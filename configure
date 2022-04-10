@@ -7122,9 +7122,6 @@ if [ "$CFG_QT3SUPPORT" = "yes" ]; then
     QT_CONFIG="$QT_CONFIG qt3support"
 fi
 
-# disable Phonon
-QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_PHONON"
-
 # disable accessibility
 if [ "$CFG_ACCESSIBILITY" = "no" ]; then
     QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_ACCESSIBILITY"
