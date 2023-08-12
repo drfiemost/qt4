@@ -57,7 +57,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define IS_RAW_DATA(d) ((d)->data != (d)->array)
+#define IS_RAW_DATA(d) ((d)->offset != 0)
 
 QT_BEGIN_NAMESPACE
 
@@ -544,12 +544,12 @@ QByteArray qUncompress(const uchar* data, int nbytes)
 
     forever {
         ulong alloc = len;
-        if (len  >= ulong(1 << 31) - sizeof(QByteArray::Data)) {
+        if (len  >= ulong(1u << 31u) - sizeof(QByteArray::Data)) {
             //QByteArray does not support that huge size anyway.
             qWarning("qUncompress: Input data is corrupted");
             return QByteArray();
         }
-        QByteArray::Data *p = static_cast<QByteArray::Data *>(::realloc(d.data(), sizeof(QByteArray::Data) + alloc));
+        QByteArray::Data *p = static_cast<QByteArray::Data *>(::realloc(d.data(), sizeof(QByteArray::Data) + alloc + 1));
         if (!p) {
             // we are not allowed to crash here when compiling with QT_NO_EXCEPTIONS
             qWarning("qUncompress: could not allocate enough memory to uncompress data");
@@ -557,19 +557,20 @@ QByteArray qUncompress(const uchar* data, int nbytes)
         }
         d.take(); // realloc was successful
         d.reset(p);
+        d->offset = 0;
 
-        int res = ::uncompress((uchar*)d->array, &len,
+        int res = ::uncompress((uchar*)d->data(), &len,
                                (uchar*)data+4, nbytes-4);
 
         switch (res) {
         case Z_OK:
             if (len != alloc) {
-                if (len  >= ulong(1 << 31) - sizeof(QByteArray::Data)) {
+                if (len  >= ulong(1u << 31u) - sizeof(QByteArray::Data)) {
                     //QByteArray does not support that huge size anyway.
                     qWarning("qUncompress: Input data is corrupted");
                     return QByteArray();
                 }
-                QByteArray::Data *p = static_cast<QByteArray::Data *>(::realloc(d.data(), sizeof(QByteArray::Data) + len));
+                QByteArray::Data *p = static_cast<QByteArray::Data *>(::realloc(d.data(), sizeof(QByteArray::Data) + len + 1));
                 if (!p) {
                     // we are not allowed to crash here when compiling with QT_NO_EXCEPTIONS
                     qWarning("qUncompress: could not allocate enough memory to uncompress data");
@@ -579,9 +580,11 @@ QByteArray qUncompress(const uchar* data, int nbytes)
                 d.reset(p);
             }
             d->ref = 1;
-            d->alloc = d->size = len;
-            d->data = d->array;
-            d->array[len] = 0;
+            d->size = len;
+            d->alloc = len;
+            d->capacityReserved = false;
+            d->offset = 0;
+            d->data()[len] = 0;
 
             return QByteArray(d.take(), 0, 0);
 
@@ -614,10 +617,10 @@ static inline char qToLower(char c)
         return c;
 }
 
-QByteArray::Data QByteArray::shared_null = {Q_BASIC_ATOMIC_INITIALIZER(1),
-                                                          0, 0, shared_null.array, {0} };
-QByteArray::Data QByteArray::shared_empty = { Q_BASIC_ATOMIC_INITIALIZER(1),
-                                              0, 0, shared_empty.array, {0} };
+const QConstByteArrayData<1> QByteArray::shared_null = { { Q_REFCOUNT_INITIALIZER(-1),
+                                                           0, 0, 0, { 0 } }, { 0 } };
+const QConstByteArrayData<1> QByteArray::shared_empty = { { Q_REFCOUNT_INITIALIZER(-1),
+                                                            0, 0, 0, { 0 } }, { 0 } };
 
 /*!
     \class QByteArray
@@ -899,15 +902,15 @@ QByteArray &QByteArray::operator=(const char *str)
 {
     Data *x;
     if (!str) {
-        x = &shared_null;
+        x = const_cast<Data *>(&shared_null.ba);
     } else if (!*str) {
-        x = &shared_empty;
+        x = const_cast<Data *>(&shared_empty.ba);
     } else {
         int len = qstrlen(str);
         if (d->ref != 1 || len > d->alloc || (len < d->size && len < d->alloc >> 1))
             realloc(len);
         x = d;
-        memcpy(x->data, str, len + 1); // include null terminator
+        memcpy(x->data(), str, len + 1); // include null terminator
         x->size = len;
     }
     x->ref.ref();
@@ -1297,19 +1300,20 @@ void QByteArray::chop(int n)
 QByteArray::QByteArray(const char *str)
 {
     if (!str) {
-        d = &shared_null;
+        d = const_cast<Data *>(&shared_null.ba);
     } else if (!*str) {
-        d = &shared_empty;
+        d = const_cast<Data *>(&shared_empty.ba);
     } else {
         int len = qstrlen(str);
-        d = static_cast<Data *>(malloc(sizeof(Data)+len));
+        d = static_cast<Data *>(malloc(sizeof(Data) + len + 1));
         Q_CHECK_PTR(d);
-        d->ref = 0;;
-        d->alloc = d->size = len;
-        d->data = d->array;
-        memcpy(d->array, str, len+1); // include null terminator
+        d->ref = 1;
+        d->size = len;
+        d->alloc = len;
+        d->capacityReserved = false;
+        d->offset = 0;
+        memcpy(d->data(), str, len+1); // include null terminator
     }
-    d->ref.ref();
 }
 
 /*!
@@ -1326,19 +1330,20 @@ QByteArray::QByteArray(const char *str)
 QByteArray::QByteArray(const char *data, int size)
 {
     if (!data) {
-        d = &shared_null;
+        d = const_cast<Data *>(&shared_null.ba);
     } else if (size <= 0) {
-        d = &shared_empty;
+        d = const_cast<Data *>(&shared_empty.ba);
     } else {
-        d = static_cast<Data *>(malloc(sizeof(Data) + size));
+        d = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
         Q_CHECK_PTR(d);
-        d->ref = 0;
-        d->alloc = d->size = size;
-        d->data = d->array;
-        memcpy(d->array, data, size);
-        d->array[size] = '\0';
+        d->ref = 1;
+        d->size = size;
+        d->alloc = size;
+        d->capacityReserved = false;
+        d->offset = 0;
+        memcpy(d->data(), data, size);
+        d->data()[size] = '\0';
     }
-    d->ref.ref();
 }
 
 /*!
@@ -1351,17 +1356,18 @@ QByteArray::QByteArray(const char *data, int size)
 QByteArray::QByteArray(int size, char ch)
 {
     if (size <= 0) {
-        d = &shared_null;
+        d = const_cast<Data *>(&shared_null.ba);
     } else {
         d = static_cast<Data *>(malloc(sizeof(Data)+size));
         Q_CHECK_PTR(d);
-        d->ref = 0;
-        d->alloc = d->size = size;
-        d->data = d->array;
-        d->array[size] = '\0';
-        memset(d->array, ch, size);
+        d->ref = 1;
+        d->size = size;
+        d->alloc = size;
+        d->capacityReserved = false;
+        d->offset = 0;
+        memset(d->data(), ch, size);
+        d->data()[size] = '\0';
     }
-    d->ref.ref();
 }
 
 /*!
@@ -1372,17 +1378,14 @@ QByteArray::QByteArray(int size, char ch)
 
 QByteArray::QByteArray(int size, Qt::Initialization)
 {
-    if (size <= 0) {
-        d = &shared_empty;
-    } else {
-        d = static_cast<Data *>(malloc(sizeof(Data)+size));
-        Q_CHECK_PTR(d);
-        d->ref = 0;
-        d->alloc = d->size = size;
-        d->data = d->array;
-        d->array[size] = '\0';
-    }
-    d->ref.ref();
+    d = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
+    Q_CHECK_PTR(d);
+    d->ref = 1;
+    d->size = size;
+    d->alloc = size;
+    d->capacityReserved = false;
+    d->offset = 0;
+    d->data()[size] = '\0';
 }
 
 /*!
@@ -1400,13 +1403,20 @@ QByteArray::QByteArray(int size, Qt::Initialization)
 
 void QByteArray::resize(int size)
 {
-    if (size <= 0) {
-        Data *x = &shared_empty;
-        x->ref.ref();
+    if (size < 0)
+        size = 0;
+
+    if (d->offset && d->ref == 1 && size < d->size) {
+        d->size = size;
+        return;
+    }
+
+    if (size == 0 && !d->capacityReserved) {
+        Data *x = const_cast<Data *>(&shared_empty.ba);
         if (!d->ref.deref())
             free(d);
         d = x;
-    } else if (d == &shared_null) {
+    } else if (d == &shared_null.ba || d == &shared_empty.ba) {
         //
         // Optimize the idiom:
         //    QByteArray a;
@@ -1415,22 +1425,21 @@ void QByteArray::resize(int size)
         // which is used in place of the Qt 3 idiom:
         //    QByteArray a(sz);
         //
-        Data *x = static_cast<Data *>(malloc(sizeof(Data)+size));
+        Data *x = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
         Q_CHECK_PTR(x);
         x->ref = 1;
-        x->alloc = x->size = size;
-        x->data = x->array;
-        x->array[size] = '\0';
-        (void) d->ref.deref(); // cannot be 0, x points to shared_null
+        x->size = size;
+        x->alloc = size;
+        x->capacityReserved = false;
+        x->offset = 0;
+        x->data()[size] = '\0';
         d = x;
     } else {
-        if (d->ref != 1 || size > d->alloc || (size < d->size && size < d->alloc >> 1))
+        if (d->ref != 1 || size > d->alloc || (!d->capacityReserved && size < d->size && size < d->alloc >> 1))
             realloc(qAllocMore(size, sizeof(Data)));
         if (d->alloc >= size) {
             d->size = size;
-            if (d->data == d->array) {
-                d->array[size] = '\0';
-            }
+            d->data()[size] = '\0';
         }
     }
 }
@@ -1450,29 +1459,30 @@ QByteArray &QByteArray::fill(char ch, int size)
 {
     resize(size < 0 ? d->size : size);
     if (d->size)
-        memset(d->data, ch, d->size);
+        memset(d->data(), ch, d->size);
     return *this;
 }
 
 void QByteArray::realloc(int alloc)
 {
-    if (d->ref != 1 || d->data != d->array) {
-        Data *x = static_cast<Data *>(malloc(sizeof(Data) + alloc));
+    if (d->ref != 1 || d->offset) {
+        Data *x = static_cast<Data *>(qMalloc(sizeof(Data) + alloc + 1));
         Q_CHECK_PTR(x);
-        x->size = qMin(alloc, d->size);
-        ::memcpy(x->array, d->data, x->size);
-        x->array[x->size] = '\0';
         x->ref = 1;
+        x->size = qMin(alloc, d->size);
         x->alloc = alloc;
-        x->data = x->array;
+        x->capacityReserved = d->capacityReserved;
+        x->offset = 0;
+        ::memcpy(x->data(), d->data(), x->size);
+        x->data()[x->size] = '\0';
         if (!d->ref.deref())
             free(d);
         d = x;
     } else {
-        Data *x = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc));
+        Data *x = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc + 1));
         Q_CHECK_PTR(x);
         x->alloc = alloc;
-        x->data = x->array;
+        x->offset = 0;
         d = x;
     }
 }
@@ -1494,7 +1504,7 @@ void QByteArray::expand(int i)
 QByteArray QByteArray::nulTerminated() const
 {
     // is this fromRawData?
-    if (d->data == d->array)
+    if (d->offset)
         return *this;           // no, then we're sure we're zero terminated
 
     QByteArray copy(*this);
@@ -1525,9 +1535,9 @@ QByteArray QByteArray::nulTerminated() const
 
 QByteArray &QByteArray::prepend(const QByteArray &ba)
 {
-    if ((d == &shared_null || d == &shared_empty) && !IS_RAW_DATA(ba.d)) {
+    if ((d == &shared_null.ba || d == &shared_empty.ba) && !IS_RAW_DATA(ba.d)) {
         *this = ba;
-    } else if (ba.d != &shared_null) {
+    } else if (ba.d != &shared_null.ba) {
         QByteArray tmp = *this;
         *this = ba;
         append(tmp);
@@ -1558,10 +1568,10 @@ QByteArray &QByteArray::prepend(const char *str, int len)
     if (str) {
         if (d->ref != 1 || d->size + len > d->alloc)
             realloc(qAllocMore(d->size + len, sizeof(Data)));
-        memmove(d->data+len, d->data, d->size);
-        memcpy(d->data, str, len);
+        memmove(d->data()+len, d->data(), d->size);
+        memcpy(d->data(), str, len);
         d->size += len;
-        d->data[d->size] = '\0';
+        d->data()[d->size] = '\0';
     }
     return *this;
 }
@@ -1576,10 +1586,10 @@ QByteArray &QByteArray::prepend(char ch)
 {
     if (d->ref != 1 || d->size + 1 > d->alloc)
         realloc(qAllocMore(d->size + 1, sizeof(Data)));
-    memmove(d->data+1, d->data, d->size);
-    d->data[0] = ch;
+    memmove(d->data()+1, d->data(), d->size);
+    d->data()[0] = ch;
     ++d->size;
-    d->data[d->size] = '\0';
+    d->data()[d->size] = '\0';
     return *this;
 }
 
@@ -1609,14 +1619,14 @@ QByteArray &QByteArray::prepend(char ch)
 
 QByteArray &QByteArray::append(const QByteArray &ba)
 {
-    if ((d == &shared_null || d == &shared_empty) && !IS_RAW_DATA(ba.d)) {
+    if ((d == &shared_null.ba || d == &shared_empty.ba) && !IS_RAW_DATA(ba.d)) {
         *this = ba;
-    } else if (ba.d != &shared_null) {
+    } else if (ba.d != &shared_null.ba) {
         if (d->ref != 1 || d->size + ba.d->size > d->alloc)
             realloc(qAllocMore(d->size + ba.d->size, sizeof(Data)));
-        memcpy(d->data + d->size, ba.d->data, ba.d->size);
+        memcpy(d->data() + d->size, ba.d->data(), ba.d->size);
         d->size += ba.d->size;
-        d->data[d->size] = '\0';
+        d->data()[d->size] = '\0';
     }
     return *this;
 }
@@ -1648,7 +1658,7 @@ QByteArray& QByteArray::append(const char *str)
         int len = qstrlen(str);
         if (d->ref != 1 || d->size + len > d->alloc)
             realloc(qAllocMore(d->size + len, sizeof(Data)));
-        memcpy(d->data + d->size, str, len + 1); // include null terminator
+        memcpy(d->data() + d->size, str, len + 1); // include null terminator
         d->size += len;
     }
     return *this;
@@ -1673,9 +1683,9 @@ QByteArray &QByteArray::append(const char *str, int len)
     if (str && len) {
         if (d->ref != 1 || d->size + len > d->alloc)
             realloc(qAllocMore(d->size + len, sizeof(Data)));
-        memcpy(d->data + d->size, str, len); // include null terminator
+        memcpy(d->data() + d->size, str, len); // include null terminator
         d->size += len;
-        d->data[d->size] = '\0';
+        d->data()[d->size] = '\0';
     }
     return *this;
 }
@@ -1690,8 +1700,8 @@ QByteArray& QByteArray::append(char ch)
 {
     if (d->ref != 1 || d->size + 1 > d->alloc)
         realloc(qAllocMore(d->size + 1, sizeof(Data)));
-    d->data[d->size++] = ch;
-    d->data[d->size] = '\0';
+    d->data()[d->size++] = ch;
+    d->data()[d->size] = '\0';
     return *this;
 }
 
@@ -1732,7 +1742,7 @@ static inline QByteArray &qbytearray_insert(QByteArray *ba,
 QByteArray &QByteArray::insert(int i, const QByteArray &ba)
 {
     QByteArray copy(ba);
-    return qbytearray_insert(this, i, copy.d->data, copy.d->size);
+    return qbytearray_insert(this, i, copy.d->data(), copy.d->size);
 }
 
 /*!
@@ -1820,7 +1830,7 @@ QByteArray &QByteArray::remove(int pos, int len)
     if (pos + len >= d->size) {
         resize(pos);
     } else {
-        memmove(d->data + pos, d->data + pos + len, d->size - pos - len);
+        memmove(d->data() + pos, d->data() + pos + len, d->size - pos - len);
         resize(d->size - len);
     }
     return *this;
@@ -1840,7 +1850,7 @@ QByteArray &QByteArray::replace(int pos, int len, const QByteArray &after)
 {
     if (len == after.d->size && (pos + len <= d->size)) {
         detach();
-        memmove(d->data + pos, after.d->data, len*sizeof(char));
+        memmove(d->data() + pos, after.d->data(), len*sizeof(char));
         return *this;
     } else {
         QByteArray copy(after);
@@ -1877,7 +1887,7 @@ QByteArray &QByteArray::replace(int pos, int len, const char *after, int alen)
 {
     if (len == alen && (pos + len <= d->size)) {
         detach();
-        memcpy(d->data + pos, after, len*sizeof(char));
+        memcpy(d->data() + pos, after, len*sizeof(char));
         return *this;
     } else {
         remove(pos, len);
@@ -1944,13 +1954,13 @@ QByteArray &QByteArray::replace(const char *before, int bsize, const char *after
     // protect against before or after being part of this
     const char *a = after;
     const char *b = before;
-    if (after >= d->data && after < d->data + d->size) {
+    if (after >= d->data() && after < d->data() + d->size) {
         char *copy = (char *)malloc(asize);
         Q_CHECK_PTR(copy);
         memcpy(copy, after, asize);
         a = copy;
     }
-    if (before >= d->data && before < d->data + d->size) {
+    if (before >= d->data() && before < d->data() + d->size) {
         char *copy = (char *)malloc(bsize);
         Q_CHECK_PTR(copy);
         memcpy(copy, before, bsize);
@@ -2027,7 +2037,7 @@ QByteArray &QByteArray::replace(const char *before, int bsize, const char *after
                 resize(newlen);
                 len = newlen;
             }
-            d = this->d->data;
+            d = this->d->data();
 
             while(pos) {
                 pos--;
@@ -2200,19 +2210,19 @@ QByteArray QByteArray::repeated(int times) const
     if (result.d->alloc != resultSize)
         return QByteArray(); // not enough memory
 
-    memcpy(result.d->data, d->data, d->size);
+    memcpy(result.d->data(), d->data(), d->size);
 
     int sizeSoFar = d->size;
-    char *end = result.d->data + sizeSoFar;
+    char *end = result.d->data() + sizeSoFar;
 
     const int halfResultSize = resultSize >> 1;
     while (sizeSoFar <= halfResultSize) {
-        memcpy(end, result.d->data, sizeSoFar);
+        memcpy(end, result.d->data(), sizeSoFar);
         end += sizeSoFar;
         sizeSoFar <<= 1;
     }
-    memcpy(end, result.d->data, resultSize - sizeSoFar);
-    result.d->data[resultSize] = '\0';
+    memcpy(end, result.d->data(), resultSize - sizeSoFar);
+    result.d->data()[resultSize] = '\0';
     result.d->size = resultSize;
     return result;
 }
@@ -2239,13 +2249,13 @@ int QByteArray::indexOf(const QByteArray &ba, int from) const
     if (ol == 0)
         return from;
     if (ol == 1)
-        return indexOf(*ba.d->data, from);
+        return indexOf(*ba.d->data(), from);
 
     const int l = d->size;
     if (from > d->size || ol + from > l)
         return -1;
 
-    return qFindByteArray(d->data, d->size, from, ba.d->data, ol);
+    return qFindByteArray(d->data(), d->size, from, ba.d->data(), ol);
 }
 
 /*! \fn int QByteArray::indexOf(const QString &str, int from) const
@@ -2287,7 +2297,7 @@ int QByteArray::indexOf(const char *c, int from) const
     if (ol == 0)
         return from;
 
-    return qFindByteArray(d->data, d->size, from, c, ol);
+    return qFindByteArray(d->data(), d->size, from, c, ol);
 }
 
 /*!
@@ -2308,11 +2318,11 @@ int QByteArray::indexOf(char ch, int from) const
     if (from < 0)
         from = qMax(from + d->size, 0);
     if (from < d->size) {
-        const char *n = d->data + from - 1;
-        const char *e = d->data + d->size;
+        const char *n = d->data() + from - 1;
+        const char *e = d->data() + d->size;
         while (++n != e)
         if (*n == ch)
-            return  n - d->data;
+            return  n - d->data();
     }
     return -1;
 }
@@ -2369,9 +2379,9 @@ int QByteArray::lastIndexOf(const QByteArray &ba, int from) const
 {
     const int ol = ba.d->size;
     if (ol == 1)
-        return lastIndexOf(*ba.d->data, from);
+        return lastIndexOf(*ba.d->data(), from);
 
-    return lastIndexOfHelper(d->data, d->size, ba.d->data, ol, from);
+    return lastIndexOfHelper(d->data(), d->size, ba.d->data(), ol, from);
 }
 
 /*! \fn int QByteArray::lastIndexOf(const QString &str, int from) const
@@ -2408,7 +2418,7 @@ int QByteArray::lastIndexOf(const char *str, int from) const
     if (ol == 1)
         return lastIndexOf(*str, from);
 
-    return lastIndexOfHelper(d->data, d->size, str, ol, from);
+    return lastIndexOfHelper(d->data(), d->size, str, ol, from);
 }
 
 /*!
@@ -2432,8 +2442,8 @@ int QByteArray::lastIndexOf(char ch, int from) const
     else if (from > d->size)
         from = d->size-1;
     if (from >= 0) {
-        const char *b = d->data;
-        const char *n = d->data + from + 1;
+        const char *b = d->data();
+        const char *n = d->data() + from + 1;
         while (n-- != b)
             if (*n == ch)
                 return  n - b;
@@ -2487,8 +2497,8 @@ int QByteArray::count(const char *str) const
 int QByteArray::count(char ch) const
 {
     int num = 0;
-    const char *i = d->data + d->size;
-    const char *b = d->data;
+    const char *i = d->data() + d->size;
+    const char *b = d->data();
     while (i != b)
         if (*--i == ch)
             ++num;
@@ -2517,7 +2527,7 @@ bool QByteArray::startsWith(const QByteArray &ba) const
         return true;
     if (d->size < ba.d->size)
         return false;
-    return memcmp(d->data, ba.d->data, ba.d->size) == 0;
+    return memcmp(d->data(), ba.d->data(), ba.d->size) == 0;
 }
 
 /*! \overload
@@ -2532,7 +2542,7 @@ bool QByteArray::startsWith(const char *str) const
     int len = qstrlen(str);
     if (d->size < len)
         return false;
-    return qstrncmp(d->data, str, len) == 0;
+    return qstrncmp(d->data(), str, len) == 0;
 }
 
 /*! \overload
@@ -2544,7 +2554,7 @@ bool QByteArray::startsWith(char ch) const
 {
     if (d->size == 0)
         return false;
-    return d->data[0] == ch;
+    return d->data()[0] == ch;
 }
 
 /*!
@@ -2562,7 +2572,7 @@ bool QByteArray::endsWith(const QByteArray &ba) const
         return true;
     if (d->size < ba.d->size)
         return false;
-    return memcmp(d->data + d->size - ba.d->size, ba.d->data, ba.d->size) == 0;
+    return memcmp(d->data() + d->size - ba.d->size, ba.d->data(), ba.d->size) == 0;
 }
 
 /*! \overload
@@ -2577,7 +2587,7 @@ bool QByteArray::endsWith(const char *str) const
     int len = qstrlen(str);
     if (d->size < len)
         return false;
-    return qstrncmp(d->data + d->size - len, str, len) == 0;
+    return qstrncmp(d->data() + d->size - len, str, len) == 0;
 }
 
 /*! \overload
@@ -2589,7 +2599,7 @@ bool QByteArray::endsWith(char ch) const
 {
     if (d->size == 0)
         return false;
-    return d->data[d->size - 1] == ch;
+    return d->data()[d->size - 1] == ch;
 }
 
 /*!
@@ -2611,7 +2621,7 @@ QByteArray QByteArray::left(int len)  const
         return *this;
     if (len < 0)
         len = 0;
-    return QByteArray(d->data, len);
+    return QByteArray(d->data(), len);
 }
 
 /*!
@@ -2633,7 +2643,7 @@ QByteArray QByteArray::right(int len) const
         return *this;
     if (len < 0)
         len = 0;
-    return QByteArray(d->data + d->size - len, len);
+    return QByteArray(d->data() + d->size - len, len);
 }
 
 /*!
@@ -2652,7 +2662,7 @@ QByteArray QByteArray::right(int len) const
 
 QByteArray QByteArray::mid(int pos, int len) const
 {
-    if (d == &shared_null || d == &shared_empty || pos >= d->size)
+    if (d == &shared_null.ba || d == &shared_empty.ba || pos >= d->size)
         return QByteArray();
     if (len < 0)
         len = d->size - pos;
@@ -2664,7 +2674,7 @@ QByteArray QByteArray::mid(int pos, int len) const
         len = d->size - pos;
     if (pos == 0 && len == d->size)
         return *this;
-    return QByteArray(d->data + pos, len);
+    return QByteArray(d->data() + pos, len);
 }
 
 /*!
@@ -2723,7 +2733,7 @@ void QByteArray::clear()
 {
     if (!d->ref.deref())
         free(d);
-    d = &shared_null;
+    d = const_cast<Data *>(&shared_null.ba);
     d->ref.ref();
 }
 
@@ -3114,10 +3124,10 @@ QByteArray QByteArray::simplified() const
     if (d->size == 0)
         return *this;
     QByteArray result(d->size, Qt::Uninitialized);
-    const char *from = d->data;
+    const char *from = d->data();
     const char *fromend = from + d->size;
     int outc=0;
-    char *to = result.d->data;
+    char *to = result.d->data();
     for (;;) {
         while (from!=fromend && isspace(uchar(*from)))
             from++;
@@ -3153,7 +3163,7 @@ QByteArray QByteArray::trimmed() const
 {
     if (d->size == 0)
         return *this;
-    const char *s = d->data;
+    const char *s = d->data();
     if (!isspace(uchar(*s)) && !isspace(uchar(s[d->size-1])))
         return *this;
     int start = 0;
@@ -3166,8 +3176,7 @@ QByteArray QByteArray::trimmed() const
     }
     int l = end - start + 1;
     if (l <= 0) {
-        shared_empty.ref.ref();
-        return QByteArray(&shared_empty, 0, 0);
+        return QByteArray(const_cast<Data *>(&shared_empty.ba), 0, 0);
     }
     return QByteArray(s+start, l);
 }
@@ -3198,8 +3207,8 @@ QByteArray QByteArray::leftJustified(int width, char fill, bool truncate) const
     if (padlen > 0) {
         result.resize(len+padlen);
         if (len)
-            memcpy(result.d->data, d->data, len);
-        memset(result.d->data+len, fill, padlen);
+            memcpy(result.d->data(), d->data(), len);
+        memset(result.d->data()+len, fill, padlen);
     } else {
         if (truncate)
             result = left(width);
@@ -3235,8 +3244,8 @@ QByteArray QByteArray::rightJustified(int width, char fill, bool truncate) const
     if (padlen > 0) {
         result.resize(len+padlen);
         if (len)
-            memcpy(result.d->data+padlen, data(), len);
-        memset(result.d->data, fill, padlen);
+            memcpy(result.d->data()+padlen, data(), len);
+        memset(result.d->data(), fill, padlen);
     } else {
         if (truncate)
             result = left(width);
@@ -3246,7 +3255,7 @@ QByteArray QByteArray::rightJustified(int width, char fill, bool truncate) const
     return result;
 }
 
-bool QByteArray::isNull() const { return d == &shared_null; }
+bool QByteArray::isNull() const { return d == &shared_null.ba; }
 
 
 /*!
@@ -3570,13 +3579,13 @@ QByteArray QByteArray::toBase64() const
     char *out = tmp.data();
     while (i < d->size) {
 	int chunk = 0;
-	chunk |= int(uchar(d->data[i++])) << 16;
+    chunk |= int(uchar(d->data()[i++])) << 16;
 	if (i == d->size) {
 	    padlen = 2;
 	} else {
-	    chunk |= int(uchar(d->data[i++])) << 8;
+        chunk |= int(uchar(d->data()[i++])) << 8;
 	    if (i == d->size) padlen = 1;
-	    else chunk |= int(uchar(d->data[i++]));
+        else chunk |= int(uchar(d->data()[i++]));
 	}
 
 	int j = (chunk & 0x00fc0000) >> 18;
@@ -3872,17 +3881,20 @@ QByteArray QByteArray::number(double n, char f, int prec)
 
 QByteArray QByteArray::fromRawData(const char *data, int size)
 {
-    Data *x = static_cast<Data *>(malloc(sizeof(Data)));
-    Q_CHECK_PTR(x);
-    if (data) {
-        x->data = const_cast<char *>(data);
+    Data *x;
+    if (!data) {
+        x = const_cast<Data *>(&shared_null.ba);
+    } else if (!size) {
+        x = const_cast<Data *>(&shared_empty.ba);
     } else {
-        x->data = x->array;
-        size = 0;
+        x = static_cast<Data *>(qMalloc(sizeof(Data) + 1));
+        Q_CHECK_PTR(x);
+        x->ref = 1;
+        x->size = size;
+        x->alloc = 0;
+        x->capacityReserved = false;
+        x->offset = data - (x->d + sizeof(qptrdiff));
     }
-    x->ref = 1;
-    x->alloc = x->size = size;
-    *x->array = '\0';
     return QByteArray(x, 0, 0);
 }
 
@@ -3906,13 +3918,13 @@ QByteArray &QByteArray::setRawData(const char *data, uint size)
         *this = fromRawData(data, size);
     } else {
         if (data) {
-            d->data = const_cast<char *>(data);
+            d->size = size;
+            d->offset = data - (d->d + sizeof(qptrdiff));
         } else {
-            d->data = d->array;
-            size = 0;
+            d->offset = 0;
+            d->size = 0;
+            *d->data() = 0;
         }
-        d->alloc = d->size = size;
-        *d->array = '\0';
     }
     return *this;
 }
@@ -4021,7 +4033,7 @@ QByteArray QByteArray::toHex() const
 {
     QByteArray hex(d->size * 2, Qt::Uninitialized);
     char *hexData = hex.data();
-    const uchar *data = (const uchar *)d->data;
+    const uchar *data = (const uchar *)d->data();
     for (int i = 0; i < d->size; ++i) {
         int j = (data[i] >> 4) & 0xf;
         if (j <= 9)
