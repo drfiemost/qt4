@@ -87,7 +87,7 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
     Data* t = static_cast<Data *>(::malloc(DataHeaderSize + alloc * sizeof(void *)));
     Q_CHECK_PTR(t);
 
-    t->ref = 1;
+    t->ref.initializeOwned();
     t->sharable = true;
     t->alloc = alloc;
     // The space reservation algorithm's optimization is biased towards appending:
@@ -123,7 +123,7 @@ QListData::Data *QListData::detach()
     Data *x = static_cast<Data *>(::malloc(DataHeaderSize + d->alloc * sizeof(void *)));
     Q_CHECK_PTR(x);
 
-    x->ref = 1;
+    x->ref.initializeOwned();
     x->sharable = true;
     x->alloc = d->alloc;
     if (!x->alloc) {
@@ -158,7 +158,7 @@ QListData::Data *QListData::detach2()
 
     ::memcpy(t, d, DataHeaderSize + d->alloc * sizeof(void *));
 
-    t->ref = 1;
+    t->ref.initializeOwned();
     t->sharable = true;
     t->alloc = x->alloc;
     if (!t->alloc) {
@@ -187,7 +187,7 @@ QListData::Data *QListData::detach(int alloc)
     Data* t = static_cast<Data *>(::malloc(DataHeaderSize + alloc * sizeof(void *)));
     Q_CHECK_PTR(t);
 
-    t->ref = 1;
+    t->ref.initializeOwned();
     t->sharable = true;
     t->alloc = alloc;
     if (!alloc) {

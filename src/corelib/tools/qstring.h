@@ -99,34 +99,34 @@ struct QStringData {
 
 #if defined(Q_COMPILER_UNICODE_STRINGS)
 
-template<int n> struct QConstStringData
+template<int n> struct QStaticStringData
 {
-    const QStringData str;
-    const char16_t data[n];
+    QStringData str;
+    char16_t data[n];
     operator const QStringData &() const { return str; }
 };
-#define QStringLiteral(str) (const QConstStringData<sizeof(u"" str)/2>) \
+#define QStringLiteral(str) (const QStaticStringData<sizeof(u"" str)/2>) \
 { { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(u"" str)/2 -1, 0, 0, { 0 } }, u"" str }
 
 // wchar_t is 2 bytes
 #elif defined(Q_OS_WIN) || (defined(__SIZEOF_WCHAR_T__) && __SIZEOF_WCHAR_T__ == 2) || defined(WCHAR_MAX) && (WCHAR_MAX - 0 < 65536)
 
-template<int n> struct QConstStringData
+template<int n> struct QStaticStringData
 {
-    const QStringData str;
-    const wchar_t data[n];
+    QStringData str;
+    wchar_t data[n];
     operator const QStringData &() const { return str; }
 };
-#define QStringLiteral(str) (const QConstStringData<sizeof(L"" str)/2>) \
+#define QStringLiteral(str) (const QStaticStringData<sizeof(L"" str)/2>) \
 { { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(L"" str)/2 -1, 0, 0, { 0 } }, L"" str }
 
 // fallback, uses QLatin1String as next best options
 #else
 
-template<int n> struct QConstStringData
+template<int n> struct QStaticStringData
 {
-    const QStringData str;
-    const ushort data[n];
+    QStringData str;
+    ushort data[n];
     operator const QStringData &() const { return str; }
 };
 #define QStringLiteral(str) QLatin1String(str)
@@ -649,7 +649,7 @@ public:
 
     QString(int size, Qt::Initialization);
     template <int n>
-    inline QString(const QConstStringData<n> &dd) : d(const_cast<QStringData *>(&dd.str)) {}
+    inline QString(const QStaticStringData<n> &dd) : d(const_cast<QStringData *>(&dd.str)) {}
 
 private:
 #if defined(QT_NO_CAST_FROM_ASCII) && !defined(Q_NO_DECLARED_NOT_DEFINED)
@@ -661,8 +661,8 @@ private:
     QString &operator=(const QByteArray &a);
 #endif
 
-    static const QConstStringData<1> shared_null;
-    static const QConstStringData<1> shared_empty;
+    static const QStaticStringData<1> shared_null;
+    static const QStaticStringData<1> shared_empty;
     Data *d;
     inline QString(Data *dd, int /*dummy*/) : d(dd) {}
 
