@@ -73,7 +73,7 @@ public:
     T* add(T **object)
     {
         if (!p.d) {
-            p.d = &QListData::shared_null;
+            p.d = const_cast<QListData::Data *>(&QListData::shared_null);
             p.d->ref.ref();
             p.detach();
         }
