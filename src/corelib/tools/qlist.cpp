@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
     the number of elements in the list.
 */
 
-const QListData::Data QListData::shared_null = { Q_REFCOUNT_INITIALIZER(-1), 0, 0, 0, true, { nullptr } };
+const QListData::Data QListData::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, true, { nullptr } };
 
 static int grow(int size)
 {

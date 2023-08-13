@@ -165,8 +165,8 @@ static int countBits(int hint)
 */
 const int MinNumBits = 4;
 
-QHashData QHashData::shared_null = {
-    nullptr, nullptr, Q_BASIC_ATOMIC_INITIALIZER(1), 0, 0, MinNumBits, 0, 0, true, false, 0
+const QHashData QHashData::shared_null = {
+    nullptr, nullptr, Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, MinNumBits, 0, 0, true, false, 0
 };
 
 void *QHashData::allocateNode()
