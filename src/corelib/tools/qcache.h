@@ -61,7 +61,6 @@ class QCache
     };
     Node *f, *l;
     QHash<Key, Node> hash;
-    void *unused; // ### Qt5: remove
     int mx, total;
 
     inline void unlink(Node &n) {
@@ -132,7 +131,7 @@ private:
 
 template <class Key, class T>
 inline QCache<Key, T>::QCache(int amaxCost)
-    : f(nullptr), l(nullptr), unused(nullptr), mx(amaxCost), total(0) {}
+    : f(nullptr), l(nullptr), mx(amaxCost), total(0) {}
 
 template <class Key, class T>
 inline void QCache<Key,T>::clear()
