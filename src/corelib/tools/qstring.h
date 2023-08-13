@@ -99,34 +99,34 @@ struct QStringData {
 
 #if defined(Q_COMPILER_UNICODE_STRINGS)
 
-template<int n> struct QStaticStringData
+template<int N> struct QStaticStringData
 {
     QStringData str;
-    char16_t data[n];
+    char16_t data[N + 1];
     operator const QStringData &() const { return str; }
 };
 #define QStringLiteral(str) (const QStaticStringData<sizeof(u"" str)/2>) \
-{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(u"" str)/2 -1, 0, 0, { 0 } }, u"" str }
+{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(u"" str)/2, 0, 0, { 0 } }, u"" str }
 
 // wchar_t is 2 bytes
 #elif defined(Q_OS_WIN) || (defined(__SIZEOF_WCHAR_T__) && __SIZEOF_WCHAR_T__ == 2) || defined(WCHAR_MAX) && (WCHAR_MAX - 0 < 65536)
 
-template<int n> struct QStaticStringData
+template<int N> struct QStaticStringData
 {
     QStringData str;
-    wchar_t data[n];
+    wchar_t data[N + 1];
     operator const QStringData &() const { return str; }
 };
 #define QStringLiteral(str) (const QStaticStringData<sizeof(L"" str)/2>) \
-{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(L"" str)/2 -1, 0, 0, { 0 } }, L"" str }
+{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(L"" str)/2, 0, 0, { 0 } }, L"" str }
 
 // fallback, uses QLatin1String as next best options
 #else
 
-template<int n> struct QStaticStringData
+template<int N> struct QStaticStringData
 {
     QStringData str;
-    ushort data[n];
+    ushort data[N + 1];
     operator const QStringData &() const { return str; }
 };
 #define QStringLiteral(str) QLatin1String(str)
@@ -170,7 +170,17 @@ public:
 
     int capacity() const;
     inline void reserve(int size);
-    inline void squeeze() { if (d->size < (int)d->alloc || d->ref != 1) realloc(); d->capacityReserved = false;}
+    inline void squeeze()
+    {
+        if (d->ref.isShared() || d->size < (int)d->alloc)
+            realloc();
+
+        if (d->capacityReserved) {
+            // cannot set unconditionally, since d could be shared_null or
+            // otherwise static.
+            d->capacityReserved = false;
+        }
+    }
 
     inline const QChar *unicode() const;
     inline QChar *data();
@@ -322,7 +332,7 @@ public:
     inline QString &prepend(const QLatin1String &s) { return insert(0, s); }
 
     inline QString &operator+=(QChar c) {
-        if (d->ref != 1 || d->size + 1 > (int)d->alloc)
+        if (d->ref.isShared() || d->size + 1 > (int)d->alloc)
             realloc(grow(d->size + 1));
         d->data()[d->size++] = c.unicode();
         d->data()[d->size] = '\0';
@@ -759,9 +769,9 @@ inline QChar *QString::data()
 inline const QChar *QString::constData() const
 { return reinterpret_cast<const QChar*>(d->data()); }
 inline void QString::detach()
-{ if (d->ref != 1 || d->offset) realloc(); }
+{ if (d->ref.isShared() || d->offset) realloc(); }
 inline bool QString::isDetached() const
-{ return d->ref == 1; }
+{ return !d->ref.isShared(); }
 inline QString &QString::operator=(const QLatin1String &s)
 {
     *this = fromLatin1(s.latin1());
@@ -914,7 +924,7 @@ inline void QCharRef::setCell(uchar acell) { QChar(*this).setCell(acell); }
 
 inline QString::QString() : d(const_cast<Data *>(&shared_null.str)) {}
 inline QString::~QString() { if (!d->ref.deref()) free(d); }
-inline void QString::reserve(int asize) { if (d->ref != 1 || asize > (int)d->alloc) realloc(asize); d->capacityReserved = true;}
+inline void QString::reserve(int asize) { if (d->ref.isShared() || asize > (int)d->alloc) realloc(asize); d->capacityReserved = true;}
 inline QString &QString::setUtf16(const ushort *autf16, int asize)
 { return setUnicode(reinterpret_cast<const QChar *>(autf16), asize); }
 inline QCharRef QString::operator[](int i)
@@ -1103,7 +1113,7 @@ inline QString QString::fromStdWString(const QStdWString &s)
 #ifdef QT3_SUPPORT
 inline QChar &QString::ref(uint i)
 {
-    if (int(i) > d->size || d->ref != 1)
+    if (int(i) > d->size || d->ref.isShared())
         resize(qMax(int(i), d->size));
     return reinterpret_cast<QChar&>(d->data()[i]);
 }

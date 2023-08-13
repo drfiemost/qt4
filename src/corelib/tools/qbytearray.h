@@ -146,10 +146,10 @@ struct QByteArrayData
     inline const char *data() const { return d + sizeof(qptrdiff) + offset; }
 };
 
-template<int n> struct QStaticByteArrayData
+template<int N> struct QStaticByteArrayData
 {
     QByteArrayData ba;
-    char data[n];
+    char data[N + 1];
 };
 
 template<int N> struct QStaticByteArrayDataPtr
@@ -160,9 +160,9 @@ template<int N> struct QStaticByteArrayDataPtr
 
 #if defined(Q_COMPILER_LAMBDA)
 #  define QByteArrayLiteral(str) ([]() -> QStaticByteArrayDataPtr<sizeof(str) - 1> { \
-        enum { Size = sizeof(str) }; \
+        enum { Size = sizeof(str) - 1 }; \
         static const QStaticByteArrayData<Size> qbytearray_literal = \
-        { { Q_REFCOUNT_INITIALIZE_STATIC, Size -1, 0, 0, { 0 } }, str }; \
+        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, { 0 } }, str }; \
         QStaticByteArrayDataPtr<Size> holder = { &qbytearray_literal }; \
     return holder; }())
 
@@ -173,9 +173,9 @@ template<int N> struct QStaticByteArrayDataPtr
 
 #  define QByteArrayLiteral(str) \
     __extension__ ({ \
-        enum { Size = sizeof(str) }; \
+        enum { Size = sizeof(str) - 1 }; \
         static const QStaticByteArrayData<Size> qbytearray_literal = \
-        { { Q_REFCOUNT_INITIALIZE_STATIC, Size -1, 0, 0, { 0 } }, str }; \
+        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, { 0 } }, str }; \
         QStaticByteArrayDataPtr<Size> holder = { &qbytearray_literal }; \
         holder; })
 #endif
@@ -472,9 +472,9 @@ inline const char *QByteArray::data() const
 inline const char *QByteArray::constData() const
 { return d->data(); }
 inline void QByteArray::detach()
-{ if (d->ref != 1 || d->offset) realloc(d->size); }
+{ if (d->ref.isShared() || d->offset) realloc(d->size); }
 inline bool QByteArray::isDetached() const
-{ return d->ref == 1; }
+{ return !d->ref.isShared(); }
 inline QByteArray::QByteArray(const QByteArray &a) : d(a.d)
 { d->ref.ref(); }
 #ifdef QT3_SUPPORT
@@ -486,10 +486,19 @@ inline int QByteArray::capacity() const
 { return d->alloc; }
 
 inline void QByteArray::reserve(int asize)
-{ if (d->ref != 1 || asize > d->alloc) realloc(asize); d->capacityReserved = true; }
+{ if (d->ref.isShared() || asize > d->alloc) realloc(asize); d->capacityReserved = true; }
 
 inline void QByteArray::squeeze()
-{ if (d->ref != 1 || d->size < d->alloc) realloc(d->size); d->capacityReserved = false; }
+{
+    if (d->ref.isShared() || d->size < d->alloc)
+        realloc(d->size);
+
+    if (d->capacityReserved) {
+        // cannot set unconditionally, since d could be shared_null or
+        // otherwise static.
+        d->capacityReserved = false;
+    }
+}
 
 class Q_CORE_EXPORT QByteRef {
     QByteArray &a;

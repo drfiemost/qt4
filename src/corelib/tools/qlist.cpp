@@ -219,7 +219,7 @@ QListData::Data *QListData::detach3()
 
 void QListData::realloc(int alloc)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     Data *x = static_cast<Data *>(::realloc(d, DataHeaderSize + alloc * sizeof(void *)));
     Q_CHECK_PTR(x);
 
@@ -232,7 +232,7 @@ void QListData::realloc(int alloc)
 // ensures that enough space is available to append n elements
 void **QListData::append(int n)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     int e = d->end;
     if (e + n > d->alloc) {
         int b = d->begin;
@@ -269,7 +269,7 @@ void **QListData::append2(const QListData& l)
 
 void **QListData::prepend()
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     if (d->begin == 0) {
         if (d->end >= d->alloc / 3)
             realloc(grow(d->alloc + 1));
@@ -287,7 +287,7 @@ void **QListData::prepend()
 
 void **QListData::insert(int i)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     if (i <= 0)
         return prepend();
     int size = d->end - d->begin;
@@ -326,7 +326,7 @@ void **QListData::insert(int i)
 
 void QListData::remove(int i)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     i += d->begin;
     if (i - d->begin < d->end - i) {
         if (int offset = i - d->begin)
@@ -341,7 +341,7 @@ void QListData::remove(int i)
 
 void QListData::remove(int i, int n)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     i += d->begin;
     int middle = i + n/2;
     if (middle - d->begin < d->end - middle) {
@@ -357,7 +357,7 @@ void QListData::remove(int i, int n)
 
 void QListData::move(int from, int to)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     if (from == to)
         return;
 
@@ -397,7 +397,7 @@ void QListData::move(int from, int to)
 
 void **QListData::erase(void **xi)
 {
-    Q_ASSERT(d->ref == 1);
+    Q_ASSERT(!d->ref.isShared());
     int i = xi - (d->array + d->begin);
     remove(i);
     return d->array + d->begin + i;
