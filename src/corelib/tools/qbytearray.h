@@ -138,12 +138,11 @@ struct QByteArrayData
     int size;
     uint alloc : 31;
     uint capacityReserved : 1;
-    union {
-        qptrdiff offset; // will always work as we add/subtract from a ushort ptr
-        char d[sizeof(qptrdiff)];
-    };
-    inline char *data() { return d + sizeof(qptrdiff) + offset; }
-    inline const char *data() const { return d + sizeof(qptrdiff) + offset; }
+
+    qptrdiff offset;
+
+    inline char *data() { return reinterpret_cast<char *>(this) + offset; }
+    inline const char *data() const { return reinterpret_cast<const char *>(this) + offset; }
 };
 
 template<int N> struct QStaticByteArrayData
@@ -162,7 +161,7 @@ template<int N> struct QStaticByteArrayDataPtr
 #  define QByteArrayLiteral(str) ([]() -> QStaticByteArrayDataPtr<sizeof(str) - 1> { \
         enum { Size = sizeof(str) - 1 }; \
         static const QStaticByteArrayData<Size> qbytearray_literal = \
-        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, { 0 } }, str }; \
+        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, sizeof(QByteArrayData) }, str }; \
         QStaticByteArrayDataPtr<Size> holder = { &qbytearray_literal }; \
     return holder; }())
 
@@ -175,7 +174,7 @@ template<int N> struct QStaticByteArrayDataPtr
     __extension__ ({ \
         enum { Size = sizeof(str) - 1 }; \
         static const QStaticByteArrayData<Size> qbytearray_literal = \
-        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, { 0 } }, str }; \
+        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, sizeof(QByteArrayData) }, str }; \
         QStaticByteArrayDataPtr<Size> holder = { &qbytearray_literal }; \
         holder; })
 #endif
@@ -399,7 +398,7 @@ public:
 
     template <int n>
     inline QByteArray(const QStaticByteArrayData<n> &dd)
-        : d(const_cast<QByteArrayData *>(&dd.str)) {}
+        : d(const_cast<QByteArrayData *>(&dd.ba)) {}
     template <int N>
     Q_DECL_CONSTEXPR inline QByteArray(QStaticByteArrayDataPtr<N> dd)
         : d(const_cast<QByteArrayData *>(&dd.ptr->ba)) {}
@@ -472,7 +471,7 @@ inline const char *QByteArray::data() const
 inline const char *QByteArray::constData() const
 { return d->data(); }
 inline void QByteArray::detach()
-{ if (d->ref.isShared() || d->offset) realloc(d->size); }
+{ if (d->ref.isShared() || (d->offset != sizeof(QByteArrayData))) realloc(d->size); }
 inline bool QByteArray::isDetached() const
 { return !d->ref.isShared(); }
 inline QByteArray::QByteArray(const QByteArray &a) : d(a.d)

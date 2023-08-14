@@ -85,15 +85,14 @@ struct QStringData {
     int size;
     uint alloc : 31;
     uint capacityReserved : 1;
+    qptrdiff offset;
+
 #ifdef QT3_SUPPORT
     bool asciiCache;
 #endif
-    union {
-        qptrdiff offset; // will always work as we add/subtract from a ushort ptr
-        ushort d[sizeof(qptrdiff)/sizeof(ushort)];
-    };
-    inline ushort *data() { return d + sizeof(qptrdiff)/sizeof(ushort) + offset; }
-    inline const ushort *data() const { return d + sizeof(qptrdiff)/sizeof(ushort) + offset; }
+
+    inline ushort *data() { return reinterpret_cast<ushort *>(reinterpret_cast<char *>(this) + offset); } 
+    inline const ushort *data() const { return reinterpret_cast<const ushort *>(reinterpret_cast<const char *>(this) + offset); }
 };
 
 
@@ -106,7 +105,7 @@ template<int N> struct QStaticStringData
     operator const QStringData &() const { return str; }
 };
 #define QStringLiteral(str) (const QStaticStringData<sizeof(u"" str)/2>) \
-{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(u"" str)/2, 0, 0, { 0 } }, u"" str }
+{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(u"" str)/2, 0, 0, sizeof(QStringData) }, u"" str }
 
 // wchar_t is 2 bytes
 #elif defined(Q_OS_WIN) || (defined(__SIZEOF_WCHAR_T__) && __SIZEOF_WCHAR_T__ == 2) || defined(WCHAR_MAX) && (WCHAR_MAX - 0 < 65536)
@@ -118,7 +117,7 @@ template<int N> struct QStaticStringData
     operator const QStringData &() const { return str; }
 };
 #define QStringLiteral(str) (const QStaticStringData<sizeof(L"" str)/2>) \
-{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(L"" str)/2, 0, 0, { 0 } }, L"" str }
+{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(L"" str)/2, 0, 0, sizeof(QStringData) }, L"" str }
 
 // fallback, uses QLatin1String as next best options
 #else
@@ -769,7 +768,7 @@ inline QChar *QString::data()
 inline const QChar *QString::constData() const
 { return reinterpret_cast<const QChar*>(d->data()); }
 inline void QString::detach()
-{ if (d->ref.isShared() || d->offset) realloc(); }
+{ if (d->ref.isShared() || (d->offset != sizeof(QStringData))) realloc(); }
 inline bool QString::isDetached() const
 { return !d->ref.isShared(); }
 inline QString &QString::operator=(const QLatin1String &s)
