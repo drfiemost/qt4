@@ -64,9 +64,9 @@ static void connManager_cleanup()
     int shutdown = appShutdown.fetchAndStoreAcquire(1);
     Q_ASSERT(shutdown == 0);
     Q_UNUSED(shutdown);
-    if(connManager_ptr)
-        connManager_ptr->cleanup();
-    connManager_ptr = 0;
+    QNetworkConfigurationManagerPrivate *cmp = connManager_ptr.fetchAndStoreAcquire(0);
+    if(cmp)
+        cmp->cleanup();
 }
 
 void QNetworkConfigurationManagerPrivate::addPostRoutine()
@@ -77,7 +77,8 @@ void QNetworkConfigurationManagerPrivate::addPostRoutine()
 static QNetworkConfigurationManagerPrivate *connManager()
 {
     QNetworkConfigurationManagerPrivate *ptr = connManager_ptr.fetchAndAddAcquire(0);
-    if (!ptr && !appShutdown) {
+    int shutdown = appShutdown.loadAcquire();
+    if (!ptr && !shutdown) {
         QMutexLocker locker(connManager_mutex());
         if (!(ptr = connManager_ptr.fetchAndAddAcquire(0))) {
             ptr = new QNetworkConfigurationManagerPrivate;

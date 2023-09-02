@@ -150,7 +150,7 @@ inline void qt_ignore_sigpipe()
 #ifndef Q_NO_POSIX_SIGNALS
     // Set to ignore SIGPIPE once only.
     static QBasicAtomicInt atom = Q_BASIC_ATOMIC_INITIALIZER(0);
-    if (!atom) {
+    if (!atom.load()) {
         // More than one thread could turn off SIGPIPE at the same time
         // But that's acceptable because they all would be doing the same
         // action
@@ -158,7 +158,7 @@ inline void qt_ignore_sigpipe()
         memset(&noaction, 0, sizeof(noaction));
         noaction.sa_handler = SIG_IGN;
         ::sigaction(SIGPIPE, &noaction, nullptr);
-        atom = 1;
+        atom.store(1);
     }
 #else
     // Posix signals are not supported by the underlying platform
