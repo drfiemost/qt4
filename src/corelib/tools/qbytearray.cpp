@@ -1358,7 +1358,7 @@ QByteArray::QByteArray(int size, char ch)
     if (size <= 0) {
         d = const_cast<Data *>(&shared_null.ba);
     } else {
-        d = static_cast<Data *>(malloc(sizeof(Data)+size));
+        d = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
         Q_CHECK_PTR(d);
         d->ref.initializeOwned();
         d->size = size;
@@ -1431,7 +1431,7 @@ void QByteArray::resize(int size)
         x->size = size;
         x->alloc = size;
         x->capacityReserved = false;
-        x->offset = 0;
+        x->offset = sizeof(QByteArrayData);
         x->data()[size] = '\0';
         d = x;
     } else {
