@@ -9,7 +9,6 @@ SUBDIRS += \
     other.pro
 
 !cross_compile:                             SUBDIRS += host.pro
-contains(QT_CONFIG, qt3support):!wince*:    SUBDIRS += qt3support.pro
 contains(QT_CONFIG, opengl):                SUBDIRS += opengl.pro
 contains(QT_CONFIG, xmlpatterns):           SUBDIRS += xmlpatterns.pro
 unix:!embedded:contains(QT_CONFIG, dbus):   SUBDIRS += dbus.pro
