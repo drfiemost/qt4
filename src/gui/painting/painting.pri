@@ -45,7 +45,6 @@ HEADERS += \
         painting/qtextureglyphcache_p.h \
         painting/qtransform.h \
         painting/qwindowsurface_p.h \
-        painting/qwmatrix.h \
         painting/qpaintbuffer_p.h
 
 

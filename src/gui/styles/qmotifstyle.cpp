@@ -2645,11 +2645,6 @@ QMotifStyle::styleHint(StyleHint hint, const QStyleOption *opt, const QWidget *w
     int ret;
 
     switch (hint) {
-#ifdef QT3_SUPPORT
-    case SH_GUIStyle:
-        ret = Qt::MotifStyle;
-        break;
-#endif
     case SH_DrawMenuBarSeparator:
         ret = true;
         break;

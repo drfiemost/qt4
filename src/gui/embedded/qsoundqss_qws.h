@@ -139,11 +139,6 @@ public:
 public Q_SLOTS:    
     void newConnection();
 
-#ifdef QT3_SUPPORT
-public:
-    QT3_SUPPORT_CONSTRUCTOR QWSSoundServerSocket(QObject *parent, const char *name);
-#endif
-
 Q_SIGNALS:
     void playFile(int, int, const QString&);
     void playFile(int, int, const QString&, int, int);

@@ -87,9 +87,6 @@ public:
                          , nativeMenuBar(-1)
 #endif
                          , doChildEffects(false)
-#ifdef QT3_SUPPORT
-                         , doAutoResize(false)
-#endif
 #ifdef Q_WS_MAC
                          , mac_menubar(0)
 #endif
@@ -184,9 +181,6 @@ public:
     QPointer<QAction> defaultAction;
 
     QBasicTimer autoReleaseTimer;
-#ifdef QT3_SUPPORT
-    bool doAutoResize;
-#endif
 #ifdef Q_WS_X11
     QAbstractPlatformMenuBar *platformMenuBar;
 #endif

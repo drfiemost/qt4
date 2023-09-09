@@ -714,17 +714,6 @@ QWSSoundServerSocket::QWSSoundServerSocket(QObject *parent) :
     connect(this, SIGNAL(newConnection()), this, SLOT(newConnection()));
 }
 
-
-#ifdef QT3_SUPPORT
-QWSSoundServerSocket::QWSSoundServerSocket(QObject *parent, const char *name) :
-    QWSServerSocket(QT_VFB_SOUND_PIPE(qws_display_id), parent)
-{
-    if (name)
-        setObjectName(QString::fromAscii(name));
-    connect(this, SIGNAL(newConnection()), this, SLOT(newConnection()));
-}
-#endif
-
 void QWSSoundServerSocket::newConnection()
 {
     while (QWS_SOCK_BASE *sock = nextPendingConnection()) {

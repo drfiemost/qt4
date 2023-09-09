@@ -1306,20 +1306,6 @@ QWSServer::QWSServer(int flags, QObject *parent) :
     }
 }
 
-#ifdef QT3_SUPPORT
-/*!
-    Use the two-argument overload and call the
-    QObject::setObjectName() function instead.
-*/
-QWSServer::QWSServer(int flags, QObject *parent, const char *name) :
-    QObject(*new QWSServerPrivate, parent)
-{
-    Q_D(QWSServer);
-    setObjectName(QString::fromAscii(name));
-    d->initServer(flags);
-}
-#endif
-
 
 #ifndef QT_NO_QWS_MULTIPROCESS
 static void ignoreSignal(int) {} // Used to eat SIGPIPE signals below
@@ -4010,54 +3996,6 @@ void QWSServer::setBackground(const QBrush &brush)
     qt_screen->exposeRegion(QRect(0,0,qt_screen->width(), qt_screen->height()), 0);
 }
 
-
-#ifdef QT3_SUPPORT
-/*!
-    \fn void QWSServer::setDesktopBackground(const QImage &image)
-
-    Sets the image used as background in the absence of obscuring
-    windows, to be the given \a image.
-
-    Use the setBackground() function instead.
-
-    \oldcode
-        QImage image;
-        setDesktopBackground(image);
-    \newcode
-        QImage image;
-        setBackground(QBrush(image));
-    \endcode
-*/
-void QWSServer::setDesktopBackground(const QImage &img)
-{
-    if (img.isNull())
-        setBackground(Qt::NoBrush);
-    else
-        setBackground(QBrush(QPixmap::fromImage(img)));
-}
-
-/*!
-    \fn void QWSServer::setDesktopBackground(const QColor &color)
-    \overload
-
-    Sets the color used as background in the absence of obscuring
-    windows, to be the given \a color.
-
-    Use the setBackground() function instead.
-
-    \oldcode
-        QColor color;
-        setDesktopBackground(color);
-    \newcode
-        QColor color;
-        setBackground(QBrush(color));
-    \endcode
-*/
-void QWSServer::setDesktopBackground(const QColor &c)
-{
-    setBackground(QBrush(c));
-}
-#endif //QT3_SUPPORT
 
 /*!
   \internal

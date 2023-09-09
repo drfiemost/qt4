@@ -2966,12 +2966,6 @@ void QWindowsXPStyle::drawComplexControl(ComplexControl cc, const QStyleOptionCo
                 bool isActive = tb->titleBarState & QStyle::State_Active;
                 XPThemeData theme(widget, p, QLatin1String("WINDOW"));
                 if (sub & SC_TitleBarLabel) {
-
-#ifdef QT3_SUPPORT
-                    if (widget && widget->inherits("Q3DockWindowTitleBar")) {
-                        partId = WP_SMALLCAPTION;
-                    } else
-#endif
                         partId = (tb->titleBarState & Qt::WindowMinimized) ? WP_MINCAPTION : WP_CAPTION;
                     theme.rect = option->rect;
                     if (widget && !widget->isEnabled())
@@ -3343,11 +3337,6 @@ int QWindowsXPStyle::pixelMetric(PixelMetric pm, const QStyleOption *option, con
 
     case PM_TitleBarHeight:
         {
-#ifdef QT3_SUPPORT
-            if (widget && widget->inherits("Q3DockWindowTitleBar")) {
-                res = GetSystemMetrics(SM_CYSMCAPTION) + GetSystemMetrics(SM_CXSIZEFRAME);
-            } else
-#endif
             if (widget && (widget->windowType() == Qt::Tool))
                 res = GetSystemMetrics(SM_CYSMCAPTION) + GetSystemMetrics(SM_CXSIZEFRAME);
             else

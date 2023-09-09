@@ -80,10 +80,6 @@ public:
 
     enum Shape { RoundedNorth, RoundedSouth, RoundedWest, RoundedEast,
                  TriangularNorth, TriangularSouth, TriangularWest, TriangularEast
-#if defined(QT3_SUPPORT) && !defined(Q_MOC_RUN)
-                , RoundedAbove = RoundedNorth, RoundedBelow = RoundedSouth,
-                TriangularAbove = TriangularNorth, TriangularBelow = TriangularSouth
-#endif
     };
 
     enum ButtonPosition {
@@ -201,13 +197,6 @@ protected:
     void keyPressEvent(QKeyEvent *);
     void changeEvent(QEvent *);
     void initStyleOption(QStyleOptionTab *option, int tabIndex) const;
-
-#ifdef QT3_SUPPORT
-public Q_SLOTS:
-    QT_MOC_COMPAT void setCurrentTab(int index) { setCurrentIndex(index); }
-Q_SIGNALS:
-    QT_MOC_COMPAT void selected(int);
-#endif
 
     friend class QAccessibleTabBar;
 private:

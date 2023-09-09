@@ -68,11 +68,6 @@ class QWSInputMethod;
 class QWSBackingStore;
 class QWSWindowSurface;
 
-#ifdef QT3_SUPPORT
-class QImage;
-class QColor;
-#endif
-
 class QWSInternalWindowInfo
 {
 public:
@@ -166,10 +161,6 @@ private:
     uint _opacity;
     bool opaque;
     QWSWindowPrivate *d;
-#ifdef QT3_SUPPORT
-    inline QT3_SUPPORT QRegion requested() const { return requested_region; }
-//    inline QT3_SUPPORT QRegion allocation() const { return allocated_region; }
-#endif
 };
 
 
@@ -217,9 +208,6 @@ class Q_GUI_EXPORT QWSServer : public QObject
     Q_DECLARE_PRIVATE(QWSServer)
 public:
     explicit QWSServer(int flags = 0, QObject *parent=0);
-#ifdef QT3_SUPPORT
-    QT3_SUPPORT_CONSTRUCTOR QWSServer(int flags, QObject *parent, const char *name);
-#endif
     ~QWSServer();
     enum ServerFlags { DisableKeyboard = 0x01,
                        DisableMouse = 0x02 };
@@ -234,9 +222,6 @@ public:
     static QWSServer* instance() { return qwsServer; }
 
 #ifndef QT_NO_QWS_INPUTMETHODS
-#ifdef QT3_SUPPORT
-    enum IMState { IMCompose, IMEnd, IMStart = IMCompose };
-#endif
     enum IMMouse { MousePress, MouseRelease, MouseMove, MouseOutside }; //MouseMove reserved but not used
     void sendIMEvent(const QInputMethodEvent*);
     void sendIMQuery(int property);
@@ -265,10 +250,6 @@ public:
     static void sendMouseEvent(const QPoint& pos, int state, int wheel = 0);
 
     static void setBackground(const QBrush &);
-#ifdef QT3_SUPPORT
-    static QT3_SUPPORT void setDesktopBackground(const QImage &img);
-    static QT3_SUPPORT void setDesktopBackground(const QColor &);
-#endif
     static QWSMouseHandler *mouseHandler();
     static const QList<QWSMouseHandler*>& mouseHandlers();
     static void setMouseHandler(QWSMouseHandler*);
@@ -344,13 +325,6 @@ private:
     friend class QApplicationPrivate;
     void updateWindowRegions() const;
 
-#ifdef QT3_SUPPORT
-#ifndef QT_NO_QWS_KEYBOARD
-    static inline QT3_SUPPORT void setKeyboardFilter(QWSServer::KeyboardFilter *f)
-        { if (f) addKeyboardFilter(f); else removeKeyboardFilter(); }
-#endif
-#endif
-
 private:
 #ifndef QT_NO_QWS_MULTIPROCESS
     Q_PRIVATE_SLOT(d_func(), void _q_clientClosed())
@@ -398,9 +372,6 @@ protected:
     void sendCommitString(const QString &commitString, int replaceFrom = 0, int replaceLength = 0);
     void sendQuery(int property);
 
-#ifdef QT3_SUPPORT
-    inline void sendIMEvent(QWSServer::IMState, const QString& txt, int cpos, int selLen = 0);
-#endif
 private:
     bool mIResolution;
 };
@@ -409,12 +380,6 @@ inline void QWSInputMethod::sendEvent(const QInputMethodEvent *ime)
 {
     qwsServer->sendIMEvent(ime);
 }
-#ifdef QT3_SUPPORT
-inline void QWSInputMethod::sendIMEvent(QWSServer::IMState state, const QString& txt, int cpos, int selLen)
-{
-    if (state == QWSServer::IMCompose) sendPreeditString(txt, cpos, selLen); else sendCommitString(txt);
-}
-#endif
 
 inline void QWSInputMethod::sendQuery(int property)
 {

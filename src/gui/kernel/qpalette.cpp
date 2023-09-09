@@ -63,103 +63,6 @@ static QColor qt_mix_colors(QColor a, QColor b)
                   (a.blue() + b.blue()) / 2, (a.alpha() + b.alpha()) / 2);
 }
 
-#ifdef QT3_SUPPORT
-
-#ifndef QT_NO_DATASTREAM
-QDataStream &qt_stream_out_qcolorgroup(QDataStream &s, const QColorGroup &g)
-{
-    if(s.version() == 1) {
-        // Qt 1.x
-        s << g.color(QPalette::Foreground) << g.color(QPalette::Background)
-          << g.color(QPalette::Light) << g.color(QPalette::Dark)
-          << g.color(QPalette::Mid) << g.color(QPalette::Text) << g.color(QPalette::Base);
-    } else {
-        int max = QPalette::NColorRoles;
-        if (s.version() <= QDataStream::Qt_2_1)
-            max = QPalette::HighlightedText + 1;
-        else if (s.version() <= QDataStream::Qt_4_3)
-            max = QPalette::AlternateBase + 1;
-        for(int r = 0 ; r < max ; r++)
-            s << g.brush((QPalette::ColorRole)r);
-    }
-    return s;
-}
-
-QDataStream &qt_stream_in_qcolorgroup(QDataStream &s, QColorGroup &g)
-{
-    if(s.version() == 1) {         // Qt 1.x
-        QColor fg, bg, light, dark, mid, text, base;
-        s >> fg >> bg >> light >> dark >> mid >> text >> base;
-        QPalette p(bg);
-        p.setColor(QPalette::Active, QPalette::Foreground, fg);
-        p.setColor(QPalette::Active, QPalette::Light, light);
-        p.setColor(QPalette::Active, QPalette::Dark, dark);
-        p.setColor(QPalette::Active, QPalette::Mid, mid);
-        p.setColor(QPalette::Active, QPalette::Text, text);
-        p.setColor(QPalette::Active, QPalette::Base, base);
-        g = p;
-        g.setCurrentColorGroup(QPalette::Active);
-    } else {
-        int max = QPalette::NColorRoles;
-        if (s.version() <= QDataStream::Qt_2_1)
-            max = QPalette::HighlightedText + 1;
-        else if (s.version() <= QDataStream::Qt_3_0)
-            max = QPalette::LinkVisited + 1;
-        else if (s.version() <= QDataStream::Qt_4_3)
-            max = QPalette::AlternateBase + 1;
-        QBrush tmp;
-        for(int r = 0 ; r < max; r++) {
-            s >> tmp;
-            g.setBrush((QPalette::ColorRole)r, tmp);
-        }
-    }
-    return s;
-}
-
-QDataStream &operator<<(QDataStream &s, const QColorGroup &g)
-{
-    return qt_stream_out_qcolorgroup(s, g);
-}
-
-QDataStream &operator>>(QDataStream &s, QColorGroup &g)
-{
-    return qt_stream_in_qcolorgroup(s, g);
-}
-#endif // QT_NO_DATASTREAM
-
-/*!
-    Constructs a palette with the specified \a active, \a disabled and
-    \a inactive color groups.
-*/
-QPalette::QPalette(const QColorGroup &active, const QColorGroup &disabled,
-                   const QColorGroup &inactive)
-{
-    Q_ASSERT(QPalette::NColorRoles == QPalette::ToolTipText + 1);
-    init();
-    setColorGroup(Active, active);
-    setColorGroup(Disabled, disabled);
-    setColorGroup(Inactive, inactive);
-}
-
-QColorGroup QPalette::createColorGroup(ColorGroup cr) const
-{
-    QColorGroup ret(*this);
-    ret.setCurrentColorGroup(cr);
-    return ret;
-}
-
-void QPalette::setColorGroup(ColorGroup cg, const QColorGroup &g)
-{
-    setColorGroup(cg, g.brush(WindowText), g.brush(Button), g.brush(Light),
-                  g.brush(Dark), g.brush(Mid), g.brush(Text), g.brush(BrightText),
-                  g.brush(Base), g.brush(AlternateBase), g.brush(Window),
-                  g.brush(Midlight), g.brush(ButtonText), g.brush(Shadow),
-                  g.brush(Highlight), g.brush(HighlightedText), g.brush(Link),
-                  g.brush(LinkVisited), g.brush(ToolTipBase), g.brush(ToolTipText));
-}
-
-#endif // QT3_SUPPORT
-
 /*!
    \fn const QColor &QPalette::color(ColorRole role) const
 
@@ -896,27 +799,6 @@ bool QPalette::operator==(const QPalette &p) const
     }
     return true;
 }
-
-#ifdef QT3_SUPPORT
-bool QColorGroup::operator==(const QColorGroup &other) const
-{
-    if (isCopyOf(other))
-        return true;
-    for (int role = 0; role < int(NColorRoles); role++) {
-        if(d->br[current_group][role] != other.d->br[other.current_group][role])
-            return false;
-    }
-    return true;
-}
-
-/*!
-   Returns the color group as a QVariant
-*/
-QColorGroup::operator QVariant() const
-{
-    return QVariant(QVariant::ColorGroup, this);
-}
-#endif
 
 /*!
     \fn bool QPalette::isEqual(ColorGroup cg1, ColorGroup cg2) const

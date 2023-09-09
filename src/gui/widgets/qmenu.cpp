@@ -69,9 +69,6 @@
 #include <private/qpushbutton_p.h>
 #include <private/qaction_p.h>
 #include <private/qsoftkeymanager_p.h>
-#ifdef QT3_SUPPORT
-#include <qmenudata.h>
-#endif // QT3_SUPPORT
 
 #ifdef Q_WS_X11
 #   include <private/qt_x11_p.h>
@@ -597,9 +594,6 @@ void QMenuPrivate::setCurrentAction(QAction *action, int popup, SelectionReason 
 #ifndef QT_NO_STATUSTIP
     QAction *previousAction = currentAction;
 #endif
-#ifdef QT3_SUPPORT
-    emitHighlighted = action;
-#endif
 
     currentAction = action;
     if (action) {
@@ -1030,9 +1024,6 @@ bool QMenuPrivate::mouseEventTaken(QMouseEvent *e)
 void QMenuPrivate::activateCausedStack(const QList<QPointer<QWidget> > &causedStack, QAction *action, QAction::ActionEvent action_e, bool self)
 {
     QBoolBlocker guard(activationRecursionGuard);
-#ifdef QT3_SUPPORT
-    const int actionId = q_func()->findIdForAction(action);
-#endif
     if(self)
         action->activate(action_e);
 
@@ -1047,28 +1038,13 @@ void QMenuPrivate::activateCausedStack(const QList<QPointer<QWidget> > &causedSt
                 emit qmenu->triggered(action);
            } else if (action_e == QAction::Hover) {
                 emit qmenu->hovered(action);
-#ifdef QT3_SUPPORT
-                if (emitHighlighted) {
-                    emit qmenu->highlighted(actionId);
-                    emitHighlighted = false;
-                }
-#endif
             }
 #ifndef QT_NO_MENUBAR
         } else if (QMenuBar *qmenubar = qobject_cast<QMenuBar*>(widget)) {
             if (action_e == QAction::Trigger) {
                 emit qmenubar->triggered(action);
-#ifdef QT3_SUPPORT
-                emit qmenubar->activated(actionId);
-#endif
             } else if (action_e == QAction::Hover) {
                 emit qmenubar->hovered(action);
-#ifdef QT3_SUPPORT
-                if (emitHighlighted) {
-                    emit qmenubar->highlighted(actionId);
-                    emitHighlighted = false;
-                }
-#endif
             }
             break; //nothing more..
 #endif
@@ -1148,14 +1124,7 @@ void QMenuPrivate::_q_actionTriggered()
     Q_Q(QMenu);
     if (QAction *action = qobject_cast<QAction *>(q->sender())) {
         QWeakPointer<QAction> actionGuard = action;
-#ifdef QT3_SUPPORT
-        //we store it here because the action might be deleted/changed by connected slots
-        const int id = q->findIdForAction(action);
-#endif
         emit q->triggered(action);
-#ifdef QT3_SUPPORT
-        emit q->activated(id);
-#endif
 
         if (!activationRecursionGuard && actionGuard) {
             //in case the action has not been activated by the mouse
@@ -1182,17 +1151,7 @@ void QMenuPrivate::_q_actionHovered()
 {
     Q_Q(QMenu);
     if (QAction * action = qobject_cast<QAction *>(q->sender())) {
-#ifdef QT3_SUPPORT
-        //we store it here because the action might be deleted/changed by connected slots
-        const int id = q->findIdForAction(action);
-#endif
         emit q->hovered(action);
-#ifdef QT3_SUPPORT
-        if (emitHighlighted) {
-            emit q->highlighted(id);
-            emitHighlighted = false;
-        }
-#endif
     }
 }
 
@@ -3157,135 +3116,6 @@ void QMenu::setSeparatorsCollapsible(bool collapse)
         d->syncSeparatorsCollapsible(collapse);
 #endif
 }
-
-#ifdef QT3_SUPPORT
-
-int QMenu::insertAny(const QIcon *icon, const QString *text, const QObject *receiver, const char *member,
-                          const QKeySequence *shortcut, const QMenu *popup, int id, int index)
-{
-    QAction *act = popup ? popup->menuAction() : new QAction(this);
-    if (id != -1)
-        static_cast<QMenuItem*>(act)->setId(id);
-    if (icon)
-        act->setIcon(*icon);
-    if (text)
-        act->setText(*text);
-    if (shortcut)
-        act->setShortcut(*shortcut);
-    if (receiver && member)
-        QObject::connect(act, SIGNAL(activated(int)), receiver, member);
-    if (index == -1 || index >= actions().count())
-        addAction(act);
-    else
-        insertAction(actions().value(index), act);
-    return findIdForAction(act);
-}
-
-/*!
-    Use insertAction() or one of the addAction() overloads instead.
-*/
-int QMenu::insertItem(QMenuItem *item, int id, int index)
-{
-    if (index == -1 || index >= actions().count())
-        addAction(item);
-    else
-        insertAction(actions().value(index), item);
-    if (id > -1)
-        item->d_func()->id = id;
-    return findIdForAction(item);
-}
-
-/*!
-    Use the insertSeparator() overload that takes a QAction *
-    parameter instead.
-*/
-int QMenu::insertSeparator(int index)
-{
-    QAction *act = new QAction(this);
-    act->setSeparator(true);
-    if (index == -1 || index >= actions().count())
-        addAction(act);
-    else
-        insertAction(actions().value(index), act);
-    return findIdForAction(act);
-}
-
-QAction *QMenu::findActionForId(int id) const
-{
-    Q_D(const QMenu);
-    for (int i = 0; i < d->actions.size(); ++i) {
-        QAction *act = d->actions.at(i);
-        if (findIdForAction(act)== id)
-            return act;
-    }
-    return 0;
-}
-
-/*!
-    Use QAction and actions() instead.
-*/
-QMenuItem *QMenu::findPopup( QMenu *popup, int *index )
-{
-   QList<QAction *> list = actions();
-    for (int i = 0; i < list.size(); ++i) {
-        QAction *act = list.at(i);
-        if (act->menu() == popup) {
-            QMenuItem *item = static_cast<QMenuItem *>(act);
-            if (index)
-                *index = act->d_func()->id;
-            return item;
-        }
-    }
-    return 0;
-}
-
-
-/*!
-    Use QAction::setData() instead.
-*/
-bool QMenu::setItemParameter(int id, int param)
-{
-    if (QAction *act = findActionForId(id)) {
-        act->d_func()->param = param;
-        return true;
-    }
-    return false;
-}
-
-/*!
-    Use QAction::data() instead.
-*/
-int QMenu::itemParameter(int id) const
-{
-    if (QAction *act = findActionForId(id))
-        return act->d_func()->param;
-    return id;
-}
-
-/*!
-    Use actions instead.
-*/
-void QMenu::setId(int index, int id)
-{
-    if(QAction *act = actions().value(index))
-        act->d_func()->id = id;
-}
-
-/*!
-    Use style()->pixelMetric(QStyle::PM_MenuPanelWidth, this) instead.
-*/
-int QMenu::frameWidth() const
-{
-    return style()->pixelMetric(QStyle::PM_MenuPanelWidth, 0, this);
-}
-
-int QMenu::findIdForAction(QAction *act) const
-{
-    if (!act)
-        return -1;
-    return act->d_func()->id;
-}
-#endif // QT3_SUPPORT
 
 /*!
     \fn uint QMenu::count() const

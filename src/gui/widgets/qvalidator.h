@@ -68,10 +68,6 @@ public:
         Invalid,
         Intermediate,
         Acceptable
-
-#if defined(QT3_SUPPORT) && !defined(Q_MOC_RUN)
-        , Valid = Intermediate
-#endif
     };
 
     void setLocale(const QLocale &locale);
@@ -80,10 +76,6 @@ public:
     virtual State validate(QString &, int &) const = 0;
     virtual void fixup(QString &) const;
 
-#ifdef QT3_SUPPORT
-public:
-    QT3_SUPPORT_CONSTRUCTOR QValidator(QObject * parent, const char *name);
-#endif
 protected:
     QValidator(QObjectPrivate &d, QObject *parent);
     QValidator(QValidatorPrivate &d, QObject *parent);
@@ -113,12 +105,6 @@ public:
 
     int bottom() const { return b; }
     int top() const { return t; }
-
-#ifdef QT3_SUPPORT
-public:
-    QT3_SUPPORT_CONSTRUCTOR QIntValidator(QObject * parent, const char *name);
-    QT3_SUPPORT_CONSTRUCTOR QIntValidator(int bottom, int top, QObject * parent, const char *name);
-#endif
 
 private:
     Q_DISABLE_COPY(QIntValidator)
@@ -163,12 +149,6 @@ public:
     int decimals() const { return dec; }
     Notation notation() const;
 
-#ifdef QT3_SUPPORT
-public:
-    QT3_SUPPORT_CONSTRUCTOR QDoubleValidator(QObject * parent, const char *name);
-    QT3_SUPPORT_CONSTRUCTOR QDoubleValidator(double bottom, double top, int decimals,
-                                           QObject * parent, const char *name);
-#endif
 private:
     Q_DECLARE_PRIVATE(QDoubleValidator)
     Q_DISABLE_COPY(QDoubleValidator)
@@ -193,12 +173,6 @@ public:
 
     void setRegExp(const QRegExp& rx);
     const QRegExp& regExp() const { return r; } // ### make inline for 5.0
-
-#ifdef QT3_SUPPORT
-public:
-    QT3_SUPPORT_CONSTRUCTOR QRegExpValidator(QObject *parent, const char *name);
-    QT3_SUPPORT_CONSTRUCTOR QRegExpValidator(const QRegExp& rx, QObject *parent, const char *name);
-#endif
 
 private:
     Q_DISABLE_COPY(QRegExpValidator)
