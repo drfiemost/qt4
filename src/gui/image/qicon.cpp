@@ -1016,8 +1016,8 @@ QIcon QIcon::fromTheme(const QString &name, const QIcon &fallback)
         icon = *qtIconCache()->object(name);
     } else {
         QIcon *cachedIcon  = new QIcon(new QIconLoaderEngine(name));
-        qtIconCache()->insert(name, cachedIcon);
         icon = *cachedIcon;
+        qtIconCache()->insert(name, cachedIcon);
     }
 
     // Note the qapp check is to allow lazy loading of static icons
