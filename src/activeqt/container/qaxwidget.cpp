@@ -1973,10 +1973,6 @@ bool QAxWidget::createHostWindow(bool initialized)
 */
 bool QAxWidget::createHostWindow(bool initialized, const QByteArray &data)
 {
-#ifdef QT3_SUPPORT
-    QApplication::sendPostedEvents(0, QEvent::ChildInserted);
-#endif
-
     container = new QAxClientSite(this);
     container->activateObject(initialized, data);
 

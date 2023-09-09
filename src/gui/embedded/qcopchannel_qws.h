@@ -60,9 +60,6 @@ class Q_GUI_EXPORT QCopChannel : public QObject
     Q_OBJECT
 public:
     explicit QCopChannel(const QString& channel, QObject *parent=0);
-#ifdef QT3_SUPPORT
-    QT3_SUPPORT_CONSTRUCTOR QCopChannel(const QString& channel, QObject *parent, const char *name);
-#endif
     virtual ~QCopChannel();
 
     QString channel() const;

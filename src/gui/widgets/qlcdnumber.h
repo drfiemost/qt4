@@ -73,9 +73,6 @@ public:
 
     enum Mode {
         Hex, Dec, Oct, Bin
-#if defined(QT3_SUPPORT) && !defined(Q_MOC_RUN)
-        , HEX = Hex, DEC = Dec, OCT = Oct, BIN = Bin
-#endif
     };
     enum SegmentStyle {
         Outline, Filled, Flat
@@ -119,16 +116,6 @@ Q_SIGNALS:
 protected:
     bool event(QEvent *e);
     void paintEvent(QPaintEvent *);
-
-public:
-#ifdef QT3_SUPPORT
-    QT3_SUPPORT_CONSTRUCTOR QLCDNumber(QWidget* parent, const char* name);
-    QT3_SUPPORT_CONSTRUCTOR QLCDNumber(uint numDigits, QWidget* parent, const char* name);
-    
-    QT3_SUPPORT void setMargin(int margin) { setContentsMargins(margin, margin, margin, margin); }
-    QT3_SUPPORT int margin() const 
-    { int margin; int dummy; getContentsMargins(&margin, &dummy, &dummy, &dummy);  return margin; }    
-#endif
 
 private:
     Q_DISABLE_COPY(QLCDNumber)

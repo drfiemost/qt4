@@ -145,9 +145,7 @@ public:
     static uint attribs;
     static inline bool testAttribute(uint flag) { return attribs & (1 << flag); }
     static int app_compile_version;
-#if defined(QT3_SUPPORT)
-    static bool useQt3Support;
-#endif
+
 #ifndef QT_NO_SETTINGS
     static QSettings *trolltechConf();
 #endif

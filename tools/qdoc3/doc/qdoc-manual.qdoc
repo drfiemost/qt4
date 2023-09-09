@@ -3880,28 +3880,6 @@
                In addition to the \c Qt3Support classes, Qt 4 provides
                compatibility functions when it's possible for an old
                API to cohabit with the new one.
-
-               \if !defined(QT3_SUPPORT)
-                   \if defined(QT3_SUPPORTWARNINGS)
-                       The compiler emits a warning when a
-                       compatibility function is called. (This works
-                       only with GCC 3.2+ and MSVC 7.)
-                   \else
-                       To use the Qt 3 support library, you need to
-                       have the line QT += qt3support in your .pro
-                       file (qmake automatically define the
-                       QT3_SUPPORT symbol, turning on compatibility
-                       function support).
-
-                       You can also define the symbol manually (e.g.,
-                       if you don't want to link against the \c
-                       Qt3Support library), or you can define \c
-                       QT3_SUPPORT_WARNINGS instead, telling the
-                       compiler to emit a warning when a compatibility
-                       function is called. (This works only with GCC
-                       3.2+ and MSVC 7.)
-                   \endif
-               \endif
            * /
            \endcode
 

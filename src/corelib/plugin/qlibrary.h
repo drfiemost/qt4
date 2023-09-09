@@ -100,10 +100,7 @@ public:
 
     void setLoadHints(LoadHints hints);
     LoadHints loadHints() const;
-#ifdef QT3_SUPPORT
-    inline QT3_SUPPORT QString library() const { return fileName(); }
-    inline QT3_SUPPORT void setAutoUnload( bool ) {}
-#endif
+
 private:
     QLibraryPrivate *d;
     bool did_load;

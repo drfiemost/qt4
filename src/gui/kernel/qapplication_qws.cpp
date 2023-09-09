@@ -2539,15 +2539,6 @@ static int parseGeometry(const char* string,
         return mask;
 }
 
-#ifdef QT3_SUPPORT
-void QApplication::setMainWidget(QWidget *mainWidget)
-{
-    QApplicationPrivate::main_widget = mainWidget;
-    if (QApplicationPrivate::main_widget) // give WM command line
-        QApplicationPrivate::applyQWSSpecificCommandLineArguments(QApplicationPrivate::main_widget);
-}
-#endif
-
 void QApplicationPrivate::applyQWSSpecificCommandLineArguments(QWidget *main_widget)
 {
     static bool beenHereDoneThat = false;
@@ -3565,17 +3556,8 @@ bool QETWidget::translateKeyEvent(const QWSKeyEvent *event, bool grab) /* grab i
         text += QChar(event->simpleData.unicode);
     code = event->simpleData.keycode;
 
-#if defined QT3_SUPPORT && !defined(QT_NO_SHORTCUT)
-    if (type == QEvent::KeyPress && !grab
-        && static_cast<QApplicationPrivate*>(qApp->d_ptr.data())->use_compat()) {
-        // send accel events if the keyboard is not grabbed
-        QKeyEvent a(type, code, state, text, autor, int(text.length()));
-        if (static_cast<QApplicationPrivate*>(qApp->d_ptr.data())->qt_tryAccelEvent(this, &a))
-            return true;
-    }
-#else
     Q_UNUSED(grab);
-#endif
+
     if (!text.isEmpty() && testAttribute(Qt::WA_KeyCompression)) {
         // the widget wants key compression so it gets it
 

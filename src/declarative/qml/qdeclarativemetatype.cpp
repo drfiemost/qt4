@@ -1155,9 +1155,6 @@ bool QDeclarativeMetaType::canCopy(int type)
     case QMetaType::QRegExp:
 #endif
     case QMetaType::Void:
-#ifdef QT3_SUPPORT
-    case QMetaType::QColorGroup:
-#endif
     case QMetaType::QFont:
     case QMetaType::QPixmap:
     case QMetaType::QBrush:
@@ -1325,13 +1322,6 @@ bool QDeclarativeMetaType::copy(int type, void *data, const void *copy)
 #endif
         case QMetaType::Void:
             return true;
-
-
-#ifdef QT3_SUPPORT
-        case QMetaType::QColorGroup:
-            *static_cast<NS(QColorGroup) *>(data) = *static_cast<const NS(QColorGroup)*>(copy);
-            return true;
-#endif
 
         case QMetaType::QFont:
             *static_cast<NS(QFont) *>(data) = *static_cast<const NS(QFont)*>(copy);
@@ -1534,12 +1524,6 @@ bool QDeclarativeMetaType::copy(int type, void *data, const void *copy)
 #endif
         case QMetaType::Void:
             return true;
-
-#ifdef QT3_SUPPORT
-        case QMetaType::QColorGroup:
-            *static_cast<NS(QColorGroup) *>(data) = NS(QColorGroup)();
-            return true;
-#endif
 
         case QMetaType::QFont:
             *static_cast<NS(QFont) *>(data) = NS(QFont)();

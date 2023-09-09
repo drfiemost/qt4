@@ -524,26 +524,6 @@ QChildEvent::~QChildEvent()
 */
 
 /*!
-    \fn QCustomEvent::QCustomEvent(int type, void *data)
-
-    Constructs a custom event object with the event \a type and a
-    pointer to \a data. The value of \a type must be at least as
-    large as QEvent::User. By default, the data pointer is set to 0.
-*/
-#ifdef QT3_SUPPORT
-QCustomEvent::QCustomEvent(int type, void *data)
-    : QEvent(static_cast<Type>(type))
-{
-    d = reinterpret_cast<QEventPrivate *>(data);
-}
-
-/*! \internal
-*/
-QCustomEvent::~QCustomEvent()
-{
-}
-#endif
-/*!
     \fn void QCustomEvent::setData(void *data)
 
     \compat

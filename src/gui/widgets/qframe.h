@@ -83,15 +83,6 @@ public:
         HLine = 0x0004, // horizontal line
         VLine = 0x0005, // vertical line
         StyledPanel = 0x0006 // rectangular panel depending on the GUI style
-
-#if defined(QT3_SUPPORT) && !defined(Q_MOC_RUN)
-        ,PopupPanel = StyledPanel, // rectangular panel depending on the GUI style
-        MenuBarPanel = StyledPanel,
-        ToolBarPanel = StyledPanel,
-        LineEditPanel = StyledPanel,
-        TabWidgetPanel = StyledPanel,
-        GroupBoxPanel = StyledPanel
-#endif
     };
     enum Shadow {
         Plain = 0x0010, // plain line
@@ -102,10 +93,6 @@ public:
     enum StyleMask {
         Shadow_Mask = 0x00f0, // mask for the shadow
         Shape_Mask = 0x000f // mask for the shape
-#if defined(QT3_SUPPORT)
-        ,MShadow = Shadow_Mask,
-        MShape = Shape_Mask
-#endif
     };
 
     Shape frameShape() const;
@@ -127,11 +114,6 @@ protected:
     void paintEvent(QPaintEvent *);
     void changeEvent(QEvent *);
     void drawFrame(QPainter *);
-
-#ifdef QT3_SUPPORT
-public:
-    QT3_SUPPORT_CONSTRUCTOR QFrame(QWidget* parent, const char* name, Qt::WindowFlags f = 0);
-#endif
 
 protected:
     QFrame(QFramePrivate &dd, QWidget* parent = 0, Qt::WindowFlags f = 0);

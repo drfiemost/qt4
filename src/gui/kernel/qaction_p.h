@@ -62,10 +62,6 @@ QT_BEGIN_NAMESPACE
 
 #ifndef QT_NO_ACTION
 
-#ifdef QT3_SUPPORT
-class QMenuItemEmitter;
-#endif
-
 class QShortcutMap;
 
 class Q_AUTOTEST_EXPORT QActionPrivate : public QObjectPrivate
@@ -130,10 +126,6 @@ public:
     static QShortcutMap *globalMap;
 #endif // QT_NO_SHORTCUT
 
-#ifdef QT3_SUPPORT //for menubar/menu compat
-    QMenuItemEmitter *act_signal;
-    int id, param;
-#endif
     void sendDataChanged();
 };
 

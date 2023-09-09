@@ -490,46 +490,6 @@ void QClipboard::setPixmap(const QPixmap &pixmap, Mode mode)
     \sa QClipboard::Mode, supportsSelection()
 */
 
-#ifdef QT3_SUPPORT
-/*!
-    \fn QMimeSource *QClipboard::data(Mode mode) const
-    \compat
-
-    Use mimeData() instead.
-*/
-QMimeSource *QClipboard::data(Mode mode) const
-{
-    Q_D(const QClipboard);
-
-    if (supportsMode(mode) == false)
-        return 0;
-
-    if (d->compat_data[mode])
-        return d->compat_data[mode];
-
-    d->wrapper[mode]->data = mimeData(mode);
-    return d->wrapper[mode];
-}
-
-
-/*!
-    \fn void QClipboard::setData(QMimeSource *src, Mode mode)
-    \compat
-
-    Use setMimeData() instead.
-*/
-void QClipboard::setData(QMimeSource *source, Mode mode)
-{
-    Q_D(QClipboard);
-
-    if (supportsMode(mode) == false)
-        return;
-
-    d->compat_data[mode] = source;
-    setMimeData(new QMimeSourceWrapper(d, mode), mode);
-}
-#endif // QT3_SUPPORT
-
 /*!
     Returns true if the clipboard supports mouse selection; otherwise
     returns false.

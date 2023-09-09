@@ -75,21 +75,7 @@ public:
     }
 
     bool isRecursive();
-/*
-#if defined(QT3_SUPPORT)
-    inline QT3_SUPPORT bool locked()
-    {
-        if (!tryLock())
-            return true;
-        unlock();
-        return false;
-    }
-    inline QT3_SUPPORT_CONSTRUCTOR QMutex(bool recursive)
-    {
-        new (this) QMutex(recursive ? Recursive : NonRecursive);
-    }
-#endif
-*/
+
 private:
     inline bool fastTryLock() {
         return d.testAndSetAcquire(0, dummyLocked());
@@ -181,10 +167,6 @@ public:
     static inline bool tryLock(int timeout = 0) { Q_UNUSED(timeout); return true; }
     static inline void unlock() {}
     static inline bool isRecursive() { return true; }
-
-#if defined(QT3_SUPPORT)
-    static inline QT3_SUPPORT bool locked() { return false; }
-#endif
 
 private:
     Q_DISABLE_COPY(QMutex)

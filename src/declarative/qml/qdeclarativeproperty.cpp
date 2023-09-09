@@ -1022,11 +1022,7 @@ bool QDeclarativePropertyPrivate::writeEnumProperty(const QMetaProperty &prop, i
     QVariant v = value;
     if (prop.isEnumType()) {
         QMetaEnum menum = prop.enumerator();
-        if (v.userType() == QVariant::String
-#ifdef QT3_SUPPORT
-            || v.userType() == QVariant::CString
-#endif
-            ) {
+        if (v.userType() == QVariant::String) {
             if (prop.isFlagType())
                 v = QVariant(menum.keysToValue(value.toByteArray()));
             else

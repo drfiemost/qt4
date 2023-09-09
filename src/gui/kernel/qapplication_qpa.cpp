@@ -635,17 +635,6 @@ void qt_cleanup()
     QApplicationPrivate::active_window = 0; //### this should not be necessary
 }
 
-
-#ifdef QT3_SUPPORT
-void QApplication::setMainWidget(QWidget *mainWidget)
-{
-    QApplicationPrivate::main_widget = mainWidget;
-    if (QApplicationPrivate::main_widget && windowIcon().isNull()
-        && QApplicationPrivate::main_widget->testAttribute(Qt::WA_SetWindowIcon))
-        setWindowIcon(QApplicationPrivate::main_widget->windowIcon());
-}
-#endif
-
 void QApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::MouseEvent *e)
 {
     static QWeakPointer<QWidget> implicit_mouse_grabber;

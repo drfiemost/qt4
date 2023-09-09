@@ -860,7 +860,6 @@ CFG_NAS=no
 CFG_QWS_DEPTHS=all
 CFG_USER_BUILD_KEY=
 CFG_ACCESSIBILITY=auto
-CFG_QT3SUPPORT=yes
 CFG_ENDIAN=auto
 CFG_HOST_ENDIAN=auto
 CFG_DOUBLEFORMAT=auto
@@ -6282,9 +6281,6 @@ if [ "$PLATFORM_QWS" = "yes" ]; then
                QMakeVar set QT_CFLAGS_DIRECTFB "$QT_CFLAGS_DIRECTFB"
                QMakeVar set QT_LIBS_DIRECTFB "$QT_LIBS_DIRECTFB"
            fi
-           if [ "$CFG_QT3SUPPORT" = "yes" ]; then
-               QMakeVar set QT_DEFINES_DIRECTFB "QT3_SUPPORT"
-           fi
 
            compileTest qws/directfb "DirectFB" $QT_CFLAGS_DIRECTFB $QT_LIBS_DIRECTFB
            if [ $? != "0" ]; then
@@ -6835,13 +6831,6 @@ macx*,yes)
 macx*,no)
     # gcc, Carbon
     QMakeVar set QMAKE_MACOSX_DEPLOYMENT_TARGET 10.4
-    ;;
-esac
-
-# disable Qt 3 support on VxWorks and INTEGRITY
-case "$XPLATFORM" in
-    unsupported/vxworks*|unsupported/integrity*)
-	CFG_QT3SUPPORT="no"
     ;;
 esac
 
@@ -8417,7 +8406,6 @@ if [ "$CFG_DEBUG_RELEASE" = "yes" ]; then
 else
    echo "Debug .................. $CFG_DEBUG"
 fi
-echo "Qt 3 compatibility ..... $CFG_QT3SUPPORT"
 [ "$CFG_DBUS" = "no" ]     && echo "QtDBus module .......... no"
 [ "$CFG_DBUS" = "yes" ]    && echo "QtDBus module .......... yes (run-time)"
 [ "$CFG_DBUS" = "linked" ] && echo "QtDBus module .......... yes (linked)"

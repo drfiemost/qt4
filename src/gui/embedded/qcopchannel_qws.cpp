@@ -157,19 +157,6 @@ QCopChannel::QCopChannel(const QString& channel, QObject *parent) :
     init(channel);
 }
 
-#ifdef QT3_SUPPORT
-/*!
-    Use the two argument overload instead, and call the
-    QObject::setObjectName() function to \a name the instance.
-*/
-QCopChannel::QCopChannel(const QString& channel, QObject *parent, const char *name) :
-    QObject(parent)
-{
-    setObjectName(QString::fromAscii(name));
-    init(channel);
-}
-#endif
-
 void QCopChannel::init(const QString& channel)
 {
     d = new QCopChannelPrivate;

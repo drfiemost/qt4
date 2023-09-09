@@ -79,9 +79,7 @@ class Q_CORE_EXPORT QCoreApplication : public QObject
     Q_DECLARE_PRIVATE(QCoreApplication)
 public:
     enum { ApplicationFlags = QT_VERSION
-#if !defined(QT3_SUPPORT)
         | 0x01000000
-#endif
     };
 
 #if defined(QT_BUILD_CORE_LIB) || defined(qdoc)
@@ -163,19 +161,6 @@ public:
                              Encoding encoding, int n);
 
     static void flush();
-
-#if defined(QT3_SUPPORT)
-    inline QT3_SUPPORT void lock() {}
-    inline QT3_SUPPORT void unlock(bool = true) {}
-    inline QT3_SUPPORT bool locked() { return false; }
-    inline QT3_SUPPORT bool tryLock() { return false; }
-
-    static inline QT3_SUPPORT void processOneEvent()
-    { processEvents(QEventLoop::WaitForMoreEvents); }
-    static QT3_SUPPORT int enter_loop();
-    static QT3_SUPPORT void exit_loop();
-    static QT3_SUPPORT int loopLevel();
-#endif
 
 #if defined(Q_WS_WIN)
     virtual bool winEventFilter(MSG *message, long *result);

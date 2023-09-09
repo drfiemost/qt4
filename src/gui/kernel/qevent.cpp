@@ -179,37 +179,6 @@ QMouseEvent::~QMouseEvent()
 {
 }
 
-#ifdef QT3_SUPPORT
-/*!
-    Use QMouseEvent(\a type, \a pos, \a button, \c buttons, \c
-    modifiers) instead, where \c buttons is \a state &
-    Qt::MouseButtonMask and \c modifiers is \a state &
-    Qt::KeyButtonMask.
-*/
-QMouseEvent::QMouseEvent(Type type, const QPoint &pos, Qt::ButtonState button, int state)
-    : QInputEvent(type), p(pos), b((Qt::MouseButton)button)
-{
-    g = QCursor::pos();
-    mouseState = Qt::MouseButtons((state ^ b) & Qt::MouseButtonMask);
-    modState = Qt::KeyboardModifiers(state & (int)Qt::KeyButtonMask);
-}
-
-/*!
-    Use QMouseEvent(\a type, \a pos, \a globalPos, \a button,
-    \c buttons, \c modifiers) instead, where
-    \c buttons is \a state & Qt::MouseButtonMask and
-    \c modifiers is \a state & Qt::KeyButtonMask.
-*/
-QMouseEvent::QMouseEvent(Type type, const QPoint &pos, const QPoint &globalPos,
-                         Qt::ButtonState button, int state)
-    : QInputEvent(type), p(pos), g(globalPos), b((Qt::MouseButton)button)
-{
-    mouseState = Qt::MouseButtons((state ^ b) & Qt::MouseButtonMask);
-    modState = Qt::KeyboardModifiers(state & (int)Qt::KeyButtonMask);
-}
-#endif
-
-
 /*!
     Constructs a mouse event object.
 
@@ -556,19 +525,6 @@ QWheelEvent::~QWheelEvent()
 {
 }
 
-#ifdef QT3_SUPPORT
-/*!
-    Use one of the other constructors instead.
-*/
-QWheelEvent::QWheelEvent(const QPoint &pos, int delta, int state, Qt::Orientation orient)
-    : QInputEvent(Wheel), p(pos), d(delta), o(orient)
-{
-    g = QCursor::pos();
-    mouseState = Qt::MouseButtons(state & Qt::MouseButtonMask);
-    modState = Qt::KeyboardModifiers(state & (int)Qt::KeyButtonMask);
-}
-#endif
-
 /*!
     Constructs a wheel event object.
 
@@ -586,18 +542,6 @@ QWheelEvent::QWheelEvent(const QPoint &pos, const QPoint& globalPos, int delta,
     : QInputEvent(Wheel, modifiers), p(pos), g(globalPos), d(delta), mouseState(buttons), o(orient)
 {}
 
-#ifdef QT3_SUPPORT
-/*!
-    Use one of the other constructors instead.
-*/
-QWheelEvent::QWheelEvent(const QPoint &pos, const QPoint& globalPos, int delta, int state,
-                         Qt::Orientation orient)
-    : QInputEvent(Wheel), p(pos), g(globalPos), d(delta), o(orient)
-{
-    mouseState = Qt::MouseButtons(state & Qt::MouseButtonMask);
-    modState = Qt::KeyboardModifiers(state & (int) Qt::KeyButtonMask);
-}
-#endif
 #endif // QT_NO_WHEELEVENT
 
 /*!
@@ -991,34 +935,6 @@ bool QKeyEvent::matches(QKeySequence::StandardKey matchKey) const
     \sa Qt::WA_KeyCompression
 */
 
-#ifdef QT3_SUPPORT
-/*!
-    \fn QKeyEvent::QKeyEvent(Type type, int key, int ascii,
-                             int modifiers, const QString &text,
-                             bool autorep, ushort count)
-
-    Use one of the other constructors instead.
-*/
-
-/*!
-    \fn int QKeyEvent::ascii() const
-
-    Use text() instead.
-*/
-
-/*!
-    \fn Qt::ButtonState QKeyEvent::state() const
-
-    Use QInputEvent::modifiers() instead.
-*/
-
-/*!
-    \fn Qt::ButtonState QKeyEvent::stateAfter() const
-
-    Use modifiers() instead.
-*/
-#endif
-
 /*!
     \class QFocusEvent
     \brief The QFocusEvent class contains event parameters for widget focus
@@ -1089,24 +1005,6 @@ Qt::FocusReason QFocusEvent::reason() const
     false.
 */
 
-#ifdef QT3_SUPPORT
-/*!
-    \enum QFocusEvent::Reason
-    \compat
-
-    Use Qt::FocusReason instead.
-
-    \value Mouse  Same as Qt::MouseFocusReason.
-    \value Tab  Same as Qt::TabFocusReason.
-    \value Backtab  Same as Qt::BacktabFocusReason.
-    \value MenuBar  Same as Qt::MenuBarFocusReason.
-    \value ActiveWindow  Same as Qt::ActiveWindowFocusReason
-    \value Other  Same as Qt::OtherFocusReason
-    \value Popup  Same as Qt::PopupFocusReason
-    \value Shortcut  Same as Qt::ShortcutFocusReason
-*/
-#endif
-
 /*!
     \class QPaintEvent
     \brief The QPaintEvent class contains event parameters for paint events.
@@ -1172,19 +1070,6 @@ QPaintEvent::QPaintEvent(const QRegion& paintRegion)
 QPaintEvent::QPaintEvent(const QRect &paintRect)
     : QEvent(Paint), m_rect(paintRect),m_region(paintRect), m_erased(false)
 {}
-
-
-#ifdef QT3_SUPPORT
- /*!
-    Constructs a paint event object with both a \a paintRegion and a
-    \a paintRect, both of which represent the area of the widget that
-    needs to be updated.
-
-*/
-QPaintEvent::QPaintEvent(const QRegion &paintRegion, const QRect &paintRect)
-    : QEvent(Paint), m_rect(paintRect), m_region(paintRegion), m_erased(false)
-{}
-#endif
 
 /*!
   \internal
@@ -1452,18 +1337,6 @@ QContextMenuEvent::QContextMenuEvent(Reason reason, const QPoint &pos, const QPo
     : QInputEvent(ContextMenu, modifiers), p(pos), gp(globalPos), reas(reason)
 {}
 
-#ifdef QT3_SUPPORT
-/*!
-    Constructs a context menu event with the given \a reason for the
-    position specified by \a pos in widget coordinates and \a globalPos
-    in global screen coordinates. \a dummy is ignored.
-*/
-QContextMenuEvent::QContextMenuEvent(Reason reason, const QPoint &pos, const QPoint &globalPos,
-                                     int /* dummy */)
-    : QInputEvent(ContextMenu), p(pos), gp(globalPos), reas(reason)
-{}
-#endif
-
 /*! \internal */
 QContextMenuEvent::~QContextMenuEvent()
 {
@@ -1487,24 +1360,6 @@ QContextMenuEvent::QContextMenuEvent(Reason reason, const QPoint &pos)
 {
     gp = QCursor::pos();
 }
-
-#ifdef QT3_SUPPORT
-/*!
-    Constructs a context menu event with the given \a reason for the
-    position specified by \a pos in widget coordinates. \a dummy is
-    ignored.
-*/
-QContextMenuEvent::QContextMenuEvent(Reason reason, const QPoint &pos, int /* dummy */)
-    : QInputEvent(ContextMenu), p(pos), reas(reason)
-{
-    gp = QCursor::pos();
-}
-
-Qt::ButtonState QContextMenuEvent::state() const
-{
-    return Qt::ButtonState(int(QApplication::keyboardModifiers())|QApplication::mouseButtons());
-}
-#endif
 
 /*!
     \fn const QPoint &QContextMenuEvent::pos() const
@@ -2537,37 +2392,6 @@ void QDropEvent::setDropAction(Qt::DropAction action)
     \sa setDropAction(), proposedAction(), {QEvent::accept()}{accept()}
 */
 
-#ifdef QT3_SUPPORT
-/*!
-    Use dropAction() instead.
-
-    The table below shows the correspondance between the return type
-    of action() and the return type of dropAction().
-
-    \table
-    \header \i Old enum value   \i New enum value
-    \row    \i QDropEvent::Copy \i Qt::CopyAction
-    \row    \i QDropEvent::Move \i Qt::MoveAction
-    \row    \i QDropEvent::Link \i Qt::LinkAction
-    \row    \i other            \i Qt::CopyAction
-    \endtable
-*/
-
-QT3_SUPPORT QDropEvent::Action QDropEvent::action() const
-{
-    switch(drop_action) {
-    case Qt::CopyAction:
-        return Copy;
-    case Qt::MoveAction:
-        return Move;
-    case Qt::LinkAction:
-        return Link;
-    default:
-        return Copy;
-    }
-}
-#endif
-
 /*!
     \fn void QDropEvent::setPoint(const QPoint &point)
     \compat
@@ -3320,10 +3144,6 @@ static const char *eventClassName(QEvent::Type t)
     case QEvent::ChildAdded:
     case QEvent::ChildPolished:
     case QEvent::ChildRemoved:
-#ifdef QT3_SUPPORT
-    case QEvent::ChildInsertedRequest:
-    case QEvent::ChildInserted:
-#endif
         return "QChildEvent";
     case QEvent::Paint:
         return "QPaintEvent";
@@ -3747,60 +3567,6 @@ QWindowStateChangeEvent::~QWindowStateChangeEvent()
 {
 }
 
-#ifdef QT3_SUPPORT
-
-/*!
-    \class QMenubarUpdatedEvent
-    \internal
-    Event sent by QMenuBar to tell Q3Workspace to update itself.
-*/
-
-/*! \internal
-
-*/
-QMenubarUpdatedEvent::QMenubarUpdatedEvent(QMenuBar * const menuBar)
-:QEvent(QEvent::MenubarUpdated), m_menuBar(menuBar) {}
-
-/*!
-    \fn QMenuBar *QMenubarUpdatedEvent::menuBar()
-    \internal
-*/
-
-/*!
-    \fn bool operator==(QKeyEvent *e, QKeySequence::StandardKey key)
-
-    \relates QKeyEvent
-
-    Returns true if \a key is currently bound to the key combination
-    specified by \a e.
-
-    Equivalent to \c {e->matches(key)}.
-*/
-
-/*!
-    \fn bool operator==(QKeySequence::StandardKey key, QKeyEvent *e)
-
-    \relates QKeyEvent
-
-    Returns true if \a key is currently bound to the key combination
-    specified by \a e.
-
-    Equivalent to \c {e->matches(key)}.
-*/
-
-/*!
-    \internal
-
-    \class QKeyEventEx
-    \ingroup events
-
-    \brief The QKeyEventEx class provides more extended information about a keyevent.
-
-    This class is for internal use only, and exists to aid the shortcut system on
-    various platforms to get all the information it needs.
-*/
-
-#endif
 
 /*!
     \class QTouchEvent

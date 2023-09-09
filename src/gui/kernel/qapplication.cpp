@@ -190,13 +190,6 @@ QApplicationPrivate::QApplicationPrivate(int &argc, char **argv, QApplication::T
 
     quitOnLastWindowClosed = true;
 
-#ifdef QT3_SUPPORT
-    qt_compat_used = 0;
-    qt_compat_resolved = 0;
-    qt_tryAccelEvent = 0;
-    qt_tryComposeUnicode = 0;
-    qt_dispatchAccelEvent = 0;
-#endif
 #if defined(Q_WS_QWS) && !defined(QT_NO_DIRECTPAINTER)
     directPainters = 0;
 #endif
@@ -1291,9 +1284,6 @@ QWidget *QApplication::widgetAt(const QPoint &p)
 bool QApplication::compressEvent(QEvent *event, QObject *receiver, QPostEventList *postedEvents)
 {
     if ((event->type() == QEvent::UpdateRequest
-#ifdef QT3_SUPPORT
-          || event->type() == QEvent::LayoutHint
-#endif
           || event->type() == QEvent::LayoutRequest
           || event->type() == QEvent::Resize
           || event->type() == QEvent::Move
@@ -1305,9 +1295,6 @@ bool QApplication::compressEvent(QEvent *event, QObject *receiver, QPostEventLis
             if (cur.receiver != receiver || cur.event == 0 || cur.event->type() != event->type())
                 continue;
             if (cur.event->type() == QEvent::LayoutRequest
-#ifdef QT3_SUPPORT
-                 || cur.event->type() == QEvent::LayoutHint
-#endif
                  || cur.event->type() == QEvent::UpdateRequest) {
                 ;
             } else if (cur.event->type() == QEvent::Resize) {
@@ -1584,10 +1571,6 @@ void QApplication::setStyle(QStyle *style)
             if (w->windowType() != Qt::Desktop && !w->testAttribute(Qt::WA_SetStyle)) {
                     QEvent e(QEvent::StyleChange);
                     QApplication::sendEvent(w, &e);
-#ifdef QT3_SUPPORT
-                    if (old)
-                        w->styleChange(*old);
-#endif
                     w->update();
             }
         }
@@ -3729,23 +3712,6 @@ Qt::LayoutDirection QApplication::layoutDirection()
     return layout_direction;
 }
 
-
-/*!
-    \obsolete
-
-    Strips out vertical alignment flags and transforms an alignment \a align
-    of Qt::AlignLeft into Qt::AlignLeft or Qt::AlignRight according to the
-    language used.
-*/
-
-#ifdef QT3_SUPPORT
-Qt::Alignment QApplication::horizontalAlignment(Qt::Alignment align)
-{
-    return QStyle::visualAlignment(layoutDirection(), align);
-}
-#endif
-
-
 /*!
     \fn QCursor *QApplication::overrideCursor()
 
@@ -3883,11 +3849,6 @@ bool QApplication::notify(QObject *receiver, QEvent *e)
         case QEvent::DragEnter: case QEvent::DragMove: case QEvent::DragLeave:
         case QEvent::Drop: case QEvent::DragResponse:
         case QEvent::ChildAdded: case QEvent::ChildPolished:
-#ifdef QT3_SUPPORT
-        case QEvent::ChildInsertedRequest:
-        case QEvent::ChildInserted:
-        case QEvent::LayoutHint:
-#endif
         case QEvent::ChildRemoved:
         case QEvent::UpdateRequest:
         case QEvent::UpdateLater:
@@ -3946,24 +3907,6 @@ bool QApplication::notify(QObject *receiver, QEvent *e)
     if (!receiver->isWidgetType()) {
         res = d->notify_helper(receiver, e);
     } else switch (e->type()) {
-#if defined QT3_SUPPORT && !defined(QT_NO_SHORTCUT)
-    case QEvent::Accel:
-        {
-            if (d->use_compat()) {
-                QKeyEvent* key = static_cast<QKeyEvent*>(e);
-                res = d->notify_helper(receiver, e);
-
-                if (!res && !key->isAccepted())
-                    res = d->qt_dispatchAccelEvent(static_cast<QWidget *>(receiver), key);
-
-                // next lines are for compatibility with Qt <= 3.0.x: old
-                // QAccel was listening on toplevel widgets
-                if (!res && !key->isAccepted() && !static_cast<QWidget *>(receiver)->isWindow())
-                    res = d->notify_helper(static_cast<QWidget *>(receiver)->window(), e);
-            }
-            break;
-        }
-#endif //QT3_SUPPORT && !QT_NO_SHORTCUT
     case QEvent::ShortcutOverride:
     case QEvent::KeyPress:
     case QEvent::KeyRelease:
@@ -3979,10 +3922,6 @@ bool QApplication::notify(QObject *receiver, QEvent *e)
             }
 
             QKeyEvent* key = static_cast<QKeyEvent*>(e);
-#if defined QT3_SUPPORT && !defined(QT_NO_SHORTCUT)
-            if (d->use_compat() && d->qt_tryComposeUnicode(static_cast<QWidget*>(receiver), key))
-                break;
-#endif
             if (key->type()==QEvent::KeyPress) {
 #ifndef QT_NO_SHORTCUT
                 // Try looking for a Shortcut before sending key events
@@ -5115,12 +5054,6 @@ void QSessionManager::requestPhase2()
     \snippet doc/src/snippets/code/src_gui_kernel_qapplication.cpp 13
 */
 
-#ifdef QT3_SUPPORT
-QWidget *QApplication::mainWidget()
-{
-    return QApplicationPrivate::main_widget;
-}
-#endif
 bool QApplicationPrivate::inPopupMode() const
 {
     return QApplicationPrivate::popupWidgets != 0;

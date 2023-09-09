@@ -101,12 +101,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef QT3_SUPPORT
-static QHash<void *, QByteArray> *asciiCache = 0;
-Q_GLOBAL_STATIC(QMutex, asciiCacheMutex)
-
-#endif
-
 #ifdef QT_USE_ICU
 // qlocale_icu.cpp
 extern bool qt_ucol_strcoll(const QChar *source, int sourceLength, const QChar *target, int targetLength, int *result);
@@ -1217,13 +1211,6 @@ QString::QString(QChar ch)
 // ### Qt 5: rename freeData() to avoid confusion. See task 197625.
 void QString::free(Data *d)
 {
-#ifdef QT3_SUPPORT
-    if (d->asciiCache) {
-        QMutexLocker locker(asciiCacheMutex());
-        Q_ASSERT(asciiCache);
-        asciiCache->remove(d);
-    }
-#endif
     ::free(d);
 }
 
@@ -1350,13 +1337,6 @@ void QString::realloc(int alloc)
             QString::free(d);
         d = x;
     } else {
-#ifdef QT3_SUPPORT
-        if (d->asciiCache) {
-            QMutexLocker locker(asciiCacheMutex());
-            Q_ASSERT(asciiCache);
-            asciiCache->remove(d);
-        }
-#endif
         Data *p = static_cast<Data *>(::realloc(d, sizeof(Data) + (alloc+1) * sizeof(QChar)));
         Q_CHECK_PTR(p);
         d = p;
@@ -3864,46 +3844,6 @@ QString QString::fromLatin1(const char *str, int size)
     return QString(fromLatin1_helper(str, size), 0);
 }
 
-
-#ifdef QT3_SUPPORT
-
-/*!
-  \internal
-*/
-const char *QString::ascii_helper() const
-{
-    QMutexLocker locker(asciiCacheMutex());
-    if (!asciiCache)
-        asciiCache = new QHash<void *, QByteArray>();
-
-    d->asciiCache = true;
-    QByteArray ascii = toAscii();
-    QByteArray old = asciiCache->value(d);
-    if (old == ascii)
-        return old.constData();
-    asciiCache->insert(d, ascii);
-    return ascii.constData();
-}
-
-/*!
-  \internal
-*/
-const char *QString::latin1_helper() const
-{
-    QMutexLocker locker(asciiCacheMutex());
-    if (!asciiCache)
-        asciiCache = new QHash<void *, QByteArray>();
-
-    d->asciiCache = true;
-    QByteArray ascii = toLatin1();
-    QByteArray old = asciiCache->value(d);
-    if (old == ascii)
-        return old.constData();
-    asciiCache->insert(d, ascii);
-    return ascii.constData();
-}
-
-#endif
 
 /*!
     Returns a QString initialized with the first \a size characters
@@ -7173,13 +7113,6 @@ QString &QString::setRawData(const QChar *unicode, int size)
    if (d->ref.isShared() || d->alloc) {
         *this = fromRawData(unicode, size);
     } else {
-#ifdef QT3_SUPPORT
-        if (d->asciiCache) {
-            QMutexLocker locker(asciiCacheMutex());
-            Q_ASSERT(asciiCache);
-            asciiCache->remove(d);
-        }
-#endif
         if (unicode) {
             d->size = size;
             d->offset = reinterpret_cast<const char *>(unicode) - reinterpret_cast<char *>(d);
