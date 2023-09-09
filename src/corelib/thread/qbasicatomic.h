@@ -64,6 +64,36 @@ public:
     volatile int _q_value;
 #endif
 
+    // Non-atomic API
+    Q_DECL_DEPRECATED inline bool operator==(int value) const
+    {
+        return _q_value == value;
+    }
+
+    Q_DECL_DEPRECATED inline bool operator!=(int value) const
+    {
+        return _q_value != value;
+    }
+
+    Q_DECL_DEPRECATED inline bool operator!() const
+    {
+        return _q_value == 0;
+    }
+/*
+    inline operator int() const
+    {
+        return _q_value;
+    }
+
+    inline QBasicAtomicInt &operator=(int value)
+    {
+#ifdef QT_ARCH_PARISC
+        this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
+#endif
+        _q_value = value;
+        return *this;
+    }
+*/
     // Atomic API, implemented in qatomic_XXX.h
 
     int load() const { return _q_value; }
@@ -124,6 +154,41 @@ public:
 #else
     T * volatile _q_value;
 #endif
+
+    // Non-atomic API
+    Q_DECL_DEPRECATED inline bool operator==(T *value) const
+    {
+        return _q_value == value;
+    }
+
+    Q_DECL_DEPRECATED inline bool operator!=(T *value) const
+    {
+        return !operator==(value);
+    }
+
+    Q_DECL_DEPRECATED inline bool operator!() const
+    {
+        return operator==(nullptr);
+    }
+
+    Q_DECL_DEPRECATED inline operator T *() const
+    {
+        return _q_value;
+    }
+
+    Q_DECL_DEPRECATED inline T *operator->() const
+    {
+        return _q_value;
+    }
+
+    Q_DECL_DEPRECATED inline QBasicAtomicPointer<T> &operator=(T *value)
+    {
+#ifdef QT_ARCH_PARISC
+        this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
+#endif
+        _q_value = value;
+        return *this;
+    }
 
     // Atomic API, implemented in qatomic_XXX.h
 
