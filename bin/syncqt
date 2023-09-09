@@ -77,7 +77,6 @@ my %modules = ( # path to module name map
         "QtDeclarative" => "$basedir/src/declarative",
         "QtScript" => "$basedir/src/script",
         "QtScriptTools" => "$basedir/src/scripttools",
-        "Qt3Support" => "$basedir/src/qt3support",
         "ActiveQt" => "$basedir/src/activeqt",
         "QtTest" => "$basedir/src/testlib",
         "QtHelp" => "$basedir/tools/assistant/lib",
@@ -776,7 +775,6 @@ foreach my $lib (@modules_to_sync) {
                         $master_contents .= "#include <QtDeclarative/QtDeclarative>\n" if($_ eq "declarative");
                         $master_contents .= "#include <QtScript/QtScript>\n" if($_ eq "script");
                         $master_contents .= "#include <QtScriptTools/QtScriptTools>\n" if($_ eq "scripttools");
-                        $master_contents .= "#include <Qt3Support/Qt3Support>\n" if($_ eq "qt3support");
                         $master_contents .= "#include <QtSql/QtSql>\n" if($_ eq "sql");
                         $master_contents .= "#include <QtXml/QtXml>\n" if($_ eq "xml");
                         $master_contents .= "#include <QtXmlPatterns/QtXmlPatterns>\n" if($_ eq "xmlpatterns");

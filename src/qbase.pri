@@ -21,7 +21,7 @@ win32 {
     #sure the same version is used
 	VERSIONS_LIST = $$split(VERSION, ".")
     QT_LIBS_OVERRIDE = $$member(VERSIONS_LIST, 0)
-	for(lib, $$list(qtcore qtgui qtnetwork qtxml qtopengl qtsql qt3support)) {
+	for(lib, $$list(qtcore qtgui qtnetwork qtxml qtopengl qtsql)) {
         eval(QMAKE_$${upper($$lib)}_VERSION_OVERRIDE = $$QT_LIBS_OVERRIDE)
 	eval(QMAKE_$${upper($$lib)}D_VERSION_OVERRIDE = $$QT_LIBS_OVERRIDE)
     }
@@ -134,7 +134,6 @@ unix {
 
 contains(QT_PRODUCT, OpenSource.*):DEFINES *= QT_OPENSOURCE
 DEFINES *= QT_NO_CAST_TO_ASCII QT_ASCII_CAST_WARNINGS
-contains(QT_CONFIG, qt3support):DEFINES *= QT3_SUPPORT
 DEFINES *= QT_MOC_COMPAT #we don't need warnings from calling moc code in our generated code
 DEFINES *= QT_USE_QSTRINGBUILDER
 

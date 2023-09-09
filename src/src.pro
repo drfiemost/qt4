@@ -7,7 +7,6 @@ SRC_SUBDIRS += src_corelib src_xml src_network src_sql src_testlib
 nacl: SRC_SUBDIRS -= src_network src_testlib
 contains(QT_CONFIG, dbus):SRC_SUBDIRS += src_dbus
 !contains(QT_CONFIG, no-gui): SRC_SUBDIRS += src_gui
-!wince*:!vxworks:!integrity:contains(QT_CONFIG, qt3support): SRC_SUBDIRS += src_qt3support
 
 !wince*:include(tools/tools.pro)
 win32:SRC_SUBDIRS += src_activeqt
@@ -48,8 +47,6 @@ src_opengl.subdir = $$QT_SOURCE_TREE/src/opengl
 src_opengl.target = sub-opengl
 src_openvg.subdir = $$QT_SOURCE_TREE/src/openvg
 src_openvg.target = sub-openvg
-src_qt3support.subdir = $$QT_SOURCE_TREE/src/qt3support
-src_qt3support.target = sub-qt3support
 src_activeqt.subdir = $$QT_SOURCE_TREE/src/activeqt
 src_activeqt.target = sub-activeqt
 src_plugins.subdir = $$QT_SOURCE_TREE/src/plugins
@@ -77,15 +74,12 @@ src_declarative.target = sub-declarative
    src_openvg.depends = src_gui
    src_sql.depends = src_corelib
    src_testlib.depends = src_corelib
-   src_qt3support.depends = src_gui src_xml src_network src_sql
    src_tools_idc.depends = src_corelib             # target defined in tools.pro
-   src_tools_uic3.depends = src_qt3support src_xml # target defined in tools.pro
    src_activeqt.depends = src_tools_idc src_gui
    src_declarative.depends = src_gui src_script src_network
    src_plugins.depends = src_gui src_sql src_svg
    contains(QT_CONFIG, declarative):src_plugins.depends += src_declarative
    src_imports.depends = src_gui src_declarative
-   contains(QT_CONFIG, qt3support): src_plugins.depends += src_qt3support
    contains(QT_CONFIG, dbus):{
       src_plugins.depends += src_dbus
    }
