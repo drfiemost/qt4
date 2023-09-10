@@ -78,6 +78,7 @@ public:
         this->store(other.load());
     }
 
+    Q_DECL_DEPRECATED
     inline QAtomicInt &operator=(int value)
     {
         this->store(value);
@@ -90,21 +91,25 @@ public:
         return *this;
     }
 
+    Q_DECL_DEPRECATED
     inline bool operator==(int value) const
     {
         return this->load() == value;
     }
 
+    Q_DECL_DEPRECATED
     inline bool operator!=(int value) const
     {
         return this->load() != value;
     }
 
+    Q_DECL_DEPRECATED
     inline operator int() const
     {
         return this->load();
     }
 
+    Q_DECL_DEPRECATED
     inline bool operator!() const
     {
         return !this->load();
@@ -163,6 +168,7 @@ public:
         this->store(other.load());
     }
 
+    Q_DECL_DEPRECATED
     inline QAtomicPointer<T> &operator=(T *value)
     {
         this->store(value);
@@ -175,26 +181,31 @@ public:
         return *this;
     }
 
+    Q_DECL_DEPRECATED
     inline bool operator==(T *value) const
     {
         return this->load() == value;
     }
 
+    Q_DECL_DEPRECATED
     inline bool operator!=(T *value) const
     {
         return this->load() != value;
     }
 
+    Q_DECL_DEPRECATED
     inline bool operator!() const
     {
         return !this->load();
     }
 
+    Q_DECL_DEPRECATED
     inline operator T *() const
     {
         return this->load();
     }
 
+    Q_DECL_DEPRECATED
     inline T *operator->() const
     {
         return this->load();
@@ -259,7 +270,7 @@ inline void qAtomicAssign(T *&d, T *x)
 template <typename T>
 inline void qAtomicDetach(T *&d)
 {
-    if (d->ref == 1)
+    if (d->ref.load() == 1)
         return;
     T *x = d;
     d = new T(*d);

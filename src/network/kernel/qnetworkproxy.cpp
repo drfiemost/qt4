@@ -420,7 +420,7 @@ public:
 
 template<> void QSharedDataPointer<QNetworkProxyPrivate>::detach()
 {
-    if (d && d->ref == 1)
+    if (d && d->ref.load() == 1)
         return;
     QNetworkProxyPrivate *x = (d ? new QNetworkProxyPrivate(*d)
                                : new QNetworkProxyPrivate);
@@ -740,7 +740,7 @@ public:
 
 template<> void QSharedDataPointer<QNetworkProxyQueryPrivate>::detach()
 {
-    if (d && d->ref == 1)
+    if (d && d->ref.load() == 1)
         return;
     QNetworkProxyQueryPrivate *x = (d ? new QNetworkProxyQueryPrivate(*d)
                                     : new QNetworkProxyQueryPrivate);

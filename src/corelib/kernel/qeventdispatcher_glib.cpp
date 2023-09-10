@@ -280,7 +280,7 @@ static gboolean postEventSourcePrepare(GSource *s, gint *timeout)
     *timeout = canWait ? -1 : 0;
 
     return (!canWait
-            || (source->serialNumber != source->lastSerialNumber));
+            || (source->serialNumber.load() != source->lastSerialNumber));
 }
 
 static gboolean postEventSourceCheck(GSource *source)
@@ -291,7 +291,7 @@ static gboolean postEventSourceCheck(GSource *source)
 static gboolean postEventSourceDispatch(GSource *s, GSourceFunc, gpointer)
 {
     GPostEventSource *source = reinterpret_cast<GPostEventSource *>(s);
-    source->lastSerialNumber = source->serialNumber;
+    source->lastSerialNumber = source->serialNumber.load();
     QEventLoop::ProcessEventsFlags excludeAllFlags
         = QEventLoop::ExcludeUserInputEvents
         | QEventLoop::ExcludeSocketNotifiers
@@ -344,7 +344,7 @@ QEventDispatcherGlibPrivate::QEventDispatcherGlibPrivate(GMainContext *context)
     // setup post event source
     postEventSource = reinterpret_cast<GPostEventSource *>(g_source_new(&postEventSourceFuncs,
                                                                         sizeof(GPostEventSource)));
-    postEventSource->serialNumber = 1;
+    postEventSource->serialNumber.store(1);
     postEventSource->processEventsFlags = QEventLoop::AllEvents;
     postEventSource->d = this;
     g_source_set_can_recurse(&postEventSource->source, true);

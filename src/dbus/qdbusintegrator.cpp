@@ -563,7 +563,7 @@ bool QDBusConnectionPrivate::handleMessage(const QDBusMessage &amsg)
         (*(*list)[i])(amsg);
     }
 
-    if (!ref)
+    if (!ref.load())
         return false;
 
     switch (amsg.type()) {
@@ -2017,7 +2017,7 @@ QDBusPendingCallPrivate *QDBusConnectionPrivate::sendWithReplyAsync(const QDBusM
 
         if ((receiver && returnMethod) || errorMethod) {
            // no one waiting, will delete pcall in processFinishedCall()
-           pcall->ref = 1;
+           pcall->ref.store(1);
         } else {
            // set double ref to prevent race between processFinishedCall() and ref counting
            // by QDBusPendingCall::QExplicitlySharedDataPointer<QDBusPendingCallPrivate>

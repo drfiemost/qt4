@@ -148,13 +148,12 @@ public:
         dirtyControlBounds(false),
         pathConverter(0)
     {
-        ref = 1;
         require_moveTo = false;
         convex = false;
     }
 
     QPainterPathData(const QPainterPathData &other) :
-        QPainterPathPrivate(), cStart(other.cStart), fillRule(other.fillRule),
+        cStart(other.cStart), fillRule(other.fillRule),
         bounds(other.bounds),
         controlBounds(other.controlBounds),
         dirtyBounds(other.dirtyBounds),
@@ -162,7 +161,6 @@ public:
         convex(other.convex),
         pathConverter(0)
     {
-        ref = 1;
         require_moveTo = false;
         elements = other.elements;
     }
@@ -245,7 +243,7 @@ inline bool QPainterPathData::isClosed() const
 
 inline void QPainterPathData::close()
 {
-    Q_ASSERT(ref == 1);
+    Q_ASSERT(ref.load() == 1);
     require_moveTo = true;
     const QPainterPath::Element &first = elements.at(cStart);
     QPainterPath::Element &last = elements.last();

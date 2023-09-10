@@ -152,7 +152,7 @@ QMutex::~QMutex()
         delete static_cast<QRecursiveMutexPrivate *>(d.load());
     else if (d.load()) {
 #ifndef Q_OS_LINUX
-        if (d.load()->possiblyUnlocked && tryLock()) { unlock(); return; }
+        if (d.load()->possiblyUnlocked.load() && tryLock()) { unlock(); return; }
 #endif
         qWarning("QMutex: destroying locked mutex");
     }
@@ -356,7 +356,7 @@ bool QBasicMutex::lockInternal(int timeout)
              return static_cast<QRecursiveMutexPrivate *>(d)->lock(timeout);
         }
 
-        if (timeout == 0 && !d->possiblyUnlocked)
+        if (timeout == 0 && !d->possiblyUnlocked.load())
             return false;
 
         if (!d->ref())
@@ -370,14 +370,14 @@ bool QBasicMutex::lockInternal(int timeout)
 
         int old_waiters;
         do {
-            old_waiters = d->waiters;
+            old_waiters = d->waiters.load();
             if (old_waiters == -QMutexPrivate::BigNumber) {
                 // we are unlocking, and the thread that unlocks is about to change d to 0
                 // we try to aquire the mutex by changing to dummyLocked()
                 if (this->d.testAndSetAcquire(d, dummyLocked())) {
                     // Mutex aquired
                     Q_ASSERT(d->waiters.load() == -QMutexPrivate::BigNumber || d->waiters == 0);
-                    d->waiters = 0;
+                    d->waiters.store(0);
                     d->deref();
                     return true;
                 } else {
@@ -402,7 +402,7 @@ bool QBasicMutex::lockInternal(int timeout)
         }
 
         if (d->wait(timeout)) {
-            if (d->possiblyUnlocked && d->possiblyUnlocked.testAndSetRelaxed(true, false))
+            if (d->possiblyUnlocked.load() && d->possiblyUnlocked.testAndSetRelaxed(true, false))
                 d->deref();
             d->derefWaiters(1);
             //we got the lock. (do not deref)
@@ -440,7 +440,7 @@ void QBasicMutex::unlockInternal()
     if (d->waiters.fetchAndAddRelease(-QMutexPrivate::BigNumber) == 0) {
         //there is no one waiting on this mutex anymore, set the mutex as unlocked (d = 0)
         if (this->d.testAndSetRelease(d, 0)) {
-            if (d->possiblyUnlocked && d->possiblyUnlocked.testAndSetRelaxed(true, false))
+            if (d->possiblyUnlocked.load() && d->possiblyUnlocked.testAndSetRelaxed(true, false))
                 d->deref();
         }
         d->derefWaiters(0);
@@ -474,20 +474,20 @@ QMutexPrivate *QMutexPrivate::allocate()
     int i = freelist()->next();
     QMutexPrivate *d = &(*freelist())[i];
     d->id = i;
-    Q_ASSERT(d->refCount == 0);
+    Q_ASSERT(d->refCount.load() == 0);
     Q_ASSERT(!d->recursive);
-    Q_ASSERT(!d->possiblyUnlocked);
-    Q_ASSERT(d->waiters == 0);
-    d->refCount = 1;
+    Q_ASSERT(!d->possiblyUnlocked.load());
+    Q_ASSERT(d->waiters.load() == 0);
+    d->refCount.store(1);
     return d;
 }
 
 void QMutexPrivate::release()
 {
     Q_ASSERT(!recursive);
-    Q_ASSERT(refCount == 0);
-    Q_ASSERT(!possiblyUnlocked);
-    Q_ASSERT(waiters == 0);
+    Q_ASSERT(refCount.load() == 0);
+    Q_ASSERT(!possiblyUnlocked.load());
+    Q_ASSERT(waiters.load() == 0);
     freelist()->release(id);
 }
 
@@ -497,7 +497,7 @@ void QMutexPrivate::derefWaiters(int value)
     int old_waiters;
     int new_waiters;
     do {
-        old_waiters = waiters;
+        old_waiters = waiters.load();
         new_waiters = old_waiters;
         if (new_waiters < 0) {
             new_waiters += QMutexPrivate::BigNumber;

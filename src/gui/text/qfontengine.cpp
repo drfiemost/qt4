@@ -184,9 +184,8 @@ static HB_Error hb_getSFntTable(void *font, HB_Tag tableTag, HB_Byte *buffer, HB
 // QFontEngine
 
 QFontEngine::QFontEngine()
-    : QObject()
+    : QObject(), ref(0)
 {
-    ref = 0;
     cache_count = 0;
     fsType = 0;
     symbol = false;

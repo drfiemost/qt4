@@ -770,7 +770,7 @@ QFont::QFont(QFontPrivate *data)
 */
 void QFont::detach()
 {
-    if (d->ref == 1) {
+    if (d->ref.load() == 1) {
         if (d->engineData && !d->engineData->ref.deref())
             delete d->engineData;
         d->engineData = 0;
@@ -2774,7 +2774,7 @@ QFontCache::~QFontCache()
                 delete it.value();
             else
                 FC_DEBUG("QFontCache::~QFontCache: engineData %p still has refcount %d",
-                         static_cast<void*>(it.value()), int(it.value()->ref));
+                         static_cast<void*>(it.value()), it.value()->ref.load());
             ++it;
         }
     }
@@ -2860,7 +2860,7 @@ QFontEngine *QFontCache::findEngine(const Key &key)
              static_cast<void*>(it.value().data),
              it.value().timestamp,
              it.value().hits,
-             int(it.value().data->ref),
+             it.value().data->ref.load(),
              it.value().data->cache_count,
              it.value().data->name());
 
@@ -3027,7 +3027,7 @@ void QFontCache::timerEvent(QTimerEvent *)
 #  endif // Q_WS_X11 || Q_WS_WIN
 #endif // QFONTCACHE_DEBUG
 
-            if (it.value()->ref > 1)
+            if (it.value()->ref.load() > 1)
                 in_use_cost += engine_data_cost;
         }
     }
@@ -3042,11 +3042,11 @@ void QFontCache::timerEvent(QTimerEvent *)
                      static_cast<void*>(it.value().data),
                      it.value().timestamp,
                      it.value().hits,
-                     int(it.value().data->ref),
+                     it.value().data->ref.load(),
                      it.value().data->cache_count,
                      it.value().data->cache_cost);
 
-            if (it.value().data->ref > 1)
+            if (it.value().data->ref.load() > 1)
                 in_use_cost += it.value().data->cache_cost / it.value().data->cache_count;
         }
 
@@ -3096,7 +3096,7 @@ void QFontCache::timerEvent(QTimerEvent *)
         EngineDataCache::Iterator it = engineDataCache.begin(),
                                  end = engineDataCache.end();
         while (it != end) {
-            if (it.value()->ref > 1) {
+            if (it.value()->ref.load() > 1) {
                 ++it;
                 continue;
             }
@@ -3124,7 +3124,7 @@ void QFontCache::timerEvent(QTimerEvent *)
         uint least_popular = ~0u;
 
         for (; it != end; ++it) {
-            if (it.value().data->ref > 1)
+            if (it.value().data->ref.load() > 1)
                 continue;
 
             if (it.value().timestamp < oldest &&
@@ -3137,7 +3137,7 @@ void QFontCache::timerEvent(QTimerEvent *)
         FC_DEBUG("    oldest %u least popular %u", oldest, least_popular);
 
         for (it = engineCache.begin(); it != end; ++it) {
-            if (it.value().data->ref == 1 &&
+            if (it.value().data->ref.load() == 1 &&
                  it.value().timestamp == oldest &&
                  it.value().hits == least_popular)
                 break;
@@ -3148,7 +3148,7 @@ void QFontCache::timerEvent(QTimerEvent *)
                      static_cast<void*>(it.value().data),
                      it.value().timestamp,
                      it.value().hits,
-                     int(it.value().data->ref),
+                     it.value().data->ref.load(),
                      it.value().data->cache_count,
                      it.value().data->name());
 

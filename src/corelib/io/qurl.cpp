@@ -3424,23 +3424,16 @@ static QString qt_ACE_do(const QString &domain, AceOperation op)
 }
 
 
-QUrlPrivate::QUrlPrivate()
+QUrlPrivate::QUrlPrivate() : ref(1), port(-1), parsingMode(QUrl::TolerantMode),
+    hasQuery(false), hasFragment(false), isValid(false), isHostValid(true),
+    valueDelimiter('='), pairDelimiter('&'),
+    stateFlags(0)
 {
-    ref = 1;
-    port = -1;
-    isValid = false;
-    isHostValid = true;
-    parsingMode = QUrl::TolerantMode;
-    valueDelimiter = '=';
-    pairDelimiter = '&';
-    stateFlags = 0;
-    hasFragment = false;
-    hasQuery = false;
 }
 
 // Called by normalized() and detach(). Must hold copy.mutex.
 QUrlPrivate::QUrlPrivate(const QUrlPrivate &copy)
-    : scheme(copy.scheme),
+    : ref(1), scheme(copy.scheme),
       userName(copy.userName),
       password(copy.password),
       host(copy.host),
@@ -3462,7 +3455,8 @@ QUrlPrivate::QUrlPrivate(const QUrlPrivate &copy)
       pairDelimiter(copy.pairDelimiter),
       stateFlags(copy.stateFlags),
       encodedNormalized(copy.encodedNormalized)
-{ ref = 1; }
+{
+}
 
 QString QUrlPrivate::canonicalHost() const
 {
@@ -6238,7 +6232,7 @@ void QUrl::detach(QMutexLocker &locker)
 */
 bool QUrl::isDetached() const
 {
-    return !d || d->ref == 1;
+    return !d || d->ref.load() == 1;
 }
 
 

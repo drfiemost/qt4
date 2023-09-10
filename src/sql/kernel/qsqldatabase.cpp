@@ -133,11 +133,11 @@ class QSqlDatabasePrivate
 {
 public:
     QSqlDatabasePrivate(QSqlDatabase *d, QSqlDriver *dr = 0):
+        ref(1),
         q(d),
         driver(dr),
         port(-1)
     {
-        ref = 1;
         precisionPolicy= QSql::LowPrecisionDouble;
     }
     QSqlDatabasePrivate(const QSqlDatabasePrivate &other);
@@ -168,9 +168,8 @@ public:
     static void cleanConnections();
 };
 
-QSqlDatabasePrivate::QSqlDatabasePrivate(const QSqlDatabasePrivate &other)
+QSqlDatabasePrivate::QSqlDatabasePrivate(const QSqlDatabasePrivate &other) : ref(1)
 {
-    ref = 1;
     q = other.q;
     dbname = other.dbname;
     uname = other.uname;
@@ -231,7 +230,7 @@ QSqlDatabasePrivate *QSqlDatabasePrivate::shared_null()
 
 void QSqlDatabasePrivate::invalidateDb(const QSqlDatabase &db, const QString &name, bool doWarn)
 {
-    if (db.d->ref != 1 && doWarn) {
+    if (db.d->ref.load() != 1 && doWarn) {
         qWarning("QSqlDatabasePrivate::removeDatabase: connection '%s' is still in use, "
                  "all queries will cease to work.", name.toLocal8Bit().constData());
         db.d->disable();

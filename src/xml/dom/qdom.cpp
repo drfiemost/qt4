@@ -1153,18 +1153,16 @@ void QDomImplementation::setInvalidDataPolicy(InvalidDataPolicy policy)
  *
  **************************************************************/
 
-QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl)
+QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl) : ref(1)
 {
-    ref  = 1;
     node_impl = n_impl;
     if (node_impl)
         node_impl->ref.ref();
     timestamp = 0;
 }
 
-QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl, const QString &name)
+QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl, const QString &name) : ref(1)
 {
-    ref = 1;
     node_impl = n_impl;
     if (node_impl)
         node_impl->ref.ref();
@@ -1172,9 +1170,8 @@ QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl, const QString 
     timestamp = 0;
 }
 
-QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl, const QString &_nsURI, const QString &localName)
+QDomNodeListPrivate::QDomNodeListPrivate(QDomNodePrivate *n_impl, const QString &_nsURI, const QString &localName) : ref(1)
 {
-    ref = 1;
     node_impl = n_impl;
     if (node_impl)
         node_impl->ref.ref();
@@ -1449,9 +1446,8 @@ inline void QDomNodePrivate::setOwnerDocument(QDomDocumentPrivate *doc)
     hasParent = false;
 }
 
-QDomNodePrivate::QDomNodePrivate(QDomDocumentPrivate *doc, QDomNodePrivate *par)
+QDomNodePrivate::QDomNodePrivate(QDomDocumentPrivate *doc, QDomNodePrivate *par) : ref(1)
 {
-    ref = 1;
     if (par)
         setParent(par);
     else
@@ -1465,9 +1461,8 @@ QDomNodePrivate::QDomNodePrivate(QDomDocumentPrivate *doc, QDomNodePrivate *par)
     columnNumber = -1;
 }
 
-QDomNodePrivate::QDomNodePrivate(QDomNodePrivate *n, bool deep)
+QDomNodePrivate::QDomNodePrivate(QDomNodePrivate *n, bool deep) : ref(1)
 {
-    ref = 1;
     setOwnerDocument(n->ownerDocument());
     prev = 0;
     next = 0;
@@ -3052,9 +3047,8 @@ int QDomNode::columnNumber() const
  *
  **************************************************************/
 
-QDomNamedNodeMapPrivate::QDomNamedNodeMapPrivate(QDomNodePrivate* n)
+QDomNamedNodeMapPrivate::QDomNamedNodeMapPrivate(QDomNodePrivate* n) : ref(1)
 {
-    ref = 1;
     readonly = false;
     parent = n;
     appendToParent = false;
@@ -4509,7 +4503,7 @@ void QDomElementPrivate::setAttributeNS(const QString& nsURI, const QString& qNa
 void QDomElementPrivate::removeAttribute(const QString& aname)
 {
     QDomNodePrivate* p = m_attr->removeNamedItem(aname);
-    if (p && p->ref == 0)
+    if (p && p->ref.load() == 0)
         delete p;
 }
 

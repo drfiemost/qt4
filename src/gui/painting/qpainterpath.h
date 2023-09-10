@@ -249,6 +249,9 @@ public:
     friend Q_GUI_EXPORT QDataStream &operator<<(QDataStream &, const QPainterPath &);
     friend Q_GUI_EXPORT QDataStream &operator>>(QDataStream &, QPainterPath &);
 #endif
+
+    QPainterPathPrivate() : ref(1) {}
+
 private:
     QAtomicInt ref;
     QVector<QPainterPath::Element> elements;
@@ -419,7 +422,7 @@ inline void QPainterPath::setElementPositionAt(int i, qreal x, qreal y)
 
 inline void QPainterPath::detach()
 {
-    if (d_ptr->ref != 1)
+    if (d_ptr->ref.load() != 1)
         detach_helper();
     setDirty(true);
 }
