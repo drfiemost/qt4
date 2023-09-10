@@ -225,6 +225,9 @@ private slots:
     void QTBUG9281_arg_locale();
 
     void toUpperLower_icu();
+    void literals();
+
+    void reserve();
 };
 
 typedef QList<int> IntList;
@@ -5134,6 +5137,41 @@ void tst_QString::toUpperLower_icu()
 
     // the cleanup function will restore the default locale
 }
+
+void tst_QString::literals()
+{
+#if defined(QT_UNICODE_LITERAL) && (defined(Q_COMPILER_LAMBDA) || defined(Q_CC_GNU))
+    QString str(QStringLiteral("abcd"));
+
+    QVERIFY(str.length() == 4);
+    QVERIFY(str == QLatin1String("abcd"));
+    QVERIFY(str.data_ptr()->ref == -1);
+    QVERIFY(str.data_ptr()->offset == sizeof(QStringData));
+
+    const QChar *s = str.constData();
+    QString str2 = str;
+    QVERIFY(str2.constData() == s);
+
+    // detach on non const access
+    QVERIFY(str.data() != s);
+
+    QVERIFY(str2.constData() == s);
+    QVERIFY(str2.data() != s);
+
+#else
+    QSKIP("Only tested on c++0x compliant compiler or gcc", SkipAll);
+#endif
+}
+
+void tst_QString::reserve()
+{
+    QString nil1, nil2;
+    nil1.reserve(0);
+    nil2.squeeze();
+    nil1.squeeze();
+    nil2.reserve(0);
+}
+
 
 
 QTEST_APPLESS_MAIN(tst_QString)

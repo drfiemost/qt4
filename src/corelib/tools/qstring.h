@@ -91,6 +91,12 @@ struct QStringData {
     inline const ushort *data() const { return reinterpret_cast<const ushort *>(reinterpret_cast<const char *>(this) + offset); }
 };
 
+template<int N> struct QStaticStringData;
+template<int N> struct QStaticStringDataPtr
+{
+    const QStaticStringData<N> *ptr;
+};
+
 
 #if defined(Q_COMPILER_UNICODE_STRINGS)
 
@@ -98,34 +104,60 @@ template<int N> struct QStaticStringData
 {
     QStringData str;
     char16_t data[N + 1];
-    operator const QStringData &() const { return str; }
 };
-#define QStringLiteral(str) (const QStaticStringData<sizeof(u"" str)/2>) \
-{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(u"" str)/2, 0, 0, sizeof(QStringData) }, u"" str }
+#define QT_UNICODE_LITERAL_II(str) u"" str
 
-// wchar_t is 2 bytes
 #elif defined(Q_OS_WIN) || (defined(__SIZEOF_WCHAR_T__) && __SIZEOF_WCHAR_T__ == 2) || defined(WCHAR_MAX) && (WCHAR_MAX - 0 < 65536)
-
+// wchar_t is 2 bytes
 template<int N> struct QStaticStringData
 {
     QStringData str;
     wchar_t data[N + 1];
-    operator const QStringData &() const { return str; }
 };
-#define QStringLiteral(str) (const QStaticStringData<sizeof(L"" str)/2>) \
-{ { Q_REFCOUNT_INITIALIZE_STATIC, sizeof(L"" str)/2, 0, 0, sizeof(QStringData) }, L"" str }
 
-// fallback, uses QLatin1String as next best options
+#if defined(Q_CC_MSVC)
+#    define QT_UNICODE_LITERAL_II(str) L##str
 #else
+#    define QT_UNICODE_LITERAL_II(str) L"" str
+#endif
 
+#else
 template<int N> struct QStaticStringData
 {
-    QStringData str;
-    ushort data[N + 1];
-    operator const QStringData &() const { return str; }
+    const QStringData str;
+    const ushort data[N + 1];
 };
-#define QStringLiteral(str) QLatin1String(str)
+#endif
 
+#if defined(QT_UNICODE_LITERAL_II)
+#  define QT_UNICODE_LITERAL(str) QT_UNICODE_LITERAL_II(str)
+# if defined(Q_COMPILER_LAMBDA)
+#  define QStringLiteral(str) ([]() -> QStaticStringDataPtr<sizeof(QT_UNICODE_LITERAL(str))/2 - 1> { \
+        enum { Size = sizeof(QT_UNICODE_LITERAL(str))/2 - 1 }; \
+        static const QStaticStringData<Size> qstring_literal = \
+        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, sizeof(QStringData) }, QT_UNICODE_LITERAL(str) }; \
+        QStaticStringDataPtr<Size> holder = { &qstring_literal }; \
+    return holder; }())
+
+# elif defined(Q_CC_GNU)
+// We need to create a QStringData in the .rodata section of memory
+// and the only way to do that is to create a "static const" variable.
+// To do that, we need the __extension__ {( )} trick which only GCC supports
+
+#  define QStringLiteral(str) \
+    __extension__ ({ \
+        enum { Size = sizeof(QT_UNICODE_LITERAL(str))/2 - 1 }; \
+        static const QStaticStringData<Size> qstring_literal = \
+        { {Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, sizeof(QStringData) }, QT_UNICODE_LITERAL(str) }; \
+        QStaticStringDataPtr<Size> holder = { &qstring_literal }; \
+        holder; })
+# endif
+#endif
+
+#ifndef QStringLiteral
+// no lambdas, not GCC, or GCC in C++98 mode with 4-byte wchar_t
+// fallback, uses QLatin1String as next best options
+# define QStringLiteral(str) QLatin1String(str)
 #endif
 
 #ifndef QT_NO_KEYWORDS
@@ -574,6 +606,8 @@ public:
     QString(int size, Qt::Initialization);
     template <int n>
     inline QString(const QStaticStringData<n> &dd) : d(const_cast<QStringData *>(&dd.str)) {}
+    template <int N>
+    inline QString(QStaticStringDataPtr<N> dd) : d(const_cast<QStringData *>(&dd.ptr->str)) {}
 
 private:
 #if defined(QT_NO_CAST_FROM_ASCII) && !defined(Q_NO_DECLARED_NOT_DEFINED)
