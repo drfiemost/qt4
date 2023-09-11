@@ -54,7 +54,7 @@ QT_MODULE(Core)
 
 #if !defined(QT_NO_THREAD) && !defined(qdoc)
 
-class QMutexPrivate;
+class QMutexData;
 
 class Q_CORE_EXPORT QBasicMutex
 {
@@ -65,8 +65,8 @@ public:
     }
 
     inline void unlock() {
-        Q_ASSERT(d.load()); //mutex must be locked
-        if (!d.testAndSetRelease(dummyLocked(), 0))
+        Q_ASSERT(d_ptr.load()); //mutex must be locked
+        if (!d_ptr.testAndSetRelease(dummyLocked(), 0))
             unlockInternal();
     }
 
@@ -78,17 +78,18 @@ public:
 
 private:
     inline bool fastTryLock() {
-        return d.testAndSetAcquire(0, dummyLocked());
+        return d_ptr.testAndSetAcquire(0, dummyLocked());
     }
     bool lockInternal(int timeout = -1);
     void unlockInternal();
-    QBasicAtomicPointer<QMutexPrivate> d;
-    static inline QMutexPrivate *dummyLocked() {
-        return reinterpret_cast<QMutexPrivate *>(quintptr(1));
+
+    QBasicAtomicPointer<QMutexData> d_ptr;
+    static inline QMutexData *dummyLocked() {
+        return reinterpret_cast<QMutexData *>(quintptr(1));
     }
 
     friend class QMutex;
-    friend class QMutexPrivate;
+    friend class QMutexData;
 };
 
 class Q_CORE_EXPORT QMutex : public QBasicMutex {
