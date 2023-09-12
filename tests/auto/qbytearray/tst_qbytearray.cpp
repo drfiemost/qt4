@@ -1534,7 +1534,7 @@ void tst_QByteArray::reserve()
 
 void tst_QByteArray::literals()
 {
-#if defined(Q_COMPILER_LAMBDA) || defined(Q_CC_GNU)
+#if defined(Q_COMPILER_LAMBDA)
     QByteArray str(QByteArrayLiteral("abcd"));
 
     QVERIFY(str.length() == 4);

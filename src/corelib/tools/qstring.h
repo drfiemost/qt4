@@ -85,59 +85,53 @@ struct QStringData {
     int size;
     uint alloc : 31;
     uint capacityReserved : 1;
+
     qptrdiff offset;
 
     inline ushort *data() { return reinterpret_cast<ushort *>(reinterpret_cast<char *>(this) + offset); } 
     inline const ushort *data() const { return reinterpret_cast<const ushort *>(reinterpret_cast<const char *>(this) + offset); }
 };
 
-template<int N> struct QStaticStringData;
-template<int N> struct QStaticStringDataPtr
-{
-    const QStaticStringData<N> *ptr;
-};
-
-
 #if defined(Q_COMPILER_UNICODE_STRINGS)
 
-template<int N> struct QStaticStringData
-{
-    QStringData str;
-    char16_t data[N + 1];
-};
 #define QT_UNICODE_LITERAL_II(str) u"" str
+typedef char16_t qunicodechar;
 
 #elif defined(Q_OS_WIN) || (defined(__SIZEOF_WCHAR_T__) && __SIZEOF_WCHAR_T__ == 2) || defined(WCHAR_MAX) && (WCHAR_MAX - 0 < 65536)
 // wchar_t is 2 bytes
-template<int N> struct QStaticStringData
-{
-    QStringData str;
-    wchar_t data[N + 1];
-};
+
 
 #if defined(Q_CC_MSVC)
 #    define QT_UNICODE_LITERAL_II(str) L##str
 #else
 #    define QT_UNICODE_LITERAL_II(str) L"" str
 #endif
+typedef wchar_t qunicodechar;
 
 #else
-template<int N> struct QStaticStringData
-{
-    const QStringData str;
-    const ushort data[N + 1];
-};
+
+#define QT_NO_UNICODE_LITERAL
+typedef ushort qunicodechar;
+
 #endif
 
-#if defined(QT_UNICODE_LITERAL_II)
+static_assert(sizeof(qunicodechar) == 2,
+        "qunicodechar must typedef an integral type of size 2");
+
+#ifndef QT_NO_UNICODE_LITERAL
 #  define QT_UNICODE_LITERAL(str) QT_UNICODE_LITERAL_II(str)
 # if defined(Q_COMPILER_LAMBDA)
-#  define QStringLiteral(str) ([]() -> QStaticStringDataPtr<sizeof(QT_UNICODE_LITERAL(str))/2 - 1> { \
+
+#  define QStringLiteral(str) \
+    ([]() -> QStringDataPtr { \
         enum { Size = sizeof(QT_UNICODE_LITERAL(str))/2 - 1 }; \
-        static const QStaticStringData<Size> qstring_literal = \
-        { { Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, sizeof(QStringData) }, QT_UNICODE_LITERAL(str) }; \
-        QStaticStringDataPtr<Size> holder = { &qstring_literal }; \
-    return holder; }())
+        static const QStaticStringData<Size> qstring_literal = { \
+            Q_STATIC_STRING_DATA_HEADER_INITIALIZER(Size), \
+            QT_UNICODE_LITERAL(str) }; \
+        QStringDataPtr holder = { qstring_literal.data_ptr() }; \
+        return holder; \
+    }()) \
+    /**/
 
 # elif defined(Q_CC_GNU)
 // We need to create a QStringData in the .rodata section of memory
@@ -147,12 +141,24 @@ template<int N> struct QStaticStringData
 #  define QStringLiteral(str) \
     __extension__ ({ \
         enum { Size = sizeof(QT_UNICODE_LITERAL(str))/2 - 1 }; \
-        static const QStaticStringData<Size> qstring_literal = \
-        { {Q_REFCOUNT_INITIALIZE_STATIC, Size, 0, 0, sizeof(QStringData) }, QT_UNICODE_LITERAL(str) }; \
-        QStaticStringDataPtr<Size> holder = { &qstring_literal }; \
-        holder; })
+        static const QStaticStringData<Size> qstring_literal = { \
+            Q_STATIC_STRING_DATA_HEADER_INITIALIZER(Size), \
+            QT_UNICODE_LITERAL(str) }; \
+        QStringDataPtr holder = { qstring_literal.data_ptr() }; \
+        holder; \
+    }) \
+    /**/
+
 # endif
-#endif
+#endif // QT_NO_UNICODE_LITERAL
+
+#define Q_STATIC_STRING_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, offset) \
+    { Q_REFCOUNT_INITIALIZE_STATIC, size, 0, 0, offset } \
+    /**/
+
+#define Q_STATIC_STRING_DATA_HEADER_INITIALIZER(size) \
+    Q_STATIC_STRING_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, sizeof(QStringData)) \
+    /**/
 
 #ifndef QStringLiteral
 // no lambdas, not GCC, or GCC in C++98 mode with 4-byte wchar_t
@@ -163,6 +169,26 @@ template<int N> struct QStaticStringData
 #ifndef QT_NO_KEYWORDS
 #define qs(str) QStringLiteral(str)
 #endif
+
+template<int N>
+struct QStaticStringData
+{
+    QStringData str;
+    qunicodechar data[N + 1];
+
+    QStringData *data_ptr() const
+    {
+        Q_ASSERT(str.ref.isStatic());
+        return const_cast<QStringData *>(&str);
+    }
+};
+
+
+struct QStringDataPtr
+{
+    QStringData *ptr;
+};
+
 
 class Q_CORE_EXPORT QString
 {
@@ -596,7 +622,7 @@ public:
     // compatibility
     struct Null { };
     static const Null null;
-    inline QString(const Null &): d(const_cast<Data *>(&shared_null.str)) {}
+    inline QString(const Null &): d(shared_null.data_ptr()) {}
     inline QString &operator=(const Null &) { *this = QString(); return *this; }
     inline bool isNull() const { return d == &shared_null.str; }
 
@@ -604,10 +630,7 @@ public:
     bool isRightToLeft() const;
 
     QString(int size, Qt::Initialization);
-    template <int n>
-    inline QString(const QStaticStringData<n> &dd) : d(const_cast<QStringData *>(&dd.str)) {}
-    template <int N>
-    inline QString(QStaticStringDataPtr<N> dd) : d(const_cast<QStringData *>(&dd.ptr->str)) {}
+    Q_DECL_CONSTEXPR inline QString(QStringDataPtr dd) : d(dd.ptr) {}
 
 private:
 #if defined(QT_NO_CAST_FROM_ASCII) && !defined(Q_NO_DECLARED_NOT_DEFINED)
@@ -622,7 +645,6 @@ private:
     static const QStaticStringData<1> shared_null;
     static const QStaticStringData<1> shared_empty;
     Data *d;
-    inline QString(Data *dd, int /*dummy*/) : d(dd) {}
 
     static int grow(int);
     static void free(Data *);
@@ -862,7 +884,7 @@ inline void QCharRef::setRow(uchar arow) { QChar(*this).setRow(arow); }
 inline void QCharRef::setCell(uchar acell) { QChar(*this).setCell(acell); }
 
 
-inline QString::QString() : d(const_cast<Data *>(&shared_null.str)) {}
+inline QString::QString() : d(shared_null.data_ptr()) {}
 inline QString::~QString() { if (!d->ref.deref()) free(d); }
 inline void QString::reserve(int asize) { if (d->ref.isShared() || asize > (int)d->alloc) realloc(asize); d->capacityReserved = true;}
 inline QString &QString::setUtf16(const ushort *autf16, int asize)
