@@ -713,6 +713,17 @@ const QString::Null QString::null = { };
 
     \section1 More Efficient String Construction
 
+    Many strings are known at compile time. But the trivial
+    constructor QString("Hello"), will convert the string literal
+    to a QString using the codecForCStrings(). To avoid this one
+    can use the QStringLiteral macro to directly create the required
+    data at compile time. Constructing a QString out of the literal
+    does then not cause any overhead at runtime.
+    A slightly less efficient way is to use QLatin1String. This class wraps
+    a C string literal, precalculates it length at compile time and can
+    then be used for faster comparison with QStrings and conversion to
+    QStrings than a regular C string literal.
+
     Using the QString \c{'+'} operator, it is easy to construct a
     complex string from multiple substrings. You will often write code
     like this:
@@ -727,9 +738,6 @@ const QString::Null QString::null = { };
     multiple memory allocations. When concatenating \e{n} substrings,
     where \e{n > 2}, there can be as many as \e{n - 1} calls to the
     memory allocator.
-
-    Second, QLatin1String does not store its length internally but
-    calls qstrlen() when it needs to know its length.
 
     In 4.6, an internal template class \c{QStringBuilder} has been
     added along with a few helper functions. This class is marked
@@ -747,12 +755,6 @@ const QString::Null QString::null = { };
     required for the final result is known. The memory allocator is
     then called \e{once} to get the required space, and the substrings
     are copied into it one by one.
-
-    \c{QLatin1Literal} is a second internal class that can replace
-    QLatin1String, which can't be changed for compatibility reasons.
-    \c{QLatin1Literal} stores its length, thereby saving time when
-    \c{QStringBuilder} computes the amount of memory required for the
-    final string.
 
     Additional efficiency is gained by inlining and reduced reference
     counting (the QString created from a \c{QStringBuilder} typically
@@ -2096,7 +2098,7 @@ QString &QString::replace(const QLatin1String &before,
                           const QString &after,
                           Qt::CaseSensitivity cs)
 {
-    int blen = qstrlen(before.latin1());
+    int blen = before.size();
     QVarLengthArray<ushort> b(blen);
     for (int i = 0; i < blen; ++i)
         b[i] = (uchar)before.latin1()[i];
@@ -2119,7 +2121,7 @@ QString &QString::replace(const QString &before,
                           const QLatin1String &after,
                           Qt::CaseSensitivity cs)
 {
-    int alen = qstrlen(after.latin1());
+    int alen = after.size();
     QVarLengthArray<ushort> a(alen);
     for (int i = 0; i < alen; ++i)
         a[i] = (uchar)after.latin1()[i];
@@ -2140,7 +2142,7 @@ QString &QString::replace(const QString &before,
 */
 QString &QString::replace(QChar c, const QLatin1String &after, Qt::CaseSensitivity cs)
 {
-    int alen = qstrlen(after.latin1());
+    int alen = after.size();
     QVarLengthArray<ushort> a(alen);
     for (int i = 0; i < alen; ++i)
         a[i] = (uchar)after.latin1()[i];
@@ -2170,20 +2172,23 @@ bool QString::operator==(const QString &other) const
 */
 bool QString::operator==(const QLatin1String &other) const
 {
+    if (d->size != other.size())
+        return false;
+
+    if (!other.size())
+        return isEmpty();
+
     const ushort *uc = d->data();
     const ushort *e = uc + d->size;
     const uchar *c = (uchar *)other.latin1();
 
-    if (!c)
-        return isEmpty();
-
-    while (*c) {
-        if (uc == e || *uc != *c)
+    while (uc < e) {
+        if (*uc != *c)
             return false;
         ++uc;
         ++c;
     }
-    return (uc == e);
+    return true;
 }
 
 /*! \fn bool QString::operator==(const QByteArray &other) const
@@ -2232,20 +2237,20 @@ bool QString::operator<(const QString &other) const
 */
 bool QString::operator<(const QLatin1String &other) const
 {
-    const ushort *uc = d->data();
-    const ushort *e = uc + d->size;
     const uchar *c = (uchar *) other.latin1();
-
     if (!c || *c == 0)
         return false;
 
-    while (*c) {
-        if (uc == e || *uc != *c)
+    const ushort *uc = d->data();
+    const ushort *e = uc + qMin(d->size, other.size());
+
+    while (uc < e) {
+        if (*uc != *c)
             break;
         ++uc;
         ++c;
     }
-    return (uc == e ? *c : *uc < *c);
+    return (uc == (d->data() + d->size) ? *c : *uc < *c);
 }
 
 /*! \fn bool QString::operator<(const QByteArray &other) const
@@ -2334,20 +2339,20 @@ bool QString::operator<(const QLatin1String &other) const
 */
 bool QString::operator>(const QLatin1String &other) const
 {
-    const ushort *uc = d->data();
-    const ushort *e = uc + d->size;
     const uchar *c = (uchar *) other.latin1();
-
     if (!c || *c == '\0')
         return !isEmpty();
 
-    while (*c) {
-        if (uc == e || *uc != *c)
+    const ushort *uc = d->data();;
+    const ushort *e = uc + qMin(d->size, other.size());
+
+    while (uc < e) {
+        if (*uc != *c)
             break;
         ++uc;
         ++c;
     }
-    return (uc == e ? false : *uc > *c);
+    return (uc == (d->data() + d->size) ? false : *uc > *c);
 }
 
 /*! \fn bool QString::operator>(const QByteArray &other) const
@@ -2716,7 +2721,7 @@ int QString::lastIndexOf(const QString &str, int from, Qt::CaseSensitivity cs) c
 */
 int QString::lastIndexOf(const QLatin1String &str, int from, Qt::CaseSensitivity cs) const
 {
-    const uint sl = qstrlen(str.latin1());
+    const uint sl = str.size();
     if (sl == 1)
         return lastIndexOf(QLatin1Char(str.latin1()[0]), from, cs);
 
@@ -3861,8 +3866,10 @@ QString QString::fromLocal8Bit(const char *str, int size)
 {
     if (!str)
         return QString();
-    if (size == 0 || (!*str && size < 0))
-        return QLatin1String("");
+    if (size == 0 || (!*str && size < 0)) {
+        QStringDataPtr empty = { shared_empty.data_ptr() };
+        return QString(empty);
+    }
 #if !defined(QT_NO_TEXTCODEC)
     if (size < 0)
         size = qstrlen(str);
@@ -7487,7 +7494,7 @@ QDataStream &operator>>(QDataStream &in, QString &str)
                 }
             }
         } else {
-            str = QLatin1String("");
+            str = QString(QLatin1String(""));
         }
     }
     return in;
@@ -8459,7 +8466,7 @@ int QStringRef::lastIndexOf(QChar ch, int from, Qt::CaseSensitivity cs) const
 */
 int QStringRef::lastIndexOf(QLatin1String str, int from, Qt::CaseSensitivity cs) const
 {
-    const int sl = qstrlen(str.latin1());
+    const int sl = str.size();
     if (sl == 1)
         return lastIndexOf(QLatin1Char(str.latin1()[0]), from, cs);
 
@@ -8812,7 +8819,7 @@ static inline int qt_find_latin1_string(const QChar *haystack, int size,
                                         int from, Qt::CaseSensitivity cs)
 {
     const char *latin1 = needle.latin1();
-    int len = qstrlen(latin1);
+    int len = needle.size();
     QVarLengthArray<ushort> s(len);
     for (int i = 0; i < len; ++i)
         s[i] = latin1[i];
@@ -8853,7 +8860,7 @@ static inline bool qt_starts_with(const QChar *haystack, int haystackLen,
         return !needle.latin1();
     if (haystackLen == 0)
         return !needle.latin1() || *needle.latin1() == 0;
-    const int slen = qstrlen(needle.latin1());
+    const int slen = needle.size();
     if (slen > haystackLen)
         return false;
     const ushort *data = reinterpret_cast<const ushort*>(haystack);
@@ -8904,7 +8911,7 @@ static inline bool qt_ends_with(const QChar *haystack, int haystackLen,
         return !needle.latin1();
     if (haystackLen == 0)
         return !needle.latin1() || *needle.latin1() == 0;
-    const int slen = qstrlen(needle.latin1());
+    const int slen = needle.size();
     int pos = haystackLen - slen;
     if (pos < 0)
         return false;

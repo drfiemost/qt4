@@ -59,22 +59,6 @@ QT_BEGIN_NAMESPACE
 
 QT_MODULE(Core)
 
-// ### Qt 5: merge with QLatin1String
-class QLatin1Literal
-{
-public:
-    int size() const { return m_size; }
-    const char *data() const { return m_data; }
-
-    template <int N>
-    QLatin1Literal(const char (&str)[N])
-        : m_size(N - 1), m_data(str) {}
-
-private:
-    const int m_size;
-    const char * const m_data;
-};
-
 struct Q_CORE_EXPORT QAbstractConcatenable
 {
 protected:
@@ -224,31 +208,13 @@ template <> struct QConcatenable<QLatin1String>
     typedef QLatin1String type;
     typedef QString ConvertTo;
     enum { ExactSize = true };
-    static int size(const QLatin1String &a) { return qstrlen(a.latin1()); }
+    static int size(const QLatin1String &a) { return a.size(); }
     static inline void appendTo(const QLatin1String &a, QChar *&out)
-    {
-        for (const char *s = a.latin1(); *s; )
-            *out++ = QLatin1Char(*s++);
-    }
-    static inline void appendTo(const QLatin1String &a, char *&out)
-    {
-        for (const char *s = a.latin1(); *s; )
-            *out++ = *s++;
-    }
-};
-
-template <> struct QConcatenable<QLatin1Literal>
-{
-    typedef QLatin1Literal type;
-    typedef QString ConvertTo;
-    enum { ExactSize = true };
-    static int size(const QLatin1Literal &a) { return a.size(); }
-    static inline void appendTo(const QLatin1Literal &a, QChar *&out)
     {
         for (const char *s = a.data(); *s; )
             *out++ = QLatin1Char(*s++);
     }
-    static inline void appendTo(const QLatin1Literal &a, char *&out)
+    static inline void appendTo(const QLatin1String &a, char *&out)
     {
         for (const char *s = a.data(); *s; )
             *out++ = *s++;
@@ -270,6 +236,23 @@ template <> struct QConcatenable<QString> : private QAbstractConcatenable
 #ifndef QT_NO_CAST_TO_ASCII
     static inline QT_ASCII_CAST_WARN void appendTo(const QString &a, char *&out)
     { convertToAscii(a.constData(), a.length(), out); }
+#endif
+};
+
+template <> struct QConcatenable<QStringDataPtr> : private QAbstractConcatenable
+{
+    typedef QStringDataPtr type;
+    typedef QString ConvertTo;
+    enum { ExactSize = true };
+    static int size(const type &a) { return a.ptr->size; }
+    static inline void appendTo(const type &a, QChar *&out)
+    {
+        memcpy(out, reinterpret_cast<const char*>(a.ptr->data()), sizeof(QChar) * a.ptr->size);
+        out += a.ptr->size;
+    }
+#ifndef QT_NO_CAST_TO_ASCII
+    static inline QT_ASCII_CAST_WARN void appendTo(const type &a, char *&out)
+    { convertToAscii(a.ptr->data(), a.ptr->size, out); }
 #endif
 };
 
