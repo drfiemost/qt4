@@ -7,7 +7,10 @@ HEADERS += thread/qmutex.h \
            thread/qthread.h \
            thread/qthreadstorage.h \
            thread/qwaitcondition.h \
-           thread/qatomic.h
+           thread/qatomic.h \
+           thread/qbasicatomic.h \
+           thread/qgenericatomic.h \
+           thread/qoldbasicatomic.h
 
 # private headers
 HEADERS += thread/qmutex_p.h \
