@@ -1,39 +1,37 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2011 Thiago Macieira <thiago@kde.org>
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
-**
 ** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** This file may be used under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation and
+** appearing in the file LICENSE.LGPL included in the packaging of this
+** file. Please review the following information to ensure the GNU Lesser
+** General Public License version 2.1 requirements will be met:
 ** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
+** In addition, as a special exception, Nokia gives you certain additional
+** rights. These rights are described in the Nokia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
+** Alternatively, this file may be used under the terms of the GNU General
+** Public License version 3.0 as published by the Free Software Foundation
+** and appearing in the file LICENSE.GPL included in the packaging of this
+** file. Please review the following information to ensure the GNU General
+** Public License version 3.0 requirements will be met:
+** http://www.gnu.org/copyleft/gpl.html.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms and
+** conditions contained in a signed written agreement between you and Nokia.
+**
+**
+**
+**
 **
 ** $QT_END_LICENSE$
 **
@@ -44,201 +42,184 @@
 
 #include <QtCore/qglobal.h>
 
+#if defined(QT_MOC) || defined(QT_BUILD_QMAKE) || defined(QT_RCC) || defined(QT_UIC) || defined(QT_BOOTSTRAPPED)
+#  include <QtCore/qatomic_bootstrap.h>
+#elif defined(Q_CC_MSVC)
+  // not ported yet
+#  define QT_OLD_ATOMICS
+#elif defined(__i386) || defined(__i386__)
+#  include <QtCore/qatomic_i386.h>
+#elif defined(__x86_64) || defined(__x86_64__) || defined(__amd64)
+#  include <QtCore/qatomic_x86_64.h>
+#else
+#  define QT_OLD_ATOMICS
+#endif
+
+#ifdef QT_OLD_ATOMICS
+# include "QtCore/qoldbasicatomic.h"
+# undef QT_OLD_ATOMICS
+#else
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
 QT_MODULE(Core)
 
-class Q_CORE_EXPORT QBasicAtomicInt
-{
-public:
-#ifdef QT_ARCH_PARISC
-    int _q_lock[4];
-#endif
-#if defined(QT_ARCH_WINDOWS) || defined(QT_ARCH_WINDOWSCE)
-    union { // needed for Q_BASIC_ATOMIC_INITIALIZER
-        volatile long _q_value;
-    };
-#else
-    volatile int _q_value;
+#if 0
+#pragma qt_no_master_include
+#pragma qt_sync_stop_processing
 #endif
 
-    // Non-atomic API
-    Q_DECL_DEPRECATED inline bool operator==(int value) const
-    {
-        return _q_value == value;
-    }
-
-    Q_DECL_DEPRECATED inline bool operator!=(int value) const
-    {
-        return _q_value != value;
-    }
-
-    Q_DECL_DEPRECATED inline bool operator!() const
-    {
-        return _q_value == 0;
-    }
-/*
-    inline operator int() const
-    {
-        return _q_value;
-    }
-
-    inline QBasicAtomicInt &operator=(int value)
-    {
-#ifdef QT_ARCH_PARISC
-        this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
-#endif
-        _q_value = value;
-        return *this;
-    }
-*/
-    // Atomic API, implemented in qatomic_XXX.h
-
-    int load() const { return _q_value; }
-    int loadAcquire() const { return _q_value; }
-    void store(int newValue) { _q_value = newValue; }
-    void storeRelease(int newValue) { _q_value = newValue; }
-    operator int() const { return loadAcquire(); }
-    int operator=(int newValue) { storeRelease(newValue); return newValue; }
-
-    static bool isReferenceCountingNative();
-    static bool isReferenceCountingWaitFree();
-
-    bool ref();
-    bool deref();
-
-    static bool isTestAndSetNative();
-    static bool isTestAndSetWaitFree();
-
-    bool testAndSetRelaxed(int expectedValue, int newValue);
-    bool testAndSetAcquire(int expectedValue, int newValue);
-    bool testAndSetRelease(int expectedValue, int newValue);
-    bool testAndSetOrdered(int expectedValue, int newValue);
-
-    static bool isFetchAndStoreNative();
-    static bool isFetchAndStoreWaitFree();
-
-    int fetchAndStoreRelaxed(int newValue);
-    int fetchAndStoreAcquire(int newValue);
-    int fetchAndStoreRelease(int newValue);
-    int fetchAndStoreOrdered(int newValue);
-
-    static bool isFetchAndAddNative();
-    static bool isFetchAndAddWaitFree();
-
-    int fetchAndAddRelaxed(int valueToAdd);
-    int fetchAndAddAcquire(int valueToAdd);
-    int fetchAndAddRelease(int valueToAdd);
-    int fetchAndAddOrdered(int valueToAdd);
-};
+// New atomics
 
 template <typename T>
+class QBasicAtomicInteger
+{
+public:
+    typedef QAtomicOps<T> Ops;
+    // static check that this is a valid integer
+    typedef char PermittedIntegerType[QAtomicIntegerTraits<T>::IsInteger ? 1 : -1];
+
+    typename Ops::Type _q_value;
+
+    // Non-atomic API
+    T load() const { return Ops::load(_q_value); }
+    void store(T newValue) { Ops::store(_q_value, newValue); }
+
+    // Atomic API, implemented in qatomic_XXX.h
+
+    T loadAcquire() { return Ops::loadAcquire(_q_value); }
+    void storeRelease(T newValue) { Ops::storeRelease(_q_value, newValue); }
+    operator T() { return loadAcquire(); }
+    T operator=(T newValue) { storeRelease(newValue); return newValue; }
+
+    static bool isReferenceCountingNative() { return Ops::isReferenceCountingNative(); }
+    static bool isReferenceCountingWaitFree() { return Ops::isReferenceCountingWaitFree(); }
+
+    bool ref() { return Ops::ref(_q_value); }
+    bool deref() { return Ops::deref(_q_value); }
+
+    static bool isTestAndSetNative() { return Ops::isTestAndSetNative(); }
+    static bool isTestAndSetWaitFree() { return Ops::isTestAndSetWaitFree(); }
+
+    bool testAndSetRelaxed(T expectedValue, T newValue)
+    { return Ops::testAndSetRelaxed(_q_value, expectedValue, newValue); }
+    bool testAndSetAcquire(T expectedValue, T newValue)
+    { return Ops::testAndSetAcquire(_q_value, expectedValue, newValue); }
+    bool testAndSetRelease(T expectedValue, T newValue)
+    { return Ops::testAndSetRelease(_q_value, expectedValue, newValue); }
+    bool testAndSetOrdered(T expectedValue, T newValue)
+    { return Ops::testAndSetOrdered(_q_value, expectedValue, newValue); }
+
+    static bool isFetchAndStoreNative() { return Ops::isFetchAndStoreNative(); }
+    static bool isFetchAndStoreWaitFree() { return Ops::isFetchAndStoreWaitFree(); }
+
+    T fetchAndStoreRelaxed(T newValue)
+    { return Ops::fetchAndStoreRelaxed(_q_value, newValue); }
+    T fetchAndStoreAcquire(T newValue)
+    { return Ops::fetchAndStoreAcquire(_q_value, newValue); }
+    T fetchAndStoreRelease(T newValue)
+    { return Ops::fetchAndStoreRelease(_q_value, newValue); }
+    T fetchAndStoreOrdered(T newValue)
+    { return Ops::fetchAndStoreOrdered(_q_value, newValue); }
+
+    static bool isFetchAndAddNative() { return Ops::isFetchAndAddNative(); }
+    static bool isFetchAndAddWaitFree() { return Ops::isFetchAndAddWaitFree(); }
+
+    T fetchAndAddRelaxed(T valueToAdd)
+    { return Ops::fetchAndAddRelaxed(_q_value, valueToAdd); }
+    T fetchAndAddAcquire(T valueToAdd)
+    { return Ops::fetchAndAddAcquire(_q_value, valueToAdd); }
+    T fetchAndAddRelease(T valueToAdd)
+    { return Ops::fetchAndAddRelease(_q_value, valueToAdd); }
+    T fetchAndAddOrdered(T valueToAdd)
+    { return Ops::fetchAndAddOrdered(_q_value, valueToAdd); }
+
+#if defined(Q_COMPILER_CONSTEXPR) && defined(Q_COMPILER_DEFAULT_DELETE_MEMBERS)
+    QBasicAtomicInteger() = default;
+    constexpr QBasicAtomicInteger(T value) : _q_value(value) {}
+    QBasicAtomicInteger(const QBasicAtomicInteger &) = delete;
+    QBasicAtomicInteger &operator=(const QBasicAtomicInteger &) = delete;
+    QBasicAtomicInteger &operator=(const QBasicAtomicInteger &) volatile = delete;
+#endif
+};
+typedef QBasicAtomicInteger<int> QBasicAtomicInt;
+
+template <typename X>
 class QBasicAtomicPointer
 {
 public:
-#ifdef QT_ARCH_PARISC
-    int _q_lock[4];
-#endif
-#if defined(QT_ARCH_WINDOWS) || defined(QT_ARCH_WINDOWSCE)
-    union {
-        T * volatile _q_value;
-#  if !defined(Q_OS_WINCE) && !defined(__i386__) && !defined(_M_IX86)
-        qint64
-#  else
-        long
-#  endif
-        volatile _q_value_integral;
-    };
-#else
-    T * volatile _q_value;
-#endif
+    typedef X *Type;
+    typedef QAtomicOps<Type> Ops;
+    typedef typename Ops::Type AtomicType;
+
+    AtomicType _q_value;
 
     // Non-atomic API
-    Q_DECL_DEPRECATED inline bool operator==(T *value) const
-    {
-        return _q_value == value;
-    }
-
-    Q_DECL_DEPRECATED inline bool operator!=(T *value) const
-    {
-        return !operator==(value);
-    }
-
-    Q_DECL_DEPRECATED inline bool operator!() const
-    {
-        return operator==(nullptr);
-    }
-
-    Q_DECL_DEPRECATED inline operator T *() const
-    {
-        return _q_value;
-    }
-
-    Q_DECL_DEPRECATED inline T *operator->() const
-    {
-        return _q_value;
-    }
-
-    Q_DECL_DEPRECATED inline QBasicAtomicPointer<T> &operator=(T *value)
-    {
-#ifdef QT_ARCH_PARISC
-        this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
-#endif
-        _q_value = value;
-        return *this;
-    }
+    Type load() const { return _q_value; }
+    void store(Type newValue) { _q_value = newValue; }
 
     // Atomic API, implemented in qatomic_XXX.h
+    Type loadAcquire() { return Ops::loadAcquire(_q_value); }
+    void storeRelease(Type newValue) { Ops::storeRelease(_q_value, newValue); }
+    operator Type() { return loadAcquire(); }
+    Type operator=(Type newValue) { storeRelease(newValue); return newValue; }
 
-    T *load() const { return _q_value; }
-    T *loadAcquire() const { return _q_value; }
-    void store(T *newValue) { _q_value = newValue; }
-    void storeRelease(T *newValue) { _q_value = newValue; }
-    operator T() const { return loadAcquire(); }
-    T operator=(T newValue) { storeRelease(newValue); return newValue; }
+    static bool isTestAndSetNative() { return Ops::isTestAndSetNative(); }
+    static bool isTestAndSetWaitFree() { return Ops::isTestAndSetWaitFree(); }
 
-    static bool isTestAndSetNative();
-    static bool isTestAndSetWaitFree();
+    bool testAndSetRelaxed(Type expectedValue, Type newValue)
+    { return Ops::testAndSetRelaxed(_q_value, expectedValue, newValue); }
+    bool testAndSetAcquire(Type expectedValue, Type newValue)
+    { return Ops::testAndSetAcquire(_q_value, expectedValue, newValue); }
+    bool testAndSetRelease(Type expectedValue, Type newValue)
+    { return Ops::testAndSetRelease(_q_value, expectedValue, newValue); }
+    bool testAndSetOrdered(Type expectedValue, Type newValue)
+    { return Ops::testAndSetOrdered(_q_value, expectedValue, newValue); }
 
-    bool testAndSetRelaxed(T *expectedValue, T *newValue);
-    bool testAndSetAcquire(T *expectedValue, T *newValue);
-    bool testAndSetRelease(T *expectedValue, T *newValue);
-    bool testAndSetOrdered(T *expectedValue, T *newValue);
+    static bool isFetchAndStoreNative() { return Ops::isFetchAndStoreNative(); }
+    static bool isFetchAndStoreWaitFree() { return Ops::isFetchAndStoreWaitFree(); }
 
-    static bool isFetchAndStoreNative();
-    static bool isFetchAndStoreWaitFree();
+    Type fetchAndStoreRelaxed(Type newValue)
+    { return Ops::fetchAndStoreRelaxed(_q_value, newValue); }
+    Type fetchAndStoreAcquire(Type newValue)
+    { return Ops::fetchAndStoreAcquire(_q_value, newValue); }
+    Type fetchAndStoreRelease(Type newValue)
+    { return Ops::fetchAndStoreRelease(_q_value, newValue); }
+    Type fetchAndStoreOrdered(Type newValue)
+    { return Ops::fetchAndStoreOrdered(_q_value, newValue); }
 
-    T *fetchAndStoreRelaxed(T *newValue);
-    T *fetchAndStoreAcquire(T *newValue);
-    T *fetchAndStoreRelease(T *newValue);
-    T *fetchAndStoreOrdered(T *newValue);
+    static bool isFetchAndAddNative() { return Ops::isFetchAndAddNative(); }
+    static bool isFetchAndAddWaitFree() { return Ops::isFetchAndAddWaitFree(); }
 
-    static bool isFetchAndAddNative();
-    static bool isFetchAndAddWaitFree();
+    Type fetchAndAddRelaxed(qptrdiff valueToAdd)
+    { return Ops::fetchAndAddRelaxed(_q_value, valueToAdd); }
+    Type fetchAndAddAcquire(qptrdiff valueToAdd)
+    { return Ops::fetchAndAddAcquire(_q_value, valueToAdd); }
+    Type fetchAndAddRelease(qptrdiff valueToAdd)
+    { return Ops::fetchAndAddRelease(_q_value, valueToAdd); }
+    Type fetchAndAddOrdered(qptrdiff valueToAdd)
+    { return Ops::fetchAndAddOrdered(_q_value, valueToAdd); }
 
-    T *fetchAndAddRelaxed(qptrdiff valueToAdd);
-    T *fetchAndAddAcquire(qptrdiff valueToAdd);
-    T *fetchAndAddRelease(qptrdiff valueToAdd);
-    T *fetchAndAddOrdered(qptrdiff valueToAdd);
+#if defined(Q_COMPILER_CONSTEXPR) && defined(Q_COMPILER_DEFAULT_DELETE_MEMBERS)
+    QBasicAtomicPointer() = default;
+    constexpr QBasicAtomicPointer(Type value) : _q_value(value) {}
+    QBasicAtomicPointer(const QBasicAtomicPointer &) = delete;
+    QBasicAtomicPointer &operator=(const QBasicAtomicPointer &) = delete;
+    QBasicAtomicPointer &operator=(const QBasicAtomicPointer &) volatile = delete;
+#endif
 };
 
-#ifdef QT_ARCH_PARISC
-#  define Q_BASIC_ATOMIC_INITIALIZER(a) {{-1,-1,-1,-1},(a)}
-#elif defined(QT_ARCH_WINDOWS) || defined(QT_ARCH_WINDOWSCE)
-#  define Q_BASIC_ATOMIC_INITIALIZER(a) { {(a)} }
-#else
+#ifndef Q_BASIC_ATOMIC_INITIALIZER
 #  define Q_BASIC_ATOMIC_INITIALIZER(a) { (a) }
 #endif
 
 QT_END_NAMESPACE
+
 QT_END_HEADER
 
-#if defined(QT_MOC) || defined(QT_BUILD_QMAKE) || defined(QT_RCC) || defined(QT_UIC) || defined(QT_BOOTSTRAPPED)
-#  include <QtCore/qatomic_bootstrap.h>
-#else
-#  include <QtCore/qatomic_arch.h>
-#endif
+#endif // QT_OLD_ATOMICS
+
 
 #endif // QBASIC_ATOMIC
