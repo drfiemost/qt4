@@ -45,12 +45,6 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qbytearray.h>
 
-#if defined(Q_CC_GNU) && !defined(Q_CC_INTEL)
-#  if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ == 0)
-#    include <QtCore/qmap.h>
-#  endif
-#endif
-
 #include <string.h>
 
 QT_BEGIN_HEADER
@@ -63,20 +57,9 @@ struct Q_CORE_EXPORT QAbstractConcatenable
 {
 protected:
     static void convertFromAscii(const char *a, int len, QChar *&out);
-    static void convertToAscii(const QChar *a, int len, char *&out);
     static inline void convertFromAscii(char a, QChar *&out)
     {
             *out++ = QLatin1Char(a);
-    }
-
-    static inline void convertToAscii(QChar a, char *&out)
-    {
-            convertToLatin1(a, out);
-    }
-
-    static inline void convertToLatin1(QChar a, char *&out)
-    {
-        *out++ = a.unicode() > 0xff ? '?' : char(a.unicode());
     }
 };
 
@@ -183,10 +166,16 @@ template <> struct QConcatenable<QChar> : private QAbstractConcatenable
     static int size(const QChar) { return 1; }
     static inline void appendTo(const QChar c, QChar *&out)
     { *out++ = c; }
-#ifndef QT_NO_CAST_TO_ASCII
-    static inline QT_ASCII_CAST_WARN void appendTo(const QChar c, char *&out)
-    { convertToAscii(c, out); }
-#endif
+};
+
+template <> struct QConcatenable<QChar::SpecialCharacter> : private QAbstractConcatenable
+{
+    typedef QChar::SpecialCharacter type;
+    typedef QString ConvertTo;
+    enum { ExactSize = true };
+    static int size(const QChar::SpecialCharacter) { return 1; }
+    static inline void appendTo(const QChar::SpecialCharacter c, QChar *&out)
+    { *out++ = c; }
 };
 
 template <> struct QConcatenable<QCharRef> : private QAbstractConcatenable
@@ -197,10 +186,6 @@ template <> struct QConcatenable<QCharRef> : private QAbstractConcatenable
     static int size(const QCharRef &) { return 1; }
     static inline void appendTo(const QCharRef &c, QChar *&out)
     { *out++ = QChar(c); }
-#ifndef QT_NO_CAST_TO_ASCII
-    static inline QT_ASCII_CAST_WARN void appendTo(const QCharRef &c, char *&out)
-    { convertToAscii(c, out); }
-#endif
 };
 
 template <> struct QConcatenable<QLatin1String>
@@ -233,10 +218,6 @@ template <> struct QConcatenable<QString> : private QAbstractConcatenable
         memcpy(out, reinterpret_cast<const char*>(a.constData()), sizeof(QChar) * n);
         out += n;
     }
-#ifndef QT_NO_CAST_TO_ASCII
-    static inline QT_ASCII_CAST_WARN void appendTo(const QString &a, char *&out)
-    { convertToAscii(a.constData(), a.length(), out); }
-#endif
 };
 
 template <> struct QConcatenable<QStringDataPtr> : private QAbstractConcatenable
@@ -250,10 +231,6 @@ template <> struct QConcatenable<QStringDataPtr> : private QAbstractConcatenable
         memcpy(out, reinterpret_cast<const char*>(a.ptr->data()), sizeof(QChar) * a.ptr->size);
         out += a.ptr->size;
     }
-#ifndef QT_NO_CAST_TO_ASCII
-    static inline QT_ASCII_CAST_WARN void appendTo(const type &a, char *&out)
-    { convertToAscii(a.ptr->data(), a.ptr->size, out); }
-#endif
 };
 
 template <> struct QConcatenable<QStringRef> : private QAbstractConcatenable
@@ -268,10 +245,6 @@ template <> struct QConcatenable<QStringRef> : private QAbstractConcatenable
         memcpy(out, reinterpret_cast<const char*>(a.constData()), sizeof(QChar) * n);
         out += n;
     }
-#ifndef QT_NO_CAST_TO_ASCII
-    static inline QT_ASCII_CAST_WARN void appendTo(const QStringRef &a, char *&out)
-    { convertToAscii(a.constData(), a.length(), out); }
-#endif
 
 };
 
@@ -351,6 +324,26 @@ template <> struct QConcatenable<QByteArray> : private QAbstractConcatenable
         const char * const end = ba.end();
         while (a != end)
             *out++ = *a++;
+    }
+};
+
+template <> struct QConcatenable<QByteArrayDataPtr> : private QAbstractConcatenable
+{
+    typedef QByteArrayDataPtr type;
+    typedef QByteArray ConvertTo;
+    enum { ExactSize = false };
+    static int size(const type &ba) { return ba.ptr->size; }
+#ifndef QT_NO_CAST_FROM_ASCII
+    static inline QT_ASCII_CAST_WARN void appendTo(const type &a, QChar *&out)
+    {
+        // adding 1 because convertFromAscii expects the size including the null-termination
+        QAbstractConcatenable::convertFromAscii(a.ptr->data(), a.ptr->size + 1, out);
+    }
+#endif
+    static inline void appendTo(const type &ba, char *&out)
+    {
+        ::memcpy(out, ba.ptr->data(), ba.ptr->size);
+        out += ba.ptr->size;
     }
 };
 
