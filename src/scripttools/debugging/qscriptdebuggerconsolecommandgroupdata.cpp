@@ -62,7 +62,7 @@ public:
     QString shortDescription;
     QString longDescription;
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 QScriptDebuggerConsoleCommandGroupDataPrivate::QScriptDebuggerConsoleCommandGroupDataPrivate()
