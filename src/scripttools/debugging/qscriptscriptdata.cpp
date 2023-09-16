@@ -66,7 +66,7 @@ public:
     int baseLineNumber;
     QDateTime timeStamp;
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 QScriptScriptDataPrivate::QScriptScriptDataPrivate()
