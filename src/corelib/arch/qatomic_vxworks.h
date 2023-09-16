@@ -42,6 +42,8 @@
 #ifndef QATOMIC_VXWORKS_H
 #define QATOMIC_VXWORKS_H
 
+#include <QtCore/qoldbasicatomic.h>
+
 QT_BEGIN_HEADER
 
 #if defined(__ppc)

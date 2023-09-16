@@ -44,6 +44,8 @@
 
 #include <INTEGRITY.h>
 
+#include <QtCore/qoldbasicatomic.h>
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE

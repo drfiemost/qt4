@@ -44,21 +44,53 @@
 
 #if defined(QT_MOC) || defined(QT_BUILD_QMAKE) || defined(QT_RCC) || defined(QT_UIC) || defined(QT_BOOTSTRAPPED)
 #  include <QtCore/qatomic_bootstrap.h>
+
+// Compiler dependent implementation
 #elif defined(Q_CC_MSVC)
   // not ported yet
 #  define QT_OLD_ATOMICS
-#elif defined(__i386) || defined(__i386__)
-#  include <QtCore/qatomic_i386.h>
-#elif defined(__x86_64) || defined(__x86_64__) || defined(__amd64)
-#  include <QtCore/qatomic_x86_64.h>
+
+// Operating system dependent implementation
+#elif defined(QT_ARCH_INTEGRITY)
+#  include "QtCore/qatomic_integrity.h"
+#elif defined(QT_ARCH_VXWORKS)
+#  include "QtCore/qatomic_vxworks.h"
+
+// Processor dependent implementation
+#elif defined(QT_ARCH_ALPHA)
+#  include "QtCore/qatomic_alpha.h"
+#elif defined(QT_ARCH_ARM)
+#  include "QtCore/qatomic_arm.h"
+#elif defined(QT_ARCH_ARMV6)
+#  include "QtCore/qatomic_armv6.h"
+#elif defined(QT_ARCH_BFIN)
+#  include "QtCore/qatomic_bfin.h"
+#elif defined(QT_ARCH_IA64)
+#  include "QtCore/qatomic_ia64.h"
+#elif defined(QT_ARCH_MIPS)
+#  include "QtCore/qatomic_mips.h"
+#elif defined(QT_ARCH_POWERPC)
+#  include "QtCore/qatomic_powerpc.h"
+#elif defined(QT_ARCH_S390)
+#  include "QtCore/qatomic_s390.h"
+#elif defined(QT_ARCH_SH4A)
+#  include "QtCore/qatomic_sh4a.h"
+#elif defined(QT_ARCH_SPARC)
+#  include "QtCore/qatomic_sparc.h"
+#elif defined(__i386) || defined(__i386__) || defined(__x86_64) || defined(__x86_64__) || defined(__amd64)
+#  include <QtCore/qatomic_x86.h>
+
+// Fallback compiler dependent implementation
+#elif defined(Q_COMPILER_ATOMICS) && defined(Q_COMPILER_CONSTEXPR)
+#  include <QtCore/qatomic_cxx11.h>
+#elif defined(Q_CC_GNU)
+#  include <QtCore/qatomic_gcc.h>
 #else
-#  define QT_OLD_ATOMICS
+#  error "Qt has not been ported to this platform"
 #endif
 
-#ifdef QT_OLD_ATOMICS
-# include "QtCore/qoldbasicatomic.h"
-# undef QT_OLD_ATOMICS
-#else
+// Only include if the implementation has been ported to QAtomicOps
+#ifndef QOLDBASICATOMIC_H
 
 QT_BEGIN_HEADER
 
@@ -219,7 +251,6 @@ QT_END_NAMESPACE
 
 QT_END_HEADER
 
-#endif // QT_OLD_ATOMICS
+#endif // QOLDBASICATOMIC_H
 
-
-#endif // QBASIC_ATOMIC
+#endif // QBASICATOMIC_H
