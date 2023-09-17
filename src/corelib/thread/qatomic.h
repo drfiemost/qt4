@@ -58,28 +58,36 @@ QT_MODULE(Core)
 #endif
 
 // High-level atomic integer operations
-class Q_CORE_EXPORT QAtomicInt : public QBasicAtomicInt
+template <typename T>
+class QAtomicInteger : public QBasicAtomicInteger<T>
 {
 public:
     // Non-atomic API
-    inline QAtomicInt(int value = 0) noexcept
+#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
+    constexpr QAtomicInteger(T value = 0) noexcept : QBasicAtomicInteger<T>(value) {}
+#else
+    inline QAtomicInteger(T value = 0) noexcept
     {
-        _q_value = value;
+        this->_q_value = value;
     }
+#endif
 
-    inline QAtomicInt(const QAtomicInt &other) noexcept
+    inline QAtomicInteger(const QAtomicInteger &other) noexcept
+#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
+        : QBasicAtomicInteger<T>()
+#endif
     {
         this->store(other.load());
     }
 
     Q_DECL_DEPRECATED
-    inline QAtomicInt &operator=(int value)
+    inline QAtomicInteger &operator=(int value)
     {
         this->store(value);
         return *this;
     }
 
-    inline QAtomicInt &operator=(const QAtomicInt &other) noexcept
+    inline QAtomicInteger &operator=(const QAtomicInteger &other) noexcept
     {
         this->store(other.load());
         return *this;
@@ -142,15 +150,31 @@ public:
 #endif
 };
 
+class QAtomicInt : public QAtomicInteger<int>
+{
+public:
+    // Non-atomic API
+    // We could use QT_COMPILER_INHERITING_CONSTRUCTORS, but we need only one;
+    // the implicit definition for all the others is fine.
+#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
+    constexpr
+#endif
+    QAtomicInt(int value = 0) noexcept : QAtomicInteger<int>(value) {}
+};
+
 // High-level atomic pointer operations
 template <typename T>
 class QAtomicPointer : public QBasicAtomicPointer<T>
 {
 public:
+#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
+    constexpr QAtomicPointer(T *value = 0) noexcept : QBasicAtomicPointer<T>(value) {}
+#else
     inline QAtomicPointer(T *value = 0) noexcept
     {
         this->store(value);
     }
+#endif
     inline QAtomicPointer(const QAtomicPointer<T> &other) noexcept
     {
         this->store(other.load());
@@ -228,6 +252,10 @@ public:
 
 #if defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 406)
 # pragma GCC diagnostic pop
+#endif
+
+#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
+#  undef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
 #endif
 
 /*!

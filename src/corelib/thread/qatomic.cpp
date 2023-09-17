@@ -43,22 +43,39 @@
 
 /*!
     \class QAtomicInt
-    \brief The QAtomicInt class provides platform-independent atomic operations on integers.
+    \brief The QAtomicInt class provides platform-independent atomic operations on int.
     \since 4.4
+    This class is a equivalent to \c{QAtomicInteger<int>}. All other
+    functionality is equivalent. Please see that class for more information.
+    \sa QAtomicInteger, QAtomicPointer
+*/
 
+/*!
+    \class QAtomicInteger
+    \inmodule QtCore
+    \brief The QAtomicInteger class provides platform-independent atomic operations on integers.
     \ingroup thread
 
     For atomic operations on pointers, see the QAtomicPointer class.
 
     An \e atomic operation is a complex operation that completes without interruption. 
-    The QAtomicInt class provides atomic reference counting, test-and-set, fetch-and-store,
+    The QAtomicInteger class provides atomic reference counting, test-and-set, fetch-and-store,
     and fetch-and-add for integers.
 
-    \section1 Non-atomic convenience operators
-
-    For convenience, QAtomicInt provides integer comparison, cast, and
-    assignment operators. Note that a combination of these operators
-    is \e not an atomic operation.
+    The template parameter \c T must be a C++ integer type:
+    \list
+       \li 8-bit: char, signed char, unsigned char, qint8, quint8
+       \li 16-bit: short, unsigned short, qint16, quint16, char16_t (C++11)
+       \li 32-bit: int, unsigned int, qint32, quint32, char32_t (C++11)
+       \li 64-bit: long long, unsigned long long, qint64, quint64
+       \li platform-specific size: long, unsigned long
+       \li pointer size: qintptr, quintptr, qptrdiff
+    \endlist
+    Of the list above, only the 32-bit- and pointer-sized instantiations are guaranteed to
+    work on all platforms. Support for other sizes depends on the compiler and
+    processor architecture the code is being compiled for. To test whether the
+    other types are supported, check the macro \c Q_ATOMIC_INT\e{nn}_IS_SUPPORTED,
+    where \c{\e{nn}} is the number of bits desired.
 
     \section1 The Atomic API
 
@@ -74,7 +91,7 @@
 
     \section2 Memory ordering
 
-    QAtomicInt provides several implementations of the atomic
+    QAtomicInteger provides several implementations of the atomic
     test-and-set, fetch-and-store, and fetch-and-add functions. Each
     implementation defines a memory ordering semantic that describes
     how memory accesses surrounding the atomic instruction are
@@ -100,8 +117,8 @@
 
     \section2 Test-and-set
 
-    If the current value of the QAtomicInt is an expected value, the
-    test-and-set functions assign a new value to the QAtomicInt and
+    If the current value of the QAtomicInteger is an expected value, the
+    test-and-set functions assign a new value to the QAtomicInteger and
     return true. If values are \a not the same, these functions do
     nothing and return false. This operation equates to the following
     code:
@@ -116,7 +133,7 @@
     \section2 Fetch-and-store
 
     The atomic fetch-and-store functions read the current value of the
-    QAtomicInt and then assign a new value, returning the original
+    QAtomicInteger and then assign a new value, returning the original
     value. This operation equates to the following code:
 
     \snippet doc/src/snippets/code/src_corelib_thread_qatomic.cpp 2
@@ -129,7 +146,7 @@
     \section2 Fetch-and-add
 
     The atomic fetch-and-add functions read the current value of the
-    QAtomicInt and then add the given value to the current value,
+    QAtomicInteger and then add the given value to the current value,
     returning the original value. This operation equates to the
     following code:
 
@@ -143,34 +160,35 @@
     \section1 Feature Tests for the Atomic API
 
     Providing a platform-independent atomic API that works on all
-    processors is challenging. The API provided by QAtomicInt is
+    processors is challenging. The API provided by QAtomicInteger is
     guaranteed to work atomically on all processors. However, since
     not all processors implement support for every operation provided
-    by QAtomicInt, it is necessary to expose information about the
+    by QAtomicInteger, it is necessary to expose information about the
     processor.
 
     You can check at compile time which features are supported on your
     hardware using various macros. These will tell you if your
     hardware always, sometimes, or does not support a particular
     operation. The macros have the form
-    Q_ATOMIC_INT_\e{OPERATION}_IS_\e{HOW}_NATIVE. \e{OPERATION}
+    Q_ATOMIC_INT\e{nn}_\e{OPERATION}_IS_\e{HOW}_NATIVE. \e{nn} is the
+    size of the integer (in bits), \e{OPERATION}
     is one of REFERENCE_COUNTING, TEST_AND_SET,
     FETCH_AND_STORE, or FETCH_AND_ADD, and \e{HOW} is one of
     ALWAYS, SOMETIMES, or NOT. There will always be exactly one
     defined macro per operation. For example, if
-    Q_ATOMIC_INT_REFERENCE_COUNTING_IS_ALWAYS_NATIVE is defined,
+    Q_ATOMIC_INT32_REFERENCE_COUNTING_IS_ALWAYS_NATIVE is defined,
     neither Q_ATOMIC_INT_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE nor
-    Q_ATOMIC_INT_REFERENCE_COUNTING_IS_NOT_NATIVE will be defined.
+    Q_ATOMIC_INT32_REFERENCE_COUNTING_IS_NOT_NATIVE will be defined.
 
     An operation that completes in constant time is said to be
     wait-free. Such operations are not implemented using locks or
     loops of any kind. For atomic operations that are always
     supported, and that are wait-free, Qt defines the
-    Q_ATOMIC_INT_\e{OPERATION}_IS_WAIT_FREE in addition to the
-    Q_ATOMIC_INT_\e{OPERATION}_IS_ALWAYS_NATIVE.
+    Q_ATOMIC_INT\e{nn}_\e{OPERATION}_IS_WAIT_FREE in addition to the
+    Q_ATOMIC_INT\e{nn}_\e{OPERATION}_IS_ALWAYS_NATIVE.
 
     In cases where an atomic operation is only supported in newer
-    generations of the processor, QAtomicInt also provides a way to
+    generations of the processor, QAtomicInteger also provides a way to
     check at runtime what your hardware supports with the
     isReferenceCountingNative(), isTestAndSetNative(),
     isFetchAndStoreNative(), and isFetchAndAddNative()
@@ -178,29 +196,29 @@
     isReferenceCountingWaitFree(), isTestAndSetWaitFree(),
     isFetchAndStoreWaitFree(), and isFetchAndAddWaitFree() functions.
 
-    Below is a complete list of all feature macros for QAtomicInt:
+    Below is a complete list of all feature macros for QAtomicInteger:
 
     \list
 
-    \o Q_ATOMIC_INT_REFERENCE_COUNTING_IS_ALWAYS_NATIVE
-    \o Q_ATOMIC_INT_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE
-    \o Q_ATOMIC_INT_REFERENCE_COUNTING_IS_NOT_NATIVE
-    \o Q_ATOMIC_INT_REFERENCE_COUNTING_IS_WAIT_FREE
+    \li Q_ATOMIC_INT\e{nn}_REFERENCE_COUNTING_IS_ALWAYS_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_REFERENCE_COUNTING_IS_NOT_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_REFERENCE_COUNTING_IS_WAIT_FREE
 
-    \o Q_ATOMIC_INT_TEST_AND_SET_IS_ALWAYS_NATIVE
-    \o Q_ATOMIC_INT_TEST_AND_SET_IS_SOMETIMES_NATIVE
-    \o Q_ATOMIC_INT_TEST_AND_SET_IS_NOT_NATIVE
-    \o Q_ATOMIC_INT_TEST_AND_SET_IS_WAIT_FREE
+    \li Q_ATOMIC_INT\e{nn}_TEST_AND_SET_IS_ALWAYS_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_TEST_AND_SET_IS_SOMETIMES_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_TEST_AND_SET_IS_NOT_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_TEST_AND_SET_IS_WAIT_FREE
 
-    \o Q_ATOMIC_INT_FETCH_AND_STORE_IS_ALWAYS_NATIVE
-    \o Q_ATOMIC_INT_FETCH_AND_STORE_IS_SOMETIMES_NATIVE
-    \o Q_ATOMIC_INT_FETCH_AND_STORE_IS_NOT_NATIVE
-    \o Q_ATOMIC_INT_FETCH_AND_STORE_IS_WAIT_FREE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_STORE_IS_ALWAYS_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_STORE_IS_SOMETIMES_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_STORE_IS_NOT_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_STORE_IS_WAIT_FREE
 
-    \o Q_ATOMIC_INT_FETCH_AND_ADD_IS_ALWAYS_NATIVE
-    \o Q_ATOMIC_INT_FETCH_AND_ADD_IS_SOMETIMES_NATIVE
-    \o Q_ATOMIC_INT_FETCH_AND_ADD_IS_NOT_NATIVE
-    \o Q_ATOMIC_INT_FETCH_AND_ADD_IS_WAIT_FREE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_ADD_IS_ALWAYS_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_ADD_IS_SOMETIMES_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_ADD_IS_NOT_NATIVE
+    \li Q_ATOMIC_INT\e{nn}_FETCH_AND_ADD_IS_WAIT_FREE
 
     \endlist
 
@@ -212,7 +230,11 @@
     Constructs a QAtomicInt with the given \a value.
 */
 
-/*! \fn QAtomicInt::QAtomicInt(const QAtomicInt &other)
+/*! \fn QAtomicInteger::QAtomicInteger(T value)
+    Constructs a QAtomicInteger with the given \a value.
+*/
+
+/*! \fn QAtomicInteger::QAtomicInteger(const QAtomicInteger &other)
 
     Constructs a copy of \a other.
 */
@@ -223,10 +245,10 @@
     this QAtomicInt.
 */
 
-/*! \fn QAtomicInt &QAtomicInt::operator=(const QAtomicInt &other)
+/*! \fn QAtomicInteger &QAtomicInteger::operator=(const QAtomicInteger &other)
 
-    Assigns \a other to this QAtomicInt and returns a reference to
-    this QAtomicInt.
+    Assigns \a other to this QAtomicInteger and returns a reference to
+    this QAtomicInteger.
 */
 
 /*! \fn bool QAtomicInt::operator==(int value) const
@@ -252,23 +274,57 @@
     Returns the value stored by the QAtomicInt object as an integer.
 */
 
-/*! \fn bool QAtomicInt::isReferenceCountingNative()
+/*! 
+    \fn int QAtomicInteger::load() const
+
+    Atomically loads the value of this QAtomicInteger using relaxed memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa store(), loadAcquire()
+*/
+
+/*!
+    \fn int QAtomicInteger::loadAcquire() const
+
+    Atomically loads the value of this QAtomicInteger using the "Acquire" memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa store(), load()
+*/
+
+/*!
+    \fn void QAtomicInteger::store(int newValue)
+
+    Atomically stores the \a newValue value into this atomic type, using
+    relaxed memory ordering.
+    \sa storeRelease(), load()
+*/
+
+/*!
+    \fn void QAtomicInteger::storeRelease(int newValue)
+
+    Atomically stores the \a newValue value into this atomic type, using
+    the "Release" memory ordering.
+    \sa store(), load()
+*/
+
+/*! \fn bool QAtomicInteger::isReferenceCountingNative()
 
     Returns true if reference counting is implemented using atomic
     processor instructions, false otherwise.
 */
 
-/*! \fn bool QAtomicInt::isReferenceCountingWaitFree()
+/*! \fn bool QAtomicInteger::isReferenceCountingWaitFree()
 
     Returns true if atomic reference counting is wait-free, false
     otherwise.
 */
 
-/*! \fn bool QAtomicInt::ref()
-    Atomically increments the value of this QAtomicInt. Returns true
+/*! \fn bool QAtomicInteger::ref()
+    Atomically increments the value of this QAtomicInteger. Returns true
     if the new value is non-zero, false otherwise.
 
-    This function uses \e ordered \l {QAtomicInt#Memory
+    This function uses \e ordered \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before and after the atomic operation (in program order)
     may not be re-ordered.
@@ -276,11 +332,11 @@
     \sa deref()
 */
 
-/*! \fn bool QAtomicInt::deref()
-    Atomically decrements the value of this QAtomicInt. Returns true
+/*! \fn bool QAtomicInteger::deref()
+    Atomically decrements the value of this QAtomicInteger. Returns true
     if the new value is non-zero, false otherwise.
 
-    This function uses \e ordered \l {QAtomicInt#Memory
+    This function uses \e ordered \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before and after the atomic operation (in program order)
     may not be re-ordered.
@@ -288,340 +344,381 @@
     \sa ref()
 */
 
-/*! \fn bool QAtomicInt::isTestAndSetNative()
+/*! \fn bool QAtomicInteger::isTestAndSetNative()
 
     Returns true if test-and-set is implemented using atomic processor
     instructions, false otherwise.
 */
 
-/*! \fn bool QAtomicInt::isTestAndSetWaitFree()
+/*! \fn bool QAtomicInteger::isTestAndSetWaitFree()
 
     Returns true if atomic test-and-set is wait-free, false otherwise.
 */
 
-/*! \fn bool QAtomicInt::testAndSetRelaxed(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetRelaxed(int expectedValue, int newValue)
 
     Atomic test-and-set.
 
-    If the current value of this QAtomicInt is the \a expectedValue,
+    If the current value of this QAtomicInteger is the \a expectedValue,
     the test-and-set functions assign the \a newValue to this
-    QAtomicInt and return true. If the values are \e not the same,
+    QAtomicInteger and return true. If the values are \e not the same,
     this function does nothing and returns false.
 
-    This function uses \e relaxed \l {QAtomicInt#Memory
+    This function uses \e relaxed \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, leaving the compiler and
     processor to freely reorder memory accesses.
 */
 
-/*! \fn bool QAtomicInt::testAndSetAcquire(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetAcquire(int expectedValue, int newValue)
 
     Atomic test-and-set.
 
-    If the current value of this QAtomicInt is the \a expectedValue,
+    If the current value of this QAtomicInteger is the \a expectedValue,
     the test-and-set functions assign the \a newValue to this
-    QAtomicInt and return true. If the values are \e not the same,
+    QAtomicInteger and return true. If the values are \e not the same,
     this function does nothing and returns false.
 
-    This function uses \e acquire \l {QAtomicInt#Memory
+    This function uses \e acquire \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access following the atomic operation (in program order) may not
     be re-ordered before the atomic operation.
 */
 
-/*! \fn bool QAtomicInt::testAndSetRelease(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetRelease(int expectedValue, int newValue)
 
     Atomic test-and-set.
 
-    If the current value of this QAtomicInt is the \a expectedValue,
+    If the current value of this QAtomicInteger is the \a expectedValue,
     the test-and-set functions assign the \a newValue to this
-    QAtomicInt and return true. If the values are \e not the same,
+    QAtomicInteger and return true. If the values are \e not the same,
     this function does nothing and returns false.
 
-    This function uses \e release \l {QAtomicInt#Memory
+    This function uses \e release \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before the atomic operation (in program order) may not be
     re-ordered after the atomic operation.
 */
 
-/*! \fn bool QAtomicInt::testAndSetOrdered(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetOrdered(int expectedValue, int newValue)
 
     Atomic test-and-set.
 
-    If the current value of this QAtomicInt is the \a expectedValue,
+    If the current value of this QAtomicInteger is the \a expectedValue,
     the test-and-set functions assign the \a newValue to this
-    QAtomicInt and return true. If the values are \e not the same,
+    QAtomicInteger and return true. If the values are \e not the same,
     this function does nothing and returns false.
 
-    This function uses \e ordered \l {QAtomicInt#Memory
+    This function uses \e ordered \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before and after the atomic operation (in program order)
     may not be re-ordered.
 */
 
-/*! \fn bool QAtomicInt::isFetchAndStoreNative()
+/*! \fn bool QAtomicInteger::isFetchAndStoreNative()
 
     Returns true if fetch-and-store is implemented using atomic
     processor instructions, false otherwise.
 */
 
-/*! \fn bool QAtomicInt::isFetchAndStoreWaitFree()
+/*! \fn bool QAtomicInteger::isFetchAndStoreWaitFree()
 
     Returns true if atomic fetch-and-store is wait-free, false
     otherwise.
 */
 
-/*! \fn int QAtomicInt::fetchAndStoreRelaxed(int newValue)
+/*! \fn int QAtomicInteger::fetchAndStoreRelaxed(int newValue)
 
     Atomic fetch-and-store.
 
-    Reads the current value of this QAtomicInt and then assigns it the
+    Reads the current value of this QAtomicInteger and then assigns it the
     \a newValue, returning the original value.
 
-    This function uses \e relaxed \l {QAtomicInt#Memory
+    This function uses \e relaxed \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, leaving the compiler and
     processor to freely reorder memory accesses.
 */
 
-/*! \fn int QAtomicInt::fetchAndStoreAcquire(int newValue)
+/*! \fn int QAtomicInteger::fetchAndStoreAcquire(int newValue)
 
     Atomic fetch-and-store.
 
-    Reads the current value of this QAtomicInt and then assigns it the
+    Reads the current value of this QAtomicInteger and then assigns it the
     \a newValue, returning the original value.
 
-    This function uses \e acquire \l {QAtomicInt#Memory
+    This function uses \e acquire \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access following the atomic operation (in program order) may not
     be re-ordered before the atomic operation.
 */
 
-/*! \fn int QAtomicInt::fetchAndStoreRelease(int newValue)
+/*! \fn int QAtomicInteger::fetchAndStoreRelease(int newValue)
 
     Atomic fetch-and-store.
 
-    Reads the current value of this QAtomicInt and then assigns it the
+    Reads the current value of this QAtomicInteger and then assigns it the
     \a newValue, returning the original value.
 
-    This function uses \e release \l {QAtomicInt#Memory
+    This function uses \e release \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before the atomic operation (in program order) may not be
     re-ordered after the atomic operation.
 */
 
-/*! \fn int QAtomicInt::fetchAndStoreOrdered(int newValue)
+/*! \fn int QAtomicInteger::fetchAndStoreOrdered(int newValue)
 
     Atomic fetch-and-store.
 
-    Reads the current value of this QAtomicInt and then assigns it the
+    Reads the current value of this QAtomicInteger and then assigns it the
     \a newValue, returning the original value.
 
-    This function uses \e ordered \l {QAtomicInt#Memory
+    This function uses \e ordered \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before and after the atomic operation (in program order)
     may not be re-ordered.
 */
 
-/*! \fn bool QAtomicInt::isFetchAndAddNative()
+/*! \fn bool QAtomicInteger::isFetchAndAddNative()
 
     Returns true if fetch-and-add is implemented using atomic
     processor instructions, false otherwise.
 */
 
-/*! \fn bool QAtomicInt::isFetchAndAddWaitFree()
+/*! \fn bool QAtomicInteger::isFetchAndAddWaitFree()
 
     Returns true if atomic fetch-and-add is wait-free, false
     otherwise.
 */
 
-/*! \fn int QAtomicInt::fetchAndAddRelaxed(int valueToAdd)
+/*! \fn int QAtomicInteger::fetchAndAddRelaxed(int valueToAdd)
 
     Atomic fetch-and-add.
 
-    Reads the current value of this QAtomicInt and then adds
+    Reads the current value of this QAtomicInteger and then adds
     \a valueToAdd to the current value, returning the original value.
 
-    This function uses \e relaxed \l {QAtomicInt#Memory
+    This function uses \e relaxed \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, leaving the compiler and
     processor to freely reorder memory accesses.
 */
 
-/*! \fn int QAtomicInt::fetchAndAddAcquire(int valueToAdd)
+/*! \fn int QAtomicInteger::fetchAndAddAcquire(int valueToAdd)
 
     Atomic fetch-and-add.
 
-    Reads the current value of this QAtomicInt and then adds
+    Reads the current value of this QAtomicInteger and then adds
     \a valueToAdd to the current value, returning the original value.
 
-    This function uses \e acquire \l {QAtomicInt#Memory
+    This function uses \e acquire \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access following the atomic operation (in program order) may not
     be re-ordered before the atomic operation.
 */
 
-/*! \fn int QAtomicInt::fetchAndAddRelease(int valueToAdd)
+/*! \fn int QAtomicInteger::fetchAndAddRelease(int valueToAdd)
 
     Atomic fetch-and-add.
 
-    Reads the current value of this QAtomicInt and then adds
+    Reads the current value of this QAtomicInteger and then adds
     \a valueToAdd to the current value, returning the original value.
 
-    This function uses \e release \l {QAtomicInt#Memory
+    This function uses \e release \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before the atomic operation (in program order) may not be
     re-ordered after the atomic operation.
 */
 
-/*! \fn int QAtomicInt::fetchAndAddOrdered(int valueToAdd)
+/*! \fn int QAtomicInteger::fetchAndAddOrdered(int valueToAdd)
 
     Atomic fetch-and-add.
 
-    Reads the current value of this QAtomicInt and then adds
+    Reads the current value of this QAtomicInteger and then adds
     \a valueToAdd to the current value, returning the original value.
 
-    This function uses \e ordered \l {QAtomicInt#Memory
+    This function uses \e ordered \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, which ensures that memory
     access before and after the atomic operation (in program order)
     may not be re-ordered.
 */
 
 /*!
-    \macro Q_ATOMIC_INT_REFERENCE_COUNTING_IS_ALWAYS_NATIVE
-    \relates QAtomicInt
+\macro Q_ATOMIC_INTnn_IS_SUPPORTED
+    \relates QAtomicInteger
+    This macro is defined if atomic integers of size \e{nn} (in bits) are
+    supported in this compiler / architecture combination.
+    Q_ATOMIC_INT32_IS_SUPPORTED is always defined.
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
+*/
+
+/*!
+    \macro Q_ATOMIC_INTnn_REFERENCE_COUNTING_IS_ALWAYS_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined if and only if all generations of your
     processor support atomic reference counting.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when only certain generations of the
     processor support atomic reference counting. Use the
-    QAtomicInt::isReferenceCountingNative() function to check what
+    QAtomicInteger::isReferenceCountingNative() function to check what
     your processor supports.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_REFERENCE_COUNTING_IS_NOT_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_REFERENCE_COUNTING_IS_NOT_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when the hardware does not support atomic
     reference counting.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_REFERENCE_COUNTING_IS_WAIT_FREE
-    \relates QAtomicInt
+     \macro Q_ATOMIC_INTnn_REFERENCE_COUNTING_IS_WAIT_FREE
+    \relates QAtomicInteger
 
     This macro is defined together with
-    Q_ATOMIC_INT_REFERENCE_COUNTING_IS_ALWAYS_NATIVE to indicate that
+    Q_ATOMIC_INTnn_REFERENCE_COUNTING_IS_ALWAYS_NATIVE to indicate that
     the reference counting is wait-free.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_TEST_AND_SET_IS_ALWAYS_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_TEST_AND_SET_IS_ALWAYS_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined if and only if your processor supports
     atomic test-and-set on integers.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_TEST_AND_SET_IS_SOMETIMES_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_TEST_AND_SET_IS_SOMETIMES_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when only certain generations of the
     processor support atomic test-and-set on integers. Use the
     QAtomicInt::isTestAndSetNative() function to check what your
     processor supports.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_TEST_AND_SET_IS_NOT_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_TEST_AND_SET_IS_NOT_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when the hardware does not support atomic
     test-and-set on integers.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_TEST_AND_SET_IS_WAIT_FREE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_TEST_AND_SET_IS_WAIT_FREE
+    \relates QAtomicInteger
 
     This macro is defined together with
     Q_ATOMIC_INT_TEST_AND_SET_IS_ALWAYS_NATIVE to indicate that the
     atomic test-and-set on integers is wait-free.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_STORE_IS_ALWAYS_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_STORE_IS_ALWAYS_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined if and only if your processor supports
     atomic fetch-and-store on integers.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_STORE_IS_SOMETIMES_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_STORE_IS_SOMETIMES_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when only certain generations of the
     processor support atomic fetch-and-store on integers. Use the
     QAtomicInt::isFetchAndStoreNative() function to check what your
     processor supports.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_STORE_IS_NOT_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_STORE_IS_NOT_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when the hardware does not support atomic
     fetch-and-store on integers.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).    
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_STORE_IS_WAIT_FREE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_STORE_IS_WAIT_FREE
+    \relates QAtomicInteger
 
     This macro is defined together with
-    Q_ATOMIC_INT_FETCH_AND_STORE_IS_ALWAYS_NATIVE to indicate that the
+    Q_ATOMIC_INTnn_FETCH_AND_STORE_IS_ALWAYS_NATIVE to indicate that the
     atomic fetch-and-store on integers is wait-free.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_ADD_IS_ALWAYS_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_ADD_IS_ALWAYS_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined if and only if your processor supports
     atomic fetch-and-add on integers.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_ADD_IS_SOMETIMES_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_ADD_IS_SOMETIMES_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when only certain generations of the
     processor support atomic fetch-and-add on integers. Use the
-    QAtomicInt::isFetchAndAddNative() function to check what your
+    QAtomicInteger::isFetchAndAddNative() function to check what your
     processor supports.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_ADD_IS_NOT_NATIVE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_ADD_IS_NOT_NATIVE
+    \relates QAtomicInteger
 
     This macro is defined when the hardware does not support atomic
     fetch-and-add on integers.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 /*!
-    \macro Q_ATOMIC_INT_FETCH_AND_ADD_IS_WAIT_FREE
-    \relates QAtomicInt
+    \macro Q_ATOMIC_INTnn_FETCH_AND_ADD_IS_WAIT_FREE
+    \relates QAtomicInteger
 
     This macro is defined together with
-    Q_ATOMIC_INT_FETCH_AND_ADD_IS_ALWAYS_NATIVE to indicate that the
+    Q_ATOMIC_INTnn_FETCH_AND_ADD_IS_ALWAYS_NATIVE to indicate that the
     atomic fetch-and-add on integers is wait-free.
+
+    \e{nn} is the size of the integer, in bits (8, 16, 32 or 64).
 */
 
 
@@ -634,7 +731,7 @@
 
     \ingroup thread
 
-    For atomic operations on integers, see the QAtomicInt class.
+    For atomic operations on integers, see the QAtomicInteger class.
 
     An \e atomic operation is a complex operation that completes without interruption.
     The QAtomicPointer class provides atomic test-and-set, fetch-and-store, and fetch-and-add for pointers.
@@ -772,7 +869,7 @@
 
     \endlist
 
-    \sa QAtomicInt
+    \sa QAtomicInteger
 */
 
 /*! \fn QAtomicPointer::QAtomicPointer(T *value)
@@ -1130,3 +1227,42 @@
 #ifndef Q_ATOMIC_INT32_IS_SUPPORTED
 #  error "Q_ATOMIC_INT32_IS_SUPPORTED must be defined"
 #endif
+
+#if !defined(Q_ATOMIC_INT64_IS_SUPPORTED) && QT_POINTER_SIZE == 8
+// 64-bit platform
+#  error "Q_ATOMIC_INT64_IS_SUPPORTED must be defined on a 64-bit platform"
+#endif
+
+QT_BEGIN_NAMESPACE
+
+// The following specializations must always be defined
+static_assert(sizeof(QAtomicInteger<unsigned>));
+static_assert(sizeof(QAtomicInteger<long>));
+static_assert(sizeof(QAtomicInteger<unsigned long>));
+static_assert(sizeof(QAtomicInteger<quintptr>));
+static_assert(sizeof(QAtomicInteger<qptrdiff>));
+#ifdef Q_COMPILER_UNICODE_STRINGS
+static_assert(sizeof(QAtomicInteger<char32_t>));
+#endif
+
+#ifdef Q_ATOMIC_INT16_IS_SUPPORTED
+static_assert(sizeof(QAtomicInteger<short>));
+static_assert(sizeof(QAtomicInteger<unsigned short>));
+#  if WCHAR_MAX < 0x10000
+static_assert(sizeof(QAtomicInteger<wchar_t>));
+#  endif
+#  ifdef Q_COMPILER_UNICODE_STRINGS
+static_assert(sizeof(QAtomicInteger<char16_t>));
+#  endif
+#endif
+
+#ifdef Q_ATOMIC_INT64_IS_SUPPORTED
+static_assert(sizeof(QAtomicInteger<qint64>));
+static_assert(sizeof(QAtomicInteger<quint64>));
+#endif
+
+#if WCHAR_MAX == INT_MAX
+static_assert(sizeof(QAtomicInteger<wchar_t>));
+#endif
+
+QT_END_NAMESPACE

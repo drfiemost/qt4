@@ -9,6 +9,7 @@ SUBDIRS=\
    q_func_info \
    qanimationgroup \
    qatomicint \
+   qatomicinteger \
    qatomicpointer \
    qbitarray \
    qbuffer \
