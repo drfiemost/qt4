@@ -48,6 +48,11 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 #if 0
+// silence syncqt warnings
+QT_END_NAMESPACE
+QT_END_HEADER
+
+#pragma qt_sync_skip_header_check
 #pragma qt_sync_stop_processing
 #endif
 
@@ -89,147 +94,146 @@ template<> struct QAtomicOpsSupport<8> { enum { IsSupported = 1 }; };
 #define Q_ATOMIC_INT64_FETCH_AND_STORE_IS_ALWAYS_NATIVE
 #define Q_ATOMIC_INT64_FETCH_AND_ADD_IS_ALWAYS_NATIVE
 
-template <typename T> struct QAtomicOps
+template <typename X> struct QAtomicOps
 {
-    typedef std::atomic<T> Type;
-    typedef typename QAtomicAdditiveType<T>::AdditiveT _AdditiveType;
-    static const int AddScale = QAtomicAdditiveType<T>::AddScale;
+    typedef std::atomic<X> Type;
 
-    static void acquireMemoryFence() { }
-    static void releaseMemoryFence() { }
-    static void orderedMemoryFence() { }
-
-    static inline
-    T load(const Type &_q_value)
+    template <typename T> static inline
+    T load(const std::atomic<T> &_q_value)  noexcept
     {
         return _q_value.load(std::memory_order_relaxed);
     }
 
-    static inline
-    T load(const volatile Type &_q_value)
+    template <typename T> static inline
+    T load(const volatile std::atomic<T> &_q_value) noexcept
     {
         return _q_value.load(std::memory_order_relaxed);
     }
 
-    static inline
-    T loadAcquire(const Type &_q_value)
+    template <typename T> static inline
+    T loadAcquire(const std::atomic<T> &_q_value) noexcept
     {
         return _q_value.load(std::memory_order_acquire);
     }
 
-    static inline
-    T loadAcquire(const volatile Type &_q_value)
+    template <typename T> static inline
+    T loadAcquire(const volatile std::atomic<T> &_q_value) noexcept
     {
         return _q_value.load(std::memory_order_acquire);
     }
 
-    static inline
-    void store(Type &_q_value, T newValue)
+    template <typename T> static inline
+    void store(std::atomic<T> &_q_value, T newValue) noexcept
     {
         _q_value.store(newValue, std::memory_order_relaxed);
     }
 
-    static inline
-    void storeRelease(Type &_q_value, T newValue)
+    template <typename T> static inline
+    void storeRelease(std::atomic<T> &_q_value, T newValue) noexcept
     {
         _q_value.store(newValue, std::memory_order_release);
     }
 
-    static inline bool isReferenceCountingNative() { return true; }
-    static inline bool isReferenceCountingWaitFree() { return false; }
-    static inline bool ref(Type &_q_value)
+    static inline constexpr bool isReferenceCountingNative() noexcept { return true; }
+    static inline constexpr bool isReferenceCountingWaitFree() noexcept { return false; }
+    template <typename T>
+    static inline bool ref(std::atomic<T> &_q_value)
     {
         return ++_q_value != 0;
     }
 
-    static inline bool deref(Type &_q_value)
+    template <typename T>
+    static inline bool deref(std::atomic<T> &_q_value) noexcept
     {
         return --_q_value != 0;
     }
 
-    static inline bool isTestAndSetNative() { return false; }
-    static inline bool isTestAndSetWaitFree() { return false; }
+    static inline constexpr bool isTestAndSetNative() noexcept { return false; }
+    static inline constexpr bool isTestAndSetWaitFree() noexcept { return false; }
 
-    static
-    bool testAndSetRelaxed(Type &_q_value, T expectedValue, T newValue)
+    template <typename T> static
+    bool testAndSetRelaxed(Type &_q_value, T expectedValue, T newValue) noexcept
     {
         return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_relaxed);
     }
 
-    static bool testAndSetAcquire(Type &_q_value, T expectedValue, T newValue)
+    template <typename T>
+    static bool testAndSetAcquire(Type &_q_value, T expectedValue, T newValue) noexcept
     {
         return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_acquire);
     }
 
-    static bool testAndSetRelease(Type &_q_value, T expectedValue, T newValue)
+    template <typename T>
+    static bool testAndSetRelease(Type &_q_value, T expectedValue, T newValue) noexcept
     {
         return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_release);
     }
 
-    static bool testAndSetOrdered(Type &_q_value, T expectedValue, T newValue)
+    template <typename T>
+    static bool testAndSetOrdered(Type &_q_value, T expectedValue, T newValue) noexcept
     {
         return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_acq_rel);
     }
 
-    static inline bool isFetchAndStoreNative() { return false; }
-    static inline bool isFetchAndStoreWaitFree() { return false; }
+    static inline constexpr bool isFetchAndStoreNative() noexcept { return false; }
+    static inline constexpr bool isFetchAndStoreWaitFree() noexcept { return false; }
 
-    static T fetchAndStoreRelaxed(Type &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreRelaxed(std::atomic<T> &_q_value, T newValue) noexcept
     {
         return _q_value.exchange(newValue, std::memory_order_relaxed);
     }
 
-    static T fetchAndStoreAcquire(Type &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreAcquire(std::atomic<T> &_q_value, T newValue) noexcept
     {
         return _q_value.exchange(newValue, std::memory_order_acquire);
     }
 
-    static T fetchAndStoreRelease(Type &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreRelease(std::atomic<T> &_q_value, T newValue) noexcept
     {
         return _q_value.exchange(newValue, std::memory_order_release);
     }
 
-    static T fetchAndStoreOrdered(Type &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreOrdered(std::atomic<T> &_q_value, T newValue) noexcept
     {
         return _q_value.exchange(newValue, std::memory_order_acq_rel);
     }
 
-    static inline bool isFetchAndAddNative() { return false; }
-    static inline bool isFetchAndAddWaitFree() { return false; }
+    static inline constexpr bool isFetchAndAddNative() noexcept { return false; }
+    static inline constexpr bool isFetchAndAddWaitFree() noexcept { return false; }
 
-    static
-    T fetchAndAddRelaxed(Type &_q_value, _AdditiveType valueToAdd)
+    template <typename T> static inline
+    T fetchAndAddRelaxed(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
-        return _q_value.fetch_add(valueToAdd * AddScale,
-                                  std::memory_order_relaxed);
+        return _q_value.fetch_add(valueToAdd, std::memory_order_relaxed);
     }
 
-    static
-    T fetchAndAddAcquire(Type &_q_value, _AdditiveType valueToAdd)
+    template <typename T> static inline
+    T fetchAndAddAcquire(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
-        return _q_value.fetch_add(valueToAdd * AddScale,
-                                  std::memory_order_acquire);
+        return _q_value.fetch_add(valueToAdd, std::memory_order_acquire);
     }
 
-    static
-    T fetchAndAddRelease(Type &_q_value, _AdditiveType valueToAdd)
+    template <typename T> static inline
+    T fetchAndAddRelease(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
-        return _q_value.fetch_add(valueToAdd * AddScale,
-                                  std::memory_order_release);
+        return _q_value.fetch_add(valueToAdd, std::memory_order_release);
     }
 
-    static
-    T fetchAndAddOrdered(Type &_q_value, _AdditiveType valueToAdd)
+    template <typename T> static inline
+    T fetchAndAddOrdered(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
-        return _q_value.fetch_add(valueToAdd * AddScale,
-                                  std::memory_order_acq_rel);
+        return _q_value.fetch_add(valueToAdd, std::memory_order_acq_rel);
     }
 };
 
 #ifdef ATOMIC_VAR_INIT
 # define Q_BASIC_ATOMIC_INITIALIZER(a)   { ATOMIC_VAR_INIT(a) }
 #else
-# define Q_BASIC_ATOMIC_INITIALIZER(a)   { {a} }
+# define Q_BASIC_ATOMIC_INITIALIZER(a)   { a }
 #endif
 
 QT_END_NAMESPACE

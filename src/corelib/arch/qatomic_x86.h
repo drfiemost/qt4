@@ -49,6 +49,11 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 #if 0
+// silence syncqt warnings
+QT_END_NAMESPACE
+QT_END_HEADER
+
+#pragma qt_sync_skip_header_check
 #pragma qt_sync_stop_processing
 #endif
 
@@ -91,21 +96,21 @@ template <int size> struct QBasicAtomicOps: QGenericAtomicOps<QBasicAtomicOps<si
 {
     static inline constexpr bool isReferenceCountingNative() noexcept { return true; }
     static inline constexpr bool isReferenceCountingWaitFree() noexcept { return true; }
-    template <typename T> static bool ref(T &_q_value);
-    template <typename T> static bool deref(T &_q_value);
+    template <typename T> static bool ref(T &_q_value) noexcept;
+    template <typename T> static bool deref(T &_q_value) noexcept;
 
     static inline constexpr bool isTestAndSetNative() noexcept { return true; }
     static inline constexpr bool isTestAndSetWaitFree() noexcept { return true; }
-    template <typename T> static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue);
+    template <typename T> static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept;
 
     static inline constexpr bool isFetchAndStoreNative() noexcept { return true; }
     static inline constexpr bool isFetchAndStoreWaitFree() noexcept { return true; }
-    template <typename T> static T fetchAndStoreRelaxed(T &_q_value, T newValue);
+    template <typename T> static T fetchAndStoreRelaxed(T &_q_value, T newValue) noexcept;
 
     static inline constexpr bool isFetchAndAddNative() noexcept { return true; }
     static inline constexpr bool isFetchAndAddWaitFree() noexcept { return true; }
     template <typename T> static
-    T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd);
+    T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept;
 };
 
 template <typename T> struct QAtomicOps : QBasicAtomicOps<sizeof(T)>
@@ -148,7 +153,7 @@ template<> struct QAtomicOpsSupport<8> { enum { IsSupported = 1 }; };
  */
 
 template<> template<typename T> inline
-bool QBasicAtomicOps<1>::ref(T &_q_value)
+bool QBasicAtomicOps<1>::ref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -161,7 +166,7 @@ bool QBasicAtomicOps<1>::ref(T &_q_value)
 }
 
 template<> template<typename T> inline
-bool QBasicAtomicOps<2>::ref(T &_q_value)
+bool QBasicAtomicOps<2>::ref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -174,7 +179,7 @@ bool QBasicAtomicOps<2>::ref(T &_q_value)
 }
 
 template<> template<typename T> inline
-bool QBasicAtomicOps<4>::ref(T &_q_value)
+bool QBasicAtomicOps<4>::ref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -187,7 +192,7 @@ bool QBasicAtomicOps<4>::ref(T &_q_value)
 }
 
 template<> template <typename T> inline
-bool QBasicAtomicOps<1>::deref(T &_q_value)
+bool QBasicAtomicOps<1>::deref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -201,7 +206,7 @@ bool QBasicAtomicOps<1>::deref(T &_q_value)
 }
 
 template<> template <typename T> inline
-bool QBasicAtomicOps<2>::deref(T &_q_value)
+bool QBasicAtomicOps<2>::deref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -214,7 +219,7 @@ bool QBasicAtomicOps<2>::deref(T &_q_value)
 }
 
 template<> template <typename T> inline
-bool QBasicAtomicOps<4>::deref(T &_q_value)
+bool QBasicAtomicOps<4>::deref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -227,7 +232,7 @@ bool QBasicAtomicOps<4>::deref(T &_q_value)
 }
 
 template<int size> template <typename T> inline
-bool QBasicAtomicOps<size>::testAndSetRelaxed(T &_q_value, T expectedValue, T newValue)
+bool QBasicAtomicOps<size>::testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -240,7 +245,7 @@ bool QBasicAtomicOps<size>::testAndSetRelaxed(T &_q_value, T expectedValue, T ne
 }
 
 template<> template <typename T> inline
-bool QBasicAtomicOps<1>::testAndSetRelaxed(T &_q_value, T expectedValue, T newValue)
+bool QBasicAtomicOps<1>::testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -253,7 +258,7 @@ bool QBasicAtomicOps<1>::testAndSetRelaxed(T &_q_value, T expectedValue, T newVa
 }
 
 template<int size> template <typename T> inline
-T QBasicAtomicOps<size>::fetchAndStoreRelaxed(T &_q_value, T newValue)
+T QBasicAtomicOps<size>::fetchAndStoreRelaxed(T &_q_value, T newValue) noexcept
 {
     asm volatile("xchg %0,%1"
                  : "=r" (newValue), "+m" (_q_value)
@@ -263,7 +268,7 @@ T QBasicAtomicOps<size>::fetchAndStoreRelaxed(T &_q_value, T newValue)
 }
 
 template<> template <typename T> inline
-T QBasicAtomicOps<1>::fetchAndStoreRelaxed(T &_q_value, T newValue)
+T QBasicAtomicOps<1>::fetchAndStoreRelaxed(T &_q_value, T newValue) noexcept
 {
     asm volatile("xchg %0,%1"
                  : "=q" (newValue), "+m" (_q_value)
@@ -273,7 +278,7 @@ T QBasicAtomicOps<1>::fetchAndStoreRelaxed(T &_q_value, T newValue)
 }
 
 template<int size> template <typename T> inline
-T QBasicAtomicOps<size>::fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd)
+T QBasicAtomicOps<size>::fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
 {
     T result;
     asm volatile("lock\n"
@@ -285,7 +290,7 @@ T QBasicAtomicOps<size>::fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiv
 }
 
 template<> template <typename T> inline
-T QBasicAtomicOps<1>::fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd)
+T QBasicAtomicOps<1>::fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
 {
     T result;
     asm volatile("lock\n"
@@ -341,7 +346,7 @@ T QBasicAtomicOps<1>::fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveTy
 #if defined(__x86_64) || defined(__x86_64__) || defined(__amd64)
 // native support for 64-bit types
 template<> template<typename T> inline
-bool QBasicAtomicOps<8>::ref(T &_q_value)
+bool QBasicAtomicOps<8>::ref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -354,7 +359,7 @@ bool QBasicAtomicOps<8>::ref(T &_q_value)
 }
 
 template<> template <typename T> inline
-bool QBasicAtomicOps<8>::deref(T &_q_value)
+bool QBasicAtomicOps<8>::deref(T &_q_value) noexcept
 {
     unsigned char ret;
     asm volatile("lock\n"
@@ -372,7 +377,7 @@ template <> struct QBasicAtomicOps<8>: QGenericAtomicOps<QBasicAtomicOps<8> >
     static inline constexpr bool isTestAndSetNative() noexcept { return true; }
     static inline constexpr bool isTestAndSetWaitFree() noexcept { return true; }
     template <typename T> static inline
-    bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue)
+    bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept
     {
 #ifdef __PIC__
 # define EBX_reg "r"

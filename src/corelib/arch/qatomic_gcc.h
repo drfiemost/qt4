@@ -47,6 +47,11 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 #if 0
+// silence syncqt warnings
+QT_END_NAMESPACE
+QT_END_HEADER
+
+#pragma qt_sync_skip_header_check
 #pragma qt_sync_stop_processing
 #endif
 
@@ -78,55 +83,61 @@ template<> struct QAtomicIntegerTraits<long long> { enum { IsInteger = 1 }; };
 template<> struct QAtomicIntegerTraits<unsigned long long> { enum { IsInteger = 1 }; };
 #endif
 
-template <typename T> struct QAtomicOps: QGenericAtomicOps<QAtomicOps<T> >
+template <typename X> struct QAtomicOps: QGenericAtomicOps<QAtomicOps<X> >
 {
     // The GCC intrinsics all have fully-ordered memory semantics, so we define
     // only the xxxRelaxed functions. The exception is __sync_lock_and_test,
     // which has acquire semantics, so we need to define the Release and
     // Ordered versions too.
 
-    typedef T Type;
+    typedef X Type;
 
 #ifndef __ia64__
-    static T loadAcquire(T &_q_value)
+    template <typename T>
+    static T loadAcquire(T &_q_value) noexcept
     {
         T tmp = _q_value;
         __sync_synchronize();
         return tmp;
     }
 
-    static void storeRelease(T &_q_value, T newValue)
+    template <typename T>
+    static void storeRelease(T &_q_value, T newValue) noexcept
     {
         __sync_synchronize();
         _q_value = newValue;
     }
 #endif
 
-    static bool isTestAndSetNative() { return false; }
-    static bool isTestAndSetWaitFree() { return false; }
-    static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue)
+    static constexpr bool isTestAndSetNative() noexcept { return false; }
+    static constexpr bool isTestAndSetWaitFree() noexcept { return false; }
+    template <typename T>
+    static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept
     {
         return __sync_bool_compare_and_swap(&_q_value, expectedValue, newValue);
     }
 
-    static T fetchAndStoreRelaxed(T &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreRelaxed(T &_q_value, T newValue) noexcept
     {
         return __sync_lock_test_and_set(&_q_value, newValue);
     }
 
-    static T fetchAndStoreRelease(T &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreRelease(T &_q_value, T newValue) noexcept
     {
         __sync_synchronize();
         return __sync_lock_test_and_set(&_q_value, newValue);
     }
 
-    static T fetchAndStoreOrdered(T &_q_value, T newValue)
+    template <typename T>
+    static T fetchAndStoreOrdered(T &_q_value, T newValue) noexcept
     {
         return fetchAndStoreRelease(_q_value, newValue);
     }
 
-    static
-    T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd)
+    template <typename T> static
+    T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
         return __sync_fetch_and_add(&_q_value, valueToAdd * QAtomicAdditiveType<T>::AddScale);
     }
