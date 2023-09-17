@@ -105,9 +105,9 @@ template <typename BaseClass> struct QGenericAtomicOps
         *static_cast<volatile T *>(&_q_value) = newValue;
     }
 
-    static inline bool isReferenceCountingNative()
+    static inline constexpr bool isReferenceCountingNative() noexcept
     { return BaseClass::isFetchAndAddNative(); }
-    static inline bool isReferenceCountingWaitFree()
+    static inline constexpr bool isReferenceCountingWaitFree() noexcept
     { return BaseClass::isFetchAndAddWaitFree(); }
     template <typename T> static inline always_inline
     bool ref(T &_q_value)
@@ -124,8 +124,8 @@ template <typename BaseClass> struct QGenericAtomicOps
 #if 0
     // These functions have no default implementation
     // Archictectures must implement them
-    static inline bool isTestAndSetNative();
-    static inline bool isTestAndSetWaitFree();
+    static inline constexpr bool isTestAndSetNative() noexcept;
+    static inline constexpr bool isTestAndSetWaitFree() noexcept;
     template <typename T> static inline
     bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue);
 #endif
@@ -152,8 +152,8 @@ template <typename BaseClass> struct QGenericAtomicOps
         return BaseClass::testAndSetRelaxed(_q_value, expectedValue, newValue);
     }
 
-    static inline bool isFetchAndStoreNative() { return false; }
-    static inline bool isFetchAndStoreWaitFree() { return false; }
+    static inline constexpr bool isFetchAndStoreNative() noexcept { return false; }
+    static inline constexpr bool isFetchAndStoreWaitFree() noexcept { return false; }
 
     template <typename T> static inline always_inline
     T fetchAndStoreRelaxed(T &_q_value, T newValue)
@@ -188,8 +188,8 @@ template <typename BaseClass> struct QGenericAtomicOps
         return BaseClass::fetchAndStoreRelaxed(_q_value, newValue);
     }
 
-    static inline bool isFetchAndAddNative() { return false; }
-    static inline bool isFetchAndAddWaitFree() { return false; }
+    static inline constexpr bool isFetchAndAddNative() noexcept { return false; }
+    static inline constexpr bool isFetchAndAddWaitFree() noexcept { return false; }
     template <typename T> static inline always_inline
     T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd)
     {

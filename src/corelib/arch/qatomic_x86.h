@@ -92,21 +92,21 @@ template<> struct QAtomicIntegerTraits<unsigned int> { enum { IsInteger = 1 }; }
 
 template <int size> struct QBasicAtomicOps: QGenericAtomicOps<QBasicAtomicOps<size> >
 {
-    static inline bool isReferenceCountingNative() { return true; }
-    static inline bool isReferenceCountingWaitFree() { return true; }
+    static inline constexpr bool isReferenceCountingNative() noexcept { return true; }
+    static inline constexpr bool isReferenceCountingWaitFree() noexcept { return true; }
     template <typename T> static bool ref(T &_q_value);
     template <typename T> static bool deref(T &_q_value);
 
-    static inline bool isTestAndSetNative() { return true; }
-    static inline bool isTestAndSetWaitFree() { return true; }
+    static inline constexpr bool isTestAndSetNative() noexcept { return true; }
+    static inline constexpr bool isTestAndSetWaitFree() noexcept { return true; }
     template <typename T> static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue);
 
-    static inline bool isFetchAndStoreNative() { return true; }
-    static inline bool isFetchAndStoreWaitFree() { return true; }
+    static inline constexpr bool isFetchAndStoreNative() noexcept { return true; }
+    static inline constexpr bool isFetchAndStoreWaitFree() noexcept { return true; }
     template <typename T> static T fetchAndStoreRelaxed(T &_q_value, T newValue);
 
-    static inline bool isFetchAndAddNative() { return true; }
-    static inline bool isFetchAndAddWaitFree() { return true; }
+    static inline constexpr bool isFetchAndAddNative() noexcept { return true; }
+    static inline constexpr bool isFetchAndAddWaitFree() noexcept { return true; }
     template <typename T> static
     T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd);
 };
@@ -378,8 +378,8 @@ bool QBasicAtomicOps<8>::deref(T &_q_value)
 // i386 architecture, emulate 64-bit support via cmpxchg8b
 template <> struct QBasicAtomicOps<8>: QGenericAtomicOps<QBasicAtomicOps<8> >
 {
-    static inline bool isTestAndSetNative() { return true; }
-    static inline bool isTestAndSetWaitFree() { return true; }
+    static inline constexpr bool isTestAndSetNative() noexcept { return true; }
+    static inline constexpr bool isTestAndSetWaitFree() noexcept { return true; }
     template <typename T> static inline
     bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue)
     {

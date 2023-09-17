@@ -62,7 +62,7 @@ class Q_CORE_EXPORT QAtomicInt : public QBasicAtomicInt
 {
 public:
     // Non-atomic API
-    inline QAtomicInt(int value = 0)
+    inline QAtomicInt(int value = 0) noexcept
     {
 #ifdef QT_ARCH_PARISC
         this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
@@ -70,7 +70,7 @@ public:
         _q_value = value;
     }
 
-    inline QAtomicInt(const QAtomicInt &other)
+    inline QAtomicInt(const QAtomicInt &other) noexcept
     {
 #ifdef QT_ARCH_PARISC
         this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
@@ -85,7 +85,7 @@ public:
         return *this;
     }
 
-    inline QAtomicInt &operator=(const QAtomicInt &other)
+    inline QAtomicInt &operator=(const QAtomicInt &other) noexcept
     {
         this->store(other.load());
         return *this;
@@ -116,30 +116,30 @@ public:
     }
 
 #ifdef qdoc
-    static bool isReferenceCountingNative();
-    static bool isReferenceCountingWaitFree();
+    static constexpr bool isReferenceCountingNative();
+    static constexpr bool isReferenceCountingWaitFree();
 
     bool ref();
     bool deref();
 
-    static bool isTestAndSetNative();
-    static bool isTestAndSetWaitFree();
+    static constexpr bool isTestAndSetNative();
+    static constexpr bool isTestAndSetWaitFree();
 
     bool testAndSetRelaxed(int expectedValue, int newValue);
     bool testAndSetAcquire(int expectedValue, int newValue);
     bool testAndSetRelease(int expectedValue, int newValue);
     bool testAndSetOrdered(int expectedValue, int newValue);
 
-    static bool isFetchAndStoreNative();
-    static bool isFetchAndStoreWaitFree();
+    static constexpr bool isFetchAndStoreNative();
+    static constexpr bool isFetchAndStoreWaitFree();
 
     int fetchAndStoreRelaxed(int newValue);
     int fetchAndStoreAcquire(int newValue);
     int fetchAndStoreRelease(int newValue);
     int fetchAndStoreOrdered(int newValue);
 
-    static bool isFetchAndAddNative();
-    static bool isFetchAndAddWaitFree();
+    static constexpr bool isFetchAndAddNative();
+    static constexpr bool isFetchAndAddWaitFree();
 
     int fetchAndAddRelaxed(int valueToAdd);
     int fetchAndAddAcquire(int valueToAdd);
@@ -153,14 +153,14 @@ template <typename T>
 class QAtomicPointer : public QBasicAtomicPointer<T>
 {
 public:
-    inline QAtomicPointer(T *value = 0)
+    inline QAtomicPointer(T *value = 0) noexcept
     {
 #ifdef QT_ARCH_PARISC
         this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
 #endif
         this->store(value);
     }
-    inline QAtomicPointer(const QAtomicPointer<T> &other)
+    inline QAtomicPointer(const QAtomicPointer<T> &other) noexcept
     {
 #ifdef QT_ARCH_PARISC
         this->_q_lock[0] = this->_q_lock[1] = this->_q_lock[2] = this->_q_lock[3] = -1;
@@ -175,7 +175,7 @@ public:
         return *this;
     }
 
-    inline QAtomicPointer<T> &operator=(const QAtomicPointer<T> &other)
+    inline QAtomicPointer<T> &operator=(const QAtomicPointer<T> &other) noexcept
     {
         this->store(other.load());
         return *this;
@@ -212,24 +212,24 @@ public:
     }
 
 #ifdef qdoc
-    static bool isTestAndSetNative();
-    static bool isTestAndSetWaitFree();
+    static constexpr bool isTestAndSetNative();
+    static constexpr bool isTestAndSetWaitFree();
 
     bool testAndSetRelaxed(T *expectedValue, T *newValue);
     bool testAndSetAcquire(T *expectedValue, T *newValue);
     bool testAndSetRelease(T *expectedValue, T *newValue);
     bool testAndSetOrdered(T *expectedValue, T *newValue);
 
-    static bool isFetchAndStoreNative();
-    static bool isFetchAndStoreWaitFree();
+    static constexpr bool isFetchAndStoreNative();
+    static constexpr bool isFetchAndStoreWaitFree();
 
     T *fetchAndStoreRelaxed(T *newValue);
     T *fetchAndStoreAcquire(T *newValue);
     T *fetchAndStoreRelease(T *newValue);
     T *fetchAndStoreOrdered(T *newValue);
 
-    static bool isFetchAndAddNative();
-    static bool isFetchAndAddWaitFree();
+    static constexpr bool isFetchAndAddNative();
+    static constexpr bool isFetchAndAddWaitFree();
 
     T *fetchAndAddRelaxed(qptrdiff valueToAdd);
     T *fetchAndAddAcquire(qptrdiff valueToAdd);

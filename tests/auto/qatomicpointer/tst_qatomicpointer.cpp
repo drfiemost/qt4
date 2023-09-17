@@ -59,6 +59,7 @@ public:
 
 private slots:
     void warningFree();
+    void alignment();
 
     void constructor();
     void copy_constructor();
@@ -131,6 +132,15 @@ void tst_QAtomicPointer::warningFree()
 
     void (*foo)() = &warningFreeHelper;
     (void)foo;
+}
+
+void tst_QAtomicPointer::alignment()
+{
+#ifdef Q_ALIGNOF
+    // this will cause a build error if the alignment isn't the same
+    char dummy[Q_ALIGNOF(QBasicAtomicPointer<void>) == Q_ALIGNOF(void*) ? 1 : -1];
+    (void)dummy;
+#endif
 }
 
 void tst_QAtomicPointer::constructor()
