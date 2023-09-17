@@ -50,31 +50,15 @@
   // not ported yet
 #  define QT_OLD_ATOMICS
 
-// Operating system dependent implementation
-#elif defined(QT_ARCH_INTEGRITY)
-#  include "QtCore/qatomic_integrity.h"
-#elif defined(QT_ARCH_VXWORKS)
-#  include "QtCore/qatomic_vxworks.h"
-
 // Processor dependent implementation
-#elif defined(QT_ARCH_ALPHA)
-#  include "QtCore/qatomic_alpha.h"
 #elif defined(QT_ARCH_ARM)
 #  include "QtCore/qatomic_arm.h"
 #elif defined(QT_ARCH_ARMV6)
 #  include "QtCore/qatomic_armv6.h"
-#elif defined(QT_ARCH_BFIN)
-#  include "QtCore/qatomic_bfin.h"
 #elif defined(QT_ARCH_IA64)
 #  include "QtCore/qatomic_ia64.h"
 #elif defined(QT_ARCH_MIPS)
 #  include "QtCore/qatomic_mips.h"
-#elif defined(QT_ARCH_POWERPC)
-#  include "QtCore/qatomic_powerpc.h"
-#elif defined(QT_ARCH_S390)
-#  include "QtCore/qatomic_s390.h"
-#elif defined(QT_ARCH_SH4A)
-#  include "QtCore/qatomic_sh4a.h"
 #elif defined(QT_ARCH_SPARC)
 #  include "QtCore/qatomic_sparc.h"
 #elif defined(__i386) || defined(__i386__) || defined(__x86_64) || defined(__x86_64__) || defined(__amd64)
@@ -88,9 +72,6 @@
 #else
 #  error "Qt has not been ported to this platform"
 #endif
-
-// Only include if the implementation has been ported to QAtomicOps
-#ifndef QOLDBASICATOMIC_H
 
 QT_BEGIN_HEADER
 
@@ -252,7 +233,5 @@ public:
 QT_END_NAMESPACE
 
 QT_END_HEADER
-
-#endif // QOLDBASICATOMIC_H
 
 #endif // QBASICATOMIC_H
