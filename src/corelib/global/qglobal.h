@@ -62,6 +62,11 @@
 #include <QtCore/qconfig.h>
 #endif
 
+/* These two macros makes it possible to turn the builtin line expander into a
+ * string literal. */
+#define QT_STRINGIFY2(x) #x
+#define QT_STRINGIFY(x) QT_STRINGIFY2(x)
+
 #ifdef __cplusplus
 
 #ifndef QT_NO_STL
@@ -1850,17 +1855,7 @@ inline T *q_check_ptr(T *p) { Q_CHECK_PTR(p); return p; }
 #   if defined(Q_OS_SOLARIS) || defined(Q_CC_XLC)
 #      define Q_FUNC_INFO __FILE__ "(line number unavailable)"
 #   else
-        /* These two macros makes it possible to turn the builtin line expander into a
-         * string literal. */
-#       define QT_STRINGIFY2(x) #x
-#       define QT_STRINGIFY(x) QT_STRINGIFY2(x)
 #       define Q_FUNC_INFO __FILE__ ":" QT_STRINGIFY(__LINE__)
-#   endif
-    /* The MIPSpro and RVCT compilers postpones macro expansion,
-       and therefore macros must be in scope when being used. */
-#   if !defined(Q_CC_MIPS) && !defined(Q_CC_RVCT) && !defined(Q_CC_NOKIAX86)
-#       undef QT_STRINGIFY2
-#       undef QT_STRINGIFY
 #   endif
 #endif
 
@@ -2103,6 +2098,7 @@ class QTypeInfo
 public:
     enum {
         isPointer = false,
+        isIntegral = false,
         isComplex = true,
         isStatic = true,
         isLarge = (sizeof(T)>sizeof(void*)),
@@ -2116,6 +2112,7 @@ class QTypeInfo<T*>
 public:
     enum {
         isPointer = true,
+        isIntegral = false,
         isComplex = false,
         isStatic = false,
         isLarge = false,
@@ -2136,7 +2133,8 @@ enum { /* TYPEINFO flags */
     Q_PRIMITIVE_TYPE = 0x1,
     Q_STATIC_TYPE = 0,
     Q_MOVABLE_TYPE = 0x2,
-    Q_DUMMY_TYPE = 0x4
+    Q_DUMMY_TYPE = 0x4,
+    Q_INTEGRAL_TYPE = 0x8
 };
 
 #define Q_DECLARE_TYPEINFO_BODY(TYPE, FLAGS) \
@@ -2148,6 +2146,7 @@ public: \
         isStatic = (((FLAGS) & (Q_MOVABLE_TYPE | Q_PRIMITIVE_TYPE)) == 0), \
         isLarge = (sizeof(TYPE)>sizeof(void*)), \
         isPointer = false, \
+        isIntegral = ((FLAGS) & Q_INTEGRAL_TYPE) != 0, \
         isDummy = (((FLAGS) & Q_DUMMY_TYPE) != 0) \
     }; \
     static inline const char *name() { return #TYPE; } \
@@ -2201,22 +2200,32 @@ Q_DECLARE_SHARED_STL(TYPE)
 /*
    QTypeInfo primitive specializations
 */
-Q_DECLARE_TYPEINFO(bool, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(char, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(signed char, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(uchar, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(short, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(ushort, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(int, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(uint, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(long, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(ulong, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(qint64, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(quint64, Q_PRIMITIVE_TYPE);
+Q_DECLARE_TYPEINFO(bool, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(char, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(signed char, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(uchar, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(short, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(ushort, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(int, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(uint, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(long, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(ulong, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(qint64, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(quint64, Q_PRIMITIVE_TYPE | Q_INTEGRAL_TYPE);
 Q_DECLARE_TYPEINFO(float, Q_PRIMITIVE_TYPE);
 Q_DECLARE_TYPEINFO(double, Q_PRIMITIVE_TYPE);
 #ifndef Q_OS_DARWIN
 Q_DECLARE_TYPEINFO(long double, Q_PRIMITIVE_TYPE);
+#endif
+#ifdef Q_COMPILER_UNICODE_STRINGS
+// ### Qt6: define as Q_PRIMITIVE_TYPE
+// We can't do it now because it would break BC on QList<char32_t>
+Q_DECLARE_TYPEINFO(char16_t, Q_INTEGRAL_TYPE);
+Q_DECLARE_TYPEINFO(char32_t, Q_INTEGRAL_TYPE);
+#endif
+#if !defined(Q_CC_MSVC) || defined(_NATIVE_WCHAR_T_DEFINED)
+// ### Qt6: same as above
+Q_DECLARE_TYPEINFO(wchar_t, Q_INTEGRAL_TYPE);
 #endif
 
 /*

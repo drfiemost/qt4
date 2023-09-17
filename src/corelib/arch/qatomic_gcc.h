@@ -50,8 +50,7 @@ QT_BEGIN_NAMESPACE
 #pragma qt_sync_stop_processing
 #endif
 
-template<> struct QAtomicIntegerTraits<int> { enum { IsInteger = 1 }; };
-template<> struct QAtomicIntegerTraits<unsigned int> { enum { IsInteger = 1 }; };
+template<> struct QAtomicOpsSupport<8> { enum { IsSupported = 1 }; };
 
 #define Q_ATOMIC_INT_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE
 #define Q_ATOMIC_INT_TEST_AND_SET_IS_SOMETIMES_NATIVE
@@ -68,6 +67,16 @@ template<> struct QAtomicIntegerTraits<unsigned int> { enum { IsInteger = 1 }; }
 #define Q_ATOMIC_POINTER_TEST_AND_SET_IS_SOMETIMES_NATIVE
 #define Q_ATOMIC_POINTER_FETCH_AND_STORE_IS_SOMETIMES_NATIVE
 #define Q_ATOMIC_POINTER_FETCH_AND_ADD_IS_SOMETIMES_NATIVE
+
+#if QT_POINTER_SIZE == 8
+#  define Q_ATOMIC_INT64_IS_SUPPORTED
+#  define Q_ATOMIC_INT64_REFERENCE_COUNTING_IS_SOMETIMES_NATIVE
+#  define Q_ATOMIC_INT64_TEST_AND_SET_IS_SOMETIMES_NATIVE
+#  define Q_ATOMIC_INT64_FETCH_AND_STORE_IS_SOMETIMES_NATIVE
+#  define Q_ATOMIC_INT64_FETCH_AND_ADD_IS_SOMETIMES_NATIVE
+template<> struct QAtomicIntegerTraits<long long> { enum { IsInteger = 1 }; };
+template<> struct QAtomicIntegerTraits<unsigned long long> { enum { IsInteger = 1 }; };
+#endif
 
 template <typename T> struct QAtomicOps: QGenericAtomicOps<QAtomicOps<T> >
 {

@@ -56,7 +56,8 @@ QT_BEGIN_NAMESPACE
 #define always_inline
 #endif
 
-template<typename T> struct QAtomicIntegerTraits { enum { IsInteger = 0 }; };
+template<int> struct QAtomicOpsSupport { enum { IsSupported = 0 }; };
+template<> struct QAtomicOpsSupport<4> { enum { IsSupported = 1 }; };
 
 template <typename T> struct QAtomicAdditiveType
 {
