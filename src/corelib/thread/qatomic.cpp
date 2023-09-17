@@ -275,7 +275,7 @@
 */
 
 /*! 
-    \fn int QAtomicInteger::load() const
+    \fn T QAtomicInteger::load() const
 
     Atomically loads the value of this QAtomicInteger using relaxed memory
     ordering. The value is not modified in any way, but note that there's no
@@ -284,7 +284,7 @@
 */
 
 /*!
-    \fn int QAtomicInteger::loadAcquire() const
+    \fn T QAtomicInteger::loadAcquire() const
 
     Atomically loads the value of this QAtomicInteger using the "Acquire" memory
     ordering. The value is not modified in any way, but note that there's no
@@ -293,7 +293,7 @@
 */
 
 /*!
-    \fn void QAtomicInteger::store(int newValue)
+    \fn void QAtomicInteger::store(T newValue)
 
     Atomically stores the \a newValue value into this atomic type, using
     relaxed memory ordering.
@@ -301,8 +301,55 @@
 */
 
 /*!
-    \fn void QAtomicInteger::storeRelease(int newValue)
+    \fn void QAtomicInteger::storeRelease(T newValue)
 
+    Atomically stores the \a newValue value into this atomic type, using
+    the "Release" memory ordering.
+    \sa store(), load()
+*/
+
+/*!
+    \fn QAtomicInteger::operator T() const
+    Atomically loads the value of this QAtomicInteger using a sequentially
+    consistent memory ordering if possible; or "Acquire" ordering if not. The
+    value is not modified in any way, but note that there's no guarantee that
+    it remains so.
+    \sa load(), loadAcquire()
+*/
+
+/*!
+    \fn QAtomicInteger &QAtomicInteger::operator=(T newValue)
+    Atomically stores the \a newValue value into this atomic type using a
+    sequentially consistent memory ordering if possible; or "Release" ordering
+    if not. This function returns a reference to this object.
+    \sa store(), storeRelease()
+*/
+
+/*!
+    \fn int QAtomicInt::load() const
+    Atomically loads the value of this QAtomicInt using relaxed memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa store(), loadAcquire()
+*/
+
+/*!
+    \fn int QAtomicInt::loadAcquire() const
+    Atomically loads the value of this QAtomicInt using the "Acquire" memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa store(), load()
+*/
+
+/*!
+    \fn void QAtomicInt::store(int newValue)
+    Atomically stores the \a newValue value into this atomic type, using
+    relaxed memory ordering.
+    \sa storeRelease(), load()
+*/
+
+/*!
+    \fn void QAtomicInt::storeRelease(int newValue)
     Atomically stores the \a newValue value into this atomic type, using
     the "Release" memory ordering.
     \sa store(), load()
@@ -329,7 +376,25 @@
     access before and after the atomic operation (in program order)
     may not be re-ordered.
 
-    \sa deref()
+    \sa deref(), operator++()
+*/
+
+/*!
+    \fn T QAtomicInteger::operator++()
+    Atomically pre-increments the value of this QAtomicInteger. Returns the new
+    value of this atomic.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa ref(), operator++(int), operator--()
+*/
+
+/*!
+    \fn T QAtomicInteger::operator++(int)
+    Atomically post-increments the value of this QAtomicInteger. Returns the old
+    value of this atomic.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa ref(), operator++(), operator--(int)
 */
 
 /*! \fn bool QAtomicInteger::deref()
@@ -341,7 +406,55 @@
     access before and after the atomic operation (in program order)
     may not be re-ordered.
 
-    \sa ref()
+    \sa ref(), operator--()
+*/
+
+/*!
+    \fn T QAtomicInteger::operator--()
+    Atomically pre-decrements the value of this QAtomicInteger. Returns the new
+    value of this atomic.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa deref(), operator--(int), operator++()
+*/
+
+/*!
+    \fn T QAtomicInteger::operator--(int)
+    Atomically post-decrements the value of this QAtomicInteger. Returns the old
+    value of this atomic.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa deref(), operator--(), operator++(int)
+*/
+
+/*!
+    \fn T *QAtomicPointer::load() const
+    Atomically loads the value of this QAtomicPointer using relaxed memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa store(), loadAcquire()
+*/
+
+/*!
+    \fn T *QAtomicPointer::loadAcquire() const
+    Atomically loads the value of this QAtomicPointerusing the "Acquire" memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa store(), load()
+*/
+
+/*!
+    \fn void QAtomicPointer::store(T *newValue)
+    Atomically stores the \a newValue value into this atomic type, using
+    relaxed memory ordering.
+    \sa storeRelease(), load()
+*/
+
+/*!
+    \fn void QAtomicPointer::storeRelease(T *newValue)
+    Atomically stores the \a newValue value into this atomic type, using
+    the "Release" memory ordering.
+    \sa store(), load()
 */
 
 /*! \fn bool QAtomicInteger::isTestAndSetNative()
@@ -355,7 +468,7 @@
     Returns true if atomic test-and-set is wait-free, false otherwise.
 */
 
-/*! \fn bool QAtomicInteger::testAndSetRelaxed(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetRelaxed(T expectedValue, T newValue)
 
     Atomic test-and-set.
 
@@ -369,7 +482,7 @@
     processor to freely reorder memory accesses.
 */
 
-/*! \fn bool QAtomicInteger::testAndSetAcquire(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetAcquire(T expectedValue, T newValue)
 
     Atomic test-and-set.
 
@@ -384,7 +497,7 @@
     be re-ordered before the atomic operation.
 */
 
-/*! \fn bool QAtomicInteger::testAndSetRelease(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetRelease(T expectedValue, T newValue)
 
     Atomic test-and-set.
 
@@ -399,7 +512,7 @@
     re-ordered after the atomic operation.
 */
 
-/*! \fn bool QAtomicInteger::testAndSetOrdered(int expectedValue, int newValue)
+/*! \fn bool QAtomicInteger::testAndSetOrdered(T expectedValue, T newValue)
 
     Atomic test-and-set.
 
@@ -426,7 +539,7 @@
     otherwise.
 */
 
-/*! \fn int QAtomicInteger::fetchAndStoreRelaxed(int newValue)
+/*! \fn T QAtomicInteger::fetchAndStoreRelaxed(T newValue)
 
     Atomic fetch-and-store.
 
@@ -438,7 +551,7 @@
     processor to freely reorder memory accesses.
 */
 
-/*! \fn int QAtomicInteger::fetchAndStoreAcquire(int newValue)
+/*! \fn T QAtomicInteger::fetchAndStoreAcquire(T newValue)
 
     Atomic fetch-and-store.
 
@@ -451,7 +564,7 @@
     be re-ordered before the atomic operation.
 */
 
-/*! \fn int QAtomicInteger::fetchAndStoreRelease(int newValue)
+/*! \fn T QAtomicInteger::fetchAndStoreRelease(T newValue)
 
     Atomic fetch-and-store.
 
@@ -464,7 +577,7 @@
     re-ordered after the atomic operation.
 */
 
-/*! \fn int QAtomicInteger::fetchAndStoreOrdered(int newValue)
+/*! \fn T QAtomicInteger::fetchAndStoreOrdered(T newValue)
 
     Atomic fetch-and-store.
 
@@ -489,7 +602,7 @@
     otherwise.
 */
 
-/*! \fn int QAtomicInteger::fetchAndAddRelaxed(int valueToAdd)
+/*! \fn T QAtomicInteger::fetchAndAddRelaxed(T valueToAdd)
 
     Atomic fetch-and-add.
 
@@ -499,9 +612,11 @@
     This function uses \e relaxed \l {QAtomicInteger#Memory
     ordering}{memory ordering} semantics, leaving the compiler and
     processor to freely reorder memory accesses.
+
+    \sa operator+=(), fetchAndSubRelaxed()
 */
 
-/*! \fn int QAtomicInteger::fetchAndAddAcquire(int valueToAdd)
+/*! \fn T QAtomicInteger::fetchAndAddAcquire(T valueToAdd)
 
     Atomic fetch-and-add.
 
@@ -512,9 +627,11 @@
     ordering}{memory ordering} semantics, which ensures that memory
     access following the atomic operation (in program order) may not
     be re-ordered before the atomic operation.
+
+    \sa operator+=(), fetchAndSubAcquire()
 */
 
-/*! \fn int QAtomicInteger::fetchAndAddRelease(int valueToAdd)
+/*! \fn T QAtomicInteger::fetchAndAddRelease(T valueToAdd)
 
     Atomic fetch-and-add.
 
@@ -525,9 +642,11 @@
     ordering}{memory ordering} semantics, which ensures that memory
     access before the atomic operation (in program order) may not be
     re-ordered after the atomic operation.
+
+    \sa operator+=(), fetchAndSubRelease()
 */
 
-/*! \fn int QAtomicInteger::fetchAndAddOrdered(int valueToAdd)
+/*! \fn T QAtomicInteger::fetchAndAddOrdered(T valueToAdd)
 
     Atomic fetch-and-add.
 
@@ -538,8 +657,238 @@
     ordering}{memory ordering} semantics, which ensures that memory
     access before and after the atomic operation (in program order)
     may not be re-ordered.
+
+    \sa operator+=(), fetchAndSubOrdered()
 */
 
+/*! \fn T QAtomicInteger::operator+=(T valueToAdd)
+
+    Atomic add-and-fetch.
+    Reads the current value of this QAtomicInteger and then adds
+    \a valueToAdd to the current value, returning the new value value.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa fetchAndAddOrdered(), operator-=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndSubRelaxed(T valueToSub)
+
+    Atomic fetch-and-sub.
+    Reads the current value of this QAtomicInteger and then subtracts
+    \a valueToSub to the current value, returning the original value.
+    This function uses \e relaxed \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, leaving the compiler and
+    processor to freely reorder memory accesses.
+    \sa operator-=(), fetchAndAddRelaxed()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndSubAcquire(T valueToSub)
+
+    Atomic fetch-and-sub.
+    Reads the current value of this QAtomicInteger and then subtracts
+    \a valueToSub to the current value, returning the original value.
+    This function uses \e acquire \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access following the atomic operation (in program order) may not
+    be re-ordered before the atomic operation.
+    \sa operator-=(), fetchAndAddAcquire()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndSubRelease(T valueToSub)
+    Atomic fetch-and-sub.
+    Reads the current value of this QAtomicInteger and then subtracts
+    \a valueToSub to the current value, returning the original value.
+    This function uses \e release \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before the atomic operation (in program order) may not be
+    re-ordered after the atomic operation.
+    \sa operator-=(), fetchAndAddRelease()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndSubOrdered(T valueToSub)
+
+    Atomic fetch-and-sub.
+    Reads the current value of this QAtomicInteger and then subtracts
+    \a valueToSub to the current value, returning the original value.
+    This function uses \e ordered \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before and after the atomic operation (in program order)
+    may not be re-ordered.
+    \sa operator-=(), fetchAndAddOrdered()
+*/
+
+/*! \fn T QAtomicInteger::operator-=(T valueToSub)
+
+    Atomic sub-and-fetch.
+    Reads the current value of this QAtomicInteger and then subtracts
+    \a valueToSub to the current value, returning the new value value.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa fetchAndSubOrdered(), operator+=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndOrRelaxed(T valueToOr)
+
+    Atomic fetch-and-or.
+    Reads the current value of this QAtomicInteger and then bitwise-ORs
+    \a valueToOr to the current value, returning the original value.
+    This function uses \e relaxed \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, leaving the compiler and
+    processor to freely reorder memory accesses.
+    \sa operator|=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndOrAcquire(T valueToOr)
+
+    Atomic fetch-and-or.
+    Reads the current value of this QAtomicInteger and then bitwise-ORs
+    \a valueToOr to the current value, returning the original value.
+    This function uses \e acquire \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access following the atomic operation (in program order) may not
+    be re-ordered before the atomic operation.
+    \sa operator|=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndOrRelease(T valueToOr)
+
+    Atomic fetch-and-or.
+    Reads the current value of this QAtomicInteger and then bitwise-ORs
+    \a valueToOr to the current value, returning the original value.
+    This function uses \e release \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before the atomic operation (in program order) may not be
+    re-ordered after the atomic operation.
+    \sa operator|=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndOrOrdered(T valueToOr)
+
+    Atomic fetch-and-or.
+    Reads the current value of this QAtomicInteger and then bitwise-ORs
+    \a valueToOr to the current value, returning the original value.
+    This function uses \e ordered \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before and after the atomic operation (in program order)
+    may not be re-ordered.
+    \sa operator|=()
+*/
+
+/*! \fn T QAtomicInteger::operator|=(T valueToOr)
+    
+    Atomic or-and-fetch.
+    Reads the current value of this QAtomicInteger and then bitwise-ORs
+    \a valueToOr to the current value, returning the new value value.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa fetchAndOrOrdered()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndXorRelaxed(T valueToXor)
+
+    Atomic fetch-and-xor.
+    Reads the current value of this QAtomicInteger and then bitwise-XORs
+    \a valueToXor to the current value, returning the original value.
+    This function uses \e relaxed \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, leaving the compiler and
+    processor to freely reorder memory accesses.
+    \sa operator^=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndXorAcquire(T valueToXor)
+    Atomic fetch-and-xor.
+    Reads the current value of this QAtomicInteger and then bitwise-XORs
+    \a valueToXor to the current value, returning the original value.
+    This function uses \e acquire \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access following the atomic operation (in program order) may not
+    be re-ordered before the atomic operation.
+    \sa operator^=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndXorRelease(T valueToXor)
+    Atomic fetch-and-xor.
+    Reads the current value of this QAtomicInteger and then bitwise-XORs
+    \a valueToXor to the current value, returning the original value.
+    This function uses \e release \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before the atomic operation (in program order) may not be
+    re-ordered after the atomic operation.
+    \sa operator^=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndXorOrdered(T valueToXor)
+    Atomic fetch-and-xor.
+    Reads the current value of this QAtomicInteger and then bitwise-XORs
+    \a valueToXor to the current value, returning the original value.
+    This function uses \e ordered \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before and after the atomic operation (in program order)
+    may not be re-ordered.
+    \sa operator^=()
+*/
+
+/*! \fn T QAtomicInteger::operator^=(T valueToXor)
+    Atomic xor-and-fetch.
+    Reads the current value of this QAtomicInteger and then bitwise-XORs
+    \a valueToXor to the current value, returning the new value value.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa fetchAndXorOrdered()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndAndRelaxed(T valueToAnd)
+    Atomic fetch-and-and.
+    Reads the current value of this QAtomicInteger and then bitwise-ANDs
+    \a valueToAnd to the current value, returning the original value.
+    This function uses \e relaxed \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, leaving the compiler and
+    processor to freely reorder memory accesses.
+    \sa operator&=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndAndAcquire(T valueToAnd)
+
+    Atomic fetch-and-and.
+    Reads the current value of this QAtomicInteger and then bitwise-ANDs
+    \a valueToAnd to the current value, returning the original value.
+    This function uses \e acquire \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access following the atomic operation (in program order) may not
+    be re-ordered before the atomic operation.
+    \sa operator&=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndAndRelease(T valueToAnd)
+    Atomic fetch-and-and.
+    Reads the current value of this QAtomicInteger and then bitwise-ANDs
+    \a valueToAnd to the current value, returning the original value.
+    This function uses \e release \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before the atomic operation (in program order) may not be
+    re-ordered after the atomic operation.
+    \sa operator&=()
+*/
+
+/*! \fn T QAtomicInteger::fetchAndAndOrdered(T valueToAnd)
+    Atomic fetch-and-and.
+    Reads the current value of this QAtomicInteger and then bitwise-ANDs
+    \a valueToAnd to the current value, returning the original value.
+    This function uses \e ordered \l {QAtomicInteger#Memory
+    ordering}{memory ordering} semantics, which ensures that memory
+    access before and after the atomic operation (in program order)
+    may not be re-ordered.
+    \sa operator&=()
+*/
+
+/*! \fn T QAtomicInteger::operator&=(T valueToAnd)
+    Atomic add-and-fetch.
+    Reads the current value of this QAtomicInteger and then bitwise-ANDs
+    \a valueToAnd to the current value, returning the new value value.
+    This function uses a sequentially consistent memory ordering if possible;
+    or "Ordered" ordering if not.
+    \sa fetchAndAndOrdered()
+*/
 /*!
 \macro Q_ATOMIC_INTnn_IS_SUPPORTED
     \relates QAtomicInteger

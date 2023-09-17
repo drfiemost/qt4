@@ -102,6 +102,8 @@ template <int size> struct QBasicAtomicOps: QGenericAtomicOps<QBasicAtomicOps<si
     static inline constexpr bool isTestAndSetNative() noexcept { return true; }
     static inline constexpr bool isTestAndSetWaitFree() noexcept { return true; }
     template <typename T> static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept;
+    template <typename T> static bool
+    testAndSetRelaxed(T &_q_value, T expectedValue, T newValue, T *currentValue) noexcept;
 
     static inline constexpr bool isFetchAndStoreNative() noexcept { return true; }
     static inline constexpr bool isFetchAndStoreWaitFree() noexcept { return true; }
@@ -254,6 +256,36 @@ bool QBasicAtomicOps<1>::testAndSetRelaxed(T &_q_value, T expectedValue, T newVa
                  : "=a" (newValue), "=qm" (ret), "+m" (_q_value)
                  : "q" (newValue), "0" (expectedValue)
                  : "memory");
+    return ret != 0;
+}
+
+template<int size> template <typename T> inline
+bool QBasicAtomicOps<size>::testAndSetRelaxed(T &_q_value, T expectedValue,
+                                              T newValue, T *currentValue) noexcept
+{
+    unsigned char ret;
+    asm volatile("lock\n"
+                 "cmpxchg %3,%2\n"
+                 "sete %1\n"
+                 : "=a" (newValue), "=qm" (ret), "+m" (_q_value)
+                 : "r" (newValue), "0" (expectedValue)
+                 : "memory");
+    *currentValue = newValue;
+    return ret != 0;
+}
+
+template<> template <typename T> inline
+bool QBasicAtomicOps<1>::testAndSetRelaxed(T &_q_value, T expectedValue,
+                                           T newValue, T *currentValue) noexcept
+{
+    unsigned char ret;
+    asm volatile("lock\n"
+                 "cmpxchg %3,%2\n"
+                 "sete %1\n"
+                 : "=a" (newValue), "=qm" (ret), "+m" (_q_value)
+                 : "q" (newValue), "0" (expectedValue)
+                 : "memory");
+    *currentValue = newValue;
     return ret != 0;
 }
 

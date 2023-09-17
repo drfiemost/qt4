@@ -151,28 +151,40 @@ template <typename X> struct QAtomicOps
     static inline constexpr bool isTestAndSetNative() noexcept { return false; }
     static inline constexpr bool isTestAndSetWaitFree() noexcept { return false; }
 
-    template <typename T> static
-    bool testAndSetRelaxed(Type &_q_value, T expectedValue, T newValue) noexcept
+    template <typename T>
+    static bool testAndSetRelaxed(std::atomic<T> &_q_value, T expectedValue, T newValue, T *currentValue = 0)  noexcept
     {
-        return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_relaxed);
+        bool tmp = _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_relaxed);
+        if (currentValue)
+            *currentValue = expectedValue;
+        return tmp;
     }
 
     template <typename T>
-    static bool testAndSetAcquire(Type &_q_value, T expectedValue, T newValue) noexcept
+    static bool testAndSetAcquire(std::atomic<T> &_q_value, T expectedValue, T newValue, T *currentValue = 0)  noexcept
     {
-        return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_acquire);
+        bool tmp = _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_acquire);
+        if (currentValue)
+            *currentValue = expectedValue;
+        return tmp;
     }
 
     template <typename T>
-    static bool testAndSetRelease(Type &_q_value, T expectedValue, T newValue) noexcept
+    static bool testAndSetRelease(std::atomic<T> &_q_value, T expectedValue, T newValue, T *currentValue = 0) noexcept
     {
-        return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_release);
+        bool tmp = _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_release);
+        if (currentValue)
+            *currentValue = expectedValue;
+        return tmp;
     }
 
     template <typename T>
-    static bool testAndSetOrdered(Type &_q_value, T expectedValue, T newValue) noexcept
+    static bool testAndSetOrdered(std::atomic<T> &_q_value, T expectedValue, T newValue, T *currentValue = 0) noexcept
     {
-        return _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_acq_rel);
+        bool tmp = _q_value.compare_exchange_strong(expectedValue, newValue, std::memory_order_acq_rel);
+        if (currentValue)
+            *currentValue = expectedValue;
+        return tmp;
     }
 
     static inline constexpr bool isFetchAndStoreNative() noexcept { return false; }
@@ -227,6 +239,102 @@ template <typename X> struct QAtomicOps
     T fetchAndAddOrdered(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
         return _q_value.fetch_add(valueToAdd, std::memory_order_acq_rel);
+    }
+
+    template <typename T> static inline
+    T fetchAndSubRelaxed(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_sub(valueToAdd, std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    T fetchAndSubAcquire(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_sub(valueToAdd, std::memory_order_acquire);
+    }
+
+    template <typename T> static inline
+    T fetchAndSubRelease(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_sub(valueToAdd, std::memory_order_release);
+    }
+
+    template <typename T> static inline
+    T fetchAndSubOrdered(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_sub(valueToAdd, std::memory_order_acq_rel);
+    }
+
+    template <typename T> static inline
+    T fetchAndAndRelaxed(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_and(valueToAdd, std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    T fetchAndAndAcquire(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_and(valueToAdd, std::memory_order_acquire);
+    }
+
+    template <typename T> static inline
+    T fetchAndAndRelease(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_and(valueToAdd, std::memory_order_release);
+    }
+
+    template <typename T> static inline
+    T fetchAndAndOrdered(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_and(valueToAdd, std::memory_order_acq_rel);
+    }
+
+    template <typename T> static inline
+    T fetchAndOrRelaxed(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_or(valueToAdd, std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    T fetchAndOrAcquire(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_or(valueToAdd, std::memory_order_acquire);
+    }
+
+    template <typename T> static inline
+    T fetchAndOrRelease(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_or(valueToAdd, std::memory_order_release);
+    }
+
+    template <typename T> static inline
+    T fetchAndOrOrdered(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_or(valueToAdd, std::memory_order_acq_rel);
+    }
+
+    template <typename T> static inline
+    T fetchAndXorRelaxed(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_xor(valueToAdd, std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    T fetchAndXorAcquire(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_xor(valueToAdd, std::memory_order_acquire);
+    }
+
+    template <typename T> static inline
+    T fetchAndXorRelease(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_xor(valueToAdd, std::memory_order_release);
+    }
+
+    template <typename T> static inline
+    T fetchAndXorOrdered(std::atomic<T> &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
+    {
+        return _q_value.fetch_xor(valueToAdd, std::memory_order_acq_rel);
     }
 };
 

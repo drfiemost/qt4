@@ -80,13 +80,6 @@ public:
         this->store(other.load());
     }
 
-    Q_DECL_DEPRECATED
-    inline QAtomicInteger &operator=(int value)
-    {
-        this->store(value);
-        return *this;
-    }
-
     inline QAtomicInteger &operator=(const QAtomicInteger &other) noexcept
     {
         this->store(other.load());
@@ -106,18 +99,20 @@ public:
     }
 
     Q_DECL_DEPRECATED
-    inline operator int() const
-    {
-        return this->load();
-    }
-
-    Q_DECL_DEPRECATED
     inline bool operator!() const
     {
         return !this->load();
     }
 
 #ifdef qdoc
+    T load() const;
+    T loadAcquire() const;
+    void store(T newValue);
+    void storeRelease(T newValue);
+
+    operator T() const;
+    QAtomicInteger &operator=(T);
+
     static constexpr bool isReferenceCountingNative();
     static constexpr bool isReferenceCountingWaitFree();
 
@@ -127,26 +122,56 @@ public:
     static constexpr bool isTestAndSetNative();
     static constexpr bool isTestAndSetWaitFree();
 
-    bool testAndSetRelaxed(int expectedValue, int newValue);
-    bool testAndSetAcquire(int expectedValue, int newValue);
-    bool testAndSetRelease(int expectedValue, int newValue);
-    bool testAndSetOrdered(int expectedValue, int newValue);
+    bool testAndSetRelaxed(T expectedValue, T newValue);
+    bool testAndSetAcquire(T expectedValue, T newValue);
+    bool testAndSetRelease(T expectedValue, T newValue);
+    bool testAndSetOrdered(T expectedValue, T newValue);
 
     static constexpr bool isFetchAndStoreNative();
     static constexpr bool isFetchAndStoreWaitFree();
 
-    int fetchAndStoreRelaxed(int newValue);
-    int fetchAndStoreAcquire(int newValue);
-    int fetchAndStoreRelease(int newValue);
-    int fetchAndStoreOrdered(int newValue);
+    T fetchAndStoreRelaxed(T newValue);
+    T fetchAndStoreAcquire(T newValue);
+    T fetchAndStoreRelease(T newValue);
+    T fetchAndStoreOrdered(T newValue);
 
     static constexpr bool isFetchAndAddNative();
     static constexpr bool isFetchAndAddWaitFree();
 
-    int fetchAndAddRelaxed(int valueToAdd);
-    int fetchAndAddAcquire(int valueToAdd);
-    int fetchAndAddRelease(int valueToAdd);
-    int fetchAndAddOrdered(int valueToAdd);
+    T fetchAndAddRelaxed(T valueToAdd);
+    T fetchAndAddAcquire(T valueToAdd);
+    T fetchAndAddRelease(T valueToAdd);
+    T fetchAndAddOrdered(T valueToAdd);
+
+    T fetchAndSubRelaxed(T valueToSub);
+    T fetchAndSubAcquire(T valueToSub);
+    T fetchAndSubRelease(T valueToSub);
+    T fetchAndSubOrdered(T valueToSub);
+
+    T fetchAndOrRelaxed(T valueToOr);
+    T fetchAndOrAcquire(T valueToOr);
+    T fetchAndOrRelease(T valueToOr);
+    T fetchAndOrOrdered(T valueToOr);
+
+    T fetchAndAndRelaxed(T valueToAnd);
+    T fetchAndAndAcquire(T valueToAnd);
+    T fetchAndAndRelease(T valueToAnd);
+    T fetchAndAndOrdered(T valueToAnd);
+
+    T fetchAndXorRelaxed(T valueToXor);
+    T fetchAndXorAcquire(T valueToXor);
+    T fetchAndXorRelease(T valueToXor);
+    T fetchAndXorOrdered(T valueToXor);
+
+    T operator++();
+    T operator++(T);
+    T operator--();
+    T operator--(T);
+    T operator+=(T value);
+    T operator-=(T value);
+    T operator|=(T value);
+    T operator&=(T value);
+    T operator^=(T value);
 #endif
 };
 
@@ -178,13 +203,6 @@ public:
     inline QAtomicPointer(const QAtomicPointer<T> &other) noexcept
     {
         this->store(other.load());
-    }
-
-    Q_DECL_DEPRECATED
-    inline QAtomicPointer<T> &operator=(T *value)
-    {
-        this->store(value);
-        return *this;
     }
 
     inline QAtomicPointer<T> &operator=(const QAtomicPointer<T> &other) noexcept
@@ -224,6 +242,11 @@ public:
     }
 
 #ifdef qdoc
+    T *load() const;
+    T *loadAcquire() const;
+    void store(T *newValue);
+    void storeRelease(T *newValue);
+
     static constexpr bool isTestAndSetNative();
     static constexpr bool isTestAndSetWaitFree();
 
