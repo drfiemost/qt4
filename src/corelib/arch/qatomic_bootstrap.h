@@ -49,6 +49,11 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 #if 0
+// silence syncqt warnings
+QT_END_NAMESPACE
+QT_END_HEADER
+
+#pragma qt_sync_skip_header_check
 #pragma qt_sync_stop_processing
 #endif
 
@@ -56,16 +61,16 @@ template <typename T> struct QAtomicOps: QGenericAtomicOps<QAtomicOps<T> >
 {
     typedef T Type;
 
-    static bool ref(T &_q_value)
+    static bool ref(T &_q_value) noexcept
     {
         return ++_q_value != 0;
     }
-    static bool deref(T &_q_value)
+    static bool deref(T &_q_value) noexcept
     {
         return --_q_value != 0;
     }
 
-    static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue)
+    static bool testAndSetRelaxed(T &_q_value, T expectedValue, T newValue) noexcept
     {
         if (_q_value == expectedValue) {
             _q_value = newValue;
@@ -74,7 +79,7 @@ template <typename T> struct QAtomicOps: QGenericAtomicOps<QAtomicOps<T> >
         return false;
     }
 
-    static T fetchAndStoreRelaxed(T &_q_value, T newValue)
+    static T fetchAndStoreRelaxed(T &_q_value, T newValue) noexcept
     {
         T tmp = _q_value;
         _q_value = newValue;
@@ -82,7 +87,7 @@ template <typename T> struct QAtomicOps: QGenericAtomicOps<QAtomicOps<T> >
     }
 
     static
-    T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd)
+    T fetchAndAddRelaxed(T &_q_value, typename QAtomicAdditiveType<T>::AdditiveT valueToAdd) noexcept
     {
         T returnValue = _q_value;
         _q_value += valueToAdd;
