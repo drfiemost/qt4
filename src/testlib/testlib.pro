@@ -1,6 +1,8 @@
 TARGET = QtTest
 QPRO_PWD = $$PWD
 QT = core
+
+CONFIG += exceptions
 INCLUDEPATH += .
 unix:!embedded:QMAKE_PKGCONFIG_DESCRIPTION = Qt \
     Unit \

@@ -2,6 +2,8 @@ TARGET = QtXmlPatterns
 QPRO_PWD = $$PWD
 QT = core \
     network
+
+CONFIG += exceptions
 DEFINES += QT_BUILD_XMLPATTERNS_LIB \
     QT_NO_USING_NAMESPACE
 win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x61000000

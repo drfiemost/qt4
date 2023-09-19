@@ -266,7 +266,6 @@ Configure::Configure(int& argc, char** argv)
     dictionary[ "FAST" ]            = "no";
     dictionary[ "NOPROCESS" ]       = "no";
     dictionary[ "STL" ]             = "yes";
-    dictionary[ "EXCEPTIONS" ]      = "yes";
     dictionary[ "RTTI" ]            = "yes";
     dictionary[ "MMX" ]             = "auto";
     dictionary[ "3DNOW" ]           = "auto";
@@ -917,11 +916,6 @@ void Configure::parseCmdLine()
             dictionary[ "STL" ] = "yes";
         else if (configCmdLine.at(i) == "-no-stl")
             dictionary[ "STL" ] = "no";
-
-        else if (configCmdLine.at(i) == "-exceptions")
-            dictionary[ "EXCEPTIONS" ] = "yes";
-        else if (configCmdLine.at(i) == "-no-exceptions")
-            dictionary[ "EXCEPTIONS" ] = "no";
 
         else if (configCmdLine.at(i) == "-rtti")
             dictionary[ "RTTI" ] = "yes";
@@ -1637,7 +1631,6 @@ void Configure::applySpecSpecifics()
         dictionary[ "OPENGL" ]              = "no";
         dictionary[ "OPENSSL" ]             = "no";
         dictionary[ "STL" ]                 = "no";
-        dictionary[ "EXCEPTIONS" ]          = "no";
         dictionary[ "RTTI" ]                = "no";
         dictionary[ "ARCHITECTURE" ]        = "windowsce";
         dictionary[ "3DNOW" ]               = "no";
@@ -1677,7 +1670,6 @@ void Configure::applySpecSpecifics()
         // On Symbian we now always will have IPv6 with no chance to disable it
         dictionary[ "IPV6" ]                = "yes";
         dictionary[ "STL" ]                 = "yes";
-        dictionary[ "EXCEPTIONS" ]          = "yes";
         dictionary[ "RTTI" ]                = "yes";
         dictionary[ "ARCHITECTURE" ]        = "symbian";
         dictionary[ "3DNOW" ]               = "no";
@@ -1719,7 +1711,6 @@ void Configure::applySpecSpecifics()
         dictionary[ "MOUSE_DRIVERS" ]       = "pc linuxtp";
         dictionary[ "QT3SUPPORT" ]          = "no";
         dictionary[ "OPENGL" ]              = "no";
-        dictionary[ "EXCEPTIONS" ]          = "no";
         dictionary[ "DBUS"]                 = "no";
         dictionary[ "QT_QWS_DEPTH" ]        = "4 8 16 24 32";
         dictionary[ "QT_SXE" ]              = "no";
@@ -1810,7 +1801,7 @@ bool Configure::displayHelp()
 //                  "[-importdir <dir>] [-datadir <dir>] [-translationdir <dir>]\n"
 //                  "[-examplesdir <dir>] [-demosdir <dir>][-buildkey <key>]\n"
                     "[-release] [-debug] [-debug-and-release] [-shared] [-static]\n"
-                    "[-no-fast] [-fast] [-no-exceptions] [-exceptions]\n"
+                    "[-no-fast] [-fast]\n"
                     "[-no-accessibility] [-accessibility] [-no-rtti] [-rtti]\n"
                     "[-no-stl] [-stl] [-no-sql-<driver>] [-qt-sql-<driver>]\n"
                     "[-plugin-sql-<driver>] [-system-sqlite] [-arch <arch>]\n"
@@ -1888,9 +1879,6 @@ bool Configure::displayHelp()
         desc("FAST", "yes",     "-fast",                "Configure Qt quickly by generating Makefiles only for library and "
                                                         "subdirectory targets.  All other Makefiles are created as wrappers "
                                                         "which will in turn run qmake\n");
-
-        desc("EXCEPTIONS", "no", "-no-exceptions",      "Disable exceptions on platforms that support it.");
-        desc("EXCEPTIONS", "yes","-exceptions",         "Enable exceptions on platforms that support it.\n");
 
         desc("ACCESSIBILITY", "no",  "-no-accessibility", "Do not compile Windows Active Accessibility support.");
         desc("ACCESSIBILITY", "yes", "-accessibility",    "Compile Windows Active Accessibility support.\n");
@@ -2363,7 +2351,7 @@ bool Configure::checkAvailability(const QString &part)
     else if (part == "INCREDIBUILD_XGE")
         available = findFile("BuildConsole.exe") && findFile("xgConsole.exe");
     else if (part == "XMLPATTERNS")
-        available = dictionary.value("EXCEPTIONS") == "yes";
+        available = true;
     else if (part == "PHONON") {
         if (dictionary.contains("XQMAKESPEC") && dictionary["XQMAKESPEC"].startsWith("symbian")) {
             available = true;
@@ -3262,10 +3250,6 @@ void Configure::generateCachefile()
             configStream << " ltcg";
         if (dictionary[ "STL" ] == "yes")
             configStream << " stl";
-        if (dictionary[ "EXCEPTIONS" ] == "yes")
-            configStream << " exceptions";
-        if (dictionary[ "EXCEPTIONS" ] == "no")
-            configStream << " exceptions_off";
         if (dictionary[ "RTTI" ] == "yes")
             configStream << " rtti";
         if (dictionary[ "MMX" ] == "yes")
@@ -3481,7 +3465,6 @@ void Configure::generateConfigfiles()
         }
 
         if (dictionary["ACCESSIBILITY"] == "no")     qconfigList += "QT_NO_ACCESSIBILITY";
-        if (dictionary["EXCEPTIONS"] == "no")        qconfigList += "QT_NO_EXCEPTIONS";
         if (dictionary["OPENGL"] == "no")            qconfigList += "QT_NO_OPENGL";
         if (dictionary["OPENVG"] == "no")            qconfigList += "QT_NO_OPENVG";
         if (dictionary["OPENSSL"] == "no")           qconfigList += "QT_NO_OPENSSL";
@@ -3778,7 +3761,6 @@ void Configure::displayConfig()
     cout << "Link Time Code Generation..." << dictionary[ "LTCG" ] << endl;
     cout << "Accessibility support......." << dictionary[ "ACCESSIBILITY" ] << endl;
     cout << "STL support................." << dictionary[ "STL" ] << endl;
-    cout << "Exception support..........." << dictionary[ "EXCEPTIONS" ] << endl;
     cout << "RTTI support................" << dictionary[ "RTTI" ] << endl;
     cout << "MMX support................." << dictionary[ "MMX" ] << endl;
     cout << "3DNOW support..............." << dictionary[ "3DNOW" ] << endl;
