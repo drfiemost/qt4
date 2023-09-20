@@ -2697,6 +2697,11 @@ QT_LICENSED_MODULE(DBus)
 #  define QT_NO_RAWFONT
 #endif
 
+#if defined(QT_REDUCE_RELOCATIONS) && defined(__ELF__) && !defined(__PIC__)
+#  error "You must build your code with position independent code if Qt was built with -reduce-relocations. "\
+         "Compile your code with -fPIC or -fPIE."
+#endif
+
 namespace QtPrivate {
 //like std::enable_if
 template <bool B, typename T = void> struct QEnableIf;

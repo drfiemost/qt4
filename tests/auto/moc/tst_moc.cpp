@@ -578,7 +578,7 @@ void tst_Moc::oldStyleCasts()
 
     QStringList args;
     args << "-c" << "-x" << "c++" << "-Wold-style-cast" << "-I" << "."
-         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-";
+         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-fPIE" << "-";
     proc.start("gcc", args);
     QVERIFY(proc.waitForStarted());
     proc.write(mocOut);
@@ -651,7 +651,7 @@ void tst_Moc::inputFileNameWithDotsButNoExtension()
 
     QStringList args;
     args << "-c" << "-x" << "c++" << "-I" << ".."
-         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-";
+         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-fPIE" << "-";
     proc.start("gcc", args);
     QVERIFY(proc.waitForStarted());
     proc.write(mocOut);

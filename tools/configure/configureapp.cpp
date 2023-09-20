@@ -265,7 +265,6 @@ Configure::Configure(int& argc, char** argv)
     dictionary[ "QMAKE_INTERNAL" ]  = "no";
     dictionary[ "FAST" ]            = "no";
     dictionary[ "NOPROCESS" ]       = "no";
-    dictionary[ "STL" ]             = "yes";
     dictionary[ "RTTI" ]            = "yes";
     dictionary[ "MMX" ]             = "auto";
     dictionary[ "3DNOW" ]           = "auto";
@@ -911,11 +910,6 @@ void Configure::parseCmdLine()
             dictionary[ "FAST" ] = "yes";
         else if (configCmdLine.at(i) == "-no-fast")
             dictionary[ "FAST" ] = "no";
-
-        else if (configCmdLine.at(i) == "-stl")
-            dictionary[ "STL" ] = "yes";
-        else if (configCmdLine.at(i) == "-no-stl")
-            dictionary[ "STL" ] = "no";
 
         else if (configCmdLine.at(i) == "-rtti")
             dictionary[ "RTTI" ] = "yes";
@@ -1630,7 +1624,6 @@ void Configure::applySpecSpecifics()
         dictionary[ "QT3SUPPORT" ]          = "no";
         dictionary[ "OPENGL" ]              = "no";
         dictionary[ "OPENSSL" ]             = "no";
-        dictionary[ "STL" ]                 = "no";
         dictionary[ "RTTI" ]                = "no";
         dictionary[ "ARCHITECTURE" ]        = "windowsce";
         dictionary[ "3DNOW" ]               = "no";
@@ -1669,7 +1662,6 @@ void Configure::applySpecSpecifics()
         dictionary[ "OPENSSL" ]             = "yes";
         // On Symbian we now always will have IPv6 with no chance to disable it
         dictionary[ "IPV6" ]                = "yes";
-        dictionary[ "STL" ]                 = "yes";
         dictionary[ "RTTI" ]                = "yes";
         dictionary[ "ARCHITECTURE" ]        = "symbian";
         dictionary[ "3DNOW" ]               = "no";
@@ -1803,7 +1795,7 @@ bool Configure::displayHelp()
                     "[-release] [-debug] [-debug-and-release] [-shared] [-static]\n"
                     "[-no-fast] [-fast]\n"
                     "[-no-accessibility] [-accessibility] [-no-rtti] [-rtti]\n"
-                    "[-no-stl] [-stl] [-no-sql-<driver>] [-qt-sql-<driver>]\n"
+                    "[-no-sql-<driver>] [-qt-sql-<driver>]\n"
                     "[-plugin-sql-<driver>] [-system-sqlite] [-arch <arch>]\n"
                     "[-D <define>] [-I <includepath>] [-L <librarypath>]\n"
                     "[-help] [-no-dsp] [-dsp] [-no-vcproj] [-vcproj]\n"
@@ -1882,9 +1874,6 @@ bool Configure::displayHelp()
 
         desc("ACCESSIBILITY", "no",  "-no-accessibility", "Do not compile Windows Active Accessibility support.");
         desc("ACCESSIBILITY", "yes", "-accessibility",    "Compile Windows Active Accessibility support.\n");
-
-        desc("STL", "no",       "-no-stl",              "Do not compile STL support.");
-        desc("STL", "yes",      "-stl",                 "Compile STL support.\n");
 
         desc(                   "-no-sql-<driver>",     "Disable SQL <driver> entirely, by default none are turned on.");
         desc(                   "-qt-sql-<driver>",     "Enable a SQL <driver> in the Qt Library.");
@@ -2635,7 +2624,6 @@ bool Configure::verifyConfiguration()
 
    Options:
      debug release
-     stl
 
  Things that do not affect the Qt API/ABI:
      system-jpeg no-jpeg jpeg
@@ -3248,8 +3236,6 @@ void Configure::generateCachefile()
 
         if (dictionary[ "LTCG" ] == "yes")
             configStream << " ltcg";
-        if (dictionary[ "STL" ] == "yes")
-            configStream << " stl";
         if (dictionary[ "RTTI" ] == "yes")
             configStream << " rtti";
         if (dictionary[ "MMX" ] == "yes")
@@ -3440,7 +3426,6 @@ void Configure::generateConfigfiles()
             tmpStream << "#define QT_DEFAULT_RUNTIME_SYSTEM \"" << dictionary["RUNTIME_SYSTEM"] << "\"" << endl;
 
         QStringList qconfigList;
-        if (dictionary["STL"] == "no")                qconfigList += "QT_NO_STL";
         if (dictionary["STYLE_WINDOWS"] != "yes")     qconfigList += "QT_NO_STYLE_WINDOWS";
         if (dictionary["STYLE_PLASTIQUE"] != "yes")   qconfigList += "QT_NO_STYLE_PLASTIQUE";
         if (dictionary["STYLE_CLEANLOOKS"] != "yes")   qconfigList += "QT_NO_STYLE_CLEANLOOKS";
@@ -3760,7 +3745,6 @@ void Configure::displayConfig()
     cout << "Debug symbols..............." << (dictionary[ "BUILD" ] == "debug" ? "yes" : "no") << endl;
     cout << "Link Time Code Generation..." << dictionary[ "LTCG" ] << endl;
     cout << "Accessibility support......." << dictionary[ "ACCESSIBILITY" ] << endl;
-    cout << "STL support................." << dictionary[ "STL" ] << endl;
     cout << "RTTI support................" << dictionary[ "RTTI" ] << endl;
     cout << "MMX support................." << dictionary[ "MMX" ] << endl;
     cout << "3DNOW support..............." << dictionary[ "3DNOW" ] << endl;
