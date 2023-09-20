@@ -358,7 +358,6 @@ Configure::Configure(int& argc, char** argv)
     dictionary[ "ACCESSIBILITY" ]   = "yes";
     dictionary[ "OPENGL" ]          = "yes";
     dictionary[ "OPENVG" ]          = "no";
-    dictionary[ "IPV6" ]            = "yes"; // Always, dynamically loaded
     dictionary[ "OPENSSL" ]         = "auto";
     dictionary[ "DBUS" ]            = "auto";
     dictionary[ "S60" ]             = "yes";
@@ -505,13 +504,6 @@ void Configure::parseCmdLine()
             if (i == argCount)
                 break;
             dictionary[ "QCONFIG" ] = configCmdLine.at(i);
-        }
-
-        else if (configCmdLine.at(i) == "-buildkey") {
-            ++i;
-            if (i == argCount)
-                break;
-            dictionary[ "USER_BUILD_KEY" ] = configCmdLine.at(i);
         }
 
         else if (configCmdLine.at(i) == "-release") {
@@ -1660,8 +1652,6 @@ void Configure::applySpecSpecifics()
         dictionary[ "QT3SUPPORT" ]          = "no";
         dictionary[ "OPENGL" ]              = "no";
         dictionary[ "OPENSSL" ]             = "yes";
-        // On Symbian we now always will have IPv6 with no chance to disable it
-        dictionary[ "IPV6" ]                = "yes";
         dictionary[ "RTTI" ]                = "yes";
         dictionary[ "ARCHITECTURE" ]        = "symbian";
         dictionary[ "3DNOW" ]               = "no";
@@ -1787,11 +1777,11 @@ QString Configure::locateFile(const QString &fileName)
 bool Configure::displayHelp()
 {
     if (dictionary[ "HELP" ] == "yes") {
-        desc("Usage: configure [-buildkey <key>]\n"
+        desc("Usage: configure\n"
 //      desc("Usage: configure [-prefix dir] [-bindir <dir>] [-libdir <dir>]\n"
 //                  "[-docdir <dir>] [-headerdir <dir>] [-plugindir <dir>]\n"
 //                  "[-importdir <dir>] [-datadir <dir>] [-translationdir <dir>]\n"
-//                  "[-examplesdir <dir>] [-demosdir <dir>][-buildkey <key>]\n"
+//                  "[-examplesdir <dir>] [-demosdir <dir>]\n"
                     "[-release] [-debug] [-debug-and-release] [-shared] [-static]\n"
                     "[-no-fast] [-fast]\n"
                     "[-no-accessibility] [-accessibility] [-no-rtti] [-rtti]\n"
@@ -1841,11 +1831,6 @@ bool Configure::displayHelp()
         desc(                   "-examplesdir <dir>",   "Examples will be installed to dir\n(default PREFIX/examples)");
         desc(                   "-demosdir <dir>",      "Demos will be installed to dir\n(default PREFIX/demos)");
 */
-        desc(" You may use these options to turn on strict plugin loading:\n\n", 0, 1);
-
-        desc(                   "-buildkey <key>",      "Build the Qt library and plugins using the specified <key>.  "
-                                                        "When the library loads plugins, it will only load those that have a matching <key>.\n");
-
         desc("Configure options:\n\n");
 
         desc(" The defaults (*) are usually acceptable. A plus (+) denotes a default value"
@@ -2640,7 +2625,6 @@ bool Configure::verifyConfiguration()
      nis
      nas
      tablet
-     ipv6
 
      X11     : x11sm xinerama xcursor xfixes xrandr xrender fontconfig xkb
      Embedded: embedded freetype
@@ -2664,53 +2648,11 @@ void Configure::generateBuildKey()
     // Sorted defines that start with QT_NO_
     QStringList build_defines = qmakeDefines.filter(QRegExp("^QT_NO_"));
     build_defines.sort();
-
-    // Build up the QT_BUILD_KEY ifdef
-    QString buildKey = "QT_BUILD_KEY \"";
-    if (!dictionary["USER_BUILD_KEY"].isEmpty())
-        buildKey += dictionary["USER_BUILD_KEY"] + " ";
-
-    QString build32Key = buildKey + "Windows " + compiler + " %1 " + build_options.join(" ") + " " + build_defines.join(" ");
-    QString build64Key = buildKey + "Windows x64 " + compiler + " %1 " + build_options.join(" ") + " " + build_defines.join(" ");
-    QString buildSymbianKey = buildKey + "Symbian " + build_options.join(" ") + " " + build_defines.join(" ");
-    build32Key = build32Key.simplified();
-    build64Key = build64Key.simplified();
-    buildSymbianKey = buildSymbianKey.simplified();
-    build32Key.prepend("#   define ");
-    build64Key.prepend("#   define ");
-    buildSymbianKey.prepend("# define ");
-
-    QString buildkey = "#if defined(__SYMBIAN32__)\n"
-                       + buildSymbianKey + "\"\n"
-                       "#else\n"
-                       // Debug builds
-                       "# if !defined(QT_NO_DEBUG)\n"
-                       "#  if (defined(WIN64) || defined(_WIN64) || defined(__WIN64__))\n"
-                       + build64Key.arg("debug") + "\"\n"
-                       "#  else\n"
-                       + build32Key.arg("debug") + "\"\n"
-                       "#  endif\n"
-                       "# else\n"
-                       // Release builds
-                       "#  if (defined(WIN64) || defined(_WIN64) || defined(__WIN64__))\n"
-                       + build64Key.arg("release") + "\"\n"
-                       "#  else\n"
-                       + build32Key.arg("release") + "\"\n"
-                       "#  endif\n"
-                       "# endif\n"
-                       "#endif\n";
-
-    dictionary["BUILD_KEY"] = buildkey;
 }
 
 void Configure::generateOutputVars()
 {
     // Generate variables for output
-    // Build key ----------------------------------------------------
-    if (dictionary.contains("BUILD_KEY")) {
-        qmakeVars += dictionary.value("BUILD_KEY");
-    }
-
     QString build = dictionary[ "BUILD" ];
     bool buildAll = (dictionary[ "BUILDALL" ] == "yes");
     if (build == "debug") {
@@ -2922,11 +2864,6 @@ void Configure::generateOutputVars()
         qtConfig += "dbus";
     else if (dictionary[ "DBUS" ] == "linked")
         qtConfig += "dbus dbus-linked";
-
-    if (dictionary["IPV6"] == "yes")
-        qtConfig += "ipv6";
-    else if (dictionary["IPV6"] == "no")
-        qtConfig += "no-ipv6";
 
     if (dictionary[ "CETEST" ] == "yes")
         qtConfig += "cetest";
@@ -3403,8 +3340,6 @@ void Configure::generateConfigfiles()
         tmpStream << "#  define QT_EDITION " << dictionary["QT_EDITION"] << endl;
         tmpStream << "#endif" << endl;
         tmpStream << endl;
-        tmpStream << dictionary["BUILD_KEY"];
-        tmpStream << endl;
         if (dictionary["BUILDDEV"] == "yes") {
             dictionary["QMAKE_INTERNAL"] = "yes";
             tmpStream << "/* Used for example to export symbols for the certain autotests*/" << endl;
@@ -3455,7 +3390,6 @@ void Configure::generateConfigfiles()
         if (dictionary["OPENSSL"] == "no")           qconfigList += "QT_NO_OPENSSL";
         if (dictionary["OPENSSL"] == "linked")       qconfigList += "QT_LINKED_OPENSSL";
         if (dictionary["DBUS"] == "no")              qconfigList += "QT_NO_DBUS";
-        if (dictionary["IPV6"] == "no")              qconfigList += "QT_NO_IPV6";
         if (dictionary["DECLARATIVE"] == "no")       qconfigList += "QT_NO_DECLARATIVE";
         if (dictionary["DECLARATIVE_DEBUG"] == "no") qconfigList += "QDECLARATIVE_NO_DEBUG_PROTOCOL";
         if (dictionary["MULTIMEDIA"] == "no")        qconfigList += "QT_NO_MULTIMEDIA";

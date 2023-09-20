@@ -150,10 +150,8 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
 // Reverse lookups using getnameinfo are broken on darwin, use gethostbyaddr instead.
 #if !defined (QT_NO_GETADDRINFO) && !defined (Q_OS_DARWIN)
         sockaddr_in sa4;
-#ifndef QT_NO_IPV6
         sockaddr_in6 sa6;
-#endif
-        sockaddr *sa = 0;
+        sockaddr *sa = nullptr;
         QT_SOCKLEN_T saSize = 0;
         if (address.protocol() == QAbstractSocket::IPv4Protocol) {
             sa = (sockaddr *)&sa4;
@@ -162,7 +160,6 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
             sa4.sin_family = AF_INET;
             sa4.sin_addr.s_addr = htonl(address.toIPv4Address());
         }
-#ifndef QT_NO_IPV6
         else {
             sa = (sockaddr *)&sa6;
             saSize = sizeof(sa6);
@@ -170,7 +167,6 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
             sa6.sin6_family = AF_INET6;
             memcpy(sa6.sin6_addr.s6_addr, address.toIPv6Address().c, sizeof(sa6.sin6_addr.s6_addr));
         }
-#endif
 
         char hbuf[NI_MAXHOST];
         if (sa && getnameinfo(sa, saSize, hbuf, sizeof(hbuf), 0, 0, 0) == 0)
@@ -232,7 +228,6 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
                 if (!addresses.contains(addr))
                     addresses.append(addr);
             }
-#ifndef QT_NO_IPV6
             else if (node->ai_family == AF_INET6) {
                 QHostAddress addr;
                 sockaddr_in6 *sa6 = (sockaddr_in6 *) node->ai_addr;
@@ -242,7 +237,7 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
                 if (!addresses.contains(addr))
                     addresses.append(addr);
             }
-#endif
+
             node = node->ai_next;
         }
         if (addresses.isEmpty() && node == 0) {

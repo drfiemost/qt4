@@ -150,10 +150,6 @@ QSettings *QLibraryInfoPrivate::findConfiguration()
 
     \table
     \header \o Function           \o Return value
-    \row    \o buildKey()         \o A string that identifies the Qt version and
-                                     the configuration. This key is used to ensure
-                                     that \l{plugins} link against the same version
-                                     of Qt as the application.
     \row    \o location()         \o The path to a certain Qt
                                      component (e.g., documentation, header files).
     \row    \o licensee(),
@@ -200,21 +196,6 @@ QLibraryInfo::licensedProducts()
 {
     const char *str = QT_CONFIGURE_LICENSED_PRODUCTS;
     return QString::fromLatin1(str);
-}
-
-/*!
-    Returns a unique key identifying this build of Qt and its
-    configurations. This key is not globally unique, rather only useful
-    for establishing of two configurations are compatible. This can be
-    used to compare with the \c QT_BUILD_KEY preprocessor symbol.
-
-    \sa location()
-*/
-
-QString
-QLibraryInfo::buildKey()
-{
-    return QString::fromLatin1(QT_BUILD_KEY);
 }
 
 /*!
@@ -523,18 +504,6 @@ void qt_core_boilerplate()
            "Copyright (C) 2015 The Qt Company Ltd.\n"
            "Contact: http://www.qt.io/licensing/\n"
            "\n"
-           "Build key:           " QT_BUILD_KEY "\n"
-           "Compat build key:    "
-#ifdef QT_BUILD_KEY_COMPAT
-           "| " QT_BUILD_KEY_COMPAT " "
-#endif
-#ifdef QT_BUILD_KEY_COMPAT2
-           "| " QT_BUILD_KEY_COMPAT2 " "
-#endif
-#ifdef QT_BUILD_KEY_COMPAT3
-           "| " QT_BUILD_KEY_COMPAT3 " "
-#endif
-           "|\n"
            "Build date:          %s\n"
            "Installation prefix: %s\n"
            "Library path:        %s\n"

@@ -107,7 +107,6 @@ static QByteArray qt_prettyDebug(const char *data, int len, int maxSize)
 */
 static inline void qt_socket_getPortAndAddress(const qt_sockaddr *s, quint16 *port, QHostAddress *addr)
 {
-#if !defined(QT_NO_IPV6)
     if (s->a.sa_family == AF_INET6) {
         Q_IPV6ADDR tmp;
         memcpy(&tmp, &s->a6.sin6_addr, sizeof(tmp));
@@ -127,7 +126,7 @@ static inline void qt_socket_getPortAndAddress(const qt_sockaddr *s, quint16 *po
             *port = ntohs(s->a6.sin6_port);
         return;
     }
-#endif
+
     if (port)
         *port = ntohs(s->a4.sin_port);
     if (addr) {
@@ -145,12 +144,8 @@ static inline void qt_socket_getPortAndAddress(const qt_sockaddr *s, quint16 *po
 bool QNativeSocketEnginePrivate::createNewSocket(QAbstractSocket::SocketType socketType,
                                          QAbstractSocket::NetworkLayerProtocol socketProtocol)
 {
-#ifndef QT_NO_IPV6
     int protocol = (socketProtocol == QAbstractSocket::IPv6Protocol) ? AF_INET6 : AF_INET;
-#else
-    Q_UNUSED(socketProtocol);
-    int protocol = AF_INET;
-#endif
+
     int type = (socketType == QAbstractSocket::UdpSocket) ? SOCK_DGRAM : SOCK_STREAM;
 
 	int socket = qt_safe_socket(protocol, type, 0);
@@ -221,24 +216,20 @@ int QNativeSocketEnginePrivate::option(QNativeSocketEngine::SocketOption opt) co
         n = SO_KEEPALIVE;
         break;
     case QNativeSocketEngine::MulticastTtlOption:
-#ifndef QT_NO_IPV6
         if (socketProtocol == QAbstractSocket::IPv6Protocol) {
             level = IPPROTO_IPV6;
             n = IPV6_MULTICAST_HOPS;
         } else
-#endif
         {
             level = IPPROTO_IP;
             n = IP_MULTICAST_TTL;
         }
         break;
     case QNativeSocketEngine::MulticastLoopbackOption:
-#ifndef QT_NO_IPV6
         if (socketProtocol == QAbstractSocket::IPv6Protocol) {
             level = IPPROTO_IPV6;
             n = IPV6_MULTICAST_LOOP;
         } else
-#endif
         {
             level = IPPROTO_IP;
             n = IP_MULTICAST_LOOP;
@@ -332,24 +323,20 @@ bool QNativeSocketEnginePrivate::setOption(QNativeSocketEngine::SocketOption opt
         n = SO_KEEPALIVE;
         break;
     case QNativeSocketEngine::MulticastTtlOption:
-#ifndef QT_NO_IPV6
         if (socketProtocol == QAbstractSocket::IPv6Protocol) {
             level = IPPROTO_IPV6;
             n = IPV6_MULTICAST_HOPS;
         } else
-#endif
         {
             level = IPPROTO_IP;
             n = IP_MULTICAST_TTL;
         }
         break;
     case QNativeSocketEngine::MulticastLoopbackOption:
-#ifndef QT_NO_IPV6
         if (socketProtocol == QAbstractSocket::IPv6Protocol) {
             level = IPPROTO_IPV6;
             n = IPV6_MULTICAST_LOOP;
         } else
-#endif
         {
             level = IPPROTO_IP;
             n = IP_MULTICAST_LOOP;
@@ -370,7 +357,6 @@ bool QNativeSocketEnginePrivate::nativeConnect(const QHostAddress &addr, quint16
     struct sockaddr *sockAddrPtr = 0;
     QT_SOCKLEN_T sockAddrSize = 0;
 
-#if !defined(QT_NO_IPV6)
     struct sockaddr_in6 sockAddrIPv6;
 
     if (addr.protocol() == QAbstractSocket::IPv6Protocol) {
@@ -391,10 +377,6 @@ bool QNativeSocketEnginePrivate::nativeConnect(const QHostAddress &addr, quint16
         sockAddrSize = sizeof(sockAddrIPv6);
         sockAddrPtr = (struct sockaddr *) &sockAddrIPv6;
     } else
-#if 0
-    {}
-#endif
-#endif
     if (addr.protocol() == QAbstractSocket::IPv4Protocol) {
         memset(&sockAddrIPv4, 0, sizeof(sockAddrIPv4));
         sockAddrIPv4.sin_family = AF_INET;
@@ -480,7 +462,6 @@ bool QNativeSocketEnginePrivate::nativeBind(const QHostAddress &address, quint16
     struct sockaddr *sockAddrPtr = 0;
     QT_SOCKLEN_T sockAddrSize = 0;
 
-#if !defined(QT_NO_IPV6)
     struct sockaddr_in6 sockAddrIPv6;
 
     if (address.protocol() == QAbstractSocket::IPv6Protocol) {
@@ -497,7 +478,6 @@ bool QNativeSocketEnginePrivate::nativeBind(const QHostAddress &address, quint16
         sockAddrSize = sizeof(sockAddrIPv6);
         sockAddrPtr = (struct sockaddr *) &sockAddrIPv6;
     } else
-#endif
         if (address.protocol() == QAbstractSocket::IPv4Protocol) {
             memset(&sockAddrIPv4, 0, sizeof(sockAddrIPv4));
             sockAddrIPv4.sin_family = AF_INET;
@@ -593,7 +573,6 @@ static bool multicastMembershipHelper(QNativeSocketEnginePrivate *d,
     int sockArgSize;
 
     ip_mreq mreq4;
-#ifndef QT_NO_IPV6
     ipv6_mreq mreq6;
 
     if (groupAddress.protocol() == QAbstractSocket::IPv6Protocol) {
@@ -606,7 +585,6 @@ static bool multicastMembershipHelper(QNativeSocketEnginePrivate *d,
         memcpy(&mreq6.ipv6mr_multiaddr, &ip6, sizeof(ip6));
         mreq6.ipv6mr_interface = interface.index();
     } else
-#endif
     if (groupAddress.protocol() == QAbstractSocket::IPv4Protocol) {
         level = IPPROTO_IP;
         sockOpt = how4;
@@ -660,11 +638,7 @@ bool QNativeSocketEnginePrivate::nativeJoinMulticastGroup(const QHostAddress &gr
                                                           const QNetworkInterface &interface)
 {
     return multicastMembershipHelper(this,
-#ifndef QT_NO_IPV6
                                      IPV6_JOIN_GROUP,
-#else
-                                     0,
-#endif
                                      IP_ADD_MEMBERSHIP,
                                      groupAddress,
                                      interface);
@@ -674,11 +648,7 @@ bool QNativeSocketEnginePrivate::nativeLeaveMulticastGroup(const QHostAddress &g
                                                            const QNetworkInterface &interface)
 {
     return multicastMembershipHelper(this,
-#ifndef QT_NO_IPV6
                                      IPV6_LEAVE_GROUP,
-#else
-                                     0,
-#endif
                                      IP_DROP_MEMBERSHIP,
                                      groupAddress,
                                      interface);
@@ -686,7 +656,6 @@ bool QNativeSocketEnginePrivate::nativeLeaveMulticastGroup(const QHostAddress &g
 
 QNetworkInterface QNativeSocketEnginePrivate::nativeMulticastInterface() const
 {
-#ifndef QT_NO_IPV6
     if (socketProtocol == QAbstractSocket::IPv6Protocol) {
         uint v;
         QT_SOCKOPTLEN_T sizeofv = sizeof(v);
@@ -694,7 +663,6 @@ QNetworkInterface QNativeSocketEnginePrivate::nativeMulticastInterface() const
             return QNetworkInterface();
         return QNetworkInterface::interfaceFromIndex(v);
     }
-#endif
 
     struct in_addr v = { 0 };
     QT_SOCKOPTLEN_T sizeofv = sizeof(v);
@@ -718,12 +686,10 @@ QNetworkInterface QNativeSocketEnginePrivate::nativeMulticastInterface() const
 
 bool QNativeSocketEnginePrivate::nativeSetMulticastInterface(const QNetworkInterface &iface)
 {
-#ifndef QT_NO_IPV6
     if (socketProtocol == QAbstractSocket::IPv6Protocol) {
         uint v = iface.index();
         return (::setsockopt(socketDescriptor, IPPROTO_IPV6, IPV6_MULTICAST_IF, &v, sizeof(v)) != -1);
     }
-#endif
 
     struct in_addr v;
     if (iface.isValid()) {
@@ -852,7 +818,6 @@ qint64 QNativeSocketEnginePrivate::nativeSendDatagram(const char *data, qint64 l
     struct sockaddr *sockAddrPtr = 0;
     QT_SOCKLEN_T sockAddrSize = 0;
 
-#if !defined(QT_NO_IPV6)
     struct sockaddr_in6 sockAddrIPv6;
     if (host.protocol() == QAbstractSocket::IPv6Protocol) {
         memset(&sockAddrIPv6, 0, sizeof(sockAddrIPv6));
@@ -871,7 +836,6 @@ qint64 QNativeSocketEnginePrivate::nativeSendDatagram(const char *data, qint64 l
         sockAddrSize = sizeof(sockAddrIPv6);
         sockAddrPtr = (struct sockaddr *)&sockAddrIPv6;
     } else
-#endif
     if (host.protocol() == QAbstractSocket::IPv4Protocol) {
         memset(&sockAddrIPv4, 0, sizeof(sockAddrIPv4));
         sockAddrIPv4.sin_family = AF_INET;
@@ -926,11 +890,9 @@ bool QNativeSocketEnginePrivate::fetchConnectionParameters()
         case AF_INET:
             socketProtocol = QAbstractSocket::IPv4Protocol;
             break;
-#if !defined (QT_NO_IPV6)
         case AF_INET6:
             socketProtocol = QAbstractSocket::IPv6Protocol;
             break;
-#endif
         default:
             socketProtocol = QAbstractSocket::UnknownNetworkLayerProtocol;
             break;
