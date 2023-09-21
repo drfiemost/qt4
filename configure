@@ -4850,6 +4850,17 @@ compileTest()
     "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" "$path" "$name" $I_FLAGS $L_FLAGS $l_FLAGS $MAC_CONFIG_TEST_COMMANDLINE "$@"
 }
 
+#-------------------------------------------------------------------------------
+# functionality tests
+#-------------------------------------------------------------------------------
+
+# Detect C++17 support
+if ! "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" config.tests/unix/c++17 "C++17" $L_FLAGS $I_FLAGS $l_FLAGS; then
+    echo "C++17 support cannot be enabled due to functionality tests!"
+    echo " Turn on verbose messaging (-v) to $0 to see the final report."
+    exit 101
+fi
+
 # detect availability of float math.h functions
 if compileTest unix/floatmath "floatmath"; then
     CFG_USE_FLOATMATH=yes
