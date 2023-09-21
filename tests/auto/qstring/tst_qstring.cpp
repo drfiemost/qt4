@@ -823,10 +823,6 @@ void tst_QString::constructorQByteArray()
 
 void tst_QString::STL()
 {
-#ifdef Q_CC_HPACC
-    QSKIP("This test crashes on HP-UX with aCC", SkipSingle);
-#endif
-#ifndef QT_NO_STL
 #ifndef QT_NO_CAST_TO_ASCII
     QString qt( "QString" );
 
@@ -863,21 +859,13 @@ void tst_QString::STL()
     QVERIFY( !stdstr3.length() );
 #endif
 
-//skip test if glibc is not compiled with wide character support
-#if (defined Q_CC_GNU && !defined _GLIBCPP_USE_WCHAR_T) || defined QT_NO_STL_WCHAR
-    QSKIP( "Not tested without wide character support", SkipAll);
-#else
     const wchar_t arr[] = {'h', 'e', 'l', 'l', 'o', 0};
-    QStdWString stlStr = arr;
+    std::wstring stlStr = arr;
 
     QString s = QString::fromStdWString(stlStr);
 
     QCOMPARE(s, QString::fromLatin1("hello"));
     QCOMPARE(stlStr, s.toStdWString());
-#endif
-#else
-    QSKIP( "Not tested without STL support", SkipAll);
-#endif
 }
 
 void tst_QString::truncate()
@@ -1776,19 +1764,6 @@ void tst_QString::append()
     QString a;
     a = "<>ABCABCABCABC";
     QCOMPARE(a.append(">"),(QString)"<>ABCABCABCABC>");
-#if 0
-#if !defined(QT_NO_STL)
-    /*
-      The std::string support is fairly trivial in itself. The major
-      problem is whether it compiles or not, because of the way
-      different compilers choose an overload based on the type of the
-      argument. If it compiles, we're happy.
-    */
-    std::string stroustrup;
-    a.append( stroustrup );
-    a += stroustrup;
-#endif
-#endif
 }
 
 void tst_QString::append_bytearray_data()
@@ -1802,19 +1777,7 @@ void tst_QString::append_bytearray_data()
     ba[1] = 'b';
     ba[2] = 'c';
     ba[3] = 'd';
-#if 0
-    ba[4] = 0;
 
-    for ( int i=0; i<2; i++ ) {
-	// i == 0: the byte array is exactly strlen+1
-	// i == 1: the byte array is larger than strlen+1
-	QTest::newRow( QString("nullTerminated_%1_0").arg(i) ) << QString() << ba << QString("abcd");
-	QTest::newRow( QString("nullTerminated_%1_1").arg(i) ) << QString("") << ba << QString("abcd");
-	QTest::newRow( QString("nullTerminated_%1_2").arg(i) ) << QString("foobar ") << ba << QString("foobar abcd");
-
-	ba.resize( 8 );
-    }
-#endif
     // no 0 termination
     ba.resize( 4 );
     QTest::newRow( "notTerminated_0" ) << QString() << ba << QString("abcd");
@@ -1893,12 +1856,6 @@ void tst_QString::prepend()
     QString a;
     a = "<>ABCABCABCABC>";
     QCOMPARE(a.prepend("-"),(QString)"-<>ABCABCABCABC>");
-#if 0
-#if !defined(QT_NO_STL)
-    std::string stroustrup;
-    a.prepend( stroustrup );
-#endif
-#endif
 }
 
 void tst_QString::prepend_bytearray_data()
@@ -1912,24 +1869,6 @@ void tst_QString::prepend_bytearray_data()
     ba[1] = 'b';
     ba[2] = 'c';
     ba[3] = 'd';
-#if 0
-    ba[4] = 0;
-
-    for ( int i=0; i<2; i++ ) {
-	// i == 0: the byte array is exactly strlen+1
-	// i == 1: the byte array is larger than strlen+1
-	QTest::newRow( QString("nullTerminated_%1_0").arg(i) ) << QString() << ba << QString("abcd");
-	QTest::newRow( QString("nullTerminated_%1_1").arg(i) ) << QString("") << ba << QString("abcd");
-	QTest::newRow( QString("nullTerminated_%1_2").arg(i) ) << QString(" foobar") << ba << QString("abcd foobar");
-
-	ba.resize( 8 );
-    }
-    // no 0 termination
-    ba.resize( 4 );
-    QTest::newRow( "notTerminated_0" ) << QString() << ba << QString("abcd");
-    QTest::newRow( "notTerminated_1" ) << QString("") << ba << QString("abcd");
-    QTest::newRow( "notTerminated_2" ) << QString(" foobar") << ba << QString("abcd foobar");
-#endif
 
     // byte array with only a 0
     ba.resize( 1 );
@@ -3165,7 +3104,6 @@ void tst_QString::fromStdString()
 #ifdef Q_CC_HPACC
     QSKIP("This test crashes on HP-UX with aCC", SkipSingle);
 #endif
-#if !defined(QT_NO_STL)
     std::string stroustrup = "foo";
     QString eng = QString::fromStdString( stroustrup );
     QCOMPARE( eng, QString("foo") );
@@ -3173,7 +3111,6 @@ void tst_QString::fromStdString()
     std::string stdnull( cnull, sizeof(cnull)-1 );
     QString qtnull = QString::fromStdString( stdnull );
     QCOMPARE( qtnull.size(), int(stdnull.size()) );
-#endif
 }
 
 void tst_QString::toStdString()
@@ -3181,7 +3118,6 @@ void tst_QString::toStdString()
 #ifdef Q_CC_HPACC
     QSKIP("This test crashes on HP-UX with aCC", SkipSingle);
 #endif
-#if !defined(QT_NO_STL)
     QString nord = "foo";
     std::string stroustrup1 = nord.toStdString();
     QVERIFY( qstrcmp(stroustrup1.c_str(), "foo") == 0 );
@@ -3195,7 +3131,6 @@ void tst_QString::toStdString()
     QString qtnull( qcnull, sizeof(qcnull)/sizeof(QChar) );
     std::string stdnull = qtnull.toStdString();
     QCOMPARE( int(stdnull.size()), qtnull.size() );
-#endif
 }
 
 void tst_QString::utf8()

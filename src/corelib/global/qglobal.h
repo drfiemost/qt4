@@ -69,9 +69,7 @@
 
 #ifdef __cplusplus
 
-#ifndef QT_NO_STL
 #include <algorithm>
-#endif
 
 #ifndef QT_NAMESPACE /* user namespace */
 
@@ -502,9 +500,6 @@ namespace QT_NAMESPACE {}
 #    define Q_FULL_TEMPLATE_INSTANTIATION
 #  endif
 /* GCC 2.95 knows "using" but does not support it correctly */
-#  if __GNUC__ == 2 && __GNUC_MINOR__ <= 95
-#    define QT_NO_STL_WCHAR
-#  endif
 #  if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95)
 #    define Q_ALIGNOF(type)   __alignof__(type)
 #    define Q_TYPEOF(expr)    __typeof__(expr)
@@ -2146,14 +2141,8 @@ Q_DECLARE_TYPEINFO_BODY(TYPE, FLAGS)
 template <typename T>
 inline void qSwap(T &value1, T &value2)
 {
-#ifdef QT_NO_STL
-    const T t = value1;
-    value1 = value2;
-    value2 = t;
-#else
     using std::swap;
     swap(value1, value2);
-#endif
 }
 
 /*
@@ -2165,9 +2154,6 @@ inline void qSwap(T &value1, T &value2)
    types must declare a 'bool isDetached(void) const;' member for this
    to work.
 */
-#ifdef QT_NO_STL
-#define Q_DECLARE_SHARED_STL(TYPE)
-#else
 #define Q_DECLARE_SHARED_STL(TYPE) \
 QT_END_NAMESPACE \
 namespace std { \
@@ -2175,7 +2161,6 @@ namespace std { \
     { swap(value1.data_ptr(), value2.data_ptr()); } \
 } \
 QT_BEGIN_NAMESPACE
-#endif
 
 #define Q_DECLARE_SHARED(TYPE)                                          \
 template <> inline bool qIsDetached<TYPE>(TYPE &t) { return t.isDetached(); } \

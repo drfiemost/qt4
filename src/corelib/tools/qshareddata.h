@@ -265,7 +265,6 @@ template <class T>
 Q_INLINE_TEMPLATE void qSwap(QExplicitlySharedDataPointer<T> &p1, QExplicitlySharedDataPointer<T> &p2)
 { p1.swap(p2); }
 
-#ifndef QT_NO_STL
 QT_END_NAMESPACE
 namespace std {
     template <class T>
@@ -277,7 +276,6 @@ namespace std {
     { p1.swap(p2); }
 }
 QT_BEGIN_NAMESPACE
-#endif
 
 QT_END_NAMESPACE
 
