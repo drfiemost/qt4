@@ -173,8 +173,7 @@ private:
     int s;      // size
     T *ptr;     // data
     union {
-        // ### Qt 5: Use 'Prealloc * sizeof(T)' as array size
-        char array[sizeof(qint64) * (((Prealloc * sizeof(T)) / sizeof(qint64)) + 1)];
+        char array[Prealloc * sizeof(T)];
         qint64 q_for_alignment_1;
         double q_for_alignment_2;
     };
@@ -237,35 +236,36 @@ Q_OUTOFLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::realloc(int asize, int a
 
     const int copySize = qMin(asize, osize);
     if (aalloc != a) {
-        ptr = reinterpret_cast<T *>(qMalloc(aalloc * sizeof(T)));
-        Q_CHECK_PTR(ptr);
-        if (ptr) {
-            s = 0;
+        if (aalloc > Prealloc) {
+            T* newPtr = reinterpret_cast<T *>(malloc(aalloc * sizeof(T)));
+            Q_CHECK_PTR(newPtr); // could throw
+            // by design: in case of QT_NO_EXCEPTIONS malloc must not fail or it crashes here
+            ptr = newPtr;
             a = aalloc;
-
-            if (QTypeInfo<T>::isStatic) {
-                QT_TRY {
-                    // copy all the old elements
-                    while (s < copySize) {
-                        new (ptr+s) T(*(oldPtr+s));
-                        (oldPtr+s)->~T();
-                        s++;
-                    }
-                } QT_CATCH(...) {
-                    // clean up all the old objects and then free the old ptr
-                    int sClean = s;
-                    while (sClean < osize)
-                        (oldPtr+(sClean++))->~T();
-                    if (oldPtr != reinterpret_cast<T *>(array) && oldPtr != ptr)
-                        qFree(oldPtr);
-                    QT_RETHROW;
+        } else {
+            ptr = reinterpret_cast<T *>(array);
+            a = Prealloc;
+        }
+        s = 0;
+        if (QTypeInfo<T>::isStatic) {
+            QT_TRY {
+                // copy all the old elements
+                while (s < copySize) {
+                    new (ptr+s) T(*(oldPtr+s));
+                    (oldPtr+s)->~T();
+                    s++;
                 }
-            } else {
-                qMemCopy(ptr, oldPtr, copySize * sizeof(T));
+            } QT_CATCH(...) {
+                // clean up all the old objects and then free the old ptr
+                int sClean = s;
+                while (sClean < osize)
+                    (oldPtr+(sClean++))->~T();
+                if (oldPtr != reinterpret_cast<T *>(array) && oldPtr != ptr)
+                    free(oldPtr);
+                QT_RETHROW;
             }
         } else {
-            ptr = oldPtr;
-            return;
+            memcpy(ptr, oldPtr, copySize * sizeof(T));
         }
     }
     s = copySize;
