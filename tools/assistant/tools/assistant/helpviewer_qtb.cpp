@@ -47,7 +47,7 @@
 #include "openpagesmanager.h"
 #include "tracer.h"
 
-#include <QtCore/qstringbuilder.h>
+#include <QtCore/QStringBuilder>
 
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>

@@ -41,7 +41,7 @@
 #include "tracer.h"
 
 #include <QtCore/QFileInfo>
-#include <QtCore/qstringbuilder.h>
+#include <QtCore/QStringBuilder>
 #include <QtGui/QMessageBox>
 
 #include "cmdlineparser.h"

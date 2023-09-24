@@ -47,7 +47,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
-#include <QtCore/qstringbuilder.h>
+#include <QtCore/QStringBuilder>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QUrl>
 

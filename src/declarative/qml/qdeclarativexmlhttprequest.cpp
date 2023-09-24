@@ -58,7 +58,7 @@
 #include <QtCore/qstack.h>
 #include <QtCore/qdebug.h>
 
-#include <QtCore/qstringbuilder.h>
+#include <QtCore/QStringBuilder>
 
 #ifndef QT_NO_XMLSTREAMREADER
 
