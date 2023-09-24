@@ -76,7 +76,7 @@ QT_BEGIN_NAMESPACE
 class QDBusCustomTypeInfo
 {
 public:
-    QDBusCustomTypeInfo() : signature(0, '\0'), marshall(0), demarshall(0)
+    QDBusCustomTypeInfo() : signature(), marshall(0), demarshall(0)
     { }
 
     // Suggestion:
