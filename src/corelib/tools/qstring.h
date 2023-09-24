@@ -215,17 +215,7 @@ public:
 
     int capacity() const;
     inline void reserve(int size);
-    inline void squeeze()
-    {
-        if (d->ref.isShared() || d->size < (int)d->alloc)
-            realloc();
-
-        if (d->capacityReserved) {
-            // cannot set unconditionally, since d could be shared_null or
-            // otherwise static.
-            d->capacityReserved = false;
-        }
-    }
+    inline void squeeze();
 
     inline const QChar *unicode() const;
     inline QChar *data();
@@ -378,7 +368,7 @@ public:
 
     inline QString &operator+=(QChar c) {
         if (d->ref.isShared() || d->size + 1 > (int)d->alloc)
-            realloc(grow(d->size + 1));
+            reallocData(uint(d->size) + 2u, true);
         d->data()[d->size++] = c.unicode();
         d->data()[d->size] = '\0';
         return *this;
@@ -630,10 +620,8 @@ private:
     static const QStaticStringData<1> shared_empty;
     Data *d;
 
-    static int grow(int);
     static void free(Data *);
-    void realloc();
-    void realloc(int alloc);
+    void reallocData(uint alloc, bool grow = false);
     void expand(int i);
     void updateProperties() const;
     QString multiArg(int numArgs, const QString **args) const;
@@ -727,7 +715,7 @@ inline QChar *QString::data()
 inline const QChar *QString::constData() const
 { return reinterpret_cast<const QChar*>(d->data()); }
 inline void QString::detach()
-{ if (d->ref.isShared() || (d->offset != sizeof(QStringData))) realloc(); }
+{ if (d->ref.isShared() || (d->offset != sizeof(QStringData))) reallocData(uint(d->size) + 1u); }
 inline bool QString::isDetached() const
 { return !d->ref.isShared(); }
 inline QString &QString::operator=(const QLatin1String &s)
@@ -874,7 +862,28 @@ inline void QCharRef::setCell(uchar acell) { QChar(*this).setCell(acell); }
 
 inline QString::QString() : d(shared_null.data_ptr()) {}
 inline QString::~QString() { if (!d->ref.deref()) free(d); }
-inline void QString::reserve(int asize) { if (d->ref.isShared() || asize > (int)d->alloc) realloc(asize); d->capacityReserved = true;}
+inline void QString::reserve(int asize)
+{
+    if (d->ref.isShared() || asize > (int)d->alloc)
+        reallocData(uint(asize) + 1u);
+
+    if (!d->capacityReserved) {
+        // cannot set unconditionally, since d could be the shared_null/shared_empty (which is const)
+        d->capacityReserved = true;
+    }
+}
+
+inline void QString::squeeze()
+{
+    if (d->ref.isShared() || d->size < (int)d->alloc)
+        reallocData(uint(d->size) + 1u);
+
+    if (d->capacityReserved) {
+        // cannot set unconditionally, since d could be shared_null or
+        // otherwise static.
+        d->capacityReserved = false;
+    }
+}
 inline QString &QString::setUtf16(const ushort *autf16, int asize)
 { return setUnicode(reinterpret_cast<const QChar *>(autf16), asize); }
 inline QCharRef QString::operator[](int i)

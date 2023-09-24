@@ -390,7 +390,7 @@ private:
     static const QStaticByteArrayData<1> shared_null;
     static const QStaticByteArrayData<1> shared_empty;
     Data *d;
-    void realloc(int alloc);
+    void reallocData(uint alloc, bool grow = false);
     void expand(int i);
     QByteArray nulTerminated() const;
 
@@ -429,7 +429,7 @@ inline const char *QByteArray::data() const
 inline const char *QByteArray::constData() const
 { return d->data(); }
 inline void QByteArray::detach()
-{ if (d->ref.isShared() || (d->offset != sizeof(QByteArrayData))) realloc(d->size); }
+{ if (d->ref.isShared() || (d->offset != sizeof(QByteArrayData))) reallocData(uint(d->size) + 1u); }
 inline bool QByteArray::isDetached() const
 { return !d->ref.isShared(); }
 inline QByteArray::QByteArray(const QByteArray &a) : d(a.d)
@@ -439,12 +439,20 @@ inline int QByteArray::capacity() const
 { return d->alloc; }
 
 inline void QByteArray::reserve(int asize)
-{ if (d->ref.isShared() || asize > d->alloc) realloc(asize); d->capacityReserved = true; }
+{
+    if (d->ref.isShared() || asize > d->alloc)
+        reallocData(uint(asize) + 1u);
+
+    if (!d->capacityReserved) {
+        // cannot set unconditionally, since d could be the shared_null/shared_empty (which is const)
+        d->capacityReserved = true;
+    }
+}
 
 inline void QByteArray::squeeze()
 {
     if (d->ref.isShared() || d->size < d->alloc)
-        realloc(d->size);
+        reallocData(uint(d->size) + 1u);
 
     if (d->capacityReserved) {
         // cannot set unconditionally, since d could be shared_null or

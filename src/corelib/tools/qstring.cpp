@@ -799,11 +799,6 @@ const QString::Null QString::null = { };
 const QStaticStringData<1> QString::shared_null = { Q_STATIC_STRING_DATA_HEADER_INITIALIZER(0), { 0 } };
 const QStaticStringData<1> QString::shared_empty = { Q_STATIC_STRING_DATA_HEADER_INITIALIZER(0), { 0 } };
 
-int QString::grow(int size)
-{
-    return qAllocMore(size * sizeof(QChar), sizeof(Data)) / sizeof(QChar);
-}
-
 /*! \typedef QString::ConstIterator
 
     Qt-style synonym for QString::const_iterator.
@@ -1268,7 +1263,7 @@ void QString::resize(int size)
     } else {
         if (d->ref.isShared() || size > d->alloc ||
             (!d->capacityReserved && size < d->size && size < d->alloc >> 1))
-            realloc(grow(size));
+            reallocData(uint(size) + 1u, true);
         if (d->alloc >= size) {
             d->size = size;
             d->data()[size] = '\0';
@@ -1327,14 +1322,17 @@ void QString::resize(int size)
 */
 
 // ### Qt 5: rename reallocData() to avoid confusion. 197625
-void QString::realloc(int alloc)
+void QString::reallocData(uint alloc, bool grow)
 {
+    if (grow)
+        alloc = qAllocMore(alloc * sizeof(QChar), sizeof(Data)) / sizeof(QChar);
+
     if (d->ref.isShared() || IS_RAW_DATA(d)) {
-        Data *x = static_cast<Data *>(::malloc(sizeof(Data) + (alloc+1) * sizeof(QChar)));
+        Data *x = static_cast<Data *>(::malloc(sizeof(Data) + alloc * sizeof(QChar)));
         Q_CHECK_PTR(x);
         x->ref.initializeOwned();
-        x->size = qMin(alloc, d->size);
-        x->alloc = (uint) alloc;
+        x->size = qMin(int(alloc) - 1, d->size);
+        x->alloc = alloc - 1u;
         x->capacityReserved = d->capacityReserved;
         x->offset = sizeof(QStringData);
         ::memcpy(x->data(), d->data(), x->size * sizeof(QChar));
@@ -1343,17 +1341,12 @@ void QString::realloc(int alloc)
             QString::free(d);
         d = x;
     } else {
-        Data *p = static_cast<Data *>(::realloc(d, sizeof(Data) + (alloc+1) * sizeof(QChar)));
+        Data *p = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc * sizeof(QChar)));
         Q_CHECK_PTR(p);
         d = p;
-        d->alloc = alloc;
+        d->alloc = alloc - 1u;
         d->offset = sizeof(QStringData);
     }
-}
-
-void QString::realloc()
-{
-    realloc(d->size);
 }
 
 void QString::expand(int i)
@@ -1560,7 +1553,7 @@ QString &QString::append(const QString &str)
             operator=(str);
         } else {
             if (d->ref.isShared() || d->size + str.d->size > d->alloc)
-                realloc(grow(d->size + str.d->size));
+                reallocData(uint(d->size + str.d->size) + 1u, true);
             memcpy(d->data() + d->size, str.d->data(), str.d->size * sizeof(QChar));
             d->size += str.d->size;
             d->data()[d->size] = '\0';
@@ -1580,7 +1573,7 @@ QString &QString::append(const QLatin1String &str)
     if (s) {
         int len = str.size();
         if (d->ref.isShared() || d->size + len > d->alloc)
-            realloc(grow(d->size + len));
+            reallocData(uint(d->size + len) + 1u, true);
         ushort *i = d->data() + d->size;
         while ((*i++ = *s++))
             ;
@@ -1623,7 +1616,7 @@ QString &QString::append(const QLatin1String &str)
 QString &QString::append(QChar ch)
 {
     if (d->ref.isShared() || d->size + 1 > d->alloc)
-        realloc(grow(d->size + 1));
+        reallocData(uint(d->size) + 2u, true);
     d->data()[d->size++] = ch.unicode();
     d->data()[d->size] = '\0';
     return *this;
@@ -2826,7 +2819,7 @@ QString& QString::replace(const QRegExp &rx, const QString &after)
     if (isEmpty() && rx2.indexIn(*this) == -1)
         return *this;
 
-    realloc();
+    reallocData(uint(d->size) + 1u);
 
     int index = 0;
     int numCaptures = rx2.captureCount();
@@ -4851,8 +4844,10 @@ int QString::localeAwareCompare_helper(const QChar *data1, int length1,
 
 const ushort *QString::utf16() const
 {
-    if (IS_RAW_DATA(d))
-        const_cast<QString*>(this)->realloc();   // ensure '\\0'-termination for ::fromRawData strings
+    if (IS_RAW_DATA(d)) {
+        // ensure '\0'-termination for ::fromRawData strings
+        const_cast<QString*>(this)->reallocData(uint(d->size) + 1u);
+    }
     return d->data();
 }
 
