@@ -1455,16 +1455,69 @@ void tst_QString::mid()
     QVERIFY(a.mid(9999).isNull());
     QVERIFY(a.mid(9999,1).isNull());
 
+    QCOMPARE(a.mid(-1, 6), a.mid(0, 5));
+    QVERIFY(a.mid(-100, 6).isEmpty());
+    QVERIFY(a.mid(INT_MIN, 0).isEmpty());
+    QCOMPARE(a.mid(INT_MIN, -1), a);
+    QVERIFY(a.mid(INT_MIN, INT_MAX).isNull());
+    QVERIFY(a.mid(INT_MIN + 1, INT_MAX).isEmpty());
+    QCOMPARE(a.mid(INT_MIN + 2, INT_MAX), a.left(1));
+    QCOMPARE(a.mid(INT_MIN + a.size() + 1, INT_MAX), a);
+    QVERIFY(a.mid(INT_MAX).isNull());
+    QVERIFY(a.mid(INT_MAX, INT_MAX).isNull());
+    QCOMPARE(a.mid(-5, INT_MAX), a);
+    QCOMPARE(a.mid(-1, INT_MAX), a);
+    QCOMPARE(a.mid(0, INT_MAX), a);
+    QCOMPARE(a.mid(1, INT_MAX), QString("BCDEFGHIEfGEFG"));
+    QCOMPARE(a.mid(5, INT_MAX), QString("FGHIEfGEFG"));
+    QVERIFY(a.mid(20, INT_MAX).isNull());
+    QCOMPARE(a.mid(-1, -1), a);
+
     QString n;
     QVERIFY(n.mid(3,3).isNull());
     QVERIFY(n.mid(0,0).isNull());
     QVERIFY(n.mid(9999,0).isNull());
     QVERIFY(n.mid(9999,1).isNull());
 
+    QVERIFY(n.mid(-1, 6).isNull());
+    QVERIFY(n.mid(-100, 6).isNull());
+    QVERIFY(n.mid(INT_MIN, 0).isNull());
+    QVERIFY(n.mid(INT_MIN, -1).isNull());
+    QVERIFY(n.mid(INT_MIN, INT_MAX).isNull());
+    QVERIFY(n.mid(INT_MIN + 1, INT_MAX).isNull());
+    QVERIFY(n.mid(INT_MIN + 2, INT_MAX).isNull());
+    QVERIFY(n.mid(INT_MIN + n.size() + 1, INT_MAX).isNull());
+    QVERIFY(n.mid(INT_MAX).isNull());
+    QVERIFY(n.mid(INT_MAX, INT_MAX).isNull());
+    QVERIFY(n.mid(-5, INT_MAX).isNull());
+    QVERIFY(n.mid(-1, INT_MAX).isNull());
+    QVERIFY(n.mid(0, INT_MAX).isNull());
+    QVERIFY(n.mid(1, INT_MAX).isNull());
+    QVERIFY(n.mid(5, INT_MAX).isNull());
+    QVERIFY(n.mid(20, INT_MAX).isNull());
+    QVERIFY(n.mid(-1, -1).isNull());
+
     QString x = "Nine pineapples";
     QCOMPARE(x.mid(5, 4), QString("pine"));
     QCOMPARE(x.mid(5), QString("pineapples"));
 
+    QCOMPARE(x.mid(-1, 6), x.mid(0, 5));
+    QVERIFY(x.mid(-100, 6).isEmpty());
+    QVERIFY(x.mid(INT_MIN, 0).isEmpty());
+    QCOMPARE(x.mid(INT_MIN, -1), x);
+    QVERIFY(x.mid(INT_MIN, INT_MAX).isNull());
+    QVERIFY(x.mid(INT_MIN + 1, INT_MAX).isEmpty());
+    QCOMPARE(x.mid(INT_MIN + 2, INT_MAX), x.left(1));
+    QCOMPARE(x.mid(INT_MIN + x.size() + 1, INT_MAX), x);
+    QVERIFY(x.mid(INT_MAX).isNull());
+    QVERIFY(x.mid(INT_MAX, INT_MAX).isNull());
+    QCOMPARE(x.mid(-5, INT_MAX), x);
+    QCOMPARE(x.mid(-1, INT_MAX), x);
+    QCOMPARE(x.mid(0, INT_MAX), x);
+    QCOMPARE(x.mid(1, INT_MAX), QString("ine pineapples"));
+    QCOMPARE(x.mid(5, INT_MAX), QString("pineapples"));
+    QVERIFY(x.mid(20, INT_MAX).isNull());
+    QCOMPARE(x.mid(-1, -1), x);
 }
 
 void tst_QString::midRef()
@@ -1477,16 +1530,70 @@ void tst_QString::midRef()
     QVERIFY(a.midRef(9999).toString().isEmpty());
     QVERIFY(a.midRef(9999,1).toString().isEmpty());
 
+    QCOMPARE(a.midRef(-1, 6), a.midRef(0, 5));
+    QVERIFY(a.midRef(-100, 6).isEmpty());
+    QVERIFY(a.midRef(INT_MIN, 0).isEmpty());
+    QCOMPARE(a.midRef(INT_MIN, -1).toString(), a);
+    QVERIFY(a.midRef(INT_MIN, INT_MAX).isNull());
+    QVERIFY(a.midRef(INT_MIN + 1, INT_MAX).isEmpty());
+    QCOMPARE(a.midRef(INT_MIN + 2, INT_MAX), a.leftRef(1));
+    QCOMPARE(a.midRef(INT_MIN + a.size() + 1, INT_MAX).toString(), a);
+    QVERIFY(a.midRef(INT_MAX).isNull());
+    QVERIFY(a.midRef(INT_MAX, INT_MAX).isNull());
+    QCOMPARE(a.midRef(-5, INT_MAX).toString(), a);
+    QCOMPARE(a.midRef(-1, INT_MAX).toString(), a);
+    QCOMPARE(a.midRef(0, INT_MAX).toString(), a);
+    QCOMPARE(a.midRef(1, INT_MAX).toString(), QString("BCDEFGHIEfGEFG"));
+    QCOMPARE(a.midRef(5, INT_MAX).toString(), QString("FGHIEfGEFG"));
+    QVERIFY(a.midRef(20, INT_MAX).isNull());
+    QCOMPARE(a.midRef(-1, -1).toString(), a);
+
     QString n;
     QVERIFY(n.midRef(3,3).toString().isEmpty());
     QVERIFY(n.midRef(0,0).toString().isEmpty());
     QVERIFY(n.midRef(9999,0).toString().isEmpty());
     QVERIFY(n.midRef(9999,1).toString().isEmpty());
 
+    QVERIFY(n.midRef(-1, 6).isNull());
+    QVERIFY(n.midRef(-100, 6).isNull());
+    QVERIFY(n.midRef(INT_MIN, 0).isNull());
+    QVERIFY(n.midRef(INT_MIN, -1).isNull());
+    QVERIFY(n.midRef(INT_MIN, INT_MAX).isNull());
+    QVERIFY(n.midRef(INT_MIN + 1, INT_MAX).isNull());
+    QVERIFY(n.midRef(INT_MIN + 2, INT_MAX).isNull());
+    QVERIFY(n.midRef(INT_MIN + n.size() + 1, INT_MAX).isNull());
+    QVERIFY(n.midRef(INT_MAX).isNull());
+    QVERIFY(n.midRef(INT_MAX, INT_MAX).isNull());
+    QVERIFY(n.midRef(-5, INT_MAX).isNull());
+    QVERIFY(n.midRef(-1, INT_MAX).isNull());
+    QVERIFY(n.midRef(0, INT_MAX).isNull());
+    QVERIFY(n.midRef(1, INT_MAX).isNull());
+    QVERIFY(n.midRef(5, INT_MAX).isNull());
+    QVERIFY(n.midRef(20, INT_MAX).isNull());
+    QVERIFY(n.midRef(-1, -1).isNull());
+
     QString x = "Nine pineapples";
     QCOMPARE(x.midRef(5, 4).toString(), QString("pine"));
     QCOMPARE(x.midRef(5).toString(), QString("pineapples"));
 
+
+    QCOMPARE(x.midRef(-1, 6), x.midRef(0, 5));
+    QVERIFY(x.midRef(-100, 6).isEmpty());
+    QVERIFY(x.midRef(INT_MIN, 0).isEmpty());
+    QCOMPARE(x.midRef(INT_MIN, -1).toString(), x);
+    QVERIFY(x.midRef(INT_MIN, INT_MAX).isNull());
+    QVERIFY(x.midRef(INT_MIN + 1, INT_MAX).isEmpty());
+    QCOMPARE(x.midRef(INT_MIN + 2, INT_MAX), x.leftRef(1));
+    QCOMPARE(x.midRef(INT_MIN + x.size() + 1, INT_MAX).toString(), x);
+    QVERIFY(x.midRef(INT_MAX).isNull());
+    QVERIFY(x.midRef(INT_MAX, INT_MAX).isNull());
+    QCOMPARE(x.midRef(-5, INT_MAX).toString(), x);
+    QCOMPARE(x.midRef(-1, INT_MAX).toString(), x);
+    QCOMPARE(x.midRef(0, INT_MAX).toString(), x);
+    QCOMPARE(x.midRef(1, INT_MAX).toString(), QString("ine pineapples"));
+    QCOMPARE(x.midRef(5, INT_MAX).toString(), QString("pineapples"));
+    QVERIFY(x.midRef(20, INT_MAX).isNull());
+    QCOMPARE(x.midRef(-1, -1).toString(), x);
 }
 
 void tst_QString::stringRef()
