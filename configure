@@ -1259,6 +1259,10 @@ while [ "$#" -gt 0 ]; do
             VAL=`echo $1 | sed 's,-R,,'`
         fi
         ;;
+    -largefile)
+        VAR="largefile"
+        VAL="yes"
+        ;;
     -l?*)
         VAR="add_link"
         VAL=`echo $1 | sed 's,-l,,'`
@@ -7831,7 +7835,7 @@ fi
 
 # cmdline args
 cat "$QMAKE_VARS_FILE" >> "$CACHEFILE.tmp"
-rm -f "$QMAKE_VARS_FILE" 2>/dev/null
+# QMAKE_VARS_FILE will be still needed for a status message.
 
 # incrementals
 INCREMENTAL=""
@@ -8091,6 +8095,7 @@ sepath=`echo "$relpath" | sed -e 's/\\./\\\\./g'`
 PROCS=1
 EXEC=""
 
+rm -f "$QMAKE_VARS_FILE" 2>/dev/null
 
 #-------------------------------------------------------------------------------
 # build makefiles based on the configuration

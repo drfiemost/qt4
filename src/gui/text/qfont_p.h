@@ -72,7 +72,8 @@ struct QFontDef
         : pointSize(-1.0), pixelSize(-1),
           styleStrategy(QFont::PreferDefault), styleHint(QFont::AnyStyle),
           weight(50), fixedPitch(false), style(QFont::StyleNormal), stretch(100),
-          ignorePitch(true), hintingPreference(QFont::PreferDefaultHinting)
+          hintingPreference(QFont::PreferDefaultHinting), ignorePitch(true),
+          fixedPitchComputed(0), reserved(0)
 #ifdef Q_WS_MAC
           ,fixedPitchComputed(false)
 #endif
@@ -97,8 +98,8 @@ struct QFontDef
     uint style      :  2;
     uint stretch    : 12; // 0-400
 
-    uint ignorePitch : 1;
     uint hintingPreference : 2;
+    uint ignorePitch : 1;
     uint fixedPitchComputed : 1; // for Mac OS X only
     uint reserved   : 14; // for future extensions
 

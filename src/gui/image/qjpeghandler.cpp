@@ -748,10 +748,11 @@ bool QJpegHandlerPrivate::readJpegHeader(QIODevice *device)
         state = Error;
         iod_src = new my_jpeg_source_mgr(device);
 
-        jpeg_create_decompress(&info);
-        info.src = iod_src;
         info.err = jpeg_std_error(&err);
         err.error_exit = my_error_exit;
+
+        jpeg_create_decompress(&info);
+        info.src = iod_src;
 
         if (!setjmp(err.setjmp_buffer)) {
             (void) jpeg_read_header(&info, TRUE);
