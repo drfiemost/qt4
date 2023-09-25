@@ -3403,7 +3403,7 @@ QString QString::right(int n) const
 
 QString QString::mid(int position, int n) const
 {
-    if (position > d->size)
+    if (position >= d->size)
         return QString();
     if (position < 0) {
         if (n < 0 || n + position >= d->size)
@@ -8340,7 +8340,7 @@ QStringRef QString::rightRef(int n) const
 
 QStringRef QString::midRef(int position, int n) const
 {
-    if (position > d->size)
+    if (position >= d->size)
         return QStringRef();
     if (position < 0) {
         if (n < 0 || n + position >= d->size)
