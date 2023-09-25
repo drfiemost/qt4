@@ -419,12 +419,13 @@ void tst_QAtomicInt::assignment_operator()
     {
         QAtomicInt atomic1 = value;
         atomic1 = newval;
-        QCOMPARE(int(atomic1), newval);
+        QCOMPARE(atomic1.load(), newval);
         atomic1 = value;
-        QCOMPARE(int(atomic1), value);
+        QCOMPARE(atomic1.load(), value);
+
         QAtomicInt atomic2 = newval;
         atomic1 = atomic2;
-        QCOMPARE(atomic1, atomic2);
+        QCOMPARE(atomic1.load(), atomic2.load());
     }
 }
 
