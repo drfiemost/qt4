@@ -278,15 +278,20 @@ QItemSelectionRange QItemSelectionRange::intersect(const QItemSelectionRange &ot
   it avoid concatenating list and works on one
  */
 
-static void indexesFromRange(const QItemSelectionRange &range, QModelIndexList &result)
+template<typename ModelIndexContainer>
+static void indexesFromRange(const QItemSelectionRange &range, ModelIndexContainer &result)
 {
     if (range.isValid() && range.model()) {
-        for (int column = range.left(); column <= range.right(); ++column) {
-            for (int row = range.top(); row <= range.bottom(); ++row) {
-                QModelIndex index = range.model()->index(row, column, range.parent());
+        const QModelIndex topLeft = range.topLeft();
+        const int bottom = range.bottom();
+        const int right = range.right();
+        for (int row = topLeft.row(); row <= bottom; ++row) {
+            const QModelIndex columnLeader = topLeft.sibling(row, topLeft.column());
+            for (int column = topLeft.column(); column <= right; ++column) {
+                QModelIndex index = columnLeader.sibling(row, column);
                 Qt::ItemFlags flags = range.model()->flags(index);
                 if ((flags & Qt::ItemIsSelectable) && (flags & Qt::ItemIsEnabled))
-                    result.append(index);
+                    result.push_back(index);
             }
         }
     }
@@ -436,6 +441,15 @@ QModelIndexList QItemSelection::indexes() const
     QModelIndexList result;
     QList<QItemSelectionRange>::const_iterator it = begin();
     for (; it != end(); ++it)
+        indexesFromRange(*it, result);
+    return result;
+}
+
+static QVector<QPersistentModelIndex> qSelectionPersistentindexes(const QItemSelection &sel)
+{
+    QVector<QPersistentModelIndex> result;
+    QList<QItemSelectionRange>::const_iterator it = sel.constBegin();
+    for (; it != sel.constEnd(); ++it)
         indexesFromRange(*it, result);
     return result;
 }
@@ -800,13 +814,8 @@ void QItemSelectionModelPrivate::_q_layoutAboutToBeChanged()
     }
     tableSelected = false;
 
-    QModelIndexList indexes = ranges.indexes();
-    QModelIndexList::const_iterator it;
-    for (it = indexes.constBegin(); it != indexes.constEnd(); ++it)
-        savedPersistentIndexes.append(QPersistentModelIndex(*it));
-    indexes = currentSelection.indexes();
-    for (it = indexes.constBegin(); it != indexes.constEnd(); ++it)
-        savedPersistentCurrentIndexes.append(QPersistentModelIndex(*it));
+    savedPersistentIndexes = qSelectionPersistentindexes(ranges);
+    savedPersistentCurrentIndexes = qSelectionPersistentindexes(currentSelection);
 }
 
 /*!
@@ -815,22 +824,32 @@ void QItemSelectionModelPrivate::_q_layoutAboutToBeChanged()
     Merges \a indexes into an item selection made up of ranges.
     Assumes that the indexes are sorted.
 */
-static QItemSelection mergeIndexes(const QList<QPersistentModelIndex> &indexes)
+static QItemSelection mergeIndexes(const QVector<QPersistentModelIndex> &indexes)
 {
     QItemSelection colSpans;
     // merge columns
     int i = 0;
     while (i < indexes.count()) {
-        QModelIndex tl = indexes.at(i);
-        QModelIndex br = tl;
+        const QPersistentModelIndex &tl = indexes.at(i);
+        QPersistentModelIndex br = tl;
+        QModelIndex brParent = br.parent();
+        int brRow = br.row();
+        int brColumn = br.column();
         while (++i < indexes.count()) {
-            QModelIndex next = indexes.at(i);
-            if ((next.parent() == br.parent())
-                 && (next.row() == br.row())
-                 && (next.column() == br.column() + 1))
+            const QPersistentModelIndex &next = indexes.at(i);
+            const QModelIndex nextParent = next.parent();
+            const int nextRow = next.row();
+            const int nextColumn = next.column();
+            if ((nextParent == brParent)
+                 && (nextRow == brRow)
+                 && (nextColumn == brColumn + 1)) {
                 br = next;
-            else
+                brParent = nextParent;
+                brRow = nextRow;
+                brColumn = nextColumn;
+            } else {
                 break;
+            }
         }
         colSpans.append(QItemSelectionRange(tl, br));
     }
