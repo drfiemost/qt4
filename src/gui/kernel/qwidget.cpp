@@ -8090,7 +8090,7 @@ bool QWidget::event(QEvent *event)
 {
     Q_D(QWidget);
 
-    // ignore mouse events when disabled
+    // ignore mouse and key events when disabled
     if (!isEnabled()) {
         switch(event->type()) {
         case QEvent::TabletPress:
@@ -8104,6 +8104,8 @@ bool QWidget::event(QEvent *event)
         case QEvent::TouchUpdate:
         case QEvent::TouchEnd:
         case QEvent::ContextMenu:
+        case QEvent::KeyPress:
+        case QEvent::KeyRelease:
 #ifndef QT_NO_WHEELEVENT
         case QEvent::Wheel:
 #endif
