@@ -108,7 +108,6 @@ void QFileInfoGatherer::setResolveSymlinks(bool enable)
 {
     Q_UNUSED(enable);
 #ifdef Q_OS_WIN
-    QMutexLocker locker(&mutex);
     m_resolveSymlinks = enable;
 #endif
 }
@@ -120,7 +119,6 @@ bool QFileInfoGatherer::resolveSymlinks() const
 
 void QFileInfoGatherer::setIconProvider(QFileIconProvider *provider)
 {
-    QMutexLocker locker(&mutex);
     m_iconProvider = provider;
 }
 
