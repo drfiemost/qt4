@@ -240,6 +240,7 @@ public:
 
     HB_Font harfbuzzFont() const;
     HB_Face harfbuzzFace() const;
+    HB_Face initializedHarfbuzzFace() const;
 
     virtual HB_Error getPointInOutline(HB_Glyph glyph, int flags, hb_uint32 point, HB_Fixed *xpos, HB_Fixed *ypos, hb_uint32 *nPoints);
 
@@ -425,7 +426,6 @@ public:
 
     QFontEngine *engine(int at) const
     {Q_ASSERT(at < engines.size()); return engines.at(at); }
-
 
 protected:
     friend class QPSPrintEnginePrivate;

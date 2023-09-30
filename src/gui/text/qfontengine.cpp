@@ -242,6 +242,15 @@ HB_Face QFontEngine::harfbuzzFace() const
     return hbFace;
 }
 
+HB_Face QFontEngine::initializedHarfbuzzFace() const
+{
+    HB_Face face = harfbuzzFace();
+    if (face != 0 && face->font_for_init != 0)
+        face = qHBLoadFace(face);
+
+    return face;
+}
+
 glyph_metrics_t QFontEngine::boundingBox(glyph_t glyph, const QTransform &matrix)
 {
     glyph_metrics_t metrics = boundingBox(glyph);
