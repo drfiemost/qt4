@@ -348,7 +348,6 @@ private:
     friend class QWidget;
     friend class QWidgetPrivate;
     friend class QETWidget;
-    friend class Q3AccelManager;
     friend class QTranslator;
     friend class QWidgetAnimator;
 #ifndef QT_NO_SHORTCUT

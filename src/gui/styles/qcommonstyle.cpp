@@ -463,9 +463,6 @@ void QCommonStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, Q
         }
         p->restore();
         break;
-    case PE_Q3DockWindowSeparator:
-        proxy()->drawPrimitive(PE_IndicatorToolBarSeparator, opt, p, widget);
-        break;
     case PE_IndicatorToolBarSeparator:
         {
             QPoint p1, p2;
@@ -4119,8 +4116,7 @@ QRect QCommonStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex 
                 }
 
                 int frameWidth = 0;
-                if (!(widget && widget->inherits("Q3GroupBox"))
-                    && ((groupBox->features & QStyleOptionFrameV2::Flat) == 0)) {
+                if ((groupBox->features & QStyleOptionFrameV2::Flat) == 0) {
                     frameWidth = proxy()->pixelMetric(PM_DefaultFrameWidth, groupBox, widget);
                 }
                 ret = frameRect.adjusted(frameWidth, frameWidth + topHeight - topMargin,
@@ -4245,10 +4241,6 @@ int QCommonStyle::pixelMetric(PixelMetric m, const QStyleOption *opt, const QWid
         break;
     case PM_DialogButtonsButtonHeight:
         ret = int(QStyleHelper::dpiScaled(30.));
-        break;
-    case PM_CheckListControllerSize:
-    case PM_CheckListButtonSize:
-        ret = int(QStyleHelper::dpiScaled(16.));
         break;
     case PM_TitleBarHeight: {
         if (const QStyleOptionTitleBar *tb = qstyleoption_cast<const QStyleOptionTitleBar *>(opt)) {
@@ -4722,7 +4714,6 @@ QSize QCommonStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
     case CT_MenuBar:
     case CT_Menu:
     case CT_MenuBarItem:
-    case CT_Q3Header:
     case CT_Slider:
     case CT_ProgressBar:
     case CT_TabBarTab:
@@ -4767,7 +4758,7 @@ int QCommonStyle::styleHint(StyleHint sh, const QStyleOption *opt, const QWidget
         break;
 #endif // QT_NO_GROUPBOX
 
-    case SH_Q3ListViewExpand_SelectMouseType:
+    case SH_ListViewExpand_SelectMouseType:
     case SH_TabBar_SelectMouseType:
         ret = QEvent::MouseButtonPress;
         break;
