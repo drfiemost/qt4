@@ -60,41 +60,38 @@ class Q_CORE_EXPORT QModelIndex
     friend class QAbstractItemModel;
     friend class QProxyModel;
 public:
-    inline QModelIndex() : r(-1), c(-1), p(0), m(0) {}
-    inline QModelIndex(const QModelIndex &other)
-        : r(other.r), c(other.c), p(other.p), m(other.m) {}
+    constexpr inline QModelIndex() : r(-1), c(-1), i(0), m(0) {}
     inline QModelIndex& operator=(const QModelIndex&) = default;
-    inline ~QModelIndex() { p = 0; m = 0; }
-    inline int row() const { return r; }
-    inline int column() const { return c; }
-    inline void *internalPointer() const { return p; }
-    inline qint64 internalId() const { return reinterpret_cast<qint64>(p); }
+    // compiler-generated copy/move ctors/assignment operators are fine!
+    constexpr inline int row() const { return r; }
+    constexpr inline int column() const { return c; }
+    constexpr inline quintptr internalId() const { return i; }
+    inline void *internalPointer() const { return reinterpret_cast<void*>(i); }
     inline QModelIndex parent() const;
     inline QModelIndex sibling(int row, int column) const;
     inline QModelIndex child(int row, int column) const;
     inline QVariant data(int role = Qt::DisplayRole) const;
     inline Qt::ItemFlags flags() const;
-    inline const QAbstractItemModel *model() const { return m; }
-    inline bool isValid() const { return (r >= 0) && (c >= 0) && (m != 0); }
-    inline bool operator==(const QModelIndex &other) const
-        { return (other.r == r) && (other.p == p) && (other.c == c) && (other.m == m); }
-    inline bool operator!=(const QModelIndex &other) const
+    constexpr inline const QAbstractItemModel *model() const { return m; }
+    constexpr inline bool isValid() const { return (r >= 0) && (c >= 0) && (m != 0); }
+    constexpr inline bool operator==(const QModelIndex &other) const
+        { return (other.r == r) && (other.i == i) && (other.c == c) && (other.m == m); }
+    constexpr inline bool operator!=(const QModelIndex &other) const
         { return !(*this == other); }
-    inline bool operator<(const QModelIndex &other) const
+    constexpr inline bool operator<(const QModelIndex &other) const
         {
-          if (r < other.r) return true;
-          if (r == other.r) {
-              if (c < other.c) return true;
-              if (c == other.c) {
-                  if (p < other.p) return true;
-                  if (p == other.p) return m < other.m;
-              }
-          }
-          return false; }
+          return  r <  other.r
+                || (r == other.r && (c <  other.c
+                                 || (c == other.c && (i <  other.i
+                                                  || (i == other.i && m < other.m )))));
+        }
 private:
-    inline QModelIndex(int row, int column, void *ptr, const QAbstractItemModel *model);
+    inline QModelIndex(int arow, int acolumn, void *ptr, const QAbstractItemModel *amodel)
+        : r(arow), c(acolumn), i(reinterpret_cast<quintptr>(ptr)), m(amodel) {}
+    constexpr inline QModelIndex(int arow, int acolumn, quintptr id, const QAbstractItemModel *amodel)
+        : r(arow), c(acolumn), i(id), m(amodel) {}
     int r, c;
-    void *p;
+    quintptr i;
     const QAbstractItemModel *m;
 };
 Q_DECLARE_TYPEINFO(QModelIndex, Q_MOVABLE_TYPE);
@@ -124,7 +121,7 @@ public:
     int row() const;
     int column() const;
     void *internalPointer() const;
-    qint64 internalId() const;
+    quintptr internalId() const;
     QModelIndex parent() const;
     QModelIndex sibling(int row, int column) const;
     QModelIndex child(int row, int column) const;
@@ -265,8 +262,7 @@ protected:
     QAbstractItemModel(QAbstractItemModelPrivate &dd, QObject *parent = 0);
 
     inline QModelIndex createIndex(int row, int column, void *data = 0) const;
-    inline QModelIndex createIndex(int row, int column, int id) const;
-    inline QModelIndex createIndex(int row, int column, quint32 id) const;
+    inline QModelIndex createIndex(int row, int column, quintptr id) const;
 
     void encodeData(const QModelIndexList &indexes, QDataStream &stream) const;
     bool decodeData(int row, int column, const QModelIndex &parent, QDataStream &stream);
@@ -319,25 +315,8 @@ inline bool QAbstractItemModel::removeColumn(int acolumn, const QModelIndex &apa
 
 inline QModelIndex QAbstractItemModel::createIndex(int arow, int acolumn, void *adata) const
 { return QModelIndex(arow, acolumn, adata, this); }
-inline QModelIndex QAbstractItemModel::createIndex(int arow, int acolumn, int aid) const
-#if defined(Q_CC_MSVC)
-#pragma warning( push )
-#pragma warning( disable : 4312 ) // avoid conversion warning on 64-bit
-#endif
-{ return QModelIndex(arow, acolumn, reinterpret_cast<void*>(aid), this); }
-#if defined(Q_CC_MSVC)
-#pragma warning( pop )
-#endif
-inline QModelIndex QAbstractItemModel::createIndex(int arow, int acolumn, quint32 aid) const
-#if defined(Q_CC_MSVC)
-#pragma warning( push )
-#pragma warning( disable : 4312 ) // avoid conversion warning on 64-bit
-#endif
-{ return QModelIndex(arow, acolumn, reinterpret_cast<void*>(aid), this); }
-#if defined(Q_CC_MSVC)
-#pragma warning( pop )
-#endif
-
+inline QModelIndex QAbstractItemModel::createIndex(int arow, int acolumn, quintptr aid) const
+{ return QModelIndex(arow, acolumn, aid, this); }
 
 class Q_CORE_EXPORT QAbstractTableModel : public QAbstractItemModel
 {
@@ -381,10 +360,6 @@ private:
 };
 
 // inline implementations
-
-inline QModelIndex::QModelIndex(int arow, int acolumn, void *adata,
-                                const QAbstractItemModel *amodel)
-    : r(arow), c(acolumn), p(adata), m(amodel) {}
 
 inline QModelIndex QModelIndex::parent() const
 { return m ? m->parent(*this) : QModelIndex(); }
