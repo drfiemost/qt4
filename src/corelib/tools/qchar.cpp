@@ -264,8 +264,6 @@ QT_BEGIN_NAMESPACE
 
     \value Symbol_Other  Unicode class name So
 
-    \value NoCategory  Qt cannot find an appropriate category for the character.
-
     \omitvalue Punctuation_Dask
 
     \sa category()
@@ -783,7 +781,7 @@ QChar::Category QChar::category() const
 QChar::Category QChar::category(uint ucs4)
 {
     if (ucs4 > UNICODE_LAST_CODEPOINT)
-        return QChar::NoCategory;
+        return QChar::Other_NotAssigned;
     return (QChar::Category) qGetProp(ucs4)->category;
 }
 

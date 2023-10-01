@@ -574,19 +574,19 @@ void tst_QRegExp::exactMatch()
     QRegExp rx_W( "\\W" );
 
     for ( int i = 0; i < 65536; i++ ) {
-	QChar ch( i );
-	bool is_d = ( ch.category() == QChar::Number_DecimalDigit );
-	bool is_s = ch.isSpace();
-	bool is_w = ( ch.isLetterOrNumber()
+        QChar ch( i );
+       bool is_d = ( ch.category() == QChar::Number_DecimalDigit );
+       bool is_s = ch.isSpace();
+       bool is_w = ( ch.isLetterOrNumber()
         || ch.isMark()
         || ch == '_' );
 
-	QVERIFY( rx_d.exactMatch(QString(ch)) == is_d );
-	QVERIFY( rx_s.exactMatch(QString(ch)) == is_s );
-	QVERIFY( rx_w.exactMatch(QString(ch)) == is_w );
-	QVERIFY( rx_D.exactMatch(QString(ch)) != is_d );
-	QVERIFY( rx_S.exactMatch(QString(ch)) != is_s );
-	QVERIFY( rx_W.exactMatch(QString(ch)) != is_w );
+       QVERIFY( rx_d.exactMatch(QString(ch)) == is_d );
+       QVERIFY( rx_s.exactMatch(QString(ch)) == is_s );
+       QVERIFY( rx_w.exactMatch(QString(ch)) == is_w );
+       QVERIFY( rx_D.exactMatch(QString(ch)) != is_d );
+       QVERIFY( rx_S.exactMatch(QString(ch)) != is_s );
+       QVERIFY( rx_W.exactMatch(QString(ch)) != is_w );
     }
 }
 

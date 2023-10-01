@@ -4949,42 +4949,51 @@ QString QString::toLower() const
     const ushort *p = d->data();
     if (!p)
         return *this;
-    if (!d->size)
-        return *this;
 
-    const ushort *e = d->data() + d->size;
+    const ushort *e = p + d->size;
+    // this avoids out of bounds check in the loop
+    while (e != p && QChar::isHighSurrogate(*(e - 1)))
+        --e;
 
-    // this avoids one out of bounds check in the loop
-    if (QChar(*p).isLowSurrogate())
-        ++p;
-
+    const QUnicodeTables::Properties *prop;
     while (p != e) {
-        uint c = *p;
-        if (QChar(c).isLowSurrogate() && QChar(*(p - 1)).isHighSurrogate())
-            c = QChar::surrogateToUcs4(*(p - 1), c);
-        const QUnicodeTables::Properties *prop = qGetProp(c);
-        if (prop->lowerCaseDiff || prop->lowerCaseSpecial) {
+        if (QChar::isHighSurrogate(*p) && QChar::isLowSurrogate(p[1])) {
+            ushort high = *p++;
+            prop = qGetProp(QChar::surrogateToUcs4(high, *p));
+        } else {
+            prop = qGetProp(*p);
+        }
+        if (prop->lowerCaseDiff) {
+            if (QChar::isLowSurrogate(*p))
+                --p; // safe; diff is 0 for surrogates
             QString s(d->size, Qt::Uninitialized);
             memcpy(s.d->data(), d->data(), (p - d->data())*sizeof(ushort));
             ushort *pp = s.d->data() + (p - d->data());
-            while (p < e) {
-                uint c = *p;
-                if (QChar(c).isLowSurrogate() && QChar(*(p - 1)).isHighSurrogate())
-                    c = QChar::surrogateToUcs4(*(p - 1), c);
-                prop = qGetProp(c);
+            while (p != e) {
+                if (QChar::isHighSurrogate(*p) && QChar::isLowSurrogate(p[1])) {
+                    *pp = *p++;
+                    prop = qGetProp(QChar::surrogateToUcs4(*pp++, *p));
+                } else {
+                    prop = qGetProp(*p);
+                }
                 if (prop->lowerCaseSpecial) {
-                    int pos = pp - s.d->data();
-                    s.resize(s.d->size + SPECIAL_CASE_MAX_LEN);
-                    pp = s.d->data() + pos;
                     const ushort *specialCase = specialCaseMap + prop->lowerCaseDiff;
-                    while (*specialCase)
+                    ushort length = *specialCase++;
+                    int pos = pp - s.d->data();
+                    s.resize(s.d->size + length - 1);
+                    pp = s.d->data() + pos;
+                    while (length--)
                         *pp++ = *specialCase++;
                 } else {
                     *pp++ = *p + prop->lowerCaseDiff;
                 }
                 ++p;
             }
-            s.truncate(pp - s.d->data());
+
+            // this restores high surrogate parts eaten above, if any
+            while (e != d->data() + d->size)
+                *pp++ = *e++;
+
             return s;
         }
         ++p;
@@ -4998,31 +5007,51 @@ QString QString::toLower() const
 */
 QString QString::toCaseFolded() const
 {
-    if (!d->size)
-        return *this;
-
     const ushort *p = d->data();
     if (!p)
         return *this;
 
-    const ushort *e = d->data() + d->size;
+    const ushort *e = p + d->size;
+    // this avoids out of bounds check in the loop
+    while (e != p && QChar::isHighSurrogate(*(e - 1)))
+        --e;
 
-    uint last = 0;
-    while (p < e) {
-        ushort folded = foldCase(*p, last);
-        if (folded != *p) {
-            QString s(*this);
-            s.detach();
+    const QUnicodeTables::Properties *prop;
+    while (p != e) {
+        if (QChar::isHighSurrogate(*p) && QChar::isLowSurrogate(p[1])) {
+            ushort high = *p++;
+            prop = qGetProp(QChar::surrogateToUcs4(high, *p));
+        } else {
+            prop = qGetProp(*p);
+        }
+        if (prop->caseFoldDiff) {
+            if (QChar::isLowSurrogate(*p))
+                --p; // safe; diff is 0 for surrogates
+            QString s(d->size, Qt::Uninitialized);
+            memcpy(s.d->data(), d->data(), (p - d->data())*sizeof(ushort));
             ushort *pp = s.d->data() + (p - d->data());
-            const ushort *ppe = s.d->data() + s.d->size;
-            last = pp > s.d->data() ? *(pp - 1) : 0;
-            while (pp < ppe) {
-                *pp = foldCase(*pp, last);
-                ++pp;
+            while (p != e) {
+                if (QChar::isHighSurrogate(*p) && QChar::isLowSurrogate(p[1])) {
+                    *pp = *p++;
+                    prop = qGetProp(QChar::surrogateToUcs4(*pp++, *p));
+                } else {
+                    prop = qGetProp(*p);
+                }
+                if (prop->caseFoldSpecial) {
+                    //### we currently don't support full case foldings
+                } else {
+                    *pp++ = *p + prop->caseFoldDiff;
+                }
+                ++p;
             }
+
+            // this restores high surrogate parts eaten above, if any
+            while (e != d->data() + d->size)
+                *pp++ = *e++;
+
             return s;
         }
-        p++;
+        ++p;
     }
     return *this;
 }
@@ -5037,48 +5066,56 @@ QString QString::toCaseFolded() const
 
     \sa toLower(), QLocale::toLower()
 */
-
 QString QString::toUpper() const
 {
     const ushort *p = d->data();
     if (!p)
         return *this;
-    if (!d->size)
-        return *this;
 
-    const ushort *e = d->data() + d->size;
+    const ushort *e = p + d->size;
+    // this avoids out of bounds check in the loop
+    while (e != p && QChar::isHighSurrogate(*(e - 1)))
+        --e;
 
-    // this avoids one out of bounds check in the loop
-    if (QChar(*p).isLowSurrogate())
-        ++p;
-
+    const QUnicodeTables::Properties *prop;
     while (p != e) {
-        uint c = *p;
-        if (QChar(c).isLowSurrogate() && QChar(*(p - 1)).isHighSurrogate())
-            c = QChar::surrogateToUcs4(*(p - 1), c);
-        const QUnicodeTables::Properties *prop = qGetProp(c);
-        if (prop->upperCaseDiff || prop->upperCaseSpecial) {
+        if (QChar::isHighSurrogate(*p) && QChar::isLowSurrogate(p[1])) {
+            ushort high = *p++;
+            prop = qGetProp(QChar::surrogateToUcs4(high, *p));
+        } else {
+            prop = qGetProp(*p);
+        }
+        if (prop->upperCaseDiff) {
+            if (QChar::isLowSurrogate(*p))
+                --p; // safe; diff is 0 for surrogates
             QString s(d->size, Qt::Uninitialized);
             memcpy(s.d->data(), d->data(), (p - d->data())*sizeof(ushort));
             ushort *pp = s.d->data() + (p - d->data());
-            while (p < e) {
-                uint c = *p;
-                if (QChar(c).isLowSurrogate() && QChar(*(p - 1)).isHighSurrogate())
-                    c = QChar::surrogateToUcs4(*(p - 1), c);
-                prop = qGetProp(c);
+            while (p != e) {
+                if (QChar::isHighSurrogate(*p) && QChar::isLowSurrogate(p[1])) {
+                    *pp = *p++;
+                    prop = qGetProp(QChar::surrogateToUcs4(*pp++, *p));
+                } else {
+                    prop = qGetProp(*p);
+                }
                 if (prop->upperCaseSpecial) {
-                    int pos = pp - s.d->data();
-                    s.resize(s.d->size + SPECIAL_CASE_MAX_LEN);
-                    pp = s.d->data() + pos;
                     const ushort *specialCase = specialCaseMap + prop->upperCaseDiff;
-                    while (*specialCase)
+                    ushort length = *specialCase++;
+                    int pos = pp - s.d->data();
+                    s.resize(s.d->size + length - 1);
+                    pp = s.d->data() + pos;
+                    while (length--)
                         *pp++ = *specialCase++;
                 } else {
                     *pp++ = *p + prop->upperCaseDiff;
                 }
                 ++p;
             }
-            s.truncate(pp - s.d->data());
+
+            // this restores high surrogate parts eaten above, if any
+            while (e != d->data() + d->size)
+                *pp++ = *e++;
+
             return s;
         }
         ++p;

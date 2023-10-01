@@ -472,17 +472,26 @@ static int appendToSpecialCaseMap(const QList<int> &map)
             utf16map << val;
         }
     }
-    specialCaseMaxLen = qMax(specialCaseMaxLen, utf16map.size());
-    utf16map << 0;
+    int length = utf16map.size();
+    utf16map.prepend(length);
+    specialCaseMaxLen = qMax(specialCaseMaxLen, length);
 
-    for (int i = 0; i < specialCaseMap.size() - utf16map.size() + 1; ++i) {
-        int j;
-        for (j = 0; j < utf16map.size(); ++j) {
-            if (specialCaseMap.at(i+j) != utf16map.at(j))
-                break;
+    if (specialCaseMap.isEmpty())
+        specialCaseMap << 0; // placeholder
+
+    int i = 1;
+    while (i < specialCaseMap.size()) {
+        int n = specialCaseMap.at(i);
+        if (n == length) {
+            int j;
+            for (j = 1; j <= n; ++j) {
+                if (specialCaseMap.at(i+j) != utf16map.at(j))
+                    break;
+            }
+            if (j > n)
+                return i;
         }
-        if (j == utf16map.size())
-            return i;
+        i += n + 1;
     }
 
     int pos = specialCaseMap.size();
@@ -615,7 +624,7 @@ static void initCategoryMap()
         { QChar::Symbol_Currency,          "Sc" },
         { QChar::Symbol_Modifier,          "Sk" },
         { QChar::Symbol_Other,             "So" },
-        { QChar::NoCategory, 0 }
+        { QChar::Other_NotAssigned, 0 }
     };
     Cat *c = categories;
     while (c->name) {
@@ -763,9 +772,7 @@ static void readUnicodeData()
         }
 
         UnicodeData data(codepoint);
-        data.p.category = categoryMap.value(properties[UD_Category], QChar::NoCategory);
-        if (data.p.category == QChar::NoCategory)
-            qFatal("unassigned char category: %s", properties[UD_Category].constData());
+        data.p.category = categoryMap.value(properties[UD_Category], QChar::Other_NotAssigned);
 
         data.p.combiningClass = properties[UD_CombiningClass].toInt();
         if (!combiningClassUsage.contains(data.p.combiningClass))
@@ -1531,7 +1538,8 @@ static inline void foldCase(uint ch, ushort *out)
         *(out++) = ch + p->caseFoldDiff;
     } else {
         const ushort *folded = specialCaseMap + p->caseFoldDiff;
-        while (*folded)
+        ushort length = *folded++;
+        while (length--)
             *out++ = *folded++;
     }
     *out = 0;
@@ -2246,13 +2254,19 @@ static QByteArray createPropertyInfo()
            "    return (QUnicodeTables::LineBreakClass)qGetProp(ucs4)->line_break_class;\n"
            "}\n\n";
 
-    out += "static const ushort specialCaseMap[] = {\n   ";
-    for (int i = 0; i < specialCaseMap.size(); ++i) {
-        out += QByteArray(" 0x") + QByteArray::number(specialCaseMap.at(i), 16);
-        if (i < specialCaseMap.size() - 1)
-            out += ",";
-        if (!specialCaseMap.at(i))
-            out += "\n   ";
+    out += "static const ushort specialCaseMap[] = {\n";
+    out += "    0x0, // placeholder";
+    int i = 1;
+    while (i < specialCaseMap.size()) {
+        out += "\n   ";
+        int n = specialCaseMap.at(i);
+        int j;
+        for (j = 0; j <= n; ++j) {
+            out += QByteArray(" 0x") + QByteArray::number(specialCaseMap.at(i+j), 16);
+            if (i+j < specialCaseMap.size() - 1)
+                out += ",";
+        }
+        i += n + 1;
     }
     out += "\n};\n";
     out += "#define SPECIAL_CASE_MAX_LEN " + QByteArray::number(specialCaseMaxLen) + "\n\n";
