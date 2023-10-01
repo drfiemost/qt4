@@ -51,11 +51,8 @@
 #include <private/qunicodetables_p.h>
 #endif
 
-#define DATA_VERSION_S "5.0"
-#define DATA_VERSION_STR "QChar::Unicode_5_0"
-
-#define LAST_CODEPOINT 0x10ffff
-#define LAST_CODEPOINT_STR "0x10ffff"
+#define DATA_VERSION_S "6.1"
+#define DATA_VERSION_STR "QChar::Unicode_6_1"
 
 
 static QHash<QByteArray, QChar::UnicodeVersion> age_map;
@@ -75,6 +72,10 @@ static void initAgeMap()
         { QChar::Unicode_4_0,   "4.0" },
         { QChar::Unicode_4_1,   "4.1" },
         { QChar::Unicode_5_0,   "5.0" },
+        { QChar::Unicode_5_1,   "5.1" },
+        { QChar::Unicode_5_2,   "5.2" },
+        { QChar::Unicode_6_0,   "6.0" },
+        { QChar::Unicode_6_1,   "6.1" },
         { QChar::Unicode_Unassigned, 0 }
     };
     AgeMap *d = ageMap;
@@ -127,6 +128,8 @@ static const char *grapheme_break_string =
     "        GraphemeBreakLF,\n"
     "        GraphemeBreakControl,\n"
     "        GraphemeBreakExtend,\n"
+    "        GraphemeBreakPrepend,\n"
+    "        GraphemeBreakSpacingMark,\n"
     "        GraphemeBreakL,\n"
     "        GraphemeBreakV,\n"
     "        GraphemeBreakT,\n"
@@ -140,6 +143,8 @@ enum GraphemeBreak {
     GraphemeBreakLF,
     GraphemeBreakControl,
     GraphemeBreakExtend,
+    GraphemeBreakPrepend,
+    GraphemeBreakSpacingMark,
     GraphemeBreakL,
     GraphemeBreakV,
     GraphemeBreakT,
@@ -162,6 +167,8 @@ static void initGraphemeBreak()
         { GraphemeBreakLF, "LF" },
         { GraphemeBreakControl, "Control" },
         { GraphemeBreakExtend, "Extend" },
+        { GraphemeBreakPrepend, "Prepend" },
+        { GraphemeBreakSpacingMark, "SpacingMark" },
         { GraphemeBreakL, "L" },
         { GraphemeBreakV, "V" },
         { GraphemeBreakT, "T" },
@@ -180,9 +187,13 @@ static void initGraphemeBreak()
 static const char *word_break_string =
     "    enum WordBreak {\n"
     "        WordBreakOther,\n"
+    "        WordBreakCR,\n"
+    "        WordBreakLF,\n"
+    "        WordBreakNewline,\n"
     "        WordBreakFormat,\n"
     "        WordBreakKatakana,\n"
     "        WordBreakALetter,\n"
+    "        WordBreakMidNumLet,\n"
     "        WordBreakMidLetter,\n"
     "        WordBreakMidNum,\n"
     "        WordBreakNumeric,\n"
@@ -191,9 +202,14 @@ static const char *word_break_string =
 
 enum WordBreak {
     WordBreakOther,
+    WordBreakCR,
+    WordBreakLF,
+    WordBreakNewline,
+    WordBreakFormat,
     WordBreakFormat,
     WordBreakKatakana,
     WordBreakALetter,
+    WordBreakMidNumLet,
     WordBreakMidLetter,
     WordBreakMidNum,
     WordBreakNumeric,
@@ -210,10 +226,15 @@ static void initWordBreak()
         WordBreak brk;
         const char *name;
     } breaks[] = {
+        { WordBreakOther, "Other" },
+        { WordBreakCR, "CR" },
+        { WordBreakLF, "LF" },
+        { WordBreakNewline, "Newline" },
+        { WordBreakFormat, "Extend" },
         { WordBreakFormat, "Format" },
-        { WordBreakFormat, "Extend" }, // these are copied in from GraphemeBreakProperty.txt
         { WordBreakKatakana, "Katakana" },
         { WordBreakALetter, "ALetter" },
+        { WordBreakMidNumLet, "MidNumLet" },
         { WordBreakMidLetter, "MidLetter" },
         { WordBreakMidNum, "MidNum" },
         { WordBreakNumeric, "Numeric" },
@@ -231,6 +252,8 @@ static void initWordBreak()
 static const char *sentence_break_string =
     "    enum SentenceBreak {\n"
     "        SentenceBreakOther,\n"
+    "        SentenceBreakCR,\n"
+    "        SentenceBreakLF,\n"
     "        SentenceBreakSep,\n"
     "        SentenceBreakFormat,\n"
     "        SentenceBreakSp,\n"
@@ -239,12 +262,15 @@ static const char *sentence_break_string =
     "        SentenceBreakOLetter,\n"
     "        SentenceBreakNumeric,\n"
     "        SentenceBreakATerm,\n"
+    "        SentenceBreakSContinue,\n"
     "        SentenceBreakSTerm,\n"
     "        SentenceBreakClose\n"
     "    };\n\n";
 
 enum SentenceBreak {
     SentenceBreakOther,
+    SentenceBreakCR,
+    SentenceBreakLF,
     SentenceBreakSep,
     SentenceBreakFormat,
     SentenceBreakSp,
@@ -253,6 +279,7 @@ enum SentenceBreak {
     SentenceBreakOLetter,
     SentenceBreakNumeric,
     SentenceBreakATerm,
+    SentenceBreakSContinue,
     SentenceBreakSTerm,
     SentenceBreakClose
 
@@ -268,7 +295,10 @@ static void initSentenceBreak()
         const char *name;
     } breaks[] = {
         { SentenceBreakOther, "Other" },
+        { SentenceBreakCR, "CR" },
+        { SentenceBreakLF, "LF" },
         { SentenceBreakSep, "Sep" },
+        { SentenceBreakFormat, "Extend" },
         { SentenceBreakFormat, "Format" },
         { SentenceBreakSp, "Sp" },
         { SentenceBreakLower, "Lower" },
@@ -276,6 +306,7 @@ static void initSentenceBreak()
         { SentenceBreakOLetter, "OLetter" },
         { SentenceBreakNumeric, "Numeric" },
         { SentenceBreakATerm, "ATerm" },
+        { SentenceBreakSContinue, "SContinue" },
         { SentenceBreakSTerm, "STerm" },
         { SentenceBreakClose, "Close" },
         { SentenceBreak_Unassigned, 0 }
@@ -289,26 +320,25 @@ static void initSentenceBreak()
 
 
 static const char *line_break_class_string =
-    "    // see http://www.unicode.org/reports/tr14/tr14-19.html\n"
-    "    // we don't use the XX, AI and CB properties and map them to AL instead.\n"
-    "    // as we don't support any EBDIC based OS'es, NL is ignored and mapped to AL as well.\n"
+    "    // see http://www.unicode.org/reports/tr14/tr14-28.html\n"
+    "    // we don't use the XX, AI, and CB classes and map them to AL instead.\n"
     "    enum LineBreakClass {\n"
-    "        LineBreak_OP, LineBreak_CL, LineBreak_QU, LineBreak_GL, LineBreak_NS,\n"
-    "        LineBreak_EX, LineBreak_SY, LineBreak_IS, LineBreak_PR, LineBreak_PO,\n"
-    "        LineBreak_NU, LineBreak_AL, LineBreak_ID, LineBreak_IN, LineBreak_HY,\n"
-    "        LineBreak_BA, LineBreak_BB, LineBreak_B2, LineBreak_ZW, LineBreak_CM,\n"
-    "        LineBreak_WJ, LineBreak_H2, LineBreak_H3, LineBreak_JL, LineBreak_JV,\n"
-    "        LineBreak_JT, LineBreak_SA, LineBreak_SG,\n"
+    "        LineBreak_OP, LineBreak_CL, LineBreak_CP, LineBreak_QU, LineBreak_GL,\n"
+    "        LineBreak_NS, LineBreak_EX, LineBreak_SY, LineBreak_IS, LineBreak_PR,\n"
+    "        LineBreak_PO, LineBreak_NU, LineBreak_AL, LineBreak_HL, LineBreak_ID,\n"
+    "        LineBreak_IN, LineBreak_HY, LineBreak_BA, LineBreak_BB, LineBreak_B2,\n"
+    "        LineBreak_ZW, LineBreak_CM, LineBreak_WJ, LineBreak_H2, LineBreak_H3,\n"
+    "        LineBreak_JL, LineBreak_JV, LineBreak_JT, LineBreak_SA, LineBreak_SG,\n"
     "        LineBreak_SP, LineBreak_CR, LineBreak_LF, LineBreak_BK\n"
     "    };\n\n";
 
 enum LineBreakClass {
-    LineBreak_OP, LineBreak_CL, LineBreak_QU, LineBreak_GL, LineBreak_NS,
-    LineBreak_EX, LineBreak_SY, LineBreak_IS, LineBreak_PR, LineBreak_PO,
-    LineBreak_NU, LineBreak_AL, LineBreak_ID, LineBreak_IN, LineBreak_HY,
-    LineBreak_BA, LineBreak_BB, LineBreak_B2, LineBreak_ZW, LineBreak_CM,
-    LineBreak_WJ, LineBreak_H2, LineBreak_H3, LineBreak_JL, LineBreak_JV,
-    LineBreak_JT, LineBreak_SA, LineBreak_SG,
+    LineBreak_OP, LineBreak_CL, LineBreak_CP, LineBreak_QU, LineBreak_GL,
+    LineBreak_NS, LineBreak_EX, LineBreak_SY, LineBreak_IS, LineBreak_PR,
+    LineBreak_PO, LineBreak_NU, LineBreak_AL, LineBreak_HL, LineBreak_ID,
+    LineBreak_IN, LineBreak_HY, LineBreak_BA, LineBreak_BB, LineBreak_B2,
+    LineBreak_ZW, LineBreak_CM, LineBreak_WJ, LineBreak_H2, LineBreak_H3,
+    LineBreak_JL, LineBreak_JV, LineBreak_JT, LineBreak_SA, LineBreak_SG,
     LineBreak_SP, LineBreak_CR, LineBreak_LF, LineBreak_BK
 
     , LineBreak_Unassigned
@@ -318,8 +348,11 @@ static QHash<QByteArray, LineBreakClass> line_break_map;
 
 static void initLineBreak()
 {
-    // ### Classes XX and AI are left out and mapped to AL for now;
-    // ### Class NL is ignored and mapped to AL as well.
+    // ### Classes XX and AI are left out and mapped to AL for now.
+    // ### Class CB is unsupported for now and mapped to AL as well.
+    // ### Class NL is mapped to BK.
+    // ### Treating characters of class CJ as class NS will give CSS strict line breaking;
+    //     treating them as class ID will give CSS normal breaking.
     struct LineBreakList {
         LineBreakClass brk;
         const char *name;
@@ -328,7 +361,7 @@ static void initLineBreak()
         { LineBreak_CR, "CR" },
         { LineBreak_LF, "LF" },
         { LineBreak_CM, "CM" },
-        { LineBreak_AL, "NL" },
+        { LineBreak_BK, "NL" },
         { LineBreak_SG, "SG" },
         { LineBreak_WJ, "WJ" },
         { LineBreak_ZW, "ZW" },
@@ -339,7 +372,9 @@ static void initLineBreak()
         { LineBreak_BB, "BB" },
         { LineBreak_HY, "HY" },
         { LineBreak_AL, "CB" }, // ###
+        { LineBreak_NS, "CJ" },
         { LineBreak_CL, "CL" },
+        { LineBreak_CP, "CP" },
         { LineBreak_EX, "EX" },
         { LineBreak_IN, "IN" },
         { LineBreak_NS, "NS" },
@@ -383,7 +418,7 @@ static const char *property_string =
     "        ushort lowerCaseSpecial : 1;\n"
     "        ushort upperCaseSpecial : 1;\n"
     "        ushort titleCaseSpecial : 1;\n"
-    "        ushort caseFoldSpecial  : 1; /* currently unused */\n"
+    "        ushort caseFoldSpecial  : 1;\n"
     "        signed short mirrorDiff    : 16;\n"
     "        signed short lowerCaseDiff : 16;\n"
     "        signed short upperCaseDiff : 16;\n"
@@ -416,18 +451,6 @@ static const char *methods =
     "    Q_CORE_EXPORT int QT_FASTCALL script(uint ucs4);\n"
     "    inline int script(QChar ch)\n"
     "    { return script(ch.unicode()); }\n\n";
-
-static const char *generated_methods =
-    "    inline bool isNonCharacter(uint ucs4)\n"
-    "    {\n"
-    "        // Noncharacter_Code_Point:\n"
-    "        // Unicode has a couple of \"non-characters\" that one can use internally,\n"
-    "        // but are not allowed to be used for text interchange.\n"
-    "        // Those are the last two entries each Unicode Plane (U+FFFE..U+FFFF,\n"
-    "        // U+1FFFE..U+1FFFF, etc.) as well as the entries in range U+FDD0..U+FDEF\n"
-    "\n"
-    "        return ucs4 >= 0xfdd0 && (ucs4 <= 0xfdef || (ucs4 & 0xfffe) == 0xfffe);\n"
-    "    }\n\n";
 
 static const int SizeOfPropertiesStruct = 20;
 
@@ -528,20 +551,41 @@ struct UnicodeData {
 
         p.direction = QChar::DirL;
         // DerivedBidiClass.txt
-        // DirR for:  U+0590..U+05FF, U+07C0..U+08FF, U+FB1D..U+FB4F, U+10800..U+10FFF
-        if ((codepoint >= 0x590 && codepoint <= 0x5ff)
-            || (codepoint >= 0x7c0 && codepoint <= 0x8ff)
-            || (codepoint >= 0xfb1d && codepoint <= 0xfb4f)
-            || (codepoint >= 0x10800 && codepoint <= 0x10fff)) {
+        // The unassigned code points that default to AL are in the ranges:
+        //     [U+0600..U+07BF, U+08A0..U+08FF, U+FB50..U+FDCF, U+FDF0..U+FDFF, U+FE70..U+FEFF, U+1EE00..U+1EEFF]
+        if ((codepoint >= 0x0600 && codepoint <= 0x07BF)
+            || (codepoint >= 0x08A0 && codepoint <= 0x08FF)
+            || (codepoint >= 0xFB50 && codepoint <= 0xFDCF)
+            || (codepoint >= 0xFDF0 && codepoint <= 0xFDFF)
+            || (codepoint >= 0xFE70 && codepoint <= 0xFEFF)
+            || (codepoint >= 0x1EE00 && codepoint <= 0x1EEFF)) {
+            p.direction = QChar::DirAL;
+        }
+        // The unassigned code points that default to R are in the ranges:
+        //     [U+0590..U+05FF, U+07C0..U+089F, U+FB1D..U+FB4F, U+10800..U+10FFF, U+1E800..U+1EDFF, U+1EF00..U+1EFFF]
+        else if ((codepoint >= 0x0590 && codepoint <= 0x05FF)
+            || (codepoint >= 0x07C0 && codepoint <= 0x089F)
+            || (codepoint >= 0xFB1D && codepoint <= 0xFB4F)
+            || (codepoint >= 0x10800 && codepoint <= 0x10FFF)
+            || (codepoint >= 0x1E800 && codepoint <= 0x1EDFF)
+            || (codepoint >= 0x1EF00 && codepoint <= 0x1EFFF)) {
             p.direction = QChar::DirR;
         }
-        // DirAL for:  U+0600..U+07BF, U+FB50..U+FDFF, U+FE70..U+FEFF
-        //             minus noncharacter code points (intersects with U+FDD0..U+FDEF)
-        if ((codepoint >= 0x600 && codepoint <= 0x7bf)
-            || (codepoint >= 0xfb50 && codepoint <= 0xfdcf)
-            || (codepoint >= 0xfdf0 && codepoint <= 0xfdff)
-            || (codepoint >= 0xfe70 && codepoint <= 0xfeff)) {
-            p.direction = QChar::DirAL;
+
+        p.line_break_class = LineBreak_AL; // XX -> AL
+        // LineBreak.txt
+        // The unassigned code points that default to "ID" include ranges in the following blocks:
+        //     [U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF, U+20000..U+2A6DF, U+2A700..U+2B73F, U+2B740..U+2B81F, U+2F800..U+2FA1F, U+20000..U+2FFFD, U+30000..U+3FFFD]
+        if ((codepoint >= 0x3400 && codepoint <= 0x4DBF)
+            || (codepoint >= 0x4E00 && codepoint <= 0x9FFF)
+            || (codepoint >= 0xF900 && codepoint <= 0xFAFF)
+            || (codepoint >= 0x20000 && codepoint <= 0x2A6DF)
+            || (codepoint >= 0x2A700 && codepoint <= 0x2B73F)
+            || (codepoint >= 0x2B740 && codepoint <= 0x2B81F)
+            || (codepoint >= 0x2F800 && codepoint <= 0x2FA1F)
+            || (codepoint >= 0x20000 && codepoint <= 0x2FFFD)
+            || (codepoint >= 0x30000 && codepoint <= 0x3FFFD)) {
+            p.line_break_class = LineBreak_ID;
         }
 
         mirroredChar = 0;
@@ -550,7 +594,6 @@ struct UnicodeData {
         p.age = QChar::Unicode_Unassigned;
         p.mirrorDiff = 0;
         p.digitValue = -1;
-        p.line_break_class = LineBreak_AL; // XX -> AL
         p.lowerCaseDiff = 0;
         p.upperCaseDiff = 0;
         p.titleCaseDiff = 0;
@@ -779,7 +822,7 @@ static void readUnicodeData()
         bool ok;
         int codepoint = properties[UD_Value].toInt(&ok, 16);
         Q_ASSERT(ok);
-        Q_ASSERT(codepoint <= LAST_CODEPOINT);
+        Q_ASSERT(codepoint <= QChar::LastValidCodePoint);
         int lastCodepoint = codepoint;
 
         QByteArray name = properties[UD_Name];
@@ -791,7 +834,7 @@ static void readUnicodeData()
             Q_ASSERT(properties[UD_Name].startsWith('<') && properties[UD_Name].contains("Last"));
             lastCodepoint = properties[UD_Value].toInt(&ok, 16);
             Q_ASSERT(ok);
-            Q_ASSERT(lastCodepoint <= LAST_CODEPOINT);
+            Q_ASSERT(lastCodepoint <= QChar::LastValidCodePoint);
         }
 
         UnicodeData data(codepoint);
@@ -809,10 +852,16 @@ static void readUnicodeData()
             int upperCase = properties[UD_UpperCase].toInt(&ok, 16);
             Q_ASSERT(ok);
             int diff = upperCase - codepoint;
-            if (qAbs(diff) >= (1<<14))
-                qWarning() << "upperCaseDiff exceeded (" << hex << codepoint << "->" << upperCase << ")";
-            data.p.upperCaseDiff = diff;
-            maxUpperCaseDiff = qMax(maxUpperCaseDiff, qAbs(diff));
+            if (qAbs(diff) >= (1<<14)) {
+                qWarning() << "upperCaseDiff exceeded (" << hex << codepoint << "->" << upperCase << "); map it for special case";
+                // if the condition below doesn't hold anymore we need to modify our special upper casing code in qchar.cpp
+                Q_ASSERT(!QChar::requiresSurrogates(codepoint) && !QChar::requiresSurrogates(upperCase));
+                data.p.upperCaseSpecial = true;
+                data.p.upperCaseDiff = appendToSpecialCaseMap(QList<int>() << upperCase);
+            } else {
+                data.p.upperCaseDiff = diff;
+                maxUpperCaseDiff = qMax(maxUpperCaseDiff, qAbs(diff));
+            }
             if (codepoint >= 0x10000 || upperCase >= 0x10000) {
                 // if the conditions below doesn't hold anymore we need to modify our upper casing code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(upperCase));
@@ -823,10 +872,16 @@ static void readUnicodeData()
             int lowerCase = properties[UD_LowerCase].toInt(&ok, 16);
             Q_ASSERT(ok);
             int diff = lowerCase - codepoint;
-            if (qAbs(diff) >= (1<<14))
-                qWarning() << "lowerCaseDiff exceeded (" << hex << codepoint << "->" << lowerCase << ")";
-            data.p.lowerCaseDiff = diff;
-            maxLowerCaseDiff = qMax(maxLowerCaseDiff, qAbs(diff));
+            if (qAbs(diff) >= (1<<14)) {
+                qWarning() << "lowerCaseDiff exceeded (" << hex << codepoint << "->" << lowerCase << "); map it for special case";
+                // if the condition below doesn't hold anymore we need to modify our special lower casing code in qchar.cpp
+                Q_ASSERT(!QChar::requiresSurrogates(codepoint) && !QChar::requiresSurrogates(lowerCase));
+                data.p.lowerCaseSpecial = true;
+                data.p.lowerCaseDiff = appendToSpecialCaseMap(QList<int>() << lowerCase);
+            } else {
+                data.p.lowerCaseDiff = diff;
+                maxLowerCaseDiff = qMax(maxLowerCaseDiff, qAbs(diff));
+            }
             if (codepoint >= 0x10000 || lowerCase >= 0x10000) {
                 // if the conditions below doesn't hold anymore we need to modify our lower casing code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(lowerCase));
@@ -840,10 +895,16 @@ static void readUnicodeData()
             int titleCase = properties[UD_TitleCase].toInt(&ok, 16);
             Q_ASSERT(ok);
             int diff = titleCase - codepoint;
-            if (qAbs(diff) >= (1<<14))
-                qWarning() << "titleCaseDiff exceeded (" << hex << codepoint << "->" << titleCase << ")";
-            data.p.titleCaseDiff = diff;
-            maxTitleCaseDiff = qMax(maxTitleCaseDiff, qAbs(diff));
+            if (qAbs(diff) >= (1<<14)) {
+                qWarning() << "titleCaseDiff exceeded (" << hex << codepoint << "->" << titleCase << "); map it for special case";
+                // if the condition below doesn't hold anymore we need to modify our special title casing code in qchar.cpp
+                Q_ASSERT(!QChar::requiresSurrogates(codepoint) && !QChar::requiresSurrogates(titleCase));
+                data.p.titleCaseSpecial = true;
+                data.p.titleCaseDiff = appendToSpecialCaseMap(QList<int>() << titleCase);
+            } else {
+                data.p.titleCaseDiff = diff;
+                maxTitleCaseDiff = qMax(maxTitleCaseDiff, qAbs(diff));
+            }
             if (codepoint >= 0x10000 || titleCase >= 0x10000) {
                 // if the conditions below doesn't hold anymore we need to modify our title casing code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(titleCase));
@@ -1077,7 +1138,7 @@ static void readDerivedNormalizationProps()
         }
     }
 
-    for (int codepoint = 0; codepoint <= LAST_CODEPOINT; ++codepoint) {
+    for (int codepoint = 0; codepoint <= QChar::LastValidCodePoint; ++codepoint) {
         UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
         if (!d.excludedComposition
             && d.decompositionType == QChar::Canonical
@@ -1177,7 +1238,7 @@ static QByteArray createNormalizationCorrections()
 static void computeUniqueProperties()
 {
     qDebug("computeUniqueProperties:");
-    for (int uc = 0; uc <= LAST_CODEPOINT; ++uc) {
+    for (int uc = 0; uc <= QChar::LastValidCodePoint; ++uc) {
         UnicodeData d = unicodeData.value(uc, UnicodeData(uc));
 
         int index = uniqueProperties.indexOf(d.p);
@@ -1381,10 +1442,16 @@ static void readCaseFolding()
         if (foldMap.size() == 1) {
             int caseFolded = foldMap.at(0);
             int diff = caseFolded - codepoint;
-            if (qAbs(diff) >= (1<<14))
-                qWarning() << "caseFoldDiff exceeded (" << hex << codepoint << "->" << caseFolded << ")";
-            ud.p.caseFoldDiff = diff;
-            maxCaseFoldDiff = qMax(maxCaseFoldDiff, qAbs(diff));
+            if (qAbs(diff) >= (1<<14)) {
+                qWarning() << "caseFoldDiff exceeded (" << hex << codepoint << "->" << caseFolded << "); map it for special case";
+                // if the condition below doesn't hold anymore we need to modify our special case folding code in qchar.cpp
+                Q_ASSERT(!QChar::requiresSurrogates(codepoint) && !QChar::requiresSurrogates(caseFolded));
+                ud.p.caseFoldSpecial = true;
+                ud.p.caseFoldDiff = appendToSpecialCaseMap(foldMap);
+            } else {
+                ud.p.caseFoldDiff = diff;
+                maxCaseFoldDiff = qMax(maxCaseFoldDiff, qAbs(diff));
+            }
             if (codepoint >= 0x10000 || caseFolded >= 0x10000) {
                 // if the conditions below doesn't hold anymore we need to modify our case folding code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(caseFolded));
@@ -1901,12 +1968,10 @@ QByteArray createScriptEnumDeclaration()
         declaration += " = Common";
     }
 
-    declaration += "\n    };\n";
+    declaration += "\n    };\n\n";
 
     scriptSentinel = ((uniqueScripts + 16) / 32) * 32; // a multiple of 32
-    declaration += "    enum { ScriptSentinel = ";
-    declaration += QByteArray::number(scriptSentinel);
-    declaration += " };\n\n";
+
     return declaration;
 }
 
@@ -2004,6 +2069,8 @@ QByteArray createScriptTableDeclaration()
             declaration.chop(1);
     }
     declaration += "\n};\n\n";
+
+    declaration += "enum { ScriptSentinel = " + QByteArray::number(scriptSentinel) + " };\n\n";
 
     declaration +=
             "Q_CORE_EXPORT int QT_FASTCALL script(uint ucs4)\n"
@@ -2801,7 +2868,6 @@ int main(int, char **)
             "#include <QtCore/qchar.h>\n\n"
             "QT_BEGIN_NAMESPACE\n\n");
     f.write("#define UNICODE_DATA_VERSION " DATA_VERSION_STR "\n\n");
-    f.write("#define UNICODE_LAST_CODEPOINT " LAST_CODEPOINT_STR "\n\n");
     f.write("namespace QUnicodeTables {\n\n");
     f.write(property_string);
     f.write("\n");
@@ -2816,8 +2882,6 @@ int main(int, char **)
     f.write(line_break_class_string);
     f.write("\n");
     f.write(methods);
-    f.write("\n");
-    f.write(generated_methods);
     f.write("} // namespace QUnicodeTables\n\n"
             "QT_END_NAMESPACE\n\n"
             "#endif // QUNICODETABLES_P_H\n");

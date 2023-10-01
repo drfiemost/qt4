@@ -130,6 +130,7 @@ private slots:
     void simplified();
     void trimmed();
     void toLower();
+    void toCaseFolded();
     void toUpper();
     void rightJustified();
     void leftJustified();
@@ -1774,6 +1775,61 @@ void tst_QString::toLower()
             QVERIFY(str.toLower() == QString(1, QChar(i).toLower()));
     }
 #endif
+}
+
+void tst_QString::toCaseFolded()
+{
+    QCOMPARE( QString().toCaseFolded(), QString() );
+    QCOMPARE( QString("").toCaseFolded(), QString("") );
+    QCOMPARE( QString("text").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("Text").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("tExt").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("teXt").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("texT").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("TExt").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("teXT").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("tEXt").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("tExT").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("TEXT").toCaseFolded(), QString("text") );
+    QCOMPARE( QString("@ABYZ[").toCaseFolded(), QString("@abyz["));
+    QCOMPARE( QString("@abyz[").toCaseFolded(), QString("@abyz["));
+    QCOMPARE( QString("`ABYZ{").toCaseFolded(), QString("`abyz{"));
+    QCOMPARE( QString("`abyz{").toCaseFolded(), QString("`abyz{"));
+
+    QCOMPARE( QString(1, QChar(0xa77d)).toCaseFolded(), QString(1, QChar(0x1d79)));
+    QCOMPARE( QString(1, QChar(0xa78d)).toCaseFolded(), QString(1, QChar(0x0265)));
+
+    QString lower, upper;
+    upper += QChar(QChar::highSurrogate(0x10400));
+    upper += QChar(QChar::lowSurrogate(0x10400));
+    lower += QChar(QChar::highSurrogate(0x10428));
+    lower += QChar(QChar::lowSurrogate(0x10428));
+    QCOMPARE( upper.toCaseFolded(), lower);
+    lower += lower;
+    upper += upper;
+    QCOMPARE( upper.toCaseFolded(), lower);
+
+    // test for broken surrogate pair handling (low low hi low hi low)
+    lower.prepend(QChar(QChar::lowSurrogate(0x10400)));
+    lower.prepend(QChar(QChar::lowSurrogate(0x10400)));
+    upper.prepend(QChar(QChar::lowSurrogate(0x10400)));
+    upper.prepend(QChar(QChar::lowSurrogate(0x10400)));
+    QCOMPARE(upper.toCaseFolded(), lower);
+    // test for broken surrogate pair handling (low low hi low hi low hi hi)
+    lower += QChar(QChar::highSurrogate(0x10400));
+    lower += QChar(QChar::highSurrogate(0x10400));
+    upper += QChar(QChar::highSurrogate(0x10400));
+    upper += QChar(QChar::highSurrogate(0x10400));
+    QCOMPARE(upper.toCaseFolded(), lower);
+
+    //### we currently don't support full case foldings
+    for (int i = 0; i < 65536; ++i) {
+        QString str(1, QChar(i));
+        QString lower = str.toCaseFolded();
+        QVERIFY(lower.length() >= 1);
+        if (lower.length() == 1)
+            QVERIFY(str.toCaseFolded() == QString(1, QChar(i).toCaseFolded()));
+    }
 }
 
 void tst_QString::trimmed()

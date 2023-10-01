@@ -85,7 +85,8 @@ public:
         ByteOrderMark = 0xfeff,
         ByteOrderSwapped = 0xfffe,
         ParagraphSeparator = 0x2029,
-        LineSeparator = 0x2028
+        LineSeparator = 0x2028,
+        LastValidCodePoint = 0x10ffff
     };
     QChar(SpecialCharacter sc);
 
@@ -201,28 +202,32 @@ public:
         Unicode_3_2,
         Unicode_4_0,
         Unicode_4_1,
-        Unicode_5_0
+        Unicode_5_0,
+        Unicode_5_1,
+        Unicode_5_2,
+        Unicode_6_0,
+        Unicode_6_1
     };
     // ****** WHEN ADDING FUNCTIONS, CONSIDER ADDING TO QCharRef TOO
 
-    Category category() const;
-    Direction direction() const;
-    Joining joining() const;
-    unsigned char combiningClass() const;
+    inline Category category() const { return QChar::category(ucs); }
+    inline Direction direction() const { return QChar::direction(ucs); }
+    inline Joining joining() const { return QChar::joining(ucs); }
+    inline unsigned char combiningClass() const { return QChar::combiningClass(ucs); }
 
-    QChar mirroredChar() const;
+    inline QChar mirroredChar() const { return QChar::mirroredChar(ucs); }
     inline bool hasMirrored() const { return QChar::hasMirrored(ucs); }
 
     QString decomposition() const;
     inline Decomposition decompositionTag() const { return QChar::decompositionTag(ucs); }
 
-    int digitValue() const;
-    QChar toLower() const;
-    QChar toUpper() const;
-    QChar toTitleCase() const;
-    QChar toCaseFolded() const;
+    inline int digitValue() const { return QChar::digitValue(ucs); }
+    inline QChar toLower() const { return QChar::toLower(ucs); }
+    inline QChar toUpper() const { return QChar::toUpper(ucs); }
+    inline QChar toTitleCase() const { return QChar::toTitleCase(ucs); }
+    inline QChar toCaseFolded() const { return QChar::toCaseFolded(ucs); }
 
-    UnicodeVersion unicodeVersion() const;
+    inline UnicodeVersion unicodeVersion() const { return QChar::unicodeVersion(ucs); }
 
     inline char toAscii() const;
     inline char toLatin1() const;
@@ -251,23 +256,27 @@ public:
     inline bool isUpper() const { return QChar::isUpper(ucs); }
     inline bool isTitleCase() const { return QChar::isTitleCase(ucs); }
 
-    inline bool isHighSurrogate() const {
-        return ((ucs & 0xfc00) == 0xd800);
-    }
-    inline bool isLowSurrogate() const {
-        return ((ucs & 0xfc00) == 0xdc00);
-    }
+    inline bool isNonCharacter() const { return QChar::isNonCharacter(ucs); }
+    inline bool isHighSurrogate() const { return QChar::isHighSurrogate(ucs); }
+    inline bool isLowSurrogate() const { return QChar::isLowSurrogate(ucs); }
+    inline bool isSurrogate() const { return QChar::isSurrogate(ucs); }
 
     inline uchar cell() const { return uchar(ucs & 0xff); }
     inline uchar row() const { return uchar((ucs>>8)&0xff); }
     inline void setCell(uchar cell);
     inline void setRow(uchar row);
 
+    static inline bool isNonCharacter(uint ucs4) {
+        return ucs4 >= 0xfdd0 && (ucs4 <= 0xfdef || (ucs4 & 0xfffe) == 0xfffe);
+    }
     static inline bool isHighSurrogate(uint ucs4) {
         return ((ucs4 & 0xfffffc00) == 0xd800);
     }
     static inline bool isLowSurrogate(uint ucs4) {
         return ((ucs4 & 0xfffffc00) == 0xdc00);
+    }
+    static inline bool isSurrogate(uint ucs4) {
+        return (ucs4 - 0xd800u < 2048u);
     }
     static inline bool requiresSurrogates(uint ucs4) {
         return (ucs4 >= 0x10000);
