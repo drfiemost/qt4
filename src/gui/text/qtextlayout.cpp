@@ -1846,7 +1846,9 @@ void QTextLine::layout_helper(int maxGlyphs)
                 addNextCluster(lbh.currentPosition, end, lbh.tmpData, lbh.glyphCount,
                                current, lbh.logClusters, lbh.glyphs);
 
-                if (attributes[lbh.currentPosition].whiteSpace || attributes[lbh.currentPosition-1].lineBreakType != HB_NoBreak) {
+                if (lbh.currentPosition >= eng->layoutData->string.length()
+                    || attributes[lbh.currentPosition].whiteSpace
+                    || attributes[lbh.currentPosition].lineBreakType != HB_NoBreak) {
                     sb_or_ws = true;
                     break;
                 } else if (breakany && attributes[lbh.currentPosition].charStop) {
@@ -1855,7 +1857,8 @@ void QTextLine::layout_helper(int maxGlyphs)
             } while (lbh.currentPosition < end);
             lbh.minw = qMax(lbh.tmpData.textWidth, lbh.minw);
 
-            if (lbh.currentPosition && attributes[lbh.currentPosition - 1].lineBreakType == HB_SoftHyphen) {
+            if (lbh.currentPosition > 0 && lbh.currentPosition < end
+                && attributes[lbh.currentPosition].lineBreakType == HB_SoftHyphen) {
                 // if we are splitting up a word because of
                 // a soft hyphen then we ...
                 //

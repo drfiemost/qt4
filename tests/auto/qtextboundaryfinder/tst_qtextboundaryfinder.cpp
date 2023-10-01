@@ -76,6 +76,9 @@ private slots:
     void toNextBoundary();
     void toPreviousBoundary_data();
     void toPreviousBoundary();
+
+    void isAtSoftHyphen_data();
+    void isAtSoftHyphen();
     void thaiLineBreak();
 };
 
@@ -96,6 +99,60 @@ void tst_QTextBoundaryFinder::init()
 
 void tst_QTextBoundaryFinder::cleanup()
 {
+}
+
+#ifdef QT_BUILD_INTERNAL
+QT_BEGIN_NAMESPACE
+extern Q_AUTOTEST_EXPORT int qt_initcharattributes_default_algorithm_only;
+QT_END_NAMESPACE
+#endif
+
+static void doTestData(const QString &testString, const QList<int> &expectedBreakPositions,
+                       QTextBoundaryFinder::BoundaryType type, bool default_algorithm_only = false)
+{
+#ifdef QT_BUILD_INTERNAL
+    QScopedValueRollback<int> default_algorithm(qt_initcharattributes_default_algorithm_only);
+    if (default_algorithm_only)
+        qt_initcharattributes_default_algorithm_only++;
+#else
+    Q_UNUSED(default_algorithm_only)
+#endif
+
+    QTextBoundaryFinder boundaryFinder(type, testString);
+
+    // test toNextBoundary()
+    {
+        QList<int> actualBreakPositions;
+        if (boundaryFinder.isAtBoundary())
+            actualBreakPositions.append(boundaryFinder.position());
+        while (boundaryFinder.toNextBoundary() != -1) {
+            QVERIFY(boundaryFinder.isAtBoundary());
+            actualBreakPositions.append(boundaryFinder.position());
+        }
+        QCOMPARE(actualBreakPositions, expectedBreakPositions);
+    }
+
+    // test toPreviousBoundary()
+    {
+        QList<int> expectedBreakPositionsRev = expectedBreakPositions;
+        qSort(expectedBreakPositionsRev.begin(), expectedBreakPositionsRev.end(), qGreater<int>());
+
+        QList<int> actualBreakPositions;
+        boundaryFinder.toEnd();
+        if (boundaryFinder.isAtBoundary())
+            actualBreakPositions.append(boundaryFinder.position());
+        while (boundaryFinder.toPreviousBoundary() != -1) {
+            QVERIFY(boundaryFinder.isAtBoundary());
+            actualBreakPositions.append(boundaryFinder.position());
+        }
+        QCOMPARE(actualBreakPositions, expectedBreakPositionsRev);
+    }
+
+    // test isAtBoundary()
+    for (int i = 0; i < testString.length(); ++i) {
+        boundaryFinder.setPosition(i);
+        QCOMPARE(boundaryFinder.isAtBoundary(), expectedBreakPositions.contains(i));
+    }
 }
 
 void tst_QTextBoundaryFinder::graphemeBoundaries()
@@ -411,6 +468,35 @@ void tst_QTextBoundaryFinder::toPreviousBoundary()
 }
 
 
+void tst_QTextBoundaryFinder::isAtSoftHyphen_data()
+{
+    QTest::addColumn<QString>("testString");
+    QTest::addColumn<QList<int> >("expectedBreakPositions");
+
+    QString testString = QString::fromUtf8("I a-m break-able");
+    testString.replace(QLatin1Char('-'), QChar(0x00AD));
+    QList<int> expectedBreakPositions;
+    expectedBreakPositions << 0 << 2 << 4 << 6 << 12 << 16;
+    QTest::newRow("Soft Hyphen") << testString << expectedBreakPositions;
+}
+
+void tst_QTextBoundaryFinder::isAtSoftHyphen()
+{
+    QFETCH(QString, testString);
+    QFETCH(QList<int>, expectedBreakPositions);
+
+    doTestData(testString, expectedBreakPositions, QTextBoundaryFinder::Line);
+
+    QTextBoundaryFinder boundaryFinder(QTextBoundaryFinder::Line, testString);
+    for (int i = 0; (i = testString.indexOf(QChar(0x00AD), i)) != -1; ++i) {
+        QVERIFY(expectedBreakPositions.contains(i + 1));
+        boundaryFinder.setPosition(i + 1);
+        QVERIFY(boundaryFinder.isAtBoundary());
+        QVERIFY(boundaryFinder.boundaryReasons() == QTextBoundaryFinder::SoftHyphen);
+    }
+}
+
+
 #include <qlibrary.h>
 
 #define LIBTHAI_MAJOR   0
@@ -432,7 +518,7 @@ static bool init_libthai()
 void tst_QTextBoundaryFinder::thaiLineBreak()
 {
     if (!init_libthai())
-        QSKIP("This test requires libThai-0.1.1x to be installed.");
+        QSKIP("This test requires libThai-0.1.1x to be installed.", SkipAll);
 #if 0
     // สวัสดีครับ นี่เป็นการงทดสอบตัวเอ
     QTextCodec *codec = QTextCodec::codecForMib(2259);
