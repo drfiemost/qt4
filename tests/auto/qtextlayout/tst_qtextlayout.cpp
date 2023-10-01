@@ -100,7 +100,7 @@ private slots:
     void charWordStopOnLineSeparator();
     void xToCursorAtEndOfLine();
     void boundingRectTopLeft();
-    void charStopForSurrogatePairs();
+    void graphemeBoundaryForSurrogatePairs();
     void tabStops();
     void integerOverflow();
     void testDefaultTabs();
@@ -277,14 +277,14 @@ void tst_QTextLayout::lineBreaking()
     while (b->utf8) {
         QString str = QString::fromUtf8(b->utf8);
         QTextEngine engine(str, QFont());
-        const HB_CharAttributes *attrs = engine.attributes();
-        QVERIFY(attrs[0].lineBreakType == HB_NoBreak);
+        const QCharAttributes *attrs = engine.attributes();
+        QVERIFY(!attrs[0].lineBreak);
         int i;
         for (i = 0; i < (int)str.length() - 1; ++i) {
             QVERIFY(b->breaks[i] != 0xff);
-            if ( (attrs[i + 1].lineBreakType != HB_NoBreak) != (bool)b->breaks[i] ) {
-                qDebug("test case \"%s\" failed at char %d; break type: %d", b->utf8, i, attrs[i + 1].lineBreakType);
-                QCOMPARE( (attrs[i + 1].lineBreakType != HB_NoBreak), (bool)b->breaks[i] );
+            if ( attrs[i + 1].lineBreak != (bool)b->breaks[i] ) {
+                qDebug("test case \"%s\" failed at char %d; break type: %d", b->utf8, i, attrs[i + 1].lineBreak);
+                QCOMPARE( attrs[i + 1].lineBreak, (bool)b->breaks[i] );
             }
         }
         QCOMPARE(b->breaks[i], (uchar)0xff);
@@ -1040,9 +1040,9 @@ void tst_QTextLayout::charWordStopOnLineSeparator()
     txt.append(lineSeparator);
     QTextLayout layout(txt, testFont);
     QTextEngine *engine = layout.engine();
-    const HB_CharAttributes *attrs = engine->attributes();
+    const QCharAttributes *attrs = engine->attributes();
     QVERIFY(attrs);
-    QVERIFY(attrs[1].charStop);
+    QVERIFY(attrs[1].graphemeBoundary);
 }
 
 void tst_QTextLayout::xToCursorAtEndOfLine()
@@ -1090,7 +1090,7 @@ void tst_QTextLayout::boundingRectTopLeft()
     QCOMPARE(layout.boundingRect().topLeft(), firstLine.position());
 }
 
-void tst_QTextLayout::charStopForSurrogatePairs()
+void tst_QTextLayout::graphemeBoundaryForSurrogatePairs()
 {
     QString txt;
     txt.append("a");
@@ -1099,12 +1099,12 @@ void tst_QTextLayout::charStopForSurrogatePairs()
     txt.append("b");
     QTextLayout layout(txt, testFont);
     QTextEngine *engine = layout.engine();
-    const HB_CharAttributes *attrs = engine->attributes();
+    const QCharAttributes *attrs = engine->attributes();
     QVERIFY(attrs);
-    QVERIFY(attrs[0].charStop);
-    QVERIFY(attrs[1].charStop);
-    QVERIFY(!attrs[2].charStop);
-    QVERIFY(attrs[3].charStop);
+    QVERIFY(attrs[0].graphemeBoundary);
+    QVERIFY(attrs[1].graphemeBoundary);
+    QVERIFY(!attrs[2].graphemeBoundary);
+    QVERIFY(attrs[3].graphemeBoundary);
 }
 
 void tst_QTextLayout::tabStops()

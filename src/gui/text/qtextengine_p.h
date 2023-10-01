@@ -73,6 +73,8 @@
 #include "private/qharfbuzz_p.h"
 #include "private/qfixed_p.h"
 
+#include <private/qunicodetools_p.h>
+
 #include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
@@ -470,7 +472,7 @@ public:
     bool isRightToLeft() const;
     static void bidiReorder(int numRuns, const quint8 *levels, int *visualOrder);
 
-    const HB_CharAttributes *attributes() const;
+    const QCharAttributes *attributes() const;
 
     void shape(int item) const;
 
@@ -647,7 +649,7 @@ private:
     void resolveAdditionalFormats() const;
     int endOfLine(int lineNum);
     int beginningOfLine(int lineNum);
-    int getClusterLength(unsigned short *logClusters, const HB_CharAttributes *attributes, int from, int to, int glyph_pos, int *start);
+    int getClusterLength(unsigned short *logClusters, const QCharAttributes *attributes, int from, int to, int glyph_pos, int *start);
 };
 
 class QStackTextEngine : public QTextEngine {
