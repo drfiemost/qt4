@@ -1,40 +1,40 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/
 **
 ** This file is part of the utils of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
-**
 ** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** This file may be used under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation and
+** appearing in the file LICENSE.LGPL included in the packaging of this
+** file. Please review the following information to ensure the GNU Lesser
+** General Public License version 2.1 requirements will be met:
 ** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
+** In addition, as a special exception, Nokia gives you certain additional
+** rights. These rights are described in the Nokia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-*
+** Alternatively, this file may be used under the terms of the GNU General
+** Public License version 3.0 as published by the Free Software Foundation
+** and appearing in the file LICENSE.GPL included in the packaging of this
+** file. Please review the following information to ensure the GNU General
+** Public License version 3.0 requirements will be met:
+** http://www.gnu.org/copyleft/gpl.html.
+**
+** Other Usage
+** Alternatively, this file may be used in accordance with the terms and
+** conditions contained in a signed written agreement between you and Nokia.
+**
+**
+**
+**
+**
+**
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
@@ -86,6 +86,132 @@ static void initAgeMap()
 }
 
 
+static QHash<QByteArray, QChar::Category> categoryMap;
+
+static void initCategoryMap()
+{
+    struct Cat {
+        QChar::Category cat;
+        const char *name;
+    } categories[] = {
+        { QChar::Mark_NonSpacing,          "Mn" },
+        { QChar::Mark_SpacingCombining,    "Mc" },
+        { QChar::Mark_Enclosing,           "Me" },
+
+        { QChar::Number_DecimalDigit,      "Nd" },
+        { QChar::Number_Letter,            "Nl" },
+        { QChar::Number_Other,             "No" },
+
+        { QChar::Separator_Space,          "Zs" },
+        { QChar::Separator_Line,           "Zl" },
+        { QChar::Separator_Paragraph,      "Zp" },
+
+        { QChar::Other_Control,            "Cc" },
+        { QChar::Other_Format,             "Cf" },
+        { QChar::Other_Surrogate,          "Cs" },
+        { QChar::Other_PrivateUse,         "Co" },
+        { QChar::Other_NotAssigned,        "Cn" },
+
+        { QChar::Letter_Uppercase,         "Lu" },
+        { QChar::Letter_Lowercase,         "Ll" },
+        { QChar::Letter_Titlecase,         "Lt" },
+        { QChar::Letter_Modifier,          "Lm" },
+        { QChar::Letter_Other,             "Lo" },
+
+        { QChar::Punctuation_Connector,    "Pc" },
+        { QChar::Punctuation_Dash,         "Pd" },
+        { QChar::Punctuation_Open,         "Ps" },
+        { QChar::Punctuation_Close,        "Pe" },
+        { QChar::Punctuation_InitialQuote, "Pi" },
+        { QChar::Punctuation_FinalQuote,   "Pf" },
+        { QChar::Punctuation_Other,        "Po" },
+
+        { QChar::Symbol_Math,              "Sm" },
+        { QChar::Symbol_Currency,          "Sc" },
+        { QChar::Symbol_Modifier,          "Sk" },
+        { QChar::Symbol_Other,             "So" },
+        { QChar::Other_NotAssigned, 0 }
+    };
+    Cat *c = categories;
+    while (c->name) {
+        categoryMap.insert(c->name, c->cat);
+        ++c;
+    }
+}
+
+
+static QHash<QByteArray, QChar::Decomposition> decompositionMap;
+
+static void initDecompositionMap()
+{
+    struct Dec {
+        QChar::Decomposition dec;
+        const char *name;
+    } decompositions[] = {
+        { QChar::Canonical, "<canonical>" },
+        { QChar::Font, "<font>" },
+        { QChar::NoBreak, "<noBreak>" },
+        { QChar::Initial, "<initial>" },
+        { QChar::Medial, "<medial>" },
+        { QChar::Final, "<final>" },
+        { QChar::Isolated, "<isolated>" },
+        { QChar::Circle, "<circle>" },
+        { QChar::Super, "<super>" },
+        { QChar::Sub, "<sub>" },
+        { QChar::Vertical, "<vertical>" },
+        { QChar::Wide, "<wide>" },
+        { QChar::Narrow, "<narrow>" },
+        { QChar::Small, "<small>" },
+        { QChar::Square, "<square>" },
+        { QChar::Compat, "<compat>" },
+        { QChar::Fraction, "<fraction>" },
+        { QChar::NoDecomposition, 0 }
+    };
+    Dec *d = decompositions;
+    while (d->name) {
+        decompositionMap.insert(d->name, d->dec);
+        ++d;
+    }
+}
+
+
+static QHash<QByteArray, QChar::Direction> directionMap;
+
+static void initDirectionMap()
+{
+    struct Dir {
+        QChar::Direction dir;
+        const char *name;
+    } directions[] = {
+        { QChar::DirL, "L" },
+        { QChar::DirR, "R" },
+        { QChar::DirEN, "EN" },
+        { QChar::DirES, "ES" },
+        { QChar::DirET, "ET" },
+        { QChar::DirAN, "AN" },
+        { QChar::DirCS, "CS" },
+        { QChar::DirB, "B" },
+        { QChar::DirS, "S" },
+        { QChar::DirWS, "WS" },
+        { QChar::DirON, "ON" },
+        { QChar::DirLRE, "LRE" },
+        { QChar::DirLRO, "LRO" },
+        { QChar::DirAL, "AL" },
+        { QChar::DirRLE, "RLE" },
+        { QChar::DirRLO, "RLO" },
+        { QChar::DirPDF, "PDF" },
+        { QChar::DirNSM, "NSM" },
+        { QChar::DirBN, "BN" },
+        { QChar::DirL, 0 }
+    };
+    Dir *d = directions;
+    while (d->name) {
+        directionMap.insert(d->name, d->dir);
+        ++d;
+    }
+}
+
+
 enum Joining {
     Joining_None,
     Joining_Left,
@@ -121,59 +247,59 @@ static void initJoiningMap()
 }
 
 
-static const char *grapheme_break_string =
-    "    enum GraphemeBreak {\n"
-    "        GraphemeBreakOther,\n"
-    "        GraphemeBreakCR,\n"
-    "        GraphemeBreakLF,\n"
-    "        GraphemeBreakControl,\n"
-    "        GraphemeBreakExtend,\n"
-    "        GraphemeBreakPrepend,\n"
-    "        GraphemeBreakSpacingMark,\n"
-    "        GraphemeBreakL,\n"
-    "        GraphemeBreakV,\n"
-    "        GraphemeBreakT,\n"
-    "        GraphemeBreakLV,\n"
-    "        GraphemeBreakLVT\n"
-    "    };\n\n";
+static const char *grapheme_break_class_string =
+    "enum GraphemeBreakClass {\n"
+    "    GraphemeBreak_Other,\n"
+    "    GraphemeBreak_CR,\n"
+    "    GraphemeBreak_LF,\n"
+    "    GraphemeBreak_Control,\n"
+    "    GraphemeBreak_Extend,\n"
+    "    GraphemeBreak_Prepend,\n"
+    "    GraphemeBreak_SpacingMark,\n"
+    "    GraphemeBreak_L,\n"
+    "    GraphemeBreak_V,\n"
+    "    GraphemeBreak_T,\n"
+    "    GraphemeBreak_LV,\n"
+    "    GraphemeBreak_LVT\n"
+    "};\n\n";
 
-enum GraphemeBreak {
-    GraphemeBreakOther,
-    GraphemeBreakCR,
-    GraphemeBreakLF,
-    GraphemeBreakControl,
-    GraphemeBreakExtend,
-    GraphemeBreakPrepend,
-    GraphemeBreakSpacingMark,
-    GraphemeBreakL,
-    GraphemeBreakV,
-    GraphemeBreakT,
-    GraphemeBreakLV,
-    GraphemeBreakLVT
+enum GraphemeBreakClass {
+    GraphemeBreak_Other,
+    GraphemeBreak_CR,
+    GraphemeBreak_LF,
+    GraphemeBreak_Control,
+    GraphemeBreak_Extend,
+    GraphemeBreak_Prepend,
+    GraphemeBreak_SpacingMark,
+    GraphemeBreak_L,
+    GraphemeBreak_V,
+    GraphemeBreak_T,
+    GraphemeBreak_LV,
+    GraphemeBreak_LVT
 
     , GraphemeBreak_Unassigned
 };
 
-static QHash<QByteArray, GraphemeBreak> grapheme_break_map;
+static QHash<QByteArray, GraphemeBreakClass> grapheme_break_map;
 
 static void initGraphemeBreak()
 {
     struct GraphemeBreakList {
-        GraphemeBreak brk;
+        GraphemeBreakClass brk;
         const char *name;
     } breaks[] = {
-        { GraphemeBreakOther, "Other" },
-        { GraphemeBreakCR, "CR" },
-        { GraphemeBreakLF, "LF" },
-        { GraphemeBreakControl, "Control" },
-        { GraphemeBreakExtend, "Extend" },
-        { GraphemeBreakPrepend, "Prepend" },
-        { GraphemeBreakSpacingMark, "SpacingMark" },
-        { GraphemeBreakL, "L" },
-        { GraphemeBreakV, "V" },
-        { GraphemeBreakT, "T" },
-        { GraphemeBreakLV, "LV" },
-        { GraphemeBreakLVT, "LVT" },
+        { GraphemeBreak_Other, "Other" },
+        { GraphemeBreak_CR, "CR" },
+        { GraphemeBreak_LF, "LF" },
+        { GraphemeBreak_Control, "Control" },
+        { GraphemeBreak_Extend, "Extend" },
+        { GraphemeBreak_Prepend, "Prepend" },
+        { GraphemeBreak_SpacingMark, "SpacingMark" },
+        { GraphemeBreak_L, "L" },
+        { GraphemeBreak_V, "V" },
+        { GraphemeBreak_T, "T" },
+        { GraphemeBreak_LV, "LV" },
+        { GraphemeBreak_LVT, "LVT" },
         { GraphemeBreak_Unassigned, 0 }
     };
     GraphemeBreakList *d = breaks;
@@ -184,61 +310,60 @@ static void initGraphemeBreak()
 }
 
 
-static const char *word_break_string =
-    "    enum WordBreak {\n"
-    "        WordBreakOther,\n"
-    "        WordBreakCR,\n"
-    "        WordBreakLF,\n"
-    "        WordBreakNewline,\n"
-    "        WordBreakFormat,\n"
-    "        WordBreakKatakana,\n"
-    "        WordBreakALetter,\n"
-    "        WordBreakMidNumLet,\n"
-    "        WordBreakMidLetter,\n"
-    "        WordBreakMidNum,\n"
-    "        WordBreakNumeric,\n"
-    "        WordBreakExtendNumLet\n"
-    "    };\n\n";
+static const char *word_break_class_string =
+    "enum WordBreakClass {\n"
+    "    WordBreak_Other,\n"
+    "    WordBreak_CR,\n"
+    "    WordBreak_LF,\n"
+    "    WordBreak_Newline,\n"
+    "    WordBreak_Extend,\n"
+    "    WordBreak_Katakana,\n"
+    "    WordBreak_ALetter,\n"
+    "    WordBreak_MidNumLet,\n"
+    "    WordBreak_MidLetter,\n"
+    "    WordBreak_MidNum,\n"
+    "    WordBreak_Numeric,\n"
+    "    WordBreak_ExtendNumLet\n"
+    "};\n\n";
 
-enum WordBreak {
-    WordBreakOther,
-    WordBreakCR,
-    WordBreakLF,
-    WordBreakNewline,
-    WordBreakFormat,
-    WordBreakFormat,
-    WordBreakKatakana,
-    WordBreakALetter,
-    WordBreakMidNumLet,
-    WordBreakMidLetter,
-    WordBreakMidNum,
-    WordBreakNumeric,
-    WordBreakExtendNumLet
+enum WordBreakClass {
+    WordBreak_Other,
+    WordBreak_CR,
+    WordBreak_LF,
+    WordBreak_Newline,
+    WordBreak_Extend,
+    WordBreak_Katakana,
+    WordBreak_ALetter,
+    WordBreak_MidNumLet,
+    WordBreak_MidLetter,
+    WordBreak_MidNum,
+    WordBreak_Numeric,
+    WordBreak_ExtendNumLet
 
     , WordBreak_Unassigned
 };
 
-static QHash<QByteArray, WordBreak> word_break_map;
+static QHash<QByteArray, WordBreakClass> word_break_map;
 
 static void initWordBreak()
 {
     struct WordBreakList {
-        WordBreak brk;
+        WordBreakClass brk;
         const char *name;
     } breaks[] = {
-        { WordBreakOther, "Other" },
-        { WordBreakCR, "CR" },
-        { WordBreakLF, "LF" },
-        { WordBreakNewline, "Newline" },
-        { WordBreakFormat, "Extend" },
-        { WordBreakFormat, "Format" },
-        { WordBreakKatakana, "Katakana" },
-        { WordBreakALetter, "ALetter" },
-        { WordBreakMidNumLet, "MidNumLet" },
-        { WordBreakMidLetter, "MidLetter" },
-        { WordBreakMidNum, "MidNum" },
-        { WordBreakNumeric, "Numeric" },
-        { WordBreakExtendNumLet, "ExtendNumLet" },
+        { WordBreak_Other, "Other" },
+        { WordBreak_CR, "CR" },
+        { WordBreak_LF, "LF" },
+        { WordBreak_Newline, "Newline" },
+        { WordBreak_Extend, "Extend" },
+        { WordBreak_Extend, "Format" },
+        { WordBreak_Katakana, "Katakana" },
+        { WordBreak_ALetter, "ALetter" },
+        { WordBreak_MidNumLet, "MidNumLet" },
+        { WordBreak_MidLetter, "MidLetter" },
+        { WordBreak_MidNum, "MidNum" },
+        { WordBreak_Numeric, "Numeric" },
+        { WordBreak_ExtendNumLet, "ExtendNumLet" },
         { WordBreak_Unassigned, 0 }
     };
     WordBreakList *d = breaks;
@@ -249,66 +374,66 @@ static void initWordBreak()
 }
 
 
-static const char *sentence_break_string =
-    "    enum SentenceBreak {\n"
-    "        SentenceBreakOther,\n"
-    "        SentenceBreakCR,\n"
-    "        SentenceBreakLF,\n"
-    "        SentenceBreakSep,\n"
-    "        SentenceBreakFormat,\n"
-    "        SentenceBreakSp,\n"
-    "        SentenceBreakLower,\n"
-    "        SentenceBreakUpper,\n"
-    "        SentenceBreakOLetter,\n"
-    "        SentenceBreakNumeric,\n"
-    "        SentenceBreakATerm,\n"
-    "        SentenceBreakSContinue,\n"
-    "        SentenceBreakSTerm,\n"
-    "        SentenceBreakClose\n"
-    "    };\n\n";
+static const char *sentence_break_class_string =
+    "enum SentenceBreakClass {\n"
+    "    SentenceBreak_Other,\n"
+    "    SentenceBreak_CR,\n"
+    "    SentenceBreak_LF,\n"
+    "    SentenceBreak_Sep,\n"
+    "    SentenceBreak_Extend,\n"
+    "    SentenceBreak_Sp,\n"
+    "    SentenceBreak_Lower,\n"
+    "    SentenceBreak_Upper,\n"
+    "    SentenceBreak_OLetter,\n"
+    "    SentenceBreak_Numeric,\n"
+    "    SentenceBreak_ATerm,\n"
+    "    SentenceBreak_SContinue,\n"
+    "    SentenceBreak_STerm,\n"
+    "    SentenceBreak_Close\n"
+    "};\n\n";
 
-enum SentenceBreak {
-    SentenceBreakOther,
-    SentenceBreakCR,
-    SentenceBreakLF,
-    SentenceBreakSep,
-    SentenceBreakFormat,
-    SentenceBreakSp,
-    SentenceBreakLower,
-    SentenceBreakUpper,
-    SentenceBreakOLetter,
-    SentenceBreakNumeric,
-    SentenceBreakATerm,
-    SentenceBreakSContinue,
-    SentenceBreakSTerm,
-    SentenceBreakClose
+enum SentenceBreakClass {
+    SentenceBreak_Other,
+    SentenceBreak_CR,
+    SentenceBreak_LF,
+    SentenceBreak_Sep,
+    SentenceBreak_Extend,
+    SentenceBreak_Sp,
+    SentenceBreak_Lower,
+    SentenceBreak_Upper,
+    SentenceBreak_OLetter,
+    SentenceBreak_Numeric,
+    SentenceBreak_ATerm,
+    SentenceBreak_SContinue,
+    SentenceBreak_STerm,
+    SentenceBreak_Close
 
     , SentenceBreak_Unassigned
 };
 
-static QHash<QByteArray, SentenceBreak> sentence_break_map;
+static QHash<QByteArray, SentenceBreakClass> sentence_break_map;
 
 static void initSentenceBreak()
 {
     struct SentenceBreakList {
-        SentenceBreak brk;
+        SentenceBreakClass brk;
         const char *name;
     } breaks[] = {
-        { SentenceBreakOther, "Other" },
-        { SentenceBreakCR, "CR" },
-        { SentenceBreakLF, "LF" },
-        { SentenceBreakSep, "Sep" },
-        { SentenceBreakFormat, "Extend" },
-        { SentenceBreakFormat, "Format" },
-        { SentenceBreakSp, "Sp" },
-        { SentenceBreakLower, "Lower" },
-        { SentenceBreakUpper, "Upper" },
-        { SentenceBreakOLetter, "OLetter" },
-        { SentenceBreakNumeric, "Numeric" },
-        { SentenceBreakATerm, "ATerm" },
-        { SentenceBreakSContinue, "SContinue" },
-        { SentenceBreakSTerm, "STerm" },
-        { SentenceBreakClose, "Close" },
+        { SentenceBreak_Other, "Other" },
+        { SentenceBreak_CR, "CR" },
+        { SentenceBreak_LF, "LF" },
+        { SentenceBreak_Sep, "Sep" },
+        { SentenceBreak_Extend, "Extend" },
+        { SentenceBreak_Extend, "Format" },
+        { SentenceBreak_Sp, "Sp" },
+        { SentenceBreak_Lower, "Lower" },
+        { SentenceBreak_Upper, "Upper" },
+        { SentenceBreak_OLetter, "OLetter" },
+        { SentenceBreak_Numeric, "Numeric" },
+        { SentenceBreak_ATerm, "ATerm" },
+        { SentenceBreak_SContinue, "SContinue" },
+        { SentenceBreak_STerm, "STerm" },
+        { SentenceBreak_Close, "Close" },
         { SentenceBreak_Unassigned, 0 }
     };
     SentenceBreakList *d = breaks;
@@ -320,17 +445,17 @@ static void initSentenceBreak()
 
 
 static const char *line_break_class_string =
-    "    // see http://www.unicode.org/reports/tr14/tr14-28.html\n"
-    "    // we don't use the XX, AI, and CB classes and map them to AL instead.\n"
-    "    enum LineBreakClass {\n"
-    "        LineBreak_OP, LineBreak_CL, LineBreak_CP, LineBreak_QU, LineBreak_GL,\n"
-    "        LineBreak_NS, LineBreak_EX, LineBreak_SY, LineBreak_IS, LineBreak_PR,\n"
-    "        LineBreak_PO, LineBreak_NU, LineBreak_AL, LineBreak_HL, LineBreak_ID,\n"
-    "        LineBreak_IN, LineBreak_HY, LineBreak_BA, LineBreak_BB, LineBreak_B2,\n"
-    "        LineBreak_ZW, LineBreak_CM, LineBreak_WJ, LineBreak_H2, LineBreak_H3,\n"
-    "        LineBreak_JL, LineBreak_JV, LineBreak_JT, LineBreak_SA, LineBreak_SG,\n"
-    "        LineBreak_SP, LineBreak_CR, LineBreak_LF, LineBreak_BK\n"
-    "    };\n\n";
+    "// see http://www.unicode.org/reports/tr14/tr14-28.html\n"
+    "// we don't use the XX and AI classes and map them to AL instead.\n"
+    "enum LineBreakClass {\n"
+    "    LineBreak_OP, LineBreak_CL, LineBreak_CP, LineBreak_QU, LineBreak_GL,\n"
+    "    LineBreak_NS, LineBreak_EX, LineBreak_SY, LineBreak_IS, LineBreak_PR,\n"
+    "    LineBreak_PO, LineBreak_NU, LineBreak_AL, LineBreak_HL, LineBreak_ID,\n"
+    "    LineBreak_IN, LineBreak_HY, LineBreak_BA, LineBreak_BB, LineBreak_B2,\n"
+    "    LineBreak_ZW, LineBreak_CM, LineBreak_WJ, LineBreak_H2, LineBreak_H3,\n"
+    "    LineBreak_JL, LineBreak_JV, LineBreak_JT, LineBreak_CB, LineBreak_SA,\n"
+    "    LineBreak_SG, LineBreak_SP, LineBreak_CR, LineBreak_LF, LineBreak_BK\n"
+    "};\n\n";
 
 enum LineBreakClass {
     LineBreak_OP, LineBreak_CL, LineBreak_CP, LineBreak_QU, LineBreak_GL,
@@ -338,8 +463,8 @@ enum LineBreakClass {
     LineBreak_PO, LineBreak_NU, LineBreak_AL, LineBreak_HL, LineBreak_ID,
     LineBreak_IN, LineBreak_HY, LineBreak_BA, LineBreak_BB, LineBreak_B2,
     LineBreak_ZW, LineBreak_CM, LineBreak_WJ, LineBreak_H2, LineBreak_H3,
-    LineBreak_JL, LineBreak_JV, LineBreak_JT, LineBreak_SA, LineBreak_SG,
-    LineBreak_SP, LineBreak_CR, LineBreak_LF, LineBreak_BK
+    LineBreak_JL, LineBreak_JV, LineBreak_JT, LineBreak_CB, LineBreak_SA,
+    LineBreak_SG, LineBreak_SP, LineBreak_CR, LineBreak_LF, LineBreak_BK
 
     , LineBreak_Unassigned
 };
@@ -349,7 +474,6 @@ static QHash<QByteArray, LineBreakClass> line_break_map;
 static void initLineBreak()
 {
     // ### Classes XX and AI are left out and mapped to AL for now.
-    // ### Class CB is unsupported for now and mapped to AL as well.
     // ### Class NL is mapped to BK.
     // ### Treating characters of class CJ as class NS will give CSS strict line breaking;
     //     treating them as class ID will give CSS normal breaking.
@@ -371,7 +495,7 @@ static void initLineBreak()
         { LineBreak_BA, "BA" },
         { LineBreak_BB, "BB" },
         { LineBreak_HY, "HY" },
-        { LineBreak_AL, "CB" }, // ###
+        { LineBreak_CB, "CB" },
         { LineBreak_NS, "CJ" },
         { LineBreak_CL, "CL" },
         { LineBreak_CP, "CP" },
@@ -387,6 +511,7 @@ static void initLineBreak()
         { LineBreak_SY, "SY" },
         { LineBreak_AL, "AI" },
         { LineBreak_AL, "AL" },
+        { LineBreak_HL, "HL" },
         { LineBreak_H2, "H2" },
         { LineBreak_H3, "H3" },
         { LineBreak_ID, "ID" },
@@ -407,50 +532,53 @@ static void initLineBreak()
 
 // Keep this one in sync with the code in createPropertyInfo
 static const char *property_string =
-    "    struct Properties {\n"
-    "        ushort category         : 8; /* 5 needed */\n"
-    "        ushort line_break_class : 8; /* 6 needed */\n"
-    "        ushort direction        : 8; /* 5 needed */\n"
-    "        ushort combiningClass   : 8;\n"
-    "        ushort joining          : 2;\n"
-    "        signed short digitValue : 6; /* 5 needed */\n"
-    "        ushort unicodeVersion   : 4;\n"
-    "        ushort lowerCaseSpecial : 1;\n"
-    "        ushort upperCaseSpecial : 1;\n"
-    "        ushort titleCaseSpecial : 1;\n"
-    "        ushort caseFoldSpecial  : 1;\n"
-    "        signed short mirrorDiff    : 16;\n"
-    "        signed short lowerCaseDiff : 16;\n"
-    "        signed short upperCaseDiff : 16;\n"
-    "        signed short titleCaseDiff : 16;\n"
-    "        signed short caseFoldDiff  : 16;\n"
-    "        ushort graphemeBreak    : 8; /* 4 needed */\n"
-    "        ushort wordBreak        : 8; /* 4 needed */\n"
-    "        ushort sentenceBreak    : 8; /* 4 needed */\n"
-    "    };\n"
-    "    Q_CORE_EXPORT const Properties * QT_FASTCALL properties(uint ucs4);\n"
-    "    Q_CORE_EXPORT const Properties * QT_FASTCALL properties(ushort ucs2);\n";
+    "struct Properties {\n"
+    "    ushort category            : 8; /* 5 used */\n"
+    "    ushort direction           : 8; /* 5 used */\n"
+    "    ushort combiningClass      : 8;\n"
+    "    ushort joining             : 2;\n"
+    "    signed short digitValue    : 6; /* 5 used */\n"
+    "    signed short mirrorDiff    : 16;\n"
+    "    signed short lowerCaseDiff : 16;\n"
+    "    signed short upperCaseDiff : 16;\n"
+    "    signed short titleCaseDiff : 16;\n"
+    "    signed short caseFoldDiff  : 16;\n"
+    "    ushort lowerCaseSpecial    : 1;\n"
+    "    ushort upperCaseSpecial    : 1;\n"
+    "    ushort titleCaseSpecial    : 1;\n"
+    "    ushort caseFoldSpecial     : 1;\n"
+    "    ushort unicodeVersion      : 4;\n"
+    "    ushort graphemeBreakClass  : 8; /* 4 used */\n"
+    "    ushort wordBreakClass      : 8; /* 4 used */\n"
+    "    ushort sentenceBreakClass  : 8; /* 4 used */\n"
+    "    ushort lineBreakClass      : 8; /* 6 used */\n"
+    "    ushort script              : 8; /* 5 used */\n"
+    "};\n\n"
+    "Q_CORE_EXPORT const Properties * QT_FASTCALL properties(uint ucs4);\n"
+    "Q_CORE_EXPORT const Properties * QT_FASTCALL properties(ushort ucs2);\n"
+    "\n";
 
 static const char *methods =
-    "    Q_CORE_EXPORT GraphemeBreak QT_FASTCALL graphemeBreakClass(uint ucs4);\n"
-    "    inline int graphemeBreakClass(QChar ch)\n"
-    "    { return graphemeBreakClass(ch.unicode()); }\n"
+    "Q_CORE_EXPORT GraphemeBreakClass QT_FASTCALL graphemeBreakClass(uint ucs4);\n"
+    "inline GraphemeBreakClass graphemeBreakClass(QChar ch)\n"
+    "{ return graphemeBreakClass(ch.unicode()); }\n"
     "\n"
-    "    Q_CORE_EXPORT WordBreak QT_FASTCALL wordBreakClass(uint ucs4);\n"
-    "    inline int wordBreakClass(QChar ch)\n"
-    "    { return wordBreakClass(ch.unicode()); }\n"
+    "Q_CORE_EXPORT WordBreakClass QT_FASTCALL wordBreakClass(uint ucs4);\n"
+    "inline WordBreakClass wordBreakClass(QChar ch)\n"
+    "{ return wordBreakClass(ch.unicode()); }\n"
     "\n"
-    "    Q_CORE_EXPORT SentenceBreak QT_FASTCALL sentenceBreakClass(uint ucs4);\n"
-    "    inline int sentenceBreakClass(QChar ch)\n"
-    "    { return sentenceBreakClass(ch.unicode()); }\n"
+    "Q_CORE_EXPORT SentenceBreakClass QT_FASTCALL sentenceBreakClass(uint ucs4);\n"
+    "inline SentenceBreakClass sentenceBreakClass(QChar ch)\n"
+    "{ return sentenceBreakClass(ch.unicode()); }\n"
     "\n"
-    "    Q_CORE_EXPORT LineBreakClass QT_FASTCALL lineBreakClass(uint ucs4);\n"
-    "    inline int lineBreakClass(QChar ch)\n"
-    "    { return lineBreakClass(ch.unicode()); }\n"
+    "Q_CORE_EXPORT LineBreakClass QT_FASTCALL lineBreakClass(uint ucs4);\n"
+    "inline LineBreakClass lineBreakClass(QChar ch)\n"
+    "{ return lineBreakClass(ch.unicode()); }\n"
     "\n"
-    "    Q_CORE_EXPORT int QT_FASTCALL script(uint ucs4);\n"
-    "    inline int script(QChar ch)\n"
-    "    { return script(ch.unicode()); }\n\n";
+    "Q_CORE_EXPORT Script QT_FASTCALL script(uint ucs4);\n"
+    "inline Script script(QChar ch)\n"
+    "{ return script(ch.unicode()); }\n"
+    "\n";
 
 static const int SizeOfPropertiesStruct = 20;
 
@@ -462,7 +590,6 @@ struct PropertyFlags {
                 && joining == o.joining
                 && age == o.age
                 && digitValue == o.digitValue
-                && line_break_class == o.line_break_class
                 && mirrorDiff == o.mirrorDiff
                 && lowerCaseDiff == o.lowerCaseDiff
                 && upperCaseDiff == o.upperCaseDiff
@@ -472,9 +599,11 @@ struct PropertyFlags {
                 && upperCaseSpecial == o.upperCaseSpecial
                 && titleCaseSpecial == o.titleCaseSpecial
                 && caseFoldSpecial == o.caseFoldSpecial
-                && graphemeBreak == o.graphemeBreak
-                && wordBreak == o.wordBreak
-                && sentenceBreak == o.sentenceBreak
+                && graphemeBreakClass == o.graphemeBreakClass
+                && wordBreakClass == o.wordBreakClass
+                && sentenceBreakClass == o.sentenceBreakClass
+                && lineBreakClass == o.lineBreakClass
+                && script == o.script
             );
     }
     // from UnicodeData.txt
@@ -486,7 +615,6 @@ struct PropertyFlags {
     // from DerivedAge.txt
     QChar::UnicodeVersion age : 4;
     int digitValue;
-    LineBreakClass line_break_class;
 
     int mirrorDiff : 16;
 
@@ -498,9 +626,11 @@ struct PropertyFlags {
     bool upperCaseSpecial;
     bool titleCaseSpecial;
     bool caseFoldSpecial;
-    GraphemeBreak graphemeBreak;
-    WordBreak wordBreak;
-    SentenceBreak sentenceBreak;
+    GraphemeBreakClass graphemeBreakClass;
+    WordBreakClass wordBreakClass;
+    SentenceBreakClass sentenceBreakClass;
+    LineBreakClass lineBreakClass;
+    int script;
 };
 
 
@@ -511,7 +641,7 @@ static int appendToSpecialCaseMap(const QList<int> &map)
     QList<int> utf16map;
     for (int i = 0; i < map.size(); ++i) {
         int val = map.at(i);
-        if (val >= 0x10000) {
+        if (QChar::requiresSurrogates(val)) {
             utf16map << QChar::highSurrogate(val);
             utf16map << QChar::lowSurrogate(val);
         } else {
@@ -572,7 +702,7 @@ struct UnicodeData {
             p.direction = QChar::DirR;
         }
 
-        p.line_break_class = LineBreak_AL; // XX -> AL
+        p.lineBreakClass = LineBreak_AL; // XX -> AL
         // LineBreak.txt
         // The unassigned code points that default to "ID" include ranges in the following blocks:
         //     [U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF, U+20000..U+2A6DF, U+2A700..U+2B73F, U+2B740..U+2B81F, U+2F800..U+2FA1F, U+20000..U+2FFFD, U+30000..U+3FFFD]
@@ -585,7 +715,7 @@ struct UnicodeData {
             || (codepoint >= 0x2F800 && codepoint <= 0x2FA1F)
             || (codepoint >= 0x20000 && codepoint <= 0x2FFFD)
             || (codepoint >= 0x30000 && codepoint <= 0x3FFFD)) {
-            p.line_break_class = LineBreak_ID;
+            p.lineBreakClass = LineBreak_ID;
         }
 
         mirroredChar = 0;
@@ -602,12 +732,16 @@ struct UnicodeData {
         p.upperCaseSpecial = 0;
         p.titleCaseSpecial = 0;
         p.caseFoldSpecial = 0;
-        p.graphemeBreak = GraphemeBreakOther;
-        p.wordBreak = WordBreakOther;
-        p.sentenceBreak = SentenceBreakOther;
+        p.graphemeBreakClass = GraphemeBreak_Other;
+        p.wordBreakClass = WordBreak_Other;
+        p.sentenceBreakClass = SentenceBreak_Other;
+        p.script = 0; // Common
         propertyIndex = -1;
         excludedComposition = false;
     }
+
+    static UnicodeData &valueRef(int codepoint);
+
     PropertyFlags p;
 
     // from UnicodeData.txt
@@ -626,153 +760,21 @@ struct UnicodeData {
     int propertyIndex;
 };
 
-enum UniDataFields {
-    UD_Value,
-    UD_Name,
-    UD_Category,
-    UD_CombiningClass,
-    UD_BidiCategory,
-    UD_Decomposition,
-    UD_DecimalDigitValue,
-    UD_DigitValue,
-    UD_NumericValue,
-    UD_Mirrored,
-    UD_OldName,
-    UD_Comment,
-    UD_UpperCase,
-    UD_LowerCase,
-    UD_TitleCase
-};
+static QList<UnicodeData> unicodeData;
 
-
-static QHash<QByteArray, QChar::Category> categoryMap;
-
-static void initCategoryMap()
+UnicodeData &UnicodeData::valueRef(int codepoint)
 {
-    struct Cat {
-        QChar::Category cat;
-        const char *name;
-    } categories[] = {
-        { QChar::Mark_NonSpacing,          "Mn" },
-        { QChar::Mark_SpacingCombining,    "Mc" },
-        { QChar::Mark_Enclosing,           "Me" },
-
-        { QChar::Number_DecimalDigit,      "Nd" },
-        { QChar::Number_Letter,            "Nl" },
-        { QChar::Number_Other,             "No" },
-
-        { QChar::Separator_Space,          "Zs" },
-        { QChar::Separator_Line,           "Zl" },
-        { QChar::Separator_Paragraph,      "Zp" },
-
-        { QChar::Other_Control,            "Cc" },
-        { QChar::Other_Format,             "Cf" },
-        { QChar::Other_Surrogate,          "Cs" },
-        { QChar::Other_PrivateUse,         "Co" },
-        { QChar::Other_NotAssigned,        "Cn" },
-
-        { QChar::Letter_Uppercase,         "Lu" },
-        { QChar::Letter_Lowercase,         "Ll" },
-        { QChar::Letter_Titlecase,         "Lt" },
-        { QChar::Letter_Modifier,          "Lm" },
-        { QChar::Letter_Other,             "Lo" },
-
-        { QChar::Punctuation_Connector,    "Pc" },
-        { QChar::Punctuation_Dash,         "Pd" },
-        { QChar::Punctuation_Open,         "Ps" },
-        { QChar::Punctuation_Close,        "Pe" },
-        { QChar::Punctuation_InitialQuote, "Pi" },
-        { QChar::Punctuation_FinalQuote,   "Pf" },
-        { QChar::Punctuation_Other,        "Po" },
-
-        { QChar::Symbol_Math,              "Sm" },
-        { QChar::Symbol_Currency,          "Sc" },
-        { QChar::Symbol_Modifier,          "Sk" },
-        { QChar::Symbol_Other,             "So" },
-        { QChar::Other_NotAssigned, 0 }
-    };
-    Cat *c = categories;
-    while (c->name) {
-        categoryMap.insert(c->name, c->cat);
-        ++c;
+    static bool initialized = false;
+    if (!initialized) {
+        unicodeData.reserve(QChar::LastValidCodePoint + 1);
+        for (int uc = 0; uc <= QChar::LastValidCodePoint; ++uc)
+            unicodeData.append(UnicodeData(uc));
+        initialized = true;
     }
+
+    Q_ASSERT(codepoint <= 0x10ffff);
+    return unicodeData[codepoint];
 }
-
-
-static QHash<QByteArray, QChar::Direction> directionMap;
-
-static void initDirectionMap()
-{
-    struct Dir {
-        QChar::Direction dir;
-        const char *name;
-    } directions[] = {
-        { QChar::DirL, "L" },
-        { QChar::DirR, "R" },
-        { QChar::DirEN, "EN" },
-        { QChar::DirES, "ES" },
-        { QChar::DirET, "ET" },
-        { QChar::DirAN, "AN" },
-        { QChar::DirCS, "CS" },
-        { QChar::DirB, "B" },
-        { QChar::DirS, "S" },
-        { QChar::DirWS, "WS" },
-        { QChar::DirON, "ON" },
-        { QChar::DirLRE, "LRE" },
-        { QChar::DirLRO, "LRO" },
-        { QChar::DirAL, "AL" },
-        { QChar::DirRLE, "RLE" },
-        { QChar::DirRLO, "RLO" },
-        { QChar::DirPDF, "PDF" },
-        { QChar::DirNSM, "NSM" },
-        { QChar::DirBN, "BN" },
-        { QChar::DirL, 0 }
-    };
-    Dir *d = directions;
-    while (d->name) {
-        directionMap.insert(d->name, d->dir);
-        ++d;
-    }
-}
-
-
-static QHash<QByteArray, QChar::Decomposition> decompositionMap;
-
-static void initDecompositionMap()
-{
-    struct Dec {
-        QChar::Decomposition dec;
-        const char *name;
-    } decompositions[] = {
-        { QChar::Canonical, "<canonical>" },
-        { QChar::Font, "<font>" },
-        { QChar::NoBreak, "<noBreak>" },
-        { QChar::Initial, "<initial>" },
-        { QChar::Medial, "<medial>" },
-        { QChar::Final, "<final>" },
-        { QChar::Isolated, "<isolated>" },
-        { QChar::Circle, "<circle>" },
-        { QChar::Super, "<super>" },
-        { QChar::Sub, "<sub>" },
-        { QChar::Vertical, "<vertical>" },
-        { QChar::Wide, "<wide>" },
-        { QChar::Narrow, "<narrow>" },
-        { QChar::Small, "<small>" },
-        { QChar::Square, "<square>" },
-        { QChar::Compat, "<compat>" },
-        { QChar::Fraction, "<fraction>" },
-        { QChar::NoDecomposition, 0 }
-    };
-    Dec *d = decompositions;
-    while (d->name) {
-        decompositionMap.insert(d->name, d->dec);
-        ++d;
-    }
-}
-
-
-static QHash<int, UnicodeData> unicodeData;
-static QList<PropertyFlags> uniqueProperties;
 
 
 static QHash<int, int> decompositionLength;
@@ -781,15 +783,15 @@ static int numLigatures = 0;
 static int highestLigature = 0;
 
 struct Ligature {
-    ushort u1;
-    ushort u2;
-    ushort ligature;
+    int u1;
+    int u2;
+    int ligature;
 };
 // we need them sorted after the first component for fast lookup
 bool operator < (const Ligature &l1, const Ligature &l2)
 { return l1.u1 < l2.u1; }
 
-static QHash<ushort, QList<Ligature> > ligatureHashes;
+static QHash<int, QList<Ligature> > ligatureHashes;
 
 static QHash<int, int> combiningClassUsage;
 
@@ -799,7 +801,26 @@ static int maxTitleCaseDiff = 0;
 
 static void readUnicodeData()
 {
-    qDebug() << "Reading UnicodeData.txt";
+    qDebug("Reading UnicodeData.txt");
+
+    enum UniDataFields {
+        UD_Value,
+        UD_Name,
+        UD_Category,
+        UD_CombiningClass,
+        UD_BidiCategory,
+        UD_Decomposition,
+        UD_DecimalDigitValue,
+        UD_DigitValue,
+        UD_NumericValue,
+        UD_Mirrored,
+        UD_OldName,
+        UD_Comment,
+        UD_UpperCase,
+        UD_LowerCase,
+        UD_TitleCase
+    };
+
     QFile f("data/UnicodeData.txt");
     if (!f.exists())
         qFatal("Couldn't find UnicodeData.txt");
@@ -837,9 +858,8 @@ static void readUnicodeData()
             Q_ASSERT(lastCodepoint <= QChar::LastValidCodePoint);
         }
 
-        UnicodeData data(codepoint);
+        UnicodeData &data = UnicodeData::valueRef(codepoint);
         data.p.category = categoryMap.value(properties[UD_Category], QChar::Other_NotAssigned);
-
         data.p.combiningClass = properties[UD_CombiningClass].toInt();
         if (!combiningClassUsage.contains(data.p.combiningClass))
             combiningClassUsage[data.p.combiningClass] = 1;
@@ -862,7 +882,7 @@ static void readUnicodeData()
                 data.p.upperCaseDiff = diff;
                 maxUpperCaseDiff = qMax(maxUpperCaseDiff, qAbs(diff));
             }
-            if (codepoint >= 0x10000 || upperCase >= 0x10000) {
+            if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(upperCase)) {
                 // if the conditions below doesn't hold anymore we need to modify our upper casing code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(upperCase));
                 Q_ASSERT(QChar::lowSurrogate(codepoint) + diff == QChar::lowSurrogate(upperCase));
@@ -882,7 +902,7 @@ static void readUnicodeData()
                 data.p.lowerCaseDiff = diff;
                 maxLowerCaseDiff = qMax(maxLowerCaseDiff, qAbs(diff));
             }
-            if (codepoint >= 0x10000 || lowerCase >= 0x10000) {
+            if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(lowerCase)) {
                 // if the conditions below doesn't hold anymore we need to modify our lower casing code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(lowerCase));
                 Q_ASSERT(QChar::lowSurrogate(codepoint) + diff == QChar::lowSurrogate(lowerCase));
@@ -905,7 +925,7 @@ static void readUnicodeData()
                 data.p.titleCaseDiff = diff;
                 maxTitleCaseDiff = qMax(maxTitleCaseDiff, qAbs(diff));
             }
-            if (codepoint >= 0x10000 || titleCase >= 0x10000) {
+            if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(titleCase)) {
                 // if the conditions below doesn't hold anymore we need to modify our title casing code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(titleCase));
                 Q_ASSERT(QChar::lowSurrogate(codepoint) + diff == QChar::lowSurrogate(titleCase));
@@ -936,16 +956,16 @@ static void readUnicodeData()
         }
 
         for (int i = codepoint; i <= lastCodepoint; ++i)
-            unicodeData.insert(i, data);
+            unicodeData[i] = data;
     }
-
 }
 
 static int maxMirroredDiff = 0;
 
 static void readBidiMirroring()
 {
-    qDebug() << "Reading BidiMirroring.txt";
+    qDebug("Reading BidiMirroring.txt");
+
     QFile f("data/BidiMirroring.txt");
     if (!f.exists())
         qFatal("Couldn't find BidiMirroring.txt");
@@ -975,17 +995,17 @@ static void readBidiMirroring()
         int mirror = pair[1].toInt(&ok, 16);
         Q_ASSERT(ok);
 
-        UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
+        UnicodeData &d = UnicodeData::valueRef(codepoint);
         d.mirroredChar = mirror;
         d.p.mirrorDiff = d.mirroredChar - codepoint;
         maxMirroredDiff = qMax(maxMirroredDiff, qAbs(d.p.mirrorDiff));
-        unicodeData.insert(codepoint, d);
     }
 }
 
 static void readArabicShaping()
 {
-    qDebug() << "Reading ArabicShaping.txt";
+    qDebug("Reading ArabicShaping.txt");
+
     QFile f("data/ArabicShaping.txt");
     if (!f.exists())
         qFatal("Couldn't find ArabicShaping.txt");
@@ -1022,7 +1042,7 @@ static void readArabicShaping()
             qFatal("%x: joining type '%s' was met; the current implementation needs to be revised!", codepoint, l[2].constData());
         }
 
-        UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
+        UnicodeData &d = UnicodeData::valueRef(codepoint);
         if (joining == Joining_Right)
             d.p.joining = QChar::Right;
         else if (joining == Joining_Dual)
@@ -1031,13 +1051,13 @@ static void readArabicShaping()
             d.p.joining = QChar::Center;
         else
             d.p.joining = QChar::OtherJoining;
-        unicodeData.insert(codepoint, d);
     }
 }
 
 static void readDerivedAge()
 {
-    qDebug() << "Reading DerivedAge.txt";
+    qDebug("Reading DerivedAge.txt");
+
     QFile f("data/DerivedAge.txt");
     if (!f.exists())
         qFatal("Couldn't find DerivedAge.txt");
@@ -1080,17 +1100,16 @@ static void readDerivedAge()
             qFatal("unassigned or unhandled age value: %s", l[1].constData());
 
         for (int codepoint = from; codepoint <= to; ++codepoint) {
-            UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
+            UnicodeData &d = UnicodeData::valueRef(codepoint);
             d.p.age = age;
-            unicodeData.insert(codepoint, d);
         }
     }
 }
 
-
 static void readDerivedNormalizationProps()
 {
-    qDebug() << "Reading DerivedNormalizationProps.txt";
+    qDebug("Reading DerivedNormalizationProps.txt");
+
     QFile f("data/DerivedNormalizationProps.txt");
     if (!f.exists())
         qFatal("Couldn't find DerivedNormalizationProps.txt");
@@ -1132,14 +1151,13 @@ static void readDerivedNormalizationProps()
         }
 
         for (int codepoint = from; codepoint <= to; ++codepoint) {
-            UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
+            UnicodeData &d = UnicodeData::valueRef(codepoint);
             d.excludedComposition = true;
-            unicodeData.insert(codepoint, d);
         }
     }
 
     for (int codepoint = 0; codepoint <= QChar::LastValidCodePoint; ++codepoint) {
-        UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
+        UnicodeData &d = UnicodeData::valueRef(codepoint);
         if (!d.excludedComposition
             && d.decompositionType == QChar::Canonical
             && d.decomposition.size() > 1) {
@@ -1150,11 +1168,11 @@ static void readDerivedNormalizationProps()
 
             // all non-starters are listed in DerivedNormalizationProps.txt
             // and already excluded from composition
-            Q_ASSERT(unicodeData.value(part1, UnicodeData(part1)).p.combiningClass == 0);
+            Q_ASSERT(UnicodeData::valueRef(part1).p.combiningClass == 0);
 
             ++numLigatures;
             highestLigature = qMax(highestLigature, part1);
-            Ligature l = {(ushort)part1, (ushort)part2, (ushort)codepoint};
+            Ligature l = { part1, part2, codepoint };
             ligatureHashes[part2].append(l);
         }
     }
@@ -1169,7 +1187,8 @@ struct NormalizationCorrection {
 
 static QByteArray createNormalizationCorrections()
 {
-    qDebug() << "Reading NormalizationCorrections.txt";
+    qDebug("Reading NormalizationCorrections.txt");
+
     QFile f("data/NormalizationCorrections.txt");
     if (!f.exists())
         qFatal("Couldn't find NormalizationCorrections.txt");
@@ -1234,28 +1253,10 @@ static QByteArray createNormalizationCorrections()
     return out;
 }
 
-
-static void computeUniqueProperties()
-{
-    qDebug("computeUniqueProperties:");
-    for (int uc = 0; uc <= QChar::LastValidCodePoint; ++uc) {
-        UnicodeData d = unicodeData.value(uc, UnicodeData(uc));
-
-        int index = uniqueProperties.indexOf(d.p);
-        if (index == -1) {
-            index = uniqueProperties.size();
-            uniqueProperties.append(d.p);
-        }
-        d.propertyIndex = index;
-        unicodeData.insert(uc, d);
-    }
-    qDebug("    %d unique unicode properties found", uniqueProperties.size());
-}
-
-
 static void readLineBreak()
 {
-    qDebug() << "Reading LineBreak.txt";
+    qDebug("Reading LineBreak.txt");
+
     QFile f("data/LineBreak.txt");
     if (!f.exists())
         qFatal("Couldn't find LineBreak.txt");
@@ -1297,17 +1298,16 @@ static void readLineBreak()
             qFatal("unassigned line break class: %s", l[1].constData());
 
         for (int codepoint = from; codepoint <= to; ++codepoint) {
-            UnicodeData d = unicodeData.value(codepoint, UnicodeData(codepoint));
-            d.p.line_break_class = lb;
-            unicodeData.insert(codepoint, d);
+            UnicodeData &d = UnicodeData::valueRef(codepoint);
+            d.p.lineBreakClass = lb;
         }
     }
 }
 
-
 static void readSpecialCasing()
 {
-    qDebug() << "Reading SpecialCasing.txt";
+    qDebug("Reading SpecialCasing.txt");
+
     QFile f("data/SpecialCasing.txt");
     if (!f.exists())
         qFatal("Couldn't find SpecialCasing.txt");
@@ -1340,7 +1340,7 @@ static void readSpecialCasing()
 
         // if the condition below doesn't hold anymore we need to modify our
         // lower/upper/title casing code and case folding code
-        Q_ASSERT(codepoint < 0x10000);
+        Q_ASSERT(!QChar::requiresSurrogates(codepoint));
 
 //         qDebug() << "codepoint" << hex << codepoint;
 //         qDebug() << line;
@@ -1370,8 +1370,7 @@ static void readSpecialCasing()
         }
 
 
-        UnicodeData ud = unicodeData.value(codepoint, UnicodeData(codepoint));
-
+        UnicodeData &ud = UnicodeData::valueRef(codepoint);
         Q_ASSERT(lowerMap.size() > 1 || lowerMap.at(0) == codepoint + ud.p.lowerCaseDiff);
         Q_ASSERT(titleMap.size() > 1 || titleMap.at(0) == codepoint + ud.p.titleCaseDiff);
         Q_ASSERT(upperMap.size() > 1 || upperMap.at(0) == codepoint + ud.p.upperCaseDiff);
@@ -1388,8 +1387,6 @@ static void readSpecialCasing()
             ud.p.upperCaseSpecial = true;
             ud.p.upperCaseDiff = appendToSpecialCaseMap(upperMap);
         }
-
-        unicodeData.insert(codepoint, ud);
     }
 }
 
@@ -1397,7 +1394,8 @@ static int maxCaseFoldDiff = 0;
 
 static void readCaseFolding()
 {
-    qDebug() << "Reading CaseFolding.txt";
+    qDebug("Reading CaseFolding.txt");
+
     QFile f("data/CaseFolding.txt");
     if (!f.exists())
         qFatal("Couldn't find CaseFolding.txt");
@@ -1438,7 +1436,7 @@ static void readCaseFolding()
             Q_ASSERT(ok);
         }
 
-        UnicodeData ud = unicodeData.value(codepoint, UnicodeData(codepoint));
+        UnicodeData &ud = UnicodeData::valueRef(codepoint);
         if (foldMap.size() == 1) {
             int caseFolded = foldMap.at(0);
             int diff = caseFolded - codepoint;
@@ -1452,7 +1450,7 @@ static void readCaseFolding()
                 ud.p.caseFoldDiff = diff;
                 maxCaseFoldDiff = qMax(maxCaseFoldDiff, qAbs(diff));
             }
-            if (codepoint >= 0x10000 || caseFolded >= 0x10000) {
+            if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(caseFolded)) {
                 // if the conditions below doesn't hold anymore we need to modify our case folding code
                 Q_ASSERT(QChar::highSurrogate(codepoint) == QChar::highSurrogate(caseFolded));
                 Q_ASSERT(QChar::lowSurrogate(codepoint) + diff == QChar::lowSurrogate(caseFolded));
@@ -1465,13 +1463,13 @@ static void readCaseFolding()
             ud.p.caseFoldSpecial = true;
             ud.p.caseFoldDiff = appendToSpecialCaseMap(foldMap);
         }
-        unicodeData.insert(codepoint, ud);
     }
 }
 
 static void readGraphemeBreak()
 {
-    qDebug() << "Reading GraphemeBreakProperty.txt";
+    qDebug("Reading GraphemeBreakProperty.txt");
+
     QFile f("data/GraphemeBreakProperty.txt");
     if (!f.exists())
         qFatal("Couldn't find GraphemeBreakProperty.txt");
@@ -1508,21 +1506,21 @@ static void readGraphemeBreak()
             Q_ASSERT(ok);
         }
 
-        GraphemeBreak brk = grapheme_break_map.value(l[1], GraphemeBreak_Unassigned);
+        GraphemeBreakClass brk = grapheme_break_map.value(l[1], GraphemeBreak_Unassigned);
         if (brk == GraphemeBreak_Unassigned)
             qFatal("unassigned grapheme break class: %s", l[1].constData());
 
         for (int codepoint = from; codepoint <= to; ++codepoint) {
-            UnicodeData ud = unicodeData.value(codepoint, UnicodeData(codepoint));
-            ud.p.graphemeBreak = brk;
-            unicodeData.insert(codepoint, ud);
+            UnicodeData &ud = UnicodeData::valueRef(codepoint);
+            ud.p.graphemeBreakClass = brk;
         }
     }
 }
 
 static void readWordBreak()
 {
-    qDebug() << "Reading WordBreakProperty.txt";
+    qDebug("Reading WordBreakProperty.txt");
+
     QFile f("data/WordBreakProperty.txt");
     if (!f.exists())
         qFatal("Couldn't find WordBreakProperty.txt");
@@ -1559,21 +1557,21 @@ static void readWordBreak()
             Q_ASSERT(ok);
         }
 
-        WordBreak brk = word_break_map.value(l[1], WordBreak_Unassigned);
+        WordBreakClass brk = word_break_map.value(l[1], WordBreak_Unassigned);
         if (brk == WordBreak_Unassigned)
             qFatal("unassigned word break class: %s", l[1].constData());
 
         for (int codepoint = from; codepoint <= to; ++codepoint) {
-            UnicodeData ud = unicodeData.value(codepoint, UnicodeData(codepoint));
-            ud.p.wordBreak = brk;
-            unicodeData.insert(codepoint, ud);
+            UnicodeData &ud = UnicodeData::valueRef(codepoint);
+            ud.p.wordBreakClass = brk;
         }
     }
 }
 
 static void readSentenceBreak()
 {
-    qDebug() << "Reading SentenceBreakProperty.txt";
+    qDebug("Reading SentenceBreakProperty.txt");
+
     QFile f("data/SentenceBreakProperty.txt");
     if (!f.exists())
         qFatal("Couldn't find SentenceBreakProperty.txt");
@@ -1610,14 +1608,13 @@ static void readSentenceBreak()
             Q_ASSERT(ok);
         }
 
-        SentenceBreak brk = sentence_break_map.value(l[1], SentenceBreak_Unassigned);
+        SentenceBreakClass brk = sentence_break_map.value(l[1], SentenceBreak_Unassigned);
         if (brk == SentenceBreak_Unassigned)
             qFatal("unassigned sentence break class: %s", l[1].constData());
 
         for (int codepoint = from; codepoint <= to; ++codepoint) {
-            UnicodeData ud = unicodeData.value(codepoint, UnicodeData(codepoint));
-            ud.p.sentenceBreak = brk;
-            unicodeData.insert(codepoint, ud);
+            UnicodeData &ud = UnicodeData::valueRef(codepoint);
+            ud.p.sentenceBreakClass = brk;
         }
     }
 }
@@ -1764,7 +1761,8 @@ static QList<BlockInfo> blockInfoList;
 
 static void readBlocks()
 {
-    qDebug() << "Reading Blocks.txt";
+    qDebug("Reading Blocks.txt");
+
     QFile f("data/Blocks.txt");
     if (!f.exists())
         qFatal("Couldn't find Blocks.txt");
@@ -1814,279 +1812,136 @@ static void readBlocks()
 #endif
 
 static QList<QByteArray> scriptNames;
-static QHash<int, int> scriptAssignment;
-static QHash<int, int> scriptHash;
+static QList<int> scriptMap;
 
-struct ExtraBlock {
-    int block;
-    QVector<int> vector;
+static const char *specialScripts[] = {
+    "Common",
+    "Greek",
+    "Cyrillic",
+    "Armenian",
+    "Hebrew",
+    "Arabic",
+    "Syriac",
+    "Thaana",
+    "Devanagari",
+    "Bengali",
+    "Gurmukhi",
+    "Gujarati",
+    "Oriya",
+    "Tamil",
+    "Telugu",
+    "Kannada",
+    "Malayalam",
+    "Sinhala",
+    "Thai",
+    "Lao",
+    "Tibetan",
+    "Myanmar",
+    "Georgian",
+    "Hangul",
+    "Ogham",
+    "Runic",
+    "Khmer",
+    "Nko",
+    "Inherited"
 };
-
-static QList<ExtraBlock> extraBlockList;
-
+enum { specialScriptsCount = sizeof(specialScripts) / sizeof(const char *) };
 
 static void readScripts()
 {
-    scriptNames.append("Common");
+    qDebug("Reading Scripts.txt");
 
-    static const char *files[] = {
-        "data/ScriptsInitial.txt",
-        "data/Scripts.txt",
-        "data/ScriptsCorrections.txt"
-    };
-    enum { fileCount = sizeof(files) / sizeof(const char *) };
+    QFile f("data/Scripts.txt");
+    if (!f.exists())
+        qFatal("Couldn't find Scripts.txt");
 
-    for (int i = 0; i < fileCount; ++i) {
-        QFile f(files[i]);
-        if (!f.exists())
-            qFatal("Couldn't find %s", files[i]);
+    f.open(QFile::ReadOnly);
 
-        f.open(QFile::ReadOnly);
+    int scriptsCount = specialScriptsCount;
+    // ### preserve the old ordering (temporary)
+    for (int i = 0; i < specialScriptsCount; ++i) {
+        scriptNames.append(specialScripts[i]);
+        scriptMap.append(i);
+    }
 
-        while (!f.atEnd()) {
-            QByteArray line = f.readLine();
-            line.resize(line.size() - 1);
+    while (!f.atEnd()) {
+        QByteArray line = f.readLine();
+        line.resize(line.size() - 1);
 
-            int comment = line.indexOf("#");
-            if (comment >= 0)
-                line = line.left(comment);
+        int comment = line.indexOf("#");
+        if (comment >= 0)
+            line = line.left(comment);
 
-            line.replace(" ", "");
-            line.replace("_", "");
+        line.replace(" ", "");
+        line.replace("_", "");
 
-            if (line.isEmpty())
-                continue;
+        if (line.isEmpty())
+            continue;
 
-            int semicolon = line.indexOf(';');
-            Q_ASSERT(semicolon >= 0);
-            QByteArray codePoints = line.left(semicolon);
-            QByteArray scriptName = line.mid(semicolon + 1);
+        int semicolon = line.indexOf(';');
+        Q_ASSERT(semicolon >= 0);
+        QByteArray codePoints = line.left(semicolon);
+        QByteArray scriptName = line.mid(semicolon + 1);
 
-            int scriptIndex = scriptNames.indexOf(scriptName);
-            if (scriptIndex == -1) {
-                scriptIndex = scriptNames.size();
-                scriptNames.append(scriptName);
-            }
+        codePoints.replace("..", ".");
+        QList<QByteArray> cl = codePoints.split('.');
 
-            codePoints.replace("..", ".");
-            QList<QByteArray> cl = codePoints.split('.');
-
-            bool ok;
-            int first = cl[0].toInt(&ok, 16);
+        bool ok;
+        int first = cl[0].toInt(&ok, 16);
+        Q_ASSERT(ok);
+        int last = first;
+        if (cl.size() == 2) {
+            last = cl[1].toInt(&ok, 16);
             Q_ASSERT(ok);
-            int last = first;
-            if (cl.size() == 2) {
-                last = cl[1].toInt(&ok, 16);
-                Q_ASSERT(ok);
-            }
+        }
 
-            for (int i = first; i <= last; ++i)
-                scriptAssignment[i] = scriptIndex;
+        int scriptIndex = scriptNames.indexOf(scriptName);
+        if (scriptIndex == -1) {
+            scriptIndex = scriptNames.size();
+            scriptNames.append(scriptName);
+
+            // is the script alias for 'Common'?
+            int s = specialScriptsCount;
+            while (--s > 0) {
+                if (scriptName == specialScripts[s])
+                    break;
+            }
+            scriptMap.append(s > 0 ? scriptsCount++ : 0);
+        }
+
+        for (int codepoint = first; codepoint <= last; ++codepoint) {
+            UnicodeData &ud = UnicodeData::valueRef(codepoint);
+            ud.p.script = scriptMap.at(scriptIndex);
         }
     }
 }
 
-
-static int scriptSentinel = 0;
-
-QByteArray createScriptEnumDeclaration()
+static QByteArray createScriptEnumDeclaration()
 {
-    static const char *specialScripts[] = {
-        "Common",
-        "Arabic",
-        "Armenian",
-        "Bengali",
-        "Cyrillic",
-        "Devanagari",
-        "Georgian",
-        "Greek",
-        "Gujarati",
-        "Gurmukhi",
-        "Hangul",
-        "Hebrew",
-        "Kannada",
-        "Khmer",
-        "Lao",
-        "Malayalam",
-        "Myanmar",
-        "Nko",
-        "Ogham",
-        "Oriya",
-        "Runic",
-        "Sinhala",
-        "Syriac",
-        "Tamil",
-        "Telugu",
-        "Thaana",
-        "Thai",
-        "Tibetan",
-        "Inherited"
-    };
-    const int specialScriptsCount = sizeof(specialScripts) / sizeof(const char *);
-
-    // generate script enum
     QByteArray declaration;
 
-    declaration += "    // See http://www.unicode.org/reports/tr24/tr24-5.html\n";
-    declaration += "    enum Script {\n        Common";
-
-    int uniqueScripts = 1; // Common
+    declaration += "// See http://www.unicode.org/reports/tr24/tr24-5.html\n";
+    declaration += "enum Script {\n    Common";
 
     // output the ones with special processing first
     for (int i = 1; i < scriptNames.size(); ++i) {
-        QByteArray scriptName = scriptNames.at(i);
-        // does the script require special processing?
-        bool special = false;
-        for (int s = 0; s < specialScriptsCount; ++s) {
-            if (scriptName == specialScripts[s]) {
-                special = true;
-                break;
-            }
-        }
-        if (!special) {
-            scriptHash[i] = 0; // alias for 'Common'
+        if (scriptMap.at(i) == 0)
             continue;
-        } else {
-            ++uniqueScripts;
-            scriptHash[i] = i;
-        }
-
-        if (scriptName != "Inherited") {
-            declaration += ",\n        ";
-            declaration += scriptName;
-        }
+        declaration += ",\n    ";
+        declaration += scriptNames.at(i);
     }
-    declaration += ",\n        Inherited";
-    declaration += ",\n        ScriptCount = Inherited";
+    declaration += ",\n    ScriptCount = Inherited";
 
     // output the ones that are an alias for 'Common'
     for (int i = 1; i < scriptNames.size(); ++i) {
-        if (scriptHash.value(i) != 0)
+        if (scriptMap.at(i) != 0)
             continue;
-        declaration += ",\n        ";
+        declaration += ",\n    ";
         declaration += scriptNames.at(i);
         declaration += " = Common";
     }
 
-    declaration += "\n    };\n\n";
-
-    scriptSentinel = ((uniqueScripts + 16) / 32) * 32; // a multiple of 32
-
-    return declaration;
-}
-
-QByteArray createScriptTableDeclaration()
-{
-    Q_ASSERT(scriptSentinel > 0);
-
-    QByteArray declaration;
-
-    const int unicodeBlockCount = 512; // number of unicode blocks
-    const int unicodeBlockSize = 128; // size of each block
-    declaration = "enum { UnicodeBlockCount = ";
-    declaration += QByteArray::number(unicodeBlockCount);
-    declaration += " }; // number of unicode blocks\n";
-    declaration += "enum { UnicodeBlockSize = ";
-    declaration += QByteArray::number(unicodeBlockSize);
-    declaration += " }; // size of each block\n\n";
-
-    // script table
-    declaration += "static const unsigned char uc_scripts[] = {\n";
-    for (int i = 0; i < unicodeBlockCount; ++i) {
-        int block = (((i << 7) & 0xff00) | ((i & 1) * 0x80));
-        int blockAssignment[unicodeBlockSize];
-        for (int x = 0; x < unicodeBlockSize; ++x) {
-            int codePoint = (i << 7) | x;
-            blockAssignment[x] = scriptAssignment.value(codePoint, 0);
-        }
-        bool allTheSame = true;
-        const int originalScript = blockAssignment[0];
-        const int script = scriptHash.value(originalScript);
-        for (int x = 1; allTheSame && x < unicodeBlockSize; ++x) {
-            const int s = scriptHash.value(blockAssignment[x]);
-            if (s != script)
-                allTheSame = false;
-        }
-
-        if (allTheSame) {
-            declaration += "    ";
-            declaration += scriptNames.value(originalScript);
-            declaration += ", /* U+";
-            declaration += QByteArray::number(block, 16).rightJustified(4, '0');
-            declaration += '-';
-            declaration += QByteArray::number(block + unicodeBlockSize - 1, 16).rightJustified(4, '0');
-            declaration += " */\n";
-        } else {
-            const int value = extraBlockList.size() + scriptSentinel;
-            const int offset = ((value - scriptSentinel) * unicodeBlockSize) + unicodeBlockCount;
-
-            declaration += "    ";
-            declaration += QByteArray::number(value);
-            declaration += ", /* U+";
-            declaration += QByteArray::number(block, 16).rightJustified(4, '0');
-            declaration += '-';
-            declaration += QByteArray::number(block + unicodeBlockSize - 1, 16).rightJustified(4, '0');
-            declaration += " at offset ";
-            declaration += QByteArray::number(offset);
-            declaration += " */\n";
-
-            ExtraBlock extraBlock;
-            extraBlock.block = block;
-            extraBlock.vector.resize(unicodeBlockSize);
-            for (int x = 0; x < unicodeBlockSize; ++x)
-                extraBlock.vector[x] = blockAssignment[x];
-
-            extraBlockList.append(extraBlock);
-        }
-    }
-
-    for (int i = 0; i < extraBlockList.size(); ++i) {
-        const int value = i + scriptSentinel;
-        const int offset = ((value - scriptSentinel) * unicodeBlockSize) + unicodeBlockCount;
-        const ExtraBlock &extraBlock = extraBlockList.at(i);
-        const int block = extraBlock.block;
-
-        declaration += "\n\n    /* U+";
-        declaration += QByteArray::number(block, 16).rightJustified(4, '0');
-        declaration += '-';
-        declaration += QByteArray::number(block + unicodeBlockSize - 1, 16).rightJustified(4, '0');
-        declaration += " at offset ";
-        declaration += QByteArray::number(offset);
-        declaration += " */\n    ";
-
-        for (int x = 0; x < extraBlock.vector.size(); ++x) {
-            const int o = extraBlock.vector.at(x);
-
-            declaration += scriptNames.value(o);
-            if (x < extraBlock.vector.size() - 1 || i < extraBlockList.size() - 1)
-                declaration += ',';
-            if ((x & 7) == 7 && x < extraBlock.vector.size() - 1)
-                declaration += "\n    ";
-            else
-                declaration += ' ';
-        }
-        if (declaration.endsWith(' '))
-            declaration.chop(1);
-    }
     declaration += "\n};\n\n";
-
-    declaration += "enum { ScriptSentinel = " + QByteArray::number(scriptSentinel) + " };\n\n";
-
-    declaration +=
-            "Q_CORE_EXPORT int QT_FASTCALL script(uint ucs4)\n"
-            "{\n"
-            "    if (ucs4 > 0xffff)\n"
-            "        return Common;\n"
-            "    int script = uc_scripts[ucs4 >> 7];\n"
-            "    if (script < ScriptSentinel)\n"
-            "        return script;\n"
-            "    script = (((script - ScriptSentinel) * UnicodeBlockSize) + UnicodeBlockCount);\n"
-            "    script = uc_scripts[script + (ucs4 & 0x7f)];\n"
-            "    return script;\n"
-            "}\n\n";
-
-    qDebug("createScriptTableDeclaration:");
-    qDebug("    memory usage: %d bytes", unicodeBlockCount + (extraBlockList.size() * unicodeBlockSize));
 
     return declaration;
 }
@@ -2095,7 +1950,7 @@ QByteArray createScriptTableDeclaration()
 static void dump(int from, int to)
 {
     for (int i = from; i <= to; ++i) {
-        UnicodeData d = unicodeData.value(i, UnicodeData(i));
+        UnicodeData &d = UnicodeData::valueRef(i);
         qDebug("0x%04x: cat=%d combining=%d dir=%d case=%x mirror=%x joining=%d age=%d",
                i, d.p.category, d.p.combiningClass, d.p.direction, d.otherCase, d.mirroredChar, d.p.joining, d.p.age);
         if (d.decompositionType != QChar::NoDecomposition) {
@@ -2107,12 +1962,31 @@ static void dump(int from, int to)
 }
 #endif
 
-struct PropertyBlock {
-    PropertyBlock() { index = -1; }
+static QList<PropertyFlags> uniqueProperties;
+
+static void computeUniqueProperties()
+{
+    qDebug("computeUniqueProperties:");
+    for (int codepoint = 0; codepoint <= QChar::LastValidCodePoint; ++codepoint) {
+        UnicodeData &d = UnicodeData::valueRef(codepoint);
+        int index = uniqueProperties.indexOf(d.p);
+        if (index == -1) {
+            index = uniqueProperties.size();
+            uniqueProperties.append(d.p);
+        }
+        d.propertyIndex = index;
+    }
+    qDebug("    %d unique unicode properties found", uniqueProperties.size());
+}
+
+struct UniqueBlock {
+    inline UniqueBlock() : index(-1) {}
+
+    inline bool operator==(const UniqueBlock &other) const
+    { return values == other.values; }
+
     int index;
-    QList<int> properties;
-    bool operator==(const PropertyBlock &other)
-    { return properties == other.properties; }
+    QVector<int> values;
 };
 
 static QByteArray createPropertyInfo()
@@ -2133,68 +2007,71 @@ static QByteArray createPropertyInfo()
     const int SMP_BLOCKSIZE = 256;
     const int SMP_SHIFT = 8;
 
-    QList<PropertyBlock> blocks;
-    QList<int> blockMap;
-
+    QList<UniqueBlock> uniqueBlocks;
+    QVector<int> blockMap;
     int used = 0;
 
     for (int block = 0; block < BMP_END/BMP_BLOCKSIZE; ++block) {
-        PropertyBlock b;
+        UniqueBlock b;
+        b.values.reserve(BMP_BLOCKSIZE);
         for (int i = 0; i < BMP_BLOCKSIZE; ++i) {
             int uc = block*BMP_BLOCKSIZE + i;
-            UnicodeData d = unicodeData.value(uc, UnicodeData(uc));
-            b.properties.append(d.propertyIndex);
+            UnicodeData &d = UnicodeData::valueRef(uc);
+            b.values.append(d.propertyIndex);
         }
-        int index = blocks.indexOf(b);
+        int index = uniqueBlocks.indexOf(b);
         if (index == -1) {
-            index = blocks.size();
+            index = uniqueBlocks.size();
             b.index = used;
             used += BMP_BLOCKSIZE;
-            blocks.append(b);
+            uniqueBlocks.append(b);
         }
-        blockMap.append(blocks.at(index).index);
+        blockMap.append(uniqueBlocks.at(index).index);
     }
-
-    int bmp_blocks = blocks.size();
-    Q_ASSERT(blockMap.size() == BMP_END/BMP_BLOCKSIZE);
+    int bmp_blocks = uniqueBlocks.size();
 
     for (int block = BMP_END/SMP_BLOCKSIZE; block < SMP_END/SMP_BLOCKSIZE; ++block) {
-        PropertyBlock b;
+        UniqueBlock b;
+        b.values.reserve(SMP_BLOCKSIZE);
         for (int i = 0; i < SMP_BLOCKSIZE; ++i) {
             int uc = block*SMP_BLOCKSIZE + i;
-            UnicodeData d = unicodeData.value(uc, UnicodeData(uc));
-            b.properties.append(d.propertyIndex);
+            UnicodeData &d = UnicodeData::valueRef(uc);
+            b.values.append(d.propertyIndex);
         }
-        int index = blocks.indexOf(b);
+        int index = uniqueBlocks.indexOf(b);
         if (index == -1) {
-            index = blocks.size();
+            index = uniqueBlocks.size();
             b.index = used;
             used += SMP_BLOCKSIZE;
-            blocks.append(b);
+            uniqueBlocks.append(b);
         }
-        blockMap.append(blocks.at(index).index);
+        blockMap.append(uniqueBlocks.at(index).index);
     }
+    int smp_blocks = uniqueBlocks.size() - bmp_blocks;
 
-    int bmp_block_data = bmp_blocks*BMP_BLOCKSIZE*2;
-    int bmp_trie = BMP_END/BMP_BLOCKSIZE*2;
+    int bmp_block_data = bmp_blocks*BMP_BLOCKSIZE*sizeof(unsigned short);
+    int bmp_trie = BMP_END/BMP_BLOCKSIZE*sizeof(unsigned short);
     int bmp_mem = bmp_block_data + bmp_trie;
-    qDebug("    %d unique blocks in BMP.", blocks.size());
+    qDebug("    %d unique blocks in BMP.", bmp_blocks);
     qDebug("        block data uses: %d bytes", bmp_block_data);
     qDebug("        trie data uses : %d bytes", bmp_trie);
 
-    int smp_block_data = (blocks.size() - bmp_blocks)*SMP_BLOCKSIZE*2;
-    int smp_trie = (SMP_END-BMP_END)/SMP_BLOCKSIZE*2;
+    int smp_block_data = smp_blocks*SMP_BLOCKSIZE*sizeof(unsigned short);
+    int smp_trie = (SMP_END-BMP_END)/SMP_BLOCKSIZE*sizeof(unsigned short);
     int smp_mem = smp_block_data + smp_trie;
-    qDebug("    %d unique blocks in SMP.", blocks.size()-bmp_blocks);
+    qDebug("    %d unique blocks in SMP.", smp_blocks);
     qDebug("        block data uses: %d bytes", smp_block_data);
     qDebug("        trie data uses : %d bytes", smp_trie);
 
-    qDebug("\n        properties uses : %d bytes", uniqueProperties.size() * SizeOfPropertiesStruct);
-    qDebug("    memory usage: %d bytes", bmp_mem + smp_mem + uniqueProperties.size() * SizeOfPropertiesStruct);
+    int prop_data = uniqueProperties.size() * SizeOfPropertiesStruct;
+    qDebug("\n        properties data uses : %d bytes", prop_data);
+    qDebug("    memory usage: %d bytes", bmp_mem + smp_mem + prop_data);
+
+    Q_ASSERT(blockMap.last() + blockMap.size() < (1<<(sizeof(unsigned short)*8)));
 
     QByteArray out;
-    out += "static const unsigned short uc_property_trie[] = {\n";
 
+    out += "static const unsigned short uc_property_trie[] = {\n";
     // first write the map
     out += "    // 0 - 0x" + QByteArray::number(BMP_END, 16);
     for (int i = 0; i < BMP_END/BMP_BLOCKSIZE; ++i) {
@@ -2226,27 +2103,26 @@ static QByteArray createPropertyInfo()
         out.chop(1);
     out += "\n";
     // write the data
-    for (int i = 0; i < blocks.size(); ++i) {
+    for (int i = 0; i < uniqueBlocks.size(); ++i) {
         if (out.endsWith(' '))
             out.chop(1);
         out += "\n";
-        const PropertyBlock &b = blocks.at(i);
-        for (int j = 0; j < b.properties.size(); ++j) {
+        const UniqueBlock &b = uniqueBlocks.at(i);
+        for (int j = 0; j < b.values.size(); ++j) {
             if (!(j % 8)) {
                 if (out.endsWith(' '))
                     out.chop(1);
                 out += "\n    ";
             }
-            out += QByteArray::number(b.properties.at(j));
+            out += QByteArray::number(b.values.at(j));
             out += ", ";
         }
     }
-
     if (out.endsWith(' '))
         out.chop(1);
-    out += "\n};\n\n"
+    out += "\n};\n\n";
 
-           "#define GET_PROP_INDEX(ucs4) \\\n"
+    out += "#define GET_PROP_INDEX(ucs4) \\\n"
            "       (ucs4 < 0x" + QByteArray::number(BMP_END, 16) + " \\\n"
            "        ? (uc_property_trie[uc_property_trie[ucs4>>" + QByteArray::number(BMP_SHIFT) +
            "] + (ucs4 & 0x" + QByteArray::number(BMP_BLOCKSIZE-1, 16)+ ")]) \\\n"
@@ -2255,53 +2131,33 @@ static QByteArray createPropertyInfo()
            " + (ucs4 & 0x" + QByteArray::number(SMP_BLOCKSIZE-1, 16) + ")]))\n\n"
            "#define GET_PROP_INDEX_UCS2(ucs2) \\\n"
            "       (uc_property_trie[uc_property_trie[ucs2>>" + QByteArray::number(BMP_SHIFT) +
-           "] + (ucs2 & 0x" + QByteArray::number(BMP_BLOCKSIZE-1, 16)+ ")])\n\n"
+           "] + (ucs2 & 0x" + QByteArray::number(BMP_BLOCKSIZE-1, 16)+ ")])\n\n";
 
-
-           "static const Properties uc_properties[] = {";
-
+    out += "static const Properties uc_properties[] = {";
     // keep in sync with the property declaration
     for (int i = 0; i < uniqueProperties.size(); ++i) {
-        PropertyFlags p = uniqueProperties.at(i);
+        const PropertyFlags &p = uniqueProperties.at(i);
         out += "\n    { ";
-//     "        ushort category : 8;\n"
+//     "        ushort category            : 8; /* 5 used */\n"
         out += QByteArray::number( p.category );
         out += ", ";
-//     "        ushort line_break_class : 8;\n"
-        out += QByteArray::number( p.line_break_class );
-        out += ", ";
-//     "        ushort direction : 8;\n"
+//     "        ushort direction           : 8; /* 5 used */\n"
         out += QByteArray::number( p.direction );
         out += ", ";
-//     "        ushort combiningClass :8;\n"
+//     "        ushort combiningClass      : 8;\n"
         out += QByteArray::number( p.combiningClass );
         out += ", ";
-//     "        ushort joining : 2;\n"
+//     "        ushort joining             : 2;\n"
         out += QByteArray::number( p.joining );
         out += ", ";
-//     "        signed short digitValue : 6;\n /* 5 needed */"
+//     "        signed short digitValue    : 6; /* 5 used */\n"
         out += QByteArray::number( p.digitValue );
         out += ", ";
-//     "        ushort unicodeVersion : 4;\n"
-        out += QByteArray::number( p.age );
-        out += ", ";
-//     "        ushort lowerCaseSpecial : 1;\n"
-//     "        ushort upperCaseSpecial : 1;\n"
-//     "        ushort titleCaseSpecial : 1;\n"
-//     "        ushort caseFoldSpecial : 1;\n"
-        out += QByteArray::number( p.lowerCaseSpecial );
-        out += ", ";
-        out += QByteArray::number( p.upperCaseSpecial );
-        out += ", ";
-        out += QByteArray::number( p.titleCaseSpecial );
-        out += ", ";
-        out += QByteArray::number( p.caseFoldSpecial );
-        out += ", ";
-//     "        signed short mirrorDiff : 16;\n"
+//     "        signed short mirrorDiff    : 16;\n"
 //     "        signed short lowerCaseDiff : 16;\n"
 //     "        signed short upperCaseDiff : 16;\n"
 //     "        signed short titleCaseDiff : 16;\n"
-//     "        signed short caseFoldDiff : 16;\n"
+//     "        signed short caseFoldDiff  : 16;\n"
         out += QByteArray::number( p.mirrorDiff );
         out += ", ";
         out += QByteArray::number( p.lowerCaseDiff );
@@ -2312,15 +2168,40 @@ static QByteArray createPropertyInfo()
         out += ", ";
         out += QByteArray::number( p.caseFoldDiff );
         out += ", ";
-        out += QByteArray::number( p.graphemeBreak );
+//     "        ushort lowerCaseSpecial    : 1;\n"
+//     "        ushort upperCaseSpecial    : 1;\n"
+//     "        ushort titleCaseSpecial    : 1;\n"
+//     "        ushort caseFoldSpecial     : 1;\n"
+        out += QByteArray::number( p.lowerCaseSpecial );
         out += ", ";
-        out += QByteArray::number( p.wordBreak );
+        out += QByteArray::number( p.upperCaseSpecial );
         out += ", ";
-        out += QByteArray::number( p.sentenceBreak );
+        out += QByteArray::number( p.titleCaseSpecial );
+        out += ", ";
+        out += QByteArray::number( p.caseFoldSpecial );
+        out += ", ";
+//     "        ushort unicodeVersion      : 4;\n"
+        out += QByteArray::number( p.age );
+        out += ", ";
+//     "        ushort graphemeBreakClass  : 8; /* 4 used */\n"
+//     "        ushort wordBreakClass      : 8; /* 4 used */\n"
+//     "        ushort sentenceBreakClass  : 8; /* 4 used */\n"
+//     "        ushort lineBreakClass      : 8; /* 6 used */\n"
+        out += QByteArray::number( p.graphemeBreakClass );
+        out += ", ";
+        out += QByteArray::number( p.wordBreakClass );
+        out += ", ";
+        out += QByteArray::number( p.sentenceBreakClass );
+        out += ", ";
+        out += QByteArray::number( p.lineBreakClass );
+        out += ", ";
+//     "        ushort script              : 8; /* 5 used */\n"
+        out += QByteArray::number( p.script );
         out += " },";
     }
     out.chop(1);
     out += "\n};\n\n";
+
 
     out += "static inline const Properties *qGetProp(uint ucs4)\n"
            "{\n"
@@ -2344,24 +2225,29 @@ static QByteArray createPropertyInfo()
            "    return qGetProp(ucs2);\n"
            "}\n\n";
 
-    out += "Q_CORE_EXPORT GraphemeBreak QT_FASTCALL graphemeBreakClass(uint ucs4)\n"
+    out += "Q_CORE_EXPORT GraphemeBreakClass QT_FASTCALL graphemeBreakClass(uint ucs4)\n"
            "{\n"
-           "    return (GraphemeBreak)qGetProp(ucs4)->graphemeBreak;\n"
+           "    return (GraphemeBreakClass)qGetProp(ucs4)->graphemeBreakClass;\n"
            "}\n"
            "\n"
-           "Q_CORE_EXPORT WordBreak QT_FASTCALL wordBreakClass(uint ucs4)\n"
+           "Q_CORE_EXPORT WordBreakClass QT_FASTCALL wordBreakClass(uint ucs4)\n"
            "{\n"
-           "    return (WordBreak)qGetProp(ucs4)->wordBreak;\n"
+           "    return (WordBreakClass)qGetProp(ucs4)->wordBreakClass;\n"
            "}\n"
            "\n"
-           "Q_CORE_EXPORT SentenceBreak QT_FASTCALL sentenceBreakClass(uint ucs4)\n"
+           "Q_CORE_EXPORT SentenceBreakClass QT_FASTCALL sentenceBreakClass(uint ucs4)\n"
            "{\n"
-           "    return (SentenceBreak)qGetProp(ucs4)->sentenceBreak;\n"
+           "    return (SentenceBreakClass)qGetProp(ucs4)->sentenceBreakClass;\n"
            "}\n"
            "\n"
            "Q_CORE_EXPORT LineBreakClass QT_FASTCALL lineBreakClass(uint ucs4)\n"
            "{\n"
-           "    return (LineBreakClass)qGetProp(ucs4)->line_break_class;\n"
+           "    return (LineBreakClass)qGetProp(ucs4)->lineBreakClass;\n"
+           "}\n"
+           "\n"
+           "Q_CORE_EXPORT Script QT_FASTCALL script(uint ucs4)\n"
+           "{\n"
+           "    return (Script)qGetProp(ucs4)->script;\n"
            "}\n\n";
 
     return out;
@@ -2372,6 +2258,7 @@ static QByteArray createSpecialCaseMap()
     qDebug("createSpecialCaseMap:");
 
     QByteArray out;
+
     out += "static const ushort specialCaseMap[] = {\n"
            "    0x0, // placeholder";
     int i = 1;
@@ -2384,22 +2271,14 @@ static QByteArray createSpecialCaseMap()
         }
         i += n + 1;
     }
-    out += "\n};\n";
-    out += "#define SPECIAL_CASE_MAX_LEN " + QByteArray::number(specialCaseMaxLen) + "\n\n";
+    out.chop(1);
+    out += "\n};\n\n";
 
-    qDebug("Special case map uses : %d bytes", specialCaseMap.size()*2);
+    qDebug("    memory usage: %d bytes", specialCaseMap.size()*sizeof(unsigned short));
 
     return out;
 }
 
-
-struct DecompositionBlock {
-    DecompositionBlock() { index = -1; }
-    int index;
-    QList<int> decompositionPositions;
-    bool operator ==(const DecompositionBlock &other)
-    { return decompositionPositions == other.decompositionPositions; }
-};
 
 static QByteArray createCompositionInfo()
 {
@@ -2415,24 +2294,25 @@ static QByteArray createCompositionInfo()
     if (SMP_END <= highestComposedCharacter)
         qFatal("end of table smaller than highest composed character 0x%x", highestComposedCharacter);
 
-    QList<DecompositionBlock> blocks;
-    QList<int> blockMap;
-    QList<unsigned short> decompositions;
-
-    int used = 0;
+    QVector<unsigned short> decompositions;
     int tableIndex = 0;
 
+    QList<UniqueBlock> uniqueBlocks;
+    QVector<int> blockMap;
+    int used = 0;
+
     for (int block = 0; block < BMP_END/BMP_BLOCKSIZE; ++block) {
-        DecompositionBlock b;
+        UniqueBlock b;
+        b.values.reserve(BMP_BLOCKSIZE);
         for (int i = 0; i < BMP_BLOCKSIZE; ++i) {
             int uc = block*BMP_BLOCKSIZE + i;
-            UnicodeData d = unicodeData.value(uc, UnicodeData(uc));
+            UnicodeData &d = UnicodeData::valueRef(uc);
             if (!d.decomposition.isEmpty()) {
                 int utf16Length = 0;
                 decompositions.append(0);
                 for (int j = 0; j < d.decomposition.size(); ++j) {
                     int code = d.decomposition.at(j);
-                    if (code >= 0x10000) {
+                    if (QChar::requiresSurrogates(code)) {
                         // save as surrogate pair
                         decompositions.append(QChar::highSurrogate(code));
                         decompositions.append(QChar::lowSurrogate(code));
@@ -2443,36 +2323,35 @@ static QByteArray createCompositionInfo()
                     }
                 }
                 decompositions[tableIndex] = d.decompositionType + (utf16Length<<8);
-                b.decompositionPositions.append(tableIndex);
+                b.values.append(tableIndex);
                 tableIndex += utf16Length + 1;
             } else {
-                b.decompositionPositions.append(0xffff);
+                b.values.append(0xffff);
             }
         }
-        int index = blocks.indexOf(b);
+        int index = uniqueBlocks.indexOf(b);
         if (index == -1) {
-            index = blocks.size();
+            index = uniqueBlocks.size();
             b.index = used;
             used += BMP_BLOCKSIZE;
-            blocks.append(b);
+            uniqueBlocks.append(b);
         }
-        blockMap.append(blocks.at(index).index);
+        blockMap.append(uniqueBlocks.at(index).index);
     }
-
-    int bmp_blocks = blocks.size();
-    Q_ASSERT(blockMap.size() == BMP_END/BMP_BLOCKSIZE);
+    int bmp_blocks = uniqueBlocks.size();
 
     for (int block = BMP_END/SMP_BLOCKSIZE; block < SMP_END/SMP_BLOCKSIZE; ++block) {
-        DecompositionBlock b;
+        UniqueBlock b;
+        b.values.reserve(SMP_BLOCKSIZE);
         for (int i = 0; i < SMP_BLOCKSIZE; ++i) {
             int uc = block*SMP_BLOCKSIZE + i;
-            UnicodeData d = unicodeData.value(uc, UnicodeData(uc));
+            UnicodeData &d = UnicodeData::valueRef(uc);
             if (!d.decomposition.isEmpty()) {
                 int utf16Length = 0;
                 decompositions.append(0);
                 for (int j = 0; j < d.decomposition.size(); ++j) {
                     int code = d.decomposition.at(j);
-                    if (code >= 0x10000) {
+                    if (QChar::requiresSurrogates(code)) {
                         // save as surrogate pair
                         decompositions.append(QChar::highSurrogate(code));
                         decompositions.append(QChar::lowSurrogate(code));
@@ -2483,47 +2362,49 @@ static QByteArray createCompositionInfo()
                     }
                 }
                 decompositions[tableIndex] = d.decompositionType + (utf16Length<<8);
-                b.decompositionPositions.append(tableIndex);
+                b.values.append(tableIndex);
                 tableIndex += utf16Length + 1;
             } else {
-                b.decompositionPositions.append(0xffff);
+                b.values.append(0xffff);
             }
         }
-        int index = blocks.indexOf(b);
+        int index = uniqueBlocks.indexOf(b);
         if (index == -1) {
-            index = blocks.size();
+            index = uniqueBlocks.size();
             b.index = used;
             used += SMP_BLOCKSIZE;
-            blocks.append(b);
+            uniqueBlocks.append(b);
         }
-        blockMap.append(blocks.at(index).index);
+        blockMap.append(uniqueBlocks.at(index).index);
     }
+    int smp_blocks = uniqueBlocks.size() - bmp_blocks;
 
     // if the condition below doesn't hold anymore we need to modify our decomposition code
     Q_ASSERT(tableIndex < 0xffff);
 
-    int bmp_block_data = bmp_blocks*BMP_BLOCKSIZE*2;
-    int bmp_trie = BMP_END/BMP_BLOCKSIZE*2;
+    int bmp_block_data = bmp_blocks*BMP_BLOCKSIZE*sizeof(unsigned short);
+    int bmp_trie = BMP_END/BMP_BLOCKSIZE*sizeof(unsigned short);
     int bmp_mem = bmp_block_data + bmp_trie;
-    qDebug("    %d unique blocks in BMP.", blocks.size());
+    qDebug("    %d unique blocks in BMP.", bmp_blocks);
     qDebug("        block data uses: %d bytes", bmp_block_data);
     qDebug("        trie data uses : %d bytes", bmp_trie);
-    qDebug("        memory usage: %d bytes", bmp_mem);
 
-    int smp_block_data = (blocks.size() - bmp_blocks)*SMP_BLOCKSIZE*2;
-    int smp_trie = (SMP_END-BMP_END)/SMP_BLOCKSIZE*2;
+    int smp_block_data = smp_blocks*SMP_BLOCKSIZE*sizeof(unsigned short);
+    int smp_trie = (SMP_END-BMP_END)/SMP_BLOCKSIZE*sizeof(unsigned short);
     int smp_mem = smp_block_data + smp_trie;
-    qDebug("    %d unique blocks in SMP.", blocks.size()-bmp_blocks);
+    qDebug("    %d unique blocks in SMP.", smp_blocks);
     qDebug("        block data uses: %d bytes", smp_block_data);
     qDebug("        trie data uses : %d bytes", smp_trie);
 
-    qDebug("\n        decomposition table uses : %d bytes", decompositions.size()*2);
-    qDebug("    memory usage: %d bytes", bmp_mem+smp_mem + decompositions.size()*2);
+    int decomposition_data = decompositions.size() * 2;
+    qDebug("\n        decomposition data uses : %d bytes", decomposition_data);
+    qDebug("    memory usage: %d bytes", bmp_mem + smp_mem + decomposition_data);
+
+    Q_ASSERT(blockMap.last() + blockMap.size() < (1<<(sizeof(unsigned short)*8)));
 
     QByteArray out;
 
     out += "static const unsigned short uc_decomposition_trie[] = {\n";
-
     // first write the map
     out += "    // 0 - 0x" + QByteArray::number(BMP_END, 16);
     for (int i = 0; i < BMP_END/BMP_BLOCKSIZE; ++i) {
@@ -2555,26 +2436,26 @@ static QByteArray createCompositionInfo()
         out.chop(1);
     out += "\n";
     // write the data
-    for (int i = 0; i < blocks.size(); ++i) {
+    for (int i = 0; i < uniqueBlocks.size(); ++i) {
         if (out.endsWith(' '))
             out.chop(1);
         out += "\n";
-        const DecompositionBlock &b = blocks.at(i);
-        for (int j = 0; j < b.decompositionPositions.size(); ++j) {
+        const UniqueBlock &b = uniqueBlocks.at(i);
+        for (int j = 0; j < b.values.size(); ++j) {
             if (!(j % 8)) {
                 if (out.endsWith(' '))
                     out.chop(1);
                 out += "\n    ";
             }
-            out += "0x" + QByteArray::number(b.decompositionPositions.at(j), 16);
+            out += "0x" + QByteArray::number(b.values.at(j), 16);
             out += ", ";
         }
     }
     if (out.endsWith(' '))
         out.chop(2);
-    out += "\n};\n\n"
+    out += "\n};\n\n";
 
-           "#define GET_DECOMPOSITION_INDEX(ucs4) \\\n"
+    out += "#define GET_DECOMPOSITION_INDEX(ucs4) \\\n"
            "       (ucs4 < 0x" + QByteArray::number(BMP_END, 16) + " \\\n"
            "        ? (uc_decomposition_trie[uc_decomposition_trie[ucs4>>" + QByteArray::number(BMP_SHIFT) +
            "] + (ucs4 & 0x" + QByteArray::number(BMP_BLOCKSIZE-1, 16)+ ")]) \\\n"
@@ -2582,10 +2463,9 @@ static QByteArray createCompositionInfo()
            "           ? uc_decomposition_trie[uc_decomposition_trie[((ucs4 - 0x" + QByteArray::number(BMP_END, 16) +
            ")>>" + QByteArray::number(SMP_SHIFT) + ") + 0x" + QByteArray::number(BMP_END/BMP_BLOCKSIZE, 16) + "]"
            " + (ucs4 & 0x" + QByteArray::number(SMP_BLOCKSIZE-1, 16) + ")]\\\n"
-           "           : 0xffff))\n\n"
+           "           : 0xffff))\n\n";
 
-           "static const unsigned short uc_decomposition_map[] = {";
-
+    out += "static const unsigned short uc_decomposition_map[] = {";
     for (int i = 0; i < decompositions.size(); ++i) {
         if (!(i % 8)) {
             if (out.endsWith(' '))
@@ -2606,22 +2486,35 @@ static QByteArray createLigatureInfo()
 {
     qDebug("createLigatureInfo: numLigatures=%d, highestLigature=0x%x", numLigatures, highestLigature);
 
-    QList<DecompositionBlock> blocks;
-    QList<int> blockMap;
-    QList<unsigned short> ligatures;
+    for (int i = 0; i < ligatureHashes.size(); ++i) {
+        const QList<Ligature> &l = ligatureHashes.value(i);
+        for (int j = 0; j < l.size(); ++j) {
+            // if the condition below doesn't hold anymore we need to modify our ligatureHelper code
+            Q_ASSERT(QChar::requiresSurrogates(l.at(j).u2) == QChar::requiresSurrogates(l.at(j).ligature) &&
+                     QChar::requiresSurrogates(l.at(j).u2) == QChar::requiresSurrogates(l.at(j).u1));
+        }
+    }
 
     const int BMP_BLOCKSIZE = 32;
     const int BMP_SHIFT = 5;
     const int BMP_END = 0x3100;
+    const int SMP_END = 0x12000;
+    const int SMP_BLOCKSIZE = 256;
+    const int SMP_SHIFT = 8;
 
-    if (BMP_END <= highestLigature)
+    if (SMP_END <= highestLigature)
         qFatal("end of table smaller than highest ligature character 0x%x", highestLigature);
 
-    int used = 0;
+    QList<unsigned short> ligatures;
     int tableIndex = 0;
 
+    QList<UniqueBlock> uniqueBlocks;
+    QVector<int> blockMap;
+    int used = 0;
+
     for (int block = 0; block < BMP_END/BMP_BLOCKSIZE; ++block) {
-        DecompositionBlock b;
+        UniqueBlock b;
+        b.values.reserve(BMP_BLOCKSIZE);
         for (int i = 0; i < BMP_BLOCKSIZE; ++i) {
             int uc = block*BMP_BLOCKSIZE + i;
             QList<Ligature> l = ligatureHashes.value(uc);
@@ -2634,42 +2527,83 @@ static QByteArray createLigatureInfo()
                     ligatures.append(l.at(j).u1);
                     ligatures.append(l.at(j).ligature);
                 }
-                b.decompositionPositions.append(tableIndex);
+                b.values.append(tableIndex);
                 tableIndex += 2*l.size() + 1;
             } else {
-                b.decompositionPositions.append(0xffff);
+                b.values.append(0xffff);
             }
         }
-        int index = blocks.indexOf(b);
+        int index = uniqueBlocks.indexOf(b);
         if (index == -1) {
-            index = blocks.size();
+            index = uniqueBlocks.size();
             b.index = used;
             used += BMP_BLOCKSIZE;
-            blocks.append(b);
+            uniqueBlocks.append(b);
         }
-        blockMap.append(blocks.at(index).index);
+        blockMap.append(uniqueBlocks.at(index).index);
     }
+    int bmp_blocks = uniqueBlocks.size();
 
-    int bmp_blocks = blocks.size();
-    Q_ASSERT(blockMap.size() == BMP_END/BMP_BLOCKSIZE);
+    for (int block = BMP_END/SMP_BLOCKSIZE; block < SMP_END/SMP_BLOCKSIZE; ++block) {
+        UniqueBlock b;
+        b.values.reserve(SMP_BLOCKSIZE);
+        for (int i = 0; i < SMP_BLOCKSIZE; ++i) {
+            int uc = block*SMP_BLOCKSIZE + i;
+            QList<Ligature> l = ligatureHashes.value(uc);
+            if (!l.isEmpty()) {
+                Q_ASSERT(QChar::requiresSurrogates(uc));
+                qSort(l); // needed for bsearch in ligatureHelper code
+
+                ligatures.append(l.size());
+                for (int j = 0; j < l.size(); ++j) {
+                    ligatures.append(QChar::highSurrogate(l.at(j).u1));
+                    ligatures.append(QChar::lowSurrogate(l.at(j).u1));
+                    ligatures.append(QChar::highSurrogate(l.at(j).ligature));
+                    ligatures.append(QChar::lowSurrogate(l.at(j).ligature));
+                }
+                b.values.append(tableIndex);
+                tableIndex += 4*l.size() + 1;
+            } else {
+                b.values.append(0xffff);
+            }
+        }
+        int index = uniqueBlocks.indexOf(b);
+        if (index == -1) {
+            index = uniqueBlocks.size();
+            b.index = used;
+            used += SMP_BLOCKSIZE;
+            uniqueBlocks.append(b);
+        }
+        blockMap.append(uniqueBlocks.at(index).index);
+    }
+    int smp_blocks = uniqueBlocks.size() - bmp_blocks;
 
     // if the condition below doesn't hold anymore we need to modify our composition code
     Q_ASSERT(tableIndex < 0xffff);
 
-    int bmp_block_data = bmp_blocks*BMP_BLOCKSIZE*2;
-    int bmp_trie = BMP_END/BMP_BLOCKSIZE*2;
+    int bmp_block_data = bmp_blocks*BMP_BLOCKSIZE*sizeof(unsigned short);
+    int bmp_trie = BMP_END/BMP_BLOCKSIZE*sizeof(unsigned short);
     int bmp_mem = bmp_block_data + bmp_trie;
-    qDebug("    %d unique blocks in BMP.", blocks.size());
+    qDebug("    %d unique blocks in BMP.", bmp_blocks);
     qDebug("        block data uses: %d bytes", bmp_block_data);
     qDebug("        trie data uses : %d bytes", bmp_trie);
-    qDebug("        memory usage: %d bytes", bmp_mem);
-    qDebug("\n        ligature data uses : %d bytes", ligatures.size()*2);
-    qDebug("    memory usage: %d bytes", bmp_mem + ligatures.size() * 2);
+
+    int smp_block_data = smp_blocks*SMP_BLOCKSIZE*sizeof(unsigned short);
+    int smp_trie = (SMP_END-BMP_END)/SMP_BLOCKSIZE*sizeof(unsigned short);
+    int smp_mem = smp_block_data + smp_trie;
+    qDebug("    %d unique blocks in SMP.", smp_blocks);
+    qDebug("        block data uses: %d bytes", smp_block_data);
+    qDebug("        trie data uses : %d bytes", smp_trie);
+
+    int ligature_data = ligatures.size() * 2;
+    qDebug("\n        ligature data uses : %d bytes", ligature_data);
+    qDebug("    memory usage: %d bytes", bmp_mem + smp_mem + ligature_data);
+
+    Q_ASSERT(blockMap.last() + blockMap.size() < (1<<(sizeof(unsigned short)*8)));
 
     QByteArray out;
 
     out += "static const unsigned short uc_ligature_trie[] = {\n";
-
     // first write the map
     out += "    // 0 - 0x" + QByteArray::number(BMP_END, 16);
     for (int i = 0; i < BMP_END/BMP_BLOCKSIZE; ++i) {
@@ -2685,34 +2619,52 @@ static QByteArray createLigatureInfo()
     }
     if (out.endsWith(' '))
         out.chop(1);
+    out += "\n\n    // 0x" + QByteArray::number(BMP_END, 16) + " - 0x" + QByteArray::number(SMP_END, 16) + "\n";
+    for (int i = BMP_END/BMP_BLOCKSIZE; i < blockMap.size(); ++i) {
+        if (!(i % 8)) {
+            if (out.endsWith(' '))
+                out.chop(1);
+            if (!(i % (0x10000/SMP_BLOCKSIZE)))
+                out += "\n";
+            out += "\n    ";
+        }
+        out += QByteArray::number(blockMap.at(i) + blockMap.size());
+        out += ", ";
+    }
+    if (out.endsWith(' '))
+        out.chop(1);
     out += "\n";
     // write the data
-    for (int i = 0; i < blocks.size(); ++i) {
+    for (int i = 0; i < uniqueBlocks.size(); ++i) {
         if (out.endsWith(' '))
             out.chop(1);
         out += "\n";
-        const DecompositionBlock &b = blocks.at(i);
-        for (int j = 0; j < b.decompositionPositions.size(); ++j) {
+        const UniqueBlock &b = uniqueBlocks.at(i);
+        for (int j = 0; j < b.values.size(); ++j) {
             if (!(j % 8)) {
                 if (out.endsWith(' '))
                     out.chop(1);
                 out += "\n    ";
             }
-            out += "0x" + QByteArray::number(b.decompositionPositions.at(j), 16);
+            out += "0x" + QByteArray::number(b.values.at(j), 16);
             out += ", ";
         }
     }
     if (out.endsWith(' '))
         out.chop(2);
-    out += "\n};\n\n"
+    out += "\n};\n\n";
 
-           "#define GET_LIGATURE_INDEX(u2) \\\n"
-           "       (u2 < 0x" + QByteArray::number(BMP_END, 16) + " ? "
-           "uc_ligature_trie[uc_ligature_trie[u2>>" + QByteArray::number(BMP_SHIFT) +
-           "] + (u2 & 0x" + QByteArray::number(BMP_BLOCKSIZE-1, 16)+ ")] : 0xffff);\n\n"
+    out += "#define GET_LIGATURE_INDEX(ucs4) \\\n"
+           "       (ucs4 < 0x" + QByteArray::number(BMP_END, 16) + " \\\n"
+           "        ? (uc_ligature_trie[uc_ligature_trie[ucs4>>" + QByteArray::number(BMP_SHIFT) +
+           "] + (ucs4 & 0x" + QByteArray::number(BMP_BLOCKSIZE-1, 16)+ ")]) \\\n"
+           "        : (ucs4 < 0x" + QByteArray::number(SMP_END, 16) + "\\\n"
+           "           ? uc_ligature_trie[uc_ligature_trie[((ucs4 - 0x" + QByteArray::number(BMP_END, 16) +
+           ")>>" + QByteArray::number(SMP_SHIFT) + ") + 0x" + QByteArray::number(BMP_END/BMP_BLOCKSIZE, 16) + "]"
+           " + (ucs4 & 0x" + QByteArray::number(SMP_BLOCKSIZE-1, 16) + ")]\\\n"
+           "           : 0xffff))\n\n";
 
-           "static const unsigned short uc_ligature_map[] = {";
-
+    out += "static const unsigned short uc_ligature_map[] = {";
     for (int i = 0; i < ligatures.size(); ++i) {
         if (!(i % 8)) {
             if (out.endsWith(' '))
@@ -2722,7 +2674,6 @@ static QByteArray createLigatureInfo()
         out += "0x" + QByteArray::number(ligatures.at(i), 16);
         out += ", ";
     }
-
     if (out.endsWith(' '))
         out.chop(2);
     out += "\n};\n\n";
@@ -2777,45 +2728,44 @@ int main(int, char **)
     QByteArray ligatures = createLigatureInfo();
     QByteArray normalizationCorrections = createNormalizationCorrections();
     QByteArray scriptEnumDeclaration = createScriptEnumDeclaration();
-    QByteArray scriptTableDeclaration = createScriptTableDeclaration();
 
     QByteArray header =
         "/****************************************************************************\n"
         "**\n"
-        "** Copyright (C) 2015 The Qt Company Ltd.\n"
-        "** Contact: http://www.qt.io/licensing/\n"
+        "** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).\n"
+        "** Contact: http://www.qt-project.org/\n"
         "**\n"
         "** This file is part of the QtCore module of the Qt Toolkit.\n"
         "**\n"
         "** $QT_BEGIN_LICENSE:LGPL$\n"
-        "** Commercial License Usage\n"
-        "** Licensees holding valid commercial Qt licenses may use this file in\n"
-        "** accordance with the commercial license agreement provided with the\n"
-        "** Software or, alternatively, in accordance with the terms contained in\n"
-        "** a written agreement between you and The Qt Company. For licensing terms\n"
-        "** and and conditions see http://www.qt.io/terms-conditions. For further\n"
-        "** information use the contact form at http://www.qt.io/contact-us.\n"
-        "**\n"
         "** GNU Lesser General Public License Usage\n"
-        "** Alternatively, this file may be used under the terms of the GNU Lesser\n"
-        "** General Public License version 2.1 or version 3 as published by the Free\n"
-        "** Software Foundation and appearing in the file LICENSE.LGPLv21 and\n"
-        "** LICENSE.LGPLv3 included in the packaging of this file. Please review the\n"
-        "** following information to ensure the GNU Lesser General Public License\n"
-        "** requirements will be met: https://www.gnu.org/licenses/lgpl.html and\n"
+        "** This file may be used under the terms of the GNU Lesser General Public\n"
+        "** License version 2.1 as published by the Free Software Foundation and\n"
+        "** appearing in the file LICENSE.LGPL included in the packaging of this\n"
+        "** file. Please review the following information to ensure the GNU Lesser\n"
+        "** General Public License version 2.1 requirements will be met:\n"
         "** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.\n"
         "**\n"
-        "** As a special exception, The Qt Company gives you certain additional\n"
-        "** rights. These rights are described in The Qt Company LGPL Exception\n"
+        "** In addition, as a special exception, Nokia gives you certain additional\n"
+        "** rights. These rights are described in the Nokia Qt LGPL Exception\n"
         "** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.\n"
         "**\n"
         "** GNU General Public License Usage\n"
-        "** Alternatively, this file may be used under the terms of the GNU\n"
-        "** General Public License version 3.0 as published by the Free Software\n"
-        "** Foundation and appearing in the file LICENSE.GPL included in the\n"
-        "** packaging of this file.  Please review the following information to\n"
-        "** ensure the GNU General Public License version 3.0 requirements will be\n"
-        "** met: http://www.gnu.org/copyleft/gpl.html.\n"
+        "** Alternatively, this file may be used under the terms of the GNU General\n"
+        "** Public License version 3.0 as published by the Free Software Foundation\n"
+        "** and appearing in the file LICENSE.GPL included in the packaging of this\n"
+        "** file. Please review the following information to ensure the GNU General\n"
+        "** Public License version 3.0 requirements will be met:\n"
+        "** http://www.gnu.org/copyleft/gpl.html.\n"
+        "**\n"
+        "** Other Usage\n"
+        "** Alternatively, this file may be used in accordance with the terms and\n"
+        "** conditions contained in a signed written agreement between you and Nokia.\n"
+        "**\n"
+        "**\n"
+        "**\n"
+        "**\n"
+        "**\n"
         "**\n"
         "** $QT_END_LICENSE$\n"
         "**\n"
@@ -2851,8 +2801,6 @@ int main(int, char **)
     f.write(ligatures);
     f.write("\n");
     f.write(normalizationCorrections);
-    f.write("\n");
-    f.write(scriptTableDeclaration);
     f.write("} // namespace QUnicodeTables\n\n");
     f.write("using namespace QUnicodeTables;\n\n");
     f.write("QT_END_NAMESPACE\n");
@@ -2867,20 +2815,14 @@ int main(int, char **)
             "#define QUNICODETABLES_P_H\n\n"
             "#include <QtCore/qchar.h>\n\n"
             "QT_BEGIN_NAMESPACE\n\n");
-    f.write("#define UNICODE_DATA_VERSION " DATA_VERSION_STR "\n\n");
+    f.write("#define UNICODE_DATA_VERSION "DATA_VERSION_STR"\n\n");
     f.write("namespace QUnicodeTables {\n\n");
     f.write(property_string);
-    f.write("\n");
     f.write(scriptEnumDeclaration);
-    f.write("\n");
-    f.write(grapheme_break_string);
-    f.write("\n");
-    f.write(word_break_string);
-    f.write("\n");
-    f.write(sentence_break_string);
-    f.write("\n");
+    f.write(grapheme_break_class_string);
+    f.write(word_break_class_string);
+    f.write(sentence_break_class_string);
     f.write(line_break_class_string);
-    f.write("\n");
     f.write(methods);
     f.write("} // namespace QUnicodeTables\n\n"
             "QT_END_NAMESPACE\n\n"

@@ -58,7 +58,7 @@ namespace QUnicodeTools {
 // -----------------------------------------------------------------------------------------------------
 namespace GB {
 
-static const uchar breakTable[QUnicodeTables::GraphemeBreakLVT + 1][QUnicodeTables::GraphemeBreakLVT + 1] = {
+static const uchar breakTable[QUnicodeTables::GraphemeBreak_LVT + 1][QUnicodeTables::GraphemeBreak_LVT + 1] = {
 //    Other   CR     LF  Control Extend Prepend S-Mark   L     V      T      LV    LVT
     { true , true , true , true , false, true , false, true , true , true , true , true  }, // Other
     { true , true , false, true , true , true , true , true , true , true , true , true  }, // CR
@@ -79,7 +79,7 @@ static const uchar breakTable[QUnicodeTables::GraphemeBreakLVT + 1][QUnicodeTabl
 
 static void getGraphemeBreaks(const ushort *string, quint32 len, HB_CharAttributes *attributes)
 {
-    QUnicodeTables::GraphemeBreak lcls = QUnicodeTables::GraphemeBreakLF; // to meet GB1
+    QUnicodeTables::GraphemeBreakClass lcls = QUnicodeTables::GraphemeBreak_LF; // to meet GB1
     for (quint32 i = 0; i != len; ++i) {
         quint32 pos = i;
         uint ucs4 = string[i];
@@ -92,7 +92,7 @@ static void getGraphemeBreaks(const ushort *string, quint32 len, HB_CharAttribut
         }
 
         const QUnicodeTables::Properties *prop = QUnicodeTables::properties(ucs4);
-        QUnicodeTables::GraphemeBreak cls = (QUnicodeTables::GraphemeBreak) prop->graphemeBreak;
+        QUnicodeTables::GraphemeBreakClass cls = (QUnicodeTables::GraphemeBreakClass) prop->graphemeBreakClass;
 
         attributes[pos].charStop = GB::breakTable[lcls][cls];
 
@@ -109,13 +109,13 @@ enum Action {
     Lookup = 2
 };
 
-static const uchar breakTable[QUnicodeTables::WordBreakExtendNumLet + 1][QUnicodeTables::WordBreakExtendNumLet + 1] = {
-//    Other      CR       LF    Newline   Format  Katakana ALetter MidNumLet MidLetter MidNum  Numeric  ExtendNumLet
+static const uchar breakTable[QUnicodeTables::WordBreak_ExtendNumLet + 1][QUnicodeTables::WordBreak_ExtendNumLet + 1] = {
+//    Other      CR       LF    Newline   Extend  Katakana ALetter MidNumLet MidLetter MidNum  Numeric  ExtendNumLet
     { Break  , Break  , Break  , Break  , NoBreak, Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // Other
     { Break  , Break  , NoBreak, Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // CR
     { Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // LF
     { Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // Newline
-    { Break  , Break  , Break  , Break  , NoBreak, Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // Format
+    { Break  , Break  , Break  , Break  , NoBreak, Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // Extend
     { Break  , Break  , Break  , Break  , NoBreak, NoBreak, Break  , Break  , Break  , Break  , Break  , NoBreak }, // Katakana
     { Break  , Break  , Break  , Break  , NoBreak, Break  , NoBreak, Lookup , Lookup , Break  , NoBreak, NoBreak }, // ALetter
     { Break  , Break  , Break  , Break  , NoBreak, Break  , Break  , Break  , Break  , Break  , Break  , Break   }, // MidNumLet
@@ -129,7 +129,7 @@ static const uchar breakTable[QUnicodeTables::WordBreakExtendNumLet + 1][QUnicod
 
 static void getWordBreaks(const ushort *string, quint32 len, HB_CharAttributes *attributes)
 {
-    QUnicodeTables::WordBreak cls = QUnicodeTables::WordBreakLF; // to meet WB1
+    QUnicodeTables::WordBreakClass cls = QUnicodeTables::WordBreak_LF; // to meet WB1
     for (quint32 i = 0; i != len; ++i) {
         quint32 pos = i;
         uint ucs4 = string[i];
@@ -142,37 +142,35 @@ static void getWordBreaks(const ushort *string, quint32 len, HB_CharAttributes *
         }
 
         const QUnicodeTables::Properties *prop = QUnicodeTables::properties(ucs4);
-        QUnicodeTables::WordBreak ncls = (QUnicodeTables::WordBreak) prop->wordBreak;
+        QUnicodeTables::WordBreakClass ncls = (QUnicodeTables::WordBreakClass) prop->wordBreakClass;
         uchar action = WB::breakTable[cls][ncls];
-        if (ncls == QUnicodeTables::WordBreakFormat) {
-            // WB4: X(Extend|Format)* -> X
-            if (action != WB::Break)
-                continue;
-        } else {
-            if (action == WB::Lookup) {
-                action = WB::Break;
-                for (quint32 lookahead = i + 1; lookahead < len; ++lookahead) {
-                    ucs4 = string[lookahead];
-                    if (QChar::isHighSurrogate(ucs4) && lookahead + 1 != len) {
-                        ushort low = string[lookahead + 1];
-                        if (QChar::isLowSurrogate(low)) {
-                            ucs4 = QChar::surrogateToUcs4(ucs4, low);
-                            ++lookahead;
-                        }
+        if (Q_UNLIKELY(action == WB::Lookup)) {
+            action = WB::Break;
+            for (quint32 lookahead = i + 1; lookahead < len; ++lookahead) {
+                ucs4 = string[lookahead];
+                if (QChar::isHighSurrogate(ucs4) && lookahead + 1 != len) {
+                    ushort low = string[lookahead + 1];
+                    if (QChar::isLowSurrogate(low)) {
+                        ucs4 = QChar::surrogateToUcs4(ucs4, low);
+                        ++lookahead;
                     }
-
-                    prop = QUnicodeTables::properties(ucs4);
-                    QUnicodeTables::WordBreak tcls = (QUnicodeTables::WordBreak) prop->wordBreak;
-                    if (tcls == QUnicodeTables::WordBreakFormat)
-                        continue;
-                    if (tcls == cls) {
-                        i = lookahead;
-                        ncls = tcls;
-                        action = WB::NoBreak;
-                    }
-                    break;
                 }
+
+                prop = QUnicodeTables::properties(ucs4);
+                QUnicodeTables::WordBreakClass tcls = (QUnicodeTables::WordBreakClass) prop->wordBreakClass;
+                if (Q_UNLIKELY(tcls == QUnicodeTables::WordBreak_Extend))
+                    continue;
+                if (Q_LIKELY(tcls == cls)) {
+                    i = lookahead;
+                    ncls = tcls;
+                    action = WB::NoBreak;
+                }
+                break;
             }
+        } else if (Q_UNLIKELY(ncls == QUnicodeTables::WordBreak_Extend)) {
+            // WB4: X(Extend|Format)* -> X
+            if (Q_LIKELY(action != WB::Break))
+                continue;
         }
         cls = ncls;
         if (action == WB::Break)
@@ -198,8 +196,8 @@ enum State {
     Lookup
 };
 
-static const uchar breakTable[BAfter + 1][QUnicodeTables::SentenceBreakClose + 1] = {
-//     Other     CR       LF      Sep     Format     Sp      Lower   Upper    OLetter  Numeric  ATerm   SContinue STerm     Close
+static const uchar breakTable[BAfter + 1][QUnicodeTables::SentenceBreak_Close + 1] = {
+//     Other     CR       LF      Sep     Extend     Sp      Lower   Upper    OLetter  Numeric  ATerm   SContinue STerm     Close
     { Initial, BAfterC, BAfter , BAfter , Initial, Initial, Initial, Upper  , Initial, Initial, ATerm  , Initial, STerm  , Initial }, // Initial
     { Initial, BAfterC, BAfter , BAfter , Upper  , Initial, Initial, Upper  , Initial, Initial, UpATerm, STerm  , STerm  , Initial }, // Upper
 
@@ -232,11 +230,11 @@ static void getSentenceBreaks(const ushort *string, quint32 len, HB_CharAttribut
         }
 
         const QUnicodeTables::Properties *prop = QUnicodeTables::properties(ucs4);
-        QUnicodeTables::SentenceBreak ncls = (QUnicodeTables::SentenceBreak) prop->sentenceBreak;
+        QUnicodeTables::SentenceBreakClass ncls = (QUnicodeTables::SentenceBreakClass) prop->sentenceBreakClass;
 
         Q_ASSERT(state <= SB::BAfter);
         state = SB::breakTable[state][ncls];
-        if (state == SB::Lookup) { // SB8
+        if (Q_UNLIKELY(state == SB::Lookup)) { // SB8
             state = SB::Break;
             for (quint32 lookahead = i + 1; lookahead < len; ++lookahead) {
                 ucs4 = string[lookahead];
@@ -249,16 +247,16 @@ static void getSentenceBreaks(const ushort *string, quint32 len, HB_CharAttribut
                 }
 
                 prop = QUnicodeTables::properties(ucs4);
-                QUnicodeTables::SentenceBreak tcls = (QUnicodeTables::SentenceBreak) prop->sentenceBreak;
+                QUnicodeTables::SentenceBreakClass tcls = (QUnicodeTables::SentenceBreakClass) prop->sentenceBreakClass;
                 switch (tcls) {
-                case QUnicodeTables::SentenceBreakOther:
-                case QUnicodeTables::SentenceBreakFormat:
-                case QUnicodeTables::SentenceBreakSp:
-                case QUnicodeTables::SentenceBreakNumeric:
-                case QUnicodeTables::SentenceBreakSContinue:
-                case QUnicodeTables::SentenceBreakClose:
+                case QUnicodeTables::SentenceBreak_Other:
+                case QUnicodeTables::SentenceBreak_Extend:
+                case QUnicodeTables::SentenceBreak_Sp:
+                case QUnicodeTables::SentenceBreak_Numeric:
+                case QUnicodeTables::SentenceBreak_SContinue:
+                case QUnicodeTables::SentenceBreak_Close:
                     continue;
-                case QUnicodeTables::SentenceBreakLower:
+                case QUnicodeTables::SentenceBreak_Lower:
                     i = lookahead;
                     state = SB::Initial;
                     break;
@@ -268,7 +266,7 @@ static void getSentenceBreaks(const ushort *string, quint32 len, HB_CharAttribut
                 break;
             }
         }
-        if (state == SB::Break) {
+        if (Q_UNLIKELY(state == SB::Break)) {
             attributes[pos].sentenceBoundary = true;
             state = SB::breakTable[SB::Initial][ncls];
         }
@@ -283,6 +281,77 @@ static void getSentenceBreaks(const ushort *string, quint32 len, HB_CharAttribut
 
 namespace LB {
 
+namespace NS { // Number Sequence
+
+// LB25 recommends to not break lines inside numbers of the form
+// described by the following regular expression:
+//  (PR|PO)?(OP|HY)?NU(NU|SY|IS)*(CL|CP)?(PR|PO)?
+
+enum Action {
+    None,
+    Start,
+    Continue,
+    Break
+};
+
+enum Class {
+    XX,
+    PRPO,
+    OPHY,
+    NU,
+    SYIS,
+    CLCP
+};
+
+static const uchar actionTable[CLCP + 1][CLCP + 1] = {
+//     XX       PRPO      OPHY       NU       SYIS      CLCP
+    { None    , Start   , Start   , Start   , None    , None     }, // XX
+    { None    , Start   , Continue, Continue, None    , None     }, // PRPO
+    { None    , Start   , Start   , Continue, None    , None     }, // OPHY
+    { Break   , Break   , Break   , Continue, Continue, Continue }, // NU
+    { Break   , Break   , Break   , Continue, Continue, Continue }, // SYIS
+    { Break   , Continue, Break   , Break   , Break   , Break    }, // CLCP
+};
+
+inline Class toClass(QUnicodeTables::LineBreakClass lbc, QChar::Category category)
+{
+    switch (lbc) {
+    case QUnicodeTables::LineBreak_AL:// case QUnicodeTables::LineBreak_AI:
+        // resolve AI math symbols in numerical context to IS
+        if (category == QChar::Symbol_Math)
+            return SYIS;
+        break;
+    case QUnicodeTables::LineBreak_PR: case QUnicodeTables::LineBreak_PO:
+        return PRPO;
+    case QUnicodeTables::LineBreak_OP: case QUnicodeTables::LineBreak_HY:
+        return OPHY;
+    case QUnicodeTables::LineBreak_NU:
+        return NU;
+    case QUnicodeTables::LineBreak_SY: case QUnicodeTables::LineBreak_IS:
+        return SYIS;
+    case QUnicodeTables::LineBreak_CL: case QUnicodeTables::LineBreak_CP:
+        return CLCP;
+    default:
+        break;
+    }
+    return XX;
+}
+
+} // namespace NS
+
+/* In order to support the tailored implementation of LB25 properly
+   the following changes were made in the pair table to allow breaks
+   where the numeric expression doesn't match the template (i.e. [^NU](IS|SY)NU):
+   CL->PO from IB to DB
+   CP->PO from IB to DB
+   CL->PR from IB to DB
+   CP->PR from IB to DB
+   PO->OP from IB to DB
+   PR->OP from IB to DB
+   IS->NU from IB to DB
+   SY->NU from IB to DB
+*/
+
 // The following line break classes are not treated by the pair table
 // and must be resolved outside:
 //  AI, BK, CB, CJ, CR, LF, NL, SA, SG, SP, XX
@@ -295,42 +364,46 @@ enum Action {
     CombiningProhibitedBreak, CP = CombiningProhibitedBreak
 };
 
-static const uchar breakTable[QUnicodeTables::LineBreak_JT + 1][QUnicodeTables::LineBreak_JT + 1] = {
-/*         OP  CL  CP  QU  GL  NS  EX  SY  IS  PR  PO  NU  AL  HL  ID  IN  HY  BA  BB  B2  ZW  CM  WJ  H2  H3  JL  JV  JT */
-/* OP */ { PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, CP, PB, PB, PB, PB, PB, PB },
-/* CL */ { DB, PB, PB, IB, IB, PB, PB, PB, PB, IB, IB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* CP */ { DB, PB, PB, IB, IB, PB, PB, PB, PB, IB, IB, IB, IB, IB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* QU */ { PB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB },
-/* GL */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB },
-/* NS */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* EX */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* SY */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* IS */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* PR */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, IB, DB, IB, IB, DB, DB, PB, CI, PB, IB, IB, IB, IB, IB },
-/* PO */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* NU */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* AL */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* HL */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* ID */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* IN */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* HY */ { DB, PB, PB, IB, DB, IB, PB, PB, PB, DB, DB, IB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* BA */ { DB, PB, PB, IB, DB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* BB */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB },
-/* B2 */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, PB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* ZW */ { DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, PB, DB, DB, DB, DB, DB, DB, DB },
-/* CM */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB },
-/* WJ */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB },
-/* H2 */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, IB, IB },
-/* H3 */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, IB },
-/* JL */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, IB, IB, IB, IB, DB },
-/* JV */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, IB, IB },
-/* JT */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, IB }
+static const uchar breakTable[QUnicodeTables::LineBreak_CB + 1][QUnicodeTables::LineBreak_CB + 1] = {
+/*         OP  CL  CP  QU  GL  NS  EX  SY  IS  PR  PO  NU  AL  HL  ID  IN  HY  BA  BB  B2  ZW  CM  WJ  H2  H3  JL  JV  JT  CB */
+/* OP */ { PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, PB, CP, PB, PB, PB, PB, PB, PB, PB },
+/* CL */ { DB, PB, PB, IB, IB, PB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* CP */ { DB, PB, PB, IB, IB, PB, PB, PB, PB, DB, DB, IB, IB, IB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* QU */ { PB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB, IB },
+/* GL */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB, IB },
+/* NS */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* EX */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* SY */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* IS */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, IB, IB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* PR */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, IB, DB, IB, IB, DB, DB, PB, CI, PB, IB, IB, IB, IB, IB, DB },
+/* PO */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* NU */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* AL */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* HL */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* ID */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* IN */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* HY */ { DB, PB, PB, IB, DB, IB, PB, PB, PB, DB, DB, IB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* BA */ { DB, PB, PB, IB, DB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* BB */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB, DB },
+/* B2 */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, IB, IB, DB, PB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* ZW */ { DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, PB, DB, DB, DB, DB, DB, DB, DB, DB },
+/* CM */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, DB, DB, IB, IB, IB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB },
+/* WJ */ { IB, PB, PB, IB, IB, IB, PB, PB, PB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, IB, PB, CI, PB, IB, IB, IB, IB, IB, IB },
+/* H2 */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, IB, IB, DB },
+/* H3 */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, IB, DB },
+/* JL */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, IB, IB, IB, IB, DB, DB },
+/* JV */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, IB, IB, DB },
+/* JT */ { DB, PB, PB, IB, IB, IB, PB, PB, PB, DB, IB, DB, DB, DB, DB, IB, IB, IB, DB, DB, PB, CI, PB, DB, DB, DB, DB, IB, DB },
+/* CB */ { DB, PB, PB, IB, IB, DB, PB, PB, PB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, DB, PB, CI, PB, DB, DB, DB, DB, DB, DB }
 };
 
 } // namespace LB
 
 static void getLineBreaks(const ushort *string, quint32 len, HB_CharAttributes *attributes)
 {
+    quint32 nestart = 0;
+    LB::NS::Class nelast = LB::NS::XX;
+
     uint lucs4 = 0;
     QUnicodeTables::LineBreakClass lcls = QUnicodeTables::LineBreak_LF; // to meet LB10
     QUnicodeTables::LineBreakClass cls = lcls;
@@ -346,30 +419,51 @@ static void getLineBreaks(const ushort *string, quint32 len, HB_CharAttributes *
         }
 
         const QUnicodeTables::Properties *prop = QUnicodeTables::properties(ucs4);
-        QUnicodeTables::LineBreakClass ncls = (QUnicodeTables::LineBreakClass) prop->line_break_class;
+        QUnicodeTables::LineBreakClass ncls = (QUnicodeTables::LineBreakClass) prop->lineBreakClass;
 
-        if (ncls == QUnicodeTables::LineBreak_SA) {
+        if (Q_UNLIKELY(ncls == QUnicodeTables::LineBreak_SA)) {
             // LB1: resolve SA to AL, except of those that have Category Mn or Mc be resolved to CM
             static const int test = FLAG(QChar::Mark_NonSpacing) | FLAG(QChar::Mark_SpacingCombining);
             if (FLAG(prop->category) & test)
                 ncls = QUnicodeTables::LineBreak_CM;
         }
-        if (ncls == QUnicodeTables::LineBreak_CM) {
+        if (Q_UNLIKELY(ncls == QUnicodeTables::LineBreak_CM)) {
             // LB10: treat CM that follows SP, BK, CR, LF, NL, or ZW as AL
             if (lcls == QUnicodeTables::LineBreak_ZW || lcls >= QUnicodeTables::LineBreak_SP)
                 ncls = QUnicodeTables::LineBreak_AL;
         }
 
+        if (Q_LIKELY(ncls != QUnicodeTables::LineBreak_CM)) {
+            // LB25: do not break lines inside numbers
+            LB::NS::Class necur = LB::NS::toClass(ncls, (QChar::Category)prop->category);
+            switch (LB::NS::actionTable[nelast][necur]) {
+            case LB::NS::Break:
+                // do not change breaks before and after the expression
+                for (quint32 j = nestart + 1; j < pos; ++j)
+                    attributes[j].lineBreakType = HB_NoBreak;
+                // fall through
+            case LB::NS::None:
+                nelast = LB::NS::XX; // reset state
+                break;
+            case LB::NS::Start:
+                nestart = i;
+                // fall through
+            default:
+                nelast = necur;
+                break;
+            }
+        }
+
         HB_LineBreakType lineBreakType = HB_NoBreak;
 
-        if (lcls >= QUnicodeTables::LineBreak_CR) {
+        if (Q_UNLIKELY(lcls >= QUnicodeTables::LineBreak_CR)) {
             // LB4: BK!, LB5: (CRxLF|CR|LF|NL)!
             if (lcls > QUnicodeTables::LineBreak_CR || ncls != QUnicodeTables::LineBreak_LF)
                 lineBreakType = HB_ForcedBreak;
             goto next;
         }
 
-        if (ncls >= QUnicodeTables::LineBreak_SP) {
+        if (Q_UNLIKELY(ncls >= QUnicodeTables::LineBreak_SP)) {
             if (ncls > QUnicodeTables::LineBreak_SP)
                 goto next; // LB6: x(BK|CR|LF|NL)
             goto next_no_cls_update; // LB7: xSP
@@ -377,13 +471,13 @@ static void getLineBreaks(const ushort *string, quint32 len, HB_CharAttributes *
 
         // for South East Asian chars that require a complex analysis, the Unicode
         // standard recommends to treat them as AL. tailoring that do dictionary analysis can override
-        if (cls >= QUnicodeTables::LineBreak_SA)
+        if (Q_UNLIKELY(cls >= QUnicodeTables::LineBreak_SA))
             cls = QUnicodeTables::LineBreak_AL;
 
         switch (LB::breakTable[cls][ncls < QUnicodeTables::LineBreak_SA ? ncls : QUnicodeTables::LineBreak_AL]) {
         case LB::DirectBreak:
             lineBreakType = HB_Break;
-            if (lucs4 == 0x00ad) // soft hyphen
+            if (lucs4 == QChar::SoftHyphen)
                 lineBreakType = HB_SoftHyphen;
             break;
         case LB::IndirectBreak:
@@ -410,8 +504,14 @@ static void getLineBreaks(const ushort *string, quint32 len, HB_CharAttributes *
         lucs4 = ucs4;
     next_no_cls_update:
         lcls = ncls;
-        if (lineBreakType != HB_NoBreak)
+        if (Q_LIKELY(lineBreakType != HB_NoBreak))
             attributes[pos].lineBreakType = lineBreakType;
+    }
+
+    if (Q_UNLIKELY(LB::NS::actionTable[nelast][LB::NS::XX] == LB::NS::Break)) {
+        // LB25: do not break lines inside numbers
+        for (quint32 j = nestart + 1; j < len; ++j)
+            attributes[j].lineBreakType = HB_NoBreak;
     }
 
     attributes[0].lineBreakType = HB_NoBreak; // LB2
@@ -430,7 +530,7 @@ static void getWhiteSpaces(const ushort *string, quint32 len, HB_CharAttributes 
             }
         }
 
-        if (QChar::isSpace(ucs4))
+        if (Q_UNLIKELY(QChar::isSpace(ucs4)))
             attributes[i].whiteSpace = true;
     }
 }
