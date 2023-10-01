@@ -509,20 +509,34 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \fn bool QChar::isPrint() const
+
     Returns true if the character is a printable character; otherwise
     returns false. This is any character not of category Other_*.
 
     Note that this gives no indication of whether the character is
     available in a particular font.
 */
-bool QChar::isPrint() const
+
+/*!
+    \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a printable character; otherwise returns false.
+    This is any character not of category Other_*.
+    Note that this gives no indication of whether the character is
+    available in a particular font.
+*/
+bool QChar::isPrint(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Other_Control) |
                      FLAG(Other_Format) |
                      FLAG(Other_Surrogate) |
                      FLAG(Other_PrivateUse) |
                      FLAG(Other_NotAssigned);
-    return !(FLAG(qGetProp(ucs)->category) & test);
+    return !(FLAG(qGetProp(ucs4)->category) & test);
 }
 
 /*!
@@ -533,37 +547,68 @@ bool QChar::isPrint() const
 */
 
 /*!
-    \internal
+    \fn bool QChar::isSpace(uint ucs4)
     \overload
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a separator character (Separator_* categories or certain code points
+    from Other_Control category); otherwise returns false.
 */
-bool QChar::isSpace(ushort ucs2)
+
+/*!
+    \internal
+*/
+bool QT_FASTCALL QChar::isSpace_helper(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Separator_Space) |
                      FLAG(Separator_Line) |
                      FLAG(Separator_Paragraph);
-    return FLAG(qGetProp(ucs2)->category) & test;
+    return FLAG(qGetProp(ucs4)->category) & test;
 }
 
 /*!
+    \fn bool QChar::isMark() const
+
     Returns true if the character is a mark (Mark_* categories);
     otherwise returns false.
 
     See QChar::Category for more information regarding marks.
 */
-bool QChar::isMark() const
+
+/*!
+    \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a mark (Mark_* categories); otherwise returns false.
+*/
+bool QChar::isMark(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Mark_NonSpacing) |
                      FLAG(Mark_SpacingCombining) |
                      FLAG(Mark_Enclosing);
-    return FLAG(qGetProp(ucs)->category) & test;
+    return FLAG(qGetProp(ucs4)->category) & test;
 }
 
 /*!
+    \fn bool QChar::isPunct() const
+
     Returns true if the character is a punctuation mark (Punctuation_*
     categories); otherwise returns false.
 */
-bool QChar::isPunct() const
+
+/*!
+    \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a punctuation mark (Punctuation_* categories); otherwise returns false.
+*/
+bool QChar::isPunct(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Punctuation_Connector) |
                      FLAG(Punctuation_Dash) |
                      FLAG(Punctuation_Open) |
@@ -571,7 +616,30 @@ bool QChar::isPunct() const
                      FLAG(Punctuation_InitialQuote) |
                      FLAG(Punctuation_FinalQuote) |
                      FLAG(Punctuation_Other);
-    return FLAG(qGetProp(ucs)->category) & test;
+    return FLAG(qGetProp(ucs4)->category) & test;
+}
+
+/*!
+    \fn bool QChar::isSymbol() const
+    Returns true if the character is a symbol (Symbol_* categories);
+    otherwise returns false.
+*/
+
+/*!
+    \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a symbol (Symbol_* categories); otherwise returns false.
+*/
+bool QChar::isSymbol(uint ucs4)
+{
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
+    const int test = FLAG(Symbol_Math) |
+                     FLAG(Symbol_Currency) |
+                     FLAG(Symbol_Modifier) |
+                     FLAG(Symbol_Other);
+    return FLAG(qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -583,31 +651,59 @@ bool QChar::isPunct() const
 
 
 /*!
-    \internal
+    \fn bool QChar::isLetter(uint ucs4)
     \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a letter (Letter_* categories); otherwise returns false.
 */
-bool QChar::isLetter(ushort ucs2)
+
+/*!
+    \internal
+
+*/
+bool QT_FASTCALL QChar::isLetter_helper(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Letter_Uppercase) |
                      FLAG(Letter_Lowercase) |
                      FLAG(Letter_Titlecase) |
                      FLAG(Letter_Modifier) |
                      FLAG(Letter_Other);
-    return FLAG(qGetProp(ucs2)->category) & test;
+    return FLAG(qGetProp(ucs4)->category) & test;
 }
 
 /*!
+    \fn bool QChar::isNumber() const
+
     Returns true if the character is a number (Number_* categories,
     not just 0-9); otherwise returns false.
 
     \sa isDigit()
 */
-bool QChar::isNumber() const
+
+/*!
+    \fn bool QChar::isNumber(uint ucs4)
+    \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a number (Number_* categories, not just 0-9); otherwise returns false.
+
+    \sa isDigit()
+*/
+
+/*!
+    \internal
+*/
+bool QT_FASTCALL QChar::isNumber_helper(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Number_DecimalDigit) |
                      FLAG(Number_Letter) |
                      FLAG(Number_Other);
-    return FLAG(qGetProp(ucs)->category) & test;
+    return FLAG(qGetProp(ucs4)->category) & test;
 }
 
 /*!
@@ -619,11 +715,20 @@ bool QChar::isNumber() const
 
 
 /*!
-    \internal
+    \fn bool QChar::isLetterOrNumber(uint ucs4)
     \overload
+
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a letter or number (Letter_* or Number_* categories); otherwise returns false.
 */
-bool QChar::isLetterOrNumber(ushort ucs2)
+
+/*!
+    \internal
+*/
+bool QT_FASTCALL QChar::isLetterOrNumber_helper(uint ucs4)
 {
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
     const int test = FLAG(Letter_Uppercase) |
                      FLAG(Letter_Lowercase) |
                      FLAG(Letter_Titlecase) |
@@ -632,7 +737,7 @@ bool QChar::isLetterOrNumber(ushort ucs2)
                      FLAG(Number_DecimalDigit) |
                      FLAG(Number_Letter) |
                      FLAG(Number_Other);
-    return FLAG(qGetProp(ucs2)->category) & test;
+    return FLAG(qGetProp(ucs4)->category) & test;
 }
 
 
@@ -644,27 +749,14 @@ bool QChar::isLetterOrNumber(ushort ucs2)
 */
 
 /*!
-    \internal
+    \fn bool QChar::isDigit(uint ucs4)
     \overload
-*/
-bool QChar::isDigit(ushort ucs2)
-{
-    return (qGetProp(ucs2)->category == Number_DecimalDigit);
-}
 
+    Returns true if the UCS-4-encoded character specified by \a ucs4 is
+    a decimal digit (Number_DecimalDigit); otherwise returns false.
 
-/*!
-    Returns true if the character is a symbol (Symbol_* categories);
-    otherwise returns false.
+    \sa isNumber()
 */
-bool QChar::isSymbol() const
-{
-    const int test = FLAG(Symbol_Math) |
-                     FLAG(Symbol_Currency) |
-                     FLAG(Symbol_Modifier) |
-                     FLAG(Symbol_Other);
-    return FLAG(qGetProp(ucs)->category) & test;
-}
 
 /*!
     \fn bool QChar::isHighSurrogate() const
@@ -745,16 +837,6 @@ int QChar::digitValue() const
 
 /*!
     \overload
-    Returns the numeric value of the digit, specified by the UCS-2-encoded
-    character, \a ucs2, or -1 if the character is not a digit.
-*/
-int QChar::digitValue(ushort ucs2)
-{
-    return qGetProp(ucs2)->digitValue;
-}
-
-/*!
-    \overload
     Returns the numeric value of the digit specified by the UCS-4-encoded
     character, \a ucs4, or -1 if the character is not a digit.
 */
@@ -786,16 +868,6 @@ QChar::Category QChar::category(uint ucs4)
 }
 
 /*!
-    \overload
-    Returns the category of the UCS-2-encoded character specified by \a ucs2.
-*/
-QChar::Category QChar::category(ushort ucs2)
-{
-    return (QChar::Category) qGetProp(ucs2)->category;
-}
-
-
-/*!
     Returns the character's direction.
 */
 QChar::Direction QChar::direction() const
@@ -812,15 +884,6 @@ QChar::Direction QChar::direction(uint ucs4)
     if (ucs4 > UNICODE_LAST_CODEPOINT)
         return QChar::DirL;
     return (QChar::Direction) qGetProp(ucs4)->direction;
-}
-
-/*!
-    \overload
-    Returns the direction of the UCS-2-encoded character specified by \a ucs2.
-*/
-QChar::Direction QChar::direction(ushort ucs2)
-{
-    return (QChar::Direction) qGetProp(ucs2)->direction;
 }
 
 /*!
@@ -846,28 +909,29 @@ QChar::Joining QChar::joining(uint ucs4)
 }
 
 /*!
-    \overload
-    Returns information about the joining properties of the UCS-2-encoded
-    character specified by \a ucs2 (needed for certain languages such as
-    Arabic).
-*/
-QChar::Joining QChar::joining(ushort ucs2)
-{
-    return (QChar::Joining) qGetProp(ucs2)->joining;
-}
+    \fn bool QChar::hasMirrored() const
 
-
-/*!
     Returns true if the character should be reversed if the text
     direction is reversed; otherwise returns false.
 
-    Same as (ch.mirroredChar() != ch).
+    A bit faster equivalent of (ch.mirroredChar() != ch).
 
     \sa mirroredChar()
 */
-bool QChar::hasMirrored() const
+
+/*!
+    \overload
+    \since 5.0
+    Returns true if the UCS-4-encoded character specified by \a ucs4
+    should be reversed if the text direction is reversed; otherwise returns false.
+    A bit faster equivalent of (QChar::mirroredChar(ucs4) != ucs4).
+    \sa mirroredChar()
+*/
+bool QChar::hasMirrored(uint ucs4)
 {
-    return qGetProp(ucs)->mirrorDiff != 0;
+    if (ucs4 > UNICODE_LAST_CODEPOINT)
+        return false;
+    return qGetProp(ucs4)->mirrorDiff != 0;
 }
 
 /*!
@@ -923,19 +987,6 @@ uint QChar::mirroredChar(uint ucs4)
     return ucs4 + qGetProp(ucs4)->mirrorDiff;
 }
 
-/*!
-    \overload
-    Returns the mirrored character if the UCS-2-encoded character specified
-    by \a ucs2 is a mirrored character; otherwise returns the character itself.
-
-    \sa hasMirrored()
-*/
-ushort QChar::mirroredChar(ushort ucs2)
-{
-    return ucs2 + qGetProp(ucs2)->mirrorDiff;
-}
-
-
 enum {
     Hangul_SBase = 0xac00,
     Hangul_LBase = 0x1100,
@@ -980,7 +1031,7 @@ static const unsigned short * QT_FASTCALL decompositionHelper
 */
 QString QChar::decomposition() const
 {
-    return decomposition(ucs);
+    return QChar::decomposition(ucs);
 }
 
 /*!
@@ -998,13 +1049,11 @@ QString QChar::decomposition(uint ucs4)
 }
 
 /*!
+    \fn QChar::Decomposition QChar::decompositionTag() const
+
     Returns the tag defining the composition of the character. Returns
     QChar::Single if no decomposition exists.
 */
-QChar::Decomposition QChar::decompositionTag() const
-{
-    return decompositionTag(ucs);
-}
 
 /*!
     \overload
@@ -1049,16 +1098,6 @@ unsigned char QChar::combiningClass(uint ucs4)
 }
 
 /*!
-    \overload
-    Returns the combining class for the UCS-2-encoded character specified by
-    \a ucs2, as defined in the Unicode standard.
-*/
-unsigned char QChar::combiningClass(ushort ucs2)
-{
-    return (unsigned char) qGetProp(ucs2)->combiningClass;
-}
-
-/*!
     Returns the Unicode version that introduced this character.
 */
 QChar::UnicodeVersion QChar::unicodeVersion() const
@@ -1076,16 +1115,6 @@ QChar::UnicodeVersion QChar::unicodeVersion(uint ucs4)
     if (ucs4 > UNICODE_LAST_CODEPOINT)
         return QChar::Unicode_Unassigned;
     return (QChar::UnicodeVersion) qGetProp(ucs4)->unicodeVersion;
-}
-
-/*!
-    \overload
-    Returns the Unicode version that introduced the character specified in
-    its UCS-2-encoded form as \a ucs2.
-*/
-QChar::UnicodeVersion QChar::unicodeVersion(ushort ucs2)
-{
-    return (QChar::UnicodeVersion) qGetProp(ucs2)->unicodeVersion;
 }
 
 /*!
@@ -1127,20 +1156,6 @@ uint QChar::toLower(uint ucs4)
 }
 
 /*!
-    \overload
-    Returns the lowercase equivalent of the UCS-2-encoded character specified
-    by \a ucs2 if the character is uppercase or titlecase; otherwise returns
-    the character itself.
-*/
-ushort QChar::toLower(ushort ucs2)
-{
-    const QUnicodeTables::Properties *p = qGetProp(ucs2);
-    if (!p->lowerCaseSpecial)
-        return ucs2 + p->lowerCaseDiff;
-    return ucs2;
-}
-
-/*!
     Returns the uppercase equivalent if the character is lowercase or titlecase;
     otherwise returns the character itself.
 */
@@ -1166,20 +1181,6 @@ uint QChar::toUpper(uint ucs4)
     if (!p->upperCaseSpecial)
         return ucs4 + p->upperCaseDiff;
     return ucs4;
-}
-
-/*!
-    \overload
-    Returns the uppercase equivalent of the UCS-2-encoded character specified
-    by \a ucs2 if the character is lowercase or titlecase; otherwise returns
-    the character itself.
-*/
-ushort QChar::toUpper(ushort ucs2)
-{
-    const QUnicodeTables::Properties *p = qGetProp(ucs2);
-    if (!p->upperCaseSpecial)
-        return ucs2 + p->upperCaseDiff;
-    return ucs2;
 }
 
 /*!
@@ -1209,21 +1210,6 @@ uint QChar::toTitleCase(uint ucs4)
         return ucs4 + p->titleCaseDiff;
     return ucs4;
 }
-
-/*!
-    \overload
-    Returns the title case equivalent of the UCS-2-encoded character specified
-    by \a ucs2 if the character is lowercase or uppercase; otherwise returns
-    the character itself.
-*/
-ushort QChar::toTitleCase(ushort ucs2)
-{
-    const QUnicodeTables::Properties *p = qGetProp(ucs2);
-    if (!p->titleCaseSpecial)
-        return ucs2 + p->titleCaseDiff;
-    return ucs2;
-}
-
 
 static inline uint foldCase(const ushort *ch, const ushort *start)
 {
@@ -1267,17 +1253,6 @@ uint QChar::toCaseFolded(uint ucs4)
         return ucs4;
     return ucs4 + qGetProp(ucs4)->caseFoldDiff;
 }
-
-/*!
-    \overload
-    Returns the case folded equivalent of the UCS-2-encoded character specified
-    by \a ucs2. For most Unicode characters this is the same as toLowerCase().
-*/
-ushort QChar::toCaseFolded(ushort ucs2)
-{
-    return ucs2 + qGetProp(ucs2)->caseFoldDiff;
-}
-
 
 /*!
     \fn char QChar::latin1() const
