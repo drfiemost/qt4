@@ -52,6 +52,7 @@
 #include "qfontengine_p.h"
 #include "qstring.h"
 #include <private/qunicodetables_p.h>
+#include <private/qunicodetools_p.h>
 #include "qtextdocument_p.h"
 #include <qapplication.h>
 #include <stdlib.h>
@@ -1424,10 +1425,10 @@ const HB_CharAttributes *QTextEngine::attributes() const
         hbScriptItems[i].script = (HB_Script)si.analysis.script;
     }
 
-    qGetCharAttributes(reinterpret_cast<const HB_UChar16 *>(layoutData->string.constData()),
-                       layoutData->string.length(),
-                       hbScriptItems.data(), hbScriptItems.size(),
-                       (HB_CharAttributes *)layoutData->memory);
+    QUnicodeTools::initCharAttributes(reinterpret_cast<const HB_UChar16 *>(layoutData->string.constData()),
+                                      layoutData->string.length(),
+                                      hbScriptItems.data(), hbScriptItems.size(),
+                                      (HB_CharAttributes *)layoutData->memory);
 
 
     layoutData->haveCharAttributes = true;
