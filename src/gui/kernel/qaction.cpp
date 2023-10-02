@@ -281,6 +281,7 @@ void QActionPrivate::setShortcutEnabled(bool enable, QShortcutMap &map)
     MenuRole for the actions in that submenu have no effect. They will never be moved.
 */
 
+#ifndef qdoc
 /*! \since 4.6
 
     \enum QAction::SoftKeyRole
@@ -300,6 +301,7 @@ void QActionPrivate::setShortcutEnabled(bool enable, QShortcutMap &map)
     the action has focus. If no widget currently has focus, the softkey framework will traverse up the
     widget parent hierarchy looking for a widget containing softkey actions.
  */
+#endif
 
 /*!
     Constructs an action with \a parent. If \a parent is an action
@@ -1385,6 +1387,7 @@ QAction::MenuRole QAction::menuRole() const
     return d->menuRole;
 }
 
+#ifndef qdoc
 /*!
     \property QAction::softKeyRole
     \brief the action's softkey role
@@ -1411,6 +1414,7 @@ QAction::SoftKeyRole QAction::softKeyRole() const
     Q_D(const QAction);
     return d->softKeyRole;
 }
+#endif
 
 /*!
     \property QAction::iconVisibleInMenu

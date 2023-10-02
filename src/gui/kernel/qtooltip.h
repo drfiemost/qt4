@@ -54,7 +54,7 @@ QT_MODULE(Gui)
 
 class Q_GUI_EXPORT QToolTip
 {
-    QToolTip();
+    QToolTip() = delete;
 public:
     static void showText(const QPoint &pos, const QString &text, QWidget *w = 0);
     static void showText(const QPoint &pos, const QString &text, QWidget *w, const QRect &rect);
