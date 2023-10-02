@@ -359,6 +359,7 @@ public:
     inline QString &insert(int i, const QString &s) { return insert(i, s.constData(), s.length()); }
     QString &insert(int i, const QLatin1String &s);
     QString &append(QChar c);
+    QString &append(const QChar *uc, int len);
     QString &append(const QString &s);
     QString &append(const QStringRef &s);
     QString &append(const QLatin1String &s);

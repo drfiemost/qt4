@@ -79,6 +79,7 @@ public:
     inline int removeDuplicates();
 
     inline QString join(const QString &sep) const;
+    inline QString join(QChar sep) const;
 
     inline QStringList filter(const QString &str, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
     inline QBool contains(const QString &str, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
@@ -107,7 +108,7 @@ public:
 namespace QtPrivate {
     void Q_CORE_EXPORT QStringList_sort(QStringList *that);
     int Q_CORE_EXPORT QStringList_removeDuplicates(QStringList *that);
-    QString Q_CORE_EXPORT QStringList_join(const QStringList *that, const QString &sep);
+    QString Q_CORE_EXPORT QStringList_join(const QStringList *that, const QChar *sep, int seplen);
     QStringList Q_CORE_EXPORT QStringList_filter(const QStringList *that, const QString &str,
                                                Qt::CaseSensitivity cs);
 
@@ -137,7 +138,13 @@ inline int QStringList::removeDuplicates()
 
 inline QString QStringList::join(const QString &sep) const
 {
-    return QtPrivate::QStringList_join(this, sep);
+
+    return QtPrivate::QStringList_join(this, sep.constData(), sep.length());
+}
+
+inline QString QStringList::join(QChar sep) const
+{
+    return QtPrivate::QStringList_join(this, &sep, 1);
 }
 
 inline QStringList QStringList::filter(const QString &str, Qt::CaseSensitivity cs) const

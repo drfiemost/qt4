@@ -352,7 +352,7 @@ SubdirsMetaMakefileGenerator::init()
             if(!sub_proj->variables()["QMAKE_FAILED_REQUIREMENTS"].isEmpty()) {
                 fprintf(stderr, "Project file(%s) not recursed because all requirements not met:\n\t%s\n",
                         subdir.fileName().toLatin1().constData(),
-                        sub_proj->values("QMAKE_FAILED_REQUIREMENTS").join(" ").toLatin1().constData());
+                        sub_proj->values("QMAKE_FAILED_REQUIREMENTS").join(' ').toLatin1().constData());
                 delete sub;
                 delete sub_proj;
                 Option::output_dir = old_output_dir;

@@ -976,13 +976,13 @@ MakefileGenerator::writePrlFile(QTextStream &t)
         t << "QMAKE_PRL_SOURCE_DIR = " << project->first("QMAKE_ABSOLUTE_SOURCE_PATH") << endl;
     t << "QMAKE_PRL_TARGET = " << target << endl;
     if(!project->isEmpty("PRL_EXPORT_DEFINES"))
-        t << "QMAKE_PRL_DEFINES = " << project->values("PRL_EXPORT_DEFINES").join(" ") << endl;
+        t << "QMAKE_PRL_DEFINES = " << project->values("PRL_EXPORT_DEFINES").join(' ') << endl;
     if(!project->isEmpty("PRL_EXPORT_CFLAGS"))
-        t << "QMAKE_PRL_CFLAGS = " << project->values("PRL_EXPORT_CFLAGS").join(" ") << endl;
+        t << "QMAKE_PRL_CFLAGS = " << project->values("PRL_EXPORT_CFLAGS").join(' ') << endl;
     if(!project->isEmpty("PRL_EXPORT_CXXFLAGS"))
-        t << "QMAKE_PRL_CXXFLAGS = " << project->values("PRL_EXPORT_CXXFLAGS").join(" ") << endl;
+        t << "QMAKE_PRL_CXXFLAGS = " << project->values("PRL_EXPORT_CXXFLAGS").join(' ') << endl;
     if(!project->isEmpty("CONFIG"))
-        t << "QMAKE_PRL_CONFIG = " << project->values("CONFIG").join(" ") << endl;
+        t << "QMAKE_PRL_CONFIG = " << project->values("CONFIG").join(' ') << endl;
     if(!project->isEmpty("TARGET_VERSION_EXT"))
         t << "QMAKE_PRL_VERSION = " << project->first("TARGET_VERSION_EXT") << endl;
     else if(!project->isEmpty("VERSION"))
@@ -997,7 +997,7 @@ MakefileGenerator::writePrlFile(QTextStream &t)
             libs << "QMAKE_LIBS_PRIVATE";
         t << "QMAKE_PRL_LIBS = ";
         for(QStringList::Iterator it = libs.begin(); it != libs.end(); ++it)
-            t << project->values((*it)).join(" ").replace('\\', "\\\\") << " ";
+            t << project->values((*it)).join(' ').replace('\\', "\\\\") << " ";
         t << endl;
     }
 }
@@ -1251,7 +1251,7 @@ MakefileGenerator::writeInstalls(QTextStream &t, const QString &installs, bool n
             do_default = false;
             if(!target.isEmpty())
                 target += "\n\t";
-            target += tmp.join(" ");
+            target += tmp.join(' ');
         }
         //masks
         tmp = findFilesInVPATH(project->values((*it) + ".files"), VPATH_NoFixify);
@@ -1392,7 +1392,7 @@ MakefileGenerator::writeInstalls(QTextStream &t, const QString &installs, bool n
                 if(project->isEmpty("QMAKE_NOFORCE"))
                     t <<  " FORCE";
                 t << "\n\t"
-                  << uninst.join(" ") << "\n\t"
+                  << uninst.join(' ') << "\n\t"
                   << "-$(DEL_DIR) " << filePrefixRoot(root, dst) << " " << endl << endl;
             }
             t << endl;
@@ -1635,7 +1635,7 @@ MakefileGenerator::replaceExtraCompilerVariables(const QString &orig_var, const 
                     fullVal += escapeFilePath(file);
                 }
             } else {
-                fullVal = val.join(" ");
+                fullVal = val.join(' ');
             }
             ret.replace(rep, reg_var.matchedLength(), fullVal);
             rep += fullVal.length();
@@ -1725,7 +1725,7 @@ MakefileGenerator::verifyExtraCompiler(const QString &comp, const QString &file_
             }
             if(argv0 != -1) {
                 cmdline[argv0] = Option::fixPathToTargetOS(cmdline.at(argv0), false);
-                tmp_cmd = cmdline.join(" ");
+                tmp_cmd = cmdline.join(' ');
             }
         }
 
@@ -1802,7 +1802,7 @@ MakefileGenerator::writeExtraCompilerTargets(QTextStream &t)
             int argv0 = findExecutable(cmdline);
             if(argv0 != -1) {
                 cmdline[argv0] = escapeFilePath(Option::fixPathToTargetOS(cmdline.at(argv0), false));
-                tmp_cmd = cmdline.join(" ");
+                tmp_cmd = cmdline.join(' ');
             }
         }
         QStringList tmp_dep = project->values((*it) + ".depends");
@@ -1826,7 +1826,7 @@ MakefileGenerator::writeExtraCompilerTargets(QTextStream &t)
                 }
                 QFileInfo cmdFileInfo(cmdline[argv0]);
                 if (!cmdFileInfo.isAbsolute() || cmdFileInfo.exists())
-                    tmp_dep_cmd = cmdline.join(" ");
+                    tmp_dep_cmd = cmdline.join(' ');
             }
             dep_cd_cmd = QLatin1String("cd ")
                  + escapeFilePath(Option::fixPathToLocalOS(Option::output_dir, false))
@@ -1862,8 +1862,8 @@ MakefileGenerator::writeExtraCompilerTargets(QTextStream &t)
         t << endl;
 
         if(project->values((*it) + ".CONFIG").indexOf("no_clean") == -1) {
-            QString tmp_clean = project->values((*it) + ".clean").join(" ");
-            QString tmp_clean_cmds = project->values((*it) + ".clean_commands").join(" ");
+            QString tmp_clean = project->values((*it) + ".clean").join(' ');
+            QString tmp_clean_cmds = project->values((*it) + ".clean_commands").join(' ');
             if(!tmp_inputs.isEmpty())
                 clean_targets += QString("compiler_" + (*it) + "_clean ");
             t << "compiler_" << (*it) << "_clean:";
@@ -2140,7 +2140,7 @@ MakefileGenerator::writeExtraVariables(QTextStream &t)
                     t << "\n####### Custom Variables" << endl;
                     first = false;
                 }
-                t << "EXPORT_" << it.key() << " = " << it.value().join(" ") << endl;
+                t << "EXPORT_" << it.key() << " = " << it.value().join(' ') << endl;
             }
         }
     }
@@ -2706,7 +2706,7 @@ MakefileGenerator::writeMakeQmake(QTextStream &t)
     if(project->isEmpty("QMAKE_FAILED_REQUIREMENTS") && !project->isEmpty("QMAKE_INTERNAL_PRL_FILE")) {
         QStringList files = fileFixify(Option::mkfile::project_files);
         t << escapeDependencyPath(project->first("QMAKE_INTERNAL_PRL_FILE")) << ": " << "\n\t"
-          << "@$(QMAKE) -prl " << buildArgs() << " " << files.join(" ") << endl;
+          << "@$(QMAKE) -prl " << buildArgs() << " " << files.join(' ') << endl;
     }
 
     QString pfile = project->projectFile();
@@ -3200,7 +3200,7 @@ MakefileGenerator::writePkgConfigFile()
     const QStringList &pkgconfig_vars = project->values("QMAKE_PKGCONFIG_VARIABLES");
     for(int i = 0; i < pkgconfig_vars.size(); ++i) {
         QString var = project->first(pkgconfig_vars.at(i) + ".name"),
-                val = project->values(pkgconfig_vars.at(i) + ".value").join(" ");
+                val = project->values(pkgconfig_vars.at(i) + ".value").join(' ');
         if(var.isEmpty())
             continue;
         if(val.isEmpty()) {
@@ -3225,7 +3225,7 @@ MakefileGenerator::writePkgConfigFile()
         name.replace(0, 1, name[0].toUpper());
     }
     t << "Name: " << name << endl;
-    QString desc = project->values("QMAKE_PKGCONFIG_DESCRIPTION").join(" ");
+    QString desc = project->values("QMAKE_PKGCONFIG_DESCRIPTION").join(' ');
     if(desc.isEmpty()) {
         if(name.isEmpty()) {
             desc = project->first("QMAKE_ORIG_TARGET").toLower();
@@ -3278,7 +3278,7 @@ MakefileGenerator::writePkgConfigFile()
     libs << "QMAKE_LFLAGS_THREAD"; //not sure about this one, but what about things like -pthread?
     t << "Libs.private: ";
     for(QStringList::ConstIterator it = libs.begin(); it != libs.end(); ++it) {
-        t << project->values((*it)).join(" ") << " ";
+        t << project->values((*it)).join(' ') << " ";
     }
     t << endl;
 
@@ -3287,13 +3287,13 @@ MakefileGenerator::writePkgConfigFile()
     t << "Cflags: "
         // << var("QMAKE_CXXFLAGS") << " "
       << varGlue("PRL_EXPORT_DEFINES","-D"," -D"," ")
-      << project->values("PRL_EXPORT_CXXFLAGS").join(" ")
-      << project->values("QMAKE_PKGCONFIG_CFLAGS").join(" ")
+      << project->values("PRL_EXPORT_CXXFLAGS").join(' ')
+      << project->values("QMAKE_PKGCONFIG_CFLAGS").join(' ')
         //      << varGlue("DEFINES","-D"," -D"," ")
       << " -I${includedir}" << endl;
 
     // requires
-    const QString requires = project->values("QMAKE_PKGCONFIG_REQUIRES").join(" ");
+    const QString requires = project->values("QMAKE_PKGCONFIG_REQUIRES").join(' ');
     if (!requires.isEmpty()) {
         t << "Requires: " << requires << endl;
     }

@@ -1409,7 +1409,7 @@ QMakeProject::read(uchar cmd)
         parser.file = "(configs)";
         parser.from_file = false;
         parser.line_no = 1; //really arg count now.. duh
-        parse("CONFIG += " + Option::user_configs.join(" "), vars);
+        parse("CONFIG += " + Option::user_configs.join(' '), vars);
     }
 
     if(cmd & ReadProFile) { // parse project file
@@ -1440,7 +1440,7 @@ QMakeProject::read(uchar cmd)
         parser.file = "(configs)";
         parser.from_file = false;
         parser.line_no = 1; //really arg count now.. duh
-        parse("CONFIG += " + Option::after_user_configs.join(" "), vars);
+        parse("CONFIG += " + Option::after_user_configs.join(' '), vars);
     }
 
     if(pfile != "-" && vars["TARGET"].isEmpty())
@@ -1450,7 +1450,7 @@ QMakeProject::read(uchar cmd)
         parser.file = "(configs)";
         parser.from_file = false;
         parser.line_no = 1; //really arg count now.. duh
-        parse("CONFIG += " + Option::user_configs.join(" "), base_vars);
+        parse("CONFIG += " + Option::user_configs.join(' '), base_vars);
     }
 
     if(cmd & ReadFeatures) {
@@ -2415,7 +2415,7 @@ QMakeProject::doProjectTest(QString func, QList<QStringList> args_list, QMap<QSt
                     parser.line_no);
             return false;
         }
-        QString project = args.join(" ");
+        QString project = args.join(' ');
         parser_info pi = parser;
         parser.from_file = false;
         parser.file = "(eval)";
