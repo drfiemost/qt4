@@ -124,19 +124,23 @@ void QDBusMarshaller::append(const QString &arg)
 inline void QDBusMarshaller::append(const QDBusObjectPath &arg)
 {
     QByteArray data = arg.path().toUtf8();
-    if (!ba && data.isEmpty())
+    if (!ba && data.isEmpty()) {
         error(QLatin1String("Invalid object path passed in arguments"));
-    const char *cdata = data.constData();
-    qIterAppend(&iterator, ba, DBUS_TYPE_OBJECT_PATH, &cdata);
+    } else {
+        const char *cdata = data.constData();
+        qIterAppend(&iterator, ba, DBUS_TYPE_OBJECT_PATH, &cdata);
+    }
 }
 
 inline void QDBusMarshaller::append(const QDBusSignature &arg)
 {
     QByteArray data = arg.signature().toUtf8();
-    if (!ba && data.isEmpty())
+    if (!ba && data.isEmpty()) {
         error(QLatin1String("Invalid signature passed in arguments"));
-    const char *cdata = data.constData();
-    qIterAppend(&iterator, ba, DBUS_TYPE_SIGNATURE, &cdata);
+    } else {
+        const char *cdata = data.constData();
+        qIterAppend(&iterator, ba, DBUS_TYPE_SIGNATURE, &cdata);
+    }
 }
 
 inline void QDBusMarshaller::append(const QDBusUnixFileDescriptor &arg)
@@ -172,7 +176,7 @@ inline bool QDBusMarshaller::append(const QDBusVariant &arg)
     }
 
     const QVariant &value = arg.variant();
-    QVariant::Type id = QVariant::Type(value.userType());
+    int id = value.userType();
     if (id == QVariant::Invalid) {
         qWarning("QDBusMarshaller: cannot add a null QDBusVariant");
         error(QLatin1String("Variant containing QVariant::Invalid passed in arguments"));
@@ -181,7 +185,7 @@ inline bool QDBusMarshaller::append(const QDBusVariant &arg)
 
     QByteArray tmpSignature;
     const char *signature = 0;
-    if (int(id) == QDBusMetaTypeId::argument) {
+    if (id == QDBusMetaTypeId::argument) {
         // take the signature from the QDBusArgument object we're marshalling
         tmpSignature =
             qvariant_cast<QDBusArgument>(value).currentSignature().toLatin1();
@@ -193,9 +197,9 @@ inline bool QDBusMarshaller::append(const QDBusVariant &arg)
     if (!signature) {
         qWarning("QDBusMarshaller: type `%s' (%d) is not registered with D-BUS. "
                  "Use qDBusRegisterMetaType to register it",
-                 QVariant::typeToName( id ), id);
+                 QMetaType::typeName(id), id);
         error(QString::fromLatin1("Unregistered type %1 passed in arguments")
-              .arg(QLatin1String(QVariant::typeToName(id))));
+              .arg(QLatin1String(QMetaType::typeName(id))));
         return false;
     }
 

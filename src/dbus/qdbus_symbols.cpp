@@ -62,7 +62,7 @@ void qdbus_unloadLibDBus()
 
 bool qdbus_loadLibDBus()
 {
-    static volatile bool triedToLoadLibrary = false;
+    static bool triedToLoadLibrary = false;
 #ifndef QT_NO_THREAD
     QMutexLocker locker(QMutexPool::globalInstanceGet((void *)&qdbus_resolve_me));
 #endif

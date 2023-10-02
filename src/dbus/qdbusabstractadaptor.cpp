@@ -266,9 +266,9 @@ void QDBusAdaptorConnector::polish()
 
 void QDBusAdaptorConnector::relaySlot(void **argv)
 {
-    QObjectPrivate *d = static_cast<QObjectPrivate *>(d_ptr.data());
-    if (Q_LIKELY(d->currentSender)) {
-        relay(d->currentSender->sender, d->currentSender->signal, argv);
+    QObject *sndr = sender();
+    if (Q_LIKELY(sndr)) {
+        relay(sndr, senderSignalIndex(), argv);
     } else {
         qWarning("QtDBus: cannot relay signals from parent %s(%p \"%s\") unless they are emitted in the object's thread %s(%p \"%s\"). "
                  "Current thread is %s(%p \"%s\").",

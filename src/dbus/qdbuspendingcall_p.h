@@ -95,10 +95,10 @@ public:
     QDBusPendingCallWatcherHelper *watcherHelper;
     QDBusMessage replyMessage;
     DBusPendingCall *pending;
-    volatile bool waitingForFinished;
 
     QString expectedReplySignature;
     int expectedReplyCount;
+    volatile bool waitingForFinished;
     // }
 
     QDBusPendingCallPrivate(const QDBusMessage &sent, QDBusConnectionPrivate *connection)
