@@ -187,9 +187,9 @@ private:
     void fetch(const QFileInfo &info, QElapsedTimer &base, bool &firstTime, QList<QPair<QString, QFileInfo> > &updatedFiles, const QString &path);
     QString translateDriveName(const QFileInfo &drive) const;
 
-    QMutex mutex;
+    mutable QMutex mutex;
     QWaitCondition condition;
-    volatile bool abort;
+    QAtomicInt abort;
 
     QStack<QString> path;
     QStack<QStringList> files;
@@ -200,10 +200,6 @@ private:
     bool m_resolveSymlinks; // not accessed by run()
     QFileIconProvider *m_iconProvider; // not accessed by run()
     QFileIconProvider defaultProvider;
-#ifndef Q_OS_WIN
-    uint userId;
-    uint groupId;
-#endif
 };
 #endif // QT_NO_FILESYSTEMMODEL
 

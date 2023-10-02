@@ -535,6 +535,10 @@ bool QFileSystemEngine::fillMetaData(const QFileSystemEntry &entry, QFileSystemM
     }
 #endif
 
+    if (!entryExists) {
+        data.clearFlags(what);
+        return false;
+    }
     return data.hasFlags(what);
 }
 
