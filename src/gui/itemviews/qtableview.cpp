@@ -3113,12 +3113,14 @@ void QTableViewPrivate::selectRow(int row, bool anchor)
                 command |= QItemSelectionModel::Current;
         }
 
-        QModelIndex tl = model->index(qMin(rowSectionAnchor, row), 0, root);
-        QModelIndex br = model->index(qMax(rowSectionAnchor, row), model->columnCount(root) - 1, root);
-        if (verticalHeader->sectionsMoved() && tl.row() != br.row())
-            q->setSelection(q->visualRect(tl)|q->visualRect(br), command);
-        else
+        QModelIndex tl = model->index(qMin(rowSectionAnchor, row), logicalColumn(0), root);
+        QModelIndex br = model->index(qMax(rowSectionAnchor, row), logicalColumn(model->columnCount(root) - 1), root);
+        if ((verticalHeader->sectionsMoved() && tl.row() != br.row())
+            || horizontalHeader->sectionsMoved()) {
+            q->setSelection(q->visualRect(tl)|q->visualRect(br), command);        
+        } else {
             selectionModel->select(QItemSelection(tl, br), command);
+        }
     }
 }
 

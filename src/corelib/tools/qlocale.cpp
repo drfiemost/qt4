@@ -3189,7 +3189,7 @@ QString QLocale::toCurrencyString(qlonglong value, const QString &symbol) const
         size = d->m_currency_negative_format_size;
         value = -value;
     }
-    QString str = d->longLongToString(value);
+    QString str = toString(value);
     QString sym = symbol.isNull() ? currencySymbol() : symbol;
     if (sym.isEmpty())
         sym = currencySymbol(QLocale::CurrencyIsoCode);
@@ -3214,7 +3214,7 @@ QString QLocale::toCurrencyString(qulonglong value, const QString &symbol) const
     const QLocalePrivate *d = this->d();
     quint8 idx = d->m_currency_format_idx;
     quint8 size = d->m_currency_format_size;
-    QString str = d->unsLongLongToString(value);
+    QString str = toString(value);
     QString sym = symbol.isNull() ? currencySymbol() : symbol;
     if (sym.isEmpty())
         sym = currencySymbol(QLocale::CurrencyIsoCode);
@@ -3244,8 +3244,7 @@ QString QLocale::toCurrencyString(double value, const QString &symbol) const
         size = d->m_currency_negative_format_size;
         value = -value;
     }
-    QString str = d->doubleToString(value, d->m_currency_digits,
-                                    QLocalePrivate::DFDecimal);
+    QString str = toString(value, 'f', d->m_currency_digits);
     QString sym = symbol.isNull() ? currencySymbol() : symbol;
     if (sym.isEmpty())
         sym = currencySymbol(QLocale::CurrencyIsoCode);

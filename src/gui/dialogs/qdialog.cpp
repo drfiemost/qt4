@@ -516,24 +516,6 @@ int QDialog::exec()
 #endif //QT_NO_MENUBAR
 #endif //Q_WS_WINCE_WM
 
-    bool showSystemDialogFullScreen = false;
-
-#ifdef Q_OS_SYMBIAN
-    if (qobject_cast<QFileDialog *>(this) || qobject_cast<QFontDialog *>(this) ||
-        qobject_cast<QWizard *>(this)) {
-        showSystemDialogFullScreen = true;
-    }
-#endif // Q_OS_SYMBIAN
-
-#ifdef Q_OS_BLACKBERRY
-    if (!qobject_cast<QMessageBox *>(this))
-        showSystemDialogFullScreen = true;
-#endif // Q_OS_BLACKBERRY
-
-    if (showSystemDialogFullScreen) {
-        setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-        setWindowState(Qt::WindowFullScreen);
-    }
     show();
 
 #ifdef Q_WS_MAC
