@@ -66,29 +66,7 @@ LoggerWidget::LoggerWidget(QWidget *parent) :
 
     m_plainTextEdit = new QPlainTextEdit();
 
-#if defined(Q_OS_SYMBIAN)
-    QAction* clearAction = new QAction(tr("Clear"), this);
-    clearAction->setSoftKeyRole(QAction::PositiveSoftKey);
-    connect(clearAction, SIGNAL(triggered()), m_plainTextEdit, SLOT(clear()));
-    addAction(clearAction);
-
-    m_plainTextEdit->setReadOnly(true);
-    QAction* backAction = new QAction( tr("Back"), this );
-    backAction->setSoftKeyRole( QAction::NegativeSoftKey );
-    connect(backAction, SIGNAL(triggered()), this, SLOT(hide()));
-    addAction( backAction );
-#endif
-
-#ifdef Q_WS_MAEMO_5
-    new TextEditAutoResizer(m_plainTextEdit);
-    setAttribute(Qt::WA_Maemo5StackedWindow);
-    QScrollArea *area = new QScrollArea();
-    area->setWidget(m_plainTextEdit);
-    area->setWidgetResizable(true);
-    setCentralWidget(area);
-#else
     setCentralWidget(m_plainTextEdit);
-#endif
 
     m_noWarningsLabel = new QLabel(m_plainTextEdit);
     m_noWarningsLabel->setText(tr("(No warnings)"));

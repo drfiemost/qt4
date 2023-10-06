@@ -55,27 +55,15 @@
 
 #include <QtGui/private/qgraphicssystem_p.h>
 
-#ifdef Q_OS_SYMBIAN
-#include <QtGui/private/qgraphicssystemex_symbian_p.h>
-#endif
-
 QT_BEGIN_NAMESPACE
 
 class QVGGraphicsSystem : public QGraphicsSystem
-#ifdef Q_OS_SYMBIAN
-    , public QSymbianGraphicsSystemEx
-#endif
 {
 public:
     QVGGraphicsSystem();
 
     QPixmapData *createPixmapData(QPixmapData::PixelType type) const;
     QWindowSurface *createWindowSurface(QWidget *widget) const;
-
-#ifdef Q_OS_SYMBIAN
-    void releaseCachedGpuResources();
-    QGraphicsSystemEx* platformExtension();
-#endif
 };
 
 QT_END_NAMESPACE

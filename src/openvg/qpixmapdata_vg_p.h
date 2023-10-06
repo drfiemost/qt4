@@ -57,10 +57,6 @@
 #include <QtGui/private/qvolatileimage_p.h>
 #include "qvg_p.h"
 
-#if defined(Q_OS_SYMBIAN)
-class RSGImage;
-#endif
-
 QT_BEGIN_NAMESPACE
 
 class QEglContext;
@@ -137,22 +133,9 @@ public:
 
     QSize size() const { return QSize(w, h); }
 
-#if defined(Q_OS_SYMBIAN)
-    QVolatileImage toVolatileImage() const;
-    void* toNativeType(NativeType type);
-    void fromNativeType(void* pixmap, NativeType type);
-    bool initFromNativeImageHandle(void *handle, const QString &type);
-    void createFromNativeImageHandleProvider();
-    void releaseNativeImageHandle();
-#endif
-
 protected:
     int metric(QPaintDevice::PaintDeviceMetric metric) const;
     void createPixmapForImage(QImage &image, Qt::ImageConversionFlags flags, bool inPlace);
-
-#if defined(Q_OS_SYMBIAN)
-    void cleanup();
-#endif
 
 private:
     QVGPixmapData *nextLRU;
@@ -180,12 +163,6 @@ protected:
     bool inImagePool;
 #if !defined(QT_NO_EGL)
     mutable QEglContext *context;
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-    mutable QNativeImageHandleProvider *nativeImageHandleProvider;
-    void *nativeImageHandle;
-    QString nativeImageType;
 #endif
 
     void forceToImage(bool allowReadback = true);

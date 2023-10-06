@@ -72,15 +72,8 @@ void QTestFileLogger::init()
 {
     char filename[100];
     int index = 0;
-#if defined(Q_OS_SYMBIAN)
-    QByteArray ba(QDir::toNativeSeparators(QString(QDir::homePath()+QDir::separator())).toUtf8());
-    index = ba.length();
-    QTest::qt_snprintf(filename, sizeof(filename), "%s%s.log",
-                ba.constData(), QTestResult::currentTestObjectName());
-#else
     QTest::qt_snprintf(filename, sizeof(filename), "%s.log",
                 QTestResult::currentTestObjectName());
-#endif
  
      // Keep filenames simple
     for (uint i = index; i < sizeof(filename) && filename[i]; ++i) {

@@ -67,10 +67,6 @@ QVGPixmapData::QVGPixmapData(PixelType type)
     recreate = true;
     inImagePool = false;
     inLRU = false;
-#if defined(Q_OS_SYMBIAN)
-    nativeImageHandleProvider = 0;
-    nativeImageHandle = 0;
-#endif
 #if !defined(QT_NO_EGL)
     context = 0;
     qt_vg_register_pixmap(this);
@@ -103,10 +99,6 @@ void QVGPixmapData::destroyImages()
     vgImage = VG_INVALID_HANDLE;
     vgImageOpacity = VG_INVALID_HANDLE;
     inImagePool = false;
-
-#if defined(Q_OS_SYMBIAN)
-    releaseNativeImageHandle();
-#endif
 }
 
 void QVGPixmapData::destroyImageAndContext()
@@ -128,10 +120,6 @@ void QVGPixmapData::destroyImageAndContext()
         }
 #else
         destroyImages();
-#endif
-    } else {
-#if defined(Q_OS_SYMBIAN)
-        releaseNativeImageHandle();
 #endif
     }
 #if !defined(QT_NO_EGL)
@@ -357,12 +345,6 @@ VGImage QVGPixmapData::toVGImage()
     else if (recreate)
         cachedOpacity = -1.0f;  // Force opacity image to be refreshed later.
 
-#if defined(Q_OS_SYMBIAN)
-    if (recreate && nativeImageHandleProvider && !nativeImageHandle) {
-        createFromNativeImageHandleProvider();
-    }
-#endif
-
     if (vgImage == VG_INVALID_HANDLE) {
         vgImage = QVGImagePool::instance()->createImageForPixmap
             (qt_vg_image_to_vg_format(source.format()), w, h, VG_IMAGE_QUALITY_FASTER, this);
@@ -450,11 +432,6 @@ void QVGPixmapData::hibernate()
     // skip the hibernation, there is no sense in copying it back to main
     // memory because the data is most likely shared between several processes.
     bool skipHibernate = (vgImage != VG_INVALID_HANDLE && source.isNull());
-#if defined(Q_OS_SYMBIAN)
-    // However we have to proceed normally if the image was retrieved via
-    // a handle provider.
-    skipHibernate &= !nativeImageHandleProvider;
-#endif
     if (skipHibernate)
         return;
 
@@ -529,11 +506,7 @@ void QVGPixmapData::ensureReadback(bool readOnly) const
             // because it may be shared (e.g. created via SgImage) and a subsequent
             // upload of the image data may produce unexpected results.
             const_cast<QVGPixmapData *>(this)->destroyImages();
-#if defined(Q_OS_SYMBIAN)
-            // There is now an own copy of the data so drop the handle provider,
-            // otherwise toVGImage() would request the handle again, which is wrong.
-            nativeImageHandleProvider = 0;
-#endif
+
             recreate = true;
         }
     }

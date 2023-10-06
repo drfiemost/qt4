@@ -71,11 +71,6 @@ public:
     void setPrefixLength(QAbstractSocket::NetworkLayerProtocol proto, int len);
 };
 
-#ifdef Q_OS_SYMBIAN
-class TInetAddr;
-QHostAddress qt_QHostAddressFromTInetAddr(const TInetAddr& addr);
-#endif
-
 QT_END_NAMESPACE
 
 #endif

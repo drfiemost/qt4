@@ -52,7 +52,7 @@ QT_MODULE(Test)
 
 #ifdef QTEST_EMBED
 # define Q_TESTLIB_EXPORT
-#elif !defined(QT_SHARED) && !(defined(Q_OS_SYMBIAN) && defined(Q_CC_RVCT))
+#elif !defined(QT_SHARED)
 # define Q_TESTLIB_EXPORT
 #else
 # ifdef QTESTLIB_MAKEDLL

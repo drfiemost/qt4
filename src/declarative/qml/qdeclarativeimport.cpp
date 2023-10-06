@@ -52,10 +52,6 @@
 #include <private/qdeclarativetypenamecache_p.h>
 #include <private/qdeclarativeengine_p.h>
 
-#ifdef Q_OS_SYMBIAN
-#include "private/qcore_symbian_p.h"
-#endif
-
 QT_BEGIN_NAMESPACE
 
 DEFINE_BOOL_CONFIG_OPTION(qmlImportTrace, QML_IMPORT_TRACE)
@@ -377,13 +373,6 @@ bool QDeclarativeImportsPrivate::importExtension(const QString &absoluteFilePath
         foreach (const QDeclarativeDirParser::Plugin &plugin, qmldirParser->plugins()) {
 
             QString resolvedFilePath = database->resolvePlugin(dir, plugin.path, plugin.name);
-#if defined(QT_LIBINFIX) && defined(Q_OS_SYMBIAN)
-            if (resolvedFilePath.isEmpty()) {
-                // In case of libinfixed build, attempt to load libinfixed version, too.
-                QString infixedPluginName = plugin.name + QLatin1String(QT_LIBINFIX);
-                resolvedFilePath = database->resolvePlugin(dir, plugin.path, infixedPluginName);
-            }
-#endif
             if (!resolvedFilePath.isEmpty()) {
                 if (!database->importPlugin(resolvedFilePath, uri, errorString)) {
                     if (errorString)
@@ -741,44 +730,14 @@ QDeclarativeImportDatabase::QDeclarativeImportDatabase(QDeclarativeEngine *e)
 #ifndef QT_NO_SETTINGS
     QString installImportsPath =  QLibraryInfo::location(QLibraryInfo::ImportsPath);
 
-#if defined(Q_OS_SYMBIAN)
-    // Append imports path for all available drives in Symbian
-    if (installImportsPath.at(1) != QChar(QLatin1Char(':'))) {
-        QString tempPath = installImportsPath;
-        if (tempPath.at(tempPath.length() - 1) != QDir::separator()) {
-            tempPath += QDir::separator();
-        }
-        RFs& fs = qt_s60GetRFs();
-        TPtrC tempPathPtr(reinterpret_cast<const TText*> (tempPath.constData()));
-        // Symbian searches should start from Y:. Fix start drive otherwise TFindFile starts from the session drive
-        _LIT(KStartDir, "Y:");
-        TFileName dirPath(KStartDir);
-        dirPath.Append(tempPathPtr);
-        TFindFile finder(fs);
-        TInt err = finder.FindByDir(tempPathPtr, dirPath);
-        while (err == KErrNone) {
-            QString foundDir(reinterpret_cast<const QChar *>(finder.File().Ptr()),
-                             finder.File().Length());
-            foundDir = QDir(foundDir).canonicalPath();
-            addImportPath(foundDir);
-            err = finder.Find();
-        }
-        // TFindFile found the directories in the order we want, but addImportPath reverses it.
-        // Reverse the order again to get it right.
-        QAlgorithmsPrivate::qReverse(fileImportPath.begin(), fileImportPath.end());
-    } else {
-        addImportPath(installImportsPath);
-    }
-#else
     addImportPath(installImportsPath);
-#endif
 
 #endif // QT_NO_SETTINGS
 
     // env import paths
     QByteArray envImportPath = qgetenv("QML_IMPORT_PATH");
     if (!envImportPath.isEmpty()) {
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
         QLatin1Char pathSep(';');
 #else
         QLatin1Char pathSep(':');
@@ -906,11 +865,6 @@ QString QDeclarativeImportDatabase::resolvePlugin(const QDir &qmldirPath, const 
                          << QLatin1String("d.dll") // try a qmake-style debug build first
 # endif
                          << QLatin1String(".dll"));
-#elif defined(Q_OS_SYMBIAN)
-    return resolvePlugin(qmldirPath, qmldirPluginPath, baseName,
-                         QStringList()
-                         << QLatin1String(".dll")
-                         << QLatin1String(".qtplugin"));
 #else
 
 # if defined(Q_OS_DARWIN)

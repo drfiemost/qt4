@@ -83,17 +83,6 @@ public:
     QSet<glyph_t> cachedGlyphs;
 };
 
-#if defined(Q_OS_SYMBIAN)
-class QSymbianVGFontGlyphCache : public QVGFontGlyphCache
-{
-public:
-    QSymbianVGFontGlyphCache();
-    void cacheGlyphs(QVGPaintEnginePrivate *d,
-                     QFontEngine *fontEngine,
-                     const glyph_t *g, int count);
-};
-#endif
-
 #endif
 
 QT_END_NAMESPACE
