@@ -58,7 +58,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
 
 QT_BEGIN_INCLUDE_NAMESPACE
 #include "QtCore/qvector.h"
@@ -151,7 +151,7 @@ static inline QStringList qCmdLineArgs(int argc, char *argv[])
     return qWinCmdArgs(cmdLine);
 }
 #endif
-#else  // !Q_OS_WIN || !Q_OS_SYMBIAN
+#else  // !Q_OS_WIN
 
 static inline QStringList qCmdLineArgs(int argc, char *argv[])
 {
@@ -161,7 +161,7 @@ static inline QStringList qCmdLineArgs(int argc, char *argv[])
     return args;
 }
 
-#endif // Q_OS_WIN || Q_OS_SYMBIAN
+#endif // Q_OS_WIN
 
 QT_END_NAMESPACE
 

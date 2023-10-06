@@ -60,16 +60,6 @@
 #include <QtCore/private/qfilesystemmetadata_p.h>
 #include <qhash.h>
 
-#ifdef Q_OS_SYMBIAN
-#include <f32file.h>
-//This macro will be defined if the OS supports memory mapped files
-#if defined (SYMBIAN_FILE_MAPPING_SUPPORTED) && !defined (WINS)
-//simpler define to check in sources
-#define QT_SYMBIAN_USE_NATIVE_FILEMAP
-#include <f32filemap.h>
-#endif
-#endif
-
 #ifndef QT_NO_FSFILEENGINE
 
 QT_BEGIN_NAMESPACE
@@ -123,33 +113,6 @@ public:
     mutable QFileSystemMetaData metaData;
 
     FILE *fh;
-#ifdef Q_OS_SYMBIAN
-#ifdef  SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
-    RFile64 symbianFile;
-    TInt64 symbianFilePos;
-#else
-    RFile symbianFile;
-    
-    /**
-     * The cursor position in the underlying file.  This differs
-     * from devicePos because the latter is updated on calls to
-     * writeData, even if no data was physically transferred to
-     * the file, but instead stored in the write buffer.
-     * 
-     * iFilePos is updated on calls to RFile::Read and
-     * RFile::Write.  It is also updated on calls to seek() but
-     * RFile::Seek is not called when that happens because
-     * Symbian supports positioned reads and writes, saving a file
-     * server call, and because Symbian does not support seeking
-     * past the end of a file.  
-     */
-    TInt symbianFilePos;
-#endif
-#ifndef QT_SYMBIAN_USE_NATIVE_FILEMAP
-    mutable int fileHandleForMaps;
-    int getMapHandle();
-#endif
-#endif
 
 #ifdef Q_WS_WIN
     HANDLE fileHandle;
@@ -161,8 +124,6 @@ public:
 #endif
 
     mutable DWORD fileAttrib;
-#elif defined (QT_SYMBIAN_USE_NATIVE_FILEMAP)
-    QHash<uchar *, RFileMap> maps;
 #else
     QHash<uchar *, QPair<int /*offset % PageSize*/, size_t /*length + offset % PageSize*/> > maps;
 #endif

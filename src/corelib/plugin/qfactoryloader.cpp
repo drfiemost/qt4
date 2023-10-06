@@ -53,33 +53,12 @@
 #include "qlibraryinfo.h"
 #include "private/qobject_p.h"
 #include "private/qcoreapplication_p.h"
-#ifdef Q_OS_SYMBIAN
-#include "private/qcore_symbian_p.h"
-#include "private/qfilesystemwatcher_symbian_p.h"
-#endif
 
 QT_BEGIN_NAMESPACE
 
 Q_GLOBAL_STATIC(QList<QFactoryLoader *>, qt_factory_loaders)
 
 Q_GLOBAL_STATIC_WITH_ARGS(QMutex, qt_factoryloader_mutex, (QMutex::Recursive))
-
-#ifdef Q_OS_SYMBIAN
-class QSymbianSystemPluginWatcher : public QSymbianFileSystemWatcherInterface
-{
-public:
-    QSymbianSystemPluginWatcher();
-    ~QSymbianSystemPluginWatcher();
-
-    void watchForUpdates();
-    void handlePathChanged(QNotifyChangeEvent *e);
-
-    QList<QNotifyChangeEvent*> watchers;
-    TDriveList drives;
-};
-
-Q_GLOBAL_STATIC(QSymbianSystemPluginWatcher, qt_symbian_system_plugin_watcher)
-#endif
 
 class QFactoryLoaderPrivate : public QObjectPrivate
 {
@@ -120,10 +99,6 @@ QFactoryLoader::QFactoryLoader(const char *iid,
     QMutexLocker locker(qt_factoryloader_mutex());
     update();
     qt_factory_loaders()->append(this);
-#ifdef Q_OS_SYMBIAN
-    // kick off Symbian plugin watcher for updates
-    qt_symbian_system_plugin_watcher();
-#endif
 }
 
 
@@ -300,56 +275,6 @@ void QFactoryLoader::refreshAll()
         (*it)->update();
     }
 }
-
-#ifdef Q_OS_SYMBIAN
-QSymbianSystemPluginWatcher::QSymbianSystemPluginWatcher()
-{
-    qt_s60GetRFs().DriveList(drives);
-    watchForUpdates();
-}
-
-QSymbianSystemPluginWatcher::~QSymbianSystemPluginWatcher()
-{
-    qDeleteAll(watchers);
-}
-
-void QSymbianSystemPluginWatcher::watchForUpdates()
-{
-    QString installPathPlugins =  QLibraryInfo::location(QLibraryInfo::PluginsPath);
-    if (installPathPlugins.at(1) == QChar(QLatin1Char(':')))
-        return;
-
-    installPathPlugins.prepend(QLatin1String("?:"));
-    installPathPlugins = QDir::toNativeSeparators(installPathPlugins);
-    RFs& fs = qt_s60GetRFs();
-    for (int i=0; i<KMaxDrives; i++) {
-        int attr = drives[i];
-        if ((attr & KDriveAttLocal) && !(attr & KDriveAttRom)) {
-            // start new watcher
-            TChar driveLetter;
-            fs.DriveToChar(i, driveLetter);
-            installPathPlugins[0] = driveLetter;
-            TPtrC ptr(qt_QString2TPtrC(installPathPlugins));
-            QNotifyChangeEvent *event = q_check_ptr(new QNotifyChangeEvent(fs, ptr, this, true));
-            watchers.push_back(event);
-        }
-    }
-}
-
-void QSymbianSystemPluginWatcher::handlePathChanged(QNotifyChangeEvent *e)
-{
-    QCoreApplicationPrivate::rebuildInstallLibraryPaths();
-    QMutexLocker locker(qt_factoryloader_mutex());
-    QString dirName(QDir::cleanPath(qt_TDesC2QString(e->watchedPath)));
-    QList<QFactoryLoader *> *loaders = qt_factory_loaders();
-    for (QList<QFactoryLoader *>::const_iterator it = loaders->constBegin();
-         it != loaders->constEnd(); ++it) {
-        QSettings settings(QSettings::UserScope, QLatin1String("Trolltech"));
-        (*it)->updateDir(dirName, settings);
-    }
-}
-
-#endif
 
 QT_END_NAMESPACE
 

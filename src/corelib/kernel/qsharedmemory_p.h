@@ -71,9 +71,6 @@ namespace QSharedMemoryPrivate
 
 #ifdef Q_OS_WIN
 #  include <qt_windows.h>
-#elif defined(Q_OS_SYMBIAN)
-#  include <e32std.h>
-#  include <sys/types.h>
 #else
 #  include <sys/types.h>
 #endif
@@ -146,11 +143,7 @@ public:
     bool attach(QSharedMemory::AccessMode mode);
     bool detach();
 
-#ifdef Q_OS_SYMBIAN
-    void setErrorString(const QString &function, TInt errorCode);
-#else
     void setErrorString(const QString &function);
-#endif
 
 #ifndef QT_NO_SYSTEMSEMAPHORE
     inline bool tryLocker(QSharedMemoryLocker *locker, const QString &function) {
@@ -166,8 +159,6 @@ public:
 private:
 #ifdef Q_OS_WIN
     HANDLE hand;
-#elif defined(Q_OS_SYMBIAN)
-    RChunk chunk;
 #elif defined(QT_POSIX_IPC)
     int hand;
 #else

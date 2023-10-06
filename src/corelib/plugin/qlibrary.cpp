@@ -292,7 +292,7 @@ static bool qt_parse_pattern(const char *s, uint *version, bool *debug)
 }
 #endif // QT_NO_PLUGIN_CHECK
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC) && !defined(Q_OS_SYMBIAN) && !defined(QT_NO_PLUGIN_CHECK)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC) && !defined(QT_NO_PLUGIN_CHECK)
 
 static long qt_find_pattern(const char *s, ulong s_len,
                              const char *pattern, ulong p_len)
@@ -403,7 +403,7 @@ static bool qt_unix_query(const QString &library, uint *version, bool *debug, QL
     return ret;
 }
 
-#endif // Q_OS_UNIX && !Q_OS_MAC && !defined(Q_OS_SYMBIAN) && !defined(QT_NO_PLUGIN_CHECK)
+#endif // Q_OS_UNIX && !Q_OS_MAC && !defined(QT_NO_PLUGIN_CHECK)
 
 typedef QMap<QString, QLibraryPrivate*> LibraryMap;
 
@@ -514,14 +514,6 @@ bool QLibraryPrivate::loadPlugin()
         return false;
     if (load()) {
         instance = (QtPluginInstanceFunction)resolve("qt_plugin_instance");
-#if defined(Q_OS_SYMBIAN)
-        if (!instance) {
-            // If resolving with function name failed (i.e. not STDDLL),
-            // try resolving using known ordinal, which for
-            // qt_plugin_instance function is always "2".
-            instance = (QtPluginInstanceFunction)resolve("2");
-        }
-#endif
         return instance;
     }
     if (qt_debug_component())
@@ -550,10 +542,6 @@ bool QLibrary::isLibrary(const QString &fileName)
 {
 #if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
     return fileName.endsWith(QLatin1String(".dll"), Qt::CaseInsensitive);
-#elif defined(Q_OS_SYMBIAN)
-    // Plugin stubs are also considered libraries in Symbian.
-    return (fileName.endsWith(QLatin1String(".dll")) ||
-            fileName.endsWith(QLatin1String(".qtplugin")));
 #else
     QString completeSuffix = QFileInfo(fileName).completeSuffix();
     if (completeSuffix.isEmpty())
@@ -718,7 +706,7 @@ bool QLibraryPrivate::isPlugin(QSettings *settings)
         debug = bool(reg.at(1).toInt());
         success = qt_version != 0;
     } else {
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC) && !defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
         if (!pHnd) {
             // use unix shortcut to avoid loading the library
             success = qt_unix_query(fileName, &qt_version, &debug, this);
@@ -739,11 +727,7 @@ bool QLibraryPrivate::isPlugin(QSettings *settings)
                     hTempModule = ::LoadLibraryEx((wchar_t*)QDir::toNativeSeparators(fileName).utf16(), 0, dwFlags);
                     SetErrorMode(oldmode);
 #else
-#  if defined(Q_OS_SYMBIAN)
-                    //Guard against accidentally trying to load non-plugin libraries by making sure the stub exists
-                    if (fileinfo.exists())
-#  endif
-                        temporary_load =  load_sys();
+                    temporary_load =  load_sys();
 #endif
                 }
 #ifdef Q_OS_WIN
@@ -756,16 +740,7 @@ bool QLibraryPrivate::isPlugin(QSettings *settings)
                 : (QtPluginQueryVerificationDataFunction) resolve("qt_plugin_query_verification_data");
 #else
                 QtPluginQueryVerificationDataFunction qtPluginQueryVerificationDataFunction = NULL;
-#  if defined(Q_OS_SYMBIAN)
-                if (temporary_load) {
-                    qtPluginQueryVerificationDataFunction = (QtPluginQueryVerificationDataFunction) resolve("qt_plugin_query_verification_data");
-                    // If resolving with function name failed (i.e. not STDDLL), try resolving using known ordinal
-                    if (!qtPluginQueryVerificationDataFunction)
-                        qtPluginQueryVerificationDataFunction = (QtPluginQueryVerificationDataFunction) resolve("1");
-                }
-#  else
                 qtPluginQueryVerificationDataFunction = (QtPluginQueryVerificationDataFunction) resolve("qt_plugin_query_verification_data");
-#  endif
 #endif
                 bool exceptionThrown = false;
                 bool ret = qt_get_verificationdata(qtPluginQueryVerificationDataFunction,

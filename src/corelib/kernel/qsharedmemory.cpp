@@ -44,9 +44,6 @@
 #include "qsystemsemaphore.h"
 #include <qdir.h>
 #include <qcryptographichash.h>
-#ifdef Q_OS_SYMBIAN
-#include <e32const.h>
-#endif
 #include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
@@ -78,8 +75,6 @@ QSharedMemoryPrivate::makePlatformSafeKey(const QString &key,
     result.append(QLatin1String(hex));
 #ifdef Q_OS_WIN
     return result;
-#elif defined(Q_OS_SYMBIAN)
-    return result.left(KMaxKernelName);
 #elif defined(QT_POSIX_IPC)
     return QLatin1Char('/') + result;
 #else

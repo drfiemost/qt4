@@ -56,12 +56,6 @@
 #include <sys/mman.h>
 #include <stdlib.h>
 #include <limits.h>
-#if defined(Q_OS_SYMBIAN)
-# include <sys/syslimits.h>
-# include <f32file.h>
-# include <pathinfo.h>
-# include "private/qcore_symbian_p.h"
-#endif
 #include <errno.h>
 #if !defined(QWS) && defined(Q_OS_MAC)
 # include <private/qcore_mac_p.h>
@@ -69,23 +63,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_OS_SYMBIAN)
-/*!
-    \internal
-
-    Returns true if supplied path is a relative path
-*/
-static bool isRelativePathSymbian(const QString& fileName)
-{
-    return !(fileName.startsWith(QLatin1Char('/'))
-             || (fileName.length() >= 2
-             && ((fileName.at(0).isLetter() && fileName.at(1) == QLatin1Char(':'))
-             || (fileName.at(0) == QLatin1Char('/') && fileName.at(1) == QLatin1Char('/')))));
-}
-
-#endif
-
-#ifndef Q_OS_SYMBIAN
 /*!
     \internal
 
@@ -125,7 +102,6 @@ static inline QByteArray openModeToFopenMode(QIODevice::OpenMode flags, const QF
 
     return mode;
 }
-#endif
 
 /*!
     \internal
@@ -750,25 +726,8 @@ QString QFSFileEngine::tempPath()
 QFileInfoList QFSFileEngine::drives()
 {
     QFileInfoList ret;
-#if defined(Q_OS_SYMBIAN)
-    TDriveList driveList;
-    RFs rfs = qt_s60GetRFs();
-    TInt err = rfs.DriveList(driveList);
-    if (err == KErrNone) {
-        char driveName[] = "A:/";
-
-        for (char i = 0; i < KMaxDrives; i++) {
-            if (driveList[i]) {
-                driveName[0] = 'A' + i;
-                ret.append(QFileInfo(QLatin1String(driveName)));
-            }
-        }
-    } else {
-        qWarning("QFSFileEngine::drives: Getting drives failed");
-    }
-#else
     ret.append(QFileInfo(rootPath()));
-#endif
+
     return ret;
 }
 
@@ -905,11 +864,7 @@ QString QFSFileEngine::fileName(FileName file) const
 bool QFSFileEngine::isRelativePath() const
 {
     Q_D(const QFSFileEngine);
-#if defined(Q_OS_SYMBIAN)
-    return isRelativePathSymbian(d->fileEntry.filePath());
-#else
     return d->fileEntry.filePath().length() ? d->fileEntry.filePath()[0] != QLatin1Char('/') : true;
-#endif
 }
 
 uint QFSFileEngine::ownerId(FileOwner own) const
@@ -925,14 +880,8 @@ uint QFSFileEngine::ownerId(FileOwner own) const
 
 QString QFSFileEngine::owner(FileOwner own) const
 {
-#ifndef Q_OS_SYMBIAN
-    if (own == OwnerUser)
-        return QFileSystemEngine::resolveUserName(ownerId(own));
-    return QFileSystemEngine::resolveGroupName(ownerId(own));
-#else
     Q_UNUSED(own)
     return QString();
-#endif
 }
 
 bool QFSFileEngine::setPermissions(uint perms)
@@ -946,44 +895,6 @@ bool QFSFileEngine::setPermissions(uint perms)
     return true;
 }
 
-#ifdef Q_OS_SYMBIAN
-bool QFSFileEngine::setSize(qint64 size)
-{
-    Q_D(QFSFileEngine);
-    bool ret = false;
-    TInt err = KErrNone;
-    if (d->symbianFile.SubSessionHandle()) {
-        TInt err = d->symbianFile.SetSize(size);
-        ret = (err == KErrNone);
-        if (ret && d->symbianFilePos > size)
-            d->symbianFilePos = size;
-    }
-    else if (d->fd != -1)
-        ret = QT_FTRUNCATE(d->fd, size) == 0;
-    else if (d->fh)
-        ret = QT_FTRUNCATE(QT_FILENO(d->fh), size) == 0;
-    else {
-        RFile tmp;
-        QString symbianFilename(d->fileEntry.nativeFilePath());
-        err = tmp.Open(qt_s60GetRFs(), qt_QString2TPtrC(symbianFilename), EFileWrite);
-        if (err == KErrNone)
-        {
-            err = tmp.SetSize(size);
-            tmp.Close();
-        }
-        ret = (err == KErrNone);
-    }
-    if (!ret) {
-        QSystemError error;
-        if (err)
-            error = QSystemError(err, QSystemError::NativeError);
-        else
-            error = QSystemError(errno, QSystemError::StandardLibraryError);
-        setError(QFile::ResizeError, error.toString());
-    }
-    return ret;
-}
-#else
 bool QFSFileEngine::setSize(qint64 size)
 {
     Q_D(QFSFileEngine);
@@ -998,7 +909,6 @@ bool QFSFileEngine::setSize(qint64 size)
         setError(QFile::ResizeError, qt_error_string(errno));
     return ret;
 }
-#endif
 
 QDateTime QFSFileEngine::fileTime(FileTime time) const
 {
@@ -1090,20 +1000,9 @@ uchar *QFSFileEnginePrivate::map(qint64 offset, qint64 size, QFile::MemoryMapFla
     q->setError(reportedError, QSystemError(nativeMapError, QSystemError::NativeError).toString());
     return 0;
 #else
-#ifdef Q_OS_SYMBIAN
-    //older phones & emulator don't support native mapping, so need to keep the open C way around for those.
-    void *mapAddress;
-    TRAPD(err, mapAddress = QT_MMAP((void*)0, realSize,
-                   access, MAP_SHARED, getMapHandle(), realOffset));
-    if (err != KErrNone) {
-        qWarning("OpenC bug: leave from mmap %d", err);
-        mapAddress = MAP_FAILED;
-        errno = EINVAL;
-    }
-#else
     void *mapAddress = QT_MMAP((void*)0, realSize,
                    access, MAP_SHARED, nativeHandle(), realOffset);
-#endif
+
     if (MAP_FAILED != mapAddress) {
         uchar *address = extra + static_cast<uchar*>(mapAddress);
         maps[address] = QPair<int,size_t>(extra, realSize);

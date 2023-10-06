@@ -97,10 +97,6 @@ QT_END_NAMESPACE
 #include <private/qwineventnotifier_p.h>
 #endif
 
-#ifdef Q_OS_SYMBIAN
-#include <e32std.h>
-#endif
-
 #ifndef QT_NO_PROCESS
 
 QT_BEGIN_NAMESPACE
@@ -797,10 +793,6 @@ QProcessPrivate::QProcessPrivate()
 #ifdef Q_OS_UNIX
     serial = 0;
 #endif
-#ifdef Q_OS_SYMBIAN
-    symbianProcess = NULL;
-    processLaunched = false;
-#endif
 }
 
 /*! \internal
@@ -872,13 +864,6 @@ void QProcessPrivate::cleanup()
     destroyPipe(deathPipe);
 #ifdef Q_OS_UNIX
     serial = 0;
-#endif
-#ifdef Q_OS_SYMBIAN
-    if (symbianProcess) {
-        symbianProcess->Close();
-        delete symbianProcess;
-        symbianProcess = NULL;
-    }
 #endif
 }
 
@@ -1415,7 +1400,7 @@ void QProcess::setStandardOutputProcess(QProcess *destination)
     dto->stdinChannel.pipeFrom(dfrom);
 }
 
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
 
 /*!
     \since 4.7
@@ -2280,7 +2265,7 @@ QT_BEGIN_INCLUDE_NAMESPACE
 #if defined(Q_OS_MAC) && !defined(Q_OS_IOS)
 # include <crt_externs.h>
 # define environ (*_NSGetEnviron())
-#elif defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN) || (defined(Q_OS_MAC) && defined(Q_OS_IOS))
+#elif defined(Q_OS_WINCE) || (defined(Q_OS_MAC) && defined(Q_OS_IOS))
   static char *qt_empty_environ[] = { 0 };
 #define environ qt_empty_environ
 #elif !defined(Q_OS_WIN)

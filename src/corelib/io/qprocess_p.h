@@ -80,9 +80,6 @@ class QSocketNotifier;
 class QWindowsPipeWriter;
 class QWinEventNotifier;
 class QTimer;
-#if defined(Q_OS_SYMBIAN)
-class RProcess;
-#endif
 
 #ifdef Q_OS_WIN
 class QProcEnvKey : public QString
@@ -322,7 +319,7 @@ public:
 
     QString program;
     QStringList arguments;
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
     QString nativeArguments;
 #endif
     QProcessEnvironment environment;
@@ -344,7 +341,7 @@ public:
     QWinEventNotifier *processFinishedNotifier;
 
     void startProcess();
-#if defined(Q_OS_UNIX) && !defined(Q_OS_SYMBIAN) && !defined(Q_OS_QNX)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_QNX)
     void execChild(const char *workingDirectory, char **path, char **argv, char **envp);
 #elif defined(Q_OS_QNX)
     pid_t spawnChild(const char *workingDirectory, char **argv, char **envp);
@@ -386,11 +383,6 @@ public:
     void cleanup();
 #ifdef Q_OS_UNIX
     static void initializeProcessManager();
-#endif
-
-#ifdef Q_OS_SYMBIAN
-    bool processLaunched;
-    RProcess* symbianProcess;
 #endif
 };
 

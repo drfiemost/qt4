@@ -176,7 +176,7 @@ void QFileSystemEntry::resolveNativeFilePath() const
 QString QFileSystemEntry::fileName() const
 {
     findLastSeparator();
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
     if (m_lastSeparator == -1 && m_filePath.length() >= 2 && m_filePath.at(1) == QLatin1Char(':'))
         return m_filePath.mid(2);
 #endif
@@ -187,7 +187,7 @@ QString QFileSystemEntry::path() const
 {
     findLastSeparator();
     if (m_lastSeparator == -1) {
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
         if (m_filePath.length() >= 2 && m_filePath.at(1) == QLatin1Char(':'))
             return m_filePath.left(2);
 #endif
@@ -195,7 +195,7 @@ QString QFileSystemEntry::path() const
     }
     if (m_lastSeparator == 0)
         return QString(QLatin1Char('/'));
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
     if (m_lastSeparator == 2 && m_filePath.at(1) == QLatin1Char(':'))
         return m_filePath.left(m_lastSeparator + 1);
 #endif
@@ -253,7 +253,7 @@ QString QFileSystemEntry::completeSuffix() const
     return m_filePath.mid(qMax((qint16)0, m_lastSeparator) + m_firstDotInFileName + 1);
 }
 
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
 bool QFileSystemEntry::isRelative() const
 {
     resolveFilePath();
@@ -284,7 +284,7 @@ bool QFileSystemEntry::isAbsolute() const
 }
 #endif
 
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
 bool QFileSystemEntry::isDriveRoot() const
 {
     resolveFilePath();
@@ -298,7 +298,7 @@ bool QFileSystemEntry::isRoot() const
 {
     resolveFilePath();
     if (m_filePath == QLatin1String("/")
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
             || isDriveRoot()
 #if defined(Q_OS_WIN)
             || isUncRoot(m_filePath)

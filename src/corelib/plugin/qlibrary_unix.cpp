@@ -86,30 +86,17 @@ bool QLibraryPrivate::load_sys()
 #if !defined(QT_NO_DYNAMIC_LIBRARY)
     QFileSystemEntry fsEntry(fileName);
 
-#if defined(Q_OS_SYMBIAN)
-    QString path; // In Symbian, always resolve with just the filename
-    QString name;
-
-    // Replace possible ".qtplugin" suffix with ".dll"
-    if (fsEntry.suffix() == QLatin1String("qtplugin"))
-        name = fsEntry.completeBaseName() + QLatin1String(".dll");
-    else
-        name = fsEntry.fileName();
-#else
     QString path = fsEntry.path();
     QString name = fsEntry.fileName();
     if (path == QLatin1String(".") && !fileName.startsWith(path))
         path.clear();
     else
         path += QLatin1Char('/');
-#endif
 
     QStringList suffixes;
     QStringList prefixes;
     if (pluginState != IsAPlugin) {
-#if !defined(Q_OS_SYMBIAN)
         prefixes << QLatin1String("lib");
-#endif
 #if defined(Q_OS_HPUX)
         // according to
         // http://docs.hp.com/en/B2355-90968/linkerdifferencesiapa.htm
@@ -135,8 +122,6 @@ bool QLibraryPrivate::load_sys()
         } else {
             suffixes << QLatin1String(".sl");
         }
-#elif defined(Q_OS_SYMBIAN)
-        suffixes << QLatin1String(".dll");
 #else
 #ifdef Q_OS_AIX
         suffixes << ".a";
@@ -226,11 +211,6 @@ bool QLibraryPrivate::load_sys()
             pHnd = dlopen(QFile::encodeName(attempt), dlFlags);
 #endif
 
-#if defined(Q_OS_SYMBIAN)
-            // Never try again in symbian, dlopen already handles the library search logic,
-            // and there is only one possible suffix.
-            retry = false;
-#else
             if (!pHnd && fileName.startsWith(QLatin1Char('/')) && QFile::exists(attempt)) {
                 // We only want to continue if dlopen failed due to that the shared library did not exist.
                 // However, we are only able to apply this check for absolute filenames (since they are
@@ -238,7 +218,6 @@ bool QLibraryPrivate::load_sys()
                 // This is all because dlerror is flawed and cannot tell us the reason why it failed.
                 retry = false;
             }
-#endif
         }
     }
 
