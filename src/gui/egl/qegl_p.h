@@ -132,36 +132,8 @@ QT_BEGIN_NAMESPACE
 #define EGLAPIENTRY
 #endif
 
-// Try to get some info to debug the symbian build failues:
-#ifdef Q_OS_SYMBIAN
-
-#ifdef EGL_KHR_image
-#warning "EGL_KHR_image is defined"
-#else
-#warning "EGL_KHR_image is NOT defined"
-#endif
-
-#ifdef EGL_KHR_image_base
-#warning "EGL_KHR_image_base is defined"
-#else
-#warning "EGL_KHR_image_base is NOT defined"
-#endif
-
-#ifdef EGL_EGLEXT_PROTOTYPES
-#warning "EGL_EGLEXT_PROTOTYPES is defined"
-#else
-#warning "EGL_EGLEXT_PROTOTYPES NOT not defined"
-#endif
-
-#endif
-
-
 // Declare/define the bits of EGL_KHR_image_base we need:
 #if !defined(EGL_KHR_image) && !defined(EGL_KHR_image_base)
-#ifdef Q_OS_SYMBIAN
-//symbian version of eglext.h differs from the khronos reference
-typedef int EGLImageKHR;
-#else
 typedef void *EGLImageKHR;
 #endif
 

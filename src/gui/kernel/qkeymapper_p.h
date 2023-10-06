@@ -206,16 +206,6 @@ public:
     UInt32 keyboard_dead;
     KeyboardLayoutItem *keyLayout[256];
 #elif defined(Q_WS_QWS)
-#elif defined(Q_OS_SYMBIAN)
-public:
-    QString translateKeyEvent(int keySym, Qt::KeyboardModifiers modifiers);
-    int mapS60KeyToQt(TUint s60key);
-    int mapS60ScanCodesToQt(TUint s60key);
-    int mapQtToS60Key(int qtKey);
-    int mapQtToS60ScanCodes(int qtKey);
-    int mapS60RemConIdToS60Key(int s60RemConId);
-    int mapS60RemConIdToS60ScanCodes(int s60RemConId);
-    void updateInputLanguage();
 #endif
 };
 

@@ -272,24 +272,7 @@ QImage QPixmapData::toImage(const QRect &rect) const
 
 QImage* QPixmapData::buffer()
 {
-    return 0;
+    return nullptr;
 }
-
-#if defined(Q_OS_SYMBIAN)
-QVolatileImage QPixmapData::toVolatileImage() const
-{
-    return QVolatileImage();
-}
-
-void* QPixmapData::toNativeType(NativeType /* type */)
-{
-    return 0;
-}
-
-void QPixmapData::fromNativeType(void* /* pixmap */, NativeType /* typre */)
-{
-    return;
-}
-#endif
 
 QT_END_NAMESPACE

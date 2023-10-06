@@ -331,12 +331,6 @@ void QRasterWindowSurface::flush(QWidget *widget, const QRegion &rgn, const QPoi
 #endif // QT_MAC_USE_COCOA
 
 #endif // Q_WS_MAC
-
-#ifdef Q_OS_SYMBIAN
-    Q_UNUSED(widget);
-    Q_UNUSED(rgn);
-    Q_UNUSED(offset);
-#endif
 }
 
 void QRasterWindowSurface::setGeometry(const QRect &rect)

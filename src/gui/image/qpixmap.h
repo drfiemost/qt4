@@ -52,11 +52,6 @@
 
 QT_BEGIN_HEADER
 
-#if defined(Q_OS_SYMBIAN)
-class CFbsBitmap;
-class RSgImage;
-#endif
-
 QT_BEGIN_NAMESPACE
 
 QT_MODULE(Gui)
@@ -170,13 +165,6 @@ public:
 #if defined(Q_WS_MAC)
     CGImageRef toMacCGImageRef() const;
     static QPixmap fromMacCGImageRef(CGImageRef image);
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-    CFbsBitmap *toSymbianCFbsBitmap() const;
-    static QPixmap fromSymbianCFbsBitmap(CFbsBitmap *bitmap);
-    RSgImage* toSymbianRSgImage() const;
-    static QPixmap fromSymbianRSgImage(RSgImage *sgImage);
 #endif
 
     inline QPixmap copy(int x, int y, int width, int height) const;

@@ -473,7 +473,7 @@ QMatchData QCompletionEngine::filterHistory()
     for (int i = 0; i < source->rowCount(); i++) {
         QString str = source->index(i, c->column).data().toString();
         if (str.startsWith(c->prefix, c->cs)
-#if (!defined(Q_OS_WIN) || defined(Q_OS_WINCE)) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_OS_WIN) || defined(Q_OS_WINCE)
             && ((!isFsModel && !isDirModel) || QDir::toNativeSeparators(str) != QDir::separator())
 #endif
             )
@@ -1015,7 +1015,7 @@ void QCompleter::setModel(QAbstractItemModel *model)
         delete oldModel;
 #ifndef QT_NO_DIRMODEL
     if (qobject_cast<QDirModel *>(model)) {
-#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
         setCaseSensitivity(Qt::CaseInsensitive);
 #else
         setCaseSensitivity(Qt::CaseSensitive);
@@ -1025,7 +1025,7 @@ void QCompleter::setModel(QAbstractItemModel *model)
 #ifndef QT_NO_FILESYSTEMMODEL
     QFileSystemModel *fsModel = qobject_cast<QFileSystemModel *>(model);
     if (fsModel) {
-#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
         setCaseSensitivity(Qt::CaseInsensitive);
 #else
         setCaseSensitivity(Qt::CaseSensitive);
@@ -1708,7 +1708,7 @@ QString QCompleter::pathFromIndex(const QModelIndex& index) const
         idx = parent.sibling(parent.row(), index.column());
     } while (idx.isValid());
 
-#if (!defined(Q_OS_WIN) || defined(Q_OS_WINCE)) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_OS_WIN) || defined(Q_OS_WINCE)
     if (list.count() == 1) // only the separator or some other text
         return list[0];
     list[0].clear() ; // the join below will provide the separator
@@ -1749,10 +1749,7 @@ QStringList QCompleter::splitPath(const QString& path) const
 
     QString pathCopy = QDir::toNativeSeparators(path);
     QString sep = QDir::separator();
-#if defined(Q_OS_SYMBIAN)
-    if (pathCopy == QLatin1String("\\"))
-        return QStringList(pathCopy);
-#elif defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
     if (pathCopy == QLatin1String("\\") || pathCopy == QLatin1String("\\\\"))
         return QStringList(pathCopy);
     QString doubleSlash(QLatin1String("\\\\"));
@@ -1765,9 +1762,7 @@ QStringList QCompleter::splitPath(const QString& path) const
     QRegExp re(QLatin1Char('[') + QRegExp::escape(sep) + QLatin1Char(']'));
     QStringList parts = pathCopy.split(re);
 
-#if defined(Q_OS_SYMBIAN)
-    // Do nothing
-#elif defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
     if (!doubleSlash.isEmpty())
         parts[0].prepend(doubleSlash);
 #else

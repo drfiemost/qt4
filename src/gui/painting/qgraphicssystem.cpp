@@ -53,12 +53,7 @@
 #ifdef Q_WS_QPA
 # include <QtGui/private/qapplication_p.h>
 #endif
-#ifdef Q_OS_SYMBIAN
-# include <private/qpixmap_raster_symbian_p.h>
-# include <private/qgraphicssystemex_symbian_p.h>
-#else
 # include <private/qgraphicssystemex_p.h>
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -79,12 +74,10 @@ QPixmapData *QGraphicsSystem::createDefaultPixmapData(QPixmapData::PixelType typ
     return new QMacPixmapData(type);
 #elif defined(Q_WS_QPA)
     return QApplicationPrivate::platformIntegration()->createPixmapData(type);
-#elif defined(Q_OS_SYMBIAN)
-    return new QSymbianRasterPixmapData(type);    
 #elif !defined(Q_WS_QWS)
 #error QGraphicsSystem::createDefaultPixmapData() not implemented
 #endif
-    return 0;
+    return nullptr;
 }
 
 QPixmapData *QGraphicsSystem::createPixmapData(QPixmapData *origin)
@@ -92,18 +85,9 @@ QPixmapData *QGraphicsSystem::createPixmapData(QPixmapData *origin)
     return createPixmapData(origin->pixelType());
 }
 
-#ifdef Q_OS_SYMBIAN
-Q_GLOBAL_STATIC(QSymbianGraphicsSystemEx, symbianPlatformExtension)
-#endif
-
 QGraphicsSystemEx* QGraphicsSystem::platformExtension()
 {
-#ifdef Q_OS_SYMBIAN
-    // this is used on raster graphics systems. HW accelerated
-    // graphics systems will overwrite this function.
-    return symbianPlatformExtension();
-#endif
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

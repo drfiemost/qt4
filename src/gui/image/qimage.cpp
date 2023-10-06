@@ -62,11 +62,7 @@
 
 #include <qhash.h>
 
-#if defined(Q_OS_SYMBIAN)
-#include <private/qpaintengine_raster_symbian_p.h>
-#else
 #include <private/qpaintengine_raster_p.h>
-#endif
 
 #include <private/qimage_p.h>
 #include <private/qfont_p.h>
@@ -5171,14 +5167,10 @@ void QImage::setText(const char* key, const char* lang, const QString& s)
 QPaintEngine *QImage::paintEngine() const
 {
     if (!d)
-        return 0;
+        return nullptr;
 
     if (!d->paintEngine) {
-#ifdef Q_OS_SYMBIAN
-        d->paintEngine = new QSymbianRasterPaintEngine(const_cast<QImage *>(this));
-#else
         d->paintEngine = new QRasterPaintEngine(const_cast<QImage *>(this));
-#endif
     }
 
     return d->paintEngine;

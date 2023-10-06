@@ -151,7 +151,7 @@ private:
     static void createDatabase();
     static void parseFontName(const QString &name, QString &foundry, QString &family);
     static QString resolveFontFamilyAlias(const QString &family);
-#if defined(Q_WS_QWS) || defined(Q_WS_QPA) || defined(Q_OS_SYMBIAN)
+#if defined(Q_WS_QWS) || defined(Q_WS_QPA)
     static QFontEngine *findFont(int script, const QFontPrivate *fp, const QFontDef &request);
 #endif
     static void load(const QFontPrivate *d, int script);

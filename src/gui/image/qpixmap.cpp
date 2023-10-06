@@ -81,10 +81,6 @@
 # include <private/qpixmap_x11_p.h>
 #endif
 
-#if defined(Q_OS_SYMBIAN)
-# include <private/qt_s60_p.h>
-#endif
-
 #include "qpixmap_raster_p.h"
 #include "private/qstylehelper_p.h"
 
@@ -1800,8 +1796,6 @@ int QPixmap::defaultDepth()
     return 32; // XXX
 #elif defined(Q_WS_MAC)
     return 32;
-#elif defined(Q_OS_SYMBIAN)
-    return S60->screenDepth;
 #elif defined(Q_WS_QPA)
     return 32; //LITE: use graphicssystem (we should do that in general)
 #endif

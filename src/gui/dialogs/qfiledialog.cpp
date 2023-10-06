@@ -59,7 +59,7 @@
 #include <qapplication.h>
 #include <qstylepainter.h>
 #include <private/qfileiconprovider_p.h>
-#if !defined(Q_WS_WINCE) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_WS_WINCE)
 #include "ui_qfiledialog.h"
 #else
 #define Q_EMBEDDED_SMALLSCREEN
@@ -3424,10 +3424,7 @@ QStringList QFSCompleter::splitPath(const QString &path) const
 
     QString pathCopy = QDir::toNativeSeparators(path);
     QString sep = QDir::separator();
-#if defined(Q_OS_SYMBIAN)
-    if (pathCopy == QLatin1String("\\"))
-        return QStringList(pathCopy);
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     if (pathCopy == QLatin1String("\\") || pathCopy == QLatin1String("\\\\"))
         return QStringList(pathCopy);
     QString doubleSlash(QLatin1String("\\\\"));
@@ -3450,11 +3447,7 @@ QStringList QFSCompleter::splitPath(const QString &path) const
 
     QRegExp re(QLatin1Char('[') + QRegExp::escape(sep) + QLatin1Char(']'));
 
-#if defined(Q_OS_SYMBIAN)
-    QStringList parts = pathCopy.split(re, QString::SkipEmptyParts);
-    if (pathCopy.endsWith(sep))
-        parts.append(QString());
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     QStringList parts = pathCopy.split(re, QString::SkipEmptyParts);
     if (!doubleSlash.isEmpty() && !parts.isEmpty())
         parts[0].prepend(doubleSlash);
@@ -3466,7 +3459,7 @@ QStringList QFSCompleter::splitPath(const QString &path) const
         parts[0] = sep[0];
 #endif
 
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
     bool startsFromRoot = !parts.isEmpty() && parts[0].endsWith(QLatin1Char(':'));
 #else
     bool startsFromRoot = pathCopy[0] == sep[0];
@@ -3478,7 +3471,7 @@ QStringList QFSCompleter::splitPath(const QString &path) const
         else
             dirModel = sourceModel;
         QString currentLocation = QDir::toNativeSeparators(dirModel->rootPath());
-#if defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WIN)
         if (currentLocation.endsWith(QLatin1Char(':')))
             currentLocation.append(sep);
 #endif

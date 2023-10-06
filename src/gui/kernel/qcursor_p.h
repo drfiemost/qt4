@@ -64,8 +64,6 @@
 #  include "private/qt_x11_p.h"
 # elif defined(Q_WS_WIN)
 #  include "QtCore/qt_windows.h"
-# elif defined(Q_OS_SYMBIAN)
-#  include "private/qt_s60_p.h"
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -114,13 +112,6 @@ public:
     } curs;
     void initCursorFromBitmap();
     void initCursorFromPixmap();
-#elif defined Q_OS_SYMBIAN
-    void loadShapeFromResource(RWsSpriteBase& target, QString resource, int hx, int hy, int interval=0);
-    void constructShapeSprite(RWsSpriteBase& target);
-    void constructCursorSprite(RWsSpriteBase& target);
-    RWsPointerCursor pcurs;
-    RWsSprite scurs;
-    RPointerArray<TSpriteMember> nativeSpriteMembers;
 #endif
     static bool initialized;
     void update();

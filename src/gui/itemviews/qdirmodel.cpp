@@ -853,7 +853,7 @@ QModelIndex QDirModel::index(const QString &path, int column) const
         return QModelIndex();
 
     QString absolutePath = QDir(path).absolutePath();
-#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
+#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE))
     absolutePath = absolutePath.toLower();
 #endif
 #if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
@@ -898,7 +898,7 @@ QModelIndex QDirModel::index(const QString &path, int column) const
             emit const_cast<QDirModel*>(this)->layoutChanged();
     } else 
 #endif
-#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
+#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE))
     if (pathElements.at(0).endsWith(QLatin1Char(':'))) {
         pathElements[0] += QLatin1Char('/');
     }
@@ -922,7 +922,7 @@ QModelIndex QDirModel::index(const QString &path, int column) const
             const QFileInfo& fi = parent->children.at(j).info;
             QString childFileName;
             childFileName = idx.isValid() ? fi.fileName() : fi.absoluteFilePath();
-#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
+#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE))
             childFileName = childFileName.toLower();
 #endif
             if (childFileName == element) {
@@ -1294,7 +1294,7 @@ QString QDirModelPrivate::name(const QModelIndex &index) const
         if (name.startsWith(QLatin1Char('/'))) // UNC host
             return info.fileName();
 #endif        
-#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
+#if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE))
         if (name.endsWith(QLatin1Char('/')))
             name.chop(1);
 #endif

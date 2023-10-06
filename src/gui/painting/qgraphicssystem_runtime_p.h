@@ -97,11 +97,6 @@ public:
 
     QPixmapData *m_data;
 
-#if defined(Q_OS_SYMBIAN)
-    void* toNativeType(NativeType type);
-    void fromNativeType(void* pixmap, NativeType type);
-#endif
-
     virtual QPixmapData *runtimeData() const;
 
 private:

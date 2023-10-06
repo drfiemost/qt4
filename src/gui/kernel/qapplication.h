@@ -57,10 +57,6 @@
 
 QT_BEGIN_HEADER
 
-#if defined(Q_OS_SYMBIAN)
-class CApaApplication;
-#endif
-
 QT_BEGIN_NAMESPACE
 
 QT_MODULE(Gui)
@@ -79,9 +75,6 @@ class QLocale;
 class QDecoration;
 #elif defined(Q_WS_QPA)
 class QPlatformNativeInterface;
-#endif
-#if defined(Q_OS_SYMBIAN)
-class QSymbianEvent;
 #endif
 
 class QApplication;
@@ -118,10 +111,6 @@ class Q_GUI_EXPORT QApplication : public QCoreApplication
 public:
     enum Type { Tty, GuiClient, GuiServer };
 
-#ifdef Q_OS_SYMBIAN
-    typedef CApaApplication * (*QS60MainApplicationFactory)();
-#endif
-
 #ifndef qdoc
     QApplication(int &argc, char **argv, int = ApplicationFlags);
     QApplication(int &argc, char **argv, bool GUIenabled, int = ApplicationFlags);
@@ -129,9 +118,6 @@ public:
 #if defined(Q_WS_X11)
     QApplication(Display* dpy, Qt::HANDLE visual = 0, Qt::HANDLE cmap = 0, int = ApplicationFlags);
     QApplication(Display *dpy, int &argc, char **argv, Qt::HANDLE visual = 0, Qt::HANDLE cmap= 0, int = ApplicationFlags);
-#endif
-#if defined(Q_OS_SYMBIAN)
-    QApplication(QApplication::QS60MainApplicationFactory factory, int &argc, char **argv, int = ApplicationFlags);
 #endif
 #endif
     virtual ~QApplication();
@@ -234,10 +220,6 @@ public:
     virtual int x11ClientMessage(QWidget*, XEvent*, bool passive_only);
     int x11ProcessEvent(XEvent*);
 #endif
-#if defined(Q_OS_SYMBIAN)
-    int symbianProcessEvent(const QSymbianEvent *event);
-    virtual bool symbianEventFilter(const QSymbianEvent *event);
-#endif
 #if defined(Q_WS_QWS)
     virtual bool qwsEventFilter(QWSEvent *);
     int qwsProcessEvent(QWSEvent*);
@@ -297,10 +279,6 @@ Q_SIGNALS:
     void commitDataRequest(QSessionManager &sessionManager);
     void saveStateRequest(QSessionManager &sessionManager);
 #endif
-#ifdef Q_OS_SYMBIAN
-    void aboutToReleaseGpuResources();
-    void aboutToUseGpuResources();
-#endif
 
 public:
     QString styleSheet() const;
@@ -331,9 +309,6 @@ protected:
 #if defined(Q_WS_X11)
     QApplication(Display* dpy, Qt::HANDLE visual = 0, Qt::HANDLE cmap = 0);
     QApplication(Display *dpy, int &argc, char **argv, Qt::HANDLE visual = 0, Qt::HANDLE cmap= 0);
-#endif
-#if defined(Q_OS_SYMBIAN) || defined(qdoc)
-    QApplication(QApplication::QS60MainApplicationFactory factory, int &argc, char **argv);
 #endif
 #endif
 
@@ -373,9 +348,6 @@ private:
 #endif
 #if defined(QT_RX71_MULTITOUCH)
     Q_PRIVATE_SLOT(d_func(), void _q_readRX71MultiTouchEvents())
-#endif
-#if defined(Q_OS_SYMBIAN)
-    Q_PRIVATE_SLOT(d_func(), void _q_aboutToQuit())
 #endif
 };
 

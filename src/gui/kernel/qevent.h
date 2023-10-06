@@ -56,10 +56,6 @@
 #include <QtCore/qset.h>
 #include <QtCore/qfile.h>
 
-#ifdef Q_OS_SYMBIAN
-class RFile;
-#endif
-
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -581,9 +577,6 @@ class Q_GUI_EXPORT QFileOpenEvent : public QEvent
 public:
     QFileOpenEvent(const QString &file);
     QFileOpenEvent(const QUrl &url);
-#ifdef Q_OS_SYMBIAN
-    QFileOpenEvent(const RFile &fileHandle);
-#endif
     ~QFileOpenEvent();
 
     inline QString file() const { return f; }

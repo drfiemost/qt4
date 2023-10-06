@@ -79,12 +79,6 @@ class QPixmap;
 #if defined(Q_WS_MAC)
 void qt_mac_set_cursor(const QCursor *c);
 #endif
-#if defined(Q_OS_SYMBIAN)
-extern void qt_symbian_show_pointer_sprite();
-extern void qt_symbian_hide_pointer_sprite();
-extern void qt_symbian_set_pointer_sprite(const QCursor& cursor);
-extern void qt_symbian_move_cursor_sprite();
-#endif
 
 class Q_GUI_EXPORT QCursor
 {
@@ -132,8 +126,6 @@ public:
     Qt::HANDLE handle() const;
 #elif defined(Q_WS_QWS) || defined(Q_WS_QPA)
     int handle() const;
-#elif defined(Q_OS_SYMBIAN)
-    Qt::HANDLE handle() const;
 #endif
 #endif
 
@@ -143,12 +135,6 @@ private:
     friend void *qt_mac_nsCursorForQCursor(const QCursor &c);
     friend void qt_mac_set_cursor(const QCursor *c);
     friend void qt_mac_updateCursorWithWidgetUnderMouse(QWidget *widgetUnderMouse);
-#endif
-#if defined(Q_OS_SYMBIAN)
-    friend void qt_symbian_show_pointer_sprite();
-    friend void qt_symbian_hide_pointer_sprite();
-    friend void qt_symbian_set_pointer_sprite(const QCursor& cursor);
-    friend void qt_symbian_move_cursor_sprite();
 #endif
 };
 

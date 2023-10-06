@@ -233,19 +233,6 @@ QImage* QRuntimePixmapData::buffer()
     return m_data->buffer();
 }
 
-#if defined(Q_OS_SYMBIAN)
-void* QRuntimePixmapData::toNativeType(NativeType type)
-{
-    return m_data->toNativeType(type);
-}
-
-void QRuntimePixmapData::fromNativeType(void *pixmap, NativeType type)
-{
-    m_data->fromNativeType(pixmap, type);
-    readBackInfo();
-}
-#endif
-
 QPixmapData* QRuntimePixmapData::runtimeData() const
 {
     return m_data;
@@ -339,10 +326,6 @@ QRuntimeGraphicsSystem::QRuntimeGraphicsSystem()
 #endif
             m_graphicsSystemName = QLatin1String("raster");
     }
-
-#ifdef Q_OS_SYMBIAN
-    m_windowSurfaceDestroyPolicy = DestroyAfterFirstFlush;
-#endif
 
     m_graphicsSystem = QGraphicsSystemFactory::create(m_graphicsSystemName);
 

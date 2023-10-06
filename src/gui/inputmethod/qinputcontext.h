@@ -76,9 +76,6 @@ class QWidget;
 class QFont;
 class QPopupMenu;
 class QInputContextPrivate;
-#ifdef Q_OS_SYMBIAN
-class QSymbianEvent;
-#endif
 
 class Q_GUI_EXPORT QInputContext : public QObject
 {
@@ -108,9 +105,6 @@ public:
 #if defined(Q_WS_X11)
     virtual bool x11FilterEvent( QWidget *keywidget, XEvent *event );
 #endif // Q_WS_X11
-#if defined(Q_OS_SYMBIAN)
-    virtual bool symbianFilterEvent( QWidget *keywidget, const QSymbianEvent *event );
-#endif // Q_OS_SYMBIAN
     virtual bool filterEvent( const QEvent *event );
 
     void sendEvent(const QInputMethodEvent &event);

@@ -55,8 +55,6 @@
 #include "qdesktopservices_win.cpp"
 #elif defined(Q_WS_MAC)
 #include "qdesktopservices_mac.cpp"
-#elif defined(Q_OS_SYMBIAN)
-#include "qdesktopservices_s60.cpp"
 #endif
 
 #include <qhash.h>

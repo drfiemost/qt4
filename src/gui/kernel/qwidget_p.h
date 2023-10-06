@@ -86,11 +86,6 @@
 #include "QtGui/qscreen_qws.h"
 #endif
 
-#if defined(Q_OS_SYMBIAN)
-class RDrawableWindow;
-class CCoeControl;
-#endif
-
 QT_BEGIN_NAMESPACE
 
 // Extra QWidget data
@@ -229,11 +224,6 @@ struct QTLWExtra {
 #ifndef QT_NO_QWS_MANAGER
     QWSManager *qwsManager;
 #endif
-#elif defined(Q_OS_SYMBIAN)
-    uint inExpose : 1; // Prevents drawing recursion
-    uint nativeWindowTransparencyEnabled : 1; // Tracks native window transparency
-    uint forcedToRaster : 1;
-    uint noSystemRotationDisabled : 1;
 #elif defined(Q_WS_QPA)
     QWindow *window;
     quint32 screenIndex; // index in qplatformscreenlist
@@ -291,50 +281,6 @@ struct QWExtra {
     QImage maskBits;
     CGImageRef imageMask;
 #endif
-#elif defined(Q_OS_SYMBIAN) // <----------------------------------------------------- Symbian
-    uint activated : 1; // RWindowBase::Activated has been called
-
-    /**
-     * If this bit is set, each native widget receives the signals from the
-     * Symbian control immediately before and immediately after draw ops are
-     * sent to the window server for this control:
-     *      void beginNativePaintEvent(const QRect &paintRect);
-     *      void endNativePaintEvent(const QRect &paintRect);
-     */
-    uint receiveNativePaintEvents : 1;
-
-    /**
-     * Defines the behaviour of QSymbianControl::Draw.
-     */
-    enum NativePaintMode {
-        /**
-         * Normal drawing mode: blits the required region of the backing store
-         * via WSERV.
-         */
-        Blit,
-
-        /**
-         * Disable drawing for this widget.
-         */
-        Disable,
-
-        /**
-         * Paint zeros into the WSERV framebuffer, using BitGDI APIs.  For windows
-         * with an EColor16MU display mode, zero is written only into the R, G and B
-         * channels of the pixel.
-         */
-        ZeroFill,
-
-        /**
-         * Blit backing store, propagating alpha channel into the framebuffer.
-         */
-        BlitWriteAlpha,
-
-        Default = Blit
-    };
-
-    NativePaintMode nativePaintMode;
-
 #endif
 };
 
@@ -416,11 +362,6 @@ public:
     QPalette naturalWidgetPalette(uint inheritedMask) const;
 
     void setMask_sys(const QRegion &);
-#ifdef Q_OS_SYMBIAN
-    void setSoftKeys_sys(const QList<QAction*> &softkeys);
-    void activateSymbianWindow(WId wid = 0);
-    void _q_cleanupWinIds();
-#endif
 
     void raise_sys();
     void lower_sys();
@@ -908,16 +849,6 @@ public:
 #ifndef QT_NO_CURSOR
     void updateCursor() const;
 #endif
-#elif defined(Q_OS_SYMBIAN) // <--------------------------------------------------------- SYMBIAN
-    static QWidget *mouseGrabber;
-    static QWidget *keyboardGrabber;
-    int symbianScreenNumber; // only valid for desktop widget and top-levels
-    bool fixNativeOrientationCalled;
-    void s60UpdateIsOpaque();
-    void reparentChildren();
-    void registerTouchWindow();
-    QList<WId> widCleanupList;
-    uint isGLGlobalShareWidget : 1;
 #endif
 
 };

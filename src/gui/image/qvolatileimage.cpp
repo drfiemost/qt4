@@ -300,37 +300,12 @@ bool QVolatileImagePaintEngine::end()
 
 void QVolatileImagePaintEngine::drawPixmap(const QPointF &p, const QPixmap &pm)
 {
-#ifdef Q_OS_SYMBIAN
-    QVolatileImage img = pm.pixmapData()->toVolatileImage();
-    if (!img.isNull()) {
-        img.beginDataAccess();
-        // imageRef() would detach and since we received the QVolatileImage from
-        // toVolatileImage() by value, it would cause a copy which would ruin
-        // our goal. So use constImageRef() instead.
-        QRasterPaintEngine::drawImage(p, img.constImageRef());
-        img.endDataAccess(true);
-    } else {
-        QRasterPaintEngine::drawPixmap(p, pm);
-    }
-#else
     QRasterPaintEngine::drawPixmap(p, pm);
-#endif
 }
 
 void QVolatileImagePaintEngine::drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
 {
-#ifdef Q_OS_SYMBIAN
-    QVolatileImage img = pm.pixmapData()->toVolatileImage();
-    if (!img.isNull()) {
-        img.beginDataAccess();
-        QRasterPaintEngine::drawImage(r, img.constImageRef(), sr);
-        img.endDataAccess(true);
-    } else {
-        QRasterPaintEngine::drawPixmap(r, pm, sr);
-    }
-#else
     QRasterPaintEngine::drawPixmap(r, pm, sr);
-#endif
 }
 
 QT_END_NAMESPACE

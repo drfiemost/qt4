@@ -1779,14 +1779,12 @@ QSize QMenu::sizeHint() const
 void QMenu::popup(const QPoint &p, QAction *atAction)
 {
     Q_D(QMenu);
-#ifndef Q_OS_SYMBIAN
     if (d->scroll) { // reset scroll state from last popup
         if (d->scroll->scrollOffset)
             d->itemsDirty = 1; // sizeHint will be incorrect if there is previous scroll
         d->scroll->scrollOffset = 0;
         d->scroll->scrollFlags = QMenuPrivate::QMenuScroller::ScrollNone;
     }
-#endif
     d->tearoffHighlighted = 0;
     d->motions = 0;
     d->doChildEffects = true;

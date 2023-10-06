@@ -95,8 +95,6 @@
 #    include <private/qfontengine_qpf_p.h>
 #  endif
 #  include <private/qabstractfontengine_p.h>
-#elif defined(Q_OS_SYMBIAN) && defined(QT_NO_FREETYPE)
-#  include <private/qfontengine_s60_p.h>
 #elif defined(Q_WS_QPA)
 #  include <private/qfontengine_ft_p.h>
 #endif
@@ -2915,47 +2913,6 @@ bool QRasterPaintEngine::drawCachedGlyphs(int numGlyphs, const glyph_t *glyphs,
     return true;
 }
 
-#if defined(Q_OS_SYMBIAN) && defined(QT_NO_FREETYPE)
-void QRasterPaintEngine::drawGlyphsS60(const QPointF &p, const QTextItemInt &ti)
-{
-    Q_D(QRasterPaintEngine);
-    QRasterPaintEngineState *s = state();
-
-    QFontEngine *fontEngine = ti.fontEngine;
-    if (fontEngine->type() != QFontEngine::S60FontEngine) {
-        QPaintEngineEx::drawTextItem(p, ti);
-        return;
-    }
-
-    QFontEngineS60 *fe = static_cast<QFontEngineS60 *>(fontEngine);
-
-    QVarLengthArray<QFixedPoint> positions;
-    QVarLengthArray<glyph_t> glyphs;
-    QTransform matrix = s->matrix;
-    matrix.translate(p.x(), p.y());
-    if (matrix.type() == QTransform::TxScale)
-        fe->setFontScale(matrix.m11());
-    ti.fontEngine->getGlyphPositions(ti.glyphs, matrix, ti.flags, glyphs, positions);
-
-    const QFixed aliasDelta = QFixed::fromReal(aliasedCoordinateDelta);
-
-    for (int i=0; i<glyphs.size(); ++i) {
-        TOpenFontCharMetrics tmetrics;
-        const TUint8 *glyphBitmapBytes;
-        TSize glyphBitmapSize;
-        fe->getCharacterData(glyphs[i], tmetrics, glyphBitmapBytes, glyphBitmapSize);
-        const int x = qFloor(positions[i].x + tmetrics.HorizBearingX() + aliasDelta);
-        const int y = qFloor(positions[i].y - tmetrics.HorizBearingY() + aliasDelta);
-        alphaPenBlt(glyphBitmapBytes, glyphBitmapSize.iWidth, 8, x, y, glyphBitmapSize.iWidth, glyphBitmapSize.iHeight);
-    }
-
-    if (matrix.type() == QTransform::TxScale)
-        fe->setFontScale(1.0);
-
-    return;
-}
-#endif // Q_OS_SYMBIAN && QT_NO_FREETYPE
-
 /*!
  * Returns true if the rectangle is completely within the current clip
  * state of the paint engine.
@@ -3108,13 +3065,6 @@ void QRasterPaintEngine::drawTextItem(const QPointF &p, const QTextItem &textIte
         return;
     }
 
-#elif defined (Q_OS_SYMBIAN) && defined(QT_NO_FREETYPE) // Q_WS_WIN || Q_WS_MAC
-    if (s->matrix.type() <= QTransform::TxTranslate
-        || (s->matrix.type() == QTransform::TxScale
-                && (qFuzzyCompare(s->matrix.m11(), s->matrix.m22())))) {
-        drawGlyphsS60(p, ti);
-        return;
-    }
 #else // Q_WS_WIN || Q_WS_MAC
 
     QFontEngine *fontEngine = ti.fontEngine;
@@ -3163,7 +3113,7 @@ void QRasterPaintEngine::drawTextItem(const QPointF &p, const QTextItem &textIte
     }
 #endif //Q_WS_QPA
 
-#if (defined(Q_WS_X11) || defined(Q_WS_QWS) || defined(Q_OS_SYMBIAN)) && !defined(QT_NO_FREETYPE)
+#if (defined(Q_WS_X11) || defined(Q_WS_QWS)) && !defined(QT_NO_FREETYPE)
 
 #if defined(Q_WS_QWS) && !defined(QT_NO_QWS_QPF2)
     if (fontEngine->type() == QFontEngine::QPF2) {
@@ -3974,13 +3924,7 @@ int QCustomRasterPaintDevice::bytesPerLine() const
     return (width() * depth() + 7) / 8;
 }
 
-#elif defined(Q_OS_SYMBIAN)
-
-void QRasterBuffer::prepareBuffer(int /* width */, int /* height */)
-{
-}
-
-#endif // Q_OS_SYMBIAN
+#endif
 
 /*!
     \class QCustomRasterPaintDevice

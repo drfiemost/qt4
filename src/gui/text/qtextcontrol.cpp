@@ -2041,9 +2041,6 @@ void QTextControlPrivate::focusEvent(QFocusEvent *e)
     if (e->gotFocus()) {
 #ifdef QT_KEYPAD_NAVIGATION
         if (!QApplication::keypadNavigationEnabled() || (hasEditFocus && (e->reason() == Qt::PopupFocusReason
-#ifdef Q_OS_SYMBIAN
-            || e->reason() == Qt::ActiveWindowFocusReason
-#endif
             ))) {
 #endif
             setBlinkingCursorEnabled(interactionFlags & (Qt::TextEditable | Qt::TextSelectableByKeyboard));

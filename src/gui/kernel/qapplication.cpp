@@ -82,7 +82,7 @@
 #include <private/qt_x11_p.h>
 #endif
 
-#if defined(Q_WS_X11) || defined(Q_OS_SYMBIAN)
+#if defined(Q_WS_X11)
 #include "qinputcontextfactory.h"
 #endif
 
@@ -128,18 +128,11 @@ extern bool qt_wince_is_pocket_pc();  //qguifunctions_wince.cpp
 
 //#define ALIEN_DEBUG
 
-#if defined(Q_OS_SYMBIAN)
-#include "qt_s60_p.h"
-#endif
-
 static void initResources()
 {
 #if defined(Q_WS_WINCE)
     Q_INIT_RESOURCE_EXTERN(qstyle_wince)
     Q_INIT_RESOURCE(qstyle_wince);
-#elif defined(Q_OS_SYMBIAN)
-    Q_INIT_RESOURCE_EXTERN(qstyle_s60)
-    Q_INIT_RESOURCE(qstyle_s60);
 #else
     Q_INIT_RESOURCE_EXTERN(qstyle)
     Q_INIT_RESOURCE(qstyle);
@@ -166,10 +159,6 @@ QApplicationPrivate *QApplicationPrivate::self = 0;
 QInputContext *QApplicationPrivate::inputContext = 0;
 
 bool QApplicationPrivate::quitOnLastWindowClosed = true;
-
-#ifdef Q_OS_SYMBIAN
-bool QApplicationPrivate::inputContextBeingCreated = false;
-#endif
 
 #ifdef Q_WS_WINCE
 int QApplicationPrivate::autoMaximizeThreshold = -1;
@@ -485,12 +474,7 @@ static int drag_time = 500;
 #ifndef QT_GUI_DRAG_DISTANCE
 #define QT_GUI_DRAG_DISTANCE 4
 #endif
-#ifdef Q_OS_SYMBIAN
-// The screens are a bit too small to for your thumb when using only 4 pixels drag distance.
-static int drag_distance = 12; //XXX move to qplatformdefs.h
-#else
 static int drag_distance = QT_GUI_DRAG_DISTANCE;
-#endif
 static Qt::LayoutDirection layout_direction = Qt::LeftToRight;
 QSize QApplicationPrivate::app_strut = QSize(0,0); // no default application strut
 bool QApplicationPrivate::animate_ui = true;
@@ -503,11 +487,7 @@ bool QApplicationPrivate::animate_toolbox = false;
 bool QApplicationPrivate::widgetCount = false;
 bool QApplicationPrivate::load_testability = false;
 #ifdef QT_KEYPAD_NAVIGATION
-#  ifdef Q_OS_SYMBIAN
-Qt::NavigationMode QApplicationPrivate::navigationMode = Qt::NavigationModeKeypadDirectional;
-#  else
 Qt::NavigationMode QApplicationPrivate::navigationMode = Qt::NavigationModeKeypadTabOrder;
-#  endif
 QWidget *QApplicationPrivate::oldEditFocus = 0;
 #endif
 
@@ -841,22 +821,12 @@ void QApplicationPrivate::construct(
     qt_gui_eval_init(application_type);
 #endif
 
-#if defined(Q_OS_SYMBIAN) && !defined(QT_NO_SYSTEMLOCALE)
-    symbianInit();
-#endif
-
 #ifndef QT_NO_LIBRARY
     if(load_testability) {
         QLibrary testLib(QLatin1String("qttestability"));
         if (testLib.load()) {
             typedef void (*TasInitialize)(void);
             TasInitialize initFunction = (TasInitialize)testLib.resolve("qt_testability_init");
-#ifdef Q_OS_SYMBIAN
-            // resolving method by name does not work on Symbian OS so need to use ordinal
-            if(!initFunction) {
-                initFunction = (TasInitialize)testLib.resolve("1");            
-            }
-#endif
             if (initFunction) {
                 initFunction();
             } else {
@@ -870,10 +840,6 @@ void QApplicationPrivate::construct(
     //make sure the plugin is loaded
     if (qt_is_gui_used)
         qt_guiPlatformPlugin();
-#endif
-
-#ifdef Q_OS_SYMBIAN
-    symbianHandleLiteModeStartup();
 #endif
 }
 
@@ -2223,11 +2189,7 @@ void QApplicationPrivate::setFocusWidget(QWidget *focus, Qt::FocusReason reason)
             if (prev) {
 #ifdef QT_KEYPAD_NAVIGATION
                 if (QApplication::keypadNavigationEnabled()) {
-                    if (prev->hasEditFocus() && reason != Qt::PopupFocusReason
-#ifdef Q_OS_SYMBIAN
-                            && reason != Qt::ActiveWindowFocusReason
-#endif
-                            )
+                    if (prev->hasEditFocus() && reason != Qt::PopupFocusReason)
                         prev->setEditFocus(false);
                 }
 #endif
@@ -2445,11 +2407,6 @@ bool QApplication::event(QEvent *e)
 {
     Q_D(QApplication);
     if(e->type() == QEvent::Close) {
-#if defined(Q_OS_SYMBIAN)
-        // In order to have proper application-exit effects on Symbian, certain
-        // native APIs have to be called _before_ closing/destroying the widgets.
-        bool effectStarted = qt_beginFullScreenEffect();
-#endif
         QCloseEvent *ce = static_cast<QCloseEvent*>(e);
         ce->accept();
         closeAllWindows();
@@ -2466,10 +2423,6 @@ bool QApplication::event(QEvent *e)
         if (ce->isAccepted()) {
             return true;
         } else {
-#if defined(Q_OS_SYMBIAN)
-            if (effectStarted)
-                qt_abortFullScreenEffect();
-#endif
         }
     } else if(e->type() == QEvent::LanguageChange) {
 #ifndef QT_NO_TRANSLATION
@@ -2874,8 +2827,6 @@ void QApplicationPrivate::dispatchEnterLeave(QWidget* enter, QWidget* leave) {
             qt_win_set_cursor(cursorWidget, true);
 #elif defined(Q_WS_X11)
             qt_x11_enforce_cursor(cursorWidget, true);
-#elif defined(Q_OS_SYMBIAN)
-            qt_symbian_set_cursor(cursorWidget, true);
 #elif defined(Q_WS_QPA)
             qt_qpa_set_cursor(cursorWidget, true);
 #endif
@@ -5133,11 +5084,7 @@ void QApplicationPrivate::emitLastWindowClosed()
 */
 void QApplication::setNavigationMode(Qt::NavigationMode mode)
 {
-#ifdef Q_OS_SYMBIAN
-    QApplicationPrivate::setNavigationMode(mode);
-#else
     QApplicationPrivate::navigationMode = mode;
-#endif
 }
 
 /*!
@@ -5180,11 +5127,7 @@ Qt::NavigationMode QApplication::navigationMode()
 void QApplication::setKeypadNavigationEnabled(bool enable)
 {
     if (enable) {
-#ifdef Q_OS_SYMBIAN
-        QApplication::setNavigationMode(Qt::NavigationModeKeypadDirectional);
-#else
         QApplication::setNavigationMode(Qt::NavigationModeKeypadTabOrder);
-#endif
     }
     else {
         QApplication::setNavigationMode(Qt::NavigationModeNone);
@@ -5448,25 +5391,6 @@ QInputContext *QApplication::inputContext() const
             qic = QInputContextFactory::create(QLatin1String("xim"), that);
         that->d_func()->inputContext = qic;
     }
-#elif defined(Q_OS_SYMBIAN)
-    if (!d->inputContext) {
-        QApplication *that = const_cast<QApplication *>(this);
-        const QStringList keys = QInputContextFactory::keys();
-        // Try hbim and coefep first, then try others.
-        if (keys.contains(QLatin1String("hbim"))) {
-            that->d_func()->inputContext = QInputContextFactory::create(QLatin1String("hbim"), that);
-        } else if (keys.contains(QLatin1String("coefep"))) {
-            if (!that->d_func()->inputContextBeingCreated) {
-                that->d_func()->inputContextBeingCreated = true;
-                that->d_func()->inputContext = QInputContextFactory::create(QLatin1String("coefep"), that);
-                that->d_func()->inputContextBeingCreated = false;
-            }
-        } else {
-            for (int c = 0; c < keys.size() && !d->inputContext; ++c) {
-                that->d_func()->inputContext = QInputContextFactory::create(keys[c], that);
-            }
-        }
-    }
 #endif
     return d->inputContext;
 }
@@ -5485,8 +5409,6 @@ uint QApplicationPrivate::currentPlatform(){
         platform |= KB_Gnome;
     if (X11->desktopEnvironment == DE_CDE)
         platform |= KB_CDE;
-#elif defined(Q_OS_SYMBIAN)
-    platform = KB_S60;
 #endif
     return platform;
 }

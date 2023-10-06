@@ -56,9 +56,6 @@
 #ifdef Q_WS_QPA
 # include <private/qpixmap_raster_p.h>
 #endif
-#ifdef Q_OS_SYMBIAN
-# include <private/qpixmap_raster_symbian_p.h>
-#endif
 
 #include "private/qapplication_p.h"
 #include "private/qgraphicssystem_p.h"
@@ -87,8 +84,6 @@ QPixmapData* QSimplePixmapDataFactory::create(QPixmapData::PixelType type)
     return new QMacPixmapData(type);
 #elif defined(Q_WS_QPA)
     return new QRasterPixmapData(type);
-#elif defined(Q_OS_SYMBIAN)
-    return new QSymbianRasterPixmapData(type);    
 #else
 #error QSimplePixmapDataFactory::create() not implemented
 #endif

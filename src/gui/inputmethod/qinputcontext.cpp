@@ -468,33 +468,6 @@ bool QInputContext::x11FilterEvent(QWidget * /*keywidget*/, XEvent * /*event*/)
 }
 #endif // Q_WS_X11
 
-#ifdef Q_OS_SYMBIAN
-/*!
-    \since 4.6
-
-    This function may be overridden only if input method is depending
-    on Symbian and you need raw Symbian events. Otherwise, this function must not.
-
-    This function is designed to filter raw key events on Symbian, but
-    other input methods may use this to implement some special
-    features.
-
-    Return true if the \a event has been consumed. Otherwise, the
-    unfiltered \a event will be translated into QEvent and forwarded
-    to filterEvent(). Filtering at both symbianFilterEvent() and
-    filterEvent() in single input method is allowed.
-
-    \a keywidget is a client widget into which a text is inputted. \a
-    event is inputted QSymbianEvent.
-
-    \sa filterEvent()
-*/
-bool QInputContext::symbianFilterEvent(QWidget * /*keywidget*/, const QSymbianEvent * /*event*/)
-{
-    return false;
-}
-#endif // Q_OS_SYMBIAN
-
 QT_END_NAMESPACE
 
 #endif //Q_NO_IM

@@ -106,10 +106,6 @@
 #endif
 #include <private/qpaintengine_raster_p.h>
 
-#if defined(Q_OS_SYMBIAN)
-#include "private/qt_s60_p.h"
-#endif
-
 #include "qwidget_p.h"
 #include "qaction_p.h"
 #include "qlayout_p.h"
@@ -319,10 +315,6 @@ QWidgetPrivate::QWidgetPrivate(int version)
       , needWindowChange(0)
       , window_event(0)
       , qd_hd(0)
-#elif defined(Q_OS_SYMBIAN)
-      , symbianScreenNumber(0)
-      , fixNativeOrientationCalled(false)
-      , isGLGlobalShareWidget(0)
 #endif
 {
     if (!qApp) {
@@ -354,10 +346,6 @@ QWidgetPrivate::QWidgetPrivate(int version)
 
 QWidgetPrivate::~QWidgetPrivate()
 {
-#ifdef Q_OS_SYMBIAN
-    _q_cleanupWinIds();
-#endif
-
     if (widgetItem)
         widgetItem->wid = 0;
 
@@ -1290,10 +1278,6 @@ void QWidgetPrivate::init(QWidget *parentWidget, Qt::WindowFlags f)
         // programmer specified desktop widget
         xinfo = desktopWidget->d_func()->xinfo;
     }
-#elif defined(Q_OS_SYMBIAN)
-    if (desktopWidget) {
-        symbianScreenNumber = qt_widget_private(desktopWidget)->symbianScreenNumber;
-    }
 #elif defined(Q_WS_QPA)
     if (desktopWidget) {
         int screen = desktopWidget->d_func()->topData()->screenIndex;
@@ -1335,16 +1319,7 @@ void QWidgetPrivate::init(QWidget *parentWidget, Qt::WindowFlags f)
     q->setAttribute(Qt::WA_WState_Hidden);
 
     //give potential windows a bigger "pre-initial" size; create_sys() will give them a new size later
-#ifdef Q_OS_SYMBIAN
-    if (isGLWidget) {
-        // Don't waste GPU mem for unnecessary large egl surface until resized by application
-        data.crect = QRect(0,0,1,1);
-    } else {
-        data.crect = parentWidget ? QRect(0,0,100,30) : QRect(0,0,360,640);
-    }
-#else
     data.crect = parentWidget ? QRect(0,0,100,30) : QRect(0,0,640,480);
-#endif
 
     focus_next = focus_prev = q;
 
@@ -1597,17 +1572,6 @@ QWidget::~QWidget()
     }
 #endif
 
-#ifdef Q_OS_SYMBIAN
-    if (d->extra && d->extra->topextra && d->extra->topextra->backingStore) {
-        // Okay, we are about to destroy the top-level window that owns
-        // the backing store. Make sure we delete the backing store right away
-        // before the window handle is invalid. This is important because
-        // the backing store will delete its window surface, which may or may
-        // not have a reference to this widget that will be used later to
-        // notify the window it no longer has a surface.
-        d->extra->topextra->backingStore.destroy();
-    }
-#endif
     if (QWidgetBackingStore *bs = d->maybeBackingStore()) {
         bs->removeDirtyWidget(this);
         if (testAttribute(Qt::WA_StaticContents))
@@ -2273,9 +2237,6 @@ void QWidgetPrivate::setOpaque(bool opaque)
 #ifdef Q_WS_WIN
     winUpdateIsOpaque();
 #endif
-#ifdef Q_OS_SYMBIAN
-    s60UpdateIsOpaque();
-#endif
 }
 
 void QWidgetPrivate::updateIsTranslucent()
@@ -2288,9 +2249,6 @@ void QWidgetPrivate::updateIsTranslucent()
 #endif
 #ifdef Q_WS_WIN
     winUpdateIsOpaque();
-#endif
-#ifdef Q_OS_SYMBIAN
-    s60UpdateIsOpaque();
 #endif
 }
 
@@ -7322,7 +7280,7 @@ void QWidgetPrivate::show_helper()
     // On Windows, show the popup now so that our own focus handling
     // stores the correct old focus widget even if it's stolen in the
     // showevent
-#if defined(Q_WS_WIN) || defined(Q_WS_MAC) || defined(Q_OS_SYMBIAN)
+#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
     if (!isEmbedded && q->windowType() == Qt::Popup)
         qApp->d_func()->openPopup(q);
 #endif
@@ -7339,7 +7297,7 @@ void QWidgetPrivate::show_helper()
 
     show_sys();
 
-#if !defined(Q_WS_WIN) && !defined(Q_WS_MAC) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_WS_WIN) && !defined(Q_WS_MAC)
     if (!isEmbedded && q->windowType() == Qt::Popup)
         qApp->d_func()->openPopup(q);
 #endif
@@ -7906,7 +7864,7 @@ QSize QWidgetPrivate::adjustedSize() const
 #else // all others
         QRect screen = QApplication::desktop()->screenGeometry(q->pos());
 #endif
-#if defined (Q_WS_WINCE) || defined (Q_OS_SYMBIAN)
+#if defined (Q_WS_WINCE)
         s.setWidth(qMin(s.width(), screen.width()));
         s.setHeight(qMin(s.height(), screen.height()));
 #else
@@ -9922,7 +9880,7 @@ void QWidget::setParent(QWidget *parent, Qt::WindowFlags f)
         desktopWidget = parent;
     bool newParent = (parent != parentWidget()) || !wasCreated || desktopWidget;
 
-#if defined(Q_WS_X11) || defined(Q_WS_WIN) || defined(Q_WS_MAC) || defined(Q_OS_SYMBIAN)
+#if defined(Q_WS_X11) || defined(Q_WS_WIN) || defined(Q_WS_MAC)
     if (newParent && parent && !desktopWidget) {
         if (testAttribute(Qt::WA_NativeWindow) && !qApp->testAttribute(Qt::AA_DontCreateNativeWidgetSiblings)
 #if defined(Q_WS_MAC) && defined(QT_MAC_USE_COCOA)
@@ -10543,7 +10501,7 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
     }
     case Qt::WA_PaintOnScreen:
         d->updateIsOpaque();
-#if defined(Q_WS_WIN) || defined(Q_WS_X11) || defined(Q_WS_MAC) || defined(Q_OS_SYMBIAN)
+#if defined(Q_WS_WIN) || defined(Q_WS_X11) || defined(Q_WS_MAC)
         // Recreate the widget if it's already created as an alien widget and
         // WA_PaintOnScreen is enabled. Paint on screen widgets must have win id.
         // So must their children.
@@ -10651,17 +10609,13 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
         }
         break;
     case Qt::WA_TranslucentBackground:
-#if defined(Q_OS_SYMBIAN)
-        setAttribute(Qt::WA_NoSystemBackground, on);
-#else
         if (on) {
             setAttribute(Qt::WA_NoSystemBackground);
             d->updateIsTranslucent();
         }
-#endif
         break;
     case Qt::WA_AcceptTouchEvents:
-#if defined(Q_WS_WIN) || defined(Q_WS_MAC) || defined(Q_OS_SYMBIAN)
+#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
         if (on)
             d->registerTouchWindow();
 #endif
@@ -11096,7 +11050,7 @@ void QWidget::setShortcutAutoRepeat(int id, bool enable)
 */
 void QWidget::updateMicroFocus()
 {
-#if !defined(QT_NO_IM) && (defined(Q_WS_X11) || defined(Q_WS_QWS) || defined(Q_OS_SYMBIAN))
+#if !defined(QT_NO_IM) && (defined(Q_WS_X11) || defined(Q_WS_QWS))
     Q_D(QWidget);
     // and optimization to update input context only it has already been created.
     if (d->assignedInputContext() || qApp->d_func()->inputContext) {
@@ -12410,15 +12364,6 @@ void QWidget::clearMask()
     XRender extension is not supported on the X11 display, or if the
     handle could not be created.
 */
-
-#ifdef Q_OS_SYMBIAN
-void QWidgetPrivate::_q_cleanupWinIds()
-{
-    foreach (WId wid, widCleanupList)
-        delete wid;
-    widCleanupList.clear();
-}
-#endif
 
 #if QT_MAC_USE_COCOA
 void QWidgetPrivate::syncUnifiedMode() {

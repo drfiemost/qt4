@@ -784,10 +784,6 @@ private:
     friend bool isWidgetOpaque(const QWidget *);
     friend class QGLWidgetPrivate;
 #endif
-#ifdef Q_OS_SYMBIAN
-    friend class QSymbianControl;
-    friend class QS60WindowSurface;
-#endif
 #ifdef Q_WS_X11
     friend void qt_net_update_user_time(QWidget *tlw, unsigned long timestamp);
     friend void qt_net_remove_user_time(QWidget *tlw);
@@ -800,9 +796,6 @@ private:
 private:
     Q_DISABLE_COPY(QWidget)
     Q_PRIVATE_SLOT(d_func(), void _q_showIfNotHidden())
-#ifdef Q_OS_SYMBIAN
-    Q_PRIVATE_SLOT(d_func(), void void _q_cleanupWinIds())
-#endif
 
     QWidgetData *data;
 

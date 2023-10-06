@@ -134,11 +134,6 @@ typedef unsigned long  WId;
 
 #endif // Q_WS_QPA
 
-#if defined(Q_OS_SYMBIAN)
-class CCoeControl;
-typedef CCoeControl * WId;
-#endif // Q_OS_SYMBIAN
-
 QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 

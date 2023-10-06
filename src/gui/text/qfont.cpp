@@ -72,9 +72,6 @@
 #include "qfontengine_qpf_p.h"
 #endif
 #endif
-#ifdef Q_OS_SYMBIAN
-#include <private/qt_s60_p.h>
-#endif
 #ifdef Q_WS_QPA
 #include <QtGui/qplatformscreen_qpa.h>
 #include <QtGui/private/qapplication_p.h>
@@ -191,8 +188,6 @@ Q_GUI_EXPORT int qt_defaultDpiX()
         //PI has not been initialised, or it is being initialised. Give a default dpi
         dpi = 100;
     }
-#elif defined(Q_OS_SYMBIAN)
-    dpi = S60->defaultDpiX;
 #endif // Q_WS_X11
 
     return dpi;
@@ -230,8 +225,6 @@ Q_GUI_EXPORT int qt_defaultDpiY()
         //PI has not been initialised, or it is being initialised. Give a default dpi
         dpi = 100;
     }
-#elif defined(Q_OS_SYMBIAN)
-    dpi = S60->defaultDpiY;
 #endif // Q_WS_X11
 
     return dpi;
@@ -815,11 +808,7 @@ QFont::QFont(const QString &family, int pointSize, int weight, bool italic)
     : d(new QFontPrivate()), resolve_mask(QFont::FamilyResolved)
 {
     if (pointSize <= 0) {
-#ifdef Q_OS_SYMBIAN
-        pointSize = 7;
-#else
         pointSize = 12;
-#endif
     } else {
         resolve_mask |= QFont::SizeResolved;
     }

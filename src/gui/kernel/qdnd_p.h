@@ -264,11 +264,6 @@ private:
 #if defined(Q_WS_QWS) || defined(Q_WS_QPA)
     Qt::DropAction currentActionForOverrideCursor;
 #endif
-#ifdef Q_OS_SYMBIAN
-#ifndef QT_NO_CURSOR
-    QCursor overrideCursor;
-#endif
-#endif
     QWidget *currentDropTarget;
 
     static QDragManager *instance;
