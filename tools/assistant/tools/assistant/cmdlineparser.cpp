@@ -48,7 +48,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char helpMessage[] = QT_TRANSLATE_NOOP("CmdLineParser",
+static const char* helpMessage = QT_TRANSLATE_NOOP("CmdLineParser",
         "Usage: assistant [Options]\n\n"
         "-collectionFile file       Uses the specified collection\n"
         "                           file instead of the default one\n"
