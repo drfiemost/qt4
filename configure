@@ -1516,7 +1516,7 @@ while [ "$#" -gt 0 ]; do
             CFG_REDUCE_EXPORTS=no
             ;;
         esac
-        case "$XPLATFORM" in *qnx-*|*blackberry-*) XPLATFORM_QNX=yes;; esac
+        case "$XPLATFORM" in *qnx-*) XPLATFORM_QNX=yes;; esac
         ;;
     device-option)
         DEV_VAR=`echo $VAL | sed "s,^\(.*\)=.*,\1,"`
@@ -2664,7 +2664,7 @@ PLATFORMS=`find "$relpath/mkspecs/" -type f | grep -v qws | sed "s,$relpath/mksp
 [ -z "$XPLATFORM" ] && XPLATFORM="$PLATFORM"
 
 case `basename "$XPLATFORM"` in win32-g++*) XPLATFORM_MINGW=yes;; esac
-case "$XPLATFORM" in *qnx-*|*blackberry-*) XPLATFORM_QNX=yes;; esac
+case "$XPLATFORM" in *qnx-*) XPLATFORM_QNX=yes;; esac
 
 if [ -d "$PLATFORM" ]; then
   QMAKESPEC="$PLATFORM"

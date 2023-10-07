@@ -22,13 +22,9 @@ SOURCES += kernel/qauthenticator.cpp \
 
 unix:SOURCES += kernel/qhostinfo_unix.cpp kernel/qnetworkinterface_unix.cpp
 win32:SOURCES += kernel/qhostinfo_win.cpp kernel/qnetworkinterface_win.cpp
-integrity:SOURCES += kernel/qhostinfo_unix.cpp kernel/qnetworkinterface_unix.cpp
 
 mac:LIBS_PRIVATE += -framework SystemConfiguration -framework CoreFoundation -framework CoreServices
 qpa:mac:!ios:SOURCES += kernel/qnetworkproxy_mac.cpp
 else:!qpa:mac:SOURCES += kernel/qnetworkproxy_mac.cpp
 else:win32:SOURCES += kernel/qnetworkproxy_win.cpp
-else:blackberry:SOURCES += kernel/qnetworkproxy_blackberry.cpp
 else:SOURCES += kernel/qnetworkproxy_generic.cpp
-
-blackberry: LIBS_PRIVATE += -lbps

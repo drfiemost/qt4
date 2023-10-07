@@ -924,7 +924,7 @@ namespace QT_NAMESPACE {}
 #endif
 
 #ifdef __cplusplus
-# if defined(Q_OS_QNX) || defined(Q_OS_BLACKBERRY)
+# if defined(Q_OS_QNX)
 #  include <utility>
 #  if defined(_YVALS) || defined(_LIBCPP_VER)
 // QNX: libcpp (Dinkumware-based) doesn't have the <initializer_list>

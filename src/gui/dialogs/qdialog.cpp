@@ -64,8 +64,6 @@ extern bool qt_wince_is_mobile();     //defined in qguifunctions_wce.cpp
 extern bool qt_wince_is_smartphone(); //is defined in qguifunctions_wce.cpp
 #elif defined(Q_WS_X11)
 #  include "../kernel/qt_x11_p.h"
-#elif defined(Q_OS_BLACKBERRY)
-#   include "qmessagebox.h"
 #endif
 
 #ifndef SPI_GETSNAPTODEFBUTTON

@@ -1168,7 +1168,6 @@ QConfFileSettingsPrivate::QConfFileSettingsPrivate(QSettings::Format format,
         org = QLatin1String("Unknown Organization");
     }
 
-#if !defined(Q_OS_BLACKBERRY)
     QString appFile = org + QDir::separator() + application + extension;
     QString orgFile = org + extension;
 
@@ -1183,13 +1182,6 @@ QConfFileSettingsPrivate::QConfFileSettingsPrivate(QSettings::Format format,
     if (!application.isEmpty())
         confFiles[F_System | F_Application].reset(QConfFile::fromName(systemPath + appFile, false));
     confFiles[F_System | F_Organization].reset(QConfFile::fromName(systemPath + orgFile, false));
-#else
-    QString confName = getPath(format, QSettings::UserScope) + org;
-    if (!application.isEmpty())
-        confName += QDir::separator() + application;
-    confName += extension;
-    confFiles[SandboxConfFile].reset(QConfFile::fromName(confName, true));
-#endif
 
     for (i = 0; i < NumConfFiles; ++i) {
         if (confFiles[i]) {
