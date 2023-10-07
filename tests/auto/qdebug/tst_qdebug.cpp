@@ -51,7 +51,7 @@ private slots:
     void assignment() const;
     void warningWithoutDebug() const;
     void criticalWithoutDebug() const;
-    void debugWithQBool() const;
+    void debugWithBool() const;
     void veryLongWarningMessage() const;
     void qDebugQStringRef() const;
 };
@@ -104,10 +104,10 @@ void tst_QDebug::criticalWithoutDebug() const
     qInstallMsgHandler(0);
 }
 
-void tst_QDebug::debugWithQBool() const
+void tst_QDebug::debugWithBool() const
 {
     qInstallMsgHandler(myMessageHandler);
-    { qDebug() << QBool(false) << QBool(true); }
+    { qDebug() << false << true; }
     QCOMPARE(s_msgType, QtDebugMsg);
     QCOMPARE(QString::fromLatin1(s_msg), QString::fromLatin1("false true "));
     qInstallMsgHandler(0);
