@@ -44,11 +44,7 @@
 #include <qapplication.h>
 #include <qlineedit.h>
 
-#if defined (QT3_SUPPORT)
-#include <q3popupmenu.h>
-#else
 #include <qmenu.h>
-#endif
 
 #include <qlabel.h>
 #include <qdialog.h>
@@ -264,34 +260,6 @@ void tst_QFocusEvent::checkReason_Popup()
     initWidget();
 
     // Now test the popup reason
-#if defined (QT3_SUPPORT)
-    Q3PopupMenu* popupMenu = new Q3PopupMenu( testFocusWidget );
-    popupMenu->insertItem( "Test" );
-    popupMenu->popup( QPoint(0,0) );
-    QVERIFY(QTest::qWaitForWindowShown(popupMenu));
-
-    QTRY_VERIFY(childFocusWidgetOne->focusOutEventLostFocus);
-#ifdef Q_OS_MAC
-    QEXPECT_FAIL("", "QTQAINFRA-428", Abort);
-#endif
-    QVERIFY( childFocusWidgetOne->hasFocus() );
-    QVERIFY( !childFocusWidgetOne->focusInEventRecieved );
-    QVERIFY( childFocusWidgetOne->focusOutEventRecieved );
-    QVERIFY( !childFocusWidgetTwo->focusInEventRecieved );
-    QVERIFY( !childFocusWidgetTwo->focusOutEventRecieved );
-    QCOMPARE( childFocusWidgetOne->focusOutEventReason, int(Qt::PopupFocusReason));
-
-    popupMenu->hide();
-
-    QVERIFY(childFocusWidgetOne->focusInEventRecieved);
-    QVERIFY(childFocusWidgetOne->focusInEventGotFocus);
-
-    QVERIFY( childFocusWidgetOne->hasFocus() );
-    QVERIFY( childFocusWidgetOne->focusInEventRecieved );
-    QVERIFY( childFocusWidgetOne->focusOutEventRecieved );
-    QVERIFY( !childFocusWidgetTwo->focusInEventRecieved );
-    QVERIFY( !childFocusWidgetTwo->focusOutEventRecieved );
-#else
     QMenu* popupMenu = new QMenu( testFocusWidget );
     popupMenu->addMenu( "Test" );
     popupMenu->popup( QPoint(0,0) );
@@ -316,7 +284,6 @@ void tst_QFocusEvent::checkReason_Popup()
     QVERIFY( childFocusWidgetOne->focusOutEventRecieved );
     QVERIFY( !childFocusWidgetTwo->focusInEventRecieved );
     QVERIFY( !childFocusWidgetTwo->focusOutEventRecieved );
-#endif
 }
 
 #ifdef Q_WS_MAC

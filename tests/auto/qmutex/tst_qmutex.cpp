@@ -375,13 +375,8 @@ public:
     }
 };
 
-#ifdef QT3_SUPPORT
-#define VERIFY_LOCKED(x) QVERIFY((x).locked())
-#define VERIFY_NLOCKED(x) QVERIFY(!(x).locked())
-#else
 #define VERIFY_LOCKED(x)
 #define VERIFY_NLOCKED(x)
-#endif // QT3_SUPPORT
 
 void tst_QMutex::lock_unlock_locked_tryLock()
 {

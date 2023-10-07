@@ -1233,9 +1233,6 @@ void tst_QComboBox::insertItem_data()
         QTest::newRow("Insert beyond count") << initialItems << 3 << "inserted" << 2 << false << editable;
         QTest::newRow("Insert at count") << initialItems << 2 << "inserted" << 2 << false << editable;
         QTest::newRow("Insert in the middle") << initialItems << 1 << "inserted" << 1 << false << editable;
-#if defined(QT3_SUPPORT)
-        QTest::newRow("Qt3Support: Insert less then 0") << initialItems << -1 << "inserted" << 2 << true << editable;
-#endif
     }
 }
 
@@ -1254,16 +1251,8 @@ void tst_QComboBox::insertItem()
     testWidget->setEditable(true);
     if (editable)
         testWidget->setEditText("FOO");
-#if defined (QT3_SUPPORT)
-    if (testQt3Support)
-        testWidget->insertItem(itemLabel, insertIndex);
-    else
-        testWidget->insertItem(insertIndex, itemLabel);
-#else
     Q_UNUSED(testQt3Support);
     testWidget->insertItem(insertIndex, itemLabel);
-#endif
-
 
     QCOMPARE(testWidget->count(), initialItems.count() + 1);
     QCOMPARE(testWidget->itemText(expectedIndex), itemLabel);

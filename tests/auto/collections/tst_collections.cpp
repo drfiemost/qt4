@@ -98,10 +98,6 @@ void foo()
 #include "qvector.h"
 #include "qqueue.h"
 
-#ifdef QT3_SUPPORT
-#include "q3cleanuphandler.h"
-#endif
-
 template class QList<int>;
 
 //TESTED_FILES=
@@ -2186,14 +2182,7 @@ void tst_Collections::qstring()
     QVERIFY(s.toLatin1() == "first");
     s = "second";
     QVERIFY(s.toLatin1() == "second");
-#ifdef QT3_SUPPORT
-    const char* cache = s.latin1();
-    QVERIFY(cache == s.latin1());
-#endif
     s.clear();
-#ifdef QT3_SUPPORT
-    QVERIFY(*s.latin1() == '\0');
-#endif
     QVERIFY(s.isNull());
     QVERIFY(s.toLatin1().size() == 0);
     QVERIFY(s.toLatin1().isEmpty());
@@ -2203,14 +2192,7 @@ void tst_Collections::qstring()
     QVERIFY(s.toUtf8() == "first-utf8");
     s = "second-utf8";
     QVERIFY(s.toUtf8() == "second-utf8");
-#ifdef QT3_SUPPORT
-    cache = s.utf8();
-    QVERIFY(cache == s.utf8());
-#endif
     s.clear();
-#ifdef QT3_SUPPORT
-    QVERIFY(*s.utf8() == '\0');
-#endif
     QVERIFY(s.isNull());
     QVERIFY(s.toUtf8().size() == 0);
     QVERIFY(s.toUtf8().isEmpty());
@@ -2220,14 +2202,7 @@ void tst_Collections::qstring()
     QVERIFY(s.toUtf8() == "first-utf8");
     s = "second-utf8";
     QVERIFY(s.toUtf8() == "second-utf8");
-#ifdef QT3_SUPPORT
-    cache = s.utf8();
-    QVERIFY(cache == s.utf8());
-#endif
     s.clear();
-#ifdef QT3_SUPPORT
-    QVERIFY(*s.utf8() == '\0');
-#endif
     QVERIFY(s.isNull());
     QVERIFY(s.toUtf8().size() == 0);
     QVERIFY(s.toUtf8().isEmpty());
@@ -2237,14 +2212,7 @@ void tst_Collections::qstring()
     QVERIFY(s.toLocal8Bit() == "first-local8Bit");
     s = "second-local8Bit";
     QVERIFY(s.toLocal8Bit() == "second-local8Bit");
-#ifdef QT3_SUPPORT
-    cache = s.local8Bit();
-    QVERIFY(cache == s.local8Bit());
-#endif
     s.clear();
-#ifdef QT3_SUPPORT
-    QVERIFY(*s.local8Bit() == '\0');
-#endif
     QVERIFY(s.isNull());
     QVERIFY(s.toLocal8Bit().size() == 0);
     QVERIFY(s.toLocal8Bit().isEmpty());
@@ -2253,14 +2221,7 @@ void tst_Collections::qstring()
     QVERIFY(s.toAscii() == "first-ascii");
     s = "second-ascii";
     QVERIFY(s.toAscii() == "second-ascii");
-#ifdef QT3_SUPPORT
-    cache = s.ascii();
-    QVERIFY(cache == s.ascii());
-#endif
     s.clear();
-#ifdef QT3_SUPPORT
-    QVERIFY(*s.ascii() == '\0');
-#endif
     QVERIFY(s.isNull());
     QVERIFY(s.toAscii().size() == 0);
     QVERIFY(s.toAscii().isEmpty());
@@ -2506,20 +2467,7 @@ void tst_Collections::pair()
 
 void tst_Collections::cleanupHandler()
 {
-#ifdef QT3_SUPPORT
-    LargeStatic * f1 = 0;
-    LargeStatic * f2 = 0;
-    {
-	Q3CleanupHandler<LargeStatic> cleanup;
-	f1 = new LargeStatic;
-	f2 = new LargeStatic;
-	cleanup.add(&f1);
-	cleanup.add(&f2);
-    }
-    QVERIFY(f1 == 0 && f2 == 0);
-#else
     QSKIP("No Qt3 support", SkipAll);
-#endif
 }
 
 /*

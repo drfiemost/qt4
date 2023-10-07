@@ -3994,13 +3994,6 @@ void tst_QUrl::task_240612()
     QCOMPARE(url.toEncoded().constData(), "//example.com/test.txt");
 }
 
-#ifdef QT3_SUPPORT
-void tst_QUrl::dirPath()
-{
-    QCOMPARE(QUrl("http://www.vg.no/test/file.txt").dirPath(), QString("/test"));
-}
-#endif
-
 void tst_QUrl::resolvedWithAbsoluteSchemes() const
 {
     QFETCH(QUrl, base);

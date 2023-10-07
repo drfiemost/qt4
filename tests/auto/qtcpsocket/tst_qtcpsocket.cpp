@@ -2197,12 +2197,6 @@ void tst_QTcpSocket::suddenRemoteDisconnect_data()
     QTest::addColumn<QString>("client");
     QTest::addColumn<QString>("server");
 
-#ifdef QT3_SUPPORT
-    QTest::newRow("Qt3 Client <-> Qt3 Server") << QString::fromLatin1("qt3client") << QString::fromLatin1("qt3server");
-    QTest::newRow("Qt3 Client <-> Qt4 Server") << QString::fromLatin1("qt3client") << QString::fromLatin1("qt4server");
-    QTest::newRow("Qt4 Client <-> Qt3 Server") << QString::fromLatin1("qt4client") << QString::fromLatin1("qt3server");
-#endif
-
     QTest::newRow("Qt4 Client <-> Qt4 Server") << QString::fromLatin1("qt4client") << QString::fromLatin1("qt4server");
 }
 
