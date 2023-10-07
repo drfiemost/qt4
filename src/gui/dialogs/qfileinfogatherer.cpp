@@ -47,9 +47,6 @@
 #  include <unistd.h>
 #  include <sys/types.h>
 #endif
-#if defined(Q_OS_VXWORKS)
-#  include "qplatformdefs.h"
-#endif
 
 QT_BEGIN_NAMESPACE
 

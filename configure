@@ -2749,7 +2749,7 @@ fi
 
 if [ "$CFG_RTOS_ENABLED" = "no" ]; then
     case `basename "$XPLATFORM"` in
-	qnx-* | vxworks-*)
+	qnx-*)
             echo ""
             echo "You are not licensed for Qt for `basename $XPLATFORM`."
             echo ""
@@ -6528,9 +6528,6 @@ case "$XPLATFORM" in
 		canBuildQtXmlPatterns="no"
 		;;
 	esac
-	;;
-    unsupported/vxworks-*-dcc*)
-	canBuildQtXmlPatterns="no"
 	;;
     *-g++*)
 	# Check gcc's version

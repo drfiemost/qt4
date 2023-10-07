@@ -72,10 +72,6 @@
 #  endif
 #endif
 
-#if defined(Q_OS_VXWORKS) && defined(_WRS_KERNEL)
-#  include <envLib.h>
-#endif
-
 #if defined(Q_OS_MACX) && !defined(Q_OS_IOS)
 #include <CoreServices/CoreServices.h>
 #endif

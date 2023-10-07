@@ -1352,8 +1352,6 @@ static QString timeZone()
 # else
     return QString::fromLocal8Bit(_tzname[1]);
 # endif
-#elif defined(Q_OS_VXWORKS)
-    return QString();
 #else
     tzset();
     return QString::fromLocal8Bit(tzname[1]);

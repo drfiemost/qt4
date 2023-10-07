@@ -87,10 +87,6 @@
 #  include <locale.h>
 #endif
 
-#ifdef Q_OS_VXWORKS
-#  include <taskLib.h>
-#endif
-
 #ifdef Q_OS_QNX
 #  include <sys/neutrino.h>
 #  include <pthread.h>
@@ -1918,8 +1914,6 @@ qint64 QCoreApplication::applicationPid()
 {
 #if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
     return GetCurrentProcessId();
-#elif defined(Q_OS_VXWORKS)
-    return (pid_t) taskIdCurrent;
 #else
     return getpid();
 #endif

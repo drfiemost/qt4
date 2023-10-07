@@ -62,13 +62,6 @@
 #ifdef Q_OS_BSD4
 #include <sys/sysctl.h>
 #endif
-#ifdef Q_OS_VXWORKS
-#  if (_WRS_VXWORKS_MAJOR > 6) || ((_WRS_VXWORKS_MAJOR == 6) && (_WRS_VXWORKS_MINOR >= 6))
-#    include <vxCpuLib.h>
-#    include <cpuset.h>
-#    define QT_VXWORKS_HAS_CPUSET
-#  endif
-#endif
 
 #ifdef Q_OS_HPUX
 #include <sys/pstat.h>
@@ -126,13 +119,6 @@ static pthread_key_t current_thread_data_key;
 
 static void destroy_current_thread_data(void *p)
 {
-#if defined(Q_OS_VXWORKS)
-    // Calling setspecific(..., 0) sets the value to 0 for ALL threads.
-    // The 'set to 1' workaround adds a bit of an overhead though,
-    // since this function is called twice now.
-    if (p == (void *)1)
-        return;
-#endif
     // POSIX says the value in our key is set to zero before calling
     // this destructor function, so we need to set it back to the
     // right value...
@@ -150,12 +136,7 @@ static void destroy_current_thread_data(void *p)
     // ... but we must reset it to zero before returning so we aren't
     // called again (POSIX allows implementations to call destructor
     // functions repeatedly until all values are zero)
-    pthread_setspecific(current_thread_data_key,
-#if defined(Q_OS_VXWORKS)
-                                                 (void *)1);
-#else
-                                                 0);
-#endif
+    pthread_setspecific(current_thread_data_key, 0);
 }
 
 static void create_current_thread_data_key()
@@ -432,23 +413,6 @@ int QThread::idealThreadCount()
 #elif defined(Q_OS_IRIX)
     // IRIX
     cores = (int)sysconf(_SC_NPROC_ONLN);
-#elif defined(Q_OS_VXWORKS)
-    // VxWorks
-#  if defined(QT_VXWORKS_HAS_CPUSET)
-    cpuset_t cpus = vxCpuEnabledGet();
-    cores = 0;
-
-    // 128 cores should be enough for everyone ;)
-    for (int i = 0; i < 128 && !CPUSET_ISZERO(cpus); ++i) {
-        if (CPUSET_ISSET(cpus, i)) {
-            CPUSET_CLR(cpus, i);
-            cores++;
-        }
-    }
-#  else
-    // as of aug 2008 VxWorks < 6.6 only supports one single core CPU
-    cores = 1;
-#  endif
 #else
     // the rest: Linux, Solaris, AIX, Tru64
     cores = (int)sysconf(_SC_NPROCESSORS_ONLN);
@@ -541,13 +505,6 @@ static bool calculateUnixPriority(int priority, int *sched_policy, int *sched_pr
 
     int prio_min;
     int prio_max;
-#if defined(Q_OS_VXWORKS) && defined(VXWORKS_DKM)
-    // for other scheduling policies than SCHED_RR or SCHED_FIFO
-    prio_min = SCHED_FIFO_LOW_PRI;
-    prio_max = SCHED_FIFO_HIGH_PRI;
-
-    if ((*sched_policy == SCHED_RR) || (*sched_policy == SCHED_FIFO))
-#endif
     {
     prio_min = sched_get_priority_min(*sched_policy);
     prio_max = sched_get_priority_max(*sched_policy);

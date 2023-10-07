@@ -337,7 +337,7 @@ QString QFileSystemEngine::resolveUserName(uint userId)
 #endif
 
     struct passwd *pw = 0;
-#if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_OPENBSD) && !defined(Q_OS_VXWORKS)
+#if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_OPENBSD)
     struct passwd entry;
     getpwuid_r(userId, &entry, buf.data(), buf.size(), &pw);
 #else
@@ -359,7 +359,7 @@ QString QFileSystemEngine::resolveGroupName(uint groupId)
 #endif
 
     struct group *gr = 0;
-#if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_OPENBSD) && !defined(Q_OS_VXWORKS)
+#if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_OPENBSD)
     size_max = sysconf(_SC_GETGR_R_SIZE_MAX);
     if (size_max == -1)
         size_max = 1024;
@@ -717,13 +717,6 @@ QFileSystemEntry QFileSystemEngine::currentPath()
 #else
         char currentName[PATH_MAX+1];
         if (::getcwd(currentName, PATH_MAX)) {
-#if defined(Q_OS_VXWORKS) && defined(VXWORKS_VXSIM)
-            QByteArray dir(currentName);
-            if (dir.indexOf(':') < dir.indexOf('/'))
-                dir.remove(0, dir.indexOf(':')+1);
-
-            qstrncpy(currentName, dir.constData(), PATH_MAX);
-#endif
             result = QFileSystemEntry(QByteArray(currentName), QFileSystemEntry::FromNativePath());
         }
 # if defined(QT_DEBUG)

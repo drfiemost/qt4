@@ -56,16 +56,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// VxWorks doesn't correctly set the _POSIX_... options
-#if defined(Q_OS_VXWORKS)
-#  if defined(_POSIX_MONOTONIC_CLOCK) && (_POSIX_MONOTONIC_CLOCK <= 0)
-#    undef _POSIX_MONOTONIC_CLOCK
-#    define _POSIX_MONOTONIC_CLOCK 1
-#  endif
-#  include <pipeDrv.h>
-#  include <selectLib.h>
-#endif
-
 #if (_POSIX_MONOTONIC_CLOCK-0 <= 0) || defined(QT_BOOTSTRAPPED)
 #  include <sys/times.h>
 #endif
@@ -88,23 +78,6 @@ static void signalHandler(int sig)
 }
 
 
-#if defined(Q_OS_VXWORKS)
-static void initThreadPipeFD(int fd)
-{
-    int ret = fcntl(fd, F_SETFD, FD_CLOEXEC);
-    if (ret == -1)
-        perror("QEventDispatcherUNIXPrivate: Unable to init thread pipe");
-
-    int flags = fcntl(fd, F_GETFL);
-    if (flags == -1)
-        perror("QEventDispatcherUNIXPrivate: Unable to get flags on thread pipe");
-
-    ret = fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-    if (ret == -1)
-        perror("QEventDispatcherUNIXPrivate: Unable to set flags on thread pipe");
-}
-#endif
-
 QEventDispatcherUNIXPrivate::QEventDispatcherUNIXPrivate()
 {
     extern Qt::HANDLE qt_application_thread_id;
@@ -114,25 +87,6 @@ QEventDispatcherUNIXPrivate::QEventDispatcherUNIXPrivate()
     // initialize the common parts of the event loop
 #if defined(Q_OS_NACL)
    // do nothing.
-#elif defined(Q_OS_VXWORKS)
-    char name[20];
-    qsnprintf(name, sizeof(name), "/pipe/qt_%08x", int(taskIdSelf()));
-
-    // make sure there is no pipe with this name
-    pipeDevDelete(name, true);
-    // create the pipe
-    if (pipeDevCreate(name, 128 /*maxMsg*/, 1 /*maxLength*/) != OK) {
-        perror("QEventDispatcherUNIXPrivate(): Unable to create thread pipe device");
-        pipefail = true;
-    } else {
-        if ((thread_pipe[0] = open(name, O_RDWR, 0)) < 0) {
-            perror("QEventDispatcherUNIXPrivate(): Unable to create thread pipe");
-            pipefail = true;
-        } else {
-            initThreadPipeFD(thread_pipe[0]);
-            thread_pipe[1] = thread_pipe[0];
-        }
-    }
 #else
     if (qt_safe_pipe(thread_pipe, O_NONBLOCK) == -1) {
         perror("QEventDispatcherUNIXPrivate(): Unable to create thread pipe");
@@ -152,13 +106,6 @@ QEventDispatcherUNIXPrivate::~QEventDispatcherUNIXPrivate()
 {
 #if defined(Q_OS_NACL)
    // do nothing.
-#elif defined(Q_OS_VXWORKS)
-    close(thread_pipe[0]);
-
-    char name[20];
-    qsnprintf(name, sizeof(name), "/pipe/qt_%08x", int(taskIdSelf()));
-
-    pipeDevDelete(name, true);
 #else
     // cleanup the common parts of the event loop
     close(thread_pipe[0]);
@@ -293,15 +240,9 @@ int QEventDispatcherUNIXPrivate::processThreadWakeUp(int nsel)
     if (nsel > 0 && FD_ISSET(thread_pipe[0], &sn_vec[0].select_fds)) {
         // some other thread woke us up... consume the data on the thread pipe so that
         // select doesn't immediately return next time
-#if defined(Q_OS_VXWORKS)
-        char c[16];
-        ::read(thread_pipe[0], c, sizeof(c));
-        ::ioctl(thread_pipe[0], FIOFLUSH, 0);
-#else
         char c[16];
         while (::read(thread_pipe[0], c, sizeof(c)) > 0)
             ;
-#endif
         if (!wakeUps.testAndSetRelease(1, 0)) {
             // hopefully, this is dead code
             qWarning("QEventDispatcherUNIX: internal error, wakeUps.testAndSetRelease(1, 0) failed!");

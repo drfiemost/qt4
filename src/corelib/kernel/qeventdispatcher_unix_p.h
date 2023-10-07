@@ -60,11 +60,9 @@
 #include "private/qpodlist_p.h"
 #include "QtCore/qvarlengtharray.h"
 
-#if !defined(Q_OS_VXWORKS)
-#  include <sys/time.h>
-#  if (!defined(Q_OS_HPUX) || defined(__ia64)) && !defined(Q_OS_NACL)
-#    include <sys/select.h>
-#  endif
+#include <sys/time.h>
+#if (!defined(Q_OS_HPUX) || defined(__ia64)) && !defined(Q_OS_NACL)
+#  include <sys/select.h>
 #endif
 
 QT_BEGIN_NAMESPACE

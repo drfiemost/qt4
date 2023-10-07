@@ -73,10 +73,6 @@
 #include <private/qsystemlibrary_p.h>
 #endif
 
-#ifdef Q_OS_VXWORKS
-#  include <ioLib.h>
-#endif
-
 #include <stdlib.h>
 
 #ifndef CSIDL_COMMON_APPDATA

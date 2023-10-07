@@ -255,8 +255,6 @@ namespace QT_NAMESPACE {}
 #  define Q_OS_UNIXWARE
 #elif defined(__svr4__) && defined(i386) /* Open UNIX 8 + GCC */
 #  define Q_OS_UNIXWARE
-#elif defined(VXWORKS) /* there is no "real" VxWorks define - this has to be set in the mkspec! */
-#  define Q_OS_VXWORKS
 #elif defined(__MAKEDEPEND__)
 #else
 #  error "Qt has not been ported to this OS - talk to qt-bugs@trolltech.com"
@@ -1290,15 +1288,6 @@ class QDataStream;
 
 #if !defined(Q_WS_QWS) && !defined(QT_NO_COP)
 #  define QT_NO_COP
-#endif
-
-#if defined(Q_OS_VXWORKS)
-#  define QT_NO_CRASHHANDLER     // no popen
-#  define QT_NO_PROCESS          // no exec*, no fork
-#  define QT_NO_LPR
-#  define QT_NO_SHAREDMEMORY     // only POSIX, no SysV and in the end...
-#  define QT_NO_SYSTEMSEMAPHORE  // not needed at all in a flat address space
-#  define QT_NO_QWS_MULTIPROCESS // no processes
 #endif
 
 # include <QtCore/qfeatures.h>
