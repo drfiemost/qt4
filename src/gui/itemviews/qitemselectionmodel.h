@@ -51,8 +51,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Gui)
-
 #ifndef QT_NO_ITEMVIEWS
 
 class Q_GUI_EXPORT QItemSelectionRange

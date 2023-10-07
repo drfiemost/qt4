@@ -56,7 +56,6 @@ QT_BEGIN_HEADER
 #ifndef QT_MOBILITY_BEARER
 QT_BEGIN_NAMESPACE
 #define QNetworkConfigurationManagerExport Q_NETWORK_EXPORT
-QT_MODULE(Network)
 #else
 QTM_BEGIN_NAMESPACE
 #define QNetworkConfigurationManagerExport Q_BEARER_EXPORT

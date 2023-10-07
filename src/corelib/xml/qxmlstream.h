@@ -54,7 +54,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Core)
 
 // QXmlStream* was originally in the QtXml module
 // since we've moved it to QtCore in Qt 4.4.0, we need to

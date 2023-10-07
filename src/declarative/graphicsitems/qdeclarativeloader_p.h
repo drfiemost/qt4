@@ -48,7 +48,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Declarative)
 
 class QDeclarativeLoaderPrivate;
 class Q_AUTOTEST_EXPORT QDeclarativeLoader : public QDeclarativeImplicitSizeItem

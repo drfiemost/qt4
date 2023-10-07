@@ -61,7 +61,7 @@ QT_BEGIN_NAMESPACE
 
 #ifdef QT_BUILD_CORE_LIB
 #ifdef __cplusplus // zlib is written in C, and does not like about the implementation of QT_MODULE macro
-QT_MODULE(Core)
+
 #endif // __cplusplus
 #endif // QT_BUILD_CORE_LIB
 

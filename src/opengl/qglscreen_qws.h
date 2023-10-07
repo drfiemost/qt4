@@ -74,8 +74,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(OpenGL)
-
 class QGLScreenPrivate;
 
 class Q_OPENGL_EXPORT QGLScreenSurfaceFunctions

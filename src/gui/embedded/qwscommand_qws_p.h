@@ -73,7 +73,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Gui)
 
 class QRect;
 

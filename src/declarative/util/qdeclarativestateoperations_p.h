@@ -52,7 +52,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Declarative)
 
 #ifdef Q_OS_WINCE
 // qgraphicsitem.h includes qfunctions_wince.h.

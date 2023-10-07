@@ -48,8 +48,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Test)
-
 class QTestElement;
 class QTestElementAttribute;
 class QTestLogger;

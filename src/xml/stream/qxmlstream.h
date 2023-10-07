@@ -48,8 +48,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Xml)
-
 #if 0
 // make syncqt generate forwarding headers for this file too
 #pragma qt_class(QXmlStreamAttribute)

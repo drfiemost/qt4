@@ -50,7 +50,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Declarative)
 
 class QDeclarativeBindPrivate;
 class Q_AUTOTEST_EXPORT QDeclarativeBind : public QObject, public QDeclarativeParserStatus

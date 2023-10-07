@@ -84,7 +84,6 @@ QT_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Declarative)
 
 template<typename T>
 int qmlRegisterType()

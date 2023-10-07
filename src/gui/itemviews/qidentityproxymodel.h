@@ -51,8 +51,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Gui)
-
 class QIdentityProxyModelPrivate;
 
 class Q_GUI_EXPORT QIdentityProxyModel : public QAbstractProxyModel

@@ -59,7 +59,7 @@ QT_BEGIN_HEADER
 #ifndef QT_MOBILITY_BEARER
 #include <QtCore/qshareddata.h>
 QT_BEGIN_NAMESPACE
-QT_MODULE(Network)
+
 #define QNetworkSessionExport Q_NETWORK_EXPORT
 #else
 #include "qmobilityglobal.h"

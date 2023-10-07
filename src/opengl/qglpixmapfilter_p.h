@@ -63,8 +63,6 @@ QT_BEGIN_NAMESPACE
 
 class QGLPixelBuffer;
 
-QT_MODULE(OpenGL)
-
 class QGLPixmapFilterBase
 {
 public:

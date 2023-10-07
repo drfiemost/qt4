@@ -90,7 +90,6 @@ typedef GLfloat GLdouble;
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(OpenGL)
 
 #if defined(Q_WS_MAC) && defined (QT_BUILD_OPENGL_LIB) && !defined(QT_MAC_USE_COCOA) && !defined(QDOC)
 #define Q_MAC_COMPAT_GL_FUNCTIONS

@@ -60,7 +60,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Test)
 
 extern Q_GUI_EXPORT void qt_translateRawTouchEvent(QWidget *window,
                                                    QTouchEvent::DeviceType deviceType,

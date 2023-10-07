@@ -51,7 +51,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Gui)
 
 // Inherited by both window surface and pixmap
 class QDirectFBPaintEngine;
