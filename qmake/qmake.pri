@@ -15,9 +15,7 @@ SOURCES += project.cpp property.cpp main.cpp generators/makefile.cpp \
            generators/win32/msvc_vcproj.cpp \
            generators/win32/msvc_vcxproj.cpp \
            generators/win32/msvc_objectmodel.cpp generators/win32/msbuild_objectmodel.cpp \
-           generators/integrity/gbuild.cpp \
-           windows/registry.cpp \
-           generators/integrity/gbuild.cpp
+           windows/registry.cpp
 
 HEADERS += project.h property.h generators/makefile.h \
            generators/unix/unixmake.h meta.h option.h cachekeys.h \
@@ -27,9 +25,7 @@ HEADERS += project.h property.h generators/makefile.h \
            generators/win32/msvc_vcproj.h \
            generators/win32/msvc_vcxproj.h \
            generators/win32/msvc_objectmodel.h generators/win32/msbuild_objectmodel.h \
-           generators/integrity/gbuild.h \
-           windows/registry_p.h \
-           generators/integrity/gbuild.h
+           windows/registry_p.h
 
 contains(QT_EDITION, OpenSource) {
    DEFINES += QMAKE_OPENSOURCE_EDITION

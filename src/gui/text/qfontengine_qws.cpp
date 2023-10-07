@@ -57,9 +57,7 @@
 
 #include <stdlib.h>
 
-#if !defined(Q_OS_INTEGRITY)
 #define QT_USE_MMAP
-#endif
 
 #ifdef QT_USE_MMAP
 // for mmap

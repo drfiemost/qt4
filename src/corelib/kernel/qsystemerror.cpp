@@ -57,7 +57,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#if !defined(Q_OS_WIN) && !defined(QT_NO_THREAD) && !defined(Q_OS_INTEGRITY) && !defined(Q_OS_QNX) && \
+#if !defined(Q_OS_WIN) && !defined(QT_NO_THREAD) && !defined(Q_OS_QNX) && \
     defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L
 namespace {
     // There are two incompatible versions of strerror_r:
@@ -124,7 +124,7 @@ static QString standardLibraryErrorString(int errorCode)
     #ifdef Q_OS_WINCE
         ret = windowsErrorString(errorCode);
     #else
-        #if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L && !defined(Q_OS_INTEGRITY) && !defined(Q_OS_QNX)
+        #if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L && !defined(Q_OS_QNX)
             QByteArray buf(1024, '\0');
             ret = fromstrerror_helper(strerror_r(errorCode, buf.data(), buf.size()), buf);
         #else

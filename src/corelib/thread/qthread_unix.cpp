@@ -440,15 +440,6 @@ int QThread::idealThreadCount()
 #elif defined(Q_OS_IRIX)
     // IRIX
     cores = (int)sysconf(_SC_NPROC_ONLN);
-#elif defined(Q_OS_INTEGRITY)
-#if (__INTEGRITY_MAJOR_VERSION >= 10)
-    // Integrity V10+ does support multicore CPUs
-    Value processorCount;
-    if (GetProcessorCount(CurrentTask(), &processorCount) == 0)
-        cores = processorCount;
-    else
-#endif
-    cores = 1;
 #elif defined(Q_OS_VXWORKS)
     // VxWorks
 #  if defined(QT_VXWORKS_HAS_CPUSET)

@@ -10,7 +10,7 @@ OBJS=project.o property.o main.o makefile.o unixmake2.o unixmake.o  \
      mingw_make.o option.o winmakefile.o projectgenerator.o \
      meta.o makefiledeps.o metamakefile.o xmloutput.o pbuilder_pbx.o \
      borland_bmake.o msvc_vcproj.o msvc_vcxproj.o msvc_nmake.o msvc_objectmodel.o msbuild_objectmodel.o \
-     registry.o gbuild.o
+     registry.o
 
 #qt code
 QOBJS=qtextcodec.o qutfcodec.o qstring.o qtextstream.o qiodevice.o qmalloc.o qglobal.o \
@@ -34,7 +34,6 @@ DEPEND_SRC=project.cpp property.cpp meta.cpp main.cpp generators/makefile.cpp ge
 	   generators/makefiledeps.cpp option.cpp generators/win32/mingw_make.cpp generators/makefile.cpp \
 	   generators/win32/msvc_vcproj.cpp generators/win32/msvc_vcxproj.cpp generators/win32/msvc_objectmodel.cpp generators/win32/msbuild_objectmodel.cpp generators/win32/msbuild_objectmodel.cpp generators/win32/msvc_nmake.cpp generators/win32/borland_bmake.cpp \
 	   $(SOURCE_PATH)/tools/shared/windows/registry.cpp \
-	   generators/integrity/gbuild.cpp \
 	   $(SOURCE_PATH)/src/corelib/codecs/qtextcodec.cpp $(SOURCE_PATH)/src/corelib/codecs/qutfcodec.cpp \
 	   $(SOURCE_PATH)/src/corelib/tools/qstring.cpp $(SOURCE_PATH)/src/corelib/io/qfile.cpp \
 	   $(SOURCE_PATH)/src/corelib/io/qtextstream.cpp $(SOURCE_PATH)/src/corelib/io/qiodevice.cpp \
@@ -68,7 +67,7 @@ DEPEND_SRC=project.cpp property.cpp meta.cpp main.cpp generators/makefile.cpp ge
 	   $(QTSRCS)
 
 CPPFLAGS = -I. -Igenerators -Igenerators/unix -Igenerators/win32 \
-           -Igenerators/mac -Igenerators/integrity \
+           -Igenerators/mac \
 	   -I$(BUILD_PATH)/include -I$(BUILD_PATH)/include/QtCore \
 	   -I$(BUILD_PATH)/src/corelib/global -I$(BUILD_PATH)/src/corelib/xml \
 	   -I$(SOURCE_PATH)/tools/shared \
@@ -299,9 +298,6 @@ pbuilder_pbx.o: generators/mac/pbuilder_pbx.cpp
 
 registry.o: $(SOURCE_PATH)/tools/shared/windows/registry.cpp
 	$(CXX) -c -o $@ $(CXXFLAGS) $(SOURCE_PATH)/tools/shared/windows/registry.cpp
-
-gbuild.o: generators/integrity/gbuild.cpp
-	$(CXX) -c -o $@ $(CXXFLAGS) generators/integrity/gbuild.cpp
 
 projectgenerator.o: generators/projectgenerator.cpp
 	$(CXX) -c -o $@ $(CXXFLAGS) generators/projectgenerator.cpp

@@ -188,7 +188,7 @@ bool QTestBasicStreamer::isTtyOutput()
 {
     QTEST_ASSERT(QTest::stream);
 
-#if defined(Q_OS_WIN) || defined(Q_OS_INTEGRITY)
+#if defined(Q_OS_WIN)
     return true;
 #else
     static bool ttyoutput = isatty(fileno(QTest::stream));

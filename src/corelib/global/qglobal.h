@@ -255,8 +255,6 @@ namespace QT_NAMESPACE {}
 #  define Q_OS_UNIXWARE
 #elif defined(__svr4__) && defined(i386) /* Open UNIX 8 + GCC */
 #  define Q_OS_UNIXWARE
-#elif defined(__INTEGRITY)
-#  define Q_OS_INTEGRITY
 #elif defined(VXWORKS) /* there is no "real" VxWorks define - this has to be set in the mkspec! */
 #  define Q_OS_VXWORKS
 #elif defined(__MAKEDEPEND__)

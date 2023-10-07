@@ -445,7 +445,6 @@ QT_BEGIN_INCLUDE_NAMESPACE
 #include "borland_bmake.h"
 #include "msvc_vcproj.h"
 #include "msvc_vcxproj.h"
-#include "gbuild.h"
 QT_END_INCLUDE_NAMESPACE
 
 MakefileGenerator *
@@ -481,8 +480,6 @@ MetaMakefileGenerator::createMakefileGenerator(QMakeProject *proj, bool noIO)
             mkfile = new NmakeMakefileGenerator;
     } else if(gen == "BMAKE") {
         mkfile = new BorlandMakefileGenerator;
-    } else if(gen == "GBUILD") {
-        mkfile = new GBuildMakefileGenerator;
     } else {
         fprintf(stderr, "Unknown generator specified: %s\n", gen.toLatin1().constData());
     }
@@ -539,9 +536,6 @@ MetaMakefileGenerator::modesForGenerator(const QString &gen,
     } else if (gen == "PROJECTBUILDER" || gen == "XCODE") {
         *host_mode = Option::HOST_MACX_MODE;
         *target_mode = Option::TARG_MACX_MODE;
-    } else if (gen == "GBUILD") {
-        *host_mode = Option::HOST_UNIX_MODE;
-        *target_mode = Option::TARG_INTEGRITY_MODE;
     } else {
         fprintf(stderr, "Unknown generator specified: %s\n", gen.toLatin1().constData());
         return false;

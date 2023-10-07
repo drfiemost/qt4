@@ -2095,7 +2095,7 @@ static void slog2_default_handler(QtMsgType msgType, const char *message)
 }
 #endif // QT_USE_SLOG2
 
-#if !defined(Q_OS_WIN) && !defined(QT_NO_THREAD) && !defined(Q_OS_INTEGRITY) && !defined(Q_OS_QNX) && \
+#if !defined(Q_OS_WIN) && !defined(QT_NO_THREAD) && !defined(Q_OS_QNX) && \
     defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L
 namespace {
     // There are two incompatible versions of strerror_r:
@@ -2159,7 +2159,7 @@ QString qt_error_string(int errorCode)
 
         if (ret.isEmpty() && errorCode == ERROR_MOD_NOT_FOUND)
             ret = QString::fromLatin1("The specified module could not be found.");
-#elif !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L && !defined(Q_OS_INTEGRITY) && !defined(Q_OS_QNX)
+#elif !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L && !defined(Q_OS_QNX)
         QByteArray buf(1024, '\0');
         ret = fromstrerror_helper(strerror_r(errorCode, buf.data(), buf.size()), buf);
 #else
@@ -2561,12 +2561,7 @@ bool qputenv(const char *varName, const QByteArray& value)
 
 #if defined(Q_OS_UNIX) && !defined(QT_NO_THREAD)
 
-#  if defined(Q_OS_INTEGRITY) && defined(__GHS_VERSION_NUMBER) && (__GHS_VERSION_NUMBER < 500)
-// older versions of INTEGRITY used a long instead of a uint for the seed.
-typedef long SeedStorageType;
-#  else
 typedef uint SeedStorageType;
-#  endif
 
 typedef QThreadStorage<SeedStorageType *> SeedStorage;
 Q_GLOBAL_STATIC(SeedStorage, randTLS)  // Thread Local Storage for seed value
