@@ -68,10 +68,6 @@ extern bool qt_wince_is_smartphone(); //is defined in qguifunctions_wce.cpp
 #   include "qmessagebox.h"
 #endif
 
-#if defined(Q_WS_S60)
-#include <AknUtils.h>               // AknLayoutUtils
-#endif
-
 #ifndef SPI_GETSNAPTODEFBUTTON
 #   define SPI_GETSNAPTODEFBUTTON  95
 #endif
@@ -261,14 +257,6 @@ QDialog::QDialog(QWidget *parent, Qt::WindowFlags f)
     if (!qt_wince_is_smartphone())
         setWindowFlags(windowFlags() | Qt::WindowOkButtonHint | QFlag(qt_wince_is_mobile() ? 0 : Qt::WindowCancelButtonHint));
 #endif
-
-#ifdef Q_WS_S60
-    if (S60->avkonComponentsSupportTransparency) {
-        bool noSystemBackground = testAttribute(Qt::WA_NoSystemBackground);
-        setAttribute(Qt::WA_TranslucentBackground); // also sets WA_NoSystemBackground
-        setAttribute(Qt::WA_NoSystemBackground, noSystemBackground); // restore system background attribute
-    }
-#endif
 }
 
 /*!
@@ -281,14 +269,6 @@ QDialog::QDialog(QDialogPrivate &dd, QWidget *parent, Qt::WindowFlags f)
 #ifdef Q_WS_WINCE
     if (!qt_wince_is_smartphone())
         setWindowFlags(windowFlags() | Qt::WindowOkButtonHint | QFlag(qt_wince_is_mobile() ? 0 : Qt::WindowCancelButtonHint));
-#endif
-
-#ifdef Q_WS_S60
-    if (S60->avkonComponentsSupportTransparency) {
-        bool noSystemBackground = testAttribute(Qt::WA_NoSystemBackground);
-        setAttribute(Qt::WA_TranslucentBackground); // also sets WA_NoSystemBackground
-        setAttribute(Qt::WA_NoSystemBackground, noSystemBackground); // restore system background attribute
-    }
 #endif
 }
 
@@ -394,17 +374,6 @@ bool QDialog::event(QEvent *e)
         accept();
         result = true;
      }
-#elif defined(Q_WS_S60)
-    if ((e->type() == QEvent::StyleChange) || (e->type() == QEvent::Resize )) {
-        if (!testAttribute(Qt::WA_Moved)) {
-            Qt::WindowStates state = windowState();
-            adjustPosition(parentWidget());
-            setAttribute(Qt::WA_Moved, false); // not really an explicit position
-            if (state != windowState())
-                setWindowState(state);
-        }
-    }
-    // TODO is Symbian, non-S60 behaviour required?
 #endif
     return result;
 }
@@ -1016,17 +985,7 @@ QSize QDialog::sizeHint() const
             return QSize(qMax(QWidget::sizeHint().width(), d->extension->sizeHint().width()),
                         QWidget::sizeHint().height());
     }
-#if defined(Q_WS_S60)
-    // if size is not fixed, try to adjust it according to S60 layoutting
-    if (minimumSize() != maximumSize()) {
-        // In S60, dialogs are always the width of screen (in portrait, regardless of current layout)
-        return QSize(qMin(S60->screenHeightInPixels, S60->screenWidthInPixels), QWidget::sizeHint().height());
-    } else {
-        return QWidget::sizeHint();
-    }
-#else
     return QWidget::sizeHint();
-#endif //Q_WS_S60
 }
 
 

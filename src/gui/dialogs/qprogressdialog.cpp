@@ -60,9 +60,6 @@
 #if defined(QT_SOFTKEYS_ENABLED)
 #include <qaction.h>
 #endif
-#ifdef Q_WS_S60
-#include <QtGui/qdesktopwidget.h>
-#endif
 
 
 QT_BEGIN_NAMESPACE
@@ -731,14 +728,7 @@ QSize QProgressDialog::sizeHint() const
     int h = margin * 2 + bh.height() + sh.height() + spacing;
     if (d->cancel)
         h += d->cancel->sizeHint().height() + spacing;
-#ifdef Q_WS_S60
-    if (QApplication::desktop()->size().height() > QApplication::desktop()->size().width())
-        return QSize(qMax(QApplication::desktop()->size().width(), sh.width() + 2 * margin), h);
-    else
-        return QSize(qMax(QApplication::desktop()->size().height(), sh.width() + 2 * margin), h);
-#else
     return QSize(qMax(200, sh.width() + 2 * margin), h);
-#endif
 }
 
 /*!\reimp

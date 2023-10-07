@@ -813,10 +813,6 @@ QMenuBar::~QMenuBar()
     if (qt_wince_is_mobile())
         d->wceDestroyMenuBar();
 #endif
-#ifdef Q_WS_S60
-    Q_D(QMenuBar);
-    d->symbianDestroyMenuBar();
-#endif
 #ifdef Q_WS_X11
     Q_D(QMenuBar);
     delete d->cornerWidgetToolBar;
@@ -1076,12 +1072,10 @@ void QMenuBar::setVisible(bool visible)
     Q_D(QMenuBar);
     d->platformMenuBar->setVisible(visible);
 #else
-#if defined(Q_WS_MAC) || defined(Q_OS_WINCE) || defined(Q_WS_S60)
+#if defined(Q_WS_MAC) || defined(Q_OS_WINCE)
     if (isNativeMenuBar()) {
-#ifndef Q_WS_S60
         if (!visible)
             QWidget::setVisible(false);
-#endif        
         return;
     }
 #endif
@@ -1285,12 +1279,10 @@ void QMenuBar::actionEvent(QActionEvent *e)
 #ifdef Q_WS_X11
     d->platformMenuBar->actionEvent(e);
 #endif
-#if defined (Q_WS_MAC) || defined(Q_OS_WINCE) || defined(Q_WS_S60)
+#if defined (Q_WS_MAC) || defined(Q_OS_WINCE)
     if (isNativeMenuBar()) {
 #ifdef Q_WS_MAC
         QMenuBarPrivate::QMacMenuBarPrivate *nativeMenuBar = d->mac_menubar;
-#elif defined(Q_WS_S60)
-        QMenuBarPrivate::QSymbianMenuBarPrivate *nativeMenuBar = d->symbian_menubar;
 #else
         QMenuBarPrivate::QWceMenuBarPrivate *nativeMenuBar = d->wce_menubar;
 #endif
@@ -1400,38 +1392,6 @@ void QMenuBarPrivate::handleReparent()
     if (qt_wince_is_mobile() && wce_menubar)
         wce_menubar->rebuild();
 #endif
-#ifdef Q_WS_S60
-
-    // Construct symbian_menubar when this code path is entered first time
-    // and when newParent != NULL
-    if (!symbian_menubar)
-        symbianCreateMenuBar(newParent);
-
-    // Reparent and rebuild menubar when parent is changed
-    if (symbian_menubar) {
-        if (oldParent != newParent)
-            reparentMenuBar(oldParent, newParent);
-        q->hide();
-        symbian_menubar->rebuild();
-    }
-
-#ifdef QT_SOFTKEYS_ENABLED
-    // Constuct menuBarAction when this code path is entered first time
-    if (!menuBarAction) {
-        if (newParent) {
-            menuBarAction = QSoftKeyManager::createAction(QSoftKeyManager::MenuSoftKey, newParent);
-            newParent->addAction(menuBarAction);
-        }
-    } else {
-        // If reparenting i.e. we already have menuBarAction, remove it from old parent
-        // and add for a new parent
-        if (oldParent)
-            oldParent->removeAction(menuBarAction);
-        if (newParent)
-            newParent->addAction(menuBarAction);
-    }
-#endif // QT_SOFTKEYS_ENABLED
-#endif // Q_WS_S60
 }
 
 /*!
@@ -1620,7 +1580,7 @@ QRect QMenuBar::actionGeometry(QAction *act) const
 QSize QMenuBar::minimumSizeHint() const
 {
     Q_D(const QMenuBar);
-#if defined(Q_WS_MAC) || defined(Q_WS_WINCE) || defined(Q_WS_S60) || defined(Q_WS_X11)
+#if defined(Q_WS_MAC) || defined(Q_WS_WINCE) || defined(Q_WS_X11)
     const bool as_gui_menubar = !isNativeMenuBar();
 #else
     const bool as_gui_menubar = true;
@@ -1682,7 +1642,7 @@ QSize QMenuBar::minimumSizeHint() const
 QSize QMenuBar::sizeHint() const
 {
     Q_D(const QMenuBar);
-#if defined(Q_WS_MAC) || defined(Q_WS_WINCE) || defined(Q_WS_S60) || defined(Q_WS_X11)
+#if defined(Q_WS_MAC) || defined(Q_WS_WINCE) || defined(Q_WS_X11)
     const bool as_gui_menubar = !isNativeMenuBar();
 #else
     const bool as_gui_menubar = true;
@@ -1747,7 +1707,7 @@ QSize QMenuBar::sizeHint() const
 int QMenuBar::heightForWidth(int) const
 {
     Q_D(const QMenuBar);
-#if defined(Q_WS_MAC) || defined(Q_WS_WINCE) || defined(Q_WS_S60) || defined(Q_WS_X11)
+#if defined(Q_WS_MAC) || defined(Q_WS_WINCE) || defined(Q_WS_X11)
     const bool as_gui_menubar = !isNativeMenuBar();
 #else
     const bool as_gui_menubar = true;

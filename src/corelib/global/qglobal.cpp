@@ -1246,7 +1246,7 @@ bool qSharedBuild()
 
     Defined on Mac OS X.
 
-    \sa Q_WS_WIN, Q_WS_X11, Q_WS_QWS, Q_WS_QPA, Q_WS_S60
+    \sa Q_WS_WIN, Q_WS_X11, Q_WS_QWS, Q_WS_QPA
 */
 
 /*!
@@ -1255,7 +1255,7 @@ bool qSharedBuild()
 
     Defined on Windows.
 
-    \sa Q_WS_MAC, Q_WS_X11, Q_WS_QWS, Q_WS_QPA, Q_WS_S60
+    \sa Q_WS_MAC, Q_WS_X11, Q_WS_QWS, Q_WS_QPA
 */
 
 /*!
@@ -1264,7 +1264,7 @@ bool qSharedBuild()
 
     Defined on X11.
 
-    \sa Q_WS_MAC, Q_WS_WIN, Q_WS_QWS, Q_WS_QPA, Q_WS_S60
+    \sa Q_WS_MAC, Q_WS_WIN, Q_WS_QWS, Q_WS_QPA
 */
 
 /*!
@@ -1273,7 +1273,7 @@ bool qSharedBuild()
 
     Defined on Qt for Embedded Linux.
 
-    \sa Q_WS_MAC, Q_WS_WIN, Q_WS_X11, Q_WS_QPA, Q_WS_S60
+    \sa Q_WS_MAC, Q_WS_WIN, Q_WS_X11, Q_WS_QPA
 */
 
 /*!
@@ -1282,7 +1282,7 @@ bool qSharedBuild()
 
     Defined on Qt for Embedded Linux, Lite version.
 
-    \sa Q_WS_MAC, Q_WS_WIN, Q_WS_X11, Q_WS_QWS, Q_WS_S60
+    \sa Q_WS_MAC, Q_WS_WIN, Q_WS_X11, Q_WS_QWS
 */
 
 /*!
@@ -1633,15 +1633,6 @@ bool qSharedBuild()
   \relates <QtGlobal>
 
   Defined on MAC OS (synonym for Darwin).
- */
-
-/*!
-  \macro Q_WS_S60
-  \relates <QtGlobal>
-
-  Defined on S60 with the Avkon UI framework.
-
-  \sa Q_WS_MAC, Q_WS_WIN, Q_WS_X11, Q_WS_QWS
  */
 
 #if defined(QT_BUILD_QMAKE)

@@ -123,10 +123,6 @@
 #include "qtabwidget.h" // Needed in inTabWidget()
 #endif // QT_KEYPAD_NAVIGATION
 
-#ifdef Q_WS_S60
-#include <aknappui.h>
-#endif
-
 #ifdef Q_OS_BLACKBERRY
 #include <bps/navigator.h>
 #endif
@@ -2179,20 +2175,6 @@ void QWidgetPrivate::updateIsOpaque()
     }
 #endif
 
-#ifdef Q_WS_S60
-    if (q->testAttribute(Qt::WA_TranslucentBackground)) {
-        if (q->windowType() & Qt::Dialog || q->windowType() & Qt::Popup) {
-            if (S60->avkonComponentsSupportTransparency) {
-                setOpaque(false);
-                return;
-            }
-        } else {
-            setOpaque(false);
-            return;
-        }
-    }
-#endif
-
     if (q->testAttribute(Qt::WA_OpaquePaintEvent) || q->testAttribute(Qt::WA_PaintOnScreen)) {
         setOpaque(true);
         return;
@@ -2209,16 +2191,11 @@ void QWidgetPrivate::updateIsOpaque()
     }
 
     if (q->isWindow() && !q->testAttribute(Qt::WA_NoSystemBackground)) {
-#ifdef Q_WS_S60
-        setOpaque(true);
-        return;
-#else
         const QBrush &windowBrush = q->palette().brush(QPalette::Window);
         if (windowBrush.style() != Qt::NoBrush && windowBrush.isOpaque()) {
             setOpaque(true);
             return;
         }
-#endif
     }
     setOpaque(false);
 }
@@ -10671,26 +10648,6 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
         }
 #endif // Q_OS_BLACKBERRY
 
-#ifdef Q_WS_S60
-        CAknAppUiBase* appUi = static_cast<CAknAppUiBase*>(CEikonEnv::Static()->EikAppUi());
-        const CAknAppUiBase::TAppUiOrientation s60orientations[] = {
-            CAknAppUiBase::EAppUiOrientationPortrait,
-            CAknAppUiBase::EAppUiOrientationLandscape,
-            CAknAppUiBase::EAppUiOrientationAutomatic
-        };
-        CAknAppUiBase::TAppUiOrientation s60orientation = CAknAppUiBase::EAppUiOrientationUnspecified;
-        for (int i = 0; i < 3; ++i) {
-            if (testAttribute(orientations[i])) {
-                s60orientation = s60orientations[i];
-                break;
-            }
-        }
-        QT_TRAP_THROWING(appUi->SetOrientationL(s60orientation));
-        S60->orientationSet = true;
-        QSymbianControl *window = static_cast<QSymbianControl *>(internalWinId());
-        if (window)
-            window->ensureFixNativeOrientation();
-#endif
         break;
     }
     default:

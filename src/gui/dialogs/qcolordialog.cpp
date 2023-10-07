@@ -64,14 +64,6 @@
 #include "qdialogbuttonbox.h"
 #include "private/qguiplatformplugin_p.h"
 
-#ifdef Q_WS_S60
-#include "private/qt_s60_p.h"
-#endif
-
-#if defined(Q_WS_S60) || defined(Q_WS_MAEMO_5)
-#  define QT_SMALL_COLORDIALOG
-#endif
-
 QT_BEGIN_NAMESPACE
 
 //////////// QWellArray BEGIN
@@ -1099,14 +1091,6 @@ QColorShower::QColorShower(QColorDialog *parent)
     gl->setMargin(gl->spacing());
     lab = new QColorShowLabel(this);
 
-#ifdef QT_SMALL_COLORDIALOG
-#  ifdef Q_WS_S60
-    const bool nonTouchUI = !S60->hasTouchscreen;
-#  elif defined Q_WS_MAEMO_5
-    const bool nonTouchUI = false;
-#  endif
-#endif
-
 #ifndef Q_WS_WINCE
 #ifdef QT_SMALL_COLORDIALOG
     lab->setMinimumHeight(60);
@@ -1526,14 +1510,6 @@ void QColorDialogPrivate::init(const QColor &initial)
     }
 #endif
 
-#if defined(QT_SMALL_COLORDIALOG)
-#  if defined(Q_WS_S60)
-    const bool nonTouchUI = !S60->hasTouchscreen;
-#  elif defined(Q_WS_MAEMO_5)
-    const bool nonTouchUI = false;
-#  endif
-#endif
-
     if (!smallDisplay) {
         standard = new QColorWell(q, 6, 8, stdrgb);
         lblBasicColors = new QLabel(q);
@@ -1940,12 +1916,6 @@ void QColorDialog::open(QObject *receiver, const char *member)
     QDialog::open();
 }
 
-/*
-    For Symbian color dialogs
-*/
-#ifdef Q_WS_S60
-extern QColor qtSymbianGetColor(const QColor &initial);
-#endif
 /*!
     \since 4.5
 
@@ -1964,10 +1934,6 @@ extern QColor qtSymbianGetColor(const QColor &initial);
 QColor QColorDialog::getColor(const QColor &initial, QWidget *parent, const QString &title,
                               ColorDialogOptions options)
 {
-#ifdef Q_WS_S60
-    if (!(options & DontUseNativeDialog))
-        return qtSymbianGetColor(initial);
-#endif
     QColorDialog dlg(parent);
     if (!title.isEmpty())
         dlg.setWindowTitle(title);
@@ -1989,9 +1955,6 @@ QColor QColorDialog::getColor(const QColor &initial, QWidget *parent, const QStr
 
 QColor QColorDialog::getColor(const QColor &initial, QWidget *parent)
 {
-#ifdef Q_WS_S60
-    return qtSymbianGetColor(initial);
-#endif
     return getColor(initial, parent, QString(), ColorDialogOptions(0));
 }
 

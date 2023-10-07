@@ -1708,25 +1708,6 @@ extern QStringList qt_win_get_open_file_names(const QFileDialogArgs &args,
 extern QString qt_win_get_existing_directory(const QFileDialogArgs &args);
 #endif
 
-/*
-    For Symbian file dialogs
-*/
-#if defined(Q_WS_S60)
-extern QString qtSymbianGetOpenFileName(const QString &caption,
-                                        const QString &dir,
-                                        const QString &filter);
-
-extern QStringList qtSymbianGetOpenFileNames(const QString &caption,
-                                             const QString &dir,
-                                             const QString &filter);
-
-extern QString qtSymbianGetSaveFileName(const QString &caption,
-                                        const QString &dir);
-
-extern QString qtSymbianGetExistingDirectory(const QString &caption,
-                                             const QString &dir);
-#endif
-
 /*!
     This is a convenience static function that returns an existing file
     selected by the user. If the user presses Cancel, it returns a null string.
@@ -1787,10 +1768,7 @@ QString QFileDialog::getOpenFileName(QWidget *parent,
 {
     if (qt_filedialog_open_filename_hook && !(options & DontUseNativeDialog))
         return qt_filedialog_open_filename_hook(parent, caption, dir, filter, selectedFilter, options);
-#if defined(Q_WS_S60)
-    if (QSysInfo::s60Version() > QSysInfo::SV_S60_5_0 && !(options & DontUseNativeDialog))
-        return qtSymbianGetOpenFileName(caption, dir, filter);
-#endif
+
     QFileDialogArgs args;
     args.parent = parent;
     args.caption = caption;
@@ -1879,10 +1857,7 @@ QStringList QFileDialog::getOpenFileNames(QWidget *parent,
 {
     if (qt_filedialog_open_filenames_hook && !(options & DontUseNativeDialog))
         return qt_filedialog_open_filenames_hook(parent, caption, dir, filter, selectedFilter, options);
-#if defined(Q_WS_S60)
-    if (QSysInfo::s60Version() > QSysInfo::SV_S60_5_0 && !(options & DontUseNativeDialog))
-        return qtSymbianGetOpenFileNames(caption, dir, filter);
-#endif
+
     QFileDialogArgs args;
     args.parent = parent;
     args.caption = caption;
@@ -1973,10 +1948,7 @@ QString QFileDialog::getSaveFileName(QWidget *parent,
 {
     if (qt_filedialog_save_filename_hook && !(options & DontUseNativeDialog))
         return qt_filedialog_save_filename_hook(parent, caption, dir, filter, selectedFilter, options);
-#if defined(Q_WS_S60)
-    if (QSysInfo::s60Version() > QSysInfo::SV_S60_5_0 && !(options & DontUseNativeDialog))
-        return qtSymbianGetSaveFileName(caption, dir);
-#endif
+
     QFileDialogArgs args;
     args.parent = parent;
     args.caption = caption;
@@ -2055,10 +2027,7 @@ QString QFileDialog::getExistingDirectory(QWidget *parent,
 {
     if (qt_filedialog_existing_directory_hook && !(options & DontUseNativeDialog))
         return qt_filedialog_existing_directory_hook(parent, caption, dir, options);
-#if defined(Q_WS_S60)
-    if (QSysInfo::s60Version() > QSysInfo::SV_S60_5_0 && !(options & DontUseNativeDialog))
-        return qtSymbianGetExistingDirectory(caption, dir);
-#endif
+
     QFileDialogArgs args;
     args.parent = parent;
     args.caption = caption;

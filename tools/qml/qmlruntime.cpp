@@ -91,10 +91,6 @@
 #include <QGLWidget>
 #endif
 
-#if defined(Q_WS_S60)
-#include <aknappui.h> // For locking app orientation
-#endif
-
 #include <qdeclarativetester.h>
 
 QT_BEGIN_NAMESPACE
@@ -732,23 +728,6 @@ void QDeclarativeViewer::proxySettingsChanged()
 
 void QDeclarativeViewer::rotateOrientation()
 {
-#if defined(Q_WS_S60)
-    CAknAppUi *appUi = static_cast<CAknAppUi *>(CEikonEnv::Static()->AppUi());
-    if (appUi) {
-        CAknAppUi::TAppUiOrientation oldOrientation = appUi->Orientation();
-        QString newOrientation;
-        if (oldOrientation == CAknAppUi::EAppUiOrientationPortrait) {
-            newOrientation = QLatin1String("Landscape");
-        } else {
-            newOrientation = QLatin1String("Portrait");
-        }
-        foreach (QAction *action, orientation->actions()) {
-            if (action->text() == newOrientation) {
-                changeOrientation(action);
-            }
-        }
-    }
-#else
     QAction *current = orientation->checkedAction();
     QList<QAction *> actions = orientation->actions();
     int index = actions.indexOf(current);
@@ -757,7 +736,6 @@ void QDeclarativeViewer::rotateOrientation()
 
     QAction *newOrientation = actions[(index + 1) % actions.count()];
     changeOrientation(newOrientation);
-#endif
 }
 
 void QDeclarativeViewer::toggleFullScreen()
@@ -1279,22 +1257,6 @@ void QDeclarativeViewer::changeOrientation(QAction *action)
         return;
     QString o = action->text();
     action->setChecked(true);
-#if defined(Q_WS_S60)
-    CAknAppUi *appUi = static_cast<CAknAppUi *>(CEikonEnv::Static()->AppUi());
-    if (appUi) {
-        CAknAppUi::TAppUiOrientation orientation = appUi->Orientation();
-        if (o == QLatin1String("Auto-orientation")) {
-            appUi->SetOrientationL(CAknAppUi::EAppUiOrientationAutomatic);
-            rotateAction->setVisible(false);
-        } else if (o == QLatin1String("Portrait")) {
-            appUi->SetOrientationL(CAknAppUi::EAppUiOrientationPortrait);
-            rotateAction->setVisible(true);
-        } else if (o == QLatin1String("Landscape")) {
-            appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
-            rotateAction->setVisible(true);
-        }
-    }
-#else
     if (o == QLatin1String("Portrait"))
         DeviceOrientation::instance()->setOrientation(DeviceOrientation::Portrait);
     else if (o == QLatin1String("Landscape"))
@@ -1303,7 +1265,6 @@ void QDeclarativeViewer::changeOrientation(QAction *action)
         DeviceOrientation::instance()->setOrientation(DeviceOrientation::PortraitInverted);
     else if (o == QLatin1String("Landscape (inverted)"))
         DeviceOrientation::instance()->setOrientation(DeviceOrientation::LandscapeInverted);
-#endif
 }
 
 void QDeclarativeViewer::orientationChanged()

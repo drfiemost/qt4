@@ -46,11 +46,6 @@
 #include "private/qaction_p.h"
 #include "private/qsoftkeymanager_common_p.h"
 
-#ifdef Q_WS_S60
-#include "private/qsoftkeymanager_s60_p.h"
-#include "private/qt_s60_p.h"
-#endif
-
 #ifndef QT_NO_SOFTKEYMANAGER
 QT_BEGIN_NAMESPACE
 
@@ -91,43 +86,13 @@ QSoftKeyManager *QSoftKeyManager::instance()
 }
 
 QSoftKeyManager::QSoftKeyManager() :
-#ifdef Q_WS_S60
-    QObject(*(new QSoftKeyManagerPrivateS60), 0)
-#else
     QObject(*(new QSoftKeyManagerPrivate), 0)
-#endif
 {
 }
 
 QAction *QSoftKeyManager::createAction(StandardSoftKey standardKey, QWidget *actionWidget)
 {
     QAction *action = new QAction(standardSoftKeyText(standardKey), actionWidget);
-#if defined(Q_WS_S60) && !defined(SYMBIAN_VERSION_9_4) && !defined(SYMBIAN_VERSION_9_3) && !defined(SYMBIAN_VERSION_9_2)
-    int key = 0;
-    switch (standardKey) {
-    case OkSoftKey:
-        key = EAknSoftkeyOk;
-        break;
-    case SelectSoftKey:
-        key = EAknSoftkeySelect;
-        break;
-    case DoneSoftKey:
-        key = EAknSoftkeyDone;
-        break;
-    case MenuSoftKey:
-        key = EAknSoftkeyOptions;
-        break;
-    case CancelSoftKey:
-        key = EAknSoftkeyCancel;
-        break;
-    default:
-        break;
-    };
-    if (key != 0) {
-        QSoftKeyManager::instance()->d_func()->softKeyCommandActions.insert(action, key);
-        connect(action, SIGNAL(destroyed(QObject*)), QSoftKeyManager::instance(), SLOT(cleanupHash(QObject*)));
-    }
-#endif
     QAction::SoftKeyRole softKeyRole = QAction::NoSoftKey;
     switch (standardKey) {
     case MenuSoftKey:
@@ -161,10 +126,6 @@ QAction *QSoftKeyManager::createKeyedAction(StandardSoftKey standardKey, Qt::Key
 
     connect(action.data(), SIGNAL(triggered()), QSoftKeyManager::instance(), SLOT(sendKeyEvent()));
 
-#if defined(Q_WS_S60) && !defined(SYMBIAN_VERSION_9_4) && !defined(SYMBIAN_VERSION_9_3) && !defined(SYMBIAN_VERSION_9_2)
-    // Don't connect destroyed slot if is was already connected in createAction
-    if (!(QSoftKeyManager::instance()->d_func()->softKeyCommandActions.contains(action.data())))
-#endif
     connect(action.data(), SIGNAL(destroyed(QObject*)), QSoftKeyManager::instance(), SLOT(cleanupHash(QObject*)));
 
     QSoftKeyManager::instance()->d_func()->keyedActions.insert(action.data(), key);
@@ -179,9 +140,6 @@ void QSoftKeyManager::cleanupHash(QObject *obj)
     // so use static_cast instead. Since the pointer is only used as a hash key, it is safe.
     QAction *action = static_cast<QAction *>(obj);
     d->keyedActions.remove(action);
-#if defined(Q_WS_S60) && !defined(SYMBIAN_VERSION_9_4) && !defined(SYMBIAN_VERSION_9_3) && !defined(SYMBIAN_VERSION_9_2)
-    d->softKeyCommandActions.remove(action);
-#endif
 }
 
 void QSoftKeyManager::sendKeyEvent()
@@ -201,11 +159,6 @@ void QSoftKeyManager::sendKeyEvent()
 
 void QSoftKeyManager::updateSoftKeys()
 {
-#ifdef Q_WS_S60
-    // Do not adjust softkeys if application is not the topmost one
-    if (S60->wsSession().GetFocusWindowGroup() != S60->windowGroup().WindowGroupId())
-        return;
-#endif
     QSoftKeyManager::instance()->d_func()->pendingUpdate = true;
     QEvent *event = new QEvent(QEvent::UpdateSoftKeys);
     QApplication::postEvent(QSoftKeyManager::instance(), event);
@@ -317,16 +270,6 @@ bool QSoftKeyManager::event(QEvent *e)
 #endif //QT_NO_ACTION
     return false;
 }
-
-#ifdef Q_WS_S60
-bool QSoftKeyManager::handleCommand(int command)
-{
-    if (QSoftKeyManager::instance()->d_func()->pendingUpdate)
-        (void)QSoftKeyManager::instance()->handleUpdateSoftKeys();
-
-    return static_cast<QSoftKeyManagerPrivateS60*>(QSoftKeyManager::instance()->d_func())->handleCommand(command);
-}
-#endif
 
 QT_END_NAMESPACE
 #endif //QT_NO_SOFTKEYMANAGER

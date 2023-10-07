@@ -256,13 +256,9 @@ void QMessageBoxPrivate::init(const QString &title, const QString &text)
 
     QGridLayout *grid = new QGridLayout;
 #ifndef Q_WS_MAC
-#ifdef Q_WS_S60
-    const int preferredIconColumn = (QApplication::layoutDirection() == Qt::LeftToRight) ? 1 : 0;
-    const int preferredTextColumn = (QApplication::layoutDirection() == Qt::LeftToRight) ? 0 : 1;
-#else
     const int preferredIconColumn = 0;
     const int preferredTextColumn = 1;
-#endif
+
     grid->addWidget(iconLabel, 0, preferredIconColumn, 2, 1, Qt::AlignTop);
     grid->addWidget(label, 0, preferredTextColumn, 1, 1);
     // -- leave space for information label --
@@ -353,15 +349,6 @@ void QMessageBoxPrivate::updateSize()
             width = hardLimit;
         }
     }
-#ifdef Q_WS_S60
-        // in S60 portait messageBoxes should always occupy maximum width
-        if (QApplication::desktop()->size().height() > QApplication::desktop()->size().width()){
-            width = hardLimit;
-        } else {
-            // in landscape the messageBoxes should be of same width as in portrait
-            width = qMin(QApplication::desktop()->size().height(), hardLimit);
-        }
-#endif
 
     if (informativeLabel) {
         label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);

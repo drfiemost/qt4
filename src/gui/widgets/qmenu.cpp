@@ -79,10 +79,6 @@
 #   include <private/qt_cocoa_helpers_mac_p.h>
 #endif
 
-#ifdef Q_WS_S60
-#   include "private/qt_s60_p.h"
-#endif
-
 
 QT_BEGIN_NAMESPACE
 
@@ -171,14 +167,6 @@ void QMenuPrivate::init()
     cancelAction->setPriority(QAction::HighPriority);
     q->addAction(selectAction);
     q->addAction(cancelAction);
-#endif
-
-#ifdef Q_WS_S60
-    if (S60->avkonComponentsSupportTransparency) {
-        bool noSystemBackground = q->testAttribute(Qt::WA_NoSystemBackground);
-        q->setAttribute(Qt::WA_TranslucentBackground); // also sets WA_NoSystemBackground
-        q->setAttribute(Qt::WA_NoSystemBackground, noSystemBackground); // restore system background attribute
-    }
 #endif
 }
 
@@ -2940,16 +2928,6 @@ void QMenu::actionEvent(QActionEvent *e)
         d->wce_menu->syncAction(e->action());
 #endif
 
-#ifdef Q_WS_S60
-    if (!d->symbian_menu)
-        d->symbian_menu = new QMenuPrivate::QSymbianMenuPrivate;
-    if (e->type() == QEvent::ActionAdded)
-        d->symbian_menu->addAction(e->action(), d->symbian_menu->findAction(e->before()));
-    else if (e->type() == QEvent::ActionRemoved)
-        d->symbian_menu->removeAction(e->action());
-    else if (e->type() == QEvent::ActionChanged)
-        d->symbian_menu->syncAction(e->action());
-#endif
     if (isVisible()) {
         d->updateActionRects();
         resize(sizeHint());
