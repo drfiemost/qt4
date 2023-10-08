@@ -7167,7 +7167,7 @@ QString QString::fromRawData(const QChar *unicode, int size)
     } else if (!size) {
         x = shared_empty.data_ptr();
     } else {
-        x = static_cast<Data *>(qMalloc(sizeof(Data) + sizeof(ushort)));
+        x = static_cast<Data *>(malloc(sizeof(Data) + sizeof(ushort)));
         Q_CHECK_PTR(x);
         x->ref.initializeOwned();
         x->size = size;

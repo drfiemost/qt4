@@ -48,6 +48,7 @@
 
 #include <new>
 #include <string.h>
+#include <stdlib.h>
 
 QT_BEGIN_HEADER
 
@@ -77,7 +78,7 @@ public:
                 i->~T();
         }
         if (ptr != reinterpret_cast<T *>(array))
-            qFree(ptr);
+            free(ptr);
     }
     inline QVarLengthArray<T, Prealloc> &operator=(const QVarLengthArray<T, Prealloc> &other)
     {
@@ -182,7 +183,7 @@ template <class T, int Prealloc>
 Q_INLINE_TEMPLATE QVarLengthArray<T, Prealloc>::QVarLengthArray(int asize)
     : s(asize) {
     if (s > Prealloc) {
-        ptr = reinterpret_cast<T *>(qMalloc(s * sizeof(T)));
+        ptr = reinterpret_cast<T *>(malloc(s * sizeof(T)));
         Q_CHECK_PTR(ptr);
         a = s;
     } else {
@@ -221,7 +222,7 @@ Q_OUTOFLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::append(const T *abuf, in
         while (s < asize)
             new (ptr+(s++)) T(*abuf++);
     } else {
-        qMemCopy(&ptr[s], abuf, increment * sizeof(T));
+        memcpy(&ptr[s], abuf, increment * sizeof(T));
         s = asize;
     }
 }
@@ -276,7 +277,7 @@ Q_OUTOFLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::realloc(int asize, int a
     }
 
     if (oldPtr != reinterpret_cast<T *>(array) && oldPtr != ptr)
-        qFree(oldPtr);
+        free(oldPtr);
 
     if (QTypeInfo<T>::isComplex) {
         // call default constructor for new objects (which can throw)

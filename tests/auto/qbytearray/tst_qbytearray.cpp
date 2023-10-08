@@ -557,18 +557,18 @@ void tst_QByteArray::fromBase64()
 void tst_QByteArray::qvsnprintf()
 {
     char buf[20];
-    qMemSet(buf, 42, sizeof(buf));
+    memset(buf, 42, sizeof(buf));
 
     QCOMPARE(::qsnprintf(buf, 10, "%s", "bubu"), 4);
     QCOMPARE(static_cast<const char *>(buf), "bubu");
     QCOMPARE(buf[5], char(42));
 
-    qMemSet(buf, 42, sizeof(buf));
+    memset(buf, 42, sizeof(buf));
     QCOMPARE(::qsnprintf(buf, 5, "%s", "bubu"), 4);
     QCOMPARE(static_cast<const char *>(buf), "bubu");
     QCOMPARE(buf[5], char(42));
 
-    qMemSet(buf, 42, sizeof(buf));
+    memset(buf, 42, sizeof(buf));
 #ifdef Q_OS_WIN
     // VS 2005 uses the Qt implementation of vsnprintf.
 # if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(Q_OS_WINCE)
@@ -593,7 +593,7 @@ void tst_QByteArray::qvsnprintf()
     QCOMPARE(buf[4], char(42));
 
 #ifndef Q_OS_WIN
-    qMemSet(buf, 42, sizeof(buf));
+    memset(buf, 42, sizeof(buf));
     QCOMPARE(::qsnprintf(buf, 10, ""), 0);
 #endif
 }

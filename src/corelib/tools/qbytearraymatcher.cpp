@@ -121,7 +121,7 @@ QByteArrayMatcher::QByteArrayMatcher()
 {
     p.p = nullptr;
     p.l = 0;
-    qMemSet(p.q_skiptable, 0, sizeof(p.q_skiptable));
+    memset(p.q_skiptable, 0, sizeof(p.q_skiptable));
 }
 
 /*!

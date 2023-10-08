@@ -47,6 +47,7 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 #ifdef truncate
 #error qbytearray.h must be included before any header file that defines truncate
@@ -402,7 +403,7 @@ public:
 };
 
 inline QByteArray::QByteArray(): d(shared_null.data_ptr()) { }
-inline QByteArray::~QByteArray() { if (!d->ref.deref()) qFree(d); }
+inline QByteArray::~QByteArray() { if (!d->ref.deref()) free(d); }
 inline int QByteArray::size() const
 { return d->size; }
 

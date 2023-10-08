@@ -56,6 +56,7 @@
 #include <new>
 #include <limits.h>
 #include <string.h>
+#include <stdlib.h>
 
 QT_BEGIN_HEADER
 
@@ -672,7 +673,7 @@ Q_OUTOFLINE_TEMPLATE typename QList<T>::Node *QList<T>::detach_helper_grow(int i
         node_copy(reinterpret_cast<Node *>(p.begin()),
                   reinterpret_cast<Node *>(p.begin() + i), n);
     } QT_CATCH(...) {
-        qFree(d);
+        free(d);
         d = x;
         QT_RETHROW;
     }
@@ -682,7 +683,7 @@ Q_OUTOFLINE_TEMPLATE typename QList<T>::Node *QList<T>::detach_helper_grow(int i
     } QT_CATCH(...) {
         node_destruct(reinterpret_cast<Node *>(p.begin()),
                       reinterpret_cast<Node *>(p.begin() + i));
-        qFree(d);
+        free(d);
         d = x;
         QT_RETHROW;
     }
@@ -701,7 +702,7 @@ Q_OUTOFLINE_TEMPLATE void QList<T>::detach_helper(int alloc)
     QT_TRY {
         node_copy(reinterpret_cast<Node *>(p.begin()), reinterpret_cast<Node *>(p.end()), n);
     } QT_CATCH(...) {
-        qFree(d);
+        free(d);
         d = x;
         QT_RETHROW;
     }
@@ -726,7 +727,7 @@ Q_OUTOFLINE_TEMPLATE QList<T>::QList(const QList<T> &l)
         struct Cleanup
         {
             Cleanup(QListData::Data *d) : d_(d) {}
-            ~Cleanup() { if (d_) qFree(d_); }
+            ~Cleanup() { if (d_) free(d_); }
 
             QListData::Data *d_;
         } tryCatch(d);
@@ -769,7 +770,7 @@ Q_OUTOFLINE_TEMPLATE void QList<T>::dealloc(QListData::Data *data)
 {
     node_destruct(reinterpret_cast<Node *>(data->array + data->begin),
                   reinterpret_cast<Node *>(data->array + data->end));
-    qFree(data);
+    free(data);
 }
 
 
