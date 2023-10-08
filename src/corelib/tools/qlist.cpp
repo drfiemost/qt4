@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
     the number of elements in the list.
 */
 
-const QListData::Data QListData::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, true, { nullptr } };
+const QListData::Data QListData::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, { nullptr } };
 
 static int grow(int size)
 {
@@ -88,7 +88,6 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
     Q_CHECK_PTR(t);
 
     t->ref.initializeOwned();
-    t->sharable = true;
     t->alloc = alloc;
     // The space reservation algorithm's optimization is biased towards appending:
     // Something which looks like an append will put the data at the beginning,
@@ -124,7 +123,6 @@ QListData::Data *QListData::detach()
     Q_CHECK_PTR(x);
 
     x->ref.initializeOwned();
-    x->sharable = true;
     x->alloc = d->alloc;
     if (!x->alloc) {
         x->begin = 0;
@@ -159,7 +157,6 @@ QListData::Data *QListData::detach2()
     ::memcpy(t, d, DataHeaderSize + d->alloc * sizeof(void *));
 
     t->ref.initializeOwned();
-    t->sharable = true;
     t->alloc = x->alloc;
     if (!t->alloc) {
         t->begin = 0;
@@ -188,7 +185,6 @@ QListData::Data *QListData::detach(int alloc)
     Q_CHECK_PTR(t);
 
     t->ref.initializeOwned();
-    t->sharable = true;
     t->alloc = alloc;
     if (!alloc) {
         t->begin = 0;
