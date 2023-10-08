@@ -118,7 +118,7 @@ static quint64 getTickCount()
     return val | (quint64(highdword) << 32);
 }
 
-QElapsedTimer::ClockType QElapsedTimer::clockType()
+QElapsedTimer::ClockType QElapsedTimer::clockType() noexcept
 {
     resolveLibs();
 
@@ -128,18 +128,18 @@ QElapsedTimer::ClockType QElapsedTimer::clockType()
         return TickCounter;
 }
 
-bool QElapsedTimer::isMonotonic()
+bool QElapsedTimer::isMonotonic() noexcept
 {
     return true;
 }
 
-void QElapsedTimer::start()
+void QElapsedTimer::start() noexcept
 {
     t1 = getTickCount();
     t2 = 0;
 }
 
-qint64 QElapsedTimer::restart()
+qint64 QElapsedTimer::restart() noexcept
 {
     qint64 oldt1 = t1;
     t1 = getTickCount();
@@ -147,35 +147,35 @@ qint64 QElapsedTimer::restart()
     return ticksToNanoseconds(t1 - oldt1) / 1000000;
 }
 
-qint64 QElapsedTimer::nsecsElapsed() const
+qint64 QElapsedTimer::nsecsElapsed() const noexcept
 {
     qint64 elapsed = getTickCount() - t1;
     return ticksToNanoseconds(elapsed);
 }
 
-qint64 QElapsedTimer::elapsed() const
+qint64 QElapsedTimer::elapsed() const noexcept
 {
     qint64 elapsed = getTickCount() - t1;
     return ticksToNanoseconds(elapsed) / 1000000;
 }
 
-qint64 QElapsedTimer::msecsSinceReference() const
+qint64 QElapsedTimer::msecsSinceReference() const noexcept
 {
     return ticksToNanoseconds(t1) / 1000000;
 }
 
-qint64 QElapsedTimer::msecsTo(const QElapsedTimer &other) const
+qint64 QElapsedTimer::msecsTo(const QElapsedTimer &other) const noexcept
 {
     qint64 difference = other.t1 - t1;
     return ticksToNanoseconds(difference) / 1000000;
 }
 
-qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const
+qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const noexcept
 {
     return msecsTo(other) / 1000;
 }
 
-bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2)
+bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
 {
     return (v1.t1 - v2.t1) < 0;
 }

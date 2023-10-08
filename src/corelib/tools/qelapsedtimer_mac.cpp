@@ -39,26 +39,31 @@
 **
 ****************************************************************************/
 
+// ask for the latest POSIX, just in case
+#define _POSIX_C_SOURCE 200809L
+
 #include "qelapsedtimer.h"
 #include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <mach/mach_time.h>
+#include <private/qcore_unix_p.h>
 
 QT_BEGIN_NAMESPACE
 
-QElapsedTimer::ClockType QElapsedTimer::clockType()
+QElapsedTimer::ClockType QElapsedTimer::clockType() noexcept
 {
     return MachAbsoluteTime;
 }
 
-bool QElapsedTimer::isMonotonic()
+bool QElapsedTimer::isMonotonic() noexcept
 {
     return true;
 }
 
 static mach_timebase_info_data_t info = {0,0};
-static qint64 absoluteToNSecs(qint64 cpuTime)
+static qint64 absoluteToNSecs(qint64 cpuTime) noexcept
 {
     if (info.denom == 0)
         mach_timebase_info(&info);
@@ -66,12 +71,12 @@ static qint64 absoluteToNSecs(qint64 cpuTime)
     return nsecs;
 }
 
-static qint64 absoluteToMSecs(qint64 cpuTime)
+static qint64 absoluteToMSecs(qint64 cpuTime) noexcept
 {
     return absoluteToNSecs(cpuTime) / 1000000;
 }
 
-timeval qt_gettime()
+timeval qt_gettime() noexcept
 {
     timeval tv;
 
@@ -82,13 +87,22 @@ timeval qt_gettime()
     return tv;
 }
 
-void QElapsedTimer::start()
+void qt_nanosleep(timespec amount)
+{
+    // Mac doesn't have clock_nanosleep, but it does have nanosleep.
+    // nanosleep is POSIX.1-1993
+
+    int r;
+    EINTR_LOOP(r, nanosleep(&amount, &amount));
+}
+
+void QElapsedTimer::start() noexcept
 {
     t1 = mach_absolute_time();
     t2 = 0;
 }
 
-qint64 QElapsedTimer::restart()
+qint64 QElapsedTimer::restart() noexcept
 {
     qint64 old = t1;
     t1 = mach_absolute_time();
@@ -97,34 +111,34 @@ qint64 QElapsedTimer::restart()
     return absoluteToMSecs(t1 - old);
 }
 
-qint64 QElapsedTimer::nsecsElapsed() const
+qint64 QElapsedTimer::nsecsElapsed() const noexcept
 {
     uint64_t cpu_time = mach_absolute_time();
     return absoluteToNSecs(cpu_time - t1);
 }
 
-qint64 QElapsedTimer::elapsed() const
+qint64 QElapsedTimer::elapsed() const noexcept
 {
     uint64_t cpu_time = mach_absolute_time();
     return absoluteToMSecs(cpu_time - t1);
 }
 
-qint64 QElapsedTimer::msecsSinceReference() const
+qint64 QElapsedTimer::msecsSinceReference() const noexcept
 {
     return absoluteToMSecs(t1);
 }
 
-qint64 QElapsedTimer::msecsTo(const QElapsedTimer &other) const
+qint64 QElapsedTimer::msecsTo(const QElapsedTimer &other) const noexcept
 {
     return absoluteToMSecs(other.t1 - t1);
 }
 
-qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const
+qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const noexcept
 {
     return msecsTo(other) / 1000;
 }
 
-bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2)
+bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
 {
     return v1.t1 < v2.t1;
 }

@@ -2959,7 +2959,7 @@ QDateTime QDateTime::currentDateTimeUtc()
     return QDateTime(d, t, Qt::UTC);
 }
 
-qint64 QDateTime::currentMSecsSinceEpoch()
+qint64 QDateTime::currentMSecsSinceEpoch() noexcept
 {
     QDate d;
     QTime t;
@@ -3070,7 +3070,7 @@ QDateTime QDateTime::currentDateTimeUtc()
     return dt;
 }
 
-qint64 QDateTime::currentMSecsSinceEpoch()
+qint64 QDateTime::currentMSecsSinceEpoch() noexcept
 {
     // posix compliant system
     // we have milliseconds

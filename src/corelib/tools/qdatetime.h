@@ -255,7 +255,7 @@ public:
 #endif
     static QDateTime fromTime_t(uint secsSince1Jan1970UTC);
     static QDateTime fromMSecsSinceEpoch(qint64 msecs);
-    static qint64 currentMSecsSinceEpoch();
+    static qint64 currentMSecsSinceEpoch() noexcept;
 
 private:
     friend class QDateTimePrivate;
