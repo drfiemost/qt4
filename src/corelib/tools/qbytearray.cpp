@@ -133,7 +133,7 @@ char *qstrcpy(char *dst, const char *src)
     if (!src)
         return nullptr;
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-    int len = qstrlen(src);
+    int len = strlen(src);
 	// This is actually not secure!!! It will be fixed
 	// properly in a later release!
     if (len >= 0 && strcpy_s(dst, len+1, src) == 0)
@@ -907,7 +907,7 @@ QByteArray &QByteArray::operator=(const char *str)
     } else if (!*str) {
         x = shared_empty.data_ptr();
     } else {
-        int len = qstrlen(str);
+        int len = strlen(str);
         if (d->ref.isShared() || len > d->alloc || (len < d->size && len < d->alloc >> 1))
             reallocData(uint(len) + 1u);
         x = d;
@@ -1417,7 +1417,7 @@ void QByteArray::resize(int size)
         if (!d->ref.deref())
             free(d);
         d = x;
-    } else if (d == &shared_null.ba || d == &shared_empty.ba) {
+    } else if (d->size == 0 && d->ref.isStatic()) {
         //
         // Optimize the idiom:
         //    QByteArray a;
@@ -1539,9 +1539,9 @@ QByteArray QByteArray::nulTerminated() const
 
 QByteArray &QByteArray::prepend(const QByteArray &ba)
 {
-    if ((d == &shared_null.ba || d == &shared_empty.ba) && !IS_RAW_DATA(ba.d)) {
+    if (d->size == 0 && d->ref.isStatic() && !IS_RAW_DATA(ba.d)) {
         *this = ba;
-    } else if (ba.d != &shared_null.ba) {
+    } else if (ba.d->size != 0) {
         QByteArray tmp = *this;
         *this = ba;
         append(tmp);
@@ -1623,9 +1623,9 @@ QByteArray &QByteArray::prepend(char ch)
 
 QByteArray &QByteArray::append(const QByteArray &ba)
 {
-    if ((d == &shared_null.ba || d == &shared_empty.ba) && !IS_RAW_DATA(ba.d)) {
+    if (d->size == 0 && d->ref.isStatic() && !IS_RAW_DATA(ba.d)) {
         *this = ba;
-    } else if (ba.d != &shared_null.ba) {
+    } else if (ba.d->size != 0) {
         if (d->ref.isShared() || d->size + ba.d->size > d->alloc)
             reallocData(uint(d->size + ba.d->size) + 1u, true);
         memcpy(d->data() + d->size, ba.d->data(), ba.d->size);
@@ -1659,7 +1659,7 @@ QByteArray &QByteArray::append(const QByteArray &ba)
 QByteArray& QByteArray::append(const char *str)
 {
     if (str) {
-        int len = qstrlen(str);
+        int len = strlen(str);
         if (d->ref.isShared() || d->size + len > d->alloc)
             reallocData(uint(d->size + len) + 1u, true);
         memcpy(d->data() + d->size, str, len + 1); // include null terminator
@@ -2543,7 +2543,7 @@ bool QByteArray::startsWith(const char *str) const
 {
     if (!str || !*str)
         return true;
-    int len = qstrlen(str);
+    int len = strlen(str);
     if (d->size < len)
         return false;
     return qstrncmp(d->data(), str, len) == 0;
@@ -2588,7 +2588,7 @@ bool QByteArray::endsWith(const char *str) const
 {
     if (!str || !*str)
         return true;
-    int len = qstrlen(str);
+    int len = strlen(str);
     if (d->size < len)
         return false;
     return qstrncmp(d->data() + d->size - len, str, len) == 0;
@@ -2666,7 +2666,7 @@ QByteArray QByteArray::right(int len) const
 
 QByteArray QByteArray::mid(int pos, int len) const
 {
-    if (d == &shared_null.ba || d == &shared_empty.ba || pos >= d->size)
+    if ((d->size == 0 && d->ref.isStatic()) || pos > d->size)
         return QByteArray();
     if (len < 0)
         len = d->size - pos;
