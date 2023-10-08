@@ -19,5 +19,4 @@ wince*: {
      DEPLOYMENT += addFiles
 }
 
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)
 

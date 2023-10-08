@@ -17,7 +17,4 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS *.pro *.xml
 sources.path = $$[QT_INSTALL_EXAMPLES]/dbus/chat
 INSTALLS += target sources
 
-symbian: include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)
-symbian: warning(This example does not work on Symbian platform)
 simulator: warning(This example does not work on Simulator platform)

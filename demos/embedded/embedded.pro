@@ -19,11 +19,6 @@ contains(QT_CONFIG, webkit) {
     SUBDIRS += anomaly
 }
 
-contains(QT_CONFIG, declarative) {
-    # Qml demos require DEPLOYMENT support. Therefore, only symbian.
-    symbian:SUBDIRS += qmlcalculator qmlclocks qmldialcontrol qmleasing qmlflickr qmlphotoviewer qmltwitter
-}
-
 # install
 sources.files = README *.pro
 sources.path = $$[QT_INSTALL_DEMOS]/embedded

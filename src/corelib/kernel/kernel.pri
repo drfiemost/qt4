@@ -86,16 +86,9 @@ mac:!embedded:!qpa{
         kernel/qcoreapplication_mac.cpp
 }
 
-mac:!nacl {
+mac {
        SOURCES += \
                 kernel/qcore_mac.cpp
-}
-
-nacl {
-    SOURCES += \
-        kernel/qfunctions_nacl.cpp
-    HEADERS += \
-        kernel/qfunctions_nacl.h
 }
 
 unix {

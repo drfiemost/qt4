@@ -42,13 +42,10 @@
 #include "qcore_unix_p.h"
 #include "qelapsedtimer.h"
 
-#ifdef Q_OS_NACL
-#else
-# if !defined(Q_OS_HPUX) || defined(__ia64)
-#  include <sys/select.h>
-# endif
-#  include <sys/time.h>
+#if !defined(Q_OS_HPUX) || defined(__ia64)
+# include <sys/select.h>
 #endif
+#include <sys/time.h>
 
 #include <stdlib.h>
 

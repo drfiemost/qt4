@@ -10,4 +10,3 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS pingpong.pro
 sources.path = $$[QT_INSTALL_EXAMPLES]/statemachine/pingpong
 INSTALLS += target sources
 
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)

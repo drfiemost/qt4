@@ -2326,7 +2326,7 @@ QStringList QProcess::systemEnvironment()
     \relates QProcess
 
     Typedef for the identifiers used to represent processes on the underlying
-    platform. On Unix and Symbian, this corresponds to \l qint64; on Windows, it
+    platform. On Unix this corresponds to \l qint64; on Windows, it
     corresponds to \c{_PROCESS_INFORMATION*}.
 
     \sa QProcess::pid()

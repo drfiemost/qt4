@@ -12,6 +12,4 @@ INSTALLS =
 
 QT = core
 
-integrity: SUBDIRS -= test
-
 CONFIG += parallel_test

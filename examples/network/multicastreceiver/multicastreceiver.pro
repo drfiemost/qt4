@@ -9,4 +9,3 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS multicastreceiver.pro
 sources.path = $$[QT_INSTALL_EXAMPLES]/network/multicastreceiver
 INSTALLS += target sources
 
-symbian: include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)

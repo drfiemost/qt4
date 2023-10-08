@@ -15,4 +15,3 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS movedobject.pro
 sources.path = $$[QT_INSTALL_EXAMPLES]/tutorials/threads/movedobject
 INSTALLS += target sources
 
-symbian: include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)

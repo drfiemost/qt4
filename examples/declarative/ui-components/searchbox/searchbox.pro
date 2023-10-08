@@ -6,7 +6,6 @@ DEPLOYMENTFOLDERS = folder_01
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
 
-symbian:TARGET.UID3 = 0xEE81B300
 
 # Smart Installer package's UID
 # This UID is from the protected range and therefore the package will
@@ -16,7 +15,6 @@ symbian:TARGET.UID3 = 0xEE81B300
 #symbian:DEPLOYMENT.installer_header = 0x2002CCCF
 
 # Allow network access on Symbian
-symbian:TARGET.CAPABILITY += NetworkServices
 
 # If your application uses the Qt Mobility libraries, uncomment the following
 # lines and add the respective components to the MOBILITY variable.

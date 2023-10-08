@@ -25,7 +25,6 @@ SUBDIRS       = analogclock \
                 wiggly \
                 windowflags \
 
-maemo5: SUBDIRS += maemovibration
 
 contains(styles, motif): SUBDIRS += styles
 

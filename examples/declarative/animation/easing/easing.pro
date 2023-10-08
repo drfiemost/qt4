@@ -12,7 +12,6 @@ DEFINES += ORIENTATIONLOCK
 # Needs to be defined for Symbian
 #DEFINES += NETWORKACCESS
 
-symbian:TARGET.UID3 = 0xEAA54148
 
 # Smart Installer package's UID
 # This UID is from the protected range 

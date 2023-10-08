@@ -27,9 +27,3 @@ build_all:!build_pass {
 }
 
 INSTALLS += qdeclarativesources sources target
-
-symbian {
-    include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
-    TARGET.EPOCALLOWDLLDATA = 1
-}
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)

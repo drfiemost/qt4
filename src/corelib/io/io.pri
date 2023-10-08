@@ -80,7 +80,7 @@ win32 {
         SOURCES += io/qfilesystemengine_unix.cpp
         SOURCES += io/qprocess_unix.cpp
         SOURCES += io/qfilesystemiterator_unix.cpp
-        !nacl:macx-*: {
+        macx-*: {
             HEADERS += io/qfilesystemwatcher_fsevents_p.h
             SOURCES += io/qsettings_mac.cpp io/qfilesystemwatcher_fsevents.cpp
         }
@@ -100,16 +100,8 @@ win32 {
                     io/qfilesystemwatcher_dnotify_p.h
         }
 
-        !nacl {
-            freebsd-*|macx-*|darwin-*|openbsd-*:{
-                SOURCES += io/qfilesystemwatcher_kqueue.cpp
-                HEADERS += io/qfilesystemwatcher_kqueue_p.h
-            }
+        freebsd-*|macx-*|darwin-*|openbsd-*:{
+            SOURCES += io/qfilesystemwatcher_kqueue.cpp
+            HEADERS += io/qfilesystemwatcher_kqueue_p.h
         }
-}
-integrity {
-	SOURCES += io/qfsfileengine_unix.cpp \
-            io/qfsfileengine_iterator.cpp \
-            io/qfilesystemengine_unix.cpp \
-            io/qfilesystemiterator_unix.cpp
 }

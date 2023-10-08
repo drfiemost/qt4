@@ -25,7 +25,7 @@ SUBDIRS       = \
     }
 
     # no QProcess
-    !vxworks:!qnx:SUBDIRS += network-chat
+    !qnx:SUBDIRS += network-chat
 
     contains(QT_CONFIG, openssl):SUBDIRS += securesocketclient
     contains(QT_CONFIG, openssl-linked):SUBDIRS += securesocketclient

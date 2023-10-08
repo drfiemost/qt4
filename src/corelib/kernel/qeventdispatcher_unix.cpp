@@ -85,14 +85,10 @@ QEventDispatcherUNIXPrivate::QEventDispatcherUNIXPrivate()
     bool pipefail = false;
 
     // initialize the common parts of the event loop
-#if defined(Q_OS_NACL)
-   // do nothing.
-#else
     if (qt_safe_pipe(thread_pipe, O_NONBLOCK) == -1) {
         perror("QEventDispatcherUNIXPrivate(): Unable to create thread pipe");
         pipefail = true;
     }
-#endif
 
     if (pipefail)
         qFatal("QEventDispatcherUNIXPrivate(): Can not continue without a thread pipe");
@@ -104,13 +100,9 @@ QEventDispatcherUNIXPrivate::QEventDispatcherUNIXPrivate()
 
 QEventDispatcherUNIXPrivate::~QEventDispatcherUNIXPrivate()
 {
-#if defined(Q_OS_NACL)
-   // do nothing.
-#else
     // cleanup the common parts of the event loop
     close(thread_pipe[0]);
     close(thread_pipe[1]);
-#endif
 
     // cleanup timers
     qDeleteAll(timerList);
@@ -259,7 +251,7 @@ int QEventDispatcherUNIXPrivate::processThreadWakeUp(int nsel)
 
 QTimerInfoList::QTimerInfoList()
 {
-#if (_POSIX_MONOTONIC_CLOCK-0 <= 0) && !defined(Q_OS_MAC) && !defined(Q_OS_NACL)
+#if (_POSIX_MONOTONIC_CLOCK-0 <= 0) && !defined(Q_OS_MAC)
     if (!QElapsedTimer::isMonotonic()) {
         // not using monotonic timers, initialize the timeChanged() machinery
         previousTime = qt_gettime();
@@ -310,10 +302,6 @@ timeval qAbsTimeval(const timeval &t)
 */
 bool QTimerInfoList::timeChanged(timeval *delta)
 {
-#ifdef Q_OS_NACL
-    Q_UNUSED(delta)
-    return false; // Calling "times" crashes.
-#endif
     struct tms unused;
     clock_t currentTicks = times(&unused);
 

@@ -213,8 +213,6 @@ namespace QT_NAMESPACE {}
 #  define Q_OS_ULTRIX
 #elif defined(sinix)
 #  define Q_OS_RELIANT
-#elif defined(__native_client__)
-#  define Q_OS_NACL
 #elif defined(__linux__) || defined(__linux)
 #  define Q_OS_LINUX
 #elif defined(__FreeBSD__) || defined(__DragonFly__)

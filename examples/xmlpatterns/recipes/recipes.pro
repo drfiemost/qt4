@@ -10,10 +10,3 @@ target.path = $$[QT_INSTALL_EXAMPLES]/xmlpatterns/recipes
 sources.files = $$SOURCES $$HEADERS $$RESOURCES *.pro *.xq *.html forms files
 sources.path = $$[QT_INSTALL_EXAMPLES]/xmlpatterns/recipes
 INSTALLS += target sources
-
-symbian {
-    TARGET.UID3 = 0xA000D7C5
-    include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
-}
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)
-

@@ -10,7 +10,6 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS systray.pro resources im
 sources.path = $$[QT_INSTALL_EXAMPLES]/desktop/systray
 INSTALLS += target sources
 
-symbian: include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
 
 wince* {
 	CONFIG(debug, release|debug) {
@@ -23,7 +22,4 @@ wince* {
 	DEPLOYMENT += addPlugins
 }
 
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)
-symbian: warning(This example does not work on Symbian platform)
-maemo5: warning(This example does not work on Maemo platform)
 simulator: warning(This example does not work on Simulator platform)

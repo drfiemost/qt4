@@ -57,8 +57,6 @@
 
 #if defined(Q_OS_WINCE)
 #  include "QtCore/qfunctions_wince.h"
-#elif defined(Q_OS_NACL)
-#  include "QtCore/qfunctions_nacl.h"
 #endif
 
 #define Q_STATIC_GLOBAL_OPERATOR static

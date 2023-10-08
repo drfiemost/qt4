@@ -11,5 +11,4 @@ INSTALLS += target sources
 
 wince*: DEPLOYMENT_PLUGIN += qsqlite
 
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)
 

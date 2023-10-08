@@ -12,7 +12,6 @@ TEMPLATE    = app
 CONFIG      += debug
 QT=core gui
 
-maemo5 {
     QT += dbus
     CONFIG += link_pkgconfig
     PKG_CONFIG += mce

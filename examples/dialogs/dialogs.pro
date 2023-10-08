@@ -16,4 +16,3 @@ sources.files = README *.pro
 sources.path = $$[QT_INSTALL_EXAMPLES]/dialogs
 INSTALLS += sources
 
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)

@@ -72,8 +72,6 @@ CONFIG -= warn_on
     QMAKE_CXXFLAGS += $$RVCT_COMMON_CXXFLAGS
 }
 
-maemo5: DEFINES *= QT_NO_UITOOLS
-
 contains(DEFINES, QT_NO_UITOOLS): CONFIG -= uitools
 
 # Disable a few warnings on Windows. The warnings are also

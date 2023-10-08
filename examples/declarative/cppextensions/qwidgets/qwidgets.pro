@@ -17,14 +17,3 @@ build_all:!build_pass {
 }
 
 INSTALLS += sources target
-
-symbian:{
-    include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
-    TARGET.EPOCALLOWDLLDATA = 1
-
-    importFiles.files = QWidgets/qmlqwidgetsplugin.dll QWidgets/qmldir
-    importFiles.path = QWidgets
-
-    DEPLOYMENT += importFiles
-}
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)

@@ -10,6 +10,6 @@ contains(QT_CONFIG, shivavg) {
     !win32:!embedded:!mac:SUBDIRS += shivavg
 }
 
-!win32:!embedded:!mac:!symbian:CONFIG += x11
+!win32:!embedded:!mac:CONFIG += x11
 
 x11:contains(QT_CONFIG, opengles2):contains(QT_CONFIG, egl):SUBDIRS += meego

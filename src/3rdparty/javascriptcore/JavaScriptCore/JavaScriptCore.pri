@@ -28,7 +28,6 @@ INCLUDEPATH = \
     $$PWD/runtime \
     $$PWD/wrec \
     $$PWD/wtf \
-    $$PWD/wtf/symbian \
     $$PWD/wtf/unicode \
     $$PWD/yarr \
     $$PWD/API \
@@ -96,7 +95,6 @@ SOURCES += \
     interpreter/RegisterFile.cpp \
     jit/ExecutableAllocatorFixedVMPool.cpp \
     jit/ExecutableAllocatorPosix.cpp \
-    jit/ExecutableAllocatorSymbian.cpp \
     jit/ExecutableAllocatorWin.cpp \
     jit/ExecutableAllocator.cpp \
     jit/JITArithmetic.cpp \
@@ -166,7 +164,6 @@ SOURCES += \
     runtime/LiteralParser.cpp \
     runtime/Lookup.cpp \
     runtime/MarkStackPosix.cpp \
-    runtime/MarkStackSymbian.cpp \
     runtime/MarkStackWin.cpp \
     runtime/MarkStack.cpp \
     runtime/MathObject.cpp \
@@ -208,8 +205,6 @@ SOURCES += \
     wtf/qt/ThreadingQt.cpp \
     wtf/RandomNumber.cpp \
     wtf/RefCountedLeakCounter.cpp \
-    wtf/symbian/BlockAllocatorSymbian.cpp \
-    wtf/symbian/RegisterFileAllocatorSymbian.cpp \
     wtf/ThreadingNone.cpp \
     wtf/Threading.cpp \
     wtf/TypeTraits.cpp \

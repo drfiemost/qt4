@@ -56,10 +56,6 @@
 #include <string.h>
 #endif
 
-#if defined (Q_OS_NACL)
-#define QT_NO_DYNAMIC_LIBRARY
-#endif
-
 QT_BEGIN_NAMESPACE
 
 #if !defined(QT_HPUX_LD) && !defined(QT_NO_DYNAMIC_LIBRARY)

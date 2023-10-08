@@ -919,7 +919,7 @@ public:
     }
 };
 
-#if defined(Q_OS_UNIX) && !defined (Q_OS_NACL)
+#if defined(Q_OS_UNIX)
 #define QT_USE_MMAP
 #endif
 

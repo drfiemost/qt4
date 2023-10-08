@@ -15,6 +15,5 @@ sources.files = $$SOURCES *.h $$RESOURCES $$FORMS drilldown.pro *.png *.jpg imag
 sources.path = $$[QT_INSTALL_EXAMPLES]/sql/drilldown
 INSTALLS += target sources
 
-maemo5: include($$QT_SOURCE_TREE/examples/maemo5pkgrules.pri)
 
 simulator: warning(This example might not fully work on Simulator platform)

@@ -8,11 +8,7 @@ TEMPLATE = subdirs
 cross_compile: CONFIG += nostrip
 
 isEmpty(QT_BUILD_PARTS) { #defaults
-    integrity {
-       QT_BUILD_PARTS = libs tools examples demos
-    } else {
-       QT_BUILD_PARTS = libs tools examples demos docs translations
-    }
+    QT_BUILD_PARTS = libs tools examples demos docs translations
 } else { #make sure the order makes sense
    contains(QT_BUILD_PARTS, translations) {
        QT_BUILD_PARTS -= translations

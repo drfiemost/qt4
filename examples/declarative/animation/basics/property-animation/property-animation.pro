@@ -12,7 +12,6 @@ QML_IMPORT_PATH =
 # Needs to be defined for Symbian
 #DEFINES += NETWORKACCESS
 
-symbian:TARGET.UID3 = 0xE4032BC6
 
 # Smart Installer package's UID
 # This UID is from the protected range 

@@ -22,7 +22,7 @@ mac {
     SUBDIRS = debugplugin releaseplugin
     tst_qplugin_pro.depends += debugplugin releaseplugin
 } 
-!integrity:SUBDIRS += tst_qplugin.pro
+SUBDIRS += tst_qplugin.pro
 
 
 CONFIG += parallel_test

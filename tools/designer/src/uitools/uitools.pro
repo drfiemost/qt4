@@ -5,11 +5,6 @@ CONFIG += qt staticlib
 DESTDIR = ../../../../lib
 DLLDESTDIR = ../../../../bin
 
-symbian {
-    TARGET.UID3 = 0x2001E628
-    load(armcc_warnings)
-}
-
 win32|mac:!macx-xcode:CONFIG += debug_and_release build_all
 
 DEFINES += QFORMINTERNAL_NAMESPACE QT_DESIGNER_STATIC QT_FORMBUILDER_NO_SCRIPT
