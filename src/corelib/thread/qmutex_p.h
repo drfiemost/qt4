@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2012 Intel Corporation
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -81,7 +82,7 @@ public:
     ~QMutexPrivate();
 
     bool wait(int timeout = -1);
-    void wakeUp();
+    void wakeUp() noexcept;
 
     // Conrol the lifetime of the privates
     QAtomicInt refCount;
@@ -110,7 +111,7 @@ public:
     QAtomicInt waiters; //number of thread waiting
     QAtomicInt possiblyUnlocked; //bool saying that a timed wait timed out
     enum { BigNumber = 0x100000 }; //Must be bigger than the possible number of waiters (number of threads)
-    void derefWaiters(int value);
+    void derefWaiters(int value) noexcept;
 
     //platform specific stuff
 #if defined(Q_OS_UNIX)
@@ -132,8 +133,8 @@ public:
     uint count;
     QMutex mutex;
 
-    bool lock(int timeout);
-    void unlock();
+    bool lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT;
+    void unlock() noexcept;
 };
 
 QT_END_NAMESPACE

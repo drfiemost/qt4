@@ -94,7 +94,7 @@ static inline int futexFlags()
     return checkFutexPrivateSupport();
 }
 
-static inline int _q_futex(void *addr, int op, int val, const struct timespec *timeout)
+static inline int _q_futex(void *addr, int op, int val, const struct timespec *timeout) noexcept
 {
     volatile int *int_addr = reinterpret_cast<volatile int *>(addr);
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN && QT_POINTER_SIZE == 8
@@ -111,15 +111,11 @@ static inline QMutexData *dummyFutexValue()
 }
 
 
-bool QBasicMutex::lockInternal(int timeout)
+bool QBasicMutex::lockInternal(int timeout) noexcept
 {
-    // we're here because fastTryLock() has just failed
-    QMutexData *d = d_ptr.load();
-    if (quintptr(d) > 0x3) { //d == dummyLocked() || d == dummyFutexValue()
-        Q_ASSERT(d->recursive);
-        return static_cast<QRecursiveMutexPrivate *>(d)->lock(timeout);
-    }
+    Q_ASSERT(!isRecursive());
 
+    // we're here because fastTryLock() has just failed
     if (timeout == 0)
         return false;
 
@@ -127,53 +123,46 @@ bool QBasicMutex::lockInternal(int timeout)
     if (timeout >= 1)
         elapsedTimer.start();
 
-    while (!fastTryLock()) {
-        d = d_ptr.load();
-
-        if (!d) // if d is 0, the mutex is unlocked
-            continue;
-
-        // the mutex is locked already, set a bit indicating we're waiting
-        while (d_ptr.fetchAndStoreAcquire(dummyFutexValue()) != 0) {
-            struct timespec ts, *pts = 0;
-            if (timeout >= 1) {
-                // recalculate the timeout
-                qint64 xtimeout = qint64(timeout) * 1000 * 1000;
-                xtimeout -= elapsedTimer.nsecsElapsed();
-                if (xtimeout <= 0) {
-                    // timer expired after we returned
-                    return false;
-                }
-                ts.tv_sec = xtimeout / Q_INT64_C(1000) / 1000 / 1000;
-                ts.tv_nsec = xtimeout % (Q_INT64_C(1000) * 1000 * 1000);
-                pts = &ts;
-            }
-
-            // successfully set the waiting bit, now sleep
-            int r = _q_futex(&d_ptr, FUTEX_WAIT, quintptr(dummyFutexValue()), pts);
-            if (r != 0 && errno == ETIMEDOUT)
+    // the mutex is locked already, set a bit indicating we're waiting
+    while (d_ptr.fetchAndStoreAcquire(dummyFutexValue()) != 0) {
+        struct timespec ts, *pts = 0;
+        if (timeout >= 1) {
+            // recalculate the timeout
+            qint64 xtimeout = qint64(timeout) * 1000 * 1000;
+            xtimeout -= elapsedTimer.nsecsElapsed();
+            if (xtimeout <= 0) {
+                // timer expired after we returned
                 return false;
+            }
+            ts.tv_sec = xtimeout / Q_INT64_C(1000) / 1000 / 1000;
+            ts.tv_nsec = xtimeout % (Q_INT64_C(1000) * 1000 * 1000);
+            pts = &ts;
         }
-        return true;
+
+        // successfully set the waiting bit, now sleep
+        int r = _q_futex(&d_ptr, FUTEX_WAIT, quintptr(dummyFutexValue()), pts);
+        if (r != 0 && errno == ETIMEDOUT)
+            return false;
+
+        // we got woken up, so try to acquire the mutex
+        // note we must set to dummyFutexValue because there could be other threads
+        // also waiting
     }
+
     Q_ASSERT(d_ptr.load());
     return true;
 }
 
-void QBasicMutex::unlockInternal()
+void QBasicMutex::unlockInternal() noexcept
 {
     QMutexData *d = d_ptr.load();
     Q_ASSERT(d); //we must be locked
     Q_ASSERT(d != dummyLocked()); // testAndSetRelease(dummyLocked(), 0) failed
+    Q_UNUSED(d);
+    Q_ASSERT(!isRecursive());
 
-    if (d == dummyFutexValue()) {
-        d_ptr.fetchAndStoreRelease(0);
-        _q_futex(&d_ptr, FUTEX_WAKE, 1, 0);
-        return;
-    }
-
-    Q_ASSERT(d->recursive);
-    static_cast<QRecursiveMutexPrivate *>(d)->unlock();
+    d_ptr.fetchAndStoreRelease(0);
+    _q_futex(&d_ptr, FUTEX_WAKE, 1, 0);
 }
 
 

@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2012 Intel Corporation
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -54,6 +55,19 @@
 #endif
 
 QT_BEGIN_NAMESPACE
+
+static inline bool isRecursive(QMutexData *d)
+{
+    register quintptr u = quintptr(d);
+    if (Q_LIKELY(u <= 0x3))
+        return false;
+#ifdef QT_LINUX_FUTEX
+    Q_ASSERT(d->recursive);
+    return true;
+#else
+    return d->recursive;
+#endif
+}
 
 /*!
     \class QBasicMutex
@@ -175,6 +189,16 @@ QMutex::~QMutex()
 
     \sa unlock()
 */
+void QMutex::lock() QT_MUTEX_LOCK_NOEXCEPT
+{
+    if (fastTryLock())
+        return;
+    QMutexData *current = d_ptr.loadAcquire();
+    if (QT_PREPEND_NAMESPACE(isRecursive)(current))
+        static_cast<QRecursiveMutexPrivate *>(current)->lock(-1);
+    else
+        lockInternal();
+}
 
 /*!\fn bool QMutex::trylock()
     Attempts to lock the mutex. If the lock was obtained, this function
@@ -193,6 +217,16 @@ QMutex::~QMutex()
 
     \sa lock(), unlock()
 */
+bool QMutex::tryLock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
+{
+    if (fastTryLock())
+        return true;
+    QMutexData *current = d_ptr.loadAcquire();
+    if (QT_PREPEND_NAMESPACE(isRecursive)(current))
+        return static_cast<QRecursiveMutexPrivate *>(current)->lock(timeout);
+    else
+        return lockInternal(timeout);
+}
 
 /*! \fn bool QMutex::tryLock(int timeout)
      \overload
@@ -218,6 +252,16 @@ QMutex::~QMutex()
 
     \sa lock(), unlock()
 */
+void QMutex::unlock() noexcept
+{
+    if (fastTryUnlock())
+        return;
+    QMutexData *current = d_ptr.loadAcquire();
+    if (QT_PREPEND_NAMESPACE(isRecursive)(current))
+        static_cast<QRecursiveMutexPrivate *>(current)->unlock();
+    else
+        unlockInternal();
+}
 
 /*! \fn void QMutex::unlock()
     Unlocks the mutex. Attempting to unlock a mutex in a different
@@ -232,16 +276,9 @@ QMutex::~QMutex()
 
     Returns true if the mutex is recursive
 */
-bool QBasicMutex::isRecursive() {
-    QMutexData *d = d_ptr.load();
-    if (quintptr(d) <= 0x3)
-        return false;
-#ifdef QT_LINUX_FUTEX
-    Q_ASSERT(d->recursive);
-    return true;
-#else
-    return d->recursive;
-#endif
+bool QBasicMutex::isRecursive()
+{
+    return QT_PREPEND_NAMESPACE(isRecursive)(d_ptr.loadAcquire());
 }
 
 
@@ -344,10 +381,9 @@ bool QBasicMutex::isRecursive() {
 /*!
     \internal helper for lockInline()
  */
-bool QBasicMutex::lockInternal(int timeout)
+bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 {
-    if (isRecursive())
-        return static_cast<QRecursiveMutexPrivate *>(d_ptr.load())->lock(timeout);
+    Q_ASSERT(!isRecursive());
 
     while (!fastTryLock()) {
         QMutexData *copy = d_ptr.loadAcquire();
@@ -437,16 +473,13 @@ bool QBasicMutex::lockInternal(int timeout)
 /*!
     \internal
 */
-void QBasicMutex::unlockInternal()
+void QBasicMutex::unlockInternal() noexcept
 {
     QMutexData *copy = this->d.loadAcquire();
     Q_ASSERT(copy); //we must be locked
     Q_ASSERT(copy != dummyLocked()); // testAndSetRelease(dummyLocked(), 0) failed
 
-    if (copy->recursive) {
-        static_cast<QRecursiveMutexPrivate *>(copy)->unlock();
-        return;
-    }
+    Q_ASSERT(!isRecursive());
 
     QMutexPrivate *d = reinterpret_cast<QMutexPrivate *>(copy);
 
@@ -505,7 +538,7 @@ void QMutexPrivate::release()
 }
 
 // atomically substract "value" to the waiters, and remove the QMutexPrivate::BigNumber flag
-void QMutexPrivate::derefWaiters(int value)
+void QMutexPrivate::derefWaiters(int value) noexcept
 {
     int old_waiters;
     int new_waiters;
@@ -523,7 +556,8 @@ void QMutexPrivate::derefWaiters(int value)
 /*!
    \internal
 */
-bool QRecursiveMutexPrivate::lock(int timeout) {
+bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
+{
     Qt::HANDLE self = QThread::currentThreadId();
     if (owner == self) {
         ++count;
@@ -545,7 +579,7 @@ bool QRecursiveMutexPrivate::lock(int timeout) {
 /*!
    \internal
  */
-void QRecursiveMutexPrivate::unlock()
+void QRecursiveMutexPrivate::unlock() noexcept
 {
     if (count > 0) {
         count--;

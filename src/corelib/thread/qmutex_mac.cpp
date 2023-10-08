@@ -84,7 +84,7 @@ bool QMutexPrivate::wait(int timeout)
     return (r == KERN_SUCCESS);
 }
 
-void QMutexPrivate::wakeUp()
+void QMutexPrivate::wakeUp() noexcept
 {
     semaphore_signal(mach_semaphore);
 }
