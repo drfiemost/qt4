@@ -152,8 +152,7 @@ void tst_QMutex::tryLock()
                 QVERIFY(lockCount.testAndSetRelaxed(1, 0));
                 normalMutex.unlock();
                 testsTurn.release();
-/*
- * FIXME 
+
                 // TEST 7 overflow: thread can acquire lock, timeout = 3000 (QTBUG-24795)
                 threadsTurn.acquire();
                 timer.start();
@@ -161,7 +160,7 @@ void tst_QMutex::tryLock()
                 QVERIFY(timer.elapsed() < 3000);
                 normalMutex.unlock();
                 testsTurn.release();
-*/
+
                 threadsTurn.acquire();
             }
         };
@@ -204,15 +203,14 @@ void tst_QMutex::tryLock()
         QVERIFY(lockCount.testAndSetRelaxed(1, 0));
         normalMutex.unlock();
         threadsTurn.release();
-/*
- * FIXME 
+
         // TEST 7: thread can acquire lock, timeout = 3000   (QTBUG-24795)
         testsTurn.acquire();
         normalMutex.lock();
         threadsTurn.release();
         QThread::msleep(100);
         normalMutex.unlock();
-*/
+
         // wait for thread to finish
         testsTurn.acquire();
         threadsTurn.release();
@@ -675,28 +673,28 @@ public:
         quint64 i = 0;
         while (t.elapsed() < one_minute) {
             i++;
-            uint nb = (i * 9 + lockCount * 13) % threadCount;
+            uint nb = (i * 9 + lockCount.load() * 13) % threadCount;
             QMutexLocker locker(&mutex[nb]);
-            if (sentinel[nb]) errorCount.ref();
+            if (sentinel[nb].load()) errorCount.ref();
             if (sentinel[nb].fetchAndAddRelaxed(5)) errorCount.ref();
             if (!sentinel[nb].testAndSetRelaxed(5, 0)) errorCount.ref();
-            if (sentinel[nb]) errorCount.ref();
+            if (sentinel[nb].load()) errorCount.ref();
             lockCount.ref();
-            nb = (nb * 17 + i * 5 + lockCount * 3) % threadCount;
+            nb = (nb * 17 + i * 5 + lockCount.load() * 3) % threadCount;
             if (mutex[nb].tryLock()) {
-                if (sentinel[nb]) errorCount.ref();
+                if (sentinel[nb].load()) errorCount.ref();
                 if (sentinel[nb].fetchAndAddRelaxed(16)) errorCount.ref();
                 if (!sentinel[nb].testAndSetRelaxed(16, 0)) errorCount.ref();
-                if (sentinel[nb]) errorCount.ref();
+                if (sentinel[nb].load()) errorCount.ref();
                 lockCount.ref();
                 mutex[nb].unlock();
             }
-            nb = (nb * 15 + i * 47 + lockCount * 31) % threadCount;
+            nb = (nb * 15 + i * 47 + lockCount.load() * 31) % threadCount;
             if (mutex[nb].tryLock(2)) {
-                if (sentinel[nb]) errorCount.ref();
+                if (sentinel[nb].load()) errorCount.ref();
                 if (sentinel[nb].fetchAndAddRelaxed(53)) errorCount.ref();
                 if (!sentinel[nb].testAndSetRelaxed(53, 0)) errorCount.ref();
-                if (sentinel[nb]) errorCount.ref();
+                if (sentinel[nb].load()) errorCount.ref();
                 lockCount.ref();
                 mutex[nb].unlock();
             }

@@ -1127,7 +1127,7 @@ class VirtualObject: public QDBusVirtualObject
 public:
     VirtualObject() :success(true) {}
 
-    QString introspect(const QString &path) const
+    QString introspect(const QString &/*path*/) const
     {
         return QString();
     }

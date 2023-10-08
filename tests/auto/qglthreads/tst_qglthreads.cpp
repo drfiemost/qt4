@@ -45,15 +45,7 @@
 #include <QtOpenGL/QtOpenGL>
 #include "tst_qglthreads.h"
 
-#ifdef Q_OS_SYMBIAN
-#include <unistd.h> // for usleep
-#define RUNNING_TIME 2000 // save GPU mem by running shorter time.
-#else
-#include "qplatformdefs.h" // for usleep
 #define RUNNING_TIME 5000
-#endif
-
-
 
 
 tst_QGLThreads::tst_QGLThreads(QObject *parent)
@@ -468,11 +460,7 @@ void tst_QGLThreads::renderInThread()
         qApp->processEvents();
         value = -value;
 
-#ifdef Q_WS_WIN
-        Sleep(100);
-#else
-        usleep(100 * 1000);
-#endif
+        QThread::msleep(100);
     }
 
     QVERIFY(!thread.failure);
@@ -575,11 +563,7 @@ public slots:
             p.drawText(rect.center(), "This is a piece of text");
             p.end();
             rotAngle += 2;
-#ifdef Q_WS_WIN
-            Sleep(20);
-#else
-            usleep(20 * 1000);
-#endif
+            QThread::msleep(20);
         }
 
         fail = beginFailed;
@@ -671,11 +655,7 @@ void tst_QGLThreads::painterOnGLWidgetInThread()
 
     while (painterThreads.areRunning()) {
         qApp->processEvents();
-#ifdef Q_WS_WIN
-        Sleep(100);
-#else
-        usleep(100 * 1000);
-#endif
+        QThread::msleep(100);
     }
     QVERIFY(!painterThreads.failed());
 }
@@ -694,11 +674,7 @@ void tst_QGLThreads::painterOnPixmapInThread()
 
     while (painterThreads.areRunning()) {
         qApp->processEvents();
-#ifdef Q_WS_WIN
-        Sleep(100);
-#else
-        usleep(100 * 1000);
-#endif
+        QThread::msleep(100);
     }
     QVERIFY(!painterThreads.failed());
 }
@@ -727,11 +703,7 @@ void tst_QGLThreads::painterOnPboInThread()
 
     while (painterThreads.areRunning()) {
         qApp->processEvents();
-#ifdef Q_WS_WIN
-        Sleep(100);
-#else
-        usleep(100 * 1000);
-#endif
+        QThread::msleep(100);
     }
     QVERIFY(!painterThreads.failed());
 }
@@ -761,11 +733,7 @@ void tst_QGLThreads::painterOnFboInThread()
 
     while (painterThreads.areRunning()) {
         qApp->processEvents();
-#ifdef Q_WS_WIN
-        Sleep(100);
-#else
-        usleep(100 * 1000);
-#endif
+        QThread::msleep(100);
     }
     QVERIFY(!painterThreads.failed());
 }

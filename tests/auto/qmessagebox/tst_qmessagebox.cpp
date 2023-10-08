@@ -607,6 +607,7 @@ void tst_QMessageBox::testSymbols()
     button = QMessageBox::Default;
     button = QMessageBox::Escape;
     button = QMessageBox::FlagMask;
+    QVERIFY(button);
 
     mb1.setText("Foo");
     QCOMPARE(mb1.text(), "Foo");

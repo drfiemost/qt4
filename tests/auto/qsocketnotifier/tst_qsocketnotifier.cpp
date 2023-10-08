@@ -121,9 +121,6 @@ signals:
 
 void tst_QSocketNotifier::unexpectedDisconnection()
 {
-#ifdef Q_OS_SYMBIAN
-    QSKIP("Symbian socket engine pseudo descriptors can't be used for QSocketNotifier", SkipAll);
-#else
     /*
       Given two sockets and two QSocketNotifiers registered on each
       their socket. If both sockets receive data, and the first slot
@@ -142,10 +139,8 @@ void tst_QSocketNotifier::unexpectedDisconnection()
 
     NATIVESOCKETENGINE readEnd1;
     readEnd1.initialize(QAbstractSocket::TcpSocket);
-    bool b = readEnd1.connectToHost(server.serverAddress(), server.serverPort());
+    readEnd1.connectToHost(server.serverAddress(), server.serverPort());
     QVERIFY(readEnd1.waitForWrite());
-//    while (!b && readEnd1.state() != QAbstractSocket::ConnectedState)
-//        b = readEnd1.connectToHost(server.serverAddress(), server.serverPort());
     QVERIFY(readEnd1.state() == QAbstractSocket::ConnectedState);
     QVERIFY(server.waitForNewConnection());
     QTcpSocket *writeEnd1 = server.nextPendingConnection();
@@ -153,10 +148,8 @@ void tst_QSocketNotifier::unexpectedDisconnection()
 
     NATIVESOCKETENGINE readEnd2;
     readEnd2.initialize(QAbstractSocket::TcpSocket);
-    b = readEnd2.connectToHost(server.serverAddress(), server.serverPort());
+    readEnd2.connectToHost(server.serverAddress(), server.serverPort());
     QVERIFY(readEnd2.waitForWrite());
-//    while (!b)
-//        b = readEnd2.connectToHost(server.serverAddress(), server.serverPort());
     QVERIFY(readEnd2.state() == QAbstractSocket::ConnectedState);
     QVERIFY(server.waitForNewConnection());
     QTcpSocket *writeEnd2 = server.nextPendingConnection();
@@ -193,7 +186,6 @@ void tst_QSocketNotifier::unexpectedDisconnection()
     writeEnd1->close();
     writeEnd2->close();
     server.close();
-#endif
 }
 
 class MixingWithTimersHelper : public QObject

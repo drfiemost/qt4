@@ -323,14 +323,13 @@ void tst_QAnimationGroup::setParentAutoAdd()
 
 void tst_QAnimationGroup::beginNestedGroup()
 {
-    QAnimationGroup *subGroup;
     QAnimationGroup *parent = new QParallelAnimationGroup();
 
     for (int i = 0; i < 10; ++i) {
         if (i & 1)
-            subGroup = new QParallelAnimationGroup(parent);
+            new QParallelAnimationGroup(parent);
         else
-            subGroup = new QSequentialAnimationGroup(parent);
+            new QSequentialAnimationGroup(parent);
 
         QCOMPARE(parent->animationCount(), 1);
         QAnimationGroup *child = static_cast<QAnimationGroup *>(parent->animationAt(0));

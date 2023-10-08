@@ -2384,11 +2384,10 @@ int CacheFoo::counter = 0;
 void tst_Collections::cache()
 {
     {
-	CacheFoo* cf;
 	QCache<int, CacheFoo> cache(120);
 	int i;
 	for (i = 0; i < 30; i++) {
-	    cf = cache.object(10);
+        cache.object(10);
 	    cache.insert(i, new CacheFoo(i), i);
 	}
 
@@ -3114,6 +3113,7 @@ void instantiateContainer()
 
     constIt = constContainer.end();
     container.constEnd();
+    Q_UNUSED(constIt)
 
     container.clear();
     container.contains(value);
@@ -3136,6 +3136,7 @@ void instantiateMutableIterationContainer()
     typename ContainerType::iterator it;
     it = container.begin();
     it = container.end();
+    Q_UNUSED(it)
 
     // QSet lacks count(T).
     const ValueType value = ValueType();
