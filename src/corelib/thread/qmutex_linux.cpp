@@ -45,14 +45,54 @@
 #ifndef QT_NO_THREAD
 #include "qatomic.h"
 #include "qmutex_p.h"
-# include "qelapsedtimer.h"
+#include "qelapsedtimer.h"
 
 #include <linux/futex.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <errno.h>
 
+#ifndef QT_LINUX_FUTEX
+# error "Qt build is broken: qmutex_linux.cpp is being built but futex support is not wanted"
+#endif
+
 QT_BEGIN_NAMESPACE
+
+static QBasicAtomicInt futexFlagSupport = Q_BASIC_ATOMIC_INITIALIZER(-1);
+
+static int checkFutexPrivateSupport()
+{
+    int value = 0;
+#if defined(FUTEX_PRIVATE_FLAG)
+    // check if the kernel supports extra futex flags
+    // FUTEX_PRIVATE_FLAG appeared in v2.6.22
+    static_assert(FUTEX_PRIVATE_FLAG != 0x80000000);
+
+    // try an operation that has no side-effects: wake up 42 threads
+    // futex will return -1 (errno==ENOSYS) if the flag isn't supported
+    // there should be no other error conditions
+    value = syscall(__NR_futex, &futexFlagSupport,
+                    FUTEX_WAKE | FUTEX_PRIVATE_FLAG,
+                    42, 0, 0, 0);
+    if (value != -1)
+        value = FUTEX_PRIVATE_FLAG;
+    else
+        value = 0;
+
+#else
+    value = 0;
+#endif
+    futexFlagSupport.store(value);
+    return value;
+}
+
+static inline int futexFlags()
+{
+    int value = futexFlagSupport.load();
+    if (Q_LIKELY(value != -1))
+        return value;
+    return checkFutexPrivateSupport();
+}
 
 static inline int _q_futex(void *addr, int op, int val, const struct timespec *timeout)
 {
@@ -62,7 +102,7 @@ static inline int _q_futex(void *addr, int op, int val, const struct timespec *t
 #endif
     int *addr2 = 0;
     int val2 = 0;
-    return syscall(SYS_futex, int_addr, op, val, timeout, addr2, val2);
+    return syscall(SYS_futex, int_addr, op | futexFlags(), val, timeout, addr2, val2);
 }
 
 static inline QMutexData *dummyFutexValue()
@@ -89,7 +129,7 @@ bool QBasicMutex::lockInternal(int timeout)
                 struct timespec ts, *pts = 0;
                 if (timeout >= 1) {
                     // recalculate the timeout
-                    qint64 xtimeout = timeout * 1000 * 1000;
+                    qint64 xtimeout = qint64(timeout) * 1000 * 1000;
                     xtimeout -= elapsedTimer.nsecsElapsed();
                     if (xtimeout <= 0) {
                         // timer expired after we returned

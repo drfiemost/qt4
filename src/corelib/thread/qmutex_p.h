@@ -59,6 +59,11 @@
 #include <QtCore/qmutex.h>
 #include <QtCore/qatomic.h>
 
+#if defined(Q_OS_LINUX) && !defined(QT_LINUXBASE)
+// use Linux mutexes everywhere except for LSB builds
+#  define QT_LINUX_FUTEX
+#endif
+
 QT_BEGIN_NAMESPACE
 
 class QMutexData
@@ -116,7 +121,7 @@ public:
     HANDLE event;
 #endif
 };
-#endif //Q_OS_LINUX
+#endif //QT_LINUX_FUTEX
 
 class QRecursiveMutexPrivate : public QMutexData
 {

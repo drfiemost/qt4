@@ -34,7 +34,11 @@ win32:SOURCES += thread/qmutex_win.cpp \
 		 thread/qwaitcondition_win.cpp
 
 unix: {
-    macx-*       { SOURCES += thread/qmutex_mac.cpp }
-    else:linux-* { SOURCES += thread/qmutex_linux.cpp }
-    else         { SOURCES += thread/qmutex_unix.cpp }
+    macx-* {
+        SOURCES += thread/qmutex_mac.cpp
+    } else:linux-*:!linux-lsb-* {
+        SOURCES += thread/qmutex_linux.cpp
+    } else {
+        SOURCES += thread/qmutex_unix.cpp
+    }
 }
