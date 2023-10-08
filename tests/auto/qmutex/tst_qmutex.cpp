@@ -67,7 +67,9 @@ private slots:
     void lock_unlock_locked_tryLock();
     void stressTest();
     void tryLockRace();
-    void qtbug16115_trylock();
+    void tryLockDeadlock();
+    void tryLockNegative_data();
+    void tryLockNegative();
     void moreStress();
 };
 
@@ -100,10 +102,12 @@ void tst_QMutex::tryLock()
             {
                 testsTurn.release();
 
+                // TEST 1: thread can't acquire lock
                 threadsTurn.acquire();
                 QVERIFY(!normalMutex.tryLock());
                 testsTurn.release();
 
+                // TEST 2: thread can acquire lock
                 threadsTurn.acquire();
                 QVERIFY(normalMutex.tryLock());
                 QVERIFY(lockCount.testAndSetRelaxed(0, 1));
@@ -112,6 +116,7 @@ void tst_QMutex::tryLock()
                 normalMutex.unlock();
                 testsTurn.release();
 
+                // TEST 3: thread can't acquire lock, timeout = waitTime
                 threadsTurn.acquire();
                 QTime timer;
                 timer.start();
@@ -119,6 +124,7 @@ void tst_QMutex::tryLock()
                 QVERIFY(timer.elapsed() >= waitTime);
                 testsTurn.release();
 
+                // TEST 4: thread can acquire lock, timeout = waitTime
                 threadsTurn.acquire();
                 timer.start();
                 QVERIFY(normalMutex.tryLock(waitTime));
@@ -131,10 +137,12 @@ void tst_QMutex::tryLock()
                 normalMutex.unlock();
                 testsTurn.release();
 
+                // TEST 5: thread can't acquire lock, timeout = 0
                 threadsTurn.acquire();
                 QVERIFY(!normalMutex.tryLock(0));
                 testsTurn.release();
 
+                // TEST 6: thread can acquire lock, timeout = 0
                 threadsTurn.acquire();
                 timer.start();
                 QVERIFY(normalMutex.tryLock(0));
@@ -144,7 +152,16 @@ void tst_QMutex::tryLock()
                 QVERIFY(lockCount.testAndSetRelaxed(1, 0));
                 normalMutex.unlock();
                 testsTurn.release();
-
+/*
+ * FIXME 
+                // TEST 7 overflow: thread can acquire lock, timeout = 3000 (QTBUG-24795)
+                threadsTurn.acquire();
+                timer.start();
+                QVERIFY(normalMutex.tryLock(3000));
+                QVERIFY(timer.elapsed() < 3000);
+                normalMutex.unlock();
+                testsTurn.release();
+*/
                 threadsTurn.acquire();
             }
         };
@@ -152,42 +169,50 @@ void tst_QMutex::tryLock()
         Thread thread;
         thread.start();
 
-        // thread can't acquire lock
+        // TEST 1: thread can't acquire lock
         testsTurn.acquire();
         normalMutex.lock();
         QVERIFY(lockCount.testAndSetRelaxed(0, 1));
         threadsTurn.release();
 
-        // thread can acquire lock
+        // TEST 2: thread can acquire lock
         testsTurn.acquire();
         QVERIFY(lockCount.testAndSetRelaxed(1, 0));
         normalMutex.unlock();
         threadsTurn.release();
 
-        // thread can't acquire lock, timeout = 1000
+        // TEST 3: thread can't acquire lock, timeout = waitTime
         testsTurn.acquire();
         normalMutex.lock();
         QVERIFY(lockCount.testAndSetRelaxed(0, 1));
         threadsTurn.release();
 
-        // thread can acquire lock, timeout = 1000
+        // TEST 4: thread can acquire lock, timeout = waitTime
         testsTurn.acquire();
         QVERIFY(lockCount.testAndSetRelaxed(1, 0));
         normalMutex.unlock();
         threadsTurn.release();
 
-        // thread can't acquire lock, timeout = 0
+        // TEST 5: thread can't acquire lock, timeout = 0
         testsTurn.acquire();
         normalMutex.lock();
         QVERIFY(lockCount.testAndSetRelaxed(0, 1));
         threadsTurn.release();
 
-        // thread can acquire lock, timeout = 0
+        // TEST 6: thread can acquire lock, timeout = 0
         testsTurn.acquire();
         QVERIFY(lockCount.testAndSetRelaxed(1, 0));
         normalMutex.unlock();
         threadsTurn.release();
-
+/*
+ * FIXME 
+        // TEST 7: thread can acquire lock, timeout = 3000   (QTBUG-24795)
+        testsTurn.acquire();
+        normalMutex.lock();
+        threadsTurn.release();
+        QThread::msleep(100);
+        normalMutex.unlock();
+*/
         // wait for thread to finish
         testsTurn.acquire();
         threadsTurn.release();
@@ -539,11 +564,11 @@ void tst_QMutex::tryLockRace()
 // Variable that will be protected by the mutex. Volatile so that the
 // the optimiser doesn't mess with it based on the increment-then-decrement
 // usage pattern.
-static volatile int qtbug16115_trylock_counter;
+static volatile int tryLockDeadlockCounter;
 // Counter for how many times the protected variable has an incorrect value.
-static int qtbug16115_failure_count = 0;
+static int tryLockDeadlockFailureCount = 0;
 
-void tst_QMutex::qtbug16115_trylock()
+void tst_QMutex::tryLockDeadlock()
 {
     //Used to deadlock on unix
     struct TrylockThread : QThread {
@@ -552,10 +577,10 @@ void tst_QMutex::qtbug16115_trylock()
         void run() {
             for (int i = 0; i < 100000; ++i) {
                 if (mut.tryLock(0)) {
-                    if ((++qtbug16115_trylock_counter) != 1)
-                        ++qtbug16115_failure_count;
-                    if ((--qtbug16115_trylock_counter) != 0)
-                        ++qtbug16115_failure_count;
+                    if ((++tryLockDeadlockCounter) != 1)
+                        ++tryLockDeadlockFailureCount;
+                    if ((--tryLockDeadlockCounter) != 0)
+                        ++tryLockDeadlockFailureCount;
                     mut.unlock();
                 }
             }
@@ -571,16 +596,65 @@ void tst_QMutex::qtbug16115_trylock()
 
     for (int i = 0; i < 100000; ++i) {
         mut.lock();
-        if ((++qtbug16115_trylock_counter) != 1)
-            ++qtbug16115_failure_count;
-        if ((--qtbug16115_trylock_counter) != 0)
-            ++qtbug16115_failure_count;
+        if ((++tryLockDeadlockCounter) != 1)
+            ++tryLockDeadlockFailureCount;
+        if ((--tryLockDeadlockCounter) != 0)
+            ++tryLockDeadlockFailureCount;
         mut.unlock();
     }
     t1.wait();
     t2.wait();
     t3.wait();
-    QCOMPARE(qtbug16115_failure_count, 0);
+    QCOMPARE(tryLockDeadlockFailureCount, 0);
+}
+
+void tst_QMutex::tryLockNegative_data()
+{
+    QTest::addColumn<int>("timeout");
+    QTest::newRow("-1") << -1;
+    QTest::newRow("-2") << -2;
+    QTest::newRow("INT_MIN/2") << INT_MIN/2;
+    QTest::newRow("INT_MIN") << INT_MIN;
+}
+
+void tst_QMutex::tryLockNegative()
+{
+    // the documentation says tryLock() with a negative number is the same as lock()
+    struct TrylockThread : QThread {
+        TrylockThread(QMutex &mut, int timeout)
+            : mut(mut), timeout(timeout), tryLockResult(-1)
+        {}
+        QMutex &mut;
+        int timeout;
+        int tryLockResult;
+        void run() {
+            tryLockResult = mut.tryLock(timeout);
+            mut.unlock();
+        }
+    };
+
+    QFETCH(int, timeout);
+
+    QMutex mutex;
+    TrylockThread thr(mutex, timeout);
+    QSignalSpy spy(&thr, SIGNAL(started()));
+    mutex.lock();
+    thr.start();
+
+    // the thread should have stopped in tryLock(), waiting for us to unlock
+    // the mutex. The following test can be falsely positive due to timing:
+    // tryLock may still fail but hasn't failed yet. But it certainly cannot be
+    // a false negative: if wait() returns, tryLock failed.
+    QVERIFY(!thr.wait(200));
+
+    // after we unlock the mutex, the thread should succeed in locking, then
+    // unlock and exit. Do this before more tests to avoid deadlocking due to
+    // ~QThread waiting forever on a thread that won't exit.
+    mutex.unlock();
+
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(thr.wait());
+    QCOMPARE(thr.tryLockResult, 1);
 }
 
 class MoreStressTestThread : public QThread

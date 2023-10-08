@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 
 static inline bool isRecursive(QMutexData *d)
 {
-    register quintptr u = quintptr(d);
+    quintptr u = quintptr(d);
     if (Q_LIKELY(u <= 0x3))
         return false;
 #ifdef QT_LINUX_FUTEX
@@ -68,6 +68,19 @@ static inline bool isRecursive(QMutexData *d)
     return d->recursive;
 #endif
 }
+
+class QRecursiveMutexPrivate : public QMutexData
+{
+public:
+    QRecursiveMutexPrivate()
+        : QMutexData(QMutex::Recursive), owner(0), count(0) {}
+    Qt::HANDLE owner;
+    uint count;
+    QMutex mutex;
+
+    bool lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT;
+    void unlock() noexcept;
+};
 
 /*!
     \class QBasicMutex
@@ -200,34 +213,6 @@ void QMutex::lock() QT_MUTEX_LOCK_NOEXCEPT
         lockInternal();
 }
 
-/*!\fn bool QMutex::trylock()
-    Attempts to lock the mutex. If the lock was obtained, this function
-    returns true. If another thread has locked the mutex, this
-    function returns false immediately.
-
-    If the lock was obtained, the mutex must be unlocked with unlock()
-    before another thread can successfully lock it.
-
-    Calling this function multiple times on the same mutex from the
-    same thread is allowed if this mutex is a
-    \l{QMutex::Recursive}{recursive mutex}. If this mutex is a
-    \l{QMutex::NonRecursive}{non-recursive mutex}, this function will
-    \e always return false when attempting to lock the mutex
-    recursively.
-
-    \sa lock(), unlock()
-*/
-bool QMutex::tryLock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
-{
-    if (fastTryLock())
-        return true;
-    QMutexData *current = d_ptr.loadAcquire();
-    if (QT_PREPEND_NAMESPACE(isRecursive)(current))
-        return static_cast<QRecursiveMutexPrivate *>(current)->lock(timeout);
-    else
-        return lockInternal(timeout);
-}
-
 /*! \fn bool QMutex::tryLock(int timeout)
      \overload
 
@@ -252,6 +237,24 @@ bool QMutex::tryLock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 
     \sa lock(), unlock()
 */
+bool QMutex::tryLock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
+{
+    if (fastTryLock())
+        return true;
+    QMutexData *current = d_ptr.loadAcquire();
+    if (QT_PREPEND_NAMESPACE(isRecursive)(current))
+        return static_cast<QRecursiveMutexPrivate *>(current)->lock(timeout);
+    else
+        return lockInternal(timeout);
+}
+
+/*! \fn void QMutex::unlock()
+    Unlocks the mutex. Attempting to unlock a mutex in a different
+    thread to the one that locked it results in an error. Unlocking a
+    mutex that is not locked results in undefined behavior.
+
+    \sa lock()
+*/
 void QMutex::unlock() noexcept
 {
     if (fastTryUnlock())
@@ -262,14 +265,6 @@ void QMutex::unlock() noexcept
     else
         unlockInternal();
 }
-
-/*! \fn void QMutex::unlock()
-    Unlocks the mutex. Attempting to unlock a mutex in a different
-    thread to the one that locked it results in an error. Unlocking a
-    mutex that is not locked results in undefined behavior.
-
-    \sa lock()
-*/
 
 /*!
     \fn void QMutex::isRecursive()
@@ -379,7 +374,15 @@ bool QBasicMutex::isRecursive()
 
 #ifndef QT_LINUX_FUTEX //linux implementation is in qmutex_linux.cpp
 /*!
-    \internal helper for lockInline()
+    \internal helper for lock()
+ */
+void QBasicMutex::lockInternal() QT_MUTEX_LOCK_NOEXCEPT
+{
+    lockInternal(-1);
+}
+
+/*!
+    \internal helper for lock(int)
  */
 bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 {
@@ -466,7 +469,7 @@ bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
             return false;
         }
     }
-    Q_ASSERT(d_ptr.load());
+    Q_ASSERT(d_ptr.load() != 0);
     return true;
 }
 
@@ -556,7 +559,7 @@ void QMutexPrivate::derefWaiters(int value) noexcept
 /*!
    \internal
 */
-bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
+inline bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 {
     Qt::HANDLE self = QThread::currentThreadId();
     if (owner == self) {
@@ -579,7 +582,7 @@ bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 /*!
    \internal
  */
-void QRecursiveMutexPrivate::unlock() noexcept
+inline void QRecursiveMutexPrivate::unlock() noexcept
 {
     if (count > 0) {
         count--;
