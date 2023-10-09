@@ -367,7 +367,7 @@ public:
     inline QString &prepend(const QLatin1String &s) { return insert(0, s); }
 
     inline QString &operator+=(QChar c) {
-        if (d->ref.isShared() || d->size + 1 > (int)d->alloc)
+        if (d->ref.isShared() || uint(d->size) + 2u > d->alloc)
             reallocData(uint(d->size) + 2u, true);
         d->data()[d->size++] = c.unicode();
         d->data()[d->size] = '\0';
@@ -649,10 +649,10 @@ public:
 };
 
 
-class Q_CORE_EXPORT QLatin1String
+class QLatin1String
 {
 public:
-    inline explicit QLatin1String(const char *s) : m_size(s ? strlen(s) : 0), m_data(s) {}
+    constexpr inline explicit QLatin1String(const char *s) : m_size(s ? strlen(s) : 0), m_data(s) {}
     constexpr inline explicit QLatin1String(const char *s, int sz) : m_size(sz), m_data(s) {}
 
     inline const char *latin1() const { return m_data; }
@@ -728,7 +728,7 @@ inline void QString::clear()
 inline QString::QString(const QString &other) : d(other.d)
 { Q_ASSERT(&other != this); d->ref.ref(); }
 inline int QString::capacity() const
-{ return d->alloc; }
+{ return d->alloc ? d->alloc - 1 : 0; }
 inline QString &QString::setNum(short n, int base)
 { return setNum(qlonglong(n), base); }
 inline QString &QString::setNum(ushort n, int base)
@@ -864,7 +864,7 @@ inline QString::QString() : d(shared_null.data_ptr()) {}
 inline QString::~QString() { if (!d->ref.deref()) free(d); }
 inline void QString::reserve(int asize)
 {
-    if (d->ref.isShared() || asize > (int)d->alloc)
+    if (d->ref.isShared() || uint(asize) + 1u > d->alloc)
         reallocData(uint(asize) + 1u);
 
     if (!d->capacityReserved) {
@@ -875,7 +875,7 @@ inline void QString::reserve(int asize)
 
 inline void QString::squeeze()
 {
-    if (d->ref.isShared() || d->size < (int)d->alloc)
+    if (d->ref.isShared() || uint(d->size) + 1u < d->alloc)
         reallocData(uint(d->size) + 1u);
 
     if (d->capacityReserved) {

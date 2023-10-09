@@ -1039,11 +1039,11 @@ QString::QString(const QChar *unicode, int size)
     } else if (size <= 0) {
         d = shared_empty.data_ptr();
     } else {
-        d = (Data*) ::malloc(sizeof(Data)+(size+1)*sizeof(QChar));
+        d = (Data*) ::malloc(sizeof(Data) + (uint(size) + 1u) * sizeof(QChar));
         Q_CHECK_PTR(d);
         d->ref.initializeOwned();
         d->size = size;
-        d->alloc = (uint) size;
+        d->alloc = uint(size) + 1u;
         d->capacityReserved = false;
         d->offset = sizeof(QStringData);
         memcpy(d->data(), unicode, size * sizeof(QChar));
@@ -1096,11 +1096,11 @@ QString::QString(int size, QChar ch)
    if (size <= 0) {
         d = shared_empty.data_ptr();
     } else {
-        d = (Data*) ::malloc(sizeof(Data)+(size+1)*sizeof(QChar));
+        d = (Data*) ::malloc(sizeof(Data) + (uint(size) + 1u) * sizeof(QChar));
         Q_CHECK_PTR(d);
         d->ref.initializeOwned();
         d->size = size;
-        d->alloc = (uint) size;
+        d->alloc = uint(size) + 1u;
         d->capacityReserved = false;
         d->offset = sizeof(QStringData);
         d->data()[size] = '\0';
@@ -1120,11 +1120,11 @@ QString::QString(int size, QChar ch)
 */
 QString::QString(int size, Qt::Initialization)
 {
-    d = (Data*) ::malloc(sizeof(Data)+(size+1)*sizeof(QChar));
+    d = (Data*) ::malloc(sizeof(Data) + (uint(size) + 1u) * sizeof(QChar));
     Q_CHECK_PTR(d);
     d->ref.initializeOwned();
     d->size = size;
-    d->alloc = (uint) size;
+    d->alloc = uint(size) + 1u;
     d->capacityReserved = false;
     d->offset = sizeof(QStringData);
     d->data()[size] = '\0';
@@ -1146,7 +1146,7 @@ QString::QString(QChar ch)
     Q_CHECK_PTR(d);
     d->ref.initializeOwned();
     d->size = 1;
-    d->alloc = 1;
+    d->alloc = 2u;
     d->capacityReserved = false;
     d->offset = sizeof(QStringData);
     d->data()[0] = ch.unicode();
@@ -1257,8 +1257,9 @@ void QString::resize(int size)
             QString::free(d);
         d = x;
     } else {
-        if (d->ref.isShared() || size > d->alloc ||
-            (!d->capacityReserved && size < d->size && size < d->alloc >> 1))
+        if (d->ref.isShared() || uint(size) + 1u > d->alloc
+                || (!d->capacityReserved && size < d->size
+                    && uint(size) + 1u < uint(d->alloc >> 1)))
             reallocData(uint(size) + 1u, true);
         if (d->alloc >= size) {
             d->size = size;
@@ -1317,7 +1318,6 @@ void QString::resize(int size)
     \sa reserve(), capacity()
 */
 
-// ### Qt 5: rename reallocData() to avoid confusion. 197625
 void QString::reallocData(uint alloc, bool grow)
 {
     if (grow)
@@ -1328,7 +1328,7 @@ void QString::reallocData(uint alloc, bool grow)
         Q_CHECK_PTR(x);
         x->ref.initializeOwned();
         x->size = qMin(int(alloc) - 1, d->size);
-        x->alloc = alloc - 1u;
+        x->alloc = alloc;
         x->capacityReserved = d->capacityReserved;
         x->offset = sizeof(QStringData);
         ::memcpy(x->data(), d->data(), x->size * sizeof(QChar));
@@ -1340,7 +1340,7 @@ void QString::reallocData(uint alloc, bool grow)
         Data *p = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc * sizeof(QChar)));
         Q_CHECK_PTR(p);
         d = p;
-        d->alloc = alloc - 1u;
+        d->alloc = alloc;
         d->offset = sizeof(QStringData);
     }
 }
@@ -1548,7 +1548,7 @@ QString &QString::append(const QString &str)
         if (d == &shared_null.str) {
             operator=(str);
         } else {
-            if (d->ref.isShared() || d->size + str.d->size > d->alloc)
+            if (d->ref.isShared() || uint(d->size + str.d->size) + 1u > d->alloc)
                 reallocData(uint(d->size + str.d->size) + 1u, true);
             memcpy(d->data() + d->size, str.d->data(), str.d->size * sizeof(QChar));
             d->size += str.d->size;
@@ -1585,7 +1585,7 @@ QString &QString::append(const QLatin1String &str)
     const uchar *s = (const uchar *)str.latin1();
     if (s) {
         int len = str.size();
-        if (d->ref.isShared() || d->size + len > d->alloc)
+        if (d->ref.isShared() || uint(d->size + len) + 1u > d->alloc)
             reallocData(uint(d->size + len) + 1u, true);
         ushort *i = d->data() + d->size;
         while ((*i++ = *s++))
@@ -1628,7 +1628,7 @@ QString &QString::append(const QLatin1String &str)
 */
 QString &QString::append(QChar ch)
 {
-    if (d->ref.isShared() || d->size + 1 > d->alloc)
+    if (d->ref.isShared() || uint(d->size) + 2u > d->alloc)
         reallocData(uint(d->size) + 2u, true);
     d->data()[d->size++] = ch.unicode();
     d->data()[d->size] = '\0';
@@ -3806,11 +3806,11 @@ QString::Data *QString::fromLatin1_helper(const char *str, int size)
     } else {
         if (size < 0)
             size = qstrlen(str);
-        d = static_cast<Data *>(::malloc(sizeof(Data) + (size+1) * sizeof(QChar)));
+        d = static_cast<Data *>(::malloc(sizeof(Data) + (uint(size) + 1u) * sizeof(QChar)));
         Q_CHECK_PTR(d);
         d->ref.initializeOwned();
         d->size = size;
-        d->alloc = (uint) size;
+        d->alloc = uint(size) + 1u;
         d->capacityReserved = false;
         d->offset = sizeof(QStringData);
         d->data()[size] = '\0';
@@ -6248,7 +6248,7 @@ QString QString::repeated(int times) const
 
     QString result;
     result.reserve(resultSize);
-    if (result.d->alloc != resultSize)
+    if (result.d->alloc != uint(resultSize) + 1u)
         return QString(); // not enough memory
 
     memcpy(result.d->data(), d->data(), d->size * sizeof(ushort));

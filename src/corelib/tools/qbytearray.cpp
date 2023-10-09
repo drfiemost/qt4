@@ -581,7 +581,7 @@ QByteArray qUncompress(const uchar* data, int nbytes)
             }
             d->ref.initializeOwned();
             d->size = len;
-            d->alloc = len;
+            d->alloc = uint(len) + 1u;
             d->capacityReserved = false;
             d->offset = sizeof(QByteArrayData);
             d->data()[len] = 0;
@@ -908,10 +908,11 @@ QByteArray &QByteArray::operator=(const char *str)
         x = shared_empty.data_ptr();
     } else {
         int len = strlen(str);
-        if (d->ref.isShared() || len > d->alloc || (len < d->size && len < d->alloc >> 1))
+        if (d->ref.isShared() || uint(len) + 1u > d->alloc
+                || (len < d->size && uint(len) + 1u < uint(d->alloc >> 1)))
             reallocData(uint(len) + 1u);
         x = d;
-        memcpy(x->data(), str, len + 1); // include null terminator
+        memcpy(x->data(), str, uint(len) + 1u); // include null terminator
         x->size = len;
     }
     x->ref.ref();
@@ -1335,11 +1336,11 @@ QByteArray::QByteArray(const char *data, int size)
     } else if (size <= 0) {
         d = shared_empty.data_ptr();
     } else {
-        d = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
+        d = static_cast<Data *>(::malloc(sizeof(Data) + uint(size) + 1u));
         Q_CHECK_PTR(d);
         d->ref.initializeOwned();
         d->size = size;
-        d->alloc = size;
+        d->alloc = uint(size) + 1u;
         d->capacityReserved = false;
         d->offset = sizeof(QByteArrayData);
         memcpy(d->data(), data, size);
@@ -1359,11 +1360,11 @@ QByteArray::QByteArray(int size, char ch)
     if (size <= 0) {
         d = shared_empty.data_ptr();
     } else {
-        d = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
+        d = static_cast<Data *>(::malloc(sizeof(Data) + uint(size) + 1u));
         Q_CHECK_PTR(d);
         d->ref.initializeOwned();
         d->size = size;
-        d->alloc = size;
+        d->alloc = uint(size) + 1u;
         d->capacityReserved = false;
         d->offset = sizeof(QByteArrayData);
         memset(d->data(), ch, size);
@@ -1379,11 +1380,11 @@ QByteArray::QByteArray(int size, char ch)
 
 QByteArray::QByteArray(int size, Qt::Initialization)
 {
-    d = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
+    d = static_cast<Data *>(::malloc(sizeof(Data) + uint(size) + 1u));
     Q_CHECK_PTR(d);
     d->ref.initializeOwned();
     d->size = size;
-    d->alloc = size;
+    d->alloc = uint(size) + 1u;
     d->capacityReserved = false;
     d->offset = sizeof(QByteArrayData);
     d->data()[size] = '\0';
@@ -1426,17 +1427,19 @@ void QByteArray::resize(int size)
         // which is used in place of the Qt 3 idiom:
         //    QByteArray a(sz);
         //
-        Data *x = static_cast<Data *>(malloc(sizeof(Data) + size + 1));
+        Data *x = static_cast<Data *>(::malloc(sizeof(Data) + uint(size) + 1u));
         Q_CHECK_PTR(x);
         x->ref.initializeOwned();
         x->size = size;
-        x->alloc = size;
+        x->alloc = uint(size) + 1u;
         x->capacityReserved = false;
         x->offset = sizeof(QByteArrayData);
         x->data()[size] = '\0';
         d = x;
     } else {
-        if (d->ref.isShared() || size > d->alloc || (!d->capacityReserved && size < d->size && size < d->alloc >> 1))
+        if (d->ref.isShared() || uint(size) + 1u > d->alloc
+                || (!d->capacityReserved && size < d->size
+                    && uint(size) + 1u < uint(d->alloc >> 1)))
             reallocData(uint(size) + 1u, true);
         if (d->alloc >= size) {
             d->size = size;
@@ -1474,7 +1477,7 @@ void QByteArray::reallocData(uint alloc, bool grow)
         Q_CHECK_PTR(x);
         x->ref.initializeOwned();
         x->size = qMin(int(alloc) - 1, d->size);
-        x->alloc = alloc - 1u;
+        x->alloc = alloc;
         x->capacityReserved = d->capacityReserved;
         x->offset = sizeof(QByteArrayData);
         ::memcpy(x->data(), d->data(), x->size);
@@ -1485,7 +1488,7 @@ void QByteArray::reallocData(uint alloc, bool grow)
     } else {
         Data *x = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc));
         Q_CHECK_PTR(x);
-        x->alloc = alloc - 1u;
+        x->alloc = alloc;
         x->offset = sizeof(QByteArrayData);
         d = x;
     }
@@ -1570,7 +1573,7 @@ QByteArray &QByteArray::prepend(const char *str)
 QByteArray &QByteArray::prepend(const char *str, int len)
 {
     if (str) {
-        if (d->ref.isShared() || d->size + len > d->alloc)
+        if (d->ref.isShared() || uint(d->size + len) + 1u > d->alloc)
             reallocData(uint(d->size + len) + 1u, true);
         memmove(d->data()+len, d->data(), d->size);
         memcpy(d->data(), str, len);
@@ -1588,7 +1591,7 @@ QByteArray &QByteArray::prepend(const char *str, int len)
 
 QByteArray &QByteArray::prepend(char ch)
 {
-    if (d->ref.isShared() || d->size + 1 > d->alloc)
+    if (d->ref.isShared() || uint(d->size) + 2u > d->alloc)
         reallocData(uint(d->size) + 2u, true);
     memmove(d->data()+1, d->data(), d->size);
     d->data()[0] = ch;
@@ -1626,7 +1629,7 @@ QByteArray &QByteArray::append(const QByteArray &ba)
     if (d->size == 0 && d->ref.isStatic() && !IS_RAW_DATA(ba.d)) {
         *this = ba;
     } else if (ba.d->size != 0) {
-        if (d->ref.isShared() || d->size + ba.d->size > d->alloc)
+        if (d->ref.isShared() || uint(d->size + ba.d->size) + 1u > d->alloc)
             reallocData(uint(d->size + ba.d->size) + 1u, true);
         memcpy(d->data() + d->size, ba.d->data(), ba.d->size);
         d->size += ba.d->size;
@@ -1660,7 +1663,7 @@ QByteArray& QByteArray::append(const char *str)
 {
     if (str) {
         int len = strlen(str);
-        if (d->ref.isShared() || d->size + len > d->alloc)
+        if (d->ref.isShared() || uint(d->size + len) + 1u > d->alloc)
             reallocData(uint(d->size + len) + 1u, true);
         memcpy(d->data() + d->size, str, len + 1); // include null terminator
         d->size += len;
@@ -1685,7 +1688,7 @@ QByteArray &QByteArray::append(const char *str, int len)
     if (len < 0)
         len = qstrlen(str);
     if (str && len) {
-        if (d->ref.isShared() || d->size + len > d->alloc)
+        if (d->ref.isShared() || uint(d->size + len) + 1u > d->alloc)
             reallocData(uint(d->size + len) + 1u, true);
         memcpy(d->data() + d->size, str, len); // include null terminator
         d->size += len;
@@ -1702,7 +1705,7 @@ QByteArray &QByteArray::append(const char *str, int len)
 
 QByteArray& QByteArray::append(char ch)
 {
-    if (d->ref.isShared() || d->size + 1 > d->alloc)
+    if (d->ref.isShared() || uint(d->size) + 2u > d->alloc)
         reallocData(uint(d->size) + 2u, true);
     d->data()[d->size++] = ch;
     d->data()[d->size] = '\0';
@@ -2211,7 +2214,7 @@ QByteArray QByteArray::repeated(int times) const
 
     QByteArray result;
     result.reserve(resultSize);
-    if (result.d->alloc != resultSize)
+    if (result.d->alloc != uint(resultSize) + 1u)
         return QByteArray(); // not enough memory
 
     memcpy(result.d->data(), d->data(), d->size);
