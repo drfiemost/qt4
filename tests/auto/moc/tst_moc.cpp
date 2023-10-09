@@ -353,11 +353,35 @@ private slots:
     void invalidSlot() {}
 #endif
 
-
     friend class Receiver; // task #85783
 signals:
     friend class Sender; // task #85783
 
+#define MACRO_DEFINED
+
+#if !(defined MACRO_UNDEF || defined MACRO_DEFINED) || 1
+    void signalInIf1();
+#else
+    void doNotExist();
+#endif
+#if !(!defined MACRO_UNDEF || !defined MACRO_DEFINED) && 1
+    void doNotExist();
+#else
+    void signalInIf2();
+#endif
+#if !(!defined (MACRO_DEFINED) || !defined (MACRO_UNDEF)) && 1
+    void doNotExist();
+#else
+    void signalInIf3();
+#endif
+
+# //QTBUG-22717
+ # /*  */
+#
+
+ # \
+
+//
 public slots:
     void const slotWithSillyConst() {}
 
@@ -450,7 +474,6 @@ public:
 private slots:
     void initTestCase();
 
-    void slotWithException() throw(MyStruct);
     void dontStripNamespaces();
     void oldStyleCasts();
     void warnOnExtraSignalSlotQualifiaction();
@@ -535,12 +558,6 @@ void tst_Moc::initTestCase()
     QVERIFY(fi.exists());
     QVERIFY(fi.isDir());
 #endif
-}
-
-void tst_Moc::slotWithException() throw(MyStruct)
-{
-    // be happy
-    QVERIFY(true);
 }
 
 void tst_Moc::dontStripNamespaces()
@@ -758,6 +775,10 @@ void tst_Moc::preprocessorConditionals()
     QVERIFY(mobj->indexOfSlot("slotInIf()") != -1);
     QVERIFY(mobj->indexOfSlot("slotInLastElse()") != -1);
     QVERIFY(mobj->indexOfSlot("slotInElif()") != -1);
+    QVERIFY(mobj->indexOfSignal("signalInIf1()") != -1);
+    QVERIFY(mobj->indexOfSignal("signalInIf2()") != -1);
+    QVERIFY(mobj->indexOfSignal("signalInIf3()") != -1);
+    QVERIFY(mobj->indexOfSignal("doNotExist()") == -1);
 }
 
 void tst_Moc::blackslashNewlines()
@@ -1134,7 +1155,7 @@ void tst_Moc::qprivateproperties()
 
 #include "task189996.h"
 
-void InlineSlotsWithThrowDeclaration::c() throw() {}
+void InlineSlotsWithThrowDeclaration::c() noexcept {}
 
 void tst_Moc::inlineSlotsWithThrowDeclaration()
 {
@@ -1143,8 +1164,6 @@ void tst_Moc::inlineSlotsWithThrowDeclaration()
     QVERIFY(mobj->indexOfSlot("a()") != -1);
     QVERIFY(mobj->indexOfSlot("b()") != -1);
     QVERIFY(mobj->indexOfSlot("c()") != -1);
-    QVERIFY(mobj->indexOfSlot("d()") != -1);
-    QVERIFY(mobj->indexOfSlot("e()") != -1);
 }
 
 void tst_Moc::warnOnPropertyWithoutREAD()
@@ -1423,7 +1442,7 @@ class VersionTest : public QObject
     Q_OBJECT
     Q_PROPERTY(int prop1 READ foo)
     Q_PROPERTY(int prop2 READ foo REVISION 2)
-    Q_ENUMS(TestEnum);
+    Q_ENUMS(TestEnum)
 
 public:
     int foo() const { return 0; }
