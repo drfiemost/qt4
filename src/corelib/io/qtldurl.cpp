@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
 
 static bool containsTLDEntry(const QString &entry)
 {
-    int index = qHash(entry) % tldCount;
+    int index = qt_hash(entry) % tldCount;
     quint32 currentDomainIndex = tldIndices[index];
     while (currentDomainIndex < tldIndices[index+1]) {
         QString currentEntry = QString::fromUtf8(tldData + currentDomainIndex);
