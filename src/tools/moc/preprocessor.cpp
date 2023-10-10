@@ -251,7 +251,7 @@ static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode m
                     }
                     token = FLOATING_LITERAL;
                     ++data;
-                    // fall through
+                    [[fallthrough]];
                 case FLOATING_LITERAL:
                     while (is_digit_char(*data))
                         ++data;
@@ -312,7 +312,7 @@ static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode m
                         ++data;
                     }
                     token = WHITESPACE; // one comment, one whitespace
-                    // fall through
+                    [[fallthrough]];
                 case WHITESPACE:
                     if (column == 1)
                         column = 0;
@@ -416,7 +416,7 @@ static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode m
                 }
                 token = PP_FLOATING_LITERAL;
                 ++data;
-                // fall through
+                [[fallthrough]];
             case PP_FLOATING_LITERAL:
                 while (is_digit_char(*data))
                     ++data;
@@ -459,7 +459,7 @@ static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode m
                     ++data;
                 }
                 token = PP_WHITESPACE; // one comment, one whitespace
-                // fall through
+                [[fallthrough]];
             case PP_WHITESPACE:
                 while (*data && (*data == ' ' || *data == '\t'))
                     ++data;
@@ -911,7 +911,7 @@ void Preprocessor::preprocess(const QByteArray &filename, Symbols &preprocessed)
         case PP_ELIF:
         case PP_ELSE:
             skipUntilEndif();
-            // fall through
+            [[fallthrough]];
         case PP_ENDIF:
             until(PP_NEWLINE);
             continue;

@@ -335,7 +335,7 @@ int runMoc(int _argc, char **_argv)
                 ignoreConflictingOptions = true;
                 break;
             }
-            // fall through
+            [[fallthrough]];
         default:
             error();
         }

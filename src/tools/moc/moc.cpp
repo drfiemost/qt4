@@ -156,7 +156,7 @@ Type Moc::parseType()
             case SIGNED:
             case UNSIGNED:
                 hasSignedOrUnsigned = true;
-                // fall through
+                [[fallthrough]];
             case CONST:
             case VOLATILE:
                 type.name += lexem();
@@ -189,7 +189,7 @@ Type Moc::parseType()
                 prev();
                 break;
             }
-            // fall through
+            [[fallthrough]];
         case CHAR:
         case SHORT:
         case INT:
@@ -860,7 +860,7 @@ void Moc::parseSlots(ClassDef *def, FunctionDef::Access access)
             continue;
         case USING:
             error("'using' directive not supported in 'slots' section");
-            // fall through
+            [[fallthrough]];
         default:
             prev();
         }
@@ -915,7 +915,7 @@ void Moc::parseSignals(ClassDef *def)
             continue;
         case USING:
             error("'using' directive not supported in 'signals' section");
-            // fall through
+            [[fallthrough]];
         default:
             prev();
         }
