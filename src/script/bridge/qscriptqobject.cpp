@@ -206,7 +206,7 @@ static QVariant variantFromValue(JSC::ExecState *exec, int targetType, JSC::JSVa
     QVariant v(targetType, (void *)0);
     if (QScriptEnginePrivate::convertValue(exec, value, targetType, v.data()))
         return v;
-    if (uint(targetType) == QVariant::LastType)
+    if (uint(targetType) == QMetaType::QVariant)
         return QScriptEnginePrivate::toVariant(exec, value);
     if (QScriptEnginePrivate::isVariant(value)) {
         v = QScriptEnginePrivate::variantValue(value);

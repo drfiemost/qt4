@@ -444,7 +444,7 @@ int QDeclarativePropertyPrivate::propertyType() const
     if (isValueType()) {
         return valueType.valueTypePropType;
     } else if (type & QDeclarativeProperty::Property) {
-        if (core.propType == (int)QVariant::LastType)
+        if (core.propType == (int)QMetaType::QVariant)
             return qMetaTypeId<QVariant>();
         else
             return core.propType;

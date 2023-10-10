@@ -252,12 +252,19 @@ bool Moc::parseEnum(EnumDef *def)
 {
     bool isTypdefEnum = false; // typedef enum { ... } Foo;
 
+    if (test(CLASS))
+        def->isEnumClass = true;
+
     if (test(IDENTIFIER)) {
         def->name = lexem();
     } else {
         if (lookup(-1) != TYPEDEF)
             return false; // anonymous enum
         isTypdefEnum = true;
+    }
+    if (test(COLON)) { // C++11 strongly typed enum
+        // enum Foo : unsigned long { ... };
+        parseType(); //ignore the result
     }
     if (!test(LBRACE))
         return false;
@@ -816,17 +823,6 @@ void Moc::generate(FILE *out)
     }
 
     fprintf(out, "QT_END_MOC_NAMESPACE\n");
-}
-
-
-QList<QMetaObject*> Moc::generate(bool ignoreProperties)
-{
-    QList<QMetaObject*> result;
-    for (int i = 0; i < classList.size(); ++i) {
-        Generator generator(&classList[i], metaTypes);
-        result << generator.generateMetaObject(ignoreProperties);
-    }
-    return result;
 }
 
 void Moc::parseSlots(ClassDef *def, FunctionDef::Access access)

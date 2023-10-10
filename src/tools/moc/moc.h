@@ -70,6 +70,8 @@ struct EnumDef
 {
     QByteArray name;
     QList<QByteArray> values;
+    bool isEnumClass; // c++11 enum class
+    EnumDef() : isEnumClass(false) {}
 };
 
 struct ArgumentDef
@@ -203,7 +205,6 @@ public:
 
     void parse();
     void generate(FILE *out);
-    QList<QMetaObject*> generate(bool ignoreProperties);
 
     bool parseClassHead(ClassDef *def);
     inline bool inClass(const ClassDef *def) const {
