@@ -2033,7 +2033,7 @@ void QTest::qWarn(const char *message)
 */
 void QTest::ignoreMessage(QtMsgType type, const char *message)
 {
-    QTestResult::ignoreMessage(type, message);
+    QTestLog::ignoreMessage(type, message);
 }
 
 /*! \internal
@@ -2095,7 +2095,7 @@ void QTest::addColumnInternal(int id, const char *name)
 QTestData &QTest::newRow(const char *dataTag)
 {
     QTestTable *tbl = QTestTable::currentTestTable();
-    QTEST_ASSERT_X(tbl, "QTest::addColumn()", "Cannot add testdata outside of a _data slot.");
+    QTEST_ASSERT_X(tbl, "QTest::newRow()", "Cannot add testdata outside of a _data slot.");
 
     return *tbl->newData(dataTag);
 }
@@ -2212,11 +2212,11 @@ bool QTest::compare_helper(bool success, const char *msg, char *val1, char *val2
     return QTestResult::compare(success, msg, val1, val2, actual, expected, file, line);
 }
 
-/*! \fn bool QTest::qCompare<float>(float const &t1, float const &t2, const char *actual, const char *expected, const char *file, int line)
+/*! \fn bool QTest::qCompare(float const &t1, float const &t2, const char *actual, const char *expected, const char *file, int line)
 \internal
  */
-template <>
-Q_TESTLIB_EXPORT bool QTest::qCompare<float>(float const &t1, float const &t2, const char *actual, const char *expected,
+
+bool QTest::qCompare(float const &t1, float const &t2, const char *actual, const char *expected,
                     const char *file, int line)
 {
     return qFuzzyCompare(t1, t2)
@@ -2225,11 +2225,10 @@ Q_TESTLIB_EXPORT bool QTest::qCompare<float>(float const &t1, float const &t2, c
                              toString(t1), toString(t2), actual, expected, file, line);
 }
 
-/*! \fn bool QTest::qCompare<double>(double const &t1, double const &t2, const char *actual, const char *expected, const char *file, int line)
+/*! \fn bool QTest::qCompare(double const &t1, double const &t2, const char *actual, const char *expected, const char *file, int line)
 \internal
  */
-template <>
-Q_TESTLIB_EXPORT bool QTest::qCompare<double>(double const &t1, double const &t2, const char *actual, const char *expected,
+bool QTest::qCompare(double const &t1, double const &t2, const char *actual, const char *expected,
                     const char *file, int line)
 {
     return qFuzzyCompare(t1, t2)

@@ -158,7 +158,7 @@ namespace QTest
     Q_TESTLIB_EXPORT bool compare_helper(bool success, const char *msg, const char *file,
                                           int line);
     Q_TESTLIB_EXPORT bool compare_helper(bool success, const char *msg, char *val1, char *val2,
-                                         const char *expected, const char *actual,
+                                         const char *actual, const char *expected,
                                          const char *file, int line);
     Q_TESTLIB_EXPORT void qSleep(int ms);
     Q_TESTLIB_EXPORT void addColumnInternal(int id, const char *name);
@@ -181,12 +181,10 @@ namespace QTest
     }
 
 
-    template <>
-    Q_TESTLIB_EXPORT bool qCompare<float>(float const &t1, float const &t2,
+    Q_TESTLIB_EXPORT bool qCompare(float const &t1, float const &t2,
                     const char *actual, const char *expected, const char *file, int line);
 
-    template <>
-    Q_TESTLIB_EXPORT bool qCompare<double>(double const &t1, double const &t2,
+    Q_TESTLIB_EXPORT bool qCompare(double const &t1, double const &t2,
                     const char *actual, const char *expected, const char *file, int line);
 
     inline bool compare_ptr_helper(const void *t1, const void *t2, const char *actual,
@@ -222,33 +220,29 @@ namespace QTest
     bool qCompare(T1 const &, T2 const &, const char *, const char *, const char *, int);
 
 #if defined(QT_COORD_TYPE) && (defined(QT_ARCH_ARM) || defined(QT_NO_FPU) || defined(QT_ARCH_WINDOWSCE))
-    template <>
-    inline bool qCompare<qreal, float>(qreal const &t1, float const &t2, const char *actual,
+    inline bool qCompare(qreal const &t1, float const &t2, const char *actual,
                                  const char *expected, const char *file, int line)
     {
-        return qCompare<qreal>(t1, qreal(t2), actual, expected, file, line);
+        return qCompare(t1, qreal(t2), actual, expected, file, line);
     }
 
-    template <>
-    inline bool qCompare<float, qreal>(float const &t1, qreal const &t2, const char *actual,
+    inline bool qCompare<(float const &t1, qreal const &t2, const char *actual,
                                  const char *expected, const char *file, int line)
     {
-        return qCompare<qreal>(qreal(t1), t2, actual, expected, file, line);
+        return qCompare(qreal(t1), t2, actual, expected, file, line);
     }
 
 #elif defined(QT_COORD_TYPE) || defined(QT_ARCH_ARM) || defined(QT_NO_FPU) || defined(QT_ARCH_WINDOWSCE) || defined(QT_ARCH_SYMBIAN)
-    template <>
-    inline bool qCompare<qreal, double>(qreal const &t1, double const &t2, const char *actual,
+    inline bool qCompare(qreal const &t1, double const &t2, const char *actual,
                                  const char *expected, const char *file, int line)
     {
-        return qCompare<float>(float(t1), float(t2), actual, expected, file, line);
+        return qCompare(float(t1), float(t2), actual, expected, file, line);
     }
 
-    template <>
-    inline bool qCompare<double, qreal>(double const &t1, qreal const &t2, const char *actual,
+    inline bool qCompare(double const &t1, qreal const &t2, const char *actual,
                                  const char *expected, const char *file, int line)
     {
-        return qCompare<float>(float(t1), float(t2), actual, expected, file, line);
+        return qCompare(float(t1), float(t2), actual, expected, file, line);
     }
 
 #endif
@@ -279,40 +273,17 @@ namespace QTest
         return compare_ptr_helper(const_cast<const T1 *>(t1),
                 static_cast<const T1 *>(const_cast<const T2 *>(t2)), actual, expected, file, line);
     }
-    template<>
-    inline bool qCompare<char>(const char *t1, const char *t2, const char *actual,
+    inline bool qCompare(const char *t1, const char *t2, const char *actual,
                                        const char *expected, const char *file, int line)
     {
         return compare_string_helper(t1, t2, actual, expected, file, line);
     }
-    template<>
-    inline bool qCompare<char>(char *t1, char *t2, const char *actual, const char *expected,
+    inline bool qCompare(char *t1, char *t2, const char *actual, const char *expected,
                         const char *file, int line)
     {
         return compare_string_helper(t1, t2, actual, expected, file, line);
     }
 #else  /* QTEST_NO_SPECIALIZATIONS */
-
-// In Symbian we have QTEST_NO_SPECIALIZATIONS defined, but still float related specialization
-// should be used. If QTEST_NO_SPECIALIZATIONS is enabled we get ambiguous overload errors.
-#if defined(QT_ARCH_SYMBIAN)
-    template <typename T1, typename T2>
-    bool qCompare(T1 const &, T2 const &, const char *, const char *, const char *, int);
-
-    template <>
-    inline bool qCompare<qreal, double>(qreal const &t1, double const &t2, const char *actual,
-                                 const char *expected, const char *file, int line)
-    {
-        return qCompare<float>(float(t1), float(t2), actual, expected, file, line);
-    }
-
-    template <>
-    inline bool qCompare<double, qreal>(double const &t1, qreal const &t2, const char *actual,
-                                 const char *expected, const char *file, int line)
-    {
-        return qCompare<float>(float(t1), float(t2), actual, expected, file, line);
-    }
-#endif
 
     inline bool qCompare(const char *t1, const char *t2, const char *actual,
                          const char *expected, const char *file, int line)
@@ -327,20 +298,14 @@ namespace QTest
     }
 #endif
 
-    /* The next two specializations are for MSVC that shows problems with implicit
+    /* The next two overloads are for MSVC that shows problems with implicit
        conversions
      */
-#ifndef QTEST_NO_SPECIALIZATIONS
-    template<>
-#endif
     inline bool qCompare(char *t1, const char *t2, const char *actual,
                          const char *expected, const char *file, int line)
     {
         return compare_string_helper(t1, t2, actual, expected, file, line);
     }
-#ifndef QTEST_NO_SPECIALIZATIONS
-    template<>
-#endif
     inline bool qCompare(const char *t1, char *t2, const char *actual,
                          const char *expected, const char *file, int line)
     {
@@ -348,13 +313,10 @@ namespace QTest
     }
 
     // NokiaX86 and RVCT do not like implicitly comparing bool with int
-#ifndef QTEST_NO_SPECIALIZATIONS
-    template <>
-#endif
     inline bool qCompare(bool const &t1, int const &t2,
                     const char *actual, const char *expected, const char *file, int line)
     {
-        return qCompare<int>(int(t1), t2, actual, expected, file, line);
+        return qCompare(int(t1), t2, actual, expected, file, line);
     }
 
 

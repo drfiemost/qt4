@@ -73,16 +73,15 @@ QT_BEGIN_NAMESPACE
 namespace QTest
 {
 
-template<>
 inline bool qCompare(QIcon const &t1, QIcon const &t2, const char *actual, const char *expected,
                     const char *file, int line)
 {
     QTEST_ASSERT(sizeof(QIcon) == sizeof(void *));
-    return qCompare<void *>(*reinterpret_cast<void * const *>(&t1),
+    return qCompare(*reinterpret_cast<void * const *>(&t1),
                    *reinterpret_cast<void * const *>(&t2), actual, expected, file, line);
 }
 
-template<>
+
 inline bool qCompare(QPixmap const &t1, QPixmap const &t2, const char *actual, const char *expected,
                     const char *file, int line)
 {
