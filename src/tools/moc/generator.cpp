@@ -49,28 +49,19 @@
 
 QT_BEGIN_NAMESPACE
 
-uint qvariant_nameToType(const char* name)
+uint qvariant_nameToType(const QByteArray &name)
 {
-    if (!name)
+    if (name.isEmpty())
         return 0;
 
-    if (strcmp(name, "QCString") == 0)
-        return QMetaType::QByteArray;
-    if (strcmp(name, "Q_LLONG") == 0)
-        return QMetaType::LongLong;
-    if (strcmp(name, "Q_ULLONG") == 0)
-        return QMetaType::ULongLong;
-    if (strcmp(name, "QIconSet") == 0)
-        return QMetaType::QIcon;
-
-    uint tp = QMetaType::type(name);
+    uint tp = QMetaType::type(name.constData());
     return tp < QMetaType::User ? tp : 0;
 }
 
 /*
   Returns true if the type is a QVariant types.
 */
-bool isVariantType(const char* type)
+bool isVariantType(const QByteArray &type)
 {
     return qvariant_nameToType(type) != 0;
 }
@@ -78,9 +69,9 @@ bool isVariantType(const char* type)
 /*!
   Returns true if the type is qreal.
 */
-static bool isQRealType(const char *type)
+static bool isQRealType(const QByteArray &type)
 {
-    return strcmp(type, "qreal") == 0;
+    return (type == "qreal");
 }
 
 Generator::Generator(ClassDef *classDef, const QList<QByteArray> &metaTypes, FILE *outfile)
@@ -113,11 +104,9 @@ static inline int lengthOfEscapeSequence(const QByteArray &s, int i)
     return i - startPos;
 }
 
-int Generator::strreg(const char *s)
+int Generator::strreg(const QByteArray &s)
 {
     int idx = 0;
-    if (!s)
-        s = "";
     for (int i = 0; i < strings.size(); ++i) {
         const QByteArray &str = strings.at(i);
         if (str == s)
@@ -144,13 +133,11 @@ void Generator::generateCode()
 //
 // build the data array
 //
-    int i = 0;
-
 
     // filter out undeclared enumerators and sets
     {
         QList<EnumDef> enumList;
-        for (i = 0; i < cdef->enumList.count(); ++i) {
+        for (int i = 0; i < cdef->enumList.count(); ++i) {
             EnumDef def = cdef->enumList.at(i);
             if (cdef->enumDeclarations.contains(def.name)) {
                 enumList += def;
@@ -190,7 +177,7 @@ void Generator::generateCode()
     fprintf(out, "    %4d, %4d, // enums/sets\n", cdef->enumList.count(), cdef->enumList.count() ? index : 0);
 
     int enumsIndex = index;
-    for (i = 0; i < cdef->enumList.count(); ++i)
+    for (int i = 0; i < cdef->enumList.count(); ++i)
         index += 4 + (cdef->enumList.at(i).values.count() * 2);
     fprintf(out, "    %4d, %4d, // constructors\n", isConstructible ? cdef->constructorList.count() : 0,
             isConstructible ? index : 0);
@@ -256,7 +243,7 @@ void Generator::generateCode()
     fprintf(out, "    \"");
     int col = 0;
     int len = 0;
-    for (i = 0; i < strings.size(); ++i) {
+    for (int i = 0; i < strings.size(); ++i) {
         QByteArray s = strings.at(i);
         len = s.length();
         if (col && col + len >= 72) {
@@ -377,7 +364,7 @@ void Generator::generateCode()
     for (int i = 1; i < cdef->superclassList.size(); ++i) { // for all superclasses but the first one
         if (cdef->superclassList.at(i).second == FunctionDef::Private)
             continue;
-        const char *cname = cdef->superclassList.at(i).first;
+        const char *cname = cdef->superclassList.at(i).first.constData();
         fprintf(out, "    if (!strcmp(_clname, \"%s\"))\n        return static_cast< %s*>(const_cast< %s*>(this));\n",
                 cname, cname, cdef->classname.constData());
     }
@@ -430,7 +417,7 @@ void Generator::generateClassInfos()
     }
 }
 
-void Generator::generateFunctions(QList<FunctionDef>& list, const char *functype, int type)
+void Generator::generateFunctions(const QList<FunctionDef>& list, const char *functype, int type)
 {
     if (list.isEmpty())
         return;
@@ -473,7 +460,7 @@ void Generator::generateFunctions(QList<FunctionDef>& list, const char *functype
     }
 }
 
-void Generator::generateFunctionRevisions(QList<FunctionDef>& list, const char *functype)
+void Generator::generateFunctionRevisions(const QList<FunctionDef>& list, const char *functype)
 {
     if (list.count())
         fprintf(out, "\n // %ss: revision\n", functype);
