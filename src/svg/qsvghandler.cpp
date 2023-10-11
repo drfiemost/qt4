@@ -950,7 +950,7 @@ static bool createSvgGlyph(QSvgFont *font, const QXmlStreamAttributes &attribute
     QStringRef havStr = attributes.value(QLatin1String("horiz-adv-x"));
     QStringRef pathStr = attributes.value(QLatin1String("d"));
 
-    QChar unicode = (uncStr.isEmpty()) ? 0 : uncStr.at(0);
+    QChar unicode = (uncStr.isEmpty()) ? u'\0' : uncStr.at(0);
     qreal havx = (havStr.isEmpty()) ? -1 : toDouble(havStr);
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
@@ -1609,7 +1609,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
         QChar pathElem = *str;
         ++str;
         QChar endc = *end;
-        *const_cast<QChar *>(end) = 0; // parseNumbersArray requires 0-termination that QStringRef cannot guarantee
+        *const_cast<QChar *>(end) = u'\0'; // parseNumbersArray requires 0-termination that QStringRef cannot guarantee
         const char *pattern = nullptr;
         if (pathElem == QLatin1Char('a') || pathElem == QLatin1Char('A'))
             pattern = "rrrffrr";
@@ -3234,7 +3234,7 @@ static bool parseStyleNode(QSvgNode *parent,
     QString type = attributes.value(QLatin1String("type")).toString();
     type = type.toLower();
 
-    if (type == QLatin1String("text/css")) {
+    if (type == QLatin1String("text/css") || type.isNull()) {
         handler->setInStyle(true);
     }
 

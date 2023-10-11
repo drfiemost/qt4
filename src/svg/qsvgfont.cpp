@@ -88,7 +88,7 @@ void QSvgFont::draw(QPainter *p, const QPointF &point, const QString &str, qreal
     for ( ; itr != str.constEnd(); ++itr) {
         QChar unicode = *itr;
         if (!m_glyphs.contains(*itr)) {
-            unicode = 0;
+            unicode = u'\0';
             if (!m_glyphs.contains(unicode))
                 continue;
         }
@@ -116,7 +116,7 @@ void QSvgFont::draw(QPainter *p, const QPointF &point, const QString &str, qreal
     for ( ; itr != str.constEnd(); ++itr) {
         QChar unicode = *itr;
         if (!m_glyphs.contains(*itr)) {
-            unicode = 0;
+            unicode = u'\0';
             if (!m_glyphs.contains(unicode))
                 continue;
         }
