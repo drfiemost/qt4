@@ -84,7 +84,7 @@ public:
     QAbstractTestLogger() {}
     virtual ~QAbstractTestLogger() {}
 
-    virtual void startLogging();
+    virtual void startLogging(const char *filename);
     virtual void stopLogging();
 
     virtual void enterTestFunction(const char *function) = 0;
@@ -100,7 +100,6 @@ public:
     virtual void registerRandomSeed(unsigned int seed) = 0;
 
     static void outputString(const char *msg);
-    static bool isTtyOutput();
 };
 
 struct QTestCharBuffer

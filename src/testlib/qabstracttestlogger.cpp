@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include "QtTest/private/qabstracttestlogger_p.h"
-#include "QtTest/private/qtestlog_p.h"
 #include "QtTest/qtestassert.h"
 
 #include "QtCore/qbytearray.h"
@@ -68,35 +67,21 @@ void QAbstractTestLogger::outputString(const char *msg)
     ::fflush(QTest::stream);
 }
 
-bool QAbstractTestLogger::isTtyOutput()
-{
-    QTEST_ASSERT(QTest::stream);
-
-#if defined(Q_OS_WIN)
-    return true;
-#else
-    static bool ttyoutput = isatty(fileno(QTest::stream));
-    return ttyoutput;
-#endif
-}
-
-
-void QAbstractTestLogger::startLogging()
+void QAbstractTestLogger::startLogging(const char *filename)
 {
     QTEST_ASSERT(!QTest::stream);
 
-    const char *out = QTestLog::outputFileName();
-    if (!out) {
+    if (!filename) {
         QTest::stream = stdout;
         return;
     }
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(Q_OS_WINCE)
-    if (::fopen_s(&QTest::stream, out, "wt")) {
+    if (::fopen_s(&QTest::stream, filename, "wt")) {
 #else
-    QTest::stream = ::fopen(out, "wt");
+    QTest::stream = ::fopen(filename, "wt");
     if (!QTest::stream) {
 #endif
-        printf("Unable to open file for logging: %s", out);
+        printf("Unable to open file for logging: %s", filename);
         ::exit(1);
     }
 }

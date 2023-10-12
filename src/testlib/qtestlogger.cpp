@@ -78,8 +78,10 @@ QTestLogger::~QTestLogger()
     delete filelogger;
 }
 
-void QTestLogger::startLogging()
+void QTestLogger::startLogging(const char *filename)
 {
+    QAbstractTestLogger::startLogging(filename);
+
     switch(format){
     case TLF_LightXml:{
         logFormatter = new QTestLightXmlStreamer;
@@ -99,7 +101,6 @@ void QTestLogger::startLogging()
     }
 
     logFormatter->setLogger(this);
-    logFormatter->startStreaming();
 }
 
 void QTestLogger::stopLogging()
@@ -161,7 +162,7 @@ void QTestLogger::stopLogging()
         logFormatter->output(iterator);
     }
 
-    logFormatter->stopStreaming();
+    QAbstractTestLogger::stopLogging();
 }
 
 void QTestLogger::enterTestFunction(const char *function)
