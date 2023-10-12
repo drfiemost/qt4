@@ -70,6 +70,8 @@ private slots:
     void getSetCheck();
     void inexistentUrl();
     void emptyUrl();
+    void invalidUrl_data();
+    void invalidUrl();
     void testStrokeWidth();
     void testMapViewBoxToTarget();
     void testRenderElement();
@@ -96,9 +98,12 @@ private slots:
     void testUseElement();
     void smallFont();
     void styleSheet();
+    void duplicateStyleId();
     void oss_fuzz_23731();
     void oss_fuzz_24131();
     void oss_fuzz_24738();
+    void illegalAnimateTransform_data();
+    void illegalAnimateTransform();
 
 #ifndef QT_NO_COMPRESS
     void testGzLoading();
@@ -154,6 +159,33 @@ void tst_QSvgRenderer::emptyUrl()
     QByteArray data(src);
     QSvgRenderer renderer(data);
 
+    QVERIFY(renderer.isValid());
+}
+
+void tst_QSvgRenderer::invalidUrl_data()
+{
+    QTest::addColumn<QByteArray>("svg");
+
+    QTest::newRow("01") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url0\" /></svg>");
+    QTest::newRow("02") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url(0\" /></svg>");
+    QTest::newRow("03") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url (0\" /></svg>");
+    QTest::newRow("04") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url ( 0\" /></svg>");
+    QTest::newRow("05") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url#\" /></svg>");
+    QTest::newRow("06") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url#(\" /></svg>");
+    QTest::newRow("07") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url(#\" /></svg>");
+    QTest::newRow("08") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url(# \" /></svg>");
+    QTest::newRow("09") << QByteArray("<svg><linearGradient id=\"0\"/><circle fill=\"url(# 0\" /></svg>");
+    QTest::newRow("10") << QByteArray("<svg><linearGradient id=\"blabla\"/><circle fill=\"urlblabla\" /></svg>");
+    QTest::newRow("11") << QByteArray("<svg><linearGradient id=\"blabla\"/><circle fill=\"url(blabla\" /></svg>");
+    QTest::newRow("12") << QByteArray("<svg><linearGradient id=\"blabla\"/><circle fill=\"url(blabla)\" /></svg>");
+    QTest::newRow("13") << QByteArray("<svg><linearGradient id=\"blabla\"/><circle fill=\"url(#blabla\" /></svg>");
+}
+
+void tst_QSvgRenderer::invalidUrl()
+{
+    QFETCH(QByteArray, svg);
+
+    QSvgRenderer renderer(svg);
     QVERIFY(renderer.isValid());
 }
 
@@ -1591,6 +1623,18 @@ void tst_QSvgRenderer::styleSheet()
     QCOMPARE(images[0], images[1]);
 }
 
+void tst_QSvgRenderer::duplicateStyleId()
+{
+    QByteArray svg = QByteArrayLiteral("<svg><linearGradient id=\"a\"/>"
+                                       "<rect style=\"fill:url(#a)\"/>"
+                                       "<linearGradient id=\"a\"/></svg>");
+    QTest::ignoreMessage(QtWarningMsg, "Duplicate unique style id: \"a\"");
+    QImage image(200, 200, QImage::Format_RGB32);
+    QPainter painter(&image);
+    QSvgRenderer renderer(svg);
+    renderer.render(&painter);
+}
+
 void tst_QSvgRenderer::oss_fuzz_23731()
 {
     // when configured with "-sanitize undefined", this resulted in:
@@ -1614,6 +1658,23 @@ void tst_QSvgRenderer::oss_fuzz_24738()
     // when configured with "-sanitize undefined", this resulted in:
     // "runtime error: division by zero"
     QSvgRenderer().load(QByteArray("<svg><path d=\"a 2 1e-212.....\">"));
+}
+
+void tst_QSvgRenderer::illegalAnimateTransform_data()
+{
+    QTest::addColumn<QByteArray>("svg");
+
+    QTest::newRow("case1") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" values=\"8,0,5,0\">");
+    QTest::newRow("case2") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" values=\"1,2\">");
+    QTest::newRow("case3") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" from=\".. 5 2\" to=\"f\">");
+    QTest::newRow("case4") << QByteArray("<svg><animateTransform type=\"scale\" begin=\"1\" dur=\"2\" by=\"--,..\">");
+}
+
+void tst_QSvgRenderer::illegalAnimateTransform()
+{
+    QFETCH(QByteArray, svg);
+    QSvgRenderer renderer;
+    QVERIFY(!renderer.load(svg)); // also shouldn't assert
 }
 
 QTEST_MAIN(tst_QSvgRenderer)
