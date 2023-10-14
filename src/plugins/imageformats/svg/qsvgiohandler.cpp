@@ -130,7 +130,7 @@ bool QSvgIOHandler::canRead() const
     if (buf.startsWith("\x1f\x8b")) {
         setFormat("svgz");
         return true;
-    } else if (buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--")) {
+    } else if (buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--") || buf.contains("<!DOCTYPE svg")) {
         setFormat("svg");
         return true;
     }
@@ -264,8 +264,8 @@ bool QSvgIOHandler::supportsOption(ImageOption option) const
 
 bool QSvgIOHandler::canRead(QIODevice *device)
 {
-    QByteArray buf = device->peek(8);
-    return buf.startsWith("\x1f\x8b") || buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--");
+    QByteArray buf = device->peek(16);
+    return buf.startsWith("\x1f\x8b") || buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--") || buf.contains("<!DOCTYPE svg");
 }
 
 QT_END_NAMESPACE

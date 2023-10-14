@@ -46,6 +46,7 @@
 #include "qsvghandler_p.h"
 #include "qsvgfont_p.h"
 
+#include <qnumeric.h>
 #include "qpainter.h"
 #include "qfile.h"
 #include "qbuffer.h"
@@ -131,6 +132,12 @@ static QByteArray qt_inflateSvgzDataFrom(QIODevice *device, bool doCheckContent)
         do {
             // Prepare the destination buffer
             int oldSize = destination.size();
+            if (oldSize > INT_MAX - CHUNK_SIZE) {
+                inflateEnd(&zlibStream);
+                qWarning("Error while inflating gzip file: integer size overflow");
+                return QByteArray();
+            }
+
             destination.resize(oldSize + CHUNK_SIZE);
             zlibStream.next_out = reinterpret_cast<Bytef*>(
                     destination.data() + oldSize - zlibStream.avail_out);
@@ -155,8 +162,8 @@ static QByteArray qt_inflateSvgzDataFrom(QIODevice *device, bool doCheckContent)
 
         if (doCheckContent) {
             // Quick format check, equivalent to QSvgIOHandler::canRead()
-            QByteArray buf = destination.left(8);
-            if (!buf.contains("<?xml") && !buf.contains("<svg") && !buf.contains("<!--")) {
+            QByteArray buf = destination.left(16);
+            if (!buf.contains("<?xml") && !buf.contains("<svg") && !buf.contains("<!--") && !buf.contains("<!DOCTYPE svg")) {
                 inflateEnd(&zlibStream);
                 qWarning("Error while inflating gzip file: SVG format check failed");
                 return QByteArray();
@@ -171,8 +178,11 @@ static QByteArray qt_inflateSvgzDataFrom(QIODevice *device, bool doCheckContent)
         }
     }
 
+    // Chop off trailing space in the buffer
+    destination.chop(zlibStream.avail_out);
+
     inflateEnd(&zlibStream);
-    return QByteArray();
+    return destination;
 }
 #else
 static QByteArray qt_inflateSvgzDataFrom(QIODevice *)
@@ -420,8 +430,16 @@ void QSvgTinyDocument::draw(QPainter *p, QSvgExtraStates &)
     draw(p);
 }
 
+static bool isValidMatrix(const QTransform &transform)
+{
+    qreal determinant = transform.determinant();
+    return qIsFinite(determinant);
+}
+
 void QSvgTinyDocument::mapSourceToTarget(QPainter *p, const QRectF &targetRect, const QRectF &sourceRect)
 {
+    QTransform oldTransform = p->worldTransform();
+
     QRectF target = targetRect;
     if (target.isEmpty()) {
         QPaintDevice *dev = p->device();
@@ -473,6 +491,9 @@ void QSvgTinyDocument::mapSourceToTarget(QPainter *p, const QRectF &targetRect, 
             p->translate(-source.x(), -source.y());
         }
     }
+
+    if (!isValidMatrix(p->worldTransform()))
+        p->setWorldTransform(oldTransform);
 }
 
 QRectF QSvgTinyDocument::boundsOnElement(const QString &id) const
