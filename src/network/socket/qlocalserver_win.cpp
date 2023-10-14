@@ -134,7 +134,7 @@ bool QLocalServerPrivate::listen(const QString &name)
     // Use only one event for all listeners of one socket.
     // The idea is that listener events are rare, so polling all listeners once in a while is
     // cheap compared to waiting for N additional events in each iteration of the main loop.
-    eventHandle = CreateEvent(NULL, TRUE, FALSE, NULL);
+    eventHandle = CreateEvent(NULL, true, false, NULL);
     connectionEventNotifier = new QWinEventNotifier(eventHandle , q);
     q->connect(connectionEventNotifier, SIGNAL(activated(HANDLE)), q, SLOT(_q_onNewConnection()));
 
@@ -158,7 +158,7 @@ void QLocalServerPrivate::_q_onNewConnection()
     for (int i = 0; i < listeners.size(); ) {
         HANDLE handle = listeners[i].handle;
         if (listeners[i].connected
-            || GetOverlappedResult(handle, &listeners[i].overlapped, &dummy, FALSE))
+            || GetOverlappedResult(handle, &listeners[i].overlapped, &dummy, false))
         {
             listeners.removeAt(i);
 

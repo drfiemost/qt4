@@ -72,7 +72,7 @@ QGLXContext::QGLXContext(Window window, QXcbScreen *screen, const QWindowFormat 
         shareGlxContext = static_cast<const QGLXContext*>(shareContext->handle())->glxContext();
 
     GLXFBConfig config = qglx_findConfig(DISPLAY_FROM_XCB(screen),screen->screenNumber(),format);
-    m_context = glXCreateNewContext(DISPLAY_FROM_XCB(screen), config, GLX_RGBA_TYPE, shareGlxContext, TRUE);
+    m_context = glXCreateNewContext(DISPLAY_FROM_XCB(screen), config, GLX_RGBA_TYPE, shareGlxContext, true);
     m_windowFormat = qglx_platformWindowFromGLXFBConfig(DISPLAY_FROM_XCB(screen), config, m_context);
     Q_XCB_NOOP(m_screen->connection());
 }

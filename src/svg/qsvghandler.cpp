@@ -3766,6 +3766,12 @@ bool QSvgHandler::startElement(const QString &localName,
             case QSvgNode::DEFS:
             case QSvgNode::SWITCH:
             {
+                if (node->type() == QSvgNode::TSPAN) {
+                    qWarning("\'tspan\' element in wrong context.");
+                    delete node;
+                    node = nullptr;
+                    break;
+                }
                 QSvgStructureNode *group =
                     static_cast<QSvgStructureNode*>(m_nodes.top());
                 group->addChild(node, someId(attributes));
@@ -3778,13 +3784,13 @@ bool QSvgHandler::startElement(const QString &localName,
                 } else {
                     qWarning("\'text\' or \'textArea\' element contains invalid element type.");
                     delete node;
-                    node = 0;
+                    node = nullptr;
                 }
                 break;
             default:
                 qWarning("Could not add child element to parent element because the types are incorrect.");
                 delete node;
-                node = 0;
+                node = nullptr;
                 break;
             }
 

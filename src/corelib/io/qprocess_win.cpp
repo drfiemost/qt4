@@ -80,13 +80,13 @@ static void qt_create_pipe(Q_PIPE *pipe, bool in)
         if (!CreatePipe(&pipe[0], &tmpHandle, &secAtt, 1024 * 1024))
             return;
         if (!DuplicateHandle(GetCurrentProcess(), tmpHandle, GetCurrentProcess(),
-                             &pipe[1], 0, FALSE, DUPLICATE_SAME_ACCESS))
+                             &pipe[1], 0, false, DUPLICATE_SAME_ACCESS))
             return;
     } else {                    // stdout or stderr
         if (!CreatePipe(&tmpHandle, &pipe[1], &secAtt, 1024 * 1024))
             return;
         if (!DuplicateHandle(GetCurrentProcess(), tmpHandle, GetCurrentProcess(),
-                             &pipe[0], 0, FALSE, DUPLICATE_SAME_ACCESS))
+                             &pipe[0], 0, false, DUPLICATE_SAME_ACCESS))
             return;
     }
 
@@ -108,7 +108,7 @@ bool QProcessPrivate::createChannel(Channel &channel)
 
     if (&channel == &stderrChannel && processChannelMode == QProcess::MergedChannels) {
         return DuplicateHandle(GetCurrentProcess(), stdoutChannel.pipe[1], GetCurrentProcess(),
-                               &stderrChannel.pipe[1], 0, TRUE, DUPLICATE_SAME_ACCESS);
+                               &stderrChannel.pipe[1], 0, true, DUPLICATE_SAME_ACCESS);
     }
 
     if (channel.type == Channel::Normal) {
@@ -118,7 +118,7 @@ bool QProcessPrivate::createChannel(Channel &channel)
         return true;
     } else if (channel.type == Channel::Redirect) {
         // we're redirecting the channel to/from a file
-        SECURITY_ATTRIBUTES secAtt = { sizeof(SECURITY_ATTRIBUTES), NULL, TRUE };
+        SECURITY_ATTRIBUTES secAtt = { sizeof(SECURITY_ATTRIBUTES), NULL, true };
 
         if (&channel == &stdinChannel) {
             // try to open in read-only mode
@@ -180,7 +180,7 @@ bool QProcessPrivate::createChannel(Channel &channel)
                 HANDLE tmpHandle = source->pipe[1];
                 if (!DuplicateHandle(GetCurrentProcess(), tmpHandle,
                                      GetCurrentProcess(), &source->pipe[1],
-                                     0, TRUE, DUPLICATE_SAME_ACCESS))
+                                     0, true, DUPLICATE_SAME_ACCESS))
                     return false;
 
                 CloseHandle(tmpHandle);
@@ -206,7 +206,7 @@ bool QProcessPrivate::createChannel(Channel &channel)
                 HANDLE tmpHandle = sink->pipe[0];
                 if (!DuplicateHandle(GetCurrentProcess(), tmpHandle,
                                      GetCurrentProcess(), &sink->pipe[0],
-                                     0, TRUE, DUPLICATE_SAME_ACCESS))
+                                     0, true, DUPLICATE_SAME_ACCESS))
                     return false;
 
                 CloseHandle(tmpHandle);
@@ -423,7 +423,7 @@ void QProcessPrivate::startProcess()
                                  stdinChannel.pipe[0], stdoutChannel.pipe[1], stderrChannel.pipe[1]
     };
     success = CreateProcess(0, (wchar_t*)args.utf16(),
-                            0, 0, TRUE, dwCreationFlags,
+                            0, 0, true, dwCreationFlags,
                             environment.isEmpty() ? 0 : envlist.data(),
                             workingDirectory.isEmpty() ? 0 : (wchar_t*)QDir::toNativeSeparators(workingDirectory).utf16(),
                             &startupInfo, pid);
@@ -561,7 +561,7 @@ static BOOL QT_WIN_CALLBACK qt_terminateApp(HWND hwnd, LPARAM procId)
     if (currentProcId == (DWORD)procId)
 	    PostMessage(hwnd, WM_CLOSE, 0, 0);
 
-    return TRUE;
+    return true;
 }
 
 void QProcessPrivate::terminateProcess()
@@ -859,7 +859,7 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                                    };
         success = CreateProcess(0, (wchar_t*)args.utf16(),
-                                0, 0, FALSE, CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE, 0,
+                                0, 0, false, CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE, 0,
                                 workingDir.isEmpty() ? 0 : (wchar_t*)workingDir.utf16(),
                                 &startupInfo, &pinfo);
 #endif // Q_OS_WINCE

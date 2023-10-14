@@ -1722,7 +1722,7 @@ BOOL IsUserAdmin()
                 &AdministratorsGroup);
     if (b) {
         if (!CheckTokenMembership( NULL, AdministratorsGroup, &b))
-            b = FALSE;
+            b = false;
         FreeSid(AdministratorsGroup);
     }
 

@@ -1475,7 +1475,7 @@ void QMessageBox::showEvent(QShowEvent *e)
     QAccessible::updateAccessibility(this, 0, QAccessible::Alert);
 #endif
 #ifdef Q_WS_WIN
-    HMENU systemMenu = GetSystemMenu((HWND)winId(), FALSE);
+    HMENU systemMenu = GetSystemMenu((HWND)winId(), false);
     if (!d->detectedEscapeButton) {
         EnableMenuItem(systemMenu, SC_CLOSE, MF_BYCOMMAND|MF_GRAYED);
     }
