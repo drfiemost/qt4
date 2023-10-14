@@ -1620,7 +1620,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
             arg.append(0);//dummy
         const qreal *num = arg.constData();
         int count = arg.count();
-        while (count > 0) {
+        while (ok && count > 0) {
             qreal offsetX = x;        // correction offsets
             qreal offsetY = y;        // for relative commands
             switch (pathElem.unicode()) {
