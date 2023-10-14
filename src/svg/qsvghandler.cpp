@@ -78,7 +78,7 @@ static const char *qt_inherit_text = "inherit";
 
 // ======== duplicated from qcolor_p
 
-static inline int qsvg_h2i(char hex)
+static inline int qsvg_h2i(char hex, bool *ok = nullptr)
 {
     if (hex >= '0' && hex <= '9')
         return hex - '0';
@@ -86,18 +86,20 @@ static inline int qsvg_h2i(char hex)
         return hex - 'a' + 10;
     if (hex >= 'A' && hex <= 'F')
         return hex - 'A' + 10;
+    if (ok)
+        *ok = false;
     return -1;
 }
 
-static inline int qsvg_hex2int(const char *s)
+static inline int qsvg_hex2int(const char *s, bool *ok = nullptr)
 {
-    return (qsvg_h2i(s[0]) << 4) | qsvg_h2i(s[1]);
+    return (qsvg_h2i(s[0], ok) * 16) | qsvg_h2i(s[1]);
 }
 
-static inline int qsvg_hex2int(char s)
+static inline int qsvg_hex2int(char s, bool *ok = nullptr)
 {
-    int h = qsvg_h2i(s);
-    return (h << 4) | h;
+    int h = qsvg_h2i(s, ok);
+    return (h * 16) | h;
 }
 
 bool qsvg_get_hex_rgb(const char *name, QRgb *rgb)
@@ -107,26 +109,27 @@ bool qsvg_get_hex_rgb(const char *name, QRgb *rgb)
     name++;
     const size_t len = qstrlen(name);
     int r, g, b;
+    bool ok = true;
     if (len == 12) {
-        r = qsvg_hex2int(name);
-        g = qsvg_hex2int(name + 4);
-        b = qsvg_hex2int(name + 8);
+        r = qsvg_hex2int(name, &ok);
+        g = qsvg_hex2int(name + 4, &ok);
+        b = qsvg_hex2int(name + 8, &ok);
     } else if (len == 9) {
-        r = qsvg_hex2int(name);
-        g = qsvg_hex2int(name + 3);
-        b = qsvg_hex2int(name + 6);
+        r = qsvg_hex2int(name, &ok);
+        g = qsvg_hex2int(name + 3, &ok);
+        b = qsvg_hex2int(name + 6, &ok);
     } else if (len == 6) {
-        r = qsvg_hex2int(name);
-        g = qsvg_hex2int(name + 2);
-        b = qsvg_hex2int(name + 4);
+        r = qsvg_hex2int(name, &ok);
+        g = qsvg_hex2int(name + 2, &ok);
+        b = qsvg_hex2int(name + 4, &ok);
     } else if (len == 3) {
-        r = qsvg_hex2int(name[0]);
-        g = qsvg_hex2int(name[1]);
-        b = qsvg_hex2int(name[2]);
+        r = qsvg_hex2int(name[0], &ok);
+        g = qsvg_hex2int(name[1], &ok);
+        b = qsvg_hex2int(name[2], &ok);
     } else {
         r = g = b = -1;
     }
-    if ((uint)r > 255 || (uint)g > 255 || (uint)b > 255) {
+    if ((uint)r > 255 || (uint)g > 255 || (uint)b > 255 || !ok) {
         *rgb = 0;
         return false;
     }
@@ -3857,7 +3860,7 @@ bool QSvgHandler::endElement(const QStringRef &localName)
     return true;
 }
 
-void QSvgHandler::resolveGradients(QSvgNode *node)
+void QSvgHandler::resolveGradients(QSvgNode *node, int nestedDepth)
 {
     if (!node || (node->type() != QSvgNode::DOC && node->type() != QSvgNode::G
         && node->type() != QSvgNode::DEFS && node->type() != QSvgNode::SWITCH)) {
@@ -3865,8 +3868,8 @@ void QSvgHandler::resolveGradients(QSvgNode *node)
     }
     QSvgStructureNode *structureNode = static_cast<QSvgStructureNode *>(node);
 
-    QList<QSvgNode *> ren = structureNode->renderers();
-    for (QList<QSvgNode *>::iterator it = ren.begin(); it != ren.end(); ++it) {
+    const QList<QSvgNode *> ren = structureNode->renderers();
+    for (auto it = ren.begin(); it != ren.end(); ++it) {
         QSvgFillStyle *fill = static_cast<QSvgFillStyle *>((*it)->styleProperty(QSvgStyleProperty::FILL));
         if (fill && !fill->isGradientResolved()) {
             QString id = fill->gradientId();
@@ -3891,7 +3894,8 @@ void QSvgHandler::resolveGradients(QSvgNode *node)
             }
         }
 
-        resolveGradients(*it);
+        if (nestedDepth < 2048)
+            resolveGradients(*it, nestedDepth + 1);
     }
 }
 

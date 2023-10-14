@@ -494,16 +494,27 @@ void QSvgUse::draw(QPainter *p, QSvgExtraStates &states)
     if (Q_UNLIKELY(!m_link || isDescendantOf(m_link) || m_recursing))
         return;
 
+    Q_ASSERT(states.nestedUseCount == 0 || states.nestedUseLevel > 0);
+    if (states.nestedUseLevel > 3 && states.nestedUseCount > (256 + states.nestedUseLevel * 2)) {
+        qDebug("Too many nested use nodes at #%s!", qPrintable(m_linkId));
+        return;
+    }
+
     applyStyle(p, states);
 
     if (!m_start.isNull()) {
         p->translate(m_start);
     }
+    if (states.nestedUseLevel > 0)
+        ++states.nestedUseCount;
     {
-        QScopedValueRollback<bool> guard(m_recursing);
-        m_recursing = true;
+        QScopedValueRollback<int> useLevelGuard(states.nestedUseLevel, states.nestedUseLevel + 1);
+        QScopedValueRollback<bool> recursingGuard(m_recursing, true);
         m_link->draw(p, states);
     }
+    if (states.nestedUseLevel == 0)
+        states.nestedUseCount = 0;
+
     if (!m_start.isNull()) {
         p->translate(-m_start);
     }

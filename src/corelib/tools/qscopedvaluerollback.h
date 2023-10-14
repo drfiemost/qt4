@@ -57,6 +57,13 @@ public:
         oldValue = varRef;
     }
 
+    explicit QScopedValueRollback(T &var, T value) :
+        varRef(var)
+    {
+        oldValue = varRef;
+        varRef = value;
+    }
+
     ~QScopedValueRollback()
     {
         varRef = oldValue;

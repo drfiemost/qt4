@@ -69,6 +69,12 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \fn QScopedValueRollback::QScopedValueRollback(T &var, T value)
+    Assigns \a value to \ var and stores the previous value of \a var
+    internally, for revert on destruction.
+*/
+
+/*!
     \fn QScopedValueRollback::~QScopedValueRollback()
 
     Assigns the previous value to the managed variable.
