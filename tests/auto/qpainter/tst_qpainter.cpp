@@ -2721,7 +2721,7 @@ void tst_QPainter::drawhelper_blend_untransformed()
         QImage expected(size - 2, size, destFormat);
         p.begin(&expected);
         p.fillRect(0, 0, expected.width(), expected.height(),
-                   QColor(dest.pixel(1, 0)));
+                   dest.pixelColor(1, 0));
         p.end();
 
         const QImage subDest(dest.bits() + dest.depth() / 8,
@@ -2790,7 +2790,7 @@ void tst_QPainter::drawhelper_blend_tiled_untransformed()
         QImage expected(size - 2, size, destFormat);
         p.begin(&expected);
         p.fillRect(0, 0, expected.width(), expected.height(),
-                   QColor(dest.pixel(1, 0)));
+                   dest.pixelColor(1, 0));
         p.end();
 
         const QImage subDest(dest.bits() + dest.depth() / 8,

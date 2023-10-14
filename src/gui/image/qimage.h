@@ -42,9 +42,10 @@
 #ifndef QIMAGE_H
 #define QIMAGE_H
 
-#include <QtGui/qtransform.h>
-#include <QtGui/qpaintdevice.h>
+#include <QtGui/qcolor.h>
 #include <QtGui/qrgb.h>
+#include <QtGui/qpaintdevice.h>
+#include <QtGui/qtransform.h>
 #include <QtCore/qbytearray.h>
 #include <QtCore/qrect.h>
 #include <QtCore/qstring.h>
@@ -212,6 +213,12 @@ public:
     void setPixel(int x, int y, uint index_or_rgb);
     void setPixel(const QPoint &pt, uint index_or_rgb);
 
+    QColor pixelColor(int x, int y) const;
+    QColor pixelColor(const QPoint &pt) const;
+
+    void setPixelColor(int x, int y, const QColor &c);
+    void setPixelColor(const QPoint &pt, const QColor &c);
+
     QVector<QRgb> colorTable() const;
     void setColorTable(const QVector<QRgb> colors);
 
@@ -311,6 +318,8 @@ Q_GUI_EXPORT_INLINE bool QImage::valid(const QPoint &pt) const { return valid(pt
 Q_GUI_EXPORT_INLINE int QImage::pixelIndex(const QPoint &pt) const { return pixelIndex(pt.x(), pt.y());}
 Q_GUI_EXPORT_INLINE QRgb QImage::pixel(const QPoint &pt) const { return pixel(pt.x(), pt.y()); }
 Q_GUI_EXPORT_INLINE void QImage::setPixel(const QPoint &pt, uint index_or_rgb) { setPixel(pt.x(), pt.y(), index_or_rgb); }
+Q_GUI_EXPORT_INLINE QColor QImage::pixelColor(const QPoint &pt) const { return pixelColor(pt.x(), pt.y()); }
+Q_GUI_EXPORT_INLINE void QImage::setPixelColor(const QPoint &pt, const QColor &c) { setPixelColor(pt.x(), pt.y(), c); }
 
 // QImage stream functions
 

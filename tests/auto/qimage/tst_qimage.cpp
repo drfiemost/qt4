@@ -2117,9 +2117,9 @@ void tst_QImage::reinterpretAsFormat()
     QFETCH(QColor, out_color);
 
     QImage image(1, 1, in_format);
-    //image.setPixelColor(0, 0, in_color);
+    image.setPixelColor(0, 0, in_color);
     QVERIFY(image.reinterpretAsFormat(out_format));
-    //QCOMPARE(image.pixelColor(0, 0), out_color);
+    QCOMPARE(image.pixelColor(0, 0), out_color);
 }
 
 void tst_QImage::reinterpretAsFormat2()
@@ -2128,11 +2128,11 @@ void tst_QImage::reinterpretAsFormat2()
 
     {
         QImage image(reinterpret_cast<const uchar*>(imageData), 4, 2, QImage::Format_RGB32);
-        QCOMPARE(image.pixel(0, 0), QColor(Qt::black).rgb());
+        QCOMPARE(image.pixelColor(0, 0), QColor(Qt::black));
         QVERIFY(image.isDetached());
         QVERIFY(image.reinterpretAsFormat(QImage::Format_ARGB32_Premultiplied));
         QCOMPARE(image.constBits(), reinterpret_cast<const uchar*>(imageData));
-        QCOMPARE(image.pixel(0, 0), QColor(Qt::transparent).rgba());
+        QCOMPARE(image.pixelColor(0, 0), QColor(Qt::transparent));
 
         //QVERIFY(!image.reinterpretAsFormat(QImage::Format_Grayscale8));
     }
