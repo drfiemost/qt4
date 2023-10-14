@@ -740,9 +740,6 @@ namespace QT_NAMESPACE {}
 #    define Q_NO_EXPLICIT_KEYWORD
 #  endif
 
-#elif defined(__WINSCW__) && !defined(Q_CC_NOKIAX86)
-#  define Q_CC_NOKIAX86
-
 #else
 #  error "Qt has not been tested with this compiler - talk to qt-bugs@trolltech.com"
 #endif
@@ -1295,7 +1292,7 @@ class QDataStream;
 #endif
 
 #ifndef Q_DECL_EXPORT
-#  if defined(Q_OS_WIN) || defined(Q_CC_NOKIAX86) || defined(Q_CC_RVCT)
+#  if defined(Q_OS_WIN) || defined(Q_CC_RVCT)
 #    define Q_DECL_EXPORT __declspec(dllexport)
 #  elif defined(QT_VISIBILITY_AVAILABLE)
 #    define Q_DECL_EXPORT __attribute__((visibility("default")))
@@ -1306,7 +1303,7 @@ class QDataStream;
 #  endif
 #endif
 #ifndef Q_DECL_IMPORT
-#  if defined(Q_OS_WIN) || defined(Q_CC_NOKIAX86) || defined(Q_CC_RVCT)
+#  if defined(Q_OS_WIN) || defined(Q_CC_RVCT)
 #    define Q_DECL_IMPORT __declspec(dllimport)
 #  else
 #    define Q_DECL_IMPORT

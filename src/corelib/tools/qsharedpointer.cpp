@@ -164,18 +164,18 @@
     complete object. See the \tt virtualBaseDifferentPointers autotest for
     this problem.
 
-    The d pointer is of type QtSharedPointer::ExternalRefCountData for simple
-    QSharedPointer objects, but could be of a derived type in some cases. It
-    is basically a reference-counted reference-counter.
+    The d pointer is a pointer to QtSharedPointer::ExternalRefCountData, but it
+    always points to one of the two classes derived from ExternalRefCountData.
 
     \section2 d-pointer
     \section3 QtSharedPointer::ExternalRefCountData
 
-    This class is basically a reference-counted reference-counter. It has two
-    members: \tt strongref and \tt weakref. The strong reference counter is
-    controlling the lifetime of the object tracked by QSharedPointer. a
-    positive value indicates that the object is alive. It's also the number
-    of QSharedObject instances that are attached to this Data.
+    It is basically a reference-counted reference-counter plus a pointer to the
+    function to be used to delete the pointer. It has three members: \tt
+    strongref, \tt weakref, and \tt destroyer. The strong reference counter is
+    controlling the lifetime of the object tracked by QSharedPointer. A
+    positive value indicates that the object is alive. It's also the number of
+    QSharedObject instances that are attached to this Data.
 
     When the strong reference count decreases to zero, the object is deleted
     (see below for information on custom deleters). The strong reference
@@ -191,40 +191,15 @@
     the object tracked derives from QObject, this number is increased by 1,
     since QObjectPrivate tracks it too).
 
-    ExternalRefCountData is a virtual class: it has a virtual destructor and
-    a virtual destroy() function. The destroy() function is supposed to
-    delete the object being tracked and return true if it does so. Otherwise,
-    it returns false to indicate that the caller must simply call delete.
-    This allows the normal use-case of QSharedPointer without custom deleters
-    to use only one 12- or 16-byte (depending on whether it's a 32- or 64-bit
-    architecture) external descriptor structure, without paying the price for
-    the custom deleter that it isn't using.
-
-    \section3 QtSharedPointer::ExternalRefCountDataWithDestroyFn
-
-    This class is not used directly, per se. It only exists to enable the two
-    classes that derive from it. It adds one member variable, which is a
-    pointer to a function (which returns void and takes an
-    ExternalRefCountData* as a parameter). It also overrides the destroy()
-    function: it calls that function pointer with \tt this as parameter, and
-    returns true.
-
-    That means when ExternalRefCountDataWithDestroyFn is used, the \tt
-    destroyer field must be set to a valid function that \b will delete the
-    object tracked.
-
-    This class also adds an operator delete function to ensure that it simply
-    calls the global operator delete. That should be the behaviour in all
-    compilers already, but to be on the safe side, this class ensures that no
-    funny business happens.
-
-    On a 32-bit architecture, this class is 16 bytes in size, whereas it's 24
-    bytes on 64-bit. (On Itanium where function pointers contain the global
-    pointer, it can be 32 bytes).
+    The third member is a pointer to the function that is used to delete the
+    pointer being tracked. That happens when the destroy() function is called.
+    The size of this class is the size of the two atomic ints plus the size of
+    a pointer. On 32-bit architectures, that's 12 bytes, whereas on 64-bit ones
+    it's 16 bytes. There is no padding.
 
     \section3 QtSharedPointer::ExternalRefCountWithCustomDeleter
 
-    This class derives from ExternalRefCountDataWithDestroyFn and is a
+    This class derives from ExternalRefCountData and is a
     template class. As template parameters, it has the type of the pointer
     being tracked (\tt T) and a \tt Deleter, which is anything. It adds two
     fields to its parent class, matching those template parameters: a member
@@ -238,31 +213,25 @@
     the deleter in the generic case.
 
     This class is never instantiated directly: the constructors and
-    destructor are private. Only the create() function may be called to
-    return an object of this type. See below for construction details.
-
-    The size of this class depends on the size of \tt Deleter. If it's an
-    empty functor (i.e., no members), ABIs generally assign it the size of 1.
-    But given that it's followed by a pointer, up to 3 or 7 padding bytes may
-    be inserted: in that case, the size of this class is 16+4+4 = 24 bytes on
-    32-bit architectures, or 24+8+8 = 40 bytes on 64-bit architectures (48
-    bytes on Itanium with global pointers stored). If \tt Deleter is a
-    function pointer, the size should be the same as the empty structure
-    case, except for Itanium where it may be 56 bytes due to another global
-    pointer. If \tt Deleter is a pointer to a member function (PMF), the size
-    will be even bigger and will depend on the ABI. For architectures using
-    the Itanium C++ ABI, a PMF is twice the size of a normal pointer, or 24
-    bytes on Itanium itself. In that case, the size of this structure will be
-    16+8+4 = 28 bytes on 32-bit architectures, 24+16+8 = 48 bytes on 64-bit,
-    and 32+24+8 = 64 bytes on Itanium.
-
-    (Values for Itanium consider an LP64 architecture; for ILP32, pointers
-    are 32-bit in length, function pointers are 64-bit and PMF are 96-bit, so
-    the sizes are slightly less)
+    destructor are private and, in C++11, deleted. Only the create() function
+    may be called to return an object of this type. See below for construction
+    details.
+    The size of this class depends on the size of \tt Deleter. If it's an empty
+    functor (i.e., no members), ABIs generally assign it the size of 1. But
+    given that it's followed by a pointer, padding bytes may be inserted so
+    that the alignment of the class and of the pointer are correct. In that
+    case, the size of this class is 12+4+4 = 20 bytes on 32-bit architectures,
+    or 16+8+8 = 40 bytes on 64-bit architectures. If \tt Deleter is a function
+    pointer, the size should be the same as the empty structure case. If \tt
+    Deleter is a pointer to a member function (PMF), the size will be bigger
+    and will depend on the ABI. For architectures using the Itanium C++ ABI, a
+    PMF is twice the size of a normal pointer. In that case, the size of this
+    structure will be 12+8+4 = 24 bytes on 32-bit architectures, 16+16+8 = 40
+    bytes on 64-bit ones.
 
     \section3 QtSharedPointer::ExternalRefCountWithContiguousData
 
-    This class also derives from ExternalRefCountDataWithDestroyFn and it is
+    This class also derives from ExternalRefCountData and it is
     also a template class. The template parameter is the type \tt T of the
     class which QSharedPointer tracks. It adds only one member to its parent,
     which is of type \tt T (the actual type, not a pointer to it).
@@ -275,8 +244,8 @@
 
     Like ExternalRefCountWithCustomDeleter, this class is never instantiated
     directly. This class also provides a create() member that returns the
-    pointer, and hides its constructors and destructor. (With C++0x, we'd
-    delete them).
+    pointer, and hides its constructors and destructor. With C++11, they're
+    deleted.
 
     The size of this class depends on the size of \tt T.
 
@@ -289,12 +258,8 @@
 
     Instead of instantiating the class by the normal way, the create() method
     calls \tt{operator new} directly with the size of the class, then calls
-    the parent class's constructor only (ExternalRefCountDataWithDestroyFn).
-    This ensures that the inherited members are initialised properly, as well
-    as the virtual table pointer, which must point to
-    ExternalRefCountDataWithDestroyFn's virtual table. That way, we also
-    ensure that the virtual destructor being called is
-    ExternalRefCountDataWithDestroyFn's.
+    the parent class's constructor only (that is, ExternalRefCountData's constructor).
+    This ensures that the inherited members are initialised properly.
 
     After initialising the base class, the
     ExternalRefCountWithCustomDeleter::create() function initialises the new
@@ -307,7 +272,7 @@
 
     When initialising the parent class, the create() functions pass the
     address of the static deleter() member function. That is, when the
-    virtual destroy() is called by QSharedPointer, the deleter() functions
+    destroy() function is called by QSharedPointer, the deleter() functions
     are called instead. These functions static_cast the ExternalRefCountData*
     parameter to their own type and execute their deletion: for the
     ExternalRefCountWithCustomDeleter::deleter() case, it runs the user's
@@ -315,23 +280,13 @@
     ExternalRefCountWithContiguousData::deleter, it simply calls the \tt T
     destructor directly.
 
-    By not calling the constructor of the derived classes, we avoid
-    instantiating their virtual tables. Since these classes are
-    template-based, there would be one virtual table per \tt T and \tt
-    Deleter type. (This is what Qt 4.5 did.)
-
-    Instead, only one non-inline function is required per template, which is
+    Only one non-inline function is required per template, which is
     the deleter() static member. All the other functions can be inlined.
     What's more, the address of deleter() is calculated only in code, which
     can be resolved at link-time if the linker can determine that the
     function lies in the current application or library module (since these
     classes are not exported, that is the case for Windows or for builds with
     \tt{-fvisibility=hidden}).
-
-    In contrast, a virtual table would require at least 3 relocations to be
-    resolved at module load-time, per module where these classes are used.
-    (In the Itanium C++ ABI, there would be more relocations, due to the
-    RTTI)
 
     \section3 Modifications due to pointer-tracking
 
@@ -342,9 +297,9 @@
 
     When ExternalRefCountWithCustomDeleter or
     ExternalRefCountWithContiguousData are used, their create() functions
-    will set the ExternalRefCountDataWithDestroyFn::destroyer function
+    will set the ExternalRefCountData::destroyer function
     pointer to safetyCheckDeleter() instead. These static member functions
-    simply call internalSafetyCheckRemove2() before passing control to the
+    simply call internalSafetyCheckRemove() before passing control to the
     normal deleter() function.
 
     If neither custom deleter nor QSharedPointer::create() are used, then
@@ -695,6 +650,32 @@
     Clears this QSharedPointer object, dropping the reference that it
     may have had to the pointer. If this was the last reference, then
     the pointer itself will be deleted.
+*/
+
+/*!
+    \fn void QSharedPointer::reset()
+
+    Same as clear(). For std::shared_ptr compatibility.
+*/
+
+/*!
+    \fn void QSharedPointer::reset(T *t)
+
+    Resets this QSharedPointer object to point to \a t
+    instead. Equivalent to:
+    \code
+    QSharedPointer<T> other(t); this->swap(other);
+    \endcode
+*/
+
+/*!
+    \fn void QSharedPointer::reset(T *t, Deleter deleter)
+
+    Resets this QSharedPointer object to point to \a t
+    instead, with deleter \a deleter. Equivalent to:
+    \code
+    QSharedPointer<T> other(t, deleter); this->swap(other);
+    \endcode
 */
 
 /*!
@@ -1226,24 +1207,21 @@ QT_BEGIN_NAMESPACE
 /*!
     \internal
     This function is called for a just-created QObject \a obj, to enable
-    the use of QSharedPointer and QWeakPointer.
+    the use of QSharedPointer and QWeakPointer in the future.
+ */
+void QtSharedPointer::ExternalRefCountData::setQObjectShared(const QObject *, bool)
+{}
 
-    When QSharedPointer is active in a QObject, the object must not be deleted
-    directly: the lifetime is managed by the QSharedPointer object. In that case,
-    the deleteLater() and parent-child relationship in QObject only decrease
-    the strong reference count, instead of deleting the object.
+/*!
+    \internal
+    This function is called when a QSharedPointer is created from a QWeakPointer
+    We check that the QWeakPointer was really created from a QSharedPointer, and
+    not from a QObject.
 */
-void QtSharedPointer::ExternalRefCountData::setQObjectShared(const QObject *obj, bool)
+void QtSharedPointer::ExternalRefCountData::checkQObjectShared(const QObject *)
 {
-    Q_ASSERT(obj);
-    QObjectPrivate *d = QObjectPrivate::get(const_cast<QObject *>(obj));
-
-    if (d->sharedRefcount.load() != 0)
-        qFatal("QSharedPointer: pointer %p already has reference counting", static_cast<const void*>(obj));
-    d->sharedRefcount.store(this);
-
-    // QObject decreases the refcount too, so increase it up
-    weakref.ref();
+    if (strongref.load() < 0)
+        qWarning("QSharedPointer: cannot create a QSharedPointer from a QObject-tracking QWeakPointer");
 }
 
 QtSharedPointer::ExternalRefCountData *QtSharedPointer::ExternalRefCountData::getAndRef(const QObject *obj)
@@ -1382,47 +1360,14 @@ Q_GLOBAL_STATIC(KnownPointers, knownPointers)
 QT_BEGIN_NAMESPACE
 
 namespace QtSharedPointer {
-    Q_CORE_EXPORT void internalSafetyCheckAdd(const volatile void *);
-    Q_CORE_EXPORT void internalSafetyCheckRemove(const volatile void *);
     Q_AUTOTEST_EXPORT void internalSafetyCheckCleanCheck();
 }
 
 /*!
     \internal
 */
-void QtSharedPointer::internalSafetyCheckAdd(const volatile void *)
+void QtSharedPointer::internalSafetyCheckAdd(const void *d_ptr, const volatile void *ptr)
 {
-    // Qt 4.5 compatibility
-    // this function is broken by design, so it was replaced with internalSafetyCheckAdd2
-    //
-    // it's broken because we tracked the pointers added and
-    // removed from QSharedPointer, converted to void*.
-    // That is, this is supposed to track the "top-of-object" pointer in
-    // case of multiple inheritance.
-    //
-    // However, it doesn't work well in some compilers:
-    // if you create an object with a class of type A and the last reference
-    // is dropped of type B, then the value passed to internalSafetyCheckRemove could
-    // be different than was added. That would leave dangling addresses.
-    //
-    // So instead, we track the pointer by the d-pointer instead.
-}
-
-/*!
-    \internal
-*/
-void QtSharedPointer::internalSafetyCheckRemove(const volatile void *)
-{
-    // Qt 4.5 compatibility
-    // see comments above
-}
-
-/*!
-    \internal
-*/
-void QtSharedPointer::internalSafetyCheckAdd2(const void *d_ptr, const volatile void *ptr)
-{
-    // see comments above for the rationale for this function
     KnownPointers *const kp = knownPointers();
     if (!kp)
         return;                 // end-game: the application is being destroyed already
@@ -1455,7 +1400,7 @@ void QtSharedPointer::internalSafetyCheckAdd2(const void *d_ptr, const volatile 
 /*!
     \internal
 */
-void QtSharedPointer::internalSafetyCheckRemove2(const void *d_ptr)
+void QtSharedPointer::internalSafetyCheckRemove(const void *d_ptr)
 {
     KnownPointers *const kp = knownPointers();
     if (!kp)

@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2012 Intel Corporation.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -48,6 +49,7 @@
 #include <QtCore/QVector>
 
 #include "externaltests.h"
+#include "forwarddeclared.h"
 #include "nontracked.h"
 #include "wrapper.h"
 
@@ -73,14 +75,15 @@ private slots:
     void basics();
     void operators();
     void swap();
-    void forwardDeclaration1();
-    void forwardDeclaration2();
+    void useOfForwardDeclared();
     void memoryManagement();
+    void dropLastReferenceOfForwardDeclared();
     void downCast();
     void functionCallDownCast();
     void upCast();
     void qobjectWeakManagement();
     void noSharedPointerFromWeakQObject();
+    void sharedPointerFromQObjectWithWeak();
     void weakQObjectFromSharedPointer();
     void objectCast();
     void differentPointers();
@@ -341,42 +344,10 @@ void tst_QSharedPointer::swap()
     QVERIFY(*p1 == 42);
 }
 
-class ForwardDeclared;
-ForwardDeclared *forwardPointer();
-void externalForwardDeclaration();
-extern int forwardDeclaredDestructorRunCount;
-
-void tst_QSharedPointer::forwardDeclaration1()
+void tst_QSharedPointer::useOfForwardDeclared()
 {
-#if defined(Q_CC_SUN) || defined(Q_CC_WINSCW) || defined(Q_CC_RVCT)
-    QSKIP("This type of forward declaration is not valid with this compiler", SkipAll);
-#else
-    externalForwardDeclaration();
-
-    struct Wrapper { QSharedPointer<ForwardDeclared> pointer; };
-
-    forwardDeclaredDestructorRunCount = 0;
-    {
-        Wrapper w;
-        w.pointer = QSharedPointer<ForwardDeclared>(forwardPointer());
-        QVERIFY(!w.pointer.isNull());
-    }
-    QCOMPARE(forwardDeclaredDestructorRunCount, 1);
-#endif
-}
-
-#include "forwarddeclared.h"
-
-void tst_QSharedPointer::forwardDeclaration2()
-{
-    forwardDeclaredDestructorRunCount = 0;
-    {
-        struct Wrapper { QSharedPointer<ForwardDeclared> pointer; };
-        Wrapper w1, w2;
-        w1.pointer = QSharedPointer<ForwardDeclared>(forwardPointer());
-        QVERIFY(!w1.pointer.isNull());
-    }
-    QCOMPARE(forwardDeclaredDestructorRunCount, 1);
+    // this just a compile test: use the forward-declared class
+    QSharedPointer<ForwardDeclared> sp;
 }
 
 void tst_QSharedPointer::memoryManagement()
@@ -442,6 +413,15 @@ void tst_QSharedPointer::memoryManagement()
     QVERIFY(ptr.isNull());
     QVERIFY(ptr == 0);
     QCOMPARE(ptr.data(), (Data*)0);
+}
+
+void tst_QSharedPointer::dropLastReferenceOfForwardDeclared()
+{
+    // pointer to shared-pointer is weird, but we need to do it so that
+    // we can drop the last reference in a different .cpp than where it was created
+    forwardDeclaredDestructorRunCount = 0;
+    delete forwardPointer();
+    QCOMPARE(forwardDeclaredDestructorRunCount, 1);
 }
 
 class DerivedData: public Data
@@ -698,10 +678,32 @@ void tst_QSharedPointer::noSharedPointerFromWeakQObject()
     QObject obj;
     QWeakPointer<QObject> weak(&obj);
 
-    QSharedPointer<QObject> strong = weak.toStrongRef();
-    QVERIFY(strong.isNull());
+    {
+        QTest::ignoreMessage(QtWarningMsg ,  "QSharedPointer: cannot create a QSharedPointer from a QObject-tracking QWeakPointer");
+        QSharedPointer<QObject> strong = weak.toStrongRef();
+        QVERIFY(strong.isNull());
+    }
+    {
+        QTest::ignoreMessage(QtWarningMsg ,  "QSharedPointer: cannot create a QSharedPointer from a QObject-tracking QWeakPointer");
+        QSharedPointer<QObject> strong = weak;
+        QVERIFY(strong.isNull());
+    }
 
+    QCOMPARE(weak.data(), &obj);
     // if something went wrong, we'll probably crash here
+}
+
+void tst_QSharedPointer::sharedPointerFromQObjectWithWeak()
+{
+    QObject *ptr = new QObject;
+    QWeakPointer<QObject> weak = ptr;
+    {
+        QSharedPointer<QObject> shared(ptr);
+        QVERIFY(!weak.isNull());
+        QCOMPARE(shared.data(), ptr);
+        QCOMPARE(weak.data(), ptr);
+    }
+    QVERIFY(weak.isNull());
 }
 
 void tst_QSharedPointer::weakQObjectFromSharedPointer()
@@ -1689,11 +1691,6 @@ void tst_QSharedPointer::invalidConstructs_data()
            "ptr = new Data;";
 
     // use of forward-declared class
-    QTest::newRow("forward-declaration")
-        << &QTest::QExternalTest::tryRun
-        << "forwardDeclaredDestructorRunCount = 0;\n"
-           "{ QSharedPointer<ForwardDeclared> ptr = QSharedPointer<ForwardDeclared>(forwardPointer()); }\n"
-           "exit(forwardDeclaredDestructorRunCount);";
     QTest::newRow("creating-forward-declaration")
         << &QTest::QExternalTest::tryCompileFail
         << "QSharedPointer<ForwardDeclared>::create();";
@@ -1797,12 +1794,6 @@ void tst_QSharedPointer::invalidConstructs_data()
         << "Data *ptr = 0;\n"
            "QWeakPointer<Data> weakptr(ptr);\n";
 
-    QTest::newRow("shared-pointer-from-unmanaged-qobject")
-        << &QTest::QExternalTest::tryRunFail
-        << "QObject *ptr = new QObject;\n"
-           "QWeakPointer<QObject> weak = ptr;\n"    // this makes the object unmanaged
-           "QSharedPointer<QObject> shared(ptr);\n";
-
     QTest::newRow("shared-pointer-implicit-from-uninitialized")
         << &QTest::QExternalTest::tryCompileFail
         << "Data *ptr = 0;\n"
@@ -1820,7 +1811,6 @@ void tst_QSharedPointer::invalidConstructs()
 
     QTest::QExternalTest test;
     test.setQtModules(QTest::QExternalTest::QtCore);
-    test.setExtraProgramSources(QStringList() << SRCDIR "forwarddeclared.cpp");
     test.setProgramHeader(
         "#define QT_SHAREDPOINTER_TRACK_POINTERS\n"
         "#define QT_DEBUG\n"
@@ -1830,9 +1820,7 @@ void tst_QSharedPointer::invalidConstructs()
         "struct Data { int i; };\n"
         "struct DerivedData: public Data { int j; };\n"
         "\n"
-        "extern int forwardDeclaredDestructorRunCount;\n"
         "class ForwardDeclared;\n"
-        "ForwardDeclared *forwardPointer();\n"
         );
 
     QFETCH(QString, code);
