@@ -463,7 +463,7 @@ int QDeclarativeVMEMetaObject::metaCall(QMetaObject::Call c, int _id, void **a)
                int t = (metaData->propertyData() + id)->propertyType;
                 bool needActivate = false;
 
-                if (t == -1) {
+                if (t == QMetaType::QVariant) {
 
                     if (c == QMetaObject::ReadProperty) {
                         *reinterpret_cast<QVariant *>(a[0]) = readVarPropertyAsVariant(id);
