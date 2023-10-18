@@ -181,13 +181,6 @@
     regardless of the Qt::FormattingOptions used.
 */
 
-/*!
- \fn uint qHash(const QUrl &url)
- \since 4.7
- \relates QUrl
-
- Computes a hash key from the normalized version of \a url.
- */
 #include "qplatformdefs.h"
 #include "qurl.h"
 #include "qatomic.h"

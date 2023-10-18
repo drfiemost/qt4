@@ -58,32 +58,32 @@ class QByteArray;
 class QString;
 class QStringRef;
 
-inline uint qHash(char key) { return uint(key); }
-inline uint qHash(uchar key) { return uint(key); }
-inline uint qHash(signed char key) { return uint(key); }
-inline uint qHash(ushort key) { return uint(key); }
-inline uint qHash(short key) { return uint(key); }
-inline uint qHash(uint key) { return key; }
-inline uint qHash(int key) { return uint(key); }
-inline uint qHash(ulong key)
+inline uint qHash(char key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(uchar key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(signed char key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(ushort key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(short key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(uint key, uint seed = 0) { return key ^ seed; }
+inline uint qHash(int key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(ulong key, uint seed = 0)
 {
     if (sizeof(ulong) > sizeof(uint)) {
-        return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U));
+        return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
     } else {
-        return uint(key & (~0U));
+        return uint(key & (~0U)) ^ seed;
     }
 }
-inline uint qHash(long key) { return qHash(ulong(key)); }
-inline uint qHash(quint64 key)
+inline uint qHash(long key, uint seed = 0) { return qHash(ulong(key), seed); }
+inline uint qHash(quint64 key, uint seed = 0)
 {
     if (sizeof(quint64) > sizeof(uint)) {
-        return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U));
+        return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
     } else {
-        return uint(key & (~0U));
+        return uint(key & (~0U)) ^ seed;
     }
 }
-inline uint qHash(qint64 key) { return qHash(quint64(key)); }
-inline uint qHash(QChar key) { return qHash(key.unicode()); }
+inline uint qHash(qint64 key, uint seed = 0) { return qHash(quint64(key), seed); }
+inline uint qHash(QChar key, uint seed = 0) { return qHash(key.unicode(), seed); }
 Q_CORE_EXPORT uint qHash(const QByteArray &key, uint seed = 0);
 Q_CORE_EXPORT uint qHash(const QString &key, uint seed = 0);
 Q_CORE_EXPORT uint qHash(const QStringRef &key, uint seed = 0);
@@ -95,19 +95,19 @@ Q_CORE_EXPORT uint qt_hash(const QString &key);
 #pragma warning( push )
 #pragma warning( disable : 4311 ) // disable pointer truncation warning
 #endif
-template <class T> inline uint qHash(const T *key)
+template <class T> inline uint qHash(const T *key, uint seed = 0)
 {
-    return qHash(reinterpret_cast<quintptr>(key));
+    return qHash(reinterpret_cast<quintptr>(key), seed);
 }
 #if defined(Q_CC_MSVC)
 #pragma warning( pop )
 #endif
 
-template <typename T1, typename T2> inline uint qHash(const QPair<T1, T2> &key)
+template <typename T1, typename T2> inline uint qHash(const QPair<T1, T2> &key, uint seed = 0)
 {
-    uint h1 = qHash(key.first);
-    uint h2 = qHash(key.second);
-    return ((h1 << 16) | (h1 >> 16)) ^ h2;
+    uint h1 = qHash(key.first, seed);
+    uint h2 = qHash(key.second, seed);
+    return ((h1 << 16) | (h1 >> 16)) ^ h2 ^ seed;
 }
 
 template<typename T> inline uint qHash(const T &t, uint seed) { return (qHash(t) ^ seed); }

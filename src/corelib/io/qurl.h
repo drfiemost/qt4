@@ -231,9 +231,9 @@ public:
     inline DataPtr &data_ptr() { return d; }
 };
 
-inline uint qHash(const QUrl &url)
+inline uint qHash(const QUrl &url, uint seed = 0)
 {
-    return qHash(url.toEncoded(QUrl::FormattingOption(0x100)));
+    return qHash(url.toEncoded(QUrl::FormattingOption(0x100)), seed);
 }
 
 Q_DECLARE_TYPEINFO(QUrl, Q_MOVABLE_TYPE);
