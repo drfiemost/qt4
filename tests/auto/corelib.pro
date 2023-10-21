@@ -8,6 +8,7 @@ SUBDIRS=\
    exceptionsafety \
    q_func_info \
    qanimationgroup \
+   qarraydata \
    qatomicint \
    qatomicinteger \
    qatomicpointer \
