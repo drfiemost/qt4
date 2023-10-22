@@ -72,6 +72,7 @@ SOURCES += \
            ../../corelib/kernel/qsystemerror.cpp \
            ../../corelib/tools/qbitarray.cpp \
            ../../corelib/tools/qbytearray.cpp \
+           ../../corelib/tools/qarraydata.cpp \
            ../../corelib/tools/qbytearraymatcher.cpp \
            ../../corelib/tools/qdatetime.cpp \
            ../../corelib/tools/qhash.cpp \
