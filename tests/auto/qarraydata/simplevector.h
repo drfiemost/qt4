@@ -86,10 +86,18 @@ public:
     bool isNull() const { return d.isNull(); }
     bool isEmpty() const { return this->empty(); }
 
+    bool isStatic() const { return d->ref.isStatic(); }
+    bool isShared() const { return d->ref.isShared(); }
     bool isSharedWith(const SimpleVector &other) const { return d == other.d; }
+    bool isSharable() const { return d->ref.isSharable(); }
+
+    void setSharable(bool sharable) { d.setSharable(sharable); }
 
     size_t size() const { return d->size; }
     size_t capacity() const { return d->alloc; }
+
+    iterator begin() { detach(); return d->begin(); }
+    iterator end() { detach(); return d->end(); }
 
     const_iterator begin() const { return d->begin(); }
     const_iterator end() const { return d->end(); }
@@ -97,8 +105,25 @@ public:
     const_iterator constBegin() const { return begin(); }
     const_iterator constEnd() const { return end(); }
 
+    T &operator[](size_t i) { Q_ASSERT(i < size_t(d->size)); detach(); return begin()[i]; }
+    T &at(size_t i) { Q_ASSERT(i < size_t(d->size)); detach(); return begin()[i]; }
+
     const T &operator[](size_t i) const { Q_ASSERT(i < size_t(d->size)); return begin()[i]; }
     const T &at(size_t i) const { Q_ASSERT(i < size_t(d->size)); return begin()[i]; }
+
+    T &front()
+    {
+        Q_ASSERT(!isEmpty());
+        detach();
+        return *begin();
+    }
+
+    T &back()
+    {
+        Q_ASSERT(!isEmpty());
+        detach();
+        return *(end() - 1);
+    }
 
     const T &front() const
     {
@@ -118,7 +143,8 @@ public:
                 || (n
                 && !d->capacityReserved
                 && (d->ref != 1 || (d->capacityReserved = 1, false)))) {
-            SimpleVector detached(Data::allocate(n, true));
+            SimpleVector detached(Data::allocate(n,
+                        d->detachFlags() | Data::CapacityReserved));
             detached.d->copyAppend(constBegin(), constEnd());
             detached.swap(*this);
         }
@@ -138,7 +164,8 @@ public:
         if (d->ref != 1
                 || capacity() - size() < size_t(last - first)) {
             SimpleVector detached(Data::allocate(
-                        qMax(capacity(), size() + (last - first)), d->capacityReserved));
+                        qMax(capacity(), size() + (last - first)),
+                        d->detachFlags()));
 
             detached.d->copyAppend(first, last);
             detached.d->copyAppend(begin, begin + d->size);
@@ -158,7 +185,8 @@ public:
         if (d->ref != 1
                 || capacity() - size() < size_t(last - first)) {
             SimpleVector detached(Data::allocate(
-                        qMax(capacity(), size() + (last - first)), d->capacityReserved));
+                        qMax(capacity(), size() + (last - first)),
+                        d->detachFlags()));
 
             if (d->size) {
                 const T *const begin = constBegin();
@@ -197,7 +225,8 @@ public:
         if (d->ref != 1
                 || capacity() - size() < size_t(last - first)) {
             SimpleVector detached(Data::allocate(
-                        qMax(capacity(), size() + (last - first)), d->capacityReserved));
+                        qMax(capacity(), size() + (last - first)),
+                        d->detachFlags()));
 
             if (position)
                 detached.d->copyAppend(begin, where);
@@ -227,6 +256,17 @@ public:
     void clear()
     {
         d.clear();
+    }
+
+    void detach()
+    {
+        d.detach();
+    }
+
+    static SimpleVector fromRawData(const T *data, size_t size,
+            QArrayData::AllocateOptions options = Data::Default)
+    {
+        return SimpleVector(Data::fromRawData(data, size, options));
     }
 
 private:

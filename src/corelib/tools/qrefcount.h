@@ -110,6 +110,7 @@ public:
     { return atomic.load(); }
 
     void initializeOwned() { atomic.store(1); }
+    void initializeUnsharable() { atomic.store(0); }
 
     QBasicAtomicInt atomic;
 };

@@ -64,7 +64,9 @@ public:
     }
 
     QArrayDataPointer(const QArrayDataPointer &other)
-        : d((other.d->ref.ref(), other.d))
+        : d(other.d->ref.ref()
+            ? other.d
+            : other.clone(other.d->cloneFlags()))
     {
     }
 
@@ -110,6 +112,21 @@ public:
         return d;
     }
 
+    void setSharable(bool sharable)
+    {
+        // Can't call setSharable on static read-only data, like shared_null
+        // and the internal shared-empties.
+        if (d->alloc == 0 && d->size == 0) {
+            d = Data::allocate(0, sharable
+                    ? QArrayData::Default
+                    : QArrayData::Unsharable);
+            return;
+        }
+
+        detach();
+        d->ref.setSharable(sharable);
+    }
+
     void swap(QArrayDataPointer &other)
     {
         qSwap(d, other.d);
@@ -118,10 +135,34 @@ public:
     void clear()
     {
         QArrayDataPointer tmp(d);
-        d = Data::sharedEmpty();
+        d = Data::allocate(0);
+    }
+
+    bool detach()
+    {
+        if (!d->isMutable() || d->ref.isShared()) {
+            Data *copy = clone(d->detachFlags());
+            QArrayDataPointer old(d);
+            d = copy;
+            return true;
+        }
+
+        return false;
     }
 
 private:
+    Data *clone(QArrayData::AllocateOptions options) const Q_REQUIRED_RESULT
+    {
+        QArrayDataPointer copy(Data::allocate(d->alloc ? d->alloc : d->size,
+                    options));
+        if (d->size)
+            copy->copyAppend(d->begin(), d->end());
+
+        Data *result = copy.d;
+        copy.d = Data::sharedNull();
+        return result;
+    }
+
     Data *d;
 };
 

@@ -73,14 +73,51 @@ struct Q_CORE_EXPORT QArrayData
         return reinterpret_cast<const char *>(this) + offset;
     }
 
+    // This refers to array data mutability, not "header data" represented by
+    // data members in QArrayData. Shared data (array and header) must still
+    // follow COW principles.
+    bool isMutable() const
+    {
+        return alloc != 0;
+    }
+
+    enum AllocateOption {
+        CapacityReserved = 0x1,
+        Unsharable = 0x2,
+        RawData = 0x4,
+
+        Default = 0
+    };
+
+    Q_DECLARE_FLAGS(AllocateOptions, AllocateOption)
+
+    AllocateOptions detachFlags() const
+    {
+        AllocateOptions result;
+        if (!ref.isSharable())
+            result |= Unsharable;
+        if (capacityReserved)
+            result |= CapacityReserved;
+        return result;
+    }
+
+    AllocateOptions cloneFlags() const
+    {
+        AllocateOptions result;
+        if (capacityReserved)
+            result |= CapacityReserved;
+        return result;
+    }
+
     static QArrayData *allocate(size_t objectSize, size_t alignment,
-            size_t capacity, bool reserve) Q_REQUIRED_RESULT;
+            size_t capacity, AllocateOptions options = Default) Q_REQUIRED_RESULT;
     static void deallocate(QArrayData *data, size_t objectSize,
             size_t alignment);
 
     static const QArrayData shared_null;
-    static const QArrayData shared_empty;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(QArrayData::AllocateOptions)
 
 template <class T>
 struct QTypedArrayData
@@ -99,11 +136,11 @@ struct QTypedArrayData
 
     class AlignmentDummy { QArrayData header; T data; };
 
-    static QTypedArrayData *allocate(size_t capacity, bool reserve = false)
-            Q_REQUIRED_RESULT
+    static QTypedArrayData *allocate(size_t capacity,
+            AllocateOptions options = Default) Q_REQUIRED_RESULT
     {
         return static_cast<QTypedArrayData *>(QArrayData::allocate(sizeof(T),
-                    Q_ALIGNOF(AlignmentDummy), capacity, reserve));
+                    Q_ALIGNOF(AlignmentDummy), capacity, options));
     }
 
     static void deallocate(QArrayData *data)
@@ -111,16 +148,24 @@ struct QTypedArrayData
         QArrayData::deallocate(data, sizeof(T), Q_ALIGNOF(AlignmentDummy));
     }
 
+    static QTypedArrayData *fromRawData(const T *data, size_t n,
+            AllocateOptions options = Default)
+    {
+        QTypedArrayData *result = allocate(0, options | RawData);
+        if (result) {
+            Q_ASSERT(!result->ref.isShared()); // No shared empty, please!
+
+            result->offset = reinterpret_cast<const char *>(data)
+                - reinterpret_cast<const char *>(result);
+            result->size = n;
+        }
+        return result;
+    }
+
     static QTypedArrayData *sharedNull()
     {
         return static_cast<QTypedArrayData *>(
                 const_cast<QArrayData *>(&QArrayData::shared_null));
-    }
-
-    static QTypedArrayData *sharedEmpty()
-    {
-        return static_cast<QTypedArrayData *>(
-                const_cast<QArrayData *>(&QArrayData::shared_empty));
     }
 };
 
