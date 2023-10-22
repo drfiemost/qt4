@@ -40,16 +40,26 @@
 ****************************************************************************/
 
 #include <QtCore/qarraydata.h>
+#include <QtCore/private/qtools_p.h>
+
+#include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
 
-const QArrayData QArrayData::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, 0 };
+const QArrayData QArrayData::shared_null[2] = {
+    { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, sizeof(QArrayData) }, // shared null
+    /* zero initialized terminator */};
 
-static const QArrayData qt_array_empty = { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, 0 };
-static const QArrayData qt_array_unsharable_empty = { { Q_BASIC_ATOMIC_INITIALIZER(0) }, 0, 0, 0, 0 };
+static const QArrayData qt_array[3] = {
+    { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, sizeof(QArrayData) }, // shared empty
+    { { Q_BASIC_ATOMIC_INITIALIZER(0) }, 0, 0, 0, sizeof(QArrayData) }, // unsharable empty
+    /* zero initialized terminator */};
+
+static const QArrayData &qt_array_empty = qt_array[0];
+static const QArrayData &qt_array_unsharable_empty = qt_array[1];
 
 QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
-        size_t capacity, AllocateOptions options)
+        size_t capacity, AllocationOptions options)
 {
     // Alignment is a power of two
     Q_ASSERT(alignment >= Q_ALIGNOF(QArrayData)
@@ -61,17 +71,23 @@ QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
             ? const_cast<QArrayData *>(&qt_array_empty)
             : const_cast<QArrayData *>(&qt_array_unsharable_empty);
 
-    size_t allocSize = sizeof(QArrayData) + objectSize * capacity;
+    size_t headerSize = sizeof(QArrayData);
 
     // Allocate extra (alignment - Q_ALIGNOF(QArrayData)) padding bytes so we
     // can properly align the data array. This assumes malloc is able to
     // provide appropriate alignment for the header -- as it should!
     // Padding is skipped when allocating a header for RawData.
     if (!(options & RawData))
-        allocSize += (alignment - Q_ALIGNOF(QArrayData));
+        headerSize += (alignment - Q_ALIGNOF(QArrayData));
 
-    QArrayData *header = static_cast<QArrayData *>(qMalloc(allocSize));
-    Q_CHECK_PTR(header);
+    // Allocate additional space if array is growing
+    if (options & Grow)
+        capacity = qAllocMore(int(objectSize * capacity), int(headerSize)) / int(objectSize);
+
+    size_t allocSize = headerSize + objectSize * capacity;
+
+
+    QArrayData *header = static_cast<QArrayData *>(::malloc(allocSize));
     if (header) {
         quintptr data = (quintptr(header) + sizeof(QArrayData) + alignment - 1)
                 & ~(alignment - 1);
@@ -97,7 +113,8 @@ void QArrayData::deallocate(QArrayData *data, size_t objectSize,
     if (data == &qt_array_unsharable_empty)
         return;
 
-    qFree(data);
+    Q_ASSERT_X(!data->ref.isStatic(), "QArrayData::deallocate", "Static data can not be deleted");
+    ::free(data);
 }
 
 QT_END_NAMESPACE

@@ -46,6 +46,23 @@
 
 #include "simplevector.h"
 
+struct SharedNullVerifier
+{
+    SharedNullVerifier()
+    {
+        Q_ASSERT(QArrayData::shared_null[0].ref.isStatic());
+        Q_ASSERT(QArrayData::shared_null[0].ref.isShared());
+        Q_ASSERT(QArrayData::shared_null[0].ref.isSharable());
+    }
+};
+
+// This is meant to verify/ensure that shared_null is not being dynamically
+// initialized and stays away from the order-of-static-initialization fiasco.
+//
+// Of course, if this was to fail, qmake and the build should have crashed and
+// burned before we ever got to this point :-)
+SharedNullVerifier globalInit;
+
 class tst_QArrayData : public QObject
 {
     Q_OBJECT
@@ -55,6 +72,8 @@ private slots:
     void sharedNullEmpty();
     void staticData();
     void simpleVector();
+    void simpleVectorReserve_data();
+    void simpleVectorReserve();
     void allocate_data();
     void allocate();
     void alignment_data();
@@ -64,6 +83,10 @@ private slots:
     void setSharable_data();
     void setSharable();
     void fromRawData();
+    void literals();
+    void variadicLiterals();
+    void rValueReferences();
+    void grow();
 };
 
 template <class T> const T &const_(const T &t) { return t; }
@@ -135,7 +158,7 @@ void tst_QArrayData::referenceCounting()
 
 void tst_QArrayData::sharedNullEmpty()
 {
-    QArrayData *null = const_cast<QArrayData *>(&QArrayData::shared_null);
+    QArrayData *null = const_cast<QArrayData *>(QArrayData::shared_null);
     QArrayData *empty = QArrayData::allocate(1, Q_ALIGNOF(QArrayData), 0);
 
     QVERIFY(null->ref.isStatic());
@@ -222,7 +245,7 @@ void tst_QArrayData::simpleVector()
     QVERIFY(v1.isNull());
     QVERIFY(v2.isNull());
     QVERIFY(v3.isNull());
-    QVERIFY(!v4.isNull());
+    QVERIFY(v4.isNull());
     QVERIFY(!v5.isNull());
     QVERIFY(!v6.isNull());
     QVERIFY(!v7.isNull());
@@ -277,15 +300,15 @@ void tst_QArrayData::simpleVector()
 
     QVERIFY(v1.isSharedWith(v2));
     QVERIFY(v1.isSharedWith(v3));
-    QVERIFY(!v1.isSharedWith(v4));
+    QVERIFY(v1.isSharedWith(v4));
     QVERIFY(!v1.isSharedWith(v5));
     QVERIFY(!v1.isSharedWith(v6));
 
-    QVERIFY(v1.constBegin() == v1.constEnd());
-    QVERIFY(v4.constBegin() == v4.constEnd());
-    QVERIFY(v6.constBegin() + v6.size() == v6.constEnd());
-    QVERIFY(v7.constBegin() + v7.size() == v7.constEnd());
-    QVERIFY(v8.constBegin() + v8.size() == v8.constEnd());
+    QCOMPARE((void *)v1.constBegin(), (void *)v1.constEnd());
+    QCOMPARE((void *)v4.constBegin(), (void *)v4.constEnd());
+    QCOMPARE((void *)(v6.constBegin() + v6.size()), (void *)v6.constEnd());
+    QCOMPARE((void *)(v7.constBegin() + v7.size()), (void *)v7.constEnd());
+    QCOMPARE((void *)(v8.constBegin() + v8.size()), (void *)v8.constEnd());
 
     QVERIFY(v1 == v2);
     QVERIFY(v1 == v3);
@@ -436,6 +459,66 @@ void tst_QArrayData::simpleVector()
         QCOMPARE(v1[i], v8[i % 10]);
 }
 
+Q_DECLARE_METATYPE(SimpleVector<int>)
+
+void tst_QArrayData::simpleVectorReserve_data()
+{
+    QTest::addColumn<SimpleVector<int> >("vector");
+    QTest::addColumn<size_t>("capacity");
+    QTest::addColumn<size_t>("size");
+
+    QTest::newRow("null") << SimpleVector<int>() << size_t(0) << size_t(0);
+    QTest::newRow("empty") << SimpleVector<int>(0, 42) << size_t(0) << size_t(0);
+    QTest::newRow("non-empty") << SimpleVector<int>(5, 42) << size_t(5) << size_t(5);
+
+    static const QStaticArrayData<int, 15> array = {
+        Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER(int, 15),
+        { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 } };
+    QArrayDataPointerRef<int> p = {
+         static_cast<QTypedArrayData<int> *>(
+            const_cast<QArrayData *>(&array.header)) };
+
+    QTest::newRow("static") << SimpleVector<int>(p) << size_t(0) << size_t(15);
+    QTest::newRow("raw-data") << SimpleVector<int>::fromRawData(array.data, 15) << size_t(0) << size_t(15);
+}
+
+void tst_QArrayData::simpleVectorReserve()
+{
+    QFETCH(SimpleVector<int>, vector);
+    QFETCH(size_t, capacity);
+    QFETCH(size_t, size);
+
+    QVERIFY(!capacity || capacity >= size);
+
+    QCOMPARE(vector.capacity(), capacity);
+    QCOMPARE(vector.size(), size);
+
+    const SimpleVector<int> copy(vector);
+
+    vector.reserve(0);
+    QCOMPARE(vector.capacity(), capacity);
+    QCOMPARE(vector.size(), size);
+
+    vector.reserve(10);
+
+    // zero-capacity (immutable) resets with detach
+    if (!capacity)
+        capacity = size;
+
+    QCOMPARE(vector.capacity(), qMax(size_t(10), capacity));
+    QCOMPARE(vector.size(), size);
+
+    vector.reserve(20);
+    QCOMPARE(vector.capacity(), size_t(20));
+    QCOMPARE(vector.size(), size);
+
+    vector.reserve(30);
+    QCOMPARE(vector.capacity(), size_t(30));
+    QCOMPARE(vector.size(), size);
+
+    QVERIFY(vector == copy);
+}
+
 struct Deallocator
 {
     Deallocator(size_t objectSize, size_t alignment)
@@ -456,13 +539,13 @@ struct Deallocator
 };
 
 Q_DECLARE_METATYPE(const QArrayData *)
-Q_DECLARE_METATYPE(QArrayData::AllocateOptions)
+Q_DECLARE_METATYPE(QArrayData::AllocationOptions)
 
 void tst_QArrayData::allocate_data()
 {
     QTest::addColumn<size_t>("objectSize");
     QTest::addColumn<size_t>("alignment");
-    QTest::addColumn<QArrayData::AllocateOptions>("allocateOptions");
+    QTest::addColumn<QArrayData::AllocationOptions>("allocateOptions");
     QTest::addColumn<bool>("isCapacityReserved");
     QTest::addColumn<bool>("isSharable");
     QTest::addColumn<const QArrayData *>("commonEmpty");
@@ -485,7 +568,7 @@ void tst_QArrayData::allocate_data()
 
     struct {
         char const *description;
-        QArrayData::AllocateOptions allocateOptions;
+        QArrayData::AllocationOptions allocateOptions;
         bool isCapacityReserved;
         bool isSharable;
         const QArrayData *commonEmpty;
@@ -496,6 +579,7 @@ void tst_QArrayData::allocate_data()
             QArrayData::CapacityReserved | QArrayData::Unsharable, true, false,
             unsharable_empty },
         { "Unsharable", QArrayData::Unsharable, false, false, unsharable_empty },
+        { "Grow", QArrayData::Grow, false, true, shared_empty }
     };
 
     for (size_t i = 0; i < sizeof(types)/sizeof(types[0]); ++i)
@@ -513,7 +597,7 @@ void tst_QArrayData::allocate()
 {
     QFETCH(size_t, objectSize);
     QFETCH(size_t, alignment);
-    QFETCH(QArrayData::AllocateOptions, allocateOptions);
+    QFETCH(QArrayData::AllocationOptions, allocateOptions);
     QFETCH(bool, isCapacityReserved);
     QFETCH(bool, isSharable);
     QFETCH(const QArrayData *, commonEmpty);
@@ -524,18 +608,21 @@ void tst_QArrayData::allocate()
 
     // Shared Empty
     QCOMPARE(QArrayData::allocate(objectSize, minAlignment, 0,
-                QArrayData::AllocateOptions(allocateOptions)), commonEmpty);
+                QArrayData::AllocationOptions(allocateOptions)), commonEmpty);
 
     Deallocator keeper(objectSize, minAlignment);
     keeper.headers.reserve(1024);
 
     for (int capacity = 1; capacity <= 1024; capacity <<= 1) {
         QArrayData *data = QArrayData::allocate(objectSize, minAlignment,
-                capacity, QArrayData::AllocateOptions(allocateOptions));
+                capacity, QArrayData::AllocationOptions(allocateOptions));
         keeper.headers.append(data);
 
-        QCOMPARE(data->size, 0);
-        QVERIFY(data->alloc >= uint(capacity));
+        QCOMPARE(data->size, 0);        
+        if (allocateOptions & QArrayData::Grow)
+            QVERIFY(data->alloc > uint(capacity));
+        else
+            QCOMPARE(data->alloc, uint(capacity));
         QCOMPARE(data->capacityReserved, uint(isCapacityReserved));
         QCOMPARE(data->ref.isSharable(), isSharable);
 
@@ -852,6 +939,8 @@ void tst_QArrayData::setSharable_data()
                 QArrayData::CapacityReserved));
     QArrayDataPointer<int> staticArray(
             static_cast<QTypedArrayData<int> *>(&staticArrayData.header));
+    QArrayDataPointer<int> rawData(
+            QTypedArrayData<int>::fromRawData(staticArrayData.data, 10));
 
     nonEmpty->copyAppend(5, 1);
     nonEmptyReserved->copyAppend(7, 2);
@@ -863,6 +952,7 @@ void tst_QArrayData::setSharable_data()
     QTest::newRow("non-empty") << nonEmpty << size_t(5) << size_t(10) << false << 1;
     QTest::newRow("non-empty-reserved") << nonEmptyReserved << size_t(7) << size_t(15) << true << 2;
     QTest::newRow("static-array") << staticArray << size_t(10) << size_t(0) << false << 3;
+    QTest::newRow("raw-data") << rawData << size_t(10) << size_t(0) << false << 3;
 }
 
 void tst_QArrayData::setSharable()
@@ -956,7 +1046,7 @@ void tst_QArrayData::fromRawData()
 
         QCOMPARE(raw.size(), size_t(11));
         QCOMPARE(raw.constBegin(), array);
-        QCOMPARE(raw.constEnd(), array + sizeof(array)/sizeof(array[0]));
+        QCOMPARE((void *)raw.constEnd(), (void *)(array + sizeof(array)/sizeof(array[0])));
 
         QVERIFY(!raw.isShared());
         QVERIFY(SimpleVector<int>(raw).isSharedWith(raw));
@@ -974,7 +1064,7 @@ void tst_QArrayData::fromRawData()
 
         QCOMPARE(raw.size(), size_t(11));
         QCOMPARE(raw.constBegin(), array);
-        QCOMPARE(raw.constEnd(), array + sizeof(array)/sizeof(array[0]));
+        QCOMPARE((void *)raw.constEnd(), (void *)(array + sizeof(array)/sizeof(array[0])));
 
         SimpleVector<int> copy(raw);
         QVERIFY(!copy.isSharedWith(raw));
@@ -987,12 +1077,217 @@ void tst_QArrayData::fromRawData()
 
         QCOMPARE(raw.size(), size_t(11));
         QCOMPARE(raw.constBegin(), array);
-        QCOMPARE(raw.constEnd(), array + sizeof(array)/sizeof(array[0]));
+        QCOMPARE((void *)raw.constEnd(), (void *)(array + sizeof(array)/sizeof(array[0])));
 
         // Detach
         QCOMPARE(raw.back(), 11);
         QVERIFY(raw.constBegin() != array);
     }
+}
+
+void tst_QArrayData::literals()
+{
+    {
+        QArrayDataPointer<char> d = Q_ARRAY_LITERAL(char, "ABCDEFGHIJ");
+        QCOMPARE(d->size, 10 + 1);
+        for (int i = 0; i < 10; ++i)
+            QCOMPARE(d->data()[i], char('A' + i));
+    }
+
+    {
+        // wchar_t is not necessarily 2-bytes
+        QArrayDataPointer<wchar_t> d = Q_ARRAY_LITERAL(wchar_t, L"ABCDEFGHIJ");
+        QCOMPARE(d->size, 10 + 1);
+        for (int i = 0; i < 10; ++i)
+            QCOMPARE(d->data()[i], wchar_t('A' + i));
+    }
+
+    {
+        SimpleVector<char> v = Q_ARRAY_LITERAL(char, "ABCDEFGHIJ");
+
+        QVERIFY(!v.isNull());
+        QVERIFY(!v.isEmpty());
+        QCOMPARE(v.size(), size_t(11));
+        // v.capacity() is unspecified, for now
+
+#if defined(Q_COMPILER_VARIADIC_MACROS) \
+        && (defined(Q_COMPILER_LAMBDA) || defined(Q_CC_GNU))
+        QVERIFY(v.isStatic());
+#endif
+
+        QVERIFY(v.isSharable());
+        QCOMPARE((void *)(v.constBegin() + v.size()), (void *)v.constEnd());
+
+        for (int i = 0; i < 10; ++i)
+            QCOMPARE(const_(v)[i], char('A' + i));
+        QCOMPARE(const_(v)[10], char('\0'));
+    }
+}
+
+void tst_QArrayData::variadicLiterals()
+{
+#if defined(Q_COMPILER_VARIADIC_MACROS) \
+        && (defined(Q_COMPILER_LAMBDA) || defined(Q_CC_GNU))
+    {
+        QArrayDataPointer<int> d =
+            Q_ARRAY_LITERAL(int, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        QCOMPARE(d->size, 10);
+        for (int i = 0; i < 10; ++i)
+            QCOMPARE(d->data()[i], i);
+    }
+
+    {
+        QArrayDataPointer<char> d = Q_ARRAY_LITERAL(char,
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
+        QCOMPARE(d->size, 10);
+        for (int i = 0; i < 10; ++i)
+            QCOMPARE(d->data()[i], char('A' + i));
+    }
+
+    {
+        QArrayDataPointer<const char *> d = Q_ARRAY_LITERAL(const char *,
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        QCOMPARE(d->size, 10);
+        for (int i = 0; i < 10; ++i) {
+            QCOMPARE(d->data()[i][0], char('A' + i));
+            QCOMPARE(d->data()[i][1], '\0');
+        }
+    }
+
+    {
+        SimpleVector<int> v = Q_ARRAY_LITERAL(int, 0, 1, 2, 3, 4, 5, 6);
+
+        QVERIFY(!v.isNull());
+        QVERIFY(!v.isEmpty());
+        QCOMPARE(v.size(), size_t(7));
+        // v.capacity() is unspecified, for now
+
+        QVERIFY(v.isStatic());
+
+        QVERIFY(v.isSharable());
+        QCOMPARE((void *)(v.constBegin() + v.size()), (void *)v.constEnd());
+
+        for (int i = 0; i < 7; ++i)
+            QCOMPARE(const_(v)[i], i);
+    }
+#else
+    QSKIP("Variadic Q_ARRAY_LITERAL not available in current configuration.", SkipAll);
+#endif // defined(Q_COMPILER_VARIADIC_MACROS)
+}
+
+#ifdef Q_COMPILER_RVALUE_REFS
+// std::remove_reference is in C++11, but requires library support
+template <class T> struct RemoveReference { typedef T Type; };
+template <class T> struct RemoveReference<T &> { typedef T Type; };
+
+// single-argument std::move is in C++11, but requires library support
+template <class T>
+typename RemoveReference<T>::Type &&cxx11Move(T &&t)
+{
+    return static_cast<typename RemoveReference<T>::Type &&>(t);
+}
+
+struct CompilerHasCxx11ImplicitMoves
+{
+    static bool value()
+    {
+        DetectImplicitMove d(cxx11Move(DetectImplicitMove()));
+        return d.constructor == DetectConstructor::MoveConstructor;
+    }
+
+    struct DetectConstructor
+    {
+        Q_DECL_CONSTEXPR DetectConstructor()
+            : constructor(DefaultConstructor)
+        {
+        }
+
+        Q_DECL_CONSTEXPR DetectConstructor(const DetectConstructor &)
+            : constructor(CopyConstructor)
+        {
+        }
+
+        Q_DECL_CONSTEXPR DetectConstructor(DetectConstructor &&)
+            : constructor(MoveConstructor)
+        {
+        }
+
+        enum Constructor {
+            DefaultConstructor,
+            CopyConstructor,
+            MoveConstructor
+        };
+
+        Constructor constructor;
+    };
+
+    struct DetectImplicitMove
+        : DetectConstructor
+    {
+    };
+};
+#endif
+
+void tst_QArrayData::rValueReferences()
+{
+#ifdef Q_COMPILER_RVALUE_REFS
+    if (!CompilerHasCxx11ImplicitMoves::value())
+        QSKIP("Implicit move ctor not supported in current configuration", SkipAll);
+
+    SimpleVector<int> v1(1, 42);
+    SimpleVector<int> v2;
+
+    const SimpleVector<int>::const_iterator begin = v1.constBegin();
+
+    QVERIFY(!v1.isNull());
+    QVERIFY(v2.isNull());
+
+    // move-assign
+    v2 = cxx11Move(v1);
+
+    QVERIFY(v1.isNull());
+    QVERIFY(!v2.isNull());
+    QCOMPARE(v2.constBegin(), begin);
+
+    SimpleVector<int> v3(cxx11Move(v2));
+
+    QVERIFY(v1.isNull());
+    QVERIFY(v2.isNull());
+    QVERIFY(!v3.isNull());
+    QCOMPARE(v3.constBegin(), begin);
+
+    QCOMPARE(v3.size(), size_t(1));
+    QCOMPARE(v3.front(), 42);
+#else
+    QSKIP("RValue references are not supported in current configuration", SkipAll);
+#endif
+}
+
+void tst_QArrayData::grow()
+{
+    SimpleVector<int> vector;
+
+    QCOMPARE(vector.size(), size_t(0));
+
+    size_t previousCapacity = vector.capacity();
+    size_t allocations = 0;
+    for (size_t i = 1; i <=  (1 << 20); ++i) {
+        int source[1] = { int(i) };
+        vector.append(source, source + 1);
+        QCOMPARE(vector.size(), i);
+        if (vector.capacity() != previousCapacity) {
+            previousCapacity = vector.capacity();
+            ++allocations;
+        }
+    }
+    QCOMPARE(vector.size(), size_t(1 << 20));
+
+    // QArrayData::Grow prevents excessive allocations on a growing container
+    QVERIFY(allocations > 20 / 2);
+    QVERIFY(allocations < 20 * 2);
+
+    for (size_t i = 0; i < (1 << 20); ++i)
+        QCOMPARE(const_(vector).at(i), int(i + 1));
 }
 
 QTEST_APPLESS_MAIN(tst_QArrayData)

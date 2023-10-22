@@ -73,6 +73,12 @@ public:
     explicit QArrayDataPointer(QTypedArrayData<T> *ptr)
         : d(ptr)
     {
+        Q_CHECK_PTR(ptr);
+    }
+
+    QArrayDataPointer(QArrayDataPointerRef<T> ref)
+        : d(ref.ptr)
+    {
     }
 
     QArrayDataPointer &operator=(const QArrayDataPointer &other)
@@ -81,6 +87,20 @@ public:
         this->swap(tmp);
         return *this;
     }
+
+#ifdef Q_COMPILER_RVALUE_REFS
+    QArrayDataPointer(QArrayDataPointer &&other)
+        : d(other.d)
+    {
+        other.d = Data::sharedNull();
+    }
+
+    QArrayDataPointer &operator=(QArrayDataPointer &&other)
+    {
+        this->swap(other);
+        return *this;
+    }
+#endif
 
     DataOps &operator*() const
     {
@@ -135,7 +155,7 @@ public:
     void clear()
     {
         QArrayDataPointer tmp(d);
-        d = Data::allocate(0);
+        d = Data::sharedNull();
     }
 
     bool detach()
@@ -151,7 +171,7 @@ public:
     }
 
 private:
-    Data *clone(QArrayData::AllocateOptions options) const Q_REQUIRED_RESULT
+    Data *clone(QArrayData::AllocationOptions options) const Q_REQUIRED_RESULT
     {
         QArrayDataPointer copy(Data::allocate(d->alloc ? d->alloc : d->size,
                     options));

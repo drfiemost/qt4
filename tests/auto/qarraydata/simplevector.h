@@ -77,6 +77,11 @@ public:
             d->copyAppend(begin, end);
     }
 
+    SimpleVector(QArrayDataPointerRef<T> ptr)
+        : d(ptr)
+    {
+    }
+
     explicit SimpleVector(Data *ptr)
         : d(ptr)
     {
@@ -139,15 +144,23 @@ public:
 
     void reserve(size_t n)
     {
-        if (n > capacity()
-                || (n
-                && !d->capacityReserved
-                && (d->ref != 1 || (d->capacityReserved = 1, false)))) {
-            SimpleVector detached(Data::allocate(n,
-                        d->detachFlags() | Data::CapacityReserved));
-            detached.d->copyAppend(constBegin(), constEnd());
-            detached.swap(*this);
+        if (n == 0)
+            return;
+
+        if (n <= capacity()) {
+            if (d->capacityReserved)
+                return;
+            if (!d->ref.isShared()) {
+                d->capacityReserved = 1;
+                return;
+            }
         }
+
+        SimpleVector detached(Data::allocate(qMax(n, size()),
+                    d->detachFlags() | Data::CapacityReserved));
+        if (size())
+            detached.d->copyAppend(constBegin(), constEnd());
+        detached.swap(*this);
     }
 
     void prepend(const_iterator first, const_iterator last)
@@ -165,7 +178,7 @@ public:
                 || capacity() - size() < size_t(last - first)) {
             SimpleVector detached(Data::allocate(
                         qMax(capacity(), size() + (last - first)),
-                        d->detachFlags()));
+                        d->detachFlags() | Data::Grow));
 
             detached.d->copyAppend(first, last);
             detached.d->copyAppend(begin, begin + d->size);
@@ -186,7 +199,7 @@ public:
                 || capacity() - size() < size_t(last - first)) {
             SimpleVector detached(Data::allocate(
                         qMax(capacity(), size() + (last - first)),
-                        d->detachFlags()));
+                        d->detachFlags() | Data::Grow));
 
             if (d->size) {
                 const T *const begin = constBegin();
@@ -226,7 +239,7 @@ public:
                 || capacity() - size() < size_t(last - first)) {
             SimpleVector detached(Data::allocate(
                         qMax(capacity(), size() + (last - first)),
-                        d->detachFlags()));
+                        d->detachFlags() | Data::Grow));
 
             if (position)
                 detached.d->copyAppend(begin, where);
@@ -264,7 +277,7 @@ public:
     }
 
     static SimpleVector fromRawData(const T *data, size_t size,
-            QArrayData::AllocateOptions options = Data::Default)
+            QArrayData::AllocationOptions options = Data::Default)
     {
         return SimpleVector(Data::fromRawData(data, size, options));
     }

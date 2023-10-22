@@ -43,6 +43,7 @@
 #define QARRAYDATA_H
 
 #include <QtCore/qrefcount.h>
+#include <string.h>
 
 QT_BEGIN_HEADER
 
@@ -82,18 +83,19 @@ struct Q_CORE_EXPORT QArrayData
     }
 
     enum AllocateOption {
-        CapacityReserved = 0x1,
-        Unsharable = 0x2,
-        RawData = 0x4,
+        CapacityReserved    = 0x1,
+        Unsharable          = 0x2,
+        RawData             = 0x4,
+        Grow                = 0x8,
 
         Default = 0
     };
 
-    Q_DECLARE_FLAGS(AllocateOptions, AllocateOption)
+    Q_DECLARE_FLAGS(AllocationOptions, AllocateOption)
 
-    AllocateOptions detachFlags() const
+    AllocationOptions detachFlags() const
     {
-        AllocateOptions result;
+        AllocationOptions result;
         if (!ref.isSharable())
             result |= Unsharable;
         if (capacityReserved)
@@ -101,23 +103,24 @@ struct Q_CORE_EXPORT QArrayData
         return result;
     }
 
-    AllocateOptions cloneFlags() const
+    AllocationOptions cloneFlags() const
     {
-        AllocateOptions result;
+        AllocationOptions result;
         if (capacityReserved)
             result |= CapacityReserved;
         return result;
     }
 
     static QArrayData *allocate(size_t objectSize, size_t alignment,
-            size_t capacity, AllocateOptions options = Default) Q_REQUIRED_RESULT;
+            size_t capacity, AllocationOptions options = Default) Q_REQUIRED_RESULT;
     static void deallocate(QArrayData *data, size_t objectSize,
             size_t alignment);
 
-    static const QArrayData shared_null;
+    static const QArrayData shared_null[2];
+    static QArrayData *sharedNull() { return const_cast<QArrayData*>(shared_null); }
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QArrayData::AllocateOptions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QArrayData::AllocationOptions)
 
 template <class T>
 struct QTypedArrayData
@@ -137,7 +140,7 @@ struct QTypedArrayData
     class AlignmentDummy { QArrayData header; T data; };
 
     static QTypedArrayData *allocate(size_t capacity,
-            AllocateOptions options = Default) Q_REQUIRED_RESULT
+            AllocationOptions options = Default) Q_REQUIRED_RESULT
     {
         return static_cast<QTypedArrayData *>(QArrayData::allocate(sizeof(T),
                     Q_ALIGNOF(AlignmentDummy), capacity, options));
@@ -149,7 +152,7 @@ struct QTypedArrayData
     }
 
     static QTypedArrayData *fromRawData(const T *data, size_t n,
-            AllocateOptions options = Default)
+            AllocationOptions options = Default)
     {
         QTypedArrayData *result = allocate(0, options | RawData);
         if (result) {
@@ -157,15 +160,14 @@ struct QTypedArrayData
 
             result->offset = reinterpret_cast<const char *>(data)
                 - reinterpret_cast<const char *>(result);
-            result->size = n;
+            result->size = int(n);
         }
         return result;
     }
 
     static QTypedArrayData *sharedNull()
     {
-        return static_cast<QTypedArrayData *>(
-                const_cast<QArrayData *>(&QArrayData::shared_null));
+        return static_cast<QTypedArrayData *>(QArrayData::sharedNull());
     }
 };
 
@@ -176,11 +178,96 @@ struct QStaticArrayData
     T data[N];
 };
 
+// Support for returning QArrayDataPointer<T> from functions
+template <class T>
+struct QArrayDataPointerRef
+{
+    QTypedArrayData<T> *ptr;
+};
+
 #define Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER(type, size) { \
     Q_REFCOUNT_INITIALIZE_STATIC, size, 0, 0, \
     (sizeof(QArrayData) + (Q_ALIGNOF(type) - 1)) \
         & ~(Q_ALIGNOF(type) - 1) } \
     /**/
+
+////////////////////////////////////////////////////////////////////////////////
+//  Q_ARRAY_LITERAL
+
+// The idea here is to place a (read-only) copy of header and array data in an
+// mmappable portion of the executable (typically, .rodata section). This is
+// accomplished by hiding a static const instance of QStaticArrayData, which is
+// POD.
+
+#if defined(Q_COMPILER_VARIADIC_MACROS)
+#if defined(Q_COMPILER_LAMBDA)
+// Hide array inside a lambda
+#define Q_ARRAY_LITERAL(Type, ...)                                              \
+    ([]() -> QArrayDataPointerRef<Type> {                                       \
+            /* MSVC 2010 Doesn't support static variables in a lambda, but */   \
+            /* happily accepts them in a static function of a lambda-local */   \
+            /* struct :-) */                                                    \
+            struct StaticWrapper {                                              \
+                static QArrayDataPointerRef<Type> get()                         \
+                {                                                               \
+                    Q_ARRAY_LITERAL_IMPL(Type, __VA_ARGS__)                     \
+                    return ref;                                                 \
+                }                                                               \
+            };                                                                  \
+            return StaticWrapper::get();                                        \
+        }())                                                                    \
+    /**/
+#elif defined(Q_CC_GNU)
+// Hide array within GCC's __extension__ {( )} block
+#define Q_ARRAY_LITERAL(Type, ...)                                              \
+    __extension__ ({                                                            \
+            Q_ARRAY_LITERAL_IMPL(Type, __VA_ARGS__)                             \
+            ref;                                                                \
+        })                                                                      \
+    /**/
+#endif
+#endif // defined(Q_COMPILER_VARIADIC_MACROS)
+
+#if defined(Q_ARRAY_LITERAL)
+#define Q_ARRAY_LITERAL_IMPL(Type, ...)                                         \
+    union { Type type_must_be_POD; } dummy; Q_UNUSED(dummy)                     \
+                                                                                \
+    /* Portable compile-time array size computation */                          \
+    Type data[] = { __VA_ARGS__ }; Q_UNUSED(data)                               \
+    enum { Size = sizeof(data) / sizeof(data[0]) };                             \
+                                                                                \
+    static const QStaticArrayData<Type, Size> literal = {                       \
+        Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER(Type, Size), { __VA_ARGS__ } };  \
+                                                                                \
+    QArrayDataPointerRef<Type> ref =                                            \
+        { static_cast<QTypedArrayData<Type> *>(                                 \
+            const_cast<QArrayData *>(&literal.header)) };                       \
+    /**/
+#else
+// As a fallback, memory is allocated and data copied to the heap.
+
+// The fallback macro does NOT use variadic macros and does NOT support
+// variable number of arguments. It is suitable for char arrays.
+
+namespace QtPrivate {
+    template <class T, size_t N>
+    inline QArrayDataPointerRef<T> qMakeArrayLiteral(const T (&array)[N])
+    {
+        union { T type_must_be_POD; } dummy; Q_UNUSED(dummy)
+
+        QArrayDataPointerRef<T> result = { QTypedArrayData<T>::allocate(N) };
+        Q_CHECK_PTR(result.ptr);
+
+        ::memcpy(result.ptr->data(), array, N * sizeof(T));
+        result.ptr->size = N;
+
+        return result;
+    }
+}
+
+#define Q_ARRAY_LITERAL(Type, Array) \
+    QT_PREPEND_NAMESPACE(QtPrivate::qMakeArrayLiteral)<Type>( Array )
+#endif // !defined(Q_ARRAY_LITERAL)
 
 QT_END_NAMESPACE
 
