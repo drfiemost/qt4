@@ -101,6 +101,8 @@ private slots:
     void setSharable2_data() const;
     void setSharable2() const;
 
+    void reserve() const;
+
 private:
     int dummyForGuard;
 };
@@ -871,6 +873,32 @@ void tst_QList::setSharable1() const
 void tst_QList::setSharable2() const
 {
     runSetSharableTest<Complex>();
+}
+
+void tst_QList::reserve() const
+{
+    // Note:
+    // This test depends on QList's current behavior that ints are stored in the array itself.
+    // This test would not work for QList<Complex>.
+    int capacity = 100;
+    QList<int> list;
+    list.reserve(capacity);
+    list << 0;
+    int *data = &list[0];
+
+    for (int i = 1; i < capacity; i++) {
+        list << i;
+        QCOMPARE(&list.at(0), data);
+    }
+
+    QList<int> copy = list;
+    list.reserve(capacity / 2);
+    QCOMPARE(list.size(), capacity); // we didn't shrink the size!
+
+    copy = list;
+    list.reserve(capacity * 2);
+    QCOMPARE(list.size(), capacity);
+    QVERIFY(&list.at(0) != data);
 }
 
 QTEST_APPLESS_MAIN(tst_QList)

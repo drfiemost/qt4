@@ -1854,6 +1854,7 @@ void tst_QVector::reserve()
         a.resize(2);
         QVector<Foo> b(a);
         b.reserve(1);
+        QCOMPARE(b.size(), a.size());
     }
     QCOMPARE(fooCtor, fooDtor);
 }
