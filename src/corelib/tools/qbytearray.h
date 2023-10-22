@@ -120,26 +120,7 @@ class QString;
 class QDataStream;
 template <typename T> class QList;
 
-struct QByteArrayData
-{
-    // Keep in sync with QArrayData
-
-    QtPrivate::RefCount ref;
-    int size;
-    uint alloc : 31;
-    uint capacityReserved : 1;
-
-    qptrdiff offset;
-
-    inline char *data() { return reinterpret_cast<char *>(this) + offset; }
-    inline const char *data() const { return reinterpret_cast<const char *>(this) + offset; }
-};
-
-static_assert(sizeof(QArrayData) == sizeof(QByteArrayData));
-static_assert(offsetof(QArrayData, ref) == offsetof(QByteArrayData, ref));
-static_assert(offsetof(QArrayData, size) == offsetof(QByteArrayData, size));
-//  Can't use offsetof on bitfield members alloc, capacityReserved
-static_assert(offsetof(QArrayData, offset) == offsetof(QByteArrayData, offset));
+typedef QArrayData QByteArrayData;
 
 template<int N> struct QStaticByteArrayData
 {
@@ -159,7 +140,7 @@ struct QByteArrayDataPtr
 };
 
 #define Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, offset) \
-    { Q_REFCOUNT_INITIALIZE_STATIC, size, 0, 0, offset } \
+    Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(size, offset)
     /**/
 
 #define Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER(size) \
@@ -170,22 +151,23 @@ struct QByteArrayDataPtr
 #if defined(Q_COMPILER_LAMBDA)
 
 #  define QByteArrayLiteral(str) \
-    ([]() -> QByteArrayDataPtr { \
+    ([]() -> QByteArray { \
         enum { Size = sizeof(str) - 1 }; \
         static const QStaticByteArrayData<Size> qbytearray_literal = { \
             Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER(Size), \
             str }; \
         QByteArrayDataPtr holder = { qbytearray_literal.data_ptr() }; \
-        return holder; \
+        const QByteArray ba(holder); \
+        return ba; \
     }()) \
     /**/
 
 #endif
 
 #ifndef QByteArrayLiteral
-// no lambdas, not GCC, use const char * instead
+// no lambdas, not GCC, just return a temporary QByteArray
 
-# define QByteArrayLiteral(str) (str)
+# define QByteArrayLiteral(str) QByteArray(str, sizeof(str) - 1)
 #endif
 
 class Q_CORE_EXPORT QByteArray
@@ -205,6 +187,7 @@ public:
     QByteArray &operator=(const QByteArray &);
     QByteArray &operator=(const char *str);
 #ifdef Q_COMPILER_RVALUE_REFS
+    inline QByteArray(QByteArray && other) : d(other.d) { other.d = Data::sharedNull(); }
     inline QByteArray &operator=(QByteArray &&other)
     { qSwap(d, other.d); return *this; }
 #endif
