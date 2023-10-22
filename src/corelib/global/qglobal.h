@@ -748,17 +748,35 @@ namespace QT_NAMESPACE {}
  * C++11 support
  *
  *  Paper           Macro                               SD-6 macro
+ *  N2341           Q_COMPILER_ALIGNAS
+ *  N2341           Q_COMPILER_ALIGNOF
+ *  N2427           Q_COMPILER_ATOMICS
+ *  N2761           Q_COMPILER_ATTRIBUTES
  *  N2541           Q_COMPILER_AUTO_FUNCTION
  *  N1984 N2546     Q_COMPILER_AUTO_TYPE
  *  N2437           Q_COMPILER_CLASS_ENUM
  *  N2235           Q_COMPILER_CONSTEXPR                __cpp_constexpr = 200704
  *  N2343 N3276     Q_COMPILER_DECLTYPE                 __cpp_decltype = 200707
  *  N2346           Q_COMPILER_DEFAULT_DELETE_MEMBERS
+ *  N1986           Q_COMPILER_DELEGATING_CONSTRUCTORS
+ *  N3206 N3272     Q_COMPILER_EXPLICIT_OVERRIDES   (v0.9 and above only)
  *  N1987           Q_COMPILER_EXTERN_TEMPLATES
+ *  N2540           Q_COMPILER_INHERITING_CONSTRUCTORS
  *  N2672           Q_COMPILER_INITIALIZER_LISTS
  *  N2658 N2927     Q_COMPILER_LAMBDA                   __cpp_lambdas = 200907
+ *  N2756           Q_COMPILER_NONSTATIC_MEMBER_INIT
+ *  N2431           Q_COMPILER_NULLPTR
+ *  N2930           Q_COMPILER_RANGE_FOR
+ *  N2442           Q_COMPILER_RAW_STRINGS
+ *  N2439           Q_COMPILER_REF_QUALIFIERS
  *  N2118 N2844 N3053 Q_COMPILER_RVALUE_REFS            __cpp_rvalue_references = 200610
+ *  N1720           Q_COMPILER_STATIC_ASSERT
+ *  N2258           Q_COMPILER_TEMPLATE_ALIAS
+ *  N2659           Q_COMPILER_THREAD_LOCAL
+ *  N2756           Q_COMPILER_UDL
  *  N2442           Q_COMPILER_UNICODE_STRINGS          __cpp_unicode_literals = 200710
+ *  N2544           Q_COMPILER_UNRESTRICTED_UNIONS
+ *  N1653           Q_COMPILER_VARIADIC_MACROS
  *  N2242 N2555     Q_COMPILER_VARIADIC_TEMPLATES       __cpp_variadic_templates = 200704
  *
  * For any future version of the C++ standard, we use only the SD-6 macro.
@@ -832,25 +850,40 @@ namespace QT_NAMESPACE {}
        /* C++0x features supported in GCC 4.3: */
 #      define Q_COMPILER_RVALUE_REFS
 #      define Q_COMPILER_DECLTYPE
+#      define Q_COMPILER_STATIC_ASSERT
+#      define Q_COMPILER_VARIADIC_MACROS
 #    endif
 #    if (__GNUC__ * 100 + __GNUC_MINOR__) >= 404
        /* C++0x features supported in GCC 4.4: */
-#      define Q_COMPILER_VARIADIC_TEMPLATES
+#      define Q_COMPILER_ATOMICS
 #      define Q_COMPILER_AUTO_FUNCTION
 #      define Q_COMPILER_AUTO_TYPE
-#      define Q_COMPILER_EXTERN_TEMPLATES
-#      define Q_COMPILER_DEFAULT_DELETE_MEMBERS
 #      define Q_COMPILER_CLASS_ENUM
+#      define Q_COMPILER_DEFAULT_DELETE_MEMBERS
+#      define Q_COMPILER_EXTERN_TEMPLATES
 #      define Q_COMPILER_INITIALIZER_LISTS
+#      define Q_COMPILER_UNICODE_STRINGS
+#      define Q_COMPILER_VARIADIC_TEMPLATES
 #    endif
 #    if (__GNUC__ * 100 + __GNUC_MINOR__) >= 405
        /* C++0x features supported in GCC 4.5: */
 #      define Q_COMPILER_LAMBDA
-#      define Q_COMPILER_UNICODE_STRINGS
+#      define Q_COMPILER_RAW_STRINGS
 #    endif
 #    if (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
        /* C++0x features supported in GCC 4.6: */
 #      define Q_COMPILER_CONSTEXPR
+#      define Q_COMPILER_NULLPTR
+#      define Q_COMPILER_UNRESTRICTED_UNIONS
+#      define Q_COMPILER_RANGE_FOR
+#    endif
+#    if (__GNUC__ * 100 + __GNUC_MINOR__) >= 407
+       /* C++11 features supported in GCC 4.7: */
+#      define Q_COMPILER_NONSTATIC_MEMBER_INIT
+#      define Q_COMPILER_DELEGATING_CONSTRUCTORS
+#      define Q_COMPILER_EXPLICIT_OVERRIDES
+#      define Q_COMPILER_TEMPLATE_ALIAS
+#      define Q_COMPILER_UDL
 #    endif
 #  endif
 #endif
