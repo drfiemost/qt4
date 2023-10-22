@@ -239,7 +239,7 @@ void QVector<T>::defaultConstruct(T *from, T *to)
             new (from++) T();
         }
     } else {
-        ::memset(from, 0, (to - from) * sizeof(T));
+        ::memset(static_cast<void *>(from), 0, (to - from) * sizeof(T));
     }
 }
 
@@ -250,7 +250,7 @@ void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
         while (srcFrom != srcTo)
             new (dstFrom++) T(*srcFrom++);
     } else {
-        ::memcpy(dstFrom, srcFrom, (srcTo - srcFrom) * sizeof(T));
+        ::memcpy(static_cast<void *>(dstFrom), static_cast<const void *>(srcFrom), (srcTo - srcFrom) * sizeof(T));
     }
 }
 
@@ -453,7 +453,7 @@ void QVector<T>::reallocData(const int asize, const int aalloc, QArrayData::Allo
                         new (dst++) T(*srcBegin++);
                     }
                 } else {
-                    ::memcpy(dst, srcBegin, (srcEnd - srcBegin) * sizeof(T));
+                    ::memcpy(static_cast<void *>(dst), static_cast<void *>(srcBegin), (srcEnd - srcBegin) * sizeof(T));
                     dst += srcEnd - srcBegin;
 
                     // destruct unused / not moved data
@@ -649,8 +649,12 @@ QVector<T> &QVector<T>::fill(const T &from, int asize)
 template <typename T>
 QVector<T> &QVector<T>::operator+=(const QVector &l)
 {
-    int newSize = d->size + l.d->size;
-    reallocData(d->size, newSize);
+    uint newSize = d->size + l.d->size;
+    const bool isTooSmall = newSize > d->alloc;
+    if (!isDetached() || isTooSmall) {
+        QArrayData::AllocationOptions opt(isTooSmall ? QArrayData::Grow : QArrayData::Default);
+        reallocData(d->size, isTooSmall ? newSize : d->alloc, opt);
+    }
 
     if (d->alloc) {
         T *w = d->begin() + newSize;
