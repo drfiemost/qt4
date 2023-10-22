@@ -46,6 +46,7 @@
 #include <QtCore/qiterator.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qrefcount.h>
+#include <QtCore/qarraydata.h>
 
 #include <iterator>
 #include <vector>
@@ -59,60 +60,21 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-
-struct Q_CORE_EXPORT QVectorData
-{
-    QtPrivate::RefCount ref;
-    int size;
-    uint alloc : 31;
-    uint capacityReserved : 1;
-
-    qptrdiff offset;
-
-    void* data() { return reinterpret_cast<char *>(this) + this->offset; }
-
-    static const QVectorData shared_null;
-    static QVectorData *allocate(int size, int alignment);
-    static QVectorData *reallocate(QVectorData *old, int newsize, int oldsize, int alignment);
-    static void free(QVectorData *data, int alignment);
-    static int grow(int sizeOfHeader, int size, int sizeOfT);
-};
-
-template <typename T>
-struct QVectorTypedData : QVectorData
-{
-    T* begin() { return reinterpret_cast<T *>(this->data()); }
-    T* end() { return begin() + this->size; }
-
-    static QVectorTypedData *sharedNull() { return static_cast<QVectorTypedData *>(const_cast<QVectorData *>(&QVectorData::shared_null)); }
-};
-
 class QRegion;
 
 template <typename T>
 class QVector
 {
-    typedef QVectorTypedData<T> Data;
+    typedef QTypedArrayData<T> Data;
     Data *d;
 
 public:
     inline QVector() : d(Data::sharedNull()) { }
     explicit QVector(int size);
     QVector(int size, const T &t);
-    inline QVector(const QVector<T> &v)
-    {
-        if (v.d->ref.ref()) {
-            d = v.d;
-        } else {
-            d = Data::sharedNull();
-            realloc(0, int(v.d->alloc));
-            qCopy(v.d->begin(), v.d->end(), d->begin());
-            d->size = v.d->size;
-            d->capacityReserved = v.d->capacityReserved;
-        }
-    }
+    inline QVector(const QVector<T> &v);
 
-    inline ~QVector() { if (!d->ref.deref()) free(d); }
+    inline ~QVector() { if (!d->ref.deref()) freeData(d); }
     QVector<T> &operator=(const QVector<T> &v);
 #ifdef Q_COMPILER_RVALUE_REFS
     inline QVector<T> operator=(QVector<T> &&other)
@@ -133,9 +95,17 @@ public:
 
     inline int capacity() const { return int(d->alloc); }
     void reserve(int size);
-    inline void squeeze() { realloc(d->size, d->size); d->capacityReserved = 0; }
+    inline void squeeze()
+    {
+        reallocData(d->size, d->size);
+        if (d->capacityReserved) {
+            // capacity reserved in a read only memory would be useless
+            // this checks avoid writing to such memory.
+            d->capacityReserved = 0;
+        }
+    }
 
-    inline void detach() { if (!isDetached()) detach_helper(); }
+    inline void detach();
     inline bool isDetached() const { return !d->ref.isShared(); }
     inline void setSharable(bool sharable)
     {
@@ -143,8 +113,14 @@ public:
             return;
         if (!sharable)
             detach();
-        if (d != Data::sharedNull())
+
+        if (d == Data::unsharableEmpty()) {
+            if (sharable)
+                d = Data::sharedNull();
+        } else {
             d->ref.setSharable(sharable);
+        }
+        Q_ASSERT(d->ref.isSharable() == sharable);
     }
 
     inline bool isSharedWith(const QVector<T> &other) const { return d == other.d; }
@@ -172,84 +148,17 @@ public:
     bool contains(const T &t) const;
     int count(const T &t) const;
 
-#ifdef QT_STRICT_ITERATORS
-    class iterator {
-    public:
-        T *i;
-        typedef std::random_access_iterator_tag  iterator_category;
-        typedef qptrdiff difference_type;
-        typedef T value_type;
-        typedef T *pointer;
-        typedef T &reference;
-
-        inline iterator() : i(0) {}
-        inline iterator(T *n) : i(n) {}
-        inline iterator(const iterator &o): i(o.i){}
-        inline T &operator*() const { return *i; }
-        inline T *operator->() const { return i; }
-        inline T &operator[](int j) const { return *(i + j); }
-        inline bool operator==(const iterator &o) const { return i == o.i; }
-        inline bool operator!=(const iterator &o) const { return i != o.i; }
-        inline bool operator<(const iterator& other) const { return i < other.i; }
-        inline bool operator<=(const iterator& other) const { return i <= other.i; }
-        inline bool operator>(const iterator& other) const { return i > other.i; }
-        inline bool operator>=(const iterator& other) const { return i >= other.i; }
-        inline iterator &operator++() { ++i; return *this; }
-        inline iterator operator++(int) { T *n = i; ++i; return n; }
-        inline iterator &operator--() { i--; return *this; }
-        inline iterator operator--(int) { T *n = i; i--; return n; }
-        inline iterator &operator+=(int j) { i+=j; return *this; }
-        inline iterator &operator-=(int j) { i-=j; return *this; }
-        inline iterator operator+(int j) const { return iterator(i+j); }
-        inline iterator operator-(int j) const { return iterator(i-j); }
-        inline int operator-(iterator j) const { return i - j.i; }
-    };
-    friend class iterator;
-
-    class const_iterator {
-    public:
-        T *i;
-        typedef std::random_access_iterator_tag  iterator_category;
-        typedef qptrdiff difference_type;
-        typedef T value_type;
-        typedef const T *pointer;
-        typedef const T &reference;
-
-        inline const_iterator() : i(0) {}
-        inline const_iterator(T *n) : i(n) {}
-        inline const_iterator(const const_iterator &o): i(o.i) {}
-        inline explicit const_iterator(const iterator &o): i(o.i) {}
-        inline const T &operator*() const { return *i; }
-        inline const T *operator->() const { return i; }
-        inline const T &operator[](int j) const { return *(i + j); }
-        inline bool operator==(const const_iterator &o) const { return i == o.i; }
-        inline bool operator!=(const const_iterator &o) const { return i != o.i; }
-        inline bool operator<(const const_iterator& other) const { return i < other.i; }
-        inline bool operator<=(const const_iterator& other) const { return i <= other.i; }
-        inline bool operator>(const const_iterator& other) const { return i > other.i; }
-        inline bool operator>=(const const_iterator& other) const { return i >= other.i; }
-        inline const_iterator &operator++() { ++i; return *this; }
-        inline const_iterator operator++(int) { T *n = i; ++i; return n; }
-        inline const_iterator &operator--() { i--; return *this; }
-        inline const_iterator operator--(int) { T *n = i; i--; return n; }
-        inline const_iterator &operator+=(int j) { i+=j; return *this; }
-        inline const_iterator &operator-=(int j) { i-=j; return *this; }
-        inline const_iterator operator+(int j) const { return const_iterator(i+j); }
-        inline const_iterator operator-(int j) const { return const_iterator(i-j); }
-        inline int operator-(const_iterator j) const { return i - j.i; }
-    };
-    friend class const_iterator;
-#else
     // STL-style
-    typedef T* iterator;
-    typedef const T* const_iterator;
-#endif
+    typedef typename Data::iterator iterator;
+    typedef typename Data::const_iterator const_iterator;
     inline iterator begin() { detach(); return d->begin(); }
-    inline const_iterator begin() const { return d->begin(); }
-    inline const_iterator constBegin() const { return d->begin(); }
+    inline const_iterator begin() const { return d->constBegin(); }
+    inline const_iterator cbegin() const { return d->constBegin(); }
+    inline const_iterator constBegin() const { return d->constBegin(); }
     inline iterator end() { detach(); return d->end(); }
-    inline const_iterator end() const { return d->end(); }
-    inline const_iterator constEnd() const { return d->end(); }
+    inline const_iterator end() const { return d->constEnd(); }
+    inline const_iterator cend() const { return d->constEnd(); }
+    inline const_iterator constEnd() const { return d->constEnd(); }
     iterator insert(iterator before, int n, const T &x);
     inline iterator insert(iterator before, const T &x) { return insert(before, 1, x); }
     iterator erase(iterator begin, iterator end);
@@ -280,8 +189,8 @@ public:
     typedef int size_type;
     inline void push_back(const T &t) { append(t); }
     inline void push_front(const T &t) { prepend(t); }
-    void pop_back() { Q_ASSERT(!isEmpty()); erase(end()-1); }
-    void pop_front() { Q_ASSERT(!isEmpty()); erase(begin()); }
+    void pop_back() { Q_ASSERT(!isEmpty()); erase(d->end() - 1); }
+    void pop_front() { Q_ASSERT(!isEmpty()); erase(d->begin()); }
     inline bool empty() const
     { return d->size == 0; }
     inline T& front() { return first(); }
@@ -312,39 +221,107 @@ public:
 private:
     friend class QRegion; // Optimization for QRegion::rects()
 
-    void detach_helper();
-    Data *malloc(int alloc);
-    void realloc(int size, int alloc);
-    void free(Data *d);
+    void reallocData(const int size, const int alloc, QArrayData::AllocationOptions options = QArrayData::Default);
+    void freeData(Data *d);
+    void defaultConstruct(T *from, T *to);
+    void copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom);
+    void destruct(T *from, T *to);
 
-    class AlignmentDummy { QVectorData header; T array[1]; };
-    
-    static Q_DECL_CONSTEXPR int offsetOfTypedData()
-    {
-        // (non-POD)-safe offsetof(AlignmentDummy, array)
-        return (sizeof(QVectorData) + (alignOfTypedData() - 1)) & ~(alignOfTypedData() - 1);
-    }
-    static Q_DECL_CONSTEXPR int alignOfTypedData()
-    {
-#ifdef Q_ALIGNOF
-        return Q_ALIGNOF(AlignmentDummy);
-#else
-        return sizeof(void *);
-#endif
-    }
+    class AlignmentDummy { Data header; T array[1]; };
 };
+    
+template <typename T>
+void QVector<T>::defaultConstruct(T *from, T *to)
+{
+    if (QTypeInfo<T>::isComplex) {
+        while (from != to) {
+            new (from++) T();
+        }
+    } else {
+        ::memset(from, 0, (to - from) * sizeof(T));
+    }
+}
 
 template <typename T>
-void QVector<T>::detach_helper()
-{ realloc(d->size, int(d->alloc)); }
+void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
+{
+    if (QTypeInfo<T>::isComplex) {
+        while (srcFrom != srcTo)
+            new (dstFrom++) T(*srcFrom++);
+    } else {
+        ::memcpy(dstFrom, srcFrom, (srcTo - srcFrom) * sizeof(T));
+    }
+}
+
+template <typename T>
+void QVector<T>::destruct(T *from, T *to)
+{
+    if (QTypeInfo<T>::isComplex) {
+        while (from != to) {
+            from++->~T();
+        }
+    }
+}
+
+template <typename T>
+inline QVector<T>::QVector(const QVector<T> &v)
+{
+    if (v.d->ref.ref()) {
+        d = v.d;
+    } else {
+        if (v.d->capacityReserved) {
+            d = Data::allocate(v.d->alloc);
+            d->capacityReserved = true;
+        } else {
+            d = Data::allocate(v.d->size);
+        }
+        if (d->alloc) {
+            copyConstruct(v.d->begin(), v.d->end(), d->begin());
+            d->size = v.d->size;
+        }
+    }
+}
+
+template <typename T>
+void QVector<T>::detach()
+{
+    if (!isDetached()) {
+        if (d->alloc)
+            reallocData(d->size, int(d->alloc));
+        else
+            d = Data::unsharableEmpty();
+    }
+    Q_ASSERT(isDetached());
+}
+
 template <typename T>
 void QVector<T>::reserve(int asize)
-{ if (asize > int(d->alloc)) realloc(d->size, asize); if (isDetached()) d->capacityReserved = 1; }
+{
+    if (asize > int(d->alloc))
+        reallocData(d->size, asize);
+    if (isDetached())
+        d->capacityReserved = 1;
+    Q_ASSERT(capacity() >= asize);
+}
+
 template <typename T>
 void QVector<T>::resize(int asize)
-{ realloc(asize, (asize > int(d->alloc) || (!d->capacityReserved && asize < d->size && asize < int(d->alloc >> 1))) ?
-          QVectorData::grow(offsetOfTypedData(), asize, sizeof(T))
-          : int(d->alloc)); }
+{
+    int newAlloc;
+    const int oldAlloc = int(d->alloc);
+    QArrayData::AllocationOptions opt;
+
+    if (asize > oldAlloc) { // there is not enough space
+        newAlloc = asize;
+        opt = QArrayData::Grow;
+    } else if (!d->capacityReserved && asize < d->size && asize < (oldAlloc >> 1)) { // we want to shrink
+        newAlloc = asize;
+        opt = QArrayData::Grow;
+    } else {
+        newAlloc = oldAlloc;
+    }
+    reallocData(asize, newAlloc, opt);
+}
 template <typename T>
 inline void QVector<T>::clear()
 { *this = QVector<T>(); }
@@ -371,11 +348,11 @@ inline void QVector<T>::insert(int i, int n, const T &t)
 template <typename T>
 inline void QVector<T>::remove(int i, int n)
 { Q_ASSERT_X(i >= 0 && n >= 0 && i + n <= d->size, "QVector<T>::remove", "index out of range");
-  erase(begin() + i, begin() + i + n); }
+  erase(d->begin() + i, d->begin() + i + n); }
 template <typename T>
 inline void QVector<T>::remove(int i)
 { Q_ASSERT_X(i >= 0 && i < d->size, "QVector<T>::remove", "index out of range");
-  erase(begin() + i, begin() + i + 1); }
+  erase(d->begin() + i, d->begin() + i + 1); }
 template <typename T>
 inline void QVector<T>::prepend(const T &t)
 { insert(begin(), 1, t); }
@@ -399,165 +376,139 @@ QVector<T> &QVector<T>::operator=(const QVector<T> &v)
 }
 
 template <typename T>
-inline typename QVector<T>::Data *QVector<T>::malloc(int aalloc)
-{
-    QVectorData *vectordata = QVectorData::allocate(offsetOfTypedData() + aalloc * sizeof(T), alignOfTypedData());
-    Q_CHECK_PTR(vectordata);
-    return static_cast<Data *>(vectordata);
-}
-
-template <typename T>
 QVector<T>::QVector(int asize)
 {
-    d = malloc(asize);
-    d->ref.initializeOwned();
-    d->size = asize;
-    d->alloc = uint(d->size);
-    d->capacityReserved = false;
-    d->offset = offsetOfTypedData();
-    if (QTypeInfo<T>::isComplex) {
-        T* b = d->begin();
-        T* i = d->end();
-        while (i != b)
-            new (--i) T;
+    if (Q_LIKELY(asize)) {
+        d = Data::allocate(asize);
+        d->size = asize;
+        defaultConstruct(d->begin(), d->end());
     } else {
-        memset(d->begin(), 0, asize * sizeof(T));
+        d = Data::sharedNull();
     }
 }
 
 template <typename T>
 QVector<T>::QVector(int asize, const T &t)
 {
-    d = malloc(asize);
-    d->ref.initializeOwned();
-    d->size = asize;
-    d->alloc = uint(d->size);
-    d->capacityReserved = false;
-    d->offset = offsetOfTypedData();
-    T* i = d->end();
-    while (i != d->begin())
-        new (--i) T(t);
+    if (asize) {
+        d = Data::allocate(asize);
+        d->size = asize;
+        T* i = d->end();
+        while (i != d->begin())
+            new (--i) T(t);
+    } else {
+        d = Data::sharedNull();
+    }
 }
 
 #ifdef Q_COMPILER_INITIALIZER_LISTS
 template <typename T>
 QVector<T>::QVector(std::initializer_list<T> args)
 {
-    d = malloc(int(args.size()));
-    d->ref.initializeOwned();
-    d->size = int(args.size());
-    d->alloc = uint(d->size);
-    d->capacityReserved = false;
-    d->offset = offsetOfTypedData();
-    if (QTypeInfo<T>::isComplex) {
-        T* b = d->begin();
-        T* i = d->end();
-        const T* s = args.end();
-        while (i != b)
-            new(--i) T(*--s);
-    } else {
+    if (args.size() > 0) {
+        d = Data::allocate(args.size());
         // std::initializer_list<T>::iterator is guaranteed to be
-        // const T* ([support.initlist]/1), so can be memcpy'ed away from:
-        ::memcpy(d->begin(), args.begin(), args.size() * sizeof(T));
+        // const T* ([support.initlist]/1), so can be memcpy'ed away from by copyConstruct
+        copyConstruct(args.begin(), args.end(), d->begin());
+        d->size = int(args.size());
+    } else {
+        d = Data::sharedNull();
     }
 }
 #endif
 
 template <typename T>
-void QVector<T>::free(Data *x)
+void QVector<T>::freeData(Data *x)
 {
-    if (QTypeInfo<T>::isComplex) {
-        T* b = x->begin();
-        T* i = b + x->size;
-        while (i-- != b)
-             i->~T();
-    }
-    Data::free(x, alignOfTypedData());
+    destruct(x->begin(), x->end());
+    Data::deallocate(x);
 }
 
 template <typename T>
-void QVector<T>::realloc(int asize, int aalloc)
+void QVector<T>::reallocData(const int asize, const int aalloc, QArrayData::AllocationOptions options)
 {
-    Q_ASSERT(asize <= aalloc);
-    T *pOld;
-    T *pNew;
+    Q_ASSERT(asize >= 0 && asize <= aalloc);
     Data *x = d;
+    const bool isShared = d->ref.isShared();
 
-    if (QTypeInfo<T>::isComplex && asize < d->size && isDetached()) {
-        // call the destructor on all objects that need to be
-        // destroyed when shrinking
-        pOld = d->begin() + d->size;
-        pNew = d->begin() + asize;
-        while (asize < d->size) {
-            (--pOld)->~T();
-            d->size--;
-        }
-    }
-
-    if (aalloc != int(d->alloc) || !isDetached()) {
-        // (re)allocate memory
-        if (QTypeInfo<T>::isStatic) {
-            x = malloc(aalloc);
-            Q_CHECK_PTR(x);
-            x->size = 0;
-        } else if (!isDetached()) {
-            x = malloc(aalloc);
-            Q_CHECK_PTR(x);
-            if (QTypeInfo<T>::isComplex) {
-                x->size = 0;
-            } else {
-                ::memcpy(x, d, offsetOfTypedData() + qMin(uint(aalloc), d->alloc) * sizeof(T));
-                x->size = d->size;
-            }
-        } else {
+    if (aalloc != 0) {
+        if (aalloc != int(d->alloc) || isShared) {
             QT_TRY {
-                QVectorData *mem = QVectorData::reallocate(d, offsetOfTypedData() + aalloc * sizeof(T),
-                                                           offsetOfTypedData() + d->alloc * sizeof(T), alignOfTypedData());
-                Q_CHECK_PTR(mem);
-                x = d = static_cast<Data *>(mem);
-                x->size = d->size;
-            } QT_CATCH (const std::bad_alloc &) {
-                if (aalloc > int(d->alloc)) // ignore the error in case we are just shrinking.
-                    QT_RETHROW;
+                // allocate memory
+                x = Data::allocate(aalloc, options);
+                Q_CHECK_PTR(x);
+                // aalloc is bigger then 0 so it is not [un]sharedEmpty
+                Q_ASSERT(x->ref.isSharable() || options.testFlag(QArrayData::Unsharable));
+                Q_ASSERT(!x->ref.isStatic());
+                x->size = asize;
+
+                T *srcBegin = d->begin();
+                T *srcEnd = asize > d->size ? d->end() : d->begin() + asize;
+                T *dst = x->begin();
+
+                if (QTypeInfo<T>::isStatic || (isShared && QTypeInfo<T>::isComplex)) {
+                    // we can not move the data, we need to copy construct it
+                    while (srcBegin != srcEnd) {
+                        new (dst++) T(*srcBegin++);
+                    }
+                } else {
+                    ::memcpy(dst, srcBegin, (srcEnd - srcBegin) * sizeof(T));
+                    dst += srcEnd - srcBegin;
+
+                    // destruct unused / not moved data
+                    if (asize < d->size)
+                        destruct(d->begin() + asize, d->end());
+                }
+
+                if (asize > d->size) {
+                    // construct all new objects when growing
+                    QT_TRY {
+                        defaultConstruct(dst, x->end());
+                    } QT_CATCH (...) {
+                        // destruct already copied objects
+                        destruct(x->begin(), dst);
+                        QT_RETHROW;
+                    }
+                }
+            } QT_CATCH (...) {
+                Data::deallocate(x);
+                QT_RETHROW;
             }
+            x->capacityReserved = d->capacityReserved;
+        } else {
+            Q_ASSERT(d->alloc == aalloc); // resize, without changing allocation size
+            Q_ASSERT(isDetached());       // can be done only on detached d
+            Q_ASSERT(x == d);             // in this case we do not need to allocate anything
+            if (asize <= d->size) {
+                destruct(x->begin() + asize, x->end()); // from future end to current end
+            } else {
+                defaultConstruct(x->end(), x->begin() + asize); // from current end to future end
+            }
+            x->size = asize;
         }
-        x->ref.initializeOwned();
-        x->alloc = uint(aalloc);
-        x->capacityReserved = d->capacityReserved;
-        x->offset = offsetOfTypedData();
+    } else {
+        x = Data::sharedNull();
     }
-
-    if (QTypeInfo<T>::isComplex) {
-        QT_TRY {
-            pOld = d->begin() + x->size;
-            pNew = x->begin() + x->size;
-            // copy objects from the old array into the new array
-            const int toMove = qMin(asize, d->size);
-            while (x->size < toMove) {
-                new (pNew++) T(*pOld++);
-                x->size++;
-            }
-            // construct all new objects when growing
-            while (x->size < asize) {
-                new (pNew++) T;
-                x->size++;
-            }
-        } QT_CATCH (...) {
-            free(x);
-            QT_RETHROW;
-        }
-
-    } else if (asize > x->size) {
-        // initialize newly allocated memory to 0
-        memset(x->end(), 0, (asize - x->size) * sizeof(T));
-    }
-    x->size = asize;
-
     if (d != x) {
-        if (!d->ref.deref())
-            free(d);
+        if (!d->ref.deref()) {
+            if (QTypeInfo<T>::isStatic || !aalloc || (isShared && QTypeInfo<T>::isComplex)) {
+                // data was copy constructed, we need to call destructors
+                // or if !alloc we did nothing to the old 'd'.
+                freeData(d);
+            } else {
+                Data::deallocate(d);
+            }
+        }
+
         d = x;
     }
+
+    Q_ASSERT(d->data());
+    Q_ASSERT(uint(d->size) <= d->alloc);
+    Q_ASSERT(d != Data::unsharableEmpty());
+    Q_ASSERT(aalloc ? d != Data::sharedNull() : d == Data::sharedNull());
+    Q_ASSERT(d->alloc >= uint(aalloc));
+    Q_ASSERT(d->size == asize);
 }
 
 template<typename T>
@@ -577,32 +528,27 @@ Q_OUTOFLINE_TEMPLATE T QVector<T>::value(int i, const T &defaultValue) const
 template <typename T>
 void QVector<T>::append(const T &t)
 {
-    if (!isDetached() || d->size + 1 > int(d->alloc)) {
-        const T copy(t);
-        realloc(d->size, (d->size + 1 > int(d->alloc)) ?
-                    QVectorData::grow(offsetOfTypedData(), d->size + 1, sizeof(T))
-                    : int(d->alloc));
-        if (QTypeInfo<T>::isComplex)
-            new (d->end()) T(copy);
-        else
-            *d->end() = copy;
-    } else {
-        if (QTypeInfo<T>::isComplex)
-            new (d->end()) T(t);
-        else
-            *d->end() = t;
+    const T copy(t);
+    const bool isTooSmall = uint(d->size + 1) > d->alloc;
+    if (!isDetached() || isTooSmall) {
+        QArrayData::AllocationOptions opt(isTooSmall ? QArrayData::Grow : QArrayData::Default);
+        reallocData(d->size, isTooSmall ? d->size + 1 : d->alloc, opt);
     }
+    if (QTypeInfo<T>::isComplex)
+        new (d->end()) T(copy);
+    else
+        *d->end() = copy;
     ++d->size;
 }
 
 template <typename T>
 typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, const T &t)
 {
-    int offset = int(before - d->begin());
+    int offset = std::distance(d->begin(), before);
     if (n != 0) {
         const T copy(t);
         if (!isDetached() || d->size + n > int(d->alloc))
-            realloc(d->size, QVectorData::grow(offsetOfTypedData(), d->size + n, sizeof(T)));
+            reallocData(d->size, d->size + n, QArrayData::Grow);
         if (QTypeInfo<T>::isStatic) {
             T *b = d->end();
             T *i = d->end() + n;
@@ -631,23 +577,42 @@ typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, c
 template <typename T>
 typename QVector<T>::iterator QVector<T>::erase(iterator abegin, iterator aend)
 {
-    int f = int(abegin - d->begin());
-    int l = int(aend - d->begin());
-    int n = l - f;
-    detach();
-    if (QTypeInfo<T>::isComplex) {
-        qCopy(d->begin()+l, d->end(), d->begin()+f);
-        T *i = d->end();
-        T* b = d->end()-n;
-        while (i != b) {
-            --i;
-            i->~T();
+    const int itemsToErase = aend - abegin;
+
+    if (!itemsToErase)
+        return abegin;
+
+    Q_ASSERT(abegin >= d->begin());
+    Q_ASSERT(aend <= d->end());
+    Q_ASSERT(abegin <= aend);
+
+    const int itemsUntouched = abegin - d->begin();
+
+    // FIXME we could do a proper realloc, which copy constructs only needed data.
+    // FIXME we ara about to delete data maybe it is good time to shrink?
+    if (d->alloc) {
+        detach();
+        abegin = d->begin() + itemsUntouched;
+        aend = abegin + itemsToErase;
+        if (QTypeInfo<T>::isStatic) {
+            iterator moveBegin = abegin + itemsToErase;
+            iterator moveEnd = d->end();
+            while (moveBegin != moveEnd) {
+                if (QTypeInfo<T>::isComplex)
+                    abegin->~T();
+                new (abegin++) T(*moveBegin++);
+            }
+            if (abegin < d->end()) {
+                // destroy rest of instances
+                destruct(abegin, d->end());
+            }
+        } else {
+            destruct(abegin, aend);
+            memmove(abegin, aend, (d->size - itemsToErase - itemsUntouched) * sizeof(T));
         }
-    } else {
-        memmove(d->begin() + f, d->begin() + l, (d->size-l)*sizeof(T));
+        d->size -= itemsToErase;
     }
-    d->size -= n;
-    return d->begin() + f;
+    return d->begin() + itemsUntouched;
 }
 
 template <typename T>
@@ -684,18 +649,20 @@ template <typename T>
 QVector<T> &QVector<T>::operator+=(const QVector &l)
 {
     int newSize = d->size + l.d->size;
-    realloc(d->size, newSize);
+    reallocData(d->size, newSize);
 
-    T *w = d->begin() + newSize;
-    T *i = l.d->end();
-    T *b = l.d->begin();
-    while (i != b) {
-        if (QTypeInfo<T>::isComplex)
-            new (--w) T(*--i);
-        else
-            *--w = *--i;
+    if (d->alloc) {
+        T *w = d->begin() + newSize;
+        T *i = l.d->end();
+        T *b = l.d->begin();
+        while (i != b) {
+            if (QTypeInfo<T>::isComplex)
+                new (--w) T(*--i);
+            else
+                *--w = *--i;
+        }
+        d->size = newSize;
     }
-    d->size = newSize;
     return *this;
 }
 
