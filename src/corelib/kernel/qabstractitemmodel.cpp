@@ -215,6 +215,13 @@ QPersistentModelIndex &QPersistentModelIndex::operator=(const QPersistentModelIn
 }
 
 /*!
+    \fn void QPersistentModelIndex::swap(QPersistentModelIndex &other)
+    \since 5.0
+    Swaps this persistent modelindex with \a other. This function is
+    very fast and never fails.
+*/
+
+/*!
     Sets the persistent model index to refer to the same item in a model
     as the \a other model index.
 */

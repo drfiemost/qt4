@@ -5,7 +5,8 @@ HEADERS +=  \
 	global/qnamespace.h \
         global/qendian.h \
         global/qnumeric_p.h \
-        global/qnumeric.h
+        global/qnumeric.h \
+        global/qtypeinfo.h
 
 SOURCES += \
 	global/qglobal.cpp \

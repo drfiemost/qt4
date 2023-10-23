@@ -74,6 +74,10 @@ public:
     inline QFileInfo&operator=(QFileInfo &&other)
     { qSwap(d_ptr, other.d_ptr); return *this; }
 #endif
+
+    inline void swap(QFileInfo &other)
+    { qSwap(d_ptr, other.d_ptr); }
+
     bool operator==(const QFileInfo &fileinfo); // 5.0 - remove me
     bool operator==(const QFileInfo &fileinfo) const;
     inline bool operator!=(const QFileInfo &fileinfo) { return !(operator==(fileinfo)); } // 5.0 - remove me
@@ -153,7 +157,7 @@ private:
     }
 };
 
-Q_DECLARE_TYPEINFO(QFileInfo, Q_MOVABLE_TYPE);
+Q_DECLARE_SHARED(QFileInfo)
 
 typedef QList<QFileInfo> QFileInfoList;
 

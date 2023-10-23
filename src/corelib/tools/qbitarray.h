@@ -169,7 +169,6 @@ Q_CORE_EXPORT QDataStream &operator<<(QDataStream &, const QBitArray &);
 Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QBitArray &);
 #endif
 
-Q_DECLARE_TYPEINFO(QBitArray, Q_MOVABLE_TYPE);
 Q_DECLARE_SHARED(QBitArray)
 
 QT_END_NAMESPACE
