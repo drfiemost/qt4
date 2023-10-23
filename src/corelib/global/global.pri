@@ -7,6 +7,7 @@ HEADERS +=  \
         global/qnumeric_p.h \
         global/qnumeric.h \
         global/qtypeinfo.h \
+        global/qsysinfo.h \
         global/qflags.h
 
 SOURCES += \
