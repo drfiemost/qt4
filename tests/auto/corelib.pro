@@ -49,6 +49,7 @@ SUBDIRS=\
    qnumeric \
    qobject \
    qobjectrace \
+   qpair \
    qplugin \
    qpluginloader \
    qpoint \

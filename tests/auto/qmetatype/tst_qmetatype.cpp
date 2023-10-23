@@ -72,6 +72,8 @@ private slots:
     void normalizedTypes();
     void typeName_data();
     void typeName();
+    void flags_data();
+    void flags();
     void construct();
     void typedefs();
     void isRegistered_data();
@@ -267,6 +269,78 @@ void tst_QMetaType::typeName()
     QFETCH(QString, aTypeName);
 
     QCOMPARE(QString::fromLatin1(QMetaType::typeName(aType)), aTypeName);
+}
+
+class C { char _[4]; };
+class M { char _[4]; };
+class P { char _[4]; };
+
+QT_BEGIN_NAMESPACE
+Q_DECLARE_TYPEINFO(M, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(P, Q_PRIMITIVE_TYPE);
+QT_END_NAMESPACE
+
+// avoid the comma:
+typedef QPair<C,C> QPairCC;
+typedef QPair<C,M> QPairCM;
+typedef QPair<C,P> QPairCP;
+typedef QPair<M,C> QPairMC;
+typedef QPair<M,M> QPairMM;
+typedef QPair<M,P> QPairMP;
+typedef QPair<P,C> QPairPC;
+typedef QPair<P,M> QPairPM;
+typedef QPair<P,P> QPairPP;
+
+Q_DECLARE_METATYPE(QPairCC)
+Q_DECLARE_METATYPE(QPairCM)
+Q_DECLARE_METATYPE(QPairCP)
+Q_DECLARE_METATYPE(QPairMC)
+Q_DECLARE_METATYPE(QPairMM)
+Q_DECLARE_METATYPE(QPairMP)
+Q_DECLARE_METATYPE(QPairPC)
+Q_DECLARE_METATYPE(QPairPM)
+Q_DECLARE_METATYPE(QPairPP)
+
+void tst_QMetaType::flags_data()
+{
+    QTest::addColumn<int>("type");
+    QTest::addColumn<bool>("isMovable");
+    QTest::addColumn<bool>("isComplex");
+    QTest::addColumn<bool>("isPointerToQObject");
+
+#define ADD_METATYPE_TEST_ROW(MetaTypeName, MetaTypeId, RealType) \
+    QTest::newRow(#RealType) << MetaTypeId << bool(!QTypeInfo<RealType>::isStatic) << bool(QTypeInfo<RealType>::isComplex) << bool(QtPrivate::IsPointerToTypeDerivedFromQObject<RealType>::Value);
+QT_FOR_EACH_STATIC_CORE_CLASS(ADD_METATYPE_TEST_ROW)
+QT_FOR_EACH_STATIC_PRIMITIVE_POINTER(ADD_METATYPE_TEST_ROW)
+QT_FOR_EACH_STATIC_CORE_POINTER(ADD_METATYPE_TEST_ROW)
+#undef ADD_METATYPE_TEST_ROW
+    QTest::newRow("TestSpace::Foo") << ::qMetaTypeId<TestSpace::Foo>() << false << true << false;
+    QTest::newRow("Whity<double>") << ::qMetaTypeId<Whity<double> >() << false << true << false;
+    QTest::newRow("CustomMovable") << ::qMetaTypeId<CustomMovable>() << true << true << false;
+    QTest::newRow("CustomObject*") << ::qMetaTypeId<CustomObject*>() << true << false << true;
+    QTest::newRow("CustomMultiInheritanceObject*") << ::qMetaTypeId<CustomMultiInheritanceObject*>() << true << false << true;
+    QTest::newRow("QPair<C,C>") << ::qMetaTypeId<QPair<C,C> >() << false << true  << false;
+    QTest::newRow("QPair<C,M>") << ::qMetaTypeId<QPair<C,M> >() << false << true  << false;
+    QTest::newRow("QPair<C,P>") << ::qMetaTypeId<QPair<C,P> >() << false << true  << false;
+    QTest::newRow("QPair<M,C>") << ::qMetaTypeId<QPair<M,C> >() << false << true  << false;
+    QTest::newRow("QPair<M,M>") << ::qMetaTypeId<QPair<M,M> >() << true  << true  << false;
+    QTest::newRow("QPair<M,P>") << ::qMetaTypeId<QPair<M,P> >() << true  << true  << false;
+    QTest::newRow("QPair<P,C>") << ::qMetaTypeId<QPair<P,C> >() << false << true  << false;
+    QTest::newRow("QPair<P,M>") << ::qMetaTypeId<QPair<P,M> >() << true  << true  << false;
+    QTest::newRow("QPair<P,P>") << ::qMetaTypeId<QPair<P,P> >() << true  << false << false;
+}
+
+void tst_QMetaType::flags()
+{
+    QFETCH(int, type);
+    QFETCH(bool, isMovable);
+    QFETCH(bool, isComplex);
+    QFETCH(bool, isPointerToQObject);
+
+    QCOMPARE(bool(QMetaType::typeFlags(type) & QMetaType::NeedsConstruction), isComplex);
+    QCOMPARE(bool(QMetaType::typeFlags(type) & QMetaType::NeedsDestruction), isComplex);
+    QCOMPARE(bool(QMetaType::typeFlags(type) & QMetaType::MovableType), isMovable);
+    QCOMPARE(bool(QMetaType::typeFlags(type) & QMetaType::PointerToQObject), isPointerToQObject);
 }
 
 void tst_QMetaType::construct()
