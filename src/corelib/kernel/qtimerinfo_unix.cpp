@@ -184,6 +184,19 @@ void QTimerInfoList::timerRepair(const timeval &diff)
     }
 }
 
+inline timeval &operator+=(timeval &t1, int ms)
+{
+    t1.tv_sec += ms / 1000;
+    t1.tv_usec += ms % 1000 * 1000;
+    return normalizedTimeval(t1);
+}
+
+inline timeval operator+(const timeval &t1, int ms)
+{
+    timeval t2 = t1;
+    return t2 += ms;
+}
+
 static timeval roundToMillisecond(timeval val)
 {
     // always round up
@@ -231,8 +244,7 @@ void QTimerInfoList::registerTimer(int timerId, int interval, QObject *object)
 {
     QTimerInfo *t = new QTimerInfo;
     t->id = timerId;
-    t->interval.tv_sec  = interval / 1000;
-    t->interval.tv_usec = (interval % 1000) * 1000;
+    t->interval = interval;
     t->timeout = updateCurrentTime() + t->interval;
     t->obj = object;
     t->activateRef = 0;
@@ -297,7 +309,7 @@ QList<QPair<int, int> > QTimerInfoList::registeredTimers(QObject *object) const
     for (int i = 0; i < count(); ++i) {
         const QTimerInfo * const t = at(i);
         if (t->obj == object)
-            list << QPair<int, int>(t->id, t->interval.tv_sec * 1000 + t->interval.tv_usec / 1000);
+            list << QPair<int, int>(t->id, t->interval);
     }
     return list;
 }
@@ -353,7 +365,7 @@ int QTimerInfoList::activateTimers()
 
         // reinsert timer
         timerInsert(currentTimerInfo);
-        if (currentTimerInfo->interval.tv_usec > 0 || currentTimerInfo->interval.tv_sec > 0)
+        if (currentTimerInfo->interval > 0)
             n_act++;
 
         if (!currentTimerInfo->activateRef) {

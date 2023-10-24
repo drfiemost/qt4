@@ -225,6 +225,12 @@ void QListData::realloc(int alloc)
         d->begin = d->end = 0;
 }
 
+void QListData::dispose(Data *d)
+{
+    Q_ASSERT(!d->ref.isShared());
+    free(d);
+}
+
 // ensures that enough space is available to append n elements
 void **QListData::append(int n)
 {
@@ -1864,7 +1870,7 @@ void **QListData::erase(void **xi)
 
     \snippet doc/src/snippets/code/src_corelib_tools_qlistdata.cpp 23
 
-    \sa fromVector(), toSet(), QSet::toList(), qSort()
+    \sa fromVector(), toSet(), QSet::toList()
 */
 
 /*! \fn QSet<T> QList<T>::toSet() const
