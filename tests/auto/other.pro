@@ -33,6 +33,7 @@ SUBDIRS=\
            qwidget \
            qworkspace \
            windowsmobile \
+           qmetaobjectbuilder \
            nativeimagehandleprovider
 
 contains(QT_CONFIG, accessibility):SUBDIRS += qaccessibility

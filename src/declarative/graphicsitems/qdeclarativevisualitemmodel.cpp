@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "private/qdeclarativevisualitemmodel_p.h"
+#include "private/qmetaobjectbuilder_p.h"
 
 #include "qdeclarativeitem.h"
 
@@ -60,7 +61,6 @@
 #include <qlistmodelinterface_p.h>
 #include <qhash.h>
 #include <qlist.h>
-#include <qmetaobjectbuilder_p.h>
 #include <QtCore/qdebug.h>
 
 #include <private/qobject_p.h>

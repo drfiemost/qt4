@@ -12,6 +12,7 @@ HEADERS += \
         kernel/qcoreevent.h \
         kernel/qmetaobject.h \
         kernel/qmetaobject_moc_p.h \
+        kernel/qmetaobjectbuilder_p.h \
         kernel/qmetatype.h \
         kernel/qmimedata.h \
         kernel/qobject.h \
@@ -46,6 +47,7 @@ SOURCES += \
         kernel/qcoreevent.cpp \
         kernel/qmetaobject.cpp \
         kernel/qmetatype.cpp \
+        kernel/qmetaobjectbuilder.cpp \
         kernel/qmimedata.cpp \
         kernel/qobject.cpp \
         kernel/qobjectcleanuphandler.cpp \
