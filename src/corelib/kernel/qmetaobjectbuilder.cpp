@@ -41,6 +41,9 @@
 
 #include "private/qmetaobjectbuilder_p.h"
 
+#include "qobject_p.h"
+#include "qmetaobject_p.h"
+
 #include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
@@ -91,62 +94,6 @@ bool isVariantType(const char* type)
 {
     return qvariant_nameToType(type) != 0;
 }
-
-// copied from qmetaobject_p.h
-// do not touch without touching the moc as well
-enum PropertyFlags  {
-    Invalid = 0x00000000,
-    Readable = 0x00000001,
-    Writable = 0x00000002,
-    Resettable = 0x00000004,
-    EnumOrFlag = 0x00000008,
-    StdCppSet = 0x00000100,
-//    Override = 0x00000200,
-    Constant = 0x00000400,
-    Final = 0x00000800,
-    Designable = 0x00001000,
-    ResolveDesignable = 0x00002000,
-    Scriptable = 0x00004000,
-    ResolveScriptable = 0x00008000,
-    Stored = 0x00010000,
-    ResolveStored = 0x00020000,
-    Editable = 0x00040000,
-    ResolveEditable = 0x00080000,
-    User = 0x00100000,
-    ResolveUser = 0x00200000,
-    Notify = 0x00400000,
-    Revisioned = 0x00800000
-};
-
-enum MethodFlags  {
-    AccessPrivate = 0x00,
-    AccessProtected = 0x01,
-    AccessPublic = 0x02,
-    AccessMask = 0x03, //mask
-
-    MethodMethod = 0x00,
-    MethodSignal = 0x04,
-    MethodSlot = 0x08,
-    MethodConstructor = 0x0c,
-    MethodTypeMask = 0x0c,
-
-    MethodCompatibility = 0x10,
-    MethodCloned = 0x20,
-    MethodScriptable = 0x40,
-    MethodRevisioned = 0x80
-};
-
-struct QMetaObjectPrivate
-{
-    int revision;
-    int className;
-    int classInfoCount, classInfoData;
-    int methodCount, methodData;
-    int propertyCount, propertyData;
-    int enumeratorCount, enumeratorData;
-    int constructorCount, constructorData;
-    int flags;
-};
 
 static inline const QMetaObjectPrivate *priv(const uint* data)
 { return reinterpret_cast<const QMetaObjectPrivate*>(data); }
@@ -1181,7 +1128,7 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
     QMetaObjectPrivate *pmeta
         = reinterpret_cast<QMetaObjectPrivate *>(buf + size);
     int pmetaSize = size;
-    dataIndex = 13;     // Number of fields in the QMetaObjectPrivate.
+    dataIndex = MetaObjectPrivateFieldCount;
     for (index = 0; index < d->properties.size(); ++index) {
         if (d->properties[index].notifySignal != -1) {
             hasNotifySignals = true;
@@ -1192,6 +1139,7 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
         pmeta->revision = 3;
         pmeta->flags = d->flags;
         pmeta->className = 0;   // Class name is always the first string.
+        //pmeta->signalCount is handled in the "output method loop" as an optimization.
 
         pmeta->classInfoCount = d->classInfoNames.size();
         pmeta->classInfoData = dataIndex;
@@ -1249,7 +1197,7 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
     }
 
     // Reset the current data position to just past the QMetaObjectPrivate.
-    dataIndex = 13;
+    dataIndex = MetaObjectPrivateFieldCount;
 
     // Add the class name to the string table.
     int offset = 0;
@@ -1287,6 +1235,8 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
             data[dataIndex + 2] = ret;
             data[dataIndex + 3] = tag;
             data[dataIndex + 4] = attrs;
+            if (method->methodType() == QMetaMethod::Signal)
+                pmeta->signalCount++;
         }
         dataIndex += 5;
     }
