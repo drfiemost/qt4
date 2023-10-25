@@ -5,10 +5,9 @@ FORCE = $$basename(dn)
 
 equals(FORCE, cxx11) {
     suffix = Cxx11_$$TYPE
-    DEFINES += QT_ATOMIC_FORCE_CXX11
 } else: equals(FORCE, gcc) {
     suffix = Gcc_$$TYPE
-    DEFINES += QT_ATOMIC_FORCE_GCC
+    DEFINES += QT_ATOMIC_FORCE_GCC QT_ATOMIC_FORCE_NO_CXX11
 } else {
     suffix = $$TYPE
 }
