@@ -409,9 +409,9 @@ void QCoreApplicationPrivate::appendApplicationPathToLibraryPaths()
 {
 #if !defined(QT_NO_LIBRARY) && !defined(QT_NO_SETTINGS)
     QStringList *app_libpaths = coreappdata()->app_libpaths;
-    Q_ASSERT(app_libpaths);
-
-    QString app_location( QCoreApplication::applicationFilePath() );
+    if (!app_libpaths)
+        coreappdata()->app_libpaths = app_libpaths = new QStringList;
+    QString app_location = QCoreApplication::applicationFilePath();
     app_location.truncate(app_location.lastIndexOf(QLatin1Char('/')));
     app_location = QDir(app_location).canonicalPath();
     if (QFile::exists(app_location) && !app_libpaths->contains(app_location))
@@ -602,12 +602,8 @@ void QCoreApplication::init()
     d->threadData->eventDispatcher = QCoreApplicationPrivate::eventDispatcher;
 
 #if !defined(QT_NO_LIBRARY) && !defined(QT_NO_SETTINGS)
-    if (!coreappdata()->app_libpaths) {
-        // make sure that library paths is initialized
-        libraryPaths();
-    } else {
+    if (coreappdata()->app_libpaths)
         d->appendApplicationPathToLibraryPaths();
-    }
 #endif
 
 #if defined(Q_OS_UNIX) && !(defined(QT_NO_PROCESS))
@@ -1643,9 +1639,11 @@ void QCoreApplication::removeTranslator(QTranslator *translationFile)
     if (!QCoreApplicationPrivate::checkInstance("removeTranslator"))
         return;
     QCoreApplicationPrivate *d = self->d_func();
-    if (d->translators.removeAll(translationFile) && !self->closingDown()) {
-        QEvent ev(QEvent::LanguageChange);
-        QCoreApplication::sendEvent(self, &ev);
+    if (d->translators.removeAll(translationFile)) {
+        if (!self->closingDown()) {
+            QEvent ev(QEvent::LanguageChange);
+            QCoreApplication::sendEvent(self, &ev);
+        }
     }
 }
 

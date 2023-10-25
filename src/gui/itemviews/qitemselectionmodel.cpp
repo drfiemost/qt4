@@ -43,6 +43,8 @@
 #include <private/qitemselectionmodel_p.h>
 #include <qdebug.h>
 
+#include <algorithm>
+
 #ifndef QT_NO_ITEMVIEWS
 
 QT_BEGIN_NAMESPACE
@@ -912,8 +914,8 @@ void QItemSelectionModelPrivate::_q_layoutChanged()
     currentSelection.clear();
 
     // sort the "new" selection, as preparation for merging
-    qStableSort(savedPersistentIndexes.begin(), savedPersistentIndexes.end());
-    qStableSort(savedPersistentCurrentIndexes.begin(), savedPersistentCurrentIndexes.end());
+    std::stable_sort(savedPersistentIndexes.begin(), savedPersistentIndexes.end());
+    std::stable_sort(savedPersistentCurrentIndexes.begin(), savedPersistentCurrentIndexes.end());
 
     // update the selection by merging the individual indexes
     ranges = mergeIndexes(savedPersistentIndexes);

@@ -45,6 +45,8 @@
 
 #include "qstringlistmodel.h"
 
+#include <algorithm>
+
 #ifndef QT_NO_STRINGLISTMODEL
 
 QT_BEGIN_NAMESPACE
@@ -254,9 +256,9 @@ void QStringListModel::sort(int, Qt::SortOrder order)
         list.append(QPair<QString, int>(lst.at(i), i));
 
     if (order == Qt::AscendingOrder)
-        qSort(list.begin(), list.end(), ascendingLessThan);
+        std::sort(list.begin(), list.end(), ascendingLessThan);
     else
-        qSort(list.begin(), list.end(), decendingLessThan);
+        std::sort(list.begin(), list.end(), decendingLessThan);
 
     lst.clear();
     QVector<int> forwarding(list.count());
