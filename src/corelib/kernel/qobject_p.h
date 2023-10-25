@@ -164,10 +164,7 @@ public:
     static inline void resetCurrentSender(QObject *receiver,
                                    Sender *currentSender,
                                    Sender *previousSender);
-#ifdef QT_JAMBI_BUILD
-    static int *setDeleteWatch(QObjectPrivate *d, int *newWatch);
-    static void resetDeleteWatch(QObjectPrivate *d, int *oldWatch, int deleteWatch);
-#endif
+
     static void clearGuards(QObject *);
 
     static QObjectPrivate *get(QObject *o) {
@@ -209,9 +206,6 @@ public:
     // these objects are all used to indicate that a QObject was deleted
     // plus QPointer, which keeps a separate list
     QAtomicPointer<QtSharedPointer::ExternalRefCountData> sharedRefcount;
-#ifdef QT_JAMBI_BUILD
-    int *deleteWatch;
-#endif
 };
 
 

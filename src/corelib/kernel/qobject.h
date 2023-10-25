@@ -97,10 +97,9 @@ public:
     uint wasDeleted : 1;
     uint sendChildEvents : 1;
     uint receiveChildEvents : 1;
-    uint inEventHandler : 1; //only used if QT_JAMBI_BUILD
     uint inThreadChangeEvent : 1;
     uint hasGuards : 1; //true iff there is one or more QPointer attached to this object
-    uint unused : 23;
+    uint unused : 24;
     int postedEvents;
     QMetaObject *metaObject; // assert dynamic
 };

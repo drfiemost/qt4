@@ -110,6 +110,39 @@ extern "C" Q_CORE_EXPORT void qt_addObject(QObject *)
 extern "C" Q_CORE_EXPORT void qt_removeObject(QObject *)
 {}
 
+struct QConnectionSenderSwitcher {
+    QObject *receiver;
+    QObjectPrivate::Sender *previousSender;
+    QObjectPrivate::Sender currentSender;
+    bool switched;
+
+    inline QConnectionSenderSwitcher() : switched(false) {}
+
+    inline QConnectionSenderSwitcher(QObject *receiver, QObject *sender, int signal_absolute_id)
+    {
+        switchSender(receiver, sender, signal_absolute_id);
+    }
+
+    inline void switchSender(QObject *receiver, QObject *sender, int signal_absolute_id)
+    {
+        this->receiver = receiver;
+        currentSender.sender = sender;
+        currentSender.signal = signal_absolute_id;
+        currentSender.ref = 1;
+        previousSender = QObjectPrivate::setCurrentSender(receiver, &currentSender);
+        switched = true;
+    }
+
+    inline ~QConnectionSenderSwitcher()
+    {
+        if (switched)
+            QObjectPrivate::resetCurrentSender(receiver, &currentSender, previousSender);
+    }
+private:
+    Q_DISABLE_COPY(QConnectionSenderSwitcher)
+};
+
+
 void (*QAbstractDeclarativeData::destroyed)(QAbstractDeclarativeData *, QObject *) = 0;
 void (*QAbstractDeclarativeData::parentChanged)(QAbstractDeclarativeData *, QObject *, QObject *) = 0;
 void (*QAbstractDeclarativeData::objectNameChanged)(QAbstractDeclarativeData *, QObject *) = 0;
@@ -136,10 +169,6 @@ QObjectPrivate::QObjectPrivate(int version)
     extraData = 0;
     connectedSignals[0] = connectedSignals[1] = 0;
     inThreadChangeEvent = false;
-#ifdef QT_JAMBI_BUILD
-    inEventHandler = false;
-    deleteWatch = 0;
-#endif
     metaObject = 0;
     hasGuards = false;
 }
@@ -159,34 +188,13 @@ QObjectPrivate::~QObjectPrivate()
         threadData->deref();
 
     delete static_cast<QAbstractDynamicMetaObject*>(metaObject);
-#ifdef QT_JAMBI_BUILD
-    if (deleteWatch)
-        *deleteWatch = 1;
-#endif
+
 #ifndef QT_NO_USERDATA
     if (extraData)
         qDeleteAll(extraData->userData);
     delete extraData;
 #endif
 }
-
-
-#ifdef QT_JAMBI_BUILD
-int *QObjectPrivate::setDeleteWatch(QObjectPrivate *d, int *w) {
-    int *old = d->deleteWatch;
-    d->deleteWatch = w;
-    return old;
-}
-
-
-void QObjectPrivate::resetDeleteWatch(QObjectPrivate *d, int *oldWatch, int deleteWatch) {
-    if (!deleteWatch)
-        d->deleteWatch = oldWatch;
-
-    if (oldWatch)
-        *oldWatch = deleteWatch;
-}
-#endif
 
 /*!\internal
   For a given metaobject, compute the signal offset, and the method offset (including signals)
@@ -897,13 +905,6 @@ QObject::~QObject()
 
     if (d->parent)        // remove it from parent object
         d->setParent_helper(0);
-
-#ifdef QT_JAMBI_BUILD
-    if (d->inEventHandler) {
-        qWarning("QObject: Do not delete object, '%s', during its event handler!",
-                 objectName().isNull() ? "unnamed" : qPrintable(objectName()));
-    }
-#endif
 }
 
 QObjectPrivate::Connection::~Connection()
@@ -1088,27 +1089,11 @@ bool QObject::event(QEvent *e)
 
     case QEvent::MetaCall:
         {
-#ifdef QT_JAMBI_BUILD
-            d_func()->inEventHandler = false;
-#endif
             QMetaCallEvent *mce = static_cast<QMetaCallEvent*>(e);
-            QObjectPrivate::Sender currentSender;
-            currentSender.sender = const_cast<QObject*>(mce->sender());
-            currentSender.signal = mce->signalId();
-            currentSender.ref = 1;
-            QObjectPrivate::Sender * const previousSender =
-                QObjectPrivate::setCurrentSender(this, &currentSender);
-#if defined(QT_NO_EXCEPTIONS)
+
+            QConnectionSenderSwitcher sw(this, const_cast<QObject*>(mce->sender()), mce->signalId());
+
             mce->placeMetaCall(this);
-#else
-            QT_TRY {
-                mce->placeMetaCall(this);
-            } QT_CATCH(...) {
-                QObjectPrivate::resetCurrentSender(this, &currentSender, previousSender);
-                QT_RETHROW;
-            }
-#endif
-            QObjectPrivate::resetCurrentSender(this, &currentSender, previousSender);
             break;
         }
 
@@ -1412,15 +1397,6 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
     if (currentSender)
         currentSender->ref = 0;
     currentSender = 0;
-
-#ifdef QT_JAMBI_BUILD
-    // the current event thread also shouldn't restore the delete watch
-    inEventHandler = false;
-
-    if (deleteWatch)
-        *deleteWatch = 1;
-    deleteWatch = 0;
-#endif
 
     // set new thread data
     targetData->ref();
@@ -2973,7 +2949,7 @@ bool QMetaObjectPrivate::connect(const QObject *sender, int signal_index,
         type &= Qt::UniqueConnection - 1;
     }
 
-    QObjectPrivate::Connection *c = new QObjectPrivate::Connection;
+    QScopedPointer<QObjectPrivate::Connection> c(new QObjectPrivate::Connection);
     c->sender = s;
     c->receiver = r;
     c->method_relative = method_index;
@@ -2983,16 +2959,11 @@ bool QMetaObjectPrivate::connect(const QObject *sender, int signal_index,
     c->nextConnectionList = 0;
     c->callFunction = callFunction;
 
-    QT_TRY {
-        QObjectPrivate::get(s)->addConnection(signal_index, c);
-    } QT_CATCH(...) {
-        delete c;
-        QT_RETHROW;
-    }
+    QObjectPrivate::get(s)->addConnection(signal_index, c.data());
 
     c->prev = &(QObjectPrivate::get(r)->senders);
     c->next = *c->prev;
-    *c->prev = c;
+    *c->prev = c.data();
     if (c->next)
         c->next->prev = &c->next;
 
@@ -3003,6 +2974,7 @@ bool QMetaObjectPrivate::connect(const QObject *sender, int signal_index,
         sender_d->connectedSignals[signal_index >> 5] |= (1 << (signal_index & 0x1f));
     }
 
+    c.take(); // stop tracking
     return true;
 }
 
@@ -3263,15 +3235,37 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
 
     Qt::HANDLE currentThreadId = QThread::currentThreadId();
 
+    {
     QMutexLocker locker(signalSlotLock(sender));
-    QObjectConnectionListVector *connectionLists = sender->d_func()->connectionLists;
-    if (!connectionLists) {
+    struct ConnectionListsRef {
+        QObjectConnectionListVector *connectionLists;
+        ConnectionListsRef(QObjectConnectionListVector *connectionLists) : connectionLists(connectionLists)
+        {
+            if (connectionLists)
+                ++connectionLists->inUse;
+        }
+        ~ConnectionListsRef()
+        {
+            if (!connectionLists)
+                return;
+
+            --connectionLists->inUse;
+            Q_ASSERT(connectionLists->inUse >= 0);
+            if (connectionLists->orphaned) {
+                if (!connectionLists->inUse)
+                    delete connectionLists;
+            }
+        }
+
+        QObjectConnectionListVector *operator->() const { return connectionLists; }
+    };
+    ConnectionListsRef connectionLists = sender->d_func()->connectionLists;
+    if (!connectionLists.connectionLists) {
         locker.unlock();
         if (qt_signal_spy_callback_set.signal_end_callback != 0)
             qt_signal_spy_callback_set.signal_end_callback(sender, signal_absolute_index);
         return;
     }
-    ++connectionLists->inUse;
 
 
     const QObjectPrivate::ConnectionList *list;
@@ -3324,13 +3318,10 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
 #endif
             }
 
-            QObjectPrivate::Sender currentSender;
-            QObjectPrivate::Sender *previousSender = 0;
+            QConnectionSenderSwitcher sw;
+
             if (receiverInSameThread) {
-                currentSender.sender = sender;
-                currentSender.signal = signal_absolute_index;
-                currentSender.ref = 1;
-                previousSender = QObjectPrivate::setCurrentSender(receiver, &currentSender);
+                sw.switchSender(receiver, sender, signal_absolute_index);
             }
             const QObjectPrivate::StaticMetaCallFunction callFunction = c->callFunction;
             const int method_relative = c->method_relative;
@@ -3340,23 +3331,8 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                 if (qt_signal_spy_callback_set.slot_begin_callback != 0)
                     qt_signal_spy_callback_set.slot_begin_callback(receiver, c->method(), argv ? argv : empty_argv);
 
-#if defined(QT_NO_EXCEPTIONS)
                 callFunction(receiver, QMetaObject::InvokeMetaMethod, method_relative, argv ? argv : empty_argv);
-#else
-                QT_TRY {
-                    callFunction(receiver, QMetaObject::InvokeMetaMethod, method_relative, argv ? argv : empty_argv);
-                } QT_CATCH(...) {
-                    locker.relock();
-                    if (receiverInSameThread)
-                        QObjectPrivate::resetCurrentSender(receiver, &currentSender, previousSender);
 
-                    --connectionLists->inUse;
-                    Q_ASSERT(connectionLists->inUse >= 0);
-                    if (connectionLists->orphaned && !connectionLists->inUse)
-                        delete connectionLists;
-                    QT_RETHROW;
-                }
-#endif
                 if (qt_signal_spy_callback_set.slot_end_callback != 0)
                     qt_signal_spy_callback_set.slot_end_callback(receiver, c->method());
                 locker.relock();
@@ -3370,32 +3346,14 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                                                                 argv ? argv : empty_argv);
                 }
 
-#if defined(QT_NO_EXCEPTIONS)
                 metacall(receiver, QMetaObject::InvokeMetaMethod, method, argv ? argv : empty_argv);
-#else
-                QT_TRY {
-                    metacall(receiver, QMetaObject::InvokeMetaMethod, method, argv ? argv : empty_argv);
-                } QT_CATCH(...) {
-                    locker.relock();
-                    if (receiverInSameThread)
-                        QObjectPrivate::resetCurrentSender(receiver, &currentSender, previousSender);
 
-                    --connectionLists->inUse;
-                    Q_ASSERT(connectionLists->inUse >= 0);
-                    if (connectionLists->orphaned && !connectionLists->inUse)
-                        delete connectionLists;
-                    QT_RETHROW;
-                }
-#endif
 
                 if (qt_signal_spy_callback_set.slot_end_callback != 0)
                     qt_signal_spy_callback_set.slot_end_callback(receiver, method);
 
                 locker.relock();
             }
-
-            if (receiverInSameThread)
-                QObjectPrivate::resetCurrentSender(receiver, &currentSender, previousSender);
 
             if (connectionLists->orphaned)
                 break;
@@ -3406,17 +3364,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
     } while (list != &connectionLists->allsignals &&
         //start over for all signals;
         ((list = &connectionLists->allsignals), true));
-
-    --connectionLists->inUse;
-    Q_ASSERT(connectionLists->inUse >= 0);
-    if (connectionLists->orphaned) {
-        if (!connectionLists->inUse)
-            delete connectionLists;
-    } else if (connectionLists->dirty) {
-        sender->d_func()->cleanConnectionLists();
     }
-
-    locker.unlock();
 
     if (qt_signal_spy_callback_set.signal_end_callback != 0)
         qt_signal_spy_callback_set.signal_end_callback(sender, signal_absolute_index);
@@ -4080,11 +4028,6 @@ QDebug operator<<(QDebug dbg, const QObject *o) {
 
 void qDeleteInEventHandler(QObject *o)
 {
-#ifdef QT_JAMBI_BUILD
-    if (!o)
-        return;
-    QObjectPrivate::get(o)->inEventHandler = false;
-#endif
     delete o;
 }
 
