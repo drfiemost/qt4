@@ -1887,8 +1887,6 @@ const char *QVariant::typeToName(Type typ)
 {
     if (typ == Invalid)
         return nullptr;
-    if (typ == UserType)
-        return "UserType";
 
     return QMetaType::typeName(typ);
 }
@@ -1905,8 +1903,6 @@ QVariant::Type QVariant::nameToType(const char *name)
 {
     if (!name || !*name)
         return Invalid;
-    if (strcmp(name, "UserType") == 0)
-        return UserType;
 
     int metaType = QMetaType::type(name);
     return metaType <= int(LastGuiType) ? QVariant::Type(metaType) : UserType;

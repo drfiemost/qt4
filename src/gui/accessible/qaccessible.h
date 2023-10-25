@@ -442,22 +442,6 @@ public:
 };
 
 
-class Q_GUI_EXPORT QAccessibleEvent : public QEvent
-{
-public:
-    inline QAccessibleEvent(Type type, int child);
-    inline int child() const { return c; }
-    inline QString value() const { return val; }
-    inline void setValue(const QString &aText) { val = aText; }
-
-private:
-    int c;
-    QString val;
-};
-
-inline QAccessibleEvent::QAccessibleEvent(Type atype, int achild)
-    : QEvent(atype), c(achild) {}
-
 #define QAccessibleInterface_iid "com.trolltech.Qt.QAccessibleInterface"
 Q_DECLARE_INTERFACE(QAccessibleInterface, QAccessibleInterface_iid)
 

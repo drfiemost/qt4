@@ -66,7 +66,22 @@ public:
         isComplex = true,
         isStatic = true,
         isLarge = (sizeof(T)>sizeof(void*)),
-        isDummy = false
+        isDummy = false,
+        sizeOf = sizeof(T)
+    };
+};
+
+template<>
+class QTypeInfo<void>
+{
+public:
+    enum {
+        isPointer = false,
+        isComplex = false,
+        isStatic = false,
+        isLarge = false,
+        isDummy = false,
+        sizeOf = 0
     };
 };
 
@@ -80,7 +95,8 @@ public:
         isComplex = false,
         isStatic = false,
         isLarge = false,
-        isDummy = false
+        isDummy = false,
+        sizeOf = sizeof(T*)
     };
 };
 
@@ -139,7 +155,8 @@ public: \
         isLarge = (sizeof(TYPE)>sizeof(void*)), \
         isPointer = false, \
         isIntegral = ((FLAGS) & Q_INTEGRAL_TYPE) != 0, \
-        isDummy = (((FLAGS) & Q_DUMMY_TYPE) != 0) \
+        isDummy = (((FLAGS) & Q_DUMMY_TYPE) != 0), \
+        sizeOf = sizeof(TYPE) \
     }; \
     static inline const char *name() { return #TYPE; } \
 }
