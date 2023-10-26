@@ -249,7 +249,7 @@ public:
         }
     };
 
-    QThread *thread;
+    QAtomicPointer<QThread> thread;
     Qt::HANDLE threadId;
     bool quitNow;
     int loopLevel;

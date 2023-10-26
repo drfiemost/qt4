@@ -129,7 +129,7 @@ void **QThreadStorageData::get() const
     DEBUG_MSG("QThreadStorageData: Returning storage %d, data %p, for thread %p",
           id,
           static_cast<void*>(*v),
-          static_cast<void*>(data->thread));
+          static_cast<void*>(data->thread.load()));
 
     return *v ? v : 0;
 }
@@ -151,7 +151,7 @@ void **QThreadStorageData::set(void *p)
         DEBUG_MSG("QThreadStorageData: Deleting previous storage %d, data %p, for thread %p",
                 id,
                 static_cast<void*>(value),
-                static_cast<void*>(data->thread));
+                static_cast<void*>(data->thread.load()));
 
         QMutexLocker locker(mutex());
         DestructorMap *destr = destructors();
@@ -169,7 +169,7 @@ void **QThreadStorageData::set(void *p)
     value = p;
     DEBUG_MSG("QThreadStorageData: Set storage %d for thread %p to %p",
               id,
-              static_cast<void*>(data->thread),
+              static_cast<void*>(data->thread.load()),
               static_cast<void*>(p));
     return &value;
 }

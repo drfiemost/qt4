@@ -133,7 +133,7 @@ QThreadData *QThreadData::current()
         threadData->threadId = reinterpret_cast<Qt::HANDLE>(GetCurrentThreadId());
 
         if (!QCoreApplicationPrivate::theMainThread) {
-            QCoreApplicationPrivate::theMainThread = threadData->thread;
+            QCoreApplicationPrivate::theMainThread = threadData->thread.load();
         } else {
             HANDLE realHandle = INVALID_HANDLE_VALUE;
 #if !defined(Q_OS_WINCE) || (defined(_WIN32_WCE) && (_WIN32_WCE>=0x600))

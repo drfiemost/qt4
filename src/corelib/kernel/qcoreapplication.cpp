@@ -333,8 +333,8 @@ QCoreApplicationPrivate::QCoreApplicationPrivate(int &aargc, char **aargv, uint 
     }
 #endif
 
-    // note: this call to QThread::currentThread() may end up setting theMainThread!
-    if (QThread::currentThread() != theMainThread)
+    QThread *cur = QThread::currentThread(); // note: this may end up setting theMainThread!
+    if (cur != theMainThread)
         qWarning("WARNING: QApplication was not created in the main() thread.");
 }
 
@@ -379,11 +379,11 @@ void QCoreApplicationPrivate::createEventDispatcher()
 #endif
 }
 
-QThread *QCoreApplicationPrivate::theMainThread = 0;
+QBasicAtomicPointer<QThread> QCoreApplicationPrivate::theMainThread = Q_BASIC_ATOMIC_INITIALIZER(0);
 QThread *QCoreApplicationPrivate::mainThread()
 {
-    Q_ASSERT(theMainThread != 0);
-    return theMainThread;
+    Q_ASSERT(theMainThread.load() != 0);
+    return theMainThread.load();
 }
 
 #if !defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD)
@@ -1061,35 +1061,6 @@ void QCoreApplication::exit(int returnCode)
 */
 
 /*!
-    Adds the event \a event, with the object \a receiver as the
-    receiver of the event, to an event queue and returns immediately.
-
-    The event must be allocated on the heap since the post event queue
-    will take ownership of the event and delete it once it has been
-    posted.  It is \e {not safe} to access the event after
-    it has been posted.
-
-    When control returns to the main event loop, all events that are
-    stored in the queue will be sent using the notify() function.
-
-    Events are processed in the order posted. For more control over
-    the processing order, use the postEvent() overload below, which
-    takes a priority argument. This function posts all event with a
-    Qt::NormalEventPriority.
-
-    \threadsafe
-
-    \sa sendEvent(), notify(), sendPostedEvents()
-*/
-
-void QCoreApplication::postEvent(QObject *receiver, QEvent *event)
-{
-    postEvent(receiver, event, Qt::NormalEventPriority);
-}
-
-
-/*!
-    \overload postEvent()
     \since 4.3
 
     Adds the event \a event, with the object \a receiver as the
@@ -1217,13 +1188,6 @@ bool QCoreApplication::compressEvent(QEvent *event, QObject *receiver, QPostEven
 }
 
 /*!
-  \fn void QCoreApplication::sendPostedEvents()
-  \overload sendPostedEvents()
-
-    Dispatches all posted events, i.e. empties the event queue.
-*/
-
-/*!
   Immediately dispatches all events which have been previously queued
   with QCoreApplication::postEvent() and which are for the object \a receiver
   and have the event type \a event_type.
@@ -1238,7 +1202,6 @@ bool QCoreApplication::compressEvent(QEvent *event, QObject *receiver, QPostEven
 
   \sa flush(), postEvent()
 */
-
 void QCoreApplication::sendPostedEvents(QObject *receiver, int event_type)
 {
     QThreadData *data = QThreadData::current();
@@ -1384,23 +1347,6 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
 }
 
 /*!
-  Removes all events posted using postEvent() for \a receiver.
-
-  The events are \e not dispatched, instead they are removed from the
-  queue. You should never need to call this function. If you do call it,
-  be aware that killing events may cause \a receiver to break one or
-  more invariants.
-
-  \threadsafe
-*/
-
-void QCoreApplication::removePostedEvents(QObject *receiver)
-{
-    removePostedEvents(receiver, 0);
-}
-
-/*!
-    \overload removePostedEvents()
     \since 4.3
 
     Removes all events of the given \a eventType that were posted
@@ -1413,7 +1359,9 @@ void QCoreApplication::removePostedEvents(QObject *receiver)
 
     If \a receiver is null, the events of \a eventType are removed for
     all objects. If \a eventType is 0, all the events are removed for
-    \a receiver.
+    \a receiver. You should never call this function with \a eventType
+    of 0. If you do call it in this way, be aware that killing events
+    may cause \a receiver to break one or more invariants.
 
     \threadsafe
 */
