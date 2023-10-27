@@ -60,7 +60,6 @@ extern bool qt_wince_is_pocket_pc();  //qguifunctions_wince.cpp
 
 #if defined(Q_WS_X11)
 #include <private/qkde_p.h>
-#include <private/qgtkstyle_p.h>
 #include <private/qt_x11_p.h>
 #endif
 
@@ -160,12 +159,6 @@ QString QGuiPlatformPlugin::styleName()
         break;
     case DE_GNOME: {
         QStringList availableStyles = QStyleFactory::keys();
-        // Set QGtkStyle for GNOME if available
-        QString gtkStyleKey = QString::fromLatin1("GTK+");
-        if (availableStyles.contains(gtkStyleKey)) {
-            stylename = gtkStyleKey;
-            break;
-        }
         if (X11->use_xrender)
             stylename = QLatin1String("cleanlooks");
         else
@@ -200,9 +193,6 @@ QString QGuiPlatformPlugin::systemIconThemeName()
     QString result;
 #ifdef Q_WS_X11
     if (X11->desktopEnvironment == DE_GNOME) {
-#ifndef QT_NO_STYLE_GTK
-        result = QGtkStylePrivate::getIconThemeName();
-#endif
         if (result.isEmpty()) {
             result = QString::fromLatin1("gnome");
         }

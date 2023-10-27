@@ -54,9 +54,6 @@
 #ifndef QT_NO_STYLE_CLEANLOOKS
 #include "qcleanlooksstyle.h"
 #endif
-#ifndef QT_NO_STYLE_GTK
-#include "qgtkstyle.h"
-#endif
 #ifndef QT_NO_STYLE_WINDOWSXP
 #include "qwindowsxpstyle.h"
 #endif
@@ -172,11 +169,6 @@ QStyle *QStyleFactory::create(const QString& key)
         ret = new QCleanlooksStyle;
     else
 #endif
-#ifndef QT_NO_STYLE_GTK
-    if (style == QLatin1String("gtk") || style == QLatin1String("gtk+"))
-        ret = new QGtkStyle;
-    else
-#endif
 #ifndef QT_NO_STYLE_MAC
     if (style.startsWith(QLatin1String("macintosh"))) {
         ret = new QMacStyle;
@@ -248,10 +240,6 @@ QStringList QStyleFactory::keys()
 #ifndef QT_NO_STYLE_PLASTIQUE
     if (!list.contains(QLatin1String("Plastique")))
         list << QLatin1String("Plastique");
-#endif
-#ifndef QT_NO_STYLE_GTK
-    if (!list.contains(QLatin1String("GTK+")))
-        list << QLatin1String("GTK+");
 #endif
 #ifndef QT_NO_STYLE_CLEANLOOKS
     if (!list.contains(QLatin1String("Cleanlooks")))

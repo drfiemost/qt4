@@ -35,12 +35,6 @@ contains( styles, all ) {
 
 x11|embedded|qpa|!macx-*:styles -= mac
 
-x11{
-    QMAKE_CXXFLAGS += $$QT_CFLAGS_QGTKSTYLE
-    LIBS_PRIVATE += $$QT_LIBS_QGTKSTYLE
-    styles += gtk
-}
-
 contains( styles, mac ) {
 	HEADERS += \
 		styles/qmacstyle_mac.h \
@@ -105,21 +99,6 @@ contains( styles, plastique ) {
 	}
 } else {
 	DEFINES += QT_NO_STYLE_PLASTIQUE
-}
-
-contains( styles, gtk ) {
-        HEADERS += styles/qgtkstyle.h
-        HEADERS += styles/qgtkpainter_p.h
-        HEADERS += styles/qgtkstyle_p.h
-        SOURCES += styles/qgtkstyle.cpp
-        SOURCES += styles/qgtkpainter.cpp
-        SOURCES += styles/qgtkstyle_p.cpp
-	!contains( styles, cleanlooks ) {
-		styles += cleanlooks
-		DEFINES+= QT_STYLE_CLEANLOOKS
-	}
-} else {
-	DEFINES += QT_NO_STYLE_GTK
 }
 
 contains( styles, cleanlooks ) {

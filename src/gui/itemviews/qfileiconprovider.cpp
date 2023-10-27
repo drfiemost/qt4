@@ -59,11 +59,6 @@
 #include <private/qfunctions_p.h>
 #include <private/qguiplatformplugin_p.h>
 
-#if defined(Q_WS_X11) && !defined(QT_NO_STYLE_GTK)
-#  include <private/qgtkstyle_p.h>
-#  include <private/qt_x11_p.h>
-#endif
-
 #ifndef SHGFI_ADDOVERLAYS
 #  define SHGFI_ADDOVERLAYS 0x000000020
 #  define SHGFI_OVERLAYINDEX 0x000000040
@@ -411,14 +406,6 @@ QIcon QFileIconProvider::icon(const QFileInfo &info) const
     QIcon platformIcon = qt_guiPlatformPlugin()->fileSystemIcon(info);
     if (!platformIcon.isNull())
         return platformIcon;
-
-#if defined(Q_WS_X11) && !defined(QT_NO_STYLE_GTK)
-    if (X11->desktopEnvironment == DE_GNOME) {
-        QIcon gtkIcon = QGtkStylePrivate::getFilesystemIcon(info);
-        if (!gtkIcon.isNull())
-            return gtkIcon;
-    }
-#endif
 
 #ifdef Q_WS_MAC
     QIcon retIcon = d->getMacIcon(info);

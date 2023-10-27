@@ -779,7 +779,6 @@ CFG_CUPS=auto
 CFG_ICONV=auto
 CFG_DBUS=auto
 CFG_GLIB=auto
-CFG_QGTKSTYLE=auto
 CFG_LARGEFILE=auto
 CFG_OPENSSL=auto
 CFG_PRECOMPILE=auto
@@ -1013,7 +1012,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-    -incremental|-qvfb|-profile|-shared|-static|-sm|-xinerama|-xshape|-xsync|-xinput|-egl|-reduce-exports|-pch|-separate-debug-info|-freetype|-xcursor|-xfixes|-xrandr|-xrender|-mitshm|-fontconfig|-xkb|-wayland|-nis|-qdbus|-dbus|-dbus-linked|-glib|-gtkstyle|-cups|-iconv|-largefile|-h|-help|-v|-verbose|-debug|-release|-fast|-accessibility|-confirm-license|-gnumake|-framework|-debug-and-release|-cocoa|-carbon|-universal|-harfbuzz|-prefix-install|-silent|-armfpa|-optimized-qmake|-dwarf2|-reduce-relocations|-sse|-openssl|-openssl-linked|-xmlpatterns|-audio-backend|-svg|-declarative|-declarative-debug|-javascript-jit|-script|-scripttools|-rpath|-force-pkg-config|-usedeffiles|-icu|-alsa)
+    -incremental|-qvfb|-profile|-shared|-static|-sm|-xinerama|-xshape|-xsync|-xinput|-egl|-reduce-exports|-pch|-separate-debug-info|-freetype|-xcursor|-xfixes|-xrandr|-xrender|-mitshm|-fontconfig|-xkb|-wayland|-nis|-qdbus|-dbus|-dbus-linked|-glib|-cups|-iconv|-largefile|-h|-help|-v|-verbose|-debug|-release|-fast|-accessibility|-confirm-license|-gnumake|-framework|-debug-and-release|-cocoa|-carbon|-universal|-harfbuzz|-prefix-install|-silent|-armfpa|-optimized-qmake|-dwarf2|-reduce-relocations|-sse|-openssl|-openssl-linked|-xmlpatterns|-audio-backend|-svg|-declarative|-declarative-debug|-javascript-jit|-script|-scripttools|-rpath|-force-pkg-config|-usedeffiles|-icu|-alsa)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -1896,13 +1895,6 @@ while [ "$#" -gt 0 ]; do
     slog2)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
             CFG_SLOG2="$VAL"
-        else
-            UNKNOWN_OPT=yes
-        fi
-        ;;
-    gtkstyle)
-        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
-            CFG_QGTKSTYLE="$VAL"
         else
             UNKNOWN_OPT=yes
         fi
@@ -3355,8 +3347,7 @@ Usage:  $relconf [-h] [-prefix <dir>] [-prefix-install] [-bindir <dir>] [-libdir
         [-qtnamespace <namespace>] [-qtlibinfix <infix>] [-separate-debug-info] [-armfpa]
         [-no-optimized-qmake] [-optimized-qmake] [-no-xmlpatterns] [-xmlpatterns]
         [-no-media-backend] [-media-backend] [-no-audio-backend] [-audio-backend] 
-        [-no-openssl] [-openssl] [-openssl-linked]
-        [-no-gtkstyle] [-gtkstyle] [-no-svg] [-svg]
+        [-no-openssl] [-openssl] [-openssl-linked] [-no-svg] [-svg]
         [-no-javascript-jit] [-javascript-jit]
         [-no-script] [-script] [-no-scripttools] [-scripttools] 
         [-no-declarative] [-declarative] [-no-declarative-debug] [-declarative-debug]
@@ -3737,9 +3728,6 @@ if [ "$PLATFORM_X11" = "yes" ]; then
     cat << EOF
 
 Qt/X11 only:
-
-    -no-gtkstyle ....... Do not build the GTK theme integration.
- +  -gtkstyle .......... Build the GTK theme integration.
 
  *  -no-nas-sound ...... Do not compile in NAS sound support.
     -system-nas-sound .. Use NAS libaudio from the operating system.
@@ -5555,30 +5543,6 @@ if [ "$PLATFORM_X11" = "yes" ]; then
             fi
         fi
     fi
-
-    if [ "$CFG_GLIB" = "yes" -a "$CFG_QGTKSTYLE" != "no" ]; then
-        if [ -n "$PKG_CONFIG" ]; then
-            QT_CFLAGS_QGTKSTYLE=`$PKG_CONFIG --cflags gtk+-2.0 ">=" 2.10 atk 2>/dev/null`
-            QT_LIBS_QGTKSTYLE=`$PKG_CONFIG --libs gobject-2.0 2>/dev/null`
-        fi
-        if [ -n "$QT_CFLAGS_QGTKSTYLE" ] ; then
-            CFG_QGTKSTYLE=yes
-            QMakeVar set QT_CFLAGS_QGTKSTYLE "$QT_CFLAGS_QGTKSTYLE"
-            QMakeVar set QT_LIBS_QGTKSTYLE "$QT_LIBS_QGTKSTYLE"
-        else
-            if [ "$CFG_QGTKSTYLE" = "yes" ] && [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
-                echo "Gtk theme support cannot be enabled due to functionality tests!"
-                echo " Turn on verbose messaging (-v) to $0 to see the final report."
-                echo " If you believe this message is in error you may use the continue"
-                echo " switch (-continue) to $0 to continue."
-                exit 101
-            else
-                CFG_QGTKSTYLE=no
-            fi
-        fi
-    elif [ "$CFG_GLIB" = "no" ]; then
-        CFG_QGTKSTYLE=no
-    fi
 fi # X11
 
 
@@ -6914,7 +6878,6 @@ fi
 # X11/Unix/Mac only configs
 [ "$CFG_ICONV" = "no" ]      && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_ICONV"
 [ "$CFG_GLIB" != "yes" ]     && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_GLIB"
-[ "$CFG_QGTKSTYLE" != "yes" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_STYLE_GTK"
 
 [ "$CFG_CUPS" = "no" ]       && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_CUPS"
 [ "$CFG_CLOCK_MONOTONIC" = "no" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_CLOCK_MONOTONIC"
@@ -7391,7 +7354,6 @@ if [ "$PLATFORM_X11" = "yes" ]; then
     echo "FontConfig support ..... $CFG_FONTCONFIG"
     echo "XKB Support ............ $CFG_XKB"
     echo "immodule support ....... $CFG_IM"
-    echo "GTK theme support ...... $CFG_QGTKSTYLE"
 fi
 [ "$CFG_SQL_mysql" != "no" ] && echo "MySQL support .......... $CFG_SQL_mysql"
 [ "$CFG_SQL_psql" != "no" ] && echo "PostgreSQL support ..... $CFG_SQL_psql"
