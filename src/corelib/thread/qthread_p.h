@@ -62,6 +62,8 @@
 #include "QtCore/qmap.h"
 #include "private/qobject_p.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class QAbstractEventDispatcher;
@@ -118,7 +120,7 @@ public:
             // insert event in descending priority order, using upper
             // bound for a given priority (to ensure proper ordering
             // of events with the same priority)
-            QPostEventList::iterator at = qUpperBound(begin() + insertionOffset, end(), priority);
+            QPostEventList::iterator at = std::upper_bound(begin() + insertionOffset, end(), priority);
             insert(at, ev);
         }
     }

@@ -47,6 +47,7 @@
 #include "qvarlengtharray.h"
 #include "private/qfunctions_p.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
@@ -406,7 +407,7 @@ void QTextTablePrivate::fragmentAdded(const QChar &type, uint fragment)
         Q_ASSERT(cells.indexOf(fragment) == -1);
         const uint pos = pieceTable->fragmentMap().position(fragment);
         QFragmentFindHelper helper(pos, pieceTable->fragmentMap());
-        QList<int>::Iterator it = qLowerBound(cells.begin(), cells.end(), helper);
+        QList<int>::Iterator it = std::lower_bound(cells.begin(), cells.end(), helper);
         cells.insert(it, fragment);
         if (!fragment_start || pos < pieceTable->fragmentMap().position(fragment_start))
             fragment_start = fragment;
@@ -615,7 +616,7 @@ QTextTableCell QTextTable::cellAt(int position) const
         return QTextTableCell();
 
     QFragmentFindHelper helper(position, map);
-    QList<int>::ConstIterator it = qLowerBound(d->cells.begin(), d->cells.end(), helper);
+    QList<int>::ConstIterator it = std::lower_bound(d->cells.begin(), d->cells.end(), helper);
     if (it != d->cells.begin())
         --it;
 
@@ -1209,7 +1210,7 @@ void QTextTable::splitCell(int row, int column, int numRows, int numCols)
     for (int r = row + 1; r < row + rowSpan; ++r) {
         // find the cell before which to insert the new cell markers
         int gridIndex = r * d->nCols + column;
-        QVector<int>::iterator it = qUpperBound(d->cellIndices.begin(), d->cellIndices.end(), gridIndex);
+        QVector<int>::iterator it = std::upper_bound(d->cellIndices.begin(), d->cellIndices.end(), gridIndex);
         int cellIndex = it - d->cellIndices.begin();
         int fragment = d->cells.value(cellIndex, d->fragment_end);
         rowPositions[r - row] = p->fragmentMap().position(fragment);

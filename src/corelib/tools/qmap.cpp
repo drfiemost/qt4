@@ -784,7 +784,7 @@ void QMapData::dump()
 
     \snippet doc/src/snippets/code/src_corelib_tools_qmap.cpp 16
 
-    \sa qLowerBound(), upperBound(), find()
+    \sa upperBound(), find()
 */
 
 /*! \fn QMap::const_iterator QMap::lowerBound(const Key &key) const
@@ -802,7 +802,7 @@ void QMapData::dump()
     Example:
     \snippet doc/src/snippets/code/src_corelib_tools_qmap.cpp 17
 
-    \sa qUpperBound(), lowerBound(), find()
+    \sa lowerBound(), find()
 */
 
 /*! \fn QMap::const_iterator QMap::upperBound(const Key &key) const

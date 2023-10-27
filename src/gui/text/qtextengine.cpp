@@ -54,6 +54,7 @@
 #include <private/qunicodetables_p.h>
 #include "qtextdocument_p.h"
 #include <qapplication.h>
+#include <algorithm>
 #include <stdlib.h>
 
 
@@ -2660,8 +2661,8 @@ void QTextEngine::setBoundary(int strPos) const
     if (strPos <= 0 || strPos >= layoutData->string.length())
         return;
 
-    const QScriptItem* it = qUpperBound(layoutData->items.constBegin(), layoutData->items.constEnd(),
-                                        strPos, QScriptItemComparator());
+    const QScriptItem* it = std::upper_bound(layoutData->items.constBegin(), layoutData->items.constEnd(),
+                                             strPos, QScriptItemComparator());
     Q_ASSERT(it > layoutData->items.constBegin());
     --it;
     if (it->position == strPos) {
