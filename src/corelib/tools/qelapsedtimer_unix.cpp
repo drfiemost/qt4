@@ -168,14 +168,14 @@ static inline void do_gettime(qint64 *sec, qint64 *frac)
 }
 
 // used in qcore_unix.cpp and qeventdispatcher_unix.cpp
-timeval qt_gettime() noexcept
+struct timespec qt_gettime() noexcept
 {
     qint64 sec, frac;
     do_gettime(&sec, &frac);
 
-    timeval tv;
+    timespec tv;
     tv.tv_sec = sec;
-    tv.tv_usec = frac / 1000;
+    tv.tv_nsec = frac;
 
     return tv;
 }

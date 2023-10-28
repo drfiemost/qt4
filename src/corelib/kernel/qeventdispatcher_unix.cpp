@@ -106,7 +106,7 @@ QEventDispatcherUNIXPrivate::~QEventDispatcherUNIXPrivate()
     qDeleteAll(timerList);
 }
 
-int QEventDispatcherUNIXPrivate::doSelect(QEventLoop::ProcessEventsFlags flags, timeval *timeout)
+int QEventDispatcherUNIXPrivate::doSelect(QEventLoop::ProcessEventsFlags flags, timespec *timeout)
 {
     Q_Q(QEventDispatcherUNIX);
 
@@ -257,7 +257,7 @@ QEventDispatcherUNIX::~QEventDispatcherUNIX()
 }
 
 int QEventDispatcherUNIX::select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-                                 timeval *timeout)
+                                 timespec *timeout)
 {
     return qt_safe_select(nfds, readfds, writefds, exceptfds, timeout);
 }
@@ -538,8 +538,8 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 
     if (!d->interrupt) {
         // return the maximum time we can wait for an event.
-        timeval *tm = 0;
-        timeval wait_tm = { 0l, 0l };
+        timespec *tm = nullptr;
+        timespec wait_tm = { 0l, 0l };
         if (!(flags & QEventLoop::X11ExcludeTimers)) {
             if (d->timerList.timerWait(wait_tm))
                 tm = &wait_tm;
@@ -551,7 +551,7 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 
             // no time to wait
             tm->tv_sec  = 0l;
-            tm->tv_usec = 0l;
+            tm->tv_nsec = 0l;
         }
 
         nevents = d->doSelect(flags, tm);

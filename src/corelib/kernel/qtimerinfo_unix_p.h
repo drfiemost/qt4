@@ -65,7 +65,7 @@ QT_BEGIN_NAMESPACE
 struct QTimerInfo {
     int id;           // - timer identifier
     int interval;     // - timer interval in milliseconds
-    timeval timeout;  // - when to sent event
+    timespec timeout; // - when to sent event
     QObject *obj;     // - object to receive event
     QTimerInfo **activateRef; // - ref from activateTimers
 };
@@ -73,12 +73,12 @@ struct QTimerInfo {
 class QTimerInfoList : public QList<QTimerInfo*>
 {
 #if ((_POSIX_MONOTONIC_CLOCK-0 <= 0) && !defined(Q_OS_MAC)) || defined(QT_BOOTSTRAPPED)
-    timeval previousTime;
+    timespec previousTime;
     clock_t previousTicks;
     int ticksPerSecond;
     int msPerTick;
 
-    bool timeChanged(timeval *delta);
+    bool timeChanged(timespec *delta);
 #endif
 
     // state variables used by activateTimers()
@@ -87,15 +87,15 @@ class QTimerInfoList : public QList<QTimerInfo*>
 public:
     QTimerInfoList();
 
-    timeval currentTime;
-    timeval updateCurrentTime();
+    timespec currentTime;
+    timespec updateCurrentTime();
 
     // must call updateCurrentTime() first!
     void repairTimersIfNeeded();
 
-    bool timerWait(timeval &);
+    bool timerWait(timespec &);
     void timerInsert(QTimerInfo *);
-    void timerRepair(const timeval &);
+    void timerRepair(const timespec &);
 
     void registerTimer(int timerId, int interval, QObject *object);
     bool unregisterTimer(int timerId);

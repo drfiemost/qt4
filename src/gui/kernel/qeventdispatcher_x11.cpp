@@ -178,7 +178,7 @@ void QEventDispatcherX11::closingDown()
 }
 
 int QEventDispatcherX11::select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-                                timeval *timeout)
+                                timespec *timeout)
 {
     Q_D(QEventDispatcherX11);
     if (d->xfd > 0) {
