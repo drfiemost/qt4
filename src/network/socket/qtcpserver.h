@@ -75,8 +75,8 @@ public:
     quint16 serverPort() const;
     QHostAddress serverAddress() const;
 
-    int socketDescriptor() const;
-    bool setSocketDescriptor(int socketDescriptor);
+    qintptr socketDescriptor() const;
+    bool setSocketDescriptor(qintptr socketDescriptor);
 
     bool waitForNewConnection(int msec = 0, bool *timedOut = 0);
     virtual bool hasPendingConnections() const;
@@ -85,17 +85,21 @@ public:
     QAbstractSocket::SocketError serverError() const;
     QString errorString() const;
 
+    void pauseAccepting();
+    void resumeAccepting();
+
 #ifndef QT_NO_NETWORKPROXY
     void setProxy(const QNetworkProxy &networkProxy);
     QNetworkProxy proxy() const;
 #endif
 
 protected:
-    virtual void incomingConnection(int handle);
+    virtual void incomingConnection(qintptr handle);
     void addPendingConnection(QTcpSocket* socket);
 
 Q_SIGNALS:
     void newConnection();
+    void acceptError(QAbstractSocket::SocketError socketError);
 
 private:
     Q_DISABLE_COPY(QTcpServer)

@@ -332,9 +332,9 @@ public:
     QSocks5BindStore();
     ~QSocks5BindStore();
 
-    void add(int socketDescriptor, QSocks5BindData *bindData);
-    bool contains(int socketDescriptor);
-    QSocks5BindData *retrieve(int socketDescriptor);
+    void add(qintptr socketDescriptor, QSocks5BindData *bindData);
+    bool contains(qintptr socketDescriptor);
+    QSocks5BindData *retrieve(qintptr socketDescriptor);
 
 protected:
     void timerEvent(QTimerEvent * event);
@@ -360,7 +360,7 @@ QSocks5BindStore::~QSocks5BindStore()
 {
 }
 
-void QSocks5BindStore::add(int socketDescriptor, QSocks5BindData *bindData)
+void QSocks5BindStore::add(qintptr socketDescriptor, QSocks5BindData *bindData)
 {
     QMutexLocker lock(&mutex);
     if (store.contains(socketDescriptor)) {
@@ -373,13 +373,13 @@ void QSocks5BindStore::add(int socketDescriptor, QSocks5BindData *bindData)
         sweepTimerId = startTimer(60000);
 }
 
-bool QSocks5BindStore::contains(int socketDescriptor)
+bool QSocks5BindStore::contains(qintptr socketDescriptor)
 {
     QMutexLocker lock(&mutex);
     return store.contains(socketDescriptor);
 }
 
-QSocks5BindData *QSocks5BindStore::retrieve(int socketDescriptor)
+QSocks5BindData *QSocks5BindStore::retrieve(qintptr socketDescriptor)
 {
     QMutexLocker lock(&mutex);
     if (!store.contains(socketDescriptor))
@@ -1018,7 +1018,7 @@ bool QSocks5SocketEngine::initialize(QAbstractSocket::SocketType type, QAbstract
     return true;
 }
 
-bool QSocks5SocketEngine::initialize(int socketDescriptor, QAbstractSocket::SocketState socketState)
+bool QSocks5SocketEngine::initialize(qintptr socketDescriptor, QAbstractSocket::SocketState socketState)
 {
     Q_D(QSocks5SocketEngine);
 
@@ -1080,7 +1080,7 @@ void QSocks5SocketEngine::setProxy(const QNetworkProxy &networkProxy)
     d->proxyInfo = networkProxy;
 }
 
-int QSocks5SocketEngine::socketDescriptor() const
+qintptr QSocks5SocketEngine::socketDescriptor() const
 {
     Q_D(const QSocks5SocketEngine);
     return d->socketDescriptor;
@@ -1436,13 +1436,15 @@ int QSocks5SocketEngine::accept()
 
     QSOCKS5_Q_DEBUG << "accept()";
 
-    if (d->socks5State == QSocks5SocketEnginePrivate::BindSuccess) {
+    qintptr sd = -1;
+    switch (d->socks5State) {
+    case QSocks5SocketEnginePrivate::BindSuccess:
         QSOCKS5_Q_DEBUG << "BindSuccess adding" << d->socketDescriptor << "to the bind store";
         d->data->controlSocket->disconnect();
         d->data->controlSocket->setParent(0);
         d->bindData->localAddress = d->localAddress;
         d->bindData->localPort = d->localPort;
-        int sd = d->socketDescriptor;
+        sd = d->socketDescriptor;
         socks5BindStore()->add(sd, d->bindData);
         d->data = 0;
         d->bindData = 0;
@@ -1451,9 +1453,15 @@ int QSocks5SocketEngine::accept()
         // reset state and local port/address
         d->socks5State = QSocks5SocketEnginePrivate::Uninitialized; // ..??
         d->socketState = QAbstractSocket::UnconnectedState;
-        return sd;
+        break;
+    case QSocks5SocketEnginePrivate::ControlSocketError:
+        setError(QAbstractSocket::ProxyProtocolError, QLatin1String("Control socket error"));
+        break;
+    default:
+        setError(QAbstractSocket::ProxyProtocolError, QLatin1String("SOCKS5 proxy error"));
+        break;
     }
-    return -1;
+    return sd;
 }
 
 void QSocks5SocketEngine::close()
@@ -1911,7 +1919,7 @@ QSocks5SocketEngineHandler::createSocketEngine(QAbstractSocket::SocketType socke
     return engine.take();
 }
 
-QAbstractSocketEngine *QSocks5SocketEngineHandler::createSocketEngine(int socketDescriptor, QObject *parent)
+QAbstractSocketEngine *QSocks5SocketEngineHandler::createSocketEngine(qintptr socketDescriptor, QObject *parent)
 {
     QSOCKS5_DEBUG << "createSocketEngine" << socketDescriptor;
     if (socks5BindStore()->contains(socketDescriptor)) {

@@ -57,7 +57,7 @@ class Q_CORE_EXPORT QSocketNotifier : public QObject
 public:
     enum Type { Read, Write, Exception };
 
-    QSocketNotifier(int socket, Type, QObject *parent = 0);
+    QSocketNotifier(qintptr socket, Type, QObject *parent = 0);
 
     ~QSocketNotifier();
 
@@ -78,7 +78,7 @@ protected:
 private:
     Q_DISABLE_COPY(QSocketNotifier)
 
-    int sockfd;
+    qintptr sockfd;
     Type sntype;
     bool snenabled;
 };

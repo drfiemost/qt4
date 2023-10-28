@@ -95,6 +95,10 @@ public:
         ProxyConnectionTimeoutError,
         ProxyNotFoundError,
         ProxyProtocolError,
+        OperationError,
+        SslInternalError,                       /* 20 */
+        SslInvalidUserDataError,
+        TemporaryError,
 
         UnknownSocketError = -1
     };
@@ -142,8 +146,8 @@ public:
     void abort();
 
     // ### Qt 5: Make socketDescriptor() and setSocketDescriptor() virtual.
-    int socketDescriptor() const;
-    bool setSocketDescriptor(int socketDescriptor, SocketState state = ConnectedState,
+    qintptr socketDescriptor() const;
+    bool setSocketDescriptor(qintptr socketDescriptor, SocketState state = ConnectedState,
                              OpenMode openMode = ReadWrite);
 
     // ### Qt 5: Make virtual?

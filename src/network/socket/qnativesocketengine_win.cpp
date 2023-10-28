@@ -231,7 +231,7 @@ static inline void qt_socket_setPortAndAddress(SOCKET socketDescriptor, sockaddr
 /*! \internal
 
 */
-static inline QAbstractSocket::SocketType qt_socket_getType(int socketDescriptor)
+static inline QAbstractSocket::SocketType qt_socket_getType(qintptr socketDescriptor)
 {
     int value = 0;
     QT_SOCKLEN_T valueSize = sizeof(value);
@@ -249,7 +249,7 @@ static inline QAbstractSocket::SocketType qt_socket_getType(int socketDescriptor
 /*! \internal
 
 */
-static inline int qt_socket_getMaxMsgSize(int socketDescriptor)
+static inline int qt_socket_getMaxMsgSize(qintptr socketDescriptor)
 {
     int value = 0;
     QT_SOCKLEN_T valueSize = sizeof(value);
@@ -799,7 +799,40 @@ bool QNativeSocketEnginePrivate::nativeListen(int backlog)
 int QNativeSocketEnginePrivate::nativeAccept()
 {
     int acceptedDescriptor = WSAAccept(socketDescriptor, 0,0,0,0);
-	if (acceptedDescriptor != -1 && QAbstractEventDispatcher::instance()) {
+    if (acceptedDescriptor == -1) {
+        int err = WSAGetLastError();
+        switch (err) {
+        case WSAEACCES:
+            setError(QAbstractSocket::SocketAccessError, AccessErrorString);
+            break;
+        case WSAECONNREFUSED:
+            setError(QAbstractSocket::ConnectionRefusedError, ConnectionRefusedErrorString);
+            break;
+        case WSAECONNRESET:
+            setError(QAbstractSocket::NetworkError, RemoteHostClosedErrorString);
+            break;
+        case WSAENETDOWN:
+            setError(QAbstractSocket::NetworkError, NetworkUnreachableErrorString);
+        case WSAENOTSOCK:
+            setError(QAbstractSocket::SocketResourceError, NotSocketErrorString);
+            break;
+        case WSAEINVAL:
+        case WSAEOPNOTSUPP:
+            setError(QAbstractSocket::UnsupportedSocketOperationError, ProtocolUnsupportedErrorString);
+            break;
+        case WSAEFAULT:
+        case WSAEMFILE:
+        case WSAENOBUFS:
+            setError(QAbstractSocket::SocketResourceError, ResourceErrorString);
+            break;
+        case WSAEWOULDBLOCK:
+            setError(QAbstractSocket::TemporaryError, TemporaryErrorString);
+            break;
+        default:
+            setError(QAbstractSocket::UnknownSocketError, UnknownSocketErrorString);
+            break;
+        }
+    } else if (acceptedDescriptor != -1 && QAbstractEventDispatcher::instance()) {
 		// Because of WSAAsyncSelect() WSAAccept returns a non blocking socket
 		// with the same attributes as the listening socket including the current
 		// WSAAsyncSelect(). To be able to change the socket to blocking mode the

@@ -317,7 +317,14 @@
            proxy) was not found. (This value was introduced in 4.5.)
     \value ProxyProtocolError The connection negotiation with the proxy server
            because the response from the proxy server could not be understood.
-           (This value was introduced in 4.5.)
+    \value OperationError An operation was attempted while the socket was in a state that
+           did not permit it.
+    \value SslInternalError The SSL library being used reported a internal error, this is
+           probably the result of a bad installation or misconfiguration of the library.
+    \value SslInvalidUserDataError Invalid data(certificate, key, cypher, etc.) was
+           provided and its use resulted in an error in the SSL library.
+    \value TemporaryError A temporary error occurred(e.g., operation would block and socket
+           is non-blocking).
 
     \value UnknownSocketError An unidentified error occurred.
     \sa QAbstractSocket::error()
@@ -1341,6 +1348,9 @@ void QAbstractSocket::connectToHostImplementation(const QString &hostName, quint
     if (d->state == ConnectedState || d->state == ConnectingState
         || d->state == ClosingState || d->state == HostLookupState) {
         qWarning("QAbstractSocket::connectToHost() called when already looking up or connecting/connected to \"%s\"", qPrintable(hostName));
+        d->socketError = QAbstractSocket::OperationError;
+        setErrorString(QAbstractSocket::tr("Trying to connect while connection is in progress"));
+        emit error(d->socketError);
         return;
     }
 
@@ -1562,7 +1572,7 @@ bool QAbstractSocket::canReadLine() const
 
     \sa setSocketDescriptor()
 */
-int QAbstractSocket::socketDescriptor() const
+qintptr QAbstractSocket::socketDescriptor() const
 {
     Q_D(const QAbstractSocket);
     return d->cachedSocketDescriptor;
@@ -1580,7 +1590,7 @@ int QAbstractSocket::socketDescriptor() const
 
     \sa socketDescriptor()
 */
-bool QAbstractSocket::setSocketDescriptor(int socketDescriptor, SocketState socketState,
+bool QAbstractSocket::setSocketDescriptor(qintptr socketDescriptor, SocketState socketState,
                                           OpenMode openMode)
 {
     Q_D(QAbstractSocket);
