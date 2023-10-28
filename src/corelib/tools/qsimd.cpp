@@ -58,7 +58,6 @@
 // (the ones we need/may need anyway)
 
 // copied from <asm/hwcap.h> (ARM)
-#define HWCAP_IWMMXT    512
 #define HWCAP_CRUNCH    1024
 #define HWCAP_THUMBEE   2048
 #define HWCAP_NEON      4096
@@ -77,12 +76,7 @@ static inline uint detectProcessorFeatures()
 {
     uint features = 0;
 
-#if defined (ARM)
-    if (IsProcessorFeaturePresent(PF_ARM_INTEL_WMMX)) {
-        features = IWMMXT;
-        return features;
-    }
-#elif defined(_X86_)
+#if defined(_X86_)
     features = 0;
 #if defined QT_HAVE_MMX
     if (IsProcessorFeaturePresent(PF_MMX_INSTRUCTIONS_AVAILABLE))
@@ -98,7 +92,7 @@ static inline uint detectProcessorFeatures()
     return features;
 }
 
-#elif defined(__arm__) || defined(__arm) || defined(QT_HAVE_IWMMXT) || defined(QT_HAVE_NEON)
+#elif defined(__arm__) || defined(__arm) || defined(QT_HAVE_NEON)
 static inline uint detectProcessorFeatures()
 {
     uint features = 0;
@@ -118,8 +112,6 @@ static inline uint detectProcessorFeatures()
             int max = nread / (sizeof vector[0]);
             for (int i = 0; i < max; i += 2)
                 if (vector[i] == AT_HWCAP) {
-                    if (vector[i+1] & HWCAP_IWMMXT)
-                        features |= IWMMXT;
                     if (vector[i+1] & HWCAP_NEON)
                         features |= NEON;
                     break;
@@ -132,10 +124,7 @@ static inline uint detectProcessorFeatures()
     // fall back if /proc/self/auxv wasn't found
 #endif
 
-#if defined(QT_HAVE_IWMMXT)
-    // runtime detection only available when running as a previlegied process
-    features = IWMMXT;
-#elif defined(QT_ALWAYS_HAVE_NEON)
+#if defined(QT_ALWAYS_HAVE_NEON)
     features = NEON;
 #endif
 
@@ -339,7 +328,6 @@ static inline uint detectProcessorFeatures()
  sse
  sse2
  cmov
- iwmmxt
  neon
  sse3
  ssse3
@@ -357,7 +345,7 @@ static const char features_string[] =
     " sse\0"
     " sse2\0"
     " cmov\0"
-    " iwmmxt\0"
+    "\0"
     " neon\0"
     " sse3\0"
     " ssse3\0"
@@ -368,7 +356,7 @@ static const char features_string[] =
 
 static const int features_indices[] = {
        0,    5,   13,   23,   36,   41,   47,   53,
-      61,   67,   73,   80,   88,   96,   -1
+      54,   60,   66,   73,   81,   89,   -1
 };
 // end generated
 

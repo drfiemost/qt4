@@ -211,7 +211,6 @@ if(mmx|3dnow|sse|sse2|iwmmxt) {
                painting/qdrawingprimitive_sse2_p.h
     SSE2_SOURCES += painting/qdrawhelper_sse2.cpp
     SSSE3_SOURCES += painting/qdrawhelper_ssse3.cpp
-    IWMMXT_SOURCES += painting/qdrawhelper_iwmmxt.cpp
 }
 
 x11 {

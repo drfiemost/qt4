@@ -180,24 +180,6 @@ QT_BEGIN_HEADER
 #include <arm_neon.h>
 #endif
 
-
-// IWMMXT intrinsics
-#if defined(QT_HAVE_IWMMXT)
-#include <mmintrin.h>
-#if defined(Q_OS_WINCE)
-#  include "qplatformdefs.h"
-#endif
-#endif
-
-#if defined(QT_HAVE_IWMMXT)
-#if !defined(__IWMMXT__) && !defined(Q_OS_WINCE)
-#  include <xmmintrin.h>
-#elif defined(Q_OS_WINCE_STD) && defined(_X86_)
-#  pragma warning(disable: 4391)
-#  include <xmmintrin.h>
-#endif
-#endif
-
 // 3D now intrinsics
 #if defined(QT_HAVE_3DNOW) && (defined(__3dNOW__) || defined(Q_CC_MSVC))
 #include <mm3dnow.h>
@@ -215,7 +197,6 @@ enum CPUFeatures {
     SSE         = 0x10,
     SSE2        = 0x20,
     CMOV        = 0x40,
-    IWMMXT      = 0x80,
     NEON        = 0x100,
     SSE3        = 0x200,
     SSSE3       = 0x400,

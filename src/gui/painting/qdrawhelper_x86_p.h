@@ -79,13 +79,6 @@ extern CompositionFunction qt_functionForMode_SSE2[];
 extern CompositionFunctionSolid qt_functionForModeSolid_SSE2[];
 #endif // QT_HAVE_SSE2
 
-#ifdef QT_HAVE_IWMMXT
-void qt_blend_color_argb_iwmmxt(int count, const QSpan *spans, void *userData);
-
-extern CompositionFunction qt_functionForMode_IWMMXT[];
-extern CompositionFunctionSolid qt_functionForModeSolid_IWMMXT[];
-#endif
-
 static const int numCompositionFunctions = 33;
 
 QT_END_NAMESPACE

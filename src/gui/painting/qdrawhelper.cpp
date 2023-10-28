@@ -6195,14 +6195,6 @@ void qInitDrawhelperAsm()
     }
 #endif // SSE2
 
-#ifdef QT_HAVE_IWMMXT
-    if (features & IWMMXT) {
-        functionForModeAsm = qt_functionForMode_IWMMXT;
-        functionForModeSolidAsm = qt_functionForModeSolid_IWMMXT;
-        qDrawHelper[QImage::Format_ARGB32_Premultiplied].blendColor = qt_blend_color_argb_iwmmxt;
-    }
-#endif // IWMMXT
-
 #if defined(QT_HAVE_ARM_SIMD)
     qBlendFunctions[QImage::Format_RGB32][QImage::Format_RGB32] = qt_blend_rgb32_on_rgb32_arm_simd;
     qBlendFunctions[QImage::Format_ARGB32_Premultiplied][QImage::Format_RGB32] = qt_blend_rgb32_on_rgb32_arm_simd;
