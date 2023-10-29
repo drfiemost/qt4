@@ -82,6 +82,8 @@ public:
         : receiver(r), event(e), priority(p)
     { }
 };
+Q_DECLARE_TYPEINFO(QPostEvent, Q_MOVABLE_TYPE);
+
 inline bool operator<(int priority, const QPostEvent &pe)
 {
     return pe.priority < priority;
@@ -93,7 +95,7 @@ inline bool operator<(const QPostEvent &pe, int priority)
 
 // This class holds the list of posted events.
 //  The list has to be kept sorted by priority
-class QPostEventList : public QList<QPostEvent>
+class QPostEventList : public QVector<QPostEvent>
 {
 public:
     // recursion == recursion count for sendPostedEvents()
@@ -107,12 +109,14 @@ public:
     QMutex mutex;
 
     inline QPostEventList()
-        : QList<QPostEvent>(), recursion(0), startOffset(0), insertionOffset(0)
+        : QVector<QPostEvent>(), recursion(0), startOffset(0), insertionOffset(0)
     { }
 
     void addEvent(const QPostEvent &ev) {
         int priority = ev.priority;
-        if (isEmpty() || last().priority >= priority) {
+        if (isEmpty() ||
+            last().priority >= priority ||
+            begin() + insertionOffset >= end()) {
             // optimization: we can simply append if the last event in
             // the queue has higher or equal priority
             append(ev);
@@ -126,8 +130,8 @@ public:
     }
 private:
     //hides because they do not keep that list sorted. addEvent must be used
-    using QList<QPostEvent>::append;
-    using QList<QPostEvent>::insert;
+    using QVector<QPostEvent>::append;
+    using QVector<QPostEvent>::insert;
 };
 
 #ifndef QT_NO_THREAD
