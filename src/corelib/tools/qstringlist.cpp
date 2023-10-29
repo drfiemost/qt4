@@ -42,6 +42,8 @@
 #include <qstringlist.h>
 #include <qset.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*! \typedef QStringListIterator
@@ -216,8 +218,8 @@ QT_BEGIN_NAMESPACE
 
     Sorts the list of strings in ascending order (case sensitively).
 
-    Sorting is performed using Qt's qSort() algorithm,
-    which operates in \l{linear-logarithmic time}, i.e. O(\e{n} log \e{n}).
+    Sorting is performed using the STL's std::sort() algorithm,
+    which averages \l{linear-logarithmic time}, i.e. O(\e{n} log \e{n}).
 
     If you want to sort your strings in an arbitrary order, consider
     using the QMap class. For example, you could use a QMap<QString,
@@ -225,12 +227,10 @@ QT_BEGIN_NAMESPACE
     being lower-case versions of the strings, and the values being the
     strings), or a QMap<int, QString> to sort the strings by some
     integer index.
-
-    \sa qSort()
 */
 void QtPrivate::QStringList_sort(QStringList *that)
 {
-    qSort(*that);
+    std::sort(that->begin(), that->end());
 }
 
 

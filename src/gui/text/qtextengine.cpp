@@ -2857,7 +2857,10 @@ void QTextEngine::resolveAdditionalFormats() const
         }
         while (endIt != addFormatSortedByEnd.end() &&
             specialData->addFormats.at(*endIt).start + specialData->addFormats.at(*endIt).length < end) {
-            currentFormats.remove(qBinaryFind(currentFormats, *endIt) - currentFormats.begin());
+            int *currentFormatIterator = std::lower_bound(currentFormats.begin(), currentFormats.end(), *endIt);
+            if (*endIt < *currentFormatIterator)
+                currentFormatIterator = currentFormats.end();
+            currentFormats.remove(currentFormatIterator - currentFormats.begin());
             ++endIt;
         }
         QTextCharFormat format;
