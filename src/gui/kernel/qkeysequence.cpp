@@ -57,8 +57,9 @@
 
 #ifdef Q_WS_MAC
 # include <private/qt_mac_p.h>
-
 #endif
+
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -107,8 +108,8 @@ static const MacSpecialKey * const MacSpecialKeyEntriesEnd = entries + NumEntrie
 
 QChar qt_macSymbolForQtKey(int key)
 {
-    const MacSpecialKey *i = qBinaryFind(entries, MacSpecialKeyEntriesEnd, key);
-    if (i == MacSpecialKeyEntriesEnd)
+    const MacSpecialKey *i = std::lower_bound(entries, MacSpecialKeyEntriesEnd, key);
+    if ((i == MacSpecialKeyEntriesEnd) || (key < *i))
         return QChar();
     ushort macSymbol = i->macSymbol;
     if (qApp->testAttribute(Qt::AA_MacDontSwapCtrlAndMeta)
