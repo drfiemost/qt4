@@ -44,12 +44,7 @@
 #include <qregexp.h>
 #include <qstringlist.h>
 
-
-
-
-
-//TESTED_CLASS=
-//TESTED_FILES=
+#include <locale.h>
 
 class tst_QStringList : public QObject
 {
@@ -63,6 +58,7 @@ public slots:
     void init();
     void cleanup();
 private slots:
+    void sort();
     void filter();
     void replaceInStrings();
     void removeDuplicates();
@@ -168,6 +164,30 @@ void tst_QStringList::lastIndexOf()
     QCOMPARE(list.lastIndexOf("vohi", 1), -1);
     QCOMPARE(list.lastIndexOf("vohi", -1), 2);
     QCOMPARE(list.lastIndexOf("vohi", -3), -1);
+}
+
+void tst_QStringList::sort()
+{
+    QStringList list1, list2;
+    list1 << "alpha" << "beta" << "BETA" << "gamma" << "Gamma" << "gAmma" << "epsilon";
+    list1.sort();
+    list2 << "BETA" << "Gamma" << "alpha" << "beta" << "epsilon" << "gAmma" << "gamma";
+    QCOMPARE( list1, list2 );
+
+    char *current_locale = setlocale(LC_ALL, "C");
+    QStringList list3, list4;
+    list3 << "alpha" << "beta" << "BETA" << "gamma" << "Gamma" << "gAmma" << "epsilon";
+    list3.sort(Qt::CaseInsensitive);
+    list4 << "alpha" << "beta" << "BETA" << "epsilon" << "Gamma" << "gAmma" << "gamma";
+    // with this list, case insensitive sorting can give more than one permutation for "equivalent"
+    // elements; so we check that the sort gave the formally correct result (list[i] <= list[i+1])
+    for (int i = 0; i < list4.count() - 1; ++i)
+        QVERIFY2(QString::compare(list4.at(i), list4.at(i + 1), Qt::CaseInsensitive) <= 0, qPrintable(QString("index %1 failed").arg(i)));
+    // additional checks
+    QCOMPARE(list4.at(0), QString("alpha"));
+    QVERIFY(list4.indexOf("epsilon") > 0);
+    QVERIFY(list4.indexOf("epsilon") < (list4.count() - 1));
+    setlocale(LC_ALL, current_locale);
 }
 
 void tst_QStringList::filter()
