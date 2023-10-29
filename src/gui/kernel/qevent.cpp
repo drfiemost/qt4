@@ -161,7 +161,7 @@ QInputEvent::~QInputEvent()
     position explicitly.
 */
 
-QMouseEvent::QMouseEvent(Type type, const QPoint &position, Qt::MouseButton button,
+QMouseEvent::QMouseEvent(Type type, const QPointF &position, Qt::MouseButton button,
                          Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers)
     : QInputEvent(type, modifiers), p(position), b(button), mouseState(buttons)
 {
@@ -192,21 +192,11 @@ QMouseEvent::~QMouseEvent()
     modifiers.
 
 */
-QMouseEvent::QMouseEvent(Type type, const QPoint &pos, const QPoint &globalPos,
+QMouseEvent::QMouseEvent(Type type, const QPointF &pos, const QPointF &globalPos,
                          Qt::MouseButton button, Qt::MouseButtons buttons,
                          Qt::KeyboardModifiers modifiers)
     : QInputEvent(type, modifiers), p(pos), g(globalPos), b(button), mouseState(buttons)
 {}
-
-/*!
-    \internal
-*/
-QMouseEvent *QMouseEvent::createExtendedMouseEvent(Type type, const QPointF &pos,
-                                                   const QPoint &globalPos, Qt::MouseButton button,
-                                                   Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers)
-{
-    return new QMouseEventEx(type, pos, globalPos, button, buttons, modifiers);
-}
 
 /*!
     \fn bool QMouseEvent::hasExtendedInfo() const
@@ -214,6 +204,8 @@ QMouseEvent *QMouseEvent::createExtendedMouseEvent(Type type, const QPointF &pos
 */
 
 /*!
+    \fn QPointF QMouseEvent::posF() const
+
     \since 4.4
 
     Returns the position of the mouse cursor as a QPointF, relative to the
@@ -225,28 +217,6 @@ QMouseEvent *QMouseEvent::createExtendedMouseEvent(Type type, const QPointF &pos
 
     \sa x() y() pos() globalPos()
 */
-QPointF QMouseEvent::posF() const
-{
-    return hasExtendedInfo() ? reinterpret_cast<const QMouseEventEx *>(this)->posF : QPointF(pos());
-}
-
-/*!
-    \internal
-*/
-QMouseEventEx::QMouseEventEx(Type type, const QPointF &pos, const QPoint &globalPos,
-                             Qt::MouseButton button, Qt::MouseButtons buttons,
-                             Qt::KeyboardModifiers modifiers)
-    : QMouseEvent(type, pos.toPoint(), globalPos, button, buttons, modifiers), posF(pos)
-{
-    d = reinterpret_cast<QEventPrivate *>(this);
-}
-
-/*!
-    \internal
-*/
-QMouseEventEx::~QMouseEventEx()
-{
-}
 
 /*!
     \fn const QPoint &QMouseEvent::pos() const
@@ -439,7 +409,7 @@ QMouseEventEx::~QMouseEventEx()
     receiving widget, while \a oldPos is the previous mouse cursor's
     position relative to the receiving widget.
 */
-QHoverEvent::QHoverEvent(Type type, const QPoint &pos, const QPoint &oldPos)
+QHoverEvent::QHoverEvent(Type type, const QPointF &pos, const QPointF &oldPos)
     : QEvent(type), p(pos), op(oldPos)
 {
 }
@@ -506,7 +476,7 @@ QHoverEvent::~QHoverEvent()
     \sa pos() delta() state()
 */
 #ifndef QT_NO_WHEELEVENT
-QWheelEvent::QWheelEvent(const QPoint &pos, int delta,
+QWheelEvent::QWheelEvent(const QPointF &pos, int delta,
                          Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers,
                          Qt::Orientation orient)
     : QInputEvent(Wheel, modifiers), p(pos), d(delta), mouseState(buttons), o(orient)
@@ -532,7 +502,7 @@ QWheelEvent::~QWheelEvent()
 
     \sa pos() globalPos() delta() state()
 */
-QWheelEvent::QWheelEvent(const QPoint &pos, const QPoint& globalPos, int delta,
+QWheelEvent::QWheelEvent(const QPointF &pos, const QPointF& globalPos, int delta,
                          Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers,
                          Qt::Orientation orient)
     : QInputEvent(Wheel, modifiers), p(pos), g(globalPos), d(delta), mouseState(buttons), o(orient)
