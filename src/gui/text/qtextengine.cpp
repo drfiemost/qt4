@@ -2851,7 +2851,7 @@ void QTextEngine::resolveAdditionalFormats() const
 
         while (startIt != addFormatSortedByStart.end() &&
             specialData->addFormats.at(*startIt).start <= si->position) {
-            currentFormats.insert(qUpperBound(currentFormats.begin(), currentFormats.end(), *startIt),
+            currentFormats.insert(std::upper_bound(currentFormats.begin(), currentFormats.end(), *startIt),
                                   *startIt);
             ++startIt;
         }

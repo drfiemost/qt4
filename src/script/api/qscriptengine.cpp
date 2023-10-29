@@ -42,6 +42,7 @@
 #include <QtCore/qmetaobject.h>
 
 #include <math.h>
+#include <algorithm>
 
 #include "CodeBlock.h"
 #include "Error.h"
@@ -3753,7 +3754,7 @@ QStringList QScriptEngine::availableExtensions() const
     }
 
     QStringList lst = result.toList();
-    qSort(lst);
+    std::sort(lst.begin(), lst.end());
     return lst;
 #endif
 }
@@ -3770,7 +3771,7 @@ QStringList QScriptEngine::importedExtensions() const
 {
     Q_D(const QScriptEngine);
     QStringList lst = d->importedExtensions.toList();
-    qSort(lst);
+    std::sort(lst.begin(), lst.end());
     return lst;
 }
 
