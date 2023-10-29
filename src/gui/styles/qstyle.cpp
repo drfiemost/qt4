@@ -56,6 +56,7 @@
 #endif
 
 #include <limits.h>
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -2411,7 +2412,7 @@ QDebug operator<<(QDebug debug, QStyle::State state)
     if (state & QStyle::State_Top) states << QLatin1String("Top");
     if (state & QStyle::State_UpArrow) states << QLatin1String("UpArrow");
 
-    qSort(states);
+    std::sort(states.begin(), states.end());
     debug << states.join(QLatin1String(" | "));
     debug << ')';
 #else

@@ -70,6 +70,8 @@
 #include <qvarlengtharray.h>
 #include <qdebug.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 // Runtime resolved theme engine function calls
@@ -4214,7 +4216,7 @@ void QWindowsXPStylePrivate::showProperties(XPThemeData &themeData)
                 }
             }
         }
-        qSort(all_props);
+        std::sort(all_props.begin(), all_props.end());
 
         {// List all properties
             printf("part properties count = %d:\n", all_props.count());

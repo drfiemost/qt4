@@ -50,6 +50,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QDebug>
 
+#include <algorithm>
+
 namespace QmlJSDebugger {
 
 BoundingBox::BoundingBox(QGraphicsObject *itemToHighlight, QGraphicsItem *parentItem,
@@ -126,7 +128,7 @@ void BoundingRectHighlighter::highlight(QList<QGraphicsObject*> items)
 
         newBoxes << box;
     }
-    qSort(newBoxes);
+    std::sort(newBoxes.begin(), newBoxes.end());
 
     if (newBoxes != m_boxes) {
         clear();
@@ -145,7 +147,7 @@ void BoundingRectHighlighter::highlight(QGraphicsObject* itemToHighlight)
     if (!box) {
         box = createBoundingBox(itemToHighlight);
         m_boxes << box;
-        qSort(m_boxes);
+        std::sort(m_boxes.begin(), m_boxes.end());
     }
 
     highlightAll();

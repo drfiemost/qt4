@@ -45,6 +45,8 @@
 #include <private/qpaintengineex_p.h>
 #include <private/qpaintbuffer_p.h>
 
+#include <algorithm>
+
 class ReplayWidget : public QWidget
 {
     Q_OBJECT
@@ -123,7 +125,7 @@ void ReplayWidget::paintEvent(QPaintEvent *)
                 printf(" #    | ms      | description\n");
                 printf("------+---------+------------------------------------------------------------\n");
 
-		qSort(iterationTimes);
+        std::sort(iterationTimes.begin(), iterationTimes.end());
 
 		int sum = 0;
                 for (int i = 0; i < iterationTimes.size(); ++i) {
@@ -193,7 +195,7 @@ void ReplayWidget::paintEvent(QPaintEvent *)
 
                 stddev = qSqrt(stddev / iterationTimes.size());
 
-                qSort(iterationTimes.begin(), iterationTimes.end());
+                std::sort(iterationTimes.begin(), iterationTimes.end());
                 uint median = iterationTimes.at(iterationTimes.size() / 2);
 
                 stddev = 100 * stddev / mean;
