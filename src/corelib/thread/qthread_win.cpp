@@ -130,7 +130,7 @@ QThreadData *QThreadData::current()
             threadData->deref();
         }
         threadData->isAdopted = true;
-        threadData->threadId = reinterpret_cast<Qt::HANDLE>(GetCurrentThreadId());
+        threadData->threadId.store(reinterpret_cast<Qt::HANDLE>(GetCurrentThreadId()));
 
         if (!QCoreApplicationPrivate::theMainThread) {
             QCoreApplicationPrivate::theMainThread = threadData->thread.load();
@@ -333,7 +333,7 @@ unsigned int __stdcall QT_ENSURE_STACK_ALIGNED_FOR_SSE QThreadPrivate::start(voi
 
     qt_create_tls();
     TlsSetValue(qt_current_thread_data_tls_index, data);
-    data->threadId = reinterpret_cast<Qt::HANDLE>(GetCurrentThreadId());
+    data->threadId.store(reinterpret_cast<Qt::HANDLE>(GetCurrentThreadId()));
 
     QThread::setTerminationEnabled(false);
 

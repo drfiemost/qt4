@@ -77,8 +77,8 @@ QT_BEGIN_NAMESPACE
 */
 
 QThreadData::QThreadData(int initialRefCount)
-    : _ref(initialRefCount), thread(0), threadId(0),
-      quitNow(false), loopLevel(0), eventDispatcher(0), canWait(true), isAdopted(false)
+    : _ref(initialRefCount), quitNow(false), loopLevel(0),
+      eventDispatcher(0), canWait(true), isAdopted(false)
 {
     // fprintf(stderr, "QThreadData %p created\n", this);
 }
@@ -175,14 +175,10 @@ QThreadPrivate::QThreadPrivate(QThreadData *d)
       isInFinish(false), exited(false), returnCode(-1),
       stackSize(0), priority(QThread::InheritPriority), data(d)
 {
-#if defined (Q_OS_UNIX)
-    thread_id = 0;
-#elif defined (Q_WS_WIN)
+#if defined (Q_WS_WIN)
     handle = 0;
     id = 0;
     waiters = 0;
-#endif
-#if defined (Q_WS_WIN)
     terminationEnabled = true;
     terminatePending = false;
 #endif

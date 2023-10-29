@@ -56,6 +56,7 @@
 
 #include "private/qobject_p.h"
 #include "private/qmetaobject_p.h"
+#include "private/qthread_p.h"
 
 // for normalizeTypeInternal
 #include "private/qmetaobject_moc_p.h"
@@ -1614,10 +1615,14 @@ bool QMetaMethod::invoke(QObject *object,
         return false;
 
     // check connection type
-    QThread *currentThread = QThread::currentThread();
+    void* currentThreadId = QThread::currentThreadId();
     QThread *objectThread = object->thread();
+    bool receiverInSameThread = false;
+    if (objectThread)
+        receiverInSameThread = currentThreadId == QThreadData::get2(objectThread)->threadId.load();
+
     if (connectionType == Qt::AutoConnection) {
-        connectionType = currentThread == objectThread
+        connectionType = receiverInSameThread
                          ? Qt::DirectConnection
                          : Qt::QueuedConnection;
     }
@@ -1693,7 +1698,7 @@ bool QMetaMethod::invoke(QObject *object,
                                                         0, -1, nargs, types, args));
     } else { // blocking queued connection
 #ifndef QT_NO_THREAD
-        if (currentThread == objectThread) {
+        if (receiverInSameThread) {
             qWarning("QMetaMethod::invoke: Dead lock detected in "
                         "BlockingQueuedConnection: Receiver is %s(%p)",
                         mobj->className(), static_cast<void*>(object));

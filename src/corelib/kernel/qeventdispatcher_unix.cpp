@@ -78,7 +78,7 @@ static void signalHandler(int sig)
 
 QEventDispatcherUNIXPrivate::QEventDispatcherUNIXPrivate()
 {
-    extern Qt::HANDLE qt_application_thread_id;
+    extern void* qt_application_thread_id;
     mainThread = (QThread::currentThreadId() == qt_application_thread_id);
     bool pipefail = false;
 

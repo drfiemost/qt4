@@ -267,7 +267,7 @@ QAbstractEventDispatcher *QCoreApplicationPrivate::eventDispatcher = 0;
 uint QCoreApplicationPrivate::attribs;
 
 #ifdef Q_OS_UNIX
-Qt::HANDLE qt_application_thread_id = 0;
+void* qt_application_thread_id = 0;
 #endif
 
 struct QCoreApplicationData {

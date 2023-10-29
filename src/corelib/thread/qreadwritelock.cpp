@@ -148,11 +148,11 @@ void QReadWriteLock::lockForRead()
 {
     QMutexLocker lock(&d->mutex);
 
-    Qt::HANDLE self = 0;
+    void* self = nullptr;
     if (d->recursive) {
         self = QThread::currentThreadId();
 
-        QHash<Qt::HANDLE, int>::iterator it = d->currentReaders.find(self);
+        QHash<void*, int>::iterator it = d->currentReaders.find(self);
         if (it != d->currentReaders.end()) {
             ++it.value();
             ++d->accessCount;
@@ -191,11 +191,11 @@ bool QReadWriteLock::tryLockForRead()
 {
     QMutexLocker lock(&d->mutex);
 
-    Qt::HANDLE self = 0;
+    void* self = 0;
     if (d->recursive) {
         self = QThread::currentThreadId();
 
-        QHash<Qt::HANDLE, int>::iterator it = d->currentReaders.find(self);
+        QHash<void*, int>::iterator it = d->currentReaders.find(self);
         if (it != d->currentReaders.end()) {
             ++it.value();
             ++d->accessCount;
@@ -236,11 +236,11 @@ bool QReadWriteLock::tryLockForRead(int timeout)
 {
     QMutexLocker lock(&d->mutex);
 
-    Qt::HANDLE self = 0;
+    void* self = 0;
     if (d->recursive) {
         self = QThread::currentThreadId();
 
-        QHash<Qt::HANDLE, int>::iterator it = d->currentReaders.find(self);
+        QHash<void*, int>::iterator it = d->currentReaders.find(self);
         if (it != d->currentReaders.end()) {
             ++it.value();
             ++d->accessCount;
@@ -276,7 +276,7 @@ void QReadWriteLock::lockForWrite()
 {
     QMutexLocker lock(&d->mutex);
 
-    Qt::HANDLE self = 0;
+    void* self = 0;
     if (d->recursive) {
         self = QThread::currentThreadId();
 
@@ -316,7 +316,7 @@ bool QReadWriteLock::tryLockForWrite()
 {
     QMutexLocker lock(&d->mutex);
 
-    Qt::HANDLE self = 0;
+    void* self = 0;
     if (d->recursive) {
         self = QThread::currentThreadId();
 
@@ -360,7 +360,7 @@ bool QReadWriteLock::tryLockForWrite(int timeout)
 {
     QMutexLocker lock(&d->mutex);
 
-    Qt::HANDLE self = 0;
+    void* self = 0;
     if (d->recursive) {
         self = QThread::currentThreadId();
 
@@ -408,8 +408,8 @@ void QReadWriteLock::unlock()
     if (d->accessCount > 0) {
         // releasing a read lock
         if (d->recursive) {
-            Qt::HANDLE self = QThread::currentThreadId();
-            QHash<Qt::HANDLE, int>::iterator it = d->currentReaders.find(self);
+            void* self = QThread::currentThreadId();
+            QHash<void*, int>::iterator it = d->currentReaders.find(self);
             if (it != d->currentReaders.end()) {
                 if (--it.value() <= 0)
                     d->currentReaders.erase(it);

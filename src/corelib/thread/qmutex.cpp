@@ -74,7 +74,7 @@ class QRecursiveMutexPrivate : public QMutexData
 public:
     QRecursiveMutexPrivate()
         : QMutexData(QMutex::Recursive), owner(0), count(0) {}
-    Qt::HANDLE owner;
+    void* owner;
     uint count;
     QMutex mutex;
 
@@ -561,7 +561,7 @@ void QMutexPrivate::derefWaiters(int value) noexcept
 */
 inline bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 {
-    Qt::HANDLE self = QThread::currentThreadId();
+    void* self = QThread::currentThreadId();
     if (owner == self) {
         ++count;
         Q_ASSERT_X(count != 0, "QMutex::lock", "Overflow in recursion counter");

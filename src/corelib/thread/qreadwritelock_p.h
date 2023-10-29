@@ -76,8 +76,8 @@ struct QReadWriteLockPrivate
     int waitingWriters;
 
     bool recursive;
-    Qt::HANDLE currentWriter;
-    QHash<Qt::HANDLE, int> currentReaders;
+    void* currentWriter;
+    QHash<void*, int> currentReaders;
 };
 
 QT_END_NAMESPACE
