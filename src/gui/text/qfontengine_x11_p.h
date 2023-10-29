@@ -92,8 +92,8 @@ public:
     virtual int synthesized() const;
 
     virtual bool stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs,
-                      QTextEngine::ShaperFlags flags) const;
-    virtual void recalcAdvances(QGlyphLayout *, QTextEngine::ShaperFlags) const;
+                      ShaperFlags flags) const;
+    virtual void recalcAdvances(QGlyphLayout *, ShaperFlags) const;
 
     virtual glyph_metrics_t boundingBox(const QGlyphLayout &glyphs);
     virtual glyph_metrics_t boundingBox(glyph_t glyph);

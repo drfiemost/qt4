@@ -338,7 +338,7 @@ bool QFontEngineQPA::getSfntTableData(uint tag, uchar *buffer, uint *length) con
     return false;
 }
 
-bool QFontEngineQPA::stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs, QTextEngine::ShaperFlags flags) const
+bool QFontEngineQPA::stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs, QFontEngine::ShaperFlags flags) const
 {
     if (*nglyphs < len) {
         *nglyphs = len;
@@ -351,7 +351,7 @@ bool QFontEngineQPA::stringToCMap(const QChar *str, int len, QGlyphLayout *glyph
 
     const uchar *cmap = externalCMap ? externalCMap : (fontData + cmapOffset);
 
-    bool mirrored = flags & QTextEngine::RightToLeft;
+    bool mirrored = flags & QFontEngine::RightToLeft;
     int glyph_pos = 0;
     if (symbol) {
         for (int i = 0; i < len; ++i) {
@@ -386,7 +386,7 @@ bool QFontEngineQPA::stringToCMap(const QChar *str, int len, QGlyphLayout *glyph
     return true;
 }
 
-void QFontEngineQPA::recalcAdvances(QGlyphLayout *glyphs, QTextEngine::ShaperFlags) const
+void QFontEngineQPA::recalcAdvances(QGlyphLayout *glyphs, QFontEngine::ShaperFlags) const
 {
     for (int i = 0; i < glyphs->numGlyphs; ++i) {
         const Glyph *g = findGlyph(glyphs->glyphs[i]);

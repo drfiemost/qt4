@@ -347,7 +347,7 @@ QFontEngineXLFD::~QFontEngineXLFD()
 #endif
 }
 
-bool QFontEngineXLFD::stringToCMap(const QChar *s, int len, QGlyphLayout *glyphs, int *nglyphs, QTextEngine::ShaperFlags flags) const
+bool QFontEngineXLFD::stringToCMap(const QChar *s, int len, QGlyphLayout *glyphs, int *nglyphs, QFontEngine::ShaperFlags flags) const
 {
     if (*nglyphs < len) {
         *nglyphs = len;
@@ -370,7 +370,7 @@ bool QFontEngineXLFD::stringToCMap(const QChar *s, int len, QGlyphLayout *glyphs
     len = str - (QChar *)_s.data();
     str = (QChar *)_s.data();
 
-    bool mirrored = flags & QTextEngine::RightToLeft;
+    bool mirrored = flags & QFontEngine::RightToLeft;
     if (_codec) {
         bool haveNbsp = false;
         for (int i = 0; i < len; i++)
@@ -418,12 +418,12 @@ bool QFontEngineXLFD::stringToCMap(const QChar *s, int len, QGlyphLayout *glyphs
     *nglyphs = len;
     glyphs->numGlyphs = len;
 
-    if (!(flags & QTextEngine::GlyphIndicesOnly))
+    if (!(flags & QFontEngine::GlyphIndicesOnly))
         recalcAdvances(glyphs, flags);
     return true;
 }
 
-void QFontEngineXLFD::recalcAdvances(QGlyphLayout *glyphs, QTextEngine::ShaperFlags /*flags*/) const
+void QFontEngineXLFD::recalcAdvances(QGlyphLayout *glyphs, QFontEngine::ShaperFlags /*flags*/) const
 {
     int i = glyphs->numGlyphs;
     XCharStruct *xcs;
