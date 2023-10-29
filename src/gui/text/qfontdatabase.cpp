@@ -61,6 +61,7 @@
 #endif
 #include <stdlib.h>
 #include <limits.h>
+#include <algorithm>
 
 #if defined(Q_WS_QWS) && !defined(QT_NO_FREETYPE)
 #  include <ft2build.h>
@@ -1651,7 +1652,7 @@ QList<QFontDatabase::WritingSystem> QFontDatabase::writingSystems() const
                 list.append(writingSystem);
         }
     }
-    qSort(list);
+    std::sort(list.begin(), list.end());
     return list;
 }
 
@@ -1961,7 +1962,7 @@ QList<int> QFontDatabase::pointSizes(const QString &family,
     if (smoothScalable)
         return standardSizes();
 
-    qSort(sizes);
+    std::sort(sizes.begin(), sizes.end());
     return sizes;
 #endif
 }
@@ -2072,7 +2073,7 @@ QList<int> QFontDatabase::smoothSizes(const QString &family,
     if (smoothScalable)
         return QFontDatabase::standardSizes();
 
-    qSort(sizes);
+    std::sort(sizes.begin(), sizes.end());
     return sizes;
 #endif
 }

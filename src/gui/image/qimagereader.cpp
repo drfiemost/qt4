@@ -154,6 +154,8 @@
 #include <private/qgifhandler_p.h>
 #endif
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 #ifndef QT_NO_LIBRARY
@@ -1513,7 +1515,7 @@ QList<QByteArray> QImageReader::supportedImageFormats()
     for (QSet<QByteArray>::ConstIterator it = formats.constBegin(); it != formats.constEnd(); ++it)
         sortedFormats << *it;
 
-    qSort(sortedFormats);
+    std::sort(sortedFormats.begin(), sortedFormats.end());
     return sortedFormats;
 }
 

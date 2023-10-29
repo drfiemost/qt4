@@ -58,6 +58,8 @@
 #include "qregion.h"
 #include "qdebug.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 void qt_format_text(const QFont &fnt, const QRectF &_r,
@@ -1833,7 +1835,7 @@ QList<QByteArray> QPictureIO::inputFormats()
                 result.append(p->format);
         }
     }
-    qSort(result);
+    std::sort(result.begin(), result.end());
 
     return result;
 }

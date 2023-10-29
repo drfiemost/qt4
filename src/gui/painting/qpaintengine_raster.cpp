@@ -103,6 +103,7 @@
 #  include <malloc.h>
 #endif
 #include <limits.h>
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -1848,7 +1849,7 @@ static bool splitPolygon(const QPointF *points, int pointCount, QVector<QPointF>
     for (int i = 0; i < pointCount; ++i)
         sorted << points + i;
 
-    qSort(sorted.begin(), sorted.end(), isAbove);
+    std::sort(sorted.begin(), sorted.end(), isAbove);
 
     qreal splitY = sorted.at(sorted.size() / 2)->y();
 
