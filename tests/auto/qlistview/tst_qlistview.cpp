@@ -135,6 +135,7 @@ private slots:
     void spacing_data();
     void spacing();
     void testScrollToWithHidden();
+    void testViewOptions();
 };
 
 // Testing get/set functions
@@ -903,6 +904,10 @@ class PublicListView : public QListView
 
     void setPositionForIndex(const QPoint &pos, const QModelIndex &index) {
         QListView::setPositionForIndex(pos, index);
+    }
+
+    QStyleOptionViewItem viewOptions() const {
+      return QListView::viewOptions();
     }
 };
 
@@ -2260,6 +2265,16 @@ void tst_QListView::testScrollToWithHidden()
     QCOMPARE(expectedScrollBarValue, lv.verticalScrollBar()->value());
 }
 
+
+void tst_QListView::testViewOptions()
+{
+    PublicListView view;
+    QStyleOptionViewItem options = view.viewOptions();
+    QCOMPARE(options.decorationPosition, QStyleOptionViewItem::Left);
+    view.setViewMode(QListView::IconMode);
+    options = view.viewOptions();
+    QCOMPARE(options.decorationPosition, QStyleOptionViewItem::Top);
+}
 
 QTEST_MAIN(tst_QListView)
 #include "tst_qlistview.moc"

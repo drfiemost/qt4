@@ -212,6 +212,7 @@ private slots:
     void task234926_setHeaderSorting();
 
     void changeHeaderData();
+    void viewOptions();
 };
 
 // Testing get/set functions
@@ -484,6 +485,11 @@ public:
     {
         return QTableView::sizeHintForRow(row);
     }
+
+    QStyleOptionViewItem viewOptions() const {
+        return QTableView::viewOptions();
+    }
+
 
     bool checkSignalOrder;
 public slots:
@@ -4101,6 +4107,13 @@ void tst_QTableView::taskQTBUG_30653_doItemsLayout()
     int doItemsLayoutOffset = view.verticalHeader()->offset();
 
     QCOMPARE(scrollToBottomOffset, doItemsLayoutOffset);
+}
+
+void tst_QTableView::viewOptions()
+{
+    QtTestTableView view;
+    QStyleOptionViewItem options = view.viewOptions();
+    QVERIFY(options.showDecorationSelected);
 }
 
 QTEST_MAIN(tst_QTableView)
