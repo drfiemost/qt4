@@ -1289,13 +1289,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_OS_MSDOS
-    \relates <QtGlobal>
-
-    Defined on MS-DOS and Windows.
-*/
-
-/*!
     \macro Q_OS_OS2
     \relates <QtGlobal>
 
@@ -1384,13 +1377,6 @@ bool qSharedBuild()
     \relates <QtGlobal>
 
     Defined on BSD/OS.
-*/
-
-/*!
-    \macro Q_OS_IRIX
-    \relates <QtGlobal>
-
-    Defined on SGI Irix.
 */
 
 /*!

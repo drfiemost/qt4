@@ -1477,9 +1477,6 @@ void tst_QColor::allowX11ColorNames()
 
 void tst_QColor::setallowX11ColorNames()
 {
-#if defined(Q_OS_IRIX)
-    QSKIP("This fails due to the gamma settings in the SGI X server", SkipAll);
-#else
     RGBData x11RgbTbl[] = {
         // a few standard X11 color names
         { "DodgerBlue1", qRgb(30, 144, 255) },
@@ -1530,7 +1527,6 @@ void tst_QColor::setallowX11ColorNames()
         color.setNamedColor(colorName);
         QVERIFY(!color.isValid());
     }
-#endif // Q_OS_IRIX
 }
 #endif // Q_WS_X11
 

@@ -186,8 +186,6 @@ namespace QT_NAMESPACE {}
 #  endif
 #elif defined(__CYGWIN__)
 #  define Q_OS_CYGWIN
-#elif defined(MSDOS) || defined(_MSDOS)
-#  define Q_OS_MSDOS
 #elif defined(__OS2__)
 #  if defined(__EMX__)
 #    define Q_OS_OS2EMX
@@ -227,8 +225,6 @@ namespace QT_NAMESPACE {}
 #elif defined(__bsdi__)
 #  define Q_OS_BSDI
 #  define Q_OS_BSD4
-#elif defined(__sgi)
-#  define Q_OS_IRIX
 #elif defined(__osf__)
 #  define Q_OS_OSF
 #elif defined(_AIX)
@@ -278,7 +274,7 @@ namespace QT_NAMESPACE {}
 #error "You are building a 64-bit application, but using a 32-bit version of Qt. Check your build configuration."
 #endif
 
-#if defined(Q_OS_MSDOS) || defined(Q_OS_OS2) || defined(Q_OS_WIN)
+#if defined(Q_OS_OS2) || defined(Q_OS_WIN)
 #  undef Q_OS_UNIX
 #elif !defined(Q_OS_UNIX)
 #  define Q_OS_UNIX
@@ -971,10 +967,7 @@ namespace QT_NAMESPACE {}
      WIN16    - unsupported
 */
 
-#if defined(Q_OS_MSDOS)
-#  define Q_WS_WIN16
-#  error "Qt requires Win32 and does not work with Windows 3.x"
-#elif defined(_WIN32_X11_)
+#if defined(_WIN32_X11_)
 #  define Q_WS_X11
 #elif defined(Q_OS_WIN32)
 #  define Q_WS_WIN32
@@ -2230,7 +2223,7 @@ Q_CORE_EXPORT int qrand();
 #endif
 
 #if defined (__ELF__)
-#  if defined (Q_OS_LINUX) || defined (Q_OS_SOLARIS) || defined (Q_OS_FREEBSD) || defined (Q_OS_OPENBSD) || defined (Q_OS_IRIX)
+#  if defined (Q_OS_LINUX) || defined (Q_OS_SOLARIS) || defined (Q_OS_FREEBSD) || defined (Q_OS_OPENBSD)
 #    define Q_OF_ELF
 #  endif
 #endif

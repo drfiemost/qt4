@@ -104,9 +104,7 @@ QT_BEGIN_INCLUDE_NAMESPACE
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#if defined(Q_OS_IRIX) && defined(USE_LIBEXC)
-# include <libexc.h>
-#endif
+
 QT_END_INCLUDE_NAMESPACE
 
 
@@ -216,44 +214,6 @@ static void print_backtrace(FILE *outb)
     if(backtrace_command(outb, "gdb -q %s %d 2>/dev/null <<EOF\n"
                          "set prompt\n"
                          "where\n"
-                         "detach\n"
-                         "quit\n"
-                         "EOF\n",
-                         globalProgName, (int)getpid()))
-        return;
-#elif defined(Q_OS_IRIX)
-    /*
-     * "set $page=0" drops hold mode
-     * "dump ." displays the contents of the variables
-     */
-    if(backtrace_command(outb, "dbx -p %d 2>/dev/null <<EOF\n"
-                         "set \\$page=0\n"
-                         "where\n"
-# if !defined(__GNUC__)
-                         /* gcc does not generate this information */
-                         "dump .\n"
-# endif
-                         "detach\n"
-                         "EOF\n",
-                         (int)getpid()))
-        return;
-
-# if defined(USE_LIBEXC)
-    if(trace_back_stack_and_print())
-        return;
-# endif
-    if(backtrace_command(outb, "gdb -q %s %d 2>/dev/null <<EOF\n"
-                         "set prompt\n"
-                         "where\n"
-                         "echo ---\\n\n"
-                         "frame 5\n"      /* Skip signal handler frames */
-                         "set \\$x = 50\n"
-                         "while (\\$x)\n" /* Print local variables for each frame */
-                         "info locals\n"
-                         "up\n"
-                         "set \\$x--\n"
-                         "end\n"
-                         "echo ---\\n\n"
                          "detach\n"
                          "quit\n"
                          "EOF\n",

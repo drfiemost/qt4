@@ -106,10 +106,6 @@ static bool qt_wince_is_smartphone() {
 }
 #endif
 
-#ifdef Q_WS_S60
-#include <qs60style.h>
-#endif
-
 #include <qwidget.h>
 
 //TESTED_CLASS=
@@ -151,7 +147,6 @@ private slots:
     void testMacStyle();
     void testWindowsCEStyle();
     void testWindowsMobileStyle();
-    void testS60Style();
     void testStyleFactory();
     void testProxyStyle();
     void pixelMetric();
@@ -394,11 +389,6 @@ void tst_QStyle::testScrollBarSubControls(QStyle* style)
     const QStyleOptionSlider opt = qt_qscrollbarStyleOption(&scrollBar);
     foreach (int subControl, QList<int>() << 1 << 2 << 4 << 8) {
 
-#ifdef Q_WS_S60
-// in s60style add line and sub line have been removed.
-        if (subControl == QStyle::SC_ScrollBarAddLine || subControl == QStyle::SC_ScrollBarSubLine )
-            continue;
-#endif
         QRect sr = testWidget->style()->subControlRect(QStyle::CC_ScrollBar, &opt,
                                     QStyle::SubControl(subControl), &scrollBar);
         QVERIFY(sr.isNull() == false);
@@ -632,16 +622,6 @@ void tst_QStyle::testWindowsMobileStyle()
     QSKIP("No WindowsMobileStyle style", SkipAll);
 #endif
 }
-
-void tst_QStyle::testS60Style()
-    {
-#if defined(Q_WS_S60)
-    QS60Style cstyle;
-    testAllFunctions(&cstyle);
-#else
-    QSKIP("No S60Style style", SkipAll);
-#endif
-    }
 
 // Helper class...
 

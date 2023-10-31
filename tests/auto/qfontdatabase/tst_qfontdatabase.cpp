@@ -88,9 +88,7 @@ private slots:
 
 tst_QFontDatabase::tst_QFontDatabase()
 {
-#ifndef Q_OS_IRIX
     QDir::setCurrent(SRCDIR);
-#endif
 }
 
 tst_QFontDatabase::~tst_QFontDatabase()

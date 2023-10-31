@@ -47,15 +47,6 @@
 #include "qdialogbuttonbox.h"
 #include "private/qsoftkeymanager_p.h"
 
-#ifdef Q_OS_SYMBIAN
-#include "qsymbianevent.h"
-#endif
-
-#ifdef Q_WS_S60
-static const int s60CommandStart = 6000;
-#endif
-
-
 class tst_QSoftKeyManager : public QObject
 {
 Q_OBJECT

@@ -1919,10 +1919,6 @@ void tst_QComboBox::itemListPosition()
     QTRY_VERIFY(combo.view());
     QTRY_VERIFY(combo.view()->isVisible());
 
-#if defined(Q_WS_S60)
-    // Assuming that QtS60 style is used, here. But other ones would certainly also fail
-    QEXPECT_FAIL("", "QtS60Style does not yet position the combobox popup correctly", Continue);
-#endif
     QVERIFY( combo.view()->window()->x() + combo.view()->window()->width() <= screen.x() + screen.width() );
 
 }

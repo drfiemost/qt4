@@ -311,14 +311,9 @@ void tst_NetworkStressTest::nativeNonBlockingConnectDisconnect()
             QVERIFY(fd != INVALID_SOCKET);
 
             // set the socket to non-blocking and start connecting
-# if !defined(Q_OS_VXWORKS)
             int flags = ::fcntl(fd, F_GETFL, 0);
             QVERIFY(flags != -1);
             QVERIFY(::fcntl(fd, F_SETFL, flags | O_NONBLOCK) != -1);
-# else // Q_OS_VXWORKS
-            int onoff = 1;
-            QVERIFY(::ioctl(socketDescriptor, FIONBIO, &onoff) >= 0);
-# endif // Q_OS_VXWORKS
             while (true) {
                 if (::connect(fd, (sockaddr *)addr.data(), addr.size()) == -1) {
                     QVERIFY2(errno == EINPROGRESS, QByteArray("Error connecting: ").append(strerror(errno)).constData());

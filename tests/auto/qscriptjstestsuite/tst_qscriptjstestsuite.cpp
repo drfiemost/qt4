@@ -336,7 +336,6 @@ tst_QScriptJSTestSuite::tst_QScriptJSTestSuite()
                         ":/")
 {
 // don't execute any tests on slow machines
-#if !defined(Q_OS_IRIX)
     // do all the test suites
     const QFileInfoList testSuiteDirInfos = testsDir.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
     for (const QFileInfo &tsdi : testSuiteDirInfos) {
@@ -350,7 +349,6 @@ tst_QScriptJSTestSuite::tst_QScriptJSTestSuite()
             addTestFunction(function, CreateDataFunction);
         }
     }
-#endif
 
     finalizeMetaObject();
 }

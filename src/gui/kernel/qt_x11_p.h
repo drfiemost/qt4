@@ -93,10 +93,6 @@
 
 #if !defined (QT_NO_TABLET)
 #  include <X11/extensions/XInput.h>
-#if defined (Q_OS_IRIX)
-#  include <X11/extensions/SGIMisc.h>
-#  include <wacom.h>
-#endif
 #endif // QT_NO_TABLET
 
 
@@ -183,10 +179,6 @@ typedef char *XPointer;
 #define QT_NO_XIM
 #elif defined(Q_OS_AIX)
 // broken in Xlib up to what version of AIX?
-#define QT_NO_XIM
-#elif defined(QT_NO_DEBUG) && defined(Q_OS_IRIX)
-// XmbLookupString broken on IRIX
-// XCreateIC broken when compiling -64 on IRIX 6.5.2
 #define QT_NO_XIM
 #elif defined(Q_OS_HPUX) && defined(__LP64__)
 // XCreateIC broken when compiling 64-bit ELF on HP-UX 11.0

@@ -392,7 +392,6 @@ void tst_QSettings::ctor()
         QVERIFY(settings3.applicationName() == "KillerAPP");
         QVERIFY(settings4.applicationName().isEmpty());
 
-#if !defined(Q_OS_BLACKBERRY)
         /*
             Go forwards.
         */
@@ -449,22 +448,6 @@ void tst_QSettings::ctor()
         QCOMPARE(settings2.value("key 1").toString(), QString("bilboh"));
         QCOMPARE(settings3.value("key 1").toString(), QString("catha"));
         QCOMPARE(settings4.value("key 1").toString(), QString("quirko"));
-#else
-        /*
-            No fallback mechanism and a single scope on Blackberry OS
-        */
-        settings2.setValue("key 1", QString("whoa"));
-        QCOMPARE(settings2.value("key 1").toString(), QString("whoa"));
-        QCOMPARE(settings4.value("key 1").toString(), QString("whoa"));
-        QVERIFY(!settings1.contains("key 1"));
-        QVERIFY(!settings3.contains("key 1"));
-
-        settings1.setValue("key 1", QString("blah"));
-        QCOMPARE(settings1.value("key 1").toString(), QString("blah"));
-        QCOMPARE(settings2.value("key 1").toString(), QString("whoa"));
-        QCOMPARE(settings3.value("key 1").toString(), QString("blah"));
-        QCOMPARE(settings4.value("key 1").toString(), QString("whoa"));
-#endif
 
         /*
             Test the copies again.

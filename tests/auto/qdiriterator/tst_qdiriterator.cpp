@@ -48,15 +48,6 @@
 #include <qfileinfo.h>
 #include <qstringlist.h>
 
-#if defined(Q_OS_VXWORKS)
-#define Q_NO_SYMLINKS
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-#define Q_NO_SYMLINKS
-#define Q_NO_SYMLINKS_TO_DIRS
-#endif
-
 #if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
 #include "../network-settings.h"
 #endif

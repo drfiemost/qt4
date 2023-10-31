@@ -124,7 +124,7 @@ signals:
 private slots:
     void checkStopWatch()
     {
-#if defined(Q_OS_WINCE) || defined(Q_OS_VXWORKS)
+#if defined(Q_OS_WINCE)
         if (stopWatch.elapsed() >= OneMinute / 2)
 #else
         if (stopWatch.elapsed() >= OneMinute)

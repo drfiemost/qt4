@@ -101,7 +101,7 @@ template <typename T>
 Q_INLINE_TEMPLATE bool QBasicAtomicPointer<T>::isFetchAndAddWaitFree()
 { return false; }
 
-#if defined(Q_CC_GNU) && !defined(Q_OS_IRIX)
+#if defined(Q_CC_GNU)
 
 #if _MIPS_SIM == _ABIO32
 #define SET_MIPS2 ".set mips2\n\t"

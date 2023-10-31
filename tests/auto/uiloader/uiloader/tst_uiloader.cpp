@@ -71,9 +71,7 @@ private:
 void uiLoaderAutotest::init()
 {
     currentDir = QDir::currentPath();
-#ifndef Q_OS_IRIX
     QDir::setCurrent(QString(SRCDIR) + QString("/.."));
-#endif
 }
 
 void uiLoaderAutotest::imageDiffTest()

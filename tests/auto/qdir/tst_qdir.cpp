@@ -56,23 +56,9 @@
 
 #include "../../shared/filesystem.h"
 
-#if defined(Q_OS_SYMBIAN)
-# include <f32file.h>
-# define STRINGIFY(x) #x
-# define TOSTRING(x) STRINGIFY(x)
-# define SRCDIR "C:/Private/" TOSTRING(SYMBIAN_SRCDIR_UID) "/"
-#elif defined(Q_OS_UNIX)
+#if defined(Q_OS_UNIX)
 # include <unistd.h>
 # include <sys/stat.h>
-#endif
-
-#if defined(Q_OS_VXWORKS)
-#define Q_NO_SYMLINKS
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-#define Q_NO_SYMLINKS
-#define Q_NO_SYMLINKS_TO_DIRS
 #endif
 
 

@@ -1192,12 +1192,6 @@ void tst_QMenuBar::task256322_highlight()
     file2->setText("file2");
     QAction *nothing = win.menuBar()->addAction("nothing");
 
-#ifdef Q_WS_S60
-    // Set minimum width to ensure that menu items are not added to the menu extension.
-    // Minimum width 360 is the minimal screen width in any supported Symbian device.
-    win.menuBar()->setMinimumWidth(360);
-#endif
-
     win.show();
     QTest::qWait(200);
 

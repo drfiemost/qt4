@@ -382,9 +382,7 @@ void tst_QFocusEvent::checkReason_ActiveWindow()
     d->hide();
     QTest::qWait(100);
 
-#if defined(Q_OS_IRIX)
-    QEXPECT_FAIL("", "IRIX requires explicit activateWindow(), so this test does not make any sense.", Abort);
-#elif defined(Q_OS_MAC)
+#if defined(Q_OS_MAC)
     QEXPECT_FAIL("", "QTQAINFRA-428", Abort);
 #endif
     QTRY_VERIFY(childFocusWidgetOne->focusInEventRecieved);

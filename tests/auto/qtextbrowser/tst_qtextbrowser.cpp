@@ -131,7 +131,7 @@ tst_QTextBrowser::~tst_QTextBrowser()
 }
 void tst_QTextBrowser::init()
 {
-#if !defined(Q_OS_IRIX) && !defined(Q_OS_WINCE)
+#if !defined(Q_OS_WINCE)
     QDir::setCurrent(SRCDIR);
 #endif
     browser = new TestBrowser;

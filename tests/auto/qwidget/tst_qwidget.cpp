@@ -74,21 +74,6 @@
 
 #include "../../shared/util.h"
 
-
-#ifdef Q_WS_S60
-#include <avkon.hrh>                // EEikStatusPaneUidTitle
-#include <akntitle.h>               // CAknTitlePane
-#include <akncontext.h>             // CAknContextPane
-#endif
-
-#ifdef Q_OS_SYMBIAN
-#include <eikspane.h>               // CEikStatusPane
-#include <eikbtgpc.h>               // CEikButtonGroupContainer
-#include <eikenv.h>                 // CEikonEnv
-#include <eikaufty.h>               // MEikAppUiFactory
-#include <eikmenub.h>               // CEikMenuBar
-#endif
-
 #ifdef Q_WS_QWS
 # include <qscreen_qws.h>
 #endif
@@ -1821,9 +1806,6 @@ void tst_QWidget::windowState()
         pos = QPoint(10,10);
         size = QSize(100,100);
     }
-#elif defined(Q_WS_S60)
-    QPoint pos = QPoint(10,10);
-    QSize size = QSize(100,100);
 #else
     const QPoint pos(500, 500);
     const QSize size(200, 200);
@@ -1938,7 +1920,7 @@ void tst_QWidget::showMaximized()
     layouted.showNormal();
     QVERIFY(!(layouted.windowState() & Qt::WindowMaximized));
 
-#if !defined(Q_WS_QWS) && !defined(Q_OS_WINCE) && !defined(Q_WS_S60) && !defined(Q_WS_QPA)
+#if !defined(Q_WS_QWS) && !defined(Q_OS_WINCE) && !defined(Q_WS_QPA)
 //embedded may choose a different size to fit on the screen.
     QCOMPARE(layouted.size(), layouted.sizeHint());
 #endif
@@ -2025,7 +2007,7 @@ void tst_QWidget::showFullScreen()
     layouted.showNormal();
     QVERIFY(!(layouted.windowState() & Qt::WindowFullScreen));
 
-#if !defined(Q_WS_QWS) && !defined(Q_OS_WINCE) && !defined (Q_WS_S60) && !defined(Q_WS_QPA)
+#if !defined(Q_WS_QWS) && !defined(Q_OS_WINCE) && !defined(Q_WS_QPA)
 //embedded may choose a different size to fit on the screen.
     QCOMPARE(layouted.size(), layouted.sizeHint());
 #endif
@@ -2445,9 +2427,6 @@ void tst_QWidget::hideWhenFocusWidgetIsChild()
 
 void tst_QWidget::normalGeometry()
 {
-#ifdef Q_OS_IRIX
-    QSKIP("4DWM issues on IRIX makes this test fail", SkipAll);
-#endif
     QWidget parent;
     parent.setWindowTitle("NormalGeometry parent");
     QWidget *child = new QWidget(&parent);
@@ -3019,9 +2998,6 @@ void tst_QWidget::testContentsPropagation()
 */
 void tst_QWidget::saveRestoreGeometry()
 {
-#ifdef Q_OS_IRIX
-    QSKIP("4DWM issues on IRIX makes this test fail", SkipAll);
-#endif
     const QPoint position(100, 100);
     const QSize size(200, 200);
 
@@ -3171,10 +3147,6 @@ void tst_QWidget::restoreVersion1Geometry_data()
 */
 void tst_QWidget::restoreVersion1Geometry()
 {
-#ifdef Q_OS_IRIX
-    QSKIP("4DWM issues on IRIX makes this test fail", SkipAll);
-#endif
-
     QFETCH(QString, fileName);
     QFETCH(uint, expectedWindowState);
     QFETCH(QPoint, expectedPosition);
@@ -3393,34 +3365,6 @@ QString textPropertyToString(Display *display, XTextProperty& text_prop)
 
 #endif
 
-#if defined(Q_WS_S60)
-// Returns the application's status pane control, if not present returns NULL.
-static CCoeControl* GetStatusPaneControl( TInt aPaneId )
-{
-    const TUid paneUid = { aPaneId };
-
-    CEikStatusPane* statusPane = CEikonEnv::Static()->AppUiFactory()->StatusPane();
-    if (statusPane && statusPane->PaneCapabilities(paneUid).IsPresent()){
-		CCoeControl* control = NULL;
-        // ControlL shouldn't leave because the pane is present
-		TRAPD(err, control = statusPane->ControlL(paneUid));
-		return err != KErrNone ? NULL : control;
-    }
-    return NULL;
-}
-// Returns the application's title pane, if not present returns NULL.
-static CAknTitlePane* TitlePane()
-{
-    return static_cast<CAknTitlePane*>(GetStatusPaneControl(EEikStatusPaneUidTitle));
-}
-
-// Returns the application's title pane, if not present returns NULL.
-static CAknContextPane* ContextPane()
-{
-    return static_cast<CAknContextPane*>(GetStatusPaneControl(EEikStatusPaneUidContext));
-}
-#endif
-
 static QString visibleWindowTitle(QWidget *window, Qt::WindowState state = Qt::WindowNoState)
 {
     QString vTitle;
@@ -3483,13 +3427,6 @@ static QString visibleWindowTitle(QWidget *window, Qt::WindowState state = Qt::W
     if (win)
         vTitle = win->caption();
     }
-#elif defined (Q_WS_S60)
-    CAknTitlePane* titlePane = TitlePane();
-    if(titlePane)
-        {
-        const TDesC* nTitle = titlePane->Text();
-        vTitle = QString::fromUtf16(nTitle->Ptr(), nTitle->Length());
-        }
 #endif
 
     return vTitle;
@@ -5168,9 +5105,6 @@ void tst_QWidget::windowMoveResize()
     //Since WindowManager operation are all assync, and we have no way to know if the window
     // manager has finished playing with the window geometry, this test can't be reliable.
     QSKIP("Window Manager behaviour are too random for this test", SkipAll);
-#endif
-#ifdef Q_OS_IRIX
-    QSKIP("4DWM issues on IRIX makes this test fail", SkipAll);
 #endif
     QFETCH(QList<QRect>, rects);
     QFETCH(int, windowFlags);
@@ -7494,9 +7428,6 @@ void tst_QWidget::moveWindowInShowEvent_data()
 
 void tst_QWidget::moveWindowInShowEvent()
 {
-#ifdef Q_OS_IRIX
-    QSKIP("4DWM issues on IRIX makes this test fail", SkipAll);
-#endif
     QFETCH(QPoint, initial);
     QFETCH(QPoint, position);
 
@@ -7537,7 +7468,7 @@ void tst_QWidget::repaintWhenChildDeleted()
     }
 #endif
     ColorWidget w(0, Qt::red);
-#if !defined(Q_OS_WINCE) && !defined(Q_WS_S60)
+#if !defined(Q_OS_WINCE)
     QPoint startPoint = QApplication::desktop()->availableGeometry(&w).topLeft();
     startPoint.rx() += 50;
     startPoint.ry() += 50;
@@ -7568,7 +7499,7 @@ void tst_QWidget::repaintWhenChildDeleted()
 void tst_QWidget::hideOpaqueChildWhileHidden()
 {
     ColorWidget w(0, Qt::red);
-#if !defined(Q_OS_WINCE) && !defined(Q_WS_S60)
+#if !defined(Q_OS_WINCE)
     QPoint startPoint = QApplication::desktop()->availableGeometry(&w).topLeft();
     startPoint.rx() += 50;
     startPoint.ry() += 50;
@@ -8180,9 +8111,7 @@ void tst_QWidget::painterRedirection()
 
 void tst_QWidget::doubleRepaint()
 {
-#ifdef Q_OS_IRIX
-   QSKIP("4DWM issues on IRIX makes this test fail", SkipAll);
-#elif defined(Q_WS_MAC)
+#if defined(Q_WS_MAC)
     if (!macHasAccessToWindowsServer())
         QSKIP("Not having window server access causes the wrong number of repaints to be issues", SkipAll);
 #endif
@@ -8503,12 +8432,7 @@ void tst_QWidget::customDpi()
     custom->logicalDpiX();
     QCOMPARE(custom->metricCallCount, 1);
     child->logicalDpiX();
-#ifdef Q_WS_S60
-    // QWidget::metric is not recursive on Symbian
-    QCOMPARE(custom->metricCallCount, 1);
-#else
     QCOMPARE(custom->metricCallCount, 2);
-#endif
 
     delete topLevel;
 }

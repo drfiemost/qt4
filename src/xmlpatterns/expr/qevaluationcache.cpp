@@ -88,7 +88,7 @@ Item EvaluationCache<IsForGlobal>::evaluateSingleton(const DynamicContext::Ptr &
     }
 }
 
-#if defined(Q_OS_IRIX) && defined(Q_CC_MIPS)
+#if defined(Q_CC_MIPS)
 /**
  * @short Compile workaround for MIPSPro on IRIX.
  *

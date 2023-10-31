@@ -58,9 +58,7 @@ private slots:
 
 void atWrapperAutotest::init()
 {
-#ifndef Q_OS_IRIX
     QDir::setCurrent(SRCDIR);
-#endif
 }
 
 void atWrapperAutotest::runTest()

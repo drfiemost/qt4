@@ -3109,20 +3109,10 @@ void tst_QTreeWidget::task206367_duplication()
     QWidget topLevel;
     QTreeWidget treeWidget(&topLevel);
     topLevel.show();
-#ifndef Q_WS_S60
     treeWidget.resize(200, 200);
-#endif
 
     treeWidget.setSortingEnabled(true);
     QTreeWidgetItem* rootItem = new QTreeWidgetItem( &treeWidget, QStringList("root") );
-#ifdef Q_WS_S60
-    // Ensure that eight items fit into tree widget. In Symbian VGA devices 8 rows of
-    // data will take more than 200 pixels.
-    int calculatedHeight = treeWidget.visualItemRect(treeWidget.topLevelItem(0)).height() +
-        2 * QApplication::style()->pixelMetric(QStyle::PM_DefaultFrameWidth, 0, 0);
-    calculatedHeight *= 8; // eight 'rows': header, root and 2 items with 2 children
-    treeWidget.resize(200, qMax(200, calculatedHeight));
-#endif
 
     for (int nFile = 0; nFile < 2; nFile++ )  {
         QTreeWidgetItem* itemFile = new QTreeWidgetItem(rootItem, QStringList(QString::number(nFile)));

@@ -1099,12 +1099,6 @@ void tst_QFileInfo::fileTimes()
 #endif
 #if defined(Q_OS_WINCE)
     QEXPECT_FAIL("simple", "WinCE only stores date of access data, not the time", Continue);
-#elif defined(Q_OS_SYMBIAN)
-    QEXPECT_FAIL("simple", "Symbian implementation of stat doesn't return read time right", Abort);
-#elif defined(Q_OS_BLACKBERRY)
-    QEXPECT_FAIL("simple", "Blackberry OS uses the noatime filesystem option", Continue);
-    QEXPECT_FAIL("longfile", "Blackberry OS uses the noatime filesystem option", Continue);
-    QEXPECT_FAIL("longfile absolutepath", "Blackberry OS uses the noatime filesystem option", Continue);
 #endif
     QVERIFY(fileInfo.lastRead() > beforeRead);
     QVERIFY(fileInfo.lastModified() > beforeWrite);
@@ -1559,10 +1553,7 @@ void tst_QFileInfo::isWritable()
     QVERIFY(fi.exists());
     QVERIFY(!fi.isWritable());
 #endif
-#if defined (Q_OS_BLACKBERRY)
-    // The Blackberry filesystem is read-only
-    QVERIFY(!QFileInfo("/etc/passwd").isWritable());
-#elif defined (Q_OS_UNIX) && !defined (Q_OS_SYMBIAN)
+#if defined (Q_OS_UNIX)
     if (::getuid() == 0)
         QVERIFY(QFileInfo("/etc/passwd").isWritable());
     else

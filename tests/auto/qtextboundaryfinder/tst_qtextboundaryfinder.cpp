@@ -79,9 +79,7 @@ private slots:
 
 void tst_QTextBoundaryFinder::init()
 {
-#ifndef Q_OS_IRIX
     QDir::setCurrent(SRCDIR);
-#endif
 }
 
 Q_DECLARE_METATYPE(QList<int>)

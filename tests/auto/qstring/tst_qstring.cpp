@@ -260,10 +260,6 @@ Q_DECLARE_METATYPE(IntList)
 #   define INFINITY DBL_INFINITY
 #   define NAN DBL_QNAN
 #endif
-#if defined(Q_OS_IRIX) && defined(Q_CC_GNU)
-#   include <ieeefp.h>
-#   define isnan(d) isnand(d)
-#endif
 
 enum {
     LittleEndian,
