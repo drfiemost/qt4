@@ -108,24 +108,21 @@ public:
             return text;
         }
 
-    static QString valueToText(const QVariant &value, const QStyleOptionViewItemV4 &option);
+    static QString valueToText(const QVariant &value, const QStyleOptionViewItem &option);
 
     void _q_commitDataAndCloseEditor(QWidget *editor);
 
     QItemEditorFactory *f;
     bool clipPainting;
 
-    QRect textLayoutBounds(const QStyleOptionViewItemV2 &options) const;
+    QRect textLayoutBounds(const QStyleOptionViewItem &options) const;
     QSizeF doTextLayout(int lineWidth) const;
     mutable QTextLayout textLayout;
     mutable QTextOption textOption;
 
     const QWidget *widget(const QStyleOptionViewItem &option) const
     {
-        if (const QStyleOptionViewItemV3 *v3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option))
-            return v3->widget;
-
-        return 0;
+        return option.widget;
     }
 
     // ### temporary hack until we have QStandardItemDelegate
@@ -143,10 +140,10 @@ void QItemDelegatePrivate::_q_commitDataAndCloseEditor(QWidget *editor)
     emit q->closeEditor(editor, QAbstractItemDelegate::SubmitModelCache);
 }
 
-QRect QItemDelegatePrivate::textLayoutBounds(const QStyleOptionViewItemV2 &option) const
+QRect QItemDelegatePrivate::textLayoutBounds(const QStyleOptionViewItem &option) const
 {
     QRect rect = option.rect;
-    const bool wrapText = option.features & QStyleOptionViewItemV2::WrapText;
+    const bool wrapText = option.features & QStyleOptionViewItem::WrapText;
     switch (option.decorationPosition) {
     case QStyleOptionViewItem::Left:
     case QStyleOptionViewItem::Right:
@@ -350,7 +347,7 @@ void QItemDelegate::setClipping(bool clip)
     d->clipPainting = clip;
 }
 
-QString QItemDelegatePrivate::valueToText(const QVariant &value, const QStyleOptionViewItemV4 &option)
+QString QItemDelegatePrivate::valueToText(const QVariant &value, const QStyleOptionViewItem &option)
 {
     QString text;
     switch (value.userType()) {
@@ -415,14 +412,7 @@ void QItemDelegate::paint(QPainter *painter,
     Q_D(const QItemDelegate);
     Q_ASSERT(index.isValid());
 
-    QStyleOptionViewItemV4 opt = setOptions(index, option);
-
-    const QStyleOptionViewItemV2 *v2 = qstyleoption_cast<const QStyleOptionViewItemV2 *>(&option);
-    opt.features = v2 ? v2->features
-                    : QStyleOptionViewItemV2::ViewItemFeatures(QStyleOptionViewItemV2::None);
-    const QStyleOptionViewItemV3 *v3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option);
-    opt.locale = v3 ? v3->locale : QLocale();
-    opt.widget = v3 ? v3->widget : 0;
+    QStyleOptionViewItem opt = setOptions(index, option);
 
     // prepare
     painter->save();
@@ -688,13 +678,13 @@ void QItemDelegate::drawDisplay(QPainter *painter, const QStyleOptionViewItem &o
         painter->restore();
     }
 
-    const QStyleOptionViewItemV4 opt = option;
+    const QStyleOptionViewItem opt = option;
 
     const QWidget *widget = d->widget(option);
     QStyle *style = widget ? widget->style() : QApplication::style();
     const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1;
     QRect textRect = rect.adjusted(textMargin, 0, -textMargin, 0); // remove width padding
-    const bool wrapText = opt.features & QStyleOptionViewItemV2::WrapText;
+    const bool wrapText = opt.features & QStyleOptionViewItem::WrapText;
     d->textOption.setWrapMode(wrapText ? QTextOption::WordWrap : QTextOption::ManualWrap);
     d->textOption.setTextDirection(option.direction);
     d->textOption.setAlignment(QStyle::visualAlignment(option.direction, option.displayAlignment));

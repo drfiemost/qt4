@@ -931,7 +931,7 @@ QStyleOptionViewItem QListView::viewOptions() const
 QStyleOptionViewItem QListViewPrivate::viewOptions() const
 {
     Q_Q(const QListView);
-    QStyleOptionViewItem option = QAbstractItemViewPrivate::viewOptionsV4(); // FIXME
+    QStyleOptionViewItem option = QAbstractItemViewPrivate::viewOptions();
     if (!iconSize.isValid()) { // otherwise it was already set in abstractitemview
         int pm = (viewMode == QListView::ListMode
                   ? q->style()->pixelMetric(QStyle::PM_ListViewIconSize, 0, q)
@@ -962,7 +962,7 @@ void QListView::paintEvent(QPaintEvent *e)
     Q_D(QListView);
     if (!d->itemDelegate)
         return;
-    QStyleOptionViewItemV4 option = d->viewOptionsV4();
+    QStyleOptionViewItem option = d->viewOptions();
     QPainter painter(d->viewport);
 
     const QVector<QModelIndex> toBeRendered = d->intersectingSet(e->rect().translated(horizontalOffset(), verticalOffset()), false);
@@ -1031,9 +1031,9 @@ void QListView::paintEvent(QPaintEvent *e)
                 }
             }
             if (alternateBase) {
-                option.features |= QStyleOptionViewItemV2::Alternate;
+                option.features |= QStyleOptionViewItem::Alternate;
             } else {
-                option.features &= ~QStyleOptionViewItemV2::Alternate;
+                option.features &= ~QStyleOptionViewItem::Alternate;
             }
 
             // draw background of the item (only alternate row). rest of the background
@@ -1491,7 +1491,7 @@ void QListView::updateGeometries()
         verticalScrollBar()->setRange(0, 0);
     } else {
         QModelIndex index = d->model->index(0, d->column, d->root);
-        QStyleOptionViewItemV4 option = d->viewOptionsV4();
+        QStyleOptionViewItem option = d->viewOptions();
         QSize step = d->itemSize(option, index);
         d->commonListView->updateHorizontalScrollBar(step);
         d->commonListView->updateVerticalScrollBar(step);
@@ -2330,7 +2330,7 @@ QListViewItem QListModeViewBase::indexToListViewItem(const QModelIndex &index) c
                                            0, segmentStartRows.count() - 1);
 
 
-    QStyleOptionViewItemV4 options = viewOptions();
+    QStyleOptionViewItem options = viewOptions();
     options.rect.setSize(contentsSize);
     QSize size = (uniformItemSizes() && cachedItemSize().isValid())
                  ? cachedItemSize() : itemSize(options, index);
@@ -2395,7 +2395,7 @@ void QListModeViewBase::doStaticLayout(const QListViewLayoutInfo &info)
 {
     const bool useItemSize = !info.grid.isValid();
     const QPoint topLeft = initStaticLayout(info);
-    QStyleOptionViewItemV4 option = viewOptions();
+    QStyleOptionViewItem option = viewOptions();
     option.rect = info.bounds;
     option.rect.adjust(info.spacing, info.spacing, -info.spacing, -info.spacing);
 
@@ -2850,7 +2850,7 @@ void QIconModeViewBase::scrollContentsBy(int dx, int dy, bool scrollElasticBand)
 void QIconModeViewBase::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     if (column() >= topLeft.column() && column() <= bottomRight.column())  {
-        QStyleOptionViewItemV4 option = viewOptions();
+        QStyleOptionViewItem option = viewOptions();
         int bottom = qMin(items.count(), bottomRight.row() + 1);
         for (int row = topLeft.row(); row < bottom; ++row)
             items[row].resize(itemSize(option, modelIndex(row)));
@@ -2861,7 +2861,7 @@ bool QIconModeViewBase::doBatchedItemLayout(const QListViewLayoutInfo &info, int
 {
     if (info.last >= items.count()) {
         //first we create the items
-        QStyleOptionViewItemV4 option = viewOptions();
+        QStyleOptionViewItem option = viewOptions();
         for (int row = items.count(); row <= info.last; ++row) {
             QSize size = itemSize(option, modelIndex(row));
             QListViewItem item(QRect(0, 0, size.width(), size.height()), row); // default pos

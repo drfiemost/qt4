@@ -194,7 +194,7 @@ public:
 #endif
     virtual QItemViewPaintPairs draggablePaintPairs(const QModelIndexList &indexes, QRect *r) const;
     // reimplemented in subclasses
-    virtual void adjustViewOptionsForIndex(QStyleOptionViewItemV4*, const QModelIndex&) const {}
+    virtual void adjustViewOptionsForIndex(QStyleOptionViewItem*, const QModelIndex&) const {}
 
     inline void releaseEditor(QWidget *editor) const {
         if (editor) {
@@ -337,7 +337,7 @@ public:
 
     QModelIndexList selectedDraggableIndexes() const;
 
-    QStyleOptionViewItemV4 viewOptionsV4() const;
+    QStyleOptionViewItem viewOptions() const;
 
     void doDelayedReset()
     {
