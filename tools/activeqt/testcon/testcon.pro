@@ -1,7 +1,6 @@
 TEMPLATE = app
 
 CONFIG	+= qaxserver qaxserver_no_postlink qaxcontainer
-# QT += qt3support
 
 # ui_qaxselect.h
 INCLUDEPATH += $$QT_SOURCE_TREE/tools/activeqt/container/debug \

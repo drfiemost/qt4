@@ -1,11 +1,8 @@
 load(qttest_p4)
 SOURCES += tst_qtextbrowser.cpp
-!symbian:DEFINES += SRCDIR=\\\"$$PWD\\\"
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
-contains(QT_CONFIG, qt3support): QT += qt3support
-
-
-wince*|symbian: {
+wince*: {
    addFiles.files = *.html
    addFiles.path = .
    addDir.files = subdir/*

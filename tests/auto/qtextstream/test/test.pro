@@ -14,9 +14,7 @@ win32 {
 
 RESOURCES += ../qtextstream.qrc
 
-contains(QT_CONFIG, qt3support):QT += qt3support
-
-wince*|symbian: {
+wince*: {
    addFiles.files = ../rfc3261.txt ../shift-jis.txt ../task113817.txt ../qtextstream.qrc ../tst_qtextstream.cpp
    addFiles.path = .
    res.files = ../resources
@@ -26,13 +24,6 @@ wince*|symbian: {
 
 wince*: {
     DEFINES += SRCDIR=\\\"\\\"
-}else:symbian {
-    # Symbian can't define SRCDIR meaningfully here
-    qt_not_deployed {
-        codecs_plugins.files = qcncodecs.dll qjpcodecs.dll qtwcodecs.dll qkrcodecs.dll
-        codecs_plugins.path = $$QT_PLUGINS_BASE_DIR/codecs
-        DEPLOYMENT += codecs_plugins
-    }
-}else {
+} else {
     DEFINES += SRCDIR=\\\"$$PWD/../\\\"
 }

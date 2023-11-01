@@ -31,17 +31,13 @@ defineTest(addTsTargets) {
 }
 
 addTsTargets(qt, -I../include -I../include/Qt \
-    3rdparty/phonon \
-    3rdparty/webkit \
     activeqt \
     corelib \
     declarative \
     gui \
-    multimedia \
     network \
     opengl \
     plugins \
-    qt3support \
     script \
     scripttools \
     sql \

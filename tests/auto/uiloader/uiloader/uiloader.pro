@@ -3,7 +3,7 @@ load(qttest_p4)
 TEMPLATE = app
 !embedded:CONFIG += uitools
 TARGET = ../tst_uiloader
-!symbian:DEFINES += SRCDIR=\\\"$$PWD\\\"
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
 win32 {
   CONFIG(debug, debug|release) {
@@ -14,9 +14,8 @@ win32 {
 }
 
 QT += xml svg network
-contains(QT_CONFIG, qt3support): QT += qt3support
 
-wince*|symbian: {
+wince*: {
    configuration.files = ../*.ini
    configuration.path = .
 

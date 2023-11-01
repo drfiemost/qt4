@@ -5,7 +5,7 @@ INCLUDEPATH += ../
 HEADERS +=  
 SOURCES += tst_qtextedit.cpp 
 
-wince*|symbian: {
+wince*: {
     addImages.files = fullWidthSelection/*
     addImages.path = fullWidthSelection
     DEPLOYMENT += addImages
@@ -13,8 +13,6 @@ wince*|symbian: {
 
 wince* {
     DEFINES += SRCDIR=\\\"./\\\"
-} else:!symbian {
+} else {
     DEFINES += SRCDIR=\\\"$$PWD/\\\"
 }
-
-contains(QT_CONFIG, qt3support): QT += qt3support

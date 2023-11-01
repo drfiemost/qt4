@@ -6253,11 +6253,6 @@ void tst_QWidget::compatibilityChildInsertedEvents()
         QCoreApplication::sendPostedEvents();
         expected =
             EventRecorder::EventList()
-#ifdef QT_HAS_QT3SUPPORT
-            << qMakePair(&widget, QEvent::ChildInsertedRequest)
-            << qMakePair(&widget, QEvent::ChildInserted)
-            << qMakePair(&widget, QEvent::ChildInserted)
-#endif
             << qMakePair(&widget, QEvent::PolishRequest)
             << qMakePair(&widget, QEvent::Polish)
             << qMakePair(&widget, QEvent::ChildPolished)
@@ -6293,10 +6288,6 @@ void tst_QWidget::compatibilityChildInsertedEvents()
             EventRecorder::EventList()
             << qMakePair(&widget, QEvent::WinIdChange)
             << qMakePair(&widget, QEvent::Polish)
-#ifdef QT_HAS_QT3SUPPORT
-            << qMakePair(&widget, QEvent::ChildInserted)
-            << qMakePair(&widget, QEvent::ChildInserted)
-#endif
             << qMakePair(&widget, QEvent::ChildPolished)
             << qMakePair(&widget, QEvent::ChildPolished)
             << qMakePair(&widget, QEvent::Move)
@@ -6312,9 +6303,6 @@ void tst_QWidget::compatibilityChildInsertedEvents()
         QCoreApplication::sendPostedEvents();
         expected =
             EventRecorder::EventList()
-#ifdef QT_HAS_QT3SUPPORT
-            << qMakePair(&widget, QEvent::ChildInsertedRequest)
-#endif
             << qMakePair(&widget, QEvent::PolishRequest)
             << qMakePair(&widget, QEvent::Type(QEvent::User + 1))
             << qMakePair(&widget, QEvent::Type(QEvent::User + 2));
@@ -6355,10 +6343,6 @@ void tst_QWidget::compatibilityChildInsertedEvents()
         QCoreApplication::sendPostedEvents();
         expected =
             EventRecorder::EventList()
-#ifdef QT_HAS_QT3SUPPORT
-            << qMakePair(&widget, QEvent::ChildInsertedRequest)
-            << qMakePair(&widget, QEvent::ChildInserted)
-#endif
             << qMakePair(&widget, QEvent::PolishRequest)
             << qMakePair(&widget, QEvent::Polish)
             << qMakePair(&widget, QEvent::ChildPolished)
@@ -6395,9 +6379,6 @@ void tst_QWidget::compatibilityChildInsertedEvents()
             EventRecorder::EventList()
             << qMakePair(&widget, QEvent::WinIdChange)
             << qMakePair(&widget, QEvent::Polish)
-#ifdef QT_HAS_QT3SUPPORT
-            << qMakePair(&widget, QEvent::ChildInserted)
-#endif
             << qMakePair(&widget, QEvent::ChildPolished)
             << qMakePair(&widget, QEvent::Move)
             << qMakePair(&widget, QEvent::Resize)
@@ -6412,9 +6393,6 @@ void tst_QWidget::compatibilityChildInsertedEvents()
         QCoreApplication::sendPostedEvents();
         expected =
             EventRecorder::EventList()
-#ifdef QT_HAS_QT3SUPPORT
-            << qMakePair(&widget, QEvent::ChildInsertedRequest)
-#endif
             << qMakePair(&widget, QEvent::PolishRequest)
             << qMakePair(&widget, QEvent::Type(QEvent::User + 1))
             << qMakePair(&widget, QEvent::Type(QEvent::User + 2));
