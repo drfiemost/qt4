@@ -1866,7 +1866,7 @@ Qt::DropActions QAbstractItemModel::supportedDragActions() const
 {
     // ### Qt 5: make this virtual or these properties
     Q_D(const QAbstractItemModel);
-    if (d->supportedDragActions != -1)
+    if (d->supportedDragActions != Qt::IgnoreAction)
         return d->supportedDragActions;
     return supportedDropActions();
 }

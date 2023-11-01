@@ -169,6 +169,14 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \typedef QFlags::Int
+
+    Typedef for the integer type used for storage as well as for
+    implicit conversion. Either \c int or \c{unsigned int}, depending
+    on whether the enum's underlying type is signed or unsigned.
+*/
+
+/*!
     \typedef QFlags::enum_type
 
     Typedef for the Enum template type.
@@ -258,9 +266,11 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \fn QFlags::operator int() const
+    \fn QFlags::operator Int() const
 
     Returns the value stored in the QFlags object as an integer.
+
+    \sa Int
 */
 
 /*!

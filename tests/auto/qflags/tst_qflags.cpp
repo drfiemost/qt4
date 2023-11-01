@@ -48,6 +48,7 @@ private slots:
     void testFlagZeroFlag() const;
     void testFlagMultiBits() const;
     void constExpr();
+    void signedness();
 };
 
 void tst_QFlags::testFlag() const
@@ -97,7 +98,7 @@ void tst_QFlags::testFlagMultiBits() const
     }
 }
 
-template <int N, typename T> bool verifyConstExpr(T n) { return n == N; }
+template <unsigned int N, typename T> bool verifyConstExpr(T n) { return n == N; }
 
 void tst_QFlags::constExpr()
 {
@@ -123,10 +124,23 @@ void tst_QFlags::constExpr()
 #endif
 }
 
+void tst_QFlags::signedness()
+{
+    // these are all 'true' on GCC, but since the std says the
+    // underlying type is implementation-defined, we need to allow for
+    // a different signedness, so we only check that the relative
+    // signedness of the types matches:
+    static_assert((std::is_unsigned<typename std::underlying_type<Qt::MouseButton>::type>::value ==
+                     std::is_unsigned<Qt::MouseButtons::Int>::value));
+
+    static_assert((std::is_signed<typename std::underlying_type<Qt::AlignmentFlag>::type>::value ==
+                     std::is_signed<Qt::Alignment::Int>::value));
+}
+
 // (statically) check QTypeInfo for QFlags instantiations:
 enum MyEnum { Zero, One, Two, Four=4 };
-Q_DECLARE_FLAGS( MyFlags, MyEnum );
-Q_DECLARE_OPERATORS_FOR_FLAGS( MyFlags );
+Q_DECLARE_FLAGS( MyFlags, MyEnum )
+Q_DECLARE_OPERATORS_FOR_FLAGS( MyFlags )
 
 static_assert( !QTypeInfo<MyFlags>::isComplex );
 static_assert( !QTypeInfo<MyFlags>::isStatic );

@@ -45,6 +45,7 @@
 #define QFLAGS_H
 
 #include <QtCore/qtypeinfo.h>
+#include <type_traits>
 
 QT_BEGIN_HEADER
 
@@ -82,11 +83,21 @@ class QFlags
     static_assert((sizeof(Enum) <= sizeof(int)),
                       "QFlags uses an int as storage, so an enum with underlying "
                       "long long will overflow.");
+    static_assert((std::is_enum<Enum>::value), "QFlags is only usable on enumeration types.");
     struct Private;
     typedef int (Private::*Zero);
-    int i;
 public:
+#ifndef qdoc
+    typedef typename std::conditional<
+            std::is_unsigned<typename std::underlying_type<Enum>::type>::value,
+            unsigned int,
+            signed int
+        >::type Int;
+#else
+    typedef int Int; // the real typedef above is too complex for qdoc
+#endif
     typedef Enum enum_type;
+
     Q_DECL_CONSTEXPR inline QFlags(const QFlags &f) : i(f.i) {}
     Q_DECL_CONSTEXPR inline QFlags(Enum f) : i(f) {}
     Q_DECL_CONSTEXPR inline QFlags(Zero = nullptr) : i(0) {}
@@ -100,7 +111,7 @@ public:
     inline QFlags &operator^=(QFlags f) { i ^= f.i; return *this; }
     inline QFlags &operator^=(Enum f) { i ^= f; return *this; }
 
-    Q_DECL_CONSTEXPR  inline operator int() const { return i; }
+    Q_DECL_CONSTEXPR  inline operator Int() const { return i; }
 
     Q_DECL_CONSTEXPR inline QFlags operator|(QFlags f) const { return QFlags(Enum(i | f.i)); }
     Q_DECL_CONSTEXPR inline QFlags operator|(Enum f) const { return QFlags(Enum(i | f)); }
@@ -114,6 +125,8 @@ public:
     Q_DECL_CONSTEXPR inline bool operator!() const { return !i; }
 
     constexpr inline bool testFlag(Enum f) const { return (i & f) == f && (f != 0 || i == int(f) ); }
+private:
+    Int i;
 };
 
 #define Q_DECLARE_FLAGS(Flags, Enum)\
