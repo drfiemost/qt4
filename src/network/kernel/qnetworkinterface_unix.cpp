@@ -52,9 +52,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#ifdef Q_OS_SOLARIS
-# include <sys/sockio.h>
-#endif
 #include <net/if.h>
 
 #ifndef QT_NO_GETIFADDRS

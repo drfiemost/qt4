@@ -39,9 +39,6 @@
 **
 ****************************************************************************/
 
-#ifdef Q_OS_HPUX
-#error "MITSHM not supported on HP-UX."
-#else
 #include <X11/Xlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -60,4 +57,3 @@ int main(int, char **)
     }
     return 0;
 }
-#endif

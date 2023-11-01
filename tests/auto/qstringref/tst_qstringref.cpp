@@ -115,13 +115,6 @@ Q_DECLARE_METATYPE(IntList)
 #if defined(Q_OS_MAC) && !defined isnan
 #define isnan(d) __isnand(d)
 #endif
-#if defined(Q_OS_SOLARIS)
-#   include <ieeefp.h>
-#endif
-#if defined(Q_OS_OSF) && (defined(__DECC) || defined(__DECCXX))
-#   define INFINITY DBL_INFINITY
-#   define NAN DBL_QNAN
-#endif
 
 enum {
     LittleEndian,

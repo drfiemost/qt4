@@ -2515,9 +2515,6 @@ if [ -z "$PLATFORM" ]; then
      dgux:*)
         PLATFORM=dgux-g++
         ;;
-#     DYNIX/ptx:4*)
-#       PLATFORM=dynix-g++
-#       ;;
      ULTRIX:*)
         PLATFORM=ultrix-g++
         ;;
@@ -2536,58 +2533,10 @@ if [ -z "$PLATFORM" ]; then
      BSD/OS:*|BSD/386:*)
         PLATFORM=bsdi-g++
         ;;
-     IRIX*:*)
-        #PLATFORM=irix-g++
-        PLATFORM=irix-cc
-        #PLATFORM=irix-cc-64
-        PLATFORM_NOTES="
-            - Also available for IRIX: irix-g++ irix-cc-64
-        "
-        ;;
-     HP-UX:*)
-        case "$UNAME_MACHINE" in
-            ia64)
-                #PLATFORM=hpuxi-acc-32
-                PLATFORM=hpuxi-acc-64
-                PLATFORM_NOTES="
-                    - Also available for HP-UXi: hpuxi-acc-32
-                "
-            ;;
-            *)
-                #PLATFORM=hpux-g++
-                PLATFORM=hpux-acc
-                #PLATFORM=hpux-acc-64
-                #PLATFORM=hpux-cc
-                #PLATFORM=hpux-acc-o64
-                PLATFORM_NOTES="
-                    - Also available for HP-UX: hpux-g++ hpux-acc-64 hpux-acc-o64
-                "
-            ;;
-        esac
-        ;;
-     OSF1:*)
-        #PLATFORM=tru64-g++
-        PLATFORM=tru64-cxx
-        PLATFORM_NOTES="
-            - Also available for Tru64: tru64-g++
-        "
-        ;;
      Linux:*)
         PLATFORM=linux-g++
         PLATFORM_NOTES="
             - Also available for Linux: linux-kcc linux-icc linux-cxx
-        "
-        ;;
-     SunOS:5*)
-        if [ "$XPLATFORM_MINGW" = "yes" ]; then
-            PLATFORM="solaris-g++"
-        else
-            #PLATFORM=solaris-g++
-            PLATFORM=solaris-cc
-            #PLATFORM=solaris-cc64
-        fi
-        PLATFORM_NOTES="
-            - Also available for Solaris: solaris-g++ solaris-cc-64
         "
         ;;
      ReliantUNIX-*:*|SINIX-*:*)
@@ -2615,13 +2564,6 @@ if [ -z "$PLATFORM" ]; then
         PLATFORM=unixware-cc
         PLATFORM_NOTES="
             - Also available for UnixWare: unixware-g++
-        "
-        ;;
-     SCO_SV:*)
-        #PLATFORM=sco-g++
-        PLATFORM=sco-cc
-        PLATFORM_NOTES="
-            - Also available for SCO OpenServer: sco-g++
         "
         ;;
      UNIX_SV:*)

@@ -72,16 +72,6 @@ Q_DECLARE_METATYPE(QSsl::SslProtocol)
 Q_DECLARE_METATYPE(QSslConfiguration)
 #endif
 
-#if defined Q_OS_HPUX && defined Q_CC_GNU
-// This error is delivered every time we try to use the fluke CA
-// certificate. For now we work around this bug. Task 202317.
-#define QSSLSOCKET_CERTUNTRUSTED_WORKAROUND
-#endif
-
-#ifdef Q_OS_SYMBIAN
-#define SRCDIR ""
-#endif
-
 #ifndef QT_NO_OPENSSL
 class QSslSocketPtr: public QSharedPointer<QSslSocket>
 {

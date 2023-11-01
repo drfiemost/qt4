@@ -32,9 +32,7 @@ char* _LUCENE_BLANK_ASTRING = "";
 #    if defined(_LUCENE_PRAGMA_WARNINGS)
 #        pragma message ("==================Using clunky thread mutex!!!==================")
 #    else
-#       if !defined(Q_OS_SOLARIS)
-#           warning "==================Using clunky thread mutex!!!=================="
-#       endif
+#        warning "==================Using clunky thread mutex!!!=================="
 #    endif
 #endif
 
@@ -42,9 +40,7 @@ char* _LUCENE_BLANK_ASTRING = "";
 #    if defined(_LUCENE_PRAGMA_WARNINGS) 
 #        pragma message ("==================Using ascii mode!!!==================")
 #    else
-#        if !defined(Q_OS_SOLARIS)	
-#            warning "==================Using ascii mode!!!=================="
-#        endif
+#        warning "==================Using ascii mode!!!=================="
 #    endif
 #endif
 
@@ -55,9 +51,7 @@ char* _LUCENE_BLANK_ASTRING = "";
 #    if defined(_LUCENE_PRAGMA_WARNINGS)
 #        pragma message ("==================Hashing not available or is disabled! CLucene may run slower than optimal ==================")
 #    else
-#        if !defined(Q_OS_SOLARIS)
-#            warning "==================Hashing not available or is disabled! CLucene may run slower than optimal =================="
-#        endif
+#         warning "==================Hashing not available or is disabled! CLucene may run slower than optimal =================="
 #    endif
 #endif*/
 #endif

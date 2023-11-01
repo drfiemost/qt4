@@ -63,12 +63,6 @@
 # define SUFFIX         ".dylib"
 # define PREFIX         "lib"
 
-#elif defined(Q_OS_HPUX) && !defined(__ia64)
-# undef sl_VALID
-# define sl_VALID       true
-# define SUFFIX         ".sl"
-# define PREFIX         "lib"
-
 #elif defined(Q_OS_AIX)
 # undef a_VALID
 # undef so_VALID
@@ -232,7 +226,7 @@ void tst_QPluginLoader::errorString()
     QVERIFY(loader.errorString() != unknown);
     }
 
-#if !defined Q_OS_WIN && !defined Q_OS_MAC && !defined Q_OS_HPUX && !defined Q_OS_SYMBIAN && !defined Q_OS_QNX
+#if !defined Q_OS_WIN && !defined Q_OS_MAC && !defined Q_OS_QNX
     {
     QPluginLoader loader(qualifiedLibraryName(QLatin1String("almostplugin")));     //a plugin with unresolved symbols
     loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);

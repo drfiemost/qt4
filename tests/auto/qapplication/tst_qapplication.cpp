@@ -369,11 +369,6 @@ void tst_QApplication::multiple()
 
 void tst_QApplication::nonGui()
 {
-#ifdef Q_OS_HPUX
-    // ### This is only to allow us to generate a test report for now.
-    QSKIP("This test shuts down the window manager on HP-UX.", SkipAll);
-#endif
-
     int argc = 0;
     QApplication app(argc, 0, false);
     QCOMPARE(qApp, &app);

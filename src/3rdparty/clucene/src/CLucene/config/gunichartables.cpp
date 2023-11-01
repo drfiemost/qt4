@@ -134,7 +134,7 @@ typedef enum
 #ifdef _LUCENE_PRAGMA_WARNINGS
  #pragma message ("===== Using internal character function =====")
 #else
-#if !(defined(Q_OS_SOLARIS) || defined(Q_CC_MIPS))
+#if !(defined(Q_CC_MIPS))
 #warning "===== Using internal character function ====="
 #endif
 #endif

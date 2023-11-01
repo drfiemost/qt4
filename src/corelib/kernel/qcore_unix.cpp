@@ -42,7 +42,7 @@
 #include "qcore_unix_p.h"
 #include "qelapsedtimer.h"
 
-#if !defined(Q_OS_HPUX) || defined(__ia64)
+#if defined(__ia64)
 # include <sys/select.h>
 #endif
 #include <sys/time.h>

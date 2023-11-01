@@ -1833,11 +1833,9 @@ void tst_QProcess::failToStart()
     QSignalSpy finishedSpy(&process, SIGNAL(finished(int)));
     QSignalSpy finishedSpy2(&process, SIGNAL(finished(int, QProcess::ExitStatus)));
 
-// Mac OS X and HP-UX have a really low default process limit (~100), so spawning
+// Mac OS X has a really low default process limit (~100), so spawning
 // to many processes here will cause test failures later on.
-#if defined Q_OS_HPUX
-   const int attempts = 15;
-#elif defined Q_OS_MAC
+#if defined Q_OS_MAC
    const int attempts = 15;
 #else
    const int attempts = 50;

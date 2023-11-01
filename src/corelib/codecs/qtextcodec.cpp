@@ -86,7 +86,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <locale.h>
-#if defined (_XOPEN_UNIX) && !defined(Q_OS_QNX) && !defined(Q_OS_OSF)
+#if defined (_XOPEN_UNIX) && !defined(Q_OS_QNX)
 #include <langinfo.h>
 #endif
 

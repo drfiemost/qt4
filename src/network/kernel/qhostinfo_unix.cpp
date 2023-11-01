@@ -74,7 +74,7 @@ QT_BEGIN_NAMESPACE
 
 // HP-UXi has a bug in getaddrinfo(3) that makes it thread-unsafe
 // with this flag. So disable it in that platform.
-#if defined(AI_ADDRCONFIG) && !defined(Q_OS_HPUX)
+#if defined(AI_ADDRCONFIG)
 #  define Q_ADDRCONFIG          AI_ADDRCONFIG
 #endif
 

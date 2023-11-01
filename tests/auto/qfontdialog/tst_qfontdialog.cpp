@@ -136,10 +136,7 @@ void tst_QFontDialog::setFont()
 	      Task #27662
     */
     bool ok = FALSE;
-#if defined Q_OS_HPUX
-    QString fontName = "Courier";
-    int fontSize = 25;
-#elif defined Q_OS_AIX
+#if defined Q_OS_AIX
     QString fontName = "Charter";
     int fontSize = 13;
 #else

@@ -63,10 +63,6 @@
 #include <sys/sysctl.h>
 #endif
 
-#ifdef Q_OS_HPUX
-#include <sys/pstat.h>
-#endif
-
 #if defined(Q_OS_MAC)
 # ifdef qDebug
 #   define old_qDebug qDebug
@@ -415,15 +411,6 @@ int QThread::idealThreadCount()
 #if defined(Q_OS_MAC) && !defined(Q_WS_QPA)
     // Mac OS X
     cores = MPProcessorsScheduled();
-#elif defined(Q_OS_HPUX)
-    // HP-UX
-    struct pst_dynamic psd;
-    if (pstat_getdynamic(&psd, sizeof(psd), 1, 0) == -1) {
-        perror("pstat_getdynamic");
-        cores = -1;
-    } else {
-        cores = (int)psd.psd_proc_cnt;
-    }
 #elif defined(Q_OS_BSD4)
     // FreeBSD, OpenBSD, NetBSD, BSD/OS
     size_t len = sizeof(cores);

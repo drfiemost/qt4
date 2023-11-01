@@ -1753,7 +1753,7 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
                 int i;
                 for (i = 0; i < lphack.size(); ++i)
                     lpargs[i+1] = (char *)lphack.at(i).constData();
-#ifndef Q_OS_OSF
+
                 char dash_o[] = "-o";
                 if (QPdf::paperSizeToString(paperSize)) {
                     lpargs[++i] = dash_o;
@@ -1763,7 +1763,7 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
                     media += QPdf::paperSizeToString(paperSize);
                     lpargs[++i] = media.data();
                 }
-#endif
+
                 lpargs[++i] = 0;
                 char **lprargs = new char *[lprhack.size()+2];
                 char lpr[] = "lpr";

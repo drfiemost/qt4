@@ -561,17 +561,7 @@ bool QLibrary::isLibrary(const QString &fileName)
 # else  // Generic Unix
     QStringList validSuffixList;
 
-#  if defined(Q_OS_HPUX)
-/*
-    See "HP-UX Linker and Libraries User's Guide", section "Link-time Differences between PA-RISC and IPF":
-    "In PA-RISC (PA-32 and PA-64) shared libraries are suffixed with .sl. In IPF (32-bit and 64-bit),
-    the shared libraries are suffixed with .so. For compatibility, the IPF linker also supports the .sl suffix."
- */
-    validSuffixList << QLatin1String("sl");
-#   if defined __ia64
-    validSuffixList << QLatin1String("so");
-#   endif
-#  elif defined(Q_OS_AIX)
+#  if defined(Q_OS_AIX)
     validSuffixList << QLatin1String("a") << QLatin1String("so");
 #  elif defined(Q_OS_UNIX)
     validSuffixList << QLatin1String("so");

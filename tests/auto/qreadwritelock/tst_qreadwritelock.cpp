@@ -57,13 +57,7 @@
 #define sleep(X) Sleep(X)
 #endif
 
-//on solaris, threads that loop one the release bool variable
-//needs to sleep more than 1 usec.
-#ifdef Q_OS_SOLARIS
-# define RWTESTSLEEP usleep(10);
-#else
-# define RWTESTSLEEP usleep(1);
-#endif
+#define RWTESTSLEEP usleep(1);
 
 #include <stdio.h>
 
@@ -730,11 +724,9 @@ void tst_QReadWriteLock::multipleReadersLoop()
     int time=500;
     int hold=250;
     int wait=0;
-#if defined (Q_OS_HPUX)
-    const int numthreads=50;
-#else
+
     const int numthreads=75;
-#endif
+
     QReadWriteLock testLock;
     ReadLockLoopThread *threads[numthreads];
     int i;

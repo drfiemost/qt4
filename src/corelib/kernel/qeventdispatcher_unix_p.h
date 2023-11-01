@@ -62,7 +62,7 @@
 #include "private/qtimerinfo_unix_p.h"
 
 #include <sys/time.h>
-#if !defined(Q_OS_HPUX) || defined(__ia64)
+#if defined(__ia64)
 #  include <sys/select.h>
 #endif
 

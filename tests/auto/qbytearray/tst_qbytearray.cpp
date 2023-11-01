@@ -246,12 +246,6 @@ void tst_QByteArray::qUncompress()
     QFETCH(QByteArray, in);
     QFETCH(QByteArray, out);
 
-#if defined Q_OS_HPUX && !defined __ia64 && defined Q_CC_GNU
-    QSKIP("Corrupt data causes this tests to lock up on HP-UX / PA-RISC with gcc", SkipAll);
-#elif defined Q_OS_SOLARIS
-    QSKIP("Corrupt data causes this tests to lock up on Solaris", SkipAll);
-#endif
-
     QByteArray res;
     res = ::qUncompress(in);
     QCOMPARE(res, out);

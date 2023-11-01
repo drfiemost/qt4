@@ -61,7 +61,7 @@
 # endif
 #endif
 
-#if defined(Q_OS_SOLARIS) || defined (QT_LINUXBASE)
+#if defined (QT_LINUXBASE)
 // uff-da apparently Solaris doesn't have the SUN_LEN macro, here is
 // an implementation of it...
 #  ifndef SUN_LEN
@@ -76,7 +76,7 @@
 #  ifndef PF_LOCAL
 #    define PF_LOCAL        PF_UNIX
 #  endif
-#endif // Q_OS_SOLARIS || QT_LINUXBASE
+#endif // QT_LINUXBASE
 
 QT_BEGIN_NAMESPACE
 

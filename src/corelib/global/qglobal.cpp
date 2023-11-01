@@ -1334,20 +1334,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_OS_SOLARIS
-    \relates <QtGlobal>
-
-    Defined on Sun Solaris.
-*/
-
-/*!
-    \macro Q_OS_HPUX
-    \relates <QtGlobal>
-
-    Defined on HP-UX.
-*/
-
-/*!
     \macro Q_OS_ULTRIX
     \relates <QtGlobal>
 
@@ -1387,20 +1373,6 @@ bool qSharedBuild()
     \relates <QtGlobal>
 
     Defined on BSD/OS.
-*/
-
-/*!
-    \macro Q_OS_OSF
-    \relates <QtGlobal>
-
-    Defined on HP Tru64 UNIX.
-*/
-
-/*!
-    \macro Q_OS_SCO
-    \relates <QtGlobal>
-
-    Defined on SCO OpenServer 5.
 */
 
 /*!

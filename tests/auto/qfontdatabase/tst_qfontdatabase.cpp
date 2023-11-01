@@ -246,12 +246,7 @@ void tst_QFontDatabase::addAppFont()
     } else {
         id = QFontDatabase::addApplicationFont("FreeMono.ttf");
     }
-#if defined(Q_OS_HPUX) && defined(QT_NO_FONTCONFIG)
-    // Documentation says that X11 systems that don't have fontconfig
-    // don't support application fonts.
-    QCOMPARE(id, -1);
-    return;
-#endif
+
     QCOMPARE(fontDbChangedSpy.count(), 1);
 // addApplicationFont is supported on Mac, don't skip the test if it breaks.
 #ifndef Q_WS_MAC

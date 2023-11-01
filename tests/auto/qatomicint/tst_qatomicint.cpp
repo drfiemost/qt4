@@ -966,9 +966,6 @@ void tst_QAtomicInt::testAndSet_loop()
 void tst_QAtomicInt::fetchAndAdd_loop()
 {
     int iterations = 10000000;
-#if defined (Q_OS_HPUX)
-    iterations = 1000000;
-#endif
 
     QAtomicInt val=0;
     for (int i = 0; i < iterations; ++i) {

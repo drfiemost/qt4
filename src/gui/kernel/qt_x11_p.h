@@ -174,18 +174,9 @@ typedef char *XPointer;
 #if defined(X11R4)
 // X11R4 does not have XIM
 #define QT_NO_XIM
-#elif defined(Q_OS_OSF) && (XlibSpecificationRelease < 6)
-// broken in Xlib up to OSF/1 3.2
-#define QT_NO_XIM
 #elif defined(Q_OS_AIX)
 // broken in Xlib up to what version of AIX?
 #define QT_NO_XIM
-#elif defined(Q_OS_HPUX) && defined(__LP64__)
-// XCreateIC broken when compiling 64-bit ELF on HP-UX 11.0
-#define QT_NO_XIM
-#elif defined(Q_OS_SCO)
-// ### suggested by user...
-// ### #define QT_NO_XIM
 #endif // QT_NO_XIM
 
 #ifndef QT_NO_XFIXES
@@ -232,8 +223,7 @@ typedef int (*PtrXSelectExtensionEvent)(Display *, Window, XEventClass *, int);
  * Instead, we disabled R6 input, and open the input method
  * immediately at application start.
  */
-#if !defined(QT_NO_XIM) && (XlibSpecificationRelease >= 6) && \
-    !defined(Q_OS_SOLARIS)
+#if !defined(QT_NO_XIM) && (XlibSpecificationRelease >= 6)
 #define USE_X11R6_XIM
 
 //######### XFree86 has wrong declarations for XRegisterIMInstantiateCallback

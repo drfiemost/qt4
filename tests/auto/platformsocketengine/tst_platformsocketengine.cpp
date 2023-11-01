@@ -707,9 +707,7 @@ void tst_PlatformSocketEngine::receiveUrgentData()
     int available;
     QByteArray response;
 
-#if defined Q_OS_HPUX
-    QSKIP("Native OOB data test doesn't work on HP-UX.", SkipAll);
-#elif defined (Q_OS_WINCE)
+#if defined (Q_OS_WINCE)
     QSKIP("Native OOB data test doesn't work on WinCE.", SkipAll);
 #endif
 

@@ -177,9 +177,6 @@ void tst_CompilerWarnings::warnings()
     compilerName = "g++";
     args << "-I" + qtDir + "/include";
     args << "-I/usr/X11R6/include/";
-#ifdef Q_OS_HPUX
-    args << "-I/usr/local/mesa/aCC-64/include";
-#endif
     args << "-c";
     args << "-Wall" << "-Wold-style-cast" << "-Woverloaded-virtual" << "-pedantic" << "-ansi"
          << "-Wno-long-long" << "-Wshadow" << "-Wpacked" << "-Wunreachable-code"

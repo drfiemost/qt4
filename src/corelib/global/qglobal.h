@@ -203,10 +203,6 @@ namespace QT_NAMESPACE {}
 #  endif
 #elif defined(__MWERKS__) && defined(__INTEL__)
 #  define Q_OS_WIN32
-#elif defined(__sun) || defined(sun)
-#  define Q_OS_SOLARIS
-#elif defined(hpux) || defined(__hpux)
-#  define Q_OS_HPUX
 #elif defined(__ultrix) || defined(ultrix)
 #  define Q_OS_ULTRIX
 #elif defined(sinix)
@@ -225,8 +221,6 @@ namespace QT_NAMESPACE {}
 #elif defined(__bsdi__)
 #  define Q_OS_BSDI
 #  define Q_OS_BSD4
-#elif defined(__osf__)
-#  define Q_OS_OSF
 #elif defined(_AIX)
 #  define Q_OS_AIX
 #elif defined(__Lynx__)
@@ -239,8 +233,6 @@ namespace QT_NAMESPACE {}
 #  define Q_OS_QNX
 #elif defined(_SEQUENT_)
 #  define Q_OS_DYNIX
-#elif defined(_SCO_DS) /* SCO OpenServer 5 + GCC */
-#  define Q_OS_SCO
 #elif defined(__USLC__) /* all SCO platforms + UDK or OUDK */
 #  define Q_OS_UNIXWARE
 #elif defined(__svr4__) && defined(i386) /* Open UNIX 8 + GCC */
@@ -495,10 +487,6 @@ namespace QT_NAMESPACE {}
 #    define Q_LIKELY(expr)    __builtin_expect(!!(expr), true)
 #    define Q_UNLIKELY(expr)  __builtin_expect(!!(expr), false)
 #  endif
-/* GCC 3.1 and GCC 3.2 wrongly define _SB_CTYPE_MACROS on HP-UX */
-#  if defined(Q_OS_HPUX) && __GNUC__ == 3 && __GNUC_MINOR__ >= 1
-#    define Q_WRONG_SB_CTYPE_MACROS
-#  endif
 /* GCC <= 3.3 cannot handle template friends */
 #  if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ <= 3)
 #    define Q_NO_TEMPLATE_FRIENDS
@@ -592,7 +580,7 @@ namespace QT_NAMESPACE {}
    __EDG documented by SGI, observed on MIPSpro 7.3.1.1 and KAI C++ 4.0b
    __EDG__ documented in EDG online docs, observed on Compaq C++ V6.3-002
    and PGI C++ 5.2-4 */
-#elif !defined(Q_OS_HPUX) && (defined(__EDG) || defined(__EDG__))
+#elif (defined(__EDG) || defined(__EDG__))
 #  define Q_CC_EDG
 /* From the EDG documentation (does not seem to apply to Compaq C++):
    _BOOL
@@ -709,32 +697,6 @@ namespace QT_NAMESPACE {}
 #    define Q_NO_BOOL_TYPE
 #  endif
 #  define Q_BROKEN_TEMPLATE_SPECIALIZATION
-
-#elif defined(Q_OS_HPUX)
-/* __HP_aCC was not defined in first aCC releases */
-#  if defined(__HP_aCC) || __cplusplus >= 199707L
-#    define Q_NO_TEMPLATE_FRIENDS
-#    define Q_CC_HPACC
-#    if __HP_aCC-0 < 060000
-#      define QT_NO_TEMPLATE_TEMPLATE_PARAMETERS
-#      define Q_DECL_EXPORT     __declspec(dllexport)
-#      define Q_DECL_IMPORT     __declspec(dllimport)
-#    endif
-#    if __HP_aCC-0 >= 061200
-#      define Q_DECL_ALIGN(n) __attribute__((aligned(n)))
-#    endif
-#    if __HP_aCC-0 >= 062000
-#      define Q_DECL_EXPORT     __attribute__((visibility("default")))
-#      define Q_DECL_HIDDEN     __attribute__((visibility("hidden")))
-#      define Q_DECL_IMPORT     Q_DECL_EXPORT
-#    endif
-#  else
-#    define Q_CC_HP
-#    define Q_NO_BOOL_TYPE
-#    define Q_FULL_TEMPLATE_INSTANTIATION
-#    define Q_BROKEN_TEMPLATE_SPECIALIZATION
-#    define Q_NO_EXPLICIT_KEYWORD
-#  endif
 
 #else
 #  error "Qt has not been tested with this compiler - talk to qt-bugs@trolltech.com"
@@ -1765,12 +1727,12 @@ inline T *q_check_ptr(T *p) { Q_CHECK_PTR(p); return p; }
 #  define Q_UNREACHABLE() Q_ASSERT(false);
 #endif
 
-#if (defined(Q_CC_GNU) && !defined(Q_OS_SOLARIS)) || defined(Q_CC_HPACC) || defined(Q_CC_DIAB)
+#if defined(Q_CC_GNU) || defined(Q_CC_HPACC) || defined(Q_CC_DIAB)
 #  define Q_FUNC_INFO __PRETTY_FUNCTION__
 #elif defined(_MSC_VER)
 #  define Q_FUNC_INFO __FUNCSIG__
 #else
-#   if defined(Q_OS_SOLARIS) || defined(Q_CC_XLC)
+#   if defined(Q_CC_XLC)
 #      define Q_FUNC_INFO __FILE__ "(line number unavailable)"
 #   else
 #       define Q_FUNC_INFO __FILE__ ":" QT_STRINGIFY(__LINE__)
@@ -2223,7 +2185,7 @@ Q_CORE_EXPORT int qrand();
 #endif
 
 #if defined (__ELF__)
-#  if defined (Q_OS_LINUX) || defined (Q_OS_SOLARIS) || defined (Q_OS_FREEBSD) || defined (Q_OS_OPENBSD)
+#  if defined (Q_OS_LINUX) || defined (Q_OS_FREEBSD) || defined (Q_OS_OPENBSD)
 #    define Q_OF_ELF
 #  endif
 #endif

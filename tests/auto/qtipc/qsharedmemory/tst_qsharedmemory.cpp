@@ -331,11 +331,7 @@ void tst_QSharedMemory::attach()
     QFETCH(QString, key);
     QFETCH(bool, exists);
     QFETCH(QSharedMemory::SharedMemoryError, error);
-#ifdef Q_OS_HPUX
-    if (QLatin1String(QTest::currentDataTag()) == QLatin1String("already exists")) {
-        QSKIP("HPUX doesn't allow for multiple attaches per process", SkipSingle);
-    }
-#endif
+
     QSharedMemory sm(key);
     QCOMPARE(sm.attach(), exists);
     QCOMPARE(sm.isAttached(), exists);
@@ -386,9 +382,6 @@ void tst_QSharedMemory::lock()
  */
 void tst_QSharedMemory::removeWhileAttached()
 {
-#ifdef Q_OS_HPUX
-    QSKIP("HPUX doesn't allow for multiple attaches per process", SkipAll);
-#endif
     rememberKey("one");
 
     // attach 1
@@ -499,9 +492,7 @@ void tst_QSharedMemory::useTooMuchMemory()
 void tst_QSharedMemory::attachTooMuch()
 {
     QSKIP("disabled", SkipAll);
-#ifdef Q_OS_HPUX
-    QSKIP("HPUX doesn't allow for multiple attaches per process", SkipAll);
-#endif
+
 #ifdef Q_OS_WINCE
     QSKIP("This nearly kills the system itself, so skip for Qt/WinCE", SkipAll);
 #endif
@@ -543,9 +534,6 @@ void tst_QSharedMemory::simpleProducerConsumer_data()
  */
 void tst_QSharedMemory::simpleProducerConsumer()
 {
-#ifdef Q_OS_HPUX
-    QSKIP("HPUX doesn't allow for multiple attaches per process", SkipAll);
-#endif
     QFETCH(QSharedMemory::AccessMode, mode);
 
     rememberKey(QLatin1String("market"));
@@ -573,9 +561,6 @@ void tst_QSharedMemory::simpleProducerConsumer()
 
 void tst_QSharedMemory::simpleDoubleProducerConsumer()
 {
-#ifdef Q_OS_HPUX
-    QSKIP("HPUX doesn't allow for multiple attaches per process", SkipAll);
-#endif
     rememberKey(QLatin1String("market"));
     QSharedMemory producer(QLatin1String("market"));
     int size = 512;
@@ -693,10 +678,6 @@ void tst_QSharedMemory::simpleThreadedProducerConsumer()
     QFETCH(bool, producerIsThread);
     QFETCH(int, threads);
     rememberKey(QLatin1String("market"));
-
-#if defined Q_OS_HPUX && defined __ia64
-    QSKIP("This test locks up on gravlaks.troll.no", SkipSingle);
-#endif
 
     Producer p;
 #if defined(Q_OS_SYMBIAN)

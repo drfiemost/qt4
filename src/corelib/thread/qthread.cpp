@@ -62,8 +62,6 @@
 # include <sys/socket.h>
 */
 /*
-#  elif defined(Q_OS_HPUX)
-#   include <sys/pstat.h>
 #  elif defined(Q_OS_FREEBSD) || defined(Q_OS_OPENBSD) || defined(Q_OS_MAC)
 #   include <sys/sysctl.h>
 #  endif

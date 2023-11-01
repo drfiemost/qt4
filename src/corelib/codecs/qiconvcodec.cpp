@@ -52,14 +52,11 @@
 
 // unistd.h is needed for the _XOPEN_UNIX macro
 #include <unistd.h>
-#if defined(_XOPEN_UNIX) && !defined(Q_OS_QNX) && !defined(Q_OS_OSF)
+#if defined(_XOPEN_UNIX) && !defined(Q_OS_QNX)
 #  include <langinfo.h>
 #endif
 
-#if defined(Q_OS_HPUX)
-#  define NO_BOM
-#  define UTF16 "ucs2"
-#elif defined(Q_OS_AIX)
+#if defined(Q_OS_AIX)
 #  define NO_BOM
 #  define UTF16 "UCS-2"
 #elif defined(Q_OS_FREEBSD) || defined(Q_OS_MAC)
@@ -479,7 +476,7 @@ iconv_t QIconvCodec::createIconv_t(const char *to, const char *from)
     char *codeset = 0;
 #endif
 
-#if defined(_XOPEN_UNIX) && !defined(Q_OS_QNX) && !defined(Q_OS_OSF)
+#if defined(_XOPEN_UNIX) && !defined(Q_OS_QNX)
     if (cd == (iconv_t) -1) {
         codeset = nl_langinfo(CODESET);
         if (codeset)

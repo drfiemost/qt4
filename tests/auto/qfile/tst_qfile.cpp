@@ -1493,12 +1493,7 @@ void tst_QFile::linkToDir()
     QFileInfo info1("myDir");
     QVERIFY(QFile::link("myDir", "myLinkToDir.lnk"));
     QFileInfo info2("myLinkToDir.lnk");
-#if !(defined Q_OS_HPUX && defined(__ia64))
-    // absurd HP-UX filesystem bug on gravlaks - checking if a symlink
-    // resolves or not alters the file system to make the broken symlink
-    // later fail...
     QVERIFY(info2.isSymLink());
-#endif
     QCOMPARE(info2.symLinkTarget(), info1.absoluteFilePath());
     QVERIFY(QFile::remove(info2.absoluteFilePath()));
     QFile::remove("myLinkToDir.lnk");
@@ -3036,7 +3031,7 @@ void tst_QFile::map()
     QCOMPARE(file.error(), QFile::NoError);
 
     // hpux wont let you map multiple times.
-#if !defined(Q_OS_HPUX) && !defined(Q_USE_DEPRECATED_MAP_API) && !defined(Q_OS_WINCE)
+#if !defined(Q_USE_DEPRECATED_MAP_API) && !defined(Q_OS_WINCE)
     // exotic test to make sure that multiple maps work
 
     // note: windows ce does not reference count mutliple maps

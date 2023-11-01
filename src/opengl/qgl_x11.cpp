@@ -55,10 +55,6 @@
 #include <private/qpixmap_x11_p.h>
 #include <private/qimagepixmapcleanuphooks_p.h>
 #include <private/qunicodetables_p.h>
-#ifdef Q_OS_HPUX
-// for GLXPBuffer
-#include <private/qglpixelbuffer_p.h>
-#endif
 
 // We always define GLX_EXT_texture_from_pixmap ourselves because
 // we can't trust system headers to do it properly
@@ -419,7 +415,7 @@ static bool buildSpec(int* spec, const QGLFormat& f, QPaintDevice* paintDevice,
     const QX11Info *xinfo = qt_x11Info(paintDevice);
     bool useFBConfig = onlyFBConfig;
 
-#if defined(GLX_VERSION_1_3) && !defined(QT_NO_XRENDER) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3) && !defined(QT_NO_XRENDER)
     /*
       HPUX defines GLX_VERSION_1_3 but does not implement the corresponding functions.
       Specifically glXChooseFBConfig and glXGetVisualFromFBConfig are not implemented.
@@ -466,7 +462,7 @@ static bool buildSpec(int* spec, const QGLFormat& f, QPaintDevice* paintDevice,
     }
 #endif
 
-#if defined(GLX_VERSION_1_3)  && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
     // GLX_RENDER_TYPE is only in glx >=1.3
     if (useFBConfig) {
         spec[i++] = GLX_RENDER_TYPE;
@@ -529,7 +525,7 @@ static bool buildSpec(int* spec, const QGLFormat& f, QPaintDevice* paintDevice,
         spec[i++] = f.samples() == -1 ? 4 : f.samples();
     }
 
-#if defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
     if (useFBConfig) {
         spec[i++] = GLX_DRAWABLE_TYPE;
         switch(paintDevice->devType()) {
@@ -653,7 +649,7 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
 
     d->cx = 0;
 
-#if defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
     /*
       HPUX defines GLX_VERSION_1_3 but does not implement the corresponding functions.
       Specifically glXChooseFBConfig and glXGetVisualFromFBConfig are not implemented.
@@ -827,7 +823,7 @@ void *QGLContext::tryVisual(const QGLFormat& f, int bufDepth)
 
     XVisualInfo* chosenVisualInfo = 0;
 
-#if defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
     while (useFBConfig) {
         GLXFBConfig *configs;
         int configCount = 0;
@@ -1710,7 +1706,7 @@ void QGLWidget::setColormap(const QGLColormap & c)
 }
 
 // Solaris defines glXBindTexImageEXT as part of the GL library
-#if defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
 typedef void (*qt_glXBindTexImageEXT)(Display*, GLXDrawable, int, const int*);
 typedef void (*qt_glXReleaseTexImageEXT)(Display*, GLXDrawable, int);
 static qt_glXBindTexImageEXT glXBindTexImageEXT = 0;
@@ -1746,13 +1742,13 @@ static bool qt_resolveTextureFromPixmap(QPaintDevice *paintDevice)
 
     return glXBindTexImageEXT && glXReleaseTexImageEXT;
 }
-#endif //defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#endif //defined(GLX_VERSION_1_3)
 
 
 QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, const qint64 key,
                                                            QGLContext::BindOptions options)
 {
-#if !defined(GLX_VERSION_1_3) || defined(Q_OS_HPUX)
+#if !defined(GLX_VERSION_1_3)
     return 0;
 #else
 
@@ -1870,13 +1866,13 @@ QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, cons
     QGLTextureCache::instance()->insert(q, key, texture, 0);
 
     return texture;
-#endif //!defined(GLX_VERSION_1_3) || defined(Q_OS_HPUX)
+#endif //!defined(GLX_VERSION_1_3)
 }
 
 
 void QGLContextPrivate::destroyGlSurfaceForPixmap(QPixmapData* pmd)
 {
-#if defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
     Q_ASSERT(pmd->classId() == QPixmapData::X11Class);
     QX11PixmapData *pixmapData = static_cast<QX11PixmapData*>(pmd);
     if (pixmapData->gl_surface) {
@@ -1888,7 +1884,7 @@ void QGLContextPrivate::destroyGlSurfaceForPixmap(QPixmapData* pmd)
 
 void QGLContextPrivate::unbindPixmapFromTexture(QPixmapData* pmd)
 {
-#if defined(GLX_VERSION_1_3) && !defined(Q_OS_HPUX)
+#if defined(GLX_VERSION_1_3)
     Q_ASSERT(pmd->classId() == QPixmapData::X11Class);
     Q_ASSERT(QGLContext::currentContext());
     QX11PixmapData *pixmapData = static_cast<QX11PixmapData*>(pmd);

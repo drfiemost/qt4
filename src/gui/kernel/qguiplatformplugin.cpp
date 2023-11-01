@@ -143,8 +143,6 @@ QString QGuiPlatformPlugin::styleName()
         return QLatin1String("WindowsXP");
     else
         return QLatin1String("Windows");                // default styles for Windows
-#elif defined(Q_WS_X11) && defined(Q_OS_SOLARIS)
-    return QLatin1String("CDE");                        // default style for X11 on Solaris
 #elif defined(Q_WS_QWS) || defined(Q_WS_QPA)
     return QLatin1String("Plastique");                  // default style for X11 and small devices
 #elif defined(Q_WS_MAC)

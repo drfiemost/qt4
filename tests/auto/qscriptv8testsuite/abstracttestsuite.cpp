@@ -273,9 +273,7 @@ bool TestConfigParser::isKnownSymbol(const QString &symbol)
             // If you add a symbol here, add a case for it in
             // isDefined() as well.
             << "Q_OS_LINUX"
-            << "Q_OS_SOLARIS"
             << "Q_OS_WINCE"
-            << "Q_OS_SYMBIAN"
             << "Q_OS_MAC"
             << "Q_OS_WIN"
             << "Q_CC_MSVC"
@@ -293,14 +291,8 @@ bool TestConfigParser::isDefined(const QString &symbol)
 #ifdef Q_OS_LINUX
             << "Q_OS_LINUX"
 #endif
-#ifdef Q_OS_SOLARIS
-            << "Q_OS_SOLARIS"
-#endif
 #ifdef Q_OS_WINCE
             << "Q_OS_WINCE"
-#endif
-#ifdef Q_OS_SYMBIAN
-            << "Q_OS_SYMBIAN"
 #endif
 #ifdef Q_OS_MAC
             << "Q_OS_MAC"
