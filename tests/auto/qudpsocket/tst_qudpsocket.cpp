@@ -255,9 +255,6 @@ void tst_QUdpSocket::broadcasting()
             QSKIP("With socks5 Broadcast is not supported.", SkipSingle);
         }
     }
-#ifdef Q_OS_AIX
-    QSKIP("Broadcast does not work on darko", SkipAll);
-#endif
     const char *message[] = {"Yo mista", "", "Yo", "Wassap"};
 
     QList<QHostAddress> broadcastAddresses;

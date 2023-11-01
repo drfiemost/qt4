@@ -328,9 +328,6 @@ void tst_PlatformSocketEngine::broadcastTest()
     }
 #endif
 #endif
-#ifdef Q_OS_AIX
-    QSKIP("Broadcast does not work on darko", SkipAll);
-#endif
     PLATFORMSOCKETENGINE broadcastSocket;
 
     // Initialize a regular Udp socket

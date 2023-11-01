@@ -87,13 +87,11 @@ static QString qws_dataDir(int qws_display_id)
     if (!S_ISDIR(buf.st_mode))
         qFatal("%s is not a directory", dataDir.constData());
 
-#if !defined(Q_OS_QNX)
     if (buf.st_uid != getuid())
         qFatal("Qt for Embedded Linux data directory is not owned by user %uh", getuid());
 
     if ((buf.st_mode & 0677) != 0600)
         qFatal("Qt for Embedded Linux data directory has incorrect permissions: %s", dataDir.constData());
-#endif
 
     result.append(QLatin1Char('/'));
     return result;

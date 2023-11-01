@@ -830,7 +830,6 @@ l_FLAGS=
 QCONFIG_FLAGS=
 XPLATFORM=              # This seems to be the QMAKESPEC, like "linux-g++"
 XPLATFORM_MINGW=no      # Whether target platform is MinGW (win32-g++*)
-XPLATFORM_QNX=no
 PLATFORM=$QMAKESPEC
 QT_CROSS_COMPILE=no
 OPT_CONFIRM_LICENSE=no
@@ -1514,7 +1513,6 @@ while [ "$#" -gt 0 ]; do
             CFG_REDUCE_EXPORTS=no
             ;;
         esac
-        case "$XPLATFORM" in *qnx-*) XPLATFORM_QNX=yes;; esac
         ;;
     device-option)
         DEV_VAR=`echo $VAL | sed "s,^\(.*\)=.*,\1,"`
@@ -2500,15 +2498,6 @@ if [ -z "$PLATFORM" ]; then
           PLATFORM=darwin-g++
         fi
         ;;
-     AIX:*)
-        #PLATFORM=aix-g++
-        #PLATFORM=aix-g++-64
-        PLATFORM=aix-xlc
-        #PLATFORM=aix-xlc-64
-        PLATFORM_NOTES="
-            - Also available for AIX: aix-g++ aix-g++-64 aix-xlc-64
-        "
-        ;;
      GNU:*)
         PLATFORM=hurd-g++
         ;;
@@ -2569,9 +2558,6 @@ if [ -z "$PLATFORM" ]; then
      UNIX_SV:*)
         PLATFORM=unixware-g++
         ;;
-     QNX:*)
-        PLATFORM=unsupported/qnx-g++
-        ;;
      *)
         if [ "$OPT_HELP" != "yes" ]; then
             echo
@@ -2594,7 +2580,6 @@ PLATFORMS=`find "$relpath/mkspecs/" -type f | grep -v qws | sed "s,$relpath/mksp
 [ -z "$XPLATFORM" ] && XPLATFORM="$PLATFORM"
 
 case `basename "$XPLATFORM"` in win32-g++*) XPLATFORM_MINGW=yes;; esac
-case "$XPLATFORM" in *qnx-*) XPLATFORM_QNX=yes;; esac
 
 if [ -d "$PLATFORM" ]; then
   QMAKESPEC="$PLATFORM"
@@ -2704,37 +2689,6 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
             echo "    GNU/Hurd ($CFG_HOST_ARCH)"
         fi
         ;;
-    IRIX*:*:*)
-        CFG_HOST_ARCH=`uname -p`
-        if [ "$OPT_VERBOSE" = "yes" ]; then
-            echo "    SGI ($CFG_HOST_ARCH)"
-        fi
-        ;;
-    SunOS:5*:*)
-        case "$UNAME_MACHINE" in
-	sun4u*|sun4v*)
-            if [ "$OPT_VERBOSE" = "yes" ]; then
-                echo "    Sun SPARC (sparc)"
-            fi
-            CFG_HOST_ARCH=sparc
-            ;;
-        i86pc)
-	    case "$PLATFORM" in
-	    *-64*)
-                if [ "$OPT_VERBOSE" = "yes" ]; then
-	            echo "    64-bit AMD 80x86 (x86_64)"
-                fi
-                CFG_HOST_ARCH=x86_64
-                ;;
-	    *)
-                if [ "$OPT_VERBOSE" = "yes" ]; then
-	            echo "    32-bit Intel 80x86 (i386)"
-                fi
-                CFG_HOST_ARCH=i386
-                ;;
-            esac
-        esac
-        ;;
     Darwin:*:*)
         case "$UNAME_MACHINE" in
             Power?Macintosh)
@@ -2749,18 +2703,6 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
                 ;;
         esac
         CFG_HOST_ARCH=macosx
-        ;;
-    AIX:*:00????????00)
-        if [ "$OPT_VERBOSE" = "yes" ]; then
-        echo "    64-bit IBM PowerPC (powerpc)"
-        fi
-        CFG_HOST_ARCH=powerpc
-        ;;
-    HP-UX:*:9000*)
-        if [ "$OPT_VERBOSE" = "yes" ]; then
-            echo "    HP PA-RISC (parisc)"
-        fi
-        CFG_HOST_ARCH=parisc
         ;;
     *:*:i?86)
         if [ "$OPT_VERBOSE" = "yes" ]; then
@@ -2816,16 +2758,6 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
             echo "    Linux on SPARC"
         fi
         CFG_HOST_ARCH=sparc
-        ;;
-    QNX:*:*)
-        case "$UNAME_MACHINE" in
-        x86pc)
-            if [ "$OPT_VERBOSE" = "yes" ]; then
-                echo "    QNX on Intel 80x86 (i386)"
-            fi
-            CFG_HOST_ARCH=i386
-            ;;
-        esac
         ;;
     *:*:*)
         if [ "$OPT_VERBOSE" = "yes" ]; then
@@ -3004,13 +2936,9 @@ if [ "$CFG_REDUCE_EXPORTS" = "auto" ]; then
     fi
 fi
 
-# auto-detect -fstack-protector-strong support (for QNX only currently)
-if [ "$XPLATFORM_QNX" = "yes" ]; then
-    if compilerSupportsFlag $TEST_COMPILER -fstack-protector-strong; then
-       CFG_STACK_PROTECTOR_STRONG=yes
-    else
-       CFG_STACK_PROTECTOR_STRONG=no
-    fi
+# auto-detect -fstack-protector-strong support
+if compilerSupportsFlag $TEST_COMPILER -fstack-protector-strong; then
+   CFG_STACK_PROTECTOR_STRONG=yes
 else
    CFG_STACK_PROTECTOR_STRONG=no
 fi
@@ -3752,16 +3680,6 @@ Qt/X11 only:
  $XKY  -xkb ............... Compile XKB support.
 
 EOF
-fi
-
-if [ "$XPLATFORM_QNX" = "yes" ]; then
-    cat << EOF
-
-    -no-slog2 .......... Do not compile with slog2 support.
-    -slog2 ............. Compile with slog2 support.
-
-EOF
-
 fi
 
 if [ "$PLATFORM_MAC" = "yes" ]; then
@@ -4586,17 +4504,6 @@ if [ "$CFG_ZLIB" = "auto" ]; then
        CFG_ZLIB=system
     else
        CFG_ZLIB=yes
-    fi
-fi
-
-if [ "$XPLATFORM_QNX" = "yes" ]; then
-    if [ "$CFG_SLOG2" != "no" ]; then
-        if compileTest unix/slog2 "slog2"; then
-            CFG_SLOG2=yes
-            QMAKE_CONFIG="$QMAKE_CONFIG slog2"
-        else
-            CFG_SLOG2=no
-        fi
     fi
 fi
 
@@ -7235,9 +7142,6 @@ if [ "$CFG_MNG" = "no" ]; then
     echo "MNG support ............ $CFG_MNG"
 else
     echo "MNG support ............ $CFG_MNG ($CFG_LIBMNG)"
-fi
-if [ "$XPLATFORM_QNX" = "yes" ]; then
-    echo "SLOG2 support .......... $CFG_SLOG2"
 fi
 echo "zlib support ........... $CFG_ZLIB"
 echo "Session management ..... $CFG_SM"

@@ -97,11 +97,7 @@ static QString targetName( BuildType buildMode, const QString& target, const QSt
         break;
     case Dll: // dll
         targetName.prepend("lib");
-#if defined (Q_OS_AIX)
-        targetName.append(".a");
-#else
         targetName.append(".so");
-#endif
         break;
     case Lib: // lib
         targetName.prepend("lib");

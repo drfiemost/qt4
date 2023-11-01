@@ -1,6 +1,6 @@
 TEMPLATE      = subdirs
 # no QSharedMemory
-!qnx:SUBDIRS = sharedmemory
+SUBDIRS = sharedmemory
 !wince*: SUBDIRS += localfortuneserver localfortuneclient
 
 # install

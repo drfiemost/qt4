@@ -3,13 +3,13 @@ SOURCES   += tst_qdir.cpp
 RESOURCES += qdir.qrc
 QT        = core
 
-wince*|symbian {
+wince* {
   DirFiles.files = testdir testData searchdir resources entrylist types tst_qdir.cpp
   DirFiles.path = .
   DEPLOYMENT += DirFiles
 }
 
-if (wince*|qnx) {
+if (wince*) {
   DEFINES += SRCDIR=\\\"\\\"
 } else:symbian {
   TARGET.CAPABILITY += AllFiles

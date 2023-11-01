@@ -886,9 +886,7 @@ QString QDeclarativeImportDatabase::resolvePlugin(const QDir &qmldirPath, const 
 # else  // Generic Unix
     QStringList validSuffixList;
 
-#  if defined(Q_OS_AIX)
-    validSuffixList << QLatin1String(".a") << QLatin1String(".so");
-#  elif defined(Q_OS_UNIX)
+#  if defined(Q_OS_UNIX)
     validSuffixList << QLatin1String(".so");
 #  endif
 

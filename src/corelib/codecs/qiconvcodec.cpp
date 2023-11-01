@@ -52,14 +52,11 @@
 
 // unistd.h is needed for the _XOPEN_UNIX macro
 #include <unistd.h>
-#if defined(_XOPEN_UNIX) && !defined(Q_OS_QNX)
+#if defined(_XOPEN_UNIX)
 #  include <langinfo.h>
 #endif
 
-#if defined(Q_OS_AIX)
-#  define NO_BOM
-#  define UTF16 "UCS-2"
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_MAC)
+#if defined(Q_OS_FREEBSD) || defined(Q_OS_MAC)
 #  define NO_BOM
 #  if Q_BYTE_ORDER == Q_BIG_ENDIAN
 #    define UTF16 "UTF-16BE"
@@ -462,21 +459,17 @@ iconv_t QIconvCodec::createIconv_t(const char *to, const char *from)
     Q_ASSERT((to == 0 && from != 0) || (to != 0 && from == 0));
 
     iconv_t cd = (iconv_t) -1;
-#if defined(__GLIBC__) || defined(GNU_LIBICONV) || defined(Q_OS_QNX)
-#if defined(Q_OS_QNX)
-    // on QNX the default locale is UTF-8, and an empty string will cause iconv_open to fail
-    static const char empty_codeset[] = "UTF-8";
-#else
+#if defined(__GLIBC__) || defined(GNU_LIBICONV)
     // both GLIBC and libgnuiconv will use the locale's encoding if from or to is an empty string
     static const char empty_codeset[] = "";
-#endif
+
     const char *codeset = empty_codeset;
     cd = iconv_open(to ? to : codeset, from ? from : codeset);
 #else
     char *codeset = 0;
 #endif
 
-#if defined(_XOPEN_UNIX) && !defined(Q_OS_QNX)
+#if defined(_XOPEN_UNIX)
     if (cd == (iconv_t) -1) {
         codeset = nl_langinfo(CODESET);
         if (codeset)

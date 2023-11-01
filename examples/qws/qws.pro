@@ -1,6 +1,6 @@
 TEMPLATE      = subdirs
 # no /dev/fbX
-!qnx:SUBDIRS = framebuffer
+SUBDIRS = framebuffer
 SUBDIRS      += mousecalibration simpledecoration
 
 # install

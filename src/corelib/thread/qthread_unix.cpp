@@ -287,7 +287,7 @@ void QThreadPrivate::createEventDispatcher(QThreadData *data)
 
 #ifndef QT_NO_THREAD
 
-#if (defined(Q_OS_LINUX) || (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6) || defined(Q_OS_QNX))
+#if (defined(Q_OS_LINUX) || (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6))
 static void setCurrentThreadName(pthread_t threadId, const char *name)
 {
 #  if defined(Q_OS_LINUX) && !defined(QT_LINUXBASE)
@@ -297,8 +297,6 @@ static void setCurrentThreadName(pthread_t threadId, const char *name)
     Q_UNUSED(threadId);
     if (QSysInfo::MacintoshVersion >= QSysInfo::MV_10_6)
         pthread_setname_np(name);
-#  elif defined(Q_OS_QNX)
-    pthread_setname_np(threadId, name);
 #  endif
 }
 #endif
@@ -328,7 +326,7 @@ void *QThreadPrivate::start(void *arg)
     // ### TODO: allow the user to create a custom event dispatcher
     createEventDispatcher(data);
 
-#if (defined(Q_OS_LINUX) || (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6) || defined(Q_OS_QNX))
+#if (defined(Q_OS_LINUX) || (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6))
     // sets the name of the current thread.
     QString objectName = thr->objectName();
 
@@ -463,11 +461,6 @@ void QThread::usleep(unsigned long usecs)
 // sched_priority is OUT only
 static bool calculateUnixPriority(int priority, int *sched_policy, int *sched_priority)
 {
-#ifdef Q_OS_QNX
-    // without Round Robin drawn intensive apps will hog the cpu
-    // and make the system appear frozen
-   *sched_policy = SCHED_RR;
-#endif
 #ifdef SCHED_IDLE
     if (priority == QThread::IdlePriority) {
         *sched_policy = SCHED_IDLE;

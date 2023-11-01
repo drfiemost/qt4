@@ -174,9 +174,6 @@ typedef char *XPointer;
 #if defined(X11R4)
 // X11R4 does not have XIM
 #define QT_NO_XIM
-#elif defined(Q_OS_AIX)
-// broken in Xlib up to what version of AIX?
-#define QT_NO_XIM
 #endif // QT_NO_XIM
 
 #ifndef QT_NO_XFIXES

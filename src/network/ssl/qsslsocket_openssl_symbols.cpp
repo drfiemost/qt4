@@ -503,10 +503,7 @@ static QPair<QLibrary*, QLibrary*> loadOpenSsl()
 #ifdef Q_OS_OPENBSD
     libcrypto->setLoadHints(QLibrary::ExportExternalSymbolsHint);
 #endif
-#if defined(Q_OS_QNX) // on QNX, the libs are always libssl.so and libcrypto.so
-    libssl->setLoadHints(QLibrary::ImprovedSearchHeuristics);
-    libcrypto->setLoadHints(libcrypto->loadHints() | QLibrary::ImprovedSearchHeuristics);
-#elif defined(SHLIB_VERSION_NUMBER)
+#if defined(SHLIB_VERSION_NUMBER)
     // first attempt: the canonical name is libssl.so.<SHLIB_VERSION_NUMBER>
     libssl->setFileNameAndVersion(QLatin1String("ssl"), QLatin1String(SHLIB_VERSION_NUMBER));
     libssl->setLoadHints(QLibrary::ImprovedSearchHeuristics);

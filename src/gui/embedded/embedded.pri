@@ -114,12 +114,6 @@ embedded {
 		SOURCES += embedded/qscreenlinuxfb_qws.cpp
 	}
 
-        contains( gfx-drivers, qnx ) {
-                HEADERS += embedded/qscreenqnx_qws.h
-                SOURCES += embedded/qscreenqnx_qws.cpp
-                LIBS_PRIVATE += -lgf
-        }
-
 	contains( gfx-drivers, qvfb ) {
 		HEADERS += embedded/qscreenvfb_qws.h
 		SOURCES += embedded/qscreenvfb_qws.cpp

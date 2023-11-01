@@ -1383,13 +1383,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_OS_AIX
-    \relates <QtGlobal>
-
-    Defined on AIX.
-*/
-
-/*!
     \macro Q_OS_HURD
     \relates <QtGlobal>
 
@@ -1415,13 +1408,6 @@ bool qSharedBuild()
     \relates <QtGlobal>
 
     Defined on DYNIX/ptx.
-*/
-
-/*!
-    \macro Q_OS_QNX
-    \relates <QtGlobal>
-
-    Defined on QNX Neutrino.
 */
 
 /*!
@@ -2052,7 +2038,7 @@ static void slog2_default_handler(QtMsgType msgType, const char *message)
 }
 #endif // QT_USE_SLOG2
 
-#if !defined(Q_OS_WIN) && !defined(QT_NO_THREAD) && !defined(Q_OS_QNX) && \
+#if !defined(Q_OS_WIN) && !defined(QT_NO_THREAD) && \
     defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L
 namespace {
     // There are two incompatible versions of strerror_r:
@@ -2116,7 +2102,7 @@ QString qt_error_string(int errorCode)
 
         if (ret.isEmpty() && errorCode == ERROR_MOD_NOT_FOUND)
             ret = QString::fromLatin1("The specified module could not be found.");
-#elif !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L && !defined(Q_OS_QNX)
+#elif !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L
         QByteArray buf(1024, '\0');
         ret = fromstrerror_helper(strerror_r(errorCode, buf.data(), buf.size()), buf);
 #else

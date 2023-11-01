@@ -65,15 +65,7 @@
 # define SUFFIX         ".dylib"
 # define PREFIX         "lib"
 
-#elif defined(Q_OS_AIX)
-# undef a_VALID
-# undef so_VALID
-# define a_VALID        true
-# define so_VALID       true
-# define SUFFIX         ".a"
-# define PREFIX         "lib"
-
-#elif defined(Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#elif defined(Q_OS_WIN)
 # undef dll_VALID
 # define dll_VALID      true
 # undef DLL_VALID
@@ -190,7 +182,7 @@ void tst_QLibrary::version()
     QFETCH( int, loadversion );
     QFETCH( int, resultversion );
 
-#if !defined(Q_OS_AIX) && !defined(Q_OS_WIN) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_OS_WIN)
     QString currDir = QDir::currentPath();
     QLibrary library( currDir + QLatin1Char('/') + lib, loadversion );
     bool ok = library.load();
@@ -488,24 +480,11 @@ void tst_QLibrary::loadHints_data()
     QTest::addColumn<bool>("result");
 
     QLibrary::LoadHints lh;
-#if defined(Q_OS_AIX)
-    if (QFile::exists("/usr/lib/libGL.a") || QFile::exists("/usr/X11R6/lib/libGL.a")) {
-# if QT_POINTER_SIZE == 4
-        QTest::newRow( "ok03 (Archive member)" ) << "libGL.a(shr.o)" << int(QLibrary::LoadArchiveMemberHint) << true;
-# else
-        QTest::newRow( "ok03 (Archive member)" ) << "libGL.a(shr_64.o)" << int(QLibrary::LoadArchiveMemberHint) << true;
-#endif
-    }
-#endif
 
-#if defined(Q_OS_SYMBIAN)
-    QString currDir;
-#else
     QString currDir = QDir::currentPath();
-#endif
 
     lh |= QLibrary::ResolveAllSymbolsHint;
-# if defined(Q_OS_WIN32) || defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
+# if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
     QTest::newRow( "ok01 (with suffix)" ) << currDir + "/mylib.dll" << int(lh) << true;
     QTest::newRow( "ok02 (with non-standard suffix)" ) << currDir + "/mylib.dl2" << int(lh) << true;
     QTest::newRow( "ok03 (with many dots)" ) << currDir + "/system.trolltech.test.mylib.dll" << int(lh) << true;

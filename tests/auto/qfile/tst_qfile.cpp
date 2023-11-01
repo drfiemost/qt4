@@ -2459,8 +2459,6 @@ void tst_QFile::virtualFile()
     QString fname;
 #if defined(Q_OS_LINUX)
     fname = "/proc/self/maps";
-#elif defined(Q_OS_AIX)
-    fname = QString("/proc/%1/map").arg(getpid());
 #elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD)
     fname = "/proc/curproc/map";
 #else

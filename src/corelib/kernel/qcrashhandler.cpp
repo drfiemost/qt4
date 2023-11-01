@@ -163,22 +163,7 @@ static void print_backtrace(FILE *outb)
      *
      * Different dbx implementations require different flags/commands.
      */
-#if defined(Q_OS_AIX)
-    if(backtrace_command(outb, "dbx -a %d 2>/dev/null <<EOF\n"
-                         "where\n"
-                         "detach\n"
-                         "EOF\n",
-                         (int)getpid()))
-        return;
-    if(backtrace_command(outb, "gdb -q %s %d 2>/dev/null <<EOF\n"
-                         "set prompt\n"
-                         "where\n"
-                         "detach\n"
-                         "quit\n"
-                         "EOF\n",
-                         globalProgName, (int)getpid()))
-        return;
-#elif defined(Q_OS_FREEBSD)
+#if defined(Q_OS_FREEBSD)
     /*
      * FreeBSD insists on sending a SIGSTOP to the process we
      * attach to, so we let the debugger send a SIGCONT to that

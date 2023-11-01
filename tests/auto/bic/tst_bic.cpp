@@ -250,7 +250,7 @@ QBic::Info tst_Bic::getCurrentInfo(const QString &libName)
 #endif
          << "-DQT_NO_STL"
          << "-xc++"
-#if !defined(Q_OS_AIX) && !defined(Q_OS_WIN)
+#if !defined(Q_OS_WIN)
          << "-o" << "/dev/null"
 #endif
          << "-fdump-class-hierarchy"

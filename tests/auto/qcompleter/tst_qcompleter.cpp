@@ -608,9 +608,8 @@ void tst_QCompleter::directoryModel_data()
         QTest::newRow("(/d)") << "/d" << "" << "Developer" << "/Developer";
 #else
         QTest::newRow("()") << "" << "" << "/" << "/";
-#if !defined(Q_OS_AIX)
         QTest::newRow("(/h)") << "/h" << "" << "home" << "/home";
-#endif
+
         QTest::newRow("(/et)") << "/et" << "" << "etc" << "/etc";
         QTest::newRow("(/etc/passw)") << "/etc/passw" << "" << "passwd" << "/etc/passwd";
 #endif
@@ -657,9 +656,8 @@ void tst_QCompleter::fileSystemModel_data()
 //        QTest::newRow("(/d)") << "/d" << "" << "Developer" << "/Developer";
 #else
         QTest::newRow("()") << "" << "" << "/" << "/";
-#if !defined(Q_OS_AIX)
         QTest::newRow("(/h)") << "/h" << "" << "home" << "/home";
-#endif
+
         QTest::newRow("(/et)") << "/et" << "" << "etc" << "/etc";
         QTest::newRow("(/etc/passw)") << "/etc/passw" << "" << "passwd" << "/etc/passwd";
 #endif

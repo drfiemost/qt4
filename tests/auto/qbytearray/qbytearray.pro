@@ -4,16 +4,14 @@ SOURCES  += tst_qbytearray.cpp
 
 QT = core
 
-wince*|symbian|qnx {
+wince* {
    addFile.files = rfc3252.txt
    addFile.path = .
    DEPLOYMENT += addFile
 }
 
-wince*|qnx {
+wince* {
   DEFINES += SRCDIR=\\\"./\\\"
-} else:symbian {
-  TARGET.EPOCHEAPSIZE="0x100 0x800000"
 } else {
   DEFINES += SRCDIR=\\\"$$PWD/\\\"
 }

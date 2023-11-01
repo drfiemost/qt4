@@ -63,21 +63,7 @@
 # define SUFFIX         ".dylib"
 # define PREFIX         "lib"
 
-#elif defined(Q_OS_AIX)
-# undef a_VALID
-# undef so_VALID
-# define a_VALID        true
-# define so_VALID       true
-# define SUFFIX         ".so"
-# define PREFIX         "lib"
-
 #elif defined(Q_OS_WIN)
-# undef dll_VALID
-# define dll_VALID      true
-# define SUFFIX         ".dll"
-# define PREFIX         ""
-
-#elif defined(Q_OS_SYMBIAN)
 # undef dll_VALID
 # define dll_VALID      true
 # define SUFFIX         ".dll"
@@ -226,7 +212,7 @@ void tst_QPluginLoader::errorString()
     QVERIFY(loader.errorString() != unknown);
     }
 
-#if !defined Q_OS_WIN && !defined Q_OS_MAC && !defined Q_OS_QNX
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
     {
     QPluginLoader loader(qualifiedLibraryName(QLatin1String("almostplugin")));     //a plugin with unresolved symbols
     loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);

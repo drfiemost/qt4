@@ -136,13 +136,8 @@ void tst_QFontDialog::setFont()
 	      Task #27662
     */
     bool ok = FALSE;
-#if defined Q_OS_AIX
-    QString fontName = "Charter";
-    int fontSize = 13;
-#else
     QString fontName = "Arial";
     int fontSize = 24;
-#endif
     QFont f1(fontName, fontSize);
     f1.setPixelSize(QFontInfo(f1).pixelSize());
     QTimer::singleShot(2000, this, SLOT(postKeyReturn()));

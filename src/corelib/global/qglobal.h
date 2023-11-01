@@ -221,16 +221,12 @@ namespace QT_NAMESPACE {}
 #elif defined(__bsdi__)
 #  define Q_OS_BSDI
 #  define Q_OS_BSD4
-#elif defined(_AIX)
-#  define Q_OS_AIX
 #elif defined(__Lynx__)
 #  define Q_OS_LYNX
 #elif defined(__GNU__)
 #  define Q_OS_HURD
 #elif defined(__DGUX__)
 #  define Q_OS_DGUX
-#elif defined(__QNXNTO__)
-#  define Q_OS_QNX
 #elif defined(_SEQUENT_)
 #  define Q_OS_DYNIX
 #elif defined(__USLC__) /* all SCO platforms + UDK or OUDK */
@@ -901,20 +897,6 @@ namespace QT_NAMESPACE {}
 #  if defined(Q_CC_MSVC)
 #    define Q_COMPILER_MANGLES_RETURN_TYPE
 #  endif
-#endif
-
-#ifdef __cplusplus
-# if defined(Q_OS_QNX)
-#  include <utility>
-#  if defined(_YVALS) || defined(_LIBCPP_VER)
-// QNX: libcpp (Dinkumware-based) doesn't have the <initializer_list>
-// header, so the feature is useless, even if the compiler supports
-// it. Disable.
-#    ifdef Q_COMPILER_INITIALIZER_LISTS
-#      undef Q_COMPILER_INITIALIZER_LISTS
-#    endif
-#  endif
-# endif
 #endif
 
 /*

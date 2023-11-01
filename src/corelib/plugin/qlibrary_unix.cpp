@@ -94,9 +94,6 @@ bool QLibraryPrivate::load_sys()
     if (pluginState != IsAPlugin) {
         prefixes << QLatin1String("lib");
 
-#ifdef Q_OS_AIX
-        suffixes << ".a";
-#endif // Q_OS_AIX
         if (!fullVersion.isEmpty()) {
             suffixes << QString::fromLatin1(".so.%1").arg(fullVersion);
         } else {
@@ -137,11 +134,7 @@ bool QLibraryPrivate::load_sys()
         dlFlags |= RTLD_LOCAL;
     }
 #endif
-#if defined(Q_OS_AIX)	// Not sure if any other platform actually support this thing.
-    if (loadHints & QLibrary::LoadArchiveMemberHint) {
-        dlFlags |= RTLD_MEMBER;
-    }
-#endif
+
 #endif // QT_HPUX_LD
     // If using the new search heuristics we do:
     //

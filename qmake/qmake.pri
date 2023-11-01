@@ -133,10 +133,6 @@ bootstrap { #Qt code
         win32-g++*:LIBS += -lole32 -luuid -ladvapi32 -lkernel32
     }
 
-    qnx {
-        CFLAGS += -fhonor-std
-        LFLAGS += -lcpp -lm
-    }
     DEFINES *= QT_NO_QOBJECT
 } else {
     CONFIG += qt 

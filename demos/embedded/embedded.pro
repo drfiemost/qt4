@@ -6,7 +6,7 @@ contains(QT_CONFIG, svg) {
                desktopservices
     fluidlauncher.subdir = fluidlauncher
     fluidlauncher.depends = styledemo desktopservices raycasting flickable digiflip lightmaps flightinfo
-    !vxworks:!qnx:SUBDIRS += fluidlauncher
+    SUBDIRS += fluidlauncher
 }
 
 SUBDIRS += lightmaps

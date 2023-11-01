@@ -108,9 +108,6 @@ tst_QFileSystemWatcher::tst_QFileSystemWatcher()
     // we have native engines for win32, macosx and freebsd
     do_force_engines << "native";
 #endif
-#if defined(Q_OS_QNX) && !defined(QT_NO_INOTIFY)
-    do_force_engines << "native";
-#endif
 }
 
 void tst_QFileSystemWatcher::basicTest_data()
@@ -209,9 +206,6 @@ void tst_QFileSystemWatcher::basicTest()
     // change the permissions, should get a signal from the watcher
     testFile.setPermissions(QFile::ReadOwner);
 
-    // IN_ATTRIB doesn't work on QNX, so skip this test
-#if !defined(Q_OS_QNX)
-
     // qDebug() << "waiting max 5 seconds for notification for file permission modification to trigger(1)";
     timer.start(5000);
     eventLoop.exec();
@@ -222,7 +216,6 @@ void tst_QFileSystemWatcher::basicTest()
     fileName = changedSpy.at(0).at(0).toString();
     QCOMPARE(fileName, testFile.fileName());
 
-#endif
 
     changedSpy.clear();
 

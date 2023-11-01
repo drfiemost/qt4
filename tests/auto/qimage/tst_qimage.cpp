@@ -54,9 +54,6 @@
 
 //TESTED_CLASS=
 //TESTED_FILES=
-#if defined(Q_OS_QNX)
-# undef SRCDIR
-#endif
 
 Q_DECLARE_METATYPE(QImage::Format)
 Q_DECLARE_METATYPE(Qt::GlobalColor)

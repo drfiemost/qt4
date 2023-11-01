@@ -341,10 +341,8 @@ public:
     QWinEventNotifier *processFinishedNotifier;
 
     void startProcess();
-#if defined(Q_OS_UNIX) && !defined(Q_OS_QNX)
+#if defined(Q_OS_UNIX)
     void execChild(const char *workingDirectory, char **path, char **argv, char **envp);
-#elif defined(Q_OS_QNX)
-    pid_t spawnChild(const char *workingDirectory, char **argv, char **envp);
 #endif
     bool processStarted();
     void terminateProcess();

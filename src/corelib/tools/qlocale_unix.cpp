@@ -50,18 +50,7 @@ QT_BEGIN_NAMESPACE
 
 static QByteArray getSystemLocale()
 {
-#if defined(Q_OS_QNX)
-    static char buff[257];
-
-    memset(buff, 0, sizeof buff);
-
-    if (confstr(_CS_LOCALE, buff, 257) > 0)
-        return buff;
-    else
-        return qgetenv("LC_ALL");
-#else
     return qgetenv("LC_ALL");
-#endif
 }
 
 #ifndef QT_NO_SYSTEMLOCALE

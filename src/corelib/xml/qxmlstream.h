@@ -84,7 +84,7 @@ QT_BEGIN_NAMESPACE
 // We are taking the optimist scenario here to avoid creating more
 // symbols to be supported.
 
-#if defined(Q_OS_MAC32) || defined(Q_OS_AIX)
+#if defined(Q_OS_MAC32)
 # if !defined QT_BUILD_XML_LIB
 #  define Q_XMLSTREAM_RENAME_SYMBOLS
 # endif
