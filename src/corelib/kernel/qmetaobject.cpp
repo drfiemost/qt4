@@ -229,11 +229,14 @@ int QMetaObject::static_metacall(Call cl, int idx, void **argv) const
         extra->static_metacall(nullptr, cl, idx, argv);
         return -1;
     } else if (priv(d.data)->revision >= 2) {
+        qWarning("QMetaObject::static_metacall: old revision %d", priv(d.data)->revision);
         if (!extra || !extra->static_metacall)
             return 0;
         typedef int (*OldMetacall)(QMetaObject::Call, int, void **);
         OldMetacall o = reinterpret_cast<OldMetacall>(extra->static_metacall);
         return o(cl, idx, argv);
+    } else {
+        qWarning("QMetaObject::static_metacall: ancient revision %d", priv(d.data)->revision);
     }
     return 0;
 }
