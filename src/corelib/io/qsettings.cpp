@@ -1905,7 +1905,7 @@ bool QConfFileSettingsPrivate::writeIniFile(QIODevice &device, const ParsedSetti
     sections.reserve(sectionCount);
     for (i = iniMap.constBegin(); i != iniMap.constEnd(); ++i)
         sections.append(QSettingsIniKey(i.key(), i.value().position));
-    qSort(sections);
+    std::sort(sections.begin(), sections.end());
 
     bool writeError = false;
     for (int j = 0; !writeError && j < sectionCount; ++j) {

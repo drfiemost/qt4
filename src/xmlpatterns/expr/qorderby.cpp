@@ -75,7 +75,7 @@ void OrderBy::OrderSpec::prepare(const Expression::Ptr &source,
 }
 
 /**
- * @short Functor used by Qt's qSort() and qStableSort(). Used for FLWOR's
+ * @short Functor used by Qt's std::sort() and std::stable_sort(). Used for FLWOR's
  * <tt>order by</tt> expression.
  *
  * This must be in the global namespace, since it is specializing qLess(), which
@@ -179,14 +179,14 @@ Item::Iterator::Ptr OrderBy::evaluateSequence(const DynamicContext::Ptr &context
 
     Q_ASSERT(m_stability == StableOrder || m_stability == UnstableOrder);
 
-    /* On one hand we could just disregard stability and always use qStableSort(), but maybe qSort()
-     * is a bit faster? */
+    /* On one hand we could just disregard stability and always use std::stable_sort(),
+     * but maybe std::sort() is a bit faster? */
     if(m_stability == StableOrder)
-        qStableSort(tuples.begin(), tuples.end(), sorter);
+        std::stable_sort(tuples.begin(), tuples.end(), sorter);
     else
     {
         Q_ASSERT(m_stability == UnstableOrder);
-        qSort(tuples.begin(), tuples.end(), sorter);
+        std::sort(tuples.begin(), tuples.end(), sorter);
     }
 
     return makeSequenceMappingIterator<Item>(ConstPtr(this),
