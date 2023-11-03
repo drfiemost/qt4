@@ -70,6 +70,7 @@
 #include "private/qmath_p.h"
 
 #include "float.h"
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 
@@ -649,7 +650,7 @@ static qreal toDouble(const QChar *&str)
         {
             val = QByteArray::fromRawData(temp, pos).toDouble();
             // Do not tolerate values too wild to be represented normally by floats
-            if (fpclassify(float(val)) != FP_NORMAL)
+            if (std::fpclassify(float(val)) != FP_NORMAL)
                 val = 0;
         }
     }

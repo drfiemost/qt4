@@ -4353,13 +4353,6 @@ if ! "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relp
     exit 101
 fi
 
-# detect availability of float math.h functions
-if compileTest unix/floatmath "floatmath"; then
-    CFG_USE_FLOATMATH=yes
-else
-    CFG_USE_FLOATMATH=no
-fi
-
 # detect mmx support
 if [ "${CFG_MMX}" = "auto" ]; then
     if compileTest unix/mmx "mmx" "-mmmx"; then
@@ -6661,10 +6654,6 @@ fi
 if [ "$PLATFORM_QPA" = "yes" ]; then
     # Add QPA to config.h
     QCONFIG_FLAGS="$QCONFIG_FLAGS Q_WS_QPA QT_NO_QWS_QPF QT_NO_QWS_QPF2"
-fi
-
-if [ "${CFG_USE_FLOATMATH}" = "yes" ]; then
-    QCONFIG_FLAGS="${QCONFIG_FLAGS} QT_USE_MATH_H_FLOATS"
 fi
 
 # Add turned on SQL drivers

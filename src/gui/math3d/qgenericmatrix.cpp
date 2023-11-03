@@ -272,7 +272,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix2x2 type defines a convenient instantiation of the
-    QGenericMatrix template for 2 columns, 2 rows, and qreal as
+    QGenericMatrix template for 2 columns, 2 rows, and float as
     the element type.
 */
 
@@ -281,7 +281,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix2x3 type defines a convenient instantiation of the
-    QGenericMatrix template for 2 columns, 3 rows, and qreal as
+    QGenericMatrix template for 2 columns, 3 rows, and float as
     the element type.
 */
 
@@ -290,7 +290,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix2x4 type defines a convenient instantiation of the
-    QGenericMatrix template for 2 columns, 4 rows, and qreal as
+    QGenericMatrix template for 2 columns, 4 rows, and float as
     the element type.
 */
 
@@ -299,7 +299,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix3x2 type defines a convenient instantiation of the
-    QGenericMatrix template for 3 columns, 2 rows, and qreal as
+    QGenericMatrix template for 3 columns, 2 rows, and float as
     the element type.
 */
 
@@ -308,7 +308,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix3x3 type defines a convenient instantiation of the
-    QGenericMatrix template for 3 columns, 3 rows, and qreal as
+    QGenericMatrix template for 3 columns, 3 rows, and float as
     the element type.
 */
 
@@ -317,7 +317,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix3x4 type defines a convenient instantiation of the
-    QGenericMatrix template for 3 columns, 4 rows, and qreal as
+    QGenericMatrix template for 3 columns, 4 rows, and float as
     the element type.
 */
 
@@ -326,7 +326,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix4x2 type defines a convenient instantiation of the
-    QGenericMatrix template for 4 columns, 2 rows, and qreal as
+    QGenericMatrix template for 4 columns, 2 rows, and float as
     the element type.
 */
 
@@ -335,7 +335,7 @@ QT_BEGIN_NAMESPACE
     \relates QGenericMatrix
 
     The QMatrix4x3 type defines a convenient instantiation of the
-    QGenericMatrix template for 4 columns, 3 rows, and qreal as
+    QGenericMatrix template for 4 columns, 3 rows, and float as
     the element type.
 */
 

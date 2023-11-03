@@ -2185,58 +2185,6 @@ void QGLShaderProgram::setUniformValue(const char *name, const QSizeF& size)
     setUniformValue(uniformLocation(name), size);
 }
 
-// We have to repack matrices from qreal to GLfloat.
-#define setUniformMatrix(func,location,value,cols,rows) \
-    if (location == -1) \
-        return; \
-    if (sizeof(qreal) == sizeof(GLfloat)) { \
-        func(location, 1, GL_FALSE, \
-             reinterpret_cast<const GLfloat *>(value.constData())); \
-    } else { \
-        GLfloat mat[cols * rows]; \
-        const qreal *data = value.constData(); \
-        for (int i = 0; i < cols * rows; ++i) \
-            mat[i] = data[i]; \
-        func(location, 1, GL_FALSE, mat); \
-    }
-#if !defined(QT_OPENGL_ES_2)
-#define setUniformGenericMatrix(func,colfunc,location,value,cols,rows) \
-    if (location == -1) \
-        return; \
-    if (sizeof(qreal) == sizeof(GLfloat)) { \
-        const GLfloat *data = reinterpret_cast<const GLfloat *> \
-            (value.constData());  \
-        if (func) \
-            func(location, 1, GL_FALSE, data); \
-        else \
-            colfunc(location, cols, data); \
-    } else { \
-        GLfloat mat[cols * rows]; \
-        const qreal *data = value.constData(); \
-        for (int i = 0; i < cols * rows; ++i) \
-            mat[i] = data[i]; \
-        if (func) \
-            func(location, 1, GL_FALSE, mat); \
-        else \
-            colfunc(location, cols, mat); \
-    }
-#else
-#define setUniformGenericMatrix(func,colfunc,location,value,cols,rows) \
-    if (location == -1) \
-        return; \
-    if (sizeof(qreal) == sizeof(GLfloat)) { \
-        const GLfloat *data = reinterpret_cast<const GLfloat *> \
-            (value.constData());  \
-        colfunc(location, cols, data); \
-    } else { \
-        GLfloat mat[cols * rows]; \
-        const qreal *data = value.constData(); \
-        for (int i = 0; i < cols * rows; ++i) \
-            mat[i] = data[i]; \
-        colfunc(location, cols, mat); \
-    }
-#endif
-
 /*!
     Sets the uniform variable at \a location in the current context
     to a 2x2 matrix \a value.
@@ -2247,7 +2195,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix2x2& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformMatrix(glUniformMatrix2fv, location, value, 2, 2);
+    glUniformMatrix2fv(location, 1, GL_FALSE, value.constData());
 }
 
 /*!
@@ -2273,8 +2221,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix2x3& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformGenericMatrix
-        (glUniformMatrix2x3fv, glUniform3fv, location, value, 2, 3);
+    glUniform3fv(location, 2, value.constData());
 }
 
 /*!
@@ -2300,8 +2247,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix2x4& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformGenericMatrix
-        (glUniformMatrix2x4fv, glUniform4fv, location, value, 2, 4);
+    glUniform4fv(location, 2, value.constData());
 }
 
 /*!
@@ -2327,8 +2273,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix3x2& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformGenericMatrix
-        (glUniformMatrix3x2fv, glUniform2fv, location, value, 3, 2);
+    glUniform2fv(location, 3, value.constData());
 }
 
 /*!
@@ -2354,7 +2299,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix3x3& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformMatrix(glUniformMatrix3fv, location, value, 3, 3);
+    glUniformMatrix3fv(location, 1, GL_FALSE, value.constData());
 }
 
 /*!
@@ -2380,8 +2325,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix3x4& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformGenericMatrix
-        (glUniformMatrix3x4fv, glUniform4fv, location, value, 3, 4);
+    glUniform4fv(location, 3, value.constData());
 }
 
 /*!
@@ -2407,8 +2351,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix4x2& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformGenericMatrix
-        (glUniformMatrix4x2fv, glUniform2fv, location, value, 4, 2);
+    glUniform2fv(location, 4, value.constData());
 }
 
 /*!
@@ -2434,8 +2377,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix4x3& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformGenericMatrix
-        (glUniformMatrix4x3fv, glUniform3fv, location, value, 4, 3);
+    glUniform3fv(location, 4, value.constData());
 }
 
 /*!
@@ -2461,7 +2403,7 @@ void QGLShaderProgram::setUniformValue(int location, const QMatrix4x4& value)
 {
     Q_D(QGLShaderProgram);
     Q_UNUSED(d);
-    setUniformMatrix(glUniformMatrix4fv, location, value, 4, 4);
+    glUniformMatrix4fv(location, 1, GL_FALSE, value.constData());
 }
 
 /*!

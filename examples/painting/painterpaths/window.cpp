@@ -40,7 +40,7 @@
 
 #include <QtGui>
 
-#include <math.h>
+#include <cmath>
 
 #include "renderarea.h"
 #include "window.h"
@@ -123,8 +123,8 @@ Window::Window()
     QPainterPath starPath;
     starPath.moveTo(90, 50);
     for (int i = 1; i < 5; ++i) {
-        starPath.lineTo(50 + 40 * cos(0.8 * i * Pi),
-                        50 + 40 * sin(0.8 * i * Pi));
+        starPath.lineTo(50 + 40 * std::cos(0.8 * i * Pi),
+                        50 + 40 * std::sin(0.8 * i * Pi));
     }
     starPath.closeSubpath();
 //! [9]
