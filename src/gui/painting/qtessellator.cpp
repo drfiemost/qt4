@@ -47,6 +47,7 @@
 
 #include <qmath.h>
 #include <limits.h>
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -686,7 +687,7 @@ QRectF QTessellatorPrivate::collectAndSortVertices(const QPointF *points, int *m
 
     QDEBUG() << "maxActiveEdges=" << *maxActiveEdges;
     vv = vertices.sorted;
-    qSort(vv, vv + vertices.nPoints, compareVertex);
+    std::sort(vv, vv + vertices.nPoints, compareVertex);
 
     return QRectF(xmin, ymin, xmax-xmin, ymax-ymin);
 }
@@ -760,7 +761,7 @@ void QTessellatorPrivate::cancelCoincidingEdges()
         if (!testListSize)
             continue;
 
-        qSort(tl, tl + testListSize);
+        std::sort(tl, tl + testListSize);
 
         for (int j = 0; j < testListSize; ++j) {
             if (tl[j].used)
@@ -898,7 +899,7 @@ void QTessellatorPrivate::processIntersections()
             ++max;
         }
 
-        qSort(scanline.edges + min, scanline.edges + max + 1, EdgeSorter(y));
+        std::sort(scanline.edges + min, scanline.edges + max + 1, EdgeSorter(y));
 #ifdef DEBUG
         for (int i = min; i <= max; ++i)
             QDEBUG() << "        " << scanline.edges[i]->edge << "at pos" << i;
