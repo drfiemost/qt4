@@ -83,7 +83,7 @@ QDeclarativePropertyCache::Data::Flags QDeclarativePropertyCache::Data::flagsFor
 void QDeclarativePropertyCache::Data::load(const QMetaProperty &p, QDeclarativeEngine *engine)
 {
     propType = p.userType();
-    if (QVariant::Type(propType) == QMetaType::QVariant)
+    if (propType == QMetaType::QVariant)
         propType = qMetaTypeId<QVariant>();
     coreIndex = p.propertyIndex();
     notifyIndex = p.notifySignalIndex();
