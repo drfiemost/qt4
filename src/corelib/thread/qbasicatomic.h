@@ -113,12 +113,15 @@ public:
     typename Ops::Type _q_value;
 
     // Everything below is either implemented in ../arch/qatomic_XXX.h or (as fallback) in qgenericatomic.h
-    T load() const noexcept { return Ops::load(_q_value); }
-    void store(T newValue) noexcept { Ops::store(_q_value, newValue); }
+    [[deprecated("Use loadRelaxed")]]  T load() const noexcept { return loadRelaxed(); }
+    [[deprecated("Use storeRelaxed")]] void store(T newValue) noexcept { storeRelaxed(newValue); }
 
-    T loadAcquire() noexcept { return Ops::loadAcquire(_q_value); }
+    T loadRelaxed() const noexcept { return Ops::loadRelaxed(_q_value); }
+    void storeRelaxed(T newValue) noexcept { Ops::storeRelaxed(_q_value, newValue); }
+
+    T loadAcquire() const noexcept { return Ops::loadAcquire(_q_value); }
     void storeRelease(T newValue) noexcept { Ops::storeRelease(_q_value, newValue); }
-    operator T() noexcept { return loadAcquire(); }
+    operator T() const noexcept { return loadAcquire(); }
     T operator=(T newValue) noexcept { storeRelease(newValue); return newValue; }
 
     static constexpr bool isReferenceCountingNative() noexcept { return Ops::isReferenceCountingNative(); }
@@ -248,13 +251,17 @@ public:
 
     AtomicType _q_value;
 
-    Type load() const noexcept { return _q_value; }
-    void store(Type newValue) noexcept { _q_value = newValue; }
-    operator Type() noexcept { return loadAcquire(); }
+    [[deprecated("Use loadRelaxed")]] Type load() const noexcept { return loadRelaxed(); }
+    [[deprecated("Use storeRelaxed")]] void store(Type newValue) noexcept { storeRelaxed(newValue); }
+
+    Type loadRelaxed() const noexcept { return Ops::loadRelaxed(_q_value); }
+    void storeRelaxed(Type newValue) noexcept { Ops::storeRelaxed(_q_value, newValue); }
+
+    operator Type() const noexcept { return loadAcquire(); }
     Type operator=(Type newValue) noexcept { storeRelease(newValue); return newValue; }
 
     // Atomic API, implemented in qatomic_XXX.h
-    Type loadAcquire() noexcept { return Ops::loadAcquire(_q_value); }
+    Type loadAcquire() const noexcept { return Ops::loadAcquire(_q_value); }
     void storeRelease(Type newValue) noexcept { Ops::storeRelease(_q_value, newValue); }
 
     static constexpr bool isTestAndSetNative() noexcept { return Ops::isTestAndSetNative(); }

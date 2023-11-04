@@ -57,6 +57,7 @@
 #include "QtCore/qtranslator.h"
 #include "QtCore/qsettings.h"
 #include "private/qobject_p.h"
+#include "private/qlocking_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -97,6 +98,16 @@ public:
 #if !defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD)
     void checkReceiverThread(QObject *receiver);
 #endif
+
+    struct QPostEventListLocker
+    {
+        QThreadData *threadData;
+        std::unique_lock<QMutex> locker;
+
+        void unlock() { locker.unlock(); }
+    };
+    static QPostEventListLocker lockThreadPostEventList(QObject *object);
+
     int &argc;
     char **argv;
     void appendApplicationPathToLibraryPaths(void);

@@ -99,13 +99,25 @@ template <typename X> struct QAtomicOps
     typedef std::atomic<X> Type;
 
     template <typename T> static inline
-    T load(const std::atomic<T> &_q_value)  noexcept
+    T load(const std::atomic<T> &_q_value) noexcept
     {
         return _q_value.load(std::memory_order_relaxed);
     }
 
     template <typename T> static inline
     T load(const volatile std::atomic<T> &_q_value) noexcept
+    {
+        return _q_value.load(std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    T loadRelaxed(const std::atomic<T> &_q_value) noexcept
+    {
+        return _q_value.load(std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    T loadRelaxed(const volatile std::atomic<T> &_q_value) noexcept
     {
         return _q_value.load(std::memory_order_relaxed);
     }
@@ -124,6 +136,12 @@ template <typename X> struct QAtomicOps
 
     template <typename T> static inline
     void store(std::atomic<T> &_q_value, T newValue) noexcept
+    {
+        _q_value.store(newValue, std::memory_order_relaxed);
+    }
+
+    template <typename T> static inline
+    void storeRelaxed(std::atomic<T> &_q_value, T newValue) noexcept
     {
         _q_value.store(newValue, std::memory_order_relaxed);
     }

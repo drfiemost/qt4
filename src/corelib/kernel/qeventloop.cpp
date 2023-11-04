@@ -112,10 +112,11 @@ QEventLoop::QEventLoop(QObject *parent)
     : QObject(*new QEventLoopPrivate, parent)
 {
     Q_D(QEventLoop);
+    auto threadData = d->threadData.loadRelaxed();
     if (!QCoreApplication::instance()) {
         qWarning("QEventLoop: Cannot be used without QApplication");
-    } else if (!d->threadData->eventDispatcher) {
-        QThreadPrivate::createEventDispatcher(d->threadData);
+    } else if (!threadData->eventDispatcher.load()) {
+        QThreadPrivate::createEventDispatcher(threadData);
     }
 }
 
@@ -142,11 +143,12 @@ QEventLoop::~QEventLoop()
 bool QEventLoop::processEvents(ProcessEventsFlags flags)
 {
     Q_D(QEventLoop);
-    if (!d->threadData->eventDispatcher)
+    auto threadData = d->threadData.loadRelaxed();
+    if (!threadData->eventDispatcher.load())
         return false;
     if (flags & DeferredDeletion)
         QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
-    return d->threadData->eventDispatcher->processEvents(flags);
+    return threadData->eventDispatcher.load()->processEvents(flags);
 }
 
 /*!
@@ -175,9 +177,11 @@ bool QEventLoop::processEvents(ProcessEventsFlags flags)
 int QEventLoop::exec(ProcessEventsFlags flags)
 {
     Q_D(QEventLoop);
+    auto threadData = d->threadData.loadRelaxed();
+
     //we need to protect from race condition with QThread::exit
-    QMutexLocker locker(&static_cast<QThreadPrivate *>(QObjectPrivate::get(d->threadData->thread))->mutex);
-    if (d->threadData->quitNow)
+    QMutexLocker locker(&static_cast<QThreadPrivate *>(QObjectPrivate::get(threadData->thread.loadAcquire()))->mutex);
+    if (threadData->quitNow)
         return -1;
 
     if (d->inExec) {
@@ -194,8 +198,9 @@ int QEventLoop::exec(ProcessEventsFlags flags)
         {
             d->inExec = true;
             d->exit = false;
-            ++d->threadData->loopLevel;
-            d->threadData->eventLoops.push(d->q_func());
+            auto threadData = d->threadData.loadRelaxed();
+            ++threadData->loopLevel;
+            threadData->eventLoops.push(d->q_func());
             locker.unlock();
         }
 
@@ -207,11 +212,12 @@ int QEventLoop::exec(ProcessEventsFlags flags)
                          "reimplement QApplication::notify() and catch all exceptions there.\n");
             }
             locker.relock();
-            QEventLoop *eventLoop = d->threadData->eventLoops.pop();
+            auto threadData = d->threadData.loadRelaxed();
+            QEventLoop *eventLoop = threadData->eventLoops.pop();
             Q_ASSERT_X(eventLoop == d->q_func(), "QEventLoop::exec()", "internal error");
             Q_UNUSED(eventLoop); // --release warning
             d->inExec = false;
-            --d->threadData->loopLevel;
+            --threadData->loopLevel;
         }
     };
     LoopReference ref(d, locker);
@@ -247,7 +253,7 @@ int QEventLoop::exec(ProcessEventsFlags flags)
 void QEventLoop::processEvents(ProcessEventsFlags flags, int maxTime)
 {
     Q_D(QEventLoop);
-    if (!d->threadData->eventDispatcher)
+    if (!d->threadData.loadRelaxed()->eventDispatcher.load())
         return;
 
     QElapsedTimer start;
@@ -280,12 +286,13 @@ void QEventLoop::processEvents(ProcessEventsFlags flags, int maxTime)
 void QEventLoop::exit(int returnCode)
 {
     Q_D(QEventLoop);
-    if (!d->threadData->eventDispatcher)
+    auto threadData = d->threadData.loadAcquire();
+    if (!threadData->eventDispatcher.load())
         return;
 
     d->returnCode = returnCode;
     d->exit = true;
-    d->threadData->eventDispatcher->interrupt();
+    threadData->eventDispatcher.load()->interrupt();
 }
 
 /*!
@@ -309,9 +316,10 @@ bool QEventLoop::isRunning() const
 void QEventLoop::wakeUp()
 {
     Q_D(QEventLoop);
-    if (!d->threadData->eventDispatcher)
+    auto threadData = d->threadData.loadAcquire();
+    if (!threadData->eventDispatcher.load())
         return;
-    d->threadData->eventDispatcher->wakeUp();
+    threadData->eventDispatcher.load()->wakeUp();
 }
 
 /*!

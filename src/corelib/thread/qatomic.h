@@ -76,12 +76,12 @@ public:
         : QBasicAtomicInteger<T>()
 #endif
     {
-        this->store(other.load());
+        this->storeRelease(other.loadAcquire());
     }
 
     inline QAtomicInteger &operator=(const QAtomicInteger &other) noexcept
     {
-        this->store(other.load());
+        this->storeRelease(other.loadAcquire());
         return *this;
     }
 
@@ -105,8 +105,10 @@ public:
 
 #ifdef qdoc
     T load() const;
+    T loadRelaxed() const;
     T loadAcquire() const;
     void store(T newValue);
+    void storeRelaxed(T newValue);
     void storeRelease(T newValue);
 
     operator T() const;
@@ -192,21 +194,21 @@ class QAtomicPointer : public QBasicAtomicPointer<T>
 {
 public:
 #ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
-    constexpr QAtomicPointer(T *value = 0) noexcept : QBasicAtomicPointer<T>(value) {}
+    constexpr QAtomicPointer(T *value = nullptr) noexcept : QBasicAtomicPointer<T>(value) {}
 #else
-    inline QAtomicPointer(T *value = 0) noexcept
+    inline QAtomicPointer(T *value = nullptr) noexcept
     {
-        this->store(value);
+        this->storeRelaxed(value);
     }
 #endif
     inline QAtomicPointer(const QAtomicPointer<T> &other) noexcept
     {
-        this->store(other.load());
+        this->storeRelease(other.loadAcquire());
     }
 
     inline QAtomicPointer<T> &operator=(const QAtomicPointer<T> &other) noexcept
     {
-        this->store(other.load());
+        this->storeRelease(other.loadAcquire());
         return *this;
     }
 

@@ -105,6 +105,18 @@ template <typename BaseClass> struct QGenericAtomicOps
     }
 
     template <typename T> static inline always_inline
+    T loadRelaxed(const T &_q_value) noexcept
+    {
+        return _q_value;
+    }
+
+    template <typename T, typename X> static inline always_inline
+    void storeRelaxed(T &_q_value, X newValue) noexcept
+    {
+        _q_value = newValue;
+    }
+
+    template <typename T> static inline always_inline
     T loadAcquire(T &_q_value) noexcept
     {
         T tmp = *static_cast<volatile T *>(&_q_value);
@@ -198,7 +210,7 @@ template <typename BaseClass> struct QGenericAtomicOps
     {
         // implement fetchAndStore on top of testAndSet
         Q_FOREVER {
-            T tmp = load(_q_value);
+            T tmp = loadRelaxed(_q_value);
             if (BaseClass::testAndSetRelaxed(_q_value, tmp, newValue))
                 return tmp;
         }
@@ -233,7 +245,7 @@ template <typename BaseClass> struct QGenericAtomicOps
     {
         // implement fetchAndAdd on top of testAndSet
         Q_FOREVER {
-            T tmp = BaseClass::load(_q_value);
+            T tmp = BaseClass::loadRelaxed(_q_value);
             if (BaseClass::testAndSetRelaxed(_q_value, tmp, T(tmp + valueToAdd)))
                 return tmp;
         }
@@ -299,7 +311,7 @@ template <typename BaseClass> struct QGenericAtomicOps
     {
         // implement fetchAndAnd on top of testAndSet
         Q_FOREVER {
-            T tmp = BaseClass::load(_q_value);
+            T tmp = BaseClass::loadRelaxed(_q_value);
             if (BaseClass::testAndSetRelaxed(_q_value, tmp, T(tmp & operand)))
                 return tmp;
         }
@@ -332,7 +344,7 @@ template <typename BaseClass> struct QGenericAtomicOps
     {
         // implement fetchAndOr on top of testAndSet
         Q_FOREVER {
-            T tmp = BaseClass::load(_q_value);
+            T tmp = BaseClass::loadRelaxed(_q_value);
             if (BaseClass::testAndSetRelaxed(_q_value, tmp, T(tmp | operand)))
                 return tmp;
         }
@@ -365,7 +377,7 @@ template <typename BaseClass> struct QGenericAtomicOps
     {
         // implement fetchAndXor on top of testAndSet
         Q_FOREVER {
-            T tmp = BaseClass::load(_q_value);
+            T tmp = BaseClass::loadRelaxed(_q_value);
             if (BaseClass::testAndSetRelaxed(_q_value, tmp, T(tmp ^ operand)))
                 return tmp;
         }

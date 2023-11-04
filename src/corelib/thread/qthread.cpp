@@ -76,7 +76,7 @@ QT_BEGIN_NAMESPACE
 
 QThreadData::QThreadData(int initialRefCount)
     : _ref(initialRefCount), quitNow(false), loopLevel(0),
-      eventDispatcher(0), canWait(true), isAdopted(false)
+      eventDispatcher(nullptr), canWait(true), isAdopted(false)
 {
     // fprintf(stderr, "QThreadData %p created\n", this);
 }
@@ -91,13 +91,13 @@ QThreadData::~QThreadData()
     // crashing during QCoreApplicationData's global static cleanup we need to
     // safeguard the main thread here.. This fix is a bit crude, but it solves
     // the problem...
-    if (this->thread == QCoreApplicationPrivate::theMainThread) {
-       QCoreApplicationPrivate::theMainThread = 0;
+    if (this->thread.loadAcquire() == QCoreApplicationPrivate::theMainThread.loadAcquire()) {
+       QCoreApplicationPrivate::theMainThread.storeRelease(nullptr);
        QThreadData::clearCurrentThreadData();
     }
 
-    QThread *t = thread;
-    thread = 0;
+    QThread *t = thread.loadAcquire();
+    thread.storeRelease(nullptr);
     delete t;
 
     for (int i = 0; i < postEventList.size(); ++i) {
@@ -389,7 +389,7 @@ QThread *QThread::currentThread()
 {
     QThreadData *data = QThreadData::current();
     Q_ASSERT(data != 0);
-    return data->thread;
+    return data->thread.loadAcquire();
 }
 
 /*!
@@ -404,7 +404,7 @@ QThread::QThread(QObject *parent)
 {
     Q_D(QThread);
     // fprintf(stderr, "QThreadData %p created for thread %p\n", d->data, this);
-    d->data->thread = this;
+    d->data->thread.storeRelaxed(this);
 }
 
 /*! \internal
@@ -414,7 +414,7 @@ QThread::QThread(QThreadPrivate &dd, QObject *parent)
 {
     Q_D(QThread);
     // fprintf(stderr, "QThreadData %p taken from private data for thread %p\n", d->data, this);
-    d->data->thread = this;
+    d->data->thread.storeRelaxed(this);
 }
 
 /*!
@@ -439,7 +439,7 @@ QThread::~QThread()
         if (d->running && !d->finished && !d->data->isAdopted)
             qWarning("QThread: Destroyed while thread is still running");
 
-        d->data->thread = 0;
+        d->data->thread.storeRelease(nullptr);
     }
 }
 
@@ -768,7 +768,7 @@ QThread::Priority QThread::priority() const
 QThread::QThread(QObject *parent)
     : QObject(*(new QThreadPrivate), (QObject*)0){
     Q_D(QThread);
-    d->data->thread = this;
+    d->data->thread.storeRelaxed(this);
 }
 
 QThread *QThread::currentThread()
@@ -795,7 +795,7 @@ QThread::QThread(QThreadPrivate &dd, QObject *parent)
 {
     Q_D(QThread);
     // fprintf(stderr, "QThreadData %p taken from private data for thread %p\n", d->data, this);
-    d->data->thread = this;
+    d->data->thread.storeRelaxed(this);
 }
 
 #endif // QT_NO_THREAD

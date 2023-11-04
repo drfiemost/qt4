@@ -308,7 +308,7 @@ public:
     { return platform_integration; }
 
     static QAbstractEventDispatcher *qt_qpa_core_dispatcher()
-    { return QCoreApplication::instance()->d_func()->threadData->eventDispatcher; }
+    { return QCoreApplication::instance()->d_func()->threadData.loadRelaxed()->eventDispatcher.loadRelaxed(); }
 #endif
 
     void createEventDispatcher();

@@ -276,11 +276,22 @@
 
 /*! 
     \fn T QAtomicInteger::load() const
+    \obsolete
+    Use loadRelaxed() instead.
 
     Atomically loads the value of this QAtomicInteger using relaxed memory
     ordering. The value is not modified in any way, but note that there's no
     guarantee that it remains so.
-    \sa store(), loadAcquire()
+    \sa storeRelaxed(), loadAcquire()
+*/
+
+/*!
+    \fn template <typename T> T QAtomicInteger<T>::loadRelaxed() const
+
+    Atomically loads the value of this QAtomicInteger using relaxed memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa storeRelaxed(), loadAcquire()
 */
 
 /*!
@@ -289,15 +300,25 @@
     Atomically loads the value of this QAtomicInteger using the "Acquire" memory
     ordering. The value is not modified in any way, but note that there's no
     guarantee that it remains so.
-    \sa store(), load()
+    \sa storeRelaxed(), loadRelaxed()
 */
 
 /*!
     \fn void QAtomicInteger::store(T newValue)
+    \obsolete
+    Use storeRelaxed() instead.
 
     Atomically stores the \a newValue value into this atomic type, using
     relaxed memory ordering.
-    \sa storeRelease(), load()
+    \sa storeRelease(), loadRelaxed()
+*/
+
+/*!
+    \fn template <typename T> void QAtomicInteger<T>::storeRelaxed(T newValue)
+
+    Atomically stores the \a newValue value into this atomic type, using
+    relaxed memory ordering.
+    \sa storeRelease(), loadRelaxed()
 */
 
 /*!
@@ -305,7 +326,7 @@
 
     Atomically stores the \a newValue value into this atomic type, using
     the "Release" memory ordering.
-    \sa store(), load()
+    \sa store(), loadAcquire()
 */
 
 /*!
@@ -314,7 +335,7 @@
     consistent memory ordering if possible; or "Acquire" ordering if not. The
     value is not modified in any way, but note that there's no guarantee that
     it remains so.
-    \sa load(), loadAcquire()
+    \sa loadRelaxed(), loadAcquire()
 */
 
 /*!
@@ -322,7 +343,7 @@
     Atomically stores the \a newValue value into this atomic type using a
     sequentially consistent memory ordering if possible; or "Release" ordering
     if not. This function returns a reference to this object.
-    \sa store(), storeRelease()
+    \sa storeRelaxed(), storeRelease()
 */
 
 /*!
@@ -429,10 +450,21 @@
 
 /*!
     \fn T *QAtomicPointer::load() const
+    \obsolete
+    Use loadRelaxed() instead.
     Atomically loads the value of this QAtomicPointer using relaxed memory
     ordering. The value is not modified in any way, but note that there's no
     guarantee that it remains so.
-    \sa store(), loadAcquire()
+    \sa storeRelaxed(), loadAcquire()
+*/
+
+/*!
+    \fn template <typename T> T *QAtomicPointer<T>::loadRelaxed() const
+
+    Atomically loads the value of this QAtomicPointer using relaxed memory
+    ordering. The value is not modified in any way, but note that there's no
+    guarantee that it remains so.
+    \sa storeRelaxed(), loadAcquire()
 */
 
 /*!
@@ -440,21 +472,31 @@
     Atomically loads the value of this QAtomicPointerusing the "Acquire" memory
     ordering. The value is not modified in any way, but note that there's no
     guarantee that it remains so.
-    \sa store(), load()
+    \sa storeRelease(), loadRelaxed()
 */
 
 /*!
     \fn void QAtomicPointer::store(T *newValue)
+    \obsolete
+    Use storeRelaxed() instead.
     Atomically stores the \a newValue value into this atomic type, using
     relaxed memory ordering.
-    \sa storeRelease(), load()
+    \sa storeRelease(), loadRelaxed()
+*/
+
+/*!
+    \fn template <typename T> void QAtomicPointer<T>::storeRelaxed(T *newValue)
+
+    Atomically stores the \a newValue value into this atomic type, using
+    relaxed memory ordering.
+    \sa storeRelease(), loadRelaxed()
 */
 
 /*!
     \fn void QAtomicPointer::storeRelease(T *newValue)
     Atomically stores the \a newValue value into this atomic type, using
     the "Release" memory ordering.
-    \sa store(), load()
+    \sa storeRelaxed(), loadRelaxed()
 */
 
 /*! \fn bool QAtomicInteger::isTestAndSetNative()

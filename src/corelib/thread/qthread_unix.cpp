@@ -123,7 +123,7 @@ static void destroy_current_thread_data(void *p)
     pthread_setspecific(current_thread_data_key, p);
     QThreadData *data = static_cast<QThreadData *>(p);
     if (data->isAdopted) {
-        QThread *thread = data->thread;
+        QThread *thread = data->thread.loadAcquire();
         Q_ASSERT(thread);
         QThreadPrivate *thread_p = static_cast<QThreadPrivate *>(QObjectPrivate::get(thread));
         Q_ASSERT(!thread_p->finished);
@@ -230,7 +230,7 @@ QThreadData *QThreadData::current()
             data = new QThreadData;
             QT_TRY {
                 set_thread_data(data);
-                data->thread = new QAdoptedThread(data);
+                data->thread.storeRelaxed(new QAdoptedThread(data));
             } QT_CATCH(...) {
                 clear_thread_data();
                 data->deref();
@@ -241,8 +241,8 @@ QThreadData *QThreadData::current()
         }
         data->isAdopted = true;
         data->threadId.store(to_HANDLE(pthread_self()));
-        if (!QCoreApplicationPrivate::theMainThread)
-            QCoreApplicationPrivate::theMainThread = data->thread.load();
+        if (!QCoreApplicationPrivate::theMainThread.loadAcquire())
+            QCoreApplicationPrivate::theMainThread.storeRelease(data->thread.loadRelaxed());
     }
     return data;
 }
@@ -276,13 +276,13 @@ void QThreadPrivate::createEventDispatcher(QThreadData *data)
     if (qgetenv("QT_NO_GLIB").isEmpty()
         && qgetenv("QT_NO_THREADED_GLIB").isEmpty()
         && QEventDispatcherGlib::versionSupported())
-        data->eventDispatcher = new QEventDispatcherGlib;
+        data->eventDispatcher.storeRelease(new QEventDispatcherGlib);
     else
 #endif
-    data->eventDispatcher = new QEventDispatcherUNIX;
+    data->eventDispatcher.storeRelease(new QEventDispatcherUNIX);
 
     l.unlock();
-    data->eventDispatcher->startingUp();
+    data->eventDispatcher.load()->startingUp();
 }
 
 #ifndef QT_NO_THREAD
@@ -368,9 +368,9 @@ void QThreadPrivate::finish(void *arg)
     locker.relock();
     d->terminated = false;
 
-    QAbstractEventDispatcher *eventDispatcher = d->data->eventDispatcher;
+    QAbstractEventDispatcher *eventDispatcher = d->data->eventDispatcher.loadRelaxed();
     if (eventDispatcher) {
-        d->data->eventDispatcher = 0;
+        d->data->eventDispatcher = nullptr;
         locker.unlock();
         eventDispatcher->closingDown();
         delete eventDispatcher;

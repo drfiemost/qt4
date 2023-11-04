@@ -219,6 +219,8 @@ public:
 
     void ref();
     void deref();
+    inline bool hasEventDispatcher() const
+    { return eventDispatcher.load() != nullptr; }
 
     bool canWaitLocked()
     {
@@ -258,7 +260,7 @@ public:
     QAtomicPointer<void> threadId;
     bool quitNow;
     int loopLevel;
-    QAbstractEventDispatcher *eventDispatcher;
+    QAtomicPointer<QAbstractEventDispatcher> eventDispatcher;
     QStack<QEventLoop *> eventLoops;
     QPostEventList postEventList;
     bool canWait;

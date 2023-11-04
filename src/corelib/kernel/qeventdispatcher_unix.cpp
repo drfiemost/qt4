@@ -519,17 +519,19 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
     // we are awake, broadcast it
     emit awake();
 
+    auto threadData = d->threadData.loadRelaxed();
     QEventLoop::ProcessEventsFlags excludeAllFlags
         = QEventLoop::ExcludeUserInputEvents
         | QEventLoop::ExcludeSocketNotifiers
         | QEventLoop::X11ExcludeTimers;
     if ((flags & excludeAllFlags) == excludeAllFlags)
         return false;
-    if(( flags & excludeAllFlags ) != excludeAllFlags )
-        QCoreApplicationPrivate::sendPostedEvents(0, 0, d->threadData);
+    if(( flags & excludeAllFlags ) != excludeAllFlags ) {
+        QCoreApplicationPrivate::sendPostedEvents(0, 0, threadData);
+    }
 
     int nevents = 0;
-    const bool canWait = (d->threadData->canWaitLocked()
+    const bool canWait = (threadData->canWaitLocked()
                           && !d->interrupt
                           && (flags & QEventLoop::WaitForMoreEvents));
 

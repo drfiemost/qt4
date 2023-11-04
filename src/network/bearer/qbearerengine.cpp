@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qbearerengine_p.h"
+#include <QtCore/private/qlocking_p.h>
 
 #ifndef QT_NO_BEARERMANAGEMENT
 
@@ -92,7 +93,7 @@ bool QBearerEngine::configurationsInUse() const
     QHash<QString, QNetworkConfigurationPrivatePointer>::ConstIterator it;
     QHash<QString, QNetworkConfigurationPrivatePointer>::ConstIterator end;
 
-    QMutexLocker locker(&mutex);
+    const auto locker = qt_scoped_lock(mutex);
 
     for (it = accessPointConfigurations.constBegin(),
          end = accessPointConfigurations.constEnd(); it != end; ++it) {
