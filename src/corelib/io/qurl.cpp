@@ -6209,7 +6209,7 @@ void QUrl::detach(QMutexLocker &locker)
     // Ensure that we hold the mutex until after making our private copy,
     // so that another thread cannot deref + delete d meanwhile.
     // So this is a modified version of qAtomicDetach(d)
-    if (d->ref == 1) {
+    if (d->ref.loadRelaxed() == 1) {
         locker.unlock();
         return;
     }
@@ -6225,7 +6225,7 @@ void QUrl::detach(QMutexLocker &locker)
 */
 bool QUrl::isDetached() const
 {
-    return !d || d->ref.load() == 1;
+    return !d || d->ref.loadRelaxed() == 1;
 }
 
 

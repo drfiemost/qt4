@@ -185,11 +185,11 @@ namespace QtSharedPointer {
         inline ExternalRefCountData(DestroyerFn d)
             : destroyer(d)
         {
-            strongref.store(1);
-            weakref.store(1);
+            strongref.storeRelaxed(1);
+            weakref.storeRelaxed(1);
         }
         inline ExternalRefCountData(Qt::Initialization) { }
-        ~ExternalRefCountData() { Q_ASSERT(!weakref.load()); Q_ASSERT(strongref.load() <= 0); }
+        ~ExternalRefCountData() { Q_ASSERT(!weakref.loadRelaxed()); Q_ASSERT(strongref.loadRelaxed() <= 0); }
 
         void destroy() { destroyer(this); }
 
@@ -404,12 +404,12 @@ namespace QtSharedPointer {
             if (o) {
                 // increase the strongref, but never up from zero
                 // or less (-1 is used by QWeakPointer on untracked QObject)
-                int tmp = o->strongref.load();
+                int tmp = o->strongref.loadRelaxed();
                 while (tmp > 0) {
                     // try to increment from "tmp" to "tmp + 1"
                     if (o->strongref.testAndSetRelaxed(tmp, tmp + 1))
                         break;   // succeeded
-                    tmp = o->strongref.load();  // failed, try again
+                    tmp = o->strongref.loadRelaxed();  // failed, try again
                 }
 
                 if (tmp > 0) {
@@ -422,7 +422,7 @@ namespace QtSharedPointer {
 
             qSwap(d, o);
             qSwap(this->value, actual);
-            if (!d || d->strongref.load() == 0)
+            if (!d || d->strongref.loadRelaxed() == 0)
                 this->value = 0;
 
             // dereference saved data
@@ -553,10 +553,10 @@ public:
     typedef const value_type &const_reference;
     typedef qptrdiff difference_type;
 
-    inline bool isNull() const { return d == nullptr || d->strongref.load() == 0 || value == nullptr; }
+    inline bool isNull() const { return d == nullptr || d->strongref.loadRelaxed() == 0 || value == nullptr; }
     inline operator RestrictedBool() const { return isNull() ? 0 : &QWeakPointer::value; }
     inline bool operator !() const { return isNull(); }
-    inline T *data() const { return d == nullptr || d->strongref.load() == 0 ? nullptr : value; }
+    inline T *data() const { return d == nullptr || d->strongref.loadRelaxed() == 0 ? nullptr : value; }
 
     inline QWeakPointer() : d(nullptr), value(nullptr) { }
     inline ~QWeakPointer() { if (d && !d->weakref.deref()) delete d; }

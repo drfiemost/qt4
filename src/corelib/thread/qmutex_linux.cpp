@@ -198,7 +198,7 @@ bool lockInternal_helper(QBasicAtomicPointer<QMutexData> &d_ptr, int timeout = -
         // also waiting
     }
 
-    Q_ASSERT(d_ptr.load());
+    Q_ASSERT(d_ptr.loadRelaxed());
     return true;
 }
 
@@ -218,7 +218,7 @@ bool QBasicMutex::lockInternal(int timeout) noexcept
 
 void QBasicMutex::unlockInternal() noexcept
 {
-    QMutexData *d = d_ptr.load();
+    QMutexData *d = d_ptr.loadRelaxed();
     Q_ASSERT(d); //we must be locked
     Q_ASSERT(d != dummyLocked()); // testAndSetRelease(dummyLocked(), 0) failed
     Q_UNUSED(d);

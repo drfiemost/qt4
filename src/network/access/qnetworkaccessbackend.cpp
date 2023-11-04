@@ -85,7 +85,7 @@ QNetworkAccessBackendFactory::QNetworkAccessBackendFactory()
 
 QNetworkAccessBackendFactory::~QNetworkAccessBackendFactory()
 {
-    if (QNetworkAccessBackendFactoryData::valid.load()) {
+    if (QNetworkAccessBackendFactoryData::valid.loadRelaxed()) {
         QMutexLocker locker(&factoryData()->mutex);
         factoryData()->removeAll(this);
     }
@@ -94,7 +94,7 @@ QNetworkAccessBackendFactory::~QNetworkAccessBackendFactory()
 QNetworkAccessBackend *QNetworkAccessManagerPrivate::findBackend(QNetworkAccessManager::Operation op,
                                                                  const QNetworkRequest &request)
 {
-    if (QNetworkAccessBackendFactoryData::valid.load()) {
+    if (QNetworkAccessBackendFactoryData::valid.loadRelaxed()) {
         QMutexLocker locker(&factoryData()->mutex);
         QNetworkAccessBackendFactoryData::ConstIterator it = factoryData()->constBegin(),
                                                            end = factoryData()->constEnd();

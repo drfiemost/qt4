@@ -346,8 +346,8 @@ void QCoreApplicationPrivate::createEventDispatcher()
 QBasicAtomicPointer<QThread> QCoreApplicationPrivate::theMainThread = Q_BASIC_ATOMIC_INITIALIZER(0);
 QThread *QCoreApplicationPrivate::mainThread()
 {
-    Q_ASSERT(theMainThread.load() != 0);
-    return theMainThread.load();
+    Q_ASSERT(theMainThread.loadRelaxed() != 0);
+    return theMainThread.loadRelaxed();
 }
 
 #if !defined (QT_NO_DEBUG) || defined (QT_MAC_FRAMEWORK_BUILD)
@@ -879,7 +879,7 @@ void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags)
         return;
     if (flags & QEventLoop::DeferredDeletion)
         QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
-    data->eventDispatcher.load()->processEvents(flags);
+    data->eventDispatcher.loadRelaxed()->processEvents(flags);
 }
 
 /*!
@@ -907,7 +907,7 @@ void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags, int m
     start.start();
     if (flags & QEventLoop::DeferredDeletion)
         QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
-    while (data->eventDispatcher.load()->processEvents(flags & ~QEventLoop::WaitForMoreEvents)) {
+    while (data->eventDispatcher.loadRelaxed()->processEvents(flags & ~QEventLoop::WaitForMoreEvents)) {
         if (start.elapsed() > maxtime)
             break;
         if (flags & QEventLoop::DeferredDeletion)
@@ -1245,7 +1245,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
 
             --data->postEventList.recursion;
             if (!data->postEventList.recursion && !data->canWait && data->hasEventDispatcher())
-                data->eventDispatcher.load()->wakeUp();
+                data->eventDispatcher.loadRelaxed()->wakeUp();
 
             // clear the global list, i.e. remove everything that was
             // delivered.

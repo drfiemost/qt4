@@ -91,7 +91,7 @@ QFileInfoGatherer::QFileInfoGatherer(QObject *parent)
 */
 QFileInfoGatherer::~QFileInfoGatherer()
 {
-    abort.store(true);
+    abort.storeRelaxed(true);
     condition.wakeAll();
     wait();
 }
@@ -205,9 +205,9 @@ void QFileInfoGatherer::run()
 {
     forever {
         QMutexLocker locker(&mutex);
-        while (!abort.load() && path.isEmpty())
+        while (!abort.loadRelaxed() && path.isEmpty())
             condition.wait(&mutex);
-        if (abort.load())
+        if (abort.loadRelaxed())
             return;
         const QString thisPath = path.front();
         path.pop_front();
@@ -301,7 +301,7 @@ void QFileInfoGatherer::getFileInfos(const QString &path, const QStringList &fil
     QString itPath = QDir::fromNativeSeparators(files.isEmpty() ? path : QLatin1String(""));
     QDirIterator dirIt(itPath, QDir::AllEntries | QDir::System | QDir::Hidden);
     QStringList allFiles;
-    while (!abort.load() && dirIt.hasNext()) {
+    while (!abort.loadRelaxed() && dirIt.hasNext()) {
         dirIt.next();
         fileInfo = dirIt.fileInfo();
         allFiles.append(fileInfo.fileName());
@@ -311,7 +311,7 @@ void QFileInfoGatherer::getFileInfos(const QString &path, const QStringList &fil
         emit newListOfFiles(path, allFiles);
 
     QStringList::const_iterator filesIt = filesToCheck.constBegin();
-    while (!abort.load() && filesIt != filesToCheck.constEnd()) {
+    while (!abort.loadRelaxed() && filesIt != filesToCheck.constEnd()) {
         fileInfo.setFile(path + QDir::separator() + *filesIt);
         ++filesIt;
         fetch(fileInfo, base, firstTime, updatedFiles, path);

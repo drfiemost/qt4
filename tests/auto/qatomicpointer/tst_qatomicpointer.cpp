@@ -105,7 +105,7 @@ void tst_QAtomicPointer::warningFreeHelper()
 
     QBasicAtomicPointer<WFHC> p = Q_BASIC_ATOMIC_INITIALIZER(0);
 
-    p.load()->bar();
+    p.loadRelaxed()->bar();
 
     WFHC *expectedValue = 0;
     WFHC *newValue = 0;

@@ -112,7 +112,7 @@ extern QImage qt_gl_read_framebuffer(const QSize&, bool, bool);
 */
 void QGLFramebufferObjectFormat::detach()
 {
-    if (d->ref.load() != 1) {
+    if (d->ref.loadRelaxed() != 1) {
         QGLFramebufferObjectFormatPrivate *newd
             = new QGLFramebufferObjectFormatPrivate(d);
         if (!d->ref.deref())

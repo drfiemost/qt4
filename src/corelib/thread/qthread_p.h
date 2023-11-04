@@ -220,7 +220,7 @@ public:
     void ref();
     void deref();
     inline bool hasEventDispatcher() const
-    { return eventDispatcher.load() != nullptr; }
+    { return eventDispatcher.loadRelaxed() != nullptr; }
 
     bool canWaitLocked()
     {

@@ -212,7 +212,7 @@ Q_CORE_EXPORT QBasicAtomicInt qt_qhash_seed = Q_BASIC_ATOMIC_INITIALIZER(-1);
 */
 static void qt_initialize_qhash_seed()
 {
-    if (qt_qhash_seed.load() == -1) {
+    if (qt_qhash_seed.loadRelaxed() == -1) {
         int x(qt_create_qhash_seed() & INT_MAX);
         qt_qhash_seed.testAndSetRelaxed(-1, x);
     }
@@ -328,7 +328,7 @@ QHashData *QHashData::detach_helper(void (*node_duplicate)(Node *, void *),
     d->userNumBits = userNumBits;
     d->numBits = numBits;
     d->numBuckets = numBuckets;
-    d->seed = uint(qt_qhash_seed.load());
+    d->seed = uint(qt_qhash_seed.loadRelaxed());
     d->sharable = true;
     d->strictAlignment = nodeAlign > 8;
     d->reserved = 0;

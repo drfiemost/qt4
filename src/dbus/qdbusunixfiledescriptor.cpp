@@ -196,7 +196,7 @@ QDBusUnixFileDescriptor::~QDBusUnixFileDescriptor()
 */
 bool QDBusUnixFileDescriptor::isValid() const
 {
-    return d ? d->fd.load() != -1 : false;
+    return d ? d->fd.loadRelaxed() != -1 : false;
 }
 
 /*!
@@ -214,7 +214,7 @@ bool QDBusUnixFileDescriptor::isValid() const
 */
 int QDBusUnixFileDescriptor::fileDescriptor() const
 {
-    return d ? d->fd.load() : -1;
+    return d ? d->fd.loadRelaxed() : -1;
 }
 
 // actual implementation
@@ -271,12 +271,12 @@ void QDBusUnixFileDescriptor::giveFileDescriptor(int fileDescriptor)
     else
         d = new QDBusUnixFileDescriptorPrivate;
 
-    const int fdl = d->fd.load();
+    const int fdl = d->fd.loadRelaxed();
     if (fdl != -1)
         qt_safe_close(fdl);
 
     if (fileDescriptor != -1)
-        d->fd.store(fileDescriptor);
+        d->fd.storeRelaxed(fileDescriptor);
 }
 
 /*!
@@ -297,7 +297,7 @@ int QDBusUnixFileDescriptor::takeFileDescriptor()
 
 QDBusUnixFileDescriptorPrivate::~QDBusUnixFileDescriptorPrivate()
 {
-    const int fdl = fd.load();
+    const int fdl = fd.loadRelaxed();
     if (fdl != -1)
         qt_safe_close(fdl);
 }

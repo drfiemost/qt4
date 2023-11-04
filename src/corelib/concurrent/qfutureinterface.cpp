@@ -422,7 +422,7 @@ QFutureInterfaceBase &QFutureInterfaceBase::operator=(const QFutureInterfaceBase
 
 bool QFutureInterfaceBase::referenceCountIsOne() const
 {
-    return d->refCount.load() == 1;
+    return d->refCount.loadRelaxed() == 1;
 }
 
 QFutureInterfaceBasePrivate::QFutureInterfaceBasePrivate(QFutureInterfaceBase::State initialState)

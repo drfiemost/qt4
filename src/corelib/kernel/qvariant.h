@@ -449,7 +449,7 @@ Q_CORE_EXPORT QDataStream& operator<< (QDataStream& s, const QVariant::Type p);
 #endif
 
 inline bool QVariant::isDetached() const
-{ return !d.is_shared || d.data.shared->ref.load() == 1; }
+{ return !d.is_shared || d.data.shared->ref.loadRelaxed() == 1; }
 
 
 #ifdef qdoc

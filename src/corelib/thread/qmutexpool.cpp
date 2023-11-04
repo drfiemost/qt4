@@ -99,7 +99,7 @@ QMutexPool::QMutexPool(QMutex::RecursionMode recursionMode, int size)
     : mutexes(size), recursionMode(recursionMode)
 {
     for (int index = 0; index < mutexes.count(); ++index) {
-        mutexes[index].store(0);
+        mutexes[index].storeRelaxed(0);
     }
 }
 
@@ -110,7 +110,7 @@ QMutexPool::QMutexPool(QMutex::RecursionMode recursionMode, int size)
 QMutexPool::~QMutexPool()
 {
     for (int index = 0; index < mutexes.count(); ++index)
-        delete mutexes[index].load();
+        delete mutexes[index].loadRelaxed();
 }
 
 /*!
@@ -136,7 +136,7 @@ QMutex *QMutexPool::createMutex(int index)
     QMutex *newMutex = new QMutex(recursionMode);
     if (!mutexes[index].testAndSetRelease(0, newMutex))
         delete newMutex;
-    return mutexes[index].load();
+    return mutexes[index].loadRelaxed();
 }
 
 /*!

@@ -342,7 +342,7 @@ QPixmap::QPixmap(const char * const xpm[])
 
 QPixmap::~QPixmap()
 {
-    Q_ASSERT(!data || data->ref.load() >= 1); // Catch if ref-counting changes again
+    Q_ASSERT(!data || data->ref.loadRelaxed() >= 1); // Catch if ref-counting changes again
 }
 
 /*!
@@ -958,7 +958,7 @@ void QPixmap::fill(const QColor &color)
         return;
     }
 
-    if (data->ref.load() == 1) {
+    if (data->ref.loadRelaxed() == 1) {
         // detach() will also remove this pixmap from caches, so
         // it has to be called even when ref == 1.
         detach();
@@ -1218,7 +1218,7 @@ QDataStream &operator>>(QDataStream &stream, QPixmap &pixmap)
 
 bool QPixmap::isDetached() const
 {
-    return data && data->ref.load() == 1;
+    return data && data->ref.loadRelaxed() == 1;
 }
 
 /*! \internal
@@ -1832,7 +1832,7 @@ void QPixmap::detach()
         rasterData->image.detach();
     }
 
-    if (data->is_cached && data->ref.load() == 1)
+    if (data->is_cached && data->ref.loadRelaxed() == 1)
         QImagePixmapCleanupHooks::executePixmapDataModificationHooks(data.data());
 
 #if defined(Q_WS_MAC)
@@ -1845,7 +1845,7 @@ void QPixmap::detach()
     }
 #endif
 
-    if (data->ref.load() != 1) {
+    if (data->ref.loadRelaxed() != 1) {
         *this = copy();
     }
     ++data->detach_no;

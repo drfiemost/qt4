@@ -56,7 +56,7 @@ class RefCount
 {
 public:
     inline bool ref() {
-        int count = atomic.load();
+        int count = atomic.loadRelaxed();
         if (count == 0) // !isSharable
             return false;
         if (count != -1) // !isStatic
@@ -65,7 +65,7 @@ public:
     }
 
     inline bool deref() {
-        int count = atomic.load();
+        int count = atomic.loadRelaxed();
         if (count == 0) // !isSharable
             return false;
         if (count == -1) // isStatic
@@ -85,32 +85,32 @@ public:
     bool isStatic() const
     {
         // Persistent object, never deleted
-        return atomic.load() == -1;
+        return atomic.loadRelaxed() == -1;
     }
 
     bool isSharable() const
     {
         // Sharable === Shared ownership.
-        return atomic.load() != 0;
+        return atomic.loadRelaxed() != 0;
     }
 
     bool isShared() const
     {
-        int count = atomic.load();
+        int count = atomic.loadRelaxed();
         return (count != 1) && (count != 0);
     }
 
     inline bool operator==(int value) const
-    { return atomic.load() ==(value); }
+    { return atomic.loadRelaxed() ==(value); }
     inline bool operator!=(int value) const
-    { return atomic.load() !=(value); }
+    { return atomic.loadRelaxed() !=(value); }
     inline bool operator!() const
-    { return !atomic.load(); }
+    { return !atomic.loadRelaxed(); }
     inline operator int() const
-    { return atomic.load(); }
+    { return atomic.loadRelaxed(); }
 
-    void initializeOwned() { atomic.store(1); }
-    void initializeUnsharable() { atomic.store(0); }
+    void initializeOwned() { atomic.storeRelaxed(1); }
+    void initializeUnsharable() { atomic.storeRelaxed(0); }
 
     QBasicAtomicInt atomic;
 };

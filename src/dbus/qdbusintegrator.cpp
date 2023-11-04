@@ -565,7 +565,7 @@ bool QDBusConnectionPrivate::handleMessage(const QDBusMessage &amsg)
         (*(*list)[i])(amsg);
     }
 
-    if (!ref.load())
+    if (!ref.loadRelaxed())
         return false;
 
     switch (amsg.type()) {
@@ -2019,11 +2019,11 @@ QDBusPendingCallPrivate *QDBusConnectionPrivate::sendWithReplyAsync(const QDBusM
 
         if ((receiver && returnMethod) || errorMethod) {
            // no one waiting, will delete pcall in processFinishedCall()
-           pcall->ref.store(1);
+           pcall->ref.storeRelaxed(1);
         } else {
            // set double ref to prevent race between processFinishedCall() and ref counting
            // by QDBusPendingCall::QExplicitlySharedDataPointer<QDBusPendingCallPrivate>
-           pcall->ref.store(2);
+           pcall->ref.storeRelaxed(2);
         }
         processFinishedCall(pcall);
         return pcall;

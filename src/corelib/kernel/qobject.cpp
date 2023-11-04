@@ -809,15 +809,15 @@ QObject::~QObject()
         QObjectPrivate::clearGuards(this);
     }
 
-    QtSharedPointer::ExternalRefCountData *sharedRefcount = d->sharedRefcount.load();
+    QtSharedPointer::ExternalRefCountData *sharedRefcount = d->sharedRefcount.loadRelaxed();
     if (sharedRefcount) {
-        if (sharedRefcount->strongref.load() > 0) {
+        if (sharedRefcount->strongref.loadRelaxed() > 0) {
             qWarning("QObject: shared QObject was deleted directly. The program is malformed and may crash.");
             // but continue deleting, it's too late to stop anyway
         }
 
         // indicate to all QWeakPointers that this QObject has now been deleted
-        sharedRefcount->strongref.store(0);
+        sharedRefcount->strongref.storeRelaxed(0);
         if (!sharedRefcount->weakref.deref())
             delete sharedRefcount;
     }
@@ -911,7 +911,7 @@ QObject::~QObject()
 
 QObjectPrivate::Connection::~Connection()
 {
-    int *v = argumentTypes.load();
+    int *v = argumentTypes.loadRelaxed();
     if (v != &DIRECT_CONNECTION_ONLY)
         delete [] v;
 }
@@ -1325,7 +1325,7 @@ void QObject::moveToThread(QThread *targetThread)
     QThreadData *thisThreadData = d->threadData.loadRelaxed();
     if (thisThreadData->thread.loadAcquire() == 0 && currentData == targetData) {
         // one exception to the rule: we allow moving objects with no thread affinity to the current thread
-        currentData = d->threadData;
+        currentData = thisThreadData;
     } else if (thisThreadData != currentData) {
         qWarning("QObject::moveToThread: Current thread (%p) is not the object's thread (%p).\n"
                  "Cannot move to target thread (%p)\n",
@@ -1391,9 +1391,9 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
             ++eventsMoved;
         }
     }
-    if (eventsMoved > 0 && targetData->eventDispatcher.load()) {
+    if (eventsMoved > 0 && targetData->eventDispatcher.loadRelaxed()) {
         targetData->canWait = false;
-        targetData->eventDispatcher.load()->wakeUp();
+        targetData->eventDispatcher.loadRelaxed()->wakeUp();
     }
 
     // the current emitting thread shouldn't restore currentSender after calling moveToThread()
@@ -2962,7 +2962,7 @@ bool QMetaObjectPrivate::connect(const QObject *sender, int signal_index,
     c->method_relative = method_index;
     c->method_offset = method_offset;
     c->connectionType = type;
-    c->argumentTypes.store(types);
+    c->argumentTypes.storeRelaxed(types);
     c->nextConnectionList = 0;
     c->callFunction = callFunction;
 
@@ -3174,7 +3174,7 @@ void QMetaObject::connectSlotsByName(QObject *o)
 
 static void queued_activate(QObject *sender, int signal, QObjectPrivate::Connection *c, void **argv)
 {
-    int *argumentTypes = c->argumentTypes.load();
+    int *argumentTypes = c->argumentTypes.loadRelaxed();
     if (!argumentTypes && argumentTypes != &DIRECT_CONNECTION_ONLY) {
         QMetaMethod m = sender->metaObject()->method(signal);
         argumentTypes = queuedConnectionTypes(m.parameterTypes());
@@ -3183,7 +3183,7 @@ static void queued_activate(QObject *sender, int signal, QObjectPrivate::Connect
         if (!c->argumentTypes.testAndSetOrdered(0, argumentTypes)) {
             if (argumentTypes != &DIRECT_CONNECTION_ONLY)
                 delete [] argumentTypes;
-            argumentTypes = c->argumentTypes.load();
+            argumentTypes = c->argumentTypes.loadRelaxed();
         }
     }
     if (argumentTypes == &DIRECT_CONNECTION_ONLY) // cannot activate

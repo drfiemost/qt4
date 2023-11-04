@@ -1220,7 +1220,7 @@ void QtSharedPointer::ExternalRefCountData::setQObjectShared(const QObject *, bo
 */
 void QtSharedPointer::ExternalRefCountData::checkQObjectShared(const QObject *)
 {
-    if (strongref.load() < 0)
+    if (strongref.loadRelaxed() < 0)
         qWarning("QSharedPointer: cannot create a QSharedPointer from a QObject-tracking QWeakPointer");
 }
 
@@ -1230,7 +1230,7 @@ QtSharedPointer::ExternalRefCountData *QtSharedPointer::ExternalRefCountData::ge
     QObjectPrivate *d = QObjectPrivate::get(const_cast<QObject *>(obj));
     Q_ASSERT_X(!d->wasDeleted, "QWeakPointer", "Detected QWeakPointer creation in a QObject being deleted");
 
-    ExternalRefCountData *that = d->sharedRefcount.load();
+    ExternalRefCountData *that = d->sharedRefcount.loadRelaxed();
     if (that) {
         that->weakref.ref();
         return that;
@@ -1238,8 +1238,8 @@ QtSharedPointer::ExternalRefCountData *QtSharedPointer::ExternalRefCountData::ge
 
     // we can create the refcount data because it doesn't exist
     ExternalRefCountData *x = new ExternalRefCountData(Qt::Uninitialized);
-    x->strongref.store(-1);
-    x->weakref.store(2);  // the QWeakPointer that called us plus the QObject itself
+    x->strongref.storeRelaxed(-1);
+    x->weakref.storeRelaxed(2);  // the QWeakPointer that called us plus the QObject itself
     if (!d->sharedRefcount.testAndSetRelease(nullptr, x)) {
         delete x;
         x = d->sharedRefcount.loadAcquire();

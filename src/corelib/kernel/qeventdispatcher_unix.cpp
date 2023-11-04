@@ -92,8 +92,6 @@ QEventDispatcherUNIXPrivate::QEventDispatcherUNIXPrivate()
         qFatal("QEventDispatcherUNIXPrivate(): Can not continue without a thread pipe");
 
     sn_highest = -1;
-
-    interrupt = false;
 }
 
 QEventDispatcherUNIXPrivate::~QEventDispatcherUNIXPrivate()
@@ -514,7 +512,7 @@ int QEventDispatcherUNIX::activateSocketNotifiers()
 bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 {
     Q_D(QEventDispatcherUNIX);
-    d->interrupt = false;
+    d->interrupt.storeRelaxed(0);
 
     // we are awake, broadcast it
     emit awake();
@@ -532,13 +530,13 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 
     int nevents = 0;
     const bool canWait = (threadData->canWaitLocked()
-                          && !d->interrupt
+                          && !d->interrupt.loadRelaxed()
                           && (flags & QEventLoop::WaitForMoreEvents));
 
     if (canWait)
         emit aboutToBlock();
 
-    if (!d->interrupt) {
+    if (!d->interrupt.loadRelaxed()) {
         // return the maximum time we can wait for an event.
         timespec *tm = nullptr;
         timespec wait_tm = { 0l, 0l };
@@ -585,7 +583,7 @@ void QEventDispatcherUNIX::wakeUp()
 void QEventDispatcherUNIX::interrupt()
 {
     Q_D(QEventDispatcherUNIX);
-    d->interrupt = true;
+    d->interrupt.storeRelaxed(1);
     wakeUp();
 }
 

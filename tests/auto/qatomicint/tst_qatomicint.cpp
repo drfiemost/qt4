@@ -159,12 +159,12 @@ static void warningFreeHelperTemplate()
     assemblyMarker<1>(&i);
 
     // the loads sometimes generate no assembly output
-    i.load();
+    i.loadRelaxed();
     assemblyMarker<11>(&i);
     i.loadAcquire();
     assemblyMarker<12>(&i);
 
-    i.store(newValue);
+    i.storeRelaxed(newValue);
     assemblyMarker<21>(&i);
     i.storeRelease(newValue);
     assemblyMarker<22>(&i);
@@ -419,13 +419,13 @@ void tst_QAtomicInt::assignment_operator()
     {
         QAtomicInt atomic1 = value;
         atomic1 = newval;
-        QCOMPARE(atomic1.load(), newval);
+        QCOMPARE(atomic1.loadRelaxed(), newval);
         atomic1 = value;
-        QCOMPARE(atomic1.load(), value);
+        QCOMPARE(atomic1.loadRelaxed(), value);
 
         QAtomicInt atomic2 = newval;
         atomic1 = atomic2;
-        QCOMPARE(atomic1.load(), atomic2.load());
+        QCOMPARE(atomic1.loadRelaxed(), atomic2.loadRelaxed());
     }
 }
 
