@@ -2387,10 +2387,10 @@ static void mapToLowerCase(QString *str, int from)
                     ++i;
                 }
             }
-            const NameprepCaseFoldingEntry *entry = qBinaryFind(NameprepCaseFolding,
+            const NameprepCaseFoldingEntry *entry = std::lower_bound(NameprepCaseFolding,
                                                                 NameprepCaseFolding + N,
                                                                 uc);
-            if ((entry - NameprepCaseFolding) != N) {
+            if ((entry != NameprepCaseFolding + N) && !(uc < *entry)) {
                 int l = 1;
                 while (l < 4 && entry->mapping[l])
                     ++l;

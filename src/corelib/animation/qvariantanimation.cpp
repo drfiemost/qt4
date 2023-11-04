@@ -311,8 +311,8 @@ void QVariantAnimationPrivate::setCurrentValueForProgress(const qreal progress)
 QVariant QVariantAnimationPrivate::valueAt(qreal step) const
 {
     QVariantAnimation::KeyValues::const_iterator result =
-        qBinaryFind(keyValues.begin(), keyValues.end(), qMakePair(step, QVariant()), animationValueLessThan);
-    if (result != keyValues.constEnd())
+        std::lower_bound(keyValues.constBegin(), keyValues.constEnd(), qMakePair(step, QVariant()), animationValueLessThan);
+    if (result != keyValues.constEnd() && !animationValueLessThan(qMakePair(step, QVariant()), *result))
         return result->second;
 
     return QVariant();
@@ -621,7 +621,7 @@ void QVariantAnimation::setKeyValues(const KeyValues &keyValues)
 {
     Q_D(QVariantAnimation);
     d->keyValues = keyValues;
-    qSort(d->keyValues.begin(), d->keyValues.end(), animationValueLessThan);
+    std::sort(d->keyValues.begin(), d->keyValues.end(), animationValueLessThan);
     d->recalculateCurrentInterval(/*force=*/true);
 }
 
