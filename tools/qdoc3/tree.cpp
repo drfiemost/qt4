@@ -54,6 +54,7 @@
 #include "tree.h"
 
 #include <limits.h>
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -1620,7 +1621,7 @@ void Tree::generateIndexSections(QXmlStreamWriter &writer,
             const InnerNode *inner = static_cast<const InnerNode *>(node);
 
             NodeList cnodes = inner->childNodes();
-            qSort(cnodes.begin(), cnodes.end(), compareNodes);
+            std::sort(cnodes.begin(), cnodes.end(), compareNodes);
 
             foreach (const Node *child, cnodes) {
                 /*
