@@ -241,6 +241,16 @@ static inline QDBusError::ErrorType get(const char *name)
 
 /*!
     \internal
+    Constructs a QDBusError that represents no error.
+*/
+QDBusError::QDBusError()
+    : code(NoError)
+{
+
+}
+
+/*!
+    \internal
     Constructs a QDBusError from a DBusError structure.
 */
 QDBusError::QDBusError(const DBusError *error)

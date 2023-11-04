@@ -347,7 +347,7 @@ static int writeProperty(QObject *obj, const QByteArray &property_name, QVariant
         }
     }
 
-    if (id != 0xff && value.userType() == QDBusMetaTypeId::argument) {
+    if (id != 0xff && value.userType() == QDBusMetaTypeId::argument()) {
         // we have to demarshall before writing
         void *null = 0;
         QVariant other(id, null);

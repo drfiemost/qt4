@@ -668,7 +668,7 @@ static int findSlot(const QMetaObject *mo, const QByteArray &name, int flags,
         metaTypes[0] = returnType;
         bool hasMessage = false;
         if (inputCount > 0 &&
-            metaTypes.at(inputCount) == QDBusMetaTypeId::message) {
+            metaTypes.at(inputCount) == QDBusMetaTypeId::message()) {
             // "no input parameters" is allowed as long as the message meta type is there
             hasMessage = true;
             --inputCount;
@@ -739,7 +739,7 @@ QDBusCallDeliveryEvent* QDBusConnectionPrivate::prepareReply(QDBusConnectionPriv
     Q_UNUSED(object);
 
     int n = metaTypes.count() - 1;
-    if (metaTypes[n] == QDBusMetaTypeId::message)
+    if (metaTypes[n] == QDBusMetaTypeId::message())
         --n;
 
     if (msg.arguments().count() < n)
@@ -839,7 +839,7 @@ bool QDBusConnectionPrivate::activateCall(QObject* object, int flags, const QDBu
             // try with no parameters, but with a QDBusMessage
             slotData.slotIdx = ::findSlot(mo, memberName, flags, QString(), slotData.metaTypes);
             if (slotData.metaTypes.count() != 2 ||
-                slotData.metaTypes.at(1) != QDBusMetaTypeId::message) {
+                slotData.metaTypes.at(1) != QDBusMetaTypeId::message()) {
                 // not found
                 // save the negative lookup
                 slotData.slotIdx = -1;
@@ -890,7 +890,7 @@ void QDBusConnectionPrivate::deliverCall(QObject *object, int /*flags*/, const Q
     int pCount = qMin(msg.arguments().count(), metaTypes.count() - 1);
     for (i = 1; i <= pCount; ++i) {
         int id = metaTypes[i];
-        if (id == QDBusMetaTypeId::message)
+        if (id == QDBusMetaTypeId::message())
             break;
 
         const QList<QVariant> args = msg.arguments();
@@ -920,7 +920,7 @@ void QDBusConnectionPrivate::deliverCall(QObject *object, int /*flags*/, const Q
         }
     }
 
-    if (metaTypes.count() > i && metaTypes[i] == QDBusMetaTypeId::message) {
+    if (metaTypes.count() > i && metaTypes[i] == QDBusMetaTypeId::message()) {
         params.append(const_cast<void*>(static_cast<const void*>(&msg)));
         ++i;
     }
@@ -1304,7 +1304,7 @@ bool QDBusConnectionPrivate::prepareHook(QDBusConnectionPrivate::SignalHook &hoo
     if (buildSignature) {
         hook.signature.clear();
         for (int i = 1; i < hook.params.count(); ++i)
-            if (hook.params.at(i) != QDBusMetaTypeId::message)
+            if (hook.params.at(i) != QDBusMetaTypeId::message())
                 hook.signature += QLatin1String( QDBusMetaType::typeToSignature( hook.params.at(i) ) );
     }
 

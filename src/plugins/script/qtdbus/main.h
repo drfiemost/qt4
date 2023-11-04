@@ -143,8 +143,6 @@ public Q_SLOTS:
                               const QScriptValue &conn = QScriptValue());
 };
 
-Q_DECLARE_METATYPE(QDBusMessage)
-
 class QScriptDBusMessageConstructor : public QObject, public QScriptable
 {
     Q_OBJECT

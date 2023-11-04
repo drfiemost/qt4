@@ -347,7 +347,6 @@ Q_DECLARE_METATYPE(QDBusReply<QStringList>)
 Q_DECLARE_METATYPE(QDBusReply<uint>)
 Q_DECLARE_METATYPE(QDBusReply<bool>)
 Q_DECLARE_METATYPE(QDBusReply<QDBusConnectionInterface::RegisterServiceReply>)
-Q_DECLARE_METATYPE(QDBusError)
 
 class QtDBusScriptPlugin : public QScriptExtensionPlugin
 {

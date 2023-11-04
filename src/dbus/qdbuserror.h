@@ -93,7 +93,8 @@ public:
 #endif
     };
 
-    QDBusError(const DBusError *error = 0);
+    QDBusError();
+    QDBusError(const DBusError *error);
     QDBusError(const QDBusMessage& msg);
     QDBusError(ErrorType error, const QString &message);
     QDBusError(const QDBusError &other);
@@ -118,6 +119,8 @@ Q_DBUS_EXPORT QDebug operator<<(QDebug, const QDBusError &);
 #endif
 
 QT_END_NAMESPACE
+
+Q_DECLARE_METATYPE(QDBusError)
 
 QT_END_HEADER
 
