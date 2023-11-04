@@ -414,7 +414,6 @@ namespace QT_NAMESPACE {}
 #  define Q_OUTOFLINE_TEMPLATE inline
 #  define Q_NO_TEMPLATE_FRIENDS
 #  define Q_ALIGNOF(type) __alignof(type)
-#  define Q_DECL_ALIGN(n) __declspec(align(n))
 /* Intel C++ disguising as Visual C++: the `using' keyword avoids warnings */
 #  if defined(__INTEL_COMPILER)
 #    define Q_CC_INTEL
@@ -476,8 +475,6 @@ namespace QT_NAMESPACE {}
 /* GCC 2.95 knows "using" but does not support it correctly */
 #  if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95)
 #    define Q_ALIGNOF(type)   __alignof__(type)
-#    define Q_TYPEOF(expr)    __typeof__(expr)
-#    define Q_DECL_ALIGN(n)   __attribute__((__aligned__(n)))
 #  endif
 #  if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 96)
 #    define Q_LIKELY(expr)    __builtin_expect(!!(expr), true)
@@ -532,8 +529,6 @@ namespace QT_NAMESPACE {}
 #    define Q_CANNOT_DELETE_CONSTANT
 #  elif __xlC__ >= 0x0600
 #    define Q_ALIGNOF(type)     __alignof__(type)
-#    define Q_TYPEOF(expr)      __typeof__(expr)
-#    define Q_DECL_ALIGN(n)     __attribute__((__aligned__(n)))
 #    define Q_PACKED            __attribute__((__packed__))
 #  endif
 
@@ -665,8 +660,6 @@ namespace QT_NAMESPACE {}
 #    endif
 #    if __SUNPRO_CC >= 0x590
 #      define Q_ALIGNOF(type)   __alignof__(type)
-#      define Q_TYPEOF(expr)    __typeof__(expr)
-#      define Q_DECL_ALIGN(n)   __attribute__((__aligned__(n)))
 #    endif
 #    if __SUNPRO_CC >= 0x550
 #      define Q_DECL_EXPORT     __global
