@@ -124,7 +124,7 @@ public:
         if (replyMessage.type() == QDBusMessage::ReplyMessage)
             emit reply(replyMessage);
         else
-            emit error(replyMessage, sentMessage);
+            emit error(QDBusError(replyMessage), sentMessage);
         emit finished();
     }
 

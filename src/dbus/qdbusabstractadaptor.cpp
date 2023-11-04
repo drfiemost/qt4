@@ -263,7 +263,7 @@ void QDBusAdaptorConnector::polish()
     }
 
     // sort the adaptor list
-    qSort(adaptors);
+    std::sort(adaptors.begin(), adaptors.end());
 }
 
 void QDBusAdaptorConnector::relaySlot(void **argv)

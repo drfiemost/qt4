@@ -284,82 +284,82 @@ void tst_QDBusPendingReply::simpleTypes()
     QVERIFY(rvoid.isFinished());
     QVERIFY(!rvoid.isError());
 
-    QDBusPendingReply<bool> rbool = iface->asyncCall("retrieveBool");
+    QDBusPendingReply<bool> rbool(iface->asyncCall("retrieveBool"));
     rbool.waitForFinished();
     QVERIFY(rbool.isFinished());
     QCOMPARE(rbool.argumentAt<0>(), adaptor->retrieveBool());
 
-    QDBusPendingReply<uchar> ruchar = iface->asyncCall("retrieveUChar");
+    QDBusPendingReply<uchar> ruchar(iface->asyncCall("retrieveUChar"));
     ruchar.waitForFinished();
     QVERIFY(ruchar.isFinished());
     QCOMPARE(ruchar.argumentAt<0>(), adaptor->retrieveUChar());
 
-    QDBusPendingReply<short> rshort = iface->asyncCall("retrieveShort");
+    QDBusPendingReply<short> rshort(iface->asyncCall("retrieveShort"));
     rshort.waitForFinished();
     QVERIFY(rshort.isFinished());
     QCOMPARE(rshort.argumentAt<0>(), adaptor->retrieveShort());
 
-    QDBusPendingReply<ushort> rushort = iface->asyncCall("retrieveUShort");
+    QDBusPendingReply<ushort> rushort(iface->asyncCall("retrieveUShort"));
     rushort.waitForFinished();
     QVERIFY(rushort.isFinished());
     QCOMPARE(rushort.argumentAt<0>(), adaptor->retrieveUShort());
 
-    QDBusPendingReply<int> rint = iface->asyncCall("retrieveInt");
+    QDBusPendingReply<int> rint(iface->asyncCall("retrieveInt"));
     rint.waitForFinished();
     QVERIFY(rint.isFinished());
     QCOMPARE(rint.argumentAt<0>(), adaptor->retrieveInt());
 
-    QDBusPendingReply<uint> ruint = iface->asyncCall("retrieveUInt");
+    QDBusPendingReply<uint> ruint(iface->asyncCall("retrieveUInt"));
     ruint.waitForFinished();
     QVERIFY(ruint.isFinished());
     QCOMPARE(ruint.argumentAt<0>(), adaptor->retrieveUInt());
 
-    QDBusPendingReply<qlonglong> rqlonglong = iface->asyncCall("retrieveLongLong");
+    QDBusPendingReply<qlonglong> rqlonglong(iface->asyncCall("retrieveLongLong"));
     rqlonglong.waitForFinished();
     QVERIFY(rqlonglong.isFinished());
     QCOMPARE(rqlonglong.argumentAt<0>(), adaptor->retrieveLongLong());
 
-    QDBusPendingReply<qulonglong> rqulonglong = iface->asyncCall("retrieveULongLong");
+    QDBusPendingReply<qulonglong> rqulonglong(iface->asyncCall("retrieveULongLong"));
     rqulonglong.waitForFinished();
     QVERIFY(rqulonglong.isFinished());
     QCOMPARE(rqulonglong.argumentAt<0>(), adaptor->retrieveULongLong());
 
-    QDBusPendingReply<double> rdouble = iface->asyncCall("retrieveDouble");
+    QDBusPendingReply<double> rdouble(iface->asyncCall("retrieveDouble"));
     rdouble.waitForFinished();
     QVERIFY(rdouble.isFinished());
     QCOMPARE(rdouble.argumentAt<0>(), adaptor->retrieveDouble());
 
-    QDBusPendingReply<QString> rstring = iface->asyncCall("retrieveString");
+    QDBusPendingReply<QString> rstring(iface->asyncCall("retrieveString"));
     rstring.waitForFinished();
     QVERIFY(rstring.isFinished());
     QCOMPARE(rstring.argumentAt<0>(), adaptor->retrieveString());
 
-    QDBusPendingReply<QDBusObjectPath> robjectpath = iface->asyncCall("retrieveObjectPath");
+    QDBusPendingReply<QDBusObjectPath> robjectpath(iface->asyncCall("retrieveObjectPath"));
     robjectpath.waitForFinished();
     QVERIFY(robjectpath.isFinished());
     QCOMPARE(robjectpath.argumentAt<0>().path(), adaptor->retrieveObjectPath().path());
 
-    QDBusPendingReply<QDBusSignature> rsignature = iface->asyncCall("retrieveSignature");
+    QDBusPendingReply<QDBusSignature> rsignature(iface->asyncCall("retrieveSignature"));
     rsignature.waitForFinished();
     QVERIFY(rsignature.isFinished());
     QCOMPARE(rsignature.argumentAt<0>().signature(), adaptor->retrieveSignature().signature());
 
-    QDBusPendingReply<QDBusVariant> rdbusvariant = iface->asyncCall("retrieveVariant");
+    QDBusPendingReply<QDBusVariant> rdbusvariant(iface->asyncCall("retrieveVariant"));
     rdbusvariant.waitForFinished();
     QVERIFY(rdbusvariant.isFinished());
     QCOMPARE(rdbusvariant.argumentAt<0>().variant(), adaptor->retrieveVariant().variant());
 
-    QDBusPendingReply<QVariant> rvariant = iface->asyncCall("retrieveVariant");
+    QDBusPendingReply<QVariant> rvariant(iface->asyncCall("retrieveVariant"));
     rvariant.waitForFinished();
     QVERIFY(rvariant.isFinished());
     QCOMPARE(rvariant.argumentAt<0>(), adaptor->retrieveVariant().variant());
 
-    QDBusPendingReply<QByteArray> rbytearray = iface->asyncCall("retrieveByteArray");
+    QDBusPendingReply<QByteArray> rbytearray(iface->asyncCall("retrieveByteArray"));
     rbytearray.waitForFinished();
     QVERIFY(rbytearray.isFinished());
     QCOMPARE(rbytearray.argumentAt<0>(), adaptor->retrieveByteArray());
 
-    QDBusPendingReply<QStringList> rstringlist = iface->asyncCall("retrieveStringList");
+    QDBusPendingReply<QStringList> rstringlist(iface->asyncCall("retrieveStringList"));
     rstringlist.waitForFinished();
     QVERIFY(rstringlist.isFinished());
     QCOMPARE(rstringlist.argumentAt<0>(), adaptor->retrieveStringList());
@@ -367,22 +367,22 @@ void tst_QDBusPendingReply::simpleTypes()
 
 void tst_QDBusPendingReply::complexTypes()
 {
-    QDBusPendingReply<QVariantList> rlist = iface->asyncCall("retrieveList");
+    QDBusPendingReply<QVariantList> rlist(iface->asyncCall("retrieveList"));
     rlist.waitForFinished();
     QVERIFY(rlist.isFinished());
     QCOMPARE(rlist.argumentAt<0>(), adaptor->retrieveList());
 
-    QDBusPendingReply<QVariantMap> rmap = iface->asyncCall("retrieveMap");
+    QDBusPendingReply<QVariantMap> rmap(iface->asyncCall("retrieveMap"));
     rmap.waitForFinished();
     QVERIFY(rmap.isFinished());
     QCOMPARE(rmap.argumentAt<0>(), adaptor->retrieveMap());
 
-    QDBusPendingReply<IntStringMap> rismap = iface->asyncCall("retrieveIntStringMap");
+    QDBusPendingReply<IntStringMap> rismap(iface->asyncCall("retrieveIntStringMap"));
     rismap.waitForFinished();
     QVERIFY(rismap.isFinished());
     QCOMPARE(rismap.argumentAt<0>(), adaptor->retrieveIntStringMap());
 
-    QDBusPendingReply<MyStruct> rstruct = iface->asyncCall("retrieveStruct");
+    QDBusPendingReply<MyStruct> rstruct(iface->asyncCall("retrieveStruct"));
     rstruct.waitForFinished();
     QVERIFY(rstruct.isFinished());
     QCOMPARE(rstruct.argumentAt<0>(), adaptor->retrieveStruct());
@@ -396,7 +396,7 @@ void tst_QDBusPendingReply::wrongTypes()
 {
     QDBusError error;
 
-    QDBusPendingReply<bool> rbool = iface->asyncCall("retrieveInt");
+    QDBusPendingReply<bool> rbool(iface->asyncCall("retrieveInt"));
     rbool.waitForFinished();
     QVERIFY(rbool.isFinished());
     QVERIFY(rbool.isError());
@@ -417,7 +417,7 @@ void tst_QDBusPendingReply::wrongTypes()
     error = rbool.error();
     VERIFY_WRONG_TYPE(error);
 
-    QDBusPendingReply<short> rshort = iface->asyncCall("retrieveInt");
+    QDBusPendingReply<short> rshort(iface->asyncCall("retrieveInt"));
     rshort.waitForFinished();
     QVERIFY(rshort.isFinished());
     QVERIFY(rshort.isError());
@@ -438,7 +438,7 @@ void tst_QDBusPendingReply::wrongTypes()
     error = rshort.error();
     VERIFY_WRONG_TYPE(error);
 
-    QDBusPendingReply<MyStruct> rstruct = iface->asyncCall("retrieveInt");
+    QDBusPendingReply<MyStruct> rstruct(iface->asyncCall("retrieveInt"));
     rstruct.waitForFinished();
     QVERIFY(rstruct.isFinished());
     QVERIFY(rstruct.isError());
@@ -462,7 +462,7 @@ void tst_QDBusPendingReply::wrongTypes()
 
 void tst_QDBusPendingReply::multipleTypes()
 {
-    QDBusPendingReply<int, int> rintint = iface->asyncCall("retrieveIntInt");
+    QDBusPendingReply<int, int> rintint(iface->asyncCall("retrieveIntInt"));
     rintint.waitForFinished();
     QVERIFY(rintint.isFinished());
     QVERIFY(!rintint.isError());
@@ -475,77 +475,77 @@ void tst_QDBusPendingReply::multipleTypes()
 
 void tst_QDBusPendingReply::synchronousSimpleTypes()
 {
-    QDBusPendingReply<bool> rbool = iface->call("retrieveBool");
+    QDBusPendingReply<bool> rbool(iface->call("retrieveBool"));
     rbool.waitForFinished();
     QVERIFY(rbool.isFinished());
     QCOMPARE(rbool.argumentAt<0>(), adaptor->retrieveBool());
 
-    QDBusPendingReply<uchar> ruchar = iface->call("retrieveUChar");
+    QDBusPendingReply<uchar> ruchar(iface->call("retrieveUChar"));
     ruchar.waitForFinished();
     QVERIFY(ruchar.isFinished());
     QCOMPARE(ruchar.argumentAt<0>(), adaptor->retrieveUChar());
 
-    QDBusPendingReply<short> rshort = iface->call("retrieveShort");
+    QDBusPendingReply<short> rshort(iface->call("retrieveShort"));
     rshort.waitForFinished();
     QVERIFY(rshort.isFinished());
     QCOMPARE(rshort.argumentAt<0>(), adaptor->retrieveShort());
 
-    QDBusPendingReply<ushort> rushort = iface->call("retrieveUShort");
+    QDBusPendingReply<ushort> rushort(iface->call("retrieveUShort"));
     rushort.waitForFinished();
     QVERIFY(rushort.isFinished());
     QCOMPARE(rushort.argumentAt<0>(), adaptor->retrieveUShort());
 
-    QDBusPendingReply<int> rint = iface->call("retrieveInt");
+    QDBusPendingReply<int> rint(iface->call("retrieveInt"));
     rint.waitForFinished();
     QVERIFY(rint.isFinished());
     QCOMPARE(rint.argumentAt<0>(), adaptor->retrieveInt());
 
-    QDBusPendingReply<uint> ruint = iface->call("retrieveUInt");
+    QDBusPendingReply<uint> ruint(iface->call("retrieveUInt"));
     ruint.waitForFinished();
     QVERIFY(ruint.isFinished());
     QCOMPARE(ruint.argumentAt<0>(), adaptor->retrieveUInt());
 
-    QDBusPendingReply<qlonglong> rqlonglong = iface->call("retrieveLongLong");
+    QDBusPendingReply<qlonglong> rqlonglong(iface->call("retrieveLongLong"));
     rqlonglong.waitForFinished();
     QVERIFY(rqlonglong.isFinished());
     QCOMPARE(rqlonglong.argumentAt<0>(), adaptor->retrieveLongLong());
 
-    QDBusPendingReply<qulonglong> rqulonglong = iface->call("retrieveULongLong");
+    QDBusPendingReply<qulonglong> rqulonglong(iface->call("retrieveULongLong"));
     rqulonglong.waitForFinished();
     QVERIFY(rqulonglong.isFinished());
     QCOMPARE(rqulonglong.argumentAt<0>(), adaptor->retrieveULongLong());
 
-    QDBusPendingReply<double> rdouble = iface->call("retrieveDouble");
+    QDBusPendingReply<double> rdouble(iface->call("retrieveDouble"));
     rdouble.waitForFinished();
     QVERIFY(rdouble.isFinished());
     QCOMPARE(rdouble.argumentAt<0>(), adaptor->retrieveDouble());
 
-    QDBusPendingReply<QString> rstring = iface->call("retrieveString");
+    QDBusPendingReply<QString> rstring(iface->call("retrieveString"));
     rstring.waitForFinished();
     QVERIFY(rstring.isFinished());
     QCOMPARE(rstring.argumentAt<0>(), adaptor->retrieveString());
 
-    QDBusPendingReply<QDBusObjectPath> robjectpath = iface->call("retrieveObjectPath");
+    QDBusPendingReply<QDBusObjectPath> robjectpath(iface->call("retrieveObjectPath"));
     robjectpath.waitForFinished();
     QVERIFY(robjectpath.isFinished());
     QCOMPARE(robjectpath.argumentAt<0>().path(), adaptor->retrieveObjectPath().path());
 
-    QDBusPendingReply<QDBusSignature> rsignature = iface->call("retrieveSignature");
+    QDBusPendingReply<QDBusSignature> rsignature(iface->call("retrieveSignature"));
     rsignature.waitForFinished();
     QVERIFY(rsignature.isFinished());
     QCOMPARE(rsignature.argumentAt<0>().signature(), adaptor->retrieveSignature().signature());
 
-    QDBusPendingReply<QDBusVariant> rdbusvariant = iface->call("retrieveVariant");
+    QDBusPendingReply<QDBusVariant> rdbusvariant(iface->call("retrieveVariant"));
     rdbusvariant.waitForFinished();
     QVERIFY(rdbusvariant.isFinished());
     QCOMPARE(rdbusvariant.argumentAt<0>().variant(), adaptor->retrieveVariant().variant());
 
-    QDBusPendingReply<QByteArray> rbytearray = iface->call("retrieveByteArray");
+    QDBusPendingReply<QByteArray> rbytearray(iface->call("retrieveByteArray"));
     rbytearray.waitForFinished();
     QVERIFY(rbytearray.isFinished());
     QCOMPARE(rbytearray.argumentAt<0>(), adaptor->retrieveByteArray());
 
-    QDBusPendingReply<QStringList> rstringlist = iface->call("retrieveStringList");
+    QDBusPendingReply<QStringList> rstringlist(iface->call("retrieveStringList"));
     rstringlist.waitForFinished();
     QVERIFY(rstringlist.isFinished());
     QCOMPARE(rstringlist.argumentAt<0>(), adaptor->retrieveStringList());
@@ -567,21 +567,21 @@ void tst_QDBusPendingReply::errors()
     error = rvoid.error();
     VERIFY_ERROR(error);
 
-    QDBusPendingReply<int> rint = iface->asyncCall("sendError");
+    QDBusPendingReply<int> rint(iface->asyncCall("sendError"));
     rint.waitForFinished();
     QVERIFY(rint.isFinished());
     QVERIFY(rint.isError());
     error = rint.error();
     VERIFY_ERROR(error);
 
-    QDBusPendingReply<int,int> rintint = iface->asyncCall("sendError");
+    QDBusPendingReply<int,int> rintint(iface->asyncCall("sendError"));
     rintint.waitForFinished();
     QVERIFY(rintint.isFinished());
     QVERIFY(rintint.isError());
     error = rintint.error();
     VERIFY_ERROR(error);
 
-    QDBusPendingReply<QString> rstring = iface->asyncCall("sendError");
+    QDBusPendingReply<QString> rstring(iface->asyncCall("sendError"));
     rstring.waitForFinished();
     QVERIFY(rstring.isFinished());
     QVERIFY(rstring.isError());

@@ -94,8 +94,8 @@ public:
     };
 
     QDBusError();
-    QDBusError(const DBusError *error);
-    QDBusError(const QDBusMessage& msg);
+    explicit QDBusError(const DBusError *error);
+    /*implicit*/ QDBusError(const QDBusMessage& msg);
     QDBusError(ErrorType error, const QString &message);
     QDBusError(const QDBusError &other);
     QDBusError &operator=(const QDBusError &other);
