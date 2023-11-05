@@ -57,7 +57,6 @@
 #include <QtDBus/QtDBus>
 #include <QtDeclarative/QtDeclarative>
 #include <QtHelp/QtHelp>
-#include <QtMultimedia/QtMultimedia>
 #include <QtOpenGL/QtOpenGL>
 #include <QtScript/QtScript>
 #include <QtScriptTools/QtScriptTools>
@@ -66,9 +65,6 @@
 #include <QtTest/QtTest>
 #include <QtXml/QtXml>
 #include <QtXmlPatterns/QtXmlPatterns>
-
-// webkit:
-#include <QtWebKit/QtWebKit>
 
 // designer:
 #include <QtDesigner/QtDesigner>

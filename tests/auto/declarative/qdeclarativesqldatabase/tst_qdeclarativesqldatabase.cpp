@@ -45,18 +45,9 @@
 #include <private/qdeclarativetext_p.h>
 #include <private/qdeclarativeengine_p.h>
 #include <QtCore/qcryptographichash.h>
-#include <QtWebKit/qwebpage.h>
-#include <QtWebKit/qwebframe.h>
-#include <QtWebKit/qwebdatabase.h>
-#include <QtWebKit/qwebsecurityorigin.h>
 #include <QtSql/qsqldatabase.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
-
-#ifdef Q_OS_SYMBIAN
-// In Symbian OS test data is located in applications private dir
-#define SRCDIR "."
-#endif
 
 class tst_qdeclarativesqldatabase : public QObject
 {
@@ -91,14 +82,6 @@ private slots:
 private:
     QString dbDir() const;
     QDeclarativeEngine *engine;
-};
-
-class QWebPageWithJavaScriptConsoleMessages : public QWebPage {
-public:
-    void javaScriptConsoleMessage(const QString& message, int lineNumber, const QString& sourceID)
-    {
-        qWarning() << sourceID << ":" << lineNumber << ":" << message;
-    }
 };
 
 void removeRecursive(const QString& dirname)
@@ -164,34 +147,6 @@ void tst_qdeclarativesqldatabase::testQml_data()
     // If you add a test, you should usually use a new database in the
     // test - in which case increment total_databases_created_by_tests above.
 }
-
-/*
-void tst_qdeclarativesqldatabase::validateAgainstWebkit()
-{
-    // Validates tests against WebKit (HTML5) support.
-    //
-    QFETCH(QString, jsfile);
-    QFETCH(QString, result);
-    QFETCH(int, databases);
-
-    QFile f(jsfile);
-    QVERIFY(f.open(QIODevice::ReadOnly));
-    QString js=f.readAll();
-
-    QWebPageWithJavaScriptConsoleMessages webpage;
-    webpage.settings()->setOfflineStoragePath(dbDir());
-    webpage.settings()->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, true);
-
-    QEXPECT_FAIL("","WebKit doesn't support openDatabaseSync yet", Continue);
-    QCOMPARE(webpage.mainFrame()->evaluateJavaScript(js).toString(),result);
-
-    QTest::qWait(100); // WebKit crashes if you quit it too fast
-
-    QWebSecurityOrigin origin = webpage.mainFrame()->securityOrigin();
-    QList<QWebDatabase> dbs = origin.databases();
-    QCOMPARE(dbs.count(), databases);
-}
-*/
 
 void tst_qdeclarativesqldatabase::testQml()
 {

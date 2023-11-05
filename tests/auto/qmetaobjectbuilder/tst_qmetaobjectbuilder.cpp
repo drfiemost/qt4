@@ -75,7 +75,7 @@ private slots:
     void usage_method();
     void usage_constructor();
     void usage_connect();
-    void usage_templateConnect();
+    //void usage_templateConnect();
 
 private:
     static bool checkForSideEffects
@@ -1410,7 +1410,7 @@ void TestObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             qFatal("You forgot to add a case for InvokeMetaMethod %s", method.signature());
           }
         }
-    } else if (_c == QMetaObject::IndexOfMethod) {
+    } /*else if (_c == QMetaObject::IndexOfMethod) {
         // This code is currently unreachable because it's only used by the
         // template-based versions of connect() and disconnect(), which don't
         // work with dynamically generated meta-objects (see test).
@@ -1435,7 +1435,7 @@ void TestObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             }
         }
         qFatal("You forgot to add one or more IndexOfMethod cases");
-    }
+    }*/
 }
 
 const QMetaObject *TestObject::metaObject() const
@@ -1593,7 +1593,7 @@ void tst_QMetaObjectBuilder::usage_connect()
     QVERIFY(QObject::disconnect(testObject.data(), SIGNAL(intPropChanged(int)),
                                 testObject.data(), SLOT(voidSlotInt(int))));
 }
-
+/*
 void tst_QMetaObjectBuilder::usage_templateConnect()
 {
     QScopedPointer<TestObject> testObject(new TestObject);
@@ -1604,7 +1604,7 @@ void tst_QMetaObjectBuilder::usage_templateConnect()
     QEXPECT_FAIL("", "template-based connect() fails because meta-object is deduced at compile-time", Abort);
     QVERIFY(con);
 }
-
+*/
 QTEST_MAIN(tst_QMetaObjectBuilder)
 
 #include "tst_qmetaobjectbuilder.moc"

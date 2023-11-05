@@ -44,6 +44,8 @@
 #include <qhash.h>
 #include <qmap.h>
 
+#include <algorithm>
+
 //TESTED_CLASS=
 //TESTED_FILES=
 
@@ -1194,7 +1196,7 @@ template <typename T>
 QList<T> sorted(const QList<T> &list)
 {
     QList<T> res = list;
-    qSort(res);
+    std::sort(res.begin(), res.end());
     return res;
 }
 

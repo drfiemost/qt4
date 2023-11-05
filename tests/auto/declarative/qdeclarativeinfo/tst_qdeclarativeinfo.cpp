@@ -162,7 +162,7 @@ void tst_qdeclarativeinfo::types()
     qmlInfo(0) << QByteArray("Qt");
 
     QTest::ignoreMessage(QtWarningMsg, "<Unknown File>: true");
-    qmlInfo(0) << QBool(true);
+    qmlInfo(0) << true;
 
     //### do we actually want QUrl to show up in the output?
     //### why the extra space at the end?
@@ -199,7 +199,7 @@ void tst_qdeclarativeinfo::chaining()
                << QUrl("http://qt.nokia.com")
                << ref
                << QByteArray("Qt")
-               << QBool(true)
+               << true
                << QString ("Quick");
 }
 

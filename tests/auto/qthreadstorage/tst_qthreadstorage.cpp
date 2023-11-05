@@ -76,9 +76,9 @@ private slots:
     void autoDelete();
     void adoptedThreads();
     void ensureCleanupOrder();
-    void QTBUG13877_crashOnExit();
-    void QTBUG14579_leakInDestructor();
-    void QTBUG14579_resetInDestructor();
+    void crashOnExit();
+    void leakInDestructor();
+    void resetInDestructor();
     void valueBased();
 };
 
@@ -297,7 +297,7 @@ void tst_QThreadStorage::ensureCleanupOrder()
     QVERIFY(First::order < Second::order);
 }
 
-void tst_QThreadStorage::QTBUG13877_crashOnExit()
+void tst_QThreadStorage::crashOnExit()
 {
     QProcess process;
 #ifdef Q_OS_WIN
@@ -342,7 +342,7 @@ public:
 };
 
 
-void tst_QThreadStorage::QTBUG14579_leakInDestructor()
+void tst_QThreadStorage::leakInDestructor()
 {
     class Thread : public QThread
     {
@@ -385,29 +385,29 @@ void tst_QThreadStorage::QTBUG14579_leakInDestructor()
     QCOMPARE(int(SPointer::count.loadRelaxed()), c);
 }
 
-class QTBUG14579_reset {
+class ThreadStorageResetLocalDataTester {
 public:
     SPointer member;
-    ~QTBUG14579_reset();
+    ~ThreadStorageResetLocalDataTester();
 };
 
-Q_GLOBAL_STATIC(QThreadStorage<QTBUG14579_reset *>, QTBUG14579_resetTls)
+Q_GLOBAL_STATIC(QThreadStorage<ThreadStorageResetLocalDataTester *>, ThreadStorageResetLocalDataTesterTls)
 
-QTBUG14579_reset::~QTBUG14579_reset() {
+ThreadStorageResetLocalDataTester::~ThreadStorageResetLocalDataTester() {
     //Quite stupid, but WTF::ThreadSpecific<T>::destroy does it.
-    QTBUG14579_resetTls()->setLocalData(this);
+    ThreadStorageResetLocalDataTesterTls()->setLocalData(this);
 }
 
-void tst_QThreadStorage::QTBUG14579_resetInDestructor()
+void tst_QThreadStorage::resetInDestructor()
 {
     class Thread : public QThread
     {
     public:
         void run()
         {
-            QVERIFY(!QTBUG14579_resetTls()->hasLocalData());
-            QTBUG14579_resetTls()->setLocalData(new QTBUG14579_reset);
-            QVERIFY(QTBUG14579_resetTls()->hasLocalData());
+            QVERIFY(!ThreadStorageResetLocalDataTesterTls()->hasLocalData());
+            ThreadStorageResetLocalDataTesterTls()->setLocalData(new ThreadStorageResetLocalDataTester);
+            QVERIFY(ThreadStorageResetLocalDataTesterTls()->hasLocalData());
         }
     };
     int c = SPointer::count.loadRelaxed();
@@ -483,7 +483,7 @@ void tst_QThreadStorage::valueBased()
     t2.someNumber = -128;
     t3.someNumber = 78;
     t1.someString = "hello";
-    t2.someString = "trolltech";
+    t2.someString = "australia";
     t3.someString = "digia";
 
     t1.start();

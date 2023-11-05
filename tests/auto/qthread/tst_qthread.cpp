@@ -149,7 +149,7 @@ void SignalRecorder::slot()
 class Current_Thread : public QThread
 {
 public:
-    Qt::HANDLE id;
+    void* id;
     QThread *thread;
 
     void run()

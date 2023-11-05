@@ -50,8 +50,9 @@
 #include "XMLWriter.h"
 #include "ExitCode.h"
 #include "Worker.h"
-#include "private/qautoptr_p.h"
 #include "tst_suitetest.h"
+
+#include <memory>
 
 using namespace QPatternistSDK;
 
@@ -133,7 +134,7 @@ void tst_SuiteTest::checkTestSuiteResult() const
     const QFileInfoList::const_iterator end(list.constEnd());
 
     QEventLoop eventLoop;
-    const QPatternist::AutoPtr<Worker> worker(new Worker(eventLoop, m_existingBaseline, result));
+    const std::unique_ptr<Worker> worker(new Worker(eventLoop, m_existingBaseline, result));
 
     /* Passed to ResultThreader so it knows what kind of file it is handling. */
     ResultThreader::Type type = ResultThreader::Baseline;
@@ -146,14 +147,14 @@ void tst_SuiteTest::checkTestSuiteResult() const
         QVERIFY2(i.exists(), qPrintable(QString::fromLatin1("File %1 does not exist.")
                                                             .arg(i.fileName())));
 
-        QFile *const file = new QFile(i.absoluteFilePath(), worker.data());
+        QFile *const file = new QFile(i.absoluteFilePath(), worker.get());
 
         QVERIFY2(file->open(QIODevice::ReadOnly), qPrintable(QString::fromLatin1("Could not open file %1 for reading.")
                                                              .arg(i.fileName())));
 
-        ResultThreader *handler = new ResultThreader(eventLoop, file, type, worker.data());
+        ResultThreader *handler = new ResultThreader(eventLoop, file, type, worker.get());
 
-        QObject::connect(handler, SIGNAL(finished()), worker.data(), SLOT(threadFinished()));
+        QObject::connect(handler, SIGNAL(finished()), worker.get(), SLOT(threadFinished()));
 
         handler->start(); /* Start the thread. It now parses the file
                              and emits threadFinished() when done. */
