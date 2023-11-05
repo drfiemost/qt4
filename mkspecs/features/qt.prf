@@ -164,7 +164,6 @@ for(QTLIB, $$list($$lower($$unique(QT)))) {
    else:isEqual(QTLIB, sql):qlib = QtSql
    else:isEqual(QTLIB, core):qlib = QtCore
    else:isEqual(QTLIB, canvas):qlib = QtCanvas
-   else:isEqual(QTLIB, qt3support):qlib = Qt3Support
    else:isEqual(QTLIB, svg):qlib = QtSvg
    else:isEqual(QTLIB, script):qlib = QtScript
    else:isEqual(QTLIB, scripttools):qlib = QtScriptTools
