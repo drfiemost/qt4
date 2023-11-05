@@ -12,7 +12,7 @@ qt_install_headers {
     class_headers.path = $$[QT_INSTALL_HEADERS]/$$TARGET
     INSTALLS += class_headers
 
-    targ_headers.files = $$INSTALL_HEADERS
+    targ_headers.files = $$SYNCQT.HEADER_FILES
     targ_headers.path = $$[QT_INSTALL_HEADERS]/$$TARGET
     INSTALLS += targ_headers
 
