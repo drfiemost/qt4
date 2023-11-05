@@ -101,13 +101,16 @@ enum MethodFlags  {
 };
 
 enum MetaObjectFlags {
-    DynamicMetaObject = 0x01
+    DynamicMetaObject = 0x01,
+    RequiresVariantMetaObject = 0x02
 };
 
 class QMutex;
 
 struct QMetaObjectPrivate
 {
+    enum { OutputRevision = 6 }; // Used by moc and qmetaobjectbuilder
+
     int revision;
     int className;
     int classInfoCount, classInfoData;
