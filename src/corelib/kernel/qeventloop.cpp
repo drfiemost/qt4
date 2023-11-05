@@ -115,7 +115,7 @@ QEventLoop::QEventLoop(QObject *parent)
     auto threadData = d->threadData.loadRelaxed();
     if (!QCoreApplication::instance()) {
         qWarning("QEventLoop: Cannot be used without QApplication");
-    } else if (!threadData->eventDispatcher.loadRelaxed()) {
+    } else if (!threadData->hasEventDispatcher()) {
         QThreadPrivate::createEventDispatcher(threadData);
     }
 }
@@ -144,7 +144,7 @@ bool QEventLoop::processEvents(ProcessEventsFlags flags)
 {
     Q_D(QEventLoop);
     auto threadData = d->threadData.loadRelaxed();
-    if (!threadData->eventDispatcher.loadRelaxed())
+    if (!threadData->hasEventDispatcher())
         return false;
     if (flags & DeferredDeletion)
         QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
@@ -287,7 +287,7 @@ void QEventLoop::exit(int returnCode)
 {
     Q_D(QEventLoop);
     auto threadData = d->threadData.loadAcquire();
-    if (!threadData->eventDispatcher.loadRelaxed())
+    if (!threadData->hasEventDispatcher())
         return;
 
     d->returnCode = returnCode;
@@ -317,7 +317,7 @@ void QEventLoop::wakeUp()
 {
     Q_D(QEventLoop);
     auto threadData = d->threadData.loadAcquire();
-    if (!threadData->eventDispatcher.loadRelaxed())
+    if (!threadData->hasEventDispatcher())
         return;
     threadData->eventDispatcher.loadRelaxed()->wakeUp();
 }

@@ -141,10 +141,11 @@ class QThreadPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QThread)
 
 public:
-    QThreadPrivate(QThreadData *d = 0);
+    QThreadPrivate(QThreadData *d = nullptr);
     ~QThreadPrivate();
 
     mutable QMutex mutex;
+    QThreadData *data;
 
     bool running;
     bool finished;
@@ -179,7 +180,6 @@ public:
 #if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
     bool terminationEnabled, terminatePending;
 # endif
-    QThreadData *data;
 
     static void createEventDispatcher(QThreadData *data);
 };
@@ -293,7 +293,9 @@ public:
 
     static QThread *createThreadForAdoption();
 private:
+#ifndef QT_NO_THREAD
     void run();
+#endif
 };
 
 QT_END_NAMESPACE

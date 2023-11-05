@@ -158,20 +158,21 @@ QThread *QAdoptedThread::createThreadForAdoption()
     return t.take();
 }
 
+#ifndef QT_NO_THREAD
 void QAdoptedThread::run()
 {
     // this function should never be called
     qFatal("QAdoptedThread::run(): Internal error, this implementation should never be called.");
 }
-#ifndef QT_NO_THREAD
+
 /*
   QThreadPrivate
 */
 
 QThreadPrivate::QThreadPrivate(QThreadData *d)
-    : QObjectPrivate(), running(false), finished(false), terminated(false),
+    : QObjectPrivate(), data(d), running(false), finished(false), terminated(false),
       isInFinish(false), exited(false), returnCode(-1),
-      stackSize(0), priority(QThread::InheritPriority), data(d)
+      stackSize(0), priority(QThread::InheritPriority)
 {
 #if defined (Q_WS_WIN)
     handle = 0;
@@ -388,7 +389,7 @@ QThreadPrivate::~QThreadPrivate()
 QThread *QThread::currentThread()
 {
     QThreadData *data = QThreadData::current();
-    Q_ASSERT(data != 0);
+    Q_ASSERT(data != nullptr);
     return data->thread.loadAcquire();
 }
 
@@ -776,16 +777,25 @@ QThread *QThread::currentThread()
     return QThreadData::current()->thread;
 }
 
-QThreadData* QThreadData::current()
+// No threads: so we can just use static variables
+static QThreadData *data = 0;
+
+QThreadData *QThreadData::current(bool createIfNecessary)
 {
-    static QThreadData *data = 0; // reinterpret_cast<QThreadData *>(pthread_getspecific(current_thread_data_key));
-    if (!data) {
-        QScopedPointer<QThreadData> newdata(new QThreadData);
-        newdata->thread = new QAdoptedThread(newdata.data());
-        data = newdata.take();
+    if (!data && createIfNecessary) {
+        data = new QThreadData;
+        data->thread = new QAdoptedThread(data);
         data->deref();
+        if (!QCoreApplicationPrivate::theMainThread)
+            QCoreApplicationPrivate::theMainThread = data->thread.load();
     }
     return data;
+}
+
+void QThreadData::clearCurrentThreadData()
+{
+    delete data;
+    data = 0;
 }
 
 /*! \internal
@@ -796,6 +806,15 @@ QThread::QThread(QThreadPrivate &dd, QObject *parent)
     Q_D(QThread);
     // fprintf(stderr, "QThreadData %p taken from private data for thread %p\n", d->data, this);
     d->data->thread.storeRelaxed(this);
+}
+
+QThreadPrivate::QThreadPrivate(QThreadData *d) : data(d ? d : new QThreadData)
+{
+}
+
+QThreadPrivate::~QThreadPrivate()
+{
+    delete data;
 }
 
 #endif // QT_NO_THREAD

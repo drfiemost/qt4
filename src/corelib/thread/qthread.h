@@ -53,6 +53,7 @@ QT_BEGIN_NAMESPACE
 
 class QThreadData;
 class QThreadPrivate;
+class QAbstractEventDispatcher;
 
 #ifndef QT_NO_THREAD
 class Q_CORE_EXPORT QThread : public QObject
@@ -103,6 +104,9 @@ public:
     static void sleep(unsigned long);
     static void msleep(unsigned long);
     static void usleep(unsigned long);
+
+    QAbstractEventDispatcher *eventDispatcher() const;
+    void setEventDispatcher(QAbstractEventDispatcher *eventDispatcher);
 
 Q_SIGNALS:
     void started();

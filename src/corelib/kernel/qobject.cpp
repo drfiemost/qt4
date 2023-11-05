@@ -150,7 +150,7 @@ void (*QAbstractDeclarativeData::objectNameChanged)(QAbstractDeclarativeData *, 
 QObjectData::~QObjectData() {}
 
 QObjectPrivate::QObjectPrivate(int version)
-    : threadData(0), connectionLists(0), senders(0), currentSender(0), currentChildBeingDeleted(0)
+    : threadData(nullptr), connectionLists(0), senders(0), currentSender(0), currentChildBeingDeleted(0)
 {
     if (version != QObjectPrivateVersion)
         qFatal("Cannot mix incompatible Qt library (version 0x%x) with this library (version 0x%x)",
@@ -723,24 +723,8 @@ static bool check_parent_thread(QObject *parent,
 */
 
 QObject::QObject(QObject *parent)
-    : d_ptr(new QObjectPrivate)
+    : QObject(*new QObjectPrivate, parent)
 {
-    Q_D(QObject);
-    d_ptr->q_ptr = this;
-    auto threadData = (parent && !parent->thread()) ? parent->d_func()->threadData.loadRelaxed() : QThreadData::current();
-    threadData->ref();
-    d->threadData.storeRelaxed(threadData);
-    if (parent) {
-        QT_TRY {
-            if (!check_parent_thread(parent, parent ? parent->d_func()->threadData.loadRelaxed() : 0, threadData))
-                parent = 0;
-            setParent(parent);
-        } QT_CATCH(...) {
-            threadData->deref();
-            QT_RETHROW;
-        }
-    }
-    qt_addObject(this);
 }
 
 /*! \internal
@@ -752,10 +736,11 @@ QObject::QObject(QObjectPrivate &dd, QObject *parent)
     d_ptr->q_ptr = this;
     auto threadData = (parent && !parent->thread()) ? parent->d_func()->threadData.loadRelaxed() : QThreadData::current();
     threadData->ref();
+    d->threadData.storeRelaxed(threadData);
     if (parent) {
         QT_TRY {
             if (!check_parent_thread(parent, parent ? parent->d_func()->threadData.loadRelaxed() : 0, threadData))
-                parent = 0;
+                parent = nullptr;
             if (d->isWidget) {
                 if (parent) {
                     d->parent = parent;
@@ -1322,7 +1307,7 @@ void QObject::moveToThread(QThread *targetThread)
 
     QThreadData *currentData = QThreadData::current();
     QThreadData *targetData = targetThread ? QThreadData::get2(targetThread) : nullptr;
-    QThreadData *thisThreadData = d->threadData.loadRelaxed();
+    QThreadData *thisThreadData = d->threadData.loadAcquire();
     if (thisThreadData->thread.loadAcquire() == 0 && currentData == targetData) {
         // one exception to the rule: we allow moving objects with no thread affinity to the current thread
         currentData = thisThreadData;
