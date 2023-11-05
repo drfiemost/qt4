@@ -126,7 +126,7 @@ private slots:
     {
         QTcpSocket *client = nextPendingConnection();
         connect(client, SIGNAL(readyRead()), SLOT(handleClientCommand()));
-        client->setProperty("pendingResponses", qVariantFromValue(responses));
+        client->setProperty("pendingResponses", QVariant::fromValue(responses));
     }
 
     void handleClientCommand()
@@ -141,7 +141,7 @@ private slots:
             client->disconnectFromHost();
         else
             client->write(pendingResponses.dequeue());
-        client->setProperty("pendingResponses", qVariantFromValue(pendingResponses));
+        client->setProperty("pendingResponses", QVariant::fromValue(pendingResponses));
     }
 };
 

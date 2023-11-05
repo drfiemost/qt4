@@ -2229,7 +2229,7 @@ void tst_QGraphicsItem::setMatrix()
     QApplication::instance()->processEvents();
 
     QCOMPARE(spy.count(), 3);
-    QList<QRectF> rlist = qVariantValue<QList<QRectF> >(spy.last().at(0));
+    QList<QRectF> rlist = qvariant_cast<QList<QRectF> >(spy.last().at(0));
 
     QCOMPARE(rlist.size(), 3);
     QCOMPARE(rlist.at(0), rotatedRect);   // From item.setMatrix() (clearing rotated rect)
@@ -4462,13 +4462,13 @@ protected:
             break;
         case QGraphicsItem::ItemMatrixChange: {
             QVariant variant;
-            qVariantSetValue<QMatrix>(variant, matrix());
+            variant.setValue<QMatrix>(matrix());
             oldValues << variant;
         }
             break;
         case QGraphicsItem::ItemTransformChange: {
             QVariant variant;
-            qVariantSetValue<QTransform>(variant, transform());
+            variant.setValue<QTransform>(transform());
             oldValues << variant;
         }
             break;
@@ -4490,7 +4490,7 @@ protected:
         case QGraphicsItem::ItemSelectedHasChanged:
             break;
         case QGraphicsItem::ItemParentChange:
-            oldValues << qVariantFromValue<void *>(parentItem());
+            oldValues << QVariant::fromValue<void *>(parentItem());
             break;
         case QGraphicsItem::ItemParentHasChanged:
             break;
@@ -4501,11 +4501,11 @@ protected:
             oldValues << children().size();
             break;
         case QGraphicsItem::ItemSceneChange:
-            oldValues << qVariantFromValue<QGraphicsScene *>(scene());
+            oldValues << QVariant::fromValue<QGraphicsScene *>(scene());
             if (itemSceneChangeTargetScene
-                && qVariantValue<QGraphicsScene *>(value)
-                && itemSceneChangeTargetScene != qVariantValue<QGraphicsScene *>(value)) {
-                return qVariantFromValue<QGraphicsScene *>(itemSceneChangeTargetScene);
+                && qvariant_cast<QGraphicsScene *>(value)
+                && itemSceneChangeTargetScene != qvariant_cast<QGraphicsScene *>(value)) {
+                return QVariant::fromValue<QGraphicsScene *>(itemSceneChangeTargetScene);
             }
             return value;
         case QGraphicsItem::ItemSceneHasChanged:
@@ -4585,17 +4585,17 @@ void tst_QGraphicsItem::itemChange()
     }
     {
         // ItemMatrixChange / ItemTransformHasChanged
-        qVariantSetValue<QMatrix>(tester.itemChangeReturnValue, QMatrix().rotate(90));
+        tester.itemChangeReturnValue.setValue<QMatrix>(QMatrix().rotate(90));
         tester.setMatrix(QMatrix().translate(50, 0), true);
         ++changeCount; // notification sent too
         QCOMPARE(tester.changes.size(), ++changeCount);
         QCOMPARE(int(tester.changes.at(tester.changes.size() - 2)), int(QGraphicsItem::ItemMatrixChange));
         QCOMPARE(int(tester.changes.last()), int(QGraphicsItem::ItemTransformHasChanged));
-        QCOMPARE(qVariantValue<QMatrix>(tester.values.at(tester.values.size() - 2)),
+        QCOMPARE(qvariant_cast<QMatrix>(tester.values.at(tester.values.size() - 2)),
                  QMatrix().translate(50, 0));
         QCOMPARE(tester.values.last(), QVariant(QTransform(QMatrix().rotate(90))));
         QVariant variant;
-        qVariantSetValue<QMatrix>(variant, QMatrix());
+        variant.setValue<QMatrix>(QMatrix());
         QCOMPARE(tester.oldValues.last(), variant);
         QCOMPARE(tester.matrix(), QMatrix().rotate(90));
     }
@@ -4605,19 +4605,19 @@ void tst_QGraphicsItem::itemChange()
         ++changeCount; // notification sent too
 
         // ItemTransformChange / ItemTransformHasChanged
-        qVariantSetValue<QTransform>(tester.itemChangeReturnValue, QTransform().rotate(90));
+        tester.itemChangeReturnValue.setValue<QTransform>(QTransform().rotate(90));
         tester.translate(50, 0);
         ++changeCount; // notification sent too
         ++changeCount;
         QCOMPARE(tester.changes.size(), changeCount);
         QCOMPARE(tester.changes.at(tester.changes.size() - 2), QGraphicsItem::ItemTransformChange);
         QCOMPARE(tester.changes.at(tester.changes.size() - 1), QGraphicsItem::ItemTransformHasChanged);
-        QCOMPARE(qVariantValue<QTransform>(tester.values.at(tester.values.size() - 2)),
+        QCOMPARE(qvariant_cast<QTransform>(tester.values.at(tester.values.size() - 2)),
                  QTransform().translate(50, 0));
-        QCOMPARE(qVariantValue<QTransform>(tester.values.at(tester.values.size() - 1)),
+        QCOMPARE(qvariant_cast<QTransform>(tester.values.at(tester.values.size() - 1)),
                  QTransform().rotate(90));
         QVariant variant;
-        qVariantSetValue<QTransform>(variant, QTransform());
+        variant.setValue<QTransform>(QTransform());
         QCOMPARE(tester.oldValues.last(), variant);
         QCOMPARE(tester.transform(), QTransform().rotate(90));
     }
@@ -4702,9 +4702,9 @@ void tst_QGraphicsItem::itemChange()
         QCOMPARE(tester.changes.size(), changeCount);
         QCOMPARE(tester.changes.at(tester.changes.size() - 2), QGraphicsItem::ItemFlagsChange);
         QCOMPARE(tester.changes.at(tester.changes.size() - 1), QGraphicsItem::ItemFlagsHaveChanged);
-        QVariant expectedFlags = qVariantFromValue<quint32>(QGraphicsItem::GraphicsItemFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemSendsGeometryChanges));
+        QVariant expectedFlags = QVariant::fromValue<quint32>(QGraphicsItem::GraphicsItemFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemSendsGeometryChanges));
         QCOMPARE(tester.values.at(tester.values.size() - 2), expectedFlags);
-        QCOMPARE(tester.values.at(tester.values.size() - 1), qVariantFromValue<quint32>((quint32)QGraphicsItem::ItemIsSelectable));
+        QCOMPARE(tester.values.at(tester.values.size() - 1), QVariant::fromValue<quint32>((quint32)QGraphicsItem::ItemIsSelectable));
     }
     {
         // ItemSelectedChange
@@ -4751,12 +4751,12 @@ void tst_QGraphicsItem::itemChange()
     }
     {
         // ItemParentChange
-        qVariantSetValue<QGraphicsItem *>(tester.itemChangeReturnValue, 0);
+        tester.itemChangeReturnValue.setValue<QGraphicsItem *>(0);
         tester.setParentItem(&testerHelper);
         QCOMPARE(tester.changes.size(), ++changeCount);
         QCOMPARE(tester.changes.last(), QGraphicsItem::ItemParentChange);
-        QCOMPARE(qVariantValue<QGraphicsItem *>(tester.values.last()), (QGraphicsItem *)&testerHelper);
-        QCOMPARE(qVariantValue<QGraphicsItem *>(tester.oldValues.last()), (QGraphicsItem *)0);
+        QCOMPARE(qvariant_cast<QGraphicsItem *>(tester.values.last()), (QGraphicsItem *)&testerHelper);
+        QCOMPARE(qvariant_cast<QGraphicsItem *>(tester.oldValues.last()), (QGraphicsItem *)0);
         QCOMPARE(tester.parentItem(), (QGraphicsItem *)0);
     }
     {
@@ -4783,14 +4783,14 @@ void tst_QGraphicsItem::itemChange()
         testerHelper.setParentItem(&tester);
         QCOMPARE(tester.changes.size(), ++changeCount);
         QCOMPARE(tester.changes.last(), QGraphicsItem::ItemChildAddedChange);
-        QCOMPARE(qVariantValue<QGraphicsItem *>(tester.values.last()), (QGraphicsItem *)&testerHelper);
+        QCOMPARE(qvariant_cast<QGraphicsItem *>(tester.values.last()), (QGraphicsItem *)&testerHelper);
     }
     {
         // ItemChildRemovedChange 1
         testerHelper.setParentItem(0);
         QCOMPARE(tester.changes.size(), ++changeCount);
         QCOMPARE(tester.changes.last(), QGraphicsItem::ItemChildRemovedChange);
-        QCOMPARE(qVariantValue<QGraphicsItem *>(tester.values.last()), (QGraphicsItem *)&testerHelper);
+        QCOMPARE(qvariant_cast<QGraphicsItem *>(tester.values.last()), (QGraphicsItem *)&testerHelper);
 
         // ItemChildRemovedChange 1
         ItemChangeTester *test = new ItemChangeTester;
@@ -4831,10 +4831,10 @@ void tst_QGraphicsItem::itemChange()
         ItemChangeTester *child = new ItemChangeTester;
         child->setParentItem(&parent);
         QCOMPARE(parent.changes.last(), QGraphicsItem::ItemChildAddedChange);
-        QCOMPARE(qVariantValue<QGraphicsItem *>(parent.values.last()), (QGraphicsItem *)child);
+        QCOMPARE(qvariant_cast<QGraphicsItem *>(parent.values.last()), (QGraphicsItem *)child);
         delete child;
         QCOMPARE(parent.changes.last(), QGraphicsItem::ItemChildRemovedChange);
-        QCOMPARE(qVariantValue<QGraphicsItem *>(parent.values.last()), (QGraphicsItem *)child);
+        QCOMPARE(qvariant_cast<QGraphicsItem *>(parent.values.last()), (QGraphicsItem *)child);
     }
     {
         // !!! Note: If this test crashes because of double-deletion, there's
@@ -4853,8 +4853,8 @@ void tst_QGraphicsItem::itemChange()
         QCOMPARE(tester.changes.at(tester.changes.size() - 1), QGraphicsItem::ItemSceneHasChanged);
         // Item's old value was 0
         // Item's current value is scene
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.oldValues.last()), (QGraphicsScene *)0);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.last()), (QGraphicsScene *)&scene);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.oldValues.last()), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.last()), (QGraphicsScene *)&scene);
         scene2.addItem(&tester);
         ++changeCount; // ItemSceneChange (0) was: (scene)
         ++changeCount; // ItemSceneHasChanged (0)
@@ -4870,16 +4870,16 @@ void tst_QGraphicsItem::itemChange()
         // Item's last old value was scene
         // Item's last current value is 0
 
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.oldValues.at(tester.oldValues.size() - 2)), (QGraphicsScene *)&scene);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.oldValues.at(tester.oldValues.size() - 1)), (QGraphicsScene *)0);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 4)), (QGraphicsScene *)0);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 3)), (QGraphicsScene *)0);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 2)), (QGraphicsScene *)&scene2);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 1)), (QGraphicsScene *)&scene2);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.oldValues.at(tester.oldValues.size() - 2)), (QGraphicsScene *)&scene);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.oldValues.at(tester.oldValues.size() - 1)), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 4)), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 3)), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 2)), (QGraphicsScene *)&scene2);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 1)), (QGraphicsScene *)&scene2);
         // Item's last old value was 0
         // Item's last current value is scene2
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.oldValues.last()), (QGraphicsScene *)0);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.last()), (QGraphicsScene *)&scene2);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.oldValues.last()), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.last()), (QGraphicsScene *)&scene2);
 
         scene2.removeItem(&tester);
         ++changeCount; // ItemSceneChange (0) was: (scene2)
@@ -4891,9 +4891,9 @@ void tst_QGraphicsItem::itemChange()
         QCOMPARE(tester.changes.at(tester.changes.size() - 1), QGraphicsItem::ItemSceneHasChanged);
         // Item's last old value was scene2
         // Item's last current value is 0
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.oldValues.last()), (QGraphicsScene *)&scene2);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 2)), (QGraphicsScene *)0);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 1)), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.oldValues.last()), (QGraphicsScene *)&scene2);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 2)), (QGraphicsScene *)0);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 1)), (QGraphicsScene *)0);
 
         tester.itemSceneChangeTargetScene = &scene;
         scene2.addItem(&tester);
@@ -4902,9 +4902,9 @@ void tst_QGraphicsItem::itemChange()
         ++changeCount; // ItemSceneHasChanged (scene)
         QCOMPARE(tester.values.size(), changeCount);
 
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 3)), (QGraphicsScene *)&scene2);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 2)), (QGraphicsScene *)&scene);
-        QCOMPARE(qVariantValue<QGraphicsScene *>(tester.values.at(tester.values.size() - 1)), (QGraphicsScene *)&scene);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 3)), (QGraphicsScene *)&scene2);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 2)), (QGraphicsScene *)&scene);
+        QCOMPARE(qvariant_cast<QGraphicsScene *>(tester.values.at(tester.values.size() - 1)), (QGraphicsScene *)&scene);
 
         QCOMPARE(tester.scene(), &scene);
         tester.itemSceneChangeTargetScene = 0;

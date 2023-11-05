@@ -409,7 +409,7 @@ void tst_QLocalSocket::listenAndConnect()
             QVERIFY(socket->error() != QLocalSocket::UnknownSocketError);
             QCOMPARE(socket->state(), QLocalSocket::UnconnectedState);
             //QVERIFY(socket->socketDescriptor() == -1);
-            QCOMPARE(qVariantValue<QLocalSocket::LocalSocketError>(spyError.first()[0]),
+            QCOMPARE(qvariant_cast<QLocalSocket::LocalSocketError>(spyError.first()[0]),
                      QLocalSocket::ServerNotFoundError);
         }
 
@@ -429,25 +429,25 @@ void tst_QLocalSocket::listenAndConnect()
         QVERIFY(spyError.count() >= 0);
         if (canListen) {
             if (spyError.count() > 0)
-                QCOMPARE(qVariantValue<QLocalSocket::LocalSocketError>(spyError.first()[0]),
+                QCOMPARE(qvariant_cast<QLocalSocket::LocalSocketError>(spyError.first()[0]),
                          QLocalSocket::SocketTimeoutError);
         } else {
-            QCOMPARE(qVariantValue<QLocalSocket::LocalSocketError>(spyError.first()[0]),
+            QCOMPARE(qvariant_cast<QLocalSocket::LocalSocketError>(spyError.first()[0]),
                      QLocalSocket::ServerNotFoundError);
         }
 
         // Check first and last state
-        QCOMPARE(qVariantValue<QLocalSocket::LocalSocketState>(spyStateChanged.first()[0]),
+        QCOMPARE(qvariant_cast<QLocalSocket::LocalSocketState>(spyStateChanged.first()[0]),
                  QLocalSocket::ConnectingState);
 #if 0
         for (int j = 0; j < spyStateChanged.count(); ++j) {
             QLocalSocket::LocalSocketState s;
-            s = qVariantValue<QLocalSocket::LocalSocketState>(spyStateChanged.at(j).at(0));
+            s = qvariant_cast<QLocalSocket::LocalSocketState>(spyStateChanged.at(j).at(0));
             qDebug() << s;
         }
 #endif
         if (canListen)
-            QCOMPARE(qVariantValue<QLocalSocket::LocalSocketState>(spyStateChanged.last()[0]),
+            QCOMPARE(qvariant_cast<QLocalSocket::LocalSocketState>(spyStateChanged.last()[0]),
                      QLocalSocket::ConnectedState);
         QCOMPARE(spyStateChanged.count(), 2);
         QCOMPARE(spyReadyRead.count(), 0);

@@ -590,7 +590,7 @@ void tst_QDBusAbstractInterface::variantPropWrite()
     QVERIFY2(p, "Not connected to D-Bus");
 
     QDBusVariant expectedValue = QDBusVariant(Q_INT64_C(-47));
-    QVERIFY(p->setProperty("variantProp", qVariantFromValue(expectedValue)));
+    QVERIFY(p->setProperty("variantProp", QVariant::fromValue(expectedValue)));
     QCOMPARE(targetObj.m_variantProp.variant(), expectedValue.variant());
 }
 
@@ -611,7 +611,7 @@ void tst_QDBusAbstractInterface::complexPropWrite()
     QVERIFY2(p, "Not connected to D-Bus");
 
     RegisteredType expectedValue = RegisteredType("This is a value");
-    QVERIFY(p->setProperty("complexProp", qVariantFromValue(expectedValue)));
+    QVERIFY(p->setProperty("complexProp", QVariant::fromValue(expectedValue)));
     QCOMPARE(targetObj.m_complexProp, expectedValue);
 }
 
@@ -660,7 +660,7 @@ void tst_QDBusAbstractInterface::variantPropWritePeer()
     resetServer();
 
     QDBusVariant expectedValue = QDBusVariant(Q_INT64_C(-47));
-    QVERIFY(p->setProperty("variantProp", qVariantFromValue(expectedValue)));
+    QVERIFY(p->setProperty("variantProp", QVariant::fromValue(expectedValue)));
     QEXPECT_FAIL("", "QTBUG-24262 peer tests are broken", Abort);
     QCOMPARE(targetObj.m_variantProp.variant(), expectedValue.variant());
 }
@@ -684,7 +684,7 @@ void tst_QDBusAbstractInterface::complexPropWritePeer()
     resetServer();
 
     RegisteredType expectedValue = RegisteredType("This is a value");
-    QVERIFY(p->setProperty("complexProp", qVariantFromValue(expectedValue)));
+    QVERIFY(p->setProperty("complexProp", QVariant::fromValue(expectedValue)));
     QEXPECT_FAIL("", "QTBUG-24262 peer tests are broken", Abort);
     QCOMPARE(targetObj.m_complexProp, expectedValue);
 }
@@ -1042,9 +1042,9 @@ void tst_QDBusAbstractInterface::createErrors_data()
     QTest::addColumn<QString>("path");
     QTest::addColumn<QString>("errorName");
 
-    QTest::newRow("invalid-service") << "this isn't valid" << "/" << "com.trolltech.QtDBus.Error.InvalidService";
+    QTest::newRow("invalid-service") << "this isn't valid" << "/" << "org.qtproject.QtDBus.Error.InvalidService";
     QTest::newRow("invalid-path") << QDBusConnection::sessionBus().baseService() << "this isn't valid"
-            << "com.trolltech.QtDBus.Error.InvalidObjectPath";
+            << "org.qtproject.QtDBus.Error.InvalidObjectPath";
 }
 
 void tst_QDBusAbstractInterface::createErrors()
@@ -1063,7 +1063,7 @@ void tst_QDBusAbstractInterface::createErrorsPeer_data()
     QTest::addColumn<QString>("path");
     QTest::addColumn<QString>("errorName");
 
-    QTest::newRow("invalid-path") << "this isn't valid" << "com.trolltech.QtDBus.Error.InvalidObjectPath";
+    QTest::newRow("invalid-path") << "this isn't valid" << "org.qtproject.QtDBus.Error.InvalidObjectPath";
 }
 
 void tst_QDBusAbstractInterface::createErrorsPeer()
@@ -1079,10 +1079,10 @@ void tst_QDBusAbstractInterface::createErrorsPeer()
 void tst_QDBusAbstractInterface::callErrors_data()
 {
     createErrors_data();
-    QTest::newRow("service-wildcard") << QString() << "/" << "com.trolltech.QtDBus.Error.InvalidService";
+    QTest::newRow("service-wildcard") << QString() << "/" << "org.qtproject.QtDBus.Error.InvalidService";
     QTest::newRow("path-wildcard") << QDBusConnection::sessionBus().baseService() << QString()
-            << "com.trolltech.QtDBus.Error.InvalidObjectPath";
-    QTest::newRow("full-wildcard") << QString() << QString() << "com.trolltech.QtDBus.Error.InvalidService";
+            << "org.qtproject.QtDBus.Error.InvalidObjectPath";
+    QTest::newRow("full-wildcard") << QString() << QString() << "org.qtproject.QtDBus.Error.InvalidService";
 }
 
 void tst_QDBusAbstractInterface::callErrors()
@@ -1121,7 +1121,7 @@ void tst_QDBusAbstractInterface::asyncCallErrors()
 void tst_QDBusAbstractInterface::callErrorsPeer_data()
 {
     createErrorsPeer_data();
-    QTest::newRow("path-wildcard") << QString() << "com.trolltech.QtDBus.Error.InvalidObjectPath";
+    QTest::newRow("path-wildcard") << QString() << "org.qtproject.QtDBus.Error.InvalidObjectPath";
 }
 
 void tst_QDBusAbstractInterface::callErrorsPeer()
