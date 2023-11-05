@@ -71,13 +71,13 @@ bool QEventDispatcherX11::processEvents(QEventLoop::ProcessEventsFlags flags)
 {
     Q_D(QEventDispatcherX11);
 
-    d->interrupt = false;
+    d->interrupt.storeRelaxed(0);
     QApplication::sendPostedEvents();
 
     ulong marker = XNextRequest(X11->display);
     int nevents = 0;
     do {
-        while (!d->interrupt) {
+        while (!d->interrupt.loadRelaxed()) {
             XEvent event;
             if (!(flags & QEventLoop::ExcludeUserInputEvents)
                 && !d->queuedUserInputEvents.isEmpty()) {
@@ -138,10 +138,10 @@ bool QEventDispatcherX11::processEvents(QEventLoop::ProcessEventsFlags flags)
                 goto out;
             }
         }
-    } while (!d->interrupt && XEventsQueued(X11->display, QueuedAfterFlush));
+    } while (!d->interrupt.loadRelaxed() && XEventsQueued(X11->display, QueuedAfterFlush));
 
  out:
-    if (!d->interrupt) {
+    if (!d->interrupt.loadRelaxed()) {
         const uint exclude_all =
             QEventLoop::ExcludeSocketNotifiers | QEventLoop::X11ExcludeTimers | QEventLoop::WaitForMoreEvents;
         if (nevents > 0 && ((uint)flags & exclude_all) == exclude_all) {
