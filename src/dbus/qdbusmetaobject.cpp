@@ -205,9 +205,7 @@ QDBusMetaObjectGenerator::findType(const QByteArray &signature,
 
         if (!typeName.isEmpty()) {
             // type name found
-            type = QVariant::nameToType(typeName);
-            if (type == QVariant::UserType)
-                type = QMetaType::type(typeName);
+            type = QMetaType::type(typeName);
         }
 
         if (type == QVariant::Invalid || signature != QDBusMetaType::typeToSignature(type)) {
@@ -233,7 +231,7 @@ QDBusMetaObjectGenerator::findType(const QByteArray &signature,
             type = -1;
         }
     } else {
-        result.name = QVariant::typeToName( QVariant::Type(type) );
+        result.name = QMetaType::typeName(type);
     }
 
     result.id = type;

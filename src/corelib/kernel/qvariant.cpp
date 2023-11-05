@@ -1861,7 +1861,7 @@ void QVariant::detach()
 */
 const char *QVariant::typeName() const
 {
-    return typeToName(Type(d.type));
+    return QMetaType::typeName(Type(d.type));
 }
 
 /*!
