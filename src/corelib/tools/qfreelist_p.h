@@ -217,21 +217,21 @@ template <typename T, typename ConstantsType>
 inline QFreeList<T, ConstantsType>::~QFreeList()
 {
     for (int i = 0; i < ConstantsType::BlockCount; ++i)
-        delete [] _v[i].load();
+        delete [] _v[i].loadRelaxed();
 }
 
 template <typename T, typename ConstantsType>
 inline typename QFreeList<T, ConstantsType>::ConstReferenceType QFreeList<T, ConstantsType>::at(int x) const
 {
     const int block = blockfor(x);
-    return (_v[block].load())[x].t();
+    return (_v[block].loadRelaxed())[x].t();
 }
 
 template <typename T, typename ConstantsType>
 inline typename QFreeList<T, ConstantsType>::ReferenceType QFreeList<T, ConstantsType>::operator[](int x)
 {
     const int block = blockfor(x);
-    return (_v[block].load())[x].t();
+    return (_v[block].loadRelaxed())[x].t();
 }
 
 template <typename T, typename ConstantsType>
@@ -240,24 +240,24 @@ inline int QFreeList<T, ConstantsType>::next()
     int id, newid, at;
     ElementType *v;
     do {
-        id = _next.load();
+        id = _next.loadAcquire();
 
         at = id & ConstantsType::IndexMask;
         const int block = blockfor(at);
-        v = _v[block].loadAcquire();;
+        v = _v[block].loadAcquire();
 
         if (!v) {
             v = allocate((id & ConstantsType::IndexMask) - at, ConstantsType::Sizes[block]);
             if (!_v[block].testAndSetRelease(0, v)) {
                 // race with another thread lost
                 delete [] v;
-                v = _v[block].loadAcquire();;
+                v = _v[block].loadAcquire();
                 Q_ASSERT(v != 0);
             }
         }
 
         newid = v[at].next | (id & ~ConstantsType::IndexMask);
-    } while (!_next.testAndSetRelaxed(id, newid));
+    } while (!_next.testAndSetRelease(id, newid));
     // qDebug("QFreeList::next(): returning %d (_next now %d, serial %d)",
     //        id & ConstantsType::IndexMask,
     //        newid & ConstantsType::IndexMask,
@@ -270,7 +270,7 @@ inline void QFreeList<T, ConstantsType>::release(int id)
 {
     int at = id & ConstantsType::IndexMask;
     const int block = blockfor(at);
-    ElementType *v = _v[block].load();
+    ElementType *v = _v[block].loadRelaxed();
 
     int x, newid;
     do {
