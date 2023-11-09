@@ -272,8 +272,8 @@ static QStringList findXmlFiles(QString dir_name)
 
     QFileInfoList::const_iterator it = file_list.begin();
     for (; it != file_list.end(); ++it) {
-	const QFileInfo &file_info = *it;
-	result.append(file_info.filePath());
+        const QFileInfo &file_info = *it;
+        result.append(file_info.filePath());
     }
 
     return result;
@@ -283,21 +283,21 @@ static QStringList findXmlFiles(QString dir_name)
 void tst_QXmlSimpleReader::testGoodXmlFile_data()
 {
     const char * const good_data_dirs[] = {
-	"xmldocs/valid/sa",
-	"xmldocs/valid/not-sa",
-	"xmldocs/valid/ext-sa",
-	0
+        SRCDIR "/xmldocs/valid/sa",
+        SRCDIR "/xmldocs/valid/not-sa",
+        SRCDIR "/xmldocs/valid/ext-sa",
+        0
     };
     const char * const *d = good_data_dirs;
 
     QStringList good_file_list;
     for (; *d != 0; ++d)
-	good_file_list += findXmlFiles(*d);
+        good_file_list += findXmlFiles(*d);
 
     QTest::addColumn<QString>("file_name");
     QStringList::const_iterator it = good_file_list.begin();
     for (; it != good_file_list.end(); ++it)
-	QTest::newRow((*it).toLatin1()) << *it;
+        QTest::newRow((*it).toLatin1()) << *it;
 }
 
 void tst_QXmlSimpleReader::testGoodXmlFile()
@@ -312,7 +312,7 @@ void tst_QXmlSimpleReader::testGoodXmlFile()
 
 //    static int i = 0;
 //    qWarning("Test nr: " + QString::number(i)); ++i;
-    QEXPECT_FAIL("xmldocs/valid/sa/089.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/valid/sa/089.xml", "", Continue);
     QVERIFY(parser.parseFile(&file));
 
     QFile ref_file(file_name + ".ref");
@@ -328,19 +328,19 @@ void tst_QXmlSimpleReader::testGoodXmlFile()
 void tst_QXmlSimpleReader::testBadXmlFile_data()
 {
     const char * const bad_data_dirs[] = {
-	"xmldocs/not-wf/sa",
-	0
+        SRCDIR "/xmldocs/not-wf/sa",
+        0
     };
     const char * const *d = bad_data_dirs;
 
     QStringList bad_file_list;
     for (; *d != 0; ++d)
-	bad_file_list += findXmlFiles(*d);
+        bad_file_list += findXmlFiles(*d);
 
     QTest::addColumn<QString>("file_name");
     QStringList::const_iterator it = bad_file_list.begin();
     for (; it != bad_file_list.end(); ++it)
-	QTest::newRow((*it).toLatin1()) << *it;
+        QTest::newRow((*it).toLatin1()) << *it;
 }
 
 void tst_QXmlSimpleReader::testBadXmlFile()
@@ -352,51 +352,51 @@ void tst_QXmlSimpleReader::testBadXmlFile()
 
 //    static int i = 0;
 //    qWarning("Test nr: " + QString::number(++i));
-    QEXPECT_FAIL("xmldocs/not-wf/sa/030.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/031.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/032.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/033.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/038.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/072.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/073.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/074.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/076.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/077.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/078.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/085.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/086.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/087.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/101.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/102.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/104.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/116.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/117.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/119.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/122.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/132.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/142.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/143.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/144.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/145.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/146.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/160.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/162.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/166.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/167.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/168.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/169.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/170.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/171.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/172.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/173.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/174.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/175.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/177.xml", "", Abort);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/180.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/181.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/182.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/185.xml", "", Continue);
-    QEXPECT_FAIL("xmldocs/not-wf/sa/186.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/030.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/031.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/032.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/033.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/038.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/072.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/073.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/074.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/076.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/077.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/078.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/085.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/086.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/087.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/101.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/102.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/104.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/116.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/117.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/119.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/122.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/132.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/142.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/143.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/144.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/145.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/146.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/160.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/162.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/166.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/167.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/168.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/169.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/170.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/171.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/172.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/173.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/174.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/175.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/177.xml", "", Abort);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/180.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/181.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/182.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/185.xml", "", Continue);
+    QEXPECT_FAIL(SRCDIR "/xmldocs/not-wf/sa/186.xml", "", Continue);
 
     QVERIFY(!parser.parseFile(&file));
 
@@ -422,31 +422,31 @@ void tst_QXmlSimpleReader::testIncrementalParsing_data()
     QTest::addColumn<int>("chunkSize");
 
     const char * const good_data_dirs[] = {
-	"xmldocs/valid/sa",
-	"xmldocs/valid/not-sa",
-	"xmldocs/valid/ext-sa",
-	0
+        SRCDIR "/xmldocs/valid/sa",
+        SRCDIR "/xmldocs/valid/not-sa",
+        SRCDIR "/xmldocs/valid/ext-sa",
+        0
     };
     const char * const *d = good_data_dirs;
 
     QStringList good_file_list;
     for (; *d != 0; ++d)
-	good_file_list += findXmlFiles(*d);
+        good_file_list += findXmlFiles(*d);
 
     for (int i=1; i<10; ++i) {
-	QStringList::const_iterator it = good_file_list.begin();
-	for (; it != good_file_list.end(); ++it) {
-	    if ( *it == "xmldocs/valid/sa/089.xml" )
-		continue;// TODO: fails at the moment -- don't bother
-	    if ( i==1 && (
-			*it == "xmldocs/valid/sa/049.xml" ||
-			*it == "xmldocs/valid/sa/050.xml" ||
-			*it == "xmldocs/valid/sa/051.xml" ||
-			*it == "xmldocs/valid/sa/052.xml" ) ) {
-		continue; // TODO: fails at the moment -- don't bother
-	    }
-	    QTest::newRow(QString("%1 %2").arg(*it).arg(i).toLatin1()) << *it << i;
-	}
+        QStringList::const_iterator it = good_file_list.begin();
+        for (; it != good_file_list.end(); ++it) {
+            if ( *it == SRCDIR "/xmldocs/valid/sa/089.xml" )
+                continue;// TODO: fails at the moment -- don't bother
+            if ( i==1 && (
+                *it == SRCDIR "/xmldocs/valid/sa/049.xml" ||
+                *it == SRCDIR "/xmldocs/valid/sa/050.xml" ||
+                *it == SRCDIR "/xmldocs/valid/sa/051.xml" ||
+                *it == SRCDIR "/xmldocs/valid/sa/052.xml" ) ) {
+                continue; // TODO: fails at the moment -- don't bother
+            }
+            QTest::newRow(QString("%1 %2").arg(*it).arg(i).toLatin1()) << *it << i;
+        }
     }
 }
 
@@ -564,7 +564,7 @@ void tst_QXmlSimpleReader::inputFromString()
 
 void tst_QXmlSimpleReader::inputFromSocket_data()
 {
-    QStringList files = findXmlFiles(QLatin1String("encodings"));
+    QStringList files = findXmlFiles(QLatin1String(SRCDIR "/encodings"));
     QVERIFY(files.count() > 0);
 
     QTest::addColumn<QString>("file_name");
@@ -577,10 +577,6 @@ void tst_QXmlSimpleReader::inputFromSocket()
 {
     QFETCH(QString, file_name);
 
-#if defined(Q_OS_SYMBIAN)
-    QSKIP("Symbian: Skipped due to problems in Open C and QtNetwork", SkipAll);
-#endif
-
 #if defined(Q_OS_WIN32) && (defined(Q_CC_INTEL) || defined(Q_CC_MSVC_NET))
     QSKIP("Regression caused by QHOstInfo change 294548, see task 202231.", SkipAll);
 #endif
@@ -589,8 +585,8 @@ void tst_QXmlSimpleReader::inputFromSocket()
 
     const bool connectionSuccess = sock.waitForConnected();
     if(!connectionSuccess) {
-	 QTextStream out(stderr);
-	 out << "QTcpSocket::errorString()" << sock.errorString();
+        QTextStream out(stderr);
+        out << "QTcpSocket::errorString()" << sock.errorString();
     }
 
     QVERIFY(connectionSuccess);
