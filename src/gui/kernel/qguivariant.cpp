@@ -720,7 +720,6 @@ Q_DECL_METATYPE_HELPER(QQuaternion)
 #endif
 
 static const QMetaTypeGuiHelper qVariantGuiHelper[] = {
-    {0, 0, 0, 0},
     Q_IMPL_METATYPE_HELPER(QFont),
     Q_IMPL_METATYPE_HELPER(QPixmap),
     Q_IMPL_METATYPE_HELPER(QBrush),
