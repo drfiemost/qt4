@@ -1940,6 +1940,7 @@ void tst_QVariant::typeName_data()
     QTest::newRow("50") << int(QVariant::Vector3D) << QByteArray("QVector3D");
     QTest::newRow("51") << int(QVariant::Vector4D) << QByteArray("QVector4D");
     QTest::newRow("52") << int(QVariant::Quaternion) << QByteArray("QQuaternion");
+    QTest::newRow("53") << int(QVariant::PolygonF) << QByteArray("QPolygonF");
 }
 
 void tst_QVariant::typeName()
@@ -1957,7 +1958,7 @@ void tst_QVariant::typeToName()
     QCOMPARE( QVariant::typeToName( v.type() ), (const char*)0 ); // Invalid
     // assumes that QVariant::Type contains consecutive values
 
-    int max = QVariant::Quaternion;
+    int max = QVariant::LastGuiType;
     for ( int t = 1; t <= max; t++ ) {
         const char *n = QVariant::typeToName( (QVariant::Type)t );
         if (n)

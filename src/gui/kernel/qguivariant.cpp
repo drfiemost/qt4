@@ -84,6 +84,9 @@ static void construct(QVariant::Private *x, const void *copy)
     case QVariant::Polygon:
         v_construct<QPolygon>(x, copy);
         break;
+    case QVariant::PolygonF:
+        v_construct<QPolygonF>(x, copy);
+        break;
     case QVariant::Font:
         v_construct<QFont>(x, copy);
         break;
@@ -190,6 +193,9 @@ static void clear(QVariant::Private *d)
     case QVariant::Polygon:
         v_clear<QPolygon>(d);
         break;
+    case QVariant::PolygonF:
+        v_clear<QPolygonF>(d);
+        break;
     case QVariant::Font:
         v_clear<QFont>(d);
         break;
@@ -281,6 +287,8 @@ static bool isNull(const QVariant::Private *d)
         return v_cast<QRegion>(d)->isEmpty();
     case QVariant::Polygon:
         return v_cast<QPolygon>(d)->isEmpty();
+    case QVariant::PolygonF:
+        return v_cast<QPolygonF>(d)->isEmpty();
     case QVariant::Pixmap:
         return v_cast<QPixmap>(d)->isNull();
     case QVariant::Image:
@@ -342,6 +350,8 @@ static bool compare(const QVariant::Private *a, const QVariant::Private *b)
             == v_cast<QBitmap>(b)->cacheKey();
     case QVariant::Polygon:
         return *v_cast<QPolygon>(a) == *v_cast<QPolygon>(b);
+    case QVariant::PolygonF:
+        return *v_cast<QPolygonF>(a) == *v_cast<QPolygonF>(b);
     case QVariant::Region:
         return *v_cast<QRegion>(a) == *v_cast<QRegion>(b);
     case QVariant::Font:
@@ -542,6 +552,9 @@ static void streamDebug(QDebug dbg, const QVariant &v)
     case QVariant::Polygon:
         dbg.nospace() << qvariant_cast<QPolygon>(v);
         break;
+    case QVariant::PolygonF:
+        dbg.nospace() << qvariant_cast<QPolygonF>(v);
+        break;
     case QVariant::Region:
         dbg.nospace() << qvariant_cast<QRegion>(v);
         break;
@@ -705,6 +718,7 @@ Q_DECL_METATYPE_HELPER(QVector4D)
 #ifndef QT_NO_QUATERNION
 Q_DECL_METATYPE_HELPER(QQuaternion)
 #endif
+Q_DECL_METATYPE_HELPER(QPolygonF)
 
 #ifdef QT_NO_DATASTREAM
 #  define Q_IMPL_METATYPE_HELPER(TYPE) \
@@ -771,10 +785,11 @@ static const QMetaTypeGuiHelper qVariantGuiHelper[] = {
     {0, 0, 0, 0},
 #endif
 #ifndef QT_NO_QUATERNION
-    Q_IMPL_METATYPE_HELPER(QQuaternion)
+    Q_IMPL_METATYPE_HELPER(QQuaternion),
 #else
-    {0, 0, 0, 0}
+    {0, 0, 0, 0},
 #endif
+    Q_IMPL_METATYPE_HELPER(QPolygonF)
 };
 
 static const QVariant::Handler *qt_guivariant_last_handler = 0;

@@ -134,6 +134,7 @@ QT_BEGIN_NAMESPACE
     F(QVector3D, 84, QVector3D) \
     F(QVector4D, 85, QVector4D) \
     F(QQuaternion, 86, QQuaternion) \
+    F(QPolygonF, 87, QPolygonF) \
 
 // ### FIXME kill that set
 #define QT_FOR_EACH_STATIC_HACKS_TYPE(F)\
@@ -179,7 +180,7 @@ public:
 
         LastCoreType = QEasingCurve,
         FirstGuiType = QFont,
-        LastGuiType = QQuaternion,
+        LastGuiType = QPolygonF,
         FirstCoreExtType = VoidStar,
         LastCoreExtType = QVariant,
 
