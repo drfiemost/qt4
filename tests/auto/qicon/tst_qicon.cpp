@@ -44,9 +44,6 @@
 
 #include <qicon.h>
 
-#if defined(Q_OS_SYMBIAN)
-#define SRCDIR "."
-#endif
 #include <qiconengine.h>
 
 Q_DECLARE_METATYPE(QSize)
@@ -474,12 +471,6 @@ void tst_QIcon::addFile()
             QPixmap(QLatin1String(":/trolltech/styles/commonstyle/images/standardbutton-open-16.png")).toImage());
     QVERIFY(icon.pixmap(16, QIcon::Selected).toImage() ==
             QPixmap(QLatin1String(":/trolltech/styles/commonstyle/images/standardbutton-save-16.png")).toImage());
-#elif defined(Q_OS_SYMBIAN)
-    // Symbian only includes the 32x32 images for size reasons
-    QVERIFY(icon.pixmap(32, QIcon::Normal).toImage() ==
-            QPixmap(QLatin1String(":/trolltech/styles/commonstyle/images/standardbutton-open-32.png")).toImage());
-    QVERIFY(icon.pixmap(32, QIcon::Selected).toImage() ==
-            QPixmap(QLatin1String(":/trolltech/styles/commonstyle/images/standardbutton-save-32.png")).toImage());
 #else
     QVERIFY(icon.pixmap(16, QIcon::Normal).toImage() ==
             QPixmap(QLatin1String(":/trolltech/styles/commonstyle/images/standardbutton-open-16.png")).toImage());
@@ -543,14 +534,8 @@ void tst_QIcon::availableSizes()
         QVERIFY(availableSizes.isEmpty());
     }
 
-#ifndef Q_OS_SYMBIAN
     const int defaultDimension = 16;
     QLatin1String standardIcon(":/trolltech/styles/commonstyle/images/standardbutton-open-16.png");
-#else
-    // In Symbian, only 32 times 32 icons are included.
-    const int defaultDimension = 32;
-    QLatin1String standardIcon(":/trolltech/styles/commonstyle/images/standardbutton-open-32.png");
-#endif
 
     {
         // we try to load an icon from resources
@@ -734,16 +719,9 @@ void tst_QIcon::fromTheme()
 
 void tst_QIcon::task223279_inconsistentAddFile()
 {
-#ifndef Q_OS_SYMBIAN
     const int defaultDimension = 16;
     const int invalidIconDimension = 32;
     QLatin1String standardIcon(":/trolltech/styles/commonstyle/images/standardbutton-open-16.png");
-#else
-    // Only 32 times 32 icons are included in Symbian
-    const int defaultDimension = 32;
-    const int invalidIconDimension = 64;
-    QLatin1String standardIcon(":/trolltech/styles/commonstyle/images/standardbutton-open-32.png");
-#endif
 
     QIcon icon1;
     icon1.addFile(standardIcon);
