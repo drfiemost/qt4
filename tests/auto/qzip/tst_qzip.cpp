@@ -72,7 +72,7 @@ void tst_QZip::cleanup()
 
 void tst_QZip::basicUnpack()
 {
-    QZipReader zip(QString(SRCDIR) + "/testdata/test.zip", QIODevice::ReadOnly);
+    QZipReader zip(QString(SRCDIR "/testdata/test.zip"), QIODevice::ReadOnly);
     QList<QZipReader::FileInfo> files = zip.fileInfoList();
     QCOMPARE(files.count(), 2);
 
@@ -108,7 +108,7 @@ void tst_QZip::basicUnpack()
 
 void tst_QZip::symlinks()
 {
-    QZipReader zip(QString(SRCDIR) + "/testdata/symlink.zip", QIODevice::ReadOnly);
+    QZipReader zip(QString(SRCDIR "/testdata/symlink.zip"), QIODevice::ReadOnly);
     QList<QZipReader::FileInfo> files = zip.fileInfoList();
     QCOMPARE(files.count(), 2);
 
