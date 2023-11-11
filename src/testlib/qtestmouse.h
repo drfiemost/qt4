@@ -88,9 +88,9 @@ namespace QTest
         }
 
         QTEST_ASSERT(button == Qt::NoButton || button & Qt::MouseButtonMask);
-        QTEST_ASSERT(stateKey == 0 || stateKey & Qt::KeyboardModifierMask);
+        QTEST_ASSERT(!stateKey || stateKey & Qt::KeyboardModifierMask);
 
-        stateKey &= static_cast<unsigned int>(Qt::KeyboardModifierMask);
+        stateKey &= Qt::KeyboardModifierMask;
 
         QMouseEvent me(QEvent::User, QPoint(), Qt::LeftButton, button, stateKey);
         switch (action)
