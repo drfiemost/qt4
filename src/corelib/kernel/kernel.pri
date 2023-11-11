@@ -14,6 +14,7 @@ HEADERS += \
         kernel/qmetaobject_moc_p.h \
         kernel/qmetaobjectbuilder_p.h \
         kernel/qmetatype.h \
+        kernel/qmetatype_p.h \
         kernel/qmimedata.h \
         kernel/qobject.h \
         kernel/qobjectdefs.h \

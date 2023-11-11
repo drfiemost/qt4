@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qmetatype.h"
+#include "qmetatype_p.h"
 #include "qobjectdefs.h"
 #include "qdatetime.h"
 #include "qbytearray.h"
@@ -314,7 +315,7 @@ static const struct { const char * typeName; int typeNameLength; int type; } typ
 
     {nullptr, 0, QMetaType::Void}
 };
-
+/*
 struct QMetaTypeGuiHelper
 {
     QMetaType::Constructor constr;
@@ -323,25 +324,25 @@ struct QMetaTypeGuiHelper
     QMetaType::SaveOperator saveOp;
     QMetaType::LoadOperator loadOp;
 #endif
-};
-Q_CORE_EXPORT const QMetaTypeGuiHelper *qMetaTypeGuiHelper = nullptr;
+};*/
+Q_CORE_EXPORT const QMetaTypeInterface *qMetaTypeGuiHelper = nullptr;
 
-class QCustomTypeInfo
+class QCustomTypeInfo : public QMetaTypeInterface
 {
 public:
-    QCustomTypeInfo() : typeName(), constr(nullptr), destr(nullptr)
+    /*QCustomTypeInfo() : typeName(), constr(nullptr), destr(nullptr)
 #ifndef QT_NO_DATASTREAM
     , saveOp(0), loadOp(0)
 #endif
     {}
-
+*/
     QByteArray typeName;
-    QMetaType::Constructor constr;
+    /*QMetaType::Constructor constr;
     QMetaType::Destructor destr;
 #ifndef QT_NO_DATASTREAM
     QMetaType::SaveOperator saveOp;
     QMetaType::LoadOperator loadOp;
-#endif
+#endif*/
     int alias;
 };
 

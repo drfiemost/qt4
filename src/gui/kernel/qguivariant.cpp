@@ -67,6 +67,7 @@
 #include "qquaternion.h"
 
 #include "private/qvariant_p.h"
+#include <private/qmetatype_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -648,151 +649,18 @@ const QVariant::Handler qt_gui_variant_handler = {
 #endif
 };
 
-struct QMetaTypeGuiHelper
-{
-    QMetaType::Constructor constr;
-    QMetaType::Destructor destr;
-#ifndef QT_NO_DATASTREAM
-    QMetaType::SaveOperator saveOp;
-    QMetaType::LoadOperator loadOp;
-#endif
+extern Q_CORE_EXPORT const QMetaTypeInterface *qMetaTypeGuiHelper;
+
+#define QT_IMPL_METATYPEINTERFACE_GUI_TYPES(MetaTypeName, MetaTypeId, RealName) \
+    QMetaTypeInterface(static_cast<RealName*>(0)),
+
+static const QMetaTypeInterface qVariantGuiHelper[] = {
+    QT_FOR_EACH_STATIC_GUI_CLASS(QT_IMPL_METATYPEINTERFACE_GUI_TYPES)
 };
 
-extern Q_CORE_EXPORT const QMetaTypeGuiHelper *qMetaTypeGuiHelper;
+#undef QT_IMPL_METATYPEINTERFACE_GUI_TYPES
 
-
-#ifdef QT_NO_DATASTREAM
-#  define Q_DECL_METATYPE_HELPER(TYPE) \
-     typedef void *(*QConstruct##TYPE)(const TYPE *); \
-     static const QConstruct##TYPE qConstruct##TYPE = qMetaTypeConstructHelper<TYPE>; \
-     typedef void (*QDestruct##TYPE)(TYPE *); \
-     static const QDestruct##TYPE qDestruct##TYPE = qMetaTypeDeleteHelper<TYPE>;
-#else
-#  define Q_DECL_METATYPE_HELPER(TYPE) \
-     typedef void *(*QConstruct##TYPE)(const TYPE *); \
-     static const QConstruct##TYPE qConstruct##TYPE = qMetaTypeConstructHelper<TYPE>; \
-     typedef void (*QDestruct##TYPE)(TYPE *); \
-     static const QDestruct##TYPE qDestruct##TYPE = qMetaTypeDeleteHelper<TYPE>; \
-     typedef void (*QSave##TYPE)(QDataStream &, const TYPE *); \
-     static const QSave##TYPE qSave##TYPE = qMetaTypeSaveHelper<TYPE>; \
-     typedef void (*QLoad##TYPE)(QDataStream &, TYPE *); \
-     static const QLoad##TYPE qLoad##TYPE = qMetaTypeLoadHelper<TYPE>;
-#endif
-
-Q_DECL_METATYPE_HELPER(QFont)
-Q_DECL_METATYPE_HELPER(QPixmap)
-Q_DECL_METATYPE_HELPER(QBrush)
-Q_DECL_METATYPE_HELPER(QColor)
-Q_DECL_METATYPE_HELPER(QPalette)
-#ifndef QT_NO_ICON
-Q_DECL_METATYPE_HELPER(QIcon)
-#endif
-Q_DECL_METATYPE_HELPER(QImage)
-Q_DECL_METATYPE_HELPER(QPolygon)
-Q_DECL_METATYPE_HELPER(QRegion)
-Q_DECL_METATYPE_HELPER(QBitmap)
-#ifndef QT_NO_CURSOR
-Q_DECL_METATYPE_HELPER(QCursor)
-#endif
-Q_DECL_METATYPE_HELPER(QSizePolicy)
-#ifndef QT_NO_SHORTCUT
-Q_DECL_METATYPE_HELPER(QKeySequence)
-#endif
-Q_DECL_METATYPE_HELPER(QPen)
-Q_DECL_METATYPE_HELPER(QTextLength)
-Q_DECL_METATYPE_HELPER(QTextFormat)
-Q_DECL_METATYPE_HELPER(QMatrix)
-Q_DECL_METATYPE_HELPER(QTransform)
-#ifndef QT_NO_MATRIX4X4
-Q_DECL_METATYPE_HELPER(QMatrix4x4)
-#endif
-#ifndef QT_NO_VECTOR2D
-Q_DECL_METATYPE_HELPER(QVector2D)
-#endif
-#ifndef QT_NO_VECTOR3D
-Q_DECL_METATYPE_HELPER(QVector3D)
-#endif
-#ifndef QT_NO_VECTOR4D
-Q_DECL_METATYPE_HELPER(QVector4D)
-#endif
-#ifndef QT_NO_QUATERNION
-Q_DECL_METATYPE_HELPER(QQuaternion)
-#endif
-Q_DECL_METATYPE_HELPER(QPolygonF)
-
-#ifdef QT_NO_DATASTREAM
-#  define Q_IMPL_METATYPE_HELPER(TYPE) \
-     { reinterpret_cast<QMetaType::Constructor>(qConstruct##TYPE), \
-       reinterpret_cast<QMetaType::Destructor>(qDestruct##TYPE) }
-#else
-#  define Q_IMPL_METATYPE_HELPER(TYPE) \
-     { reinterpret_cast<QMetaType::Constructor>(qConstruct##TYPE), \
-       reinterpret_cast<QMetaType::Destructor>(qDestruct##TYPE), \
-       reinterpret_cast<QMetaType::SaveOperator>(qSave##TYPE), \
-       reinterpret_cast<QMetaType::LoadOperator>(qLoad##TYPE) \
-     }
-#endif
-
-static const QMetaTypeGuiHelper qVariantGuiHelper[] = {
-    Q_IMPL_METATYPE_HELPER(QFont),
-    Q_IMPL_METATYPE_HELPER(QPixmap),
-    Q_IMPL_METATYPE_HELPER(QBrush),
-    Q_IMPL_METATYPE_HELPER(QColor),
-    Q_IMPL_METATYPE_HELPER(QPalette),
-#ifdef QT_NO_ICON
-    {0, 0, 0, 0},
-#else
-    Q_IMPL_METATYPE_HELPER(QIcon),
-#endif
-    Q_IMPL_METATYPE_HELPER(QImage),
-    Q_IMPL_METATYPE_HELPER(QPolygon),
-    Q_IMPL_METATYPE_HELPER(QRegion),
-    Q_IMPL_METATYPE_HELPER(QBitmap),
-#ifdef QT_NO_CURSOR
-    {0, 0, 0, 0},
-#else
-    Q_IMPL_METATYPE_HELPER(QCursor),
-#endif
-    Q_IMPL_METATYPE_HELPER(QSizePolicy),
-#ifdef QT_NO_SHORTCUT
-    {0, 0, 0, 0},
-#else
-    Q_IMPL_METATYPE_HELPER(QKeySequence),
-#endif
-    Q_IMPL_METATYPE_HELPER(QPen),
-    Q_IMPL_METATYPE_HELPER(QTextLength),
-    Q_IMPL_METATYPE_HELPER(QTextFormat),
-    Q_IMPL_METATYPE_HELPER(QMatrix),
-    Q_IMPL_METATYPE_HELPER(QTransform),
-#ifndef QT_NO_MATRIX4X4
-    Q_IMPL_METATYPE_HELPER(QMatrix4x4),
-#else
-    {0, 0, 0, 0},
-#endif
-#ifndef QT_NO_VECTOR2D
-    Q_IMPL_METATYPE_HELPER(QVector2D),
-#else
-    {0, 0, 0, 0},
-#endif
-#ifndef QT_NO_VECTOR3D
-    Q_IMPL_METATYPE_HELPER(QVector3D),
-#else
-    {0, 0, 0, 0},
-#endif
-#ifndef QT_NO_VECTOR4D
-    Q_IMPL_METATYPE_HELPER(QVector4D),
-#else
-    {0, 0, 0, 0},
-#endif
-#ifndef QT_NO_QUATERNION
-    Q_IMPL_METATYPE_HELPER(QQuaternion),
-#else
-    {0, 0, 0, 0},
-#endif
-    Q_IMPL_METATYPE_HELPER(QPolygonF)
-};
-
-static const QVariant::Handler *qt_guivariant_last_handler = 0;
+static const QVariant::Handler *qt_guivariant_last_handler = nullptr;
 int qRegisterGuiVariant()
 {
     qt_guivariant_last_handler = QVariant::handler;
@@ -805,7 +673,7 @@ Q_CONSTRUCTOR_FUNCTION(qRegisterGuiVariant)
 int qUnregisterGuiVariant()
 {
     QVariant::handler = qt_guivariant_last_handler;
-    qMetaTypeGuiHelper = 0;
+    qMetaTypeGuiHelper = nullptr;
     return 1;
 }
 Q_DESTRUCTOR_FUNCTION(qUnregisterGuiVariant)
