@@ -14,6 +14,7 @@ HEADERS += thread/qmutex.h \
 # private headers
 HEADERS += thread/qmutex_p.h \
            thread/qmutexpool_p.h \
+           thread/qfutex_p.h \
            thread/qorderedmutexlocker_p.h \
            thread/qreadwritelock_p.h \
            thread/qthread_p.h \
