@@ -127,7 +127,6 @@ private slots:
     void cache();
     void regexp();
     void pair();
-    void cleanupHandler();
     void sharableQList();
     void sharableQLinkedList();
     void sharableQVector();
@@ -150,7 +149,7 @@ private slots:
     void containerTypedefs();
     void forwardDeclared();
     void alignment();
-    void QTBUG13079_collectionInsideCollection();
+    void collectionInsideCollection();
 
     void foreach_2();
     void insert_remove_loop();
@@ -2464,11 +2463,6 @@ void tst_Collections::pair()
     QVERIFY(!(a > a || b > b || c > c || d > d || e > e));
 }
 
-void tst_Collections::cleanupHandler()
-{
-    QSKIP("No Qt3 support", SkipAll);
-}
-
 /*
     These test that Java-style mutable iterators don't trash shared
     copy (the setSharable() mechanism).
@@ -3421,6 +3415,10 @@ void tst_Collections::forwardDeclared()
     { typedef QSet<T1> C; C *x = 0; /* C::iterator i; */ C::const_iterator j; Q_UNUSED(x) }
 }
 
+#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95)
+#  define Q_DECL_ALIGN(n)   __attribute__((__aligned__(n)))
+#endif
+
 #if defined(Q_ALIGNOF) && defined(Q_DECL_ALIGN)
 
 class Q_DECL_ALIGN(4) Aligned4
@@ -3532,20 +3530,20 @@ void tst_Collections::alignment()
 #ifndef QT_NO_TEMPLATE_TEMPLATE_PARAMETERS
 
 template<template<class> class C>
-struct QTBUG13079_Node {
-    C<QTBUG13079_Node> children;
+struct Node {
+    C<Node> children;
     QString s;
 
-    ~QTBUG13079_Node() {
+    ~Node() {
         children.begin(); //play with memory
     }
 };
-template<template<class> class C> void QTBUG13079_collectionInsideCollectionImpl()
+template<template<class> class C> void collectionInsideCollectionImpl()
 {
-    C<QTBUG13079_Node<C> > nodeList;
-    nodeList << QTBUG13079_Node<C>();
+    C<Node<C> > nodeList;
+    nodeList << Node<C>();
     nodeList.first().s = "parent";
-    nodeList.first().children << QTBUG13079_Node<C>();
+    nodeList.first().children << Node<C>();
     nodeList.first().children.first().s = "child";
 
     nodeList = nodeList.first().children;
@@ -3553,24 +3551,24 @@ template<template<class> class C> void QTBUG13079_collectionInsideCollectionImpl
 
     nodeList = nodeList.first().children;
     QCOMPARE(nodeList.count(), 0);
-    nodeList << QTBUG13079_Node<C>();
+    nodeList << Node<C>();
 }
 
 template<template<class, class> class C>
-struct QTBUG13079_NodeAssoc {
-    C<int, QTBUG13079_NodeAssoc> children;
+struct NodeAssoc {
+    C<int, NodeAssoc> children;
     QString s;
 
-    ~QTBUG13079_NodeAssoc() {
+    ~NodeAssoc() {
         children.begin(); //play with memory
     }
 };
-template<template<class, class> class C> void QTBUG13079_collectionInsideCollectionAssocImpl()
+template<template<class, class> class C> void collectionInsideCollectionAssocImpl()
 {
-    C<int, QTBUG13079_NodeAssoc<C> > nodeMap;
-    nodeMap[18] = QTBUG13079_NodeAssoc<C>();
+    C<int, NodeAssoc<C> > nodeMap;
+    nodeMap[18] = NodeAssoc<C>();
     nodeMap[18].s = "parent";
-    nodeMap[18].children[12] = QTBUG13079_NodeAssoc<C>();
+    nodeMap[18].children[12] = NodeAssoc<C>();
     nodeMap[18].children[12].s = "child";
 
     nodeMap = nodeMap[18].children;
@@ -3578,39 +3576,39 @@ template<template<class, class> class C> void QTBUG13079_collectionInsideCollect
 
     nodeMap = nodeMap[12].children;
     QCOMPARE(nodeMap.count(), 0);
-    nodeMap[42] = QTBUG13079_NodeAssoc<C>();
+    nodeMap[42] = NodeAssoc<C>();
 }
 
 
-quint32 qHash(const QTBUG13079_Node<QSet> &)
+quint32 qHash(const Node<QSet> &)
 {
     return 0;
 }
 
-bool operator==(const QTBUG13079_Node<QSet> &a, const QTBUG13079_Node<QSet> &b)
+bool operator==(const Node<QSet> &a, const Node<QSet> &b)
 {
     return a.s == b.s && a.children == b.children;
 }
 
 template<template<class> class C>
-struct QTBUG13079_NodePtr : QSharedData {
-    C<QTBUG13079_NodePtr> child;
-    QTBUG13079_NodePtr *next;
+struct NodePtr : QSharedData {
+    C<NodePtr> child;
+    NodePtr *next;
     QString s;
 
-    QTBUG13079_NodePtr() : next(0) {}
-    ~QTBUG13079_NodePtr() {
+    NodePtr() : next(0) {}
+    ~NodePtr() {
         next = child.data(); //play with memory
     }
 };
-template<template<class> class C> void QTBUG13079_collectionInsidePtrImpl()
+template<template<class> class C> void collectionInsidePtrImpl()
 {
-    typedef C<QTBUG13079_NodePtr<C> > Ptr;
+    typedef C<NodePtr<C> > Ptr;
     {
         Ptr nodePtr;
-        nodePtr = Ptr(new QTBUG13079_NodePtr<C>());
+        nodePtr = Ptr(new NodePtr<C>());
         nodePtr->s = "parent";
-        nodePtr->child = Ptr(new QTBUG13079_NodePtr<C>());
+        nodePtr->child = Ptr(new NodePtr<C>());
         nodePtr->child->s = "child";
         nodePtr = nodePtr->child;
         QCOMPARE(nodePtr->s, QString::fromLatin1("child"));
@@ -3619,9 +3617,9 @@ template<template<class> class C> void QTBUG13079_collectionInsidePtrImpl()
     }
     {
         Ptr nodePtr;
-        nodePtr = Ptr(new QTBUG13079_NodePtr<C>());
+        nodePtr = Ptr(new NodePtr<C>());
         nodePtr->s = "parent";
-        nodePtr->next = new QTBUG13079_NodePtr<C>();
+        nodePtr->next = new NodePtr<C>();
         nodePtr->next->s = "next";
         nodePtr = Ptr(nodePtr->next);
         QCOMPARE(nodePtr->s, QString::fromLatin1("next"));
@@ -3632,28 +3630,28 @@ template<template<class> class C> void QTBUG13079_collectionInsidePtrImpl()
 
 #endif
 
-void tst_Collections::QTBUG13079_collectionInsideCollection()
+void tst_Collections::collectionInsideCollection()
 {
 #ifndef QT_NO_TEMPLATE_TEMPLATE_PARAMETERS
-    QTBUG13079_collectionInsideCollectionImpl<QVector>();
-    QTBUG13079_collectionInsideCollectionImpl<QStack>();
-    QTBUG13079_collectionInsideCollectionImpl<QList>();
-    QTBUG13079_collectionInsideCollectionImpl<QLinkedList>();
-    QTBUG13079_collectionInsideCollectionImpl<QQueue>();
+    collectionInsideCollectionImpl<QVector>();
+    collectionInsideCollectionImpl<QStack>();
+    collectionInsideCollectionImpl<QList>();
+    collectionInsideCollectionImpl<QLinkedList>();
+    collectionInsideCollectionImpl<QQueue>();
 
     {
-        QSet<QTBUG13079_Node<QSet> > nodeSet;
-        nodeSet << QTBUG13079_Node<QSet>();
+        QSet<Node<QSet> > nodeSet;
+        nodeSet << Node<QSet>();
         nodeSet = nodeSet.begin()->children;
         QCOMPARE(nodeSet.count(), 0);
     }
 
-    QTBUG13079_collectionInsideCollectionAssocImpl<QMap>();
-    QTBUG13079_collectionInsideCollectionAssocImpl<QHash>();
+    collectionInsideCollectionAssocImpl<QMap>();
+    collectionInsideCollectionAssocImpl<QHash>();
 
-    QTBUG13079_collectionInsidePtrImpl<QSharedPointer>();
-    QTBUG13079_collectionInsidePtrImpl<QExplicitlySharedDataPointer>();
-    QTBUG13079_collectionInsidePtrImpl<QSharedDataPointer>();
+    collectionInsidePtrImpl<QSharedPointer>();
+    collectionInsidePtrImpl<QExplicitlySharedDataPointer>();
+    collectionInsidePtrImpl<QSharedDataPointer>();
 #else
     QSKIP("Template-Template Parameters are not supported", SkipAll);
 #endif
