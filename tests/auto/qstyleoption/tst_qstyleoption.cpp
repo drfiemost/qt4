@@ -51,7 +51,6 @@ class tst_QStyleOption: public QObject
 private slots:
     void qstyleoptioncast_data();
     void qstyleoptioncast();
-    void copyconstructors();
 };
 
 // Just a simple container for QStyleOption-pointer 
@@ -92,9 +91,6 @@ void tst_QStyleOption::qstyleoptioncast_data()
     QTest::newRow("optionHeader") << stylePtr(new QStyleOptionHeader) << false << int(QStyleOption::SO_Header);
     QTest::newRow("optionMenuItem") << stylePtr(new QStyleOptionMenuItem) << false << int(QStyleOption::SO_MenuItem);
     QTest::newRow("optionProgressBar") << stylePtr(new QStyleOptionProgressBar) << false << int(QStyleOption::SO_ProgressBar);
-    QTest::newRow("optionQ3DockWindow") << stylePtr(new QStyleOptionQ3DockWindow) << false << int(QStyleOption::SO_Q3DockWindow);
-    QTest::newRow("optionQ3ListView") << stylePtr(new QStyleOptionQ3ListView) << true << int(QStyleOption::SO_Q3ListView);
-    QTest::newRow("optionQ3ListViewItem") << stylePtr(new QStyleOptionQ3ListViewItem) << false << int(QStyleOption::SO_Q3ListViewItem);
     QTest::newRow("optionSlider") << stylePtr(new QStyleOptionSlider) << true << int(QStyleOption::SO_Slider);
     QTest::newRow("optionSpinBox") << stylePtr(new QStyleOptionSpinBox) << true << int(QStyleOption::SO_SpinBox);
     QTest::newRow("optionTab") << stylePtr(new QStyleOptionTab) << false << int(QStyleOption::SO_Tab);
@@ -142,21 +138,6 @@ void tst_QStyleOption::qstyleoptioncast()
 
     // Deallocate
     delete testOption;
-}
-
-void tst_QStyleOption::copyconstructors()
-{
-    QStyleOptionFrame frame;
-    QStyleOptionFrameV2 frame2(frame);
-    QCOMPARE(frame2.version, int(QStyleOptionFrameV2::Version));
-    frame2 = frame;
-    QCOMPARE(frame2.version, int(QStyleOptionFrameV2::Version));
-
-    QStyleOptionProgressBar bar;
-    QStyleOptionProgressBarV2 bar2(bar);
-    QCOMPARE(bar2.version, int(QStyleOptionProgressBarV2::Version));
-    bar2 = bar;
-    QCOMPARE(bar2.version, int(QStyleOptionProgressBarV2::Version));
 }
 
 QTEST_MAIN(tst_QStyleOption)

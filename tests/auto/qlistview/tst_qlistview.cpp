@@ -2002,8 +2002,8 @@ void tst_QListView::styleOptionViewItem()
         public:
             void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
             {
-                QVERIFY(qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option));
-                QStyleOptionViewItemV4 opt(option);
+                QVERIFY(qstyleoption_cast<const QStyleOptionViewItem *>(&option));
+                QStyleOptionViewItem opt(option);
                 initStyleOption(&opt, index);
 
                 QCOMPARE(opt.index, index);
