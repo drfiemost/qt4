@@ -43,6 +43,8 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "qelapsedtimer.h"
+#include "qdeadlinetimer.h"
+#include "qdeadlinetimer_p.h"
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
@@ -248,6 +250,18 @@ qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const noexcept
 bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
 {
     return v1.t1 < v2.t1 || (v1.t1 == v2.t1 && v1.t2 < v2.t2);
+}
+
+QDeadlineTimer QDeadlineTimer::current(Qt::TimerType timerType) noexcept
+{
+    static_assert(QDeadlineTimerNanosecondsInT2);
+    QDeadlineTimer result;
+    qint64 cursec, curnsec;
+    do_gettime(&cursec, &curnsec);
+    result.t1 = cursec;
+    result.t2 = curnsec;
+    result.type = timerType;
+    return result;
 }
 
 QT_END_NAMESPACE

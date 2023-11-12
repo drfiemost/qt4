@@ -94,6 +94,7 @@ Qt {
     Q_ENUMS(GestureType)
 #endif
     Q_ENUMS(CursorMoveStyle)
+    Q_ENUMS(TimerType)
 #endif // defined(Q_MOC_RUN)
 
 #if defined(Q_MOC_RUN)
@@ -1495,6 +1496,12 @@ public:
     enum CursorMoveStyle {
         LogicalMoveStyle,
         VisualMoveStyle
+    };
+
+    enum TimerType {
+        PreciseTimer,
+        CoarseTimer,
+        VeryCoarseTimer
     };
 }
 #ifdef Q_MOC_RUN

@@ -105,6 +105,7 @@ template <typename T>
 class QBasicAtomicInteger
 {
 public:
+    typedef T Type;
     typedef QAtomicOps<T> Ops;
     // static check that this is a valid integer
     static_assert(QTypeInfo<T>::isIntegral, "template parameter is not an integral type");

@@ -43,6 +43,8 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "qelapsedtimer.h"
+#include "qdeadlinetimer.h"
+#include "qdeadlinetimer_p.h"
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
@@ -51,6 +53,12 @@
 #include <private/qcore_unix_p.h>
 
 QT_BEGIN_NAMESPACE
+
+#ifdef __LP64__
+typedef __int128_t LargeInt;
+#else
+typedef qint64 LargeInt;
+#endif
 
 QElapsedTimer::ClockType QElapsedTimer::clockType() noexcept
 {
@@ -141,6 +149,15 @@ qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const noexcept
 bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
 {
     return v1.t1 < v2.t1;
+}
+
+QDeadlineTimer QDeadlineTimer::current(Qt::TimerType timerType) Q_DECL_NOTHROW
+{
+    Q_STATIC_ASSERT(!QDeadlineTimerNanosecondsInT2);
+    QDeadlineTimer result;
+    result.type = timerType;
+    result.t1 = absoluteToNSecs(mach_absolute_time());
+    return result;
 }
 
 QT_END_NAMESPACE

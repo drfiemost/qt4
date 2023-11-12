@@ -50,7 +50,6 @@ HEADERS +=  \
         tools/qstringmatcher.h \
         tools/qtextboundaryfinder.h \
         tools/qtimeline.h \
-        tools/qelapsedtimer.h \
         tools/qunicodetables_p.h \
         tools/qunicodetools_p.h \
         tools/qvarlengtharray.h \
@@ -65,7 +64,6 @@ SOURCES += \
         tools/qcryptographichash.cpp \
         tools/qdatetime.cpp \
         tools/qeasingcurve.cpp \
-        tools/qelapsedtimer.cpp \
         tools/qfreelist.cpp \
         tools/qhash.cpp \
         tools/qline.cpp \
@@ -94,12 +92,10 @@ SOURCES += \
         tools/qvsnprintf.cpp
 
 mac: {
-    SOURCES += tools/qelapsedtimer_mac.cpp
     OBJECTIVE_SOURCES += tools/qlocale_mac.mm
 }
-else:unix:SOURCES += tools/qelapsedtimer_unix.cpp tools/qlocale_unix.cpp
-else:win32:SOURCES += tools/qelapsedtimer_win.cpp tools/qlocale_win.cpp
-else:SOURCES += tools/qelapsedtimer_generic.cpp
+else:unix:SOURCES += tools/qlocale_unix.cpp
+else:win32:SOURCES += tools/qlocale_win.cpp
 
 contains(QT_CONFIG, zlib):include($$PWD/../../3rdparty/zlib.pri)
 else:include($$PWD/../../3rdparty/zlib_dependency.pri)

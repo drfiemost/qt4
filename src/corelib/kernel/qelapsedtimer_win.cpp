@@ -40,6 +40,8 @@
 ****************************************************************************/
 
 #include "qelapsedtimer.h"
+#include "qdeadlinetimer.h"
+#include "qdeadlinetimer_p.h"
 #include <windows.h>
 
 #include <private/qsystemlibrary_p.h>
@@ -87,6 +89,17 @@ static inline qint64 ticksToNanoseconds(qint64 ticks)
     } else {
         // GetTickCount(64) return milliseconds
         return ticks * 1000000;
+    }
+}
+
+static inline qint64 nanosecondsToTicks(qint64 nsec)
+{
+    if (counterFrequency > 0) {
+        // QueryPerformanceCounter uses an arbitrary frequency
+        return double(nsec) * counterFrequency / 1000000000.;
+    } else {
+        // GetTickCount(64) uses milliseconds
+        return nsec / 1000000;
     }
 }
 
@@ -178,6 +191,15 @@ qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const noexcept
 bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
 {
     return (v1.t1 - v2.t1) < 0;
+}
+
+QDeadlineTimer QDeadlineTimer::current(Qt::TimerType timerType) Q_DECL_NOTHROW
+{
+    Q_STATIC_ASSERT(!QDeadlineTimerNanosecondsInT2);
+    QDeadlineTimer result;
+    result.t1 = ticksToNanoseconds(getTickCount());
+    result.type = timerType;
+    return result;
 }
 
 QT_END_NAMESPACE

@@ -1,6 +1,7 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2017 Intel Corporation.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -43,11 +44,14 @@
 
 #ifndef QT_NO_THREAD
 #include "qmutex.h"
+#include "qfutex_p.h"
 #include "qwaitcondition.h"
-#include "qelapsedtimer.h"
+#include "qdeadlinetimer.h"
 #include "qdatetime.h"
 
 QT_BEGIN_NAMESPACE
+
+using namespace QtFutex;
 
 /*!
     \class QSemaphore
@@ -98,6 +102,66 @@ QT_BEGIN_NAMESPACE
     \sa QMutex, QWaitCondition, QThread, {Semaphores Example}
 */
 
+/*
+    QSemaphore futex operation
+    QSemaphore stores a 32-bit integer with the counter of currently available
+    tokens (value between 0 and INT_MAX). When a thread attempts to acquire n
+    tokens and the counter is larger than that, we perform a compare-and-swap
+    with the new count. If that succeeds, the acquisition worked; if not, we
+    loop again because the counter changed. If there were not enough tokens,
+    we'll perform a futex-wait.
+    Before we do, we set the high bit in the futex to indicate that semaphore
+    is contended: that is, there's a thread waiting for more tokens. On
+    release() for n tokens, we perform a fetch-and-add of n and then check if
+    that high bit was set. If it was, then we clear that bit and perform a
+    futex-wake on the semaphore to indicate the waiting threads can wake up and
+    acquire tokens. Which ones get woken up is unspecified.
+ */
+static const quint32 futexContendedBit = 1U << 31;
+
+static int futexAvailCounter(quint32 v)
+{
+    // the low 31 bits
+    return int(v) & (futexContendedBit - 1);
+}
+
+template <bool IsTimed> bool futexSemaphoreTryAcquire(QBasicAtomicInteger<quint32> &u, int n, int timeout)
+{
+    QDeadlineTimer timer(IsTimed ? QDeadlineTimer(timeout) : QDeadlineTimer());
+    quint32 curValue = u.loadAcquire();
+    qint64 remainingTime = timeout * Q_INT64_C(1000) * 1000;
+    forever {
+        int available = futexAvailCounter(curValue);
+        if (available >= n) {
+            // try to acquire
+            quint32 newValue = curValue - n;
+            if (u.testAndSetOrdered(curValue, newValue, curValue))
+                return true;        // succeeded!
+            continue;
+        }
+
+        // not enough tokens available, put us to wait
+        if (remainingTime == 0)
+            return false;
+
+        // set the contended bit
+        u.fetchAndOrRelaxed(futexContendedBit);
+        curValue |= futexContendedBit;
+
+        if (IsTimed && remainingTime > 0) {
+            bool timedout = !futexWait(u, curValue, remainingTime);
+            if (timedout)
+                return false;
+        } else {
+            futexWait(u, curValue);
+        }
+
+        curValue = u.loadAcquire();
+        if (IsTimed)
+            remainingTime = timer.remainingTimeNSecs();
+    }
+}
+
 class QSemaphorePrivate {
 public:
     inline QSemaphorePrivate(int n) : avail(n) { }
@@ -117,7 +181,10 @@ public:
 QSemaphore::QSemaphore(int n)
 {
     Q_ASSERT_X(n >= 0, "QSemaphore", "parameter 'n' must be non-negative");
-    d = new QSemaphorePrivate(n);
+    if (futexAvailable())
+        u.store(n);
+    else
+        d = new QSemaphorePrivate(n);
 }
 
 /*!
@@ -127,7 +194,10 @@ QSemaphore::QSemaphore(int n)
     undefined behavior.
 */
 QSemaphore::~QSemaphore()
-{ delete d; }
+{
+    if (!futexAvailable())
+        delete d;
+}
 
 /*!
     Tries to acquire \c n resources guarded by the semaphore. If \a n
@@ -139,6 +209,12 @@ QSemaphore::~QSemaphore()
 void QSemaphore::acquire(int n)
 {
     Q_ASSERT_X(n >= 0, "QSemaphore::acquire", "parameter 'n' must be non-negative");
+
+    if (futexAvailable()) {
+        futexSemaphoreTryAcquire<false>(u, n, -1);
+        return;
+    }
+
     QMutexLocker locker(&d->mutex);
     while (n > d->avail)
         d->cond.wait(locker.mutex());
@@ -158,6 +234,41 @@ void QSemaphore::acquire(int n)
 void QSemaphore::release(int n)
 {
     Q_ASSERT_X(n >= 0, "QSemaphore::release", "parameter 'n' must be non-negative");
+
+    if (futexAvailable()) {
+        quint32 prevValue = u.fetchAndAddRelease(n);
+        if (prevValue & futexContendedBit) {
+#ifdef FUTEX_OP
+            /*
+               We'll ask the kernel to wake up and clear the bit for us.
+               atomic {
+                  int oldval = u;
+                  u = oldval & ~(1 << 31);
+                  futexWake(u, INT_MAX);
+                  if (oldval == 0)       // impossible condition
+                      futexWake(u, INT_MAX);
+               }
+            */
+            quint32 op = FUTEX_OP_ANDN | FUTEX_OP_OPARG_SHIFT;
+            quint32 oparg = 31;
+            quint32 cmp = FUTEX_OP_CMP_EQ;
+            quint32 cmparg = 0;
+            futexWakeOp(u, INT_MAX, INT_MAX, u, FUTEX_OP(op, oparg, cmp, cmparg));
+#else
+            // Unset the bit and wake everyone. There are two possibibilies
+            // under which a thread can set the bit between the AND and the
+            // futexWake:
+            // 1) it did see the new counter value, but it wasn't enough for
+            //    its acquisition anyway, so it has to wait;
+            // 2) it did not see the new counter value, in which case its
+            //    futexWait will fail.
+            u.fetchAndAndRelease(futexContendedBit - 1);
+            futexWakeAll(u);
+#endif
+        }
+        return;
+    }
+
     QMutexLocker locker(&d->mutex);
     d->avail += n;
     d->cond.wakeAll();
@@ -171,6 +282,9 @@ void QSemaphore::release(int n)
 */
 int QSemaphore::available() const
 {
+    if (futexAvailable())
+        return futexAvailCounter(u.load());
+
     QMutexLocker locker(&d->mutex);
     return d->avail;
 }
@@ -189,6 +303,10 @@ int QSemaphore::available() const
 bool QSemaphore::tryAcquire(int n)
 {
     Q_ASSERT_X(n >= 0, "QSemaphore::tryAcquire", "parameter 'n' must be non-negative");
+
+    if (futexAvailable())
+        return futexSemaphoreTryAcquire<false>(u, n, 0);
+
     QMutexLocker locker(&d->mutex);
     if (n > d->avail)
         return false;
@@ -215,20 +333,19 @@ bool QSemaphore::tryAcquire(int n)
 bool QSemaphore::tryAcquire(int n, int timeout)
 {
     Q_ASSERT_X(n >= 0, "QSemaphore::tryAcquire", "parameter 'n' must be non-negative");
+    if (futexAvailable())
+        return futexSemaphoreTryAcquire<true>(u, n, timeout < 0 ? -1 : timeout);
+
+    QDeadlineTimer timer(timeout);
     QMutexLocker locker(&d->mutex);
-    if (timeout < 0) {
-        while (n > d->avail)
-            d->cond.wait(locker.mutex());
-    } else {
-        QElapsedTimer timer;
-        timer.start();
-        while (n > d->avail) {
-            const qint64 elapsed = timer.elapsed();
-            if (timeout - elapsed <= 0
-                || !d->cond.wait(locker.mutex(), timeout - elapsed))
-                return false;
-        }
+    qint64 remainingTime = timer.remainingTime();
+    while (n > d->avail && remainingTime > 0) {
+        if (!d->cond.wait(locker.mutex(), remainingTime))
+            return false;
+        remainingTime = timer.remainingTime();
     }
+    if (n > d->avail)
+        return false;
     d->avail -= n;
     return true;
 

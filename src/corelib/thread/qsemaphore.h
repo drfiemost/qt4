@@ -43,6 +43,7 @@
 #define QSEMAPHORE_H
 
 #include <QtCore/qglobal.h>
+#include <QtCore/qbasicatomic.h>
 
 QT_BEGIN_HEADER
 
@@ -70,7 +71,10 @@ public:
 private:
     Q_DISABLE_COPY(QSemaphore)
 
-    QSemaphorePrivate *d;
+    union {
+        QSemaphorePrivate *d;
+        QBasicAtomicInteger<quint32> u;
+    };
 };
 
 #endif // QT_NO_THREAD

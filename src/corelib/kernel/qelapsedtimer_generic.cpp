@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #include "qelapsedtimer.h"
+#include "qdeadlinetimer.h"
 #include "qdatetime.h"
 
 QT_BEGIN_NAMESPACE
@@ -189,6 +190,14 @@ qint64 QElapsedTimer::secsTo(const QElapsedTimer &other) const noexcept
 bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
 {
     return v1.t1 < v2.t1;
+}
+
+QDeadlineTimer QDeadlineTimer::current(Qt::TimerType timerType) Q_DECL_NOTHROW
+{
+    QDeadlineTimer result;
+    result.t1 = QDateTime::currentMSecsSinceEpoch() * 1000 * 1000;
+    result.type = timerType;
+    return result;
 }
 
 QT_END_NAMESPACE

@@ -23,6 +23,7 @@ SUBDIRS=\
    qcryptographichash \
    qdate \
    qdatetime \
+   qdeadlinetimer \
    qdebug \
    qdiriterator \
    qeasingcurve \

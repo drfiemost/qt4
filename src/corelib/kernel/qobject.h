@@ -148,7 +148,7 @@ public:
     QThread *thread() const;
     void moveToThread(QThread *thread);
 
-    int startTimer(int interval);
+    int startTimer(int interval, Qt::TimerType timerType = Qt::CoarseTimer);
     void killTimer(int id);
 
     template<typename T>

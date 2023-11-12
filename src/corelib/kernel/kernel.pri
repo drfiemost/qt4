@@ -5,6 +5,9 @@ HEADERS += \
         kernel/qabstractitemmodel.h \
         kernel/qabstractitemmodel_p.h \
         kernel/qbasictimer.h \
+        kernel/qdeadlinetimer.h \
+        kernel/qdeadlinetimer_p.h \
+        kernel/qelapsedtimer.h \
         kernel/qeventloop.h\
         kernel/qpointer.h \
         kernel/qcorecmdlineargs_p.h \
@@ -46,6 +49,8 @@ SOURCES += \
         kernel/qeventloop.cpp \
         kernel/qcoreapplication.cpp \
         kernel/qcoreevent.cpp \
+        kernel/qdeadlinetimer.cpp \
+        kernel/qelapsedtimer.cpp \
         kernel/qmetaobject.cpp \
         kernel/qmetatype.cpp \
         kernel/qmetaobjectbuilder.cpp \
@@ -68,6 +73,7 @@ win32 {
         SOURCES += \
                 kernel/qeventdispatcher_win.cpp \
                 kernel/qcoreapplication_win.cpp \
+                kernel/qelapsedtimer_win.cpp \
                 kernel/qwineventnotifier_p.cpp \
                 kernel/qsharedmemory_win.cpp \
                 kernel/qsystemsemaphore_win.cpp
@@ -91,13 +97,15 @@ mac:!embedded:!qpa{
 
 mac {
        SOURCES += \
-                kernel/qcore_mac.cpp
+                kernel/qcore_mac.cpp \
+                kernel/qelapsedtimer_mac.cpp
 }
 
 unix {
     SOURCES += \
             kernel/qcore_unix.cpp \
             kernel/qcrashhandler.cpp \
+            kernel/qelapsedtimer_unix.cpp \
             kernel/qsharedmemory_unix.cpp \
             kernel/qsystemsemaphore_unix.cpp \
             kernel/qeventdispatcher_unix.cpp \
@@ -119,3 +127,5 @@ unix {
 
    contains(QT_CONFIG, clock-gettime):include($$QT_SOURCE_TREE/config.tests/unix/clock-gettime/clock-gettime.pri)
 }
+
+!darwin:!unix:!win32: SOURCES += kernel/qelapsedtimer_generic.cpp
