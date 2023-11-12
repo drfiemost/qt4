@@ -50,6 +50,10 @@ private slots:
     void testFlagMultiBits() const;
     void constExpr();
     void signedness();
+    void classEnum();
+    void initializerLists();
+    void testSetFlags();
+    void adl();
 };
 
 void tst_QFlags::boolCasts() const
@@ -179,6 +183,178 @@ void tst_QFlags::signedness()
 
     static_assert((std::is_signed<typename std::underlying_type<Qt::AlignmentFlag>::type>::value ==
                      std::is_signed<Qt::Alignment::Int>::value));
+}
+
+#if defined(Q_COMPILER_CLASS_ENUM)
+enum class MyStrictEnum { StrictZero, StrictOne, StrictTwo, StrictFour=4 };
+Q_DECLARE_FLAGS( MyStrictFlags, MyStrictEnum )
+Q_DECLARE_OPERATORS_FOR_FLAGS( MyStrictFlags )
+
+enum class MyStrictNoOpEnum { StrictZero, StrictOne, StrictTwo, StrictFour=4 };
+Q_DECLARE_FLAGS( MyStrictNoOpFlags, MyStrictNoOpEnum )
+
+static_assert( !QTypeInfo<MyStrictFlags>::isComplex );
+static_assert( !QTypeInfo<MyStrictFlags>::isStatic );
+static_assert( !QTypeInfo<MyStrictFlags>::isLarge );
+static_assert( !QTypeInfo<MyStrictFlags>::isPointer );
+#endif
+
+void tst_QFlags::classEnum()
+{
+#if defined(Q_COMPILER_CLASS_ENUM)
+    // The main aim of the test is making sure it compiles
+    // The QCOMPARE are there as an extra
+    MyStrictEnum e1 = MyStrictEnum::StrictOne;
+    MyStrictEnum e2 = MyStrictEnum::StrictTwo;
+
+    MyStrictFlags f1(MyStrictEnum::StrictOne);
+    QCOMPARE(f1, 1);
+
+    MyStrictFlags f2(e2);
+    QCOMPARE(f2, 2);
+
+    MyStrictFlags f0;
+    QCOMPARE(f0, 0);
+
+    MyStrictFlags f3(e2 | e1);
+    QCOMPARE(f3, 3);
+
+    QVERIFY(f3.testFlag(MyStrictEnum::StrictOne));
+    QVERIFY(!f1.testFlag(MyStrictEnum::StrictTwo));
+
+    QVERIFY(!f0);
+
+    QCOMPARE(f3 & int(1), 1);
+    QCOMPARE(f3 & uint(1), 1);
+    QCOMPARE(f3 & MyStrictEnum::StrictOne, 1);
+
+    MyStrictFlags aux;
+    aux = f3;
+    aux &= int(1);
+    QCOMPARE(aux, 1);
+
+    aux = f3;
+    aux &= uint(1);
+    QCOMPARE(aux, 1);
+
+    aux = f3;
+    aux &= MyStrictEnum::StrictOne;
+    QCOMPARE(aux, 1);
+
+    aux = f3;
+    aux &= f1;
+    QCOMPARE(aux, 1);
+
+    aux = f3 ^ f3;
+    QCOMPARE(aux, 0);
+
+    aux = f3 ^ f1;
+    QCOMPARE(aux, 2);
+
+    aux = f3 ^ f0;
+    QCOMPARE(aux, 3);
+
+    aux = f3 ^ MyStrictEnum::StrictOne;
+    QCOMPARE(aux, 2);
+
+    aux = f3 ^ MyStrictEnum::StrictZero;
+    QCOMPARE(aux, 3);
+
+    aux = f3;
+    aux ^= f3;
+    QCOMPARE(aux, 0);
+
+    aux = f3;
+    aux ^= f1;
+    QCOMPARE(aux, 2);
+
+    aux = f3;
+    aux ^= f0;
+    QCOMPARE(aux, 3);
+
+    aux = f3;
+    aux ^= MyStrictEnum::StrictOne;
+    QCOMPARE(aux, 2);
+
+    aux = f3;
+    aux ^= MyStrictEnum::StrictZero;
+    QCOMPARE(aux, 3);
+
+    aux = f1 | f2;
+    QCOMPARE(aux, 3);
+
+    aux = MyStrictEnum::StrictOne | MyStrictEnum::StrictTwo;
+    QCOMPARE(aux, 3);
+
+    aux = f1;
+    aux |= f2;
+    QCOMPARE(aux, 3);
+
+    aux = MyStrictEnum::StrictOne;
+    aux |= MyStrictEnum::StrictTwo;
+    QCOMPARE(aux, 3);
+
+    aux = ~f1;
+    QCOMPARE(aux, -2);
+
+    // Just to make sure it compiles
+    if (false)
+        qDebug() << f3;
+#endif
+}
+
+void tst_QFlags::initializerLists()
+{
+#if defined(Q_COMPILER_INITIALIZER_LISTS)
+    Qt::MouseButtons bts = { Qt::LeftButton, Qt::RightButton };
+    QVERIFY(bts.testFlag(Qt::LeftButton));
+    QVERIFY(bts.testFlag(Qt::RightButton));
+    QVERIFY(!bts.testFlag(Qt::MiddleButton));
+
+#if defined(Q_COMPILER_CLASS_ENUM)
+    MyStrictNoOpFlags flags = { MyStrictNoOpEnum::StrictOne, MyStrictNoOpEnum::StrictFour };
+    QVERIFY(flags.testFlag(MyStrictNoOpEnum::StrictOne));
+    QVERIFY(flags.testFlag(MyStrictNoOpEnum::StrictFour));
+    QVERIFY(!flags.testFlag(MyStrictNoOpEnum::StrictTwo));
+#endif // Q_COMPILER_CLASS_ENUM
+
+#else
+    QSKIP("This test requires C++11 initializer_list support.");
+#endif // Q_COMPILER_INITIALIZER_LISTS
+}
+
+void tst_QFlags::testSetFlags()
+{
+    Qt::MouseButtons btn = Qt::NoButton;
+
+    btn.setFlag(Qt::LeftButton);
+    QVERIFY(btn.testFlag(Qt::LeftButton));
+    QVERIFY(!btn.testFlag(Qt::MidButton));
+
+    btn.setFlag(Qt::LeftButton, false);
+    QVERIFY(!btn.testFlag(Qt::LeftButton));
+    QVERIFY(!btn.testFlag(Qt::MidButton));
+}
+
+namespace SomeNS {
+enum Foo { Foo_A = 1 << 0, Foo_B = 1 << 1, Foo_C = 1 << 2 };
+
+Q_DECLARE_FLAGS(Foos, Foo)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Foos);
+
+Qt::Alignment alignment()
+{
+    // Checks that the operator| works, despite there is another operator| in this namespace.
+    return Qt::AlignLeft | Qt::AlignTop;
+}
+}
+
+void tst_QFlags::adl()
+{
+    SomeNS::Foos fl = SomeNS::Foo_B | SomeNS::Foo_C;
+    QVERIFY(fl & SomeNS::Foo_B);
+    QVERIFY(!(fl & SomeNS::Foo_A));
+    QCOMPARE(SomeNS::alignment(), Qt::AlignLeft | Qt::AlignTop);
 }
 
 // (statically) check QTypeInfo for QFlags instantiations:

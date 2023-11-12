@@ -214,6 +214,14 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \fn QFlags::QFlags(std::initializer_list<Enum> flags)
+
+    Constructs a QFlags object initialized with all \a flags
+    combined using the bitwise OR operator.
+    \sa operator|=(), operator|()
+*/
+
+/*!
     \fn QFlags &QFlags::operator=(const QFlags &other)
 
     Assigns \a other to this object and returns a reference to this
@@ -232,6 +240,11 @@ QT_BEGIN_NAMESPACE
 /*!
     \fn QFlags &QFlags::operator&=(uint mask)
 
+    \overload
+*/
+
+/*!
+    \fn QFlags &QFlags::operator&=(Enum mask)
     \overload
 */
 
@@ -345,6 +358,13 @@ QT_BEGIN_NAMESPACE
     \since 4.2
 
     Returns true if the \a flag is set, otherwise false.
+*/
+
+/*!
+    \fn QFlags QFlags::setFlag(Enum flag, bool on) const
+
+    Sets the indicated \a flag if \a on is \c true or unsets it if
+    it if \a on is \c false. Returns a reference to this object.
 */
 
 /*!

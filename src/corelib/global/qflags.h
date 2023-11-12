@@ -47,6 +47,10 @@
 #include <QtCore/qtypeinfo.h>
 #include <type_traits>
 
+#ifdef Q_COMPILER_INITIALIZER_LISTS
+#include <initializer_list>
+#endif
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -99,33 +103,53 @@ public:
     typedef Enum enum_type;
 
     Q_DECL_CONSTEXPR inline QFlags(const QFlags &f) : i(f.i) {}
-    Q_DECL_CONSTEXPR inline QFlags(Enum f) : i(f) {}
+    Q_DECL_CONSTEXPR inline QFlags(Enum f) : i(Int(f)) {}
     Q_DECL_CONSTEXPR inline QFlags(Zero = nullptr) : i(0) {}
     constexpr inline QFlags(QFlag f) : i(f) {}
+
+#ifdef Q_COMPILER_INITIALIZER_LISTS
+    Q_DECL_CONSTEXPR inline QFlags(std::initializer_list<Enum> flags)
+        : i(initializer_list_helper(flags.begin(), flags.end())) {}
+#endif
 
     inline QFlags &operator=(const QFlags &f) { i = f.i; return *this; }
     inline QFlags &operator&=(int mask) { i &= mask; return *this; }
     inline QFlags &operator&=(uint mask) { i &= mask; return *this; }
+    inline QFlags &operator&=(Enum mask) { i &= Int(mask); return *this; }
     inline QFlags &operator|=(QFlags f) { i |= f.i; return *this; }
-    inline QFlags &operator|=(Enum f) { i |= f; return *this; }
+    inline QFlags &operator|=(Enum f) { i |= Int(f); return *this; }
     inline QFlags &operator^=(QFlags f) { i ^= f.i; return *this; }
-    inline QFlags &operator^=(Enum f) { i ^= f; return *this; }
+    inline QFlags &operator^=(Enum f) { i ^= Int(f); return *this; }
 
     Q_DECL_CONSTEXPR  inline operator Int() const { return i; }
 
     Q_DECL_CONSTEXPR inline QFlags operator|(QFlags f) const { return QFlags(Enum(i | f.i)); }
-    Q_DECL_CONSTEXPR inline QFlags operator|(Enum f) const { return QFlags(Enum(i | f)); }
+    Q_DECL_CONSTEXPR inline QFlags operator|(Enum f) const { return QFlags(Enum(i | Int(f))); }
     Q_DECL_CONSTEXPR inline QFlags operator^(QFlags f) const { return QFlags(Enum(i ^ f.i)); }
-    Q_DECL_CONSTEXPR inline QFlags operator^(Enum f) const { return QFlags(Enum(i ^ f)); }
+    Q_DECL_CONSTEXPR inline QFlags operator^(Enum f) const { return QFlags(Enum(i ^ Int(f))); }
     Q_DECL_CONSTEXPR inline QFlags operator&(int mask) const { return QFlags(Enum(i & mask)); }
     Q_DECL_CONSTEXPR inline QFlags operator&(uint mask) const { return QFlags(Enum(i & mask)); }
-    Q_DECL_CONSTEXPR inline QFlags operator&(Enum f) const { return QFlags(Enum(i & f)); }
+    Q_DECL_CONSTEXPR inline QFlags operator&(Enum f) const { return QFlags(Enum(i & Int(f))); }
     Q_DECL_CONSTEXPR inline QFlags operator~() const { return QFlags(Enum(~i)); }
 
     Q_DECL_CONSTEXPR inline bool operator!() const { return !i; }
 
-    constexpr inline bool testFlag(Enum f) const { return (i & f) == f && (f != 0 || i == int(f) ); }
+    constexpr inline bool testFlag(Enum f) const { return (i & Int(f)) == Int(f) && (Int(f) != 0 || i == Int(f) ); }
+
+    constexpr inline QFlags &setFlag(Enum f, bool on = true) noexcept
+    {
+        return on ? (*this |= f) : (*this &= ~f);
+    }
+
 private:
+#ifdef Q_COMPILER_INITIALIZER_LISTS
+    Q_DECL_CONSTEXPR static inline Int initializer_list_helper(typename std::initializer_list<Enum>::const_iterator it,
+                                                               typename std::initializer_list<Enum>::const_iterator end)
+    {
+        return (it == end ? Int(0) : (Int(*it) | initializer_list_helper(it + 1, end)));
+    }
+#endif
+
     Int i;
 };
 
