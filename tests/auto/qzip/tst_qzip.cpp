@@ -78,7 +78,7 @@ void tst_QZip::basicUnpack()
 
     QZipReader::FileInfo fi = files.at(0);
     QVERIFY(fi.isValid());
-    QCOMPARE(fi.filePath, QString("test/"));
+    QCOMPARE(fi.filePath, QString("test"));
     QCOMPARE(uint(fi.isDir), (uint) 1);
     QCOMPARE(uint(fi.isFile), (uint) 0);
     QCOMPARE(uint(fi.isSymLink), (uint) 0);
@@ -102,7 +102,7 @@ void tst_QZip::basicUnpack()
 
     QCOMPARE(zip.fileData("test/test.txt"), QByteArray("content\n"));
 
-    fi = files.at(-1);
+    fi = zip.entryInfoAt(-1);
     QVERIFY(!fi.isValid());
 }
 
