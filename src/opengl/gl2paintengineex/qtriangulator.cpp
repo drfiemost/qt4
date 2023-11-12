@@ -59,6 +59,8 @@
 
 #include <private/qgl_p.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 //#define Q_TRIANGULATOR_DEBUG
@@ -1298,7 +1300,7 @@ template <class T>
 inline void QRingBuffer<T>::enqueue(const T &x)
 {
     if (m_size == m_capacity)
-        reallocate(qMax(2 * m_capacity, 64));
+        reallocate(std::max(2 * m_capacity, 64));
     int index = m_head + m_size;
     if (index >= m_capacity)
         index -= m_capacity;
@@ -1733,7 +1735,7 @@ bool QTriangulator<T>::ComplexToSimple::calculateIntersection(int left, int righ
     const QPodPoint &u2 = m_parent->m_vertices.at((qint32)e1.to);
     const QPodPoint &v1 = m_parent->m_vertices.at((qint32)e2.from);
     const QPodPoint &v2 = m_parent->m_vertices.at((qint32)e2.to);
-    if (qMax(u1.x, u2.x) <= qMin(v1.x, v2.x))
+    if (std::max(u1.x, u2.x) <= qMin(v1.x, v2.x))
         return false;
 
     quint64 key = (left > right ? (quint64(right) << 32) | quint64(left) : (quint64(left) << 32) | quint64(right));
@@ -1768,7 +1770,7 @@ bool QTriangulator<T>::ComplexToSimple::edgeIsLeftOfEdge(int leftEdgeIndex, int 
     const QPodPoint &upper = m_parent->m_vertices.at(leftEdge.upper());
     if (upper.x < qMin(l.x, u.x))
         return true;
-    if (upper.x > qMax(l.x, u.x))
+    if (upper.x > std::max(l.x, u.x))
         return false;
     qint64 d = QT_PREPEND_NAMESPACE(qPointDistanceFromLine)(upper, l, u);
     // d < 0: left, d > 0: right, d == 0: on top
@@ -2390,9 +2392,9 @@ QTriangulator<T>::ComplexToSimple::DebugDialog::DebugDialog(ComplexToSimple *par
     minY = maxY = vertices.at(0).y;
     for (int i = 1; i < vertices.size(); ++i) {
         minX = qMin(minX, vertices.at(i).x);
-        maxX = qMax(maxX, vertices.at(i).x);
+        maxX = std::max(maxX, vertices.at(i).x);
         minY = qMin(minY, vertices.at(i).y);
-        maxY = qMax(maxY, vertices.at(i).y);
+        maxY = std::max(maxY, vertices.at(i).y);
     }
     int w = maxX - minX;
     int h = maxY - minY;

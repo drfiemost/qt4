@@ -88,6 +88,8 @@
 
 #include <QDebug>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 inline static bool isPowerOfTwo(uint x)
@@ -437,8 +439,8 @@ void QGL2PaintEngineExPrivate::updateMatrix()
 
     // 1/10000 == 0.0001, so we have good enough res to cover curves
     // that span the entire widget...
-    inverseScale = qMax(1 / qMax( qMax(qAbs(transform.m11()), qAbs(transform.m22())),
-                                  qMax(qAbs(transform.m12()), qAbs(transform.m21())) ),
+    inverseScale = std::max(1 / std::max( std::max(qAbs(transform.m11()), qAbs(transform.m22())),
+                                  std::max(qAbs(transform.m12()), qAbs(transform.m21())) ),
                         qreal(0.0001));
 
     matrixDirty = false;
@@ -1291,7 +1293,7 @@ void QGL2PaintEngineExPrivate::stroke(const QVectorPath &path, const QPen &pen)
         if (width == 0)
             width = 0.5;
         qreal extra = pen.joinStyle() == Qt::MiterJoin
-                      ? qMax(pen.miterLimit() * width, width)
+                      ? std::max(pen.miterLimit() * width, width)
                       : width;
 
         if (pen.isCosmetic())

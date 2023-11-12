@@ -101,6 +101,8 @@
 #include <EGL/egl.h>
 #endif
 
+#include  <algorithm>
+
 // #define QT_GL_CONTEXT_RESOURCE_DEBUG
 
 QT_BEGIN_NAMESPACE
@@ -5968,7 +5970,7 @@ QSize QGLTexture::bindCompressedTexturePVR(const char *buf, int len)
     quint32 height = pvrHeader->height;
     while (bufferSize > 0 && level <= pvrHeader->mipMapCount) {
         quint32 size =
-            (qMax(width, minWidth) * qMax(height, minHeight) *
+            (std::max(width, minWidth) * std::max(height, minHeight) *
              pvrHeader->bitsPerPixel) / 8;
         if (size > bufferSize)
             break;

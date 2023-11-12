@@ -72,6 +72,8 @@
 #include "float.h"
 #include <cmath>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 static const char *qt_inherit_text = "inherit";
@@ -895,7 +897,7 @@ static bool constructColor(const QStringRef &colorStr, const QStringRef &opacity
         return false;
     if (!opacity.isEmpty()) {
         bool ok = true;
-        qreal op = qMin(qreal(1.0), qMax(qreal(0.0), toDouble(opacity, &ok)));
+        qreal op = std::min(qreal(1.0), std::max(qreal(0.0), toDouble(opacity, &ok)));
         if (!ok)
             op = 1.0;
         color.setAlphaF(op);
@@ -1030,7 +1032,7 @@ static void parseBrush(QSvgNode *node,
 
         //fill-opacity atttribute handling
         if (!attributes.fillOpacity.isEmpty() && attributes.fillOpacity != QT_INHERIT) {
-            prop->setFillOpacity(qMin(qreal(1.0), qMax(qreal(0.0), toDouble(attributes.fillOpacity))));
+            prop->setFillOpacity(std::min(qreal(1.0), std::max(qreal(0.0), toDouble(attributes.fillOpacity))));
         }
 
         //fill attribute handling
@@ -1289,7 +1291,7 @@ static void parsePen(QSvgNode *node,
 
         //stroke-opacity atttribute handling
         if (!attributes.strokeOpacity.isEmpty() && attributes.strokeOpacity != QT_INHERIT)
-            prop->setOpacity(qMin(qreal(1.0), qMax(qreal(0.0), toDouble(attributes.strokeOpacity))));
+            prop->setOpacity(std::min(qreal(1.0), std::max(qreal(0.0), toDouble(attributes.strokeOpacity))));
 
         node->appendStyleProperty(prop, attributes.id);
     }
@@ -3209,7 +3211,7 @@ static bool parseStopNode(QSvgStyleProperty *parent,
 
     QGradient *grad = style->qgradient();
 
-    offset = qMin(qreal(1), qMax(qreal(0), offset)); // Clamp to range [0, 1]
+    offset = std::min(qreal(1), std::max(qreal(0), offset)); // Clamp to range [0, 1]
     QGradientStops stops;
     if (style->gradientStopsSet()) {
         stops = grad->stops();
@@ -4065,7 +4067,7 @@ bool QSvgHandler::processingInstruction(const QString &target, const QString &da
 void QSvgHandler::setAnimPeriod(int start, int end)
 {
     Q_UNUSED(start);
-    m_animEnd   = qMax(end, m_animEnd);
+    m_animEnd   = std::max(end, m_animEnd);
 }
 
 int QSvgHandler::animationDuration() const

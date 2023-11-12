@@ -292,10 +292,10 @@ void QScriptDebuggerConsoleWidgetPrivate::_q_onCompletionTaskFinished()
                                     .arg(commandLine->prompt()).arg(commandLine->input()));
         int maxLength = 0;
         for (int i = 0; i < task->resultCount(); ++i)
-            maxLength = qMax(maxLength, task->resultAt(i).length());
+            maxLength = std::max(maxLength, task->resultAt(i).length());
         Q_ASSERT(maxLength > 0);
         int tab = 8;
-        int columns = qMax(1, outputEdit->charactersPerLine() / (maxLength + tab));
+        int columns = std::max(1, outputEdit->charactersPerLine() / (maxLength + tab));
         QString msg;
         for (int i = 0; i < task->resultCount(); ++i) {
             if (i != 0) {

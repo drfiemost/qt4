@@ -46,6 +46,8 @@
 
 #include <math.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -1088,9 +1090,9 @@ QRect QRect::operator|(const QRect &r) const
 
     QRect tmp;
     tmp.x1 = qMin(l1, l2);
-    tmp.x2 = qMax(r1, r2);
+    tmp.x2 = std::max(r1, r2);
     tmp.y1 = qMin(t1, t2);
-    tmp.y2 = qMax(b1, b2);
+    tmp.y2 = std::max(b1, b2);
     return tmp;
 }
 
@@ -1162,9 +1164,9 @@ QRect QRect::operator&(const QRect &r) const
         return QRect();
 
     QRect tmp;
-    tmp.x1 = qMax(l1, l2);
+    tmp.x1 = std::max(l1, l2);
     tmp.x2 = qMin(r1, r2);
-    tmp.y1 = qMax(t1, t2);
+    tmp.y1 = std::max(t1, t2);
     tmp.y2 = qMin(b1, b2);
     return tmp;
 }
@@ -2168,10 +2170,10 @@ QRectF QRectF::operator|(const QRectF &r) const
 
     if (r.w < 0) {
         left = qMin(left, r.xp + r.w);
-        right = qMax(right, r.xp);
+        right = std::max(right, r.xp);
     } else {
         left = qMin(left, r.xp);
-        right = qMax(right, r.xp + r.w);
+        right = std::max(right, r.xp + r.w);
     }
 
     qreal top = yp;
@@ -2183,10 +2185,10 @@ QRectF QRectF::operator|(const QRectF &r) const
 
     if (r.h < 0) {
         top = qMin(top, r.yp + r.h);
-        bottom = qMax(bottom, r.yp);
+        bottom = std::max(bottom, r.yp);
     } else {
         top = qMin(top, r.yp);
-        bottom = qMax(bottom, r.yp + r.h);
+        bottom = std::max(bottom, r.yp + r.h);
     }
 
     return QRectF(left, top, right - left, bottom - top);
@@ -2266,8 +2268,8 @@ QRectF QRectF::operator&(const QRectF &r) const
         return QRectF();
 
     QRectF tmp;
-    tmp.xp = qMax(l1, l2);
-    tmp.yp = qMax(t1, t2);
+    tmp.xp = std::max(l1, l2);
+    tmp.yp = std::max(t1, t2);
     tmp.w = qMin(r1, r2) - tmp.xp;
     tmp.h = qMin(b1, b2) - tmp.yp;
     return tmp;

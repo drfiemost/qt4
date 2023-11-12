@@ -47,6 +47,8 @@
 
 #include "qsqlquerymodel_p.h"
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 #define QSQL_PREFETCH 255
@@ -59,7 +61,7 @@ void QSqlQueryModelPrivate::prefetch(int limit)
         return;
 
     QModelIndex newBottom;
-    const int oldBottomRow = qMax(bottom.row(), 0);
+    const int oldBottomRow = std::max(bottom.row(), 0);
 
     // try to seek directly
     if (query.seek(limit)) {
@@ -188,7 +190,7 @@ void QSqlQueryModel::fetchMore(const QModelIndex &parent)
     Q_D(QSqlQueryModel);
     if (parent.isValid())
         return;
-    d->prefetch(qMax(d->bottom.row(), 0) + QSQL_PREFETCH);
+    d->prefetch(std::max(d->bottom.row(), 0) + QSQL_PREFETCH);
 }
 
 /*!
@@ -328,7 +330,7 @@ void QSqlQueryModel::setQuery(const QSqlQuery &query)
     bool mustClearModel = d->bottom.isValid();
     if (mustClearModel) {
         d->atEnd = true;
-        beginRemoveRows(QModelIndex(), 0, qMax(d->bottom.row(), 0));
+        beginRemoveRows(QModelIndex(), 0, std::max(d->bottom.row(), 0));
         d->bottom = QModelIndex();
     }
 
@@ -358,7 +360,7 @@ void QSqlQueryModel::setQuery(const QSqlQuery &query)
     QModelIndex newBottom;
     if (hasQuerySize && d->query.size() > 0) {
         newBottom = createIndex(d->query.size() - 1, d->rec.count() - 1);
-        beginInsertRows(QModelIndex(), 0, qMax(0, newBottom.row()));
+        beginInsertRows(QModelIndex(), 0, std::max(0, newBottom.row()));
         d->bottom = createIndex(d->query.size() - 1, columnsChanged ? 0 : d->rec.count() - 1);
         d->atEnd = true;
         endInsertRows();
@@ -429,7 +431,7 @@ bool QSqlQueryModel::setHeaderData(int section, Qt::Orientation orientation,
         return false;
 
     if (d->headers.size() <= section)
-        d->headers.resize(qMax(section + 1, 16));
+        d->headers.resize(std::max(section + 1, 16));
     d->headers[section][role] = value;
     emit headerDataChanged(orientation, section, section);
     return true;

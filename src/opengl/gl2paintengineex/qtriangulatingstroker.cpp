@@ -42,6 +42,8 @@
 #include "qtriangulatingstroker_p.h"
 #include <qmath.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 #define CURVE_FLATNESS Q_PI / 8
@@ -105,7 +107,7 @@ void QTriangulatingStroker::process(const QVectorPath &path, const QPen &pen, co
     //
     // To get a rough idea of the length of each curve, I pretend that
     // the curve is a 90 degree arc, whose radius is
-    // qMax(curveBounds.width, curveBounds.height). Based on this
+    // std::max(curveBounds.width, curveBounds.height). Based on this
     // logic we can estimate the length of the outline edges based on
     // the radius + a pen width and adjusting for scale factors
     // depending on if the pen is cosmetic or not.
@@ -288,7 +290,7 @@ void QTriangulatingStroker::cubicTo(const qreal *pts)
     QBezier bezier = QBezier::fromPoints(*(p - 1), p[0], p[1], p[2]);
 
     QRectF bounds = bezier.bounds();
-    float rad = qMax(bounds.width(), bounds.height());
+    float rad = std::max(bounds.width(), bounds.height());
     int threshold = qMin<float>(64, (rad + m_curvyness_add) * m_curvyness_mul);
     if (threshold < 4)
         threshold = 4;
@@ -560,7 +562,7 @@ void QDashedStrokeProcessor::process(const QVectorPath &path, const QPen &pen, c
                                                 *(((const QPointF *) pts) + 1),
                                                 *(((const QPointF *) pts) + 2));
                 QRectF bounds = b.bounds();
-                float rad = qMax(bounds.width(), bounds.height());
+                float rad = std::max(bounds.width(), bounds.height());
                 int threshold = qMin<float>(64, (rad + curvynessAdd) * curvynessMul);
                 if (threshold < 4)
                     threshold = 4;

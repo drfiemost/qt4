@@ -71,6 +71,8 @@
 
 #include <limits.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 
@@ -126,7 +128,7 @@ uint qHash(const QStringRef &key, uint seed)
 uint qHash(const QBitArray &bitArray, uint seed)
 {
     int m = bitArray.d.size() - 1;
-    uint result = hash(reinterpret_cast<const uchar *>(bitArray.d.constData()), qMax(0, m), seed);
+    uint result = hash(reinterpret_cast<const uchar *>(bitArray.d.constData()), std::max(0, m), seed);
 
     // deal with the last 0 to 7 bits manually, because we can't trust that
     // the padding is initialized to 0 in bitArray.d

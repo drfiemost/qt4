@@ -43,6 +43,8 @@
 
 #include <limits.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 static inline void bm_init_skiptable(const uchar *cc, int len, uchar *skiptable)
@@ -234,7 +236,7 @@ static int findChar(const char *str, int len, char ch, int from)
     const uchar *s = (const uchar *)str;
     uchar c = (uchar)ch;
     if (from < 0)
-        from = qMax(from + len, 0);
+        from = std::max(from + len, 0);
     if (from < len) {
         const uchar *n = s + from - 1;
         const uchar *e = s + len;

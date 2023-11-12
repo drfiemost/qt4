@@ -507,7 +507,7 @@ QString QtPrivate::QStringList_join(const QStringList *that, const QChar *sep, i
 static int indexOfMutating(const QStringList *that, QRegExp &rx, int from)
 {
     if (from < 0)
-        from = qMax(from + that->size(), 0);
+        from = std::max(from + that->size(), 0);
     for (int i = from; i < that->size(); ++i) {
         if (rx.exactMatch(that->at(i)))
             return i;

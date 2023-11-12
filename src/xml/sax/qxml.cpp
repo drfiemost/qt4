@@ -48,6 +48,8 @@
 #include "qstack.h"
 #include <qdebug.h>
 
+#include  <algorithm>
+
 
 #ifdef Q_CC_BOR // borland 6 finds bogus warnings when building this file in uic3
 #    pragma warn -8080
@@ -1504,7 +1506,7 @@ void QXmlInputSource::fetchData()
                 }
             }
 
-            rawData.resize(qMax(qint64(0), size));
+            rawData.resize(std::max(qint64(0), size));
         }
 
         /* We do this inside the "if (d->inputDevice ..." scope
@@ -7962,7 +7964,7 @@ bool QXmlSimpleReaderPrivate::insertXmlRef(const QString &data, const QString &n
     } else {
         xmlRefStack.push(XmlRef(name, data));
     }
-    int n = qMax(parameterEntities.count(), entities.count());
+    int n = std::max(parameterEntities.count(), entities.count());
     if (xmlRefStack.count() > n+1) {
         // recursive entities
         reportParseError(QLatin1String(XMLERR_RECURSIVEENTITIES));

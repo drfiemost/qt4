@@ -46,6 +46,8 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/qshareddata.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -127,7 +129,7 @@ QStringList QScriptScriptData::lines(int startLineNumber, int count) const
     if (!d)
         return QStringList();
     QStringList allLines = d->contents.split(QLatin1Char('\n'));
-    return allLines.mid(qMax(0, startLineNumber - d->baseLineNumber), count);
+    return allLines.mid(std::max(0, startLineNumber - d->baseLineNumber), count);
 }
 
 QString QScriptScriptData::fileName() const

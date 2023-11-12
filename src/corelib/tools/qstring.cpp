@@ -76,6 +76,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include  <algorithm>
+
 #ifdef truncate
 #undef truncate
 #endif
@@ -325,7 +327,7 @@ static int findChar(const QChar *str, int len, QChar ch, int from,
     const ushort *s = (const ushort *)str;
     ushort c = ch.unicode();
     if (from < 0)
-        from = qMax(from + len, 0);
+        from = std::max(from + len, 0);
     if (from < len) {
         const ushort *n = s + from - 1;
         const ushort *e = s + len;
@@ -1316,7 +1318,7 @@ void QString::reallocData(uint alloc, bool grow)
 void QString::expand(int i)
 {
     int sz = d->size;
-    resize(qMax(i + 1, sz));
+    resize(std::max(i + 1, sz));
     if (d->size - 1 > sz) {
         ushort *n = d->data() + d->size - 1;
         ushort *e = d->data() + sz;
@@ -1435,7 +1437,7 @@ QString &QString::insert(int i, const QLatin1String &str)
         return *this;
 
     int len = str.size();
-    expand(qMax(d->size, i) + len - 1);
+    expand(std::max(d->size, i) + len - 1);
 
     ::memmove(d->data() + i + len, d->data() + i, (d->size - i - len) * sizeof(QChar));
     for (int j = 0; j < len; ++j)
@@ -1466,7 +1468,7 @@ QString& QString::insert(int i, const QChar *unicode, int size)
         return *this;
     }
 
-    expand(qMax(d->size, i) + size - 1);
+    expand(std::max(d->size, i) + size - 1);
 
     ::memmove(d->data() + i + size, d->data() + i, (d->size - i - size) * sizeof(QChar));
     memcpy(d->data() + i, s, size * sizeof(QChar));
@@ -1486,7 +1488,7 @@ QString& QString::insert(int i, QChar ch)
         i += d->size;
     if (i < 0)
         return *this;
-    expand(qMax(i, d->size));
+    expand(std::max(i, d->size));
     ::memmove(d->data() + i + 1, d->data() + i, (d->size - i) * sizeof(QChar));
     d->data()[i] = ch.unicode();
     return *this;
@@ -3293,7 +3295,7 @@ QString QString::section(const QRegExp &reg, int start, int end, SectionFlags fl
         sections.append(qt_section_chunk(last_len, QString(uc + last_m, m - last_m)));
         last_m = m;
         last_len = sep.matchedLength();
-        m += qMax(sep.matchedLength(), 1);
+        m += std::max(sep.matchedLength(), 1);
     }
     sections.append(qt_section_chunk(last_len, QString(uc + last_m, n - last_m)));
 
@@ -6386,9 +6388,9 @@ static QString replaceArgEscapes(const QString &s, const ArgEscapeData &d, int f
     int result_len = s.length()
                      - d.escape_len
                      + (d.occurrences - d.locale_occurrences)
-                     *qMax(abs_field_width, arg.length())
+                     *std::max(abs_field_width, arg.length())
                      + d.locale_occurrences
-                     *qMax(abs_field_width, larg.length());
+                     *std::max(abs_field_width, larg.length());
 
     QString result(result_len, Qt::Uninitialized);
     QChar *result_buff = (QChar*) result.unicode();
@@ -6434,9 +6436,9 @@ static QString replaceArgEscapes(const QString &s, const ArgEscapeData &d, int f
 
             uint pad_chars;
             if (locale_arg)
-                pad_chars = qMax(abs_field_width, larg.length()) - larg.length();
+                pad_chars = std::max(abs_field_width, larg.length()) - larg.length();
             else
-                pad_chars = qMax(abs_field_width, arg.length()) - arg.length();
+                pad_chars = std::max(abs_field_width, arg.length()) - arg.length();
 
             if (field_width > 0) { // left padded
                 for (uint i = 0; i < pad_chars; ++i)

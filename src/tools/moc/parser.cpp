@@ -44,6 +44,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 #ifdef USE_LEXEM_STORE
@@ -75,13 +77,13 @@ void Parser::error(const char *msg) {
 void Parser::warning(const char *msg) {
     if (displayWarnings && msg)
         fprintf(stderr, ErrorFormatString "Warning: %s\n",
-                currentFilenames.top().constData(), qMax(0, index > 0 ? symbol().lineNum : 0), msg);
+                currentFilenames.top().constData(), std::max(0, index > 0 ? symbol().lineNum : 0), msg);
 }
 
 void Parser::note(const char *msg) {
     if (displayNotes && msg)
         fprintf(stderr, ErrorFormatString "Note: %s\n",
-                currentFilenames.top().constData(), qMax(0, index > 0 ? symbol().lineNum : 0), msg);
+                currentFilenames.top().constData(), std::max(0, index > 0 ? symbol().lineNum : 0), msg);
 }
 
 QT_END_NAMESPACE

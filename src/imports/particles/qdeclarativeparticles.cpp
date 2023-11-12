@@ -54,6 +54,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include  <algorithm>
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #define M_PI_2 (M_PI / 2.)
@@ -516,7 +518,7 @@ void QDeclarativeParticlesPrivate::tick(int time)
             double tmpDbl;
             emissionCarry = modf(emission, &tmpDbl);
             emissionCount = (int)tmpDbl;
-            emissionCount = qMax(0,emissionCount);
+            emissionCount = std::max(0,emissionCount);
         }
         while(((count == -1) || particles.count() < count) &&
                 (emissionRate==-1 || emissionCount--))
@@ -536,7 +538,7 @@ void QDeclarativeParticlesPrivate::tick(int time)
             qreal workingEmission = bursts[i].second * (qreal(interval)/1000.);
             workingEmission *= variance;
             emission = (int)workingEmission;
-            emission = qMax(emission, 0);
+            emission = std::max(emission, 0);
         }
         emission = qMin(emission, bursts[i].first);
         bursts[i].first -= emission;

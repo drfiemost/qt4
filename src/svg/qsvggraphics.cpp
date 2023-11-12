@@ -55,6 +55,8 @@
 #include <math.h>
 #include <limits.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 #define QT_SVG_DRAW_SHAPE(command)                          \
@@ -637,10 +639,10 @@ QRectF QSvgLine::bounds(QPainter *p, QSvgExtraStates &) const
     if (qFuzzyIsNull(sw)) {
         QPointF p1 = p->transform().map(m_line.p1());
         QPointF p2 = p->transform().map(m_line.p2());
-        qreal minX = qMin(p1.x(), p2.x());
-        qreal minY = qMin(p1.y(), p2.y());
-        qreal maxX = qMax(p1.x(), p2.x());
-        qreal maxY = qMax(p1.y(), p2.y());
+        qreal minX = std::min(p1.x(), p2.x());
+        qreal minY = std::min(p1.y(), p2.y());
+        qreal maxX = std::max(p1.x(), p2.x());
+        qreal maxY = std::max(p1.y(), p2.y());
         return QRectF(minX, minY, maxX - minX, maxY - minY);
     } else {
         QPainterPath path;

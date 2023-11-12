@@ -50,6 +50,8 @@
 #include "private/qobject_p.h"
 #include "private/qgraphicsitem_p.h"
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class QGraphicsSvgItemPrivate : public QGraphicsItemPrivate
@@ -186,7 +188,7 @@ static void qt_graphicsItem_highlightSelected(
     QGraphicsItem *item, QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
     const QRectF murect = painter->transform().mapRect(QRectF(0, 0, 1, 1));
-    if (qFuzzyIsNull(qMax(murect.width(), murect.height())))
+    if (qFuzzyIsNull(std::max(murect.width(), murect.height())))
         return;
 
     const QRectF mbrect = painter->transform().mapRect(item->boundingRect());

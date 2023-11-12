@@ -73,6 +73,8 @@
 #include <private/qcore_mac_p.h>
 #endif
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 enum {
@@ -4595,7 +4597,7 @@ int QDateTimeParser::sectionMaxSize(Section s, int count) const
                 const QString str = (s == MonthSection
                                      ? l.monthName(i, count == 4 ? QLocale::LongFormat : QLocale::ShortFormat)
                                      : l.dayName(i, count == 4 ? QLocale::LongFormat : QLocale::ShortFormat));
-                ret = qMax(str.size(), ret);
+                ret = std::max(str.size(), ret);
             }
             return ret;
         }
@@ -4912,7 +4914,7 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                     used = sn.count;
                 }
             }
-            pos += qMax(0, used);
+            pos += std::max(0, used);
 
             state = qMin<State>(state, tmpstate);
             if (state == Intermediate && context == FromString) {

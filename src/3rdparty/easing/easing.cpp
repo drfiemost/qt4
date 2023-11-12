@@ -19,6 +19,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #include <QtCore/qmath.h>
 #include <math.h>
+#include  <algorithm>
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -623,7 +625,7 @@ static inline qreal qt_sinProgress(qreal value)
 
 static inline qreal qt_smoothBeginEndMixFactor(qreal value)
 {
-    return qMin(qMax(1 - value * 2 + qreal(0.3), qreal(0.0)), qreal(1.0));
+    return std::min(std::max(1 - value * 2 + qreal(0.3), qreal(0.0)), qreal(1.0));
 }
 
 // SmoothBegin blends Smooth and Linear Interpolation.

@@ -52,6 +52,8 @@
 #include <QtGui/qwidgetaction.h>
 #include <QtCore/qdebug.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class QScriptEditExtraArea : public QWidget
@@ -274,7 +276,7 @@ int QScriptEdit::extraAreaWidth() const
     const QFontMetrics fm(fontMetrics());
 
     int digits = 1;
-    int max = qMax(1, blockCount() + m_baseLineNumber);
+    int max = std::max(1, blockCount() + m_baseLineNumber);
     while (max >= 10) {
         max /= 10;
         ++digits;

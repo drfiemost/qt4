@@ -44,6 +44,8 @@
 #include <qdebug.h>
 #include <string.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -458,7 +460,7 @@ void QBitArray::fill(bool value, int begin, int end)
 
 QBitArray &QBitArray::operator&=(const QBitArray &other)
 {
-    resize(qMax(size(), other.size()));
+    resize(std::max(size(), other.size()));
     uchar *a1 = reinterpret_cast<uchar*>(d.data()) + 1;
     const uchar *a2 = reinterpret_cast<const uchar*>(other.d.constData()) + 1;
     int n = other.d.size() -1 ; 
@@ -487,7 +489,7 @@ QBitArray &QBitArray::operator&=(const QBitArray &other)
 
 QBitArray &QBitArray::operator|=(const QBitArray &other)
 {
-    resize(qMax(size(), other.size()));
+    resize(std::max(size(), other.size()));
     uchar *a1 = reinterpret_cast<uchar*>(d.data()) + 1;
     const uchar *a2 = reinterpret_cast<const uchar *>(other.d.constData()) + 1;
     int n = other.d.size() - 1;   
@@ -513,7 +515,7 @@ QBitArray &QBitArray::operator|=(const QBitArray &other)
 
 QBitArray &QBitArray::operator^=(const QBitArray &other)
 {
-    resize(qMax(size(), other.size()));
+    resize(std::max(size(), other.size()));
     uchar *a1 = reinterpret_cast<uchar*>(d.data()) + 1;
     const uchar *a2 = reinterpret_cast<const uchar *>(other.d.constData()) + 1;
     int n = other.d.size() - 1;

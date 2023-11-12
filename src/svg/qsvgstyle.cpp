@@ -55,6 +55,8 @@
 #include "qmath.h"
 #include "qnumeric.h"
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 QSvgExtraStates::QSvgExtraStates()
@@ -281,9 +283,9 @@ void QSvgFontStyle::apply(QPainter *p, const QSvgNode *, QSvgExtraStates &states
 
     if (m_weightSet) {
         if (m_weight == BOLDER) {
-            states.fontWeight = qMin(states.fontWeight + 100, 900);
+            states.fontWeight = std::min(states.fontWeight + 100, 900);
         } else if (m_weight == LIGHTER) {
-            states.fontWeight = qMax(states.fontWeight - 100, 100);
+            states.fontWeight = std::max(states.fontWeight - 100, 100);
         } else {
             states.fontWeight = m_weight;
         }
@@ -726,7 +728,7 @@ void QSvgAnimateTransform::resolveMatrix(const QSvgNode *node)
 
     qreal currentPosition = percentOfAnimation * (m_count - 1);
     int endElem   = qCeil(currentPosition);
-    int startElem = qMax(endElem - 1, 0);
+    int startElem = std::max(endElem - 1, 0);
 
     switch(m_type)
     {

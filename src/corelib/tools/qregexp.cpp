@@ -1364,7 +1364,7 @@ void QRegExpMatchState::prepareForMatch(QRegExpEngine *eng)
     int ns = eng->s.size(); // number of states
     int ncap = eng->ncap;
 #ifndef QT_NO_REGEXP_OPTIM
-    int newSlideTabSize = qMax(eng->minl + 1, 16);
+    int newSlideTabSize = std::max(eng->minl + 1, 16);
 #else
     int newSlideTabSize = 0;
 #endif
@@ -1623,7 +1623,7 @@ void QRegExpEngine::heuristicallyChooseHeuristic()
           check whether they are good or bad.
         */
         int badCharScore = 0;
-        int step = qMax(1, NumBadChars / 32);
+        int step = std::max(1, NumBadChars / 32);
         for (int i = 1; i < NumBadChars; i += step) {
             if (occ1.at(i) == NoOccurrence)
                 badCharScore += minl;
@@ -2553,7 +2553,7 @@ void QRegExpEngine::Box::cat(const Box &b)
 #ifndef QT_NO_REGEXP_OPTIM
     if (maxl != InftyLen) {
         if (rightStr.length() + b.leftStr.length() >
-             qMax(str.length(), b.str.length())) {
+             std::max(str.length(), b.str.length())) {
             earlyStart = minl - rightStr.length();
             lateStart = maxl - rightStr.length();
             str = rightStr + b.leftStr;

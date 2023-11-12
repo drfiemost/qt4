@@ -58,6 +58,8 @@
 #include <qimagereader.h>
 #include <qbuffer.h>
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 Q_OPENGL_EXPORT extern const QGLContext* qt_gl_share_context();
@@ -122,9 +124,9 @@ QGLFramebufferObject *QGLFramebufferObjectPool::acquire(const QSize &requestSize
             QSize sz = fboSize;
 
             if (sz.width() < requestSize.width())
-                sz.setWidth(qMax(requestSize.width(), qRound(sz.width() * 1.5)));
+                sz.setWidth(std::max(requestSize.width(), qRound(sz.width() * 1.5)));
             if (sz.height() < requestSize.height())
-                sz.setHeight(qMax(requestSize.height(), qRound(sz.height() * 1.5)));
+                sz.setHeight(std::max(requestSize.height(), qRound(sz.height() * 1.5)));
 
             // wasting too much space?
             if (sz.width() * sz.height() > requestSize.width() * requestSize.height() * 4)

@@ -57,6 +57,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include  <algorithm>
+
 #define IS_RAW_DATA(d) ((d)->offset != sizeof(QByteArrayData))
 
 QT_BEGIN_NAMESPACE
@@ -539,7 +541,7 @@ QByteArray qUncompress(const uchar* data, int nbytes)
     }
     ulong expectedSize = (data[0] << 24) | (data[1] << 16) |
                        (data[2] <<  8) | (data[3]      );
-    ulong len = qMax(expectedSize, 1ul);
+    ulong len = std::max(expectedSize, 1ul);
     QScopedPointer<QByteArray::Data, QScopedPointerPodDeleter> d;
 
     forever {
@@ -1467,7 +1469,7 @@ void QByteArray::reallocData(uint alloc, Data::AllocationOptions options)
 
 void QByteArray::expand(int i)
 {
-    resize(qMax(i + 1, d->size));
+    resize(std::max(i + 1, d->size));
 }
 
 /*!
@@ -1697,7 +1699,7 @@ static inline QByteArray &qbytearray_insert(QByteArray *ba,
         return *ba;
 
     int oldsize = ba->size();
-    ba->resize(qMax(pos, oldsize) + len);
+    ba->resize(std::max(pos, oldsize) + len);
     char *dst = ba->data();
     if (pos > oldsize)
         ::memset(dst + oldsize, 0x20, pos - oldsize);
@@ -2294,7 +2296,7 @@ int QByteArray::indexOf(const char *c, int from) const
 int QByteArray::indexOf(char ch, int from) const
 {
     if (from < 0)
-        from = qMax(from + d->size, 0);
+        from = std::max(from + d->size, 0);
     if (from < d->size) {
         const char *n = d->data() + from - 1;
         const char *e = d->data() + d->size;

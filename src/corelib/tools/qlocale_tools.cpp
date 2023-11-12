@@ -58,6 +58,8 @@
 #    include <fenv.h>
 #endif
 
+#include  <algorithm>
+
 // Sizes as defined by the ISO C99 standard - fallback
 #ifndef LLONG_MAX
 #   define LLONG_MAX Q_INT64_C(0x7fffffffffffffff)
@@ -2916,7 +2918,7 @@ Q_CORE_EXPORT char *qdtoa( double d, int mode, int ndigits, int *decpt, int *sig
 
     int n = qstrlen(res);
     if (mode == 0) { // remove trailing 0's
-        const int stop = qMax(1, *decpt);
+        const int stop = std::max(1, *decpt);
         int i;
         for (i = n-1; i >= stop; --i) {
             if (res[i] != '0')

@@ -46,6 +46,8 @@
 #include <QtCore/qmath.h>
 #include <QtCore/qelapsedtimer.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class QTimeLinePrivate : public QObjectPrivate
@@ -653,7 +655,7 @@ int QTimeLine::frameForTime(int msec) const
 qreal QTimeLine::valueForTime(int msec) const
 {
     Q_D(const QTimeLine);
-    msec = qMin(qMax(msec, 0), d->duration);
+    msec = std::min(std::max(msec, 0), d->duration);
 
     qreal value = msec / qreal(d->duration);
     return d->easingCurve.valueForProgress(value);

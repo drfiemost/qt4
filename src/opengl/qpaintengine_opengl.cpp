@@ -77,6 +77,8 @@
 #include <stdlib.h>
 #include "qpaintengine_opengl_p.h"
 
+#include  <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 Q_GUI_EXPORT QImage qt_imageForBrush(int brushStyle, bool invert); //in qbrush.cpp
@@ -332,7 +334,7 @@ void QGLOffscreen::initialize()
     activated = true;
     initialized = true;
 
-    int dim = qMax(2048, static_cast<int>(qt_next_power_of_two(qMax(device->size().width(), device->size().height()))));
+    int dim = std::max(2048, static_cast<int>(qt_next_power_of_two(std::max(device->size().width(), device->size().height()))));
 
     bool shared_context = QGLContext::areSharing(device->context(), ctx);
     bool would_fail = last_failed_size.isValid() &&
@@ -1730,7 +1732,7 @@ void QOpenGLImmediateModeTessellator::addTrap(const Trapezoid &trap)
 static void drawTrapezoid(const QGLTrapezoid &trap, const qreal offscreenHeight, QGLContext *ctx)
 {
     qreal minX = qMin(trap.topLeftX, trap.bottomLeftX);
-    qreal maxX = qMax(trap.topRightX, trap.bottomRightX);
+    qreal maxX = std::max(trap.topRightX, trap.bottomRightX);
 
     if (qFuzzyCompare(trap.top, trap.bottom) || qFuzzyCompare(minX, maxX) ||
         (qFuzzyCompare(trap.topLeftX, trap.topRightX) && qFuzzyCompare(trap.bottomLeftX, trap.bottomRightX)))
@@ -1811,7 +1813,7 @@ void QOpenGLTrapezoidToArrayTessellator::addTrap(const Trapezoid &trap)
 #else
     if (size > allocated - 12) {
 #endif
-        allocated = qMax(2*allocated, 512);
+        allocated = std::max(2*allocated, 512);
         vertices = (GLfloat *)realloc(vertices, allocated * sizeof(GLfloat));
     }
 
@@ -2207,8 +2209,8 @@ void QOpenGLPaintEngine::updateMatrix(const QTransform &mtx)
 
     // 1/10000 == 0.0001, so we have good enough res to cover curves
     // that span the entire widget...
-    d->inverseScale = qMax(1 / qMax( qMax(qAbs(mtx.m11()), qAbs(mtx.m22())),
-                                     qMax(qAbs(mtx.m12()), qAbs(mtx.m21())) ),
+    d->inverseScale = std::max(1 / std::max( std::max(qAbs(mtx.m11()), qAbs(mtx.m22())),
+                                     std::max(qAbs(mtx.m12()), qAbs(mtx.m21())) ),
                            qreal(0.0001));
 
     d->updateGLMatrix();
@@ -2828,8 +2830,8 @@ void QGLMaskTextureCache::quadtreeUpdate(int channel, int node, int current_bloc
         bool all_empty = true;
 
         for (int i = 0; i < 4; ++i) {
-            largest_available = qMax(largest_available, occupied_quadtree[channel][first_child + i].largest_available_block);
-            largest_used = qMax(largest_used, occupied_quadtree[channel][first_child + i].largest_used_block);
+            largest_available = std::max(largest_available, occupied_quadtree[channel][first_child + i].largest_available_block);
+            largest_used = std::max(largest_used, occupied_quadtree[channel][first_child + i].largest_used_block);
 
             if (occupied_quadtree[channel][first_child + i].largest_available_block < current_block_size)
                 all_empty = false;
@@ -2944,7 +2946,7 @@ found:
 
 bool QGLMaskTextureCache::quadtreeFindAvailableLocation(const QSize &size, QRect *rect, int *channel)
 {
-    int needed_block_size = qMax(1, qMax(size.width(), size.height()));
+    int needed_block_size = std::max(1, std::max(size.width(), size.height()));
 
     for (int i = 0; i < 4; ++i) {
         int current_block_size = offscreenSize.width();
@@ -2986,7 +2988,7 @@ void QGLMaskTextureCache::quadtreeFindExistingLocation(const QSize &size, QRect 
         if (occupied_quadtree[i][0].largest_used_block < occupied_quadtree[*channel][0].largest_used_block)
             *channel = i;
 
-    int needed_block_size = qt_next_power_of_two(qMax(1, qMax(size.width(), size.height())));
+    int needed_block_size = qt_next_power_of_two(std::max(1, std::max(size.width(), size.height())));
 
     int node = 0;
     int current_block_size = offscreenSize.width();
@@ -4273,8 +4275,8 @@ static const QRectF scaleRect(const QRectF &r, qreal sx, qreal sy)
 template <typename T>
 static const T qSubImage(const T &image, const QRectF &src, QRectF *srcNew)
 {
-    const int sx1 = qMax(0, qFloor(src.left()));
-    const int sy1 = qMax(0, qFloor(src.top()));
+    const int sx1 = std::max(0, qFloor(src.left()));
+    const int sy1 = std::max(0, qFloor(src.top()));
     const int sx2 = qMin(image.width(), qCeil(src.right()));
     const int sy2 = qMin(image.height(), qCeil(src.bottom()));
 
@@ -5174,10 +5176,10 @@ void QOpenGLPaintEnginePrivate::copyDrawable(const QRectF &rect)
     DEBUG_ONCE qDebug() << "Refreshing drawable_texture for rectangle" << rect;
     QRectF screen_rect = rect.adjusted(-1, -1, 1, 1);
 
-    int left = qMax(0, static_cast<int>(screen_rect.left()));
+    int left = std::max(0, static_cast<int>(screen_rect.left()));
     int width = qMin(device->size().width() - left, static_cast<int>(screen_rect.width()) + 1);
 
-    int bottom = qMax(0, static_cast<int>(device->size().height() - screen_rect.bottom()));
+    int bottom = std::max(0, static_cast<int>(device->size().height() - screen_rect.bottom()));
     int height = qMin(device->size().height() - bottom, static_cast<int>(screen_rect.height()) + 1);
 
     glBindTexture(GL_TEXTURE_2D, drawable_texture);
@@ -5231,8 +5233,8 @@ void QOpenGLPaintEnginePrivate::composite(GLuint primitive, const GLfloat *verte
 
             minX = qMin(minX, tx);
             minY = qMin(minY, ty);
-            maxX = qMax(maxX, tx);
-            maxY = qMax(maxY, ty);
+            maxX = std::max(maxX, tx);
+            maxY = std::max(maxY, ty);
         }
 
         QRectF r(minX, minY, maxX - minX, maxY - minY);
