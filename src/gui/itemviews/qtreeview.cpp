@@ -59,6 +59,8 @@
 
 #include <private/qtreeview_p.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -3588,7 +3590,7 @@ QList<QPair<int, int> > QTreeViewPrivate::columnRanges(const QModelIndex &topInd
         }
     }
     //let's sort the list
-    qSort(logicalIndexes.begin(), logicalIndexes.end());
+    std::sort(logicalIndexes.begin(), logicalIndexes.end());
 
     QList<QPair<int, int> > ret;
     QPair<int, int> current;
