@@ -103,16 +103,7 @@ static_assert(sizeof(pthread_t) <= sizeof(void*));
 
 enum { ThreadPriorityResetFlag = 0x80000000 };
 
-#if defined(Q_OS_LINUX) && defined(__GLIBC__) && (defined(Q_CC_GNU) || defined(Q_CC_INTEL))
-#define HAVE_TLS
-#endif
-#if defined(Q_CC_XLC) || defined (Q_CC_SUN)
-#define HAVE_TLS
-#endif
-
-#ifdef HAVE_TLS
-static __thread QThreadData *currentThreadData = 0;
-#endif
+static thread_local QThreadData *currentThreadData = nullptr;
 
 static pthread_once_t current_thread_data_once = PTHREAD_ONCE_INIT;
 static pthread_key_t current_thread_data_key;
@@ -161,29 +152,19 @@ Q_DESTRUCTOR_FUNCTION(destroy_current_thread_data_key)
 // Utility functions for getting, setting and clearing thread specific data.
 static QThreadData *get_thread_data()
 {
-#ifdef HAVE_TLS
     return currentThreadData;
-#else
-    pthread_once(&current_thread_data_once, create_current_thread_data_key);
-    return reinterpret_cast<QThreadData *>(pthread_getspecific(current_thread_data_key));
-#endif
 }
 
 static void set_thread_data(QThreadData *data)
 {
-#ifdef HAVE_TLS
     currentThreadData = data;
-#endif
     pthread_once(&current_thread_data_once, create_current_thread_data_key);
     pthread_setspecific(current_thread_data_key, data);
 }
 
 static void clear_thread_data()
 {
-#ifdef HAVE_TLS
-    currentThreadData = 0;
-#endif
-    pthread_setspecific(current_thread_data_key, 0);
+    set_thread_data(nullptr);
 }
 
 template <typename T>
