@@ -44,6 +44,7 @@ SUBDIRS=\
    qmap \
    qmargins \
    qmath \
+   qmetamethod \
    qmetaproperty \
    qmetatype \
    qmutex \
