@@ -1622,7 +1622,7 @@ bool QMetaMethod::invoke(QObject *object,
     QThread *objectThread = object->thread();
     bool receiverInSameThread = false;
     if (objectThread)
-        receiverInSameThread = currentThreadId == QThreadData::get2(objectThread)->threadId.load();
+        receiverInSameThread = currentThreadId == QThreadData::get2(objectThread)->threadId.loadRelaxed();
 
     if (connectionType == Qt::AutoConnection) {
         connectionType = receiverInSameThread
