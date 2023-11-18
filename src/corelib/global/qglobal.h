@@ -1020,17 +1020,6 @@ QT_END_INCLUDE_NAMESPACE
 #endif
 
 /*
-   Constant bool values
-*/
-
-#ifndef QT_LINUXBASE /* the LSB defines TRUE and FALSE for us */
-#  ifndef TRUE
-#   define TRUE true
-#   define FALSE false
-#  endif
-#endif
-
-/*
  * Warning/diagnostic handling
  */
 
