@@ -267,7 +267,7 @@ void QCommonStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, Q
     case PE_IndicatorProgressChunk:
         {
             bool vertical = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt))
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt))
                 vertical = (pb2->orientation == Qt::Vertical);
             if (!vertical) {
                 p->fillRect(opt->rect.x(), opt->rect.y() + 3, opt->rect.width() -2, opt->rect.height() - 6,
@@ -412,8 +412,8 @@ void QCommonStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, Q
 #ifndef QT_NO_GROUPBOX
     case PE_FrameGroupBox:
         if (const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
-            const QStyleOptionFrameV2 *frame2 = qstyleoption_cast<const QStyleOptionFrameV2 *>(opt);
-            if (frame2 && (frame2->features & QStyleOptionFrameV2::Flat)) {
+            const QStyleOptionFrame *frame2 = qstyleoption_cast<const QStyleOptionFrame *>(opt);
+            if (frame2 && (frame2->features & QStyleOptionFrame::Flat)) {
                 QRect fr = frame->rect;
                 QPoint p1(fr.x(), fr.y() + 1);
                 QPoint p2(fr.x() + fr.width(), p1.y());
@@ -1010,7 +1010,7 @@ void QCommonStylePrivate::viewItemLayout(const QStyleOptionViewItem *opt,  QRect
 
     Uses the same computation than in QTabBar::tabSizeHint
  */
-void QCommonStylePrivate::tabLayout(const QStyleOptionTabV3 *opt, const QWidget *widget, QRect *textRect, QRect *iconRect) const
+void QCommonStylePrivate::tabLayout(const QStyleOptionTab *opt, const QWidget *widget, QRect *textRect, QRect *iconRect) const
 {
     Q_ASSERT(textRect);
     Q_ASSERT(iconRect);
@@ -1269,7 +1269,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
     case CE_ProgressBar:
         if (const QStyleOptionProgressBar *pb
                 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
-            QStyleOptionProgressBarV2 subopt = *pb;
+            QStyleOptionProgressBar subopt = *pb;
             subopt.rect = subElementRect(SE_ProgressBarGroove, pb, widget);
             proxy()->drawControl(CE_ProgressBarGroove, &subopt, p, widget);
             subopt.rect = subElementRect(SE_ProgressBarContents, pb, widget);
@@ -1288,7 +1288,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
     case CE_ProgressBarLabel:
         if (const QStyleOptionProgressBar *pb = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
             bool vertical = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
                 vertical = (pb2->orientation == Qt::Vertical);
             }
             if (!vertical) {
@@ -1322,7 +1322,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
             qint64 progress = qint64(pb->progress);
 
             // Get extra style options if version 2
-            const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt);
+            const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt);
             if (pb2) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 inverted = pb2->invertedAppearance;
@@ -1386,7 +1386,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
                 int x0 = reverse ? rect.right() - ((unit_width > 1) ? unit_width : 0)
                                  : rect.x();
 
-                QStyleOptionProgressBarV2 pbBits = *pb;
+                QStyleOptionProgressBar pbBits = *pb;
                 pbBits.rect = rect;
                 pbBits.palette = pal2;
                 int myY = pbBits.rect.y();
@@ -1731,7 +1731,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
         break;
     case CE_TabBarTabLabel:
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
-            QStyleOptionTabV3 tabV2(*tab);
+            QStyleOptionTab tabV2(*tab);
             QRect tr = tabV2.rect;
             bool verticalTabs = tabV2.shape == QTabBar::RoundedEast
                                 || tabV2.shape == QTabBar::RoundedWest
@@ -2113,7 +2113,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
 #endif // QT_NO_ITEMVIEWS
 #ifndef QT_NO_FRAME
     case CE_ShapedFrame:
-        if (const QStyleOptionFrameV3 *f = qstyleoption_cast<const QStyleOptionFrameV3 *>(opt)) {
+        if (const QStyleOptionFrame *f = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
             int frameShape  = f->frameShape;
             int frameShadow = QFrame::Plain;
             if (f->state & QStyle::State_Sunken) {
@@ -2345,7 +2345,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
         if (const QStyleOptionProgressBar *pb = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
             int textw = 0;
             bool vertical = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
                 vertical = (pb2->orientation == Qt::Vertical);
             }
             if (!vertical) {
@@ -2600,14 +2600,14 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
         break;
     case SE_TabBarTabText:
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
-            QStyleOptionTabV3 tabV3(*tab);
+            QStyleOptionTab tabV3(*tab);
             QRect dummyIconRect;
             d->tabLayout(&tabV3, widget, &r, &dummyIconRect);
         }
         break;
     case SE_TabBarTabLeftButton:
     case SE_TabBarTabRightButton:
-        if (const QStyleOptionTabV3 *tab = qstyleoption_cast<const QStyleOptionTabV3 *>(opt)) {
+        if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
             bool selected = tab->state & State_Selected;
             int verticalShift = proxy()->pixelMetric(QStyle::PM_TabBarTabShiftVertical, tab, widget);
             int horizontalShift = proxy()->pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, tab, widget);
@@ -2703,14 +2703,14 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
         }
         break;
     case SE_FrameContents:
-        if (const QStyleOptionFrameV2 *f = qstyleoption_cast<const QStyleOptionFrameV2 *>(opt)) {
+        if (const QStyleOptionFrame *f = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
             int fw = proxy()->pixelMetric(PM_DefaultFrameWidth, f, widget);
             r = opt->rect.adjusted(fw, fw, -fw, -fw);
             r = visualRect(opt->direction, opt->rect, r);
         }
         break;
     case SE_ShapedFrameContents:
-        if (const QStyleOptionFrameV3 *f = qstyleoption_cast<const QStyleOptionFrameV3 *>(opt)) {
+        if (const QStyleOptionFrame *f = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
             int frameShape  = f->frameShape;
             int frameShadow = QFrame::Plain;
             if (f->state & QStyle::State_Sunken) {
@@ -3519,7 +3519,7 @@ void QCommonStyle::drawComplexControl(ComplexControl cc, const QStyleOptionCompl
             QRect textRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxLabel, widget);
             QRect checkBoxRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxCheckBox, widget);
             if (groupBox->subControls & QStyle::SC_GroupBoxFrame) {
-                QStyleOptionFrameV2 frame;
+                QStyleOptionFrame frame;
                 frame.QStyleOption::operator=(*groupBox);
                 frame.features = groupBox->features;
                 frame.lineWidth = groupBox->lineWidth;
@@ -4115,7 +4115,7 @@ QRect QCommonStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex 
                 }
 
                 int frameWidth = 0;
-                if ((groupBox->features & QStyleOptionFrameV2::Flat) == 0) {
+                if ((groupBox->features & QStyleOptionFrame::Flat) == 0) {
                     frameWidth = proxy()->pixelMetric(PM_DefaultFrameWidth, groupBox, widget);
                 }
                 ret = frameRect.adjusted(frameWidth, frameWidth + topHeight - topMargin,
@@ -4128,7 +4128,7 @@ QRect QCommonStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex 
                 QFontMetrics fontMetrics = groupBox->fontMetrics;
                 int h = fontMetrics.height();
                 int tw = fontMetrics.size(Qt::TextShowMnemonic, groupBox->text + QLatin1Char(' ')).width();
-                int marg = (groupBox->features & QStyleOptionFrameV2::Flat) ? 0 : 8;
+                int marg = (groupBox->features & QStyleOptionFrame::Flat) ? 0 : 8;
                 ret = groupBox->rect.adjusted(marg, 0, -marg, 0);
                 ret.setHeight(h);
 

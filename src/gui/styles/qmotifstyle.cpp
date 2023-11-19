@@ -776,7 +776,7 @@ void QMotifStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QP
     case PE_IndicatorProgressChunk:
         {
             bool vertical = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt))
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt))
                 vertical = (pb2->orientation == Qt::Vertical);
             if (!vertical) {
                 p->fillRect(opt->rect.x(), opt->rect.y(), opt->rect.width(),
@@ -1031,7 +1031,7 @@ void QMotifStyle::drawControl(ControlElement element, const QStyleOption *opt, Q
             bool vertical = false;
             bool invert = false;
             bool bottomToTop = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 invert = pb2->invertedAppearance;
                 bottomToTop = pb2->bottomToTop;
@@ -1298,7 +1298,7 @@ void QMotifStyle::drawControl(ControlElement element, const QStyleOption *opt, Q
             bool inverted = false;
 
             // Get extra style options if version 2
-            const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt);
+            const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt);
             if (pb2) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 inverted = pb2->invertedAppearance;

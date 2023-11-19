@@ -1594,7 +1594,7 @@ case PE_Frame:
                 // This should work, but currently there's an error in the ::drawBackgroundDirectly()
                 // code, when using the HDC directly..
                 if (useGradient) {
-                    QStyleOptionTabWidgetFrameV2 frameOpt = *tab;
+                    QStyleOptionTabWidgetFrame frameOpt = *tab;
                     frameOpt.rect = widget->rect();
                     QRect contentsRect = subElementRect(SE_TabWidgetTabContents, &frameOpt, widget);
                     QRegion reg = option->rect;
@@ -1714,8 +1714,8 @@ case PE_Frame:
         else
             stateId = GBS_NORMAL;
         if (const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-            const QStyleOptionFrameV2 *frame2 = qstyleoption_cast<const QStyleOptionFrameV2 *>(option);
-            if (frame2->features & QStyleOptionFrameV2::Flat) {
+            const QStyleOptionFrame *frame2 = qstyleoption_cast<const QStyleOptionFrame *>(option);
+            if (frame2->features & QStyleOptionFrame::Flat) {
                 // Windows XP does not have a theme part for a flat GroupBox, paint it with the windows style
                 QRect fr = frame->rect;
                 QPoint p1(fr.x(), fr.y() + 1);
@@ -1730,7 +1730,7 @@ case PE_Frame:
         {
         Qt::Orientation orient = Qt::Horizontal;
         bool inverted = false;
-        if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option)) {
+        if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
             orient = pb2->orientation;
             if (pb2->invertedAppearance)
                 inverted = true;
@@ -2100,7 +2100,7 @@ void QWindowsXPStyle::drawControl(ControlElement element, const QStyleOption *op
     case CE_ProgressBarGroove:
         {
         Qt::Orientation orient = Qt::Horizontal;
-        if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option))
+        if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option))
             orient = pb2->orientation;
         partId = (orient == Qt::Horizontal) ? PP_BAR : PP_BARVERT;
         name = QLatin1String("PROGRESS");
@@ -3305,7 +3305,7 @@ int QWindowsXPStyle::pixelMetric(PixelMetric pm, const QStyleOption *option, con
     case PM_ProgressBarChunkWidth:
         {
             Qt::Orientation orient = Qt::Horizontal;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option))
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option))
                 orient = pb2->orientation;
             XPThemeData theme(widget, 0, QLatin1String("PROGRESS"), (orient == Qt::Horizontal) ? PP_CHUNK : PP_CHUNKVERT);
             if (theme.isValid()) {

@@ -1758,7 +1758,7 @@ case PE_FrameDockWidget:
     case PE_IndicatorProgressChunk:
         {
             bool vertical = false, inverted = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 inverted = pb2->invertedAppearance;
             }
@@ -2413,7 +2413,7 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
             bool inverted = false;
 
             // Get extra style options if version 2
-            const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt);
+            const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt);
             if (pb2) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 inverted = pb2->invertedAppearance;
@@ -2436,7 +2436,7 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
             if (pb->minimum == 0 && pb->maximum == 0) {
                 Q_D(const QWindowsStyle);
                 const int unit_width = proxy()->pixelMetric(PM_ProgressBarChunkWidth, pb, widget);
-                QStyleOptionProgressBarV2 pbBits = *pb;
+                QStyleOptionProgressBar pbBits = *pb;
                 Q_ASSERT(unit_width >0);
 
                 pbBits.rect = rect;

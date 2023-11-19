@@ -1335,8 +1335,8 @@ void QPlastiqueStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
 #ifndef QT_NO_GROUPBOX
     case PE_FrameGroupBox:
         if (const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-            QStyleOptionFrameV2 frameV2(*frame);
-            if (frameV2.features & QStyleOptionFrameV2::Flat) {
+            QStyleOptionFrame frameV2(*frame);
+            if (frameV2.features & QStyleOptionFrame::Flat) {
                 QPen oldPen = painter->pen();
                 painter->setPen(borderColor);
                 painter->drawLine(frameV2.rect.topLeft(), frameV2.rect.topRight());
@@ -2474,7 +2474,7 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
             bool inverted = false;
             bool bottomToTop = false;
             // Get extra style options if version 2
-            if (const QStyleOptionProgressBarV2 *bar2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option)) {
+            if (const QStyleOptionProgressBar *bar2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
                 vertical = (bar2->orientation == Qt::Vertical);
                 inverted = bar2->invertedAppearance;
                 bottomToTop = bar2->bottomToTop;
@@ -2543,7 +2543,7 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
             painter->save();
 
             // Get extra style options if version 2
-            if (const QStyleOptionProgressBarV2 *bar2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option)) {
+            if (const QStyleOptionProgressBar *bar2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
                 vertical = (bar2->orientation == Qt::Vertical);
                 inverted = bar2->invertedAppearance;
             }

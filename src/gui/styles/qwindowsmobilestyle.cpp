@@ -4689,7 +4689,7 @@ void QWindowsMobileStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
 #ifndef QT_NO_PROGRESSBAR
     case PE_IndicatorProgressChunk: {
             bool vertical = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option))
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option))
                 vertical = (pb2->orientation == Qt::Vertical);
             if (!vertical) {
                 painter->fillRect(option->rect.x(), option->rect.y()+2, option->rect.width(), option->rect.height()-4,
@@ -4813,8 +4813,8 @@ void QWindowsMobileStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
     case PE_FrameGroupBox:
         if (const QStyleOptionFrame *frame = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
 
-            const QStyleOptionFrameV2 *frame2 = qstyleoption_cast<const QStyleOptionFrameV2 *>(option);
-            if (frame2 && !(frame2->features & QStyleOptionFrameV2::Flat)) {
+            const QStyleOptionFrame *frame2 = qstyleoption_cast<const QStyleOptionFrame *>(option);
+            if (frame2 && !(frame2->features & QStyleOptionFrame::Flat)) {
               QPen oldPen = painter->pen();
               QRect r = frame->rect;
               painter->setPen(frame->palette.shadow().color());
@@ -6177,7 +6177,7 @@ void QWindowsMobileStyle::drawComplexControl(ComplexControl control, const QStyl
             QRect textRect = proxy()->subControlRect(CC_GroupBox, &groupBoxFont, SC_GroupBoxLabel, widget);
             QRect checkBoxRect = proxy()->subControlRect(CC_GroupBox, option, SC_GroupBoxCheckBox, widget).adjusted(0,0,0,0);
             if (groupBox->subControls & QStyle::SC_GroupBoxFrame) {
-                QStyleOptionFrameV2 frame;
+                QStyleOptionFrame frame;
                 frame.QStyleOption::operator=(*groupBox);
                 frame.features = groupBox->features;
                 frame.lineWidth = groupBox->lineWidth;
@@ -6809,8 +6809,8 @@ QRect QWindowsMobileStyle::subControlRect(ComplexControl control, const QStyleOp
                 QFontMetrics fontMetrics = groupBox->fontMetrics;
                 int h = fontMetrics.height();
                 int textWidth = fontMetrics.size(Qt::TextShowMnemonic, groupBox->text + QLatin1Char(' ')).width();
-                int margX = (groupBox->features & QStyleOptionFrameV2::Flat) ? 0 : 2;
-                int margY = (groupBox->features & QStyleOptionFrameV2::Flat) ? 0 : 2;
+                int margX = (groupBox->features & QStyleOptionFrame::Flat) ? 0 : 2;
+                int margY = (groupBox->features & QStyleOptionFrame::Flat) ? 0 : 2;
                 rect = groupBox->rect.adjusted(margX, margY, -margX, 0);
                 if (groupBox->text.size())
                     rect.setHeight(h);

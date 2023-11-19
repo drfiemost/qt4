@@ -1058,7 +1058,7 @@ void QWindowsVistaStyle::drawControl(ControlElement element, const QStyleOption 
     case CE_ProgressBarGroove:
         {
             Qt::Orientation orient = Qt::Horizontal;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option))
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option))
                 orient = pb2->orientation;
             partId = (orient == Qt::Horizontal) ? PP_TRANSPARENTBAR : PP_TRANSPARENTBARVERT;
             name = QLatin1String("PROGRESS");
@@ -1074,7 +1074,7 @@ void QWindowsVistaStyle::drawControl(ControlElement element, const QStyleOption 
             bool isIndeterminate = (bar->minimum == 0 && bar->maximum == 0);
             bool vertical = false;
             bool inverted = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option)) {
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 inverted = pb2->invertedAppearance;
             }

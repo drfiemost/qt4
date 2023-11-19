@@ -214,25 +214,25 @@ void QToolBoxButton::initStyleOption(QStyleOptionToolBox *option) const
     option->text = text();
     option->icon = icon();
 
-    if (QStyleOptionToolBoxV2 *optionV2 = qstyleoption_cast<QStyleOptionToolBoxV2 *>(option)) {
+    if (QStyleOptionToolBox *optionV2 = qstyleoption_cast<QStyleOptionToolBox *>(option)) {
         QToolBox *toolBox = static_cast<QToolBox *>(parentWidget()); // I know I'm in a tool box.
         int widgetCount = toolBox->count();
         int currIndex = toolBox->currentIndex();
         if (widgetCount == 1) {
-            optionV2->position = QStyleOptionToolBoxV2::OnlyOneTab;
+            optionV2->position = QStyleOptionToolBox::OnlyOneTab;
         } else if (indexInPage == 0) {
-            optionV2->position = QStyleOptionToolBoxV2::Beginning;
+            optionV2->position = QStyleOptionToolBox::Beginning;
         } else if (indexInPage == widgetCount - 1) {
-            optionV2->position = QStyleOptionToolBoxV2::End;
+            optionV2->position = QStyleOptionToolBox::End;
         } else {
-            optionV2->position = QStyleOptionToolBoxV2::Middle;
+            optionV2->position = QStyleOptionToolBox::Middle;
         }
         if (currIndex == indexInPage - 1) {
-            optionV2->selectedPosition = QStyleOptionToolBoxV2::PreviousIsSelected;
+            optionV2->selectedPosition = QStyleOptionToolBox::PreviousIsSelected;
         } else if (currIndex == indexInPage + 1) {
-            optionV2->selectedPosition = QStyleOptionToolBoxV2::NextIsSelected;
+            optionV2->selectedPosition = QStyleOptionToolBox::NextIsSelected;
         } else {
-            optionV2->selectedPosition = QStyleOptionToolBoxV2::NotAdjacent;
+            optionV2->selectedPosition = QStyleOptionToolBox::NotAdjacent;
         }
     }
 }
@@ -242,7 +242,7 @@ void QToolBoxButton::paintEvent(QPaintEvent *)
     QPainter paint(this);
     QString text = QAbstractButton::text();
     QPainter *p = &paint;
-    QStyleOptionToolBoxV2 opt;
+    QStyleOptionToolBox opt;
     initStyleOption(&opt);
     style()->drawControl(QStyle::CE_ToolBoxTab, &opt, p, parentWidget());
 }

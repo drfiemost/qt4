@@ -378,7 +378,7 @@ int QFrame::midLineWidth() const
 void QFramePrivate::updateStyledFrameWidths()
 {
     Q_Q(const QFrame);
-    QStyleOptionFrameV3 opt;
+    QStyleOptionFrame opt;
     opt.initFrom(q);
     opt.lineWidth = lineWidth;
     opt.midLineWidth = midLineWidth;
@@ -490,7 +490,7 @@ void QFrame::paintEvent(QPaintEvent *)
 void QFrame::drawFrame(QPainter *p)
 {
     Q_D(QFrame);
-    QStyleOptionFrameV3 opt;
+    QStyleOptionFrame opt;
     opt.init(this);
     int frameShape  = d->frameStyle & QFrame::Shape_Mask;
     int frameShadow = d->frameStyle & QFrame::Shadow_Mask;

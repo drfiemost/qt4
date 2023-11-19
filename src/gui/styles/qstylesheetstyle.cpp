@@ -1826,7 +1826,7 @@ QRenderRule QStyleSheetStyle::renderRule(const QWidget *w, const QStyleOption *o
                 extraClass |= PseudoClass_Frameless;
 #endif // QT_NO_SPINBOX
         } else if (const QStyleOptionGroupBox *gb = qstyleoption_cast<const QStyleOptionGroupBox *>(opt)) {
-            if (gb->features & QStyleOptionFrameV2::Flat)
+            if (gb->features & QStyleOptionFrame::Flat)
                 extraClass |= PseudoClass_Flat;
             if (gb->lineWidth == 0)
                 extraClass |= PseudoClass_Frameless;
@@ -1933,8 +1933,8 @@ QRenderRule QStyleSheetStyle::renderRule(const QWidget *w, const QStyleOption *o
         } else if (const QStyleOptionFrame *frm = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
             if (frm->lineWidth == 0)
                 extraClass |= PseudoClass_Frameless;
-            if (const QStyleOptionFrameV2 *frame2 = qstyleoption_cast<const QStyleOptionFrameV2 *>(opt)) {
-                if (frame2->features & QStyleOptionFrameV2::Flat)
+            if (const QStyleOptionFrame *frame2 = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
+                if (frame2->features & QStyleOptionFrame::Flat)
                     extraClass |= PseudoClass_Flat;
             }
         }
@@ -1960,19 +1960,19 @@ QRenderRule QStyleSheetStyle::renderRule(const QWidget *w, const QStyleOption *o
         }
 #endif // QT_NO_TOOLBAR
 #ifndef QT_NO_TOOLBOX
-        else if (const QStyleOptionToolBoxV2 *tab = qstyleoption_cast<const QStyleOptionToolBoxV2 *>(opt)) {
-            if (tab->position == QStyleOptionToolBoxV2::OnlyOneTab)
+        else if (const QStyleOptionToolBox *tab = qstyleoption_cast<const QStyleOptionToolBox *>(opt)) {
+            if (tab->position == QStyleOptionToolBox::OnlyOneTab)
                 extraClass |= PseudoClass_OnlyOne;
-            else if (tab->position == QStyleOptionToolBoxV2::Beginning)
+            else if (tab->position == QStyleOptionToolBox::Beginning)
                 extraClass |= PseudoClass_First;
-            else if (tab->position == QStyleOptionToolBoxV2::End)
+            else if (tab->position == QStyleOptionToolBox::End)
                 extraClass |= PseudoClass_Last;
-            else if (tab->position == QStyleOptionToolBoxV2::Middle)
+            else if (tab->position == QStyleOptionToolBox::Middle)
                 extraClass |= PseudoClass_Middle;
 
-            if (tab->selectedPosition == QStyleOptionToolBoxV2::NextIsSelected)
+            if (tab->selectedPosition == QStyleOptionToolBox::NextIsSelected)
                 extraClass |= PseudoClass_NextSelected;
-            else if (tab->selectedPosition == QStyleOptionToolBoxV2::PreviousIsSelected)
+            else if (tab->selectedPosition == QStyleOptionToolBox::PreviousIsSelected)
                 extraClass |= PseudoClass_PreviousSelected;
         }
 #endif // QT_NO_TOOLBOX
@@ -2989,7 +2989,7 @@ void QStyleSheetStyle::drawComplexControl(ComplexControl cc, const QStyleOptionC
             }
 
             frameRect = subControlRect(CC_GroupBox, opt, SC_GroupBoxFrame, w);
-            QStyleOptionFrameV2 frame;
+            QStyleOptionFrame frame;
             frame.QStyleOption::operator=(*gb);
             frame.features = gb->features;
             frame.lineWidth = gb->lineWidth;
@@ -3796,7 +3796,7 @@ void QStyleSheetStyle::drawControl(ControlElement ce, const QStyleOption *opt, Q
     case CE_ProgressBarContents: {
         QRenderRule subRule = renderRule(w, opt, PseudoElement_ProgressBarChunk);
         if (subRule.hasDrawable()) {
-            if (const QStyleOptionProgressBarV2 *pb = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+            if (const QStyleOptionProgressBar *pb = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
                 p->save();
                 p->setClipRect(pb->rect);
 
@@ -3871,12 +3871,12 @@ void QStyleSheetStyle::drawControl(ControlElement ce, const QStyleOption *opt, Q
         break;
 
     case CE_ProgressBarLabel:
-        if (const QStyleOptionProgressBarV2 *pb = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+        if (const QStyleOptionProgressBar *pb = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
             if (rule.hasBox() || rule.hasBorder() || hasStyleRule(w, PseudoElement_ProgressBarChunk)) {
                 drawItemText(p, pb->rect, pb->textAlignment | Qt::TextSingleLine, pb->palette,
                              pb->state & State_Enabled, pb->text, QPalette::Text);
             } else {
-                QStyleOptionProgressBarV2 pbCopy(*pb);
+                QStyleOptionProgressBar pbCopy(*pb);
                 rule.configurePalette(&pbCopy.palette, QPalette::HighlightedText, QPalette::Highlight);
                 baseStyle()->drawControl(ce, &pbCopy, p, w);
             }
@@ -3999,7 +3999,7 @@ void QStyleSheetStyle::drawControl(ControlElement ce, const QStyleOption *opt, Q
     case CE_TabBarTabLabel:
     case CE_TabBarTabShape:
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
-            QStyleOptionTabV3 tabCopy(*tab);
+            QStyleOptionTab tabCopy(*tab);
             QRenderRule subRule = renderRule(w, opt, PseudoElement_TabBarTab);
             QRect r = positionRect(w, subRule, PseudoElement_TabBarTab, opt->rect, opt->direction);
             if (ce == CE_TabBarTabShape && subRule.hasDrawable()) {
@@ -4078,7 +4078,7 @@ void QStyleSheetStyle::drawControl(ControlElement ce, const QStyleOption *opt, Q
     case CE_ShapedFrame:
         if (const QStyleOptionFrame *frm = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
             if (rule.hasNativeBorder()) {
-                QStyleOptionFrameV3 frmOpt(*frm);
+                QStyleOptionFrame frmOpt(*frm);
                 rule.configurePalette(&frmOpt.palette, QPalette::Text, QPalette::Base);
                 frmOpt.rect = rule.borderRect(frmOpt.rect);
                 baseStyle()->drawControl(ce, &frmOpt, p, w);
@@ -4213,9 +4213,9 @@ void QStyleSheetStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *op
     case PE_Frame:
         if (const QStyleOptionFrame *frm = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
             if (rule.hasNativeBorder()) {
-                QStyleOptionFrameV2 frmOpt(*frm);
+                QStyleOptionFrame frmOpt(*frm);
                 rule.configurePalette(&frmOpt.palette, QPalette::Text, QPalette::Base);
-                if (!qstyleoption_cast<const QStyleOptionFrameV3 *>(opt)) //if it comes from  CE_ShapedFrame, the margins are already sustracted
+                if (!qstyleoption_cast<const QStyleOptionFrame *>(opt)) //if it comes from  CE_ShapedFrame, the margins are already sustracted
                     frmOpt.rect = rule.borderRect(frmOpt.rect);
                 baseStyle()->drawPrimitive(pe, &frmOpt, p, w);
             } else {
@@ -4378,7 +4378,7 @@ void QStyleSheetStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *op
             QRenderRule subRule = renderRule(w, opt, PseudoElement_TabWidgetPane);
             if (subRule.hasNativeBorder()) {
                 subRule.drawBackground(p, opt->rect);
-                QStyleOptionTabWidgetFrameV2 frmCopy(*frm);
+                QStyleOptionTabWidgetFrame frmCopy(*frm);
                 subRule.configurePalette(&frmCopy.palette, QPalette::WindowText, QPalette::Window);
                 baseStyle()->drawPrimitive(pe, &frmCopy, p, w);
             } else {
@@ -5694,7 +5694,7 @@ QRect QStyleSheetStyle::subElementRect(SubElement se, const QStyleOption *opt, c
     case SE_ProgressBarGroove:
     case SE_ProgressBarContents:
     case SE_ProgressBarLabel:
-        if (const QStyleOptionProgressBarV2 *pb = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+        if (const QStyleOptionProgressBar *pb = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
             if (rule.hasBox() || !rule.hasNativeBorder() || rule.hasPosition() || hasStyleRule(w, PseudoElement_ProgressBarChunk)) {
                 if (se == SE_ProgressBarGroove)
                     return rule.borderRect(pb->rect);

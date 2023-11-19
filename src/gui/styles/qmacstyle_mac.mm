@@ -208,7 +208,7 @@ QRect rotateTabPainter(QPainter *p, QTabBar::Shape shape, QRect tabRect)
     return tabRect;
 }
 
-void drawTabShape(QPainter *p, const QStyleOptionTabV3 *tabOpt)
+void drawTabShape(QPainter *p, const QStyleOptionTab *tabOpt)
 {
     QRect r = tabOpt->rect;
     p->translate(tabOpt->rect.x(), tabOpt->rect.y());
@@ -309,7 +309,7 @@ void drawTabShape(QPainter *p, const QStyleOptionTabV3 *tabOpt)
     }
 }
 
-void drawTabBase(QPainter *p, const QStyleOptionTabBarBaseV2 *tbb, const QWidget *w)
+void drawTabBase(QPainter *p, const QStyleOptionTabBarBase *tbb, const QWidget *w)
 {
     QRect r = tbb->rect;
     if (isVerticalTabs(tbb->shape)) {
@@ -2411,7 +2411,7 @@ int QMacStyle::styleHint(StyleHint sh, const QStyleOption *opt, const QWidget *w
         ret = QEvent::MouseButtonRelease;
         break;
     case SH_TabBar_SelectMouseType:
-        if (const QStyleOptionTabBarBaseV2 *opt2 = qstyleoption_cast<const QStyleOptionTabBarBaseV2 *>(opt)) {
+        if (const QStyleOptionTabBarBase *opt2 = qstyleoption_cast<const QStyleOptionTabBarBase *>(opt)) {
             ret = opt2->documentMode ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease;
         } else {
             ret = QEvent::MouseButtonRelease;
@@ -2755,8 +2755,8 @@ void QMacStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPai
         p->restore();
         break; }
     case PE_FrameTabBarBase:
-        if (const QStyleOptionTabBarBaseV2 *tbb
-                = qstyleoption_cast<const QStyleOptionTabBarBaseV2 *>(opt)) {
+        if (const QStyleOptionTabBarBase *tbb
+                = qstyleoption_cast<const QStyleOptionTabBarBase *>(opt)) {
             if (tbb->documentMode) {
                 p->save();
                 drawTabBase(p, tbb, w);
@@ -2794,8 +2794,8 @@ void QMacStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPai
         break;
     case PE_FrameGroupBox:
         if (const QStyleOptionFrame *groupBox = qstyleoption_cast<const QStyleOptionFrame *>(opt)) {
-            const QStyleOptionFrameV2 *frame2 = qstyleoption_cast<const QStyleOptionFrameV2 *>(opt);
-            if (frame2 && frame2->features & QStyleOptionFrameV2::Flat) {
+            const QStyleOptionFrame *frame2 = qstyleoption_cast<const QStyleOptionFrame *>(opt);
+            if (frame2 && frame2->features & QStyleOptionFrame::Flat) {
                 QWindowsStyle::drawPrimitive(pe, groupBox, p, w);
             } else {
                 HIThemeGroupBoxDrawInfo gdi;
@@ -3514,7 +3514,7 @@ void QMacStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPainter
     case CE_TabBarTabShape:
         if (const QStyleOptionTab *tabOpt = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
 
-            if (const QStyleOptionTabV3 *tabOptV3 = qstyleoption_cast<const QStyleOptionTabV3 *>(opt)) {
+            if (const QStyleOptionTab *tabOptV3 = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
                 if (tabOptV3->documentMode) {
                     p->save();
                     QRect tabRect = tabOptV3->rect;
@@ -3633,7 +3633,7 @@ void QMacStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPainter
         break;
     case CE_TabBarTabLabel:
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
-            QStyleOptionTabV3 myTab = *tab;
+            QStyleOptionTab myTab = *tab;
             ThemeTabDirection ttd = getTabDirection(myTab.shape);
             bool verticalTabs = ttd == kThemeTabWest || ttd == kThemeTabEast;
             bool selected = (myTab.state & QStyle::State_Selected);
@@ -4073,7 +4073,7 @@ void QMacStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPainter
             bool isIndeterminate = (pb->minimum == 0 && pb->maximum == 0);
             bool vertical = false;
             bool inverted = false;
-            if (const QStyleOptionProgressBarV2 *pb2 = qstyleoption_cast<const QStyleOptionProgressBarV2 *>(opt)) {
+            if (const QStyleOptionProgressBar *pb2 = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
                 vertical = (pb2->orientation == Qt::Vertical);
                 inverted = pb2->invertedAppearance;
             }
@@ -4484,7 +4484,7 @@ QRect QMacStyle::subElementRect(SubElement sr, const QStyleOption *opt,
         }
         break;
     case SE_FrameLayoutItem:
-        // hack because QStyleOptionFrameV2 doesn't have a frameStyle member
+        // hack because QStyleOptionFrame doesn't have a frameStyle member
         if (const QFrame *frame = qobject_cast<const QFrame *>(widget)) {
             rect = opt->rect;
             switch (frame->frameStyle() & QFrame::Shape_Mask) {
@@ -5409,7 +5409,7 @@ QRect QMacStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex *op
     case CC_GroupBox:
         if (const QStyleOptionGroupBox *groupBox = qstyleoption_cast<const QStyleOptionGroupBox *>(opt)) {
             bool checkable = groupBox->subControls & SC_GroupBoxCheckBox;
-            bool flat = (groupBox->features & QStyleOptionFrameV2::Flat);
+            bool flat = (groupBox->features & QStyleOptionFrame::Flat);
             bool hasNoText = !checkable && groupBox->text.isEmpty();
             switch (sc) {
             case SC_GroupBoxLabel:
@@ -5672,7 +5672,7 @@ QSize QMacStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
 
         break;
     case QStyle::CT_TabBarTab:
-        if (const QStyleOptionTabV3 *tab = qstyleoption_cast<const QStyleOptionTabV3 *>(opt)) {
+        if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
             const QAquaWidgetSize AquaSize = d->aquaSizeConstrain(opt, widget);
             const bool differentFont = (widget && widget->testAttribute(Qt::WA_SetFont))
                                        || !QApplication::desktopSettingsAware();
