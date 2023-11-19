@@ -70,32 +70,29 @@ class QListViewItem
     friend class QListModeViewBase;
     friend class QIconModeViewBase;
 public:
-    inline QListViewItem()
+    constexpr QListViewItem()
         : x(-1), y(-1), w(0), h(0), indexHint(-1), visited(0xffff) {}
-    inline QListViewItem(const QListViewItem &other)
-        : x(other.x), y(other.y), w(other.w), h(other.h),
-          indexHint(other.indexHint), visited(other.visited) {}
     inline QListViewItem& operator=(const QListViewItem&) = default;
-    inline QListViewItem(QRect r, int i)
+    constexpr QListViewItem(QRect r, int i)
         : x(r.x()), y(r.y()), w(qMin(r.width(), SHRT_MAX)), h(qMin(r.height(), SHRT_MAX)),
           indexHint(i), visited(0xffff) {}
-    inline bool operator==(const QListViewItem &other) const {
+    constexpr bool operator==(const QListViewItem &other) const {
         return (x == other.x && y == other.y && w == other.w && h == other.h &&
                 indexHint == other.indexHint); }
-    inline bool operator!=(const QListViewItem &other) const
+    constexpr bool operator!=(const QListViewItem &other) const
         { return !(*this == other); }
-    inline bool isValid() const
+    constexpr bool isValid() const
         { return rect().isValid() && (indexHint > -1); }
-    inline void invalidate()
+    constexpr void invalidate()
         { x = -1; y = -1; w = 0; h = 0; }
-    inline void resize(const QSize &size)
+    constexpr void resize(const QSize size)
         { w = qMin(size.width(), SHRT_MAX); h = qMin(size.height(), SHRT_MAX); }
-    inline void move(const QPoint &position)
+    constexpr void move(const QPoint position)
         { x = position.x(); y = position.y(); }
-    inline int width() const { return w; }
-    inline int height() const { return h; }
+    constexpr int width() const { return w; }
+    constexpr int height() const { return h; }
 private:
-    inline QRect rect() const
+    constexpr QRect rect() const
         { return QRect(x, y, w, h); }
     int x, y;
     short w, h;
