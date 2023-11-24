@@ -420,14 +420,19 @@ QFutureInterfaceBase &QFutureInterfaceBase::operator=(const QFutureInterfaceBase
     return *this;
 }
 
-bool QFutureInterfaceBase::referenceCountIsOne() const
+bool QFutureInterfaceBase::refT() const
 {
-    return d->refCount.loadRelaxed() == 1;
+    return d->refCount.refT();
+}
+
+bool QFutureInterfaceBase::derefT() const
+{
+    return d->refCount.derefT();
 }
 
 QFutureInterfaceBasePrivate::QFutureInterfaceBasePrivate(QFutureInterfaceBase::State initialState)
     : refCount(1), m_progressValue(0), m_progressMinimum(0), m_progressMaximum(0),
-      state(initialState), pendingResults(0),
+      state(initialState),
       manualProgress(false), m_expectedResultCount(0), runnable(0)
 {
     progressTime.invalidate();
