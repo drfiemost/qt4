@@ -77,7 +77,7 @@ private:
     };
 public:
     template<typename T>
-    QMetaTypeInterface(T * = nullptr)
+    explicit QMetaTypeInterface(T *)
         : constr(reinterpret_cast<QMetaType::Constructor>(Impl<T>::constr))
               , destr(reinterpret_cast<QMetaType::Destructor>(Impl<T>::destr))
           #ifndef QT_NO_DATASTREAM
