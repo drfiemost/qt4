@@ -55,7 +55,6 @@
 QT_BEGIN_NAMESPACE
 
 static QBasicAtomicPointer<QNetworkConfigurationManagerPrivate> connManager_ptr;
-Q_GLOBAL_STATIC(QMutex, connManager_mutex)
 static QBasicAtomicInt appShutdown;
 
 static void connManager_cleanup()
@@ -79,7 +78,8 @@ static QNetworkConfigurationManagerPrivate *connManager()
     QNetworkConfigurationManagerPrivate *ptr = connManager_ptr.fetchAndAddAcquire(0);
     int shutdown = appShutdown.loadAcquire();
     if (!ptr && !shutdown) {
-        QMutexLocker locker(connManager_mutex());
+        static QBasicMutex connManager_mutex;
+        QMutexLocker locker(&connManager_mutex);
         if (!(ptr = connManager_ptr.fetchAndAddAcquire(0))) {
             ptr = new QNetworkConfigurationManagerPrivate;
 

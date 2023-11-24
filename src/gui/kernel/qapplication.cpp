@@ -449,7 +449,7 @@ QPlatformIntegration *QApplicationPrivate::platform_integration = 0;
 QString QApplicationPrivate::graphics_system_name;         // graphics system id - for delayed initialization
 bool QApplicationPrivate::runtime_graphics_system = false;
 
-Q_GLOBAL_STATIC(QMutex, applicationFontMutex)
+static QBasicMutex applicationFontMutex;
 QFont *QApplicationPrivate::app_font = 0;        // default application font
 QFont *QApplicationPrivate::sys_font = 0;        // default system font
 QFont *QApplicationPrivate::set_font = 0;        // default font set by programmer
@@ -1115,7 +1115,7 @@ QApplication::~QApplication()
     app_palettes()->clear();
 
     {
-        QMutexLocker locker(applicationFontMutex());
+        QMutexLocker locker(&applicationFontMutex);
         delete QApplicationPrivate::app_font;
         QApplicationPrivate::app_font = 0;
     }
@@ -1898,7 +1898,7 @@ void QApplicationPrivate::setSystemPalette(const QPalette &pal)
 */
 QFont QApplication::font()
 {
-    QMutexLocker locker(applicationFontMutex());
+    QMutexLocker locker(&applicationFontMutex);
     if (!QApplicationPrivate::app_font) {
         QApplicationPrivate::app_font = new QFont(QLatin1String("Helvetica"));
     }
@@ -1981,7 +1981,7 @@ void QApplication::setFont(const QFont &font, const char *className)
     bool all = false;
     FontHash *hash = app_fonts();
     if (!className) {
-        QMutexLocker locker(applicationFontMutex());
+        QMutexLocker locker(&applicationFontMutex);
         if (!QApplicationPrivate::app_font)
             QApplicationPrivate::app_font = new QFont(font);
         else

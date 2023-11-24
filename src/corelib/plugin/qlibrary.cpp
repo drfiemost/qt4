@@ -78,7 +78,7 @@ QT_BEGIN_NAMESPACE
 #  define QT_NO_DEBUG_PLUGIN_CHECK
 #endif
 
-Q_GLOBAL_STATIC(QMutex, qt_library_mutex)
+static QBasicMutex qt_library_mutex;
 
 /*!
     \class QLibrary
@@ -427,7 +427,7 @@ QLibraryPrivate::QLibraryPrivate(const QString &canonicalFileName, const QString
 
 QLibraryPrivate *QLibraryPrivate::findOrCreate(const QString &fileName, const QString &version)
 {
-    QMutexLocker locker(qt_library_mutex());
+    QMutexLocker locker(&qt_library_mutex);
     if (QLibraryPrivate *lib = libraryMap()->value(fileName)) {
         lib->libraryRefCount.ref();
         return lib;
@@ -499,7 +499,7 @@ bool QLibraryPrivate::unload()
 
 void QLibraryPrivate::release()
 {
-    QMutexLocker locker(qt_library_mutex());
+    QMutexLocker locker(&qt_library_mutex);
     if (!libraryRefCount.deref())
         delete this;
 }

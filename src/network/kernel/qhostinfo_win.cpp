@@ -100,11 +100,6 @@ static void resolveLibrary()
     triedResolve = true;
 }
 
-#if defined(Q_OS_WINCE)
-#include <qmutex.h>
-Q_GLOBAL_STATIC(QMutex, qPrivCEMutex)
-#endif
-
 static void translateWSAError(int error, QHostInfo *results)
 {
     switch (error) {
@@ -126,7 +121,8 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
     resolveLibrary();
 
 #if defined(Q_OS_WINCE)
-    QMutexLocker locker(qPrivCEMutex());
+    static QBasicMutex qPrivCEMutex;
+    QMutexLocker locker(&qPrivCEMutex);
 #endif
 
     QWindowsSockInit winSock;
