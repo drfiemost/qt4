@@ -315,34 +315,13 @@ static const struct { const char * typeName; int typeNameLength; int type; } typ
 
     {nullptr, 0, QMetaType::Void}
 };
-/*
-struct QMetaTypeGuiHelper
-{
-    QMetaType::Constructor constr;
-    QMetaType::Destructor destr;
-#ifndef QT_NO_DATASTREAM
-    QMetaType::SaveOperator saveOp;
-    QMetaType::LoadOperator loadOp;
-#endif
-};*/
+
 Q_CORE_EXPORT const QMetaTypeInterface *qMetaTypeGuiHelper = nullptr;
 
 class QCustomTypeInfo : public QMetaTypeInterface
 {
 public:
-    /*QCustomTypeInfo() : typeName(), constr(nullptr), destr(nullptr)
-#ifndef QT_NO_DATASTREAM
-    , saveOp(0), loadOp(0)
-#endif
-    {}
-*/
     QByteArray typeName;
-    /*QMetaType::Constructor constr;
-    QMetaType::Destructor destr;
-#ifndef QT_NO_DATASTREAM
-    QMetaType::SaveOperator saveOp;
-    QMetaType::LoadOperator loadOp;
-#endif*/
     int alias;
 };
 
