@@ -95,11 +95,12 @@ public:
     uint pendTimer : 1;
     uint blockSig : 1;
     uint wasDeleted : 1;
+    uint isDeletingChildren : 1;
     uint sendChildEvents : 1;
     uint receiveChildEvents : 1;
     uint inThreadChangeEvent : 1;
     uint hasGuards : 1; //true iff there is one or more QPointer attached to this object
-    uint unused : 24;
+    uint unused : 23;
     int postedEvents;
     QMetaObject *metaObject; // assert dynamic
 };
