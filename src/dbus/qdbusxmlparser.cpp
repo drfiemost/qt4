@@ -105,7 +105,7 @@ static bool parseAnnotation(const QXmlStreamReader &xml, QDBusIntrospection::Ann
     annotations.insert(name, value);
     if (!interfaceAnnotation)
         ifaceData->introspection += QLatin1String("  ");
-    ifaceData->introspection += QLatin1String("    <annotation value=\"") + value + QLatin1String("\" name=\"") + name + QLatin1String("\"/>\n");
+    ifaceData->introspection += QLatin1String("    <annotation value=\"") + value.toHtmlEscaped()  + QLatin1String("\" name=\"") + name + QLatin1String("\"/>\n");
     return true;
 }
 
@@ -391,6 +391,11 @@ QDBusXmlParser::QDBusXmlParser(const QString& service, const QString& path,
         case QXmlStreamReader::Comment:
             // ignore comments and processing instructions
             break;
+        case QXmlStreamReader::Characters:
+            // ignore whitespace
+            if (xml.isWhitespace())
+                break;
+            [[fallthrough]];
         default:
             qDBusParserError() << "unknown token" << xml.name() << xml.tokenString();
             break;

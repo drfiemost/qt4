@@ -227,6 +227,8 @@ private slots:
     void literals();
 
     void reserve();
+    void toHtmlEscaped_data();
+    void toHtmlEscaped();
 
     void operatorGreaterWithQLatin1String();
 };
@@ -5322,6 +5324,25 @@ void tst_QString::operatorGreaterWithQLatin1String()
     QVERIFY(!(stringfoo < latin1foo));
 }
 
+void tst_QString::toHtmlEscaped_data()
+{
+    QTest::addColumn<QString>("original");
+    QTest::addColumn<QString>("expected");
+
+    QTest::newRow("1") << "Hello World\n" << "Hello World\n";
+    QTest::newRow("2") << "#include <QtCore>" << "#include &lt;QtCore&gt;";
+    QTest::newRow("3") << "<p class=\"cool\"><a href=\"http://example.com/?foo=bar&amp;bar=foo\">plop --&gt; </a></p>"
+                       << "&lt;p class=&quot;cool&quot;&gt;&lt;a href=&quot;http://example.com/?foo=bar&amp;amp;bar=foo&quot;&gt;plop --&amp;gt; &lt;/a&gt;&lt;/p&gt;";
+    QTest::newRow("4") << QString::fromUtf8("<\320\222\321\201>") << QString::fromUtf8("&lt;\320\222\321\201&gt;");
+}
+
+void tst_QString::toHtmlEscaped()
+{
+    QFETCH(QString, original);
+    QFETCH(QString, expected);
+
+    QCOMPARE(original.toHtmlEscaped(), expected);
+}
 
 QTEST_APPLESS_MAIN(tst_QString)
 

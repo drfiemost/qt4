@@ -9087,6 +9087,42 @@ QVector<uint> QStringRef::toUcs4() const
 }
 
 /*!
+    \obsolete
+    \fn QString Qt::escape(const QString &plain)
+
+    \sa QString::toHtmlEscaped()
+*/
+
+/*!
+    Converts the plain text string \a plain to a HTML string with
+    HTML metacharacters \c{<}, \c{>}, \c{&}, and \c{"} replaced by HTML
+    entities.
+    Example:
+
+    \snippet doc/src/snippets/code/src_corelib_tools_qstring.cpp 7
+*/
+QString QString::toHtmlEscaped() const
+{
+    QString rich;
+    const int len = length();
+    rich.reserve(int(len * 1.1));
+    for (int i = 0; i < len; ++i) {
+        if (at(i) == QLatin1Char('<'))
+            rich += QLatin1String("&lt;");
+        else if (at(i) == QLatin1Char('>'))
+            rich += QLatin1String("&gt;");
+        else if (at(i) == QLatin1Char('&'))
+            rich += QLatin1String("&amp;");
+        else if (at(i) == QLatin1Char('"'))
+            rich += QLatin1String("&quot;");
+        else
+            rich += at(i);
+    }
+    rich.squeeze();
+    return rich;
+}
+
+/*!
   \macro QStringLiteral(str)
   \relates QString
   The macro generates the data for a QString out of \a str at compile time if the compiler supports it.

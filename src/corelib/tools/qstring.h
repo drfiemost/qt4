@@ -345,6 +345,7 @@ public:
 
     QString trimmed() const Q_REQUIRED_RESULT;
     QString simplified() const Q_REQUIRED_RESULT;
+    QString toHtmlEscaped() const Q_REQUIRED_RESULT;
 
     QString &insert(int i, QChar c);
     QString &insert(int i, const QChar *uc, int len);
@@ -1241,6 +1242,11 @@ inline bool QStringRef::contains(QChar c, Qt::CaseSensitivity cs) const
 inline bool QStringRef::contains(const QStringRef &s, Qt::CaseSensitivity cs) const
 { return indexOf(s, 0, cs) != -1; }
 
+namespace Qt {
+[[deprecated("Use QString::toHtmlEscaped()")]] inline QString escape(const QString &plain) {
+    return plain.toHtmlEscaped();
+}
+}
 
 QT_END_NAMESPACE
 
