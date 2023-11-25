@@ -739,7 +739,7 @@ void QWindowsVistaStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
                 bool hover = vopt->state & QStyle::State_MouseOver;
                 bool active = vopt->state & QStyle::State_Active;
 
-                if (vopt->features & QStyleOptionViewItemV2::Alternate)
+                if (vopt->features & QStyleOptionViewItem::Alternate)
                     painter->fillRect(vopt->rect, vopt->palette.alternateBase());
 
                 QPalette::ColorGroup cg = vopt->state & QStyle::State_Enabled

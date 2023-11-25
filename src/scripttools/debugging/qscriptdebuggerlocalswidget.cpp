@@ -195,7 +195,7 @@ class QScriptDebuggerLocalsItemDelegate
 {
     Q_OBJECT
 public:
-    QScriptDebuggerLocalsItemDelegate(QObject *parent = 0);
+    QScriptDebuggerLocalsItemDelegate(QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
@@ -227,9 +227,7 @@ private Q_SLOTS:
 private:
     static const QWidget *widget(const QStyleOptionViewItem &option)
     {
-        if (const QStyleOptionViewItemV3 *v3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option))
-            return v3->widget;
-        return 0;
+        return option.widget;
     }
 };
 
