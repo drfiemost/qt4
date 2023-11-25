@@ -1653,19 +1653,6 @@ QVariant::QVariant(const char *val)
   Constructs a new variant with the regexp value \a regExp.
 */
 
-/*! \since 4.2
-  \fn QVariant::QVariant(Qt::GlobalColor color)
-
-  Constructs a new variant of type QVariant::Color and initializes
-  it with \a color.
-
-  This is a convenience constructor that allows \c{QVariant(Qt::blue);}
-  to create a valid QVariant storing a QColor.
-
-  Note: This constructor will assert if the application does not link
-  to the Qt GUI library.
- */
-
 QVariant::QVariant(Type type)
 { create(type, nullptr); }
 QVariant::QVariant(int typeOrUserType, const void *copy)
@@ -1745,7 +1732,6 @@ QVariant::QVariant(const QLocale &l) { d.is_null = false; d.type = Locale; v_con
 #ifndef QT_NO_REGEXP
 QVariant::QVariant(const QRegExp &regExp) { d.is_null = false; d.type = RegExp; v_construct<QRegExp>(&d, regExp); }
 #endif
-QVariant::QVariant(Qt::GlobalColor color) { create(62, &color); }
 
 /*!
     Returns the storage type of the value stored in the variant.
