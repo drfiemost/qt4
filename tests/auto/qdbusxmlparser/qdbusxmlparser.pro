@@ -1,5 +1,5 @@
 load(qttest_p4)
-QT = core
+QT = core xml
 contains(QT_CONFIG,dbus): {
 	SOURCES += tst_qdbusxmlparser.cpp
 	QT += dbus

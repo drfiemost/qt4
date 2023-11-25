@@ -1,7 +1,6 @@
 TARGET = QtDBus
 QPRO_PWD = $$PWD
-QT = core \
-    xml
+QT = core
 CONFIG += link_pkgconfig
 DEFINES += QT_BUILD_DBUS_LIB \
     DBUS_API_SUBJECT_TO_CHANGE
@@ -22,8 +21,7 @@ unix|win32-g++* {
     QMAKE_PKGCONFIG_DESCRIPTION = Qt \
         DBus \
         module
-    QMAKE_PKGCONFIG_REQUIRES = QtCore \
-        QtXml
+    QMAKE_PKGCONFIG_REQUIRES = QtCore
 }
 win32 { 
     wince*:LIBS_PRIVATE += -lws2
