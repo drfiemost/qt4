@@ -191,7 +191,7 @@ private:
     void exec(const QByteArray &ba, int ver = 0, QDataStream::ByteOrder byteOrder = QDataStream::BigEndian);
 #endif
     struct QRegionData {
-        QBasicAtomicInt ref;
+        QtPrivate::RefCount ref;
 #if defined(Q_WS_WIN)
         HRGN   rgn;
 #elif defined(Q_WS_X11)
@@ -208,7 +208,7 @@ private:
     friend class QETWidget;
 #endif
     struct QRegionData *d;
-    static struct QRegionData shared_empty;
+    static const struct QRegionData shared_empty;
     static void cleanUp(QRegionData *x);
 };
 
