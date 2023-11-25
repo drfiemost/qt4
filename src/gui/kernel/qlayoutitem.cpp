@@ -257,6 +257,11 @@ void QLayoutItem::setAlignment(Qt::Alignment alignment)
 */
 
 /*!
+    Destructor.
+*/
+QSpacerItem::~QSpacerItem() {}
+
+/*!
     Changes this spacer item to have preferred width \a w, preferred
     height \a h, horizontal size policy \a hPolicy and vertical size
     policy \a vPolicy.
@@ -283,6 +288,11 @@ void QSpacerItem::changeSize(int w, int h, QSizePolicy::Policy hPolicy,
 
     Creates an item containing the given \a widget.
 */
+
+/*!
+    Destructor.
+*/
+QWidgetItem::~QWidgetItem() {}
 
 /*!
     Destroys the QLayoutItem.

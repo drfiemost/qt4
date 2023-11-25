@@ -79,6 +79,10 @@ QWindowsCEStyle::QWindowsCEStyle() : QWindowsStyle() {
     qApp->setEffectEnabled(Qt::UI_AnimateMenu, false);
 }
 
+QWindowsCEStyle::~QWindowsCEStyle()
+{
+}
+
 void QWindowsCEStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *option,
                                     QPainter *painter, const QWidget *widget) const {
 

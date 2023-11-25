@@ -318,6 +318,10 @@ QString QSpinBox::cleanText() const
     return d->stripped(d->edit->displayText());
 }
 
+/*!
+    Destructor.
+*/
+QSpinBox::~QSpinBox() {}
 
 /*!
     \property QSpinBox::singleStep
@@ -575,6 +579,11 @@ QDoubleSpinBox::QDoubleSpinBox(QWidget *parent)
     Q_D(QDoubleSpinBox);
     d->init();
 }
+
+/*!
+    Destructor.
+*/
+QDoubleSpinBox::~QDoubleSpinBox() {}
 
 /*!
     \property QDoubleSpinBox::value

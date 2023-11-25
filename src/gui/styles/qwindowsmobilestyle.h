@@ -58,6 +58,7 @@ class Q_GUI_EXPORT QWindowsMobileStyle : public QWindowsStyle
     Q_OBJECT
 public:
     QWindowsMobileStyle();
+    ~QWindowsMobileStyle();
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
                        QPainter *painter, const QWidget *widget = 0) const;

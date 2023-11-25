@@ -566,7 +566,8 @@ class Q_GUI_EXPORT QGraphicsObject : public QObject, public QGraphicsItem
     Q_CLASSINFO("DefaultProperty", "children")
     Q_INTERFACES(QGraphicsItem)
 public:
-    QGraphicsObject(QGraphicsItem *parent = 0);
+    explicit QGraphicsObject(QGraphicsItem *parent = nullptr);
+    ~QGraphicsObject();
 
     using QObject::children;
 

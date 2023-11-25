@@ -217,7 +217,8 @@ class Q_GUI_EXPORT QWizardPage : public QWidget
     Q_PROPERTY(QString subTitle READ subTitle WRITE setSubTitle)
 
 public:
-    QWizardPage(QWidget *parent = 0);
+    explicit QWizardPage(QWidget *parent = nullptr);
+    ~QWizardPage();
 
     void setTitle(const QString &title);
     QString title() const;

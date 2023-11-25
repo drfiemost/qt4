@@ -7586,6 +7586,13 @@ void QGraphicsItem::prepareGeometryChange()
 }
 
 /*!
+  Destructor.
+*/
+QGraphicsObject::~QGraphicsObject()
+{
+}
+
+/*!
     \internal
 
     Highlights \a item as selected.

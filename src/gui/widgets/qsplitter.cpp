@@ -123,6 +123,13 @@ QSplitterHandle::QSplitterHandle(Qt::Orientation orientation, QSplitter *parent)
 }
 
 /*!
+    Destructor.
+*/
+QSplitterHandle::~QSplitterHandle()
+{
+}
+
+/*!
     Sets the orientation of the splitter handle to \a orientation.
     This is usually propagated from the QSplitter.
 

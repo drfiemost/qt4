@@ -100,6 +100,7 @@ public:
     explicit QDateTimeEdit(const QDateTime &dt, QWidget *parent = 0);
     explicit QDateTimeEdit(const QDate &d, QWidget *parent = 0);
     explicit QDateTimeEdit(const QTime &t, QWidget *parent = 0);
+    ~QDateTimeEdit();
 
     QDateTime dateTime() const;
     QDate date() const;
@@ -194,7 +195,7 @@ protected:
     virtual void paintEvent(QPaintEvent *event);
     void initStyleOption(QStyleOptionSpinBox *option) const;
 
-    QDateTimeEdit(const QVariant &val, QVariant::Type parserType, QWidget *parent = 0);
+    QDateTimeEdit(const QVariant &val, QVariant::Type parserType, QWidget *parent = nullptr);
 private:
     Q_DECLARE_PRIVATE(QDateTimeEdit)
     Q_DISABLE_COPY(QDateTimeEdit)
@@ -206,16 +207,18 @@ class Q_GUI_EXPORT QTimeEdit : public QDateTimeEdit
 {
     Q_OBJECT
 public:
-    QTimeEdit(QWidget *parent = 0);
-    QTimeEdit(const QTime &time, QWidget *parent = 0);
+    explicit QTimeEdit(QWidget *parent = nullptr);
+    explicit QTimeEdit(const QTime &time, QWidget *parent = nullptr);
+    ~QTimeEdit();
 };
 
 class Q_GUI_EXPORT QDateEdit : public QDateTimeEdit
 {
     Q_OBJECT
 public:
-    QDateEdit(QWidget *parent = 0);
-    QDateEdit(const QDate &date, QWidget *parent = 0);
+    explicit QDateEdit(QWidget *parent = nullptr);
+    explicit QDateEdit(const QDate &date, QWidget *parent = nullptr);
+    ~QDateEdit();
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QDateTimeEdit::Sections)

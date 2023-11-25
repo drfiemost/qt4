@@ -225,6 +225,13 @@ QCheckBox::QCheckBox(const QString &text, QWidget *parent)
     setText(text);
 }
 
+/*!
+    Destructor.
+*/
+QCheckBox::~QCheckBox()
+{
+}
+
 void QCheckBox::setTristate(bool y)
 {
     Q_D(QCheckBox);

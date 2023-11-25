@@ -3770,6 +3770,13 @@ QStyleHintReturnMask::QStyleHintReturnMask() : QStyleHintReturn(Version, Type)
 }
 
 /*!
+    Destructor.
+*/
+QStyleHintReturnMask::~QStyleHintReturnMask()
+{
+}
+
+/*!
     \enum QStyleHintReturnMask::StyleOptionType
 
     This enum is used to hold information about the type of the style option, and
@@ -3818,6 +3825,13 @@ QStyleHintReturnMask::QStyleHintReturnMask() : QStyleHintReturn(Version, Type)
     initialized to default values.
 */
 QStyleHintReturnVariant::QStyleHintReturnVariant() : QStyleHintReturn(Version, Type)
+{
+}
+
+/*!
+    Destructor.
+*/
+QStyleHintReturnVariant::~QStyleHintReturnVariant()
 {
 }
 
