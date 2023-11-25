@@ -45,11 +45,17 @@
 #include "qreadwritelock.h"
 #include "qatomic.h"
 #include "qstring.h"
+#include "qdeadlinetimer.h"
+#include "private/qdeadlinetimer_p.h"
+#include "qelapsedtimer.h"
+#include "private/qcore_unix_p.h"
 
 #include "qmutex_p.h"
 #include "qreadwritelock_p.h"
 
 #include <errno.h>
+#include <sys/time.h>
+#include <time.h>
 
 #ifndef QT_NO_THREAD
 
@@ -61,6 +67,40 @@ static void report_error(int code, const char *where, const char *what)
         qWarning("%s: %s failure: %s", where, what, qPrintable(qt_error_string(code)));
 }
 
+void qt_initialize_pthread_cond(pthread_cond_t *cond, const char *where)
+{
+    pthread_condattr_t condattr;
+
+    pthread_condattr_init(&condattr);
+#if !defined(Q_OS_MAC) && (_POSIX_MONOTONIC_CLOCK-0 >= 0)
+    if (QElapsedTimer::clockType() == QElapsedTimer::MonotonicClock)
+        pthread_condattr_setclock(&condattr, CLOCK_MONOTONIC);
+#endif
+    report_error(pthread_cond_init(cond, &condattr), where, "cv init");
+    pthread_condattr_destroy(&condattr);
+}
+
+void qt_abstime_for_timeout(timespec *ts, QDeadlineTimer deadline)
+{
+#ifdef Q_OS_MAC
+    // on Mac, qt_gettime() (on qelapsedtimer_mac.cpp) returns ticks related to the Mach absolute time
+    // that doesn't work with pthread
+    // Mac also doesn't have clock_gettime
+    struct timeval tv;
+    qint64 nsec = deadline.remainingTimeNSecs();
+    gettimeofday(&tv, 0);
+    ts->tv_sec = tv.tv_sec + nsec / (1000 * 1000 * 1000);
+    ts->tv_nsec = tv.tv_usec * 1000 + nsec % (1000 * 1000 * 1000);
+
+    normalizedTimespec(*ts);
+#else
+    // depends on QDeadlineTimer's internals!!
+    static_assert(QDeadlineTimerNanosecondsInT2);
+    ts->tv_sec = deadline._q_data().first;
+    ts->tv_nsec = deadline._q_data().second;
+#endif
+}
+
 class QWaitConditionPrivate {
 public:
     pthread_mutex_t mutex;
@@ -68,20 +108,19 @@ public:
     int waiters;
     int wakeups;
 
-    bool wait(unsigned long time)
+    int wait_relative(QDeadlineTimer deadline)
+    {
+        timespec ti;
+        qt_abstime_for_timeout(&ti, deadline);
+        return pthread_cond_timedwait(&cond, &mutex, &ti);
+    }
+
+    bool wait(QDeadlineTimer deadline)
     {
         int code;
         forever {
-            if (time != ULONG_MAX) {
-                struct timeval tv;
-                gettimeofday(&tv, 0);
-
-                timespec ti;
-                ti.tv_nsec = (tv.tv_usec + (time % 1000) * 1000) * 1000;
-                ti.tv_sec = tv.tv_sec + (time / 1000) + (ti.tv_nsec / 1000000000);
-                ti.tv_nsec %= 1000000000;
-
-                code = pthread_cond_timedwait(&cond, &mutex, &ti);
+            if (!deadline.isForever()) {
+                code = wait_relative(deadline);
             } else {
                 code = pthread_cond_wait(&cond, &mutex);
             }
@@ -114,7 +153,7 @@ QWaitCondition::QWaitCondition()
 {
     d = new QWaitConditionPrivate;
     report_error(pthread_mutex_init(&d->mutex, NULL), "QWaitCondition", "mutex init");
-    report_error(pthread_cond_init(&d->cond, NULL), "QWaitCondition", "cv init");
+    qt_initialize_pthread_cond(&d->cond, "QWaitCondition");
     d->waiters = d->wakeups = 0;
 }
 
@@ -144,6 +183,13 @@ void QWaitCondition::wakeAll()
 
 bool QWaitCondition::wait(QMutex *mutex, unsigned long time)
 {
+    if (time > std::numeric_limits<qint64>::max())
+        return wait(mutex, QDeadlineTimer(QDeadlineTimer::Forever));
+    return wait(mutex, QDeadlineTimer(time));
+}
+
+bool QWaitCondition::wait(QMutex *mutex, QDeadlineTimer deadline)
+{
     if (! mutex)
         return false;
     if (mutex->isRecursive()) {
@@ -155,7 +201,7 @@ bool QWaitCondition::wait(QMutex *mutex, unsigned long time)
     ++d->waiters;
     mutex->unlock();
 
-    bool returnValue = d->wait(time);
+    bool returnValue = d->wait(deadline);
 
     mutex->lock();
 
@@ -163,6 +209,11 @@ bool QWaitCondition::wait(QMutex *mutex, unsigned long time)
 }
 
 bool QWaitCondition::wait(QReadWriteLock *readWriteLock, unsigned long time)
+{
+    return wait(readWriteLock, QDeadlineTimer(time));
+}
+
+bool QWaitCondition::wait(QReadWriteLock *readWriteLock, QDeadlineTimer deadline)
 {
     if (!readWriteLock || readWriteLock->d->accessCount == 0)
         return false;
@@ -177,7 +228,7 @@ bool QWaitCondition::wait(QReadWriteLock *readWriteLock, unsigned long time)
     int previousAccessCount = readWriteLock->d->accessCount;
     readWriteLock->unlock();
 
-    bool returnValue = d->wait(time);
+    bool returnValue = d->wait(deadline);
 
     if (previousAccessCount < 0)
         readWriteLock->lockForWrite();

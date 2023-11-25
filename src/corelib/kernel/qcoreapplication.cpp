@@ -594,21 +594,23 @@ QCoreApplication::~QCoreApplication()
 {
     qt_call_post_routines();
 
-    self = 0;
+    self = nullptr;
     QCoreApplicationPrivate::is_app_closing = true;
     QCoreApplicationPrivate::is_app_running = false;
 
 #if !defined(QT_NO_THREAD)
 #if !defined(QT_NO_CONCURRENT)
     // Synchronize and stop the global thread pool threads.
-    QThreadPool *globalThreadPool = 0;
+    QThreadPool *globalThreadPool = nullptr;
     QT_TRY {
         globalThreadPool = QThreadPool::globalInstance();
     } QT_CATCH (...) {
         // swallow the exception, since destructors shouldn't throw
     }
-    if (globalThreadPool)
+    if (globalThreadPool) {
         globalThreadPool->waitForDone();
+        delete globalThreadPool;
+    }
 #endif
     QThread::cleanup();
 #endif
@@ -616,11 +618,11 @@ QCoreApplication::~QCoreApplication()
     d_func()->threadData.loadRelaxed()->eventDispatcher = nullptr;
     if (QCoreApplicationPrivate::eventDispatcher)
         QCoreApplicationPrivate::eventDispatcher->closingDown();
-    QCoreApplicationPrivate::eventDispatcher = 0;
+    QCoreApplicationPrivate::eventDispatcher = nullptr;
 
 #ifndef QT_NO_LIBRARY
     delete coreappdata()->app_libpaths;
-    coreappdata()->app_libpaths = 0;
+    coreappdata()->app_libpaths = nullptr;
 #endif
 }
 

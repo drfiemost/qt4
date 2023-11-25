@@ -41,7 +41,8 @@
 
 #include "qthreadpool.h"
 #include "qthreadpool_p.h"
-#include "qelapsedtimer.h"
+#include "qdeadlinetimer.h"
+#include "qcoreapplication.h"
 
 #ifndef QT_NO_THREAD
 
@@ -55,8 +56,6 @@ inline bool operator<(const QPair<QRunnable *, int> &p, int priority)
 {
     return priority < p.second;
 }
-
-Q_GLOBAL_STATIC(QThreadPool, theInstance)
 
 /*
     QThread wrapper, provides synchronization against a ThreadPool
@@ -128,11 +127,6 @@ void QThreadPoolThread::run()
             r = !manager->queue.isEmpty() ? manager->queue.takeFirst().first : 0;
         } while (r != 0);
 
-        if (manager->isExiting) {
-            registerThreadInactive();
-            break;
-        }
-
         // if too many threads are active, expire this thread
         bool expired = manager->tooManyThreadsActive();
         if (!expired) {
@@ -143,6 +137,10 @@ void QThreadPoolThread::run()
             ++manager->activeThreads;
             if (manager->waitingThreads.removeOne(this))
                 expired = true;
+            if (!manager->allThreads.contains(this)) {
+                registerThreadInactive();
+                break;
+            }
         }
         if (expired) {
             manager->expiredThreads.enqueue(this);
@@ -163,8 +161,7 @@ void QThreadPoolThread::registerThreadInactive()
 
 */
 QThreadPoolPrivate:: QThreadPoolPrivate()
-    : isExiting(false),
-      expiryTimeout(30000),
+    : expiryTimeout(30000),
       maxThreadCount(qAbs(QThread::idealThreadCount())),
       reservedThreads(0),
       activeThreads(0)
@@ -258,49 +255,54 @@ void QThreadPoolPrivate::startThread(QRunnable *runnable)
 
 /*!
     \internal
-    Makes all threads exit, waits for each thread to exit and deletes it.
+
+    Helper function only to be called from waitForDone(int)
 */
 void QThreadPoolPrivate::reset()
 {
-    QMutexLocker locker(&mutex);
-    isExiting = true;
+    // move the contents of the set out so that we can iterate without the lock
+    QSet<QThreadPoolThread *> allThreadsCopy;
+    allThreadsCopy.swap(allThreads);
+    expiredThreads.clear();
+    waitingThreads.clear();
+    mutex.unlock();
 
-    do {
-        // make a copy of the set so that we can iterate without the lock
-        QSet<QThreadPoolThread *> allThreadsCopy = allThreads;
-        allThreads.clear();
-        locker.unlock();
-
-        foreach (QThreadPoolThread *thread, allThreadsCopy) {
+    for (QThreadPoolThread *thread: allThreadsCopy) {
+        if (!thread->isFinished()) {
             thread->runnableReady.wakeAll();
             thread->wait();
-            delete thread;
         }
 
-        locker.relock();
-        // repeat until all newly arrived threads have also completed
-    } while (!allThreads.isEmpty());
+        delete thread;
+    }
 
-    waitingThreads.clear();
-    expiredThreads.clear();
+mutex.lock();
+}
 
-    isExiting = false;
+/*!
+    \internal
+
+    Helper function only to be called from waitForDone(int)
+*/
+bool QThreadPoolPrivate::waitForDone(const QDeadlineTimer &timer)
+{
+    while (!(queue.isEmpty() && activeThreads == 0) && !timer.hasExpired())
+        noActiveThreads.wait(&mutex, timer);
+
+    return queue.isEmpty() && activeThreads == 0;
 }
 
 bool QThreadPoolPrivate::waitForDone(int msecs)
 {
-    QMutexLocker locker(&mutex);
-    if (msecs < 0) {
-        while (!(queue.isEmpty() && activeThreads == 0))
-            noActiveThreads.wait(locker.mutex());
-    } else {
-        QElapsedTimer timer;
-        timer.start();
-        int t;
-        while (!(queue.isEmpty() && activeThreads == 0) && 
-               ((t = msecs - timer.elapsed()) > 0))
-            noActiveThreads.wait(locker.mutex(), t);
-    }
+    QDeadlineTimer timer(msecs);
+    do {
+        if (!waitForDone(timer))
+            return false;
+        reset();
+        // More threads can be started during reset(), in that case continue
+        // waiting if we still have time left.
+    } while ((!queue.isEmpty() || activeThreads) && !timer.hasExpired());
+
     return queue.isEmpty() && activeThreads == 0;
 }
 
@@ -444,7 +446,13 @@ QThreadPool::~QThreadPool()
 */
 QThreadPool *QThreadPool::globalInstance()
 {
-    return theInstance();
+    static QPointer<QThreadPool> theInstance;
+    static QBasicMutex theMutex;
+
+    const QMutexLocker locker(&theMutex);
+    if (theInstance.isNull() && !QCoreApplication::closingDown())
+        theInstance = new QThreadPool();
+    return theInstance;
 }
 
 /*!
@@ -642,10 +650,7 @@ void QThreadPool::waitForDone()
 bool QThreadPool::waitForDone(int msecs)
 {
     Q_D(QThreadPool);
-    bool rc = d->waitForDone(msecs);
-    if (rc)
-      d->reset();
-    return rc;
+    return d->waitForDone(msecs);
 }
 
 QT_END_NAMESPACE

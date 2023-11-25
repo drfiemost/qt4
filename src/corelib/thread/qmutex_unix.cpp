@@ -42,12 +42,15 @@
 #include "qplatformdefs.h"
 #include "qmutex.h"
 #include "qstring.h"
+#include "qelapsedtimer.h"
 
 #ifndef QT_NO_THREAD
 #include "qatomic.h"
 #include "qmutex_p.h"
 
 #include <errno.h>
+#include <sys/time.h>
+#include <time.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -61,7 +64,7 @@ QMutexPrivate::QMutexPrivate()
     : wakeup(false)
 {
     report_error(pthread_mutex_init(&mutex, NULL), "QMutex", "mutex init");
-    report_error(pthread_cond_init(&cond, NULL), "QMutex", "cv init");
+    qt_initialize_pthread_cond(&cond, "QMutex");
 }
 
 QMutexPrivate::~QMutexPrivate()
@@ -78,13 +81,8 @@ bool QMutexPrivate::wait(int timeout)
         if (timeout < 0) {
             errorCode = pthread_cond_wait(&cond, &mutex);
         } else {
-            struct timeval tv;
-            gettimeofday(&tv, 0);
-
             timespec ti;
-            ti.tv_nsec = (tv.tv_usec + (timeout % 1000) * 1000) * 1000;
-            ti.tv_sec = tv.tv_sec + (timeout / 1000) + (ti.tv_nsec / 1000000000);
-            ti.tv_nsec %= 1000000000;
+            qt_abstime_for_timeout(&ti, QDeadlineTimer(timeout));
 
             errorCode = pthread_cond_timedwait(&cond, &mutex, &ti);
         }

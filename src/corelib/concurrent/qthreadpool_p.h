@@ -64,6 +64,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class QDeadlineTimer;
+
 class QThreadPoolThread;
 class QThreadPoolPrivate : public QObjectPrivate
 {
@@ -83,6 +85,7 @@ public:
     void startThread(QRunnable *runnable = 0);
     void reset();
     bool waitForDone(int msecs = -1);
+    bool waitForDone(const QDeadlineTimer &timer);
     bool startFrontRunnable();
     void stealRunnable(QRunnable *);
 
@@ -93,7 +96,6 @@ public:
     QList<QPair<QRunnable *, int> > queue;
     QWaitCondition noActiveThreads;
 
-    bool isExiting;
     int expiryTimeout;
     int maxThreadCount;
     int reservedThreads;
