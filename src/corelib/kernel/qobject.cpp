@@ -172,6 +172,7 @@ QObjectPrivate::QObjectPrivate(int version)
     inThreadChangeEvent = false;
     metaObject = 0;
     hasGuards = false;
+    deleteLaterCalled = false;
 }
 
 QObjectPrivate::~QObjectPrivate()
