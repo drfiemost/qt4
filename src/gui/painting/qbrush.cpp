@@ -402,7 +402,7 @@ void QBrush::init(const QColor &color, Qt::BrushStyle style)
         d.reset(new QBrushData);
         break;
     }
-    d->ref.store(1);
+    d->ref.storeRelaxed(1);
     d->style = style;
     d->color = color;
 }

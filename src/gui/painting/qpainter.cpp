@@ -7595,7 +7595,7 @@ void QPainter::restoreRedirected(const QPaintDevice *device)
 */
 QPaintDevice *QPainter::redirected(const QPaintDevice *device, QPoint *offset)
 {
-    Q_ASSERT(device != 0);
+    Q_ASSERT(device != nullptr);
 
     if (device->devType() == QInternal::Widget) {
         const QWidgetPrivate *widgetPrivate = static_cast<const QWidget *>(device)->d_func();
@@ -7603,12 +7603,12 @@ QPaintDevice *QPainter::redirected(const QPaintDevice *device, QPoint *offset)
             return widgetPrivate->redirected(offset);
     }
 
-    if (!globalRedirectionAtomic() || *globalRedirectionAtomic() == 0)
-        return 0;
+    if (!globalRedirectionAtomic() || globalRedirectionAtomic()->loadRelaxed() == 0)
+        return nullptr;
 
     QMutexLocker locker(globalRedirectionsMutex());
     QPaintDeviceRedirectionList *redirections = globalRedirections();
-    Q_ASSERT(redirections != 0);
+    Q_ASSERT(redirections != nullptr);
     for (int i = redirections->size()-1; i >= 0; --i)
         if (redirections->at(i) == device) {
             if (offset)
@@ -7617,16 +7617,16 @@ QPaintDevice *QPainter::redirected(const QPaintDevice *device, QPoint *offset)
         }
     if (offset)
         *offset = QPoint(0, 0);
-    return 0;
+    return nullptr;
 }
 
 
 void qt_painter_removePaintDevice(QPaintDevice *dev)
 {
-    if (!globalRedirectionAtomic() || *globalRedirectionAtomic() == 0)
+    if (!globalRedirectionAtomic() || globalRedirectionAtomic()->loadRelaxed() == 0)
         return;
 
-    QMutex *mutex = 0;
+    QMutex *mutex = nullptr;
     QT_TRY {
         mutex = globalRedirectionsMutex();
     } QT_CATCH(...) {
@@ -7634,7 +7634,7 @@ void qt_painter_removePaintDevice(QPaintDevice *dev)
         // a destructor, and destructors shall not throw
     }
     QMutexLocker locker(mutex);
-    QPaintDeviceRedirectionList *redirections = 0;
+    QPaintDeviceRedirectionList *redirections = nullptr;
     QT_TRY {
         redirections = globalRedirections();
     } QT_CATCH(...) {
