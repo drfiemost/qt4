@@ -52,10 +52,10 @@ QT_BEGIN_NAMESPACE
 void QAbstractEventDispatcherPrivate::init()
 {
     Q_Q(QAbstractEventDispatcher);
-    if (threadData->eventDispatcher != 0) {
+    if (threadData.loadRelaxed()->eventDispatcher.loadRelaxed() != 0) {
         qWarning("QAbstractEventDispatcher: An event dispatcher has already been created for this thread");
     } else {
-        threadData->eventDispatcher = q;
+        threadData.loadRelaxed()->eventDispatcher.storeRelaxed(q);
     }
 }
 
@@ -414,7 +414,7 @@ bool QAbstractEventDispatcher::filterEvent(void *message)
     if (d->event_filter) {
         // Raise the loopLevel so that deleteLater() calls in or triggered
         // by event_filter() will be processed from the main event loop.
-        QScopedLoopLevelCounter loopLevelCounter(d->threadData);
+        QScopedLoopLevelCounter loopLevelCounter(d->threadData.loadRelaxed());
         return d->event_filter(message);
     }
     return false;

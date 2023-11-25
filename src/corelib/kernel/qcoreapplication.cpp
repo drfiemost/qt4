@@ -1215,7 +1215,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
         event_type = 0;
     }
 
-    if (receiver && receiver->d_func()->threadData != data) {
+    if (receiver && receiver->d_func()->threadData.loadRelaxed() != data) {
         qWarning("QCoreApplication::sendPostedEvents: Cannot send "
                  "posted events for objects in another thread");
         return;
