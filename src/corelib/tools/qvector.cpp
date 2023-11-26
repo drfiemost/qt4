@@ -468,6 +468,14 @@ QT_BEGIN_NAMESPACE
     \sa operator<<(), prepend(), insert()
 */
 
+/*! \fn void QVector::append(const QVector<T> &value)
+    \overload
+    \since 5.5
+    Appends the items of the \a value vector to this vector.
+    \sa operator<<(), operator+=()
+*/
+
+
 /*! \fn void QVector::prepend(const T &value)
 
     Inserts \a value at the beginning of the vector.

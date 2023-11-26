@@ -78,7 +78,7 @@ public:
     QVector<T> &operator=(const QVector<T> &v);
 #ifdef Q_COMPILER_RVALUE_REFS
     inline QVector(QVector<T> &&other) : d(other.d) { other.d = Data::sharedNull(); }
-    inline QVector<T> operator=(QVector<T> &&other)
+    inline QVector<T> &operator=(QVector<T> &&other)
     { qSwap(d, other.d); return *this; }
 #endif
     inline void swap(QVector<T> &other) { qSwap(d, other.d); }
@@ -135,6 +135,7 @@ public:
     T &operator[](int i);
     const T &operator[](int i) const;
     void append(const T &t);
+    inline void append(const QVector<T> &l) { *this += l; }
     void prepend(const T &t);
     void insert(int i, const T &t);
     void insert(int i, int n, const T &t);
@@ -300,7 +301,7 @@ void QVector<T>::reserve(int asize)
 {
     if (asize > int(d->alloc))
         reallocData(d->size, asize);
-    if (isDetached())
+    if (isDetached() && d != Data::unsharableEmpty())
         d->capacityReserved = 1;
     Q_ASSERT(capacity() >= asize);
 }
@@ -526,16 +527,23 @@ Q_OUTOFLINE_TEMPLATE T QVector<T>::value(int i, const T &defaultValue) const
 template <typename T>
 void QVector<T>::append(const T &t)
 {
-    const T copy(t);
     const bool isTooSmall = uint(d->size + 1) > d->alloc;
     if (!isDetached() || isTooSmall) {
+        T copy(t);
         QArrayData::AllocationOptions opt(isTooSmall ? QArrayData::Grow : QArrayData::Default);
         reallocData(d->size, isTooSmall ? d->size + 1 : d->alloc, opt);
+
+        if (QTypeInfo<T>::isComplex)
+            new (d->end()) T(std::move(copy));
+        else
+            *d->end() = std::move(copy);
+
+    } else {
+        if (QTypeInfo<T>::isComplex)
+            new (d->end()) T(t);
+        else
+            *d->end() = t;
     }
-    if (QTypeInfo<T>::isComplex)
-        new (d->end()) T(copy);
-    else
-        *d->end() = copy;
     ++d->size;
 }
 
@@ -616,10 +624,10 @@ typename QVector<T>::iterator QVector<T>::erase(iterator abegin, iterator aend)
 template <typename T>
 bool QVector<T>::operator==(const QVector<T> &v) const
 {
-    if (d->size != v.d->size)
-        return false;
     if (d == v.d)
         return true;
+    if (d->size != v.d->size)
+        return false;
     T* b = d->begin();
     T* i = b + d->size;
     T* j = v.d->end();
@@ -715,13 +723,9 @@ bool QVector<T>::contains(const T &t) const
 template <typename T>
 int QVector<T>::count(const T &t) const
 {
-    int c = 0;
-    T* b = d->begin();
-    T* i = d->end();
-    while (i != b)
-        if (*--i == t)
-            ++c;
-    return c;
+    const T *b = d->begin();
+    const T *e = d->end();
+    return int(std::count(b, e, t));
 }
 
 template <typename T>
