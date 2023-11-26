@@ -59,6 +59,7 @@
 #include <qshareddata.h>
 #include <qdebug.h>
 #include <stdio.h>
+#include <limits>
 
 QT_BEGIN_NAMESPACE
 
@@ -172,14 +173,16 @@ public:
     bool isDocumentType() const             { return nodeType() == QDomNode::DocumentTypeNode; }
     bool isElement() const                  { return nodeType() == QDomNode::ElementNode; }
     bool isEntityReference() const          { return nodeType() == QDomNode::EntityReferenceNode; }
-    bool isText() const                     { return (nodeType() == QDomNode::TextNode)
-                                                  || (nodeType() == QDomNode::CDATASectionNode); }
+    bool isText() const                     { const QDomNode::NodeType nt = nodeType();
+                                              return (nt == QDomNode::TextNode)
+                                                  || (nt == QDomNode::CDATASectionNode); }
     bool isEntity() const                   { return nodeType() == QDomNode::EntityNode; }
     bool isNotation() const                 { return nodeType() == QDomNode::NotationNode; }
     bool isProcessingInstruction() const    { return nodeType() == QDomNode::ProcessingInstructionNode; }
-    bool isCharacterData() const            { return (nodeType() == QDomNode::CharacterDataNode)
-                                                  || (nodeType() == QDomNode::TextNode)
-                                                  || (nodeType() == QDomNode::CommentNode); }
+    bool isCharacterData() const            { const QDomNode::NodeType nt = nodeType();
+                                              return (nt == QDomNode::CharacterDataNode)
+                                                  || (nt == QDomNode::TextNode)
+                                                  || (nt == QDomNode::CommentNode); }
     bool isComment() const                  { return nodeType() == QDomNode::CommentNode; }
 
     virtual QDomNode::NodeType nodeType() const { return QDomNode::BaseNode; }
@@ -4853,7 +4856,7 @@ void QDomElement::setAttribute(const QString& name, float value)
     if (!impl)
         return;
     QString x;
-    x.setNum(value);
+    x.setNum(value, 'g', 8);
     IMPL->setAttribute(name, x);
 }
 
@@ -4867,7 +4870,7 @@ void QDomElement::setAttribute(const QString& name, double value)
     if (!impl)
         return;
     QString x;
-    x.setNum(value);
+    x.setNum(value, 'g', 17);
     IMPL->setAttribute(name, x);
 }
 
@@ -5036,7 +5039,7 @@ void QDomElement::setAttributeNS(const QString nsURI, const QString& qName, doub
     if (!impl)
         return;
     QString x;
-    x.setNum(value);
+    x.setNum(value, 'g', 17);
     IMPL->setAttributeNS(nsURI, qName, x);
 }
 

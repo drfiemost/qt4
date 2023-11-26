@@ -51,6 +51,7 @@
 #include <QtTest/QtTest>
 #include <QtXml>
 #include <QVariant>
+#include <cmath>
 
 #if defined(Q_OS_SYMBIAN)
 # define SRCDIR ""
@@ -427,7 +428,9 @@ void tst_QDom::setGetAttributes()
     const int intVal = std::numeric_limits<int>::min();
     const uint uintVal = std::numeric_limits<uint>::max();
     const float floatVal = 0.1234f;
-    const double doubleVal = 0.1234;
+    const double doubleVal1 = 1./6.;
+    const double doubleVal2 = std::nextafter(doubleVal1, 1.);
+    const double doubleVal3 = std::nextafter(doubleVal2, 1.);
 
     rootNode.setAttribute("qstringVal", qstringVal);
     rootNode.setAttribute("qlonglongVal", qlonglongVal);
@@ -435,7 +438,9 @@ void tst_QDom::setGetAttributes()
     rootNode.setAttribute("intVal", intVal);
     rootNode.setAttribute("uintVal", uintVal);
     rootNode.setAttribute("floatVal", floatVal);
-    rootNode.setAttribute("doubleVal", doubleVal);
+    rootNode.setAttribute("doubleVal1", doubleVal1);
+    rootNode.setAttribute("doubleVal2", doubleVal2);
+    rootNode.setAttribute("doubleVal3", doubleVal3);
 
     QDomElement nsNode = doc.createElement("NS");
     rootNode.appendChild(nsNode);
@@ -445,7 +450,9 @@ void tst_QDom::setGetAttributes()
     nsNode.setAttributeNS("namespace", "intVal", intVal);
     nsNode.setAttributeNS("namespace", "uintVal", uintVal);
     nsNode.setAttributeNS("namespace", "floatVal", floatVal); // not available atm
-    nsNode.setAttributeNS("namespace", "doubleVal", doubleVal);
+    nsNode.setAttributeNS("namespace", "doubleVal1", doubleVal1);
+    nsNode.setAttributeNS("namespace", "doubleVal2", doubleVal2);
+    nsNode.setAttributeNS("namespace", "doubleVal3", doubleVal3);
 
     bool bOk;
     QCOMPARE(rootNode.attribute("qstringVal"), qstringVal);
@@ -459,8 +466,10 @@ void tst_QDom::setGetAttributes()
     QVERIFY(bOk);
     QCOMPARE(rootNode.attribute("floatVal").toFloat(&bOk), floatVal);
     QVERIFY(bOk);
-    QCOMPARE(rootNode.attribute("doubleVal").toDouble(&bOk), doubleVal);
-    QVERIFY(bOk);
+
+    QVERIFY(rootNode.attribute("doubleVal1").toDouble(&bOk) == doubleVal1 && bOk);
+    QVERIFY(rootNode.attribute("doubleVal2").toDouble(&bOk) == doubleVal2 && bOk);
+    QVERIFY(rootNode.attribute("doubleVal3").toDouble(&bOk) == doubleVal3 && bOk);
 
     QCOMPARE(nsNode.attributeNS("namespace", "qstringVal"), qstringVal);
     QCOMPARE(nsNode.attributeNS("namespace", "qlonglongVal").toLongLong(&bOk), qlonglongVal);
@@ -473,8 +482,10 @@ void tst_QDom::setGetAttributes()
     QVERIFY(bOk);
     QCOMPARE(nsNode.attributeNS("namespace", "floatVal").toFloat(&bOk), floatVal);
     QVERIFY(bOk);
-    QCOMPARE(nsNode.attributeNS("namespace", "doubleVal").toDouble(&bOk), doubleVal);
-    QVERIFY(bOk);
+
+    QVERIFY(nsNode.attributeNS("namespace", "doubleVal1").toDouble(&bOk) == doubleVal1 && bOk);
+    QVERIFY(nsNode.attributeNS("namespace", "doubleVal2").toDouble(&bOk) == doubleVal2 && bOk);
+    QVERIFY(nsNode.attributeNS("namespace", "doubleVal3").toDouble(&bOk) == doubleVal3 && bOk);
 
     QLocale::setDefault(oldLocale);
 }
