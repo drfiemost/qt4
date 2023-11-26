@@ -54,6 +54,7 @@
 #include <qtextcodec.h>
 #include <qtextstream.h>
 #include <qxml.h>
+#include "private/qxml_p.h"
 #include <qvariant.h>
 #include <qmap.h>
 #include <qshareddata.h>
@@ -503,7 +504,7 @@ public:
     ~QDomDocumentPrivate();
 
     bool setContent(QXmlInputSource *source, bool namespaceProcessing, QString *errorMsg, int *errorLine, int *errorColumn);
-    bool setContent(QXmlInputSource *source, QXmlReader *reader, QString *errorMsg, int *errorLine, int *errorColumn);
+    bool setContent(QXmlInputSource *source, QXmlReader *reader, QXmlSimpleReader *simpleReader, QString *errorMsg, int *errorLine, int *errorColumn);
 
     // Attributes
     QDomDocumentTypePrivate* doctype() { return type.data(); }
@@ -522,7 +523,7 @@ public:
     QDomAttrPrivate* createAttributeNS(const QString& nsURI, const QString& qName);
     QDomEntityReferencePrivate* createEntityReference(const QString& name);
 
-    QDomNodePrivate* importNode(const QDomNodePrivate* importedNode, bool deep);
+    QDomNodePrivate* importNode(QDomNodePrivate* importedNode, bool deep);
 
     // Reimplemented from QDomNodePrivate
     QDomNodePrivate* cloneNode(bool deep = true);
@@ -574,7 +575,7 @@ public:
 class QDomHandler : public QXmlDefaultHandler
 {
 public:
-    QDomHandler(QDomDocumentPrivate* d, bool namespaceProcessing);
+    QDomHandler(QDomDocumentPrivate* d, QXmlSimpleReader *reader, bool namespaceProcessing);
     ~QDomHandler();
 
     // content handler
@@ -616,6 +617,7 @@ private:
     bool cdata;
     bool nsProcessing;
     QXmlLocator *locator;
+    QXmlSimpleReader *reader;
 };
 
 /**************************************************************
@@ -6195,10 +6197,10 @@ bool QDomDocumentPrivate::setContent(QXmlInputSource *source, bool namespaceProc
 {
     QXmlSimpleReader reader;
     initializeReader(reader, namespaceProcessing);
-    return setContent(source, &reader, errorMsg, errorLine, errorColumn);
+    return setContent(source, &reader, &reader, errorMsg, errorLine, errorColumn);
 }
 
-bool QDomDocumentPrivate::setContent(QXmlInputSource *source, QXmlReader *reader, QString *errorMsg, int *errorLine, int *errorColumn)
+bool QDomDocumentPrivate::setContent(QXmlInputSource *source, QXmlReader *reader, QXmlSimpleReader *simpleReader, QString *errorMsg, int *errorLine, int *errorColumn)
 {
     clear();
     impl = new QDomImplementationPrivate;
@@ -6208,7 +6210,7 @@ bool QDomDocumentPrivate::setContent(QXmlInputSource *source, QXmlReader *reader
     bool namespaceProcessing = reader->feature(QLatin1String("http://xml.org/sax/features/namespaces"))
         && !reader->feature(QLatin1String("http://xml.org/sax/features/namespace-prefixes"));
 
-    QDomHandler hnd(this, namespaceProcessing);
+    QDomHandler hnd(this, simpleReader, namespaceProcessing);
     reader->setContentHandler(&hnd);
     reader->setErrorHandler(&hnd);
     reader->setLexicalHandler(&hnd);
@@ -6364,7 +6366,7 @@ QDomEntityReferencePrivate* QDomDocumentPrivate::createEntityReference(const QSt
     return e;
 }
 
-QDomNodePrivate* QDomDocumentPrivate::importNode(const QDomNodePrivate *importedNode, bool deep)
+QDomNodePrivate* QDomDocumentPrivate::importNode(QDomNodePrivate *importedNode, bool deep)
 {
     QDomNodePrivate *node = 0;
     switch (importedNode->nodeType()) {
@@ -6743,7 +6745,7 @@ bool QDomDocument::setContent(QXmlInputSource *source, bool namespaceProcessing,
         impl = new QDomDocumentPrivate();
     QXmlSimpleReader reader;
     initializeReader(reader, namespaceProcessing);
-    return IMPL->setContent(source, &reader, errorMsg, errorLine, errorColumn);
+    return IMPL->setContent(source, &reader, &reader, errorMsg, errorLine, errorColumn);
 }
 
 /*!
@@ -6805,7 +6807,7 @@ bool QDomDocument::setContent(QXmlInputSource *source, QXmlReader *reader, QStri
 {
     if (!impl)
         impl = new QDomDocumentPrivate();
-    return IMPL->setContent(source, reader, errorMsg, errorLine, errorColumn);
+    return IMPL->setContent(source, reader, 0, errorMsg, errorLine, errorColumn);
 }
 
 /*!
@@ -7026,6 +7028,9 @@ QDomNodeList QDomDocument::elementsByTagName(const QString& tagname) const
     import QDomDocument and QDomDocumentType nodes. In those cases
     this function returns a \link QDomNode::isNull() null node\endlink.
 
+    If \a importedNode is a \l{QDomNode::isNull()}{null node},
+    a null node is returned.
+
     If \a deep is true, this function imports not only the node \a
     importedNode but its whole subtree; if it is false, only the \a
     importedNode is imported. The argument \a deep has no effect on
@@ -7084,6 +7089,8 @@ QDomNodeList QDomDocument::elementsByTagName(const QString& tagname) const
 */
 QDomNode QDomDocument::importNode(const QDomNode& importedNode, bool deep)
 {
+    if (importedNode.isNull())
+        return QDomNode();
     if (!impl)
         impl = new QDomDocumentPrivate();
     return QDomNode(IMPL->importNode(importedNode.impl, deep));
@@ -7356,9 +7363,9 @@ QDomComment QDomNode::toComment() const
  *
  **************************************************************/
 
-QDomHandler::QDomHandler(QDomDocumentPrivate* adoc, bool namespaceProcessing)
+QDomHandler::QDomHandler(QDomDocumentPrivate* adoc, QXmlSimpleReader* areader, bool namespaceProcessing)
     : errorLine(0), errorColumn(0), doc(adoc), node(adoc), cdata(false),
-        nsProcessing(namespaceProcessing), locator(0)
+        nsProcessing(namespaceProcessing), locator(0), reader(areader)
 {
 }
 
@@ -7462,11 +7469,10 @@ bool QDomHandler::processingInstruction(const QString& target, const QString& da
         return false;
 }
 
-extern bool qt_xml_skipped_entity_in_content;
 bool QDomHandler::skippedEntity(const QString& name)
 {
     // we can only handle inserting entity references into content
-    if (!qt_xml_skipped_entity_in_content)
+    if (reader && !reader->d_ptr->skipped_entity_in_content)
         return true;
 
     QDomNodePrivate *n = doc->createEntityReference(name);
