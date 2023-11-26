@@ -88,6 +88,7 @@ SOURCES += \
            ../../corelib/xml/qxmlutils.cpp \
            ../../corelib/xml/qxmlstream.cpp \
            ../../xml/dom/qdom.cpp \
+           ../../xml/dom/qdomhelpers.cpp \
            ../../xml/sax/qxml.cpp
 
 unix:SOURCES += ../../corelib/io/qfilesystemengine_unix.cpp \
