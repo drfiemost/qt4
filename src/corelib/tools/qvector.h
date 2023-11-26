@@ -315,9 +315,6 @@ void QVector<T>::resize(int asize)
     if (asize > oldAlloc) { // there is not enough space
         newAlloc = asize;
         opt = QArrayData::Grow;
-    } else if (!d->capacityReserved && asize < d->size && asize < (oldAlloc >> 1)) { // we want to shrink
-        newAlloc = asize;
-        opt = QArrayData::Grow;
     } else {
         newAlloc = oldAlloc;
     }
@@ -325,7 +322,7 @@ void QVector<T>::resize(int asize)
 }
 template <typename T>
 inline void QVector<T>::clear()
-{ *this = QVector<T>(); }
+{ resize(0); }
 template <typename T>
 inline const T &QVector<T>::at(int i) const
 { Q_ASSERT_X(i >= 0 && i < d->size, "QVector<T>::at", "index out of range");

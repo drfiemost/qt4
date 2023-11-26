@@ -1130,7 +1130,7 @@ void QTextDocumentPrivate::clearUndoRedoStacks(QTextDocument::Stacks stacksToCle
                 delete c.custom;
         }
         undoState = 0;
-        undoStack.resize(0);
+        undoStack.clear();
         if (emitSignals && undoCommandsAvailable)
             emitUndoAvailable(false);
         if (emitSignals && redoCommandsAvailable)

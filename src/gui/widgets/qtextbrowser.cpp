@@ -1132,7 +1132,7 @@ void QTextBrowser::clearHistory()
     d->forwardStack.clear();
     if (!d->stack.isEmpty()) {
         QTextBrowserPrivate::HistoryEntry historyEntry = d->stack.top();
-        d->stack.resize(0);
+        d->stack.clear();
         d->stack.push(historyEntry);
         d->home = historyEntry.url;
     }

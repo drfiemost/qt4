@@ -216,7 +216,7 @@ void QMenuBarPrivate::updateGeometries()
         itemsDirty) {
         for(int j = 0; j < shortcutIndexMap.size(); ++j)
             q->releaseShortcut(shortcutIndexMap.value(j));
-        shortcutIndexMap.resize(0); // faster than clear
+        shortcutIndexMap.clear();
         for(int i = 0; i < actions.count(); i++)
             shortcutIndexMap.append(q->grabShortcut(QKeySequence::mnemonic(actions.at(i)->text())));
     }
