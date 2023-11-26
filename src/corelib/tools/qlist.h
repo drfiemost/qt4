@@ -45,6 +45,7 @@
 #include <QtCore/qalgorithms.h>
 #include <QtCore/qiterator.h>
 #include <QtCore/qrefcount.h>
+#include <QtCore/qarraydata.h>
 
 #include <iterator>
 #include <list>
@@ -632,10 +633,17 @@ inline void QList<T>::move(int from, int to)
 template<typename T>
 Q_OUTOFLINE_TEMPLATE QList<T> QList<T>::mid(int pos, int alength) const
 {
-    if (alength < 0 || pos + alength > size())
-        alength = size() - pos;
-    if (pos == 0 && alength == size())
+    using namespace QtPrivate;
+    switch (QContainerImplHelper::mid(size(), &pos, &alength)) {
+    case QContainerImplHelper::Null:
+    case QContainerImplHelper::Empty:
+        return QList<T>();
+    case QContainerImplHelper::Full:
         return *this;
+    case QContainerImplHelper::Subset:
+        break;
+    }
+
     QList<T> cpy;
     if (alength <= 0)
         return cpy;

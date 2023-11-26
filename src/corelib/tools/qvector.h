@@ -729,19 +729,26 @@ int QVector<T>::count(const T &t) const
 }
 
 template <typename T>
-Q_OUTOFLINE_TEMPLATE QVector<T> QVector<T>::mid(int pos, int length) const
+Q_OUTOFLINE_TEMPLATE QVector<T> QVector<T>::mid(int pos, int len) const
 {
-    if (length < 0)
-        length = size() - pos;
-    if (pos == 0 && length == size())
+    using namespace QtPrivate;
+    switch (QContainerImplHelper::mid(d->size, &pos, &len)) {
+    case QContainerImplHelper::Null:
+    case QContainerImplHelper::Empty:
+        return QVector<T>();
+    case QContainerImplHelper::Full:
         return *this;
-    if (pos + length > size())
-        length = size() - pos;
-    QVector<T> copy;
-    copy.reserve(length);
-    for (int i = pos; i < pos + length; ++i)
-        copy += at(i);
-    return copy;
+    case QContainerImplHelper::Subset:
+        break;
+    }
+
+    QVector<T> midResult;
+    midResult.reallocData(0, len);
+    T *srcFrom = d->begin() + pos;
+    T *srcTo = d->begin() + pos + len;
+    midResult.copyConstruct(srcFrom, srcTo, midResult.data());
+    midResult.d->size = len;
+    return midResult;
 }
 
 template <typename T>
