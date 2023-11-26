@@ -48,6 +48,8 @@
 #include <iterator>
 #include <list>
 
+#include <algorithm>
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -376,7 +378,7 @@ template <typename T>
 bool QLinkedList<T>::removeOne(const T &_t)
 {
     detach();
-    iterator it = qFind(begin(), end(), _t);
+    iterator it = std::find(begin(), end(), _t);
     if (it != end()) {
         erase(it);
         return true;
@@ -387,7 +389,7 @@ bool QLinkedList<T>::removeOne(const T &_t)
 template <typename T>
 inline T QLinkedList<T>::takeFirst()
 {
-    T t = first();
+    T t = std::move(first());
     removeFirst();
     return t;
 }
@@ -395,7 +397,7 @@ inline T QLinkedList<T>::takeFirst()
 template <typename T>
 inline T QLinkedList<T>::takeLast()
 {
-    T t = last();
+    T t = std::move(last());
     removeLast();
     return t;
 }

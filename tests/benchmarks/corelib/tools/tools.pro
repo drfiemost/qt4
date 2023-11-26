@@ -6,6 +6,7 @@ SUBDIRS = \
         qcontiguouscache \
         qline \
         qlist \
+        qmap \
         qrect \
         #qregexp \     # FIXME: broken
         qstring \

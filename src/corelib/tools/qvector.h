@@ -142,6 +142,10 @@ public:
     void replace(int i, const T &t);
     void remove(int i);
     void remove(int i, int n);
+    inline void removeFirst() { Q_ASSERT(!isEmpty()); erase(d->begin()); }
+    inline void removeLast();
+    T takeFirst() { Q_ASSERT(!isEmpty()); T r = std::move(first()); removeFirst(); return r; }
+    T takeLast()  { Q_ASSERT(!isEmpty()); T r = std::move(last()); removeLast(); return r; }
 
     QVector<T> &fill(const T &t, int size = -1);
 
@@ -149,6 +153,11 @@ public:
     int lastIndexOf(const T &t, int from = -1) const;
     bool contains(const T &t) const;
     int count(const T &t) const;
+
+    // QList compatibility
+    void removeAt(int i) { remove(i); }
+    int length() const { return size(); }
+    T takeAt(int i) { T t = std::move((*this)[i]); remove(i); return t; }
 
     // STL-style
     typedef typename Data::iterator iterator;
@@ -174,7 +183,7 @@ public:
     inline const T &last() const { Q_ASSERT(!isEmpty()); return *(end()-1); }
     inline bool startsWith(const T &t) const { return !isEmpty() && first() == t; }
     inline bool endsWith(const T &t) const { return !isEmpty() && last() == t; }
-    QVector<T> mid(int pos, int length = -1) const;
+    QVector<T> mid(int pos, int len = -1) const;
 
     T value(int i) const;
     T value(int i, const T &defaultValue) const;
@@ -191,8 +200,8 @@ public:
     typedef int size_type;
     inline void push_back(const T &t) { append(t); }
     inline void push_front(const T &t) { prepend(t); }
-    void pop_back() { Q_ASSERT(!isEmpty()); erase(d->end() - 1); }
-    void pop_front() { Q_ASSERT(!isEmpty()); erase(d->begin()); }
+    void pop_back() { removeLast(); }
+    void pop_front() { removeFirst(); }
     inline bool empty() const
     { return d->size == 0; }
     inline T& front() { return first(); }
@@ -548,6 +557,22 @@ void QVector<T>::append(const T &t)
 }
 
 template <typename T>
+inline void QVector<T>::removeLast()
+{
+    Q_ASSERT(!isEmpty());
+
+    if (d->alloc) {
+        if (d->ref.isShared()) {
+            reallocData(d->size - 1, int(d->alloc));
+            return;
+        }
+        if (QTypeInfo<T>::isComplex)
+            (d->data() + d->size - 1)->~T();
+        --d->size;
+    }
+}
+
+template <typename T>
 typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, const T &t)
 {
     int offset = std::distance(d->begin(), before);
@@ -596,6 +621,7 @@ typename QVector<T>::iterator QVector<T>::erase(iterator abegin, iterator aend)
 
     // FIXME we could do a proper realloc, which copy constructs only needed data.
     // FIXME we ara about to delete data maybe it is good time to shrink?
+    // FIXME the shrink is also an issue in removeLast, that is just a copy + reduce of this.
     if (d->alloc) {
         detach();
         abegin = d->begin() + itemsUntouched;
