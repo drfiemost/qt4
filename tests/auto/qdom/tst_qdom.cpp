@@ -77,6 +77,7 @@ private slots:
     void toString_02();
     void hasAttributes_data();
     void hasAttributes();
+    void setGetAttributes();
     void save_data();
     void save();
     void saveWithSerialization() const;
@@ -134,6 +135,7 @@ private slots:
     void cloneDTD_QTBUG8398() const;
     void DTDNotationDecl();
     void DTDEntityDecl();
+    void dontCrashWithNegativeIndex() const;
 
     void cleanupTestCase() const;
 
@@ -270,11 +272,11 @@ void tst_QDom::setContent()
     QStringList::Iterator it;
     for ( it = featuresTrue.begin(); it != featuresTrue.end(); ++it ) {
         QVERIFY( reader.hasFeature( *it ) );
-        reader.setFeature( *it, TRUE );
+        reader.setFeature( *it, true );
     }
     for ( it = featuresFalse.begin(); it != featuresFalse.end(); ++it ) {
         QVERIFY( reader.hasFeature( *it ) );
-        reader.setFeature( *it, FALSE );
+        reader.setFeature( *it, false );
     }
 
     QDomDocument domDoc;
@@ -409,6 +411,74 @@ void tst_QDom::hasAttributes()
     int visitedNodes = hasAttributesHelper( doc );
     QTEST( visitedNodes, "visitedNodes" );
 }
+
+void tst_QDom::setGetAttributes()
+{
+    QDomDocument doc;
+    QDomElement rootNode = doc.createElement("Root");
+    doc.appendChild(rootNode);
+
+    const QLocale oldLocale = QLocale();
+    QLocale::setDefault(QLocale::German); // decimal separator != '.'
+
+    const QString qstringVal("QString");
+    const qlonglong qlonglongVal = std::numeric_limits<qlonglong>::min();
+    const qulonglong qulonglongVal = std::numeric_limits<qulonglong>::max();
+    const int intVal = std::numeric_limits<int>::min();
+    const uint uintVal = std::numeric_limits<uint>::max();
+    const float floatVal = 0.1234f;
+    const double doubleVal = 0.1234;
+
+    rootNode.setAttribute("qstringVal", qstringVal);
+    rootNode.setAttribute("qlonglongVal", qlonglongVal);
+    rootNode.setAttribute("qulonglongVal", qulonglongVal);
+    rootNode.setAttribute("intVal", intVal);
+    rootNode.setAttribute("uintVal", uintVal);
+    rootNode.setAttribute("floatVal", floatVal);
+    rootNode.setAttribute("doubleVal", doubleVal);
+
+    QDomElement nsNode = doc.createElement("NS");
+    rootNode.appendChild(nsNode);
+    nsNode.setAttributeNS("namespace", "qstringVal", qstringVal);
+    nsNode.setAttributeNS("namespace", "qlonglongVal", qlonglongVal);
+    nsNode.setAttributeNS("namespace", "qulonglongVal", qulonglongVal);
+    nsNode.setAttributeNS("namespace", "intVal", intVal);
+    nsNode.setAttributeNS("namespace", "uintVal", uintVal);
+    nsNode.setAttributeNS("namespace", "floatVal", floatVal); // not available atm
+    nsNode.setAttributeNS("namespace", "doubleVal", doubleVal);
+
+    bool bOk;
+    QCOMPARE(rootNode.attribute("qstringVal"), qstringVal);
+    QCOMPARE(rootNode.attribute("qlonglongVal").toLongLong(&bOk), qlonglongVal);
+    QVERIFY(bOk);
+    QCOMPARE(rootNode.attribute("qulonglongVal").toULongLong(&bOk), qulonglongVal);
+    QVERIFY(bOk);
+    QCOMPARE(rootNode.attribute("intVal").toInt(&bOk), intVal);
+    QVERIFY(bOk);
+    QCOMPARE(rootNode.attribute("uintVal").toUInt(&bOk), uintVal);
+    QVERIFY(bOk);
+    QCOMPARE(rootNode.attribute("floatVal").toFloat(&bOk), floatVal);
+    QVERIFY(bOk);
+    QCOMPARE(rootNode.attribute("doubleVal").toDouble(&bOk), doubleVal);
+    QVERIFY(bOk);
+
+    QCOMPARE(nsNode.attributeNS("namespace", "qstringVal"), qstringVal);
+    QCOMPARE(nsNode.attributeNS("namespace", "qlonglongVal").toLongLong(&bOk), qlonglongVal);
+    QVERIFY(bOk);
+    QCOMPARE(nsNode.attributeNS("namespace", "qulonglongVal").toULongLong(&bOk), qulonglongVal);
+    QVERIFY(bOk);
+    QCOMPARE(nsNode.attributeNS("namespace", "intVal").toInt(&bOk), intVal);
+    QVERIFY(bOk);
+    QCOMPARE(nsNode.attributeNS("namespace", "uintVal").toUInt(&bOk), uintVal);
+    QVERIFY(bOk);
+    QCOMPARE(nsNode.attributeNS("namespace", "floatVal").toFloat(&bOk), floatVal);
+    QVERIFY(bOk);
+    QCOMPARE(nsNode.attributeNS("namespace", "doubleVal").toDouble(&bOk), doubleVal);
+    QVERIFY(bOk);
+
+    QLocale::setDefault(oldLocale);
+}
+
 
 int tst_QDom::hasAttributesHelper( const QDomNode& node )
 {
@@ -597,13 +667,13 @@ void tst_QDom::cloneNode_data()
     QTest::addColumn<QList<QVariant> >("pathToNode");
     QTest::addColumn<bool>("deep");
 
-    QTest::newRow( "noDeep_01" ) << doc01 << nodeB1 << (bool)FALSE;
-    QTest::newRow( "noDeep_02" ) << doc01 << nodeC1 << (bool)FALSE;
-    QTest::newRow( "noDeep_03" ) << doc01 << nodeC2 << (bool)FALSE;
+    QTest::newRow( "noDeep_01" ) << doc01 << nodeB1 << false;
+    QTest::newRow( "noDeep_02" ) << doc01 << nodeC1 << false;
+    QTest::newRow( "noDeep_03" ) << doc01 << nodeC2 << false;
 
-    QTest::newRow( "deep_01" ) << doc01 << nodeB1 << (bool)TRUE;
-    QTest::newRow( "deep_02" ) << doc01 << nodeC1 << (bool)TRUE;
-    QTest::newRow( "deep_03" ) << doc01 << nodeC2 << (bool)TRUE;
+    QTest::newRow( "deep_01" ) << doc01 << nodeB1 << true;
+    QTest::newRow( "deep_02" ) << doc01 << nodeC1 << true;
+    QTest::newRow( "deep_03" ) << doc01 << nodeC2 << true;
 }
 
 void tst_QDom::cloneNode()
@@ -741,14 +811,14 @@ void tst_QDom::ownerDocumentTask27424_data()
     QTest::addColumn<bool>("insertLevel2AfterCstr");
     QTest::addColumn<bool>("insertLevel3AfterCstr");
 
-    QTest::newRow( "000" ) << (bool)FALSE << (bool)FALSE << (bool)FALSE;
-    QTest::newRow( "001" ) << (bool)FALSE << (bool)FALSE << (bool)TRUE;
-    QTest::newRow( "010" ) << (bool)FALSE << (bool)TRUE  << (bool)FALSE;
-    QTest::newRow( "011" ) << (bool)FALSE << (bool)TRUE  << (bool)TRUE;
-    QTest::newRow( "100" ) << (bool)TRUE  << (bool)FALSE << (bool)FALSE;
-    QTest::newRow( "101" ) << (bool)TRUE  << (bool)FALSE << (bool)TRUE;
-    QTest::newRow( "110" ) << (bool)TRUE  << (bool)TRUE  << (bool)FALSE;
-    QTest::newRow( "111" ) << (bool)TRUE  << (bool)TRUE  << (bool)TRUE;
+    QTest::newRow( "000" ) << false << false << false;
+    QTest::newRow( "001" ) << false << false << true;
+    QTest::newRow( "010" ) << false << true  << false;
+    QTest::newRow( "011" ) << false << true  << true;
+    QTest::newRow( "100" ) << true  << false << false;
+    QTest::newRow( "101" ) << true  << false << true;
+    QTest::newRow( "110" ) << true  << true  << false;
+    QTest::newRow( "111" ) << true  << true  << true;
 }
 
 void tst_QDom::ownerDocumentTask27424()
@@ -867,14 +937,14 @@ void tst_QDom::documentCreationTask27424_data()
     QTest::addColumn<bool>("insertLevel2AfterCstr");
     QTest::addColumn<bool>("insertLevel3AfterCstr");
 
-    QTest::newRow( "000" ) << (bool)FALSE << (bool)FALSE << (bool)FALSE;
-    QTest::newRow( "001" ) << (bool)FALSE << (bool)FALSE << (bool)TRUE;
-    QTest::newRow( "010" ) << (bool)FALSE << (bool)TRUE  << (bool)FALSE;
-    QTest::newRow( "011" ) << (bool)FALSE << (bool)TRUE  << (bool)TRUE;
-    QTest::newRow( "100" ) << (bool)TRUE  << (bool)FALSE << (bool)FALSE;
-    QTest::newRow( "101" ) << (bool)TRUE  << (bool)FALSE << (bool)TRUE;
-    QTest::newRow( "110" ) << (bool)TRUE  << (bool)TRUE  << (bool)FALSE;
-    QTest::newRow( "111" ) << (bool)TRUE  << (bool)TRUE  << (bool)TRUE;
+    QTest::newRow( "000" ) << false << false << false;
+    QTest::newRow( "001" ) << false << false << true;
+    QTest::newRow( "010" ) << false << true  << false;
+    QTest::newRow( "011" ) << false << true  << true;
+    QTest::newRow( "100" ) << true  << false << false;
+    QTest::newRow( "101" ) << true  << false << true;
+    QTest::newRow( "110" ) << true  << true  << false;
+    QTest::newRow( "111" ) << true  << true  << true;
 }
 
 void tst_QDom::documentCreationTask27424()
@@ -1004,7 +1074,7 @@ bool tst_QDom::compareNodes( const QDomNode &node1, const QDomNode &node2, bool 
     }
 
     if ( node1.isNull() && node2.isNull() )
-        return TRUE;
+        return true;
     // ### I am not sure if this test is complete
     bool equal =     node1.nodeName() == node2.nodeName();
     equal = equal && node1.nodeType() == node2.nodeType();
@@ -1977,6 +2047,14 @@ void tst_QDom::DTDEntityDecl()
     QVERIFY(doctype.namedItem(QString("logo")).isEntity());
     QCOMPARE(doctype.namedItem(QString("logo")).toEntity().systemId(), QString("http://www.w3c.org/logo.gif"));
     QCOMPARE(doctype.namedItem(QString("logo")).toEntity().notationName(), QString("gif"));
+}
+
+void tst_QDom::dontCrashWithNegativeIndex() const
+{
+    QDomDocument doc;
+    QDomElement elem = doc.appendChild(doc.createElement("root")).toElement();
+    QDomNode node = elem.attributes().item(-1);
+    QVERIFY(node.isNull());
 }
 
 QTEST_MAIN(tst_QDom)
