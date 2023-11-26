@@ -912,11 +912,11 @@ bool QSvgPaintEngine::begin(QPaintDevice *)
                   " version=\"1.2\" baseProfile=\"tiny\">" << endl;
 
     if (!d->attributes.document_title.isEmpty()) {
-        *d->stream << "<title>" << d->attributes.document_title << "</title>" << endl;
+        *d->stream << "<title>" << d->attributes.document_title.toHtmlEscaped() << "</title>" << endl;
     }
 
     if (!d->attributes.document_description.isEmpty()) {
-        *d->stream << "<desc>" << d->attributes.document_description << "</desc>" << endl;
+        *d->stream << "<desc>" << d->attributes.document_description.toHtmlEscaped() << "</desc>" << endl;
     }
 
     d->stream->setString(&d->defs);
@@ -1162,7 +1162,7 @@ void QSvgPaintEngine::drawTextItem(const QPointF &pt, const QTextItem &textItem)
                   "x=\"" << pt.x() << "\" y=\"" << pt.y() << "\" ";
     qfontToSvg(textItem.font());
     *d->stream << " >"
-               << Qt::escape(s)
+               << s.toHtmlEscaped()
                << "</text>"
                << endl;
 }

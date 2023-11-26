@@ -126,7 +126,7 @@ bool QSvgIOHandler::canRead() const
     if (d->loaded && !d->readDone)
         return true;        // Will happen if we have been asked for the size
 
-    QByteArray buf = device()->peek(8);
+    QByteArray buf = device()->peek(16);
     if (buf.startsWith("\x1f\x8b")) {
         setFormat("svgz");
         return true;

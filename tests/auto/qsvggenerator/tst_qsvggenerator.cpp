@@ -70,6 +70,8 @@ public:
 private slots:
     void construction();
     void fileName();
+    void escapesTitle();
+    void escapesDescription();
     void outputDevice();
     void sizeAndViewBox();
     void metric();
@@ -78,6 +80,7 @@ private slots:
     void fractionalFontSize();
     void titleAndDescription();
     void gradientInterpolation();
+    void patternBrush();
 };
 
 tst_QSvgGenerator::tst_QSvgGenerator()
@@ -95,7 +98,7 @@ void tst_QSvgGenerator::construction()
 {
     QSvgGenerator generator;
     QCOMPARE(generator.fileName(), QString());
-    QCOMPARE(generator.outputDevice(), (QIODevice *)0);
+    QCOMPARE(generator.outputDevice(), (QIODevice *)nullptr);
     QCOMPARE(generator.resolution(), 72);
     QCOMPARE(generator.size(), QSize());
 }
@@ -132,7 +135,7 @@ static void compareWithoutFontInfo(const QByteArray &source, const QByteArray &r
 
 static void checkFile(const QString &fileName)
 {
-    QVERIFY(QFile::exists(fileName));;
+    QVERIFY(QFile::exists(fileName));
 
     QFile file(fileName);
     QVERIFY(file.open(QIODevice::ReadOnly));
@@ -157,6 +160,66 @@ void tst_QSvgGenerator::fileName()
     painter.end();
 
     checkFile(fileName);
+}
+
+void tst_QSvgGenerator::escapesTitle()
+{
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+
+    const QString titleThatNeedsToBeEscaped("<malicious>\"title\" 'oh no'");
+
+    {
+        QSvgGenerator generator;
+
+        generator.setOutputDevice(&buffer);
+        generator.setTitle(titleThatNeedsToBeEscaped);
+
+        QPainter painter(&generator);
+        painter.end();
+    }
+
+    QDomDocument generated;
+    generated.setContent(byteArray);
+
+    const auto titleElements = generated.documentElement().elementsByTagName("title");
+
+    QCOMPARE(1, titleElements.size());
+
+    const auto theOnlyTitleElement = titleElements.at(0);
+
+    QCOMPARE(1, theOnlyTitleElement.childNodes().size());
+    QCOMPARE(titleThatNeedsToBeEscaped, theOnlyTitleElement.firstChild().nodeValue());
+}
+
+void tst_QSvgGenerator::escapesDescription()
+{
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+
+    const QString descriptionThatNeedsToBeEscaped("<evil>\"description\" 'whoopsie!'");
+
+    {
+        QSvgGenerator generator;
+
+        generator.setOutputDevice(&buffer);
+        generator.setDescription(descriptionThatNeedsToBeEscaped);
+
+        QPainter painter(&generator);
+        painter.end();
+    }
+
+    QDomDocument generated;
+    generated.setContent(byteArray);
+
+    const auto descriptionElements = generated.documentElement().elementsByTagName("desc");
+
+    QCOMPARE(1, descriptionElements.size());
+
+    const auto theOnlyDescriptionElement = descriptionElements.at(0);
+
+    QCOMPARE(1, theOnlyDescriptionElement.childNodes().size());
+    QCOMPARE(descriptionThatNeedsToBeEscaped, theOnlyDescriptionElement.firstChild().nodeValue());
 }
 
 void tst_QSvgGenerator::outputDevice()
