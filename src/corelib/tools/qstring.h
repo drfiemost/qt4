@@ -1152,6 +1152,8 @@ public:
     int localeAwareCompare(const QStringRef &s) const;
     static int localeAwareCompare(const QStringRef &s1, const QString &s2);
     static int localeAwareCompare(const QStringRef &s1, const QStringRef &s2);
+
+    QStringRef trimmed() const Q_REQUIRED_RESULT;
 };
 
 inline QStringRef &QStringRef::operator=(const QString *aString)
