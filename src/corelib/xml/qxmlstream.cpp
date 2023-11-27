@@ -41,13 +41,6 @@
 
 #include "QtCore/qxmlstream.h"
 
-#if defined(QT_BUILD_XML_LIB) && defined(Q_OS_MAC64)
-// No need to define this in the 64-bit Mac libraries.
-// Since Qt 4.4 and previous weren't supported in 64-bit, there are
-// no QXmlStream* symbols to keep compatibility with
-# define QT_NO_XMLSTREAM
-#endif
-
 #ifndef QT_NO_XMLSTREAM
 
 #include "qxmlutils_p.h"
@@ -786,6 +779,7 @@ QXmlStreamPrivateTagStack::QXmlStreamPrivateTagStack()
     NamespaceDeclaration &namespaceDeclaration = namespaceDeclarations.push();
     namespaceDeclaration.prefix = addToStringStorage(QLatin1String("xml"));
     namespaceDeclaration.namespaceUri = addToStringStorage(QLatin1String("http://www.w3.org/XML/1998/namespace"));
+    initialTagStackStringStorageSize = tagStackStringStorageSize;
 }
 
 #ifndef QT_NO_XMLSTREAMREADER
@@ -857,6 +851,7 @@ void QXmlStreamReaderPrivate::init()
     rawReadBuffer.clear();
     dataBuffer.clear();
     readBuffer.clear();
+    tagStackStringStorageSize = initialTagStackStringStorageSize;
 
     type = QXmlStreamReader::NoToken;
     error = QXmlStreamReader::NoError;
@@ -1643,7 +1638,7 @@ void QXmlStreamReaderPrivate::resolveTag()
             if (attributes[j].name() == attribute.name()
                 && attributes[j].namespaceUri() == attribute.namespaceUri()
                 && (namespaceProcessing || attributes[j].qualifiedName() == attribute.qualifiedName()))
-                raiseWellFormedError(QXmlStream::tr("Attribute redefined."));
+                raiseWellFormedError(QXmlStream::tr("Attribute '%1' redefined.").arg(attribute.qualifiedName().toString()));
         }
     }
 
@@ -1958,7 +1953,7 @@ QStringRef QXmlStreamReader::text() const
 }
 
 
-/*!  If the state() is \l DTD, this function returns the DTD's
+/*!  If the tokenType() is \l DTD, this function returns the DTD's
   notation declarations. Otherwise an empty vector is returned.
 
   The QXmlStreamNotationDeclarations class is defined to be a QVector
@@ -1973,7 +1968,7 @@ QXmlStreamNotationDeclarations QXmlStreamReader::notationDeclarations() const
 }
 
 
-/*!  If the state() is \l DTD, this function returns the DTD's
+/*!  If the tokenType() is \l DTD, this function returns the DTD's
   unparsed (external) entity declarations. Otherwise an empty vector is returned.
 
   The QXmlStreamEntityDeclarations class is defined to be a QVector
@@ -1990,7 +1985,7 @@ QXmlStreamEntityDeclarations QXmlStreamReader::entityDeclarations() const
 /*!
   \since 4.4
 
-  If the state() is \l DTD, this function returns the DTD's
+  If the tokenType() is \l DTD, this function returns the DTD's
   name. Otherwise an empty string is returned.
 
  */
@@ -2005,7 +2000,7 @@ QStringRef QXmlStreamReader::dtdName() const
 /*!
   \since 4.4
 
-  If the state() is \l DTD, this function returns the DTD's
+  If the tokenType() is \l DTD, this function returns the DTD's
   public identifier. Otherwise an empty string is returned.
 
  */
@@ -2020,7 +2015,7 @@ QStringRef QXmlStreamReader::dtdPublicId() const
 /*!
   \since 4.4
 
-  If the state() is \l DTD, this function returns the DTD's
+  If the tokenType() is \l DTD, this function returns the DTD's
   system identifier. Otherwise an empty string is returned.
 
  */
@@ -2032,7 +2027,7 @@ QStringRef QXmlStreamReader::dtdSystemId() const
    return QStringRef();
 }
 
-/*!  If the state() is \l StartElement, this function returns the
+/*!  If the tokenType() is \l StartElement, this function returns the
   element's namespace declarations. Otherwise an empty vector is
   returned.
 
@@ -2095,7 +2090,7 @@ void QXmlStreamReader::addExtraNamespaceDeclarations(const QXmlStreamNamespaceDe
   The \a behaviour defines what happens in case anything else is
   read before reaching EndElement. The function can include the text from
   child elements (useful for example for HTML), ignore child elements, or
-  raise an UnexpectedElementError and return what was read so far.
+  raise an UnexpectedElementError and return what was read so far (default).
 
   \since 4.6
  */
@@ -2135,16 +2130,6 @@ QString QXmlStreamReader::readElementText(ReadElementTextBehaviour behaviour)
         }
     }
     return QString();
-}
-
-/*!
-  \overload readElementText()
-
-  Calling this function is equivalent to calling readElementText(ErrorOnUnexpectedElement).
- */
-QString QXmlStreamReader::readElementText()
-{
-    return readElementText(ErrorOnUnexpectedElement);
 }
 
 /*!  Raises a custom error with an optional error \a message.
@@ -2841,7 +2826,7 @@ bool QXmlStreamReader::isStandaloneDocument() const
 /*!
      \since 4.4
 
-     If the state() is \l StartDocument, this function returns the
+     If the tokenType() is \l StartDocument, this function returns the
      version string as specified in the XML declaration.
      Otherwise an empty string is returned.
  */
@@ -2856,7 +2841,7 @@ QStringRef QXmlStreamReader::documentVersion() const
 /*!
      \since 4.4
 
-     If the state() is \l StartDocument, this function returns the
+     If the tokenType() is \l StartDocument, this function returns the
      encoding string as specified in the XML declaration.
      Otherwise an empty string is returned.
  */
