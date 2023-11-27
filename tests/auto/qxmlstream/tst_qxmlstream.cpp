@@ -574,9 +574,10 @@ private slots:
     void clear() const;
     void checkCommentIndentation() const;
     void checkCommentIndentation_data() const;
-    void qtbug9196_crash() const;
+    void crashInXmlStreamReader() const;
     void invalidStringCharacters_data() const;
     void invalidStringCharacters() const;
+    void write8bitCodec() const;
     void hasError() const;
     void roundTrip() const;
     void roundTrip_data() const;
@@ -1576,9 +1577,10 @@ void tst_QXmlStream::checkCommentIndentation() const // task 256468
     QCOMPARE(output, expectedOutput);
 }
 
-void tst_QXmlStream::qtbug9196_crash() const
+// This is a regression test for QTBUG-9196, where the series of tags used
+// in the test caused a crash in the XML stream reader.
+void tst_QXmlStream::crashInXmlStreamReader() const
 {
-    // the following input used to produce a crash in the stream reader
     QByteArray ba("<a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a>"
                   "<a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a><a></a>");
     QXmlStreamReader xml(ba);
@@ -1755,6 +1757,44 @@ void tst_QXmlStream::roundTrip() const
     }
     QCOMPARE(out, in);
 }
+
+void tst_QXmlStream::write8bitCodec() const
+{
+    QBuffer outBuffer;
+    QVERIFY(outBuffer.open(QIODevice::WriteOnly));
+    QXmlStreamWriter writer(&outBuffer);
+    writer.setAutoFormatting(false);
+
+    QTextCodec *codec = QTextCodec::codecForName("IBM500");
+    if (!codec) {
+        QSKIP("Encoding IBM500 not available.", SkipAll);
+    }
+    writer.setCodec(codec);
+
+    writer.writeStartDocument();
+    writer.writeStartElement("root");
+    writer.writeAttribute("attrib", "1");
+    writer.writeEndElement();
+    writer.writeEndDocument();
+    outBuffer.close();
+
+    // test 8 bit encoding
+    QByteArray values = outBuffer.data();
+    QVERIFY(values.size() > 1);
+    // check '<'
+    QCOMPARE(values[0] & 0x00FF, 0x4c);
+    // check '?'
+    QCOMPARE(values[1] & 0x00FF, 0x6F);
+
+    // convert the start of the XML
+    const QString expected = ("<?xml version=\"1.0\" encoding=\"IBM500\"?>");
+    QTextDecoder *decoder = codec->makeDecoder();
+    QVERIFY(decoder);
+    QString decodedText = decoder->toUnicode(values);
+    delete decoder;
+    QVERIFY(decodedText.startsWith(expected));
+}
+
 
 #include "tst_qxmlstream.moc"
 // vim: et:ts=4:sw=4:sts=4

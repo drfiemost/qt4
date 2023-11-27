@@ -683,8 +683,9 @@ void QSettingsPrivate::iniEscapedString(const QString &str, QByteArray &result, 
     int startPos = result.size();
 
     result.reserve(startPos + str.size() * 3 / 2);
+    const QChar *unicode = str.unicode();
     for (i = 0; i < str.size(); ++i) {
-        uint ch = str.at(i).unicode();
+        uint ch = unicode[i].unicode();
         if (ch == ';' || ch == ',' || ch == '=')
             needsQuotes = true;
 
@@ -738,7 +739,7 @@ void QSettingsPrivate::iniEscapedString(const QString &str, QByteArray &result, 
 #ifndef QT_NO_TEXTCODEC
             } else if (useCodec) {
                 // slow
-                result += codec->fromUnicode(str.at(i));
+                result += codec->fromUnicode(&unicode[i], 1);
 #endif
             } else {
                 result += (char)ch;

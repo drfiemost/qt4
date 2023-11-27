@@ -953,7 +953,7 @@ public:
 
 
     short token;
-    ushort token_char;
+    uint token_char;
 
     uint filterCarriageReturn();
     inline uint getChar();
@@ -964,7 +964,7 @@ public:
     void putStringLiteral(const QString &s);
     void putReplacement(const QString &s);
     void putReplacementInAttributeValue(const QString &s);
-    ushort getChar_helper();
+    uint getChar_helper();
 
     bool scanUntil(const char *str, short tokenToInject = -1);
     bool scanString(const char *str, short tokenToInject, bool requireSpace = true);
@@ -1021,7 +1021,7 @@ bool QXmlStreamReaderPrivate::parse()
     case QXmlStreamReader::StartElement:
         name.clear();
         prefix.clear();
-	qualifiedName.clear();
+        qualifiedName.clear();
         namespaceUri.clear();
         publicNamespaceDeclarations.clear();
         attributes.clear();
@@ -1030,7 +1030,7 @@ bool QXmlStreamReaderPrivate::parse()
             Tag &tag = tagStack_pop();
             namespaceUri = tag.namespaceDeclaration.namespaceUri;
             name = tag.name;
-	    qualifiedName = tag.qualifiedName;
+            qualifiedName = tag.qualifiedName;
             isEmptyElement = false;
             return true;
         }
@@ -1039,7 +1039,7 @@ bool QXmlStreamReaderPrivate::parse()
     case QXmlStreamReader::EndElement:
         name.clear();
         prefix.clear();
-	qualifiedName.clear();
+        qualifiedName.clear();
         namespaceUri.clear();
         clearTextBuffer();
         break;
@@ -1049,11 +1049,11 @@ bool QXmlStreamReaderPrivate::parse()
         dtdName.clear();
         dtdPublicId.clear();
         dtdSystemId.clear();
-        // fall through
+        [[fallthrough]];
     case QXmlStreamReader::Comment:
     case QXmlStreamReader::Characters:
         isCDATA = false;
-	isWhitespace = true;
+        isWhitespace = true;
         text.clear();
         clearTextBuffer();
         break;
@@ -1065,23 +1065,23 @@ bool QXmlStreamReaderPrivate::parse()
     case QXmlStreamReader::ProcessingInstruction:
         processingInstructionTarget.clear();
         processingInstructionData.clear();
-	clearTextBuffer();
+        clearTextBuffer();
         break;
     case QXmlStreamReader::NoToken:
     case QXmlStreamReader::Invalid:
         break;
     case QXmlStreamReader::StartDocument:
-	lockEncoding = true;
+        lockEncoding = true;
         documentVersion.clear();
         documentEncoding.clear();
 #ifndef QT_NO_TEXTCODEC
-	if(decoder->hasFailure()) {
-	    raiseWellFormedError(QXmlStream::tr("Encountered incorrectly encoded content."));
-	    readBuffer.clear();
-	    return false;
-	}
+        if(decoder && decoder->hasFailure()) {
+            raiseWellFormedError(QXmlStream::tr("Encountered incorrectly encoded content."));
+            readBuffer.clear();
+            return false;
+        }
 #endif
-        // fall through
+        [[fallthrough]];
     default:
         clearTextBuffer();
         ;
@@ -1106,8 +1106,8 @@ bool QXmlStreamReaderPrivate::parse()
         if (token == -1 && - TERMINAL_COUNT != action_index[act]) {
             uint cu = getChar();
             token = NOTOKEN;
-            token_char = cu;
-            if (cu & 0xff0000) {
+            token_char = cu == ~0U ? cu : ushort(cu);
+            if ((cu != ~0U) && (cu & 0xff0000)) {
                 token = cu >> 16;
             } else switch (token_char) {
             case 0xfffe:
@@ -1125,8 +1125,8 @@ bool QXmlStreamReaderPrivate::parse()
                 } else {
                     break;
                 }
-                // fall through
-            case '\0': {
+                [[fallthrough]];
+            case ~0U: {
                 token = EOF_SYMBOL;
                 if (!tagsDone && !inParseEntity) {
                     int a = t_action(act, token);
