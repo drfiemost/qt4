@@ -55,10 +55,6 @@
 //TESTED_CLASS=QXmlStreamReader QXmlStreamWriter
 //TESTED_FILES=corelib/xml/stream/qxmlutils.cpp corelib/xml/stream/qxmlstream.cpp corelib/xml/stream/qxmlstream_p.h
 
-#ifdef Q_OS_SYMBIAN
-#define SRCDIR ""
-#endif
-
 Q_DECLARE_METATYPE(QXmlStreamReader::ReadElementTextBehaviour)
 
 static const char *const catalogFile = SRCDIR "XML-Test-Suite/xmlconf/finalCatalog.xml";
@@ -579,7 +575,11 @@ private slots:
     void checkCommentIndentation() const;
     void checkCommentIndentation_data() const;
     void qtbug9196_crash() const;
+    void invalidStringCharacters_data() const;
+    void invalidStringCharacters() const;
     void hasError() const;
+    void roundTrip() const;
+    void roundTrip_data() const;
 
 private:
     static QByteArray readFile(const QString &filename);
@@ -1666,6 +1666,94 @@ void tst_QXmlStream::hasError() const
         QCOMPARE(fb.data(), QByteArray("<?xml vers"));
     }
 
+}
+
+void tst_QXmlStream::invalidStringCharacters() const
+{
+    // test scan in attributes
+    QFETCH(QString, testString);
+    QFETCH(bool, expectedResultNoError);
+
+    QByteArray values = testString.toUtf8();
+    QBuffer inBuffer;
+    inBuffer.setData(values);
+    QVERIFY(inBuffer.open(QIODevice::ReadOnly));
+    QXmlStreamReader reader(&inBuffer);
+    do {
+        reader.readNext();
+    } while (!reader.atEnd());
+    QCOMPARE((reader.error() == QXmlStreamReader::NoError), expectedResultNoError);
+}
+
+void tst_QXmlStream::invalidStringCharacters_data() const
+{
+    // test scan in attributes
+    QTest::addColumn<bool>("expectedResultNoError");
+    QTest::addColumn<QString>("testString");
+    QChar ctrl(0x1A);
+    QTest::newRow("utf8, attributes, legal") << true << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'/>");
+    QTest::newRow("utf8, attributes, only char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='")+ctrl+QString("'/>");
+    QTest::newRow("utf8, attributes, 1st char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='")+ctrl+QString("abc'/>");
+    QTest::newRow("utf8, attributes, middle char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='abc")+ctrl+QString("efgx'/>");
+    QTest::newRow("utf8, attributes, last char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='abcde")+ctrl+QString("'/>");
+    //
+    QTest::newRow("utf8, text, legal") << true << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'>abcx1A</root>");
+    QTest::newRow("utf8, text, only, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'>")+ctrl+QString("</root>");
+    QTest::newRow("utf8, text, 1st char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'>abc")+ctrl+QString("def</root>");
+    QTest::newRow("utf8, text, middle char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'>abc")+ctrl+QString("efg</root>");
+    QTest::newRow("utf8, text, last char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'>abc")+ctrl+QString("</root>");
+    //
+    QTest::newRow("utf8, cdata text, legal") << true << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'><![CDATA[abcdefghi]]></root>");
+    QTest::newRow("utf8, cdata text, only, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'><![CDATA[")+ctrl+QString("]]></root>");
+    QTest::newRow("utf8, cdata text, 1st char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'><![CDATA[")+ctrl+QString("abcdefghi]]></root>");
+    QTest::newRow("utf8, cdata text, middle char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'><![CDATA[abcd")+ctrl+QString("efghi]]></root>");
+    QTest::newRow("utf8, cdata text, last char, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aa'><![CDATA[abcdefghi")+ctrl+QString("]]></root>");
+    //
+    QTest::newRow("utf8, mixed, control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='a")+ctrl+QString("a'><![CDATA[abcdefghi")+ctrl+QString("]]></root>");
+    QTest::newRow("utf8, tag") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><roo")+ctrl+QString("t attr='aa'><![CDATA[abcdefghi]]></roo")+ctrl+QString("t>");
+    //
+    QTest::newRow("utf8, attributes, 1st char, legal escaping hex") << true << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='a&#xA0;'/>");
+    QTest::newRow("utf8, attributes, 1st char, control escaping hex") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='&#x1A;aaa'/>");
+    QTest::newRow("utf8, attributes, middle char, legal escaping hex") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aaa&#x1A;aaa'/>");
+    QTest::newRow("utf8, attributes, last char, control escaping hex") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aaa&#x1A;'/>");
+    QTest::newRow("utf8, attributes, 1st char, legal escaping dec") << true << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='a&#160;'/>");
+    QTest::newRow("utf8, attributes, 1st char, control escaping dec") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='&#26;aaaa'/>");
+    QTest::newRow("utf8, attributes, middle char, legal escaping dec") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aaa&#26;aaaaa'/>");
+    QTest::newRow("utf8, attributes, last char, control escaping dec") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='aaaaaa&#26;'/>");
+    QTest::newRow("utf8, tag escaping") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><roo&#x1A;t attr='aa'><![CDATA[abcdefghi]]></roo&#x1A;t>");
+    //
+    QTest::newRow("utf8, mix of illegal control") << false << QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root attr='a&#0;&#x4;&#x1c;a'><![CDATA[abcdefghi]]></root>");
+    //
+}
+
+void tst_QXmlStream::roundTrip_data() const
+{
+    QTest::addColumn<QString>("in");
+
+    QTest::newRow("QTBUG-63434") <<
+        "<?xml version=\"1.0\"?>"
+        "<root>"
+            "<father>"
+                "<child xmlns:unknown=\"http://mydomain\">Text</child>"
+            "</father>"
+        "</root>\n";
+}
+
+void tst_QXmlStream::roundTrip() const
+{
+    QFETCH(QString, in);
+    QString out;
+
+    QXmlStreamReader reader(in);
+    QXmlStreamWriter writer(&out);
+
+    while (!reader.atEnd()) {
+        reader.readNext();
+        QVERIFY(!reader.hasError());
+        writer.writeCurrentToken(reader);
+        QVERIFY(!writer.hasError());
+    }
+    QCOMPARE(out, in);
 }
 
 #include "tst_qxmlstream.moc"

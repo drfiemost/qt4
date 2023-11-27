@@ -983,11 +983,11 @@ bool QXmlStreamReaderPrivate::scanUntil(const char *str, short tokenToInject)
         case '\r':
             if ((c = filterCarriageReturn()) == 0)
                 break;
-            // fall through
+            [[fallthrough]];
         case '\n':
             ++lineNumber;
             lastLineStart = characterOffset + readBufferPos;
-            // fall through
+            [[fallthrough]];
         case '\t':
             textBuffer += QChar(c);
             continue;
@@ -1165,11 +1165,11 @@ inline int QXmlStreamReaderPrivate::fastScanLiteralContent()
         case '\r':
             if (filterCarriageReturn() == 0)
                 return n;
-            // fall through
+            [[fallthrough]];
         case '\n':
             ++lineNumber;
             lastLineStart = characterOffset + readBufferPos;
-            // fall through
+            [[fallthrough]];
         case ' ':
         case '\t':
             if (normalizeLiterals)
@@ -1186,8 +1186,12 @@ inline int QXmlStreamReaderPrivate::fastScanLiteralContent()
                 putChar(c);
                 return n;
             }
-            // fall through
+            [[fallthrough]];
         default:
+            if (c < 0x20) {
+                putChar(c);
+                return n;
+            }
             textBuffer += QChar(c);
             ++n;
         }
@@ -1204,11 +1208,11 @@ inline int QXmlStreamReaderPrivate::fastScanSpace()
         case '\r':
             if ((c = filterCarriageReturn()) == 0)
                 return n;
-            // fall through
+            [[fallthrough]];
         case '\n':
             ++lineNumber;
             lastLineStart = characterOffset + readBufferPos;
-            // fall through
+            [[fallthrough]];
         case ' ':
         case '\t':
             textBuffer += QChar(c);
@@ -1262,11 +1266,11 @@ inline int QXmlStreamReaderPrivate::fastScanContentCharList()
         case '\r':
             if ((c = filterCarriageReturn()) == 0)
                 return n;
-            // fall through
+            [[fallthrough]];
         case '\n':
             ++lineNumber;
             lastLineStart = characterOffset + readBufferPos;
-            // fall through
+            [[fallthrough]];
         case ' ':
         case '\t':
             textBuffer += QChar(ushort(c));
@@ -1278,7 +1282,7 @@ inline int QXmlStreamReaderPrivate::fastScanContentCharList()
                 putChar(c);
                 return n;
             }
-            // fall through
+            [[fallthrough]];
         default:
             if (c < 0x20) {
                 putChar(c);
@@ -1884,32 +1888,25 @@ void QXmlStreamReaderPrivate::parseError()
             }
         }
 
-    error_message.clear ();
     if (nexpected && nexpected < nmax) {
-        bool first = true;
-
-        for (int s = 0; s < nexpected; ++s) {
-            if (first)
-                error_message += QXmlStream::tr ("Expected ");
-            else if (s == nexpected - 1)
-                error_message += QLatin1String (nexpected > 2 ? ", or " : " or ");
-            else
-                error_message += QLatin1String (", ");
-
-            first = false;
-            error_message += QLatin1String("\'");
-            error_message += QLatin1String (spell [expected[s]]);
-            error_message += QLatin1String("\'");
+        //: '<first option>'
+        QString exp_str = QXmlStream::tr("'%1'", "expected").arg(QLatin1String(spell[expected[0]]));
+        if (nexpected == 2) {
+            //: <first option>, '<second option>'
+            exp_str = QXmlStream::tr("%1 or '%2'", "expected").arg(exp_str, QLatin1String(spell[expected[1]]));
+        } else if (nexpected > 2) {
+            int s = 1;
+            for (; s < nexpected - 1; ++s) {
+                //: <options so far>, '<next option>'
+                exp_str = QXmlStream::tr("%1, '%2'", "expected").arg(exp_str, QLatin1String(spell[expected[s]]));
+            }
+            //: <options so far>, or '<final option>'
+            exp_str = QXmlStream::tr("%1, or '%2'", "expected").arg(exp_str, QLatin1String(spell[expected[s]]));
         }
-        error_message += QXmlStream::tr(", but got \'");
-        error_message += QLatin1String(spell [token]);
-        error_message += QLatin1String("\'");
+        error_message = QXmlStream::tr("Expected %1, but got '%2'.").arg(exp_str, QLatin1String(spell[token]));
     } else {
-        error_message += QXmlStream::tr("Unexpected \'");
-        error_message += QLatin1String(spell [token]);
-        error_message += QLatin1String("\'");
+        error_message = QXmlStream::tr("Unexpected '%1'.").arg(QLatin1String(spell[token]));
     }
-    error_message += QLatin1Char('.');
 
     raiseWellFormedError(error_message);
 }
@@ -2127,7 +2124,7 @@ QString QXmlStreamReader::readElementText(ReadElementTextBehaviour behaviour)
                     break;
                 }
                 // continue on ErrorOnUnexpectedElement
-                // fall through
+                [[fallthrough]];
             default:
                 if (d->error || behaviour == ErrorOnUnexpectedElement) {
                     if (!d->error)
@@ -3700,7 +3697,6 @@ void QXmlStreamWriter::writeEntityReference(const QString &name)
 void QXmlStreamWriter::writeNamespace(const QString &namespaceUri, const QString &prefix)
 {
     Q_D(QXmlStreamWriter);
-    Q_ASSERT(!namespaceUri.isEmpty());
     Q_ASSERT(prefix != QLatin1String("xmlns"));
     if (prefix.isEmpty()) {
         d->findNamespace(namespaceUri, d->inStartElement);
@@ -3894,13 +3890,13 @@ void QXmlStreamWriter::writeCurrentToken(const QXmlStreamReader &reader)
         writeEndDocument();
         break;
     case QXmlStreamReader::StartElement: {
+        writeStartElement(reader.namespaceUri().toString(), reader.name().toString());
         QXmlStreamNamespaceDeclarations namespaceDeclarations = reader.namespaceDeclarations();
         for (int i = 0; i < namespaceDeclarations.size(); ++i) {
             const QXmlStreamNamespaceDeclaration &namespaceDeclaration = namespaceDeclarations.at(i);
             writeNamespace(namespaceDeclaration.namespaceUri().toString(),
                            namespaceDeclaration.prefix().toString());
         }
-        writeStartElement(reader.namespaceUri().toString(), reader.name().toString());
         writeAttributes(reader.attributes());
              } break;
     case QXmlStreamReader::EndElement:
