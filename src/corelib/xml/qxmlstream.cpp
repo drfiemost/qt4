@@ -891,7 +891,7 @@ inline void QXmlStreamReaderPrivate::reallocateStack()
     sym_stack = reinterpret_cast<Value*> (realloc(sym_stack, stack_size * sizeof(Value)));
     Q_CHECK_PTR(sym_stack);
     state_stack = reinterpret_cast<int*> (realloc(state_stack, stack_size * sizeof(int)));
-    Q_CHECK_PTR(sym_stack);
+    Q_CHECK_PTR(state_stack);
 }
 
 
@@ -2961,7 +2961,8 @@ public:
     uint inEmptyElement :1;
     uint lastWasStartElement :1;
     uint wroteSomething :1;
-    uint hasError :1;
+    uint hasIoError :1;
+    uint hasEncodingError :1;
     uint autoFormatting :1;
     uint isCodecASCIICompatible :1;
     QByteArray autoFormattingIndent;
@@ -2997,7 +2998,8 @@ QXmlStreamWriterPrivate::QXmlStreamWriterPrivate(QXmlStreamWriter *q)
     checkIfASCIICompatibleCodec();
     inStartElement = inEmptyElement = false;
     wroteSomething = false;
-    hasError = false;
+    hasIoError = false;
+    hasEncodingError = false;
     lastWasStartElement = false;
     lastNamespaceDeclaration = 1;
     autoFormatting = false;
@@ -3024,15 +3026,19 @@ void QXmlStreamWriterPrivate::checkIfASCIICompatibleCodec()
 void QXmlStreamWriterPrivate::write(const QStringRef &s)
 {
     if (device) {
-        if (hasError)
+        if (hasIoError)
             return;
 #ifdef QT_NO_TEXTCODEC
         QByteArray bytes = s.toLatin1();
 #else
         QByteArray bytes = encoder->fromUnicode(s.constData(), s.size());
+        if (encoder->hasFailure()) {
+            hasEncodingError = true;
+            return;
+        }
 #endif
         if (device->write(bytes) != bytes.size())
-            hasError = true;
+            hasIoError = true;
     }
     else if (stringDevice)
         s.appendTo(stringDevice);
@@ -3043,15 +3049,19 @@ void QXmlStreamWriterPrivate::write(const QStringRef &s)
 void QXmlStreamWriterPrivate::write(const QString &s)
 {
     if (device) {
-        if (hasError)
+        if (hasIoError)
             return;
 #ifdef QT_NO_TEXTCODEC
         QByteArray bytes = s.toLatin1();
 #else
         QByteArray bytes = encoder->fromUnicode(s);
+        if (encoder->hasFailure()) {
+            hasEncodingError = true;
+            return;
+        }
 #endif
         if (device->write(bytes) != bytes.size())
-            hasError = true;
+            hasIoError = true;
     }
     else if (stringDevice)
         stringDevice->append(s);
@@ -3065,25 +3075,47 @@ void QXmlStreamWriterPrivate::writeEscaped(const QString &s, bool escapeWhitespa
     escaped.reserve(s.size());
     for ( int i = 0; i < s.size(); ++i ) {
         QChar c = s.at(i);
-        if (c.unicode() == '<' )
+        switch (c.unicode()) {
+        case '<':
             escaped.append(QLatin1String("&lt;"));
-        else if (c.unicode() == '>' )
+            break;
+        case '>':
             escaped.append(QLatin1String("&gt;"));
-        else if (c.unicode() == '&' )
+            break;
+        case '&':
             escaped.append(QLatin1String("&amp;"));
-        else if (c.unicode() == '\"' )
+            break;
+        case '\"':
             escaped.append(QLatin1String("&quot;"));
-        else if (escapeWhitespace && c.isSpace()) {
-            if (c.unicode() == '\n')
-                escaped.append(QLatin1String("&#10;"));
-            else if (c.unicode() == '\r')
-                escaped.append(QLatin1String("&#13;"));
-            else if (c.unicode() == '\t')
+            break;
+        case '\t':
+            if (escapeWhitespace)
                 escaped.append(QLatin1String("&#9;"));
             else
                 escaped += c;
-        } else {
-            escaped += QChar(c);
+            break;
+        case '\n':
+            if (escapeWhitespace)
+                escaped.append(QLatin1String("&#10;"));
+            else
+                escaped += c;
+            break;
+        case '\v':
+        case '\f':
+            hasEncodingError = true;
+            break;
+        case '\r':
+            if (escapeWhitespace)
+                escaped.append(QLatin1String("&#13;"));
+            else
+                escaped += c;
+            break;
+        default:
+            if (c.unicode() > 0x1f && c.unicode() < 0xfffe)
+                escaped += c;
+            else
+                hasEncodingError = true;
+            break;
         }
     }
     write(escaped);
@@ -3093,11 +3125,11 @@ void QXmlStreamWriterPrivate::writeEscaped(const QString &s, bool escapeWhitespa
 void QXmlStreamWriterPrivate::write(const char *s, int len)
 {
     if (device) {
-        if (hasError)
+        if (hasIoError)
             return;
         if (isCodecASCIICompatible) {
             if (device->write(s, len) != len)
-                hasError = true;
+                hasIoError = true;
             return;
         }
     }
@@ -3383,16 +3415,18 @@ int QXmlStreamWriter::autoFormattingIndent() const
 /*!
     \since 4.8
 
-    Returns true if the stream failed to write to the underlying device;
-    otherwise returns false.
+    Returns \c true if writing failed.
+
+    This can happen if the stream failed to write to the underlying
+    device or if the data to be written contained invalid characters.
 
     The error status is never reset. Writes happening after the error
-    occurred are ignored, even if the error condition is cleared.
+    occurred may be ignored, even if the error condition is cleared.
  */
 bool QXmlStreamWriter::hasError() const
 {
     Q_D(const QXmlStreamWriter);
-    return d->hasError;
+    return d->hasIoError || d->hasEncodingError;
 }
 
 /*!
