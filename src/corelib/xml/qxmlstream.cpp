@@ -69,6 +69,8 @@ public: \
         { return QString::fromLatin1(sourceText); } \
 private:
 #endif
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 
 #include "qxmlstream_p.h"
@@ -840,7 +842,7 @@ void QXmlStreamReaderPrivate::init()
 #endif
     attributeStack.clear();
     attributeStack.reserve(16);
-    entityParser = nullptr;
+    entityParser.reset();
     hasCheckedStartDocument = false;
     normalizeLiterals = false;
     hasSeenTag = false;
@@ -873,7 +875,7 @@ void QXmlStreamReaderPrivate::parseEntity(const QString &value)
 
 
     if (!entityParser)
-        entityParser = new QXmlStreamReaderPrivate(q);
+        entityParser = std::make_unique<QXmlStreamReaderPrivate>(q);
     else
         entityParser->init();
     entityParser->inParseEntity = true;
@@ -903,7 +905,6 @@ QXmlStreamReaderPrivate::~QXmlStreamReaderPrivate()
 #endif
     free(sym_stack);
     free(state_stack);
-    delete entityParser;
 }
 
 
@@ -973,7 +974,7 @@ inline uint QXmlStreamReaderPrivate::peekChar()
 bool QXmlStreamReaderPrivate::scanUntil(const char *str, short tokenToInject)
 {
     int pos = textBuffer.size();
-    int oldLineNumber = lineNumber;
+    const auto oldLineNumber = lineNumber;
 
     uint c;
     while ((c = getChar()) != StreamEOF) {
@@ -1300,6 +1301,11 @@ inline int QXmlStreamReaderPrivate::fastScanName(int *prefix)
     int n = 0;
     uint c;
     while ((c = getChar()) != StreamEOF) {
+        if (n >= 4096) {
+            // This is too long to be a sensible name, and
+            // can exhaust memory
+            return 0;
+        }
         switch (c) {
         case '\n':
         case ' ':
@@ -1473,18 +1479,19 @@ void QXmlStreamReaderPrivate::putReplacementInAttributeValue(const QString &s)
 
 uint QXmlStreamReaderPrivate::getChar_helper()
 {
-    const int BUFFER_SIZE = 8192;
+    constexpr int BUFFER_SIZE = 8192;
     characterOffset += readBufferPos;
     readBufferPos = 0;
-    readBuffer.resize(0);
+    if (readBuffer.size())
+        readBuffer.resize(0);
 #ifndef QT_NO_TEXTCODEC
     if (decoder)
 #endif
         nbytesread = 0;
     if (device) {
         rawReadBuffer.resize(BUFFER_SIZE);
-        int nbytesreadOrMinus1 = device->read(rawReadBuffer.data() + nbytesread, BUFFER_SIZE - nbytesread);
-        nbytesread += qMax(nbytesreadOrMinus1, 0);
+        qint64 nbytesreadOrMinus1 = device->read(rawReadBuffer.data() + nbytesread, BUFFER_SIZE - nbytesread);
+        nbytesread += qMax(nbytesreadOrMinus1, qint64{0});
     } else {
         if (nbytesread)
             rawReadBuffer += dataBuffer;

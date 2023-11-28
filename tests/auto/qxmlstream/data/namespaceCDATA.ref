@@ -15,7 +15,7 @@ Characters( whitespace text="
 StartElement( name="bar" namespaceUri="http://qt.nokia.com" qualifiedName="pre:bar" prefix="pre"
     NamespaceDeclaration( prefix="pre" namespaceUri="http://qt.nokia.com" )
  )
-EndElement( name="bar" namespaceUri="http://qt.nokia.com" qualifiedName="pre:bar" )
+EndElement( name="bar" namespaceUri="http://qt.nokia.com" qualifiedName="pre:bar" prefix="pre" )
 Characters( whitespace text="
 " )
 EndElement( name="body" qualifiedName="body" )
