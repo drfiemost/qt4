@@ -65,6 +65,7 @@ SUBDIRS=\
    qregexp \
    qresourceengine \
    qringbuffer \
+   qscopeguard \
    qscopedpointer \
    qscopedvaluerollback \
    qsemaphore \

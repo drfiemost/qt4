@@ -1339,7 +1339,7 @@ bool QXmlStreamReaderPrivate::parse()
         case 17:
         case 18:
             dtdName = symString(3);
-            // fall through
+            [[fallthrough]];
 
         case 19:
         case 20:
@@ -1589,7 +1589,7 @@ bool QXmlStreamReaderPrivate::parse()
 
         case 129:
             isWhitespace = false;
-            // fall through
+            [[fallthrough]];
 
         case 130:
             sym(1).len += fastScanContentCharList();
@@ -1761,7 +1761,7 @@ bool QXmlStreamReaderPrivate::parse()
 
         case 236:
             isEmptyElement = true;
-        // fall through
+        [[fallthrough]];
 
         case 237:
             setType(QXmlStreamReader::StartElement);

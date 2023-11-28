@@ -34,6 +34,7 @@ HEADERS +=  \
         tools/qregexp.h \
         tools/qringbuffer_p.h \
         tools/qrefcount.h \
+        tools/qscopeguard.h \
         tools/qscopedpointer.h \
         tools/qscopedpointer_p.h \
         tools/qscopedvaluerollback.h \

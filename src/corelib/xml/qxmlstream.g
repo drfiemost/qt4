@@ -43,6 +43,8 @@
 
 %merged_output qxmlstream_p.h
 
+%expect 4
+
 %token NOTOKEN
 %token SPACE " "
 %token LANGLE "<"
@@ -157,7 +159,8 @@ public:
     inline void reserve(int extraCapacity) {
         if (tos + extraCapacity + 1 > cap) {
             cap = qMax(tos + extraCapacity + 1, cap << 1 );
-            data = reinterpret_cast<T *>(realloc(data, cap * sizeof(T)));
+            void *ptr = realloc(static_cast<void *>(data), cap * sizeof(T));
+            data = reinterpret_cast<T *>(ptr);
             Q_CHECK_PTR(data);
         }
     }
@@ -555,7 +558,7 @@ bool QXmlStreamReaderPrivate::parse()
         dtdName.clear();
         dtdPublicId.clear();
         dtdSystemId.clear();
-        // fall through
+        [[fallthrough]];
     case QXmlStreamReader::Comment:
     case QXmlStreamReader::Characters:
         isCDATA = false;
@@ -587,7 +590,7 @@ bool QXmlStreamReaderPrivate::parse()
 	    return false;
 	}
 #endif
-        // fall through
+        [[fallthrough]];
     default:
         clearTextBuffer();
         ;
@@ -631,7 +634,7 @@ bool QXmlStreamReaderPrivate::parse()
                 } else {
                     break;
                 }
-                // fall through
+                [[fallthrough]];
             case '\0': {
                 token = EOF_SYMBOL;
                 if (!tagsDone && !inParseEntity) {
@@ -748,7 +751,7 @@ bool QXmlStreamReaderPrivate::parse()
             state_stack[tos] = 0;
             return true;
         } else if (act > 0) {
-            if (++tos == stack_size-1)
+            if (++tos >= stack_size-1)
                 reallocateStack();
 
             Value &val = sym_stack[tos];
@@ -885,7 +888,7 @@ doctype_decl ::= langle_bang DOCTYPE qname markup space_opt RANGLE;
 /.
         case $rule_number:
             dtdName = symString(3);
-            // fall through
+            [[fallthrough]];
 ./
 doctype_decl ::= doctype_decl_start external_id space_opt markup space_opt RANGLE;
 /.
@@ -1283,7 +1286,7 @@ scan_content_char ::= content_char;
 /.
         case $rule_number:
             isWhitespace = false;
-            // fall through
+            [[fallthrough]];
 ./
 
 scan_content_char ::= SPACE;
@@ -1569,7 +1572,7 @@ empty_element_tag ::= stag_start attribute_list_opt SLASH RANGLE;
 /.
         case $rule_number:
             isEmptyElement = true;
-        // fall through
+        [[fallthrough]];
 ./
 
 
