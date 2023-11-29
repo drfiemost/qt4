@@ -100,6 +100,8 @@ private slots:
     void setSharable1() const;
     void setSharable2_data() const;
     void setSharable2() const;
+    void eraseValidIteratorsOnSharedList() const;
+    void insertWithValidIteratorsOnSharedList() const;
 
     void reserve() const;
 
@@ -873,6 +875,53 @@ void tst_QList::setSharable1() const
 void tst_QList::setSharable2() const
 {
     runSetSharableTest<Complex>();
+}
+
+void tst_QList::eraseValidIteratorsOnSharedList() const
+{
+    QList<int> a, b;
+    a.push_back(10);
+    a.push_back(20);
+    a.push_back(30);
+    QList<int>::iterator i = a.begin();
+    ++i;
+    b = a;
+    a.erase(i);
+    QCOMPARE(b.size(), 3);
+    QCOMPARE(a.size(), 2);
+    QCOMPARE(a.at(0), 10);
+    QCOMPARE(a.at(1), 30);
+
+    a.push_back(40);
+    a.push_back(50);
+    a.push_back(60);
+    QCOMPARE(a.size(), 5);
+    i = a.begin();
+    b = a;
+    ++i;
+    QList<int>::iterator j = i;
+    ++j;
+    ++j;
+    a.erase(i, j); // remove 3 elements
+    QCOMPARE(b.size(), 5);
+    QCOMPARE(a.size(), 3);
+    QCOMPARE(a.at(0), 10);
+    QCOMPARE(a.at(1), 50);
+}
+
+void tst_QList::insertWithValidIteratorsOnSharedList() const
+{
+    QList<int> a, b;
+    a.push_back(10);
+    a.push_back(20);
+    a.push_back(30);
+    QList<int>::iterator i = a.begin();
+    ++i;
+    b = a;
+    a.insert(i, 15);
+    QCOMPARE(a.size(), b.size() + 1);
+    QCOMPARE(b.at(1), 20);
+    QCOMPARE(a.at(1), 15);
 }
 
 void tst_QList::reserve() const

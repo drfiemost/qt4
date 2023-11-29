@@ -137,7 +137,7 @@ public:
 #ifdef Q_COMPILER_INITIALIZER_LISTS
     inline QList(std::initializer_list<T> args)
         : d(const_cast<QListData::Data *>(&QListData::shared_null))
-    { std::copy(args.begin(), args.end(), std::back_inserter(*this)); }
+    { reserve(args.size()); std::copy(args.begin(), args.end(), std::back_inserter(*this)); }
 #endif
     bool operator==(const QList<T> &l) const;
     inline bool operator!=(const QList<T> &l) const { return !(*this == l); }
@@ -277,7 +277,7 @@ public:
         inline const_iterator &operator-=(int j) { i-=j; return *this; }
         inline const_iterator operator+(int j) const { return const_iterator(i+j); }
         inline const_iterator operator-(int j) const { return const_iterator(i-j); }
-        inline int operator-(const_iterator j) const { return i - j.i; }
+        inline int operator-(const_iterator j) const { return int(i - j.i); }
     };
     friend class const_iterator;
 
@@ -380,7 +380,7 @@ Q_INLINE_TEMPLATE void QList<T>::node_construct(Node *n, const T &t)
     else *reinterpret_cast<T*>(n) = t;
 #else
     // This is always safe, but penaltizes unoptimized builds a lot.
-    else ::memcpy(n, &t, sizeof(T));
+    else ::memcpy(n, static_cast<const void *>(&t), sizeof(T));
 #endif
 }
 
@@ -448,7 +448,11 @@ template <typename T>
 inline typename QList<T>::iterator QList<T>::insert(iterator before, const T &t)
 {
     int iBefore = int(before.i - reinterpret_cast<Node *>(p.begin()));
-    Node *n = reinterpret_cast<Node *>(p.insert(iBefore));
+    Node *n = nullptr;
+    if (d->ref.isShared())
+        n = detach_helper_grow(iBefore, 1);
+    else
+        n = reinterpret_cast<Node *>(p.insert(iBefore));
     QT_TRY {
         node_construct(n, t);
     } QT_CATCH(...) {
@@ -459,8 +463,15 @@ inline typename QList<T>::iterator QList<T>::insert(iterator before, const T &t)
 }
 template <typename T>
 inline typename QList<T>::iterator QList<T>::erase(iterator it)
-{ node_destruct(it.i);
- return reinterpret_cast<Node *>(p.erase(reinterpret_cast<void**>(it.i))); }
+{
+    if (d->ref.isShared()) {
+        int offset = int(it.i - reinterpret_cast<Node *>(p.begin()));
+        it = begin(); // implies detach()
+        it += offset;
+    }
+    node_destruct(it.i);
+    return reinterpret_cast<Node *>(p.erase(reinterpret_cast<void**>(it.i)));
+}
 template <typename T>
 inline const T &QList<T>::at(int i) const
 { Q_ASSERT_X(i >= 0 && i < p.size(), "QList<T>::at", "index out of range");
@@ -616,9 +627,7 @@ inline void QList<T>::swap(int i, int j)
     Q_ASSERT_X(i >= 0 && i < p.size() && j >= 0 && j < p.size(),
                 "QList<T>::swap", "index out of range");
     detach();
-    void *t = d->array[d->begin + i];
-    d->array[d->begin + i] = d->array[d->begin + j];
-    d->array[d->begin + j] = t;
+    std::swap(d->array[d->begin + i], d->array[d->begin + j]);
 }
 
 template <typename T>
@@ -761,10 +770,10 @@ Q_OUTOFLINE_TEMPLATE QList<T>::~QList()
 template <typename T>
 Q_OUTOFLINE_TEMPLATE bool QList<T>::operator==(const QList<T> &l) const
 {
-    if (p.size() != l.p.size())
-        return false;
     if (d == l.d)
         return true;
+    if (p.size() != l.p.size())
+        return false;
     Node *i = reinterpret_cast<Node *>(p.end());
     Node *b = reinterpret_cast<Node *>(p.begin());
     Node *li = reinterpret_cast<Node *>(l.p.end());
@@ -832,6 +841,16 @@ template <typename T>
 Q_OUTOFLINE_TEMPLATE typename QList<T>::iterator QList<T>::erase(typename QList<T>::iterator afirst,
                                                                  typename QList<T>::iterator alast)
 {
+    if (d->ref.isShared()) {
+        // ### A block is erased and a detach is needed. We should shrink and only copy relevant items.
+        int offsetfirst = int(afirst.i - reinterpret_cast<Node *>(p.begin()));
+        int offsetlast = int(alast.i - reinterpret_cast<Node *>(p.begin()));
+        afirst = begin(); // implies detach()
+        alast = afirst;
+        afirst += offsetfirst;
+        alast += offsetlast;
+    }
+
     for (Node *n = afirst.i; n < alast.i; ++n)
         node_destruct(n);
     int idx = afirst - begin();
