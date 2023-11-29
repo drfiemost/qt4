@@ -253,7 +253,7 @@ int QEventLoop::exec(ProcessEventsFlags flags)
 void QEventLoop::processEvents(ProcessEventsFlags flags, int maxTime)
 {
     Q_D(QEventLoop);
-    if (!d->threadData.loadRelaxed()->eventDispatcher.load())
+    if (!d->threadData.loadRelaxed()->hasEventDispatcher())
         return;
 
     QElapsedTimer start;

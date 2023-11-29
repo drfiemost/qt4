@@ -78,6 +78,7 @@ public:
 class QSvgFont : public QSvgRefCounted
 {
 public:
+    static constexpr qreal DEFAULT_UNITS_PER_EM = 1000;
     QSvgFont(qreal horizAdvX);
 
     void setFamilyName(const QString &name);
@@ -90,9 +91,7 @@ public:
     void draw(QPainter *p, const QPointF &point, const QString &str, qreal pixelSize, Qt::Alignment alignment) const;
 public:
     QString m_familyName;
-    qreal m_unitsPerEm;
-    qreal m_ascent;
-    qreal m_descent;
+    qreal m_unitsPerEm = DEFAULT_UNITS_PER_EM;
     qreal m_horizAdvX;
     QHash<QChar, QSvgGlyph> m_glyphs;
 };
