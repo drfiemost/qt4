@@ -244,7 +244,7 @@ private:
 template <typename T>
 void QVector<T>::defaultConstruct(T *from, T *to)
 {
-    if (QTypeInfo<T>::isComplex) {
+    if constexpr (QTypeInfo<T>::isComplex) {
         while (from != to) {
             new (from++) T();
         }
@@ -256,7 +256,7 @@ void QVector<T>::defaultConstruct(T *from, T *to)
 template <typename T>
 void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
 {
-    if (QTypeInfo<T>::isComplex) {
+    if constexpr (QTypeInfo<T>::isComplex) {
         while (srcFrom != srcTo)
             new (dstFrom++) T(*srcFrom++);
     } else {
@@ -267,7 +267,7 @@ void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
 template <typename T>
 void QVector<T>::destruct(T *from, T *to)
 {
-    if (QTypeInfo<T>::isComplex) {
+    if constexpr (QTypeInfo<T>::isComplex) {
         while (from != to) {
             from++->~T();
         }
@@ -542,13 +542,13 @@ void QVector<T>::append(const T &t)
         QArrayData::AllocationOptions opt(isTooSmall ? QArrayData::Grow : QArrayData::Default);
         reallocData(d->size, isTooSmall ? d->size + 1 : d->alloc, opt);
 
-        if (QTypeInfo<T>::isComplex)
+        if constexpr (QTypeInfo<T>::isComplex)
             new (d->end()) T(std::move(copy));
         else
             *d->end() = std::move(copy);
 
     } else {
-        if (QTypeInfo<T>::isComplex)
+        if constexpr (QTypeInfo<T>::isComplex)
             new (d->end()) T(t);
         else
             *d->end() = t;
@@ -566,7 +566,7 @@ inline void QVector<T>::removeLast()
             reallocData(d->size - 1, int(d->alloc));
             return;
         }
-        if (QTypeInfo<T>::isComplex)
+        if constexpr (QTypeInfo<T>::isComplex)
             (d->data() + d->size - 1)->~T();
         --d->size;
     }
@@ -580,7 +580,7 @@ typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, c
         const T copy(t);
         if (!isDetached() || d->size + n > int(d->alloc))
             reallocData(d->size, d->size + n, QArrayData::Grow);
-        if (QTypeInfo<T>::isStatic) {
+        if constexpr (QTypeInfo<T>::isStatic) {
             T *b = d->end();
             T *i = d->end() + n;
             while (i != b)
@@ -626,11 +626,11 @@ typename QVector<T>::iterator QVector<T>::erase(iterator abegin, iterator aend)
         detach();
         abegin = d->begin() + itemsUntouched;
         aend = abegin + itemsToErase;
-        if (QTypeInfo<T>::isStatic) {
+        if constexpr (QTypeInfo<T>::isStatic) {
             iterator moveBegin = abegin + itemsToErase;
             iterator moveEnd = d->end();
             while (moveBegin != moveEnd) {
-                if (QTypeInfo<T>::isComplex)
+                if constexpr (QTypeInfo<T>::isComplex)
                     abegin->~T();
                 new (abegin++) T(*moveBegin++);
             }
@@ -696,7 +696,7 @@ QVector<T> &QVector<T>::operator+=(const QVector &l)
         T *i = l.d->end();
         T *b = l.d->begin();
         while (i != b) {
-            if (QTypeInfo<T>::isComplex)
+            if constexpr (QTypeInfo<T>::isComplex)
                 new (--w) T(*--i);
             else
                 *--w = *--i;
