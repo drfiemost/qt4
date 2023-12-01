@@ -116,7 +116,7 @@ static inline int qt_string_count(const QChar *haystack, int haystackLen,
                                   Qt::CaseSensitivity cs);
 static inline int qt_string_count(const QChar *haystack, int haystackLen,
                                   QChar needle, Qt::CaseSensitivity cs);
-static inline int qt_find_latin1_string(const QChar *hay, int size, const QLatin1String &needle,
+static inline int qt_find_latin1_string(const QChar *hay, int size, QLatin1String needle,
                                         int from, Qt::CaseSensitivity cs);
 static inline bool qt_starts_with(const QChar *haystack, int haystackLen,
                                   const QChar *needle, int needleLen, Qt::CaseSensitivity cs);
@@ -126,6 +126,38 @@ static inline bool qt_ends_with(const QChar *haystack, int haystackLen,
                                 const QChar *needle, int needleLen, Qt::CaseSensitivity cs);
 static inline bool qt_ends_with(const QChar *haystack, int haystackLen,
                                 const QLatin1String &needle, Qt::CaseSensitivity cs);
+
+// conversion between Latin 1 and UTF-16
+static void qt_from_latin1(ushort *dst, const char *str, size_t size)
+{
+    /* SIMD:
+     * Unpacking with SSE has been shown to improve performance on recent CPUs
+     * The same method gives no improvement with NEON.
+     */
+#if defined(QT_ALWAYS_HAVE_SSE2)
+    if (size >= 16) {
+        int chunkCount = size >> 4; // divided by 16
+        const __m128i nullMask = _mm_set1_epi32(0);
+        for (int i = 0; i < chunkCount; ++i) {
+            const __m128i chunk = _mm_loadu_si128((__m128i*)str); // load
+            str += 16;
+
+            // unpack the first 8 bytes, padding with zeros
+            const __m128i firstHalf = _mm_unpacklo_epi8(chunk, nullMask);
+            _mm_storeu_si128((__m128i*)dst, firstHalf); // store
+            dst += 8;
+
+            // unpack the last 8 bytes, padding with zeros
+            const __m128i secondHalf = _mm_unpackhi_epi8 (chunk, nullMask);
+            _mm_storeu_si128((__m128i*)dst, secondHalf); // store
+            dst += 8;
+        }
+        size = size % 16;
+    }
+#endif
+    while (size--)
+        *dst++ = (uchar)*str++;
+}
 
 // Unicode case-insensitive comparison
 static int ucstricmp(const ushort *a, const ushort *ae, const ushort *b, const ushort *be)
@@ -1113,7 +1145,7 @@ QString::QString(int size, Qt::Initialization)
     d->data()[size] = '\0';
 }
 
-/*! \fn QString::QString(const QLatin1String &str)
+/*! \fn QString::QString(QLatin1String str)
 
     Constructs a copy of the Latin-1 string \a str.
 
@@ -1350,7 +1382,7 @@ QString &QString::operator=(const QString &other)
 }
 
 
-/*! \fn QString &QString::operator=(const QLatin1String &str)
+/*! \fn QString &QString::operator=(QLatin1String str)
 
     \overload operator=()
 
@@ -1425,14 +1457,14 @@ QString &QString::operator=(QChar ch)
 
 
 /*!
-    \fn QString &QString::insert(int position, const QLatin1String &str)
+    \fn QString &QString::insert(int position, QLatin1String str)
     \overload insert()
 
     Inserts the Latin-1 string \a str at the given index \a position.
 */
-QString &QString::insert(int i, const QLatin1String &str)
+QString &QString::insert(int i, QLatin1String str)
 {
-    const uchar *s = (const uchar *)str.latin1();
+    const char *s = str.latin1();
     if (i < 0 || !s || !(*s))
         return *this;
 
@@ -1440,8 +1472,7 @@ QString &QString::insert(int i, const QLatin1String &str)
     expand(std::max(d->size, i) + len - 1);
 
     ::memmove(d->data() + i + len, d->data() + i, (d->size - i - len) * sizeof(QChar));
-    for (int j = 0; j < len; ++j)
-        d->data()[i + j] = s[j];
+    qt_from_latin1(d->data() + i, s, uint(len));
     return *this;
 }
 
@@ -1550,16 +1581,16 @@ QString &QString::append(const QChar *str, int len)
 
   Appends the Latin-1 string \a str to this string.
 */
-QString &QString::append(const QLatin1String &str)
+QString &QString::append(QLatin1String str)
 {
-    const uchar *s = (const uchar *)str.latin1();
+    const char *s = str.latin1();
     if (s) {
         int len = str.size();
         if (d->ref.isShared() || uint(d->size + len) + 1u > d->alloc)
             reallocData(uint(d->size + len) + 1u, true);
         ushort *i = d->data() + d->size;
-        while ((*i++ = *s++))
-            ;
+        qt_from_latin1(i, s, uint(len));
+        i[len] = '\0';
         d->size += len;
     }
     return *this;
@@ -1617,7 +1648,7 @@ QString &QString::append(QChar ch)
     \sa append(), insert()
 */
 
-/*! \fn QString &QString::prepend(const QLatin1String &str)
+/*! \fn QString &QString::prepend(QLatin1String str)
 
     \overload prepend()
 
@@ -2051,18 +2082,14 @@ QString& QString::replace(QChar before, QChar after, Qt::CaseSensitivity cs)
 
   \note The text is not rescanned after a replacement.
 */
-QString &QString::replace(const QLatin1String &before,
-                          const QLatin1String &after,
-                          Qt::CaseSensitivity cs)
+QString &QString::replace(QLatin1String before, QLatin1String after, Qt::CaseSensitivity cs)
 {
     int alen = after.size();
-    QVarLengthArray<ushort> a(alen);
-    for (int i = 0; i < alen; ++i)
-        a[i] = (uchar)after.latin1()[i];
     int blen = before.size();
+    QVarLengthArray<ushort> a(alen);
     QVarLengthArray<ushort> b(blen);
-    for (int i = 0; i < blen; ++i)
-        b[i] = (uchar)before.latin1()[i];
+    qt_from_latin1(a.data(), after.latin1(), alen);
+    qt_from_latin1(b.data(), before.latin1(), blen);
     return replace((const QChar *)b.data(), blen, (const QChar *)a.data(), alen, cs);
 }
 
@@ -2078,14 +2105,11 @@ QString &QString::replace(const QLatin1String &before,
 
   \note The text is not rescanned after a replacement.
 */
-QString &QString::replace(const QLatin1String &before,
-                          const QString &after,
-                          Qt::CaseSensitivity cs)
+QString &QString::replace(QLatin1String before, const QString &after, Qt::CaseSensitivity cs)
 {
     int blen = before.size();
     QVarLengthArray<ushort> b(blen);
-    for (int i = 0; i < blen; ++i)
-        b[i] = (uchar)before.latin1()[i];
+    qt_from_latin1(b.data(), before.latin1(), blen);
     return replace((const QChar *)b.data(), blen, after.constData(), after.d->size, cs);
 }
 
@@ -2101,14 +2125,11 @@ QString &QString::replace(const QLatin1String &before,
 
   \note The text is not rescanned after a replacement.
 */
-QString &QString::replace(const QString &before,
-                          const QLatin1String &after,
-                          Qt::CaseSensitivity cs)
+QString &QString::replace(const QString &before, QLatin1String after, Qt::CaseSensitivity cs)
 {
     int alen = after.size();
     QVarLengthArray<ushort> a(alen);
-    for (int i = 0; i < alen; ++i)
-        a[i] = (uchar)after.latin1()[i];
+    qt_from_latin1(a.data(), after.latin1(), alen);
     return replace(before.constData(), before.d->size, (const QChar *)a.data(), alen, cs);
 }
 
@@ -2124,12 +2145,11 @@ QString &QString::replace(const QString &before,
 
   \note The text is not rescanned after a replacement.
 */
-QString &QString::replace(QChar c, const QLatin1String &after, Qt::CaseSensitivity cs)
+QString &QString::replace(QChar c, QLatin1String after, Qt::CaseSensitivity cs)
 {
     int alen = after.size();
     QVarLengthArray<ushort> a(alen);
-    for (int i = 0; i < alen; ++i)
-        a[i] = (uchar)after.latin1()[i];
+    qt_from_latin1(a.data(), after.latin1(), alen);
     return replace(&c, 1, (const QChar *)a.data(), alen, cs);
 }
 
@@ -2154,7 +2174,7 @@ bool QString::operator==(const QString &other) const
 /*!
     \overload operator==()
 */
-bool QString::operator==(const QLatin1String &other) const
+bool QString::operator==(QLatin1String other) const
 {
     if (d->size != other.size())
         return false;
@@ -2219,7 +2239,7 @@ bool QString::operator<(const QString &other) const
 /*!
     \overload operator<()
 */
-bool QString::operator<(const QLatin1String &other) const
+bool QString::operator<(QLatin1String other) const
 {
     const uchar *c = (uchar *) other.latin1();
     if (!c || *c == 0)
@@ -2275,7 +2295,7 @@ bool QString::operator<(const QLatin1String &other) const
     localeAwareCompare().
 */
 
-/*! \fn bool QString::operator<=(const QLatin1String &other) const
+/*! \fn bool QString::operator<=(QLatin1String other) const
 
     \overload operator<=()
 */
@@ -2321,7 +2341,7 @@ bool QString::operator<(const QLatin1String &other) const
 /*!
     \overload operator>()
 */
-bool QString::operator>(const QLatin1String &other) const
+bool QString::operator>(QLatin1String other) const
 {
     const uchar *c = (uchar *) other.latin1();
     if (!c || *c == '\0')
@@ -2420,7 +2440,7 @@ bool QString::operator>(const QLatin1String &other) const
     localeAwareCompare().
 */
 
-/*! \fn bool QString::operator!=(const QLatin1String &other) const
+/*! \fn bool QString::operator!=(QLatin1String other) const
 
     \overload operator!=()
 */
@@ -2493,7 +2513,7 @@ int QString::indexOf(const QString &str, int from, Qt::CaseSensitivity cs) const
   \sa lastIndexOf(), contains(), count()
 */
 
-int QString::indexOf(const QLatin1String &str, int from, Qt::CaseSensitivity cs) const
+int QString::indexOf(QLatin1String str, int from, Qt::CaseSensitivity cs) const
 {
     return qt_find_latin1_string(unicode(), size(), str, from, cs);
 }
@@ -2703,7 +2723,7 @@ int QString::lastIndexOf(const QString &str, int from, Qt::CaseSensitivity cs) c
 
   \sa indexOf(), contains(), count()
 */
-int QString::lastIndexOf(const QLatin1String &str, int from, Qt::CaseSensitivity cs) const
+int QString::lastIndexOf(QLatin1String str, int from, Qt::CaseSensitivity cs) const
 {
     const uint sl = str.size();
     if (sl == 1)
@@ -2721,8 +2741,7 @@ int QString::lastIndexOf(const QLatin1String &str, int from, Qt::CaseSensitivity
         from = delta;
 
     QVarLengthArray<ushort> s(sl);
-    for (uint i = 0; i < sl; ++i)
-        s[i] = str.latin1()[i];
+    qt_from_latin1(s.data(), str.latin1(), sl);
 
     return lastIndexOfHelper(d->data(), from, s.data(), sl, cs);
 }
@@ -3428,7 +3447,7 @@ bool QString::startsWith(const QString& s, Qt::CaseSensitivity cs) const
 /*!
   \overload startsWith()
  */
-bool QString::startsWith(const QLatin1String& s, Qt::CaseSensitivity cs) const
+bool QString::startsWith(QLatin1String s, Qt::CaseSensitivity cs) const
 {
     return qt_starts_with(isNull() ? nullptr : unicode(), size(), s, cs);
 }
@@ -3502,7 +3521,7 @@ bool QString::endsWith(const QStringRef &s, Qt::CaseSensitivity cs) const
 /*!
     \overload endsWith()
 */
-bool QString::endsWith(const QLatin1String& s, Qt::CaseSensitivity cs) const
+bool QString::endsWith(QLatin1String s, Qt::CaseSensitivity cs) const
 {
     return qt_ends_with(isNull() ? nullptr : unicode(), size(), s, cs);
 }
@@ -3782,33 +3801,7 @@ QString::Data *QString::fromLatin1_helper(const char *str, int size)
         d->size = size;
         d->data()[size] = '\0';
         ushort *dst = d->data();
-        /* SIMD:
-         * Unpacking with SSE has been shown to improve performance on recent CPUs
-         * The same method gives no improvement with NEON.
-         */
-#if defined(QT_ALWAYS_HAVE_SSE2)
-        if (size >= 16) {
-            int chunkCount = size >> 4; // divided by 16
-            const __m128i nullMask = _mm_set1_epi32(0);
-            for (int i = 0; i < chunkCount; ++i) {
-                const __m128i chunk = _mm_loadu_si128((__m128i*)str); // load
-                str += 16;
-
-                // unpack the first 8 bytes, padding with zeros
-                const __m128i firstHalf = _mm_unpacklo_epi8(chunk, nullMask);
-                _mm_storeu_si128((__m128i*)dst, firstHalf); // store
-                dst += 8;
-
-                // unpack the last 8 bytes, padding with zeros
-                const __m128i secondHalf = _mm_unpackhi_epi8 (chunk, nullMask);
-                _mm_storeu_si128((__m128i*)dst, secondHalf); // store
-                dst += 8;
-            }
-            size = size % 16;
-        }
-#endif
-        while (size--)
-            *dst++ = (uchar)*str++;
+        qt_from_latin1(dst, str, uint(size));
     }
     return d;
 }
@@ -4312,7 +4305,7 @@ QString& QString::fill(QChar ch, int size)
     \sa append(), prepend()
 */
 
-/*! \fn QString &QString::operator+=(const QLatin1String &str)
+/*! \fn QString &QString::operator+=(QLatin1String str)
 
     \overload operator+=()
 
@@ -4545,7 +4538,7 @@ QString& QString::fill(QChar ch, int size)
 */
 
 /*!
-    \fn int QString::compare(const QString &s1, const QLatin1String &s2, Qt::CaseSensitivity cs)
+    \fn int QString::compare(const QString &s1, QLatin1String s2, Qt::CaseSensitivity cs)
     \since 4.2
     \overload compare()
 
@@ -4554,7 +4547,7 @@ QString& QString::fill(QChar ch, int size)
 */
 
 /*!
-    \fn int QString::compare(const QLatin1String &s1, const QString &s2, Qt::CaseSensitivity cs = Qt::CaseSensitive)
+    \fn int QString::compare(QLatin1String s1, const QString &s2, Qt::CaseSensitivity cs = Qt::CaseSensitive)
 
     \since 4.2
     \overload compare()
@@ -4611,7 +4604,7 @@ int QString::compare_helper(const QChar *data1, int length1, const QChar *data2,
 
     Same as compare(*this, \a other, \a cs).
 */
-int QString::compare(const QLatin1String &other, Qt::CaseSensitivity cs) const
+int QString::compare(QLatin1String other, Qt::CaseSensitivity cs) const
 {
     return compare_helper(unicode(), length(), other, cs);
 }
@@ -7209,7 +7202,7 @@ QString &QString::setRawData(const QChar *unicode, int size)
     benefits as the first version of the code, and is faster than
     converting the Latin-1 strings using QString::fromLatin1().
 
-    Thanks to the QString(const QLatin1String &) constructor,
+    Thanks to the QString(QLatin1String) constructor,
     QLatin1String can be used everywhere a QString is expected. For
     example:
 
@@ -7412,37 +7405,37 @@ QString &QString::setRawData(const QChar *unicode, int size)
 
 
 
-/*! \fn bool operator==(const QLatin1String &s1, const QLatin1String &s2)
+/*! \fn bool operator==(QLatin1String s1, QLatin1String s2)
    \relates QLatin1String
 
    Returns true if string \a s1 is lexically equal to string \a s2; otherwise
    returns false.
 */
-/*! \fn bool operator!=(const QLatin1String &s1, const QLatin1String &s2)
+/*! \fn bool operator!=(QLatin1String s1, QLatin1String s2)
    \relates QLatin1String
 
    Returns true if string \a s1 is lexically unequal to string \a s2; otherwise
    returns false.
 */
-/*! \fn bool operator<(const QLatin1String &s1, const QLatin1String &s2)
+/*! \fn bool operator<(QLatin1String s1, QLatin1String s2)
    \relates QLatin1String
 
    Returns true if string \a s1 is lexically smaller than string \a s2; otherwise
    returns false.
 */
-/*! \fn bool operator<=(const QLatin1String &s1, const QLatin1String &s2)
+/*! \fn bool operator<=(QLatin1String s1, QLatin1String s2)
    \relates QLatin1String
 
    Returns true if string \a s1 is lexically smaller than or equal to string \a s2; otherwise
    returns false.
 */
-/*! \fn bool operator>(const QLatin1String &s1, const QLatin1String &s2)
+/*! \fn bool operator>(QLatin1String s1, QLatin1String s2)
    \relates QLatin1String
 
    Returns true if string \a s1 is lexically greater than string \a s2; otherwise
    returns false.
 */
-/*! \fn bool operator>=(const QLatin1String &s1, const QLatin1String &s2)
+/*! \fn bool operator>=(QLatin1String s1, QLatin1String s2)
    \relates QLatin1String
 
    Returns true if string \a s1 is lexically greater than or equal to
@@ -8002,7 +7995,7 @@ bool operator==(const QString &s1,const QStringRef &s2)
    Returns true if string  \a s1 is lexically equal to string reference \a s2; otherwise
    returns false.
 */
-bool operator==(const QLatin1String &s1, const QStringRef &s2)
+bool operator==(QLatin1String s1, const QStringRef &s2)
 {
     if (s1.size() != s2.size())
         return false;
@@ -8536,8 +8529,7 @@ int QStringRef::lastIndexOf(QLatin1String str, int from, Qt::CaseSensitivity cs)
         from = delta;
 
     QVarLengthArray<ushort> s(sl);
-    for (int i = 0; i < sl; ++i)
-        s[i] = str.latin1()[i];
+    qt_from_latin1(s.data(), str.latin1(), sl);
 
     return lastIndexOfHelper(reinterpret_cast<const ushort*>(unicode()), from, s.data(), sl, cs);
 }
@@ -8869,14 +8861,13 @@ static inline int qt_string_count(const QChar *unicode, int size, QChar ch,
 }
 
 static inline int qt_find_latin1_string(const QChar *haystack, int size,
-                                        const QLatin1String &needle,
+                                        QLatin1String needle,
                                         int from, Qt::CaseSensitivity cs)
 {
     const char *latin1 = needle.latin1();
     int len = needle.size();
     QVarLengthArray<ushort> s(len);
-    for (int i = 0; i < len; ++i)
-        s[i] = latin1[i];
+    qt_from_latin1(s.data(), latin1, len);
 
     return qFindString(haystack, size, from,
                        reinterpret_cast<const QChar*>(s.constData()), len, cs);

@@ -170,10 +170,10 @@ class Q_XMLSTREAM_EXPORT QXmlStreamAttributes : public QVector<QXmlStreamAttribu
 public:
     inline QXmlStreamAttributes() {}
     QStringRef value(const QString &namespaceUri, const QString &name) const;
-    QStringRef value(const QString &namespaceUri, const QLatin1String &name) const;
-    QStringRef value(const QLatin1String &namespaceUri, const QLatin1String &name) const;
+    QStringRef value(const QString &namespaceUri, QLatin1String name) const;
+    QStringRef value(QLatin1String namespaceUri, QLatin1String name) const;
     QStringRef value(const QString &qualifiedName) const;
-    QStringRef value(const QLatin1String &qualifiedName) const;
+    QStringRef value(QLatin1String qualifiedName) const;
     void append(const QString &namespaceUri, const QString &name, const QString &value);
     void append(const QString &qualifiedName, const QString &value);
 

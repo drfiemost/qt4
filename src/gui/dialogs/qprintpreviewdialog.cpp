@@ -344,7 +344,7 @@ void QPrintPreviewDialogPrivate::init(QPrinter *_printer)
     preview->setFocus();
 }
 
-static inline void qt_setupActionIcon(QAction *action, const QLatin1String &name)
+static inline void qt_setupActionIcon(QAction *action, QLatin1String name)
 {
     QLatin1String imagePrefix(":/trolltech/dialogs/qprintpreviewdialog/images/");
     QIcon icon;

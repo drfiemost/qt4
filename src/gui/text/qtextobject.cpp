@@ -527,7 +527,7 @@ void QTextFrame::setLayoutData(QTextFrameLayoutData *data)
 
 
 
-void QTextFramePrivate::fragmentAdded(const QChar &type, uint fragment)
+void QTextFramePrivate::fragmentAdded(QChar type, uint fragment)
 {
     if (type == QTextBeginningOfFrame) {
         Q_ASSERT(!fragment_start);
@@ -545,7 +545,7 @@ void QTextFramePrivate::fragmentAdded(const QChar &type, uint fragment)
     }
 }
 
-void QTextFramePrivate::fragmentRemoved(const QChar &type, uint fragment)
+void QTextFramePrivate::fragmentRemoved(QChar type, uint fragment)
 {
     Q_UNUSED(fragment); // --release warning
     if (type == QTextBeginningOfFrame) {
