@@ -1489,7 +1489,8 @@ QString& QString::insert(int i, const QChar *unicode, int size)
         return *this;
 
     const ushort *s = (const ushort *)unicode;
-    if (s >= d->data() && s < d->data() + d->alloc) {
+    const std::less<const ushort*> less = {};
+    if (!less(s, d->data()) && less(s, d->data() + d->alloc)) {
         // Part of me - take a copy
         ushort *tmp = static_cast<ushort *>(::malloc(size * sizeof(QChar)));
         Q_CHECK_PTR(tmp);
@@ -1863,26 +1864,40 @@ QString &QString::replace(const QString &before, const QString &after, Qt::CaseS
     return replace(before.constData(), before.size(), after.constData(), after.size(), cs);
 }
 
+namespace { // helpers for replace and its helper:
+QChar *textCopy(const QChar *start, int len)
+{
+    const size_t size = len * sizeof(QChar);
+    QChar *const copy = static_cast<QChar *>(::malloc(size));
+    Q_CHECK_PTR(copy);
+    ::memcpy(copy, start, size);
+    return copy;
+}
+
+bool pointsIntoRange(const QChar *ptr, const ushort *base, int len)
+{
+    const QChar *const start = reinterpret_cast<const QChar *>(base);
+    return start <= ptr && ptr < start + len;
+}
+} // end namespace
+
 /*!
   \internal
  */
 void QString::replace_helper(uint *indices, int nIndices, int blen, const QChar *after, int alen)
 {
-    // copy *after in case it lies inside our own d->data() area
-    // (which we could possibly invalidate via a realloc or corrupt via memcpy operations.)
-    QChar *afterBuffer = const_cast<QChar *>(after);
-    if (after >= reinterpret_cast<QChar *>(d->data()) && after < reinterpret_cast<QChar *>(d->data()) + d->size) {
-        afterBuffer = static_cast<QChar *>(::malloc(alen*sizeof(QChar)));
-        Q_CHECK_PTR(afterBuffer);
-        ::memcpy(afterBuffer, after, alen*sizeof(QChar));
-    }
+    // Copy after if it lies inside our own d->data() area (which we could
+    // possibly invalidate via a realloc or modify by replacement).
+    QChar *afterBuffer = 0;
+    if (pointsIntoRange(after, d->data(), d->size)) // Use copy in place of vulnerable original:
+        after = afterBuffer = textCopy(after, alen);
 
     QT_TRY {
         if (blen == alen) {
             // replace in place
             detach();
             for (int i = 0; i < nIndices; ++i)
-                memcpy(d->data() + indices[i], afterBuffer, alen * sizeof(QChar));
+                memcpy(d->data() + indices[i], after, alen * sizeof(QChar));
         } else if (alen < blen) {
             // replace from front
             detach();
@@ -1898,7 +1913,7 @@ void QString::replace_helper(uint *indices, int nIndices, int blen, const QChar 
                     to += msize;
                 }
                 if (alen) {
-                    memcpy(d->data() + to, afterBuffer, alen*sizeof(QChar));
+                    memcpy(d->data() + to, after, alen * sizeof(QChar));
                     to += alen;
                 }
                 movestart = indices[i] + blen;
@@ -1921,17 +1936,15 @@ void QString::replace_helper(uint *indices, int nIndices, int blen, const QChar 
                 int moveto = insertstart + alen;
                 memmove(d->data() + moveto, d->data() + movestart,
                         (moveend - movestart)*sizeof(QChar));
-                memcpy(d->data() + insertstart, afterBuffer, alen*sizeof(QChar));
+                memcpy(d->data() + insertstart, after, alen * sizeof(QChar));
                 moveend = movestart-blen;
             }
         }
     } QT_CATCH(const std::bad_alloc &) {
-        if (afterBuffer != after)
-            ::free(afterBuffer);
+        ::free(afterBuffer);
         QT_RETHROW;
     }
-    if (afterBuffer != after)
-        ::free(afterBuffer);
+    ::free(afterBuffer);
 }
 
 /*!
@@ -1960,12 +1973,13 @@ QString &QString::replace(const QChar *before, int blen,
         return *this;
 
     QStringMatcher matcher(before, blen, cs);
+    QChar *beforeBuffer = 0, *afterBuffer = 0;
 
     int index = 0;
     while (1) {
         uint indices[1024];
         uint pos = 0;
-        while (pos < 1023) {
+        while (pos < 1024) {
             index = matcher.indexIn(*this, index);
             if (index == -1)
                 break;
@@ -1978,13 +1992,29 @@ QString &QString::replace(const QChar *before, int blen,
         if (!pos)
             break;
 
+        if (Q_UNLIKELY(index != -1)) {
+            /*
+              We're about to change data, that before and after might point
+              into, and we'll need that data for our next batch of indices.
+            */
+            if (!afterBuffer && pointsIntoRange(after, d->data(), d->size))
+                after = afterBuffer = textCopy(after, alen);
+
+            if (!beforeBuffer && pointsIntoRange(before, d->data(), d->size)) {
+                beforeBuffer = textCopy(before, blen);
+                matcher = QStringMatcher(beforeBuffer, blen, cs);
+            }
+        }
+
         replace_helper(indices, pos, blen, after, alen);
 
-        if (index == -1)
+        if (Q_LIKELY(index == -1)) // Nothing left to replace
             break;
         // index has to be adjusted in case we get back into the loop above.
         index += pos*(alen-blen);
     }
+    ::free(afterBuffer);
+    ::free(beforeBuffer);
 
     return *this;
 }
@@ -2015,13 +2045,13 @@ QString& QString::replace(QChar ch, const QString &after, Qt::CaseSensitivity cs
         uint indices[1024];
         uint pos = 0;
         if (cs == Qt::CaseSensitive) {
-            while (pos < 1023 && index < d->size) {
+            while (pos < 1024 && index < d->size) {
                 if (d->data()[index] == cc)
                     indices[pos++] = index;
                 index++;
             }
         } else {
-            while (pos < 1023 && index < d->size) {
+            while (pos < 1024 && index < d->size) {
                 if (QChar::toCaseFolded(d->data()[index]) == cc)
                     indices[pos++] = index;
                 index++;
@@ -2032,7 +2062,7 @@ QString& QString::replace(QChar ch, const QString &after, Qt::CaseSensitivity cs
 
         replace_helper(indices, pos, 1, after.constData(), after.d->size);
 
-        if (index == -1)
+        if (Q_LIKELY(index == size())) // Nothing left to replace
             break;
         // index has to be adjusted in case we get back into the loop above.
         index += pos*(after.d->size - 1);
@@ -3593,8 +3623,8 @@ static inline __m128i mergeQuestionMarks(__m128i chunk)
 # else
     // SSE has no compare instruction for unsigned comparison.
     // The variables must be shiffted + 0x8000 to be compared
-    const __m128i signedBitOffset = _mm_set1_epi16(0x8000);
-    const __m128i thresholdMask = _mm_set1_epi16(0xff + 0x8000);
+    const __m128i signedBitOffset = _mm_set1_epi16(short(0x8000));
+    const __m128i thresholdMask = _mm_set1_epi16(short(0xff + 0x8000));
 
     const __m128i signedChunk = _mm_add_epi16(chunk, signedBitOffset);
     const __m128i offLimitMask = _mm_cmpgt_epi16(signedChunk, thresholdMask);
@@ -8864,6 +8894,9 @@ static inline int qt_find_latin1_string(const QChar *haystack, int size,
                                         QLatin1String needle,
                                         int from, Qt::CaseSensitivity cs)
 {
+    if (size < needle.size())
+        return -1;
+
     const char *latin1 = needle.latin1();
     int len = needle.size();
     QVarLengthArray<ushort> s(len);
