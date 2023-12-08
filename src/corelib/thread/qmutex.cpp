@@ -568,7 +568,7 @@ void QMutexPrivate::derefWaiters(int value) noexcept
 inline bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
 {
     void* self = QThread::currentThreadId();
-    if (owner.load() == self) {
+    if (owner.loadRelaxed() == self) {
         ++count;
         Q_ASSERT_X(count != 0, "QMutex::lock", "Overflow in recursion counter");
         return true;
@@ -581,7 +581,7 @@ inline bool QRecursiveMutexPrivate::lock(int timeout) QT_MUTEX_LOCK_NOEXCEPT
     }
 
     if (success)
-        owner.store(self);
+        owner.storeRelaxed(self);
     return success;
 }
 
@@ -593,7 +593,7 @@ inline void QRecursiveMutexPrivate::unlock() noexcept
     if (count > 0) {
         count--;
     } else {
-        owner.store(0);
+        owner.storeRelaxed(nullptr);
         mutex.unlock();
     }
 }

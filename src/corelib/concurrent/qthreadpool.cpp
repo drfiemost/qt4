@@ -44,6 +44,8 @@
 #include "qdeadlinetimer.h"
 #include "qcoreapplication.h"
 
+#include <algorithm>
+
 #ifndef QT_NO_THREAD
 
 QT_BEGIN_NAMESPACE
@@ -212,7 +214,7 @@ void QThreadPoolPrivate::enqueueTask(QRunnable *runnable, int priority)
 
     // put it on the queue
     QList<QPair<QRunnable *, int> >::iterator at =
-        qUpperBound(queue.begin(), queue.end(), priority);
+        std::upper_bound(queue.begin(), queue.end(), priority);
     queue.insert(at, qMakePair(runnable, priority));
 }
 
