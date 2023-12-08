@@ -50,15 +50,6 @@
 
 QT_BEGIN_NAMESPACE
 
-inline bool operator<(int priority, const QPair<QRunnable *, int> &p)
-{
-    return p.second < priority;
-}
-inline bool operator<(const QPair<QRunnable *, int> &p, int priority)
-{
-    return priority < p.second;
-}
-
 /*
     QThread wrapper, provides synchronization against a ThreadPool
 */
@@ -207,15 +198,22 @@ bool QThreadPoolPrivate::tryStart(QRunnable *task)
     return true;
 }
 
+inline bool operator<(int priority, const QPair<QRunnable *, int> &p)
+{ return p.second < priority; }
+inline bool operator<(const QPair<QRunnable *, int> &p, int priority)
+{ return priority < p.second; }
+
 void QThreadPoolPrivate::enqueueTask(QRunnable *runnable, int priority)
 {
     if (runnable->autoDelete())
         ++runnable->ref;
 
     // put it on the queue
-    QList<QPair<QRunnable *, int> >::iterator at =
-        std::upper_bound(queue.begin(), queue.end(), priority);
-    queue.insert(at, qMakePair(runnable, priority));
+    QList<QPair<QRunnable *, int> >::const_iterator begin = queue.constBegin();
+    QList<QPair<QRunnable *, int> >::const_iterator it = queue.constEnd();
+    if (it != begin && priority < (*(it - 1)).second)
+        it = std::upper_bound(begin, --it, priority);
+    queue.insert(it - begin, qMakePair(runnable, priority));
 }
 
 int QThreadPoolPrivate::activeThreadCount() const
@@ -308,31 +306,6 @@ bool QThreadPoolPrivate::waitForDone(int msecs)
     return queue.isEmpty() && activeThreads == 0;
 }
 
-/*! \internal
-    Pulls a runnable from the front queue and runs it in the current thread. Blocks
-    until the runnable has completed. Returns true if a runnable was found.
-*/
-bool QThreadPoolPrivate::startFrontRunnable()
-{
-    QMutexLocker locker(&mutex);
-    if (queue.isEmpty())
-        return false;
-
-    QRunnable *runnable = queue.takeFirst().first;
-    const bool autoDelete = runnable->autoDelete();
-    bool del = autoDelete && !--runnable->ref;
-
-    locker.unlock();
-    runnable->run();
-    locker.relock();
-
-    if (del) {
-        delete runnable;
-    }
-
-    return true;
-}
-
 /*!
     \internal
     Searches for \a runnable in the queue, removes it from the queue and
@@ -341,7 +314,7 @@ bool QThreadPoolPrivate::startFrontRunnable()
 */
 void QThreadPoolPrivate::stealRunnable(QRunnable *runnable)
 {
-    if (runnable == 0 || queue.isEmpty())
+    if (runnable == 0)
         return;
     bool found = false;
     {
@@ -439,8 +412,7 @@ QThreadPool::QThreadPool(QObject *parent)
 */
 QThreadPool::~QThreadPool()
 {
-    d_func()->waitForDone();
-    d_func()->reset();
+    waitForDone();
 }
 
 /*!
@@ -632,22 +604,10 @@ void QThreadPool::releaseThread()
 }
 
 /*!
-    Waits for each thread to exit and removes all threads from the thread pool.
-*/
-void QThreadPool::waitForDone()
-{
-    Q_D(QThreadPool);
-    d->waitForDone();
-    d->reset();
-}
-
-/*!
-    \overload waitForDone()
-    \since 4.8
-
     Waits up to \a msecs milliseconds for all threads to exit and removes all 
     threads from the thread pool. Returns true if all threads were removed; 
-    otherwise it returns false.
+    otherwise it returns false. If \a msecs is -1 (the default), the timeout
+    is ignored (waits for the last thread to exit).
 */
 bool QThreadPool::waitForDone(int msecs)
 {

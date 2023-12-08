@@ -84,9 +84,8 @@ public:
 
     void startThread(QRunnable *runnable = 0);
     void reset();
-    bool waitForDone(int msecs = -1);
+    bool waitForDone(int msecs);
     bool waitForDone(const QDeadlineTimer &timer);
-    bool startFrontRunnable();
     void stealRunnable(QRunnable *);
 
     mutable QMutex mutex;
