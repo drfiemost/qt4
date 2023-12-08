@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtTest module of the Qt Toolkit.
@@ -62,6 +62,8 @@
 #include "QtTest/private/qsignaldumper_p.h"
 #include "QtTest/private/qbenchmark_p.h"
 #include "3rdparty/cycle_p.h"
+
+#include <cmath>
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -137,11 +139,20 @@ QT_BEGIN_NAMESPACE
    The QCOMPARE macro compares an \a actual value to an \a expected value using
    the equals operator. If \a actual and \a expected are identical, execution
    continues. If not, a failure is recorded in the test log and the test
-   won't be executed further.
+   function returns without attempting any later checks.
 
-   In the case of comparing floats and doubles, qFuzzyCompare() is used for
-   comparing. This means that comparing to 0 will likely fail. One solution
-   to this is to compare to 1, and add 1 to the produced output.
+   Always respect QCOMPARE() parameter semantics. The first parameter passed to
+   it should always be the actual value produced by the code-under-test, while
+   the second parameter should always be the expected value. When the values
+   don't match, QCOMPARE() prints them with the labels \e Actual and \e
+   Expected.  If the parameter order is swapped, debugging a failing test can be
+   confusing and tests expecting zero may fail due to rounding errors.
+
+   When comparing floating-point types (\c float and \c double),
+   \l qFuzzyCompare() is used for finite values. If qFuzzyIsNull() is true for
+   both values, they are also considered equal. Infinities match if they have
+   the same sign, and any NaN as actual value matches with any NaN as expected
+   value (even though NaN != NaN, even when they're identical).
 
    QCOMPARE tries to output the contents of the values if the comparison fails,
    so it is visible from the test log why the comparison failed.
@@ -2201,15 +2212,53 @@ QObject *QTest::testObject()
  */
 bool QTest::compare_helper(bool success, const char *msg, const char *file, int line)
 {
+    static bool warned = false;
+    if (!warned) {
+        warned = true;
+        QTest::qWarn("QTest::compare_helper(bool, const char *, const char *, int) is obsolete "
+                     "and will soon be removed. Please update your code to use the other "
+                     "version of this function.");
+    }
+
     return QTestResult::compare(success, msg, file, line);
 }
 
 /*! \internal
+    This function is called by various specializations of QTest::qCompare
+    to decide whether to report a failure and to produce verbose test output.
+
+    The failureMsg parameter can be null, in which case a default message
+    will be output if the compare fails.  If the compare succeeds, failureMsg
+    will not be output.
+
+    If the caller has already passed a failure message showing the compared
+    values, or if those values cannot be stringified, val1 and val2 can be null.
  */
-bool QTest::compare_helper(bool success, const char *msg, char *val1, char *val2,
-                    const char *actual, const char *expected, const char *file, int line)
+bool QTest::compare_helper(bool success, const char *failureMsg,
+                           char *val1, char *val2,
+                           const char *actual, const char *expected,
+                           const char *file, int line)
 {
-    return QTestResult::compare(success, msg, val1, val2, actual, expected, file, line);
+    return QTestResult::compare(success, failureMsg, val1, val2, actual, expected, file, line);
+}
+
+template <typename T>
+static bool floatingCompare(const T &actual, const T &expected)
+{
+    switch (std::fpclassify(expected))
+    {
+    case FP_INFINITE:
+        return (expected < 0) == (actual < 0) && std::fpclassify(actual) == FP_INFINITE;
+    case FP_NAN:
+        return std::fpclassify(actual) == FP_NAN;
+    default:
+        if (!qFuzzyIsNull(expected))
+            return qFuzzyCompare(actual, expected);
+        [[fallthrough]];
+    case FP_SUBNORMAL: // subnormal is always fuzzily null
+    case FP_ZERO:
+        return qFuzzyIsNull(actual);
+    }
 }
 
 /*! \fn bool QTest::qCompare(float const &t1, float const &t2, const char *actual, const char *expected, const char *file, int line)
@@ -2219,10 +2268,9 @@ bool QTest::compare_helper(bool success, const char *msg, char *val1, char *val2
 bool QTest::qCompare(float const &t1, float const &t2, const char *actual, const char *expected,
                     const char *file, int line)
 {
-    return qFuzzyCompare(t1, t2)
-            ? compare_helper(true, "COMPARE()", file, line)
-            : compare_helper(false, "Compared floats are not the same (fuzzy compare)",
-                             toString(t1), toString(t2), actual, expected, file, line);
+    return compare_helper(floatingCompare(t1, t2),
+                          "Compared floats are not the same (fuzzy compare)",
+                          toString(t1), toString(t2), actual, expected, file, line);
 }
 
 /*! \fn bool QTest::qCompare(double const &t1, double const &t2, const char *actual, const char *expected, const char *file, int line)
@@ -2231,10 +2279,9 @@ bool QTest::qCompare(float const &t1, float const &t2, const char *actual, const
 bool QTest::qCompare(double const &t1, double const &t2, const char *actual, const char *expected,
                     const char *file, int line)
 {
-    return qFuzzyCompare(t1, t2)
-            ? compare_helper(true, "COMPARE()", file, line)
-            : compare_helper(false, "Compared doubles are not the same (fuzzy compare)",
-                             toString(t1), toString(t2), actual, expected, file, line);
+    return compare_helper(floatingCompare(t1, t2),
+                          "Compared doubles are not the same (fuzzy compare)",
+                          toString(t1), toString(t2), actual, expected, file, line);
 }
 
 #define COMPARE_IMPL2(TYPE, FORMAT) \
@@ -2287,10 +2334,8 @@ char *QTest::toString(const void *p)
 bool QTest::compare_string_helper(const char *t1, const char *t2, const char *actual,
                                   const char *expected, const char *file, int line)
 {
-    return (qstrcmp(t1, t2) == 0)
-            ? compare_helper(true, "COMPARE()", file, line)
-            : compare_helper(false, "Compared strings are not the same",
-                             toString(t1), toString(t2), actual, expected, file, line);
+    return compare_helper(qstrcmp(t1, t2) == 0, "Compared strings are not the same",
+                          toString(t1), toString(t2), actual, expected, file, line);
 }
 
 /*! \fn bool QTest::compare_ptr_helper(const void *t1, const void *t2, const char *actual, const char *expected, const char *file, int line);
