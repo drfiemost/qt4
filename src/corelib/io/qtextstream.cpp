@@ -2502,6 +2502,8 @@ QTextStream &QTextStream::operator<<(double f)
         flags |= QLocalePrivate::CapitalEorX;
     if (numberFlags() & ForcePoint)
         flags |= QLocalePrivate::Alternate;
+    if (locale() != QLocale::c() && !(locale().numberOptions() & QLocale::OmitGroupSeparator))
+        flags |= QLocalePrivate::ThousandsGroup;
 
     const QLocalePrivate *dd = d->locale.d();
     QString num = dd->doubleToString(f, d->realNumberPrecision, form, -1, flags);

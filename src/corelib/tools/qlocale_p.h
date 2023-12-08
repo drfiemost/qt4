@@ -161,16 +161,14 @@ public:
         if (qIsInf(d))
             return float(d);
         if (std::fabs(d) > std::numeric_limits<float>::max()) {
-            if (ok != 0)
+            if (ok != nullptr)
                 *ok = false;
             const float huge = std::numeric_limits<float>::infinity();
             return d < 0 ? -huge : huge;
         }
-        if (std::fabs(d) >= std::numeric_limits<double>::min() // i.e. d != 0
-            && std::fabs(d) < std::numeric_limits<float>::min()) {
-            // Values smaller than std::numeric_limits<double>::min() have
-            // failed already; match them.
-            if (ok != 0)
+        if (d != 0 && float(d) == 0) {
+            // Values that underflow double already failed. Match them:
+            if (ok != nullptr)
                 *ok = false;
             return 0;
         }
