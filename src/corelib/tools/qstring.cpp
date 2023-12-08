@@ -5369,7 +5369,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                     case lm_t: i = va_arg(ap, int); break;
                     default: i = 0; break;
                 }
-                subst = locale.d()->longLongToString(i, precision, 10, width, flags);
+                subst = locale.d->longLongToString(i, precision, 10, width, flags);
                 ++c;
                 break;
             }
@@ -5401,7 +5401,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                         base = 16; break;
                     default: break;
                 }
-                subst = locale.d()->unsLongLongToString(u, precision, base, width, flags);
+                subst = locale.d->unsLongLongToString(u, precision, base, width, flags);
                 ++c;
                 break;
             }
@@ -5430,7 +5430,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                     case 'g': form = QLocalePrivate::DFSignificantDigits; break;
                     default: break;
                 }
-                subst = locale.d()->doubleToString(d, precision, form, width, flags);
+                subst = locale.d->doubleToString(d, precision, form, width, flags);
                 ++c;
                 break;
             }
@@ -5464,7 +5464,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                 quint64 i = reinterpret_cast<unsigned long>(arg);
 #endif
                 flags |= QLocalePrivate::Alternate;
-                subst = locale.d()->unsLongLongToString(i, precision, 16, width, flags);
+                subst = locale.d->unsLongLongToString(i, precision, 16, width, flags);
                 ++c;
                 break;
             }
@@ -5547,7 +5547,7 @@ qint64 QString::toLongLong(bool *ok, int base) const
 
     bool my_ok;
     QLocale def_locale;
-    qint64 result = def_locale.d()->stringToLongLong(*this, base, &my_ok, QLocalePrivate::FailOnGroupSeparators);
+    qint64 result = def_locale.d->stringToLongLong(*this, base, &my_ok, QLocalePrivate::FailOnGroupSeparators);
     if (my_ok) {
         if (ok != nullptr)
             *ok = true;
@@ -5555,7 +5555,7 @@ qint64 QString::toLongLong(bool *ok, int base) const
     }
 
     QLocale c_locale(QLocale::C);
-    return c_locale.d()->stringToLongLong(*this, base, ok, QLocalePrivate::FailOnGroupSeparators);
+    return c_locale.d->stringToLongLong(*this, base, ok, QLocalePrivate::FailOnGroupSeparators);
 }
 
 /*!
@@ -5588,7 +5588,7 @@ quint64 QString::toULongLong(bool *ok, int base) const
 
     bool my_ok;
     QLocale def_locale;
-    quint64 result = def_locale.d()->stringToUnsLongLong(*this, base, &my_ok, QLocalePrivate::FailOnGroupSeparators);
+    quint64 result = def_locale.d->stringToUnsLongLong(*this, base, &my_ok, QLocalePrivate::FailOnGroupSeparators);
     if (my_ok) {
         if (ok != nullptr)
             *ok = true;
@@ -5596,7 +5596,7 @@ quint64 QString::toULongLong(bool *ok, int base) const
     }
 
     QLocale c_locale(QLocale::C);
-    return c_locale.d()->stringToUnsLongLong(*this, base, ok, QLocalePrivate::FailOnGroupSeparators);
+    return c_locale.d->stringToUnsLongLong(*this, base, ok, QLocalePrivate::FailOnGroupSeparators);
 }
 
 /*!
@@ -5824,7 +5824,7 @@ double QString::toDouble(bool *ok) const
 {
     bool my_ok;
     QLocale def_locale;
-    double result = def_locale.d()->stringToDouble(*this, &my_ok, QLocalePrivate::FailOnGroupSeparators);
+    double result = def_locale.d->stringToDouble(*this, &my_ok, QLocalePrivate::FailOnGroupSeparators);
     if (my_ok) {
         if (ok != nullptr)
             *ok = true;
@@ -5832,7 +5832,7 @@ double QString::toDouble(bool *ok) const
     }
 
     QLocale c_locale(QLocale::C);
-    return c_locale.d()->stringToDouble(*this, ok, QLocalePrivate::FailOnGroupSeparators);
+    return c_locale.d->stringToDouble(*this, ok, QLocalePrivate::FailOnGroupSeparators);
 }
 
 /*!
@@ -5909,7 +5909,7 @@ QString &QString::setNum(qlonglong n, int base)
     }
 #endif
     QLocale locale(QLocale::C);
-    *this = locale.d()->longLongToString(n, -1, base);
+    *this = locale.d->longLongToString(n, -1, base);
     return *this;
 }
 
@@ -5925,7 +5925,7 @@ QString &QString::setNum(qulonglong n, int base)
     }
 #endif
     QLocale locale(QLocale::C);
-    *this = locale.d()->unsLongLongToString(n, -1, base);
+    *this = locale.d->unsLongLongToString(n, -1, base);
     return *this;
 }
 
@@ -5981,7 +5981,7 @@ QString &QString::setNum(double n, char f, int prec)
     }
 
     QLocale locale(QLocale::C);
-    *this = locale.d()->doubleToString(n, prec, form, -1, flags);
+    *this = locale.d->doubleToString(n, prec, form, -1, flags);
     return *this;
 }
 
@@ -6728,14 +6728,14 @@ QString QString::arg(qlonglong a, int fieldWidth, int base, QChar fillChar) cons
 
     QString arg;
     if (d.occurrences > d.locale_occurrences)
-        arg = QLocale::c().d()->longLongToString(a, -1, base, fieldWidth, flags);
+        arg = QLocale::c().d->longLongToString(a, -1, base, fieldWidth, flags);
 
     QString locale_arg;
     if (d.locale_occurrences > 0) {
         QLocale locale;
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
             flags |= QLocalePrivate::ThousandsGroup;
-        locale_arg = locale.d()->longLongToString(a, -1, base, fieldWidth, flags);
+        locale_arg = locale.d->longLongToString(a, -1, base, fieldWidth, flags);
     }
 
     return replaceArgEscapes(*this, d, fieldWidth, arg, locale_arg, fillChar);
@@ -6772,14 +6772,14 @@ QString QString::arg(qulonglong a, int fieldWidth, int base, QChar fillChar) con
 
     QString arg;
     if (d.occurrences > d.locale_occurrences)
-        arg = QLocale::c().d()->unsLongLongToString(a, -1, base, fieldWidth, flags);
+        arg = QLocale::c().d->unsLongLongToString(a, -1, base, fieldWidth, flags);
 
     QString locale_arg;
     if (d.locale_occurrences > 0) {
         QLocale locale;
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
             flags |= QLocalePrivate::ThousandsGroup;
-        locale_arg = locale.d()->unsLongLongToString(a, -1, base, fieldWidth, flags);
+        locale_arg = locale.d->unsLongLongToString(a, -1, base, fieldWidth, flags);
     }
 
     return replaceArgEscapes(*this, d, fieldWidth, arg, locale_arg, fillChar);
@@ -6906,7 +6906,7 @@ QString QString::arg(double a, int fieldWidth, char fmt, int prec, QChar fillCha
 
     QString arg;
     if (d.occurrences > d.locale_occurrences)
-        arg = QLocale::c().d()->doubleToString(a, prec, form, fieldWidth, flags);
+        arg = QLocale::c().d->doubleToString(a, prec, form, fieldWidth, flags);
 
     QString locale_arg;
     if (d.locale_occurrences > 0) {
@@ -6914,7 +6914,7 @@ QString QString::arg(double a, int fieldWidth, char fmt, int prec, QChar fillCha
 
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
             flags |= QLocalePrivate::ThousandsGroup;
-        locale_arg = locale.d()->doubleToString(a, prec, form, fieldWidth, flags);
+        locale_arg = locale.d->doubleToString(a, prec, form, fieldWidth, flags);
     }
 
     return replaceArgEscapes(*this, d, fieldWidth, arg, locale_arg, fillChar);

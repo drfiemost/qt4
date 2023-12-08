@@ -76,10 +76,6 @@ QT_END_NAMESPACE
 //TESTED_CLASS=
 //TESTED_FILES=
 
-#ifdef Q_OS_SYMBIAN
-#define SRCDIR ""
-#endif
-
 class tst_QTextStream : public QObject
 {
     Q_OBJECT
@@ -1217,13 +1213,8 @@ void tst_QTextStream::stillOpenWhenAtEnd()
 #endif
     QTcpSocket socket;
     socket.connectToHost(QtNetworkSettings::serverName(), 143);
-#if defined(Q_OS_SYMBIAN)
-    // This number is determined in an arbitrary way; whatever it takes
-    // to make the test pass.
-    QVERIFY(socket.waitForReadyRead(30000));
-#else
     QVERIFY(socket.waitForReadyRead(5000));
-#endif
+
 
     QTextStream stream2(&socket);
     while (!stream2.readLine().isNull()) {}
@@ -1501,7 +1492,7 @@ void tst_QTextStream::pos3LargeFile()
 // ------------------------------------------------------------------------------
 void tst_QTextStream::readStdin()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WINCE)
     QSKIP("Qt/CE and Symbian have no stdin/out support for processes", SkipAll);
 #endif
     QProcess stdinProcess;
@@ -1527,7 +1518,7 @@ void tst_QTextStream::readStdin()
 // ------------------------------------------------------------------------------
 void tst_QTextStream::readAllFromStdin()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WINCE)
     QSKIP("Qt/CE and Symbian have no stdin/out support for processes", SkipAll);
 #endif
     QProcess stdinProcess;
@@ -1548,7 +1539,7 @@ void tst_QTextStream::readAllFromStdin()
 // ------------------------------------------------------------------------------
 void tst_QTextStream::readLineFromStdin()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WINCE)
     QSKIP("Qt/CE and Symbian have no stdin/out support for processes", SkipAll);
 #endif
     QProcess stdinProcess;
@@ -2998,7 +2989,7 @@ void tst_QTextStream::int_write_with_locale()
 // ------------------------------------------------------------------------------
 
 // like QTEST_APPLESS_MAIN, but initialising the locale on Unix
-#if defined (Q_OS_UNIX) && !defined (Q_OS_SYMBIAN)
+#if defined (Q_OS_UNIX)
 QT_BEGIN_NAMESPACE
 extern bool qt_locale_initialized;
 QT_END_NAMESPACE
@@ -3006,7 +2997,7 @@ QT_END_NAMESPACE
 
 int main(int argc, char *argv[])
 {
-#if defined (Q_OS_UNIX) && !defined (Q_OS_SYMBIAN)
+#if defined (Q_OS_UNIX)
     ::setlocale(LC_ALL, "");
     qt_locale_initialized = true;
 #endif

@@ -3740,7 +3740,7 @@ QByteArray &QByteArray::setNum(double n, char f, int prec)
     }
 
     QLocale locale(QLocale::C);
-    *this = locale.d()->doubleToString(n, prec, form, -1, flags).toLatin1();
+    *this = locale.d->doubleToString(n, prec, form, -1, flags).toLatin1();
     return *this;
 }
 
