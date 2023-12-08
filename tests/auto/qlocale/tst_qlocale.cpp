@@ -662,6 +662,7 @@ void tst_QLocale::stringToDouble()
     QFETCH(QString, num_str);
     QFETCH(bool, good);
     QFETCH(double, num);
+    QStringRef num_strRef = num_str.leftRef(-1);
 
     QLocale locale(locale_name);
     QCOMPARE(locale.name(), locale_name);
@@ -685,6 +686,7 @@ void tst_QLocale::stringToDouble()
             QVERIFY(diff <= MY_DOUBLE_EPSILON);
         }
     }
+
     d = locale.toDouble(num_str, &ok);
     QCOMPARE(ok, good);
 
@@ -926,6 +928,7 @@ void tst_QLocale::long_long_conversion()
     QFETCH(QString, num_str);
     QFETCH(bool, good);
     QFETCH(qlonglong, num);
+    QStringRef num_strRef = num_str.leftRef(-1);
 
     QLocale locale(locale_name);
     QCOMPARE(locale.name(), locale_name);
@@ -934,9 +937,14 @@ void tst_QLocale::long_long_conversion()
     qlonglong l = locale.toLongLong(num_str, &ok);
     QCOMPARE(ok, good);
 
-    if (ok) {
-	QCOMPARE(l, num);
-    }
+    if (ok)
+        QCOMPARE(l, num);
+
+    l = locale.toLongLong(num_strRef, &ok);
+    QCOMPARE(ok, good);
+
+    if (ok)
+        QCOMPARE(l, num);
 }
 
 void tst_QLocale::long_long_conversion_extra()
@@ -1605,7 +1613,7 @@ void tst_QLocale::testNames_data()
     QTest::addColumn<int>("country");
 
     for (int i = 0; i < locale_data_count; ++i) {
-        const QLocalePrivate &item = locale_data[i];
+        const QLocaleData &item = locale_data[i];
 
         const QString testName = QString::fromLatin1("data_%1 (%2/%3)").arg(i)
                 .arg(QLocale::languageToString((QLocale::Language)item.m_language_id))

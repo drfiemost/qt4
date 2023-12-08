@@ -1169,6 +1169,16 @@ public:
     static int localeAwareCompare(const QStringRef &s1, const QStringRef &s2);
 
     QStringRef trimmed() const Q_REQUIRED_RESULT;
+    short  toShort(bool *ok = 0, int base = 10) const;
+    ushort toUShort(bool *ok = 0, int base = 10) const;
+    int toInt(bool *ok = 0, int base = 10) const;
+    uint toUInt(bool *ok = 0, int base = 10) const;
+    long toLong(bool *ok = 0, int base = 10) const;
+    ulong toULong(bool *ok = 0, int base = 10) const;
+    qlonglong toLongLong(bool *ok = 0, int base = 10) const;
+    qulonglong toULongLong(bool *ok = 0, int base = 10) const;
+    float toFloat(bool *ok = 0) const;
+    double toDouble(bool *ok = 0) const;
 };
 
 inline QStringRef &QStringRef::operator=(const QString *aString)

@@ -222,17 +222,16 @@ public:
         return float(d);
     }
 
-    double stringToDouble(const QString &num, bool *ok, GroupSeparatorMode group_sep_mode) const;
-    qint64 stringToLongLong(const QString &num, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
-    quint64 stringToUnsLongLong(const QString &num, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
-
+    double stringToDouble(const QChar *begin, int len, bool *ok, GroupSeparatorMode group_sep_mode) const;
+    qint64 stringToLongLong(const QChar *begin, int len, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
+    quint64 stringToUnsLongLong(const QChar *begin, int len, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
 
     static double bytearrayToDouble(const char *num, bool *ok, bool *overflow = nullptr);
     static qint64 bytearrayToLongLong(const char *num, int base, bool *ok, bool *overflow = nullptr);
     static quint64 bytearrayToUnsLongLong(const char *num, int base, bool *ok);
 
     typedef QVarLengthArray<char, 256> CharBuff;
-    bool numberToCLocale(const QString &num,
+    bool numberToCLocale(const QChar *str, int len,
     	    	    	  GroupSeparatorMode group_sep_mode,
                           CharBuff *result) const;
     inline char digitToCLocale(QChar c) const;

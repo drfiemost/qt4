@@ -1174,7 +1174,7 @@ qlonglong QLocale::toLongLong(const QString &s, bool *ok, int base) const
             ? QLocalePrivate::FailOnGroupSeparators
             : QLocalePrivate::ParseGroupSeparators;
 
-    return d->stringToLongLong(s, base, ok, mode);
+    return d->stringToLongLong(s.constData(), s.size(), base, ok, mode);
 }
 
 // ### Qt5: make the return type for toULongLong() qulonglong.
@@ -1204,7 +1204,7 @@ qlonglong QLocale::toULongLong(const QString &s, bool *ok, int base) const
             ? QLocalePrivate::FailOnGroupSeparators
             : QLocalePrivate::ParseGroupSeparators;
 
-    return d->stringToUnsLongLong(s, base, ok, mode);
+    return d->stringToUnsLongLong(s.constData(), s.size(), base, ok, mode);
 }
 
 /*!
@@ -1254,7 +1254,174 @@ double QLocale::toDouble(const QString &s, bool *ok) const
             ? QLocalePrivate::FailOnGroupSeparators
             : QLocalePrivate::ParseGroupSeparators;
 
-    return d->stringToDouble(s, ok, mode);
+    return d->stringToDouble(s.constData(), s.size(), ok, mode);
+}
+
+/*!
+    Returns the short int represented by the localized string \a s.
+    If the conversion fails the function returns 0.
+    If \a ok is not null, failure is reported by setting *ok to false, and
+    success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toUShort(), toString()
+    \since 5.1
+*/
+
+short QLocale::toShort(const QStringRef &s, bool *ok) const
+{
+    qlonglong i = toLongLong(s, ok);
+    if (i < SHRT_MIN || i > SHRT_MAX) {
+        if (ok)
+            *ok = false;
+        return 0;
+    }
+    return short(i);
+}
+
+/*!
+    Returns the unsigned short int represented by the localized string \a s.
+    If the conversion fails the function returns 0.
+    If \a ok is not null, failure is reported by setting *ok to false, and
+    success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toShort(), toString()
+    \since 5.1
+*/
+
+ushort QLocale::toUShort(const QStringRef &s, bool *ok) const
+{
+    qulonglong i = toULongLong(s, ok);
+    if (i > USHRT_MAX) {
+        if (ok)
+            *ok = false;
+        return 0;
+    }
+    return ushort(i);
+}
+
+/*!
+    Returns the int represented by the localized string \a s.
+    If the conversion fails the function returns 0.
+    If \a ok is not null, failure is reported by setting *ok to false, and
+    success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toUInt(), toString()
+    \since 5.1
+*/
+
+int QLocale::toInt(const QStringRef &s, bool *ok) const
+{
+    qlonglong i = toLongLong(s, ok);
+    if (i < INT_MIN || i > INT_MAX) {
+        if (ok)
+            *ok = false;
+        return 0;
+    }
+    return int(i);
+}
+
+/*!
+    Returns the unsigned int represented by the localized string \a s.
+    If the conversion fails the function returns 0.
+    If \a ok is not null, failure is reported by setting *ok to false, and
+    success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toInt(), toString()
+    \since 5.1
+*/
+
+uint QLocale::toUInt(const QStringRef &s, bool *ok) const
+{
+    qulonglong i = toULongLong(s, ok);
+    if (i > UINT_MAX) {
+        if (ok)
+            *ok = false;
+        return 0;
+    }
+    return uint(i);
+}
+
+/*!
+    Returns the long long int represented by the localized string \a s.
+    If the conversion fails the function returns 0.
+    If \a ok is not null, failure is reported by setting *ok to false, and
+    success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toInt(), toULongLong(), toDouble(), toString()
+    \since 5.1
+*/
+
+
+qlonglong QLocale::toLongLong(const QStringRef &s, bool *ok) const
+{
+    QLocalePrivate::GroupSeparatorMode mode
+        = d->m_numberOptions & RejectGroupSeparator
+            ? QLocalePrivate::FailOnGroupSeparators
+            : QLocalePrivate::ParseGroupSeparators;
+
+    return d->stringToLongLong(s.constData(), s.size(), 10, ok, mode);
+}
+
+/*!
+    Returns the unsigned long long int represented by the localized
+    string \a s.
+    If the conversion fails the function returns 0.
+    If \a ok is not null, failure is reported by setting *ok to false, and
+    success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toLongLong(), toInt(), toDouble(), toString()
+    \since 5.1
+*/
+
+qulonglong QLocale::toULongLong(const QStringRef &s, bool *ok) const
+{
+    QLocalePrivate::GroupSeparatorMode mode
+        = d->m_numberOptions & RejectGroupSeparator
+            ? QLocalePrivate::FailOnGroupSeparators
+            : QLocalePrivate::ParseGroupSeparators;
+
+    return d->stringToUnsLongLong(s.constData(), s.size(), 10, ok, mode);
+}
+
+/*!
+    Returns the float represented by the localized string \a s, or 0.0
+    if the conversion failed.
+    If \a ok is not null, reports failure by setting
+    *ok to false and success by setting *ok to true.
+    This function ignores leading and trailing whitespace.
+    \sa toDouble(), toInt(), toString()
+    \since 5.1
+*/
+
+float QLocale::toFloat(const QStringRef &s, bool *ok) const
+{
+    return QLocalePrivate::convertDoubleToFloat(toDouble(s, ok), ok);
+}
+
+/*!
+    Returns the double represented by the localized string \a s, or
+    0.0 if the conversion failed.
+    If \a ok is not null, reports failure by setting
+    *ok to false and success by setting *ok to true.
+    Unlike QString::toDouble(), this function does not fall back to
+    the "C" locale if the string cannot be interpreted in this
+    locale.
+    \snippet code/src_corelib_tools_qlocale.cpp 3
+    Notice that the last conversion returns 1234.0, because '.' is the
+    thousands group separator in the German locale.
+    This function ignores leading and trailing whitespace.
+    \sa toFloat(), toInt(), toString()
+    \since 5.1
+*/
+
+double QLocale::toDouble(const QStringRef &s, bool *ok) const
+{
+    QLocalePrivate::GroupSeparatorMode mode
+        = d->m_numberOptions & RejectGroupSeparator
+            ? QLocalePrivate::FailOnGroupSeparators
+            : QLocalePrivate::ParseGroupSeparators;
+
+    return d->stringToDouble(s.constData(), s.size(), ok, mode);
 }
 
 /*!
@@ -2814,12 +2981,12 @@ QString QLocalePrivate::unsLongLongToString(const QChar zero, const QChar group,
     number. We can't detect junk here, since we don't even know the base
     of the number.
 */
-bool QLocalePrivate::numberToCLocale(const QString &num,
+bool QLocalePrivate::numberToCLocale(const QChar *str, int len,
                                             GroupSeparatorMode group_sep_mode,
                                             CharBuff *result) const
 {
-    const QChar *uc = num.unicode();
-    int l = num.length();
+    const QChar *uc = str;
+    int l = len;
     int idx = 0;
 
     // Skip whitespace
@@ -2827,6 +2994,12 @@ bool QLocalePrivate::numberToCLocale(const QString &num,
         ++idx;
     if (idx == l)
         return false;
+
+    // Check trailing whitespace
+    for (; idx < l; --l) {
+        if (!uc[l - 1].isSpace())
+            break;
+    }
 
     while (idx < l) {
         const QChar in = uc[idx];
@@ -2851,12 +3024,6 @@ bool QLocalePrivate::numberToCLocale(const QString &num,
         ++idx;
     }
 
-    // Check trailing whitespace
-    for (; idx < l; ++idx) {
-        if (!uc[idx].isSpace())
-            return false;
-    }
-
     result->append('\0');
 
     // Check separators
@@ -2865,7 +3032,7 @@ bool QLocalePrivate::numberToCLocale(const QString &num,
         return false;
 
 
-    return true;
+    return idx == l;
 }
 
 bool QLocalePrivate::validateChars(const QString &str, NumberMode numMode, QByteArray *buff,
@@ -2961,12 +3128,11 @@ bool QLocalePrivate::validateChars(const QString &str, NumberMode numMode, QByte
     return true;
 }
 
-double QLocalePrivate::stringToDouble(const QString &number, bool *ok,
+double QLocalePrivate::stringToDouble(const QChar *begin, int len, bool *ok,
                                         GroupSeparatorMode group_sep_mode) const
 {
     CharBuff buff;
-    if (!numberToCLocale(group().unicode() == 0xa0 ? number.trimmed() : number,
-                         group_sep_mode, &buff)) {
+    if (!numberToCLocale(begin, len, group_sep_mode, &buff)) {
         if (ok != nullptr)
             *ok = false;
         return 0.0;
@@ -2974,12 +3140,11 @@ double QLocalePrivate::stringToDouble(const QString &number, bool *ok,
     return bytearrayToDouble(buff.constData(), ok);
 }
 
-qlonglong QLocalePrivate::stringToLongLong(const QString &number, int base,
+qlonglong QLocalePrivate::stringToLongLong(const QChar *begin, int len, int base,
                                            bool *ok, GroupSeparatorMode group_sep_mode) const
 {
     CharBuff buff;
-    if (!numberToCLocale(group().unicode() == 0xa0 ? number.trimmed() : number,
-                         group_sep_mode, &buff)) {
+    if (!numberToCLocale(begin, len, group_sep_mode, &buff)) {
         if (ok != nullptr)
             *ok = false;
         return 0;
@@ -2988,12 +3153,11 @@ qlonglong QLocalePrivate::stringToLongLong(const QString &number, int base,
     return bytearrayToLongLong(buff.constData(), base, ok);
 }
 
-qulonglong QLocalePrivate::stringToUnsLongLong(const QString &number, int base,
+qulonglong QLocalePrivate::stringToUnsLongLong(const QChar *begin, int len, int base,
                                                bool *ok, GroupSeparatorMode group_sep_mode) const
 {
     CharBuff buff;
-    if (!numberToCLocale(group().unicode() == 0xa0 ? number.trimmed() : number,
-                         group_sep_mode, &buff)) {
+    if (!numberToCLocale(begin, len, group_sep_mode, &buff)) {
         if (ok != nullptr)
             *ok = false;
         return 0;
@@ -3001,7 +3165,6 @@ qulonglong QLocalePrivate::stringToUnsLongLong(const QString &number, int base,
 
     return bytearrayToUnsLongLong(buff.constData(), base, ok);
 }
-
 
 double QLocalePrivate::bytearrayToDouble(const char *num, bool *ok, bool *overflow)
 {

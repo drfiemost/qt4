@@ -135,6 +135,7 @@ class Q_CORE_EXPORT QLocale
     Q_ENUMS(Language)
     Q_ENUMS(Country)
     friend class QString;
+    friend class QStringRef;
     friend class QByteArray;
     friend class QIntValidator;
     friend class QDoubleValidatorPrivate;
@@ -694,6 +695,15 @@ public:
     qlonglong toULongLong(const QString &s, bool *ok = nullptr, int base = 0) const;
     float toFloat(const QString &s, bool *ok = nullptr) const;
     double toDouble(const QString &s, bool *ok = nullptr) const;
+
+    short toShort(const QStringRef &s, bool *ok = 0) const;
+    ushort toUShort(const QStringRef &s, bool *ok = 0) const;
+    int toInt(const QStringRef &s, bool *ok = 0) const;
+    uint toUInt(const QStringRef &s, bool *ok = 0) const;
+    qlonglong toLongLong(const QStringRef &s, bool *ok = 0) const;
+    qulonglong toULongLong(const QStringRef &s, bool *ok = 0) const;
+    float toFloat(const QStringRef &s, bool *ok = 0) const;
+    double toDouble(const QStringRef &s, bool *ok = 0) const;
 
     QString toString(qlonglong i) const;
     QString toString(qulonglong i) const;
