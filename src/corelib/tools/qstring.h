@@ -501,6 +501,7 @@ public:
     int localeAwareCompare(const QStringRef &s) const;
     static int localeAwareCompare(const QString& s1, const QStringRef& s2);
 
+    // ### TODO: make inline except for the long long versions
     short  toShort(bool *ok=nullptr, int base=10) const;
     ushort toUShort(bool *ok=nullptr, int base=10) const;
     int toInt(bool *ok=nullptr, int base=10) const;
@@ -659,6 +660,8 @@ private:
                                          const QChar *data2, int length2);
     static Data *fromLatin1_helper(const char *str, int size = -1);
     static Data *fromAscii_helper(const char *str, int size = -1);
+    static qlonglong toIntegral_helper(const QChar *data, int len, bool *ok, int base);
+    static qulonglong toIntegral_helper(const QChar *data, uint len, bool *ok, int base);
     void replace_helper(uint *indices, int nIndices, int blen, const QChar *after, int alen);
     friend class QCharRef;
     friend class QCFString;
@@ -667,6 +670,24 @@ private:
     friend struct QAbstractConcatenable;
     friend inline bool qStringComparisonHelper(const QString &s1, const char *s2);
     friend inline bool qStringComparisonHelper(const QStringRef &s1, const char *s2);
+
+
+    template <typename T> static
+    T toIntegral_helper(const QChar *data, int len, bool *ok, int base)
+    {
+        typedef typename std::conditional<std::is_unsigned<T>::value, qulonglong, qlonglong>::type Int64;
+        typedef typename std::conditional<std::is_unsigned<T>::value, uint, int>::type Int32;
+
+        // we select the right overload by casting size() to int or uint
+        Int64 val = toIntegral_helper(data, Int32(len), ok, base);
+        if (T(val) != val) {
+            if (ok)
+                *ok = false;
+            val = 0;
+        }
+        return T(val);
+    }
+
 public:
     typedef Data * DataPtr;
     inline DataPtr &data_ptr() { return d; }

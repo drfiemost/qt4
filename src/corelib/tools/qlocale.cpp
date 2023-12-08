@@ -1177,8 +1177,6 @@ qlonglong QLocale::toLongLong(const QString &s, bool *ok, int base) const
     return d->stringToLongLong(s.constData(), s.size(), base, ok, mode);
 }
 
-// ### Qt5: make the return type for toULongLong() qulonglong.
-
 /*!
     Returns the unsigned long long int represented by the localized
     string \a s, using base \a base. If \a base is 0 the base is
@@ -1197,7 +1195,7 @@ qlonglong QLocale::toLongLong(const QString &s, bool *ok, int base) const
     \sa toLongLong(), toInt(), toDouble(), toString()
 */
 
-qlonglong QLocale::toULongLong(const QString &s, bool *ok, int base) const
+qulonglong QLocale::toULongLong(const QString &s, bool *ok, int base) const
 {
     QLocalePrivate::GroupSeparatorMode mode
         = d->m_numberOptions & RejectGroupSeparator
