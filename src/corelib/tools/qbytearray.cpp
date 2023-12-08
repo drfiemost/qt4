@@ -3524,7 +3524,8 @@ double QByteArray::toDouble(bool *ok) const
 /*!
     Returns the byte array converted to a \c float value.
 
-    Returns 0.0 if the conversion fails.
+    Returns an infinity if the conversion overflows or 0.0 if the
+    conversion fails for other reasons (e.g. underflow).
 
     If \a ok is not 0: if a conversion error occurs, *\a{ok} is set to
     false; otherwise *\a{ok} is set to true.
@@ -3537,7 +3538,7 @@ double QByteArray::toDouble(bool *ok) const
 
 float QByteArray::toFloat(bool *ok) const
 {
-    return float(toDouble(ok));
+    return QLocalePrivate::convertDoubleToFloat(toDouble(ok), ok);
 }
 
 /*!

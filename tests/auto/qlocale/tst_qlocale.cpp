@@ -47,6 +47,7 @@
 #include <qtextcodec.h>
 #include <qdatetime.h>
 #include <float.h>
+#include <locale.h>
 
 #include <qlocale.h>
 #include <qnumeric.h>
@@ -67,11 +68,6 @@ extern "C" DWORD GetThreadLocale(void) {
 
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
 #    include <stdlib.h>
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-#    include <e32std.h>
-#    include <private/qcore_symbian_p.h>
 #endif
 
 Q_DECLARE_METATYPE(qlonglong)
@@ -97,9 +93,13 @@ private slots:
 
     void ctor();
     void emptyCtor();
+    void stringToFloat_data();
+    void stringToFloat();
     void unixLocaleName();
-    void double_conversion_data();
-    void double_conversion();
+    void stringToDouble_data();
+    void stringToDouble();
+    void doubleToString_data();
+    void doubleToString();
     void long_long_conversion_data();
     void long_long_conversion();
     void long_long_conversion_extra();
@@ -144,10 +144,6 @@ private slots:
     // defaultNumberingSystem test
     void defaultNumeringSystem();
 
-#if defined(Q_OS_SYMBIAN)
-    void symbianSystemLocale();
-#endif
-
     void ampm();
     void currency();
     void quoteString();
@@ -158,6 +154,17 @@ private slots:
 private:
     QString m_decimal, m_thousand, m_sdate, m_ldate, m_time;
     QString m_sysLocaleApp;
+    void toReal_data();
+    
+    class TransientLocale
+    {
+        const int m_category;
+        const char *const m_prior;
+    public:
+        TransientLocale(int category, const char *locale)
+            : m_category(category), m_prior(setlocale(category, locale)) {}
+        ~TransientLocale() { setlocale(m_category, m_prior); }
+    };
 };
 
 tst_QLocale::tst_QLocale()
@@ -401,7 +408,7 @@ void tst_QLocale::ctor()
 
 void tst_QLocale::emptyCtor()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_WINCE)
     QSKIP("Uses unsupported Windows CE / Symbian QProcess functionality (std streams, env)", SkipAll);
 #endif
 #if defined(QT_NO_PROCESS)
@@ -499,7 +506,7 @@ void tst_QLocale::unixLocaleName()
 #undef TEST_NAME
 }
 
-void tst_QLocale::double_conversion_data()
+void tst_QLocale::toReal_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("num_str");
@@ -621,9 +628,35 @@ void tst_QLocale::double_conversion_data()
     QTest::newRow("de_DE 9.876543,0e--2") << QString("de_DE") << QString("9.876543,0e")+QChar(8722)+QString("2")   << false << 0.0;
 }
 
-void tst_QLocale::double_conversion()
+void tst_QLocale::stringToDouble_data()
 {
-#define MY_DOUBLE_EPSILON (2.22045e-16)
+    toReal_data();
+    if (std::numeric_limits<double>::has_infinity) {
+        double huge = std::numeric_limits<double>::infinity();
+        QTest::newRow("C inf") << QString("C") << QString("inf") << true << huge;
+        QTest::newRow("C +inf") << QString("C") << QString("+inf") << true << +huge;
+        QTest::newRow("C -inf") << QString("C") << QString("-inf") << true << -huge;
+        // Overflow:
+        QTest::newRow("C huge") << QString("C") << QString("2e308") << false << huge;
+        QTest::newRow("C -huge") << QString("C") << QString("-2e308") << false << -huge;
+    }
+    if (std::numeric_limits<double>::has_quiet_NaN)
+        QTest::newRow("C qnan") << QString("C") << QString("NaN") << true << std::numeric_limits<double>::quiet_NaN();
+
+    // In range (but outside float's range):
+    QTest::newRow("C big") << QString("C") << QString("3.5e38") << true << 3.5e38;
+    QTest::newRow("C -big") << QString("C") << QString("-3.5e38") << true << -3.5e38;
+    QTest::newRow("C small") << QString("C") << QString("1e-45") << true << 1e-45;
+    QTest::newRow("C -small") << QString("C") << QString("-1e-45") << true << -1e-45;
+
+    // Underflow:
+    QTest::newRow("C tiny") << QString("C") << QString("2e-324") << false << 0.;
+    QTest::newRow("C -tiny") << QString("C") << QString("-2e-324") << false << 0.;
+}
+
+void tst_QLocale::stringToDouble()
+{
+#define MY_DOUBLE_EPSILON (2.22045e-16) // 1/2^{52}; double has a 53-bit mantissa
 
     QFETCH(QString, locale_name);
     QFETCH(QString, num_str);
@@ -637,12 +670,188 @@ void tst_QLocale::double_conversion()
     double d = locale.toDouble(num_str, &ok);
     QCOMPARE(ok, good);
 
-    if (ok) {
-    	double diff = d - num;
-	if (diff < 0)
-	    diff = -diff;
-	QVERIFY(diff <= MY_DOUBLE_EPSILON);
+    {
+        // Make sure result is independent of locale:
+        TransientLocale ignoreme(LC_ALL, "ar_SA");
+        QCOMPARE(locale.toDouble(num_str, &ok), d);
+        QCOMPARE(ok, good);
     }
+
+    if (ok || std::isinf(num)) {
+        // First use fuzzy-compare, then a more precise check:
+        QCOMPARE(d, num);
+        if (std::isfinite(num)) {
+            double diff = d > num ? d - num : num - d;
+            QVERIFY(diff <= MY_DOUBLE_EPSILON);
+        }
+    }
+    d = locale.toDouble(num_str, &ok);
+    QCOMPARE(ok, good);
+
+    if (ok || std::isinf(num)) {
+        QCOMPARE(d, num);
+        if (std::isfinite(num)) {
+            double diff = d > num ? d - num : num - d;
+            QVERIFY(diff <= MY_DOUBLE_EPSILON);
+        }
+    }
+#undef MY_DOUBLE_EPSILON
+}
+
+void tst_QLocale::stringToFloat_data()
+{
+    toReal_data();
+    if (std::numeric_limits<float>::has_infinity) {
+        double huge = std::numeric_limits<float>::infinity();
+        QTest::newRow("C inf") << QString("C") << QString("inf") << true << huge;
+        QTest::newRow("C +inf") << QString("C") << QString("+inf") << true << +huge;
+        QTest::newRow("C -inf") << QString("C") << QString("-inf") << true << -huge;
+        // Overflow float, but not double:
+        QTest::newRow("C big") << QString("C") << QString("3.5e38") << false << huge;
+        QTest::newRow("C -big") << QString("C") << QString("-3.5e38") << false << -huge;
+        // Overflow double, too:
+        QTest::newRow("C huge") << QString("C") << QString("2e308") << false << huge;
+        QTest::newRow("C -huge") << QString("C") << QString("-2e308") << false << -huge;
+    }
+    if (std::numeric_limits<float>::has_quiet_NaN)
+        QTest::newRow("C qnan") << QString("C") << QString("NaN") << true << double(std::numeric_limits<float>::quiet_NaN());
+
+    // Underflow float, but not double:
+    QTest::newRow("C small") << QString("C") << QString("1e-45") << false << 0.;
+    QTest::newRow("C -small") << QString("C") << QString("-1e-45") << false << 0.;
+
+    // Underflow double, too:
+    QTest::newRow("C tiny") << QString("C") << QString("2e-324") << false << 0.;
+    QTest::newRow("C -tiny") << QString("C") << QString("-2e-324") << false << 0.;
+}
+
+void tst_QLocale::stringToFloat()
+{
+#define MY_FLOAT_EPSILON (2.384e-7) // 1/2^{22}; float has a 23-bit mantissa
+
+    QFETCH(QString, locale_name);
+    QFETCH(QString, num_str);
+    QFETCH(bool, good);
+    QFETCH(double, num);
+    float fnum = num;
+
+    QLocale locale(locale_name);
+    QCOMPARE(locale.name(), locale_name);
+
+    bool ok;
+    float f = locale.toFloat(num_str, &ok);
+    QCOMPARE(ok, good);
+
+    {
+        // Make sure result is independent of locale:
+        TransientLocale ignoreme(LC_ALL, "ar_SA");
+        QCOMPARE(locale.toFloat(num_str, &ok), f);
+        QCOMPARE(ok, good);
+    }
+
+    if (ok || std::isinf(fnum)) {
+        // First use fuzzy-compare, then a more precise check:
+        QCOMPARE(f, fnum);
+        if (std::isfinite(fnum)) {
+            float diff = f > fnum ? f - fnum : fnum - f;
+            QVERIFY(diff <= MY_FLOAT_EPSILON);
+        }
+    }
+
+    f = locale.toFloat(num_str, &ok);
+    QCOMPARE(ok, good);
+
+    if (ok || std::isinf(fnum)) {
+        QCOMPARE(f, fnum);
+        if (std::isfinite(fnum)) {
+            float diff = f > fnum ? f - fnum : fnum - f;
+            QVERIFY(diff <= MY_FLOAT_EPSILON);
+        }
+    }
+#undef MY_FLOAT_EPSILON
+}
+
+void tst_QLocale::doubleToString_data()
+{
+    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("num_str");
+    QTest::addColumn<double>("num");
+    QTest::addColumn<char>("mode");
+    QTest::addColumn<int>("precision");
+
+    QTest::newRow("C 3.4 f 5")  << QString("C") << QString("3.40000")     << 3.4 << 'f' << 5;
+    QTest::newRow("C 3.4 f 0")  << QString("C") << QString("3")           << 3.4 << 'f' << 0;
+    QTest::newRow("C 3.4 e 5")  << QString("C") << QString("3.40000e+00") << 3.4 << 'e' << 5;
+    QTest::newRow("C 3.4 e 0")  << QString("C") << QString("3e+00")       << 3.4 << 'e' << 0;
+    QTest::newRow("C 3.4 g 5")  << QString("C") << QString("3.4")         << 3.4 << 'g' << 5;
+    QTest::newRow("C 3.4 g 1")  << QString("C") << QString("3")           << 3.4 << 'g' << 1;
+
+    QTest::newRow("C 3.4 f 1")  << QString("C") << QString("3.4")     << 3.4 << 'f' << 1;
+    QTest::newRow("C 3.4 e 1")  << QString("C") << QString("3.4e+00") << 3.4 << 'e' << 1;
+    QTest::newRow("C 3.4 g 2")  << QString("C") << QString("3.4")     << 3.4 << 'g' << 2;
+
+    QTest::newRow("de_DE 3,4 f 1")  << QString("de_DE") << QString("3,4")     << 3.4 << 'f' << 1;
+    QTest::newRow("de_DE 3,4 e 1")  << QString("de_DE") << QString("3,4e+00") << 3.4 << 'e' << 1;
+    QTest::newRow("de_DE 3,4 g 2")  << QString("de_DE") << QString("3,4")     << 3.4 << 'g' << 2;
+
+    QTest::newRow("C 0.035003945 f 12") << QString("C") << QString("0.035003945000")   << 0.035003945 << 'f' << 12;
+    QTest::newRow("C 0.035003945 f 6")  << QString("C") << QString("0.035004")         << 0.035003945 << 'f' << 6;
+    QTest::newRow("C 0.035003945 e 10") << QString("C") << QString("3.5003945000e-02") << 0.035003945 << 'e' << 10;
+    QTest::newRow("C 0.035003945 e 4")  << QString("C") << QString("3.5004e-02")       << 0.035003945 << 'e' << 4;
+    QTest::newRow("C 0.035003945 g 11") << QString("C") << QString("0.035003945")      << 0.035003945 << 'g' << 11;
+    QTest::newRow("C 0.035003945 g 5")  << QString("C") << QString("0.035004")         << 0.035003945 << 'g' << 5;
+
+    QTest::newRow("C 0.035003945 f 9")  << QString("C") << QString("0.035003945")   << 0.035003945 << 'f' << 9;
+    QTest::newRow("C 0.035003945 e 7")  << QString("C") << QString("3.5003945e-02") << 0.035003945 << 'e' << 7;
+    QTest::newRow("C 0.035003945 g 8")  << QString("C") << QString("0.035003945")   << 0.035003945 << 'g' << 8;
+
+    QTest::newRow("de_DE 0,035003945 f 9")  << QString("de_DE") << QString("0,035003945")   << 0.035003945 << 'f' << 9;
+    QTest::newRow("de_DE 0,035003945 e 7")  << QString("de_DE") << QString("3,5003945e-02") << 0.035003945 << 'e' << 7;
+    QTest::newRow("de_DE 0,035003945 g 8")  << QString("de_DE") << QString("0,035003945")   << 0.035003945 << 'g' << 8;
+
+    QTest::newRow("C 0.000003945 f 12") << QString("C") << QString("0.000003945000") << 0.000003945 << 'f' << 12;
+    QTest::newRow("C 0.000003945 f 6")  << QString("C") << QString("0.000004")       << 0.000003945 << 'f' << 6;
+    QTest::newRow("C 0.000003945 e 6")  << QString("C") << QString("3.945000e-06")   << 0.000003945 << 'e' << 6;
+    QTest::newRow("C 0.000003945 e 0")  << QString("C") << QString("4e-06")          << 0.000003945 << 'e' << 0;
+    QTest::newRow("C 0.000003945 g 7")  << QString("C") << QString("3.945e-06")      << 0.000003945 << 'g' << 7;
+    QTest::newRow("C 0.000003945 g 1")  << QString("C") << QString("4e-06")          << 0.000003945 << 'g' << 1;
+
+    QTest::newRow("C 0.000003945 f 9")  << QString("C") << QString("0.000003945") << 0.000003945 << 'f' << 9;
+    QTest::newRow("C 0.000003945 e 3")  << QString("C") << QString("3.945e-06")   << 0.000003945 << 'e' << 3;
+    QTest::newRow("C 0.000003945 g 4")  << QString("C") << QString("3.945e-06")   << 0.000003945 << 'g' << 4;
+
+    QTest::newRow("de_DE 0,000003945 f 9")  << QString("de_DE") << QString("0,000003945") << 0.000003945 << 'f' << 9;
+    QTest::newRow("de_DE 0,000003945 e 3")  << QString("de_DE") << QString("3,945e-06")   << 0.000003945 << 'e' << 3;
+    QTest::newRow("de_DE 0,000003945 g 4")  << QString("de_DE") << QString("3,945e-06")   << 0.000003945 << 'g' << 4;
+
+    QTest::newRow("C 12456789012 f 3")  << QString("C") << QString("12456789012.000")     << 12456789012.0 << 'f' << 3;
+    QTest::newRow("C 12456789012 e 13") << QString("C") << QString("1.2456789012000e+10") << 12456789012.0 << 'e' << 13;
+    QTest::newRow("C 12456789012 e 7")  << QString("C") << QString("1.2456789e+10")       << 12456789012.0 << 'e' << 7;
+    QTest::newRow("C 12456789012 g 14") << QString("C") << QString("12456789012")         << 12456789012.0 << 'g' << 14;
+    QTest::newRow("C 12456789012 g 8")  << QString("C") << QString("1.2456789e+10")       << 12456789012.0 << 'g' << 8;
+
+    QTest::newRow("C 12456789012 f 0")  << QString("C") << QString("12456789012")      << 12456789012.0 << 'f' << 0;
+    QTest::newRow("C 12456789012 e 10") << QString("C") << QString("1.2456789012e+10") << 12456789012.0 << 'e' << 10;
+    QTest::newRow("C 12456789012 g 11") << QString("C") << QString("12456789012")      << 12456789012.0 << 'g' << 11;
+
+    QTest::newRow("de_DE 12456789012 f 0")  << QString("de_DE") << QString("12.456.789.012")   << 12456789012.0 << 'f' << 0;
+    QTest::newRow("de_DE 12456789012 e 10") << QString("de_DE") << QString("1,2456789012e+10") << 12456789012.0 << 'e' << 10;
+    QTest::newRow("de_DE 12456789012 g 11") << QString("de_DE") << QString("12.456.789.012")   << 12456789012.0 << 'g' << 11;
+}
+
+void tst_QLocale::doubleToString()
+{
+    QFETCH(QString, locale_name);
+    QFETCH(QString, num_str);
+    QFETCH(double, num);
+    QFETCH(char, mode);
+    QFETCH(int, precision);
+
+    const QLocale locale(locale_name);
+    QCOMPARE(locale.toString(num, mode, precision), num_str);
+
+    TransientLocale ignoreme(LC_ALL, "de_DE");
+    QCOMPARE(locale.toString(num, mode, precision), num_str);
 }
 
 void tst_QLocale::long_long_conversion_data()
@@ -779,7 +988,8 @@ void tst_QLocale::fpExceptions()
 #define _EM_INEXACT 0x00000001
 #endif
 
-    // check that qdtoa doesn't throw floating point exceptions when they are enabled
+    // check that double-to-string conversion doesn't throw floating point exceptions when they are
+    // enabled
 #ifdef Q_OS_WIN
     unsigned int oldbits = _control87(0, 0);
     _control87( 0 | _EM_INEXACT, _MCW_EM );
@@ -1514,13 +1724,28 @@ void tst_QLocale::underflowOverflow()
 a(QLatin1String("0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001e10"));
 
     bool ok = false;
-    a.toDouble(&ok);
+    double d = a.toDouble(&ok);
     QVERIFY(!ok);
+    QCOMPARE(d, 0.0);
 
     a = QLatin1String("1e600");
     ok = false;
-    a.toDouble(&ok);
+    
+    d = a.toDouble(&ok);
+    QVERIFY(!ok); // detectable overflow
+    QCOMPARE(d, 0.0);
+
+    a = QLatin1String("-1e600");
+    ok = false;
+    d = a.toDouble(&ok);
+    QVERIFY(!ok); // detectable underflow
+    QCOMPARE(d, 0.0);
+
+    a = QLatin1String("1e-600");
+    ok = false;
+    d = a.toDouble(&ok);
     QVERIFY(!ok);
+    QCOMPARE(d, 0.0);
 
     a = QLatin1String("-9223372036854775809");
     a.toLongLong(&ok);
@@ -1611,7 +1836,7 @@ void tst_QLocale::systemMeasurementSystems()
     // Theoretically, we could include HPUX in this test, but its setenv implementation
     // stinks. It's called putenv, and it requires you to keep the variable you pass
     // to it around forever.
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC) && !defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
     QFETCH(QString, lcAllLocale);
     QFETCH(QString, lcMeasurementLocale);
     QFETCH(QString, langLocale);
@@ -1734,7 +1959,7 @@ void tst_QLocale::queryMeasureSystem()
     // Theoretically, we could include HPUX in this test, but its setenv implementation
     // stinks. It's called putenv, and it requires you to keep the variable you pass
     // to it around forever.
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC) && !defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
     QFETCH(QString, lcAllLocale);
     QFETCH(QString, lcMeasurementLocale);
     QFETCH(QString, langLocale);
@@ -1956,34 +2181,6 @@ void tst_QLocale::standaloneMonthName()
     QCOMPARE(ru.standaloneMonthName(1, QLocale::ShortFormat), QString::fromUtf8("\320\257\320\275\320\262\56"));
     QCOMPARE(ru.standaloneMonthName(1, QLocale::NarrowFormat), QString::fromUtf8("\320\257"));
 }
-
-#if defined(Q_OS_SYMBIAN)
-void tst_QLocale::symbianSystemLocale()
-{
-# if defined(__SERIES60_31__)
-    QSKIP("S60 3.1 doesn't support system format properly", SkipAll);
-# else
-    // Simple test to verify that Symbian system locale works at all
-    const QSystemLocale locale;
-    TExtendedLocale s60Locale;
-    s60Locale.LoadSystemSettings();
-
-    TTime s60Date(_L("20090117:")); // Symbian offsets day and month from zero
-    QDate date(2009,2,18);
-
-    TPtrC s60DateFormat = s60Locale.GetShortDateFormatSpec();
-    QString dateFormat = locale.query(QSystemLocale::DateFormatShort, QVariant()).toString();
-
-    TBuf<50> s60FormattedDate;
-    TRAPD(err, s60Date.FormatL(s60FormattedDate, s60DateFormat));
-    QVERIFY(err == KErrNone);
-    QString s60FinalResult = qt_TDesC2QString(s60FormattedDate);
-    QString finalResult = date.toString(dateFormat);
-
-    QCOMPARE(finalResult, s60FinalResult);
-# endif
-}
-#endif
 
 void tst_QLocale::currency()
 {

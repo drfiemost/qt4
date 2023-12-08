@@ -1193,8 +1193,10 @@ qlonglong QLocale::toULongLong(const QString &s, bool *ok, int base) const
 }
 
 /*!
-    Returns the float represented by the localized string \a s, or 0.0
-    if the conversion failed.
+    Returns the float represented by the localized string \a s.
+
+    Returns an infinity if the conversion overflows or 0.0 if the
+    conversion fails for any other reason (e.g. underflow).
 
     If \a ok is not 0, reports failure by setting
     *ok to false and success by setting *ok to true.
@@ -1204,20 +1206,9 @@ qlonglong QLocale::toULongLong(const QString &s, bool *ok, int base) const
     \sa toDouble(), toInt(), toString()
 */
 
-#define QT_MAX_FLOAT 3.4028234663852886e+38
-
 float QLocale::toFloat(const QString &s, bool *ok) const
 {
-    bool myOk;
-    double d = toDouble(s, &myOk);
-    if (!myOk || d > QT_MAX_FLOAT || d < -QT_MAX_FLOAT) {
-        if (ok != nullptr)
-            *ok = false;
-        return 0.0;
-    }
-    if (ok != nullptr)
-        *ok = true;
-    return float(d);
+    return QLocalePrivate::convertDoubleToFloat(toDouble(s, ok), ok);
 }
 
 /*!

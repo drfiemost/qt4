@@ -5838,8 +5838,22 @@ double QString::toDouble(bool *ok) const
 /*!
     Returns the string converted to a \c float value.
 
-    If a conversion error occurs, *\a{ok} is set to false; otherwise
-    *\a{ok} is set to true. Returns 0.0 if the conversion fails.
+    Returns an infinity if the conversion overflows or 0.0 if the
+    conversion fails for other reasons (e.g. underflow).
+
+    If \a ok is not \c nullptr, failure is reported by setting *\a{ok}
+    to \c false, and success by setting *\a{ok} to \c true.
+    \warning The QString content may only contain valid numerical characters
+    which includes the plus/minus sign, the character e used in scientific
+    notation, and the decimal point. Including the unit or additional characters
+    leads to a conversion error.
+
+    The string conversion will always happen in the 'C' locale. For locale
+    dependent conversion use QLocale::toFloat()
+
+    For historical reasons, this function does not handle
+    thousands group separators. If you need to convert such numbers,
+    use QLocale::toFloat().
 
     Example:
 
@@ -5848,20 +5862,9 @@ double QString::toDouble(bool *ok) const
     \sa number(), toDouble(), toInt()
 */
 
-#define QT_MAX_FLOAT 3.4028234663852886e+38
-
 float QString::toFloat(bool *ok) const
 {
-    bool myOk;
-    double d = toDouble(&myOk);
-    if (!myOk || d > QT_MAX_FLOAT || d < -QT_MAX_FLOAT) {
-        if (ok != nullptr)
-            *ok = false;
-        return 0.0;
-    }
-    if (ok != nullptr)
-        *ok = true;
-    return (float) d;
+    return QLocalePrivate::convertDoubleToFloat(toDouble(ok), ok);
 }
 
 /*! \fn QString &QString::setNum(int n, int base)

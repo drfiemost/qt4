@@ -56,8 +56,12 @@
 #include "QtCore/qstring.h"
 #include "QtCore/qvarlengtharray.h"
 #include "QtCore/qmetatype.h"
+#include "QtCore/qnumeric.h"
 
 #include "qlocale.h"
+
+#include <limits>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 
@@ -150,6 +154,29 @@ public:
                                 int base = 10,
                                 int width = -1,
                                 unsigned flags = NoFlags) const;
+    
+    // this function is meant to be called with the result of stringToDouble or bytearrayToDouble
+    static float convertDoubleToFloat(double d, bool *ok)
+    {
+        if (qIsInf(d))
+            return float(d);
+        if (std::fabs(d) > std::numeric_limits<float>::max()) {
+            if (ok != 0)
+                *ok = false;
+            const float huge = std::numeric_limits<float>::infinity();
+            return d < 0 ? -huge : huge;
+        }
+        if (std::fabs(d) >= std::numeric_limits<double>::min() // i.e. d != 0
+            && std::fabs(d) < std::numeric_limits<float>::min()) {
+            // Values smaller than std::numeric_limits<double>::min() have
+            // failed already; match them.
+            if (ok != 0)
+                *ok = false;
+            return 0;
+        }
+        return float(d);
+    }
+
     double stringToDouble(const QString &num, bool *ok, GroupSeparatorMode group_sep_mode) const;
     qint64 stringToLongLong(const QString &num, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
     quint64 stringToUnsLongLong(const QString &num, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
