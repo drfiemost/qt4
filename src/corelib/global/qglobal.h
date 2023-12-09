@@ -1919,17 +1919,6 @@ inline void qSwap(T &value1, T &value2)
     swap(value1, value2);
 }
 
-/*
-   These functions make it possible to use standard C++ functions with
-   a similar name from Qt header files (especially template classes).
-*/
-#ifdef QT_DEPRECATED
-Q_CORE_EXPORT QT_DEPRECATED void *qMalloc(size_t size);
-Q_CORE_EXPORT QT_DEPRECATED void qFree(void *ptr);
-Q_CORE_EXPORT QT_DEPRECATED void *qRealloc(void *ptr, size_t size);
-Q_CORE_EXPORT QT_DEPRECATED void *qMemCopy(void *dest, const void *src, size_t n);
-Q_CORE_EXPORT QT_DEPRECATED void *qMemSet(void *dest, int c, size_t n);
-#endif
 Q_CORE_EXPORT void *qMallocAligned(size_t size, size_t alignment);
 Q_CORE_EXPORT void *qReallocAligned(void *ptr, size_t size, size_t oldsize, size_t alignment);
 Q_CORE_EXPORT void qFreeAligned(void *ptr);

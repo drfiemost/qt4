@@ -1989,9 +1989,6 @@ Q_CORE_EXPORT unsigned int qt_int_sqrt(unsigned int n)
     return p;
 }
 
-void *qMemCopy(void *dest, const void *src, size_t n) { return memcpy(dest, src, n); }
-void *qMemSet(void *dest, int c, size_t n) { return memset(dest, c, n); }
-
 static QtMsgHandler handler = nullptr;                // pointer to debug handler
 
 #if defined(Q_CC_MWERKS) && defined(Q_OS_MACX)

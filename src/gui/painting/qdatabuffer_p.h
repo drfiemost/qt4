@@ -114,7 +114,7 @@ public:
                 capacity = 1;
             while (capacity < size)
                 capacity *= 2;
-            buffer = (Type*) qRealloc(buffer, capacity * sizeof(Type));
+            buffer = (Type*) ::realloc(buffer, capacity * sizeof(Type));
         }
     }
 

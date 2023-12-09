@@ -1034,7 +1034,7 @@ QScriptEnginePrivate::~QScriptEnginePrivate()
     while (freeScriptValues) {
         QScriptValuePrivate *p = freeScriptValues;
         freeScriptValues = p->next;
-        qFree(p);
+        ::free(p);
     }
 }
 

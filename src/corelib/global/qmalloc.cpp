@@ -50,21 +50,6 @@
 
 QT_BEGIN_NAMESPACE
 
-void *qMalloc(size_t size)
-{
-    return ::malloc(size);
-}
-
-void qFree(void *ptr)
-{
-    ::free(ptr);
-}
-
-void *qRealloc(void *ptr, size_t size)
-{
-    return ::realloc(ptr, size);
-}
-
 void *qMallocAligned(size_t size, size_t alignment)
 {
     return qReallocAligned(nullptr, size, 0, alignment);
