@@ -176,56 +176,6 @@ public:
 };
 #endif
 
-template <typename RandomAccessIterator>
-[[deprecated("Use std::sort")]] inline void qSort(RandomAccessIterator start, RandomAccessIterator end)
-{
-    if (start != end)
-        QAlgorithmsPrivate::qSortHelper(start, end, *start);
-}
-
-template <typename RandomAccessIterator, typename LessThan>
-[[deprecated("Use std::sort")]] inline void qSort(RandomAccessIterator start, RandomAccessIterator end, LessThan lessThan)
-{
-    if (start != end)
-        QAlgorithmsPrivate::qSortHelper(start, end, *start, lessThan);
-}
-
-template<typename Container>
-[[deprecated("Use std::sort")]] inline void qSort(Container &c)
-{
-#ifdef Q_CC_BOR
-    // Work around Borland 5.5 optimizer bug
-    c.detach();
-#endif
-    if (!c.empty())
-        QAlgorithmsPrivate::qSortHelper(c.begin(), c.end(), *c.begin());
-}
-
-template <typename RandomAccessIterator>
-[[deprecated("Use std::stable_sort")]] inline void qStableSort(RandomAccessIterator start, RandomAccessIterator end)
-{
-    if (start != end)
-        QAlgorithmsPrivate::qStableSortHelper(start, end, *start);
-}
-
-template <typename RandomAccessIterator, typename LessThan>
-[[deprecated("Use std::stable_sort")]] inline void qStableSort(RandomAccessIterator start, RandomAccessIterator end, LessThan lessThan)
-{
-    if (start != end)
-        QAlgorithmsPrivate::qStableSortHelper(start, end, *start, lessThan);
-}
-
-template<typename Container>
-[[deprecated("Use std::stable_sort")]] inline void qStableSort(Container &c)
-{
-#ifdef Q_CC_BOR
-    // Work around Borland 5.5 optimizer bug
-    c.detach();
-#endif
-    if (!c.empty())
-        QAlgorithmsPrivate::qStableSortHelper(c.begin(), c.end(), *c.begin());
-}
-
 template <typename RandomAccessIterator, typename T>
 [[deprecated("Use std::lower_bound")]] Q_OUTOFLINE_TEMPLATE RandomAccessIterator qLowerBound(RandomAccessIterator begin, RandomAccessIterator end, const T &value)
 {

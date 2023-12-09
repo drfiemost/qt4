@@ -1255,10 +1255,13 @@ Q_DECL_CONSTEXPR inline qint64 qRound64(qreal d)
 #endif
 
 template <typename T>
+//[[deprecated("Use std::min")]]
 Q_DECL_CONSTEXPR inline const T &qMin(const T &a, const T &b) { return (a < b) ? a : b; }
 template <typename T>
+//[[deprecated("Use std::max")]]
 Q_DECL_CONSTEXPR inline const T &qMax(const T &a, const T &b) { return (a < b) ? b : a; }
 template <typename T>
+//[[deprecated("Use std::clamp")]]
 Q_DECL_CONSTEXPR inline const T &qBound(const T &min, const T &val, const T &max)
 { return qMax(min, qMin(max, val)); }
 
@@ -1907,7 +1910,9 @@ static inline bool qIsNull(float f)
 #  define Q_DUMMY_COMPARISON_OPERATOR(C)
 #endif
 
+
 template <typename T>
+//[[deprecated("Use std::swap")]]
 inline void qSwap(T &value1, T &value2)
 {
     using std::swap;

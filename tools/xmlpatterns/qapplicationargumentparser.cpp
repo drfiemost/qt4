@@ -52,6 +52,8 @@
 
 #include "qapplicationargumentparser_p.h"
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -303,23 +305,6 @@ void QApplicationArgumentParserPrivate::displayVersion() const
         << endl;
 }
 
-/*!
- \internal
- \relates QApplicationArgument
-
- qLess() functor for QApplicationArgument that considers the name.
- */
-template<>
-class qLess <QApplicationArgument>
-{
-public:
-    inline bool operator()(const QApplicationArgument &o1,
-                           const QApplicationArgument &o2) const
-    {
-        return o1.name().compare(o2.name()) < 0;
-    }
-};
-
 void QApplicationArgumentParserPrivate::displayHelp() const
 {
     enum Constants
@@ -346,7 +331,7 @@ void QApplicationArgumentParserPrivate::displayHelp() const
 
     /* Sort them, such that we get the nameless options at the end, and it
      * generally looks tidy. */
-    qSort(args);
+    std::sort(args.begin(), args.end());
 
     /* This is the basic approach:
      * Switches:
@@ -365,7 +350,7 @@ void QApplicationArgumentParserPrivate::displayHelp() const
     int maxWidth = 0;
 
     QList<QApplicationArgument> nameless(declaredNamelessArguments);
-    qSort(nameless);
+    std::sort(nameless.begin(), nameless.end());
 
     /* Note, here the nameless arguments appear last, but are sorted
      * with themselves. */

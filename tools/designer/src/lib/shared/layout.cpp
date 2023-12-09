@@ -73,6 +73,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSet>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 enum { FormLayoutColumns = 2 };
@@ -518,7 +520,7 @@ BoxLayout::BoxLayout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInter
 void BoxLayout::sort()
 {
     QWidgetList wl = widgets();
-    qStableSort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
+    std::stable_sort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
     setWidgets(wl);
 }
 
@@ -571,7 +573,7 @@ SplitterLayout::SplitterLayout(const QWidgetList &wl, QWidget *p, QDesignerFormW
 void SplitterLayout::sort()
 {
     QWidgetList wl = widgets();
-    qStableSort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
+    std::stable_sort(wl.begin(), wl.end(), PositionSortPredicate(m_orientation));
     setWidgets(wl);
 }
 
@@ -1247,8 +1249,8 @@ QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QW
         index += 2;
     }
 
-    qSort(x);
-    qSort(y);
+    std::sort(x.begin(), x.end());
+    std::sort(y.begin(), y.end());
 
     // Remove duplicate x entries (Remove next, if equal to current)
     removeIntVecDuplicates(x);

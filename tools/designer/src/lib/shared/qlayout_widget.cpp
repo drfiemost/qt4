@@ -67,6 +67,8 @@
 #include <QtCore/QPair>
 #include <QtCore/QSet>
 
+#include <algorithm>
+
 enum { ShiftValue = 1 };
 enum { debugLayout = 0 };
 enum { FormLayoutColumns = 2 };
@@ -238,7 +240,7 @@ static bool removeEmptyCellsOnGrid(GridLikeLayout *grid, const QRect &area)
         }
     // remove, starting from last
     if (!indexesToBeRemoved.empty()) {
-        qStableSort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
+        std::stable_sort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
         for (int i = indexesToBeRemoved.size() - 1; i >= 0; i--)
             delete grid->takeAt(indexesToBeRemoved[i]);
     }
