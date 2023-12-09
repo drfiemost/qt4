@@ -65,6 +65,15 @@
 
 QT_BEGIN_NAMESPACE
 
+#ifdef QT_USE_ICU
+namespace QIcu {
+    QString toUpper(const QByteArray &localeId, const QString &str, bool *ok);
+    QString toLower(const QByteArray &localeId, const QString &str, bool *ok);
+
+    bool strcoll(const QByteArray &localeID, const QChar *source, int sourceLength, const QChar *target, int targetLength, int *result);
+}
+#endif
+
 struct QLocaleData
 {
 public:
@@ -117,7 +126,17 @@ static const QLocaleData *findLocaleData(QLocale::Language language,
 class Q_CORE_EXPORT QLocalePrivate : public QSharedData
 {
 public:
-    QLocalePrivate() : m_index(0), m_numberOptions(0), m_data(0) {}
+    QLocalePrivate(int index, int numberOptions = 0)
+        : m_index(index), m_numberOptions(numberOptions)
+    {
+        m_data = dataPointerForIndex(index);
+        m_localeID = bcp47Name().toLatin1();
+        m_localeID.replace('-','_');
+    }
+
+    ~QLocalePrivate()
+    {
+    }
 
     QChar decimal() const { return QChar(m_data->m_decimal); }
     QChar group() const { return QChar(m_data->m_group); }
@@ -142,6 +161,7 @@ public:
     static QLocale::Country codeToCountry(const QString &code);
     static void getLangAndCountry(const QString &name, QLocale::Language &lang,
                                   QLocale::Script &script, QLocale::Country &cntry);
+    static const QLocaleData *dataPointerForIndex(quint16 index);
 
     QLocale::MeasurementSystem measurementSystem() const;
 
@@ -244,11 +264,11 @@ public:
     QString dateTimeToString(const QString &format, const QDate *date, const QTime *time,
                              const QLocale *q) const;
 
-private:
     friend class QLocale;
     quint16 m_index;
     quint16 m_numberOptions;
     const QLocaleData *m_data;
+    QByteArray m_localeID;
 };
 
 inline char QLocalePrivate::digitToCLocale(QChar in) const

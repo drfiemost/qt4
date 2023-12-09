@@ -796,6 +796,7 @@ public:
     QString createSeparatedList(const QStringList &strl) const;
 
 private:
+    QLocale(QLocalePrivate &dd);
     friend class QLocalePrivate;
     QSharedDataPointer<QLocalePrivate> d;
 };
