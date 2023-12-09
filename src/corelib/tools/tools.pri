@@ -10,6 +10,7 @@ HEADERS +=  \
         tools/qbytedata_p.h \
         tools/qcache.h \
         tools/qchar.h \
+        tools/qcollator_p.h \
         tools/qcontainerfwd.h \
         tools/qcryptographichash.h \
         tools/qdatetime.h \
@@ -62,6 +63,7 @@ SOURCES += \
         tools/qbitarray.cpp \
         tools/qbytearray.cpp \
         tools/qbytearraymatcher.cpp \
+        tools/qcollator.cpp \
         tools/qcryptographichash.cpp \
         tools/qdatetime.cpp \
         tools/qeasingcurve.cpp \

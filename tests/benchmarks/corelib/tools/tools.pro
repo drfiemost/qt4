@@ -6,6 +6,7 @@ SUBDIRS = \
         qcontiguouscache \
         qline \
         qlist \
+        qlocale \
         qmap \
         qrect \
         #qregexp \     # FIXME: broken
