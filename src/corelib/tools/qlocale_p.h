@@ -74,6 +74,28 @@ namespace QIcu {
 }
 #endif
 
+struct QLocaleId
+{
+    // bypass constructors
+    static inline QLocaleId fromIds(ushort language, ushort script, ushort country)
+    {
+        const QLocaleId localeId = { language, script, country };
+        return localeId;
+    }
+
+    inline bool operator==(QLocaleId other) const
+    { return language_id == other.language_id && script_id == other.script_id && country_id == other.country_id; }
+    inline bool operator!=(QLocaleId other) const
+    { return !operator==(other); }
+
+    QLocaleId withLikelySubtagsAdded() const;
+    QLocaleId withLikelySubtagsRemoved() const;
+
+    QString bcp47Name() const;
+
+    ushort language_id, script_id, country_id;
+};
+
 struct QLocaleData
 {
 public:
@@ -126,10 +148,9 @@ static const QLocaleData *findLocaleData(QLocale::Language language,
 class Q_CORE_EXPORT QLocalePrivate : public QSharedData
 {
 public:
-    QLocalePrivate(int index, int numberOptions = 0)
-        : m_index(index), m_numberOptions(numberOptions)
+    explicit QLocalePrivate(const QLocaleData *data, int numberOptions = 0)
+        : m_data(data), m_numberOptions(numberOptions)
     {
-        m_data = dataPointerForIndex(index);
         m_localeID = bcp47Name().toLatin1();
         m_localeID.replace('-','_');
     }
@@ -265,9 +286,8 @@ public:
                              const QLocale *q) const;
 
     friend class QLocale;
-    quint16 m_index;
-    quint16 m_numberOptions;
     const QLocaleData *m_data;
+    quint16 m_numberOptions;
     QByteArray m_localeID;
 };
 

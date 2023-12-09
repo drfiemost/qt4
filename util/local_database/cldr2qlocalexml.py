@@ -1,40 +1,27 @@
 #!/usr/bin/env python
 #############################################################################
 ##
-## Copyright (C) 2015 The Qt Company Ltd.
-## Contact: http://www.qt.io/licensing/
+## Copyright (C) 2016 The Qt Company Ltd.
+## Contact: https://www.qt.io/licensing/
 ##
 ## This file is part of the test suite of the Qt Toolkit.
 ##
-## $QT_BEGIN_LICENSE:LGPL$
+## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
 ## Licensees holding valid commercial Qt licenses may use this file in
 ## accordance with the commercial license agreement provided with the
 ## Software or, alternatively, in accordance with the terms contained in
 ## a written agreement between you and The Qt Company. For licensing terms
-## and conditions see http://www.qt.io/terms-conditions. For further
-## information use the contact form at http://www.qt.io/contact-us.
-##
-## GNU Lesser General Public License Usage
-## Alternatively, this file may be used under the terms of the GNU Lesser
-## General Public License version 2.1 or version 3 as published by the Free
-## Software Foundation and appearing in the file LICENSE.LGPLv21 and
-## LICENSE.LGPLv3 included in the packaging of this file. Please review the
-## following information to ensure the GNU Lesser General Public License
-## requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-## http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-##
-## As a special exception, The Qt Company gives you certain additional
-## rights. These rights are described in The Qt Company LGPL Exception
-## version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+## and conditions see https://www.qt.io/terms-conditions. For further
+## information use the contact form at https://www.qt.io/contact-us.
 ##
 ## GNU General Public License Usage
 ## Alternatively, this file may be used under the terms of the GNU
-## General Public License version 3.0 as published by the Free Software
-## Foundation and appearing in the file LICENSE.GPL included in the
-## packaging of this file.  Please review the following information to
-## ensure the GNU General Public License version 3.0 requirements will be
-## met: http://www.gnu.org/copyleft/gpl.html.
+## General Public License version 3 as published by the Free Software
+## Foundation with exceptions as appearing in the file LICENSE.GPL3-EXCEPT
+## included in the packaging of this file. Please review the following
+## information to ensure the GNU General Public License requirements will
+## be met: https://www.gnu.org/licenses/gpl-3.0.html.
 ##
 ## $QT_END_LICENSE$
 ##
@@ -46,8 +33,10 @@ import enumdata
 import xpathlite
 from  xpathlite import DraftResolution
 from dateconverter import convert_date
+from xml.sax.saxutils import escape, unescape
 import re
 
+findAlias = xpathlite.findAlias
 findEntry = xpathlite.findEntry
 findEntryInFile = xpathlite._findEntryInFile
 findTagsInFile = xpathlite.findTagsInFile
@@ -93,11 +82,20 @@ def parse_list_pattern_part_format(pattern):
 def ordStr(c):
     if len(c) == 1:
         return str(ord(c))
+    raise xpathlite.Error("Unable to handle value \"%s\"" % addEscapes(c))
     return "##########"
 
 # the following functions are supposed to fix the problem with QLocale
 # returning a character instead of strings for QLocale::exponential()
 # and others. So we fallback to default values in these cases.
+def fixOrdStrMinus(c):
+    if len(c) == 1:
+        return str(ord(c))
+    return str(ord('-'))
+def fixOrdStrPlus(c):
+    if len(c) == 1:
+        return str(ord(c))
+    return str(ord('+'))
 def fixOrdStrExp(c):
     if len(c) == 1:
         return str(ord(c))
@@ -112,49 +110,52 @@ def fixOrdStrList(c):
     return str(ord(';'))
 
 def generateLocaleInfo(path):
-    (dir_name, file_name) = os.path.split(path)
-
     if not path.endswith(".xml"):
         return {}
+
+    # skip legacy/compatibility ones
+    alias = findAlias(path)
+    if alias:
+        raise xpathlite.Error("alias to \"%s\"" % alias)
+
     language_code = findEntryInFile(path, "identity/language", attribute="type")[0]
-    if language_code == 'root':
-        # just skip it
-        return {}
     country_code = findEntryInFile(path, "identity/territory", attribute="type")[0]
     script_code = findEntryInFile(path, "identity/script", attribute="type")[0]
     variant_code = findEntryInFile(path, "identity/variant", attribute="type")[0]
 
-    # we should handle fully qualified names with the territory
-    if not country_code:
+    return _generateLocaleInfo(path, language_code, script_code, country_code, variant_code)
+
+def _generateLocaleInfo(path, language_code, script_code, country_code, variant_code=""):
+    if not path.endswith(".xml"):
+        return {}
+
+    if language_code == 'root':
+        # just skip it
         return {}
 
     # we do not support variants
     # ### actually there is only one locale with variant: en_US_POSIX
     #     does anybody care about it at all?
     if variant_code:
-        return {}
+        raise xpathlite.Error("we do not support variants (\"%s\")" % variant_code)
 
     language_id = enumdata.languageCodeToId(language_code)
-    if language_id == -1:
-        sys.stderr.write("unknown language code \"" + language_code + "\"\n")
-        return {}
+    if language_id <= 0:
+        raise xpathlite.Error("unknown language code \"%s\"" % language_code)
     language = enumdata.language_list[language_id][0]
 
     script_id = enumdata.scriptCodeToId(script_code)
-    if script_code == -1:
-        sys.stderr.write("unknown script code \"" + script_code + "\"\n")
-        return {}
-    script = "AnyScript"
-    if script_id != -1:
-        script = enumdata.script_list[script_id][0]
+    if script_id == -1:
+        raise xpathlite.Error("unknown script code \"%s\"" % script_code)
+    script = enumdata.script_list[script_id][0]
 
-    country_id = enumdata.countryCodeToId(country_code)
-    country = ""
-    if country_id != -1:
-        country = enumdata.country_list[country_id][0]
-    if country == "":
-        sys.stderr.write("unknown country code \"" + country_code + "\"\n")
+    # we should handle fully qualified names with the territory
+    if not country_code:
         return {}
+    country_id = enumdata.countryCodeToId(country_code)
+    if country_id <= 0:
+        raise xpathlite.Error("unknown country code \"%s\"" % country_code)
+    country = enumdata.country_list[country_id][0]
 
     # So we say we accept only those values that have "contributed" or
     # "approved" resolution. see http://www.unicode.org/cldr/process.html
@@ -174,6 +175,7 @@ def generateLocaleInfo(path):
     result['script_id'] = script_id
     result['country_id'] = country_id
 
+    (dir_name, file_name) = os.path.split(path)
     supplementalPath = dir_name + "/../supplemental/supplementalData.xml"
     currencies = findTagsInFile(supplementalPath, "currencyData/region[iso3166=%s]"%country_code);
     result['currencyIsoCode'] = ''
@@ -561,10 +563,49 @@ if not os.path.isdir(cldr_dir):
 cldr_files = os.listdir(cldr_dir)
 
 locale_database = {}
+
+# see http://www.unicode.org/reports/tr35/tr35-info.html#Default_Content
+defaultContent_locales = {}
+for ns in findTagsInFile(cldr_dir + "/../supplemental/supplementalMetadata.xml", "metadata/defaultContent"):
+    for data in ns[1:][0]:
+        if data[0] == u"locales":
+            defaultContent_locales = data[1].split()
+
+for file in defaultContent_locales:
+    items = file.split("_")
+    if len(items) == 3:
+        language_code = items[0]
+        script_code = items[1]
+        country_code = items[2]
+    else:
+        if len(items) != 2:
+            sys.stderr.write("skipping defaultContent locale \"" + file + "\"\n")
+            continue
+        language_code = items[0]
+        script_code = ""
+        country_code = items[1]
+        if len(country_code) == 4:
+            sys.stderr.write("skipping defaultContent locale \"" + file + "\"\n")
+            continue
+    try:
+        l = _generateLocaleInfo(cldr_dir + "/" + file + ".xml", language_code, script_code, country_code)
+        if not l:
+            sys.stderr.write("skipping defaultContent locale \"" + file + "\"\n")
+            continue
+    except xpathlite.Error as e:
+        sys.stderr.write("skipping defaultContent locale \"%s\" (%s)\n" % (file, str(e)))
+        continue
+
+    locale_database[(l['language_id'], l['script_id'], l['country_id'], l['variant_code'])] = l
+
 for file in cldr_files:
-    l = generateLocaleInfo(cldr_dir + "/" + file)
-    if not l:
-        sys.stderr.write("skipping file \"" + file + "\"\n")
+    try:
+        l = generateLocaleInfo(cldr_dir + "/" + file)
+        if not l:
+            sys.stderr.write("skipping file \"" + file + "\"\n")
+            continue
+    except xpathlite.Error as e:
+        sys.stderr.write("skipping file \"%s\" (%s)\n" % (file, str(e)))
         continue
 
     locale_database[(l['language_id'], l['script_id'], l['country_id'], l['variant_code'])] = l
@@ -611,109 +652,77 @@ for id in enumdata.country_list:
     print "        </country>"
 print "    </countryList>"
 
-print \
-"    <defaultCountryList>\n\
-        <defaultCountry>\n\
-            <language>Afrikaans</language>\n\
-            <country>SouthAfrica</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Afan</language>\n\
-            <country>Ethiopia</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Afar</language>\n\
-            <country>Djibouti</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Arabic</language>\n\
-            <country>SaudiArabia</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Chinese</language>\n\
-            <country>China</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Dutch</language>\n\
-            <country>Netherlands</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>English</language>\n\
-            <country>UnitedStates</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>French</language>\n\
-            <country>France</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>German</language>\n\
-            <country>Germany</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Greek</language>\n\
-            <country>Greece</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Italian</language>\n\
-            <country>Italy</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Malay</language>\n\
-            <country>Malaysia</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Portuguese</language>\n\
-            <country>Portugal</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Russian</language>\n\
-            <country>RussianFederation</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Serbian</language>\n\
-            <country>SerbiaAndMontenegro</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>SerboCroatian</language>\n\
-            <country>SerbiaAndMontenegro</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Somali</language>\n\
-            <country>Somalia</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Spanish</language>\n\
-            <country>Spain</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Swahili</language>\n\
-            <country>Kenya</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Swedish</language>\n\
-            <country>Sweden</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Tigrinya</language>\n\
-            <country>Eritrea</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Uzbek</language>\n\
-            <country>Uzbekistan</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Persian</language>\n\
-            <country>Iran</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Mongolian</language>\n\
-            <country>Mongolia</country>\n\
-        </defaultCountry>\n\
-        <defaultCountry>\n\
-            <language>Nepali</language>\n\
-            <country>Nepal</country>\n\
-        </defaultCountry>\n\
-    </defaultCountryList>"
+def _parseLocale(l):
+    language = "AnyLanguage"
+    script = "AnyScript"
+    country = "AnyCountry"
+
+    if l == "und":
+        raise xpathlite.Error("we are treating unknown locale like C")
+
+    items = l.split("_")
+    language_code = items[0]
+    if language_code != "und":
+        language_id = enumdata.languageCodeToId(language_code)
+        if language_id == -1:
+            raise xpathlite.Error("unknown language code \"%s\"" % language_code)
+        language = enumdata.language_list[language_id][0]
+
+    if len(items) > 1:
+        script_code = items[1]
+        country_code = ""
+        if len(items) > 2:
+            country_code = items[2]
+        if len(script_code) == 4:
+            script_id = enumdata.scriptCodeToId(script_code)
+            if script_id == -1:
+                raise xpathlite.Error("unknown script code \"%s\"" % script_code)
+            script = enumdata.script_list[script_id][0]
+        else:
+            country_code = script_code
+        if country_code:
+            country_id = enumdata.countryCodeToId(country_code)
+            if country_id == -1:
+                raise xpathlite.Error("unknown country code \"%s\"" % country_code)
+            country = enumdata.country_list[country_id][0]
+
+    return (language, script, country)
+
+print "    <likelySubtags>"
+for ns in findTagsInFile(cldr_dir + "/../supplemental/likelySubtags.xml", "likelySubtags"):
+    tmp = {}
+    for data in ns[1:][0]: # ns looks like this: [u'likelySubtag', [(u'from', u'aa'), (u'to', u'aa_Latn_ET')]]
+        tmp[data[0]] = data[1]
+
+    try:
+        (from_language, from_script, from_country) = _parseLocale(tmp[u"from"])
+    except xpathlite.Error as e:
+        sys.stderr.write("skipping likelySubtag \"%s\" -> \"%s\" (%s)\n" % (tmp[u"from"], tmp[u"to"], str(e)))
+        continue
+    try:
+        (to_language, to_script, to_country) = _parseLocale(tmp[u"to"])
+    except xpathlite.Error as e:
+        sys.stderr.write("skipping likelySubtag \"%s\" -> \"%s\" (%s)\n" % (tmp[u"from"], tmp[u"to"], str(e)))
+        continue
+    # substitute according to http://www.unicode.org/reports/tr35/#Likely_Subtags
+    if to_country == "AnyCountry" and from_country != to_country:
+        to_country = from_country
+    if to_script == "AnyScript" and from_script != to_script:
+        to_script = from_script
+
+    print "        <likelySubtag>"
+    print "            <from>"
+    print "                <language>" + from_language + "</language>"
+    print "                <script>" + from_script + "</script>"
+    print "                <country>" + from_country + "</country>"
+    print "            </from>"
+    print "            <to>"
+    print "                <language>" + to_language + "</language>"
+    print "                <script>" + to_script + "</script>"
+    print "                <country>" + to_country + "</country>"
+    print "            </to>"
+    print "        </likelySubtag>"
+print "    </likelySubtags>"
 
 print "    <localeList>"
 print \
@@ -774,10 +783,10 @@ for key in locale_keys:
 
     print "        <locale>"
     print "            <language>" + l['language']        + "</language>"
-    print "            <languageEndonym>" + l['language_endonym'].encode('utf-8') + "</languageEndonym>"
+    print "            <languageEndonym>" + escape(l['language_endonym']).encode('utf-8') + "</languageEndonym>"
     print "            <script>" + l['script']        + "</script>"
     print "            <country>"  + l['country']         + "</country>"
-    print "            <countryEndonym>"  + l['country_endonym'].encode('utf-8') + "</countryEndonym>"
+    print "            <countryEndonym>"  + escape(l['country_endonym']).encode('utf-8') + "</countryEndonym>"
     print "            <languagecode>" + l['language_code']        + "</languagecode>"
     print "            <scriptcode>" + l['script_code']        + "</scriptcode>"
     print "            <countrycode>"  + l['country_code']         + "</countrycode>"
@@ -786,45 +795,45 @@ for key in locale_keys:
     print "            <list>"     + fixOrdStrList(l['list'])    + "</list>"
     print "            <percent>"  + fixOrdStrPercent(l['percent']) + "</percent>"
     print "            <zero>"     + ordStr(l['zero'])    + "</zero>"
-    print "            <minus>"    + ordStr(l['minus'])   + "</minus>"
-    print "            <plus>"     + ordStr(l['plus'])   + "</plus>"
+    print "            <minus>"    + fixOrdStrMinus(l['minus'])   + "</minus>"
+    print "            <plus>"     + fixOrdStrPlus(l['plus'])   + "</plus>"
     print "            <exp>"      + fixOrdStrExp(l['exp'])     + "</exp>"
-    print "            <quotationStart>" + l['quotationStart'].encode('utf-8') + "</quotationStart>"
-    print "            <quotationEnd>" + l['quotationEnd'].encode('utf-8')   + "</quotationEnd>"
-    print "            <alternateQuotationStart>" + l['alternateQuotationStart'].encode('utf-8') + "</alternateQuotationStart>"
-    print "            <alternateQuotationEnd>" + l['alternateQuotationEnd'].encode('utf-8')   + "</alternateQuotationEnd>"
-    print "            <listPatternPartStart>" + l['listPatternPartStart'].encode('utf-8')   + "</listPatternPartStart>"
-    print "            <listPatternPartMiddle>" + l['listPatternPartMiddle'].encode('utf-8')   + "</listPatternPartMiddle>"
-    print "            <listPatternPartEnd>" + l['listPatternPartEnd'].encode('utf-8')   + "</listPatternPartEnd>"
-    print "            <listPatternPartTwo>" + l['listPatternPartTwo'].encode('utf-8')   + "</listPatternPartTwo>"
-    print "            <am>"       + l['am'].encode('utf-8') + "</am>"
-    print "            <pm>"       + l['pm'].encode('utf-8') + "</pm>"
-    print "            <firstDayOfWeek>"  + l['firstDayOfWeek'].encode('utf-8') + "</firstDayOfWeek>"
-    print "            <weekendStart>"  + l['weekendStart'].encode('utf-8') + "</weekendStart>"
-    print "            <weekendEnd>"  + l['weekendEnd'].encode('utf-8') + "</weekendEnd>"
-    print "            <longDateFormat>"  + l['longDateFormat'].encode('utf-8')  + "</longDateFormat>"
-    print "            <shortDateFormat>" + l['shortDateFormat'].encode('utf-8') + "</shortDateFormat>"
-    print "            <longTimeFormat>"  + l['longTimeFormat'].encode('utf-8')  + "</longTimeFormat>"
-    print "            <shortTimeFormat>" + l['shortTimeFormat'].encode('utf-8') + "</shortTimeFormat>"
-    print "            <standaloneLongMonths>" + l['standaloneLongMonths'].encode('utf-8')      + "</standaloneLongMonths>"
-    print "            <standaloneShortMonths>"+ l['standaloneShortMonths'].encode('utf-8')      + "</standaloneShortMonths>"
-    print "            <standaloneNarrowMonths>"+ l['standaloneNarrowMonths'].encode('utf-8')      + "</standaloneNarrowMonths>"
-    print "            <longMonths>"      + l['longMonths'].encode('utf-8')      + "</longMonths>"
-    print "            <shortMonths>"     + l['shortMonths'].encode('utf-8')     + "</shortMonths>"
-    print "            <narrowMonths>"     + l['narrowMonths'].encode('utf-8')     + "</narrowMonths>"
-    print "            <longDays>"        + l['longDays'].encode('utf-8')        + "</longDays>"
-    print "            <shortDays>"       + l['shortDays'].encode('utf-8')       + "</shortDays>"
-    print "            <narrowDays>"       + l['narrowDays'].encode('utf-8')       + "</narrowDays>"
-    print "            <standaloneLongDays>" + l['standaloneLongDays'].encode('utf-8')        + "</standaloneLongDays>"
-    print "            <standaloneShortDays>" + l['standaloneShortDays'].encode('utf-8')       + "</standaloneShortDays>"
-    print "            <standaloneNarrowDays>" + l['standaloneNarrowDays'].encode('utf-8')       + "</standaloneNarrowDays>"
-    print "            <currencyIsoCode>" + l['currencyIsoCode'].encode('utf-8') + "</currencyIsoCode>"
-    print "            <currencySymbol>" + l['currencySymbol'].encode('utf-8') + "</currencySymbol>"
-    print "            <currencyDisplayName>" + l['currencyDisplayName'].encode('utf-8') + "</currencyDisplayName>"
+    print "            <quotationStart>" + escape(l['quotationStart']).encode('utf-8') + "</quotationStart>"
+    print "            <quotationEnd>" + escape(l['quotationEnd']).encode('utf-8')   + "</quotationEnd>"
+    print "            <alternateQuotationStart>" + escape(l['alternateQuotationStart']).encode('utf-8') + "</alternateQuotationStart>"
+    print "            <alternateQuotationEnd>" + escape(l['alternateQuotationEnd']).encode('utf-8')   + "</alternateQuotationEnd>"
+    print "            <listPatternPartStart>" + escape(l['listPatternPartStart']).encode('utf-8')   + "</listPatternPartStart>"
+    print "            <listPatternPartMiddle>" + escape(l['listPatternPartMiddle']).encode('utf-8')   + "</listPatternPartMiddle>"
+    print "            <listPatternPartEnd>" + escape(l['listPatternPartEnd']).encode('utf-8')   + "</listPatternPartEnd>"
+    print "            <listPatternPartTwo>" + escape(l['listPatternPartTwo']).encode('utf-8')   + "</listPatternPartTwo>"
+    print "            <am>"       + escape(l['am']).encode('utf-8') + "</am>"
+    print "            <pm>"       + escape(l['pm']).encode('utf-8') + "</pm>"
+    print "            <firstDayOfWeek>"  + escape(l['firstDayOfWeek']).encode('utf-8') + "</firstDayOfWeek>"
+    print "            <weekendStart>"  + escape(l['weekendStart']).encode('utf-8') + "</weekendStart>"
+    print "            <weekendEnd>"  + escape(l['weekendEnd']).encode('utf-8') + "</weekendEnd>"
+    print "            <longDateFormat>"  + escape(l['longDateFormat']).encode('utf-8')  + "</longDateFormat>"
+    print "            <shortDateFormat>" + escape(l['shortDateFormat']).encode('utf-8') + "</shortDateFormat>"
+    print "            <longTimeFormat>"  + escape(l['longTimeFormat']).encode('utf-8')  + "</longTimeFormat>"
+    print "            <shortTimeFormat>" + escape(l['shortTimeFormat']).encode('utf-8') + "</shortTimeFormat>"
+    print "            <standaloneLongMonths>" + escape(l['standaloneLongMonths']).encode('utf-8')      + "</standaloneLongMonths>"
+    print "            <standaloneShortMonths>"+ escape(l['standaloneShortMonths']).encode('utf-8')      + "</standaloneShortMonths>"
+    print "            <standaloneNarrowMonths>"+ escape(l['standaloneNarrowMonths']).encode('utf-8')      + "</standaloneNarrowMonths>"
+    print "            <longMonths>"      + escape(l['longMonths']).encode('utf-8')      + "</longMonths>"
+    print "            <shortMonths>"     + escape(l['shortMonths']).encode('utf-8')     + "</shortMonths>"
+    print "            <narrowMonths>"     + escape(l['narrowMonths']).encode('utf-8')     + "</narrowMonths>"
+    print "            <longDays>"        + escape(l['longDays']).encode('utf-8')        + "</longDays>"
+    print "            <shortDays>"       + escape(l['shortDays']).encode('utf-8')       + "</shortDays>"
+    print "            <narrowDays>"       + escape(l['narrowDays']).encode('utf-8')       + "</narrowDays>"
+    print "            <standaloneLongDays>" + escape(l['standaloneLongDays']).encode('utf-8')        + "</standaloneLongDays>"
+    print "            <standaloneShortDays>" + escape(l['standaloneShortDays']).encode('utf-8')       + "</standaloneShortDays>"
+    print "            <standaloneNarrowDays>" + escape(l['standaloneNarrowDays']).encode('utf-8')       + "</standaloneNarrowDays>"
+    print "            <currencyIsoCode>" + escape(l['currencyIsoCode']).encode('utf-8') + "</currencyIsoCode>"
+    print "            <currencySymbol>" + escape(l['currencySymbol']).encode('utf-8') + "</currencySymbol>"
+    print "            <currencyDisplayName>" + escape(l['currencyDisplayName']).encode('utf-8') + "</currencyDisplayName>"
     print "            <currencyDigits>" + str(l['currencyDigits']) + "</currencyDigits>"
     print "            <currencyRounding>" + str(l['currencyRounding']) + "</currencyRounding>"
-    print "            <currencyFormat>" + l['currencyFormat'].encode('utf-8') + "</currencyFormat>"
-    print "            <currencyNegativeFormat>" + l['currencyNegativeFormat'].encode('utf-8') + "</currencyNegativeFormat>"
+    print "            <currencyFormat>" + escape(l['currencyFormat']).encode('utf-8') + "</currencyFormat>"
+    print "            <currencyNegativeFormat>" + escape(l['currencyNegativeFormat']).encode('utf-8') + "</currencyNegativeFormat>"
     print "        </locale>"
 print "    </localeList>"
 print "</localeDatabase>"

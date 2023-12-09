@@ -1,7 +1,7 @@
 CONFIG += testcase
 
 TARGET = ../tst_qlocale
-QT = core testlib
+QT = core testlib core-private
 embedded: QT += gui
 SOURCES += ../tst_qlocale.cpp
 

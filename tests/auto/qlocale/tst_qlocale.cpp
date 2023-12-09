@@ -393,15 +393,18 @@ void tst_QLocale::ctor()
         + "/" + QLocale::countryToString(l.country())).toLatin1().constData()); \
     }
 
-    TEST_CTOR("zh_CN", Chinese, AnyScript, China)
+    TEST_CTOR("zh_CN", Chinese, SimplifiedHanScript, China)
     TEST_CTOR("zh_Hans_CN", Chinese, SimplifiedHanScript, China)
     TEST_CTOR("zh_Hans", Chinese, SimplifiedHanScript, China)
-    TEST_CTOR("zh_Hant", Chinese, TraditionalHanScript, HongKong)
+    TEST_CTOR("zh_Hant", Chinese, TraditionalHanScript, Taiwan)
     TEST_CTOR("zh_Hans_MO", Chinese, SimplifiedHanScript, Macau)
     TEST_CTOR("zh_Hant_MO", Chinese, TraditionalHanScript, Macau)
     TEST_CTOR("az_Latn_AZ", Azerbaijani, LatinScript, Azerbaijan)
     TEST_CTOR("ha_NG", Hausa, AnyScript, Nigeria)
     TEST_CTOR("ha_Latn_NG", Hausa, LatinScript, Nigeria)
+
+    TEST_CTOR("ru", Russian, CyrillicScript, RussianFederation)
+    TEST_CTOR("ru_Cyrl", Russian, CyrillicScript, RussianFederation)
 
 #undef TEST_CTOR
 }
@@ -2256,12 +2259,37 @@ void tst_QLocale::uiLanguages()
     QCOMPARE(c.uiLanguages().at(0), QLatin1String("C"));
 
     const QLocale en_US("en_US");
-    QCOMPARE(en_US.uiLanguages().size(), 1);
-    QCOMPARE(en_US.uiLanguages().at(0), QLatin1String("en-US"));
+    QCOMPARE(en_US.uiLanguages().size(), 3);
+    QCOMPARE(en_US.uiLanguages().at(0), QLatin1String("en"));
+    QCOMPARE(en_US.uiLanguages().at(1), QLatin1String("en-US"));
+    QCOMPARE(en_US.uiLanguages().at(2), QLatin1String("en-Latn-US"));
+
+    const QLocale en_Latn_US("en_Latn_US");
+    QCOMPARE(en_Latn_US.uiLanguages().size(), 3);
+    QCOMPARE(en_Latn_US.uiLanguages().at(0), QLatin1String("en"));
+    QCOMPARE(en_Latn_US.uiLanguages().at(1), QLatin1String("en-US"));
+    QCOMPARE(en_Latn_US.uiLanguages().at(2), QLatin1String("en-Latn-US"));
+
+    const QLocale en_GB("en_GB");
+    QCOMPARE(en_GB.uiLanguages().size(), 2);
+    QCOMPARE(en_GB.uiLanguages().at(0), QLatin1String("en-GB"));
+    QCOMPARE(en_GB.uiLanguages().at(1), QLatin1String("en-Latn-GB"));
+
+    const QLocale en_Dsrt_US("en_Dsrt_US");
+    QCOMPARE(en_Dsrt_US.uiLanguages().size(), 2);
+    QCOMPARE(en_Dsrt_US.uiLanguages().at(0), QLatin1String("en-Dsrt"));
+    QCOMPARE(en_Dsrt_US.uiLanguages().at(1), QLatin1String("en-Dsrt-US"));
 
     const QLocale ru_RU("ru_RU");
-    QCOMPARE(ru_RU.uiLanguages().size(), 1);
-    QCOMPARE(ru_RU.uiLanguages().at(0), QLatin1String("ru-RU"));
+    QCOMPARE(ru_RU.uiLanguages().size(), 3);
+    QCOMPARE(ru_RU.uiLanguages().at(0), QLatin1String("ru"));
+    QCOMPARE(ru_RU.uiLanguages().at(1), QLatin1String("ru-RU"));
+    QCOMPARE(ru_RU.uiLanguages().at(2), QLatin1String("ru-Cyrl-RU"));
+
+    const QLocale zh_Hant("zh_Hant");
+    QCOMPARE(zh_Hant.uiLanguages().size(), 2);
+    QCOMPARE(zh_Hant.uiLanguages().at(0), QLatin1String("zh-TW"));
+    QCOMPARE(zh_Hant.uiLanguages().at(1), QLatin1String("zh-Hant-TW"));
 }
 
 void tst_QLocale::weekendDays()
