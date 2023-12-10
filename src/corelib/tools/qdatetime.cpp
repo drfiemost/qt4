@@ -647,18 +647,6 @@ QString QDate::shortMonthName(int month, QDate::MonthNameType type)
 }
 
 /*!
-    Returns the short version of the name of the \a month. The
-    returned name is in normal type which can be used for date formatting.
-
-    \sa toString(), longMonthName(), shortDayName(), longDayName()
- */
-
-QString QDate::shortMonthName(int month)
-{
-    return shortMonthName(month, QDate::DateFormat);
-}
-
-/*!
     \since 4.5
 
     Returns the long name of the \a month for the representation specified
@@ -704,21 +692,6 @@ QString QDate::longMonthName(int month, MonthNameType type)
 }
 
 /*!
-    Returns the long version of the name of the \a month. The
-    returned name is in normal type which can be used for date formatting.
-
-    \sa toString(), shortMonthName(), shortDayName(), longDayName()
- */
-
-QString QDate::longMonthName(int month)
-{
-    if (month < 1 || month > 12) {
-        month = 1;
-    }
-    return QLocale::system().monthName(month, QLocale::LongFormat);
-}
-
-/*!
     \since 4.5
 
     Returns the short name of the \a weekday for the representation specified
@@ -756,21 +729,6 @@ QString QDate::shortDayName(int weekday, MonthNameType type)
         break;
     }
     return QString();
-}
-
-/*!
-    Returns the short version of the name of the \a weekday. The
-    returned name is in normal type which can be used for date formatting.
-
-    \sa toString(), longDayName(), shortMonthName(), longMonthName()
- */
-
-QString QDate::shortDayName(int weekday)
-{
-    if (weekday < 1 || weekday > 7) {
-        weekday = 1;
-    }
-    return QLocale::system().dayName(weekday, QLocale::ShortFormat);
 }
 
 /*!
@@ -813,20 +771,6 @@ QString QDate::longDayName(int weekday, MonthNameType type)
     return QLocale::system().dayName(weekday, QLocale::LongFormat);
 }
 
-/*!
-    Returns the long version of the name of the \a weekday. The
-    returned name is in normal type which can be used for date formatting.
-
-    \sa toString(), shortDayName(), shortMonthName(), longMonthName()
- */
-
-QString QDate::longDayName(int weekday)
-{
-    if (weekday < 1 || weekday > 7) {
-        weekday = 1;
-    }
-    return QLocale::system().dayName(weekday, QLocale::LongFormat);
-}
 #endif //QT_NO_TEXTDATE
 
 #ifndef QT_NO_DATESTRING
@@ -905,9 +849,10 @@ QString QDate::toString(Qt::DateFormat f) const
         {
             if (year() < 0 || year() > 9999)
                 return QString();
+            QString year(QString::number(y).rightJustified(4, QLatin1Char('0')));
             QString month(QString::number(m).rightJustified(2, QLatin1Char('0')));
             QString day(QString::number(d).rightJustified(2, QLatin1Char('0')));
-            return QString::number(y) + QLatin1Char('-') + month + QLatin1Char('-') + day;
+            return year + QLatin1Char('-') + month + QLatin1Char('-') + day;
         }
     }
 }
@@ -974,7 +919,9 @@ QString QDate::toString(const QString& format) const
 #endif //QT_NO_DATESTRING
 
 /*!
-    \obsolete
+    \fn bool setYMD(int y, int m, int d)
+
+    \deprecated, use setDate() instead.
 
     Sets the date's year \a y, month \a m, and day \a d.
 
@@ -983,13 +930,6 @@ QString QDate::toString(const QString& format) const
 
     Use setDate() instead.
 */
-
-bool QDate::setYMD(int y, int m, int d)
-{
-    if (uint(y) <= 99)
-        y += 1900;
-    return setDate(y, m, d);
-}
 
 /*!
     \since 4.2
@@ -1425,30 +1365,6 @@ bool QDate::isLeapYear(int y)
     } else {
         return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;
     }
-}
-
-/*!
-    \internal
-
-    This function has a confusing name and shouldn't be part of the
-    API anyway, since we have toJulian() and fromJulian().
-    ### Qt 5: remove it
-*/
-uint QDate::gregorianToJulian(int y, int m, int d)
-{
-    return julianDayFromDate(y, m, d);
-}
-
-/*!
-    \internal
-
-    This function has a confusing name and shouldn't be part of the
-    API anyway, since we have toJulian() and fromJulian().
-    ### Qt 5: remove it
-*/
-void QDate::julianToGregorian(uint jd, int &y, int &m, int &d)
-{
-    getDateFromJulianDay(jd, &y, &m, &d);
 }
 
 /*! \fn static QDate QDate::fromJulianDay(int jd)
@@ -1919,6 +1835,10 @@ QTime QTime::fromString(const QString& s, Qt::DateFormat f)
             const int minute(s.mid(3, 2).toInt(&ok));
             if (!ok)
                 return QTime();
+            if (f == Qt::ISODate && s.size() == 5) {
+                // Do not need to specify seconds if using ISO format.
+                return QTime(hour, minute, 0, 0);
+            }
             const int second(s.mid(6, 2).toInt(&ok));
             if (!ok)
                 return QTime();
@@ -3505,7 +3425,7 @@ QDateTime QDateTime::fromString(const QString& s, Qt::DateFormat f)
     case Qt::ISODate: {
         QString tmp = s;
         Qt::TimeSpec ts = Qt::LocalTime;
-        const QDate date = QDate::fromString(tmp.left(10), Qt::ISODate);
+        QDate date = QDate::fromString(tmp.left(10), Qt::ISODate);
         if (tmp.size() == 10)
             return QDateTime(date);
 
@@ -3528,7 +3448,15 @@ QDateTime QDateTime::fromString(const QString& s, Qt::DateFormat f)
             tmp = tmp.left(signIndex);
             ts = Qt::OffsetFromUTC;
         }
-        return QDateTime(date, QTime::fromString(tmp, Qt::ISODate), ts);
+
+        QTime time(QTime::fromString(tmp, Qt::ISODate));
+        if (!time.isValid() && tmp == QString::fromLatin1("24:00:00")) {
+            // ISO 8601 (section 4.2.3) says that 24:00 is equivalent to 00:00 the next day.
+            date = date.addDays(1);
+            // Don't need to correct time since QDateTime constructor will do it for us.
+        }
+
+        return QDateTime(date, time, ts);
     }
     case Qt::SystemLocaleDate:
     case Qt::SystemLocaleShortDate:

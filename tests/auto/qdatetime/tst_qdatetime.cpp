@@ -121,6 +121,8 @@ private slots:
     void dateFromStringFormat();
     void timeFromStringFormat_data();
     void timeFromStringFormat();
+    void timeFromStringDateFormat_data();
+    void timeFromStringDateFormat();
     void dateTimeFromStringFormat_data();
     void dateTimeFromStringFormat();
 
@@ -1436,6 +1438,22 @@ void tst_QDateTime::fromStringTextDate_data()
                               << 28 << 6 << 2005 << 7 << 57 << 30 << 110
                               << int(Qt::LocalTime);
 
+    // Should be next day according to ISO 8601 section 4.2.3.
+    QTest::newRow("ISO date 24:00") << QString("2012-06-04T24:00:00")
+                            << int(Qt::ISODate)
+                            << 5 << 6 << 2012 << 0 << 0 << 0 << 0
+                            << int(Qt::LocalTime);
+
+    QTest::newRow("ISO date 24:00 end of month") << QString("2012-06-30T24:00:00")
+                            << int(Qt::ISODate)
+                            << 1 << 7 << 2012 << 0 << 0 << 0 << 0
+                            << int(Qt::LocalTime);
+
+    QTest::newRow("ISO date 24:00 end of month and year") << QString("2012-12-31T24:00:00")
+                            << int(Qt::ISODate)
+                            << 1 << 1 << 2013 << 0 << 0 << 0 << 0
+                            << int(Qt::LocalTime);
+
     QTest::newRow("Year 0999") << QString("Tue Jun 17 08:00:10 0999")
                             << int(Qt::TextDate)
                             << 17 << 6 << 999 << 8 << 0 << 10 << 0
@@ -1581,6 +1599,33 @@ void tst_QDateTime::timeFromStringFormat()
 {
     QFETCH(QString, string);
     QFETCH(QString, format);
+    QFETCH(QTime, expected);
+
+    QTime dt = QTime::fromString(string, format);
+    QCOMPARE(dt, expected);
+}
+
+void tst_QDateTime::timeFromStringDateFormat_data()
+{
+    QTest::addColumn<QString>("string");
+    QTest::addColumn<Qt::DateFormat>("format");
+    QTest::addColumn<QTime>("expected");
+
+    QTest::newRow("valid, start of day, omit seconds") << QString::fromLatin1("00:00") << Qt::ISODate << QTime(0, 0, 0);
+    QTest::newRow("valid, omit seconds") << QString::fromLatin1("22:21") << Qt::ISODate << QTime(22, 21, 0);
+    QTest::newRow("valid, omit seconds (2)") << QString::fromLatin1("23:59") << Qt::ISODate << QTime(23, 59, 0);
+    QTest::newRow("valid, end of day") << QString::fromLatin1("23:59:59") << Qt::ISODate << QTime(23, 59, 59);
+
+    QTest::newRow("invalid, empty string") << QString::fromLatin1("") << Qt::ISODate << invalidTime();
+    QTest::newRow("invalid, too many hours") << QString::fromLatin1("25:00") << Qt::ISODate << invalidTime();
+    QTest::newRow("invalid, too many minutes") << QString::fromLatin1("10:70") << Qt::ISODate << invalidTime();
+    QTest::newRow("invalid, too many seconds") << QString::fromLatin1("23:59:60") << Qt::ISODate << invalidTime();
+}
+
+void tst_QDateTime::timeFromStringDateFormat()
+{
+    QFETCH(QString, string);
+    QFETCH(Qt::DateFormat, format);
     QFETCH(QTime, expected);
 
     QTime dt = QTime::fromString(string, format);

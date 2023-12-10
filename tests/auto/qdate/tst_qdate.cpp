@@ -59,7 +59,6 @@ public slots:
     void init();
     void cleanup();
 private slots:
-    void toString();
     void isValid_data();
     void isValid();
     void julianDay_data();
@@ -86,6 +85,8 @@ private slots:
     void fromString_format();
     void toString_format_data();
     void toString_format();
+    void toStringDateFormat_data();
+    void toStringDateFormat();
     void isLeapYear();
     void yearsZeroToNinetyNine();
     void negativeYear() const;
@@ -103,6 +104,7 @@ private slots:
 };
 
 Q_DECLARE_METATYPE(QDate)
+Q_DECLARE_METATYPE(Qt::DateFormat)
 
 tst_QDate::tst_QDate()
 {
@@ -667,6 +669,33 @@ void tst_QDate::toString_format()
     QCOMPARE( t.toString( format ), str );
 }
 
+void tst_QDate::toStringDateFormat_data()
+{
+    QTest::addColumn<QDate>("date");
+    QTest::addColumn<Qt::DateFormat>("format");
+    QTest::addColumn<QString>("expectedStr");
+
+    QTest::newRow("data0") << QDate(1,1,1) << Qt::ISODate << QString("0001-01-01");
+    QTest::newRow("data1") << QDate(11,1,1) << Qt::ISODate << QString("0011-01-01");
+    QTest::newRow("data2") << QDate(111,1,1) << Qt::ISODate << QString("0111-01-01");
+    QTest::newRow("data3") << QDate(1974,12,1) << Qt::ISODate << QString("1974-12-01");
+}
+
+void tst_QDate::toStringDateFormat()
+{
+    QFETCH(QDate, date);
+    QFETCH(Qt::DateFormat, format);
+    QFETCH(QString, expectedStr);
+
+    QCOMPARE(date.toString(Qt::SystemLocaleShortDate), QLocale::system().toString(date, QLocale::ShortFormat));
+    QCOMPARE(date.toString(Qt::LocaleDate), QLocale().toString(date, QLocale::ShortFormat));
+    QLocale::setDefault(QLocale::German);
+    QCOMPARE(date.toString(Qt::SystemLocaleShortDate), QLocale::system().toString(date, QLocale::ShortFormat));
+    QCOMPARE(date.toString(Qt::LocaleDate), QLocale().toString(date, QLocale::ShortFormat));
+
+    QCOMPARE(date.toString(format), expectedStr);
+}
+
 void tst_QDate::isLeapYear()
 {
     QVERIFY(QDate::isLeapYear(-4445));
@@ -738,14 +767,6 @@ void tst_QDate::yearsZeroToNinetyNine()
 
     {
         QDate dt;
-        dt.setYMD(1, 2, 3);
-        QCOMPARE(dt.year(), 1901);
-        QCOMPARE(dt.month(), 2);
-        QCOMPARE(dt.day(), 3);
-    }
-
-    {
-        QDate dt;
         dt.setDate(1, 2, 3);
         QCOMPARE(dt.year(), 1);
         QCOMPARE(dt.month(), 2);
@@ -754,20 +775,6 @@ void tst_QDate::yearsZeroToNinetyNine()
         dt.setDate(0, 2, 3);
         QVERIFY(!dt.isValid());
     }
-}
-
-void tst_QDate::toString()
-{
-    QDate date(1974,12,1);
-    QCOMPARE(date.toString(Qt::SystemLocaleDate),
-                QLocale::system().toString(date, QLocale::ShortFormat));
-    QCOMPARE(date.toString(Qt::LocaleDate),
-                QLocale().toString(date, QLocale::ShortFormat));
-    QLocale::setDefault(QLocale::German);
-    QCOMPARE(date.toString(Qt::SystemLocaleDate),
-                QLocale::system().toString(date, QLocale::ShortFormat));
-    QCOMPARE(date.toString(Qt::LocaleDate),
-                QLocale().toString(date, QLocale::ShortFormat));
 }
 
 void tst_QDate::negativeYear() const

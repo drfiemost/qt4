@@ -478,9 +478,9 @@ static void _q_fixupDateTime(QDateTime *dateTime, bool leapYear = false)
             while (!QDate::isLeapYear(prevLeapYear))
                prevLeapYear--;
 
-            d.setYMD(prevLeapYear, d.month(), d.day());
+            d.setDate(prevLeapYear, d.month(), d.day());
         } else {
-            d.setYMD(d.year() - 1, d.month(), d.day());
+            d.setDate(d.year() - 1, d.month(), d.day());
         }
         dateTime->setDate(d);
     }
