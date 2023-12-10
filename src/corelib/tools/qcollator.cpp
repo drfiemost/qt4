@@ -82,7 +82,7 @@ public:
     QCollatorPrivate()
         : collation(QCollator::Default),
           collator(0)
-    { ref.store(1); }
+    { ref.storeRelaxed(1); }
     ~QCollatorPrivate();
 
 private:
@@ -206,9 +206,9 @@ void QCollator::init()
  */
 void QCollator::detach()
 {
-    if (d->ref.load() != 1) {
+    if (d->ref.loadRelaxed() != 1) {
         QCollatorPrivate *x = new QCollatorPrivate;
-        x->ref.store(1);
+        x->ref.storeRelaxed(1);
         x->locale = d->locale;
         x->collation = d->collation;
         x->collator = 0;
