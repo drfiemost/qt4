@@ -457,7 +457,7 @@ def unicodeStr(s):
     return "<size>" + str(len(utf8)) + "</size><data>" + addEscapes(utf8) + "</data>"
 
 def usage():
-    print "Usage: cldr2qlocalexml.py <path-to-cldr-main>"
+    print("Usage: cldr2qlocalexml.py <path-to-cldr-main>")
     sys.exit()
 
 def integrateWeekData(filePath):
@@ -620,37 +620,37 @@ for line in ldml:
     if 'version cldrVersion CDATA #FIXED' in line:
         cldr_version = line.split('"')[1]
 
-print "<localeDatabase>"
-print "    <version>" + cldr_version + "</version>"
-print "    <languageList>"
+print("<localeDatabase>")
+print("    <version>" + cldr_version + "</version>")
+print("    <languageList>")
 for id in enumdata.language_list:
     l = enumdata.language_list[id]
-    print "        <language>"
-    print "            <name>" + l[0] + "</name>"
-    print "            <id>" + str(id) + "</id>"
-    print "            <code>" + l[1] + "</code>"
-    print "        </language>"
-print "    </languageList>"
+    print("        <language>")
+    print("            <name>" + l[0] + "</name>")
+    print("            <id>" + str(id) + "</id>")
+    print("            <code>" + l[1] + "</code>")
+    print("        </language>")
+print("    </languageList>")
 
-print "    <scriptList>"
+print("    <scriptList>")
 for id in enumdata.script_list:
     l = enumdata.script_list[id]
-    print "        <script>"
-    print "            <name>" + l[0] + "</name>"
-    print "            <id>" + str(id) + "</id>"
-    print "            <code>" + l[1] + "</code>"
-    print "        </script>"
-print "    </scriptList>"
+    print("        <script>")
+    print("            <name>" + l[0] + "</name>")
+    print("            <id>" + str(id) + "</id>")
+    print("            <code>" + l[1] + "</code>")
+    print("        </script>")
+print("    </scriptList>")
 
-print "    <countryList>"
+print("    <countryList>")
 for id in enumdata.country_list:
     l = enumdata.country_list[id]
-    print "        <country>"
-    print "            <name>" + l[0] + "</name>"
-    print "            <id>" + str(id) + "</id>"
-    print "            <code>" + l[1] + "</code>"
-    print "        </country>"
-print "    </countryList>"
+    print("        <country>")
+    print("            <name>" + l[0] + "</name>")
+    print("            <id>" + str(id) + "</id>")
+    print("            <code>" + l[1] + "</code>")
+    print("        </country>")
+print("    </countryList>")
 
 def _parseLocale(l):
     language = "AnyLanguage"
@@ -688,7 +688,7 @@ def _parseLocale(l):
 
     return (language, script, country)
 
-print "    <likelySubtags>"
+print("    <likelySubtags>")
 for ns in findTagsInFile(cldr_dir + "/../supplemental/likelySubtags.xml", "likelySubtags"):
     tmp = {}
     for data in ns[1:][0]: # ns looks like this: [u'likelySubtag', [(u'from', u'aa'), (u'to', u'aa_Latn_ET')]]
@@ -710,23 +710,23 @@ for ns in findTagsInFile(cldr_dir + "/../supplemental/likelySubtags.xml", "likel
     if to_script == "AnyScript" and from_script != to_script:
         to_script = from_script
 
-    print "        <likelySubtag>"
-    print "            <from>"
-    print "                <language>" + from_language + "</language>"
-    print "                <script>" + from_script + "</script>"
-    print "                <country>" + from_country + "</country>"
-    print "            </from>"
-    print "            <to>"
-    print "                <language>" + to_language + "</language>"
-    print "                <script>" + to_script + "</script>"
-    print "                <country>" + to_country + "</country>"
-    print "            </to>"
-    print "        </likelySubtag>"
-print "    </likelySubtags>"
+    print("        <likelySubtag>")
+    print("            <from>")
+    print("                <language>" + from_language + "</language>")
+    print("                <script>" + from_script + "</script>")
+    print("                <country>" + from_country + "</country>")
+    print("            </from>")
+    print("            <to>")
+    print("                <language>" + to_language + "</language>")
+    print("                <script>" + to_script + "</script>")
+    print("                <country>" + to_country + "</country>")
+    print("            </to>")
+    print("        </likelySubtag>")
+print("    </likelySubtags>")
 
-print "    <localeList>"
+print("    <localeList>")
 print \
-"        <locale>\n\
+("        <locale>\n\
             <language>C</language>\n\
             <languageEndonym></languageEndonym>\n\
             <script>AnyScript</script>\n\
@@ -776,64 +776,64 @@ print \
             <currencyRounding>1</currencyRounding>\n\
             <currencyFormat>%1%2</currencyFormat>\n\
             <currencyNegativeFormat></currencyNegativeFormat>\n\
-        </locale>"
+        </locale>")
 
 for key in locale_keys:
     l = locale_database[key]
 
-    print "        <locale>"
-    print "            <language>" + l['language']        + "</language>"
-    print "            <languageEndonym>" + escape(l['language_endonym']).encode('utf-8') + "</languageEndonym>"
-    print "            <script>" + l['script']        + "</script>"
-    print "            <country>"  + l['country']         + "</country>"
-    print "            <countryEndonym>"  + escape(l['country_endonym']).encode('utf-8') + "</countryEndonym>"
-    print "            <languagecode>" + l['language_code']        + "</languagecode>"
-    print "            <scriptcode>" + l['script_code']        + "</scriptcode>"
-    print "            <countrycode>"  + l['country_code']         + "</countrycode>"
-    print "            <decimal>"  + ordStr(l['decimal']) + "</decimal>"
-    print "            <group>"    + ordStr(l['group'])   + "</group>"
-    print "            <list>"     + fixOrdStrList(l['list'])    + "</list>"
-    print "            <percent>"  + fixOrdStrPercent(l['percent']) + "</percent>"
-    print "            <zero>"     + ordStr(l['zero'])    + "</zero>"
-    print "            <minus>"    + fixOrdStrMinus(l['minus'])   + "</minus>"
-    print "            <plus>"     + fixOrdStrPlus(l['plus'])   + "</plus>"
-    print "            <exp>"      + fixOrdStrExp(l['exp'])     + "</exp>"
-    print "            <quotationStart>" + escape(l['quotationStart']).encode('utf-8') + "</quotationStart>"
-    print "            <quotationEnd>" + escape(l['quotationEnd']).encode('utf-8')   + "</quotationEnd>"
-    print "            <alternateQuotationStart>" + escape(l['alternateQuotationStart']).encode('utf-8') + "</alternateQuotationStart>"
-    print "            <alternateQuotationEnd>" + escape(l['alternateQuotationEnd']).encode('utf-8')   + "</alternateQuotationEnd>"
-    print "            <listPatternPartStart>" + escape(l['listPatternPartStart']).encode('utf-8')   + "</listPatternPartStart>"
-    print "            <listPatternPartMiddle>" + escape(l['listPatternPartMiddle']).encode('utf-8')   + "</listPatternPartMiddle>"
-    print "            <listPatternPartEnd>" + escape(l['listPatternPartEnd']).encode('utf-8')   + "</listPatternPartEnd>"
-    print "            <listPatternPartTwo>" + escape(l['listPatternPartTwo']).encode('utf-8')   + "</listPatternPartTwo>"
-    print "            <am>"       + escape(l['am']).encode('utf-8') + "</am>"
-    print "            <pm>"       + escape(l['pm']).encode('utf-8') + "</pm>"
-    print "            <firstDayOfWeek>"  + escape(l['firstDayOfWeek']).encode('utf-8') + "</firstDayOfWeek>"
-    print "            <weekendStart>"  + escape(l['weekendStart']).encode('utf-8') + "</weekendStart>"
-    print "            <weekendEnd>"  + escape(l['weekendEnd']).encode('utf-8') + "</weekendEnd>"
-    print "            <longDateFormat>"  + escape(l['longDateFormat']).encode('utf-8')  + "</longDateFormat>"
-    print "            <shortDateFormat>" + escape(l['shortDateFormat']).encode('utf-8') + "</shortDateFormat>"
-    print "            <longTimeFormat>"  + escape(l['longTimeFormat']).encode('utf-8')  + "</longTimeFormat>"
-    print "            <shortTimeFormat>" + escape(l['shortTimeFormat']).encode('utf-8') + "</shortTimeFormat>"
-    print "            <standaloneLongMonths>" + escape(l['standaloneLongMonths']).encode('utf-8')      + "</standaloneLongMonths>"
-    print "            <standaloneShortMonths>"+ escape(l['standaloneShortMonths']).encode('utf-8')      + "</standaloneShortMonths>"
-    print "            <standaloneNarrowMonths>"+ escape(l['standaloneNarrowMonths']).encode('utf-8')      + "</standaloneNarrowMonths>"
-    print "            <longMonths>"      + escape(l['longMonths']).encode('utf-8')      + "</longMonths>"
-    print "            <shortMonths>"     + escape(l['shortMonths']).encode('utf-8')     + "</shortMonths>"
-    print "            <narrowMonths>"     + escape(l['narrowMonths']).encode('utf-8')     + "</narrowMonths>"
-    print "            <longDays>"        + escape(l['longDays']).encode('utf-8')        + "</longDays>"
-    print "            <shortDays>"       + escape(l['shortDays']).encode('utf-8')       + "</shortDays>"
-    print "            <narrowDays>"       + escape(l['narrowDays']).encode('utf-8')       + "</narrowDays>"
-    print "            <standaloneLongDays>" + escape(l['standaloneLongDays']).encode('utf-8')        + "</standaloneLongDays>"
-    print "            <standaloneShortDays>" + escape(l['standaloneShortDays']).encode('utf-8')       + "</standaloneShortDays>"
-    print "            <standaloneNarrowDays>" + escape(l['standaloneNarrowDays']).encode('utf-8')       + "</standaloneNarrowDays>"
-    print "            <currencyIsoCode>" + escape(l['currencyIsoCode']).encode('utf-8') + "</currencyIsoCode>"
-    print "            <currencySymbol>" + escape(l['currencySymbol']).encode('utf-8') + "</currencySymbol>"
-    print "            <currencyDisplayName>" + escape(l['currencyDisplayName']).encode('utf-8') + "</currencyDisplayName>"
-    print "            <currencyDigits>" + str(l['currencyDigits']) + "</currencyDigits>"
-    print "            <currencyRounding>" + str(l['currencyRounding']) + "</currencyRounding>"
-    print "            <currencyFormat>" + escape(l['currencyFormat']).encode('utf-8') + "</currencyFormat>"
-    print "            <currencyNegativeFormat>" + escape(l['currencyNegativeFormat']).encode('utf-8') + "</currencyNegativeFormat>"
-    print "        </locale>"
-print "    </localeList>"
-print "</localeDatabase>"
+    print("        <locale>")
+    print("            <language>" + l['language']        + "</language>")
+    print("            <languageEndonym>" + escape(l['language_endonym']).encode('utf-8') + "</languageEndonym>")
+    print("            <script>" + l['script']        + "</script>")
+    print("            <country>"  + l['country']         + "</country>")
+    print("            <countryEndonym>"  + escape(l['country_endonym']).encode('utf-8') + "</countryEndonym>")
+    print("            <languagecode>" + l['language_code']        + "</languagecode>")
+    print("            <scriptcode>" + l['script_code']        + "</scriptcode>")
+    print("            <countrycode>"  + l['country_code']         + "</countrycode>")
+    print("            <decimal>"  + ordStr(l['decimal']) + "</decimal>")
+    print("            <group>"    + ordStr(l['group'])   + "</group>")
+    print("            <list>"     + fixOrdStrList(l['list'])    + "</list>")
+    print("            <percent>"  + fixOrdStrPercent(l['percent']) + "</percent>")
+    print("            <zero>"     + ordStr(l['zero'])    + "</zero>")
+    print("            <minus>"    + fixOrdStrMinus(l['minus'])   + "</minus>")
+    print("            <plus>"     + fixOrdStrPlus(l['plus'])   + "</plus>")
+    print("            <exp>"      + fixOrdStrExp(l['exp'])     + "</exp>")
+    print("            <quotationStart>" + escape(l['quotationStart']).encode('utf-8') + "</quotationStart>")
+    print("            <quotationEnd>" + escape(l['quotationEnd']).encode('utf-8')   + "</quotationEnd>")
+    print("            <alternateQuotationStart>" + escape(l['alternateQuotationStart']).encode('utf-8') + "</alternateQuotationStart>")
+    print("            <alternateQuotationEnd>" + escape(l['alternateQuotationEnd']).encode('utf-8')   + "</alternateQuotationEnd>")
+    print("            <listPatternPartStart>" + escape(l['listPatternPartStart']).encode('utf-8')   + "</listPatternPartStart>")
+    print("            <listPatternPartMiddle>" + escape(l['listPatternPartMiddle']).encode('utf-8')   + "</listPatternPartMiddle>")
+    print("            <listPatternPartEnd>" + escape(l['listPatternPartEnd']).encode('utf-8')   + "</listPatternPartEnd>")
+    print("            <listPatternPartTwo>" + escape(l['listPatternPartTwo']).encode('utf-8')   + "</listPatternPartTwo>")
+    print("            <am>"       + escape(l['am']).encode('utf-8') + "</am>")
+    print("            <pm>"       + escape(l['pm']).encode('utf-8') + "</pm>")
+    print("            <firstDayOfWeek>"  + escape(l['firstDayOfWeek']).encode('utf-8') + "</firstDayOfWeek>")
+    print("            <weekendStart>"  + escape(l['weekendStart']).encode('utf-8') + "</weekendStart>")
+    print("            <weekendEnd>"  + escape(l['weekendEnd']).encode('utf-8') + "</weekendEnd>")
+    print("            <longDateFormat>"  + escape(l['longDateFormat']).encode('utf-8')  + "</longDateFormat>")
+    print("            <shortDateFormat>" + escape(l['shortDateFormat']).encode('utf-8') + "</shortDateFormat>")
+    print("            <longTimeFormat>"  + escape(l['longTimeFormat']).encode('utf-8')  + "</longTimeFormat>")
+    print("            <shortTimeFormat>" + escape(l['shortTimeFormat']).encode('utf-8') + "</shortTimeFormat>")
+    print("            <standaloneLongMonths>" + escape(l['standaloneLongMonths']).encode('utf-8')      + "</standaloneLongMonths>")
+    print("            <standaloneShortMonths>"+ escape(l['standaloneShortMonths']).encode('utf-8')      + "</standaloneShortMonths>")
+    print("            <standaloneNarrowMonths>"+ escape(l['standaloneNarrowMonths']).encode('utf-8')      + "</standaloneNarrowMonths>")
+    print("            <longMonths>"      + escape(l['longMonths']).encode('utf-8')      + "</longMonths>")
+    print("            <shortMonths>"     + escape(l['shortMonths']).encode('utf-8')     + "</shortMonths>")
+    print("            <narrowMonths>"     + escape(l['narrowMonths']).encode('utf-8')     + "</narrowMonths>")
+    print("            <longDays>"        + escape(l['longDays']).encode('utf-8')        + "</longDays>")
+    print("            <shortDays>"       + escape(l['shortDays']).encode('utf-8')       + "</shortDays>")
+    print("            <narrowDays>"       + escape(l['narrowDays']).encode('utf-8')       + "</narrowDays>")
+    print("            <standaloneLongDays>" + escape(l['standaloneLongDays']).encode('utf-8')        + "</standaloneLongDays>")
+    print("            <standaloneShortDays>" + escape(l['standaloneShortDays']).encode('utf-8')       + "</standaloneShortDays>")
+    print("            <standaloneNarrowDays>" + escape(l['standaloneNarrowDays']).encode('utf-8')       + "</standaloneNarrowDays>")
+    print("            <currencyIsoCode>" + escape(l['currencyIsoCode']).encode('utf-8') + "</currencyIsoCode>")
+    print("            <currencySymbol>" + escape(l['currencySymbol']).encode('utf-8') + "</currencySymbol>")
+    print("            <currencyDisplayName>" + escape(l['currencyDisplayName']).encode('utf-8') + "</currencyDisplayName>")
+    print("            <currencyDigits>" + str(l['currencyDigits']) + "</currencyDigits>")
+    print("            <currencyRounding>" + str(l['currencyRounding']) + "</currencyRounding>")
+    print("            <currencyFormat>" + escape(l['currencyFormat']).encode('utf-8') + "</currencyFormat>")
+    print("            <currencyNegativeFormat>" + escape(l['currencyNegativeFormat']).encode('utf-8') + "</currencyNegativeFormat>")
+    print("        </locale>")
+print("    </localeList>")
+print("</localeDatabase>")

@@ -395,12 +395,12 @@ class StringData:
         lst = unicode2hex(s)
         index = len(self.data)
         if index > 65535:
-            print "\n\n\n#error Data index is too big!"
+            print("\n\n\n#error Data index is too big!")
             sys.stderr.write ("\n\n\nERROR: index exceeds the uint16 range! index = %d\n" % index)
             sys.exit(1)
         size = len(lst)
         if size >= 65535:
-            print "\n\n\n#error Data is too big!"
+            print("\n\n\n#error Data is too big!")
             sys.stderr.write ("\n\n\nERROR: data size exceeds the uint16 range! size = %d\n" % size)
             sys.exit(1)
         token = None
@@ -445,7 +445,7 @@ def escapedString(s):
     return result
 
 def printEscapedString(s):
-    print escapedString(s);
+    print(escapedString(s))
 
 
 def currencyIsoCodeData(s):
@@ -454,7 +454,7 @@ def currencyIsoCodeData(s):
     return "0,0,0"
 
 def usage():
-    print "Usage: qlocalexml2cpp.py <path-to-locale.xml> <path-to-qt-src-tree>"
+    print("Usage: qlocalexml2cpp.py <path-to-locale.xml> <path-to-qt-src-tree>")
     sys.exit(1)
 
 GENERATED_BLOCK_START = "// GENERATED PART STARTS HERE\n"
