@@ -122,12 +122,15 @@ public:
         first.type = FirstSection;
         first.pos = -1;
         first.count = -1;
+        first.zeroesAdded = 0;
         last.type = FirstSection;
         last.pos = -1;
         last.count = -1;
+        last.zeroesAdded = 0;
         none.type = NoSection;
         none.pos = -1;
         none.count = -1;
+        none.zeroesAdded = 0;
     }
     virtual ~QDateTimeParser() {}
     enum {
@@ -170,6 +173,7 @@ public:
         Section type;
         mutable int pos;
         int count;
+        int zeroesAdded;
     };
 
     enum State { // duplicated from QValidator

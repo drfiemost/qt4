@@ -55,6 +55,7 @@
 #include <locale.h>
 #endif
 
+#include <cmath>
 #include <time.h>
 #if defined(Q_OS_WINCE)
 #include "qfunctions_wince.h"
@@ -1693,7 +1694,10 @@ QTime QTime::addSecs(int s) const
 
 int QTime::secsTo(const QTime &t) const
 {
-    return (t.ds() - ds()) / 1000;
+    // Truncate milliseconds as we do not want to consider them.
+    int ourSeconds = ds() / 1000;
+    int theirSeconds = t.ds() / 1000;
+    return theirSeconds - ourSeconds;
 }
 
 /*!
@@ -1795,12 +1799,104 @@ int QTime::msecsTo(const QTime &t) const
 */
 
 #ifndef QT_NO_DATESTRING
+// These anonymous functions tidy up QDateTime::fromString()
+// and avoid confusion of reponsibility between it and QTime::fromString().
+namespace {
+inline bool isMidnight(int hour, int minute, int second, int msec)
+{
+    return hour == 24 && minute == 0 && second == 0 && msec == 0;
+}
+
+QTime fromStringImpl(const QString &s, Qt::DateFormat f, bool &isMidnight24)
+{
+    if (s.isEmpty()) {
+        // Return a null time.
+        return QTime();
+    }
+
+    switch (f) {
+    case Qt::SystemLocaleDate:
+    case Qt::SystemLocaleShortDate:
+    case Qt::SystemLocaleLongDate:
+    {
+        QLocale::FormatType formatType(f == Qt::SystemLocaleLongDate ? QLocale::LongFormat : QLocale::ShortFormat);
+        return QTime::fromString(s, QLocale::system().timeFormat(formatType));
+    }
+    case Qt::LocaleDate:
+    case Qt::DefaultLocaleShortDate:
+    case Qt::DefaultLocaleLongDate:
+    {
+        QLocale::FormatType formatType(f == Qt::DefaultLocaleLongDate ? QLocale::LongFormat : QLocale::ShortFormat);
+        return QTime::fromString(s, QLocale().timeFormat(formatType));
+    }
+    case Qt::TextDate:
+    case Qt::ISODate:
+    {
+        bool ok = true;
+        const int hour(s.mid(0, 2).toInt(&ok));
+        if (!ok)
+            return QTime();
+        const int minute(s.mid(3, 2).toInt(&ok));
+        if (!ok)
+            return QTime();
+        if (f == Qt::ISODate) {
+            if (s.size() == 5) {
+                // Do not need to specify seconds if using ISO format.
+                return QTime(hour, minute, 0, 0);
+            } else if ((s.size() > 6 && s[5] == QLatin1Char(',')) || s[5] == QLatin1Char('.')) {
+                // Possibly specifying fraction of a minute.
+
+                // We only want 5 digits worth of fraction of minute. This follows the existing
+                // behaviour that determines how milliseconds are read; 4 millisecond digits are
+                // read and then rounded to 3. If we read at most 5 digits for fraction of minute,
+                // the maximum amount of millisecond digits it will expand to once converted to
+                // seconds is 4. E.g. 12:34,99999 will expand to 12:34:59.9994. The milliseconds
+                // will then be rounded up AND clamped to 999.
+                const QString minuteFractionStr(QLatin1String("0.") + s.mid(6, 5));
+                const float minuteFraction = minuteFractionStr.toFloat(&ok);
+                if (!ok)
+                    return QTime();
+                const float secondWithMs = minuteFraction * 60;
+                const float second = std::floor(secondWithMs);
+                const float millisecond = 1000 * (secondWithMs - second);
+                const int millisecondRounded = qMin(qRound(millisecond), 999);
+
+                if (isMidnight(hour, minute, second, millisecondRounded)) {
+                    isMidnight24 = true;
+                    return QTime(0, 0, 0, 0);
+                }
+
+                return QTime(hour, minute, second, millisecondRounded);
+            }
+        }
+
+        const int second(s.mid(6, 2).toInt(&ok));
+        if (!ok)
+            return QTime();
+        const QString msec_s(QLatin1String("0.") + s.mid(9, 4));
+        const double msec(msec_s.toDouble(&ok));
+        if (!ok)
+            return QTime(hour, minute, second, 0);
+
+        if (f == Qt::ISODate) {
+            if (isMidnight(hour, minute, second, msec)) {
+                isMidnight24 = true;
+                return QTime(0, 0, 0, 0);
+            }
+        }
+        return QTime(hour, minute, second, qMin(qRound(msec * 1000.0), 999));
+    }
+    }
+    Q_UNREACHABLE();
+    return QTime();
+}
+}
+
+
 /*!
     \fn QTime QTime::fromString(const QString &string, Qt::DateFormat format)
-
     Returns the time represented in the \a string as a QTime using the
     \a format given, or an invalid time if this is not possible.
-
     Note that fromString() uses a "C" locale encoded string to convert
     milliseconds to a float value. If the default locale is not "C",
     this may result in two conversion attempts (if the conversion
@@ -1809,46 +1905,8 @@ int QTime::msecsTo(const QTime &t) const
 */
 QTime QTime::fromString(const QString& s, Qt::DateFormat f)
 {
-    if (s.isEmpty()) {
-        QTime t;
-        t.mds = NullTime;
-        return t;
-    }
-
-    switch (f) {
-    case Qt::SystemLocaleDate:
-    case Qt::SystemLocaleShortDate:
-    case Qt::SystemLocaleLongDate:
-        return fromString(s, QLocale::system().timeFormat(f == Qt::SystemLocaleLongDate ? QLocale::LongFormat
-                                                                                        : QLocale::ShortFormat));
-    case Qt::LocaleDate:
-    case Qt::DefaultLocaleShortDate:
-    case Qt::DefaultLocaleLongDate:
-        return fromString(s, QLocale().timeFormat(f == Qt::DefaultLocaleLongDate ? QLocale::LongFormat
-                                                                                 : QLocale::ShortFormat));
-    default:
-        {
-            bool ok = true;
-            const int hour(s.mid(0, 2).toInt(&ok));
-            if (!ok)
-                return QTime();
-            const int minute(s.mid(3, 2).toInt(&ok));
-            if (!ok)
-                return QTime();
-            if (f == Qt::ISODate && s.size() == 5) {
-                // Do not need to specify seconds if using ISO format.
-                return QTime(hour, minute, 0, 0);
-            }
-            const int second(s.mid(6, 2).toInt(&ok));
-            if (!ok)
-                return QTime();
-            const QString msec_s(QLatin1String("0.") + s.mid(9, 4));
-            const float msec(msec_s.toFloat(&ok));
-            if (!ok)
-                return QTime(hour, minute, second, 0);
-            return QTime(hour, minute, second, qMin(qRound(msec * 1000.0), 999));
-        }
-    }
+    bool unused;
+    return fromStringImpl(s, f, unused);
 }
 
 /*!
@@ -2807,7 +2865,10 @@ QString QDateTime::toString(const QString& format) const
 
 QDateTime QDateTime::addDays(int ndays) const
 {
-    return QDateTime(d->date.addDays(ndays), d->time, timeSpec());
+    QDateTime dt(*this);
+    dt.detach();
+    dt.d->date = d->date.addDays(ndays);
+    return dt;
 }
 
 /*!
@@ -2820,7 +2881,10 @@ QDateTime QDateTime::addDays(int ndays) const
 
 QDateTime QDateTime::addMonths(int nmonths) const
 {
-    return QDateTime(d->date.addMonths(nmonths), d->time, timeSpec());
+    QDateTime dt(*this);
+    dt.detach();
+    dt.d->date = d->date.addMonths(nmonths);
+    return dt;
 }
 
 /*!
@@ -2833,7 +2897,10 @@ QDateTime QDateTime::addMonths(int nmonths) const
 
 QDateTime QDateTime::addYears(int nyears) const
 {
-    return QDateTime(d->date.addYears(nyears), d->time, timeSpec());
+    QDateTime dt(*this);
+    dt.detach();
+    dt.d->date = d->date.addYears(nyears);
+    return dt;
 }
 
 QDateTime QDateTimePrivate::addMSecs(const QDateTime &dt, qint64 msecs)
@@ -3449,11 +3516,12 @@ QDateTime QDateTime::fromString(const QString& s, Qt::DateFormat f)
             ts = Qt::OffsetFromUTC;
         }
 
-        QTime time(QTime::fromString(tmp, Qt::ISODate));
-        if (!time.isValid() && tmp == QString::fromLatin1("24:00:00")) {
+        bool isMidnight24 = false;
+        // Might be end of day (24:00, including variants), which QTime considers invalid.
+        QTime time(fromStringImpl(tmp, Qt::ISODate, isMidnight24));
+        if (isMidnight24) {
             // ISO 8601 (section 4.2.3) says that 24:00 is equivalent to 00:00 the next day.
             date = date.addDays(1);
-            // Don't need to correct time since QDateTime constructor will do it for us.
         }
 
         return QDateTime(date, time, ts);
@@ -4010,59 +4078,59 @@ static QString getFmtString(const QString& f, const QTime* dt = nullptr, const Q
 // Parses the format string and uses getFmtString to get the values for the tokens. Ret
 static QString fmtDateTime(const QString& f, const QTime* dt, const QDate* dd)
 {
-    const QLatin1Char quote('\'');
+    QString buf;
+
     if (f.isEmpty())
-        return QString();
+        return buf;
     if (dt && !dt->isValid())
-        return QString();
+        return buf;
     if (dd && !dd->isValid())
-        return QString();
+        return buf;
 
     const bool ap = hasUnquotedAP(f);
 
-    QString buf;
     QString frm;
-    QChar status(QLatin1Char('0'));
+    uint status = '0';
 
-    for (int i = 0; i < (int)f.length(); ++i) {
-        if (f.at(i) == quote) {
-            if (status == quote) {
-                if (i > 0 && f.at(i - 1) == quote)
-                    buf += QLatin1Char('\'');
-                status = QLatin1Char('0');
+    for (int i = 0, n = f.length(); i < n; ++i) {
+        const QChar c = f.at(i);
+        const uint cc = c.unicode();
+        if (cc == '\'') {
+            if (status == cc) {
+                if (i > 0 && f.at(i - 1).unicode() == cc)
+                    buf += c;
+                status = '0';
             } else {
                 if (!frm.isEmpty()) {
                     buf += getFmtString(frm, dt, dd, ap);
                     frm.clear();
                 }
-                status = quote;
+                status = cc;
             }
-        } else if (status == quote) {
-            buf += f.at(i);
-        } else if (f.at(i) == status) {
-            if ((ap) && ((f.at(i) == QLatin1Char('P')) || (f.at(i) == QLatin1Char('p'))))
-                status = QLatin1Char('0');
-            frm += f.at(i);
+        } else if (status == '\'') {
+            buf += c;
+        } else if (c == status) {
+            if (ap && (cc == 'P' || cc == 'p'))
+                status = '0';
+            frm += c;
         } else {
             buf += getFmtString(frm, dt, dd, ap);
             frm.clear();
-            if ((f.at(i) == QLatin1Char('h')) || (f.at(i) == QLatin1Char('m'))
-                || (f.at(i) == QLatin1Char('H'))
-                || (f.at(i) == QLatin1Char('s')) || (f.at(i) == QLatin1Char('z'))) {
-                status = f.at(i);
-                frm += f.at(i);
-            } else if ((f.at(i) == QLatin1Char('d')) || (f.at(i) == QLatin1Char('M')) || (f.at(i) == QLatin1Char('y'))) {
-                status = f.at(i);
-                frm += f.at(i);
-            } else if ((ap) && (f.at(i) == QLatin1Char('A'))) {
-                status = QLatin1Char('P');
-                frm += f.at(i);
-            } else  if((ap) && (f.at(i) == QLatin1Char('a'))) {
-                status = QLatin1Char('p');
-                frm += f.at(i);
+            if (cc == 'h' || cc == 'm' || cc == 'H' || cc == 's' || cc == 'z') {
+                status = cc;
+                frm += c;
+            } else if (cc == 'd' || cc == 'M' || cc == 'y') {
+                status = cc;
+                frm += c;
+            } else if (ap && cc == 'A') {
+                status = 'P';
+                frm += c;
+            } else  if (ap && cc == 'a') {
+                status = 'p';
+                frm += c;
             } else {
-                buf += f.at(i);
-                status = QLatin1Char('0');
+                buf += c;
+                status = '0';
             }
         }
     }
@@ -4613,7 +4681,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
             case 'h':
                 if (parserType != QVariant::Date) {
                     const Section hour = (sect == 'h') ? Hour12Section : Hour24Section;
-                    const SectionNode sn = { hour, i - add, countRepeat(newFormat, i, 2) };
+                    const SectionNode sn = { hour, i - add, countRepeat(newFormat, i, 2), 0 };
                     newSectionNodes.append(sn);
                     appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                     i += sn.count - 1;
@@ -4623,7 +4691,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
                 break;
             case 'm':
                 if (parserType != QVariant::Date) {
-                    const SectionNode sn = { MinuteSection, i - add, countRepeat(newFormat, i, 2) };
+                    const SectionNode sn = { MinuteSection, i - add, countRepeat(newFormat, i, 2), 0 };
                     newSectionNodes.append(sn);
                     appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                     i += sn.count - 1;
@@ -4633,7 +4701,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
                 break;
             case 's':
                 if (parserType != QVariant::Date) {
-                    const SectionNode sn = { SecondSection, i - add, countRepeat(newFormat, i, 2) };
+                    const SectionNode sn = { SecondSection, i - add, countRepeat(newFormat, i, 2), 0 };
                     newSectionNodes.append(sn);
                     appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                     i += sn.count - 1;
@@ -4644,7 +4712,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
 
             case 'z':
                 if (parserType != QVariant::Date) {
-                    const SectionNode sn = { MSecSection, i - add, countRepeat(newFormat, i, 3) < 3 ? 1 : 3 };
+                    const SectionNode sn = { MSecSection, i - add, countRepeat(newFormat, i, 3) < 3 ? 1 : 3, 0 };
                     newSectionNodes.append(sn);
                     appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                     i += sn.count - 1;
@@ -4656,7 +4724,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
             case 'a':
                 if (parserType != QVariant::Date) {
                     const bool cap = (sect == 'A');
-                    const SectionNode sn = { AmPmSection, i - add, (cap ? 1 : 0) };
+                    const SectionNode sn = { AmPmSection, i - add, (cap ? 1 : 0), 0 };
                     newSectionNodes.append(sn);
                     appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                     newDisplay |= AmPmSection;
@@ -4672,7 +4740,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
                     const int repeat = countRepeat(newFormat, i, 4);
                     if (repeat >= 2) {
                         const SectionNode sn = { repeat == 4 ? YearSection : YearSection2Digits,
-                                                 i - add, repeat == 4 ? 4 : 2 };
+                                                 i - add, repeat == 4 ? 4 : 2, 0 };
                         newSectionNodes.append(sn);
                         appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                         i += sn.count - 1;
@@ -4683,7 +4751,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
                 break;
             case 'M':
                 if (parserType != QVariant::Time) {
-                    const SectionNode sn = { MonthSection, i - add, countRepeat(newFormat, i, 4) };
+                    const SectionNode sn = { MonthSection, i - add, countRepeat(newFormat, i, 4), 0 };
                     newSectionNodes.append(sn);
                     newSeparators.append(unquote(newFormat.mid(index, i - index)));
                     i += sn.count - 1;
@@ -4694,7 +4762,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
             case 'd':
                 if (parserType != QVariant::Time) {
                     const int repeat = countRepeat(newFormat, i, 4);
-                    const SectionNode sn = { repeat >= 3 ? DayOfWeekSection : DaySection, i - add, repeat };
+                    const SectionNode sn = { repeat >= 3 ? DayOfWeekSection : DaySection, i - add, repeat, 0 };
                     newSectionNodes.append(sn);
                     appendSeparator(&newSeparators, newFormat, index, i - index, lastQuote);
                     i += sn.count - 1;
@@ -4758,8 +4826,26 @@ int QDateTimeParser::sectionSize(int sectionIndex) const
         qWarning("QDateTimeParser::sectionSize Internal error (%d)", sectionIndex);
         return -1;
     }
+
     if (sectionIndex == sectionNodes.size() - 1) {
-        return displayText().size() - sectionPos(sectionIndex) - separators.last().size();
+        // In some cases there is a difference between displayText() and text.
+        // e.g. when text is 2000/01/31 and displayText() is "2000/2/31" - text
+        // is the previous value and displayText() is the new value.
+        // The size difference is always due to leading zeroes.
+        int sizeAdjustment = 0;
+        if (displayText().size() != text.size()) {
+            // Any zeroes added before this section will affect our size.
+            int preceedingZeroesAdded = 0;
+            if (sectionNodes.size() > 1 && context == DateTimeEdit) {
+                for (QVector<SectionNode>::ConstIterator sectionIt = sectionNodes.constBegin();
+                    sectionIt != sectionNodes.constBegin() + sectionIndex; ++sectionIt) {
+                    preceedingZeroesAdded += sectionIt->zeroesAdded;
+                }
+            }
+            sizeAdjustment = preceedingZeroesAdded;
+        }
+
+        return displayText().size() + sizeAdjustment - sectionPos(sectionIndex) - separators.last().size();
     } else {
         return sectionPos(sectionIndex + 1) - sectionPos(sectionIndex)
             - separators.at(sectionIndex + 1).size();
@@ -5047,6 +5133,7 @@ int QDateTimeParser::parseSection(const QDateTime &currentValue, int sectionInde
                         text.insert(index, QString().fill(QLatin1Char('0'), missingZeroes));
                         used = sectionmaxsize;
                         cursorPosition += missingZeroes;
+                        ++(const_cast<QDateTimeParser*>(this)->sectionNodes[sectionIndex].zeroesAdded);
                     } else {
                         state = Intermediate;;
                     }

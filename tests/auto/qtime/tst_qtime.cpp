@@ -360,6 +360,10 @@ void tst_QTime::secsTo_data()
     QTest::newRow(  "data1" ) << QTime(0,0,0) << QTime(0,1,0) << 60;
     QTest::newRow(  "data2" ) << QTime(0,0,0) << QTime(0,10,0) << 600;
     QTest::newRow(  "data3" ) << QTime(0,0,0) << QTime(23,59,59) << 86399;
+    QTest::newRow("disregard msec (1s)") << QTime(12, 30, 1, 500) << QTime(12, 30, 2, 400) << 1;
+    QTest::newRow("disregard msec (0s)") << QTime(12, 30, 1, 500) << QTime(12, 30, 1, 900) << 0;
+    QTest::newRow("disregard msec (-1s)") << QTime(12, 30, 2, 400) << QTime(12, 30, 1, 500) << -1;
+    QTest::newRow("disregard msec (0s)") << QTime(12, 30, 1, 900) << QTime(12, 30, 1, 500) << 0;
 }
 
 void tst_QTime::secsTo()
