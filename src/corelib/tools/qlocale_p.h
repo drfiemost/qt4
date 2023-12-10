@@ -183,6 +183,7 @@ static const QLocaleData *findLocaleData(QLocale::Language language,
 public:
     quint16 m_language_id, m_script_id, m_country_id;
 
+    // FIXME QTBUG-69324: not all unicode code-points map to single-token UTF-16 :-(
     quint16 m_decimal, m_group, m_list, m_percent, m_zero, m_minus, m_plus, m_exponential;
     quint16 m_quotation_start, m_quotation_end;
     quint16 m_alternate_quotation_start, m_alternate_quotation_end;
@@ -209,6 +210,9 @@ public:
     quint16 m_narrow_day_names_idx, m_narrow_day_names_size;
     quint16 m_am_idx, m_am_size;
     quint16 m_pm_idx, m_pm_size;
+    quint16 m_byte_idx, m_byte_size;
+    quint16 m_byte_si_quantified_idx, m_byte_si_quantified_size;
+    quint16 m_byte_iec_quantified_idx, m_byte_iec_quantified_size;
     char    m_currency_iso_code[3];
     quint16 m_currency_symbol_idx, m_currency_symbol_size;
     quint16 m_currency_display_name_idx, m_currency_display_name_size;

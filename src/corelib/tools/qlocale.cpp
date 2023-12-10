@@ -69,7 +69,7 @@
 QT_BEGIN_NAMESPACE
 
 #ifndef QT_NO_SYSTEMLOCALE
-static QSystemLocale *_systemLocale = 0;
+static QSystemLocale *_systemLocale = nullptr;
 class QSystemLocaleSingleton: public QSystemLocale
 {
 public:
@@ -77,7 +77,7 @@ public:
 };
 
 Q_GLOBAL_STATIC(QSystemLocaleSingleton, QSystemLocale_globalSystemLocale)
-static QLocaleData *system_data = 0;
+static QLocaleData *system_data = nullptr;
 Q_GLOBAL_STATIC(QLocaleData, globalLocaleData)
 #endif
 
@@ -547,7 +547,7 @@ QSystemLocale::QSystemLocale(bool)
 QSystemLocale::~QSystemLocale()
 {
     if (_systemLocale == this) {
-        _systemLocale = 0;
+        _systemLocale = nullptr;
 
         if (system_data)
             system_data->m_language_id = 0;
@@ -2131,7 +2131,7 @@ QString QLocale::standaloneMonthName(int month, FormatType type) const
     default:
         return QString();
     }
-    QString name = getLocaleListData(standalone_months_data + idx, size, month - 1);
+    QString name = getLocaleListData(months_data + idx, size, month - 1);
     if (name.isEmpty())
         return monthName(month, type);
     return name;
