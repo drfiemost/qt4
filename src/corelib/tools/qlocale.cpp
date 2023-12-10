@@ -148,14 +148,14 @@ QLocale::Country QLocalePrivate::codeToCountry(const QString &code)
     return QLocale::AnyCountry;
 }
 
-QString QLocalePrivate::languageCode() const
+QString QLocalePrivate::languageToCode(QLocale::Language language)
 {
-    if (m_data->m_language_id == QLocale::AnyLanguage)
+    if (language == QLocale::AnyLanguage)
         return QString();
-    if (m_data->m_language_id == QLocale::C)
+    if (language == QLocale::C)
         return QLatin1String("C");
 
-    const unsigned char *c = language_code_list + 3*(uint(m_data->m_language_id));
+    const unsigned char *c = language_code_list + 3*(uint(language));
 
     QString code(c[2] == 0 ? 2 : 3, Qt::Uninitialized);
 
@@ -167,20 +167,20 @@ QString QLocalePrivate::languageCode() const
     return code;
 }
 
-QString QLocalePrivate::scriptCode() const
+QString QLocalePrivate::scriptToCode(QLocale::Script script)
 {
-    if (m_data->m_script_id == QLocale::AnyScript || m_data->m_script_id > QLocale::LastScript)
+    if (script == QLocale::AnyScript || script > QLocale::LastScript)
         return QString();
-    const unsigned char *c = script_code_list + 4*(uint(m_data->m_script_id));
+    const unsigned char *c = script_code_list + 4*(uint(script));
     return QString::fromLatin1((const char *)c, 4);
 }
 
-QString QLocalePrivate::countryCode() const
+QString QLocalePrivate::countryToCode(QLocale::Country country)
 {
-    if (m_data->m_country_id == QLocale::AnyCountry)
+    if (country == QLocale::AnyCountry)
         return QString();
 
-    const unsigned char *c = country_code_list + 3*(uint(m_data->m_country_id));
+    const unsigned char *c = country_code_list + 3*(uint(country));
 
     QString code(c[2] == 0 ? 2 : 3, Qt::Uninitialized);
 
@@ -1046,6 +1046,41 @@ QString QLocale::name() const
     return result;
 }
 
+static qlonglong toIntegral_helper(const QLocaleData *d, const QChar *data, int len, bool *ok,
+                                   QLocaleData::GroupSeparatorMode mode, qlonglong)
+{
+    return d->stringToLongLong(data, len, 10, ok, mode);
+}
+
+static qulonglong toIntegral_helper(const QLocaleData *d, const QChar *data, int len, bool *ok,
+                                    QLocaleData::GroupSeparatorMode mode, qulonglong)
+{
+    return d->stringToUnsLongLong(data, len, 10, ok, mode);
+}
+
+template <typename T> static inline
+T toIntegral_helper(const QLocalePrivate *d, const QChar *data, int len, bool *ok)
+{
+    // ### Qt6: use std::conditional<std::is_unsigned<T>::value, qulonglong, qlonglong>::type
+    const bool isUnsigned = T(0) < T(-1);
+    typedef typename QtPrivate::QConditional<isUnsigned, qulonglong, qlonglong>::Type Int64;
+
+    QLocaleData::GroupSeparatorMode mode
+            = d->m_numberOptions & QLocale::RejectGroupSeparator
+              ? QLocaleData::FailOnGroupSeparators
+              : QLocaleData::ParseGroupSeparators;
+
+    // we select the right overload by the last, unused parameter
+    Int64 val = toIntegral_helper(d->m_data, data, len, ok, mode, Int64());
+    if (T(val) != val) {
+        if (ok)
+            *ok = false;
+        val = 0;
+    }
+    return T(val);
+}
+
+
 /*!
     \since 4.8
 
@@ -1106,11 +1141,7 @@ QString QLocale::scriptToString(QLocale::Script script)
 }
 
 /*!
-    Returns the short int represented by the localized string \a s,
-    using base \a base. If \a base is 0 the base is determined
-    automatically using the following rules: If the string begins with
-    "0x", it is assumed to be hexadecimal; if it begins with "0", it
-    is assumed to be octal; otherwise it is assumed to be decimal.
+    Returns the short int represented by the localized string \a s.
 
     If the conversion fails the function returns 0.
 
@@ -1122,23 +1153,13 @@ QString QLocale::scriptToString(QLocale::Script script)
     \sa toUShort(), toString()
 */
 
-short QLocale::toShort(const QString &s, bool *ok, int base) const
+short QLocale::toShort(const QString &s, bool *ok) const
 {
-    qlonglong i = toLongLong(s, ok, base);
-    if (i < SHRT_MIN || i > SHRT_MAX) {
-        if (ok != nullptr)
-            *ok = false;
-        return 0;
-    }
-    return short(i);
+    return toIntegral_helper<short>(d, s.constData(), s.size(), ok);
 }
 
 /*!
-    Returns the unsigned short int represented by the localized string
-    \a s, using base \a base. If \a base is 0 the base is determined
-    automatically using the following rules: If the string begins with
-    "0x", it is assumed to be hexadecimal; if it begins with "0", it
-    is assumed to be octal; otherwise it is assumed to be decimal.
+    Returns the unsigned short int represented by the localized string \a s.
 
     If the conversion fails the function returns 0.
 
@@ -1150,23 +1171,13 @@ short QLocale::toShort(const QString &s, bool *ok, int base) const
     \sa toShort(), toString()
 */
 
-ushort QLocale::toUShort(const QString &s, bool *ok, int base) const
+ushort QLocale::toUShort(const QString &s, bool *ok) const
 {
-    qulonglong i = toULongLong(s, ok, base);
-    if (i > USHRT_MAX) {
-        if (ok != nullptr)
-            *ok = false;
-        return 0;
-    }
-    return ushort(i);
+    return toIntegral_helper<ushort>(d, s.constData(), s.size(), ok);
 }
 
 /*!
-    Returns the int represented by the localized string \a s, using
-    base \a base. If \a base is 0 the base is determined automatically
-    using the following rules: If the string begins with "0x", it is
-    assumed to be hexadecimal; if it begins with "0", it is assumed to
-    be octal; otherwise it is assumed to be decimal.
+    Returns the int represented by the localized string \a s.
 
     If the conversion fails the function returns 0.
 
@@ -1178,23 +1189,13 @@ ushort QLocale::toUShort(const QString &s, bool *ok, int base) const
     \sa toUInt(), toString()
 */
 
-int QLocale::toInt(const QString &s, bool *ok, int base) const
+int QLocale::toInt(const QString &s, bool *ok) const
 {
-    qlonglong i = toLongLong(s, ok, base);
-    if (i < INT_MIN || i > INT_MAX) {
-        if (ok != nullptr)
-            *ok = false;
-        return 0;
-    }
-    return int(i);
+    return toIntegral_helper<int>(d, s.constData(), s.size(), ok);
 }
 
 /*!
-    Returns the unsigned int represented by the localized string \a s,
-    using base \a base. If \a base is 0 the base is determined
-    automatically using the following rules: If the string begins with
-    "0x", it is assumed to be hexadecimal; if it begins with "0", it
-    is assumed to be octal; otherwise it is assumed to be decimal.
+    Returns the unsigned int represented by the localized string \a s.
 
     If the conversion fails the function returns 0.
 
@@ -1206,23 +1207,13 @@ int QLocale::toInt(const QString &s, bool *ok, int base) const
     \sa toInt(), toString()
 */
 
-uint QLocale::toUInt(const QString &s, bool *ok, int base) const
+uint QLocale::toUInt(const QString &s, bool *ok) const
 {
-    qulonglong i = toULongLong(s, ok, base);
-    if (i > UINT_MAX) {
-        if (ok != nullptr)
-            *ok = false;
-        return 0;
-    }
-    return uint(i);
+    return toIntegral_helper<uint>(d, s.constData(), s.size(), ok);
 }
 
 /*!
-    Returns the long long int represented by the localized string \a
-    s, using base \a base. If \a base is 0 the base is determined
-    automatically using the following rules: If the string begins with
-    "0x", it is assumed to be hexadecimal; if it begins with "0", it
-    is assumed to be octal; otherwise it is assumed to be decimal.
+    Returns the long long int represented by the localized string \a s.
 
     If the conversion fails the function returns 0.
 
@@ -1235,23 +1226,14 @@ uint QLocale::toUInt(const QString &s, bool *ok, int base) const
 */
 
 
-qlonglong QLocale::toLongLong(const QString &s, bool *ok, int base) const
+qlonglong QLocale::toLongLong(const QString &s, bool *ok) const
 {
-    QLocalePrivate::GroupSeparatorMode mode
-        = d->m_numberOptions & RejectGroupSeparator
-            ? QLocalePrivate::FailOnGroupSeparators
-            : QLocalePrivate::ParseGroupSeparators;
-
-    return d->stringToLongLong(s.constData(), s.size(), base, ok, mode);
+    return toIntegral_helper<qlonglong>(d, s.constData(), s.size(), ok);
 }
 
 /*!
     Returns the unsigned long long int represented by the localized
-    string \a s, using base \a base. If \a base is 0 the base is
-    determined automatically using the following rules: If the string
-    begins with "0x", it is assumed to be hexadecimal; if it begins
-    with "0", it is assumed to be octal; otherwise it is assumed to be
-    decimal.
+    string \a s.
 
     If the conversion fails the function returns 0.
 
@@ -1263,14 +1245,9 @@ qlonglong QLocale::toLongLong(const QString &s, bool *ok, int base) const
     \sa toLongLong(), toInt(), toDouble(), toString()
 */
 
-qulonglong QLocale::toULongLong(const QString &s, bool *ok, int base) const
+qulonglong QLocale::toULongLong(const QString &s, bool *ok) const
 {
-    QLocalePrivate::GroupSeparatorMode mode
-        = d->m_numberOptions & RejectGroupSeparator
-            ? QLocalePrivate::FailOnGroupSeparators
-            : QLocalePrivate::ParseGroupSeparators;
-
-    return d->stringToUnsLongLong(s.constData(), s.size(), base, ok, mode);
+    return toIntegral_helper<qulonglong>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1315,12 +1292,12 @@ float QLocale::toFloat(const QString &s, bool *ok) const
 
 double QLocale::toDouble(const QString &s, bool *ok) const
 {
-    QLocalePrivate::GroupSeparatorMode mode
+    QLocaleData::GroupSeparatorMode mode
         = d->m_numberOptions & RejectGroupSeparator
-            ? QLocalePrivate::FailOnGroupSeparators
-            : QLocalePrivate::ParseGroupSeparators;
+            ? QLocaleData::FailOnGroupSeparators
+            : QLocaleData::ParseGroupSeparators;
 
-    return d->stringToDouble(s.constData(), s.size(), ok, mode);
+    return d->m_data->stringToDouble(s.constData(), s.size(), ok, mode);
 }
 
 /*!
@@ -1335,13 +1312,7 @@ double QLocale::toDouble(const QString &s, bool *ok) const
 
 short QLocale::toShort(const QStringRef &s, bool *ok) const
 {
-    qlonglong i = toLongLong(s, ok);
-    if (i < SHRT_MIN || i > SHRT_MAX) {
-        if (ok)
-            *ok = false;
-        return 0;
-    }
-    return short(i);
+    return toIntegral_helper<short>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1356,13 +1327,7 @@ short QLocale::toShort(const QStringRef &s, bool *ok) const
 
 ushort QLocale::toUShort(const QStringRef &s, bool *ok) const
 {
-    qulonglong i = toULongLong(s, ok);
-    if (i > USHRT_MAX) {
-        if (ok)
-            *ok = false;
-        return 0;
-    }
-    return ushort(i);
+    return toIntegral_helper<ushort>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1377,13 +1342,7 @@ ushort QLocale::toUShort(const QStringRef &s, bool *ok) const
 
 int QLocale::toInt(const QStringRef &s, bool *ok) const
 {
-    qlonglong i = toLongLong(s, ok);
-    if (i < INT_MIN || i > INT_MAX) {
-        if (ok)
-            *ok = false;
-        return 0;
-    }
-    return int(i);
+    return toIntegral_helper<int>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1398,13 +1357,7 @@ int QLocale::toInt(const QStringRef &s, bool *ok) const
 
 uint QLocale::toUInt(const QStringRef &s, bool *ok) const
 {
-    qulonglong i = toULongLong(s, ok);
-    if (i > UINT_MAX) {
-        if (ok)
-            *ok = false;
-        return 0;
-    }
-    return uint(i);
+    return toIntegral_helper<uint>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1420,12 +1373,7 @@ uint QLocale::toUInt(const QStringRef &s, bool *ok) const
 
 qlonglong QLocale::toLongLong(const QStringRef &s, bool *ok) const
 {
-    QLocalePrivate::GroupSeparatorMode mode
-        = d->m_numberOptions & RejectGroupSeparator
-            ? QLocalePrivate::FailOnGroupSeparators
-            : QLocalePrivate::ParseGroupSeparators;
-
-    return d->stringToLongLong(s.constData(), s.size(), 10, ok, mode);
+    return toIntegral_helper<qlonglong>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1441,12 +1389,7 @@ qlonglong QLocale::toLongLong(const QStringRef &s, bool *ok) const
 
 qulonglong QLocale::toULongLong(const QStringRef &s, bool *ok) const
 {
-    QLocalePrivate::GroupSeparatorMode mode
-        = d->m_numberOptions & RejectGroupSeparator
-            ? QLocalePrivate::FailOnGroupSeparators
-            : QLocalePrivate::ParseGroupSeparators;
-
-    return d->stringToUnsLongLong(s.constData(), s.size(), 10, ok, mode);
+    return toIntegral_helper<qulonglong>(d, s.constData(), s.size(), ok);
 }
 
 /*!
@@ -1482,12 +1425,12 @@ float QLocale::toFloat(const QStringRef &s, bool *ok) const
 
 double QLocale::toDouble(const QStringRef &s, bool *ok) const
 {
-    QLocalePrivate::GroupSeparatorMode mode
+    QLocaleData::GroupSeparatorMode mode
         = d->m_numberOptions & RejectGroupSeparator
-            ? QLocalePrivate::FailOnGroupSeparators
-            : QLocalePrivate::ParseGroupSeparators;
+            ? QLocaleData::FailOnGroupSeparators
+            : QLocaleData::ParseGroupSeparators;
 
-    return d->stringToDouble(s.constData(), s.size(), ok, mode);
+    return d->m_data->stringToDouble(s.constData(), s.size(), ok, mode);
 }
 
 /*!
@@ -2950,13 +2893,17 @@ QString QLocaleData::unsLongLongToString(const QChar zero, const QChar group,
                                             int base, int width,
                                             unsigned flags)
 {
+    const QChar resultZero = base == 10 ? zero : QChar(QLatin1Char('0'));
+    QString num_str = l ? qulltoa(l, base, zero) : QString(resultZero);
+
     bool precision_not_specified = false;
     if (precision == -1) {
+        if (flags == NoFlags)
+            return num_str; // fast-path: nothing below applies, so we're done.
+
         precision_not_specified = true;
         precision = 1;
     }
-
-    QString num_str = qulltoa(l, base, zero);
 
     uint cnt_thousand_sep = 0;
     if (flags & ThousandsGroup && base == 10) {
@@ -2966,12 +2913,13 @@ QString QLocaleData::unsLongLongToString(const QChar zero, const QChar group,
         }
     }
 
-    for (int i = num_str.length()/* - cnt_thousand_sep*/; i < precision; ++i)
-        num_str.prepend(base == 10 ? zero : QChar::fromLatin1('0'));
+    const int zeroPadding = precision - num_str.length()/* + cnt_thousand_sep*/;
+    if (zeroPadding > 0)
+        num_str.prepend(QString(zeroPadding, resultZero));
 
     if ((flags & Alternate || flags & ShowBase)
             && base == 8
-            && (num_str.isEmpty() || num_str[0].unicode() != QLatin1Char('0')))
+            && (num_str.isEmpty() || num_str.at(0).unicode() != QLatin1Char('0')))
         num_str.prepend(QLatin1Char('0'));
 
     // LeftAdjusted overrides this flag ZeroPadded. sprintf only padds
@@ -2990,8 +2938,8 @@ QString QLocaleData::unsLongLongToString(const QChar zero, const QChar group,
         else if (base == 2 && flags & Alternate)
             num_pad_chars -= 2;
 
-        for (int i = 0; i < num_pad_chars; ++i)
-            num_str.prepend(base == 10 ? zero : QChar::fromLatin1('0'));
+        if (num_pad_chars > 0)
+            num_str.prepend(QString(num_pad_chars, resultZero));
     }
 
     if (flags & CapitalEorX)
@@ -3019,7 +2967,7 @@ QString QLocaleData::unsLongLongToString(const QChar zero, const QChar group,
     number. We can't detect junk here, since we don't even know the base
     of the number.
 */
-bool QLocalePrivate::numberToCLocale(const QChar *str, int len,
+bool QLocaleData::numberToCLocale(const QChar *str, int len,
                                             GroupSeparatorMode group_sep_mode,
                                             CharBuff *result) const
 {
@@ -3044,9 +2992,9 @@ bool QLocalePrivate::numberToCLocale(const QChar *str, int len,
 
         char out = digitToCLocale(in);
         if (out == 0) {
-            if (in == list())
+            if (in == m_list)
                 out = ';';
-            else if (in == percent())
+            else if (in == m_percent)
                 out = '%';
             // for handling base-x numbers
             else if (in.unicode() >= 'A' && in.unicode() <= 'Z')
@@ -3073,7 +3021,7 @@ bool QLocalePrivate::numberToCLocale(const QChar *str, int len,
     return idx == l;
 }
 
-bool QLocalePrivate::validateChars(const QString &str, NumberMode numMode, QByteArray *buff,
+bool QLocaleData::validateChars(const QString &str, NumberMode numMode, QByteArray *buff,
                                     int decDigits) const
 {
     buff->clear();
@@ -3166,7 +3114,7 @@ bool QLocalePrivate::validateChars(const QString &str, NumberMode numMode, QByte
     return true;
 }
 
-double QLocalePrivate::stringToDouble(const QChar *begin, int len, bool *ok,
+double QLocaleData::stringToDouble(const QChar *begin, int len, bool *ok,
                                         GroupSeparatorMode group_sep_mode) const
 {
     CharBuff buff;
@@ -3178,7 +3126,7 @@ double QLocalePrivate::stringToDouble(const QChar *begin, int len, bool *ok,
     return bytearrayToDouble(buff.constData(), ok);
 }
 
-qlonglong QLocalePrivate::stringToLongLong(const QChar *begin, int len, int base,
+qlonglong QLocaleData::stringToLongLong(const QChar *begin, int len, int base,
                                            bool *ok, GroupSeparatorMode group_sep_mode) const
 {
     CharBuff buff;
@@ -3191,7 +3139,7 @@ qlonglong QLocalePrivate::stringToLongLong(const QChar *begin, int len, int base
     return bytearrayToLongLong(buff.constData(), base, ok);
 }
 
-qulonglong QLocalePrivate::stringToUnsLongLong(const QChar *begin, int len, int base,
+qulonglong QLocaleData::stringToUnsLongLong(const QChar *begin, int len, int base,
                                                bool *ok, GroupSeparatorMode group_sep_mode) const
 {
     CharBuff buff;
@@ -3204,7 +3152,7 @@ qulonglong QLocalePrivate::stringToUnsLongLong(const QChar *begin, int len, int 
     return bytearrayToUnsLongLong(buff.constData(), base, ok);
 }
 
-double QLocalePrivate::bytearrayToDouble(const char *num, bool *ok, bool *overflow)
+double QLocaleData::bytearrayToDouble(const char *num, bool *ok, bool *overflow)
 {
     if (ok != nullptr)
         *ok = true;
@@ -3256,7 +3204,7 @@ double QLocalePrivate::bytearrayToDouble(const char *num, bool *ok, bool *overfl
     return d;
 }
 
-qlonglong QLocalePrivate::bytearrayToLongLong(const char *num, int base, bool *ok, bool *overflow)
+qlonglong QLocaleData::bytearrayToLongLong(const char *num, int base, bool *ok, bool *overflow)
 {
     bool _ok;
     const char *endptr;
@@ -3298,7 +3246,7 @@ qlonglong QLocalePrivate::bytearrayToLongLong(const char *num, int base, bool *o
     return l;
 }
 
-qulonglong QLocalePrivate::bytearrayToUnsLongLong(const char *num, int base, bool *ok)
+qulonglong QLocaleData::bytearrayToUnsLongLong(const char *num, int base, bool *ok)
 {
     bool _ok;
     const char *endptr;

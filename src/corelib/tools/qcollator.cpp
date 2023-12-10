@@ -224,7 +224,7 @@ void QCollator::detach()
  */
 void QCollator::setLocale(const QLocale &locale)
 {
-    if (d->ref.load() != 1)
+    if (d->ref.loadRelaxed() != 1)
         detach();
     d->clear();
     d->locale = locale;
@@ -273,7 +273,7 @@ void QCollator::setCollation(QCollator::Collation collation)
     if ((int)collation < 0 || (int)collation >= collationStringsCount)
         return;
 
-    if (d->ref.load() != 1)
+    if (d->ref.loadRelaxed() != 1)
         detach();
     d->clear();
     d->collation = collation;
@@ -355,7 +355,7 @@ QCollator QCollator::fromIdentifier(const QString &identifier)
  */
 void QCollator::setCasePreference(CasePreference c)
 {
-    if (d->ref.load() != 1)
+    if (d->ref.loadRelaxed() != 1)
         detach();
 
 #ifdef QT_USE_ICU
@@ -405,7 +405,7 @@ QCollator::CasePreference QCollator::casePreference() const
  */
 void QCollator::setNumericMode(bool on)
 {
-    if (d->ref.load() != 1)
+    if (d->ref.loadRelaxed() != 1)
         detach();
 
 #ifdef QT_USE_ICU
@@ -440,7 +440,7 @@ bool QCollator::numericMode() const
  */
 void QCollator::setIgnorePunctuation(bool on)
 {
-    if (d->ref.load() != 1)
+    if (d->ref.loadRelaxed() != 1)
         detach();
 
 #ifdef QT_USE_ICU

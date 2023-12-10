@@ -330,9 +330,9 @@ static qlonglong pow10(int exp)
 QValidator::State QIntValidator::validate(QString & input, int&) const
 {
     QByteArray buff;
-    if (!locale().d->validateChars(input, QLocalePrivate::IntegerMode, &buff)) {
+    if (!locale().d->m_data->validateChars(input, QLocaleData::IntegerMode, &buff)) {
         QLocale cl(QLocale::C);
-        if (!cl.d->validateChars(input, QLocalePrivate::IntegerMode, &buff))
+        if (!cl.d->m_data->validateChars(input, QLocaleData::IntegerMode, &buff))
             return Invalid;
     }
 
@@ -349,12 +349,12 @@ QValidator::State QIntValidator::validate(QString & input, int&) const
         return Intermediate;
 
     bool ok, overflow;
-    qlonglong entered = QLocalePrivate::bytearrayToLongLong(buff.constData(), 10, &ok, &overflow);
+    qlonglong entered = QLocaleData::bytearrayToLongLong(buff.constData(), 10, &ok, &overflow);
     if (overflow || !ok)
         return Invalid;
 
     if (entered >= b && entered <= t) {
-        locale().toInt(input, &ok, 10);
+        locale().toInt(input, &ok);
         return ok ? Acceptable : Intermediate;
     }
 
@@ -371,13 +371,13 @@ QValidator::State QIntValidator::validate(QString & input, int&) const
 void QIntValidator::fixup(QString &input) const
 {
     QByteArray buff;
-    if (!locale().d->validateChars(input, QLocalePrivate::IntegerMode, &buff)) {
+    if (!locale().d->m_data->validateChars(input, QLocaleData::IntegerMode, &buff)) {
         QLocale cl(QLocale::C);
-        if (!cl.d->validateChars(input, QLocalePrivate::IntegerMode, &buff))
+        if (!cl.d->m_data->validateChars(input, QLocaleData::IntegerMode, &buff))
             return;
     }
     bool ok, overflow;
-    qlonglong entered = QLocalePrivate::bytearrayToLongLong(buff.constData(), 10, &ok, &overflow);
+    qlonglong entered = QLocaleData::bytearrayToLongLong(buff.constData(), 10, &ok, &overflow);
     if (ok && !overflow)
         input = locale().toString(entered);
 }
@@ -453,7 +453,7 @@ public:
 
     QDoubleValidator::Notation notation;
 
-    QValidator::State validateWithLocale(QString & input, QLocalePrivate::NumberMode numMode, const QLocale &locale) const;
+    QValidator::State validateWithLocale(QString & input, QLocaleData::NumberMode numMode, const QLocale &locale) const;
 };
 
 
@@ -562,13 +562,13 @@ QValidator::State QDoubleValidator::validate(QString & input, int &) const
 {
     Q_D(const QDoubleValidator);
 
-    QLocalePrivate::NumberMode numMode = QLocalePrivate::DoubleStandardMode;
+    QLocaleData::NumberMode numMode = QLocaleData::DoubleStandardMode;
     switch (d->notation) {
         case StandardNotation:
-            numMode = QLocalePrivate::DoubleStandardMode;
+            numMode = QLocaleData::DoubleStandardMode;
             break;
         case ScientificNotation:
-            numMode = QLocalePrivate::DoubleScientificMode;
+            numMode = QLocaleData::DoubleScientificMode;
             break;
     }
 
@@ -579,11 +579,11 @@ QValidator::State QDoubleValidator::validate(QString & input, int &) const
     return qMax(currentLocaleValidation, cLocaleValidation);
 }
 
-QValidator::State QDoubleValidatorPrivate::validateWithLocale(QString &input, QLocalePrivate::NumberMode numMode, const QLocale &locale) const
+QValidator::State QDoubleValidatorPrivate::validateWithLocale(QString &input, QLocaleData::NumberMode numMode, const QLocale &locale) const
 {
     Q_Q(const QDoubleValidator);
     QByteArray buff;
-    if (!locale.d->validateChars(input, numMode, &buff, q->dec))
+    if (!locale.d->m_data->validateChars(input, numMode, &buff, q->dec))
         return QValidator::Invalid;
 
     if (buff.isEmpty())
@@ -596,7 +596,7 @@ QValidator::State QDoubleValidatorPrivate::validateWithLocale(QString &input, QL
         return QValidator::Invalid;
 
     bool ok, overflow;
-    double i = QLocalePrivate::bytearrayToDouble(buff.constData(), &ok, &overflow);
+    double i = QLocaleData::bytearrayToDouble(buff.constData(), &ok, &overflow);
     if (overflow)
         return QValidator::Invalid;
     if (!ok)

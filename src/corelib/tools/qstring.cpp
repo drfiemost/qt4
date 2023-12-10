@@ -5542,8 +5542,7 @@ qlonglong QString::toIntegral_helper(const QChar *data, int len, bool *ok, int b
     }
 #endif
 
-    QLocale c_locale(QLocale::C);
-    return c_locale.d->stringToLongLong(data, len, base, ok, QLocalePrivate::FailOnGroupSeparators);
+    return QLocaleData::c()->stringToLongLong(data, len, base, ok, QLocaleData::FailOnGroupSeparators);
 }
 
 /*!
@@ -5582,8 +5581,7 @@ qulonglong QString::toIntegral_helper(const QChar *data, uint len, bool *ok, int
     }
 #endif
 
-    QLocale c_locale(QLocale::C);
-    return c_locale.d->stringToUnsLongLong(data, len, base, ok, QLocalePrivate::FailOnGroupSeparators);
+    return QLocaleData::c()->stringToUnsLongLong(data, len, base, ok, QLocaleData::FailOnGroupSeparators);
 }
 
 /*!
@@ -5785,8 +5783,7 @@ ushort QString::toUShort(bool *ok, int base) const
 
 double QString::toDouble(bool *ok) const
 {
-    QLocale c_locale(QLocale::C);
-    return c_locale.d->stringToDouble(constData(), size(), ok, QLocalePrivate::FailOnGroupSeparators);
+    return QLocaleData::c()->stringToDouble(constData(), size(), ok, QLocaleData::FailOnGroupSeparators);
 }
 
 /*!
@@ -9286,8 +9283,7 @@ ushort QStringRef::toUShort(bool *ok, int base) const
 
 double QStringRef::toDouble(bool *ok) const
 {
-    QLocale c_locale(QLocale::C);
-    return c_locale.d->stringToDouble(constData(), size(), ok, QLocalePrivate::FailOnGroupSeparators);
+    return QLocaleData::c()->stringToDouble(constData(), size(), ok, QLocaleData::FailOnGroupSeparators);
 }
 
 /*!

@@ -687,12 +687,12 @@ public:
     QString nativeLanguageName() const;
     QString nativeCountryName() const;
 
-    short toShort(const QString &s, bool *ok = nullptr, int base = 0) const;
-    ushort toUShort(const QString &s, bool *ok = nullptr, int base = 0) const;
-    int toInt(const QString &s, bool *ok = nullptr, int base = 0) const;
-    uint toUInt(const QString &s, bool *ok = nullptr, int base = 0) const;
-    qlonglong toLongLong(const QString &s, bool *ok = nullptr, int base = 0) const;
-    qulonglong toULongLong(const QString &s, bool *ok = nullptr, int base = 0) const;
+    short toShort(const QString &s, bool *ok = nullptr) const;
+    ushort toUShort(const QString &s, bool *ok = nullptr) const;
+    int toInt(const QString &s, bool *ok = nullptr) const;
+    uint toUInt(const QString &s, bool *ok = nullptr) const;
+    qlonglong toLongLong(const QString &s, bool *ok = nullptr) const;
+    qulonglong toULongLong(const QString &s, bool *ok = nullptr) const;
     float toFloat(const QString &s, bool *ok = nullptr) const;
     double toDouble(const QString &s, bool *ok = nullptr) const;
 

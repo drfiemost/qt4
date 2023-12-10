@@ -1377,7 +1377,7 @@ void tst_QLocale::formatTimeZone()
 #endif // Q_OS_WIN
         QCOMPARE(enUS.toString(dt5, "t"), QString("CEST"));
     } else {
-        QSKIP("You must test using Central European (CET/CEST) time zone, e.g. TZ=Europe/Oslo");
+        QSKIP("You must test using Central European (CET/CEST) time zone, e.g. TZ=Europe/Oslo", SkipAll);
     }
 
     // Current datetime should return current abbreviation
