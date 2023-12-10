@@ -94,9 +94,9 @@ QLocale::Language QLocalePrivate::codeToLanguage(const QString &code)
     int len = code.length();
     if (len != 2 && len != 3)
         return QLocale::C;
-    ushort uc1 = len-- > 0 ? code[0].toLower().unicode() : 0;
-    ushort uc2 = len-- > 0 ? code[1].toLower().unicode() : 0;
-    ushort uc3 = len-- > 0 ? code[2].toLower().unicode() : 0;
+    ushort uc1 = code[0].toLower().unicode();
+    ushort uc2 = code[1].toLower().unicode();
+    ushort uc3 = len > 2 ? code[2].toLower().unicode() : 0;
 
     if (uc1 == 'n' && uc2 == 'o' && uc3 == 0)
         uc2 = 'b';
@@ -135,9 +135,9 @@ QLocale::Country QLocalePrivate::codeToCountry(const QString &code)
     int len = code.length();
     if (len != 2 && len != 3)
         return QLocale::AnyCountry;
-    ushort uc1 = len-- > 0 ? code[0].toUpper().unicode() : 0;
-    ushort uc2 = len-- > 0 ? code[1].toUpper().unicode() : 0;
-    ushort uc3 = len-- > 0 ? code[2].toUpper().unicode() : 0;
+    ushort uc1 = code[0].toUpper().unicode();
+    ushort uc2 = code[1].toUpper().unicode();
+    ushort uc3 = len > 2 ? code[2].toUpper().unicode() : 0;
 
     const unsigned char *c = country_code_list;
     for (; *c != 0; c += 3) {
@@ -514,7 +514,11 @@ static const QLocaleData *default_data = nullptr;
 static uint default_number_options = 0;
 
 static const QLocaleData *const c_data = locale_data;
-static QLocalePrivate c_private = { c_data, Q_BASIC_ATOMIC_INITIALIZER(1), 0 };
+static QLocalePrivate *c_private()
+{
+    static QLocalePrivate c_locale = { c_data, Q_BASIC_ATOMIC_INITIALIZER(1), QLocale::OmitGroupSeparator };
+    return &c_locale;
+}
 
 #ifndef QT_NO_SYSTEMLOCALE
 
@@ -678,8 +682,9 @@ static const int locale_data_size = sizeof(locale_data)/sizeof(QLocaleData) - 1;
 static QLocalePrivate *localePrivateByName(const QString &name)
 {
     if (name == QLatin1String("C"))
-        return &c_private;
-    return QLocalePrivate::create(findLocaleData(name));
+        return c_private();
+    const QLocaleData *data = findLocaleData(name);
+    return QLocalePrivate::create(data, data->m_language_id == QLocale::C ? QLocale::OmitGroupSeparator : 0);
 }
 
 static QLocalePrivate *defaultLocalePrivate()
@@ -691,7 +696,7 @@ static QLocalePrivate *findLocalePrivate(QLocale::Language language, QLocale::Sc
                                          QLocale::Country country)
 {
     if (language == QLocale::C)
-        return &c_private;
+        return c_private();
 
     const QLocaleData *data = QLocaleData::findLocaleData(language, script, country);
 
@@ -2006,8 +2011,8 @@ QList<QLocale> QLocale::matchingLocales(QLocale::Language language,
         data += locale_index[language];
     while ( (data != locale_data + locale_data_size)
             && (language == QLocale::AnyLanguage || data->m_language_id == uint(language))) {
-        QLocale locale(*QLocalePrivate::create(data));
-        result.append(locale);
+        result.append(QLocale(*(data->m_language_id == C ? c_private()
+                                    : QLocalePrivate::create(data))));
         ++data;
     }
     return result;
@@ -2638,9 +2643,9 @@ QString QLocaleData::doubleToString(const QChar _zero, const QChar plus, const Q
                                     const QChar exponential, const QChar group, const QChar decimal,
                                     double d, int precision, DoubleForm form, int width, unsigned flags)
 {
-    if (precision == -1)
+    if (precision < 0)
         precision = 6;
-    if (width == -1)
+    if (width < 0)
         width = 0;
 
     bool negative = false;
@@ -2987,6 +2992,11 @@ bool QLocaleData::numberToCLocale(const QChar *str, int len,
             break;
     }
 
+    int group_cnt = 0; // counts number of group chars
+    int decpt_idx = -1;
+    int last_separator_idx = -1;
+    int start_of_digits_idx = -1;
+
     while (idx < l) {
         const QChar in = uc[idx];
 
@@ -3004,20 +3014,60 @@ bool QLocaleData::numberToCLocale(const QChar *str, int len,
             else
                 break;
         }
+        if (group_sep_mode == ParseGroupSeparators) {
+            if (start_of_digits_idx == -1 && out >= '0' && out <= '9') {
+                start_of_digits_idx = idx;
+            } else if (out == ',') {
+                // Don't allow group chars after the decimal point
+                if (decpt_idx != -1)
+                    return false;
+
+                // check distance from the last separator or from the beginning of the digits
+                // ### FIXME: Some locales allow other groupings! See https://en.wikipedia.org/wiki/Thousands_separator
+                if (last_separator_idx != -1 && idx - last_separator_idx != 4)
+                    return false;
+                if (last_separator_idx == -1 && (start_of_digits_idx == -1 || idx - start_of_digits_idx > 3))
+                    return false;
+
+                last_separator_idx = idx;
+                ++group_cnt;
+
+                // don't add the group separator
+                ++idx;
+                continue;
+            } else if (out == '.' || out == 'e' || out == 'E') {
+                // Fail if more than one decimal point
+                if (out == '.' && decpt_idx != -1)
+                    return false;
+                if (decpt_idx == -1)
+                    decpt_idx = idx;
+
+                // check distance from the last separator
+                // ### FIXME: Some locales allow other groupings! See https://en.wikipedia.org/wiki/Thousands_separator
+                if (last_separator_idx != -1 && idx - last_separator_idx != 4)
+                    return false;
+
+                // stop processing separators
+                last_separator_idx = -1;
+            }
+        }
 
         result->append(out);
 
         ++idx;
     }
 
+    if (group_sep_mode == ParseGroupSeparators) {
+        // group separator post-processing
+        // did we end in a separator?
+        if (last_separator_idx + 1 == idx)
+            return false;
+        // were there enough digits since the last separator?
+        if (last_separator_idx != -1 && idx - last_separator_idx != 4)
+            return false;
+    }
+
     result->append('\0');
-
-    // Check separators
-    if (group_sep_mode == ParseGroupSeparators
-            && !removeGroupSeparators(result))
-        return false;
-
-
     return idx == l;
 }
 

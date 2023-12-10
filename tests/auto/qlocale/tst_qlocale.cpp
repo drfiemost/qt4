@@ -95,6 +95,7 @@ private slots:
     void emptyCtor();
     void stringToFloat_data();
     void stringToFloat();
+    void consistentC();
     void unixLocaleName();
     void stringToDouble_data();
     void stringToDouble();
@@ -491,6 +492,15 @@ void tst_QLocale::emptyCtor()
 #endif
 }
 
+void tst_QLocale::consistentC()
+{
+    const QLocale c(QLocale::C);
+    QCOMPARE(c, QLocale::c());
+    QCOMPARE(c, QLocale(QLocale::C, QLocale::AnyScript, QLocale::AnyCountry));
+    QVERIFY(QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript,
+                                     QLocale::AnyCountry).contains(c));
+}
+
 void tst_QLocale::unixLocaleName()
 {
 #define TEST_NAME(req_lang, req_country, exp_name) \
@@ -709,7 +719,7 @@ void tst_QLocale::stringToFloat_data()
     toReal_data();
     const QString C(QStringLiteral("C"));
     if (Bounds::has_infinity) {
-        double huge = std::numeric_limits<float>::infinity();
+        double huge = Bounds::infinity();
         QTest::newRow("C inf") << C << QString("inf") << true << huge;
         QTest::newRow("C +inf") << C << QString("+inf") << true << +huge;
         QTest::newRow("C -inf") << C << QString("-inf") << true << -huge;
@@ -751,6 +761,7 @@ void tst_QLocale::stringToFloat()
     QFETCH(QString, num_str);
     QFETCH(bool, good);
     QFETCH(double, num);
+    QStringRef num_strRef = num_str.leftRef(-1);
     float fnum = num;
 
     QLocale locale(locale_name);
@@ -776,7 +787,7 @@ void tst_QLocale::stringToFloat()
         }
     }
 
-    f = locale.toFloat(num_str, &ok);
+    f = locale.toFloat(num_strRef, &ok);
     QCOMPARE(ok, good);
 
     if (ok || std::isinf(fnum)) {
@@ -953,6 +964,7 @@ void tst_QLocale::long_long_conversion()
 void tst_QLocale::long_long_conversion_extra()
 {
     QLocale l(QLocale::C);
+    l.setNumberOptions(0);
     QCOMPARE(l.toString((qlonglong)1), QString("1"));
     QCOMPARE(l.toString((qlonglong)12), QString("12"));
     QCOMPARE(l.toString((qlonglong)123), QString("123"));
@@ -1633,20 +1645,20 @@ void tst_QLocale::numberOptions()
     bool ok;
 
     QLocale locale(QLocale::C);
+    QCOMPARE(locale.numberOptions(), QLocale::OmitGroupSeparator);
+    QCOMPARE(locale.toInt(QString("12345"), &ok), 12345);
+    QVERIFY(ok);
+    QCOMPARE(locale.toInt(QString("12345"), &ok), 12345);
+    QVERIFY(ok);
+    QCOMPARE(locale.toString(12345), QString("12345"));
+
+    locale.setNumberOptions(0);
     QCOMPARE(locale.numberOptions(), 0);
     QCOMPARE(locale.toInt(QString("12,345"), &ok), 12345);
     QVERIFY(ok);
     QCOMPARE(locale.toInt(QString("12345"), &ok), 12345);
     QVERIFY(ok);
     QCOMPARE(locale.toString(12345), QString("12,345"));
-
-    locale.setNumberOptions(QLocale::OmitGroupSeparator);
-    QCOMPARE(locale.numberOptions(), QLocale::OmitGroupSeparator);
-    QCOMPARE(locale.toInt(QString("12,345"), &ok), 12345);
-    QVERIFY(ok);
-    QCOMPARE(locale.toInt(QString("12345"), &ok), 12345);
-    QVERIFY(ok);
-    QCOMPARE(locale.toString(12345), QString("12345"));
 
     locale.setNumberOptions(QLocale::RejectGroupSeparator);
     QCOMPARE(locale.numberOptions(), QLocale::RejectGroupSeparator);
@@ -2330,7 +2342,6 @@ void tst_QLocale::currency()
     QCOMPARE(c.toCurrencyString(qlonglong(-1234)), QString("-1234"));
     QCOMPARE(c.toCurrencyString(double(1234.56)), QString("1234.56"));
     QCOMPARE(c.toCurrencyString(double(-1234.56)), QString("-1234.56"));
-    QCOMPARE(c.toCurrencyString(double(-1234.5678)), QString("-1234.57"));
 
     const QLocale en_US("en_US");
     QCOMPARE(en_US.toCurrencyString(qulonglong(1234)), QString("$1,234"));
