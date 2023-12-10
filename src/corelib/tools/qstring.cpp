@@ -5184,8 +5184,6 @@ QString &QString::sprintf(const char *cformat, ...)
 
 QString &QString::vsprintf(const char* cformat, va_list ap)
 {
-    QLocale locale(QLocale::C);
-
     if (!cformat || !*cformat) {
         // Qt 1.x compat
         *this = fromLatin1("");
@@ -5223,12 +5221,12 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
         bool no_more_flags = false;
         do {
             switch (*c) {
-                case '#': flags |= QLocalePrivate::Alternate; break;
-                case '0': flags |= QLocalePrivate::ZeroPadded; break;
-                case '-': flags |= QLocalePrivate::LeftAdjusted; break;
-                case ' ': flags |= QLocalePrivate::BlankBeforePositive; break;
-                case '+': flags |= QLocalePrivate::AlwaysShowSign; break;
-                case '\'': flags |= QLocalePrivate::ThousandsGroup; break;
+                case '#': flags |= QLocaleData::Alternate; break;
+                case '0': flags |= QLocaleData::ZeroPadded; break;
+                case '-': flags |= QLocaleData::LeftAdjusted; break;
+                case ' ': flags |= QLocaleData::BlankBeforePositive; break;
+                case '+': flags |= QLocaleData::AlwaysShowSign; break;
+                case '\'': flags |= QLocaleData::ThousandsGroup; break;
                 default: no_more_flags = true; break;
             }
 
@@ -5360,7 +5358,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                     case lm_t: i = va_arg(ap, int); break;
                     default: i = 0; break;
                 }
-                subst = locale.d->longLongToString(i, precision, 10, width, flags);
+                subst = QLocaleData::c()->longLongToString(i, precision, 10, width, flags);
                 ++c;
                 break;
             }
@@ -5380,7 +5378,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                 }
 
                 if (qIsUpper(*c))
-                    flags |= QLocalePrivate::CapitalEorX;
+                    flags |= QLocaleData::CapitalEorX;
 
                 int base = 10;
                 switch (qToLower(*c)) {
@@ -5392,7 +5390,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                         base = 16; break;
                     default: break;
                 }
-                subst = locale.d->unsLongLongToString(u, precision, base, width, flags);
+                subst = QLocaleData::c()->unsLongLongToString(u, precision, base, width, flags);
                 ++c;
                 break;
             }
@@ -5411,17 +5409,17 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                     d = va_arg(ap, double);
 
                 if (qIsUpper(*c))
-                    flags |= QLocalePrivate::CapitalEorX;
+                    flags |= QLocaleData::CapitalEorX;
 
-                QLocalePrivate::DoubleForm form = QLocalePrivate::DFDecimal;
+                QLocaleData::DoubleForm form = QLocaleData::DFDecimal;
                 switch (qToLower(*c)) {
-                    case 'e': form = QLocalePrivate::DFExponent; break;
+                    case 'e': form = QLocaleData::DFExponent; break;
                     case 'a':                             // not supported - decimal form used instead
-                    case 'f': form = QLocalePrivate::DFDecimal; break;
-                    case 'g': form = QLocalePrivate::DFSignificantDigits; break;
+                    case 'f': form = QLocaleData::DFDecimal; break;
+                    case 'g': form = QLocaleData::DFSignificantDigits; break;
                     default: break;
                 }
-                subst = locale.d->doubleToString(d, precision, form, width, flags);
+                subst = QLocaleData::c()->doubleToString(d, precision, form, width, flags);
                 ++c;
                 break;
             }
@@ -5454,8 +5452,8 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
 #else
                 quint64 i = reinterpret_cast<unsigned long>(arg);
 #endif
-                flags |= QLocalePrivate::Alternate;
-                subst = locale.d->unsLongLongToString(i, precision, 16, width, flags);
+                flags |= QLocaleData::Alternate;
+                subst = QLocaleData::c()->unsLongLongToString(i, precision, 16, width, flags);
                 ++c;
                 break;
             }
@@ -5497,7 +5495,7 @@ QString &QString::vsprintf(const char* cformat, va_list ap)
                 continue;
         }
 
-        if (flags & QLocalePrivate::LeftAdjusted)
+        if (flags & QLocaleData::LeftAdjusted)
             result.append(subst.leftJustified(width));
         else
             result.append(subst.rightJustified(width));
@@ -5867,8 +5865,7 @@ QString &QString::setNum(qlonglong n, int base)
         base = 10;
     }
 #endif
-    QLocale locale(QLocale::C);
-    *this = locale.d->longLongToString(n, -1, base);
+    *this = QLocaleData::c()->longLongToString(n, -1, base);
     return *this;
 }
 
@@ -5883,8 +5880,7 @@ QString &QString::setNum(qulonglong n, int base)
         base = 10;
     }
 #endif
-    QLocale locale(QLocale::C);
-    *this = locale.d->unsLongLongToString(n, -1, base);
+    *this = QLocaleData::c()->unsLongLongToString(n, -1, base);
     return *this;
 }
 
@@ -5916,22 +5912,22 @@ QString &QString::setNum(qulonglong n, int base)
 
 QString &QString::setNum(double n, char f, int prec)
 {
-    QLocalePrivate::DoubleForm form = QLocalePrivate::DFDecimal;
+    QLocaleData::DoubleForm form = QLocaleData::DFDecimal;
     uint flags = 0;
 
     if (qIsUpper(f))
-        flags = QLocalePrivate::CapitalEorX;
+        flags = QLocaleData::CapitalEorX;
     f = qToLower(f);
 
     switch (f) {
         case 'f':
-            form = QLocalePrivate::DFDecimal;
+            form = QLocaleData::DFDecimal;
             break;
         case 'e':
-            form = QLocalePrivate::DFExponent;
+            form = QLocaleData::DFExponent;
             break;
         case 'g':
-            form = QLocalePrivate::DFSignificantDigits;
+            form = QLocaleData::DFSignificantDigits;
             break;
         default:
 #if defined(QT_CHECK_RANGE)
@@ -5940,8 +5936,7 @@ QString &QString::setNum(double n, char f, int prec)
             break;
     }
 
-    QLocale locale(QLocale::C);
-    *this = locale.d->doubleToString(n, prec, form, -1, flags);
+    *this = QLocaleData::c()->doubleToString(n, prec, form, -1, flags);
     return *this;
 }
 
@@ -6690,20 +6685,20 @@ QString QString::arg(qlonglong a, int fieldWidth, int base, QChar fillChar) cons
         return *this;
     }
 
-    unsigned flags = QLocalePrivate::NoFlags;
+    unsigned flags = QLocaleData::NoFlags;
     if (fillChar == QLatin1Char('0'))
-        flags = QLocalePrivate::ZeroPadded;
+        flags = QLocaleData::ZeroPadded;
 
     QString arg;
     if (d.occurrences > d.locale_occurrences)
-        arg = QLocale::c().d->longLongToString(a, -1, base, fieldWidth, flags);
+        arg = QLocaleData::c()->longLongToString(a, -1, base, fieldWidth, flags);
 
     QString locale_arg;
     if (d.locale_occurrences > 0) {
         QLocale locale;
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
-            flags |= QLocalePrivate::ThousandsGroup;
-        locale_arg = locale.d->longLongToString(a, -1, base, fieldWidth, flags);
+            flags |= QLocaleData::ThousandsGroup;
+        locale_arg = locale.d->m_data->longLongToString(a, -1, base, fieldWidth, flags);
     }
 
     return replaceArgEscapes(*this, d, fieldWidth, arg, locale_arg, fillChar);
@@ -6734,20 +6729,20 @@ QString QString::arg(qulonglong a, int fieldWidth, int base, QChar fillChar) con
         return *this;
     }
 
-    unsigned flags = QLocalePrivate::NoFlags;
+    unsigned flags = QLocaleData::NoFlags;
     if (fillChar == QLatin1Char('0'))
-        flags = QLocalePrivate::ZeroPadded;
+        flags = QLocaleData::ZeroPadded;
 
     QString arg;
     if (d.occurrences > d.locale_occurrences)
-        arg = QLocale::c().d->unsLongLongToString(a, -1, base, fieldWidth, flags);
+        arg = QLocaleData::c()->unsLongLongToString(a, -1, base, fieldWidth, flags);
 
     QString locale_arg;
     if (d.locale_occurrences > 0) {
         QLocale locale;
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
-            flags |= QLocalePrivate::ThousandsGroup;
-        locale_arg = locale.d->unsLongLongToString(a, -1, base, fieldWidth, flags);
+            flags |= QLocaleData::ThousandsGroup;
+        locale_arg = locale.d->m_data->unsLongLongToString(a, -1, base, fieldWidth, flags);
     }
 
     return replaceArgEscapes(*this, d, fieldWidth, arg, locale_arg, fillChar);
@@ -6846,24 +6841,24 @@ QString QString::arg(double a, int fieldWidth, char fmt, int prec, QChar fillCha
         return *this;
     }
 
-    unsigned flags = QLocalePrivate::NoFlags;
+    unsigned flags = QLocaleData::NoFlags;
     if (fillChar == QLatin1Char('0'))
-        flags = QLocalePrivate::ZeroPadded;
+        flags = QLocaleData::ZeroPadded;
 
     if (qIsUpper(fmt))
-        flags |= QLocalePrivate::CapitalEorX;
+        flags |= QLocaleData::CapitalEorX;
     fmt = qToLower(fmt);
 
-    QLocalePrivate::DoubleForm form = QLocalePrivate::DFDecimal;
+    QLocaleData::DoubleForm form = QLocaleData::DFDecimal;
     switch (fmt) {
     case 'f':
-        form = QLocalePrivate::DFDecimal;
+        form = QLocaleData::DFDecimal;
         break;
     case 'e':
-        form = QLocalePrivate::DFExponent;
+        form = QLocaleData::DFExponent;
         break;
     case 'g':
-        form = QLocalePrivate::DFSignificantDigits;
+        form = QLocaleData::DFSignificantDigits;
         break;
     default:
 #if defined(QT_CHECK_RANGE)
@@ -6874,15 +6869,15 @@ QString QString::arg(double a, int fieldWidth, char fmt, int prec, QChar fillCha
 
     QString arg;
     if (d.occurrences > d.locale_occurrences)
-        arg = QLocale::c().d->doubleToString(a, prec, form, fieldWidth, flags);
+        arg = QLocaleData::c()->doubleToString(a, prec, form, fieldWidth, flags);
 
     QString locale_arg;
     if (d.locale_occurrences > 0) {
         QLocale locale;
 
         if (!(locale.numberOptions() & QLocale::OmitGroupSeparator))
-            flags |= QLocalePrivate::ThousandsGroup;
-        locale_arg = locale.d->doubleToString(a, prec, form, fieldWidth, flags);
+            flags |= QLocaleData::ThousandsGroup;
+        locale_arg = locale.d->m_data->doubleToString(a, prec, form, fieldWidth, flags);
     }
 
     return replaceArgEscapes(*this, d, fieldWidth, arg, locale_arg, fillChar);
