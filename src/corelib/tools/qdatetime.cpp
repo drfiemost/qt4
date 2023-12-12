@@ -227,30 +227,40 @@ static int fromOffsetString(const QString &offsetString, bool *valid)
     if (size < 2 || size > 6)
         return 0;
 
+    // sign will be +1 for a positive and -1 for a negative offset
+    int sign;
+
     // First char must be + or -
-    const QChar sign = offsetString.at(0);
-    if (sign != QLatin1Char('+') && sign != QLatin1Char('-'))
+    const QChar signChar = offsetString.at(0);
+    if (signChar == QLatin1Char('+'))
+        sign = 1;
+    else if (signChar == QLatin1Char('-'))
+        sign = -1;
+    else
         return 0;
 
     // Split the hour and minute parts
-    QStringList parts = offsetString.split(QLatin1Char(':'));
-    if (parts.count() == 1) {
-        // [+-]HHMM format
-        parts.append(parts.at(0).mid(3));
-        parts[0] = parts.at(0).left(3);
-    }
+    const QString time = offsetString.mid(1);
+    int hhLen = time.indexOf(QLatin1Char(':'));
+    int mmIndex;
+    if (hhLen == -1)
+        mmIndex = hhLen = 2; // [+-]HHmm or [+-]HH format
+    else
+        mmIndex = hhLen + 1;
 
+    const QString hhRef = time.left(hhLen);
     bool ok = false;
-    const int hour = parts.at(0).toInt(&ok);
+    const int hour = hhRef.toInt(&ok);
     if (!ok)
         return 0;
 
-    const int minute = parts.at(1).toInt(&ok);
+    const QString mmRef = time.mid(mmIndex);
+    const int minute = mmRef.isEmpty() ? 0 : mmRef.toInt(&ok);
     if (!ok || minute < 0 || minute > 59)
         return 0;
 
     *valid = true;
-    return ((hour * 60) + minute) * 60;
+    return sign * ((hour * 60) + minute) * 60;
 }
 
 #if !defined(Q_OS_WINCE)
@@ -3441,24 +3451,45 @@ QDateTime QDateTime::fromString(const QString& string, Qt::DateFormat format)
         if (size < 10)
             return QDateTime();
 
-        QString isoString = string;
-        Qt::TimeSpec spec = Qt::LocalTime;
-
-        QDate date = QDate::fromString(isoString.left(10), Qt::ISODate);
+        QDate date = QDate::fromString(string.left(10), Qt::ISODate);
         if (!date.isValid())
             return QDateTime();
         if (size == 10)
             return QDateTime(date);
 
-        isoString.remove(0, 11);
+        Qt::TimeSpec spec = Qt::LocalTime;
+        QString isoString = string.mid(10); // trim "yyyy-MM-dd"
+
+        // Must be left with T and at least one digit for the hour:
+        if (isoString.size() < 2
+            || !(isoString.startsWith(QLatin1Char('T'))
+                 // FIXME: QSql relies on QVariant::toDateTime() accepting a space here:
+                 || isoString.startsWith(QLatin1Char(' ')))) {
+            return QDateTime();
+        }
+        isoString = isoString.mid(1); // trim 'T' (or space)
+
         int offset = 0;
         // Check end of string for Time Zone definition, either Z for UTC or [+-]HH:MM for Offset
         if (isoString.endsWith(QLatin1Char('Z'))) {
             spec = Qt::UTC;
-            isoString.chop(1);
+            isoString.chop(1); // trim 'Z'
         } else {
-            const int signIndex = isoString.indexOf(QRegExp(QStringLiteral("[+-]")));
-            if (signIndex >= 0) {
+            // the loop below is faster but functionally equal to:
+            // const int signIndex = isoString.indexOf(QRegExp(QStringLiteral("[+-]")));
+            int signIndex = isoString.size() - 1;
+            Q_ASSERT(signIndex >= 0);
+            bool found = false;
+            {
+                const QChar plus = QLatin1Char('+');
+                const QChar minus = QLatin1Char('-');
+                do {
+                    QChar character(isoString.at(signIndex));
+                    found = character == plus || character == minus;
+                } while (!found && --signIndex >= 0);
+            }
+
+            if (found) {
                 bool ok;
                 offset = fromOffsetString(isoString.mid(signIndex), &ok);
                 if (!ok)
@@ -3471,7 +3502,7 @@ QDateTime QDateTime::fromString(const QString& string, Qt::DateFormat format)
         // Might be end of day (24:00, including variants), which QTime considers invalid.
         // ISO 8601 (section 4.2.3) says that 24:00 is equivalent to 00:00 the next day.
         bool isMidnight24 = false;
-        QTime time = fromIsoTimeString(isoString, Qt::ISODate, &isMidnight24);
+        QTime time = fromIsoTimeString(isoString, format, &isMidnight24);
         if (!time.isValid())
             return QDateTime();
         if (isMidnight24)
