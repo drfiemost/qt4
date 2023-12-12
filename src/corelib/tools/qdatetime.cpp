@@ -171,10 +171,33 @@ static void getDateFromJulianDay(uint julianDay, int *year, int *month, int *day
 static const char monthDays[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 #ifndef QT_NO_TEXTDATE
-static const char * const qt_shortMonthNames[] = {
+static const char qt_shortMonthNames[][4] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-#endif
+
+static int qt_monthNumberFromShortName(const QString &shortName)
+{
+    for (unsigned int i = 0; i < sizeof(qt_shortMonthNames) / sizeof(qt_shortMonthNames[0]); ++i) {
+        if (shortName == QLatin1String(qt_shortMonthNames[i]))
+            return i + 1;
+    }
+    return -1;
+}
+
+static int fromShortMonthName(const QString &monthName)
+{
+    // Assume that English monthnames are the default
+    int month = qt_monthNumberFromShortName(monthName);
+    if (month != -1)
+        return month;
+    // If English names can't be found, search the localized ones
+    for (int i = 1; i <= 12; ++i) {
+        if (monthName == QDate::shortMonthName(i))
+            return i;
+    }
+    return -1;
+}
+#endif // QT_NO_TEXTDATE
 
 static QDateTimePrivate::Spec utcToLocal(QDate &date, QTime &time);
 static void utcToOffset(QDate *date, QTime *time, qint32 offset);
@@ -1175,24 +1198,9 @@ QDate QDate::fromString(const QString& string, Qt::DateFormat format)
             return QDate();
 
         QString monthName = parts.at(1);
-        int month = -1;
-        // Assume that English monthnames are the default
-        for (int i = 0; i < 12; ++i) {
-            if (monthName == QLatin1String(qt_shortMonthNames[i])) {
-                month = i + 1;
-                break;
-            }
-        }
-        // If English names can't be found, search the localized ones
+        const int month = fromShortMonthName(monthName);
         if (month == -1) {
-            for (int i = 1; i <= 12; ++i) {
-                if (monthName == QDate::shortMonthName(i)) {
-                    month = i;
-                    break;
-                }
-            }
-        }
-        if (month < 1 || month > 12) {
+            // Month name matches neither English nor other localised name.
             return QDate();
         }
 
@@ -1650,6 +1658,7 @@ bool QTime::setHMS(int h, int m, int s, int ms)
 
 QTime QTime::addSecs(int s) const
 {
+    s %= SECS_PER_DAY;
     return addMSecs(s * 1000);
 }
 
@@ -3400,21 +3409,6 @@ int QDateTime::utcOffset() const
 }
 
 #ifndef QT_NO_DATESTRING
-
-static int fromShortMonthName(const QString &monthName)
-{
-    // Assume that English monthnames are the default
-    for (int i = 0; i < 12; ++i) {
-        if (monthName == QLatin1String(qt_shortMonthNames[i]))
-            return i + 1;
-    }
-    // If English names can't be found, search the localized ones
-    for (int i = 1; i <= 12; ++i) {
-        if (monthName == QDate::shortMonthName(i))
-            return i;
-    }
-    return -1;
-}
 
 /*!
     \fn QDateTime QDateTime::fromString(const QString &string, Qt::DateFormat format)
