@@ -1473,17 +1473,6 @@ static const double tinytens[] = { 1e-16, 1e-32 };
 #endif
 #endif
 
-/*
-  The pre-release gcc3.3 shipped with SuSE 8.2 has a bug which causes
-  the comparison 1e-100 == 0.0 to return true. As a workaround, we
-  compare it to a global variable containing 0.0, which produces
-  correct assembler output.
-
-  ### consider detecting the broken compilers and using the static
-  ### double for these, and use a #define for all working compilers
-*/
-static double g_double_zero = 0.0;
-
 Q_CORE_EXPORT double qstrtod(const char *s00, const char **se, bool *ok)
 {
     int bb2, bb5, bbe, bd2, bd5, bbbits, bs2, c, dsign,
@@ -1582,7 +1571,7 @@ Q_CORE_EXPORT double qstrtod(const char *s00, const char **se, bool *ok)
         switch(c = *++s) {
         case '-':
             esign = 1;
-            // fall through
+            [[fallthrough]];
         case '+':
             c = *++s;
         }
@@ -1742,11 +1731,11 @@ Q_CORE_EXPORT double qstrtod(const char *s00, const char **se, bool *ok)
             /* The last multiplication could underflow. */
             rv0 = rv;
             rv *= tinytens[j];
-            if (rv == g_double_zero)
+            if (rv == 0.0)
                 {
                     rv = 2.*rv0;
                     rv *= tinytens[j];
-                    if (rv == g_double_zero)
+                    if (rv == 0.0)
                         {
                         undfl:
                             rv = 0.;
@@ -1892,7 +1881,7 @@ Q_CORE_EXPORT double qstrtod(const char *s00, const char **se, bool *ok)
             else {
                 rv -= ulp(rv);
 #ifndef Sudden_Underflow
-                if (rv == g_double_zero)
+                if (rv == 0.0)
                     goto undfl;
 #endif
             }
@@ -2304,7 +2293,7 @@ static char *_qdtoa( NEEDS_VOLATILE double d, int mode, int ndigits, int *decpt,
 #ifdef IBM
     d += 0; /* normalize */
 #endif
-    if (d == g_double_zero)
+    if (d == 0.0)
         {
             *decpt = 1;
             s = const_cast<char*>("0");
@@ -2577,7 +2566,7 @@ static char *_qdtoa( NEEDS_VOLATILE double d, int mode, int ndigits, int *decpt,
                 }
                 break;
             }
-            if ((d *= 10.) == g_double_zero)
+            if ((d *= 10.) == 0.0)
                 break;
         }
         goto ret1;

@@ -143,6 +143,9 @@ private slots:
     void queryMeasureSystem_data();
     void queryMeasureSystem();
 
+    void defaultNumberingSystem_data();
+    void defaultNumberingSystem();
+
     void ampm_data();
     void ampm();
     void currency();
@@ -150,6 +153,14 @@ private slots:
     void uiLanguages();
     void weekendDays();
     void listPatterns();
+
+    void QTBUG_26035_positivesign();
+
+    void textDirection_data();
+    void textDirection();
+
+    void bcp47Name_data();
+    void bcp47Name();
 
 private:
     QString m_decimal, m_thousand, m_sdate, m_ldate, m_time;
@@ -1866,9 +1877,7 @@ void tst_QLocale::standaloneDayName()
 
 void tst_QLocale::underflowOverflow()
 {
-    QString
-a(QLatin1String("0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001e10"));
-
+    QString a(QLatin1String("0.") + QString(546, QLatin1Char('0')) + QLatin1String("1e10"));
     bool ok = false;
     double d = a.toDouble(&ok);
     QVERIFY(!ok);
@@ -1876,16 +1885,15 @@ a(QLatin1String("0.0000000000000000000000000000000000000000000000000000000000000
 
     a = QLatin1String("1e600");
     ok = false;
-    
     d = a.toDouble(&ok);
     QVERIFY(!ok); // detectable overflow
-    QCOMPARE(d, 0.0);
+    QVERIFY(qIsInf(d));
 
     a = QLatin1String("-1e600");
     ok = false;
     d = a.toDouble(&ok);
     QVERIFY(!ok); // detectable underflow
-    QCOMPARE(d, 0.0);
+    QVERIFY(qIsInf(-d));
 
     a = QLatin1String("1e-600");
     ok = false;
@@ -1898,11 +1906,35 @@ a(QLatin1String("0.0000000000000000000000000000000000000000000000000000000000000
     QVERIFY(!ok);
 }
 
+void tst_QLocale::defaultNumberingSystem_data()
+{
+    QTest::addColumn<QString>("expect");
+
+    QTest::newRow("sk_SK") << QStringLiteral("123");
+    QTest::newRow("ta_IN") << QStringLiteral("123");
+    QTest::newRow("te_IN") << QStringLiteral("123");
+    QTest::newRow("hi_IN") << QStringLiteral("123");
+    QTest::newRow("gu_IN") << QStringLiteral("123");
+    QTest::newRow("kn_IN") << QStringLiteral("123");
+    QTest::newRow("pa_IN") << QStringLiteral("123");
+    QTest::newRow("ne_IN") << QString::fromUtf8("१२३");
+    QTest::newRow("mr_IN") << QString::fromUtf8("१२३");
+    QTest::newRow("ml_IN") << QStringLiteral("123");
+    QTest::newRow("kok_IN") << QStringLiteral("123");
+}
+
+void tst_QLocale::defaultNumberingSystem()
+{
+    QFETCH(QString, expect);
+    QLatin1String name(QTest::currentDataTag());
+    QLocale locale(name);
+    QCOMPARE(locale.toString(123), expect);
+}
+
 void tst_QLocale::measurementSystems_data()
 {
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<int>("mSystem");
-
+    QTest::addColumn<int>("system");
     QTest::newRow("no_NO") << QString("no_NO") << (int)QLocale::MetricSystem; // Norwegian/Norway
     QTest::newRow("sv_SE") << QString("sv_SE") << (int)QLocale::MetricSystem; // Swedish/Sweden
     QTest::newRow("en_US") << QString("en_US") << (int)QLocale::ImperialSystem; // English/United States
@@ -1912,17 +1944,15 @@ void tst_QLocale::measurementSystems_data()
     QTest::newRow("es_US") << QString("es_US") << (int)QLocale::ImperialSystem; // Spanish/United States
     QTest::newRow("es_ES") << QString("es_ES") << (int)QLocale::MetricSystem; // Spanish/Spain
     QTest::newRow("es")    << QString("es")    << (int)QLocale::MetricSystem; // Spanish
+
 }
 
 void tst_QLocale::measurementSystems()
 {
-    QSKIP("Meh, skip the test as we do not reread the environment variables anymore", SkipAll);
     QFETCH(QString, localeName);
-    QFETCH(int, mSystem);
-
-    // Method should be const.
+    QFETCH(int, system);
     const QLocale locale(localeName);
-    QCOMPARE((int)locale.measurementSystem(), mSystem);
+    QCOMPARE((int)locale.measurementSystem(), system);
 }
 
 void tst_QLocale::systemMeasurementSystems_data()
@@ -2429,6 +2459,100 @@ void tst_QLocale::listPatterns()
     QCOMPARE(zh_CN.createSeparatedList(sl3), QString::fromUtf8("aaa" "\xe5\x92\x8c" "bbb"));
     QCOMPARE(zh_CN.createSeparatedList(sl4), QString::fromUtf8("aaa" "\xe3\x80\x81" "bbb" "\xe5\x92\x8c" "ccc"));
     QCOMPARE(zh_CN.createSeparatedList(sl5), QString::fromUtf8("aaa" "\xe3\x80\x81" "bbb" "\xe3\x80\x81" "ccc" "\xe5\x92\x8c" "ddd"));
+}
+
+void tst_QLocale::QTBUG_26035_positivesign()
+{
+    QLocale locale(QLocale::C);
+    bool ok (false);
+    QCOMPARE(locale.toInt(QString("+100,000"), &ok), 100000);
+    QVERIFY(ok);
+    ok = false;
+    QCOMPARE(locale.toInt(QString("+100,000,000"), &ok), 100000000);
+    QVERIFY(ok);
+    ok = false;
+    QCOMPARE(locale.toLongLong(QString("+100,000"), &ok), (qlonglong)100000);
+    QVERIFY(ok);
+    ok = false;
+    QCOMPARE(locale.toLongLong(QString("+100,000,000"), &ok), (qlonglong)100000000);
+    QVERIFY(ok);
+}
+
+void tst_QLocale::textDirection_data()
+{
+    QTest::addColumn<int>("language");
+    QTest::addColumn<int>("script");
+    QTest::addColumn<bool>("rightToLeft");
+
+    for (int language = QLocale::C; language <= QLocale::LastLanguage; ++language) {
+        bool rightToLeft = false;
+        switch (language) {
+        // based on likelySubtags for RTL scripts
+        case QLocale::Arabic:
+        //case QLocale::Divehi:
+//        case QLocale::Fulah:
+//        case QLocale::Hausa:
+        case QLocale::Hebrew:
+//        case QLocale::Hungarian:
+        //case QLocale::Kashmiri:
+//        case QLocale::Kurdish:
+        //case QLocale::Pashto:
+        case QLocale::Persian:
+        //case QLocale::Sindhi:
+        case QLocale::Syriac:
+        case QLocale::Urdu:
+        //case QLocale::Yiddish:
+            // false if there is no locale data for language:
+            rightToLeft = (QLocale(QLocale::Language(language)).language()
+                           == QLocale::Language(language));
+            break;
+        default:
+            break;
+        }
+        const QString testName = QLocalePrivate::languageToCode(QLocale::Language(language));
+        QTest::newRow(qPrintable(testName)) << language << int(QLocale::AnyScript) << rightToLeft;
+    }
+    //QTest::newRow("pa_Arab") << int(QLocale::Punjabi) << int(QLocale::ArabicScript) << true;
+    //QTest::newRow("uz_Arab") << int(QLocale::Uzbek) << int(QLocale::ArabicScript) << true;
+}
+
+void tst_QLocale::textDirection()
+{
+    QFETCH(int, language);
+    QFETCH(int, script);
+    QFETCH(bool, rightToLeft);
+
+    QLocale locale(QLocale::Language(language), QLocale::Script(script), QLocale::AnyCountry);
+    QCOMPARE(locale.textDirection() == Qt::RightToLeft, rightToLeft);
+}
+
+void tst_QLocale::bcp47Name_data()
+{
+    QTest::addColumn<QString>("expect");
+
+    //QTest::newRow("C") << QStringLiteral("en");
+    QTest::newRow("en") << QStringLiteral("en");
+    QTest::newRow("en_US") << QStringLiteral("en");
+    QTest::newRow("en_GB") << QStringLiteral("en-GB");
+    QTest::newRow("en_DE") << QStringLiteral("en-DE");
+    QTest::newRow("de_DE") << QStringLiteral("de");
+    QTest::newRow("sr_RS") << QStringLiteral("sr");
+    QTest::newRow("sr_Cyrl_RS") << QStringLiteral("sr");
+    //QTest::newRow("sr_Latn_RS") << QStringLiteral("sr-Latn");
+    QTest::newRow("sr_ME") << QStringLiteral("sr-ME");
+    QTest::newRow("sr_Cyrl_ME") << QStringLiteral("sr-Cyrl-ME");
+    QTest::newRow("sr_Latn_ME") << QStringLiteral("sr-ME");
+
+    // Fall back to defaults when country isn't in CLDR for this language:
+    QTest::newRow("sr_HR") << QStringLiteral("sr");
+    QTest::newRow("sr_Cyrl_HR") << QStringLiteral("sr");
+    //QTest::newRow("sr_Latn_HR") << QStringLiteral("sr-Latn");
+}
+
+void tst_QLocale::bcp47Name()
+{
+    QFETCH(QString, expect);
+    QCOMPARE(QLocale(QLatin1String(QTest::currentDataTag())).bcp47Name(), expect);
 }
 
 QTEST_APPLESS_MAIN(tst_QLocale)

@@ -278,14 +278,14 @@ public:
         if (std::fabs(d) > std::numeric_limits<float>::max()) {
             if (ok != nullptr)
                 *ok = false;
-            const float huge = std::numeric_limits<float>::infinity();
+            constexpr float huge = std::numeric_limits<float>::infinity();
             return d < 0 ? -huge : huge;
         }
         if (d != 0 && float(d) == 0) {
             // Values that underflow double already failed. Match them:
             if (ok != nullptr)
                 *ok = false;
-            return 0;
+            return 0.;
         }
         return float(d);
     }

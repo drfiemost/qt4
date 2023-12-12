@@ -3235,22 +3235,15 @@ double QLocaleData::bytearrayToDouble(const char *num, bool *ok, bool *overflow)
             *ok = false;
         if (overflow != nullptr)
             *overflow = *endptr != '\0';
-        return 0.0;
+        return d;
     }
 
     if (*endptr != '\0') {
         // we stopped at a non-digit character after converting some digits
         if (ok != nullptr)
             *ok = false;
-        if (overflow != nullptr)
-            *overflow = false;
         return 0.0;
     }
-
-    if (ok != nullptr)
-        *ok = true;
-    if (overflow != nullptr)
-        *overflow = false;
     return d;
 }
 

@@ -3497,6 +3497,7 @@ QDateTime QDateTime::fromString(const QString& string, Qt::DateFormat format)
         bool ok = false;
 
         // First try month then day
+        month = fromShortMonthName(parts.at(1));
         if (month)
             day = parts.at(2).toInt();
 
