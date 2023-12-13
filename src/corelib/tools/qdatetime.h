@@ -154,12 +154,12 @@ public:
     QTime addMSecs(int ms) const;
     int msecsTo(const QTime &) const;
 
-    bool operator==(const QTime &other) const { return mds == other.mds; }
-    bool operator!=(const QTime &other) const { return mds != other.mds; }
-    bool operator<(const QTime &other) const { return mds < other.mds; }
-    bool operator<=(const QTime &other) const { return mds <= other.mds; }
-    bool operator>(const QTime &other) const { return mds > other.mds; }
-    bool operator>=(const QTime &other) const { return mds >= other.mds; }
+    constexpr bool operator==(const QTime &other) const { return mds == other.mds; }
+    constexpr bool operator!=(const QTime &other) const { return mds != other.mds; }
+    constexpr bool operator<(const QTime &other) const { return mds < other.mds; }
+    constexpr bool operator<=(const QTime &other) const { return mds <= other.mds; }
+    constexpr bool operator>(const QTime &other) const { return mds > other.mds; }
+    constexpr bool operator>=(const QTime &other) const { return mds >= other.mds; }
 
     static QTime currentTime();
 #ifndef QT_NO_DATESTRING
@@ -173,7 +173,7 @@ public:
     int elapsed() const;
 private:
     enum TimeFlag { NullTime = -1 };
-    inline int ds() const { return mds == -1 ? 0 : mds; }
+    constexpr inline int ds() const { return mds == -1 ? 0 : mds; }
     int mds;
 #if defined(Q_OS_WINCE)
     int startTick;
@@ -251,7 +251,7 @@ public:
     inline bool operator>=(const QDateTime &other) const { return !(*this < other); }
 
     [[deprecated("Use setOffsetFromUtc")]] void setUtcOffset(int seconds);
-    [[deprecated("Use toOffsetFromUtc")]] int utcOffset() const;
+    [[deprecated("Use offsetFromUtc")]] int utcOffset() const;
 
     static QDateTime currentDateTime();
     static QDateTime currentDateTimeUtc();
