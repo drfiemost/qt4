@@ -127,7 +127,6 @@ private slots:
     void standaloneDayName_data();
     void standaloneDayName();
     void underflowOverflow();
-    void measurementSystems_data();
     void measurementSystems();
     void systemMeasurementSystems_data();
     void systemMeasurementSystems();
@@ -1931,28 +1930,19 @@ void tst_QLocale::defaultNumberingSystem()
     QCOMPARE(locale.toString(123), expect);
 }
 
-void tst_QLocale::measurementSystems_data()
-{
-    QTest::addColumn<QString>("localeName");
-    QTest::addColumn<int>("system");
-    QTest::newRow("no_NO") << QString("no_NO") << (int)QLocale::MetricSystem; // Norwegian/Norway
-    QTest::newRow("sv_SE") << QString("sv_SE") << (int)QLocale::MetricSystem; // Swedish/Sweden
-    QTest::newRow("en_US") << QString("en_US") << (int)QLocale::ImperialSystem; // English/United States
-    QTest::newRow("en_GB") << QString("en_GB") << (int)QLocale::MetricSystem; // English/Great Britain
-    QTest::newRow("no")    << QString("no")    << (int)QLocale::MetricSystem; // Norwegian
-    QTest::newRow("en")    << QString("en")    << (int)QLocale::ImperialSystem; // English
-    QTest::newRow("es_US") << QString("es_US") << (int)QLocale::ImperialSystem; // Spanish/United States
-    QTest::newRow("es_ES") << QString("es_ES") << (int)QLocale::MetricSystem; // Spanish/Spain
-    QTest::newRow("es")    << QString("es")    << (int)QLocale::MetricSystem; // Spanish
-
-}
-
 void tst_QLocale::measurementSystems()
 {
-    QFETCH(QString, localeName);
-    QFETCH(int, system);
-    const QLocale locale(localeName);
-    QCOMPARE((int)locale.measurementSystem(), system);
+    QLocale locale(QLocale::English, QLocale::UnitedStates);
+    QCOMPARE(locale.measurementSystem(), QLocale::ImperialUSSystem);
+
+    locale = QLocale(QLocale::English, QLocale::UnitedKingdom);
+    QCOMPARE(locale.measurementSystem(), QLocale::ImperialUKSystem);
+
+    locale = QLocale(QLocale::English, QLocale::Australia);
+    QCOMPARE(locale.measurementSystem(), QLocale::MetricSystem);
+
+    locale = QLocale(QLocale::German);
+    QCOMPARE(locale.measurementSystem(), QLocale::MetricSystem);
 }
 
 void tst_QLocale::systemMeasurementSystems_data()

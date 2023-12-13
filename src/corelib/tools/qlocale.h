@@ -952,7 +952,12 @@ public:
     };
 // GENERATED PART ENDS HERE
 
-    enum MeasurementSystem { MetricSystem, ImperialSystem };
+    enum MeasurementSystem {
+        MetricSystem,
+        ImperialUSSystem,
+        ImperialUKSystem,
+        ImperialSystem = ImperialUSSystem // compatibility
+    };
 
     enum FormatType { LongFormat, ShortFormat, NarrowFormat };
     enum NumberOption {
