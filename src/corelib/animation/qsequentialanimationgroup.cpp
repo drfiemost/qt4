@@ -436,7 +436,7 @@ void QSequentialAnimationGroupPrivate::setCurrentAnimation(int index, bool inter
 {
     Q_Q(QSequentialAnimationGroup);
 
-    index = qMin(index, animations.count() - 1);
+    index = std::min(index, animations.count() - 1);
 
     if (index == -1) {
         Q_ASSERT(animations.isEmpty());

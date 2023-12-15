@@ -731,7 +731,7 @@ qint64 QIODevice::bytesAvailable() const
 {
     Q_D(const QIODevice);
     if (!d->isSequential())
-        return qMax(size() - d->pos, qint64(0));
+        return std::max(size() - d->pos, qint64(0));
     return d->buffer.size();
 }
 
@@ -956,7 +956,7 @@ QByteArray QIODevice::read(qint64 maxSize)
             // If resize fails, read incrementally.
             qint64 readResult;
             do {
-                result.resize(int(qMin(maxSize, result.size() + QIODEVICE_BUFFERSIZE)));
+                result.resize(int(std::min(maxSize, result.size() + QIODEVICE_BUFFERSIZE)));
                 readResult = read(result.data() + readBytes, result.size() - readBytes);
                 if (readResult > 0 || readBytes == 0)
                     readBytes += readResult;
@@ -1186,7 +1186,7 @@ QByteArray QIODevice::readLine(qint64 maxSize)
 
         qint64 readResult;
         do {
-            result.resize(int(qMin(maxSize, result.size() + QIODEVICE_BUFFERSIZE)));
+            result.resize(int(std::min(maxSize, result.size() + QIODEVICE_BUFFERSIZE)));
             readResult = readLine(result.data() + readBytes, result.size() - readBytes);
             if (readResult > 0 || readBytes == 0)
                 readBytes += readResult;

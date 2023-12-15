@@ -94,7 +94,7 @@ enum {
 static inline QDate fixedDate(int y, int m, int d)
 {
     QDate result(y, m, 1);
-    result.setDate(y, m, qMin(d, result.daysInMonth()));
+    result.setDate(y, m, std::min(d, result.daysInMonth()));
     return result;
 }
 
@@ -1832,7 +1832,7 @@ static QTime fromIsoTimeString(const QString &string, Qt::DateFormat format, boo
         const float secondNoMs = std::floor(secondWithMs);
         const float secondFraction = secondWithMs - secondNoMs;
         second = secondNoMs;
-        msec = qMin(qRound(secondFraction * 1000.0), 999);
+        msec = std::min(qRound(secondFraction * 1000.0), 999);
     } else {
         // HH:MM:SS or HH:MM:SS.sssss
         second = string.mid(6, 2).toInt(&ok);
@@ -1842,7 +1842,7 @@ static QTime fromIsoTimeString(const QString &string, Qt::DateFormat format, boo
             const double secondFraction = QString::fromUtf8("0.%1").arg(string.mid(9, 4)).toDouble(&ok);
             if (!ok)
                 return QTime();
-            msec = qMin(qRound(secondFraction * 1000.0), 999);
+            msec = std::min(qRound(secondFraction * 1000.0), 999);
         }
     }
 
@@ -4416,7 +4416,7 @@ static inline int countRepeat(const QString &str, int index, int maxCount)
 {
     int count = 1;
     const QChar ch(str.at(index));
-    const int max = qMin(index + maxCount, str.size());
+    const int max = std::min(index + maxCount, str.size());
     while (index + count < max && str.at(index + count) == ch) {
         ++count;
     }
@@ -4651,11 +4651,11 @@ int QDateTimeParser::sectionMaxSize(Section s, int count) const
     case LastSection: return 0;
 
     case AmPmSection: {
-        const int lowerMax = qMin(getAmPmText(AmText, LowerCase).size(),
+        const int lowerMax = std::min(getAmPmText(AmText, LowerCase).size(),
                                   getAmPmText(PmText, LowerCase).size());
-        const int upperMax = qMin(getAmPmText(AmText, UpperCase).size(),
+        const int upperMax = std::min(getAmPmText(AmText, UpperCase).size(),
                                   getAmPmText(PmText, UpperCase).size());
-        return qMin(4, qMin(lowerMax, upperMax));
+        return std::min(4, std::min(lowerMax, upperMax));
     }
 
     case Hour24Section:
@@ -4867,7 +4867,7 @@ int QDateTimeParser::parseSection(const QDateTime &currentValue, int sectionInde
                 }
             }
 
-            const int max = qMin(sectionmaxsize, sectiontextSize);
+            const int max = std::min(sectionmaxsize, sectiontextSize);
             for (int digits = max; digits >= 1; --digits) {
                 digitsStr.truncate(digits);
                 int tmp = (int)loc.toUInt(digitsStr, &ok);
@@ -5004,7 +5004,7 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
             }
             pos += std::max(0, used);
 
-            state = qMin<State>(state, tmpstate);
+            state = std::min<State>(state, tmpstate);
             if (state == Intermediate && context == FromString) {
                 state = Invalid;
                 break;
@@ -5025,7 +5025,7 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                 case YearSection2Digits: current = &year2digits; break;
                 case MonthSection: current = &month; break;
                 case DayOfWeekSection: current = &dayofweek; break;
-                case DaySection: current = &day; num = qMax<int>(1, num); break;
+                case DaySection: current = &day; num = std::max<int>(1, num); break;
                 case AmPmSection: current = &ampm; break;
                 default:
                     qWarning("QDateTimeParser::parse Internal error (%s)",
@@ -5115,7 +5115,7 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                         goto end;
                     }
                     if (state == Acceptable && fixday) {
-                        day = qMin<int>(day, QDate(year, month, 1).daysInMonth());
+                        day = std::min<int>(day, QDate(year, month, 1).daysInMonth());
 
                         const QLocale loc = locale();
                         for (int i=0; i<sectionNodesCount; ++i) {
@@ -5124,7 +5124,7 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                             }
                         }
                     } else {
-                        state = qMin(Intermediate, state);
+                        state = std::min(Intermediate, state);
                     }
                 }
             }
@@ -5333,7 +5333,7 @@ int QDateTimeParser::findMonth(const QString &str1, int startMonth, int sectionI
             if (context == FromString)
                 continue;
 
-            const int limit = qMin(str1.size(), str2.size());
+            const int limit = std::min(str1.size(), str2.size());
 
             QDTPDEBUG << "limit is" << limit << str1 << str2;
             bool equal = true;
@@ -5390,7 +5390,7 @@ int QDateTimeParser::findDay(const QString &str1, int startDay, int sectionIndex
             if (context == FromString)
                 continue;
 
-            const int limit = qMin(str1.size(), str2.size());
+            const int limit = std::min(str1.size(), str2.size());
             bool found = true;
             for (int i=0; i<limit; ++i) {
                 if (str1.at(i) != str2.at(i) && !str1.at(i).isSpace()) {
@@ -5472,7 +5472,7 @@ int QDateTimeParser::findAmPm(QString &str, int index, int *used) const
     } else if (context == FromString || (str.count(space) == 0 && str.size() >= size)) {
         return Neither;
     }
-    size = qMin(size, str.size());
+    size = std::min(size, str.size());
 
     bool broken[2] = {false, false};
     for (int i=0; i<size; ++i) {

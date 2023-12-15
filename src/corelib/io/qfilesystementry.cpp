@@ -241,7 +241,7 @@ QString QFileSystemEntry::suffix() const
     if (m_lastDotInFileName == -1)
         return QString();
 
-    return m_filePath.mid(qMax((qint16)0, m_lastSeparator) + m_firstDotInFileName + m_lastDotInFileName + 1);
+    return m_filePath.mid(std::max((qint16)0, m_lastSeparator) + m_firstDotInFileName + m_lastDotInFileName + 1);
 }
 
 QString QFileSystemEntry::completeSuffix() const
@@ -250,7 +250,7 @@ QString QFileSystemEntry::completeSuffix() const
     if (m_firstDotInFileName == -1)
         return QString();
 
-    return m_filePath.mid(qMax((qint16)0, m_lastSeparator) + m_firstDotInFileName + 1);
+    return m_filePath.mid(std::max((qint16)0, m_lastSeparator) + m_firstDotInFileName + 1);
 }
 
 #if defined(Q_OS_WIN)
@@ -370,7 +370,7 @@ void QFileSystemEntry::findFileNameSeparators() const
             }
         }
         m_lastSeparator = lastSeparator;
-        m_firstDotInFileName = firstDotInFileName == -1 ? -1 : firstDotInFileName - qMax(0, lastSeparator);
+        m_firstDotInFileName = firstDotInFileName == -1 ? -1 : firstDotInFileName - std::max(0, lastSeparator);
         if (lastDotInFileName == -1)
             m_lastDotInFileName = -1;
         else if (firstDotInFileName == lastDotInFileName)

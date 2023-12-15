@@ -874,13 +874,13 @@ int QAbstractAnimation::currentTime() const
 void QAbstractAnimation::setCurrentTime(int msecs)
 {
     Q_D(QAbstractAnimation);
-    msecs = qMax(msecs, 0);
+    msecs = std::max(msecs, 0);
 
     // Calculate new time and loop.
     int dura = duration();
     int totalDura = dura <= 0 ? dura : ((d->loopCount < 0) ? -1 : dura * d->loopCount);
     if (totalDura != -1)
-        msecs = qMin(totalDura, msecs);
+        msecs = std::min(totalDura, msecs);
     d->totalCurrentTime = msecs;
 
     // Update new values.
@@ -888,8 +888,8 @@ void QAbstractAnimation::setCurrentTime(int msecs)
     d->currentLoop = ((dura <= 0) ? 0 : (msecs / dura));
     if (d->currentLoop == d->loopCount) {
         //we're at the end
-        d->currentTime = qMax(0, dura);
-        d->currentLoop = qMax(0, d->loopCount - 1);
+        d->currentTime = std::max(0, dura);
+        d->currentLoop = std::max(0, d->loopCount - 1);
     } else {
         if (d->direction == Forward) {
             d->currentTime = (dura <= 0) ? msecs : (msecs % dura);

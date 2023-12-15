@@ -194,7 +194,7 @@ void QAnimationGroup::insertAnimation(int index, QAbstractAnimation *animation)
     if (QAnimationGroup *oldGroup = animation->group()) {
         oldGroup->removeAnimation(animation);
         // ensure we don't insert out of bounds if oldGroup == this
-        index = qMin(index, d->animations.size());
+        index = std::min(index, d->animations.size());
     }
 
     d->animations.insert(index, animation);

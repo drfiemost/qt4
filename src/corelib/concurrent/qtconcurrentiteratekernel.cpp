@@ -171,7 +171,7 @@ void BlockSizeManager::timeAfterUser()
     if (controlPartElapsed.median() * TargetRatio < userPartElapsed.median())
         return;
 
-    m_blockSize = qMin(m_blockSize * 2,  maxBlockSize);
+    m_blockSize = std::min(m_blockSize * 2,  maxBlockSize);
 
 #ifdef QTCONCURRENT_FOR_DEBUG
     qDebug() << QThread::currentThread() << "adjusting block size" << controlPartElapsed.median() << userPartElapsed.median() << m_blockSize;

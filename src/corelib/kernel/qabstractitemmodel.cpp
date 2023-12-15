@@ -532,7 +532,7 @@ static uint typeOfVariant(const QVariant &value)
 */
 bool QAbstractItemModelPrivate::variantLessThan(const QVariant &v1, const QVariant &v2)
 {
-    switch(qMax(typeOfVariant(v1), typeOfVariant(v2)))
+    switch(std::max(typeOfVariant(v1), typeOfVariant(v2)))
     {
     case 0: //integer type
         return v1.toLongLong() < v2.toLongLong();
@@ -2311,10 +2311,10 @@ bool QAbstractItemModel::decodeData(int row, int column, const QModelIndex &pare
         rows.append(r);
         columns.append(c);
         data.append(v);
-        top = qMin(r, top);
-        left = qMin(c, left);
-        bottom = qMax(r, bottom);
-        right = qMax(c, right);
+        top = std::min(r, top);
+        left = std::min(c, left);
+        bottom = std::max(r, bottom);
+        right = std::max(c, right);
     }
 
     // insert the dragged items into the table, use a bit array to avoid overwriting items,
@@ -2345,8 +2345,8 @@ bool QAbstractItemModel::decodeData(int row, int column, const QModelIndex &pare
     }
     insertRows(row, dragRowCount, parent);
 
-    row = qMax(0, row);
-    column = qMax(0, column);
+    row = std::max(0, row);
+    column = std::max(0, column);
 
     QVector<QPersistentModelIndex> newIndexes(data.size());
     // set the data in the table
@@ -3356,8 +3356,8 @@ bool QAbstractTableModel::dropMimeData(const QMimeData *data, Qt::DropAction act
             rows.append(r);
             columns.append(c);
             data.append(v);
-            top = qMin(r, top);
-            left = qMin(c, left);
+            top = std::min(r, top);
+            left = std::min(c, left);
         }
 
         for (int i = 0; i < data.size(); ++i) {
@@ -3407,8 +3407,8 @@ bool QAbstractListModel::dropMimeData(const QMimeData *data, Qt::DropAction acti
             rows.append(r);
             columns.append(c);
             data.append(v);
-            top = qMin(r, top);
-            left = qMin(c, left);
+            top = std::min(r, top);
+            left = std::min(c, left);
         }
 
         for (int i = 0; i < data.size(); ++i) {

@@ -705,7 +705,7 @@ QDataStream &operator>>(QDataStream &in, QBitArray &ba)
     quint32 allocated = 0;
 
     while (allocated < totalBytes) {
-        int blockSize = qMin(Step, totalBytes - allocated);
+        int blockSize = std::min(Step, totalBytes - allocated);
         ba.d.resize(allocated + blockSize + 1);
         if (in.readRawData(ba.d.data() + 1 + allocated, blockSize) != blockSize) {
             ba.clear();

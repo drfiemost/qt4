@@ -83,7 +83,7 @@ int qvsnprintf(char *str, size_t n, const char *fmt, va_list ap)
     QByteArray ba = buf.toLocal8Bit();
 
     if (n > 0) {
-        size_t blen = qMin(size_t(ba.length()), size_t(n - 1));
+        size_t blen = std::min(size_t(ba.length()), size_t(n - 1));
         memcpy(str, ba.constData(), blen);
         str[blen] = '\0'; // make sure str is always 0 terminated
     }

@@ -348,11 +348,11 @@ int qstrcmp(const QByteArray &str1, const QByteArray &str2)
 {
     int l1 = str1.length();
     int l2 = str2.length();
-    int ret = memcmp(str1, str2, qMin(l1, l2));
+    int ret = memcmp(str1, str2, std::min(l1, l2));
     if (ret != 0)
         return ret;
 
-    // they matched qMin(l1, l2) bytes
+    // they matched std::min(l1, l2) bytes
     // so the longer one is lexically after the shorter one
     return l1 - l2;
 }
@@ -1450,7 +1450,7 @@ void QByteArray::reallocData(uint alloc, Data::AllocationOptions options)
     if (d->ref.isShared() || IS_RAW_DATA(d)) {
         Data *x = Data::allocate(alloc, options);
         Q_CHECK_PTR(x);
-        x->size = qMin(int(alloc) - 1, d->size);
+        x->size = std::min(int(alloc) - 1, d->size);
         ::memcpy(x->data(), d->data(), x->size);
         x->data()[x->size] = '\0';
         if (!d->ref.deref())
@@ -2758,7 +2758,7 @@ QDataStream &operator>>(QDataStream &in, QByteArray &ba)
     quint32 allocated = 0;
 
     do {
-        int blockSize = qMin(Step, len - allocated);
+        int blockSize = std::min(Step, len - allocated);
         ba.resize(allocated + blockSize);
         if (in.readRawData(ba.data() + allocated, blockSize) != blockSize) {
             ba.clear();

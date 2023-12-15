@@ -2058,8 +2058,8 @@ QString QDir::cleanPath(const QString &path)
                         }
                     } else if (dotcount == 2 && i > 0 && p[i - 1] != QLatin1Char('.')) {
                         eaten = true;
-                        used -= iwrite - qMax(0, last);
-                        iwrite = qMax(0, last);
+                        used -= iwrite - std::max(0, last);
+                        iwrite = std::max(0, last);
                         last = -1;
                         ++i;
                     } else if (dotcount == 1) {

@@ -467,7 +467,7 @@ bool QSemaphore::tryAcquire(int n, int timeout)
 
     // We're documented to accept any negative value as "forever"
     // but QDeadlineTimer only accepts -1.
-    timeout = qMax(timeout, -1);
+    timeout = std::max(timeout, -1);
 
     if (futexAvailable())
         return futexSemaphoreTryAcquire<true>(u, n, timeout < 0 ? -1 : timeout);

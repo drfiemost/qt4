@@ -140,7 +140,7 @@ int QEventDispatcherUNIXPrivate::doSelect(QEventLoop::ProcessEventsFlags flags, 
         }
 
         int wakeUpFd = initThreadWakeUp();
-        highest = qMax(highest, wakeUpFd);
+        highest = std::max(highest, wakeUpFd);
 
         nsel = q->select(highest + 1,
                          &sn_vec[0].select_fds,
@@ -388,7 +388,7 @@ void QEventDispatcherUNIX::registerSocketNotifier(QSocketNotifier *notifier)
     list.insert(i, sn);
 
     FD_SET(sockfd, fds);
-    d->sn_highest = qMax(d->sn_highest, sockfd);
+    d->sn_highest = std::max(d->sn_highest, sockfd);
 }
 
 void QEventDispatcherUNIX::unregisterSocketNotifier(QSocketNotifier *notifier)
@@ -431,7 +431,7 @@ void QEventDispatcherUNIX::unregisterSocketNotifier(QSocketNotifier *notifier)
         d->sn_highest = -1;
         for (int i=0; i<3; i++) {
             if (!d->sn_vec[i].list.isEmpty())
-                d->sn_highest = qMax(d->sn_highest,  // list is fd-sorted
+                d->sn_highest = std::max(d->sn_highest,  // list is fd-sorted
                                      d->sn_vec[i].list[0]->fd);
         }
     }

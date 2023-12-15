@@ -168,7 +168,7 @@ QWaitCondition::~QWaitCondition()
 void QWaitCondition::wakeOne()
 {
     report_error(pthread_mutex_lock(&d->mutex), "QWaitCondition::wakeOne()", "mutex lock");
-    d->wakeups = qMin(d->wakeups + 1, d->waiters);
+    d->wakeups = std::min(d->wakeups + 1, d->waiters);
     report_error(pthread_cond_signal(&d->cond), "QWaitCondition::wakeOne()", "cv signal");
     report_error(pthread_mutex_unlock(&d->mutex), "QWaitCondition::wakeOne()", "mutex unlock");
 }

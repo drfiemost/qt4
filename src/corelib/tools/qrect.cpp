@@ -1089,9 +1089,9 @@ QRect QRect::operator|(const QRect &r) const
         b2 = r.y2;
 
     QRect tmp;
-    tmp.x1 = qMin(l1, l2);
+    tmp.x1 = std::min(l1, l2);
     tmp.x2 = std::max(r1, r2);
-    tmp.y1 = qMin(t1, t2);
+    tmp.y1 = std::min(t1, t2);
     tmp.y2 = std::max(b1, b2);
     return tmp;
 }
@@ -1165,9 +1165,9 @@ QRect QRect::operator&(const QRect &r) const
 
     QRect tmp;
     tmp.x1 = std::max(l1, l2);
-    tmp.x2 = qMin(r1, r2);
+    tmp.x2 = std::min(r1, r2);
     tmp.y1 = std::max(t1, t2);
-    tmp.y2 = qMin(b1, b2);
+    tmp.y2 = std::min(b1, b2);
     return tmp;
 }
 
@@ -2169,10 +2169,10 @@ QRectF QRectF::operator|(const QRectF &r) const
         right += w;
 
     if (r.w < 0) {
-        left = qMin(left, r.xp + r.w);
+        left = std::min(left, r.xp + r.w);
         right = std::max(right, r.xp);
     } else {
-        left = qMin(left, r.xp);
+        left = std::min(left, r.xp);
         right = std::max(right, r.xp + r.w);
     }
 
@@ -2184,10 +2184,10 @@ QRectF QRectF::operator|(const QRectF &r) const
         bottom += h;
 
     if (r.h < 0) {
-        top = qMin(top, r.yp + r.h);
+        top = std::min(top, r.yp + r.h);
         bottom = std::max(bottom, r.yp);
     } else {
-        top = qMin(top, r.yp);
+        top = std::min(top, r.yp);
         bottom = std::max(bottom, r.yp + r.h);
     }
 
@@ -2270,8 +2270,8 @@ QRectF QRectF::operator&(const QRectF &r) const
     QRectF tmp;
     tmp.xp = std::max(l1, l2);
     tmp.yp = std::max(t1, t2);
-    tmp.w = qMin(r1, r2) - tmp.xp;
-    tmp.h = qMin(b1, b2) - tmp.yp;
+    tmp.w = std::min(r1, r2) - tmp.xp;
+    tmp.h = std::min(b1, b2) - tmp.yp;
     return tmp;
 }
 

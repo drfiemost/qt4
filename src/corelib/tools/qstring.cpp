@@ -234,7 +234,7 @@ static int ucstrcmp(const QChar *a, int alen, const QChar *b, int blen)
 {
     if (a == b && alen == blen)
         return 0;
-    int l = qMin(alen, blen);
+    int l = std::min(alen, blen);
     int cmp = ucstrncmp(a, b, l);
     return cmp ? cmp : (alen-blen);
 }
@@ -1328,7 +1328,7 @@ void QString::reallocData(uint alloc, bool grow)
         Data::AllocationOptions allocOptions(d->capacityReserved ? Data::CapacityReserved : 0);
         Data *x = Data::allocate(alloc, allocOptions);
         Q_CHECK_PTR(x);
-        x->size = qMin(int(alloc) - 1, d->size);
+        x->size = std::min(int(alloc) - 1, d->size);
         ::memcpy(x->data(), d->data(), x->size * sizeof(QChar));
         x->data()[x->size] = 0;
         if (!d->ref.deref())
@@ -2272,7 +2272,7 @@ bool QString::operator<(QLatin1String other) const
         return false;
 
     const ushort *uc = d->data();
-    const ushort *e = uc + qMin(d->size, other.size());
+    const ushort *e = uc + std::min(d->size, other.size());
 
     while (uc < e) {
         if (*uc != *c)
@@ -2374,7 +2374,7 @@ bool QString::operator>(QLatin1String other) const
         return !isEmpty();
 
     const ushort *uc = d->data();
-    const ushort *e = uc + qMin(d->size, other.size());
+    const ushort *e = uc + std::min(d->size, other.size());
 
     while (uc < e) {
         if (*uc != *c)
@@ -7509,7 +7509,7 @@ QDataStream &operator>>(QDataStream &in, QString &str)
             quint32 allocated = 0;
 
             while (allocated < len) {
-                int blockSize = qMin(Step, len - allocated);
+                int blockSize = std::min(Step, len - allocated);
                 str.resize(allocated + blockSize);
                 if (in.readRawData(reinterpret_cast<char *>(str.data()) + allocated * 2,
                                    blockSize * 2) != blockSize * 2) {

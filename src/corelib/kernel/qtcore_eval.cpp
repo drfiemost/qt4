@@ -119,7 +119,7 @@ static int qt_eval_days_left()
 
     QDate today = QDate::currentDate();
     QDate build = QLibraryInfo::buildDate();
-    return qMax(-1, today.daysTo(build) + 30);
+    return std::max(-1, today.daysTo(build) + 30);
 }
 
 static QString qt_eval_string()

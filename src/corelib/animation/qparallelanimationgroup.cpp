@@ -116,7 +116,7 @@ int QParallelAnimationGroup::duration() const
         if (currentDuration == -1)
             return -1; // Undetermined length
 
-        ret = qMax(ret, currentDuration);
+        ret = std::max(ret, currentDuration);
     }
 
     return ret;
@@ -238,7 +238,7 @@ void QParallelAnimationGroupPrivate::_q_uncontrolledAnimationFinished()
 
     int maxDuration = 0;
     for (int i = 0; i < animations.size(); ++i)
-        maxDuration = qMax(maxDuration, animations.at(i)->totalDuration());
+        maxDuration = std::max(maxDuration, animations.at(i)->totalDuration());
 
     if (currentTime >= maxDuration)
         q->stop();

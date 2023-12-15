@@ -540,14 +540,14 @@ bool QTextStreamPrivate::fillReadBuffer(qint64 maxBytes)
 #endif
         ) {
         if (maxBytes != -1)
-            bytesRead = device->readLine(buf, qMin<qint64>(sizeof(buf), maxBytes));
+            bytesRead = device->readLine(buf, std::min<qint64>(sizeof(buf), maxBytes));
         else
             bytesRead = device->readLine(buf, sizeof(buf));
     } else
 #endif
     {
         if (maxBytes != -1)
-            bytesRead = device->read(buf, qMin<qint64>(sizeof(buf), maxBytes));
+            bytesRead = device->read(buf, std::min<qint64>(sizeof(buf), maxBytes));
         else
             bytesRead = device->read(buf, sizeof(buf));
     }
@@ -572,7 +572,7 @@ bool QTextStreamPrivate::fillReadBuffer(qint64 maxBytes)
 
 #if defined (QTEXTSTREAM_DEBUG)
     qDebug("QTextStreamPrivate::fillReadBuffer(), device->read(\"%s\", %d) == %d",
-           qt_prettyDebug(buf, qMin(32,int(bytesRead)) , int(bytesRead)).constData(), sizeof(buf), int(bytesRead));
+           qt_prettyDebug(buf, std::min(32,int(bytesRead)) , int(bytesRead)).constData(), sizeof(buf), int(bytesRead));
 #endif
 
     if (bytesRead <= 0)
@@ -681,7 +681,7 @@ void QTextStreamPrivate::flushWriteBuffer()
     qint64 bytesWritten = device->write(data);
 #if defined (QTEXTSTREAM_DEBUG)
     qDebug("QTextStreamPrivate::flushWriteBuffer(), device->write(\"%s\") == %d",
-           qt_prettyDebug(data.constData(), qMin(data.size(),32), data.size()).constData(), int(bytesWritten));
+           qt_prettyDebug(data.constData(), std::min(data.size(),32), data.size()).constData(), int(bytesWritten));
 #endif
     if (bytesWritten <= 0) {
         status = QTextStream::WriteFailed;
@@ -714,11 +714,11 @@ QString QTextStreamPrivate::read(int maxlen)
 {
     QString ret;
     if (string) {
-        lastTokenSize = qMin(maxlen, string->size() - stringOffset);
+        lastTokenSize = std::min(maxlen, string->size() - stringOffset);
         ret = string->mid(stringOffset, lastTokenSize);
     } else {
         while (readBuffer.size() - readBufferOffset < maxlen && fillReadBuffer()) ;
-        lastTokenSize = qMin(maxlen, readBuffer.size() - readBufferOffset);
+        lastTokenSize = std::min(maxlen, readBuffer.size() - readBufferOffset);
         ret = readBuffer.mid(readBufferOffset, lastTokenSize);
     }
     consumeLastToken();
@@ -994,8 +994,8 @@ inline void QTextStreamPrivate::putString(const QString &s, bool number)
     QByteArray a = s.toUtf8();
     QByteArray b = tmp.toUtf8();
     qDebug("QTextStreamPrivate::putString(\"%s\") calls write(\"%s\")",
-           qt_prettyDebug(a.constData(), a.size(), qMax(16, a.size())).constData(),
-           qt_prettyDebug(b.constData(), b.size(), qMax(16, b.size())).constData());
+           qt_prettyDebug(a.constData(), a.size(), std::max(16, a.size())).constData(),
+           qt_prettyDebug(b.constData(), b.size(), std::max(16, b.size())).constData());
 #endif
     write(tmp);
 }

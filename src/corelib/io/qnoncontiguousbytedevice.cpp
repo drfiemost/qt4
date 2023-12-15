@@ -212,7 +212,7 @@ const char* QNonContiguousByteDeviceByteArrayImpl::readPointer(qint64 maximumLen
     }
 
     if (maximumLength != -1)
-        len = qMin(maximumLength, size() - currentPosition);
+        len = std::min(maximumLength, size() - currentPosition);
     else
         len = size() - currentPosition;
 
@@ -271,7 +271,7 @@ const char* QNonContiguousByteDeviceRingBufferImpl::readPointer(qint64 maximumLe
     const char *returnValue = ringBuffer->readPointerAtPosition(currentPosition, len);
 
     if (maximumLength != -1)
-        len = qMin(len, maximumLength);
+        len = std::min(len, maximumLength);
 
     return returnValue;
 }
@@ -342,7 +342,7 @@ const char* QNonContiguousByteDeviceIoDeviceImpl::readPointer(qint64 maximumLeng
         return currentReadBuffer->data() + currentReadBufferPosition;
     }
 
-    qint64 haveRead = device->read(currentReadBuffer->data(), qMin(maximumLength, currentReadBufferSize));
+    qint64 haveRead = device->read(currentReadBuffer->data(), std::min(maximumLength, currentReadBufferSize));
 
     if ((haveRead == -1) || (haveRead == 0 && device->atEnd() && !device->isSequential())) {
         eof = true;

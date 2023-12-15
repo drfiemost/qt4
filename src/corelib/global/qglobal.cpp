@@ -2868,7 +2868,7 @@ int qrand()
     \relates <QtGlobal>
     \obsolete
 
-    Use qMin(\a x, \a y) instead.
+    Use std::min(\a x, \a y) instead.
 
     \sa QMAX(), QABS()
 */
@@ -2878,7 +2878,7 @@ int qrand()
     \relates <QtGlobal>
     \obsolete
 
-    Use qMax(\a x, \a y) instead.
+    Use std::max(\a x, \a y) instead.
 
     \sa QMIN(), QABS()
 */

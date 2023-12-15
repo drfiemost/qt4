@@ -45,7 +45,7 @@ QT_BEGIN_NAMESPACE
 
 static void bm_init_skiptable(const ushort *uc, int len, uchar *skiptable, Qt::CaseSensitivity cs)
 {
-    int l = qMin(len, 255);
+    int l = std::min(len, 255);
     memset(skiptable, l, 256*sizeof(uchar));
     uc += len - l;
     if (cs == Qt::CaseSensitive) {

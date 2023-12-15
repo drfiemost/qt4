@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
 
 static inline void bm_init_skiptable(const uchar *cc, int len, uchar *skiptable)
 {
-    int l = qMin(len, 255);
+    int l = std::min(len, 255);
     memset(skiptable, l, 256*sizeof(uchar));
     cc += len - l;
     while (l--)

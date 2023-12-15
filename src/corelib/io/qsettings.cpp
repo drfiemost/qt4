@@ -3183,7 +3183,7 @@ void QSettings::setArrayIndex(int i)
 
     QSettingsGroup &top = d->groupStack.top();
     int len = top.toString().size();
-    top.setArrayIndex(qMax(i, 0));
+    top.setArrayIndex(std::max(i, 0));
     d->groupPrefix.replace(d->groupPrefix.size() - len - 1, len, top.toString());
 }
 

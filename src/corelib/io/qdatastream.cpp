@@ -920,7 +920,7 @@ QDataStream &QDataStream::readBytes(char *&s, uint &l)
     char *curBuf = nullptr;
 
     do {
-        int blockSize = qMin(Step, len - allocated);
+        int blockSize = std::min(Step, len - allocated);
         prevBuf = curBuf;
         curBuf = new char[allocated + blockSize + 1];
         if (prevBuf) {
@@ -1264,7 +1264,7 @@ int QDataStream::skipRawData(int len)
         int sumRead = 0;
 
         while (len > 0) {
-            int blockSize = qMin(len, (int)sizeof(buf));
+            int blockSize = std::min(len, (int)sizeof(buf));
             int n = dev->read(buf, blockSize);
             if (n == -1)
                 return -1;

@@ -88,14 +88,14 @@ void QBufferPrivate::_q_emitSignals()
 
 qint64 QBufferPrivate::peek(char *data, qint64 maxSize)
 {
-    qint64 readBytes = qMin(maxSize, static_cast<qint64>(buf->size()) - pos);
+    qint64 readBytes = std::min(maxSize, static_cast<qint64>(buf->size()) - pos);
     memcpy(data, buf->constData() + pos, readBytes);
     return readBytes;
 }
 
 QByteArray QBufferPrivate::peek(qint64 maxSize)
 {
-    qint64 readBytes = qMin(maxSize, static_cast<qint64>(buf->size()) - pos);
+    qint64 readBytes = std::min(maxSize, static_cast<qint64>(buf->size()) - pos);
     if (pos == 0 && maxSize >= buf->size())
         return *buf;
     return QByteArray(buf->constData() + pos, readBytes);
@@ -422,7 +422,7 @@ bool QBuffer::canReadLine() const
 qint64 QBuffer::readData(char *data, qint64 len)
 {
     Q_D(QBuffer);
-    if ((len = qMin(len, qint64(d->buf->size()) - d->ioIndex)) <= 0)
+    if ((len = std::min(len, qint64(d->buf->size()) - d->ioIndex)) <= 0)
         return qint64(0);
     memcpy(data, d->buf->constData() + d->ioIndex, len);
     d->ioIndex += int(len);

@@ -2469,7 +2469,7 @@ QString QLocalePrivate::dateTimeToString(const QString &format, const QDateTime 
 
             case 'M':
                 used = true;
-                repeat = qMin(repeat, 4);
+                repeat = std::min(repeat, 4);
                 switch (repeat) {
                 case 1:
                     result.append(m_data->longLongToString(date.month()));
@@ -2488,7 +2488,7 @@ QString QLocalePrivate::dateTimeToString(const QString &format, const QDateTime 
 
             case 'd':
                 used = true;
-                repeat = qMin(repeat, 4);
+                repeat = std::min(repeat, 4);
                 switch (repeat) {
                 case 1:
                     result.append(m_data->longLongToString(date.day()));
@@ -2513,7 +2513,7 @@ QString QLocalePrivate::dateTimeToString(const QString &format, const QDateTime 
             switch (c.unicode()) {
             case 'h': {
                 used = true;
-                repeat = qMin(repeat, 2);
+                repeat = std::min(repeat, 2);
                 int hour = time.hour();
                 if (timeFormatContainsAP(format)) {
                     if (hour > 12)
@@ -2534,7 +2534,7 @@ QString QLocalePrivate::dateTimeToString(const QString &format, const QDateTime 
             }
             case 'H':
                 used = true;
-                repeat = qMin(repeat, 2);
+                repeat = std::min(repeat, 2);
                 switch (repeat) {
                 case 1:
                     result.append(m_data->longLongToString(time.hour()));
@@ -2547,7 +2547,7 @@ QString QLocalePrivate::dateTimeToString(const QString &format, const QDateTime 
 
             case 'm':
                 used = true;
-                repeat = qMin(repeat, 2);
+                repeat = std::min(repeat, 2);
                 switch (repeat) {
                 case 1:
                     result.append(m_data->longLongToString(time.minute()));
@@ -2560,7 +2560,7 @@ QString QLocalePrivate::dateTimeToString(const QString &format, const QDateTime 
 
             case 's':
                 used = true;
-                repeat = qMin(repeat, 2);
+                repeat = std::min(repeat, 2);
                 switch (repeat) {
                 case 1:
                     result.append(m_data->longLongToString(time.second()));

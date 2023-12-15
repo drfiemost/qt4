@@ -244,7 +244,7 @@ int ResultStoreBase::updateInsertIndex(int index, int _count)
         index = insertIndex;
         insertIndex += _count;
     } else {
-        insertIndex = qMax(index + _count, insertIndex);
+        insertIndex = std::max(index + _count, insertIndex);
     }
     return index;
 }

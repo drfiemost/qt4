@@ -469,7 +469,7 @@ static bool calculateUnixPriority(int priority, int *sched_policy, int *sched_pr
     int prio;
     // crudely scale our priority enum values to the prio_min/prio_max
     prio = ((priority - lowestPriority) * (prio_max - prio_min) / highestPriority) + prio_min;
-    prio = std::max(prio_min, qMin(prio_max, prio));
+    prio = std::max(prio_min, std::min(prio_max, prio));
 
     *sched_priority = prio;
     return true;
