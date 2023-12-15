@@ -47,11 +47,6 @@
 #include <QProcess>
 #include <QFile>
 
-#ifdef Q_OS_SYMBIAN
-// In Symbian OS test data is located in applications private dir
-#define QT_TEST_SOURCE_DIR "."
-#endif
-
 enum Mode { Record, RecordNoVisuals, RecordSnapshot, Play, TestVisuals, RemoveVisuals, UpdateVisuals, UpdatePlatformVisuals, Test };
 
 static QString testdir;
@@ -87,7 +82,7 @@ QString tst_qmlvisual::viewer()
 
 #if defined(Q_WS_MAC)
     qmlruntime = QDir(binaries).absoluteFilePath("QMLViewer.app/Contents/MacOS/QMLViewer");
-#elif defined(Q_WS_WIN) || defined(Q_WS_S60)
+#elif defined(Q_WS_WIN)
     qmlruntime = QDir(binaries).absoluteFilePath("qmlviewer.exe");
 #else
     qmlruntime = QDir(binaries).absoluteFilePath("qmlviewer");
@@ -174,8 +169,6 @@ QString tst_qmlvisual::toTestScript(const QString &file, Mode mode)
     platformsuffix = "-WIN";
 #elif defined(Q_WS_QWS)
     platformsuffix = "-QWS";
-#elif defined(Q_WS_S60)
-    platformsuffix = "-S60";
 #endif
 
     QString testdata = file.left(index + 1) + 

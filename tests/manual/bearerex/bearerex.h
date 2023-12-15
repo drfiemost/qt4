@@ -46,13 +46,8 @@
 
 #include "ui_detailedinfodialog.h"
 
-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-#include "ui_bearerex_maemo.h"
-#include "ui_sessiondialog_maemo.h"
-#else
 #include "ui_bearerex.h"
 #include "ui_sessiondialog.h"
-#endif
 #include "qnetworkconfigmanager.h"
 #include "qnetworksession.h"
 #include "datatransferer.h"

@@ -251,10 +251,6 @@ DetailedInfoDialog::DetailedInfoDialog(QNetworkConfiguration* apNetworkConfigura
     }
     
     tableWidget->setFocusPolicy(Qt::NoFocus);
-
-#ifdef Q_OS_SYMBIAN
-    this->showMaximized();
-#endif
 }
 
 SessionTab::SessionTab(QNetworkConfiguration* apNetworkConfiguration,
