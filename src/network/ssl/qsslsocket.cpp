@@ -1810,7 +1810,7 @@ qint64 QSslSocket::readData(char *data, qint64 maxlen)
     } else {
         do {
             const char *readPtr = d->readBuffer.readPointer();
-            int bytesToRead = qMin<int>(maxlen - readBytes, d->readBuffer.nextDataBlockSize());
+            int bytesToRead = std::min<int>(maxlen - readBytes, d->readBuffer.nextDataBlockSize());
             ::memcpy(data + readBytes, readPtr, bytesToRead);
             readBytes += bytesToRead;
             d->readBuffer.free(bytesToRead);

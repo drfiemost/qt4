@@ -550,7 +550,7 @@ void QDeclarativeQtScriptExpression::updateGuards(const QPODVector<QDeclarativeE
     if (properties.count() != guardListLength) {
         QDeclarativeNotifierEndpoint *newGuardList = new QDeclarativeNotifierEndpoint[properties.count()];
 
-        for (int ii = 0; ii < qMin(guardListLength, properties.count()); ++ii) 
+        for (int ii = 0; ii < std::min(guardListLength, properties.count()); ++ii) 
            guardList[ii].copyAndClear(newGuardList[ii]);
 
         delete [] guardList;

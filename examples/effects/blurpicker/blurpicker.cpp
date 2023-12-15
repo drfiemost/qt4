@@ -83,7 +83,7 @@ void BlurPicker::setIndex(qreal index)
         pos = QTransform().rotate(-20).map(pos);
         pos -= QPointF(40, 40);
         icon->setPos(pos);
-        baseline = qMax(baseline, ys);
+        baseline = std::max(baseline, ys);
         static_cast<BlurEffect *>(icon->graphicsEffect())->setBaseLine(baseline);
     }
 

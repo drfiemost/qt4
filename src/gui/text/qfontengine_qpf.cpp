@@ -701,13 +701,13 @@ glyph_metrics_t QFontEngineQPF::boundingBox(const QGlyphLayout &glyphs)
 
         QFixed x = overall.xoff + glyphs.offsets[i].x + g->x;
         QFixed y = overall.yoff + glyphs.offsets[i].y + g->y;
-        overall.x = qMin(overall.x, x);
-        overall.y = qMin(overall.y, y);
-        xmax = qMax(xmax, x + g->width);
-        ymax = qMax(ymax, y + g->height);
+        overall.x = std::min(overall.x, x);
+        overall.y = std::min(overall.y, y);
+        xmax = std::max(xmax, x + g->width);
+        ymax = std::max(ymax, y + g->height);
         overall.xoff += g->advance;
     }
-    overall.height = qMax(overall.height, ymax - overall.y);
+    overall.height = std::max(overall.height, ymax - overall.y);
     overall.width = xmax - overall.x;
 
     return overall;

@@ -967,8 +967,8 @@ VGPath QVGPaintEnginePrivate::roundedRectPath(const QRectF &rect, qreal xRadius,
         yRadius = yRadius * rect.height() / 200.;
     }
 
-    xRadius = qMin(xRadius, rect.width() / 2);
-    yRadius = qMin(yRadius, rect.height() / 2);
+    xRadius = std::min(xRadius, rect.width() / 2);
+    yRadius = std::min(yRadius, rect.height() / 2);
 
     VGfloat pts[] = {
         x1 + xRadius, y1,                   // MoveTo
@@ -3232,11 +3232,11 @@ static void drawImageTiled(QVGPaintEnginePrivate *d,
     d->setRenderingQuality(VG_RENDERING_QUALITY_NONANTIALIASED);
 
     for (int y = sourceRect.y(); y < sourceRect.height(); y += tileHeight) {
-        int h = qMin(tileHeight, sourceRect.height() - y);
+        int h = std::min(tileHeight, sourceRect.height() - y);
         if (h < 1)
             break;
         for (int x = sourceRect.x(); x < sourceRect.width(); x += tileWidth) {
-            int w = qMin(tileWidth, sourceRect.width() - x);
+            int w = std::min(tileWidth, sourceRect.width() - x);
             if (w < 1)
                 break;
 

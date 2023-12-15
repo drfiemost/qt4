@@ -457,7 +457,7 @@ void tst_QPathClipper::clipTest(int subjectIndex, int clipIndex, QPathClipper::O
     bounds = bounds.adjusted(-adjustX, -adjustY, adjustX, adjustY);
 
     const int dim = 256;
-    const qreal scale = qMin(dim / bounds.width(), dim / bounds.height());
+    const qreal scale = std::min(dim / bounds.width(), dim / bounds.height());
 
     QPathClipper clipper(subject, clip);
     QPainterPath result = clipper.clip(op);

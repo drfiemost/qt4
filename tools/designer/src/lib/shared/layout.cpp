@@ -204,7 +204,7 @@ void Layout::setup()
     // handle that and do not crash in this case
     foreach (QWidget *w, m_widgets) {
         connect(w, SIGNAL(destroyed()), this, SLOT(widgetDestroyed()));
-        m_startPoint = QPoint(qMin(m_startPoint.x(), w->x()), qMin(m_startPoint.y(), w->y()));
+        m_startPoint = QPoint(std::min(m_startPoint.x(), w->x()), qMin(m_startPoint.y(), w->y()));
         const QRect rc(w->geometry());
 
         m_geometries.insert(w, rc);
@@ -1001,8 +1001,8 @@ bool Grid::shrinkFormLayoutSpans()
         if (!locateWidget(w, row, col, rowspan, colspan))
             qDebug("ooops, widget '%s' does not fit in layout", w->objectName().toUtf8().constData());
         const int maxColSpan = col == 0 ? 2 : 1;
-        const int newColSpan = qMin(colspan, maxColSpan);
-        const int newRowSpan = qMin(rowspan, maxRowSpan);
+        const int newColSpan = std::min(colspan, maxColSpan);
+        const int newRowSpan = std::min(rowspan, maxRowSpan);
         if (newColSpan != colspan || newRowSpan != rowspan) {
             // in case like this:
             // W1 W1
@@ -1065,7 +1065,7 @@ void Grid::reallocFormLayout()
     QWidget **formCells = new QWidget*[FormLayoutColumns * formNRows];
     qFill(formCells, formCells + FormLayoutColumns * formNRows, static_cast<QWidget *>(0));
     QWidget **formPtr = formCells;
-    const int matchingColumns = qMin(m_ncols, static_cast<int>(FormLayoutColumns));
+    const int matchingColumns = std::min(m_ncols, static_cast<int>(FormLayoutColumns));
     for (int r = 0; r < m_nrows; r++) {
         int c = 0;
         for ( ; c < matchingColumns; c++)               // Just copy over matching columns

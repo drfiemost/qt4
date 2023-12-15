@@ -51,7 +51,7 @@ HeadingItem::HeadingItem(const QString &text, QGraphicsScene *scene, QGraphicsIt
 
 QImage *HeadingItem::createImage(const QMatrix &matrix) const
 {
-    float sx = qMin(matrix.m11(), matrix.m22());
+    float sx = std::min(matrix.m11(), matrix.m22());
     float sy = matrix.m22() < sx ? sx : matrix.m22();
     QFontMetrics fm(Colors::headingFont());
 

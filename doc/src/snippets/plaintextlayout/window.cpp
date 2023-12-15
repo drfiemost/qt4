@@ -66,7 +66,7 @@ void Window::paintEvent(QPaintEvent *event)
 //! [0]
     QTextLayout textLayout(text, font);
     qreal margin = 10;
-    qreal radius = qMin(width()/2.0, height()/2.0) - margin;
+    qreal radius = std::min(width()/2.0, height()/2.0) - margin;
     QFontMetrics fm(font);
 
     qreal lineHeight = fm.height();
@@ -80,9 +80,9 @@ void Window::paintEvent(QPaintEvent *event)
         if (!line.isValid())
             break;
 
-        qreal x1 = qMax(0.0, pow(pow(radius,2)-pow(radius-y,2), 0.5));
-        qreal x2 = qMax(0.0, pow(pow(radius,2)-pow(radius-(y+lineHeight),2), 0.5));
-        qreal x = qMax(x1, x2) + margin;
+        qreal x1 = std::max(0.0, pow(pow(radius,2)-pow(radius-y,2), 0.5));
+        qreal x2 = std::max(0.0, pow(pow(radius,2)-pow(radius-(y+lineHeight),2), 0.5));
+        qreal x = std::max(x1, x2) + margin;
         qreal lineWidth = (width() - margin) - x;
 
         line.setLineWidth(lineWidth);

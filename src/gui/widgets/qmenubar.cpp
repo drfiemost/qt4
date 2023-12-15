@@ -343,7 +343,7 @@ void QMenuBarPrivate::popupAction(QAction *action, bool activateFirst)
 
         //we put the popup menu on the screen containing the bottom-center of the action rect
         QRect screenRect = QApplication::desktop()->screenGeometry(pos + QPoint(adjustedActionRect.width() / 2, 0));
-        pos = QPoint(qMax(pos.x(), screenRect.x()), qMax(pos.y(), screenRect.y()));
+        pos = QPoint(std::max(pos.x(), screenRect.x()), qMax(pos.y(), screenRect.y()));
 
         const bool fitUp = (q->mapToGlobal(adjustedActionRect.topLeft()).y() >= popup_size.height());
         const bool fitDown = (pos.y() + popup_size.height() <= screenRect.bottom());
@@ -369,7 +369,7 @@ void QMenuBarPrivate::popupAction(QAction *action, bool activateFirst)
         }
 
         if(!defaultPopDown || (fitUp && !fitDown))
-            pos.setY(qMax(screenRect.y(), q->mapToGlobal(QPoint(0, adjustedActionRect.top()-popup_size.height())).y()));
+            pos.setY(std::max(screenRect.y(), q->mapToGlobal(QPoint(0, adjustedActionRect.top()-popup_size.height())).y()));
         activeMenu->popup(pos);
         if(activateFirst)
             activeMenu->d_func()->setFirstActionActive();
@@ -477,7 +477,7 @@ void QMenuBarPrivate::calcActionRects(int max_width, int start) const
                     separator_len += iWidth;
             }
             //maximum height
-            max_item_height = qMax(max_item_height, sz.height());
+            max_item_height = std::max(max_item_height, sz.height());
             //append
             actionRects[i] = QRect(0, 0, sz.width(), sz.height());
         }
@@ -1720,7 +1720,7 @@ int QMenuBar::heightForWidth(int) const
     int spaceBelowMenuBar = style()->styleHint(QStyle::SH_MainWindow_SpaceBelowMenuBar, 0, this);
     if(as_gui_menubar) {
         for (int i = 0; i < d->actionRects.count(); ++i)
-            height = qMax(height, d->actionRects.at(i).height());
+            height = std::max(height, d->actionRects.at(i).height());
         if (height) //there is at least one non-null item
             height += spaceBelowMenuBar;
         height += 2*fw;
@@ -1731,9 +1731,9 @@ int QMenuBar::heightForWidth(int) const
     if(d->platformMenuBar->allowCornerWidgets()) {
 #endif
     if(d->leftWidget)
-        height = qMax(d->leftWidget->sizeHint().height() + margin, height);
+        height = std::max(d->leftWidget->sizeHint().height() + margin, height);
     if(d->rightWidget)
-        height = qMax(d->rightWidget->sizeHint().height() + margin, height);
+        height = std::max(d->rightWidget->sizeHint().height() + margin, height);
 #ifdef Q_WS_X11
     }
 #endif

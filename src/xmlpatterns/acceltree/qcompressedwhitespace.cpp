@@ -133,7 +133,7 @@ QString CompressedWhitespace::compress(const QStringRef &input)
          * ones that is needed. */
         while(true)
         {
-            const int unitLength = qMin(wsLen, int(MaxCharCount));
+            const int unitLength = std::min(wsLen, int(MaxCharCount));
             wsLen -= unitLength;
 
             ushort resultCP = toCompressedChar(c, unitLength);

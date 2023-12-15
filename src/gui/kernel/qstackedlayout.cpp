@@ -204,7 +204,7 @@ int QStackedLayout::insertWidget(int index, QWidget *widget)
 {
     Q_D(QStackedLayout);
     addChildWidget(widget);
-    index = qMin(index, d->list.count());
+    index = std::min(index, d->list.count());
     if (index < 0)
         index = d->list.count();
     QWidgetItem *wi = QLayoutPrivate::createWidgetItem(this, widget);

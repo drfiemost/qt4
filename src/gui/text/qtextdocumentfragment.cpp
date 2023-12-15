@@ -101,8 +101,8 @@ int QTextCopyHelper::appendFragment(int pos, int endPos, int objectIndex)
     else
        charFormatIndex = convertFormatIndex(frag->format, objectIndex);
 
-    const int inFragmentOffset = qMax(0, pos - fragIt.position());
-    int charsToCopy = qMin(int(frag->size_array[0] - inFragmentOffset), endPos - pos);
+    const int inFragmentOffset = std::max(0, pos - fragIt.position());
+    int charsToCopy = std::min(int(frag->size_array[0] - inFragmentOffset), endPos - pos);
 
     QTextBlock nextBlock = src->blocksFind(pos + 1);
 
@@ -912,7 +912,7 @@ QTextHtmlImporter::Table QTextHtmlImporter::scanTable(int tableNodeIdx)
                 if (spanInfo.colSpan > 1 || spanInfo.rowSpan > 1)
                     rowColSpans.append(spanInfo);
 
-                columnWidths.resize(qMax(columnWidths.count(), colsInRow));
+                columnWidths.resize(std::max(columnWidths.count(), colsInRow));
                 rowColSpanForColumn.resize(columnWidths.size());
                 for (int i = currentColumn; i < currentColumn + c.tableCellColSpan; ++i) {
                     if (columnWidths.at(i).type() == QTextLength::VariableLength) {
@@ -925,7 +925,7 @@ QTextHtmlImporter::Table QTextHtmlImporter::scanTable(int tableNodeIdx)
                 }
             }
 
-        table.columns = qMax(table.columns, colsInRow);
+        table.columns = std::max(table.columns, colsInRow);
 
         ++effectiveRow;
     }
@@ -1063,7 +1063,7 @@ QTextHtmlImporter::ProcessNodeResult QTextHtmlImporter::processBlockNode()
         && parentNode
         && (parentNode->isListStart() || parentNode->id == Html_dl)
         && (parentNode->children.last() == currentNodeIdx)) {
-        bottomMargin = qMax(bottomMargin, this->bottomMargin(currentNode->parent));
+        bottomMargin = std::max(bottomMargin, this->bottomMargin(currentNode->parent));
     }
 
     if (block.bottomMargin() != bottomMargin) {

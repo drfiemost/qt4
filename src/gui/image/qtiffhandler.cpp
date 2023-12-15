@@ -464,11 +464,11 @@ bool QTiffHandler::write(const QImage &image)
 
         // try to do the conversion in chunks no greater than 16 MB
         int chunks = (width * height / (1024 * 1024 * 16)) + 1;
-        int chunkHeight = qMax(height / chunks, 1);
+        int chunkHeight = std::max(height / chunks, 1);
 
         int y = 0;
         while (y < height) {
-            QImage chunk = image.copy(0, y, width, qMin(chunkHeight, height - y)).convertToFormat(QImage::Format_Mono);
+            QImage chunk = image.copy(0, y, width, std::min(chunkHeight, height - y)).convertToFormat(QImage::Format_Mono);
 
             int chunkStart = y;
             int chunkEnd = y + chunk.height();
@@ -539,11 +539,11 @@ bool QTiffHandler::write(const QImage &image)
         //// write the data
         // try to do the conversion in chunks no greater than 16 MB
         int chunks = (width * height/ (1024 * 1024 * 16)) + 1;
-        int chunkHeight = qMax(height / chunks, 1);
+        int chunkHeight = std::max(height / chunks, 1);
 
         int y = 0;
         while (y < height) {
-            QImage chunk = image.copy(0, y, width, qMin(chunkHeight, height - y));
+            QImage chunk = image.copy(0, y, width, std::min(chunkHeight, height - y));
 
             int chunkStart = y;
             int chunkEnd = y + chunk.height();
@@ -567,11 +567,11 @@ bool QTiffHandler::write(const QImage &image)
         }
         // try to do the ARGB32 conversion in chunks no greater than 16 MB
         int chunks = (width * height * 4 / (1024 * 1024 * 16)) + 1;
-        int chunkHeight = qMax(height / chunks, 1);
+        int chunkHeight = std::max(height / chunks, 1);
 
         int y = 0;
         while (y < height) {
-            QImage chunk = image.copy(0, y, width, qMin(chunkHeight, height - y)).convertToFormat(QImage::Format_ARGB32);
+            QImage chunk = image.copy(0, y, width, std::min(chunkHeight, height - y)).convertToFormat(QImage::Format_ARGB32);
 
             int chunkStart = y;
             int chunkEnd = y + chunk.height();

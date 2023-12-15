@@ -71,7 +71,7 @@ inline static QString fromSQLTCHAR(const QVarLengthArray<SQLTCHAR>& input, int s
 {
     QString result;
 
-    int realsize = qMin(size, input.size());
+    int realsize = std::min(size, input.size());
     if(realsize > 0 && input[realsize-1] == 0)
         realsize--;
     switch(sizeof(SQLTCHAR)) {
@@ -1404,7 +1404,7 @@ bool QODBCResult::exec()
                     dt->fraction = qdt.time().msec() * 1000000;
 
                     // (How many leading digits do we want to keep?  With SQL Server 2005, this should be 3: 123000000)
-                    int keep = (int)qPow(10.0, 9 - qMin(9, precision));
+                    int keep = (int)qPow(10.0, 9 - std::min(9, precision));
                     dt->fraction = (dt->fraction / keep) * keep;
                 }
 

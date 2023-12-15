@@ -539,7 +539,7 @@ QSize QHeaderView::sizeHint() const
         d->cachedSizeHint = d->cachedSizeHint.expandedTo(hint);
     }
     // get size hint for the last n sections
-    i = qMax(i, sectionCount - 100 );
+    i = std::max(i, sectionCount - 100 );
     for (int j = sectionCount - 1, checked = 0; j >= i && checked < 100; --j) {
         if (isSectionHidden(j))
             continue;
@@ -571,7 +571,7 @@ int QHeaderView::sectionSizeHint(int logicalIndex) const
     else
         size = sectionSizeFromContents(logicalIndex);
     int hint = d->orientation == Qt::Horizontal ? size.width() : size.height();
-    return qMax(minimumSectionSize(), hint);
+    return std::max(minimumSectionSize(), hint);
 }
 
 /*!
@@ -1430,8 +1430,8 @@ int QHeaderView::minimumSectionSize() const
         QSize strut = QApplication::globalStrut();
         int margin = style()->pixelMetric(QStyle::PM_HeaderMargin, 0, this);
         if (d->orientation == Qt::Horizontal)
-            return qMax(strut.width(), (fontMetrics().maxWidth() + margin));
-        return qMax(strut.height(), (fontMetrics().height() + margin));
+            return std::max(strut.width(), (fontMetrics().maxWidth() + margin));
+        return std::max(strut.height(), (fontMetrics().height() + margin));
     }
     return d->minimumSectionSize;
 }
@@ -1584,8 +1584,8 @@ void QHeaderView::headerDataChanged(Qt::Orientation orientation, int logicalFirs
 
     for (int section = logicalFirst; section <= logicalLast; ++section) {
         const int visual = visualIndex(section);
-        firstVisualIndex = qMin(firstVisualIndex, visual);
-        lastVisualIndex =  qMax(lastVisualIndex,  visual);
+        firstVisualIndex = std::min(firstVisualIndex, visual);
+        lastVisualIndex =  std::max(lastVisualIndex,  visual);
     }
 
     d->executePostedResize();
@@ -1768,7 +1768,7 @@ void QHeaderViewPrivate::updateHiddenSections(int logicalFirst, int logicalLast)
 
     // remove sections from sectionsHidden
     if (!sectionHidden.isEmpty()) {
-        const int newsize = qMin(sectionCount - changeCount, sectionHidden.size());
+        const int newsize = std::min(sectionCount - changeCount, sectionHidden.size());
         QBitArray newSectionHidden(newsize);
         for (int j = 0, k = 0; j < sectionHidden.size(); ++j) {
             const int logical = logicalIndex(j);
@@ -1786,8 +1786,8 @@ void QHeaderViewPrivate::_q_sectionsRemoved(const QModelIndex &parent,
     Q_Q(QHeaderView);
     if (parent != root)
         return; // we only handle changes in the top level
-    if (qMin(logicalFirst, logicalLast) < 0
-        || qMax(logicalLast, logicalFirst) >= sectionCount)
+    if (std::min(logicalFirst, logicalLast) < 0
+        || std::max(logicalLast, logicalFirst) >= sectionCount)
         return;
     int oldCount = q->count();
     int changeCount = logicalLast - logicalFirst + 1;
@@ -2094,8 +2094,8 @@ void QHeaderView::paintEvent(QPaintEvent *e)
     }
 
     int tmp = start;
-    start = qMin(start, end);
-    end = qMax(tmp, end);
+    start = std::min(start, end);
+    end = std::max(tmp, end);
 
     d->prepareSectionSelected(); // clear and resize the bit array
 
@@ -2231,7 +2231,7 @@ void QHeaderView::mouseMoveEvent(QMouseEvent *e)
                 d->cascadingResize(visual, d->headerSectionSize(visual) + delta);
             } else {
                 int delta = d->reverse() ? d->firstPos - pos : pos - d->firstPos;
-                resizeSection(d->section, qMax(d->originalSize + delta, minimumSectionSize()));
+                resizeSection(d->section, std::max(d->originalSize + delta, minimumSectionSize()));
             }
             d->lastPos = pos;
             return;
@@ -2262,7 +2262,7 @@ void QHeaderView::mouseMoveEvent(QMouseEvent *e)
             return;
         }
         case QHeaderViewPrivate::SelectSections: {
-            int logical = logicalIndexAt(qMax(-d->offset, pos));
+            int logical = logicalIndexAt(std::max(-d->offset, pos));
             if (logical == -1 && pos > 0)
                 logical = d->lastVisibleVisualIndex();
             if (logical == d->pressed)
@@ -2897,7 +2897,7 @@ void QHeaderViewPrivate::setupSectionIndicator(int section, int position)
     painter.end();
 
     sectionIndicator->setPixmap(pm);
-    sectionIndicatorOffset = position - qMax(p, 0);
+    sectionIndicatorOffset = position - std::max(p, 0);
 }
 
 void QHeaderViewPrivate::updateSectionIndicator(int section, int position)
@@ -3033,7 +3033,7 @@ void QHeaderViewPrivate::resizeSections(QHeaderView::ResizeMode globalMode, bool
             sectionSize = headerSectionSize(i);
         } else { // resizeMode == QHeaderView::ResizeToContents
             int logicalIndex = q->logicalIndex(i);
-            sectionSize = qMax(viewSectionSizeHint(logicalIndex),
+            sectionSize = std::max(viewSectionSizeHint(logicalIndex),
                                q->sectionSizeHint(logicalIndex));
         }
         section_sizes.append(sectionSize);
@@ -3045,7 +3045,7 @@ void QHeaderViewPrivate::resizeSections(QHeaderView::ResizeMode globalMode, bool
     int pixelReminder = 0;
     if (numberOfStretchedSections > 0 && lengthToStrech > 0) { // we have room to stretch in
         int hintLengthForEveryStretchedSection = lengthToStrech / numberOfStretchedSections;
-        stretchSectionLength = qMax(hintLengthForEveryStretchedSection, q->minimumSectionSize());
+        stretchSectionLength = std::max(hintLengthForEveryStretchedSection, q->minimumSectionSize());
         pixelReminder = lengthToStrech % numberOfStretchedSections;
     }
 
@@ -3072,7 +3072,7 @@ void QHeaderViewPrivate::resizeSections(QHeaderView::ResizeMode globalMode, bool
                               : newSectionResizeMode);
             if (resizeMode == QHeaderView::Stretch && stretchSectionLength != -1) {
                 if (i == lastVisibleSection)
-                    newSectionLength = qMax(stretchSectionLength, lastSectionSize);
+                    newSectionLength = std::max(stretchSectionLength, lastSectionSize);
                 else
                     newSectionLength = stretchSectionLength;
                 if (pixelReminder > 0) {
@@ -3260,7 +3260,7 @@ void QHeaderViewPrivate::removeSectionsFromSpans(int start, int end)
             break;
         } else if (start >= start_section && start <= end_section) {
             // the some of the removed sections are inside the span,at the end
-            int change = qMin(end_section - start + 1, end - start + 1);
+            int change = std::min(end_section - start + 1, end - start + 1);
             sectionSpans[i].count -= change;
             sectionSpans[i].size = section_size * sectionSpans.at(i).count;
             start += change;
@@ -3268,7 +3268,7 @@ void QHeaderViewPrivate::removeSectionsFromSpans(int start, int end)
             // the change affects several spans
         } else if (end >= start_section && end <= end_section) {
             // the some of the removed sections are inside the span, at the beginning
-            int change = qMin((end - start_section + 1), end - start + 1);
+            int change = std::min((end - start_section + 1), end - start + 1);
             sectionSpans[i].count -= change;
             sectionSpans[i].size = section_size * sectionSpans.at(i).count;
             length -= (change * section_size);
@@ -3345,7 +3345,7 @@ void QHeaderViewPrivate::cascadingResize(int visual, int newSize)
 
         // resize the section
         if (!sectionResized) {
-            newSize = qMax(newSize, minimumSize);
+            newSize = std::max(newSize, minimumSize);
             if (oldSize != newSize)
                 resizeSectionSpan(visual, oldSize, newSize);
         }
@@ -3357,7 +3357,7 @@ void QHeaderViewPrivate::cascadingResize(int visual, int newSize)
             int currentSectionSize = headerSectionSize(i);
             if (currentSectionSize <= minimumSize)
                 continue;
-            int newSectionSize = qMax(currentSectionSize - delta, minimumSize);
+            int newSectionSize = std::max(currentSectionSize - delta, minimumSize);
             //qDebug() << "### cascading to" << i << newSectionSize - currentSectionSize << delta;
             resizeSectionSpan(i, currentSectionSize, newSectionSize);
             saveCascadingSectionSize(i, currentSectionSize);
@@ -3389,7 +3389,7 @@ void QHeaderViewPrivate::cascadingResize(int visual, int newSize)
         }
 
         // resize the section
-        resizeSectionSpan(visual, oldSize, qMax(newSize, minimumSize));
+        resizeSectionSpan(visual, oldSize, std::max(newSize, minimumSize));
 
         // cascade the section size change
         if (delta < 0 && newSize < minimumSize) {
@@ -3399,7 +3399,7 @@ void QHeaderViewPrivate::cascadingResize(int visual, int newSize)
                 int sectionSize = headerSectionSize(i);
                 if (sectionSize <= minimumSize)
                     continue;
-                resizeSectionSpan(i, sectionSize, qMax(sectionSize + delta, minimumSize));
+                resizeSectionSpan(i, sectionSize, std::max(sectionSize + delta, minimumSize));
                 saveCascadingSectionSize(i, sectionSize);
                 break;
             }
@@ -3411,7 +3411,7 @@ void QHeaderViewPrivate::cascadingResize(int visual, int newSize)
                 if (!sectionIsCascadable(i))
                     continue;
                 int currentSectionSize = headerSectionSize(i);
-                int newSectionSize = qMax(currentSectionSize - delta, minimumSize);
+                int newSectionSize = std::max(currentSectionSize - delta, minimumSize);
                 resizeSectionSpan(i, currentSectionSize, newSectionSize);
                 break;
             }

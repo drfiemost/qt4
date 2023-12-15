@@ -296,7 +296,7 @@ public:
 
 void tst_QUuid::threadUniqueness()
 {
-    QVector<UuidThread *> threads(qMax(2, QThread::idealThreadCount()));
+    QVector<UuidThread *> threads(std::max(2, QThread::idealThreadCount()));
     for (int i = 0; i < threads.count(); ++i)
         threads[i] = new UuidThread;
     for (int i = 0; i < threads.count(); ++i)

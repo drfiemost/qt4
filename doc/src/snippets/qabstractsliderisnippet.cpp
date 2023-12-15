@@ -56,7 +56,7 @@ void QAbstractSlider::setRange(int min, int max)
     int oldMin = d->minimum;
     int oldMax = d->maximum;
     d->minimum = min;
-    d->maximum = qMax(min, max);
+    d->maximum = std::max(min, max);
     if (oldMin != d->minimum || oldMax != d->maximum) {
         sliderChange(SliderRangeChange);
         emit rangeChanged(d->minimum, d->maximum);
@@ -114,7 +114,7 @@ Qt::Orientation QAbstractSlider::orientation() const
 void QAbstractSlider::setMinimum(int min)
 {
     Q_D(QAbstractSlider);
-    setRange(min, qMax(d->maximum, min));
+    setRange(min, std::max(d->maximum, min));
 }
 
 int QAbstractSlider::minimum() const
@@ -127,7 +127,7 @@ int QAbstractSlider::minimum() const
 void QAbstractSlider::setMaximum(int max)
 {
     Q_D(QAbstractSlider);
-    setRange(qMin(d->minimum, max), max);
+    setRange(std::min(d->minimum, max), max);
 }
 
 int QAbstractSlider::maximum() const
@@ -370,7 +370,7 @@ void QAbstractSlider::wheelEvent(QWheelEvent * e)
         offset = 0;
     }
 
-    int step = qMin(QApplication::wheelScrollLines() * d->singleStep, d->pageStep);
+    int step = std::min(QApplication::wheelScrollLines() * d->singleStep, d->pageStep);
     if ((e->modifiers() & Qt::ControlModifier) || (e->modifiers() & Qt::ShiftModifier))
         step = d->pageStep;
     offset += e->delta() * step / 120;

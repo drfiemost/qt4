@@ -809,7 +809,7 @@ void QDesignerMenu::dropEvent(QDropEvent *event)
     if (action && checkAction(action) == AcceptActionDrag) {
         event->acceptProposedAction();
         int index = findAction(event->pos());
-        index = qMin(index, actions().count() - 1);
+        index = std::min(index, actions().count() - 1);
 
         fw->beginCommand(tr("Insert action"));
         InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);
@@ -933,7 +933,7 @@ void QDesignerMenu::moveUp(bool ctrl)
     if (ctrl)
         (void) swap(m_currentIndex, m_currentIndex - 1);
     --m_currentIndex;
-    m_currentIndex = qMax(0, m_currentIndex);
+    m_currentIndex = std::max(0, m_currentIndex);
     // Always re-select, swapping destroys order
     update();
     selectCurrentAction();
@@ -949,7 +949,7 @@ void QDesignerMenu::moveDown(bool ctrl)
         (void) swap(m_currentIndex + 1, m_currentIndex);
 
     ++m_currentIndex;
-    m_currentIndex = qMin(actions().count() - 1, m_currentIndex);
+    m_currentIndex = std::min(actions().count() - 1, m_currentIndex);
     update();
     if (!ctrl)
         selectCurrentAction();
@@ -1266,8 +1266,8 @@ QAction *QDesignerMenu::createAction(const QString &objectName, bool separator)
 // ### share with QDesignerMenu::swap
 bool QDesignerMenu::swap(int a, int b)
 {
-    const int left = qMin(a, b);
-    int right = qMax(a, b);
+    const int left = std::min(a, b);
+    int right = std::max(a, b);
 
     QAction *action_a = safeActionAt(left);
     QAction *action_b = safeActionAt(right);
@@ -1279,7 +1279,7 @@ bool QDesignerMenu::swap(int a, int b)
             || qobject_cast<SpecialMenuAction*>(action_b))
         return false; // nothing to do
 
-    right = qMin(right, realActionCount());
+    right = std::min(right, realActionCount());
     if (right < 0)
         return false; // nothing to do
 

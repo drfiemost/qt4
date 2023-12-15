@@ -1351,8 +1351,8 @@ Q_TESTLIB_EXPORT void qtest_qParseArgs(int argc, char *argv[], bool qml)
             if(colon != -1) {
                 data = qstrdup(argv[i]+colon+1);
             }
-            QTest::qt_snprintf(buf, qMin(512, off + 1), "%s", argv[i]); // copy text before the ':' into buf
-            QTest::qt_snprintf(buf + off, qMin(512 - off, 3), "()");    // append "()"
+            QTest::qt_snprintf(buf, std::min(512, off + 1), "%s", argv[i]); // copy text before the ':' into buf
+            QTest::qt_snprintf(buf + off, std::min(512 - off, 3), "()");    // append "()"
             int idx = QTest::currentTestObject->metaObject()->indexOfMethod(buf);
             if (idx < 0 || !isValidSlot(QTest::currentTestObject->metaObject()->method(idx))) {
                 printf("Unknown testfunction: '%s'\n", buf);
@@ -1616,7 +1616,7 @@ char *toHexRepresentation(const char *ba, int length)
      * size char arrays.
      * */
     const int maxLen = 50;
-    const int len = qMin(maxLen, length);
+    const int len = std::min(maxLen, length);
     char *result = 0;
 
     if(length > maxLen) {
@@ -1955,7 +1955,7 @@ int QTest::qExec(QObject *testObject, int argc, char **argv)
 #endif
     // make sure our exit code is never going above 127
     // since that could wrap and indicate 0 test fails
-    return qMin(QTestResult::failCount(), 127);
+    return std::min(QTestResult::failCount(), 127);
 
 #endif
 }

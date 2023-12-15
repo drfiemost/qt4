@@ -89,7 +89,7 @@ QT_BEGIN_NAMESPACE
 
 static inline int intmaxlog(int n)
 {
-    return  (n > 0 ? qMax(qCeil(qLn(qreal(n)) / qLn(qreal(2))), 5) : 0);
+    return  (n > 0 ? std::max(qCeil(qLn(qreal(n)) / qLn(qreal(2))), 5) : 0);
 }
 
 /*!

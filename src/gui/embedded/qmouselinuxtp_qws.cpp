@@ -257,7 +257,7 @@ void QWSLinuxTPMouseHandlerPrivate::readMouseData()
 #endif
             numSamples++;
             if (numSamples >= QT_QWS_TP_MINIMUM_SAMPLES) {
-                int sampleCount = qMin(numSamples + 1,samples.count());
+                int sampleCount = std::min(numSamples + 1,samples.count());
 
                 // average the rest
                 QPoint mousePos = QPoint(0, 0);

@@ -1051,7 +1051,7 @@ void QMotifStyle::drawControl(ControlElement element, const QStyleOption *opt, Q
             const int unit_width = proxy()->pixelMetric(PM_ProgressBarChunkWidth, opt, widget);
             int u = rect.width() / unit_width;
             int p_v = pb->progress - pb->minimum;
-            int t_s = qMax(0, pb->maximum - pb->minimum);
+            int t_s = std::max(0, pb->maximum - pb->minimum);
             if (u > 0 && pb->progress >= INT_MAX / u && t_s >= u) {
                 // scale down to something usable.
                 p_v /= u;
@@ -1107,7 +1107,7 @@ void QMotifStyle::drawControl(ControlElement element, const QStyleOption *opt, Q
         if (const QStyleOptionMenuItem *menuitem = qstyleoption_cast<const QStyleOptionMenuItem *>(opt)) {
             int maxpmw = menuitem->maxIconWidth;
             if(menuitem->menuHasCheckableItems)
-                maxpmw = qMax(maxpmw, motifCheckMarkSpace);
+                maxpmw = std::max(maxpmw, motifCheckMarkSpace);
 
             int x, y, w, h;
             opt->rect.getRect(&x, &y, &w, &h);
@@ -1681,7 +1681,7 @@ int QMotifStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt,
         break;
 
     case PM_SplitterWidth:
-        ret = qMax(10, QApplication::globalStrut().width());
+        ret = std::max(10, QApplication::globalStrut().width());
         break;
 
     case PM_SliderLength:
@@ -1750,7 +1750,7 @@ int QMotifStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt,
         if (!opt)
             ret = 12;
         else
-            ret = qMax(12, (opt->rect.height() - 4) / 3);
+            ret = std::max(12, (opt->rect.height() - 4) / 3);
         break;
     default:
         ret =  QCommonStyle::pixelMetric(pm, opt, widget);
@@ -1774,7 +1774,7 @@ QMotifStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex *opt,
             int fw = spinbox->frame ? proxy()->pixelMetric(PM_SpinBoxFrameWidth, spinbox, widget) : 0;
             QSize bs;
             bs.setHeight(opt->rect.height()/2 - fw);
-            bs.setWidth(qMin(bs.height() * 8 / 5, opt->rect.width() / 4)); // 1.6 -approximate golden mean
+            bs.setWidth(std::min(bs.height() * 8 / 5, opt->rect.width() / 4)); // 1.6 -approximate golden mean
             bs = bs.expandedTo(QApplication::globalStrut());
             int y = fw + spinbox->rect.y();
             int x, lx, rx;
@@ -1910,7 +1910,7 @@ QMotifStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
             sz = QCommonStyle::sizeFromContents(ct, opt, contentsSize, widget);
             if (!btn->text.isEmpty() && (btn->features & (QStyleOptionButton::AutoDefaultButton|QStyleOptionButton::DefaultButton)))
-                sz.setWidth(qMax(75, sz.width()));
+                sz.setWidth(std::max(75, sz.width()));
             sz += QSize(0, 1); // magical extra pixel
         }
         break;
@@ -1942,7 +1942,7 @@ QMotifStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
 
             int checkColumn = mi->maxIconWidth;
             if (mi->menuHasCheckableItems)
-                checkColumn = qMax(checkColumn, motifCheckMarkSpace);
+                checkColumn = std::max(checkColumn, motifCheckMarkSpace);
             if (checkColumn > 0)
                 w += checkColumn + motifCheckMarkHMargin;
 

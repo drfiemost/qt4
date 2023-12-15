@@ -600,7 +600,7 @@ void JavaStyle::drawControl(ControlElement control, const QStyleOption *option,
             bool act = menuItem->state & State_Selected;
             const QStyleOption *opt = option;
             const QStyleOptionMenuItem *menuitem = menuItem;
-            int checkcol = qMax(menuitem->maxIconWidth, 20);
+            int checkcol = std::max(menuitem->maxIconWidth, 20);
             if (menuItem->icon.isNull())
                 checkcol = 0;
 

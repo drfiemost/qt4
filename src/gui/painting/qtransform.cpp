@@ -804,7 +804,7 @@ QTransform & QTransform::operator*=(const QTransform &o)
     if (thisType == TxNone)
         return operator=(o);
 
-    TransformationType t = qMax(thisType, otherType);
+    TransformationType t = std::max(thisType, otherType);
     switch(t) {
     case TxNone:
         break;
@@ -887,7 +887,7 @@ QTransform QTransform::operator*(const QTransform &m) const
         return m;
 
     QTransform t(true);
-    TransformationType type = qMax(thisType, otherType);
+    TransformationType type = std::max(thisType, otherType);
     switch(type) {
     case TxNone:
         break;
@@ -1839,8 +1839,8 @@ void QTransform::setMatrix(qreal m11, qreal m12, qreal m13,
 
 static inline bool needsPerspectiveClipping(const QRectF &rect, const QTransform &transform)
 {
-    const qreal wx = qMin(transform.m13() * rect.left(), transform.m13() * rect.right());
-    const qreal wy = qMin(transform.m23() * rect.top(), transform.m23() * rect.bottom());
+    const qreal wx = std::min(transform.m13() * rect.left(), transform.m13() * rect.right());
+    const qreal wy = std::min(transform.m23() * rect.top(), transform.m23() * rect.bottom());
 
     return wx + wy + transform.m33() < Q_NEAR_CLIP;
 }
@@ -1874,20 +1874,20 @@ QRect QTransform::mapRect(const QRect &rect) const
         qreal xmax = x;
         qreal ymax = y;
         MAP(rect.right() + 1, rect.top(), x, y);
-        xmin = qMin(xmin, x);
-        ymin = qMin(ymin, y);
-        xmax = qMax(xmax, x);
-        ymax = qMax(ymax, y);
+        xmin = std::min(xmin, x);
+        ymin = std::min(ymin, y);
+        xmax = std::max(xmax, x);
+        ymax = std::max(ymax, y);
         MAP(rect.right() + 1, rect.bottom() + 1, x, y);
-        xmin = qMin(xmin, x);
-        ymin = qMin(ymin, y);
-        xmax = qMax(xmax, x);
-        ymax = qMax(ymax, y);
+        xmin = std::min(xmin, x);
+        ymin = std::min(ymin, y);
+        xmax = std::max(xmax, x);
+        ymax = std::max(ymax, y);
         MAP(rect.left(), rect.bottom() + 1, x, y);
-        xmin = qMin(xmin, x);
-        ymin = qMin(ymin, y);
-        xmax = qMax(xmax, x);
-        ymax = qMax(ymax, y);
+        xmin = std::min(xmin, x);
+        ymin = std::min(ymin, y);
+        xmax = std::max(xmax, x);
+        ymax = std::max(ymax, y);
         return QRect(qRound(xmin), qRound(ymin), qRound(xmax)-qRound(xmin), qRound(ymax)-qRound(ymin));
     } else {
         QPainterPath path;
@@ -1943,20 +1943,20 @@ QRectF QTransform::mapRect(const QRectF &rect) const
         qreal xmax = x;
         qreal ymax = y;
         MAP(rect.x() + rect.width(), rect.y(), x, y);
-        xmin = qMin(xmin, x);
-        ymin = qMin(ymin, y);
-        xmax = qMax(xmax, x);
-        ymax = qMax(ymax, y);
+        xmin = std::min(xmin, x);
+        ymin = std::min(ymin, y);
+        xmax = std::max(xmax, x);
+        ymax = std::max(ymax, y);
         MAP(rect.x() + rect.width(), rect.y() + rect.height(), x, y);
-        xmin = qMin(xmin, x);
-        ymin = qMin(ymin, y);
-        xmax = qMax(xmax, x);
-        ymax = qMax(ymax, y);
+        xmin = std::min(xmin, x);
+        ymin = std::min(ymin, y);
+        xmax = std::max(xmax, x);
+        ymax = std::max(ymax, y);
         MAP(rect.x(), rect.y() + rect.height(), x, y);
-        xmin = qMin(xmin, x);
-        ymin = qMin(ymin, y);
-        xmax = qMax(xmax, x);
-        ymax = qMax(ymax, y);
+        xmin = std::min(xmin, x);
+        ymin = std::min(ymin, y);
+        xmax = std::max(xmax, x);
+        ymax = std::max(ymax, y);
         return QRectF(xmin, ymin, xmax-xmin, ymax - ymin);
     } else {
         QPainterPath path;
@@ -2281,7 +2281,7 @@ bool qt_scaleForTransform(const QTransform &transform, qreal *scale)
         const qreal xScale = qAbs(transform.m11());
         const qreal yScale = qAbs(transform.m22());
         if (scale)
-            *scale = qMax(xScale, yScale);
+            *scale = std::max(xScale, yScale);
         return qFuzzyCompare(xScale, yScale);
     }
 
@@ -2290,7 +2290,7 @@ bool qt_scaleForTransform(const QTransform &transform, qreal *scale)
     const qreal yScale = transform.m12() * transform.m12()
                          + transform.m22() * transform.m22();
     if (scale)
-        *scale = qSqrt(qMax(xScale, yScale));
+        *scale = qSqrt(std::max(xScale, yScale));
     return type == QTransform::TxRotate && qFuzzyCompare(xScale, yScale);
 }
 

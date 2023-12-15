@@ -2207,7 +2207,7 @@ bool QFont::fromString(const QString &descrip)
         setPointSizeF(l[1].toDouble());
     if (count == 9) {
         setStyleHint((StyleHint) l[2].toInt());
-        setWeight(qMax(qMin(99, l[3].toInt()), 0));
+        setWeight(std::max(std::min(99, l[3].toInt()), 0));
         setItalic(l[4].toInt());
         setUnderline(l[5].toInt());
         setStrikeOut(l[6].toInt());
@@ -2217,7 +2217,7 @@ bool QFont::fromString(const QString &descrip)
         if (l[2].toInt() > 0)
             setPixelSize(l[2].toInt());
         setStyleHint((StyleHint) l[3].toInt());
-        setWeight(qMax(qMin(99, l[4].toInt()), 0));
+        setWeight(std::max(std::min(99, l[4].toInt()), 0));
         setStyle((QFont::Style)l[5].toInt());
         setUnderline(l[6].toInt());
         setStrikeOut(l[7].toInt());
@@ -3053,7 +3053,7 @@ void QFontCache::timerEvent(QTimerEvent *)
       calculation correct, we are more interested in speed, and use
       in_use_cost as a floor for new_max_cost
     */
-    uint new_max_cost = qMax(qMax(max_cost / 2, in_use_cost), min_cost);
+    uint new_max_cost = std::max(qMax(max_cost / 2, in_use_cost), min_cost);
 
     FC_DEBUG("  after sweep, in use %u kb, total %u kb, max %u kb, new max %u kb",
               in_use_cost, total_cost, max_cost, new_max_cost);

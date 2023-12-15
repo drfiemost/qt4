@@ -117,7 +117,7 @@ QSize QToolBarAreaLayoutLine::sizeHint() const
 
         QSize sh = item.sizeHint();
         a += item.preferredSize > 0 ? item.preferredSize : pick(o, sh);
-        b = qMax(b, perp(o, sh));
+        b = std::max(b, perp(o, sh));
     }
 
     QSize result;
@@ -137,7 +137,7 @@ QSize QToolBarAreaLayoutLine::minimumSize() const
 
         QSize ms = item.minimumSize();
         a += pick(o, ms);
-        b = qMax(b, perp(o, ms));
+        b = std::max(b, perp(o, ms));
     }
 
     QSize result;
@@ -152,7 +152,7 @@ void QToolBarAreaLayoutLine::fitLayout()
     int last = -1;
     int min = pick(o, minimumSize());
     int space = pick(o, rect.size());
-    int extra = qMax(0, space - min);
+    int extra = std::max(0, space - min);
 
     for (int i = 0; i < toolBarItems.count(); ++i) {
         QToolBarAreaLayoutItem &item = toolBarItems[i];
@@ -167,7 +167,7 @@ void QToolBarAreaLayoutLine::fitLayout()
         item.size = item.preferredSize > 0 ? item.preferredSize : pick(o, item.sizeHint());
 
         //the extraspace is the space above the item minimum sizehint
-        const int extraSpace = qMin(item.size - itemMin, extra);
+        const int extraSpace = std::min(item.size - itemMin, extra);
         item.size = itemMin + extraSpace; //that is the real size
 
         extra -= extraSpace;
@@ -184,7 +184,7 @@ void QToolBarAreaLayoutLine::fitLayout()
 
         item.pos = pos;
         if (i == last) // stretch the last item to the end of the line
-            item.size = qMax(0, pick(o, rect.size()) - item.pos);
+            item.size = std::max(0, pick(o, rect.size()) - item.pos);
         pos += item.size;
     }
 }
@@ -229,7 +229,7 @@ QSize QToolBarAreaLayoutInfo::sizeHint() const
             continue;
 
         QSize hint = l.sizeHint();
-        a = qMax(a, pick(o, hint));
+        a = std::max(a, pick(o, hint));
         b += perp(o, hint);
     }
 
@@ -249,7 +249,7 @@ QSize QToolBarAreaLayoutInfo::minimumSize() const
             continue;
 
         QSize m = l.minimumSize();
-        a = qMax(a, pick(o, m));
+        a = std::max(a, pick(o, m));
         b += perp(o, m);
     }
 
@@ -419,7 +419,7 @@ void QToolBarAreaLayoutInfo::moveToolBar(QToolBar *toolbar, int pos)
                 if (previousIndex >= 0) {
                     QToolBarAreaLayoutItem &previous = line.toolBarItems[previousIndex];
                     if (pos < current.pos) {
-                        newPos = qMax(pos, minPos);
+                        newPos = std::max(pos, minPos);
                     } else {
                         //we check the max value for the position (until everything at the right is "compressed")
                         int maxPos = pick(o, rect.size());
@@ -429,7 +429,7 @@ void QToolBarAreaLayoutInfo::moveToolBar(QToolBar *toolbar, int pos)
                                 maxPos -= pick(o, item.minimumSize());
                             }
                         }
-                        newPos = qMin(pos, maxPos);
+                        newPos = std::min(pos, maxPos);
                     }
 
                     //extra is the number of pixels to add to the previous toolbar
@@ -501,7 +501,7 @@ QList<int> QToolBarAreaLayoutInfo::gapIndex(const QPoint &pos, int *minDistance)
                 if (item.skip())
                     continue;
 
-                int size = qMin(item.size, pick(o, item.sizeHint()));
+                int size = std::min(item.size, pick(o, item.sizeHint()));
 
                 if (p > item.pos + size)
                     continue;
@@ -678,10 +678,10 @@ QSize QToolBarAreaLayout::minimumSize(const QSize &centerMin) const
     QSize top_min = docks[QInternal::TopDock].minimumSize();
     QSize bottom_min = docks[QInternal::BottomDock].minimumSize();
 
-    result.setWidth(qMax(top_min.width(), result.width()));
-    result.setWidth(qMax(bottom_min.width(), result.width()));
-    result.setHeight(qMax(left_min.height(), result.height()));
-    result.setHeight(qMax(right_min.height(), result.height()));
+    result.setWidth(std::max(top_min.width(), result.width()));
+    result.setWidth(std::max(bottom_min.width(), result.width()));
+    result.setHeight(std::max(left_min.height(), result.height()));
+    result.setHeight(std::max(right_min.height(), result.height()));
 
     result.rwidth() += left_min.width() + right_min.width();
     result.rheight() += top_min.height() + bottom_min.height();
@@ -701,10 +701,10 @@ QSize QToolBarAreaLayout::sizeHint(const QSize &centerHint) const
     QSize top_hint = docks[QInternal::TopDock].sizeHint();
     QSize bottom_hint = docks[QInternal::BottomDock].sizeHint();
 
-    result.setWidth(qMax(top_hint.width(), result.width()));
-    result.setWidth(qMax(bottom_hint.width(), result.width()));
-    result.setHeight(qMax(left_hint.height(), result.height()));
-    result.setHeight(qMax(right_hint.height(), result.height()));
+    result.setWidth(std::max(top_hint.width(), result.width()));
+    result.setWidth(std::max(bottom_hint.width(), result.width()));
+    result.setHeight(std::max(left_hint.height(), result.height()));
+    result.setHeight(std::max(right_hint.height(), result.height()));
 
     result.rwidth() += left_hint.width() + right_hint.width();
     result.rheight() += top_hint.height() + bottom_hint.height();
@@ -1232,14 +1232,14 @@ static void packRect(uint *geom0, uint *geom1, const QRect &rect, bool floating)
     // The 0x7FFF is half of 0xFFFF. We add it so we can handle negative coordinates on
     // dual monitors. It's subtracted when unpacking.
 
-    *geom0 |= qMax(0, rect.width()) & 0x0000ffff;
-    *geom1 |= qMax(0, rect.height()) & 0x0000ffff;
+    *geom0 |= std::max(0, rect.width()) & 0x0000ffff;
+    *geom1 |= std::max(0, rect.height()) & 0x0000ffff;
 
     *geom0 <<= 16;
     *geom1 <<= 16;
 
-    *geom0 |= qMax(0, rect.x() + 0x7FFF) & 0x0000ffff;
-    *geom1 |= qMax(0, rect.y() + 0x7FFF) & 0x0000ffff;
+    *geom0 |= std::max(0, rect.x() + 0x7FFF) & 0x0000ffff;
+    *geom1 |= std::max(0, rect.y() + 0x7FFF) & 0x0000ffff;
 
     // yeah, we chop one bit off the width, but it still has a range up to 32512
 

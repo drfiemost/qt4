@@ -194,7 +194,7 @@ namespace QTest {
         QString afterDecimalPoint = QString::number(number, 'f', 20);
         afterDecimalPoint.remove(0, beforeDecimalPoint.count() + 1);
 
-        int beforeUse = qMin(beforeDecimalPoint.count(), significantDigits);
+        int beforeUse = std::min(beforeDecimalPoint.count(), significantDigits);
         int beforeRemove = beforeDecimalPoint.count() - beforeUse;
 
         // Replace insignificant digits before the decimal point with zeros.

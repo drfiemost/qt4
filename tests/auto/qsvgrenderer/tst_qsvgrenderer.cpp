@@ -559,7 +559,7 @@ static void compareTransforms(const QTransform &m1, const QTransform &m2)
                                               m1.m31() - m2.m31(),
                                               m1.m32() - m2.m32(),
                                               m1.m33() - m2.m33()));
-    QVERIFY(diffIsSmallEnough(diffNorm, qMin(norm1, norm2)));
+    QVERIFY(diffIsSmallEnough(diffNorm, std::min(norm1, norm2)));
 }
 
 void tst_QSvgRenderer::matrixForElement() const

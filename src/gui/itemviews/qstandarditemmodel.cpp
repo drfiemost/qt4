@@ -414,7 +414,7 @@ bool QStandardItemPrivate::insertRows(int row, int count, const QList<QStandardI
     }
     if (!items.isEmpty()) {
         int index = childIndex(row, 0);
-        int limit = qMin(items.count(), columnCount() * count);
+        int limit = std::min(items.count(), columnCount() * count);
         for (int i = 0; i < limit; ++i) {
             QStandardItem *item = items.at(i);
             if (item) {
@@ -457,7 +457,7 @@ bool QStandardItemPrivate::insertColumns(int column, int count, const QList<QSta
         }
     }
     if (!items.isEmpty()) {
-        int limit = qMin(items.count(), rowCount() * count);
+        int limit = std::min(items.count(), rowCount() * count);
         for (int i = 0; i < limit; ++i) {
             QStandardItem *item = items.at(i);
             if (item) {
@@ -1398,9 +1398,9 @@ void QStandardItem::setRowCount(int rows)
     if (rc == rows)
         return;
     if (rc < rows)
-        insertRows(qMax(rc, 0), rows - rc);
+        insertRows(std::max(rc, 0), rows - rc);
     else
-        removeRows(qMax(rows, 0), rc - rows);
+        removeRows(std::max(rows, 0), rc - rows);
 }
 
 /*!
@@ -1426,9 +1426,9 @@ void QStandardItem::setColumnCount(int columns)
     if (cc == columns)
         return;
     if (cc < columns)
-        insertColumns(qMax(cc, 0), columns - cc);
+        insertColumns(std::max(cc, 0), columns - cc);
     else
-        removeColumns(qMax(columns, 0), cc - columns);
+        removeColumns(std::max(columns, 0), cc - columns);
 }
 
 /*!
@@ -1625,7 +1625,7 @@ void QStandardItem::removeRows(int row, int count)
             oldItem->d_func()->setModel(0);
         delete oldItem;
     }
-    d->children.remove(qMax(i, 0), n);
+    d->children.remove(std::max(i, 0), n);
     d->rows -= count;
     if (d->model)
         d->model->d_func()->rowsRemoved(this, row, count);
@@ -3029,10 +3029,10 @@ bool QStandardItemModel::dropMimeData(const QMimeData *data, Qt::DropAction acti
         rows.append(r);
         columns.append(c);
         items.append(item);
-        top = qMin(r, top);
-        left = qMin(c, left);
-        bottom = qMax(r, bottom);
-        right = qMax(c, right);
+        top = std::min(r, top);
+        left = std::min(c, left);
+        bottom = std::max(r, bottom);
+        right = std::max(c, right);
     }
 
     // insert the dragged items into the table, use a bit array to avoid overwriting items,
@@ -3063,8 +3063,8 @@ bool QStandardItemModel::dropMimeData(const QMimeData *data, Qt::DropAction acti
     }
     insertRows(row, dragRowCount, parent);
 
-    row = qMax(0, row);
-    column = qMax(0, column);
+    row = std::max(0, row);
+    column = std::max(0, column);
 
     QStandardItem *parentItem = itemFromIndex (parent);
     if (!parentItem)

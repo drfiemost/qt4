@@ -88,7 +88,7 @@ void RateController::transfer()
 
     int msecs = 1000;
     if (!stopWatch.isNull())
-        msecs = qMin(msecs, stopWatch.elapsed());
+        msecs = std::min(msecs, stopWatch.elapsed());
 
     qint64 bytesToWrite = (upLimit * msecs) / 1000;
     qint64 bytesToRead = (downLimit * msecs) / 1000;
@@ -110,8 +110,8 @@ void RateController::transfer()
     bool canTransferMore;
     do {
         canTransferMore = false;
-        qint64 writeChunk = qMax<qint64>(1, bytesToWrite / pendingSockets.size());
-        qint64 readChunk = qMax<qint64>(1, bytesToRead / pendingSockets.size());
+        qint64 writeChunk = std::max<qint64>(1, bytesToWrite / pendingSockets.size());
+        qint64 readChunk = std::max<qint64>(1, bytesToRead / pendingSockets.size());
 
         QSetIterator<PeerWireClient *> it(pendingSockets);
         while (it.hasNext() && (bytesToWrite > 0 || bytesToRead > 0)) {
@@ -122,9 +122,9 @@ void RateController::transfer()
             }
 
             bool dataTransferred = false;
-            qint64 available = qMin<qint64>(socket->socketBytesAvailable(), readChunk);
+            qint64 available = std::min<qint64>(socket->socketBytesAvailable(), readChunk);
             if (available > 0) {
-                qint64 readBytes = socket->readFromSocket(qMin<qint64>(available, bytesToRead));
+                qint64 readBytes = socket->readFromSocket(std::min<qint64>(available, bytesToRead));
                 if (readBytes > 0) {
                     bytesToRead -= readBytes;
                     dataTransferred = true;
@@ -132,8 +132,8 @@ void RateController::transfer()
             }
 
             if (upLimit * 2 > socket->bytesToWrite()) {
-                qint64 chunkSize = qMin<qint64>(writeChunk, bytesToWrite);
-                qint64 toWrite = qMin(upLimit * 2 - socket->bytesToWrite(), chunkSize);
+                qint64 chunkSize = std::min<qint64>(writeChunk, bytesToWrite);
+                qint64 toWrite = std::min(upLimit * 2 - socket->bytesToWrite(), chunkSize);
                 if (toWrite > 0) {
                     qint64 writtenBytes = socket->writeToSocket(toWrite);
                     if (writtenBytes > 0) {

@@ -418,8 +418,8 @@ void QRasterWindowSurface::prepareBuffer(QImage::Format format, QWidget *widget)
     int width = window()->width();
     int height = window()->height();
     if (d->image) {
-        width = qMax(d->image->width(), width);
-        height = qMax(d->image->height(), height);
+        width = std::max(d->image->width(), width);
+        height = std::max(d->image->height(), height);
     }
 
     if (width == 0 || height == 0) {

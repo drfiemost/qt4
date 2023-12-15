@@ -173,10 +173,10 @@ static QPixmapIconEngineEntry *bestSizeMatch( const QSize &size, QPixmapIconEngi
     }
     int b = area(pb->size);
     int res = a;
-    if (qMin(a,b) >= s)
-        res = qMin(a,b);
+    if (std::min(a,b) >= s)
+        res = std::min(a,b);
     else
-        res = qMax(a,b);
+        res = std::max(a,b);
     if (res == a)
         return pa;
     return pb;

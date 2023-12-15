@@ -137,7 +137,7 @@ QList<QPair<QString, int> > DetailsDialog::orderItems()
         QPair<QString, int> item;
         item.first = itemsTable->item(row, 0)->text();
         int quantity = itemsTable->item(row, 1)->data(Qt::DisplayRole).toInt();
-        item.second = qMax(0, quantity);
+        item.second = std::max(0, quantity);
         orderList.append(item);
     }
 

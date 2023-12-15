@@ -403,8 +403,8 @@ void tst_QStandardItem::getSetChild()
     QStandardItem *child = new QStandardItem;
     item.setChild(row, column, child);
     if ((row >= 0) && (column >= 0)) {
-        QCOMPARE(item.rowCount(), qMax(rows, row + 1));
-        QCOMPARE(item.columnCount(), qMax(columns, column + 1));
+        QCOMPARE(item.rowCount(), std::max(rows, row + 1));
+        QCOMPARE(item.columnCount(), std::max(columns, column + 1));
 
         QCOMPARE(item.child(row, column), child);
         QCOMPARE(child->row(), row);
@@ -496,7 +496,7 @@ void tst_QStandardItem::insertColumn()
 
     if (column >= 0) {
         QCOMPARE(item.columnCount(), columns + 1);
-        QCOMPARE(item.rowCount(), qMax(rows, count));
+        QCOMPARE(item.rowCount(), std::max(rows, count));
         // check to make sure items were inserted in correct place
         for (int i = 0; i < count; ++i)
             QCOMPARE(item.child(i, column), columnItems.at(i));
@@ -567,7 +567,7 @@ void tst_QStandardItem::insertRow()
     item.insertRow(row, rowItems);
 
     if (row >= 0) {
-        QCOMPARE(item.columnCount(), qMax(columns, count));
+        QCOMPARE(item.columnCount(), std::max(columns, count));
         QCOMPARE(item.rowCount(), rows + 1);
         // check to make sure items were inserted in correct place
         for (int i = 0; i < count; ++i)
@@ -670,7 +670,7 @@ void tst_QStandardItem::appendColumn()
     item.appendColumn(columnItems);
 
     QCOMPARE(item.columnCount(), columns + 1);
-    QCOMPARE(item.rowCount(), qMax(rows, count));
+    QCOMPARE(item.rowCount(), std::max(rows, count));
     // check to make sure items were inserted in correct place
     for (int i = 0; i < count; ++i)
         QCOMPARE(item.child(i, columns), columnItems.at(i));
@@ -745,7 +745,7 @@ void tst_QStandardItem::appendRow()
     item.appendRow(rowItems);
 
     QCOMPARE(item.rowCount(), rows + 1);
-    QCOMPARE(item.columnCount(), qMax(columns, count));
+    QCOMPARE(item.columnCount(), std::max(columns, count));
     // check to make sure items were inserted in correct place
     for (int i = 0; i < count; ++i)
         QCOMPARE(item.child(rows, i), rowItems.at(i));

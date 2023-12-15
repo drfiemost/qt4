@@ -1533,7 +1533,7 @@ void tst_QSharedPointer::threadStressTest()
     memset(guard2, 0, sizeof guard2);
 
     for (int r = 0; r < 5; ++r) {
-        QVector<QThread*> allThreads(6 * qMax(strongThreadCount, weakThreadCount) + 3, 0);
+        QVector<QThread*> allThreads(6 * std::max(strongThreadCount, weakThreadCount) + 3, 0);
         QSharedPointer<ThreadData> base = QSharedPointer<ThreadData>(new ThreadData(&counter));
         counter = 0;
 

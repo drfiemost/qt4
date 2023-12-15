@@ -783,8 +783,8 @@ void QDialog::adjustPosition(QWidget* w)
             int framew = current->geometry().x() - current->x();
             int frameh = current->geometry().y() - current->y();
 
-            extraw = qMax(extraw, framew);
-            extrah = qMax(extrah, frameh);
+            extraw = std::max(extraw, framew);
+            extrah = std::max(extrah, frameh);
         }
     }
 
@@ -942,11 +942,11 @@ void QDialog::showExtension(bool showIt)
                  .expandedTo(d->extension->minimumSize())
                  .boundedTo(d->extension->maximumSize()));
         if (d->orientation == Qt::Horizontal) {
-            int h = qMax(height(), s.height());
+            int h = std::max(height(), s.height());
             d->extension->setGeometry(width(), 0, s.width(), h);
             setFixedSize(width() + s.width(), h);
         } else {
-            int w = qMax(width(), s.width());
+            int w = std::max(width(), s.width());
             d->extension->setGeometry(0, height(), w, s.height());
             setFixedSize(w, height() + s.height());
         }
@@ -978,9 +978,9 @@ QSize QDialog::sizeHint() const
     if (d->extension) {
         if (d->orientation == Qt::Horizontal)
             return QSize(QWidget::sizeHint().width(),
-                        qMax(QWidget::sizeHint().height(),d->extension->sizeHint().height()));
+                        std::max(QWidget::sizeHint().height(),d->extension->sizeHint().height()));
         else
-            return QSize(qMax(QWidget::sizeHint().width(), d->extension->sizeHint().width()),
+            return QSize(std::max(QWidget::sizeHint().width(), d->extension->sizeHint().width()),
                         QWidget::sizeHint().height());
     }
     return QWidget::sizeHint();
@@ -994,9 +994,9 @@ QSize QDialog::minimumSizeHint() const
     if (d->extension) {
         if (d->orientation == Qt::Horizontal)
             return QSize(QWidget::minimumSizeHint().width(),
-                        qMax(QWidget::minimumSizeHint().height(), d->extension->minimumSizeHint().height()));
+                        std::max(QWidget::minimumSizeHint().height(), d->extension->minimumSizeHint().height()));
         else
-            return QSize(qMax(QWidget::minimumSizeHint().width(), d->extension->minimumSizeHint().width()),
+            return QSize(std::max(QWidget::minimumSizeHint().width(), d->extension->minimumSizeHint().width()),
                         QWidget::minimumSizeHint().height());
     }
 

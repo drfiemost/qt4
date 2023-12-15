@@ -178,7 +178,7 @@ static inline bool canSimplifyFormLayout(const QFormLayout *formLayout, const QR
     if (restrictionArea.x() >= FormLayoutColumns)
         return false;
     // Try to find empty rows
-    const int bottomCheckRow = qMin(formLayout->rowCount(), restrictionArea.top() + restrictionArea.height());
+    const int bottomCheckRow = std::min(formLayout->rowCount(), restrictionArea.top() + restrictionArea.height());
     for (int r = restrictionArea.y(); r < bottomCheckRow; r++)
         if (isEmptyFormLayoutRow(formLayout, r))
             return true;
@@ -1234,7 +1234,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
             }
         }
         // Weed out empty ones
-        const int bottomCheckRow = qMin(rowCount, restrictionArea.y() + restrictionArea.height());
+        const int bottomCheckRow = std::min(rowCount, restrictionArea.y() + restrictionArea.height());
         for (int r = bottomCheckRow - 1; r >= restrictionArea.y(); r--)
             if (LayoutInfo::isEmptyItem(pairs[r].first) && LayoutInfo::isEmptyItem(pairs[r].second)) {
                 delete pairs[r].first;
@@ -1378,8 +1378,8 @@ void QLayoutSupport::adjustIndicator(const QPoint &pos, int index)
         const int fromLeft = pos.x() - g.x();
         const int fromTop = pos.y() - g.y();
 
-        const int fromLeftRight = qMin(fromRight, fromLeft );
-        const int fromBottomTop = qMin(fromBottom, fromTop);
+        const int fromLeftRight = std::min(fromRight, fromLeft );
+        const int fromBottomTop = std::min(fromBottom, fromTop);
 
         const Qt::Orientation indicatorOrientation =  fromLeftRight < fromBottomTop ? Qt::Vertical :  Qt::Horizontal;
 

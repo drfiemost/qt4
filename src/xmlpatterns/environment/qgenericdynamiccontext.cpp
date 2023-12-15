@@ -169,7 +169,7 @@ const QAbstractUriResolver *GenericDynamicContext::uriResolver() const
 ItemCacheCell &GenericDynamicContext::globalItemCacheCell(const VariableSlotID slot)
 {
     if(slot >= m_globalItemCacheCells.size())
-        m_globalItemCacheCells.resize(qMax(slot + 1, m_globalItemCacheCells.size()));
+        m_globalItemCacheCells.resize(std::max(slot + 1, m_globalItemCacheCells.size()));
 
     return m_globalItemCacheCells[slot];
 }
@@ -177,7 +177,7 @@ ItemCacheCell &GenericDynamicContext::globalItemCacheCell(const VariableSlotID s
 ItemSequenceCacheCell::Vector &GenericDynamicContext::globalItemSequenceCacheCells(const VariableSlotID slot)
 {
     if(slot >= m_globalItemSequenceCacheCells.size())
-        m_globalItemSequenceCacheCells.resize(qMax(slot + 1, m_globalItemSequenceCacheCells.size()));
+        m_globalItemSequenceCacheCells.resize(std::max(slot + 1, m_globalItemSequenceCacheCells.size()));
 
     return m_globalItemSequenceCacheCells;
 }

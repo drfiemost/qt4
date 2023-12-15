@@ -1337,15 +1337,15 @@ void QDeclarativeListViewPrivate::fixup(AxisData &data, qreal minExtent, qreal m
                 pos = isRightToLeft() ? - header->position() + highlightStart - size() : header->position() - highlightStart;
             } else {
                 if (isRightToLeft())
-                    pos = qMax(qMin(-topItem->position() + highlightStart - size(), -maxExtent), -minExtent);
+                    pos = std::max(std::min(-topItem->position() + highlightStart - size(), -maxExtent), -minExtent);
                 else
-                    pos = qMax(qMin(topItem->position() - highlightStart, -maxExtent), -minExtent);
+                    pos = std::max(std::min(topItem->position() - highlightStart, -maxExtent), -minExtent);
             }
         } else if (bottomItem && isInBounds) {
             if (isRightToLeft())
-                pos = qMax(qMin(-bottomItem->position() + highlightEnd - size(), -maxExtent), -minExtent);
+                pos = std::max(std::min(-bottomItem->position() + highlightEnd - size(), -maxExtent), -minExtent);
             else
-                pos = qMax(qMin(bottomItem->position() - highlightEnd, -maxExtent), -minExtent);
+                pos = std::max(std::min(bottomItem->position() - highlightEnd, -maxExtent), -minExtent);
         } else {
             QDeclarativeFlickablePrivate::fixup(data, minExtent, maxExtent);
             return;
@@ -1464,7 +1464,7 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
             // + averageSize/4 to encourage moving at least one item in the flick direction
             qreal dist = v2 / (accel * qreal(2.0)) + averageSize/4;
             if (maxDistance > 0)
-                dist = qMin(dist, maxDistance);
+                dist = std::min(dist, maxDistance);
             if (v > 0)
                 dist = -dist;
             if ((maxDistance > qreal(0.0) && v2 / (2.0f * maxDistance) < accel) || snapMode == QDeclarativeListView::SnapOneItem) {
@@ -2690,7 +2690,7 @@ qreal QDeclarativeListView::minYExtent() const
                 if (d->visibleItem(0))
                     d->minExtent -= d->visibleItem(0)->sectionSize();
             }
-            d->minExtent = qMax(d->minExtent, -(d->endPositionAt(0) - d->highlightRangeEnd + 1));
+            d->minExtent = std::max(d->minExtent, -(d->endPositionAt(0) - d->highlightRangeEnd + 1));
         }
         d->minExtentDirty = false;
     }
@@ -2710,7 +2710,7 @@ qreal QDeclarativeListView::maxYExtent() const
         } else if (d->haveHighlightRange && d->highlightRange == StrictlyEnforceRange) {
             d->maxExtent = -(d->positionAt(d->model->count()-1) - d->highlightRangeStart);
             if (d->highlightRangeEnd != d->highlightRangeStart)
-                d->maxExtent = qMin(d->maxExtent, -(d->endPosition() - d->highlightRangeEnd + 1));
+                d->maxExtent = std::min(d->maxExtent, -(d->endPosition() - d->highlightRangeEnd + 1));
         } else {
             d->maxExtent = -(d->endPosition() - height() + 1);
         }
@@ -2758,7 +2758,7 @@ qreal QDeclarativeListView::minXExtent() const
         }
         if (d->haveHighlightRange && d->highlightRange == StrictlyEnforceRange) {
             d->minExtent += d->isRightToLeft() ? -highlightStart : highlightStart;
-            d->minExtent = qMax(d->minExtent, -(endPositionFirstItem - highlightEnd + 1));
+            d->minExtent = std::max(d->minExtent, -(endPositionFirstItem - highlightEnd + 1));
         }
         d->minExtentDirty = false;
     }
@@ -2794,8 +2794,8 @@ qreal QDeclarativeListView::maxXExtent() const
             d->maxExtent = -(lastItemPosition - highlightStart);
             if (highlightEnd != highlightStart) {
                 d->maxExtent = d->isRightToLeft()
-                        ? qMax(d->maxExtent, -(d->endPosition() - highlightEnd + 1))
-                        : qMin(d->maxExtent, -(d->endPosition() - highlightEnd + 1));
+                        ? std::max(d->maxExtent, -(d->endPosition() - highlightEnd + 1))
+                        : std::min(d->maxExtent, -(d->endPosition() - highlightEnd + 1));
             }
         } else {
             d->maxExtent = -(d->endPosition() - width() + 1);
@@ -2913,7 +2913,7 @@ void QDeclarativeListViewPrivate::positionViewAtIndex(int index, int mode)
         return;
     if (mode < QDeclarativeListView::Beginning || mode > QDeclarativeListView::Contain)
         return;
-    int idx = qMax(qMin(index, model->count()-1), 0);
+    int idx = std::max(std::min(index, model->count()-1), 0);
 
     if (layoutScheduled)
         layout();
@@ -2932,7 +2932,7 @@ void QDeclarativeListViewPrivate::positionViewAtIndex(int index, int mode)
         visibleItems.clear();
         visiblePos = itemPos;
         visibleIndex = idx;
-        setPosition(qMin(qreal(itemPos), maxExtent));
+        setPosition(std::min(qreal(itemPos), maxExtent));
         // now release the reference to all the old visible items.
         for (int i = 0; i < oldVisible.count(); ++i)
             releaseItem(oldVisible.at(i));
@@ -2966,14 +2966,14 @@ void QDeclarativeListViewPrivate::positionViewAtIndex(int index, int mode)
             if (itemPos < pos)
                 pos = itemPos;
         }
-        pos = qMin(pos, maxExtent);
+        pos = std::min(pos, maxExtent);
         qreal minExtent;
         if (orient == QDeclarativeListView::Vertical) {
             minExtent = -q->minYExtent();
         } else {
             minExtent = isRightToLeft() ? q->maxXExtent()-size(): -q->minXExtent();
         }
-        pos = qMax(pos, minExtent);
+        pos = std::max(pos, minExtent);
         moveReason = QDeclarativeListViewPrivate::Other;
         q->cancelFlick();
         setPosition(pos);
@@ -3421,7 +3421,7 @@ void QDeclarativeListView::itemsRemoved(int modelIndex, int count)
         d->currentItem = 0;
         d->currentIndex = -1;
         if (d->itemCount)
-            d->updateCurrent(qMin(modelIndex, d->itemCount-1));
+            d->updateCurrent(std::min(modelIndex, d->itemCount-1));
         else
             emit currentIndexChanged();
     }
@@ -3448,7 +3448,7 @@ void QDeclarativeListView::itemsRemoved(int modelIndex, int count)
         } else {
             if (modelIndex < d->visibleIndex)
                 d->visibleIndex = modelIndex+1;
-            d->visibleIndex = qMax(qMin(d->visibleIndex, d->itemCount-1), 0);
+            d->visibleIndex = std::max(std::min(d->visibleIndex, d->itemCount-1), 0);
         }
     }
 

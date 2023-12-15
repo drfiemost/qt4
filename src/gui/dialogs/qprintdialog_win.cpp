@@ -145,8 +145,8 @@ static void qt_win_setup_PRINTDLGEX(PRINTDLGEX *pd, QWidget *parent,
         pd->Flags |= PD_PRINTTOFILE;
     Q_ASSERT(parent);
     pd->hwndOwner = parent->window()->winId();
-    pd->lpPageRanges[0].nFromPage = qMax(pdlg->fromPage(), pdlg->minPage());
-    pd->lpPageRanges[0].nToPage   = (pdlg->toPage() > 0) ? qMin(pdlg->toPage(), pdlg->maxPage()) : 1;
+    pd->lpPageRanges[0].nFromPage = std::max(pdlg->fromPage(), pdlg->minPage());
+    pd->lpPageRanges[0].nToPage   = (pdlg->toPage() > 0) ? std::min(pdlg->toPage(), pdlg->maxPage()) : 1;
     pd->nCopies = d->ep->num_copies;
 }
 

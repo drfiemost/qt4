@@ -130,11 +130,11 @@ void QTriangulatingStroker::process(const QVectorPath &path, const QPen &pen, co
     } else if (cosmetic) {
         m_curvyness_add = realWidth / 2;
         m_curvyness_mul = float(CURVE_FLATNESS);
-        m_roundness = qMax<int>(4, realWidth * CURVE_FLATNESS);
+        m_roundness = std::max<int>(4, realWidth * CURVE_FLATNESS);
     } else {
         m_curvyness_add = m_width;
         m_curvyness_mul = CURVE_FLATNESS / m_inv_scale;
-        m_roundness = qMax<int>(4, realWidth * m_curvyness_mul);
+        m_roundness = std::max<int>(4, realWidth * m_curvyness_mul);
     }
 
     // Over this level of segmentation, there doesn't seem to be any
@@ -291,7 +291,7 @@ void QTriangulatingStroker::cubicTo(const qreal *pts)
 
     QRectF bounds = bezier.bounds();
     float rad = std::max(bounds.width(), bounds.height());
-    int threshold = qMin<float>(64, (rad + m_curvyness_add) * m_curvyness_mul);
+    int threshold = std::min<float>(64, (rad + m_curvyness_add) * m_curvyness_mul);
     if (threshold < 4)
         threshold = 4;
     qreal threshold_minus_1 = threshold - 1;
@@ -563,7 +563,7 @@ void QDashedStrokeProcessor::process(const QVectorPath &path, const QPen &pen, c
                                                 *(((const QPointF *) pts) + 2));
                 QRectF bounds = b.bounds();
                 float rad = std::max(bounds.width(), bounds.height());
-                int threshold = qMin<float>(64, (rad + curvynessAdd) * curvynessMul);
+                int threshold = std::min<float>(64, (rad + curvynessAdd) * curvynessMul);
                 if (threshold < 4)
                     threshold = 4;
 

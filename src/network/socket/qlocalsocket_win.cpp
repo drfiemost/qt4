@@ -210,11 +210,11 @@ qint64 QLocalSocket::readData(char *data, qint64 maxSize)
         d->actualReadBufferSize--;
         readSoFar = 1;
     } else {
-        qint64 bytesToRead = qMin(qint64(d->actualReadBufferSize), maxSize);
+        qint64 bytesToRead = std::min(qint64(d->actualReadBufferSize), maxSize);
         readSoFar = 0;
         while (readSoFar < bytesToRead) {
             const char *ptr = d->readBuffer.readPointer();
-            int bytesToReadFromThisBlock = qMin(bytesToRead - readSoFar,
+            int bytesToReadFromThisBlock = std::min(bytesToRead - readSoFar,
                                                 qint64(d->readBuffer.nextDataBlockSize()));
             memcpy(data + readSoFar, ptr, bytesToReadFromThisBlock);
             readSoFar += bytesToReadFromThisBlock;

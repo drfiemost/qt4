@@ -192,8 +192,8 @@ QLayoutItem *QToolBarLayout::takeAt(int index)
 
 void QToolBarLayout::insertAction(int index, QAction *action)
 {
-    index = qMax(0, index);
-    index = qMin(items.count(), index);
+    index = std::max(0, index);
+    index = std::min(items.count(), index);
 
     QToolBarItem *item = createItem(action);
     if (item) {
@@ -302,12 +302,12 @@ void QToolBarLayout::updateGeomArray() const
             if (count == 0) // the minimum size only displays one widget
                 rpick(o, that->minSize) += pick(o, min);
             int s = perp(o, minSize);
-            rperp(o, that->minSize) = qMax(s, perp(o, min));
+            rperp(o, that->minSize) = std::max(s, perp(o, min));
 
             //we only add spacing before item (ie never before the first one)
             rpick(o, that->hint) += (count == 0 ? 0 : spacing) + pick(o, hint);
             s = perp(o, that->hint);
-            rperp(o, that->hint) = qMax(s, perp(o, hint));
+            rperp(o, that->hint) = std::max(s, perp(o, hint));
             ++count;
         }
 
@@ -475,7 +475,7 @@ bool QToolBarLayout::layoutActions(const QSize &size)
             }
 
             if (expanded)
-                rowHeight = qMax(rowHeight, perp(o, items.at(i)->sizeHint()));
+                rowHeight = std::max(rowHeight, perp(o, items.at(i)->sizeHint()));
             expansiveRow = expansiveRow || a[i].expansive;
             size = newSize;
             maximumSize += spacing + (a[i].expansive ? a[i].maximumSize : a[i].smartSizeHint());
@@ -598,9 +598,9 @@ QSize QToolBarLayout::expandedSize(const QSize &size) const
     if (rows == 1)
         ++rows;      // we want to expand to at least two rows
     int space = total_w/rows + spacing + extensionExtent;
-    space = qMax(space, min_w - 2*margin - handleExtent);
+    space = std::max(space, min_w - 2*margin - handleExtent);
     if (win != 0)
-        space = qMin(space, pick(o, win->size()) - 2*margin - handleExtent);
+        space = std::min(space, pick(o, win->size()) - 2*margin - handleExtent);
 
     int w = 0;
     int h = 0;
@@ -615,7 +615,7 @@ QSize QToolBarLayout::expandedSize(const QSize &size) const
                 continue;
 
             int newSize = size + (count == 0 ? 0 : spacing) + geomArray[i].minimumSize;
-            rowHeight = qMax(rowHeight, perp(o, items.at(i)->sizeHint()));
+            rowHeight = std::max(rowHeight, perp(o, items.at(i)->sizeHint()));
             if (prev != -1 && newSize > space) {
                 if (count > 1 && size + spacing + extensionExtent > space) {
                     size -= spacing + geomArray[prev].minimumSize;
@@ -629,14 +629,14 @@ QSize QToolBarLayout::expandedSize(const QSize &size) const
             ++count;
         }
 
-        w = qMax(size, w);
+        w = std::max(size, w);
         h += rowHeight + spacing;
     }
 
     w += 2*margin + handleExtent + spacing + extensionExtent;
-    w = qMax(w, min_w);
+    w = std::max(w, min_w);
     if (win != 0)
-        w = qMin(w, pick(o, win->size()));
+        w = std::min(w, pick(o, win->size()));
     h += 2*margin - spacing; //there is no spacing before the first row
 
     QSize result;

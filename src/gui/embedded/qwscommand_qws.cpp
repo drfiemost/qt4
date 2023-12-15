@@ -170,7 +170,7 @@ void QWSHexDump::sideviewDump(int at)
         ++at;
         sideview[at] = '\0';
         int currentWidth = (2 * at) + (at / clustering) - (at%clustering?0:1);
-        int missing = qMax(dataWidth - currentWidth, 0);
+        int missing = std::max(dataWidth - currentWidth, 0);
         while (missing--)
             *outstrm << ' ';
 

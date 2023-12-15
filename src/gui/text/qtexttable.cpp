@@ -824,7 +824,7 @@ void QTextTable::insertColumns(int pos, int num)
     QVector<QTextLength> columnWidths = tfmt.columnWidthConstraints();
     if (! columnWidths.isEmpty()) {
         for (int i = num; i > 0; --i)
-            columnWidths.insert(pos, columnWidths[qMax(0, pos-1)]);
+            columnWidths.insert(pos, columnWidths[std::max(0, pos-1)]);
     }
     tfmt.setColumnWidthConstraints (columnWidths);
     QTextObject::setFormat(tfmt);
@@ -1016,8 +1016,8 @@ void QTextTable::mergeCells(int row, int column, int numRows, int numCols)
     const int rowSpan = fmt.tableCellRowSpan();
     const int colSpan = fmt.tableCellColumnSpan();
 
-    numRows = qMin(numRows, rows() - cell.row());
-    numCols = qMin(numCols, columns() - cell.column());
+    numRows = std::min(numRows, rows() - cell.row());
+    numCols = std::min(numCols, columns() - cell.column());
 
     // nothing to merge?
     if (numRows < rowSpan || numCols < colSpan)

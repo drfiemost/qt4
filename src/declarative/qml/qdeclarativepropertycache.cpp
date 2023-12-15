@@ -251,7 +251,7 @@ void QDeclarativePropertyCache::append(QDeclarativeEngine *engine, const QMetaOb
     QDeclarativeEnginePrivate *enginePriv = QDeclarativeEnginePrivate::get(engine);
     int methodCount = metaObject->methodCount();
     // 3 to block the destroyed signal and the deleteLater() slot
-    int methodOffset = qMax(3, metaObject->methodOffset()); 
+    int methodOffset = std::max(3, metaObject->methodOffset()); 
 
     methodIndexCache.resize(methodCount);
     for (int ii = methodOffset; ii < methodCount; ++ii) {

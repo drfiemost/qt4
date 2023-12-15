@@ -288,9 +288,9 @@ void Viewer::createImage()
             float yellow3 = 255 - qBlue(p3);
 
             QColor newColor(
-                qMax(255 - int(cyan1+cyan2+cyan3) - darkness, 0),
-                qMax(255 - int(magenta1+magenta2+magenta3) - darkness, 0),
-                qMax(255 - int(yellow1+yellow2+yellow3) - darkness, 0));
+                std::max(255 - int(cyan1+cyan2+cyan3) - darkness, 0),
+                std::max(255 - int(magenta1+magenta2+magenta3) - darkness, 0),
+                std::max(255 - int(yellow1+yellow2+yellow3) - darkness, 0));
 
             newImage.setPixel(x, y, newColor.rgb());
         }

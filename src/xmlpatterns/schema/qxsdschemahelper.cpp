@@ -76,13 +76,13 @@ static inline unsigned int effectiveTotalRangeMinimum(const XsdParticle::Ptr &pa
                 if (minValue == -1) {
                     minValue = particle->minimumOccurs();
                 } else {
-                    minValue = qMin((unsigned int)minValue, particle->minimumOccurs());
+                    minValue = std::min((unsigned int)minValue, particle->minimumOccurs());
                 }
             } else if (particle->term()->isModelGroup()) {
                 if (minValue == -1) {
                     minValue = effectiveTotalRangeMinimum(particle);
                 } else {
-                    minValue = qMin((unsigned int)minValue, effectiveTotalRangeMinimum(particle));
+                    minValue = std::min((unsigned int)minValue, effectiveTotalRangeMinimum(particle));
                 }
             }
         }

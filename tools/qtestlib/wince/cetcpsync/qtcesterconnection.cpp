@@ -340,7 +340,7 @@ bool QtCesterConnection::execute(QString program,
     ExecuteOptions options;
     strcpy(options.appName, qPrintable(program));
     QStringList argList = arguments.split(QLatin1Char(' '));
-    options.argumentsCount = qMin(argList.size(), MAX_ARGUMENTS);
+    options.argumentsCount = std::min(argList.size(), MAX_ARGUMENTS);
     options.waitForFinished = true;
     options.timeout = timeout;
     if (!_sendData(socket, (char*) &options, sizeof(options))) {

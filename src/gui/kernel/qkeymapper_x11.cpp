@@ -1829,7 +1829,7 @@ bool QKeyMapperPrivate::translateKeyEvent(QWidget *keyWidget, const XEvent *even
     }
 
     return QKeyMapper::sendKeyEvent(keyWidget, grab, type, code, modifiers, text, autor,
-                                    qMax(qMax(count,1), int(text.length())),
+                                    std::max(qMax(count,1), int(text.length())),
                                     event->xkey.keycode, keysym, event->xkey.state);
 }
 
@@ -1858,7 +1858,7 @@ bool QKeyMapper::sendKeyEvent(QWidget *keyWidget, bool grab,
     }
 
     Q_UNUSED(grab);
-    QKeyEventEx e(type, code, modifiers, text, autorepeat, qMax(qMax(count,1), int(text.length())),
+    QKeyEventEx e(type, code, modifiers, text, autorepeat, std::max(qMax(count,1), int(text.length())),
                   nativeScanCode, nativeVirtualKey, nativeModifiers);
     return qt_sendSpontaneousEvent(keyWidget, &e);
 }

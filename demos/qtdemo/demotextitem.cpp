@@ -66,7 +66,7 @@ QImage *DemoTextItem::createImage(const QMatrix &matrix) const
     if (this->type == DYNAMIC_TEXT)
         return 0;
 
-    float sx = qMin(matrix.m11(), matrix.m22());
+    float sx = std::min(matrix.m11(), matrix.m22());
     float sy = matrix.m22() < sx ? sx : matrix.m22();
 
     QGraphicsTextItem textItem(0, 0);

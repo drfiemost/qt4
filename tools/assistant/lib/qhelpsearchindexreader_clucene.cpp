@@ -450,7 +450,7 @@ void QHelpSearchIndexReaderClucene::boostSearchHits(const QHelpEngineCore &engin
         }
         searchTerms.removeDuplicates();
 
-        int count = qMin(75, hitList.count());
+        int count = std::min(75, hitList.count());
         QMap<int, QHelpSearchEngine::SearchHit> hitMap;
         for (int i = 0; i < count; ++i) {
             const QHelpSearchEngine::SearchHit &hit = hitList.at(i);

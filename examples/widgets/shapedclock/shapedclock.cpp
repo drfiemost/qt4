@@ -99,7 +99,7 @@ void ShapedClock::paintEvent(QPaintEvent *)
     QColor hourColor(127, 0, 127);
     QColor minuteColor(0, 127, 127, 191);
 
-    int side = qMin(width(), height());
+    int side = std::min(width(), height());
     QTime time = QTime::currentTime();
 
     QPainter painter(this);
@@ -143,7 +143,7 @@ void ShapedClock::paintEvent(QPaintEvent *)
 //! [4]
 void ShapedClock::resizeEvent(QResizeEvent * /* event */)
 {
-    int side = qMin(width(), height());
+    int side = std::min(width(), height());
     QRegion maskedRegion(width() / 2 - side / 2, height() / 2 - side / 2, side,
                          side, QRegion::Ellipse);
     setMask(maskedRegion);

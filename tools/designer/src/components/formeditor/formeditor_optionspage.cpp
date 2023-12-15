@@ -104,7 +104,7 @@ void ZoomSettingsWidget::fromSettings(const QDesignerSharedSettings &s)
 {
     setChecked(s.zoomEnabled());
     const int idx = m_zoomCombo->findData(QVariant(s.zoom()));
-    m_zoomCombo->setCurrentIndex(qMax(0, idx));
+    m_zoomCombo->setCurrentIndex(std::max(0, idx));
 }
 
 void ZoomSettingsWidget::toSettings(QDesignerSharedSettings &s) const

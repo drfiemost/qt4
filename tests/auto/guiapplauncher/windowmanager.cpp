@@ -389,7 +389,7 @@ QString Win_WindowManager::waitForTopLevelWindowImpl(unsigned /* count */, Q_PID
     }
     // Try to locate top level app window. App still might be in splash screen or initialization
     // phase.
-    const int remainingMilliSeconds = qMax(timeOutMS - elapsed.elapsed(), 500);
+    const int remainingMilliSeconds = std::max(timeOutMS - elapsed.elapsed(), 500);
     const int attempts = 10;
     const int intervalMilliSeconds = remainingMilliSeconds / attempts;
     for (int a = 0; a < attempts; a++) {

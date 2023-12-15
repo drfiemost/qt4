@@ -296,10 +296,10 @@ void QTransformedScreen::setTransformation(Transformation transformation)
 }
 
 static inline QRect correctNormalized(const QRect &r) {
-    const int x1 = qMin(r.left(), r.right());
-    const int x2 = qMax(r.left(), r.right());
-    const int y1 = qMin(r.top(), r.bottom());
-    const int y2 = qMax(r.top(), r.bottom());
+    const int x1 = std::min(r.left(), r.right());
+    const int x2 = std::max(r.left(), r.right());
+    const int y1 = std::min(r.top(), r.bottom());
+    const int y2 = std::max(r.top(), r.bottom());
 
     return QRect( QPoint(x1,y1), QPoint(x2,y2) );
 }

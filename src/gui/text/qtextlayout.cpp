@@ -900,12 +900,12 @@ QRectF QTextLayout::boundingRect() const
 
     for (int i = 0; i < d->lines.size(); ++i) {
         const QScriptLine &si = d->lines[i];
-        xmin = qMin(xmin, si.x);
-        ymin = qMin(ymin, si.y);
-        QFixed lineWidth = si.width < QFIXED_MAX ? qMax(si.width, si.textWidth) : si.textWidth;
-        xmax = qMax(xmax, si.x+lineWidth);
+        xmin = std::min(xmin, si.x);
+        ymin = std::min(ymin, si.y);
+        QFixed lineWidth = si.width < QFIXED_MAX ? std::max(si.width, si.textWidth) : si.textWidth;
+        xmax = std::max(xmax, si.x+lineWidth);
         // ### shouldn't the ascent be used in ymin???
-        ymax = qMax(ymax, si.y+si.height());
+        ymax = std::max(ymax, si.y+si.height());
     }
     return QRectF(xmin.toReal(), ymin.toReal(), (xmax-xmin).toReal(), (ymax-ymin).toReal());
 }
@@ -1610,7 +1610,7 @@ namespace {
 
         QFixed calculateNewWidth(const QScriptLine &line) const {
             return line.textWidth + tmpData.textWidth + spaceData.textWidth + softHyphenWidth
-                    - qMin(rightBearing, QFixed());
+                    - std::min(rightBearing, QFixed());
         }
 
         inline glyph_t currentGlyph() const
@@ -1641,7 +1641,7 @@ namespace {
         {
             qreal rb;
             fontEngine->getGlyphBearings(glyph, 0, &rb);
-            rightBearing = qMin(QFixed(), QFixed::fromReal(rb));
+            rightBearing = std::min(QFixed(), QFixed::fromReal(rb));
         }
 
         inline void adjustRightBearing()
@@ -1656,7 +1656,7 @@ namespace {
             if (previousGlyph > 0 && previousFontEngine) {
                 qreal rb;
                 previousFontEngine->getGlyphBearings(previousGlyph, 0, &rb);
-                rightBearing = qMin(QFixed(), QFixed::fromReal(rb));
+                rightBearing = std::min(QFixed(), QFixed::fromReal(rb));
             }
         }
 
@@ -1675,7 +1675,7 @@ inline bool LineBreakHelper::checkFullOtherwiseExtend(QScriptLine &line)
     if (line.length && !manualWrap && (newWidth > line.width || glyphCount > maxGlyphs))
         return true;
 
-    minw = qMax(minw, tmpData.textWidth);
+    minw = std::max(minw, tmpData.textWidth);
     line += tmpData;
     line.textWidth += spaceData.textWidth;
 
@@ -1764,23 +1764,23 @@ void QTextLine::layout_helper(int maxGlyphs)
                     return;
                 lbh.logClusters = eng->layoutData->logClustersPtr;
             }
-            lbh.currentPosition = qMax(line.from, current.position);
+            lbh.currentPosition = std::max(line.from, current.position);
             end = current.position + eng->length(item);
             lbh.glyphs = eng->shapedGlyphs(&current);
             QFontEngine *fontEngine = eng->fontEngine(current);
             if (lbh.fontEngine != fontEngine) {
                 lbh.fontEngine = fontEngine;
-                lbh.minimumRightBearing = qMin(QFixed(),
+                lbh.minimumRightBearing = std::min(QFixed(),
                                                QFixed::fromReal(fontEngine->minRightBearing()));
             }
         }
         const QScriptItem &current = eng->layoutData->items[item];
 
-        lbh.tmpData.leading = qMax(lbh.tmpData.leading + lbh.tmpData.ascent,
-                                   current.leading + current.ascent) - qMax(lbh.tmpData.ascent,
+        lbh.tmpData.leading = std::max(lbh.tmpData.leading + lbh.tmpData.ascent,
+                                   current.leading + current.ascent) - std::max(lbh.tmpData.ascent,
                                                                             current.ascent);
-        lbh.tmpData.ascent = qMax(lbh.tmpData.ascent, current.ascent);
-        lbh.tmpData.descent = qMax(lbh.tmpData.descent, current.descent);
+        lbh.tmpData.ascent = std::max(lbh.tmpData.ascent, current.ascent);
+        lbh.tmpData.descent = std::max(lbh.tmpData.descent, current.descent);
 
         if (current.analysis.flags == QScriptAnalysis::Tab && (alignment & (Qt::AlignLeft | Qt::AlignRight | Qt::AlignCenter | Qt::AlignJustify))) {
             lbh.whiteSpaceOrObject = true;
@@ -1855,7 +1855,7 @@ void QTextLine::layout_helper(int maxGlyphs)
                     break;
                 }
             } while (lbh.currentPosition < end);
-            lbh.minw = qMax(lbh.tmpData.textWidth, lbh.minw);
+            lbh.minw = std::max(lbh.tmpData.textWidth, lbh.minw);
 
             if (lbh.currentPosition > 0 && lbh.currentPosition < end
                 && attributes[lbh.currentPosition].lineBreak
@@ -1919,7 +1919,7 @@ found:
     if (lbh.rightBearing > 0 && !lbh.whiteSpaceOrObject) // If right bearing has not yet been adjusted
         lbh.adjustRightBearing();
     line.textAdvance = line.textWidth;
-    line.textWidth -= qMin(QFixed(), lbh.rightBearing);
+    line.textWidth -= std::min(QFixed(), lbh.rightBearing);
 
     if (line.length == 0) {
         LB_DEBUG("no break available in line, adding temp: length %d, width %f, space: length %d, width %f",
@@ -1933,10 +1933,10 @@ found:
     LB_DEBUG("        : '%s'", eng->layoutData->string.mid(line.from, line.length).toUtf8().data());
 
     if (lbh.manualWrap) {
-        eng->minWidth = qMax(eng->minWidth, line.textWidth);
-        eng->maxWidth = qMax(eng->maxWidth, line.textWidth);
+        eng->minWidth = std::max(eng->minWidth, line.textWidth);
+        eng->maxWidth = std::max(eng->maxWidth, line.textWidth);
     } else {
-        eng->minWidth = qMax(eng->minWidth, lbh.minw);
+        eng->minWidth = std::max(eng->minWidth, lbh.minw);
         eng->maxWidth += line.textWidth;
     }
 
@@ -2585,8 +2585,8 @@ qreal QTextLine::cursorToX(int *cursorPos, Edge edge) const
             x += si.width;
             continue;
         }
-        int start = qMax(line.from, si.position);
-        int end = qMin(lineEnd, si.position + eng->length(item));
+        int start = std::max(line.from, si.position);
+        int end = std::min(lineEnd, si.position + eng->length(item));
 
         logClusters = eng->logClusters(&si);
 
@@ -2609,7 +2609,7 @@ qreal QTextLine::cursorToX(int *cursorPos, Edge edge) const
     } else {
         bool rtl = eng->isRightToLeft();
         bool visual = eng->visualCursorMovement();
-        int end = qMin(lineEnd, si->position + l) - si->position;
+        int end = std::min(lineEnd, si->position + l) - si->position;
         if (reverse) {
             int glyph_end = end == l ? si->num_glyphs : logClusters[end];
             int glyph_start = glyph_pos;
@@ -2618,7 +2618,7 @@ qreal QTextLine::cursorToX(int *cursorPos, Edge edge) const
             for (int i = glyph_end - 1; i >= glyph_start; i--)
                 x += glyphs.effectiveAdvance(i);
         } else {
-            int start = qMax(line.from - si->position, 0);
+            int start = std::max(line.from - si->position, 0);
             int glyph_start = logClusters[start];
             int glyph_end = glyph_pos;
             if (!visual || !rtl || (lastLine && itm == visualOrder[0] + firstItem))
@@ -2689,8 +2689,8 @@ int QTextLine::xToCursor(qreal _x, CursorPosition cpos) const
         int pos = si.position;
         if (si.analysis.bidiLevel % 2)
             pos += eng->length(item);
-        pos = qMax(line.from, pos);
-        pos = qMin(line.from + line_length, pos);
+        pos = std::max(line.from, pos);
+        pos = std::min(line.from + line_length, pos);
         return pos;
     } else if (x < line.textWidth
                || (line.justified && x < line.width)) {
@@ -2709,8 +2709,8 @@ int QTextLine::xToCursor(qreal _x, CursorPosition cpos) const
             int item_length = eng->length(item);
 //             qDebug("    item %d, visual %d x_remain=%f", i, item, x.toReal());
 
-            int start = qMax(line.from - si.position, 0);
-            int end = qMin(line.from + line_length - si.position, item_length);
+            int start = std::max(line.from - si.position, 0);
+            int end = std::min(line.from + line_length - si.position, item_length);
 
             unsigned short *logClusters = eng->logClusters(&si);
 
@@ -2854,7 +2854,7 @@ int QTextLine::xToCursor(qreal _x, CursorPosition cpos) const
     int pos = si.position;
     if (!(si.analysis.bidiLevel % 2))
         pos += eng->length(item);
-    pos = qMax(line.from, pos);
+    pos = std::max(line.from, pos);
 
     int maxPos = line.from + line_length;
 
@@ -2866,7 +2866,7 @@ int QTextLine::xToCursor(qreal _x, CursorPosition cpos) const
     if (this->i < eng->lines.count() - 1)
         --maxPos;
 
-    pos = qMin(pos, maxPos);
+    pos = std::min(pos, maxPos);
     return pos;
 }
 

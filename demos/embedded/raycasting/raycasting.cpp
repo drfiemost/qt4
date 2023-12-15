@@ -292,7 +292,7 @@ protected:
         if (touchDevice && event->rect().intersects(trackPad)) {
             p.fillRect(trackPad, Qt::white);
             p.setPen(QPen(QColor(224, 224, 224), 6));
-            int rad = qMin(trackPad.width(), trackPad.height()) * 0.3;
+            int rad = std::min(trackPad.width(), trackPad.height()) * 0.3;
             p.drawEllipse(centerPad, rad, rad);
 
             p.setPen(Qt::NoPen);

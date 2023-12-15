@@ -570,7 +570,7 @@ void tst_QHeaderView::sectionSize()
 #if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
     // We test on a device with doubled pixels. Therefore we need to specify
     // different boundaries.
-    initialDefaultSize = qMax(view->minimumSectionSize(), 30);
+    initialDefaultSize = std::max(view->minimumSectionSize(), 30);
 #endif
 
     // bounds check
@@ -723,7 +723,7 @@ void tst_QHeaderView::length()
         length += view->sectionSize(i);
     }
 
-    length = qMax(length, view->viewport()->height());
+    length = std::max(length, view->viewport()->height());
     QCOMPARE(length, view->length());
 
     view->setStretchLastSection(false);

@@ -203,7 +203,7 @@ static QString getEnglishName(const QString &familyName)
     HDC hdc = GetDC( 0 );
     LOGFONT lf;
     memset(&lf, 0, sizeof(LOGFONT));
-    memcpy(lf.lfFaceName, familyName.utf16(), qMin(LF_FACESIZE, familyName.length()) * sizeof(wchar_t));
+    memcpy(lf.lfFaceName, familyName.utf16(), std::min(LF_FACESIZE, familyName.length()) * sizeof(wchar_t));
     lf.lfCharSet = DEFAULT_CHARSET;
     HFONT hfont = CreateFontIndirect(&lf);
 
@@ -421,7 +421,7 @@ void populate_database(const QString& fam)
     if (fam.isNull()) {
         lf.lfFaceName[0] = 0;
     } else {
-        memcpy(lf.lfFaceName, fam.utf16(), sizeof(wchar_t) * qMin(fam.length() + 1, 32));  // 32 = Windows hard-coded
+        memcpy(lf.lfFaceName, fam.utf16(), sizeof(wchar_t) * std::min(fam.length() + 1, 32));  // 32 = Windows hard-coded
     }
     lf.lfPitchAndFamily = 0;
 
@@ -439,7 +439,7 @@ void populate_database(const QString& fam)
             HDC hdc = GetDC(0);
             LOGFONT lf;
             memset(&lf, 0, sizeof(LOGFONT));
-            memcpy(lf.lfFaceName, familyName.utf16(), sizeof(wchar_t) * qMin(LF_FACESIZE, familyName.size()));
+            memcpy(lf.lfFaceName, familyName.utf16(), sizeof(wchar_t) * std::min(LF_FACESIZE, familyName.size()));
             lf.lfCharSet = DEFAULT_CHARSET;
             HFONT hfont = CreateFontIndirect(&lf);
             HGDIOBJ oldobj = SelectObject(hdc, hfont);
@@ -819,7 +819,7 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
         if (fam == QLatin1String("Courier") && !(request.styleStrategy & QFont::PreferBitmap))
             fam = QLatin1String("Courier New");
 
-        memcpy(lf.lfFaceName, fam.utf16(), sizeof(wchar_t) * qMin(fam.length() + 1, 32));  // 32 = Windows hard-coded
+        memcpy(lf.lfFaceName, fam.utf16(), sizeof(wchar_t) * std::min(fam.length() + 1, 32));  // 32 = Windows hard-coded
 
         hfont = CreateFontIndirect(&lf);
         if (!hfont)
@@ -889,7 +889,7 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
             if (db->directWriteGdiInterop != 0) {
                 QString nameSubstitute = fontNameSubstitute(QString::fromWCharArray(lf.lfFaceName));
                 memcpy(lf.lfFaceName, nameSubstitute.utf16(),
-                       sizeof(wchar_t) * qMin(nameSubstitute.length() + 1, LF_FACESIZE));
+                       sizeof(wchar_t) * std::min(nameSubstitute.length() + 1, LF_FACESIZE));
 
                 HRESULT hr = db->directWriteGdiInterop->CreateFontFromLOGFONT(
                             &lf,

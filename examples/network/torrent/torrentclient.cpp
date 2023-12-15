@@ -1394,7 +1394,7 @@ int TorrentClient::requestBlocks(PeerWireClient *client, TorrentPiece *piece, in
     }
 
     // Request no more blocks than we've been asked to.
-    int blocksToRequest = qMin(maxBlocks, bits.size());
+    int blocksToRequest = std::min(maxBlocks, bits.size());
 
     // Calculate the offset and size of each block, and send requests.
     for (int i = 0; i < blocksToRequest; ++i) {

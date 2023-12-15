@@ -800,7 +800,7 @@ void tst_QMenu::menuSizeHint()
         if (menu.actionGeometry(action).topLeft() == QPoint(0,0))
             continue;
 #endif
-        maxWidth = qMax(maxWidth, menu.actionGeometry(action).width());
+        maxWidth = std::max(maxWidth, menu.actionGeometry(action).width());
         result |= menu.actionGeometry(action);
         QCOMPARE(result.x(), left + hmargin + panelWidth);
         QCOMPARE(result.y(), top + vmargin + panelWidth);

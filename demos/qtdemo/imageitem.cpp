@@ -68,13 +68,13 @@ QImage *ImageItem::createImage(const QMatrix &matrix) const
         return original;
 
     // Calculate what the size of the final image will be:
-    w = qMin(w, float(original->size().width()) * this->scale);
-    h = qMin(h, float(original->size().height()) * this->scale);
+    w = std::min(w, float(original->size().width()) * this->scale);
+    h = std::min(h, float(original->size().height()) * this->scale);
 
     float adjustx = 1.0f;
     float adjusty = 1.0f;
     if (this->adjustSize){
-        adjustx = qMin(matrix.m11(), matrix.m22());
+        adjustx = std::min(matrix.m11(), matrix.m22());
         adjusty = matrix.m22() < adjustx ? adjustx : matrix.m22();
         w *= adjustx;
         h *= adjusty;

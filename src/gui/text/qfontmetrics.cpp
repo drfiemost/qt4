@@ -553,7 +553,7 @@ int QFontMetrics::width(const QString &text, int len, int flags) const
 {
     int pos = text.indexOf(QLatin1Char('\x9c'));
     if (pos != -1) {
-        len = (len < 0) ? pos : qMin(pos, len);
+        len = (len < 0) ? pos : std::min(pos, len);
     } else if (len < 0) {
         len = text.length();
     }
@@ -650,8 +650,8 @@ int QFontMetrics::charWidth(const QString &text, int pos) const
 
     if (script != QUnicodeTables::Common) {
         // complex script shaping. Have to do some hard work
-        int from = qMax(0, pos - 8);
-        int to = qMin(text.length(), pos + 8);
+        int from = std::max(0, pos - 8);
+        int to = std::min(text.length(), pos + 8);
         QString cstr = QString::fromRawData(text.unicode() + from, to - from);
         QStackTextEngine layout(cstr, d.data());
         layout.ignoreBidi = true;

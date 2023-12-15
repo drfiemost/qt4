@@ -135,7 +135,7 @@ QRectF EmbeddedSvgViewer::getViewBox(QPointF viewBoxCenter)
 
 void EmbeddedSvgViewer::updateImageScale()
 {
-    m_imageScale = qMax( (qreal)m_imageSize.width() / (qreal)width(), 
+    m_imageScale = std::max( (qreal)m_imageSize.width() / (qreal)width(), 
                                (qreal)m_imageSize.height() / (qreal)height())*m_zoomLevel;
 
     m_viewBoxSize.setWidth((qreal)width() * m_imageScale);

@@ -155,8 +155,8 @@ void Cloud::calculateForces()
 
     QRectF sceneRect = scene()->sceneRect();
     newPos = pos() + QPointF(xvel, yvel);
-    newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + 10), sceneRect.right() - 10));
-    newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));
+    newPos.setX(std::min(std::max(newPos.x(), sceneRect.left() + 10), sceneRect.right() - 10));
+    newPos.setY(std::min(std::max(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));
 }
 
 bool Cloud::advance()
@@ -167,11 +167,11 @@ bool Cloud::advance()
 
     if (currentScale < finalScale) {
         animated = true;
-        currentScale = qMin<qreal>(currentScale + scaleDelta, finalScale);
+        currentScale = std::min<qreal>(currentScale + scaleDelta, finalScale);
         setTransform(QTransform::fromScale(currentScale, currentScale), false);
     } else if (currentScale > finalScale) {
         animated = true;
-        currentScale = qMax<qreal>(currentScale - scaleDelta, finalScale);
+        currentScale = std::max<qreal>(currentScale - scaleDelta, finalScale);
         setTransform(QTransform::fromScale(currentScale, currentScale), false);
     }
 

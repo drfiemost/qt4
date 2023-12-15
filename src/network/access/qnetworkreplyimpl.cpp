@@ -543,7 +543,7 @@ qint64 QNetworkReplyImplPrivate::nextDownstreamBlockSize() const
     if (readBufferMaxSize == 0)
         return DesiredBufferSize;
 
-    return qMax<qint64>(0, readBufferMaxSize - readBuffer.byteAmount());
+    return std::max<qint64>(0, readBufferMaxSize - readBuffer.byteAmount());
 }
 
 void QNetworkReplyImplPrivate::initCacheSaveDevice()
@@ -1003,7 +1003,7 @@ qint64 QNetworkReplyImpl::readData(char *data, qint64 maxlen)
 
     // Special case code if we have the "zero copy" download buffer
     if (d->downloadBuffer) {
-        qint64 maxAvail = qMin<qint64>(d->downloadBufferCurrentSize - d->downloadBufferReadPosition, maxlen);
+        qint64 maxAvail = std::min<qint64>(d->downloadBufferCurrentSize - d->downloadBufferReadPosition, maxlen);
         if (maxAvail == 0)
             return d->state == QNetworkReplyImplPrivate::Finished ? -1 : 0;
         // FIXME what about "Aborted" state?
@@ -1026,7 +1026,7 @@ qint64 QNetworkReplyImpl::readData(char *data, qint64 maxlen)
         return 1;
     }
 
-    maxlen = qMin<qint64>(maxlen, d->readBuffer.byteAmount());
+    maxlen = std::min<qint64>(maxlen, d->readBuffer.byteAmount());
     qint64 bytesRead = d->readBuffer.read(data, maxlen);
     if (d->backend && readBufferSize())
         d->backend->emitReadBufferFreed(bytesRead);

@@ -535,7 +535,7 @@ qint64 QProcessPrivate::bytesAvailableFromStderr() const
 
 qint64 QProcessPrivate::readFromStdout(char *data, qint64 maxlen)
 {
-    DWORD read = qMin(maxlen, bytesAvailableFromStdout());
+    DWORD read = std::min(maxlen, bytesAvailableFromStdout());
     DWORD bytesRead = 0;
 
     if (read > 0 && !ReadFile(stdoutChannel.pipe[0], data, read, &bytesRead, 0))
@@ -545,7 +545,7 @@ qint64 QProcessPrivate::readFromStdout(char *data, qint64 maxlen)
 
 qint64 QProcessPrivate::readFromStderr(char *data, qint64 maxlen)
 {
-    DWORD read = qMin(maxlen, bytesAvailableFromStderr());
+    DWORD read = std::min(maxlen, bytesAvailableFromStderr());
     DWORD bytesRead = 0;
 
     if (read > 0 && !ReadFile(stderrChannel.pipe[0], data, read, &bytesRead, 0))

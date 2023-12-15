@@ -202,7 +202,7 @@ bool QTextureGlyphCache::populate(QFontEngine *fontEngine, int numGlyphs, const 
                     -metrics.y.truncate() }; // baseline for horizontal scripts
 
         listItemCoordinates.insert(key, c);
-        rowHeight = qMax(rowHeight, glyph_height);
+        rowHeight = std::max(rowHeight, glyph_height);
     }
     if (listItemCoordinates.isEmpty())
         return true;
@@ -222,7 +222,7 @@ bool QTextureGlyphCache::populate(QFontEngine *fontEngine, int numGlyphs, const 
     while (iter != listItemCoordinates.end()) {
         Coord c = iter.value();
 
-        m_currentRowHeight = qMax(m_currentRowHeight, c.h + margin * 2);
+        m_currentRowHeight = std::max(m_currentRowHeight, c.h + margin * 2);
 
         if (m_cx + c.w > requiredWidth) {
             int new_width = requiredWidth*2;
@@ -267,8 +267,8 @@ void QTextureGlyphCache::fillInPendingGlyphs()
         QHash<GlyphAndSubPixelPosition, Coord>::iterator iter = m_pendingGlyphs.begin();
         while (iter != m_pendingGlyphs.end()) {
             Coord c = iter.value();
-            requiredHeight = qMax(requiredHeight, c.y + c.h);
-            requiredWidth = qMax(requiredWidth, c.x + c.w);
+            requiredHeight = std::max(requiredHeight, c.y + c.h);
+            requiredWidth = std::max(requiredWidth, c.x + c.w);
             ++iter;
         }
     }
@@ -385,7 +385,7 @@ void QImageTextureGlyphCache::fillTexture(const Coord &c, glyph_t g, QFixed subP
 
     if (m_type == QFontEngineGlyphCache::Raster_RGBMask) {
         QImage ref(m_image.bits() + (c.x * 4 + c.y * m_image.bytesPerLine()),
-                   qMax(mask.width(), c.w), qMax(mask.height(), c.h), m_image.bytesPerLine(),
+                   std::max(mask.width(), c.w), qMax(mask.height(), c.h), m_image.bytesPerLine(),
                    m_image.format());
         QPainter p(&ref);
         p.setCompositionMode(QPainter::CompositionMode_Source);
@@ -400,8 +400,8 @@ void QImageTextureGlyphCache::fillTexture(const Coord &c, glyph_t g, QFixed subP
             mask = mask.convertToFormat(QImage::Format_Mono);
         }
 
-        int mw = qMin(mask.width(), c.w);
-        int mh = qMin(mask.height(), c.h);
+        int mw = std::min(mask.width(), c.w);
+        int mh = std::min(mask.height(), c.h);
         uchar *d = m_image.bits();
         int dbpl = m_image.bytesPerLine();
 
@@ -422,8 +422,8 @@ void QImageTextureGlyphCache::fillTexture(const Coord &c, glyph_t g, QFixed subP
             }
         }
     } else { // A8
-        int mw = qMin(mask.width(), c.w);
-        int mh = qMin(mask.height(), c.h);
+        int mw = std::min(mask.width(), c.w);
+        int mh = std::min(mask.height(), c.h);
         uchar *d = m_image.bits();
         int dbpl = m_image.bytesPerLine();
 

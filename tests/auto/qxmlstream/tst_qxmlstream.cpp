@@ -67,7 +67,7 @@ static inline int best(int a, int b)
         return b;
     if (b < 0)
         return a;
-    return qMin(a, b);
+    return std::min(a, b);
 }
 
 static inline int best(int a, int b, int c)
@@ -78,7 +78,7 @@ static inline int best(int a, int b, int c)
         return best(a, c);
     if (c < 0)
         return best(a, b);
-    return qMin(qMin(a, b), c);
+    return std::min(qMin(a, b), c);
 }
 
 /**
@@ -1595,7 +1595,7 @@ class FakeBuffer : public QBuffer
 protected:
     qint64 writeData(const char *c, qint64 i)
     {
-        qint64 ai = qMin(m_capacity, i);
+        qint64 ai = std::min(m_capacity, i);
         m_capacity -= ai;
         return ai ? QBuffer::writeData(c, ai) : 0;
     }

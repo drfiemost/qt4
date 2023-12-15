@@ -79,7 +79,7 @@ bool IncrementalModel::canFetchMore(const QModelIndex & /* index */) const
 void IncrementalModel::fetchMore(const QModelIndex & /* index */)
 {
     int remainder = list.size() - count;
-    int itemsToFetch = qMin(5, remainder);
+    int itemsToFetch = std::min(5, remainder);
 
     beginInsertRows(QModelIndex(), count, count+itemsToFetch-1);
     

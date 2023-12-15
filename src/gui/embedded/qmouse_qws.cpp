@@ -224,8 +224,8 @@ QWSMouseHandler::~QWSMouseHandler()
 
 void QWSMouseHandler::limitToScreen(QPoint &position)
 {
-    position.setX(qMin(d_ptr->screen->deviceWidth() - 1, qMax(0, position.x())));
-    position.setY(qMin(d_ptr->screen->deviceHeight() - 1, qMax(0, position.y())));
+    position.setX(std::min(d_ptr->screen->deviceWidth() - 1, std::max(0, position.x())));
+    position.setY(std::min(d_ptr->screen->deviceHeight() - 1, std::max(0, position.y())));
 }
 
 /*!
@@ -577,7 +577,7 @@ QPoint QWSCalibratedMouseHandler::transform(const QPoint &position)
 */
 void QWSCalibratedMouseHandler::setFilterSize(int size)
 {
-    samples.resize(qMax(1, size));
+    samples.resize(std::max(1, size));
     numSamples = 0;
     currSample = 0;
 }

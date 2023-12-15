@@ -592,13 +592,13 @@ void QCalendarDateValidator::setFormat(const QString &format)
             } else {
                 SectionToken *token = 0;
                 if (nextChar == QLatin1Char('d')) {
-                    offset = qMin(4, countRepeat(format, pos));
+                    offset = std::min(4, countRepeat(format, pos));
                     token = new SectionToken(m_dayValidator, offset);
                 } else if (nextChar == QLatin1Char('M')) {
-                    offset = qMin(4, countRepeat(format, pos));
+                    offset = std::min(4, countRepeat(format, pos));
                     token = new SectionToken(m_monthValidator, offset);
                 } else if (nextChar == QLatin1Char('y')) {
-                    offset = qMin(4, countRepeat(format, pos));
+                    offset = std::min(4, countRepeat(format, pos));
                     token = new SectionToken(m_yearValidator, offset);
                 } else {
                     separator += nextChar;
@@ -2150,8 +2150,8 @@ QSize QCalendarWidget::minimumSizeHint() const
     } else {
         for (int i = 1; i <= 7; i++) {
             QFontMetrics fm(d->m_model->formatForCell(0, i).font());
-            w = qMax(w, fm.width(d->m_model->dayName(d->m_model->dayOfWeekForColumn(i))) + marginH);
-            h = qMax(h, fm.height());
+            w = std::max(w, fm.width(d->m_model->dayName(d->m_model->dayOfWeekForColumn(i))) + marginH);
+            h = std::max(h, fm.height());
         }
     }
 
@@ -2161,15 +2161,15 @@ QSize QCalendarWidget::minimumSizeHint() const
         for (int i = 1; i <= 6; i++) {
             QFontMetrics fm(d->m_model->formatForCell(i, 0).font());
             for (int j = 1; j < end; j++)
-                w = qMax(w, fm.width(QString::number(j)) + marginH);
-            h = qMax(h, fm.height());
+                w = std::max(w, fm.width(QString::number(j)) + marginH);
+            h = std::max(h, fm.height());
         }
     }
 
     QFontMetrics fm(d->m_model->formatForCell(1, 1).font());
     for (int i = 1; i <= end; i++) {
-        w = qMax(w, fm.width(QString::number(i)) + marginH);
-        h = qMax(h, fm.height());
+        w = std::max(w, fm.width(QString::number(i)) + marginH);
+        h = std::max(h, fm.height());
     }
 
     if (d->m_view->showGrid()) {
@@ -2180,8 +2180,8 @@ QSize QCalendarWidget::minimumSizeHint() const
 
     w += 1; // default column span
 
-    h = qMax(h, d->m_view->verticalHeader()->minimumSectionSize());
-    w = qMax(w, d->m_view->horizontalHeader()->minimumSectionSize());
+    h = std::max(h, d->m_view->verticalHeader()->minimumSectionSize());
+    w = std::max(w, d->m_view->horizontalHeader()->minimumSectionSize());
 
     //add the size of the header.
     QSize headerSize(0, 0);
@@ -2196,7 +2196,7 @@ QSize QCalendarWidget::minimumSizeHint() const
         int monthW = 0;
         for (int i = 1; i < 12; i++) {
             QString monthName = locale().standaloneMonthName(i, QLocale::LongFormat);
-            monthW = qMax(monthW, fm.boundingRect(monthName).width());
+            monthW = std::max(monthW, fm.boundingRect(monthName).width());
         }
         const int buttonDecoMargin = d->monthButton->sizeHint().width() - fm.boundingRect(d->monthButton->text()).width();
         headerW += monthW + buttonDecoMargin;
@@ -2207,7 +2207,7 @@ QSize QCalendarWidget::minimumSizeHint() const
         headerSize = QSize(headerW, headerH);
     }
     w *= cols;
-    w = qMax(headerSize.width(), w);
+    w = std::max(headerSize.width(), w);
     h = (h * rows) + headerSize.height();
     d->cachedSizeHint = QSize(w, h);
     return d->cachedSizeHint;

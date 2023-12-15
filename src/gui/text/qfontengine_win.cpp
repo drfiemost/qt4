@@ -730,8 +730,8 @@ qreal QFontEngineWin::minRightBearing() const
             mr = abc[0].abcC;
             for (int i = 1; i < n; i++) {
                 if (abc[i].abcA + abc[i].abcB + abc[i].abcC != 0) {
-                    ml = qMin(ml,abc[i].abcA);
-                    mr = qMin(mr,abc[i].abcC);
+                    ml = std::min(ml,abc[i].abcA);
+                    mr = std::min(mr,abc[i].abcC);
                 }
             }
             delete [] abc;
@@ -763,8 +763,8 @@ qreal QFontEngineWin::minRightBearing() const
             mr = abc[0].abcC;
             for (int i = 1; i < n; i++) {
                 if (abc[i].abcA + abc[i].abcB + abc[i].abcC != 0) {
-                    ml = qMin(ml,abc[i].abcA);
-                    mr = qMin(mr,abc[i].abcC);
+                    ml = std::min(ml,abc[i].abcA);
+                    mr = std::min(mr,abc[i].abcC);
                 }
             }
             delete [] abc;
@@ -784,8 +784,8 @@ qreal QFontEngineWin::minRightBearing() const
             float fmr = abc[0].abcfC;
             for (int i=1; i<n; i++) {
                 if (abc[i].abcfA + abc[i].abcfB + abc[i].abcfC != 0) {
-                    fml = qMin(fml,abc[i].abcfA);
-                    fmr = qMin(fmr,abc[i].abcfC);
+                    fml = std::min(fml,abc[i].abcfA);
+                    fmr = std::min(fmr,abc[i].abcfC);
                 }
             }
             ml = int(fml - 0.9999);
@@ -1362,7 +1362,7 @@ void QFontEngineMultiWin::loadEngine(int at)
     QString fam = fallbacks.at(at-1);
 
     LOGFONT lf = static_cast<QFontEngineWin *>(engines.at(0))->logfont;
-    memcpy(lf.lfFaceName, fam.utf16(), sizeof(wchar_t) * qMin(fam.length() + 1, 32));  // 32 = Windows hard-coded
+    memcpy(lf.lfFaceName, fam.utf16(), sizeof(wchar_t) * std::min(fam.length() + 1, 32));  // 32 = Windows hard-coded
     HFONT hfont = CreateFontIndirect(&lf);
 
     bool stockFont = false;

@@ -410,8 +410,8 @@ HBITMAP QWindowsXPStylePrivate::buffer(int w, int h)
         bufferBitmap = 0;
     }
 
-    w = qMax(bufferW, w);
-    h = qMax(bufferH, h);
+    w = std::max(bufferW, w);
+    h = std::max(bufferH, h);
 
     if (!bufferDC)
         bufferDC = CreateCompatibleDC(qt_win_display_dc());
@@ -2119,7 +2119,7 @@ void QWindowsXPStyle::drawControl(ControlElement element, const QStyleOption *op
             bool checked = checkable ? menuitem->checked : false;
 
             // windows always has a check column, regardless whether we have an icon or not
-            int checkcol = qMax(menuitem->maxIconWidth, 12);
+            int checkcol = std::max(menuitem->maxIconWidth, 12);
 
             int x, y, w, h;
             rect.getRect(&x, &y, &w, &h);
@@ -2397,9 +2397,9 @@ void QWindowsXPStyle::drawControl(ControlElement element, const QStyleOption *op
             QColor highlight = option->palette.color(QPalette::Active, QPalette::Highlight);
             p->save();
             p->setPen(highlight.darker(120));
-            QColor dimHighlight(qMin(highlight.red()/2 + 110, 255),
-                                qMin(highlight.green()/2 + 110, 255),
-                                qMin(highlight.blue()/2 + 110, 255),
+            QColor dimHighlight(std::min(highlight.red()/2 + 110, 255),
+                                std::min(highlight.green()/2 + 110, 255),
+                                std::min(highlight.blue()/2 + 110, 255),
                                 (widget && widget->isTopLevel())? 255 : 127);
             p->setBrush(dimHighlight);
             p->drawRect(option->rect.adjusted(0, 0, -1, -1));
@@ -2748,7 +2748,7 @@ void QWindowsXPStyle::drawComplexControl(ComplexControl cc, const QStyleOptionCo
                 while (v <= slider->maximum + 1) {
                     if (v == slider->maximum + 1 && interval == 1)
                         break;
-                    const int v_ = qMin(v, slider->maximum);
+                    const int v_ = std::min(v, slider->maximum);
                     int tickLength = (v_ == slider->minimum || v_ >= slider->maximum) ? 4 : 3;
                     pos = QStyle::sliderPositionFromValue(slider->minimum, slider->maximum,
                                                           v_, available) + fudge;
@@ -3275,7 +3275,7 @@ int QWindowsXPStyle::pixelMetric(PixelMetric pm, const QStyleOption *option, con
         break;
 
     case PM_SplitterWidth:
-        res = qMax(int(QStyleHelper::dpiScaled(5.)), QApplication::globalStrut().width());
+        res = std::max(int(QStyleHelper::dpiScaled(5.)), QApplication::globalStrut().width());
         break;
 
     case PM_IndicatorWidth:
@@ -3672,7 +3672,7 @@ QSize QWindowsXPStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt
                                 borderSize.cyBottomHeight + borderSize.cyTopHeight - 2);
                 }
                 const int textMargins = 2*(proxy()->pixelMetric(PM_FocusFrameHMargin) + 1);
-                sz += QSize(qMax(pixelMetric(QStyle::PM_ScrollBarExtent, option, widget)
+                sz += QSize(std::max(pixelMetric(QStyle::PM_ScrollBarExtent, option, widget)
                                  + textMargins, 23), 0); //arrow button
             }
         }

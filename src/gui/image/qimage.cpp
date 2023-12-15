@@ -1162,7 +1162,7 @@ QImage QImage::copy(const QRect& r) const
         // Qt for Embedded Linux can create images with non-default bpl
         // make sure we don't crash.
         if (image.d->nbytes != d->nbytes) {
-            int bpl = qMin(bytesPerLine(), image.bytesPerLine());
+            int bpl = std::min(bytesPerLine(), image.bytesPerLine());
             for (int i = 0; i < height(); i++)
                 memcpy(image.scanLine(i), scanLine(i), bpl);
         } else
@@ -1207,12 +1207,12 @@ QImage QImage::copy(const QRect& r) const
 
     image.d->colortable = d->colortable;
 
-    int pixels_to_copy = qMax(w - dx, 0);
+    int pixels_to_copy = std::max(w - dx, 0);
     if (x > d->width)
         pixels_to_copy = 0;
     else if (pixels_to_copy > d->width - x)
         pixels_to_copy = d->width - x;
-    int lines_to_copy = qMax(h - dy, 0);
+    int lines_to_copy = std::max(h - dy, 0);
     if (y > d->height)
         lines_to_copy = 0;
     else if (lines_to_copy > d->height - y)
@@ -2726,7 +2726,7 @@ static void convert_RGB_to_Indexed8(QImageData *dst, const QImageData *src, Qt::
                     // Bi-directional error diffusion
                     if (y&1) {
                         for (int x = 0; x < src->width; x++) {
-                            int pix = qMax(qMin(5, (l1[x] * 5 + 128)/ 255), 0);
+                            int pix = std::max(std::min(5, (l1[x] * 5 + 128)/ 255), 0);
                             int err = l1[x] - pix * 255 / 5;
                             pv[chan][x] = pix;
 
@@ -2741,7 +2741,7 @@ static void convert_RGB_to_Indexed8(QImageData *dst, const QImageData *src, Qt::
                         }
                     } else {
                         for (int x = src->width; x-- > 0;) {
-                            int pix = qMax(qMin(5, (l1[x] * 5 + 128)/ 255), 0);
+                            int pix = std::max(std::min(5, (l1[x] * 5 + 128)/ 255), 0);
                             int err = l1[x] - pix * 255 / 5;
                             pv[chan][x] = pix;
 
@@ -2861,7 +2861,7 @@ static void convert_Indexed8_to_X32(QImageData *dest, const QImageData *src, Qt:
         uint *end = p + w;
 
         while (p < end)
-            *p++ = colorTable.at(qMin<int>(tableSize, *b++));
+            *p++ = colorTable.at(std::min<int>(tableSize, *b++));
 
         src_data += src->bytes_per_line;
         dest_data += dest->bytes_per_line;
@@ -2966,7 +2966,7 @@ static void convert_generic(QImageData *dest, const QImageData *src, Qt::ImageCo
     for (int y = 0; y < src->height; ++y) {
         int x = 0;
         while (x < src->width) {
-            int l = qMin(src->width - x, buffer_size);
+            int l = std::min(src->width - x, buffer_size);
             const uint *ptr = fetch(buffer, srcData, x, l);
             ptr = srcLayout->convertToARGB32PM(buffer, ptr, l, srcLayout, 0);
             ptr = destLayout->convertFromARGB32PM(buffer, ptr, l, destLayout, 0);
@@ -3953,7 +3953,7 @@ bool QImage::allGray() const
         const uchar *b = constScanLine(j);
         int x = 0;
         while (x < d->width) {
-            int l = qMin(d->width - x, buffer_size);
+            int l = std::min(d->width - x, buffer_size);
             const uint *ptr = fetch(buffer, b, x, l);
             ptr = layout->convertToARGB32PM(buffer, ptr, l, layout, 0);
             for (int i = 0; i < l; ++i) {
@@ -4074,8 +4074,8 @@ QImage QImage::scaled(const QSize& s, Qt::AspectRatioMode aspectMode, Qt::Transf
 
     QSize newSize = size();
     newSize.scale(s, aspectMode);
-    newSize.rwidth() = qMax(newSize.width(), 1);
-    newSize.rheight() = qMax(newSize.height(), 1);
+    newSize.rwidth() = std::max(newSize.width(), 1);
+    newSize.rheight() = std::max(newSize.height(), 1);
     if (newSize == size())
         return *this;
 
@@ -4615,7 +4615,7 @@ QImage QImage::rgbSwapped() const
         const uchar *p = constScanLine(i);
         int x = 0;
         while (x < d->width) {
-            int l = qMin(d->width - x, buffer_size);
+            int l = std::min(d->width - x, buffer_size);
             const uint *ptr = fetch(buffer, p, x, l);
             for (int j = 0; j < l; ++j) {
                 uint red = (ptr[j] >> layout->redShift) & redBlueMask;
@@ -4798,7 +4798,7 @@ bool QImageData::doImageIO(const QImage *image, QImageWriter *writer, int qualit
     if (quality > 100  || quality < -1)
         qWarning("QPixmap::save: Quality out of range [-1, 100]");
     if (quality >= 0)
-        writer->setQuality(qMin(quality,100));
+        writer->setQuality(std::min(quality,100));
     return writer->write(*image);
 }
 

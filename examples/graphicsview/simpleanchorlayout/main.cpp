@@ -52,7 +52,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget * = 0)
     {
         QFont font;
-        font.setPixelSize(0.75 * qMin(boundingRect().width(), boundingRect().height()));
+        font.setPixelSize(0.75 * std::min(boundingRect().width(), boundingRect().height()));
 
         painter->fillRect(boundingRect(), color);
         painter->save();

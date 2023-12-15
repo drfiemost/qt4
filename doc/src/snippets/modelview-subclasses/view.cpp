@@ -227,13 +227,13 @@ QRect LinearView::selectionViewportRect(const QItemSelection &selection) const
     int lastRow = selection.at(0).top();
 
     for (int i = 0; i < ranges; ++i) {
-        firstRow = qMin(firstRow, selection.at(i).top());
-        lastRow = qMax(lastRow, selection.at(i).bottom());
+        firstRow = std::min(firstRow, selection.at(i).top());
+        lastRow = std::max(lastRow, selection.at(i).bottom());
     }
 
-    QModelIndex firstItem = model()->index(qMin(firstRow, lastRow), 0,
+    QModelIndex firstItem = model()->index(std::min(firstRow, lastRow), 0,
         QModelIndex());
-    QModelIndex lastItem = model()->index(qMax(firstRow, lastRow), 0,
+    QModelIndex lastItem = model()->index(std::max(firstRow, lastRow), 0,
         QModelIndex());
 
     QRect firstRect = itemViewportRect(firstItem);

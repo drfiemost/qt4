@@ -631,7 +631,7 @@ void QPrintPreviewDialogPrivate::_q_zoomFactorChanged()
     QString text = zoomFactor->lineEdit()->text();
     bool ok;
     qreal factor = text.remove(QLatin1Char('%')).toFloat(&ok);
-    factor = qMax(qreal(1.0), qMin(qreal(1000.0), factor));
+    factor = std::max(qreal(1.0), std::min(qreal(1000.0), factor));
     if (ok) {
         preview->setZoomFactor(factor/100.0);
         zoomFactor->setEditText(QString::fromLatin1("%1%").arg(factor));

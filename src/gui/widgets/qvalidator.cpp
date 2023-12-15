@@ -576,7 +576,7 @@ QValidator::State QDoubleValidator::validate(QString & input, int &) const
     if (currentLocaleValidation == Acceptable || locale().language() == QLocale::C)
         return currentLocaleValidation;
     State cLocaleValidation = d->validateWithLocale(input, numMode, QLocale(QLocale::C));
-    return qMax(currentLocaleValidation, cLocaleValidation);
+    return std::max(currentLocaleValidation, cLocaleValidation);
 }
 
 QValidator::State QDoubleValidatorPrivate::validateWithLocale(QString &input, QLocaleData::NumberMode numMode, const QLocale &locale) const
@@ -606,7 +606,7 @@ QValidator::State QDoubleValidatorPrivate::validateWithLocale(QString &input, QL
         return QValidator::Acceptable;
 
     if (notation == QDoubleValidator::StandardNotation) {
-        double max = qMax(qAbs(q->b), qAbs(q->t));
+        double max = std::max(qAbs(q->b), qAbs(q->t));
         if (max < LLONG_MAX) {
             qlonglong n = pow10(numDigits(qlonglong(max))) - 1;
             if (qAbs(i) > n)

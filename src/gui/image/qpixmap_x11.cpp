@@ -473,7 +473,7 @@ void QX11PixmapData::fromImage(const QImage &img,
             if (image.colorCount() == 2) {
                 QRgb c0 = image.color(0);        // Auto: convert to best
                 QRgb c1 = image.color(1);
-                conv8 = qMin(c0,c1) != qRgb(0,0,0) || qMax(c0,c1) != qRgb(255,255,255);
+                conv8 = std::min(c0,c1) != qRgb(0,0,0) || std::max(c0,c1) != qRgb(255,255,255);
             } else {
                 // eg. 1-color monochrome images (they do exist).
                 conv8 = true;
@@ -1734,7 +1734,7 @@ QImage QX11PixmapData::toImage(const QXImageWrapper &xiWrapper, const QRect &rec
         }
     } else if (xi->bits_per_pixel == d) {        // compatible depth
         char *xidata = xi->data;                // copy each scanline
-        int bpl = qMin(image.bytesPerLine(),xi->bytes_per_line);
+        int bpl = std::min(image.bytesPerLine(),xi->bytes_per_line);
         for (int y=0; y<xi->height; y++) {
             memcpy(image.scanLine(y), xidata, bpl);
             xidata += xi->bytes_per_line;

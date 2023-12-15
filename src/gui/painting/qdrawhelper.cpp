@@ -166,9 +166,9 @@ static const uint *QT_FASTCALL convertToARGB32PM(uint *buffer, const uint *src, 
             uint blue = (src[i] >> layout->blueShift) & blueMask;
 
             alpha = (alpha << alphaLeftShift) | (alpha >> alphaRightShift);
-            red = qMin(alpha, (red << redLeftShift) | (red >> redRightShift));
-            green = qMin(alpha, (green << greenLeftShift) | (green >> greenRightShift));
-            blue = qMin(alpha, (blue << blueLeftShift) | (blue >> blueRightShift));
+            red = std::min(alpha, (red << redLeftShift) | (red >> redRightShift));
+            green = std::min(alpha, (green << greenLeftShift) | (green >> greenRightShift));
+            blue = std::min(alpha, (blue << blueLeftShift) | (blue >> blueRightShift));
             buffer[i] = (alpha << 24) | (red << 16) | (green << 8) | blue;
         }
     } else {
@@ -466,7 +466,7 @@ static void QT_FASTCALL destStore(QRasterBuffer *rasterBuffer, int x, int y, con
     StorePixelsFunc store = qStorePixels[layout->bpp];
     uchar *dest = rasterBuffer->scanLine(y);
     while (length) {
-        int l = qMin(length, buffer_size);
+        int l = std::min(length, buffer_size);
         const uint *ptr = layout->convertFromARGB32PM(buf, buffer, l, layout, 0);
         store(dest, ptr, x, l);
         length -= l;
@@ -892,7 +892,7 @@ static const uint * QT_FASTCALL fetchTransformedBilinearARGB32PM(uint *buffer, c
                     x %= image_width;
                     if (x < 0) x += image_width;
                 } else {
-                    lim = qMin(count, image_x2-x+1);
+                    lim = std::min(count, image_x2-x+1);
                     if (x < image_x1) {
                         Q_ASSERT(x <= image_x2);
                         uint t = s1[image_x1];
@@ -975,7 +975,7 @@ static const uint * QT_FASTCALL fetchTransformedBilinearARGB32PM(uint *buffer, c
                     if (blendType == BlendTransformedBilinearTiled) {
                         if (x >= image_width) x -= image_width;
                     } else {
-                        x = qMin(x, image_x2);
+                        x = std::min(x, image_x2);
                     }
 
                     uint t = s1[x];
@@ -1056,9 +1056,9 @@ static const uint * QT_FASTCALL fetchTransformedBilinearARGB32PM(uint *buffer, c
                     } \
                     uint *boundedEnd; \
                     if (fdx > 0) \
-                        boundedEnd = qMin(end, buffer + uint((image_x2 - (fx >> 16)) / data->m11)); \
+                        boundedEnd = std::min(end, buffer + uint((image_x2 - (fx >> 16)) / data->m11)); \
                     else \
-                        boundedEnd = qMin(end, buffer + uint((image_x1 - (fx >> 16)) / data->m11)); \
+                        boundedEnd = std::min(end, buffer + uint((image_x1 - (fx >> 16)) / data->m11)); \
                     boundedEnd -= 3;
 
 #if defined(QT_ALWAYS_HAVE_SSE2)
@@ -1431,8 +1431,8 @@ static const uint *QT_FASTCALL fetchTransformedBilinear(uint *buffer, const Oper
                     x %= image_width;
                     if (x < 0)
                         x += image_width;
-                    int len1 = qMin(count, image_width - x);
-                    int len2 = qMin(x, count - len1);
+                    int len1 = std::min(count, image_width - x);
+                    int len2 = std::min(x, count - len1);
 
                     ptr1 = fetch(buf1, s1, x, len1);
                     ptr1 = layout->convertToARGB32PM(buf1, ptr1, len1, layout, clut);
@@ -1462,9 +1462,9 @@ static const uint *QT_FASTCALL fetchTransformedBilinear(uint *buffer, const Oper
                         buf2[i] = buf2[i - image_width];
                     }
                 } else {
-                    int start = qMax(x, image_x1);
-                    int end = qMin(x + count, image_x2 + 1);
-                    int len = qMax(1, end - start);
+                    int start = std::max(x, image_x1);
+                    int end = std::min(x + count, image_x2 + 1);
+                    int len = std::max(1, end - start);
                     int leading = start - x;
 
                     ptr1 = fetch(buf1 + leading, s1, start, len);
@@ -1511,7 +1511,7 @@ static const uint *QT_FASTCALL fetchTransformedBilinear(uint *buffer, const Oper
                 uint buf2[buffer_size];
                 uint *b = buffer;
                 while (length) {
-                    int len = qMin(length, buffer_size / 2);
+                    int len = std::min(length, buffer_size / 2);
                     int fracX = fx;
                     for (int i = 0; i < len; ++i) {
                         int x1 = (fx >> 16);
@@ -1566,7 +1566,7 @@ static const uint *QT_FASTCALL fetchTransformedBilinear(uint *buffer, const Oper
             uint *b = buffer;
 
             while (length) {
-                int len = qMin(length, buffer_size / 2);
+                int len = std::min(length, buffer_size / 2);
                 int fracX = fx;
                 int fracY = fy;
                 for (int i = 0; i < len; ++i) {
@@ -1649,7 +1649,7 @@ static const uint *QT_FASTCALL fetchTransformedBilinear(uint *buffer, const Oper
         int distys[buffer_size / 2];
 
         while (length) {
-            int len = qMin(length, buffer_size / 2);
+            int len = std::min(length, buffer_size / 2);
             for (int i = 0; i < len; ++i) {
                 const qreal iw = fw == 0 ? 1 : 1 / fw;
                 const qreal px = fx * iw - qreal(0.5);
@@ -2769,7 +2769,7 @@ void QT_FASTCALL comp_func_Overlay(uint *Q_DECL_RESTRICT dest, const uint *Q_DEC
 */
 static inline int darken_op(int dst, int src, int da, int sa)
 {
-    return qt_div_255(qMin(src * da, dst * sa) + src * (255 - da) + dst * (255 - sa));
+    return qt_div_255(std::min(src * da, dst * sa) + src * (255 - da) + dst * (255 - sa));
 }
 
 template <typename T>
@@ -2842,7 +2842,7 @@ void QT_FASTCALL comp_func_Darken(uint *Q_DECL_RESTRICT dest, const uint *Q_DECL
 */
 static inline int lighten_op(int dst, int src, int da, int sa)
 {
-    return qt_div_255(qMax(src * da, dst * sa) + src * (255 - da) + dst * (255 - sa));
+    return qt_div_255(std::max(src * da, dst * sa) + src * (255 - da) + dst * (255 - sa));
 }
 
 template <typename T>
@@ -3248,7 +3248,7 @@ void QT_FASTCALL comp_func_SoftLight(uint *Q_DECL_RESTRICT dest, const uint *Q_D
 */
 static inline int difference_op(int dst, int src, int da, int sa)
 {
-    return src + dst - qt_div_255(2 * qMin(src * da, dst * sa));
+    return src + dst - qt_div_255(2 * std::min(src * da, dst * sa));
 }
 
 template <typename T>
@@ -3767,7 +3767,7 @@ void blend_color_generic(int count, const QSpan *spans, void *userData)
         int x = spans->x;
         int length = spans->len;
         while (length) {
-            int l = qMin(buffer_size, length);
+            int l = std::min(buffer_size, length);
             uint *dest = op.dest_fetch ? op.dest_fetch(buffer, data->rasterBuffer, x, spans->y, l) : buffer;
             op.funcSolid(dest, l, data->solid.color, spans->coverage);
             if (op.dest_store)
@@ -3916,7 +3916,7 @@ void handleSpans(int count, const QSpan *spans, const QSpanData *data, T &handle
         int length = right - x;
 
         while (length) {
-            int l = qMin(buffer_size, length);
+            int l = std::min(buffer_size, length);
             length -= l;
 
             int process_length = l;
@@ -3929,7 +3929,7 @@ void handleSpans(int count, const QSpan *spans, const QSpanData *data, T &handle
                     coverage = (spans->coverage * const_alpha) >> 8;
 
                 int right = spans->x + spans->len;
-                int len = qMin(l, right - x);
+                int len = std::min(l, right - x);
 
                 handler.process(x, y, len, coverage, src, offset);
 
@@ -4027,7 +4027,7 @@ static void blend_untransformed_generic(int count, const QSpan *spans, void *use
             if (length > 0) {
                 const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
                 while (length) {
-                    int l = qMin(buffer_size, length);
+                    int l = std::min(buffer_size, length);
                     const uint *src = op.src_fetch(src_buffer, &op, data, sy, sx, l);
                     uint *dest = op.dest_fetch ? op.dest_fetch(buffer, data->rasterBuffer, x, spans->y, l) : buffer;
                     op.func(dest, src, l, coverage);
@@ -4218,7 +4218,7 @@ static void blend_tiled_generic(int count, const QSpan *spans, void *userData)
 
         const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
         while (length) {
-            int l = qMin(image_width - sx, length);
+            int l = std::min(image_width - sx, length);
             if (buffer_size < l)
                 l = buffer_size;
             const uint *src = op.src_fetch(src_buffer, &op, data, sy, sx, l);
@@ -4269,7 +4269,7 @@ static void blend_tiled_argb(int count, const QSpan *spans, void *userData)
 
         const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
         while (length) {
-            int l = qMin(image_width - sx, length);
+            int l = std::min(image_width - sx, length);
             if (buffer_size < l)
                 l = buffer_size;
             const uint *src = (uint *)data->texture.scanLine(sy) + sx;
@@ -4325,10 +4325,10 @@ static void blend_tiled_rgb565(int count, const QSpan *spans, void *userData)
 
         if (coverage == 255) {
             // Copy the first texture block
-            length = qMin(image_width,length);
+            length = std::min(image_width,length);
             int tx = x;
             while (length) {
-                int l = qMin(image_width - sx, length);
+                int l = std::min(image_width - sx, length);
                 if (buffer_size < l)
                     l = buffer_size;
                 quint16 *dest = ((quint16 *)data->rasterBuffer->scanLine(spans->y)) + tx;
@@ -4345,7 +4345,7 @@ static void blend_tiled_rgb565(int count, const QSpan *spans, void *userData)
             // We are dealing with one block of data
             // - More likely to fit in the cache
             // - can use memcpy
-            int copy_image_width = qMin(image_width, int(spans->len));
+            int copy_image_width = std::min(image_width, int(spans->len));
             length = spans->len - copy_image_width;
             quint16 *src = ((quint16 *)data->rasterBuffer->scanLine(spans->y)) + x;
             quint16 *dest = src + copy_image_width;
@@ -4362,7 +4362,7 @@ static void blend_tiled_rgb565(int count, const QSpan *spans, void *userData)
             const quint8 ialpha = 0x20 - alpha;
             if (alpha > 0) {
                 while (length) {
-                    int l = qMin(image_width - sx, length);
+                    int l = std::min(image_width - sx, length);
                     if (buffer_size < l)
                         l = buffer_size;
                     quint16 *dest = ((quint16 *)data->rasterBuffer->scanLine(spans->y)) + x;
@@ -4429,7 +4429,7 @@ static void blend_transformed_bilinear_rgb565(int count, const QSpan *spans, voi
                     l = length;
                     b = dest;
                 } else {
-                    l = qMin(length, buffer_size);
+                    l = std::min(length, buffer_size);
                     b = buffer;
                 }
                 const quint16 *end = b + l;
@@ -4512,7 +4512,7 @@ static void blend_transformed_bilinear_rgb565(int count, const QSpan *spans, voi
                     l = length;
                     b = dest;
                 } else {
-                    l = qMin(length, buffer_size);
+                    l = std::min(length, buffer_size);
                     b = buffer;
                 }
                 const quint16 *end = b + l;
@@ -4608,7 +4608,7 @@ static void blend_transformed_argb(int count, const QSpan *spans, void *userData
             int length = spans->len;
             const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
             while (length) {
-                int l = qMin(length, buffer_size);
+                int l = std::min(length, buffer_size);
                 const uint *end = buffer + l;
                 uint *b = buffer;
                 while (b < end) {
@@ -4645,7 +4645,7 @@ static void blend_transformed_argb(int count, const QSpan *spans, void *userData
             int length = spans->len;
             const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
             while (length) {
-                int l = qMin(length, buffer_size);
+                int l = std::min(length, buffer_size);
                 const uint *end = buffer + l;
                 uint *b = buffer;
                 while (b < end) {
@@ -4718,7 +4718,7 @@ static void blend_transformed_rgb565(int count, const QSpan *spans, void *userDa
                     l = length;
                     b = dest;
                 } else {
-                    l = qMin(length, buffer_size);
+                    l = std::min(length, buffer_size);
                     b = buffer;
                 }
                 const quint16 *end = b + l;
@@ -4773,7 +4773,7 @@ static void blend_transformed_rgb565(int count, const QSpan *spans, void *userDa
                     l = length;
                     b = dest;
                 } else {
-                    l = qMin(length, buffer_size);
+                    l = std::min(length, buffer_size);
                     b = buffer;
                 }
                 const quint16 *end = b + l;
@@ -4842,7 +4842,7 @@ static void blend_transformed_tiled_argb(int count, const QSpan *spans, void *us
             const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
             int length = spans->len;
             while (length) {
-                int l = qMin(length, buffer_size);
+                int l = std::min(length, buffer_size);
                 const uint *end = buffer + l;
                 uint *b = buffer;
                 int px16 = x % (image_width << 16);
@@ -4896,7 +4896,7 @@ static void blend_transformed_tiled_argb(int count, const QSpan *spans, void *us
             const int coverage = (spans->coverage * data->texture.const_alpha) >> 8;
             int length = spans->len;
             while (length) {
-                int l = qMin(length, buffer_size);
+                int l = std::min(length, buffer_size);
                 const uint *end = buffer + l;
                 uint *b = buffer;
                 while (b < end) {
@@ -4981,7 +4981,7 @@ static void blend_transformed_tiled_rgb565(int count, const QSpan *spans, void *
                     l = length;
                     b = dest;
                 } else {
-                    l = qMin(length, buffer_size);
+                    l = std::min(length, buffer_size);
                     b = buffer;
                 }
                 const quint16 *end = b + l;
@@ -5041,7 +5041,7 @@ static void blend_transformed_tiled_rgb565(int count, const QSpan *spans, void *
                     l = length;
                     b = dest;
                 } else {
-                    l = qMin(length, buffer_size);
+                    l = std::min(length, buffer_size);
                     b = buffer;
                 }
                 const quint16 *end = b + l;
@@ -5710,9 +5710,9 @@ static void qt_alphamapblit_quint32(QRasterBuffer *rasterBuffer,
             map += mapStride;
         }
     } else {
-        int bottom = qMin(y + mapHeight, rasterBuffer->height());
+        int bottom = std::min(y + mapHeight, rasterBuffer->height());
 
-        int top = qMax(y, 0);
+        int top = std::max(y, 0);
         map += (top - y) * mapStride;
 
         const_cast<QClipData *>(clip)->initialize();
@@ -5724,8 +5724,8 @@ static void qt_alphamapblit_quint32(QRasterBuffer *rasterBuffer,
             for (int i=0; i<line.count; ++i) {
                 const QSpan &clip = line.spans[i];
 
-                int start = qMax<int>(x, clip.x);
-                int end = qMin<int>(x + mapWidth, clip.x + clip.len);
+                int start = std::max<int>(x, clip.x);
+                int end = std::min<int>(x + mapWidth, clip.x + clip.len);
 
                 for (int xp=start; xp<end; ++xp) {
                     const int coverage = map[xp - x];
@@ -5790,9 +5790,9 @@ static void qt_alphargbblit_quint32(QRasterBuffer *rasterBuffer,
             src += srcStride;
         }
     } else {
-        int bottom = qMin(y + mapHeight, rasterBuffer->height());
+        int bottom = std::min(y + mapHeight, rasterBuffer->height());
 
-        int top = qMax(y, 0);
+        int top = std::max(y, 0);
         src += (top - y) * srcStride;
 
         const_cast<QClipData *>(clip)->initialize();
@@ -5804,8 +5804,8 @@ static void qt_alphargbblit_quint32(QRasterBuffer *rasterBuffer,
             for (int i=0; i<line.count; ++i) {
                 const QSpan &clip = line.spans[i];
 
-                int start = qMax<int>(x, clip.x);
-                int end = qMin<int>(x + mapWidth, clip.x + clip.len);
+                int start = std::max<int>(x, clip.x);
+                int end = std::min<int>(x + mapWidth, clip.x + clip.len);
 
                 for (int xp=start; xp<end; ++xp) {
                     const uint coverage = src[xp - x];

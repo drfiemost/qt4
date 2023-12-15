@@ -831,13 +831,13 @@ QSize QAbstractSpinBox::sizeHint() const
         QString s;
         s = d->prefix + d->textFromValue(d->minimum) + d->suffix + QLatin1Char(' ');
         s.truncate(18);
-        w = qMax(w, fm.width(s));
+        w = std::max(w, fm.width(s));
         s = d->prefix + d->textFromValue(d->maximum) + d->suffix + QLatin1Char(' ');
         s.truncate(18);
-        w = qMax(w, fm.width(s));
+        w = std::max(w, fm.width(s));
         if (d->specialValueText.size()) {
             s = d->specialValueText;
-            w = qMax(w, fm.width(s));
+            w = std::max(w, fm.width(s));
         }
         w += 2; // cursor blinking space
 
@@ -1964,7 +1964,7 @@ QVariant operator-(const QVariant &arg1, const QVariant &arg2)
         QDateTime a2 = arg2.toDateTime();
         int days = a2.daysTo(a1);
         int secs = a2.secsTo(a1);
-        int msecs = qMax(0, a1.time().msec() - a2.time().msec());
+        int msecs = std::max(0, a1.time().msec() - a2.time().msec());
         if (days < 0 || secs < 0 || msecs < 0) {
             ret = arg1;
         } else {

@@ -752,8 +752,8 @@ void QPaintEngineEx::drawRoundedRect(const QRectF &rect, qreal xRadius, qreal yR
         yRadius = yRadius * rect.height() / qreal(200.);
     }
 
-    xRadius = qMin(xRadius, rect.width() / 2);
-    yRadius = qMin(yRadius, rect.height() / 2);
+    xRadius = std::min(xRadius, rect.width() / 2);
+    yRadius = std::min(yRadius, rect.height() / 2);
 
     qreal pts[] = {
         x1 + xRadius, y1,                   // MoveTo
@@ -785,7 +785,7 @@ void QPaintEngineEx::drawLines(const QLine *lines, int lineCount)
 {
     int elementCount = lineCount << 1;
     while (elementCount > 0) {
-        int count = qMin(elementCount, 32);
+        int count = std::min(elementCount, 32);
 
         qreal pts[64];
         int count2 = count<<1;
@@ -811,7 +811,7 @@ void QPaintEngineEx::drawLines(const QLineF *lines, int lineCount)
 {
     int elementCount = lineCount << 1;
     while (elementCount > 0) {
-        int count = qMin(elementCount, 32);
+        int count = std::min(elementCount, 32);
 
         QVectorPath path((qreal *) lines, count, qpaintengineex_line_types_16,
                          QVectorPath::LinesHint);
@@ -857,7 +857,7 @@ void QPaintEngineEx::drawPoints(const QPointF *points, int pointCount)
 
     if (pen.brush().isOpaque()) {
         while (pointCount > 0) {
-            int count = qMin(pointCount, 16);
+            int count = std::min(pointCount, 16);
             qreal pts[64];
             int oset = -1;
             for (int i=0; i<count; ++i) {
@@ -888,7 +888,7 @@ void QPaintEngineEx::drawPoints(const QPoint *points, int pointCount)
 
     if (pen.brush().isOpaque()) {
         while (pointCount > 0) {
-            int count = qMin(pointCount, 16);
+            int count = std::min(pointCount, 16);
             qreal pts[64];
             int oset = -1;
             for (int i=0; i<count; ++i) {

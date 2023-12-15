@@ -166,7 +166,7 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
     m_browseSkinIndex = m_firstUserSkinIndex = skins.size();
     m_ui.m_skinCombo->addItem(PreviewConfigurationWidget::tr("Browse..."), QString());
 
-    m_ui.m_skinCombo->setMaxVisibleItems (qMax(15, 2 * m_browseSkinIndex));
+    m_ui.m_skinCombo->setMaxVisibleItems (std::max(15, 2 * m_browseSkinIndex));
     m_ui.m_skinCombo->setEditable(false);
 
     retrieveSettings();

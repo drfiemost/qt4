@@ -339,11 +339,11 @@ static QString getString(HIMC himc, DWORD dwindex, int *selStart = 0, int *selLe
         *selLength = -1;
         for (int i = 0; i < attrlen; i++) {
             if (attrbuffer[i] & ATTR_TARGET_CONVERTED) {
-                *selStart = qMin(*selStart, i);
-                *selLength = qMax(*selLength, i);
+                *selStart = std::min(*selStart, i);
+                *selLength = std::max(*selLength, i);
             }
         }
-        *selLength = qMax(0, *selLength - *selStart + 1);
+        *selLength = std::max(0, *selLength - *selStart + 1);
     }
 
     if (len <= 0)

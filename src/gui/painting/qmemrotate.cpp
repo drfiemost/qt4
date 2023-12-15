@@ -208,7 +208,7 @@ inline void qt_memrotate90_tiled(const T *src, int w, int h, int sstride, T *des
 
     const int pack = sizeof(quint32) / sizeof(T);
     const int unaligned =
-        qMin(uint((quintptr(dest) & (sizeof(quint32)-1)) / sizeof(T)), uint(h));
+        std::min(uint((quintptr(dest) & (sizeof(quint32)-1)) / sizeof(T)), uint(h));
     const int restX = w % tileSize;
     const int restY = (h - unaligned) % tileSize;
     const int unoptimizedY = restY % pack;
@@ -217,7 +217,7 @@ inline void qt_memrotate90_tiled(const T *src, int w, int h, int sstride, T *des
 
     for (int tx = 0; tx < numTilesX; ++tx) {
         const int startx = w - tx * tileSize - 1;
-        const int stopx = qMax(startx - tileSize, 0);
+        const int stopx = std::max(startx - tileSize, 0);
 
         if (unaligned) {
             for (int x = startx; x >= stopx; --x) {
@@ -230,7 +230,7 @@ inline void qt_memrotate90_tiled(const T *src, int w, int h, int sstride, T *des
 
         for (int ty = 0; ty < numTilesY; ++ty) {
             const int starty = ty * tileSize + unaligned;
-            const int stopy = qMin(starty + tileSize, h - unoptimizedY);
+            const int stopy = std::min(starty + tileSize, h - unoptimizedY);
 
             for (int x = startx; x >= stopx; --x) {
                 quint32 *d = reinterpret_cast<quint32*>(dest + (w - x - 1) * dstride + starty);
@@ -268,11 +268,11 @@ inline void qt_memrotate90_tiled_unpacked(const T *src, int w, int h, int sstrid
 
     for (int tx = 0; tx < numTilesX; ++tx) {
         const int startx = w - tx * tileSize - 1;
-        const int stopx = qMax(startx - tileSize, 0);
+        const int stopx = std::max(startx - tileSize, 0);
 
         for (int ty = 0; ty < numTilesY; ++ty) {
             const int starty = ty * tileSize;
-            const int stopy = qMin(starty + tileSize, h);
+            const int stopy = std::min(starty + tileSize, h);
 
             for (int x = startx; x >= stopx; --x) {
                 T *d = (T *)((char*)dest + (w - x - 1) * dstride) + starty;
@@ -295,7 +295,7 @@ inline void qt_memrotate270_tiled(const T *src, int w, int h, int sstride, T *de
 
     const int pack = sizeof(quint32) / sizeof(T);
     const int unaligned =
-        qMin(uint((long(dest) & (sizeof(quint32)-1)) / sizeof(T)), uint(h));
+        std::min(uint((long(dest) & (sizeof(quint32)-1)) / sizeof(T)), uint(h));
     const int restX = w % tileSize;
     const int restY = (h - unaligned) % tileSize;
     const int unoptimizedY = restY % pack;
@@ -304,7 +304,7 @@ inline void qt_memrotate270_tiled(const T *src, int w, int h, int sstride, T *de
 
     for (int tx = 0; tx < numTilesX; ++tx) {
         const int startx = tx * tileSize;
-        const int stopx = qMin(startx + tileSize, w);
+        const int stopx = std::min(startx + tileSize, w);
 
         if (unaligned) {
             for (int x = startx; x < stopx; ++x) {
@@ -317,7 +317,7 @@ inline void qt_memrotate270_tiled(const T *src, int w, int h, int sstride, T *de
 
         for (int ty = 0; ty < numTilesY; ++ty) {
             const int starty = h - 1 - unaligned - ty * tileSize;
-            const int stopy = qMax(starty - tileSize, unoptimizedY);
+            const int stopy = std::max(starty - tileSize, unoptimizedY);
 
             for (int x = startx; x < stopx; ++x) {
                 quint32 *d = reinterpret_cast<quint32*>(dest + x * dstride
@@ -355,11 +355,11 @@ inline void qt_memrotate270_tiled_unpacked(const T *src, int w, int h, int sstri
 
     for (int tx = 0; tx < numTilesX; ++tx) {
         const int startx = tx * tileSize;
-        const int stopx = qMin(startx + tileSize, w);
+        const int stopx = std::min(startx + tileSize, w);
 
         for (int ty = 0; ty < numTilesY; ++ty) {
             const int starty = h - 1 - ty * tileSize;
-            const int stopy = qMax(starty - tileSize, 0);
+            const int stopy = std::max(starty - tileSize, 0);
 
             for (int x = startx; x < stopx; ++x) {
                 T *d = (T*)((char*)dest + x * dstride) + h - 1 - starty;

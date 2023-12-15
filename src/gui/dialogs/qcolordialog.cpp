@@ -724,7 +724,7 @@ void QColorLuminancePicker::setVal(int v)
 {
     if (val == v)
         return;
-    val = qMax(0, qMin(v,255));
+    val = std::max(0, std::min(v,255));
     delete pix; pix=0;
     repaint();
     emit newHsv(hue, sat, val);
@@ -826,8 +826,8 @@ QSize QColorPicker::sizeHint() const
 
 void QColorPicker::setCol(int h, int s)
 {
-    int nhue = qMin(qMax(0,h), 359);
-    int nsat = qMin(qMax(0,s), 255);
+    int nhue = std::min(std::max(0,h), 359);
+    int nsat = std::min(std::max(0,s), 255);
     if (nhue == hue && nsat == sat)
         return;
 
@@ -1542,7 +1542,7 @@ void QColorDialogPrivate::init(const QColor &initial)
         // better color picker size for small displays
 #if defined(QT_SMALL_COLORDIALOG)
         QSize screenSize = QApplication::desktop()->availableGeometry(QCursor::pos()).size();
-        pWidth = pHeight = qMin(screenSize.width(), screenSize.height());
+        pWidth = pHeight = std::min(screenSize.width(), screenSize.height());
         pHeight -= 20;
         if(screenSize.height() > screenSize.width())
             pWidth -= 20;
@@ -1582,7 +1582,7 @@ void QColorDialogPrivate::init(const QColor &initial)
     lp = new QColorLuminancePicker(q);
 #if defined(QT_SMALL_COLORDIALOG)
     QSize screenSize = QApplication::desktop()->availableGeometry(QCursor::pos()).size();
-    const int minDimension = qMin(screenSize.height(), screenSize.width());
+    const int minDimension = std::min(screenSize.height(), screenSize.width());
     //set picker to be finger-usable
     int pickerWidth = !nonTouchUI ? minDimension/9 : minDimension/12;
     lp->setFixedWidth(pickerWidth);

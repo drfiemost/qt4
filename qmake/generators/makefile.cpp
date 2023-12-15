@@ -1895,7 +1895,7 @@ MakefileGenerator::writeExtraCompilerTargets(QTextStream &t)
                             file = " " + replaceExtraCompilerVariables(tmp_clean, tmp_inputs.at(input),
                                            replaceExtraCompilerVariables(tmp_out, tmp_inputs.at(input), QString()));
                             if(del_statement.length() + files.length() +
-                               qMax(fixEnvVariables(file).length(), file.length()) > commandlineLimit) {
+                               std::max(fixEnvVariables(file).length(), file.length()) > commandlineLimit) {
                                 cleans.append(files);
                                 files.clear();
                             }

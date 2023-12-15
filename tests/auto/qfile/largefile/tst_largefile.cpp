@@ -356,7 +356,7 @@ void tst_LargeFile::fillFileSparsely()
                         .arg(this_->largeFile.errorString())
                         .arg(this_->maxSizeBits)) );
             } else
-                lastKnownGoodIndex = qMax<int>(index_, lastKnownGoodIndex);
+                lastKnownGoodIndex = std::max<int>(index_, lastKnownGoodIndex);
         }
 
     private:

@@ -442,7 +442,7 @@ void PieView::scrollTo(const QModelIndex &index, ScrollHint)
             horizontalScrollBar()->value() + rect.left() - area.left());
     else if (rect.right() > area.right())
         horizontalScrollBar()->setValue(
-            horizontalScrollBar()->value() + qMin(
+            horizontalScrollBar()->value() + std::min(
                 rect.right() - area.right(), rect.left() - area.left()));
 
     if (rect.top() < area.top())
@@ -450,7 +450,7 @@ void PieView::scrollTo(const QModelIndex &index, ScrollHint)
             verticalScrollBar()->value() + rect.top() - area.top());
     else if (rect.bottom() > area.bottom())
         verticalScrollBar()->setValue(
-            verticalScrollBar()->value() + qMin(
+            verticalScrollBar()->value() + std::min(
                 rect.bottom() - area.bottom(), rect.top() - area.top()));
 
     update();
@@ -489,10 +489,10 @@ void PieView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlag
         int lastColumn = indexes[0].column();
 
         for (int i = 1; i < indexes.size(); ++i) {
-            firstRow = qMin(firstRow, indexes[i].row());
-            lastRow = qMax(lastRow, indexes[i].row());
-            firstColumn = qMin(firstColumn, indexes[i].column());
-            lastColumn = qMax(lastColumn, indexes[i].column());
+            firstRow = std::min(firstRow, indexes[i].row());
+            lastRow = std::max(lastRow, indexes[i].row());
+            firstColumn = std::min(firstColumn, indexes[i].column());
+            lastColumn = std::max(lastColumn, indexes[i].column());
         }
 
         QItemSelection selection(
@@ -511,9 +511,9 @@ void PieView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlag
 void PieView::updateGeometries()
 {
     horizontalScrollBar()->setPageStep(viewport()->width());
-    horizontalScrollBar()->setRange(0, qMax(0, 2*totalSize - viewport()->width()));
+    horizontalScrollBar()->setRange(0, std::max(0, 2*totalSize - viewport()->width()));
     verticalScrollBar()->setPageStep(viewport()->height());
-    verticalScrollBar()->setRange(0, qMax(0, totalSize - viewport()->height()));
+    verticalScrollBar()->setRange(0, std::max(0, totalSize - viewport()->height()));
 }
 
 int PieView::verticalOffset() const

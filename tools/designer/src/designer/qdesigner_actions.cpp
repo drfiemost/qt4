@@ -969,7 +969,7 @@ void QDesignerActions::updateRecentFileActions()
 {
     QStringList files = m_settings.recentFilesList();
     const int originalSize = files.size();
-    int numRecentFiles = qMin(files.size(), int(MaxRecentFiles));
+    int numRecentFiles = std::min(files.size(), int(MaxRecentFiles));
     const QList<QAction *> recentFilesActs = m_recentFilesActions->actions();
 
     for (int i = 0; i < numRecentFiles; ++i) {
@@ -979,7 +979,7 @@ void QDesignerActions::updateRecentFileActions()
         if (!fi.exists()) {
             files.removeAt(i);
             --i;
-            numRecentFiles = qMin(files.size(), int(MaxRecentFiles));
+            numRecentFiles = std::min(files.size(), int(MaxRecentFiles));
             continue;
         }
         const QString text = fi.fileName();
@@ -1227,10 +1227,10 @@ QRect QDesignerActions::fixDialogRect(const QRect &rect) const
     dlgRect.moveCenter(frameGeometry.center());
 
     // make sure that parts of the dialog are not outside of screen
-    dlgRect.moveBottom(qMin(dlgRect.bottom(), availableGeometry.bottom()));
-    dlgRect.moveRight(qMin(dlgRect.right(), availableGeometry.right()));
-    dlgRect.moveLeft(qMax(dlgRect.left(), availableGeometry.left()));
-    dlgRect.moveTop(qMax(dlgRect.top(), availableGeometry.top()));
+    dlgRect.moveBottom(std::min(dlgRect.bottom(), availableGeometry.bottom()));
+    dlgRect.moveRight(std::min(dlgRect.right(), availableGeometry.right()));
+    dlgRect.moveLeft(std::max(dlgRect.left(), availableGeometry.left()));
+    dlgRect.moveTop(std::max(dlgRect.top(), availableGeometry.top()));
 
     return dlgRect;
 }
@@ -1418,11 +1418,11 @@ void QDesignerActions::printPreviewImage()
 
     // Clamp to page
     const QRectF page =  painter.viewport();
-    const double maxScaling = qMin(page.size().width() / pixmapSize.width(), page.size().height() / pixmapSize.height());
-    const double scaling = qMin(suggestedScaling, maxScaling);
+    const double maxScaling = std::min(page.size().width() / pixmapSize.width(), page.size().height() / pixmapSize.height());
+    const double scaling = std::min(suggestedScaling, maxScaling);
 
-    const double xOffset = page.left() + qMax(0.0, (page.size().width()  - scaling * pixmapSize.width())  / 2.0);
-    const double yOffset = page.top()  + qMax(0.0, (page.size().height() - scaling * pixmapSize.height()) / 2.0);
+    const double xOffset = page.left() + std::max(0.0, (page.size().width()  - scaling * pixmapSize.width())  / 2.0);
+    const double yOffset = page.top()  + std::max(0.0, (page.size().height() - scaling * pixmapSize.height()) / 2.0);
 
     // Draw.
     painter.translate(xOffset, yOffset);

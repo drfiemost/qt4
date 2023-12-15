@@ -880,7 +880,7 @@ static void readUnicodeData()
                 data.p.upperCaseDiff = appendToSpecialCaseMap(QList<int>() << upperCase);
             } else {
                 data.p.upperCaseDiff = diff;
-                maxUpperCaseDiff = qMax(maxUpperCaseDiff, qAbs(diff));
+                maxUpperCaseDiff = std::max(maxUpperCaseDiff, qAbs(diff));
             }
             if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(upperCase)) {
                 // if the conditions below doesn't hold anymore we need to modify our upper casing code
@@ -900,7 +900,7 @@ static void readUnicodeData()
                 data.p.lowerCaseDiff = appendToSpecialCaseMap(QList<int>() << lowerCase);
             } else {
                 data.p.lowerCaseDiff = diff;
-                maxLowerCaseDiff = qMax(maxLowerCaseDiff, qAbs(diff));
+                maxLowerCaseDiff = std::max(maxLowerCaseDiff, qAbs(diff));
             }
             if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(lowerCase)) {
                 // if the conditions below doesn't hold anymore we need to modify our lower casing code
@@ -923,7 +923,7 @@ static void readUnicodeData()
                 data.p.titleCaseDiff = appendToSpecialCaseMap(QList<int>() << titleCase);
             } else {
                 data.p.titleCaseDiff = diff;
-                maxTitleCaseDiff = qMax(maxTitleCaseDiff, qAbs(diff));
+                maxTitleCaseDiff = std::max(maxTitleCaseDiff, qAbs(diff));
             }
             if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(titleCase)) {
                 // if the conditions below doesn't hold anymore we need to modify our title casing code
@@ -938,7 +938,7 @@ static void readUnicodeData()
         // decompositition
         QByteArray decomposition = properties[UD_Decomposition];
         if (!decomposition.isEmpty()) {
-            highestComposedCharacter = qMax(highestComposedCharacter, codepoint);
+            highestComposedCharacter = std::max(highestComposedCharacter, codepoint);
             QList<QByteArray> d = decomposition.split(' ');
             if (d[0].contains('<')) {
                 data.decompositionType = decompositionMap.value(d[0], QChar::NoDecomposition);
@@ -998,7 +998,7 @@ static void readBidiMirroring()
         UnicodeData &d = UnicodeData::valueRef(codepoint);
         d.mirroredChar = mirror;
         d.p.mirrorDiff = d.mirroredChar - codepoint;
-        maxMirroredDiff = qMax(maxMirroredDiff, qAbs(d.p.mirrorDiff));
+        maxMirroredDiff = std::max(maxMirroredDiff, qAbs(d.p.mirrorDiff));
     }
 }
 
@@ -1171,7 +1171,7 @@ static void readDerivedNormalizationProps()
             Q_ASSERT(UnicodeData::valueRef(part1).p.combiningClass == 0);
 
             ++numLigatures;
-            highestLigature = qMax(highestLigature, part1);
+            highestLigature = std::max(highestLigature, part1);
             Ligature l = { part1, part2, codepoint };
             ligatureHashes[part2].append(l);
         }
@@ -1242,7 +1242,7 @@ static QByteArray createNormalizationCorrections()
         out += "    { 0x" + QByteArray::number(c.codepoint, 16) + ", 0x" + QByteArray::number(c.mapped, 16)
              + ", " + QString::number(c.version) + " },\n";
         ++numCorrections;
-        maxVersion = qMax(c.version, maxVersion);
+        maxVersion = std::max(c.version, maxVersion);
     }
 
     out += "};\n\n"
@@ -1448,7 +1448,7 @@ static void readCaseFolding()
                 ud.p.caseFoldDiff = appendToSpecialCaseMap(foldMap);
             } else {
                 ud.p.caseFoldDiff = diff;
-                maxCaseFoldDiff = qMax(maxCaseFoldDiff, qAbs(diff));
+                maxCaseFoldDiff = std::max(maxCaseFoldDiff, qAbs(diff));
             }
             if (QChar::requiresSurrogates(codepoint) || QChar::requiresSurrogates(caseFolded)) {
                 // if the conditions below doesn't hold anymore we need to modify our case folding code

@@ -113,7 +113,7 @@ int QSqlCachedResultPrivate::nextIndex()
         return 0;
     int newIdx = rowCacheEnd;
     if (newIdx + colCount > cache.size())
-        cache.resize(qMin(cache.size() * 2, cache.size() + 10000));
+        cache.resize(std::min(cache.size() * 2, cache.size() + 10000));
     rowCacheEnd += colCount;
 
     return newIdx;

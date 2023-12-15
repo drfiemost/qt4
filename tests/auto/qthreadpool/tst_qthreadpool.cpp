@@ -804,7 +804,7 @@ void tst_QThreadPool::tryStartPeakThreadCount()
             {
                 QMutexLocker lock(&mutex);
                 ++activeThreads;
-                peakActiveThreads = qMax(peakActiveThreads, activeThreads);
+                peakActiveThreads = std::max(peakActiveThreads, activeThreads);
             }
 
             QTest::qWait(100);

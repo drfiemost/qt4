@@ -133,7 +133,7 @@ void Spacer::paintEvent(QPaintEvent *)
     }
     if (m_orientation == Qt::Horizontal) {
         const int dist = 3;
-        const int amplitude = qMin(3, h / 3);
+        const int amplitude = std::min(3, h / 3);
         const int base = h / 2;
         int i = 0;
         p.setPen(Qt::white);
@@ -147,7 +147,7 @@ void Spacer::paintEvent(QPaintEvent *)
         p.drawLine(w - 1, y-10, w - 1, y+10);
     } else {
         const int dist = 3;
-        const int amplitude = qMin(3, w / 3);
+        const int amplitude = std::min(3, w / 3);
         const int base = w / 2;
         int i = 0;
         p.setPen(Qt::white);
@@ -193,12 +193,12 @@ void Spacer::updateMask()
     const int h = height();
     if (w > 1 && h > 1) {
         if (m_orientation == Qt::Horizontal) {
-            const int amplitude = qMin(3, h / 3);
+            const int amplitude = std::min(3, h / 3);
             const int base = h / 2;
             r = r.subtract(QRect(1, 0, w - 2, base - amplitude));
             r = r.subtract(QRect(1, base + amplitude, w - 2, h - base - amplitude));
         } else {
-            const int amplitude = qMin(3, w / 3);
+            const int amplitude = std::min(3, w / 3);
             const int base = w / 2;
             r = r.subtract(QRect(0, 1, base - amplitude, h - 2));
             r = r.subtract(QRect(base + amplitude, 1, w - base - amplitude, h - 2));

@@ -867,7 +867,7 @@ void QCompleterPrivate::showPopup(const QRect& rect)
     Qt::LayoutDirection dir = widget->layoutDirection();
     QPoint pos;
     int rh, w;
-    int h = (popup->sizeHintForRow(0) * qMin(maxVisibleItems, popup->model()->rowCount()) + 3) + 3;
+    int h = (popup->sizeHintForRow(0) * std::min(maxVisibleItems, popup->model()->rowCount()) + 3) + 3;
     QScrollBar *hsb = popup->horizontalScrollBar();
     if (hsb && hsb->isVisible())
         h += popup->horizontalScrollBar()->sizeHint().height();
@@ -891,9 +891,9 @@ void QCompleterPrivate::showPopup(const QRect& rect)
 
     int top = pos.y() - rh - screen.top() + 2;
     int bottom = screen.bottom() - pos.y();
-    h = qMax(h, popup->minimumHeight());
+    h = std::max(h, popup->minimumHeight());
     if (h > bottom) {
-        h = qMin(qMax(top, bottom), h);
+        h = std::min(std::max(top, bottom), h);
 
         if (top > bottom)
             pos.setY(pos.y() - h - rh + 2);

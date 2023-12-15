@@ -1218,7 +1218,7 @@ void QDeclarativePathViewPrivate::handleMouseReleaseEvent(QGraphicsSceneMouseEve
         qreal v2 = velocity*velocity;
         qreal accel = deceleration/10;
         // + 0.25 to encourage moving at least one item in the flick direction
-        qreal dist = qMin(qreal(modelCount-1), qreal(v2 / (accel * qreal(2.0)) + qreal(0.25)));
+        qreal dist = std::min(qreal(modelCount-1), qreal(v2 / (accel * qreal(2.0)) + qreal(0.25)));
         if (haveHighlightRange && highlightRangeMode == QDeclarativePathView::StrictlyEnforceRange) {
             // round to nearest item.
             if (velocity > 0.)
@@ -1388,7 +1388,7 @@ void QDeclarativePathView::refill()
 
     if (d->modelCount) {
         // add items to beginning and end
-        int count = d->pathItems == -1 ? d->modelCount : qMin(d->pathItems, d->modelCount);
+        int count = d->pathItems == -1 ? d->modelCount : std::min(d->pathItems, d->modelCount);
         if (d->items.count() < count) {
             int idx = qRound(d->modelCount - d->offset) % d->modelCount;
             qreal startPos = 0.0;
@@ -1514,7 +1514,7 @@ void QDeclarativePathView::itemsRemoved(int modelIndex, int count)
         currentChanged = true;
     } else if (d->currentIndex >= modelIndex && d->currentIndex < modelIndex + count) {
         // current item has been removed.
-        d->currentIndex = qMin(modelIndex, d->modelCount-count-1);
+        d->currentIndex = std::min(modelIndex, d->modelCount-count-1);
         if (d->currentItem) {
             if (QDeclarativePathViewAttached *att = d->attached(d->currentItem))
                 att->setIsCurrentItem(true);

@@ -146,7 +146,7 @@ void QProgressDialogPrivate::layout()
     Q_Q(QProgressDialog);
     int sp = q->style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing);
     int mtb = q->style()->pixelMetric(QStyle::PM_DefaultTopLevelMargin);
-    int mlr = qMin(q->width() / 10, mtb);
+    int mlr = std::min(q->width() / 10, mtb);
     const bool centered =
         bool(q->style()->styleHint(QStyle::SH_ProgressDialog_CenterCancelButton, 0, q));
 
@@ -161,16 +161,16 @@ void QProgressDialogPrivate::layout()
     // dialog can be made very small if the user demands it so.
     for (int attempt=5; attempt--;) {
         cspc = cancel ? cs.height() + sp : 0;
-        lh = qMax(0, q->height() - mtb - bh.height() - sp - cspc);
+        lh = std::max(0, q->height() - mtb - bh.height() - sp - cspc);
 
         if (lh < q->height()/4) {
             // Getting cramped
             sp /= 2;
             mtb /= 2;
             if (cancel) {
-                cs.setHeight(qMax(4,cs.height()-sp-2));
+                cs.setHeight(std::max(4,cs.height()-sp-2));
             }
-            bh.setHeight(qMax(4,bh.height()-sp-1));
+            bh.setHeight(std::max(4,bh.height()-sp-1));
         } else {
             break;
         }
@@ -374,8 +374,8 @@ void QProgressDialog::setLabel(QLabel *label)
             label->setParent(this, 0);
         }
     }
-    int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-    int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+    int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+    int h = std::max(isVisible() ? height() : 0, sizeHint().height());
     resize(w, h);
     if (label)
         label->show();
@@ -402,8 +402,8 @@ void QProgressDialog::setLabelText(const QString &text)
     Q_D(QProgressDialog);
     if (d->label) {
         d->label->setText(text);
-        int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-        int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+        int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+        int h = std::max(isVisible() ? height() : 0, sizeHint().height());
         resize(w, h);
     }
 }
@@ -440,8 +440,8 @@ void QProgressDialog::setCancelButton(QPushButton *cancelButton)
         d->escapeShortcut = 0;
 #endif
     }
-    int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-    int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+    int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+    int h = std::max(isVisible() ? height() : 0, sizeHint().height());
     resize(w, h);
     if (cancelButton)
 #if !defined(QT_SOFTKEYS_ENABLED)
@@ -481,8 +481,8 @@ void QProgressDialog::setCancelButtonText(const QString &cancelButtonText)
     } else {
         setCancelButton(0);
     }
-    int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-    int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+    int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+    int h = std::max(isVisible() ? height() : 0, sizeHint().height());
     resize(w, h);
 }
 
@@ -508,8 +508,8 @@ void QProgressDialog::setBar(QProgressBar *bar)
 #endif
     delete d->bar;
     d->bar = bar;
-    int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-    int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+    int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+    int h = std::max(isVisible() ? height() : 0, sizeHint().height());
     resize(w, h);
 }
 
@@ -696,8 +696,8 @@ void QProgressDialog::setValue(int progress)
                 }
             }
             if (need_show) {
-                int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-                int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+                int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+                int h = std::max(isVisible() ? height() : 0, sizeHint().height());
                 resize(w, h);
                 show();
                 d->shown_once = true;
@@ -728,7 +728,7 @@ QSize QProgressDialog::sizeHint() const
     int h = margin * 2 + bh.height() + sh.height() + spacing;
     if (d->cancel)
         h += d->cancel->sizeHint().height() + spacing;
-    return QSize(qMax(200, sh.width() + 2 * margin), h);
+    return QSize(std::max(200, sh.width() + 2 * margin), h);
 }
 
 /*!\reimp
@@ -844,8 +844,8 @@ void QProgressDialog::showEvent(QShowEvent *e)
 {
     Q_D(QProgressDialog);
     QDialog::showEvent(e);
-    int w = qMax(isVisible() ? width() : 0, sizeHint().width());
-    int h = qMax(isVisible() ? height() : 0, sizeHint().height());
+    int w = std::max(isVisible() ? width() : 0, sizeHint().width());
+    int h = std::max(isVisible() ? height() : 0, sizeHint().height());
     resize(w, h);
     d->forceTimer->stop();
 }

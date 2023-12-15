@@ -396,7 +396,7 @@ int QDial::notchSize() const
 {
     Q_D(const QDial);
     // radius of the arc
-    int r = qMin(width(), height())/2;
+    int r = std::min(width(), height())/2;
     // length of the whole arc
     int l = (int)(r * (d->wrapping ? 6 : 5) * Q_PI / 6);
     // length of the arc from minValue() to minValue()+pageStep()

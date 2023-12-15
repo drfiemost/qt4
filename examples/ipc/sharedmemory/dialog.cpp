@@ -133,7 +133,7 @@ void Dialog::loadFromFile()
     sharedMemory.lock();
     char *to = (char*)sharedMemory.data();
     const char *from = buffer.data().data();
-    memcpy(to, from, qMin(sharedMemory.size(), size));
+    memcpy(to, from, std::min(sharedMemory.size(), size));
     sharedMemory.unlock();
 }
 //! [2]

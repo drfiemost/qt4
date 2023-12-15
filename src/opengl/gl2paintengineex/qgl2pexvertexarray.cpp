@@ -140,7 +140,7 @@ void QGL2PEXVertexArray::addPath(const QVectorPath &path, GLfloat curveInverseSc
                                                 points[i+2]);
                 QRectF bounds = b.bounds();
                 // threshold based on same algorithm as in qtriangulatingstroker.cpp
-                int threshold = qMin<float>(64, std::max(bounds.width(), bounds.height()) * 3.14f / (curveInverseScale * 6));
+                int threshold = std::min<float>(64, std::max(bounds.width(), bounds.height()) * 3.14f / (curveInverseScale * 6));
                 if (threshold < 3) threshold = 3;
                 qreal one_over_threshold_minus_1 = qreal(1) / (threshold - 1);
                 for (int t=0; t<threshold; ++t) {

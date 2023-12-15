@@ -281,7 +281,7 @@ QSize QDockAreaLayoutInfo::minimumSize() const
         QSize min_size = item.minimumSize();
 #ifndef QT_NO_TABBAR
         if (tabbed) {
-            a = qMax(a, pick(o, min_size));
+            a = std::max(a, pick(o, min_size));
         } else
 #endif
         {
@@ -289,7 +289,7 @@ QSize QDockAreaLayoutInfo::minimumSize() const
                 a += *sep;
             a += pick(o, min_size);
         }
-        b = qMax(b, perp(o, min_size));
+        b = std::max(b, perp(o, min_size));
 
         first = false;
     }
@@ -307,13 +307,13 @@ QSize QDockAreaLayoutInfo::minimumSize() const
             case QTabBar::TriangularNorth:
             case QTabBar::TriangularSouth:
                 result.rheight() += tbm.height();
-                result.rwidth() = qMax(tbm.width(), result.width());
+                result.rwidth() = std::max(tbm.width(), result.width());
                 break;
             case QTabBar::RoundedEast:
             case QTabBar::RoundedWest:
             case QTabBar::TriangularEast:
             case QTabBar::TriangularWest:
-                result.rheight() = qMax(tbm.height(), result.height());
+                result.rheight() = std::max(tbm.height(), result.height());
                 result.rwidth() += tbm.width();
                 break;
             default:
@@ -345,11 +345,11 @@ QSize QDockAreaLayoutInfo::maximumSize() const
             continue;
 
         QSize max_size = item.maximumSize();
-        min_perp = qMax(min_perp, perp(o, item.minimumSize()));
+        min_perp = std::max(min_perp, perp(o, item.minimumSize()));
 
 #ifndef QT_NO_TABBAR
         if (tabbed) {
-            a = qMin(a, pick(o, max_size));
+            a = std::min(a, pick(o, max_size));
         } else
 #endif
         {
@@ -357,15 +357,15 @@ QSize QDockAreaLayoutInfo::maximumSize() const
                 a += *sep;
             a += pick(o, max_size);
         }
-        b = qMin(b, perp(o, max_size));
+        b = std::min(b, perp(o, max_size));
 
-        a = qMin(a, int(QWIDGETSIZE_MAX));
-        b = qMin(b, int(QWIDGETSIZE_MAX));
+        a = std::min(a, int(QWIDGETSIZE_MAX));
+        b = std::min(b, int(QWIDGETSIZE_MAX));
 
         first = false;
     }
 
-    b = qMax(b, min_perp);
+    b = std::max(b, min_perp);
 
     QSize result;
     rpick(o, result) = a;
@@ -409,12 +409,12 @@ QSize QDockAreaLayoutInfo::sizeHint() const
         bool gap = item.flags & QDockAreaLayoutItem::GapItem;
 
         QSize size_hint = item.sizeHint();
-        min_perp = qMax(min_perp, perp(o, item.minimumSize()));
-        max_perp = qMin(max_perp, perp(o, item.maximumSize()));
+        min_perp = std::max(min_perp, perp(o, item.minimumSize()));
+        max_perp = std::min(max_perp, perp(o, item.maximumSize()));
 
 #ifndef QT_NO_TABBAR
         if (tabbed) {
-            a = qMax(a, gap ? item.size : pick(o, size_hint));
+            a = std::max(a, gap ? item.size : pick(o, size_hint));
         } else
 #endif
         {
@@ -424,14 +424,14 @@ QSize QDockAreaLayoutInfo::sizeHint() const
             }
             a += gap ? item.size : pick(o, size_hint);
         }
-        b = qMax(b, perp(o, size_hint));
+        b = std::max(b, perp(o, size_hint));
 
         previous = &item;
     }
 
-    max_perp = qMax(max_perp, min_perp);
-    b = qMax(b, min_perp);
-    b = qMin(b, max_perp);
+    max_perp = std::max(max_perp, min_perp);
+    b = std::max(b, min_perp);
+    b = std::min(b, max_perp);
 
     QSize result;
     rpick(o, result) = a;
@@ -446,13 +446,13 @@ QSize QDockAreaLayoutInfo::sizeHint() const
             case QTabBar::TriangularNorth:
             case QTabBar::TriangularSouth:
                 result.rheight() += tbh.height();
-                result.rwidth() = qMax(tbh.width(), result.width());
+                result.rwidth() = std::max(tbh.width(), result.width());
                 break;
             case QTabBar::RoundedEast:
             case QTabBar::RoundedWest:
             case QTabBar::TriangularEast:
             case QTabBar::TriangularWest:
-                result.rheight() = qMax(tbh.height(), result.height());
+                result.rheight() = std::max(tbh.height(), result.height());
                 result.rwidth() += tbh.width();
                 break;
             default:
@@ -574,13 +574,13 @@ void QDockAreaLayoutInfo::fitItems()
                 item.flags &= ~QDockAreaLayoutItem::KeepSize;
                 min_size -= item.size;
                 min_size += pick(o, item.minimumSize());
-                min_size = qMax(0, min_size);
+                min_size = std::max(0, min_size);
             } else if (size > max_size) {
                 // There is too much space to keep this widget's size
                 item.flags &= ~QDockAreaLayoutItem::KeepSize;
                 max_size -= item.size;
                 max_size += pick(o, item.maximumSize());
-                max_size = qMin<int>(QWIDGETSIZE_MAX, max_size);
+                max_size = std::min<int>(QWIDGETSIZE_MAX, max_size);
             }
         }
 
@@ -838,7 +838,7 @@ static inline int shrink(QLayoutStruct &ls, int delta)
     if (ls.empty)
         return 0;
     int old_size = ls.size;
-    ls.size = qMax(ls.size - delta, ls.minimumSize);
+    ls.size = std::max(ls.size - delta, ls.minimumSize);
     return old_size - ls.size;
 }
 
@@ -847,7 +847,7 @@ static inline int grow(QLayoutStruct &ls, int delta)
     if (ls.empty)
         return 0;
     int old_size = ls.size;
-    ls.size = qMin(ls.size + delta, ls.maximumSize);
+    ls.size = std::min(ls.size + delta, ls.maximumSize);
     return ls.size - old_size;
 }
 
@@ -1864,12 +1864,12 @@ static Qt::DockWidgetArea toDockWidgetArea(QInternal::DockPosition pos)
 static QRect constrainedRect(QRect rect, const QRect &desktop)
 {
     if (desktop.isValid()) {
-        rect.setWidth(qMin(rect.width(), desktop.width()));
-        rect.setHeight(qMin(rect.height(), desktop.height()));
-        rect.moveLeft(qMax(rect.left(), desktop.left()));
-        rect.moveTop(qMax(rect.top(), desktop.top()));
-        rect.moveRight(qMin(rect.right(), desktop.right()));
-        rect.moveBottom(qMin(rect.bottom(), desktop.bottom()));
+        rect.setWidth(std::min(rect.width(), desktop.width()));
+        rect.setHeight(std::min(rect.height(), desktop.height()));
+        rect.moveLeft(std::max(rect.left(), desktop.left()));
+        rect.moveTop(std::max(rect.top(), desktop.top()));
+        rect.moveRight(std::min(rect.right(), desktop.right()));
+        rect.moveBottom(std::min(rect.bottom(), desktop.bottom()));
     }
 
     return rect;
@@ -2577,8 +2577,8 @@ void QDockAreaLayout::remove(const QList<int> &path)
     docks[index].remove(path.mid(1));
 }
 
-static inline int qMin(int i1, int i2, int i3) { return qMin(i1, qMin(i2, i3)); }
-static inline int qMax(int i1, int i2, int i3) { return qMax(i1, qMax(i2, i3)); }
+static inline int std::min(int i1, int i2, int i3) { return qMin(i1, qMin(i2, i3)); }
+static inline int std::max(int i1, int i2, int i3) { return qMax(i1, qMax(i2, i3)); }
 
 void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
                                 QVector<QLayoutStruct> *_hor_struct_list)
@@ -2665,11 +2665,11 @@ void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
 
         int left = (tl_significant && bl_significant) ? left_hint.height() : 0;
         int right = (tr_significant && br_significant) ? right_hint.height() : 0;
-        ver_struct_list[1].sizeHint = qMax(left, center_hint.height(), right);
+        ver_struct_list[1].sizeHint = std::max(left, center_hint.height(), right);
 
         left = (tl_significant && bl_significant) ? left_min.height() : 0;
         right = (tr_significant && br_significant) ? right_min.height() : 0;
-        ver_struct_list[1].minimumSize = qMax(left, center_min.height(), right);
+        ver_struct_list[1].minimumSize = std::max(left, center_min.height(), right);
         ver_struct_list[1].maximumSize = center_max.height();
         ver_struct_list[1].expansive = have_central;
         ver_struct_list[1].empty = docks[QInternal::LeftDock].isEmpty()
@@ -2691,7 +2691,7 @@ void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
 
         for (int i = 0; i < 3; ++i) {
             ver_struct_list[i].sizeHint
-                = qMax(ver_struct_list[i].sizeHint, ver_struct_list[i].minimumSize);
+                = std::max(ver_struct_list[i].sizeHint, ver_struct_list[i].minimumSize);
         }
         if (have_central && ver_struct_list[0].empty && ver_struct_list[2].empty) {
             ver_struct_list[1].maximumSize = QWIDGETSIZE_MAX;
@@ -2728,11 +2728,11 @@ void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
 
         int top = (tl_significant && tr_significant) ? top_hint.width() : 0;
         int bottom = (bl_significant && br_significant) ? bottom_hint.width() : 0;
-        hor_struct_list[1].sizeHint = qMax(top, center_hint.width(), bottom);
+        hor_struct_list[1].sizeHint = std::max(top, center_hint.width(), bottom);
 
         top = (tl_significant && tr_significant) ? top_min.width() : 0;
         bottom = (bl_significant && br_significant) ? bottom_min.width() : 0;
-        hor_struct_list[1].minimumSize = qMax(top, center_min.width(), bottom);
+        hor_struct_list[1].minimumSize = std::max(top, center_min.width(), bottom);
 
         hor_struct_list[1].maximumSize = center_max.width();
         hor_struct_list[1].expansive = have_central;
@@ -2753,7 +2753,7 @@ void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
 
         for (int i = 0; i < 3; ++i) {
             hor_struct_list[i].sizeHint
-                = qMax(hor_struct_list[i].sizeHint, hor_struct_list[i].minimumSize);
+                = std::max(hor_struct_list[i].sizeHint, hor_struct_list[i].minimumSize);
         }
         if (have_central && hor_struct_list[0].empty && hor_struct_list[2].empty) {
             hor_struct_list[1].maximumSize = QWIDGETSIZE_MAX;
@@ -2925,7 +2925,7 @@ QSize QDockAreaLayout::sizeHint() const
     else
         col3 += bottom.height();
 
-    return QSize(qMax(row1, row2, row3), qMax(col1, col2, col3));
+    return QSize(std::max(row1, row2, row3), qMax(col1, col2, col3));
 }
 
 QSize QDockAreaLayout::minimumSize() const
@@ -2975,7 +2975,7 @@ QSize QDockAreaLayout::minimumSize() const
     else
         col3 += bottom.height();
 
-    return QSize(qMax(row1, row2, row3), qMax(col1, col2, col3));
+    return QSize(std::max(row1, row2, row3), qMax(col1, col2, col3));
 }
 
 bool QDockAreaLayout::restoreDockWidget(QDockWidget *dockWidget)

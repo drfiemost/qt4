@@ -131,7 +131,7 @@ void TrackerClient::fetchPeerList()
     } else {
         query += "&downloaded=" + QByteArray::number(
             torrentDownloader->downloadedBytes());
-        int left = qMax<int>(0, metaInfo.totalSize() - torrentDownloader->downloadedBytes());
+        int left = std::max<int>(0, metaInfo.totalSize() - torrentDownloader->downloadedBytes());
         query += "&left=" + QByteArray::number(seeding ? 0 : left);
     }
 

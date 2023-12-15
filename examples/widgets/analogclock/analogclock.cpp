@@ -80,7 +80,7 @@ void AnalogClock::paintEvent(QPaintEvent *)
     QColor hourColor(127, 0, 127);
     QColor minuteColor(0, 127, 127, 191);
 
-    int side = qMin(width(), height());
+    int side = std::min(width(), height());
     QTime time = QTime::currentTime();
 //! [10]
 

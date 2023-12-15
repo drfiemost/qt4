@@ -398,7 +398,7 @@ public:
         }
 
         QMutexLocker lock(&openFile_->mutex);
-        qint64 readSize = qMin(openFile_->content.size() - position_, maxLen);
+        qint64 readSize = std::min(openFile_->content.size() - position_, maxLen);
         if (readSize < 0)
             return -1;
 
@@ -432,7 +432,7 @@ public:
             openFile_->content.replace(position_, length, data, length);
         }
 
-        qint64 writeSize = qMin(length, openFile_->content.size() - position_);
+        qint64 writeSize = std::min(length, openFile_->content.size() - position_);
         position_ += writeSize;
 
         return writeSize;

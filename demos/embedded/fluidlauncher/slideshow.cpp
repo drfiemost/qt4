@@ -165,13 +165,13 @@ void SlideShow::paintEvent(QPaintEvent *event)
     if (d->imagePaths.size() > 0) {
         QPixmap slide = QPixmap(d->imagePaths[d->currentSlide]);
         QSize slideSize = slide.size();
-        QSize scaledSize = QSize(qMin(slideSize.width(), size().width()),
-            qMin(slideSize.height(), size().height()));
+        QSize scaledSize = QSize(std::min(slideSize.width(), size().width()),
+            std::min(slideSize.height(), size().height()));
         if (slideSize != scaledSize)
             slide = slide.scaled(scaledSize, Qt::KeepAspectRatio);
 
-        QRect pixmapRect(qMax( (size().width() - slide.width())/2, 0),
-                         qMax( (size().height() - slide.height())/2, 0),
+        QRect pixmapRect(std::max( (size().width() - slide.width())/2, 0),
+                         std::max( (size().height() - slide.height())/2, 0),
                          slide.width(),
                          slide.height());
 

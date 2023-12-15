@@ -1714,8 +1714,8 @@ void QX11EmbedContainerPrivate::acceptClient(WId window)
     // Resize it, but no smaller than its minimum size hint.
     XResizeWindow(q->x11Info().display(),
                   client,
-                  qMax(q->width(), wmMinimumSizeHint.width()),
-                  qMax(q->height(), wmMinimumSizeHint.height()));
+                  std::max(q->width(), wmMinimumSizeHint.width()),
+                  std::max(q->height(), wmMinimumSizeHint.height()));
     q->update();
 
     // Not mentioned in the protocol is that if the container

@@ -231,7 +231,7 @@ DWORD WINAPI qt_adopted_thread_watcher_function(LPVOID)
             int loop = 0;
             do {
                 offset = loop * MAXIMUM_WAIT_OBJECTS;
-                count = qMin(handlesCopy.count() - offset, MAXIMUM_WAIT_OBJECTS);
+                count = std::min(handlesCopy.count() - offset, MAXIMUM_WAIT_OBJECTS);
                 ret = WaitForMultipleObjects(count, handlesCopy.constData() + offset, false, 100);
                 loop = (loop + 1) % loops;
             } while (ret == WAIT_TIMEOUT);

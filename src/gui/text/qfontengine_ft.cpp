@@ -1266,8 +1266,8 @@ qreal QFontEngineFT::minRightBearing() const
         while (--ng) {
             if (glyphs.glyphs[ng]) {
                 glyph_metrics_t gi = const_cast<QFontEngineFT *>(this)->boundingBox(glyphs.glyphs[ng]);
-                lbearing = qMin(lbearing, gi.x);
-                rbearing = qMin(rbearing, (gi.xoff - gi.x - gi.width));
+                lbearing = std::min(lbearing, gi.x);
+                rbearing = std::min(rbearing, (gi.xoff - gi.x - gi.width));
             }
         }
     }
@@ -1654,10 +1654,10 @@ glyph_metrics_t QFontEngineFT::boundingBox(const QGlyphLayout &glyphs)
         if (g) {
             QFixed x = overall.xoff + glyphs.offsets[i].x + g->x;
             QFixed y = overall.yoff + glyphs.offsets[i].y - g->y;
-            overall.x = qMin(overall.x, x);
-            overall.y = qMin(overall.y, y);
-            xmax = qMax(xmax, x + g->width);
-            ymax = qMax(ymax, y + g->height);
+            overall.x = std::min(overall.x, x);
+            overall.y = std::min(overall.y, y);
+            xmax = std::max(xmax, x + g->width);
+            ymax = std::max(ymax, y + g->height);
             overall.xoff += qRound(g->advance);
         } else {
             int left  = FLOOR(face->glyph->metrics.horiBearingX);
@@ -1667,14 +1667,14 @@ glyph_metrics_t QFontEngineFT::boundingBox(const QGlyphLayout &glyphs)
 
             QFixed x = overall.xoff + glyphs.offsets[i].x - (-TRUNC(left));
             QFixed y = overall.yoff + glyphs.offsets[i].y - TRUNC(top);
-            overall.x = qMin(overall.x, x);
-            overall.y = qMin(overall.y, y);
-            xmax = qMax(xmax, x + TRUNC(right - left));
-            ymax = qMax(ymax, y + TRUNC(top - bottom));
+            overall.x = std::min(overall.x, x);
+            overall.y = std::min(overall.y, y);
+            xmax = std::max(xmax, x + TRUNC(right - left));
+            ymax = std::max(ymax, y + TRUNC(top - bottom));
             overall.xoff += qRound(TRUNC(ROUND(face->glyph->advance.x)));
         }
     }
-    overall.height = qMax(overall.height, ymax - overall.y);
+    overall.height = std::max(overall.height, ymax - overall.y);
     overall.width = xmax - overall.x;
 
     if (face)

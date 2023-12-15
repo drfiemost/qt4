@@ -127,7 +127,7 @@ static QString s5StateToString(QSocks5SocketEnginePrivate::Socks5State s)
 static QString dump(const QByteArray &buf)
 {
     QString data;
-    for (int i = 0; i < qMin<int>(MAX_DATA_DUMP, buf.size()); ++i) {
+    for (int i = 0; i < std::min<int>(MAX_DATA_DUMP, buf.size()); ++i) {
         if (i) data += QLatin1Char(' ');
         uint val = (unsigned char)buf.at(i);
        // data += QString("0x%1").arg(val, 3, 16, QLatin1Char('0'));
@@ -1516,7 +1516,7 @@ qint64 QSocks5SocketEngine::read(char *data, qint64 maxlen)
                 return 0;       // nothing to be read
             }
         }
-        qint64 copy = qMin<qint64>(d->connectData->readBuffer.size(), maxlen);
+        qint64 copy = std::min<qint64>(d->connectData->readBuffer.size(), maxlen);
         memcpy(data, d->connectData->readBuffer.constData(), copy);
         d->connectData->readBuffer.remove(0, copy);
         QSOCKS5_DEBUG << "read" << dump(QByteArray(data, copy));
@@ -1536,7 +1536,7 @@ qint64 QSocks5SocketEngine::write(const char *data, qint64 len)
 
     if (d->mode == QSocks5SocketEnginePrivate::ConnectMode) {
         // clamp down the amount of bytes to transfer at once
-        len = qMin<qint64>(len, MaxWriteBufferSize) - d->data->controlSocket->bytesToWrite();
+        len = std::min<qint64>(len, MaxWriteBufferSize) - d->data->controlSocket->bytesToWrite();
         if (len <= 0)
             return 0;
 
@@ -1607,7 +1607,7 @@ qint64 QSocks5SocketEngine::readDatagram(char *data, qint64 maxlen, QHostAddress
         return 0;
 
     QSocks5RevivedDatagram datagram = d->udpData->pendingDatagrams.dequeue();
-    int copyLen = qMin<int>(maxlen, datagram.data.size());
+    int copyLen = std::min<int>(maxlen, datagram.data.size());
     memcpy(data, datagram.data.constData(), copyLen);
     if (addr)
         *addr = datagram.address;

@@ -1755,10 +1755,10 @@ void QGraphicsScene::render(QPainter *painter, const QRectF &target, const QRect
     // Scale according to the aspect ratio mode.
     switch (aspectRatioMode) {
     case Qt::KeepAspectRatio:
-        xratio = yratio = qMin(xratio, yratio);
+        xratio = yratio = std::min(xratio, yratio);
         break;
     case Qt::KeepAspectRatioByExpanding:
-        xratio = yratio = qMax(xratio, yratio);
+        xratio = yratio = std::max(xratio, yratio);
         break;
     case Qt::IgnoreAspectRatio:
         break;
@@ -2457,7 +2457,7 @@ QGraphicsItemGroup *QGraphicsScene::createItemGroup(const QList<QGraphicsItem *>
             int commonIndex = -1;
             QGraphicsItem *parent = items.at(n++);
             do {
-                int index = ancestors.indexOf(parent, qMax(0, commonIndex));
+                int index = ancestors.indexOf(parent, std::max(0, commonIndex));
                 if (index != -1) {
                     commonIndex = index;
                     break;
@@ -5708,7 +5708,7 @@ void QGraphicsScene::setActiveWindow(QGraphicsWidget *widget)
         // Find the highest z value.
         qreal z = panel->zValue();
         for (int i = 0; i < siblingWindows.size(); ++i)
-            z = qMax(z, siblingWindows.at(i)->zValue());
+            z = std::max(z, siblingWindows.at(i)->zValue());
 
         // This will probably never overflow.
         const qreal litt = qreal(0.001);

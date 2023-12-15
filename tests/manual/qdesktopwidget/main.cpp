@@ -118,10 +118,10 @@ private slots:
 
             screen->setBrush(fillBrush);
             scene->addItem(screen);
-            sceneRect.setLeft(qMin(sceneRect.left(), screenRect.left()));
-            sceneRect.setRight(qMax(sceneRect.right(), screenRect.right()));
-            sceneRect.setTop(qMin(sceneRect.top(), screenRect.top()));
-            sceneRect.setBottom(qMax(sceneRect.bottom(), screenRect.bottom()));
+            sceneRect.setLeft(std::min(sceneRect.left(), screenRect.left()));
+            sceneRect.setRight(std::max(sceneRect.right(), screenRect.right()));
+            sceneRect.setTop(std::min(sceneRect.top(), screenRect.top()));
+            sceneRect.setBottom(std::max(sceneRect.bottom(), screenRect.bottom()));
 
             QGraphicsRectItem *workArea = new QGraphicsRectItem(screen);
             workArea->setRect(0, 0, workRect.width(), workRect.height());

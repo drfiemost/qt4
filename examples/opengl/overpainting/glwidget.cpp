@@ -222,7 +222,7 @@ void GLWidget::createBubbles(int number)
     for (int i = 0; i < number; ++i) {
         QPointF position(width()*(0.1 + (0.8*qrand()/(RAND_MAX+1.0))),
                         height()*(0.1 + (0.8*qrand()/(RAND_MAX+1.0))));
-        qreal radius = qMin(width(), height())*(0.0125 + 0.0875*qrand()/(RAND_MAX+1.0));
+        qreal radius = std::min(width(), height())*(0.0125 + 0.0875*qrand()/(RAND_MAX+1.0));
         QPointF velocity(width()*0.0125*(-0.5 + qrand()/(RAND_MAX+1.0)),
                         height()*0.0125*(-0.5 + qrand()/(RAND_MAX+1.0)));
 
@@ -246,7 +246,7 @@ void GLWidget::animate()
 //! [14]
 void GLWidget::setupViewport(int width, int height)
 {
-    int side = qMin(width, height);
+    int side = std::min(width, height);
     glViewport((width - side) / 2, (height - side) / 2, side, side);
 
     glMatrixMode(GL_PROJECTION);
@@ -266,7 +266,7 @@ void GLWidget::drawInstructions(QPainter *painter)
     QString text = tr("Click and drag with the left mouse button "
                       "to rotate the Qt logo.");
     QFontMetrics metrics = QFontMetrics(font());
-    int border = qMax(4, metrics.leading());
+    int border = std::max(4, metrics.leading());
 
     QRect rect = metrics.boundingRect(0, 0, width() - 2*border, int(height()*0.125),
                                       Qt::AlignCenter | Qt::TextWordWrap, text);

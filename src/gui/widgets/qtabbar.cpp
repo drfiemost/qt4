@@ -341,7 +341,7 @@ void QTabBar::initStyleOption(QStyleOptionTab *option, int tabIndex) const
 int QTabBarPrivate::extraWidth() const
 {
     Q_Q(const QTabBar);
-    return 2 * qMax(q->style()->pixelMetric(QStyle::PM_TabBarScrollButtonWidth, 0, q),
+    return 2 * std::max(q->style()->pixelMetric(QStyle::PM_TabBarScrollButtonWidth, 0, q),
                     QApplication::globalStrut().width());
 }
 
@@ -429,7 +429,7 @@ void QTabBarPrivate::layoutTabs()
             QSize sz = q->tabSizeHint(i);
             tabList[i].maxRect = QRect(x, 0, sz.width(), sz.height());
             x += sz.width();
-            maxHeight = qMax(maxHeight, sz.height());
+            maxHeight = std::max(maxHeight, sz.height());
             sz = minimumTabSizeHint(i);
             tabList[i].minRect = QRect(minx, 0, sz.width(), sz.height());
             minx += sz.width();
@@ -454,7 +454,7 @@ void QTabBarPrivate::layoutTabs()
             QSize sz = q->tabSizeHint(i);
             tabList[i].maxRect = QRect(0, y, sz.width(), sz.height());
             y += sz.height();
-            maxWidth = qMax(maxWidth, sz.width());
+            maxWidth = std::max(maxWidth, sz.width());
             sz = minimumTabSizeHint(i);
             tabList[i].minRect = QRect(0, miny, sz.width(), sz.height());
             miny += sz.height();
@@ -481,7 +481,7 @@ void QTabBarPrivate::layoutTabs()
     tabChain[tabChainIndex].empty = true;
 
     // Do the calculation
-    qGeomCalc(tabChain, 0, tabChain.count(), 0, qMax(available, last), 0);
+    qGeomCalc(tabChain, 0, tabChain.count(), 0, std::max(available, last), 0);
 
     // Use the results
     for (i = 0; i < tabList.count(); ++i) {
@@ -1358,8 +1358,8 @@ QSize QTabBar::tabSizeHint(int index) const
         int vframe = style()->pixelMetric(QStyle::PM_TabBarTabVSpace, &opt, this);
         const QFontMetrics fm = fontMetrics();
 
-        int maxWidgetHeight = qMax(opt.leftButtonSize.height(), opt.rightButtonSize.height());
-        int maxWidgetWidth = qMax(opt.leftButtonSize.width(), opt.rightButtonSize.width());
+        int maxWidgetHeight = std::max(opt.leftButtonSize.height(), opt.rightButtonSize.height());
+        int maxWidgetWidth = std::max(opt.leftButtonSize.width(), opt.rightButtonSize.width());
 
         int widgetWidth = 0;
         int widgetHeight = 0;
@@ -1379,12 +1379,12 @@ QSize QTabBar::tabSizeHint(int index) const
 
         QSize csz;
         if (verticalTabs(d->shape)) {
-            csz = QSize( qMax(maxWidgetWidth, qMax(fm.height(), iconSize.height())) + vframe,
+            csz = QSize( std::max(maxWidgetWidth, qMax(fm.height(), iconSize.height())) + vframe,
                     fm.size(Qt::TextShowMnemonic, tab->text).width() + iconSize.width() + hframe + widgetHeight + padding);
         } else {
             csz = QSize(fm.size(Qt::TextShowMnemonic, tab->text).width() + iconSize.width() + hframe
                   + widgetWidth + padding,
-                  qMax(maxWidgetHeight, qMax(fm.height(), iconSize.height())) + vframe);
+                  std::max(maxWidgetHeight, qMax(fm.height(), iconSize.height())) + vframe);
         }
 
         QSize retSize = style()->sizeFromContents(QStyle::CT_TabBarTab, &opt, csz, this);
@@ -1616,8 +1616,8 @@ int QTabBarPrivate::calculateNewPosition(int from, int to, int index) const
     if (index == from)
         return to;
 
-    int start = qMin(from, to);
-    int end = qMax(from, to);
+    int start = std::min(from, to);
+    int end = std::max(from, to);
     if (index >= start && index <= end)
         index += (from < to) ? -1 : 1;
     return index;
@@ -1646,8 +1646,8 @@ void QTabBar::moveTab(int from, int to)
     }
 
     // Update the locations of the tabs first
-    int start = qMin(from, to);
-    int end = qMax(from, to);
+    int start = std::min(from, to);
+    int end = std::max(from, to);
     int width = vertical ? d->tabList[from].rect.height() : d->tabList[from].rect.width();
     if (from < to)
         width *= -1;
@@ -1942,7 +1942,7 @@ void QTabBar::mouseReleaseEvent(QMouseEvent *event)
         int width = verticalTabs(d->shape)
             ? tabRect(d->pressedIndex).height()
             : tabRect(d->pressedIndex).width();
-        int duration = qMin(ANIMATION_DURATION,
+        int duration = std::min(ANIMATION_DURATION,
                 (qAbs(length) * ANIMATION_DURATION) / width);
         d->tabList[d->pressedIndex].startAnimation(d, duration);
         d->dragInProgress = false;

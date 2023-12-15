@@ -282,7 +282,7 @@ QT_BEGIN_NAMESPACE
     do { \
         if (var < 0 || var > 255) { \
             qWarning(#fn": invalid value %d", var); \
-            var = qMax(0, qMin(var, 255)); \
+            var = std::max(0, std::min(var, 255)); \
         } \
     } while (0)
 
@@ -290,7 +290,7 @@ QT_BEGIN_NAMESPACE
     do { \
         if (var < qreal(0.0) || var > qreal(1.0)) { \
             qWarning(#fn": invalid value %g", var); \
-            var = qMax(qreal(0.0), qMin(var, qreal(1.0)));      \
+            var = std::max(qreal(0.0), std::min(var, qreal(1.0)));      \
         } \
     } while (0)
 
@@ -1833,7 +1833,7 @@ QColor QColor::toCmyk() const
     qreal y = qreal(1.0) - b;
 
     // cmy -> cmyk
-    const qreal k = qMin(c, qMin(m, y));
+    const qreal k = std::min(c, qMin(m, y));
 
     if (!qFuzzyIsNull(k - 1)) {
         c = (c - k) / (qreal(1.0) - k);

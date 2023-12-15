@@ -761,7 +761,7 @@ QSize QCommonStylePrivate::viewItemSize(const QStyleOptionViewItem *option, int 
                 line.setLineWidth(bounds.width());
                 line.setPosition(QPointF(0, height));
                 height += line.height();
-                widthUsed = qMax(widthUsed, line.naturalTextWidth());
+                widthUsed = std::max(widthUsed, line.naturalTextWidth());
             }
             textLayout.endLayout();
             const QSize size(qCeil(widthUsed), qCeil(height));
@@ -792,7 +792,7 @@ static QSizeF viewItemTextLayout(QTextLayout &textLayout, int lineWidth)
         line.setLineWidth(lineWidth);
         line.setPosition(QPointF(0, height));
         height += line.height();
-        widthUsed = qMax(widthUsed, line.naturalTextWidth());
+        widthUsed = std::max(widthUsed, line.naturalTextWidth());
     }
     textLayout.endLayout();
     return QSizeF(widthUsed, height);
@@ -847,7 +847,7 @@ void QCommonStylePrivate::viewItemDrawText(QPainter *p, const QStyleOptionViewIt
             elidedIndex = j;
             break;
         }
-        width = qMax<qreal>(width, line.width());
+        width = std::max<qreal>(width, line.width());
         height += line.height();
     }
 
@@ -907,12 +907,12 @@ void QCommonStylePrivate::viewItemLayout(const QStyleOptionViewItem *opt,  QRect
         pm.rwidth() += 2 * pixmapMargin;
     }
     if (sizehint) {
-        h = qMax(checkRect->height(), qMax(textRect->height(), pm.height()));
+        h = std::max(checkRect->height(), qMax(textRect->height(), pm.height()));
         if (opt->decorationPosition == QStyleOptionViewItem::Left
             || opt->decorationPosition == QStyleOptionViewItem::Right) {
             w = textRect->width() + pm.width();
         } else {
-            w = qMax(textRect->width(), pm.width());
+            w = std::max(textRect->width(), pm.width());
         }
     } else {
         w = opt->rect.width();
@@ -1797,7 +1797,7 @@ void QCommonStyle::drawControl(ControlElement element, const QStyleOption *opt,
         int x, y, w, h;
         opt->rect.getRect(&x, &y, &w, &h);
 
-        int sw = qMin(h, w);
+        int sw = std::min(h, w);
         if (h > w)
             p->translate(0, h - w);
         else
@@ -2350,7 +2350,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
             }
             if (!vertical) {
                 if (pb->textVisible)
-                    textw = qMax(pb->fontMetrics.width(pb->text), pb->fontMetrics.width(QLatin1String("100%"))) + 6;
+                    textw = std::max(pb->fontMetrics.width(pb->text), pb->fontMetrics.width(QLatin1String("100%"))) + 6;
             }
 
             if ((pb->textAlignment & Qt::AlignCenter) == 0) {
@@ -2437,7 +2437,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
             case QTabBar::TriangularNorth:
                 // Constrain the size now, otherwise, center could get off the page
                 // This of course repeated for all the other directions
-                r.setWidth(qMin(r.width(), twf->rect.width()
+                r.setWidth(std::min(r.width(), twf->rect.width()
                                             - twf->leftCornerWidgetSize.width()
                                             - twf->rightCornerWidgetSize.width()));
                 switch (proxy()->styleHint(SH_TabBar_Alignment, twf, widget) & alingMask) {
@@ -2459,7 +2459,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
                 break;
             case QTabBar::RoundedSouth:
             case QTabBar::TriangularSouth:
-                r.setWidth(qMin(r.width(), twf->rect.width()
+                r.setWidth(std::min(r.width(), twf->rect.width()
                                             - twf->leftCornerWidgetSize.width()
                                             - twf->rightCornerWidgetSize.width()));
                 switch (proxy()->styleHint(SH_TabBar_Alignment, twf, widget) & alingMask) {
@@ -2484,7 +2484,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
                 break;
             case QTabBar::RoundedEast:
             case QTabBar::TriangularEast:
-                r.setHeight(qMin(r.height(), twf->rect.height()
+                r.setHeight(std::min(r.height(), twf->rect.height()
                                             - twf->leftCornerWidgetSize.height()
                                             - twf->rightCornerWidgetSize.height()));
                 switch (proxy()->styleHint(SH_TabBar_Alignment, twf, widget) & alingMask) {
@@ -2506,7 +2506,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
                 break;
             case QTabBar::RoundedWest:
             case QTabBar::TriangularWest:
-                r.setHeight(qMin(r.height(), twf->rect.height()
+                r.setHeight(std::min(r.height(), twf->rect.height()
                                              - twf->leftCornerWidgetSize.height()
                                              - twf->rightCornerWidgetSize.height()));
                 switch (proxy()->styleHint(SH_TabBar_Alignment, twf, widget) & alingMask) {
@@ -2537,21 +2537,21 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
             switch (twf->shape) {
             case QTabBar::RoundedNorth:
             case QTabBar::TriangularNorth:
-                r = QRect(QPoint(0,qMax(twf->tabBarSize.height() - overlap, 0)),
-                          QSize(twf->rect.width(), qMin(twf->rect.height() - twf->tabBarSize.height() + overlap, twf->rect.height())));
+                r = QRect(QPoint(0,std::max(twf->tabBarSize.height() - overlap, 0)),
+                          QSize(twf->rect.width(), std::min(twf->rect.height() - twf->tabBarSize.height() + overlap, twf->rect.height())));
                 break;
             case QTabBar::RoundedSouth:
             case QTabBar::TriangularSouth:
-                r = QRect(QPoint(0,0), QSize(twf->rect.width(), qMin(twf->rect.height() - twf->tabBarSize.height() + overlap, twf->rect.height())));
+                r = QRect(QPoint(0,0), QSize(twf->rect.width(), std::min(twf->rect.height() - twf->tabBarSize.height() + overlap, twf->rect.height())));
                 break;
             case QTabBar::RoundedEast:
             case QTabBar::TriangularEast:
-                r = QRect(QPoint(0, 0), QSize(qMin(twf->rect.width() - twf->tabBarSize.width() + overlap, twf->rect.width()), twf->rect.height()));
+                r = QRect(QPoint(0, 0), QSize(std::min(twf->rect.width() - twf->tabBarSize.width() + overlap, twf->rect.width()), twf->rect.height()));
                 break;
             case QTabBar::RoundedWest:
             case QTabBar::TriangularWest:
-                r = QRect(QPoint(qMax(twf->tabBarSize.width() - overlap, 0), 0),
-                          QSize(qMin(twf->rect.width() - twf->tabBarSize.width() + overlap, twf->rect.width()), twf->rect.height()));
+                r = QRect(QPoint(std::max(twf->tabBarSize.width() - overlap, 0), 0),
+                          QSize(std::min(twf->rect.width() - twf->tabBarSize.width() + overlap, twf->rect.width()), twf->rect.height()));
                 break;
             }
             if (sr == SE_TabWidgetTabContents && twf->lineWidth > 0)
@@ -2612,7 +2612,7 @@ QRect QCommonStyle::subElementRect(SubElement sr, const QStyleOption *opt,
             int verticalShift = proxy()->pixelMetric(QStyle::PM_TabBarTabShiftVertical, tab, widget);
             int horizontalShift = proxy()->pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, tab, widget);
             int hpadding = proxy()->pixelMetric(QStyle::PM_TabBarTabHSpace, opt, widget) / 2;
-            hpadding = qMax(hpadding, 4); //workaround KStyle returning 0 because they workaround an old bug in Qt
+            hpadding = std::max(hpadding, 4); //workaround KStyle returning 0 because they workaround an old bug in Qt
 
             bool verticalTabs = tab->shape == QTabBar::RoundedEast
                     || tab->shape == QTabBar::RoundedWest
@@ -2929,7 +2929,7 @@ static QPolygonF calcArrow(const QStyleOptionSlider *dial, qreal &a)
 {
     int width = dial->rect.width();
     int height = dial->rect.height();
-    int r = qMin(width, height) / 2;
+    int r = std::min(width, height) / 2;
     int currentSliderPosition = dial->upsideDown ? dial->sliderPosition : (dial->maximum - dial->sliderPosition);
 
     if (dial->maximum == dial->minimum)
@@ -2998,7 +2998,7 @@ void QCommonStyle::drawComplexControl(ComplexControl cc, const QStyleOptionCompl
                 while (v <= slider->maximum + 1) {
                     if (v == slider->maximum + 1 && interval == 1)
                         break;
-                    const int v_ = qMin(v, slider->maximum);
+                    const int v_ = std::min(v, slider->maximum);
                     pos = QStyle::sliderPositionFromValue(slider->minimum, slider->maximum,
                                                           v_, available) + fudge;
                     if (slider->orientation == Qt::Horizontal) {
@@ -3431,7 +3431,7 @@ void QCommonStyle::drawComplexControl(ComplexControl cc, const QStyleOptionCompl
 
             int width = dial->rect.width();
             int height = dial->rect.height();
-            qreal r = qMin(width, height) / 2;
+            qreal r = std::min(width, height) / 2;
             qreal d_ = r / 6;
             qreal dx = dial->rect.x() + d_ + (width - 2 * r) / 2 + 1;
             qreal dy = dial->rect.y() + d_ + (height - 2 * r) / 2 + 1;
@@ -3500,7 +3500,7 @@ void QCommonStyle::drawComplexControl(ComplexControl cc, const QStyleOptionCompl
             if (fropt.state & QStyle::State_HasFocus) {
                 br.adjust(0, 0, 2, 2);
                 if (dial->subControls & SC_DialTickmarks) {
-                    int r = qMin(width, height) / 2;
+                    int r = std::min(width, height) / 2;
                     br.translate(-r / 6, - r / 6);
                     br.setWidth(br.width() + r / 3);
                     br.setHeight(br.height() + r / 3);
@@ -3855,19 +3855,19 @@ QRect QCommonStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex 
             switch (sc) {
             case SC_ScrollBarSubLine:            // top/left button
                 if (scrollbar->orientation == Qt::Horizontal) {
-                    int buttonWidth = qMin(scrollBarRect.width() / 2, sbextent);
+                    int buttonWidth = std::min(scrollBarRect.width() / 2, sbextent);
                     ret.setRect(0, 0, buttonWidth, scrollBarRect.height());
                 } else {
-                    int buttonHeight = qMin(scrollBarRect.height() / 2, sbextent);
+                    int buttonHeight = std::min(scrollBarRect.height() / 2, sbextent);
                     ret.setRect(0, 0, scrollBarRect.width(), buttonHeight);
                 }
                 break;
             case SC_ScrollBarAddLine:            // bottom/right button
                 if (scrollbar->orientation == Qt::Horizontal) {
-                    int buttonWidth = qMin(scrollBarRect.width()/2, sbextent);
+                    int buttonWidth = std::min(scrollBarRect.width()/2, sbextent);
                     ret.setRect(scrollBarRect.width() - buttonWidth, 0, buttonWidth, scrollBarRect.height());
                 } else {
-                    int buttonHeight = qMin(scrollBarRect.height()/2, sbextent);
+                    int buttonHeight = std::min(scrollBarRect.height()/2, sbextent);
                     ret.setRect(0, scrollBarRect.height() - buttonHeight, scrollBarRect.width(), buttonHeight);
                 }
                 break;
@@ -3911,9 +3911,9 @@ QRect QCommonStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex 
         if (const QStyleOptionSpinBox *spinbox = qstyleoption_cast<const QStyleOptionSpinBox *>(opt)) {
             QSize bs;
             int fw = spinbox->frame ? proxy()->pixelMetric(PM_SpinBoxFrameWidth, spinbox, widget) : 0;
-            bs.setHeight(qMax(8, spinbox->rect.height()/2 - fw));
+            bs.setHeight(std::max(8, spinbox->rect.height()/2 - fw));
             // 1.6 -approximate golden mean
-            bs.setWidth(qMax(16, qMin(bs.height() * 8 / 5, spinbox->rect.width() / 4)));
+            bs.setWidth(std::max(16, std::min(bs.height() * 8 / 5, spinbox->rect.width() / 4)));
             bs = bs.expandedTo(QApplication::globalStrut());
             int y = fw + spinbox->rect.y();
             int x, lx, rx;
@@ -4244,13 +4244,13 @@ int QCommonStyle::pixelMetric(PixelMetric m, const QStyleOption *opt, const QWid
     case PM_TitleBarHeight: {
         if (const QStyleOptionTitleBar *tb = qstyleoption_cast<const QStyleOptionTitleBar *>(opt)) {
             if ((tb->titleBarFlags & Qt::WindowType_Mask) == Qt::Tool) {
-                ret = qMax(widget ? widget->fontMetrics().height() : opt->fontMetrics.height(), 16);
+                ret = std::max(widget ? widget->fontMetrics().height() : opt->fontMetrics.height(), 16);
 #ifndef QT_NO_DOCKWIDGET
             } else if (qobject_cast<const QDockWidget*>(widget)) {
-                ret = qMax(widget->fontMetrics().height(), int(QStyleHelper::dpiScaled(13)));
+                ret = std::max(widget->fontMetrics().height(), int(QStyleHelper::dpiScaled(13)));
 #endif
             } else {
-                ret = qMax(widget ? widget->fontMetrics().height() : opt->fontMetrics.height(), 18);
+                ret = std::max(widget ? widget->fontMetrics().height() : opt->fontMetrics.height(), 18);
             }
         } else {
             ret = int(QStyleHelper::dpiScaled(18.));
@@ -4306,7 +4306,7 @@ int QCommonStyle::pixelMetric(PixelMetric m, const QStyleOption *opt, const QWid
             int s = sb->orientation == Qt::Horizontal ?
                     QApplication::globalStrut().height()
                     : QApplication::globalStrut().width();
-            ret = qMax(16, s);
+            ret = std::max(16, s);
         } else {
             ret = int(QStyleHelper::dpiScaled(16.));
         }
@@ -4614,7 +4614,7 @@ QSize QCommonStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
                 margins = 4 + proxy()->pixelMetric(isRadio ? PM_RadioButtonLabelSpacing
                                                   : PM_CheckBoxLabelSpacing, opt, widget);
             sz += QSize(w + margins, 4);
-            sz.setHeight(qMax(sz.height(), h));
+            sz.setHeight(std::max(sz.height(), h));
         }
         break;
 #ifndef QT_NO_MENU
@@ -4630,7 +4630,7 @@ QSize QCommonStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
                 h =  mi->fontMetrics.height() + 8;
                 if (!mi->icon.isNull()) {
                     int iconExtent = proxy()->pixelMetric(PM_SmallIconSize);
-                    h = qMax(h, mi->icon.actualSize(QSize(iconExtent, iconExtent)).height() + 4);
+                    h = std::max(h, mi->icon.actualSize(QSize(iconExtent, iconExtent)).height() + 4);
                 }
             }
             if (mi->text.contains(QLatin1Char('\t')))
@@ -4657,7 +4657,7 @@ QSize QCommonStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
             int fw = cmb->frame ? proxy()->pixelMetric(PM_ComboBoxFrameWidth, opt, widget) * 2 : 0;
             const int textMargins = 2*(proxy()->pixelMetric(PM_FocusFrameHMargin) + 1);
             // QItemDelegate::sizeHint expands the textMargins two times, thus the 2*textMargins...
-            int other = qMax(23, 2*textMargins + proxy()->pixelMetric(QStyle::PM_ScrollBarExtent, opt, widget));
+            int other = std::max(23, 2*textMargins + proxy()->pixelMetric(QStyle::PM_ScrollBarExtent, opt, widget));
             sz = QSize(sz.width() + fw + other, sz.height() + fw);
         }
         break;
@@ -4668,7 +4668,7 @@ QSize QCommonStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
             int margin = proxy()->pixelMetric(QStyle::PM_HeaderMargin, hdr, widget);
             int iconSize = nullIcon ? 0 : proxy()->pixelMetric(QStyle::PM_SmallIconSize, hdr, widget);
             QSize txt = hdr->fontMetrics.size(0, hdr->text);
-            sz.setHeight(margin + qMax(iconSize, txt.height()) + margin);
+            sz.setHeight(margin + std::max(iconSize, txt.height()) + margin);
             sz.setWidth((nullIcon ? 0 : margin) + iconSize
                         + (hdr->text.isNull() ? 0 : margin) + txt.width() + margin);
         }
@@ -5835,9 +5835,9 @@ QPixmap QCommonStyle::generatedIconPixmap(QIcon::Mode iconMode, const QPixmap &p
             blues[i]  = uchar((blue  * (i<<1)) >> 8);
         }
         for (int i=0; i<128; ++i) {
-            reds[i+128]   = uchar(qMin(red   + (i << 1), 255));
-            greens[i+128] = uchar(qMin(green + (i << 1), 255));
-            blues[i+128]  = uchar(qMin(blue  + (i << 1), 255));
+            reds[i+128]   = uchar(std::min(red   + (i << 1), 255));
+            greens[i+128] = uchar(std::min(green + (i << 1), 255));
+            blues[i+128]  = uchar(std::min(blue  + (i << 1), 255));
         }
 
         int intensity = qt_intensity(red, green, blue);
@@ -5849,7 +5849,7 @@ QPixmap QCommonStyle::generatedIconPixmap(QIcon::Mode iconMode, const QPixmap &p
         if ((red - factor > green && red - factor > blue)
             || (green - factor > red && green - factor > blue)
             || (blue - factor > red && blue - factor > green))
-            intensity = qMin(255, intensity + 91);
+            intensity = std::min(255, intensity + 91);
         else if (intensity <= 128)
             intensity -= 51;
 

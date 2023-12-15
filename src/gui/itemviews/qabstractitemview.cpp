@@ -2979,9 +2979,9 @@ int QAbstractItemView::sizeHintForRow(int row) const
     for (int c = 0; c < colCount; ++c) {
         index = d->model->index(row, c, d->root);
         if (QWidget *editor = d->editorForIndex(index).widget.data())
-            height = qMax(height, editor->height());
+            height = std::max(height, editor->height());
         int hint = d->delegateForIndex(index)->sizeHint(option, index).height();
-        height = qMax(height, hint);
+        height = std::max(height, hint);
     }
     return height;
 }
@@ -3010,9 +3010,9 @@ int QAbstractItemView::sizeHintForColumn(int column) const
     for (int r = 0; r < rows; ++r) {
         index = d->model->index(r, column, d->root);
         if (QWidget *editor = d->editorForIndex(index).widget.data())
-            width = qMax(width, editor->sizeHint().width());
+            width = std::max(width, editor->sizeHint().width());
         int hint = d->delegateForIndex(index)->sizeHint(option, index).width();
-        width = qMax(width, hint);
+        width = std::max(width, hint);
     }
     return width;
 }
@@ -3706,7 +3706,7 @@ void QAbstractItemView::doAutoScroll()
     Q_D(QAbstractItemView);
     int verticalStep = verticalScrollBar()->pageStep();
     int horizontalStep = horizontalScrollBar()->pageStep();
-    if (d->autoScrollCount < qMax(verticalStep, horizontalStep))
+    if (d->autoScrollCount < std::max(verticalStep, horizontalStep))
         ++d->autoScrollCount;
 
     int margin = d->autoScrollMargin;

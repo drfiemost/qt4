@@ -856,7 +856,7 @@ QRect QAccessibleDial::rect(int child) const
         // Mixture from qcommonstyle.cpp (focus rect).
         int width = dial()->width();
         int height = dial()->height();
-        qreal radius = qMin(width, height) / 2.0;
+        qreal radius = std::min(width, height) / 2.0;
         qreal delta = radius / 6.0;
         qreal dx = delta + (width - 2 * radius) / 2.0;
         qreal dy = delta + (height - 2 * radius) / 2.0;
@@ -885,7 +885,7 @@ QRect QAccessibleDial::rect(int child) const
 
         int width = dial()->rect().width();
         int height = dial()->rect().height();
-        int radius = qMin(width, height) / 2;
+        int radius = std::min(width, height) / 2;
         int xc = width / 2;
         int yc = height / 2;
         int bigLineSize = radius / 6;

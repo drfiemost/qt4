@@ -78,8 +78,8 @@ void TextProgressBar::update()
     } else {
         // we don't know the maximum, so we can't draw a progress bar
         int center = (iteration % 48) + 1; // 50 spaces, minus 2
-        QByteArray before(qMax(center - 2, 0), ' ');
-        QByteArray after(qMin(center + 2, 50), ' ');
+        QByteArray before(std::max(center - 2, 0), ' ');
+        QByteArray after(std::min(center + 2, 50), ' ');
 
         printf("\r[%s###%s]      %s      ",
                before.constData(), after.constData(), qPrintable(message));

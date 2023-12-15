@@ -162,7 +162,7 @@ void GSuggestCompletion::showCompletion(const QStringList &choices, const QStrin
     popup->adjustSize();
     popup->setUpdatesEnabled(true);
 
-    int h = popup->sizeHintForRow(0) * qMin(7, choices.count()) + 3;
+    int h = popup->sizeHintForRow(0) * std::min(7, choices.count()) + 3;
     popup->resize(popup->width(), h);
 
     popup->move(editor->mapToGlobal(QPoint(0, editor->height())));

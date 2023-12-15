@@ -489,7 +489,7 @@ QKeySequence::SequenceMatch QShortcutMap::find(QKeyEvent *e)
             if (it == itEnd)
                 break;
             tempRes = matches(entry.keyseq, (*it).keyseq);
-            oneKSResult = qMax(oneKSResult, tempRes);
+            oneKSResult = std::max(oneKSResult, tempRes);
             if (tempRes != QKeySequence::NoMatch && correctContext(*it)) {
                 if (tempRes == QKeySequence::ExactMatch) {
                     if ((*it).enabled)
@@ -569,7 +569,7 @@ void QShortcutMap::createNewSequences(QKeyEvent *e, QVector<QKeySequence> &ksl)
         return;
 
     int ssActual = d->currentSequences.count();
-    int ssTotal = qMax(1, ssActual);
+    int ssTotal = std::max(1, ssActual);
     // Resize to possible permutations of the current sequence(s).
     ksl.resize(pkTotal * ssTotal);
 

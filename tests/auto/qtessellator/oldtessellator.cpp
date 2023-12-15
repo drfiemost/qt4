@@ -230,8 +230,8 @@ void old_tesselate_polygon(QVector<XTrapezoid> *traps, const QPointF *pg, int pg
 	edge.b = p1.y() - edge.m * p1.x(); // intersection with y axis
 	edge.m = edge.m != 0.0 ? 1.0 / edge.m : 0.0; // inverted derivative
 	edges.append(edge);
-        ymin = qMin(ymin, qreal(XFixedToDouble(edge.p1.y)));
-        ymax = qMax(ymax, qreal(XFixedToDouble(edge.p2.y)));
+        ymin = std::min(ymin, qreal(XFixedToDouble(edge.p1.y)));
+        ymax = std::max(ymax, qreal(XFixedToDouble(edge.p2.y)));
     }
 
     QList<const QEdge *> et; 	    // edge list

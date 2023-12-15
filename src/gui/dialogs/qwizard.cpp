@@ -383,7 +383,7 @@ void QWizardHeader::setup(const QWizardLayoutInfo &info, const QString &title,
         /*
             There is no widthForHeight() function, so we simulate it with a loop.
         */
-        int candidateSubTitleWidth = qMin(512, 2 * QApplication::desktop()->width() / 3);
+        int candidateSubTitleWidth = std::min(512, 2 * QApplication::desktop()->width() / 3);
         int delta = candidateSubTitleWidth >> 1;
         while (delta > 0) {
             if (subTitleLabel->heightForWidth(candidateSubTitleWidth - delta)
@@ -999,7 +999,7 @@ void QWizardPrivate::recreateLayout(const QWizardLayoutInfo &info)
     } else {
         numColumns = 1;
     }
-    int pageColumn = qMin(1, numColumns - 1);
+    int pageColumn = std::min(1, numColumns - 1);
 
     if (mac) {
         mainLayout->setMargin(0);
@@ -1586,7 +1586,7 @@ void QWizardPrivate::handleAeroStyleChange()
             antiFlickerWidget->move(0, vistaHelper->titleBarSize() + vistaHelper->topOffset());
             vistaHelper->backButton()->move(
                 0, vistaHelper->topOffset() // ### should ideally work without the '+ 1'
-                - qMin(vistaHelper->topOffset(), vistaHelper->topPadding() + 1));
+                - std::min(vistaHelper->topOffset(), vistaHelper->topPadding() + 1));
         } else {
             vistaHelper->setDWMTitleBar(QVistaHelper::NormalTitleBar);
             q->setMouseTracking(true);

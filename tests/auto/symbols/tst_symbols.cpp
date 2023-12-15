@@ -193,7 +193,7 @@ void tst_Symbols::prefix()
             << "QPixmap" << "QImage" << "QRegion" << "QPolygon";
     QStringList qAlgorithmFunctions;
     qAlgorithmFunctions << "qBinaryFind" << "qLowerBound" << "qUpperBound"
-                        << "qAbs" << "qMin" << "qMax" << "qBound" << "qSwap"
+                        << "qAbs" << "std::min" << "std::max" << "qBound" << "qSwap"
                         << "qHash" << "qDeleteAll" << "qCopy" << "qSort";
 
     QStringList exceptionalSymbols;

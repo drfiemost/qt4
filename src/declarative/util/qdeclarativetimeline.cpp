@@ -775,7 +775,7 @@ int QDeclarativeTimeLinePrivate::advance(int t)
                         if (changed)
                             updates << qMakePair(op.order, Update(v, val));
                     }
-                    tl.length -= qMin(advanceTime, tl.length);
+                    tl.length -= std::min(advanceTime, tl.length);
                     tl.consumedOpLength = 0;
                     tl.ops.removeFirst();
                 } else {
@@ -784,7 +784,7 @@ int QDeclarativeTimeLinePrivate::advance(int t)
                     qreal val = value(op, tl.consumedOpLength, tl.base, &changed);
                     if (changed)
                         updates << qMakePair(op.order, Update(v, val));
-                    tl.length -= qMin(advanceTime, tl.length);
+                    tl.length -= std::min(advanceTime, tl.length);
                     break;
                 }
 
@@ -806,7 +806,7 @@ int QDeclarativeTimeLinePrivate::advance(int t)
             }
         }
 
-        length -= qMin(length, advanceTime);
+        length -= std::min(length, advanceTime);
         syncPoint -= advanceTime;
 
         std::sort(updates.begin(), updates.end());

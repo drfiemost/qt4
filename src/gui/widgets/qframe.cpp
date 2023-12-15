@@ -389,8 +389,8 @@ void QFramePrivate::updateStyledFrameWidths()
     topFrameWidth = cr.top() - opt.rect.top();
     rightFrameWidth = opt.rect.right() - cr.right(),
     bottomFrameWidth = opt.rect.bottom() - cr.bottom();
-    frameWidth = qMax(qMax(leftFrameWidth, rightFrameWidth),
-                      qMax(topFrameWidth, bottomFrameWidth));
+    frameWidth = std::max(qMax(leftFrameWidth, rightFrameWidth),
+                      std::max(topFrameWidth, bottomFrameWidth));
 }
 
 /*!

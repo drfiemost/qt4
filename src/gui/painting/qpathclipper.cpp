@@ -193,10 +193,10 @@ bool QIntersectionFinder::hasIntersections(const QPathSegments &a, const QPathSe
 
     for (int i = 1; i < b.segments(); ++i) {
         const QRectF &r = b.elementBounds(i);
-        minX = qMin(minX, r.left());
-        minY = qMin(minY, r.top());
-        maxX = qMax(maxX, r.right());
-        maxY = qMax(maxY, r.bottom());
+        minX = std::min(minX, r.left());
+        minY = std::min(minY, r.top());
+        maxX = std::max(maxX, r.right());
+        maxY = std::max(maxY, r.bottom());
     }
 
     QRectF rb(minX, minY, maxX - minX, maxY - minY);
@@ -966,7 +966,7 @@ void QPathSegments::addPath(const QPainterPath &path)
                     QRectF bounds = bezier.bounds();
 
                     // threshold based on similar algorithm as in qtriangulatingstroker.cpp
-                    int threshold = qMin<float>(64, qMax(bounds.width(), bounds.height()) * (2 * qreal(3.14) / 6));
+                    int threshold = std::min<float>(64, std::max(bounds.width(), bounds.height()) * (2 * qreal(3.14) / 6));
 
                     if (threshold < 3) threshold = 3;
                     qreal one_over_threshold_minus_1 = qreal(1) / (threshold - 1);
@@ -1390,8 +1390,8 @@ bool QPathClipper::intersect()
 
     QRectF r1 = subjectPath.controlPointRect();
     QRectF r2 = clipPath.controlPointRect();
-    if (qMax(r1.x(), r2.x()) > qMin(r1.x() + r1.width(), r2.x() + r2.width()) ||
-        qMax(r1.y(), r2.y()) > qMin(r1.y() + r1.height(), r2.y() + r2.height())) {
+    if (std::max(r1.x(), r2.x()) > std::min(r1.x() + r1.width(), r2.x() + r2.width()) ||
+        std::max(r1.y(), r2.y()) > std::min(r1.y() + r1.height(), r2.y() + r2.height())) {
         // no way we could intersect
         return false;
     }
@@ -1441,8 +1441,8 @@ bool QPathClipper::contains()
 
     QRectF r1 = subjectPath.controlPointRect();
     QRectF r2 = clipPath.controlPointRect();
-    if (qMax(r1.x(), r2.x()) > qMin(r1.x() + r1.width(), r2.x() + r2.width()) ||
-        qMax(r1.y(), r2.y()) > qMin(r1.y() + r1.height(), r2.y() + r2.height())) {
+    if (std::max(r1.x(), r2.x()) > std::min(r1.x() + r1.width(), r2.x() + r2.width()) ||
+        std::max(r1.y(), r2.y()) > std::min(r1.y() + r1.height(), r2.y() + r2.height())) {
         // no intersection -> not contained
         return false;
     }
@@ -1708,8 +1708,8 @@ bool QPathClipper::doClip(QWingedEdge &list, ClipperMode mode)
             QPathVertex *b = list.vertex(edge->second);
 
             // FIXME: this can be optimized by using binary search
-            const int first = qFuzzyFind(y_coords.begin(), y_coords.end(), qMin(a->y, b->y)) - y_coords.begin();
-            const int last = qFuzzyFind(y_coords.begin() + first, y_coords.end(), qMax(a->y, b->y)) - y_coords.begin();
+            const int first = qFuzzyFind(y_coords.begin(), y_coords.end(), std::min(a->y, b->y)) - y_coords.begin();
+            const int last = qFuzzyFind(y_coords.begin() + first, y_coords.end(), std::max(a->y, b->y)) - y_coords.begin();
 
             Q_ASSERT(first < y_coords.size() - 1);
             Q_ASSERT(last < y_coords.size());

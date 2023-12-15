@@ -199,7 +199,7 @@ namespace {
             for (QMap<SOCKET, SockInfo>::iterator it = currentSockets.begin(); it != currentSockets.end(); ++it) {
                 const SockInfo &info = it.value();
                 int socket = it.key();
-                maxFd = qMax(maxFd, socket);
+                maxFd = std::max(maxFd, socket);
 
                 if ((info.ev & FD_READ) || (info.ev & FD_CLOSE) || (info.ev & FD_ACCEPT))
                     FD_SET(socket, &readS);

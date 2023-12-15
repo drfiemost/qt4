@@ -708,7 +708,7 @@ void BezierViewer::paintEvent( QPaintEvent* )
     /* Calculate scale to fit in window */
     QRectF br = bezier.boundingRect() | points.boundingRect();
     QRectF pr = rect();
-    int scl = qMax( qMin(pr.width()/br.width(), pr.height()/br.height()), qreal(1.) );
+    int scl = std::max( std::min(pr.width()/br.width(), pr.height()/br.height()), qreal(1.) );
     int border = scl-1;
 
     /* Scale Bezier curve vertices */
@@ -7830,9 +7830,9 @@ void tst_QWidget::adjustSize_data()
     QTest::addColumn<QSize>("expectedSize");
 
     QTest::newRow("1") << QSize(5, 6) << int(QSizePolicy::Minimum) << int(QSizePolicy::Expanding)
-        << false << false << false << false << QSize(5, qMax(6, MagicH));
+        << false << false << false << false << QSize(5, std::max(6, MagicH));
     QTest::newRow("2") << QSize(5, 6) << int(QSizePolicy::Minimum) << int(QSizePolicy::Expanding)
-        << true << false << false << false << QSize(5, qMax(10, MagicH));
+        << true << false << false << false << QSize(5, std::max(10, MagicH));
     QTest::newRow("3") << QSize(5, 6) << int(QSizePolicy::Minimum) << int(QSizePolicy::Expanding)
         << false << true << false << false << QSize(35, 26);
     QTest::newRow("4") << QSize(5, 6) << int(QSizePolicy::Minimum) << int(QSizePolicy::Expanding)
@@ -7846,7 +7846,7 @@ void tst_QWidget::adjustSize_data()
     QTest::newRow("8") << QSize(40001, 30001) << int(QSizePolicy::Minimum) << int(QSizePolicy::Expanding)
         << false << true << true << false << QSize(100000, 100000);
     QTest::newRow("9") << QSize(5, 6) << int(QSizePolicy::Expanding) << int(QSizePolicy::Minimum)
-        << true << false << false << false << QSize(qMax(5, MagicW), 10);
+        << true << false << false << false << QSize(std::max(5, MagicW), 10);
 
     QTest::newRow("1c") << QSize(5, 6) << int(QSizePolicy::Minimum) << int(QSizePolicy::Expanding)
         << false << false << false << true << QSize(5, 6);
@@ -7894,8 +7894,8 @@ void tst_QWidget::adjustSize()
 #if defined (Q_OS_WINCE)
         if (!haveParent) {
             const QRect& desktopRect = qApp->desktop()->availableGeometry();
-            expectedSize.setWidth(qMin(expectedSize.width(), desktopRect.width()));
-            expectedSize.setHeight(qMin(expectedSize.height(), desktopRect.height()));
+            expectedSize.setWidth(std::min(expectedSize.width(), desktopRect.width()));
+            expectedSize.setHeight(std::min(expectedSize.height(), desktopRect.height()));
         }
 #endif
         QCOMPARE(child->size(), expectedSize);

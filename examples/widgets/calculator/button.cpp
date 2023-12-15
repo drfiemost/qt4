@@ -57,7 +57,7 @@ QSize Button::sizeHint() const
 {
     QSize size = QToolButton::sizeHint();
     size.rheight() += 20;
-    size.rwidth() = qMax(size.width(), size.height());
+    size.rwidth() = std::max(size.width(), size.height());
     return size;
 }
 //! [2]

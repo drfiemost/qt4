@@ -641,7 +641,7 @@ void QWindowsCEStyle::drawControl(ControlElement element, const QStyleOption *op
             bool act = menuitem->state & State_Selected;
 
             // windows always has a check column, regardless whether we have an icon or not
-            int checkcol = qMax(menuitem->maxIconWidth, windowsCheckMarkWidth);
+            int checkcol = std::max(menuitem->maxIconWidth, windowsCheckMarkWidth);
             QBrush fill = menuitem->palette.brush(act ? QPalette::Highlight : QPalette::Button);
             painter->fillRect(menuitem->rect.adjusted(1, 1, 0, 0), fill);
 
@@ -1807,13 +1807,13 @@ QSize QWindowsCEStyle::sizeFromContents(ContentsType type, const QStyleOption *o
                                         : PM_IndicatorHeight, btn, widget);
             int margins = (!btn->icon.isNull() && btn->text.isEmpty()) ? 0 : 10;
             newSize += QSize(irect.right() + margins, 4);
-            newSize.setHeight(qMax(newSize.height(), h));
+            newSize.setHeight(std::max(newSize.height(), h));
         }
         break;
     case CT_ComboBox:
         if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
             int fw = cmb->frame ? pixelMetric(PM_ComboBoxFrameWidth, option, widget) * 2 : 0;
-            newSize = QSize(newSize.width() + fw -1, qMax(24, newSize.height() + fw-1));
+            newSize = QSize(newSize.width() + fw -1, std::max(24, newSize.height() + fw-1));
         }
         break;
 #ifndef QT_NO_SPINBOX
@@ -1936,9 +1936,9 @@ QRect QWindowsCEStyle::subControlRect(ComplexControl control, const QStyleOption
         if (const QStyleOptionSpinBox *spinbox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
             QSize bs;
             int fw = spinbox->frame ? pixelMetric(PM_SpinBoxFrameWidth, spinbox, widget) : 0;
-            bs.setWidth(qMax(18, (spinbox->rect.height() / 2 - fw + 1)));
+            bs.setWidth(std::max(18, (spinbox->rect.height() / 2 - fw + 1)));
             // 1.6 -approximate golden mean
-            bs.setHeight(qMax(18, qMin((bs.height() * 8 / 5), (spinbox->rect.width() / 4))));
+            bs.setHeight(std::max(18, std::min((bs.height() * 8 / 5), (spinbox->rect.width() / 4))));
             bs = bs.expandedTo(QApplication::globalStrut());
             int y = fw;
             int x, lx, rx;
@@ -2249,7 +2249,7 @@ int QWindowsCEStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const 
         ret = 19;
         break;
     case PM_SplitterWidth:
-        ret = qMax(4, QApplication::globalStrut().width());
+        ret = std::max(4, QApplication::globalStrut().width());
         break;
 
 #if defined(Q_WS_WIN)

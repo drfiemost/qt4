@@ -71,7 +71,7 @@ void WorldTimeClock::paintEvent(QPaintEvent *)
     QColor hourColor(127, 0, 127);
     QColor minuteColor(0, 127, 127, 191);
 
-    int side = qMin(width(), height());
+    int side = std::min(width(), height());
     QTime time = QTime::currentTime();
     time = time.addSecs(timeZoneOffset);
 
@@ -116,6 +116,6 @@ void WorldTimeClock::paintEvent(QPaintEvent *)
 
 void WorldTimeClock::setTimeZone(int hourOffset)
 {
-    timeZoneOffset = qMin(qMax(-12, hourOffset), 12) * 3600;
+    timeZoneOffset = std::min(std::max(-12, hourOffset), 12) * 3600;
     update();
 }

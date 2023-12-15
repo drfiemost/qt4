@@ -419,7 +419,7 @@ void QGLBlurTextureCache::pixmapDestroyed(QPixmapData *pmd)
 }
 
 static const int qAnimatedBlurLevelIncrement = 16;
-static const int qMaxBlurHalfScaleLevel = 1;
+static const int std::maxBlurHalfScaleLevel = 1;
 
 static GLuint generateBlurTexture(const QSize &size, GLenum format = GL_RGBA)
 {
@@ -455,9 +455,9 @@ bool QGLPixmapBlurFilter::processGL(QPainter *painter, const QPointF &pos, const
     int padding = nextMultiple(qCeil(actualRadius), qAnimatedBlurLevelIncrement);
     QRect targetRect = src.rect().adjusted(-padding, -padding, padding, padding);
 
-    // pad so that we'll be able to half-scale qMaxBlurHalfScaleLevel times
-    targetRect.setWidth((targetRect.width() + (qMaxBlurHalfScaleLevel-1)) & ~(qMaxBlurHalfScaleLevel-1));
-    targetRect.setHeight((targetRect.height() + (qMaxBlurHalfScaleLevel-1)) & ~(qMaxBlurHalfScaleLevel-1));
+    // pad so that we'll be able to half-scale std::maxBlurHalfScaleLevel times
+    targetRect.setWidth((targetRect.width() + (std::maxBlurHalfScaleLevel-1)) & ~(qMaxBlurHalfScaleLevel-1));
+    targetRect.setHeight((targetRect.height() + (std::maxBlurHalfScaleLevel-1)) & ~(qMaxBlurHalfScaleLevel-1));
 
     QSize textureSize;
 
@@ -497,7 +497,7 @@ bool QGLPixmapBlurFilter::processGL(QPainter *painter, const QPointF &pos, const
 
     actualRadius *= qreal(0.5);
     int level = 1;
-    for (; level < qMaxBlurHalfScaleLevel; ++level) {
+    for (; level < std::maxBlurHalfScaleLevel; ++level) {
         if (actualRadius <= 16)
             break;
         actualRadius *= qreal(0.5);
@@ -506,7 +506,7 @@ bool QGLPixmapBlurFilter::processGL(QPainter *painter, const QPointF &pos, const
     const int s = (1 << level);
 
     int prepadding = qRound(info->radius());
-    padding = qMin(prepadding, qCeil(actualRadius) << level);
+    padding = std::min(prepadding, qCeil(actualRadius) << level);
     targetRect = src.rect().adjusted(-padding, -padding, padding, padding);
 
     targetRect.setWidth(targetRect.width() & ~(s-1));

@@ -326,7 +326,7 @@ void tst_QTextLayout::threeLineBoundingRect()
     const int secondLineWidth = secondWord.length() * testFont.pixelSize();
     const int thirdLineWidth = thirdWord.length() * testFont.pixelSize();
 
-    const int longestLine = qMax(firstLineWidth, qMax(secondLineWidth, thirdLineWidth));
+    const int longestLine = std::max(firstLineWidth, qMax(secondLineWidth, thirdLineWidth));
 
     QTextLayout layout(text, testFont);
     layout.beginLayout();
@@ -1849,7 +1849,7 @@ void tst_QTextLayout::textWidthVsWIdth()
         line.setLineWidth(width);
         layout.endLayout();
 
-        qreal textWidthIsLargerBy = qMax(qreal(0), line.naturalTextWidth() - line.width());
+        qreal textWidthIsLargerBy = std::max(qreal(0), line.naturalTextWidth() - line.width());
         qreal thisMustBeZero = 0;
         QCOMPARE(textWidthIsLargerBy, thisMustBeZero);
     }

@@ -2173,11 +2173,11 @@ qint64 QAbstractSocket::readData(char *data, qint64 maxSize)
    }
 
     // First try to satisfy the read from the buffer
-    qint64 bytesToRead = qMin(qint64(d->readBuffer.size()), maxSize);
+    qint64 bytesToRead = std::min(qint64(d->readBuffer.size()), maxSize);
     qint64 readSoFar = 0;
     while (readSoFar < bytesToRead) {
         const char *ptr = d->readBuffer.readPointer();
-        int bytesToReadFromThisBlock = qMin(int(bytesToRead - readSoFar),
+        int bytesToReadFromThisBlock = std::min(int(bytesToRead - readSoFar),
                                             d->readBuffer.nextDataBlockSize());
         memcpy(data + readSoFar, ptr, bytesToReadFromThisBlock);
         readSoFar += bytesToReadFromThisBlock;
@@ -2234,7 +2234,7 @@ qint64 QAbstractSocket::readData(char *data, qint64 maxSize)
 
 #if defined (QABSTRACTSOCKET_DEBUG)
     qDebug("QAbstractSocket::readData(%p \"%s\", %lli) == %lld [unreachable]",
-           data, qt_prettyDebug(data, qMin<qint64>(32, readSoFar), readSoFar).data(),
+           data, qt_prettyDebug(data, std::min<qint64>(32, readSoFar), readSoFar).data(),
            maxSize, readSoFar);
 #endif
     return readSoFar;
@@ -2285,7 +2285,7 @@ qint64 QAbstractSocket::writeData(const char *data, qint64 size)
 
 #if defined (QABSTRACTSOCKET_DEBUG)
     qDebug("QAbstractSocket::writeData(%p \"%s\", %lli) == %lli", data,
-           qt_prettyDebug(data, qMin((int)size, 32), size).data(),
+           qt_prettyDebug(data, std::min((int)size, 32), size).data(),
            size, written);
 #endif
         if (written >= 0)
@@ -2312,7 +2312,7 @@ qint64 QAbstractSocket::writeData(const char *data, qint64 size)
 
 #if defined (QABSTRACTSOCKET_DEBUG)
     qDebug("QAbstractSocket::writeData(%p \"%s\", %lli) == %lli", data,
-           qt_prettyDebug(data, qMin((int)size, 32), size).data(),
+           qt_prettyDebug(data, std::min((int)size, 32), size).data(),
            size, written);
 #endif
     return written;

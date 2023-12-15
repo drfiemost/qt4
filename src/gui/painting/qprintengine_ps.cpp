@@ -460,7 +460,7 @@ void QPSPrintEnginePrivate::drawImage(qreal x, qreal y, qreal w, qreal h,
         const QImage constImg(img);
         const QImage constMask(mask);
         while(suby < height) {
-            qreal subImageHeight = qMin(subheight, height-suby);
+            qreal subImageHeight = std::min(subheight, height-suby);
             const QImage subImage(constImg.scanLine(suby), width, subImageHeight,
                                   constImg.bytesPerLine(), constImg.format());
             const QImage subMask = mask.isNull() ? mask : QImage(constMask.scanLine(suby), width, subImageHeight,

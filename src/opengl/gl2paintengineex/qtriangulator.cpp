@@ -1735,7 +1735,7 @@ bool QTriangulator<T>::ComplexToSimple::calculateIntersection(int left, int righ
     const QPodPoint &u2 = m_parent->m_vertices.at((qint32)e1.to);
     const QPodPoint &v1 = m_parent->m_vertices.at((qint32)e2.from);
     const QPodPoint &v2 = m_parent->m_vertices.at((qint32)e2.to);
-    if (std::max(u1.x, u2.x) <= qMin(v1.x, v2.x))
+    if (std::max(u1.x, u2.x) <= std::min(v1.x, v2.x))
         return false;
 
     quint64 key = (left > right ? (quint64(right) << 32) | quint64(left) : (quint64(left) << 32) | quint64(right));
@@ -1768,7 +1768,7 @@ bool QTriangulator<T>::ComplexToSimple::edgeIsLeftOfEdge(int leftEdgeIndex, int 
     const QPodPoint &u = m_parent->m_vertices.at(rightEdge.upper());
     const QPodPoint &l = m_parent->m_vertices.at(rightEdge.lower());
     const QPodPoint &upper = m_parent->m_vertices.at(leftEdge.upper());
-    if (upper.x < qMin(l.x, u.x))
+    if (upper.x < std::min(l.x, u.x))
         return true;
     if (upper.x > std::max(l.x, u.x))
         return false;
@@ -2391,14 +2391,14 @@ QTriangulator<T>::ComplexToSimple::DebugDialog::DebugDialog(ComplexToSimple *par
     minX = maxX = vertices.at(0).x;
     minY = maxY = vertices.at(0).y;
     for (int i = 1; i < vertices.size(); ++i) {
-        minX = qMin(minX, vertices.at(i).x);
+        minX = std::min(minX, vertices.at(i).x);
         maxX = std::max(maxX, vertices.at(i).x);
-        minY = qMin(minY, vertices.at(i).y);
+        minY = std::min(minY, vertices.at(i).y);
         maxY = std::max(maxY, vertices.at(i).y);
     }
     int w = maxX - minX;
     int h = maxY - minY;
-    qreal border = qMin(w, h) / 10.0;
+    qreal border = std::min(w, h) / 10.0;
     m_window = QRectF(minX - border, minY - border, (maxX - minX + 2 * border), (maxY - minY + 2 * border));
 }
 
@@ -2412,7 +2412,7 @@ void QTriangulator<T>::ComplexToSimple::DebugDialog::paintEvent(QPaintEvent *)
     if (vertices.isEmpty())
         return;
     
-    qreal halfPointSize = qMin(m_window.width(), m_window.height()) / 300.0;
+    qreal halfPointSize = std::min(m_window.width(), m_window.height()) / 300.0;
     p.setWindow(m_window.toRect());
 
     p.setPen(Qt::white);

@@ -192,10 +192,10 @@ void QGIFFormat::disposePrevious(QImage *image)
 
     if (disposed) return;
 
-    int l = qMin(swidth-1,left);
-    int r = qMin(swidth-1,right);
-    int t = qMin(sheight-1,top);
-    int b = qMin(sheight-1,bottom);
+    int l = std::min(swidth-1,left);
+    int r = std::min(swidth-1,right);
+    int t = std::min(sheight-1,top);
+    int b = std::min(sheight-1,bottom);
 
     switch (disposal) {
       case NoDisposal:
@@ -345,9 +345,9 @@ int QGIFFormat::decode(QImage *image, const uchar *buffer, int length,
 
                 // disbelieve ridiculous logical screen sizes,
                 // unless the image frames are also large.
-                if (swidth/10 > qMax(newwidth,16384))
+                if (swidth/10 > std::max(newwidth,16384))
                     swidth = -1;
-                if (sheight/10 > qMax(newheight,16384))
+                if (sheight/10 > std::max(newheight,16384))
                     sheight = -1;
 
                 if (swidth <= 0)
@@ -383,8 +383,8 @@ int QGIFFormat::decode(QImage *image, const uchar *buffer, int length,
                 width = newwidth;
                 height = newheight;
 
-                right=qMax(0, qMin(left+width, swidth)-1);
-                bottom=qMax(0, qMin(top+height, sheight)-1);
+                right=std::max(0, std::min(left+width, swidth)-1);
+                bottom=std::max(0, std::min(top+height, sheight)-1);
                 lcmap=!!(hold[9]&0x80);
                 interlace=!!(hold[9]&0x40);
                 //bool lcmsortflag=!!(hold[9]&0x20);
@@ -413,10 +413,10 @@ int QGIFFormat::decode(QImage *image, const uchar *buffer, int length,
                 }
 
                 if (disposal == RestoreImage) {
-                    int l = qMin(swidth-1,left);
-                    int r = qMin(swidth-1,right);
-                    int t = qMin(sheight-1,top);
-                    int b = qMin(sheight-1,bottom);
+                    int l = std::min(swidth-1,left);
+                    int r = std::min(swidth-1,right);
+                    int t = std::min(sheight-1,top);
+                    int b = std::min(sheight-1,bottom);
                     int w = r-l+1;
                     int h = b-t+1;
 
@@ -428,8 +428,8 @@ int QGIFFormat::decode(QImage *image, const uchar *buffer, int length,
                             return -1;
                         }
                         // We just use the backing store as a byte array
-                        backingstore = QImage(qMax(backingstore.width(), w),
-                                              qMax(backingstore.height(), h),
+                        backingstore = QImage(std::max(backingstore.width(), w),
+                                              std::max(backingstore.height(), h),
                                               QImage::Format_RGB32);
                         if (backingstore.isNull()) {
                             state = Error;
@@ -806,9 +806,9 @@ void QGIFFormat::scan(QIODevice *device, QVector<QSize> *imageSizes, int *loopCo
                     int newWidth = LM(hold[5], hold[6]);
                     int newHeight = LM(hold[7], hold[8]);
 
-                    if (imageWidth/10 > qMax(newWidth,200))
+                    if (imageWidth/10 > std::max(newWidth,200))
                         imageWidth = -1;
-                    if (imageHeight/10 > qMax(newHeight,200))
+                    if (imageHeight/10 > std::max(newHeight,200))
                         imageHeight = -1;
 
                     if (imageWidth <= 0)
@@ -981,7 +981,7 @@ void QGIFFormat::nextY(unsigned char *bits, int bpl)
         break;
     case 1: {
         int i;
-        my = qMin(7, bottom-y);
+        my = std::min(7, bottom-y);
         // Don't dup with transparency
         if (trans_index < 0) {
             for (i=1; i<=my; i++) {
@@ -1010,7 +1010,7 @@ void QGIFFormat::nextY(unsigned char *bits, int bpl)
     } break;
     case 2: {
         int i;
-        my = qMin(3, bottom-y);
+        my = std::min(3, bottom-y);
         // Don't dup with transparency
         if (trans_index < 0) {
             for (i=1; i<=my; i++) {
@@ -1034,7 +1034,7 @@ void QGIFFormat::nextY(unsigned char *bits, int bpl)
     } break;
     case 3: {
         int i;
-        my = qMin(1, bottom-y);
+        my = std::min(1, bottom-y);
         // Don't dup with transparency
         if (trans_index < 0) {
             for (i=1; i<=my; i++) {

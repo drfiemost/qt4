@@ -182,7 +182,7 @@ void MainWindow::printImage()
 
     double xscale = printer.pageRect().width()/double(sourceWidth);
     double yscale = printer.pageRect().height()/double(sourceHeight);
-    double scale = qMin(xscale, yscale);
+    double scale = std::min(xscale, yscale);
 
     painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
                       printer.paperRect().y() + printer.pageRect().height()/2);

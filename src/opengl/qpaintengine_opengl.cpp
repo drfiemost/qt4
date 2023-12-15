@@ -1731,7 +1731,7 @@ void QOpenGLImmediateModeTessellator::addTrap(const Trapezoid &trap)
 #ifndef QT_OPENGL_ES
 static void drawTrapezoid(const QGLTrapezoid &trap, const qreal offscreenHeight, QGLContext *ctx)
 {
-    qreal minX = qMin(trap.topLeftX, trap.bottomLeftX);
+    qreal minX = std::min(trap.topLeftX, trap.bottomLeftX);
     qreal maxX = std::max(trap.topRightX, trap.bottomRightX);
 
     if (qFuzzyCompare(trap.top, trap.bottom) || qFuzzyCompare(minX, maxX) ||
@@ -3317,7 +3317,7 @@ QRect QGLEllipseMaskGenerator::screenRect()
         QPointF screen_delta(matrix().m11() * delta.x() + matrix().m21() * delta.y(),
                              matrix().m12() * delta.x() + matrix().m22() * delta.y());
 
-        min_screen_delta_len = qMin(min_screen_delta_len,
+        min_screen_delta_len = std::min(min_screen_delta_len,
                                     qreal(qSqrt(screen_delta.x() * screen_delta.x() + screen_delta.y() * screen_delta.y())));
     }
 
@@ -4189,7 +4189,7 @@ void QOpenGLPaintEngine::drawPath(const QPainterPath &path)
             && d->cpen.isSolid()
             && d->cpen.color().alpha() == 255
             && d->txop < QTransform::TxProject
-            && d->cpen.widthF() >= 2 / qSqrt(qMin(d->matrix.m11() * d->matrix.m11()
+            && d->cpen.widthF() >= 2 / qSqrt(std::min(d->matrix.m11() * d->matrix.m11()
                                                   + d->matrix.m21() * d->matrix.m21(),
                                                   d->matrix.m12() * d->matrix.m12()
                                                   + d->matrix.m22() * d->matrix.m22()));
@@ -4277,8 +4277,8 @@ static const T qSubImage(const T &image, const QRectF &src, QRectF *srcNew)
 {
     const int sx1 = std::max(0, qFloor(src.left()));
     const int sy1 = std::max(0, qFloor(src.top()));
-    const int sx2 = qMin(image.width(), qCeil(src.right()));
-    const int sy2 = qMin(image.height(), qCeil(src.bottom()));
+    const int sx2 = std::min(image.width(), qCeil(src.right()));
+    const int sy2 = std::min(image.height(), qCeil(src.bottom()));
 
     const T sub = image.copy(sx1, sy1, sx2 - sx1, sy2 - sy1);
 
@@ -4840,7 +4840,7 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
                 }
             }
 
-            glyph_height = qMin(glyph_height, glyph_im.height());
+            glyph_height = std::min(glyph_height, glyph_im.height());
 
             QGLGlyphCoord *qgl_glyph = new QGLGlyphCoord;
             qgl_glyph->x = qreal(font_tex->x_offset) / font_tex->width;
@@ -5177,10 +5177,10 @@ void QOpenGLPaintEnginePrivate::copyDrawable(const QRectF &rect)
     QRectF screen_rect = rect.adjusted(-1, -1, 1, 1);
 
     int left = std::max(0, static_cast<int>(screen_rect.left()));
-    int width = qMin(device->size().width() - left, static_cast<int>(screen_rect.width()) + 1);
+    int width = std::min(device->size().width() - left, static_cast<int>(screen_rect.width()) + 1);
 
     int bottom = std::max(0, static_cast<int>(device->size().height() - screen_rect.bottom()));
-    int height = qMin(device->size().height() - bottom, static_cast<int>(screen_rect.height()) + 1);
+    int height = std::min(device->size().height() - bottom, static_cast<int>(screen_rect.height()) + 1);
 
     glBindTexture(GL_TEXTURE_2D, drawable_texture);
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, left, bottom, left, bottom, width, height);
@@ -5231,8 +5231,8 @@ void QOpenGLPaintEnginePrivate::composite(GLuint primitive, const GLfloat *verte
             qreal tx, ty;
             matrix.map(x, y, &tx, &ty);
 
-            minX = qMin(minX, tx);
-            minY = qMin(minY, ty);
+            minX = std::min(minX, tx);
+            minY = std::min(minY, ty);
             maxX = std::max(maxX, tx);
             maxY = std::max(maxY, ty);
         }

@@ -522,7 +522,7 @@ void QPrintDialogPrivate::setupPrinter()
         p->setFromTo(0,0);
     } else if (options.printRange->isChecked()) {
         p->setPrintRange(QPrinter::PageRange);
-        p->setFromTo(options.from->value(), qMax(options.from->value(), options.to->value()));
+        p->setFromTo(options.from->value(), std::max(options.from->value(), options.to->value()));
     }
 
     // copies
@@ -561,8 +561,8 @@ void QPrintDialogPrivate::updateWidgets()
     default:
         break;
     }
-    const int minPage = qMax(1, qMin(q->minPage() , q->maxPage()));
-    const int maxPage = qMax(1, q->maxPage() == INT_MAX ? 9999 : q->maxPage());
+    const int minPage = std::max(1, std::min(q->minPage() , q->maxPage()));
+    const int maxPage = std::max(1, q->maxPage() == INT_MAX ? 9999 : q->maxPage());
 
     options.from->setMinimum(minPage);
     options.to->setMinimum(minPage);

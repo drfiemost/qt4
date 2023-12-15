@@ -5245,8 +5245,8 @@ QRegion QGraphicsItem::boundingRegion(const QTransform &itemToDeviceTransform) c
         return QRegion(deviceRect);
 
     int pad = 1;
-    QSize bitmapSize(qMax(1, int(deviceRect.width() * granularity) + pad * 2),
-                     qMax(1, int(deviceRect.height() * granularity) + pad * 2));
+    QSize bitmapSize(std::max(1, int(deviceRect.width() * granularity) + pad * 2),
+                     std::max(1, int(deviceRect.height() * granularity) + pad * 2));
     QImage mask(bitmapSize, QImage::Format_ARGB32_Premultiplied);
     mask.fill(0);
     QPainter p(&mask);
@@ -7604,11 +7604,11 @@ static void qt_graphicsItem_highlightSelected(
     QGraphicsItem *item, QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
     const QRectF murect = painter->transform().mapRect(QRectF(0, 0, 1, 1));
-    if (qFuzzyIsNull(qMax(murect.width(), murect.height())))
+    if (qFuzzyIsNull(std::max(murect.width(), murect.height())))
         return;
 
     const QRectF mbrect = painter->transform().mapRect(item->boundingRect());
-    if (qMin(mbrect.width(), mbrect.height()) < qreal(1.0))
+    if (std::min(mbrect.width(), mbrect.height()) < qreal(1.0))
         return;
 
     qreal itemPenWidth;
@@ -9374,10 +9374,10 @@ QRectF QGraphicsLineItem::boundingRect() const
         const qreal x2 = d->line.p2().x();
         const qreal y1 = d->line.p1().y();
         const qreal y2 = d->line.p2().y();
-        qreal lx = qMin(x1, x2);
-        qreal rx = qMax(x1, x2);
-        qreal ty = qMin(y1, y2);
-        qreal by = qMax(y1, y2);
+        qreal lx = std::min(x1, x2);
+        qreal rx = std::max(x1, x2);
+        qreal ty = std::min(y1, y2);
+        qreal by = std::max(y1, y2);
         return QRectF(lx, ty, rx - lx, by - ty);
     }
     return shape().controlPointRect();
@@ -10732,7 +10732,7 @@ static QRectF setupTextLayout(QTextLayout *layout)
     qreal y = 0;
     for (int i = 0; i < layout->lineCount(); ++i) {
         QTextLine line = layout->lineAt(i);
-        maxWidth = qMax(maxWidth, line.naturalTextWidth());
+        maxWidth = std::max(maxWidth, line.naturalTextWidth());
         line.setPosition(QPointF(0, y));
         y += line.height();
     }

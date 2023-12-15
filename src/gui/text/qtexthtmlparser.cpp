@@ -1612,10 +1612,10 @@ void QTextHtmlParser::applyAttributes(const QStringList &attributes)
                     node->applyBackgroundImage(value, resourceProvider);
                 } else if (key == QLatin1String("rowspan")) {
                     if (setIntAttribute(&node->tableCellRowSpan, value))
-                        node->tableCellRowSpan = qMax(1, node->tableCellRowSpan);
+                        node->tableCellRowSpan = std::max(1, node->tableCellRowSpan);
                 } else if (key == QLatin1String("colspan")) {
                     if (setIntAttribute(&node->tableCellColSpan, value))
-                        node->tableCellColSpan = qMax(1, node->tableCellColSpan);
+                        node->tableCellColSpan = std::max(1, node->tableCellColSpan);
                 }
                 break;
             case Html_table:

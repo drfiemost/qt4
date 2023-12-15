@@ -887,7 +887,7 @@ void QDBusConnectionPrivate::deliverCall(QObject *object, int /*flags*/, const Q
 
     // add the input parameters
     int i;
-    int pCount = qMin(msg.arguments().count(), metaTypes.count() - 1);
+    int pCount = std::min(msg.arguments().count(), metaTypes.count() - 1);
     for (i = 1; i <= pCount; ++i) {
         int id = metaTypes[i];
         if (id == QDBusMetaTypeId::message())

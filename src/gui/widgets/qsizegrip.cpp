@@ -352,9 +352,9 @@ void QSizeGrip::mousePressEvent(QMouseEvent * e)
 
     // Find frame geometries, title bar height, and decoration sizes.
     const QRect frameGeometry = tlw->frameGeometry();
-    const int titleBarHeight = qMax(tlw->geometry().y() - frameGeometry.y(), 0);
-    const int bottomDecoration = qMax(frameGeometry.height() - tlw->height() - titleBarHeight, 0);
-    const int leftRightDecoration = qMax((frameGeometry.width() - tlw->width()) / 2, 0);
+    const int titleBarHeight = std::max(tlw->geometry().y() - frameGeometry.y(), 0);
+    const int bottomDecoration = std::max(frameGeometry.height() - tlw->height() - titleBarHeight, 0);
+    const int leftRightDecoration = std::max((frameGeometry.width() - tlw->width()) / 2, 0);
 
     // Determine dyMax depending on whether the sizegrip is at the bottom
     // of the widget or not.
@@ -423,14 +423,14 @@ void QSizeGrip::mouseMoveEvent(QMouseEvent * e)
     // Don't extend beyond the available geometry; bound to dyMax and dxMax.
     QSize ns;
     if (d->atBottom())
-        ns.rheight() = d->r.height() + qMin(np.y() - d->p.y(), d->dyMax);
+        ns.rheight() = d->r.height() + std::min(np.y() - d->p.y(), d->dyMax);
     else
-        ns.rheight() = d->r.height() - qMax(np.y() - d->p.y(), d->dyMax);
+        ns.rheight() = d->r.height() - std::max(np.y() - d->p.y(), d->dyMax);
 
     if (d->atLeft())
-        ns.rwidth() = d->r.width() - qMax(np.x() - d->p.x(), d->dxMax);
+        ns.rwidth() = d->r.width() - std::max(np.x() - d->p.x(), d->dxMax);
     else
-        ns.rwidth() = d->r.width() + qMin(np.x() - d->p.x(), d->dxMax);
+        ns.rwidth() = d->r.width() + std::min(np.x() - d->p.x(), d->dxMax);
 
     ns = QLayout::closestAcceptableSize(tlw, ns);
 

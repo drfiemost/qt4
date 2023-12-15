@@ -534,7 +534,7 @@ QMatrix QSvgTinyDocument::matrixForElement(const QString &id) const
 
 int QSvgTinyDocument::currentFrame() const
 {
-    double runningPercentage = qMin(m_time.elapsed()/double(m_animationDuration), 1.);
+    double runningPercentage = std::min(m_time.elapsed()/double(m_animationDuration), 1.);
 
     int totalFrames = m_fps * m_animationDuration;
 

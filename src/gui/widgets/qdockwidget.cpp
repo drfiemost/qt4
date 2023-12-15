@@ -139,7 +139,7 @@ QSize QDockWidgetTitleButton::sizeHint() const
     if (!icon().isNull()) {
         int iconSize = style()->pixelMetric(QStyle::PM_SmallIconSize, 0, this);
         QSize sz = icon().actualSize(QSize(iconSize, iconSize));
-        size += qMax(sz.width(), sz.height());
+        size += std::max(sz.width(), sz.height());
     }
 
     return QSize(size, size);
@@ -267,11 +267,11 @@ QSize QDockWidgetLayout::sizeFromContent(const QSize &content, bool floating) co
     QSize result = content;
 
     if (verticalTitleBar) {
-        result.setHeight(qMax(result.height(), minimumTitleWidth()));
-        result.setWidth(qMax(content.width(), 0));
+        result.setHeight(std::max(result.height(), minimumTitleWidth()));
+        result.setWidth(std::max(content.width(), 0));
     } else {
-        result.setHeight(qMax(result.height(), 0));
-        result.setWidth(qMax(content.width(), minimumTitleWidth()));
+        result.setHeight(std::max(result.height(), 0));
+        result.setWidth(std::max(content.width(), minimumTitleWidth()));
     }
 
     QDockWidget *w = qobject_cast<QDockWidget*>(parentWidget());
@@ -289,8 +289,8 @@ QSize QDockWidgetLayout::sizeFromContent(const QSize &content, bool floating) co
             result += QSize(2*fw, th + 2*fw);
     }
 
-    result.setHeight(qMin(result.height(), (int) QWIDGETSIZE_MAX));
-    result.setWidth(qMin(result.width(), (int) QWIDGETSIZE_MAX));
+    result.setHeight(std::min(result.height(), (int) QWIDGETSIZE_MAX));
+    result.setWidth(std::min(result.width(), (int) QWIDGETSIZE_MAX));
 
     if (content.width() < 0)
         result.setWidth(-1);
@@ -444,7 +444,7 @@ int QDockWidgetLayout::titleHeight() const
     if (QLayoutItem *item = item_list[FloatButton])
         floatSize = item->widget()->sizeHint();
 
-    int buttonHeight = qMax(perp(verticalTitleBar, closeSize),
+    int buttonHeight = std::max(perp(verticalTitleBar, closeSize),
                             perp(verticalTitleBar, floatSize));
 
     QFontMetrics titleFontMetrics = q->fontMetrics();
@@ -458,7 +458,7 @@ int QDockWidgetLayout::titleHeight() const
 
     int mw = q->style()->pixelMetric(QStyle::PM_DockWidgetTitleMargin, 0, q);
 
-    return qMax(buttonHeight + 2, titleFontMetrics.height() + 2*mw);
+    return std::max(buttonHeight + 2, titleFontMetrics.height() + 2*mw);
 }
 
 void QDockWidgetLayout::setGeometry(const QRect &geometry)

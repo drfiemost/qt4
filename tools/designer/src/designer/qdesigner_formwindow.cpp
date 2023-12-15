@@ -186,7 +186,7 @@ int QDesignerFormWindow::getNumberOfUntitledWindows() const
                 if (rx.captureCount() > 1) {
                     const QString numberCapture = rx.cap(2);
                     if (!numberCapture.isEmpty())
-                        maxUntitled = qMax(numberCapture.toInt(), maxUntitled);
+                        maxUntitled = std::max(numberCapture.toInt(), maxUntitled);
                 }
             }
         }

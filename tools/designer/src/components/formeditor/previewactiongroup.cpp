@@ -116,7 +116,7 @@ void PreviewActionGroup::updateDeviceProfiles()
     int index = 0;
     if (hasProfiles) {
         // Make actions visible
-        const int maxIndex = qMin(static_cast<int>(MaxDeviceActions), profiles.size());
+        const int maxIndex = std::min(static_cast<int>(MaxDeviceActions), profiles.size());
         for (; index < maxIndex; index++) {
             const QString name = profiles.at(index).name();
             al.at(index)->setText(name);

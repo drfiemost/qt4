@@ -364,7 +364,7 @@ void QApplicationArgumentParserPrivate::displayHelp() const
         const QString typeName(q_ptr->typeToName(at));
         const int typeNameLength = typeName.length();
         const int padding = at.type() == QVariant::Invalid ? 0 : ValueArgumentPadding;
-        maxWidth = qMax(maxWidth, nameLength + typeNameLength + padding);
+        maxWidth = std::max(maxWidth, nameLength + typeNameLength + padding);
     }
 
     QTextStream out(stderr);

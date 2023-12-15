@@ -1876,7 +1876,7 @@ qint64 QHttp::read(char *data, qint64 maxlen)
     int readSoFar = 0;
     while (!d->rba.isEmpty() && readSoFar < maxlen) {
         int nextBlockSize = d->rba.nextDataBlockSize();
-        int bytesToRead = qMin<qint64>(maxlen - readSoFar, nextBlockSize);
+        int bytesToRead = std::min<qint64>(maxlen - readSoFar, nextBlockSize);
         memcpy(data + readSoFar, d->rba.readPointer(), bytesToRead);
         d->rba.free(bytesToRead);
         readSoFar += bytesToRead;
@@ -2698,7 +2698,7 @@ void QHttpPrivate::postMoreData()
 #else
     if (socket->bytesToWrite() == 0) {
 #endif
-        int max = qMin<qint64>(4096, postDevice->size() - postDevice->pos());
+        int max = std::min<qint64>(4096, postDevice->size() - postDevice->pos());
         QByteArray arr;
         arr.resize(max);
 
@@ -2908,7 +2908,7 @@ void QHttpPrivate::_q_slotReadyRead()
                 }
 
                 // read data
-                qint64 toRead = chunkedSize < 0 ? n : qMin(n, chunkedSize);
+                qint64 toRead = chunkedSize < 0 ? n : std::min(n, chunkedSize);
                 if (!arr)
                     arr = new QByteArray;
                 uint oldArrSize = arr->size();
@@ -2937,7 +2937,7 @@ void QHttpPrivate::_q_slotReadyRead()
                 // if repost is required, the content is ignored
                 return;
             }
-            n = qMin(qint64(response.contentLength() - bytesDone), n);
+            n = std::min(qint64(response.contentLength() - bytesDone), n);
             if (n > 0) {
                 arr = new QByteArray;
                 arr->resize(n);

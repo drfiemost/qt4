@@ -189,8 +189,8 @@ void MiniHttpServerConnection::handleDisconnected()
 
 void MiniHttpServerConnection::handleBytesWritten()
 {
-    qint64 maxBytes = qMin<qint64>(128*1024, source.bytesAvailable());
-    maxBytes = qMin(maxBytes, 128*1024 - socket->bytesToWrite());
+    qint64 maxBytes = std::min<qint64>(128*1024, source.bytesAvailable());
+    maxBytes = std::min(maxBytes, 128*1024 - socket->bytesToWrite());
     if (maxBytes < 0)
         return;
 

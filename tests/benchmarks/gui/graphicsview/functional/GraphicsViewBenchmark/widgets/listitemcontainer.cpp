@@ -163,7 +163,7 @@ int ListItemContainer::maxItemCountInItemBuffer() const
                 }
             }
         }
-        count = qMin(guess, count);
+        count = std::min(guess, count);
     }
     return count;
 }

@@ -147,7 +147,7 @@ int roundedValueB = qRound(valueB);
 int myValue = 6;
 int yourValue = 4;
 
-int minValue = qMin(myValue, yourValue);
+int minValue = std::min(myValue, yourValue);
 // minValue == yourValue
 //! [13]
 
@@ -156,7 +156,7 @@ int minValue = qMin(myValue, yourValue);
 int myValue = 6;
 int yourValue = 4;
 
-int maxValue = qMax(myValue, yourValue);
+int maxValue = std::max(myValue, yourValue);
 // maxValue == myValue
 //! [14]
 

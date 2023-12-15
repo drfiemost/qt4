@@ -2361,7 +2361,7 @@ QDeclarativePropertyCache *QDeclarativeEnginePrivate::createCache(QDeclarativeTy
         QDeclarativeType *t = QDeclarativeMetaType::qmlType(metaObject, type->module(),
                                                             type->majorVersion(), minorVersion);
         if (t) {
-            maxMinorVersion = qMax(maxMinorVersion, t->minorVersion());
+            maxMinorVersion = std::max(maxMinorVersion, t->minorVersion());
             types << t;
         } else {
             types << 0;
@@ -2553,7 +2553,7 @@ bool QDeclarative_isFileCaseCorrect(const QString &fileName)
     int absoluteLength = absolute.length();
     int canonicalLength = canonical.length();
 
-    int length = qMin(absoluteLength, canonicalLength);
+    int length = std::min(absoluteLength, canonicalLength);
     for (int ii = 0; ii < length; ++ii) {
         const QChar &a = absolute.at(absoluteLength - 1 - ii);
         const QChar &c = canonical.at(canonicalLength - 1 - ii);

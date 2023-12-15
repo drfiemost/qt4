@@ -353,7 +353,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
     }
 
     if (perfectMatch == -1)
-        perfectMatch = qMax(0, goodMatch);
+        perfectMatch = std::max(0, goodMatch);
 
     setStringList(lst);
     return index(perfectMatch, 0, QModelIndex());

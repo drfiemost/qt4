@@ -117,7 +117,7 @@ void ReplayWidget::paintEvent(QPaintEvent *)
         if (currentFrame == repeats) {
             currentFrame = 0;
             if (currentIteration >= 3) {
-                iterationTimes[currentCommand - 1] = qMin(iterationTimes[currentCommand - 1], uint(timer.elapsed()));
+                iterationTimes[currentCommand - 1] = std::min(iterationTimes[currentCommand - 1], uint(timer.elapsed()));
                 timer.restart();
             }
 
@@ -183,7 +183,7 @@ void ReplayWidget::paintEvent(QPaintEvent *)
 
                 for (int i = 0; i < iterationTimes.size(); ++i) {
                     mean += iterationTimes.at(i);
-                    min = qMin(min, iterationTimes.at(i));
+                    min = std::min(min, iterationTimes.at(i));
                 }
 
                 mean /= qreal(iterationTimes.size());
@@ -217,8 +217,8 @@ void ReplayWidget::resizeEvent(QResizeEvent *)
 
     QRect bounds = rect();
 
-    int first = qMax(0, from);
-    int last = qMin(unsigned(to), unsigned(updates.size()));
+    int first = std::max(0, from);
+    int last = std::min(unsigned(to), unsigned(updates.size()));
     for (int i = first; i < last; ++i) {
         if (updates.at(i).intersects(bounds))
             visibleUpdates << i;

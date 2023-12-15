@@ -632,7 +632,7 @@ void tst_NetworkStressTest::parallelConnectDisconnect()
     QElapsedTimer outerTimer;
     outerTimer.start();
 
-    for (int i = 0; i < qMax(2, AttemptCount/qMax(2, parallelAttempts/4)); ++i) {
+    for (int i = 0; i < std::max(2, AttemptCount/qMax(2, parallelAttempts/4)); ++i) {
         QElapsedTimer timeout;
         byteCounter = 0;
         timeout.start();
@@ -716,7 +716,7 @@ void tst_NetworkStressTest::namGet()
     QElapsedTimer outerTimer;
     outerTimer.start();
 
-    for (int i = 0; i < qMax(2, AttemptCount/qMax(2, parallelAttempts/4)); ++i) {
+    for (int i = 0; i < std::max(2, AttemptCount/qMax(2, parallelAttempts/4)); ++i) {
         QElapsedTimer timeout;
         byteCounter = 0;
         timeout.start();

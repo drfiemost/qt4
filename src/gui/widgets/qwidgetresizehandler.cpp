@@ -69,7 +69,7 @@ QWidgetResizeHandler::QWidgetResizeHandler(QWidget *parent, QWidget *cw)
     widget->setMouseTracking(true);
     QFrame *frame = qobject_cast<QFrame*>(widget);
     range = frame ? frame->frameWidth() : RANGE;
-    range = qMax(RANGE, range);
+    range = std::max(RANGE, range);
     activeForMove = activeForResize = true;
     widget->installEventFilter(this);
 }
@@ -259,10 +259,10 @@ void QWidgetResizeHandler::mouseMoveEvent(QMouseEvent *e)
 #ifdef Q_WS_X11
     // Workaround for window managers which refuse to move a tool window partially offscreen.
     QRect desktop = QApplication::desktop()->availableGeometry(widget);
-    pp.rx() = qMax(pp.x(), desktop.left());
-    pp.ry() = qMax(pp.y(), desktop.top());
-    p.rx() = qMin(p.x(), desktop.right());
-    p.ry() = qMin(p.y(), desktop.bottom());
+    pp.rx() = std::max(pp.x(), desktop.left());
+    pp.ry() = std::max(pp.y(), desktop.top());
+    p.rx() = std::min(p.x(), desktop.right());
+    p.ry() = std::min(p.y(), desktop.bottom());
 #endif
 
     QSize ms = qSmartMinSize(childWidget);

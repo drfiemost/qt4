@@ -1160,7 +1160,7 @@ void TabWidgetCommand::removePage()
 
     m_widget->hide();
     m_widget->setParent(formWindow());
-    m_tabWidget->setCurrentIndex(qMin(m_index, m_tabWidget->count()));
+    m_tabWidget->setCurrentIndex(std::min(m_index, m_tabWidget->count()));
 
     formWindow()->clearSelection();
     formWindow()->selectWidget(m_tabWidget, true);

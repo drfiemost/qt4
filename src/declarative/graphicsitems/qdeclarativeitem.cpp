@@ -282,7 +282,7 @@ void QDeclarativeContents::calcHeight(QDeclarativeItem *changed)
         }
         if (!children.isEmpty())
             m_y = top;
-        m_height = qMax(bottom - top, qreal(0.0));
+        m_height = std::max(bottom - top, qreal(0.0));
     }
 
     if (m_height != oldheight || m_y != oldy)
@@ -320,7 +320,7 @@ void QDeclarativeContents::calcWidth(QDeclarativeItem *changed)
         }
         if (!children.isEmpty())
             m_x = left;
-        m_width = qMax(right - left, qreal(0.0));
+        m_width = std::max(right - left, qreal(0.0));
     }
 
     if (m_width != oldwidth || m_x != oldx)

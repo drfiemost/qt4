@@ -476,14 +476,14 @@ void QWidgetItem::setGeometry(const QRect &rect)
             pref.setHeight(wid->sizeHint().expandedTo(wid->minimumSize()).height());
         pref += widgetRectSurplus;
         if (align & Qt::AlignHorizontal_Mask)
-            s.setWidth(qMin(s.width(), pref.width()));
+            s.setWidth(std::min(s.width(), pref.width()));
         if (align & Qt::AlignVertical_Mask) {
             if (hasHeightForWidth())
-                s.setHeight(qMin(s.height(), 
+                s.setHeight(std::min(s.height(), 
                                  heightForWidth(s.width() - widgetRectSurplus.width()) 
                                  + widgetRectSurplus.height()));
             else
-                s.setHeight(qMin(s.height(), pref.height()));
+                s.setHeight(std::min(s.height(), pref.height()));
         }
     }
     Qt::Alignment alignHoriz = QStyle::visualAlignment(wid->layoutDirection(), align);

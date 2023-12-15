@@ -221,7 +221,7 @@ static void dumpWritingSystems(const QByteArray &bits)
     QStringList writingSystems;
 
     QString bitString = stringify(bits);
-    for (int i = 0; i < qMin(int(QFontDatabase::WritingSystemsCount), bitString.length()); ++i) {
+    for (int i = 0; i < std::min(int(QFontDatabase::WritingSystemsCount), bitString.length()); ++i) {
         if (bitString.at(i) == QLatin1Char('1'))
             writingSystems << QFontDatabase::writingSystemName(QFontDatabase::WritingSystem(i));
     }

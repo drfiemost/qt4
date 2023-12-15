@@ -72,8 +72,8 @@ void WebViewPrivate::adjustSize()
     QSizeF contentSize = web->page()->mainFrame()->contentsSize();
     QPointF pos = web->pos();
 
-    qreal w = qMax(contentSize.width(), q->viewport()->boundingRect().width());
-    qreal h = qMax(contentSize.height(), q->viewport()->boundingRect().height());
+    qreal w = std::max(contentSize.width(), q->viewport()->boundingRect().width());
+    qreal h = std::max(contentSize.height(), q->viewport()->boundingRect().height());
 
     if (web->boundingRect().size() != QSizeF(w, h)) {
         //qDebug() << "WebView: adjustSize:" << QSizeF(w, h);
@@ -262,11 +262,11 @@ void WebView::scrollContentsBy(qreal dx, qreal dy)
     QRectF viewportRect = viewport()->boundingRect();
     QPointF pos = d->web->pos();
 
-    qreal w = qMax(contentSize.width(), viewportRect.width());
-    qreal h = qMax(contentSize.height(), viewportRect.height());
+    qreal w = std::max(contentSize.width(), viewportRect.width());
+    qreal h = std::max(contentSize.height(), viewportRect.height());
 
-    qreal minx = qMin(0.0f, (float) -(w - viewportRect.width()));
-    qreal miny = qMin(0.0f, (float) -(h - viewportRect.height()));
+    qreal minx = std::min(0.0f, (float) -(w - viewportRect.width()));
+    qreal miny = std::min(0.0f, (float) -(h - viewportRect.height()));
 
     qreal x = d->web->pos().x() - dx;
 

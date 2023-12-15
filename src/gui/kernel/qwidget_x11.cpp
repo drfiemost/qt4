@@ -569,8 +569,8 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
         int width = sw / 2;
         int height = 4 * sh / 10;
         if (extra) {
-            width = qMax(qMin(width, extra->maxw), extra->minw);
-            height = qMax(qMin(height, extra->maxh), extra->minh);
+            width = std::max(std::min(width, extra->maxw), extra->minw);
+            height = std::max(std::min(height, extra->maxh), extra->minh);
         }
         data.crect.setSize(QSize(width, height));
     }
@@ -2310,14 +2310,14 @@ static void do_size_hints(QWidget* widget, QWExtra *x)
         if (x->minw > 0 || x->minh > 0) {
             // add minimum size hints
             s.flags |= PMinSize;
-            s.min_width  = qMin(XCOORD_MAX, x->minw);
-            s.min_height = qMin(XCOORD_MAX, x->minh);
+            s.min_width  = std::min(XCOORD_MAX, x->minw);
+            s.min_height = std::min(XCOORD_MAX, x->minh);
         }
         if (x->maxw < QWIDGETSIZE_MAX || x->maxh < QWIDGETSIZE_MAX) {
             // add maximum size hints
             s.flags |= PMaxSize;
-            s.max_width  = qMin(XCOORD_MAX, x->maxw);
-            s.max_height = qMin(XCOORD_MAX, x->maxh);
+            s.max_width  = std::min(XCOORD_MAX, x->maxw);
+            s.max_height = std::min(XCOORD_MAX, x->maxh);
         }
         if (x->topextra &&
             (x->topextra->incw > 0 || x->topextra->inch > 0)) {
@@ -2525,10 +2525,10 @@ void QWidgetPrivate::setGeometry_sys(int x, int y, int w, int h, bool isMove)
         data.window_state = s;
     }
     if (extra) {                                // any size restrictions?
-        w = qMin(w,extra->maxw);
-        h = qMin(h,extra->maxh);
-        w = qMax(w,extra->minw);
-        h = qMax(h,extra->minh);
+        w = std::min(w,extra->maxw);
+        h = std::min(h,extra->maxh);
+        w = std::max(w,extra->minw);
+        h = std::max(h,extra->minh);
     }
     QPoint oldPos(q->pos());
     QSize oldSize(q->size());

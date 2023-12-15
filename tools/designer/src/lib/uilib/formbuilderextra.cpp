@@ -353,7 +353,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
         return true;
     }
     // Apply all values contained in list
-    const int ac = qMin(count, list.size());
+    const int ac = std::min(count, list.size());
     bool ok;
     int i = 0;
     for ( ; i < ac; i++) {

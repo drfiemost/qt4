@@ -74,7 +74,7 @@ int QDesktopWidget::numScreens() const
         return 0;
 
     const QList<QScreen*> subScreens = screen->subScreens();
-    return qMax(subScreens.size(), 1);
+    return std::max(subScreens.size(), 1);
 }
 
 QWidget *QDesktopWidget::screen(int)

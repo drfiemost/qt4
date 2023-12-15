@@ -93,8 +93,8 @@ bool PiecesModel::removeRows(int row, int count, const QModelIndex &parent)
     if (row >= pixmaps.size() || row + count <= 0)
         return false;
 
-    int beginRow = qMax(0, row);
-    int endRow = qMin(row + count - 1, pixmaps.size() - 1);
+    int beginRow = std::max(0, row);
+    int endRow = std::min(row + count - 1, pixmaps.size() - 1);
 
     beginRemoveRows(parent, beginRow, endRow);
 
@@ -152,7 +152,7 @@ bool PiecesModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         if (row < 0)
             endRow = pixmaps.size();
         else
-            endRow = qMin(row, pixmaps.size());
+            endRow = std::min(row, pixmaps.size());
     } else
         endRow = parent.row();
 

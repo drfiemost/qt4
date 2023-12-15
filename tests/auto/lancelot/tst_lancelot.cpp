@@ -335,7 +335,7 @@ int main(int argc, char *argv[])
 
     char *fargv[20];
     int fargc = 0;
-    for (int i = 0; i < qMin(argc, 19); i++) {
+    for (int i = 0; i < std::min(argc, 19); i++) {
         if (!qstrcmp(argv[i], "-simfail")) {
             tst_Lancelot::simfail = true;
         } else if (!qstrcmp(argv[i], "-compareto") && i < argc-1) {

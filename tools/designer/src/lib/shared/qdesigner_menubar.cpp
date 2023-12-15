@@ -688,7 +688,7 @@ void QDesignerMenuBar::dropEvent(QDropEvent *event)
         if (checkAction(action) == AcceptActionDrag) {
             event->acceptProposedAction();
             int index = findAction(event->pos());
-            index = qMin(index, actions().count() - 1);
+            index = std::min(index, actions().count() - 1);
 
             QDesignerFormWindowInterface *fw = formWindow();
             InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);
@@ -763,7 +763,7 @@ void QDesignerMenuBar::moveRight(bool ctrl)
 void QDesignerMenuBar::movePrevious(bool ctrl)
 {
     const bool swapped = ctrl && swapActions(m_currentIndex, m_currentIndex - 1);
-    const int newIndex = qMax(0, m_currentIndex - 1);
+    const int newIndex = std::max(0, m_currentIndex - 1);
     // Always re-select, swapping destroys order
     if (swapped || newIndex != m_currentIndex) {
         m_currentIndex = newIndex;
@@ -774,7 +774,7 @@ void QDesignerMenuBar::movePrevious(bool ctrl)
 void QDesignerMenuBar::moveNext(bool ctrl)
 {
     const bool swapped = ctrl && swapActions(m_currentIndex + 1, m_currentIndex);
-    const int newIndex = qMin(actions().count() - 1, m_currentIndex + 1);
+    const int newIndex = std::min(actions().count() - 1, m_currentIndex + 1);
     if (swapped || newIndex != m_currentIndex) {
         m_currentIndex = newIndex;
         updateCurrentAction(!ctrl);
@@ -894,8 +894,8 @@ QAction *QDesignerMenuBar::safeActionAt(int index) const
 
 bool QDesignerMenuBar::swapActions(int a, int b)
 {
-    const int left = qMin(a, b);
-    int right = qMax(a, b);
+    const int left = std::min(a, b);
+    int right = std::max(a, b);
 
     QAction *action_a = safeActionAt(left);
     QAction *action_b = safeActionAt(right);
@@ -907,7 +907,7 @@ bool QDesignerMenuBar::swapActions(int a, int b)
             || qobject_cast<SpecialMenuAction*>(action_b))
         return false; // nothing to do
 
-    right = qMin(right, realActionCount());
+    right = std::min(right, realActionCount());
     if (right < 0)
         return false; // nothing to do
 

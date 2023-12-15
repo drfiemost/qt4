@@ -791,7 +791,7 @@ bool Q_INTERNAL_WIN_NO_THROW QPNGImageWriter::writeImage(const QImage& image, in
 
     if (image.colorCount()) {
         // Paletted
-        int num_palette = qMin(256, image.colorCount());
+        int num_palette = std::min(256, image.colorCount());
         png_color palette[256];
         png_byte trans[256];
         int num_trans = 0;
@@ -910,7 +910,7 @@ static bool write_png_image(const QImage &image, QIODevice *device,
 {
     QPNGImageWriter writer(device);
     if (quality >= 0) {
-        quality = qMin(quality, 100);
+        quality = std::min(quality, 100);
         quality = (100-quality) * 9 / 91; // map [0,100] -> [9,0]
     }
     writer.setGamma(gamma);

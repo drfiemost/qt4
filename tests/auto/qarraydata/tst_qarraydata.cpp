@@ -505,7 +505,7 @@ void tst_QArrayData::simpleVectorReserve()
     if (!capacity)
         capacity = size;
 
-    QCOMPARE(vector.capacity(), qMax(size_t(10), capacity));
+    QCOMPARE(vector.capacity(), std::max(size_t(10), capacity));
     QCOMPARE(vector.size(), size);
 
     vector.reserve(20);
@@ -604,7 +604,7 @@ void tst_QArrayData::allocate()
 
     // Minimum alignment that can be requested is that of QArrayData.
     // Typically, this alignment is sizeof(void *) and ensured by malloc.
-    size_t minAlignment = qMax(alignment, Q_ALIGNOF(QArrayData));
+    size_t minAlignment = std::max(alignment, Q_ALIGNOF(QArrayData));
 
     // Shared Empty
     QCOMPARE(QArrayData::allocate(objectSize, minAlignment, 0,
@@ -653,7 +653,7 @@ void tst_QArrayData::alignment()
 
     // Minimum alignment that can be requested is that of QArrayData.
     // Typically, this alignment is sizeof(void *) and ensured by malloc.
-    size_t minAlignment = qMax(alignment, Q_ALIGNOF(QArrayData));
+    size_t minAlignment = std::max(alignment, Q_ALIGNOF(QArrayData));
 
     Deallocator keeper(sizeof(Unaligned), minAlignment);
     keeper.headers.reserve(100);

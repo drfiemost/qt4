@@ -131,8 +131,8 @@ void QDesignerWorkbench::Position::applyTo(QMdiSubWindow *mdiSubWindow,
 {
     // QMdiSubWindow attempts to resize its children to sizeHint() when switching user interface modes.
     // Restore old size
-    const QPoint mdiAreaPos =  QPoint(qMax(0, m_position.x() - mdiAreaOffset.x()),
-                                      qMax(0, m_position.y() - mdiAreaOffset.y()));
+    const QPoint mdiAreaPos =  QPoint(std::max(0, m_position.x() - mdiAreaOffset.x()),
+                                      std::max(0, m_position.y() - mdiAreaOffset.y()));
     mdiSubWindow->move(mdiAreaPos);
     const QSize decorationSize = mdiSubWindow->size() - mdiSubWindow->contentsRect().size();
     mdiSubWindow->resize(mdiSubWindow->widget()->size() + decorationSize);

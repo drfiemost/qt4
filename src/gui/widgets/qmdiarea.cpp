@@ -222,12 +222,12 @@ static void setIndex(int *index, int candidate, int min, int max, bool isIncreas
         if (candidate > max)
             *index = min;
         else
-            *index = qMax(candidate, min);
+            *index = std::max(candidate, min);
     } else {
         if (candidate < min)
             *index = max;
         else
-            *index = qMin(candidate, max);
+            *index = std::min(candidate, max);
     }
     Q_ASSERT(*index >= min && *index <= max);
 }
@@ -301,8 +301,8 @@ void RegularTiler::rearrange(QList<QWidget *> &widgets, const QRect &domain) con
         return;
 
     const int n = widgets.size();
-    const int ncols = qMax(qCeil(qSqrt(qreal(n))), 1);
-    const int nrows = qMax((n % ncols) ? (n / ncols + 1) : (n / ncols), 1);
+    const int ncols = std::max(qCeil(qSqrt(qreal(n))), 1);
+    const int nrows = std::max((n % ncols) ? (n / ncols + 1) : (n / ncols), 1);
     const int nspecial = (n % ncols) ? (ncols - n % ncols) : 0;
     const int dx = domain.width()  / ncols;
     const int dy = domain.height() / nrows;
@@ -360,11 +360,11 @@ void SimpleCascader::rearrange(QList<QWidget *> &widgets, const QRect &domain) c
         titleBarHeight -= 4;
 #endif
     const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QWorkspaceTitleBar"));
-    const int dy = qMax(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
+    const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
 
     const int n = widgets.size();
-    const int nrows = qMax((domain.height() - (topOffset + bottomOffset)) / dy, 1);
-    const int ncols = qMax(n / nrows + ((n % nrows) ? 1 : 0), 1);
+    const int nrows = std::max((domain.height() - (topOffset + bottomOffset)) / dy, 1);
+    const int ncols = std::max(n / nrows + ((n % nrows) ? 1 : 0), 1);
     const int dcol = (domain.width() - (leftOffset + rightOffset)) / ncols;
 
     int i = 0;
@@ -394,7 +394,7 @@ void IconTiler::rearrange(QList<QWidget *> &widgets, const QRect &domain) const
     const int n = widgets.size();
     const int width = widgets.at(0)->width();
     const int height = widgets.at(0)->height();
-    const int ncols = qMax(domain.width() / width, 1);
+    const int ncols = std::max(domain.width() / width, 1);
     const int nrows = n / ncols + ((n % ncols) ? 1 : 0);
 
     int i = 0;
@@ -1212,8 +1212,8 @@ void QMdiAreaPrivate::updateScrollBars()
     if (isSubWindowsTiled && hbar->value() != 0)
         hbar->setValue(0);
     const int xOffset = startX + hbar->value();
-    hbar->setRange(qMin(0, xOffset),
-                   qMax(0, xOffset + childrenRect.width() - viewportRect.width()));
+    hbar->setRange(std::min(0, xOffset),
+                   std::max(0, xOffset + childrenRect.width() - viewportRect.width()));
     hbar->setPageStep(childrenRect.width());
     hbar->setSingleStep(childrenRect.width() / 20);
 
@@ -1221,8 +1221,8 @@ void QMdiAreaPrivate::updateScrollBars()
     if (isSubWindowsTiled && vbar->value() != 0)
         vbar->setValue(0);
     const int yOffset = childrenRect.top() + vbar->value();
-    vbar->setRange(qMin(0, yOffset),
-                   qMax(0, yOffset + childrenRect.height() - viewportRect.height()));
+    vbar->setRange(std::min(0, yOffset),
+                   std::max(0, yOffset + childrenRect.height() - viewportRect.height()));
     vbar->setPageStep(childrenRect.height());
     vbar->setSingleStep(childrenRect.height() / 20);
 }
@@ -1264,8 +1264,8 @@ QRect QMdiAreaPrivate::resizeToMinimumTileSize(const QSize &minSubWindowSize, in
         return viewport->rect();
 
     // Calculate minimum size.
-    const int columns = qMax(qCeil(qSqrt(qreal(subWindowCount))), 1);
-    const int rows = qMax((subWindowCount % columns) ? (subWindowCount / columns + 1)
+    const int columns = std::max(qCeil(qSqrt(qreal(subWindowCount))), 1);
+    const int rows = std::max((subWindowCount % columns) ? (subWindowCount / columns + 1)
                                                      : (subWindowCount / columns), 1);
     const int minWidth = minSubWindowSize.width() * columns;
     const int minHeight = minSubWindowSize.height() * rows;

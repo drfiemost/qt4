@@ -985,7 +985,7 @@ protected:
         qint64 measuredSentBytes = 0;
         while (dataIndex < wantedSize) {
             const int remainingBytes = wantedSize - measuredSentBytes;
-            const int bytesToWrite = qMin(remainingBytes, static_cast<int>(BlockSize));
+            const int bytesToWrite = std::min(remainingBytes, static_cast<int>(BlockSize));
             if (bytesToWrite <= 0)
                 qFatal("%s: attempt to write %d bytes", Q_FUNC_INFO, bytesToWrite);
             measuredSentBytes += writeNextData(client, bytesToWrite);
@@ -2946,7 +2946,7 @@ void tst_QNetworkReply::ioGetFromHttpWithAuth()
         QCOMPARE(reader2.data, expectedData);
 
         QCOMPARE(authspy.count(), (expectedAuth ? 1 : 0));
-        expectedAuth = qMax(0, expectedAuth - 1);
+        expectedAuth = std::max(0, expectedAuth - 1);
     }
 
     // rinse and repeat:
@@ -2967,7 +2967,7 @@ void tst_QNetworkReply::ioGetFromHttpWithAuth()
         QCOMPARE(reader.data, expectedData);
 
         QCOMPARE(authspy.count(), (expectedAuth ? 1 : 0));
-        expectedAuth = qMax(0, expectedAuth - 1);
+        expectedAuth = std::max(0, expectedAuth - 1);
     }
 
     // now check with synchronous calls:
@@ -5936,7 +5936,7 @@ public slots:
 
         // send data
         if (client && client->bytesToWrite() < 100*1024 && dataSent < dataSize) {
-            qint64 amount = qMin(qint64(16*1024), dataSize - dataSent);
+            qint64 amount = std::min(qint64(16*1024), dataSize - dataSent);
             QByteArray data(amount, '@');
 
             if (chunkedEncoding) {

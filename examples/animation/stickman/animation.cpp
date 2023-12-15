@@ -105,7 +105,7 @@ int Animation::totalFrames() const
 
 void Animation::setCurrentFrame(int currentFrame)
 {
-    m_currentFrame = qMax(qMin(currentFrame, totalFrames()-1), 0);
+    m_currentFrame = std::max(std::min(currentFrame, totalFrames()-1), 0);
 }
 
 int Animation::currentFrame() const

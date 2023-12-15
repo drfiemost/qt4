@@ -101,7 +101,7 @@ void render_qt_text(QPainter *painter, int w, int h, const QColor &color) {
     path.moveTo(-0.535993, 0.275629);
 
     painter->translate(w / 2, h / 2);
-    double scale = qMin(w, h) * 8 / 10.0;
+    double scale = std::min(w, h) * 8 / 10.0;
     painter->scale(scale, scale);
 
     painter->setRenderHint(QPainter::Antialiasing);

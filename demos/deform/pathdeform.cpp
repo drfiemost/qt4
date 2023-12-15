@@ -239,7 +239,7 @@ void PathDeformControls::layoutForSmallScreen()
     fontSizeSlider->setValue(120);
 
     QRect screen_size = QApplication::desktop()->screenGeometry();
-    radiusSlider->setValue(qMin(screen_size.width(), screen_size.height())/5);
+    radiusSlider->setValue(std::min(screen_size.width(), screen_size.height())/5);
 
     m_renderer->setText(tr("Qt"));
 }
@@ -616,7 +616,7 @@ void PathDeformRenderer::paint(QPainter *painter)
 
 void PathDeformRenderer::setRadius(int radius)
 {
-    qreal max = qMax(m_radius, (qreal)radius);
+    qreal max = std::max(m_radius, (qreal)radius);
     m_radius = radius;
     generateLensPixmap();
     if (!m_animated || m_radius < max) {

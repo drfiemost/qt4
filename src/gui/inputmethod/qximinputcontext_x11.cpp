@@ -219,7 +219,7 @@ extern "C" {
 
             // figure out where the selection starts, and how long it is
             bool started = false;
-            for (int x = 0; x < qMin(data->selectedChars.size(), data->text.length()); ++x) {
+            for (int x = 0; x < std::min(data->selectedChars.size(), data->text.length()); ++x) {
                 if (started) {
                     if (data->selectedChars.testBit(x)) ++sellen;
                     else break;
@@ -403,7 +403,7 @@ QXIMInputContext::QXIMInputContext()
 
             QList<QByteArray> layoutNames = QByteArray::fromRawData(names[2], qstrlen(names[2])).split(',');
             QList<QByteArray> variantNames = QByteArray::fromRawData(names[3], qstrlen(names[3])).split(',');
-            for (int i = 0; i < qMin(layoutNames.count(), variantNames.count()); ++i  ) {
+            for (int i = 0; i < std::min(layoutNames.count(), variantNames.count()); ++i  ) {
                 QByteArray variantName = variantNames.at(i);
                 const int dashPos = variantName.indexOf("-");
                 if (dashPos >= 0)

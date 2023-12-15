@@ -519,7 +519,7 @@ void QDeclarativeRectangle::drawRect(QPainter &p)
             rect = QRectF(0, 0, width(), height());
         qreal radius = d->radius;
         if (radius > width()/2 || radius > height()/2)
-            radius = qMin(width()/2, height()/2);
+            radius = std::min(width()/2, height()/2);
         if (radius > 0.)
             p.drawRoundedRect(rect, radius, radius);
         else

@@ -171,7 +171,7 @@ void qGeomCalc(QVector<QLayoutStruct> &chain, int start, int count,
                 rest-=items;
             }
             QLayoutStruct *data = &chain[i];
-            data->size = qMin(data->minimumSize, maxv);
+            data->size = std::min(data->minimumSize, maxv);
             data->done = true;
         }
     } else if (space < cHint + sumSpacing) {
@@ -356,14 +356,14 @@ Q_GUI_EXPORT QSize qSmartMinSize(const QSize &sizeHint, const QSize &minSizeHint
         if (sizePolicy.horizontalPolicy() & QSizePolicy::ShrinkFlag)
             s.setWidth(minSizeHint.width());
         else
-            s.setWidth(qMax(sizeHint.width(), minSizeHint.width()));
+            s.setWidth(std::max(sizeHint.width(), minSizeHint.width()));
     }
 
     if (sizePolicy.verticalPolicy() != QSizePolicy::Ignored) {
         if (sizePolicy.verticalPolicy() & QSizePolicy::ShrinkFlag) {
             s.setHeight(minSizeHint.height());
         } else {
-            s.setHeight(qMax(sizeHint.height(), minSizeHint.height()));
+            s.setHeight(std::max(sizeHint.height(), minSizeHint.height()));
         }
     }
 

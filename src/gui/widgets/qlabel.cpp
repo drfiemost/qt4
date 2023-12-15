@@ -547,7 +547,7 @@ QSize QLabelPrivate::sizeForWidth(int w) const
 {
     Q_Q(const QLabel);
     if(q->minimumWidth() > 0)
-        w = qMax(w, q->minimumWidth());
+        w = std::max(w, q->minimumWidth());
     QSize contentsMargin(leftmargin + rightmargin, topmargin + bottommargin);
 
     QRect br;
@@ -586,7 +586,7 @@ QSize QLabelPrivate::sizeForWidth(int w) const
             // Calculate the length of document if w is the width
             if (align & Qt::TextWordWrap) {
                 if (w >= 0) {
-                    w = qMax(w-hextra-contentsMargin.width(), 0); // strip margin and indent
+                    w = std::max(w-hextra-contentsMargin.width(), 0); // strip margin and indent
                     control->setTextWidth(w);
                 } else {
                     control->adjustSize();
@@ -614,7 +614,7 @@ QSize QLabelPrivate::sizeForWidth(int w) const
 
             bool tryWidth = (w < 0) && (align & Qt::TextWordWrap);
             if (tryWidth)
-                w = qMin(fm.averageCharWidth() * 80, q->maximumSize().width());
+                w = std::min(fm.averageCharWidth() * 80, q->maximumSize().width());
             else if (w < 0)
                 w = 2000;
             w -= (hextra + contentsMargin.width());
@@ -1221,8 +1221,8 @@ void QLabelPrivate::_q_movieUpdated(const QRect& rect)
         } else {
             r = q->style()->itemPixmapRect(q->contentsRect(), align, movie->currentPixmap());
             r.translate(rect.x(), rect.y());
-            r.setWidth(qMin(r.width(), rect.width()));
-            r.setHeight(qMin(r.height(), rect.height()));
+            r.setWidth(std::min(r.width(), rect.width()));
+            r.setHeight(std::min(r.height(), rect.height()));
         }
         q->update(r);
     }
@@ -1594,9 +1594,9 @@ QRectF QLabelPrivate::layoutRect() const
     qreal rh = control->document()->documentLayout()->documentSize().height();
     qreal yo = 0;
     if (align & Qt::AlignVCenter)
-        yo = qMax((cr.height()-rh)/2, qreal(0));
+        yo = std::max((cr.height()-rh)/2, qreal(0));
     else if (align & Qt::AlignBottom)
-        yo = qMax(cr.height()-rh, qreal(0));
+        yo = std::max(cr.height()-rh, qreal(0));
     return QRectF(cr.x(), yo + cr.y(), cr.width(), cr.height());
 }
 

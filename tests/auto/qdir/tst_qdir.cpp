@@ -690,7 +690,7 @@ void tst_QDir::entryList()
     QStringList actual = dir.entryList(nameFilters, (QDir::Filters)filterspec,
                                        (QDir::SortFlags)sortspec);
 
-    int max = qMin(actual.count(), expected.count());
+    int max = std::min(actual.count(), expected.count());
 
     if (qstrcmp(QTest::currentDataTag(), "unprintablenames") == 0) {
         // The purpose of this entry is to check that QDir doesn't
@@ -1016,7 +1016,7 @@ void tst_QDir::setNameFilters()
 
     dir.setNameFilters(nameFilters);
     QStringList actual = dir.entryList();
-    int max = qMin(actual.count(), expected.count());
+    int max = std::min(actual.count(), expected.count());
 
     for (int i=0; i<max; ++i)
         QCOMPARE(actual[i], expected[i]);

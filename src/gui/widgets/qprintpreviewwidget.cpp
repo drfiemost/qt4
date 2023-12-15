@@ -62,7 +62,7 @@ public:
         : pageNum(_pageNum), pagePicture(_pagePicture),
           paperSize(_paperSize), pageRect(_pageRect)
     {
-        qreal border = qMax(paperSize.height(), paperSize.width()) / 25;
+        qreal border = std::max(paperSize.height(), paperSize.width()) / 25;
         brect = QRectF(QPointF(-border, -border),
                        QSizeF(paperSize)+QSizeF(2*border, 2*border));
         setCacheMode(DeviceCoordinateCache);

@@ -8146,8 +8146,8 @@ void tst_QGraphicsItem::sorting()
 #ifdef Q_OS_SYMBIAN
     // Adjust area in devices where scrollbars are thicker than 25 pixels as they will
     // obstruct painting otherwise.
-    int scrollWidth = qMax(25, view.verticalScrollBar()->width());
-    int scrollHeight = qMax(25, view.horizontalScrollBar()->height());
+    int scrollWidth = std::max(25, view.verticalScrollBar()->width());
+    int scrollHeight = std::max(25, view.horizontalScrollBar()->height());
 
     view.resize(95 + scrollWidth, 75 + scrollHeight);
 #else

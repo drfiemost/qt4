@@ -1620,7 +1620,7 @@ void QDragManager::move(const QPoint & globalPos)
         if (r != Success || X11->badwindow()) {
             target = 0;
         } else {
-            target_version = qMin(xdnd_version,tv ? *tv : 1);
+            target_version = std::min(xdnd_version,tv ? *tv : 1);
             if (tv)
                 XFree(tv);
 //             if (!(!X11->badwindow() && type))

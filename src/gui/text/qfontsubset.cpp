@@ -910,10 +910,10 @@ static void getBounds(const QList<TTF_POINT> &points, qint16 *xmin, qint16 *xmax
     *ymax = *ymin;
 
     for (int i = 1; i < points.size(); ++i) {
-        *xmin = qMin(*xmin, points.at(i).x);
-        *xmax = qMax(*xmax, points.at(i).x);
-        *ymin = qMin(*ymin, points.at(i).y);
-        *ymax = qMax(*ymax, points.at(i).y);
+        *xmin = std::min(*xmin, points.at(i).x);
+        *xmax = std::max(*xmax, points.at(i).x);
+        *ymin = std::min(*ymin, points.at(i).y);
+        *ymax = std::max(*ymax, points.at(i).y);
     }
 }
 
@@ -1278,15 +1278,15 @@ QByteArray QFontSubset::toTruetype() const
         }
         QTtfGlyph glyph = generateGlyph(i, path, metric.xoff.toReal(), metric.x.toReal(), properties.emSquare.toReal());
 
-        font.head.xMin = qMin(font.head.xMin, glyph.xMin);
-        font.head.xMax = qMax(font.head.xMax, glyph.xMax);
-        font.head.yMin = qMin(font.head.yMin, glyph.yMin);
-        font.head.yMax = qMax(font.head.yMax, glyph.yMax);
+        font.head.xMin = std::min(font.head.xMin, glyph.xMin);
+        font.head.xMax = std::max(font.head.xMax, glyph.xMax);
+        font.head.yMin = std::min(font.head.yMin, glyph.yMin);
+        font.head.yMax = std::max(font.head.yMax, glyph.yMax);
 
-        font.hhea.xMaxExtent = qMax(font.hhea.xMaxExtent, (qint16)(glyph.lsb + glyph.xMax - glyph.xMin));
+        font.hhea.xMaxExtent = std::max(font.hhea.xMaxExtent, (qint16)(glyph.lsb + glyph.xMax - glyph.xMin));
 
-        font.maxp.maxPoints = qMax(font.maxp.maxPoints, glyph.numPoints);
-        font.maxp.maxContours = qMax(font.maxp.maxContours, glyph.numContours);
+        font.maxp.maxPoints = std::max(font.maxp.maxPoints, glyph.numPoints);
+        font.maxp.maxContours = std::max(font.maxp.maxContours, glyph.numContours);
 
 //         qDebug("adding glyph %d size=%d", glyph.index, glyph.data.size());
         glyphs.append(glyph);

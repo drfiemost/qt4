@@ -645,7 +645,7 @@ void QLinuxFbScreen::createPalette(fb_cmap &cmap, fb_var_screeninfo &vinfo, fb_f
             rbits=gbits=bbits=8;
             break;
         }
-        screencols=cmap.len=1<<qMax(rbits,qMax(gbits,bbits));
+        screencols=cmap.len=1<<std::max(rbits,qMax(gbits,bbits));
         cmap.red=(unsigned short int *)
                  malloc(sizeof(unsigned short int)*256);
         cmap.green=(unsigned short int *)

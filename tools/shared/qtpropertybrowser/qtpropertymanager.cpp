@@ -1405,7 +1405,7 @@ static QIcon drawCheckBox(bool value)
     const int indicatorHeight = style->pixelMetric(QStyle::PM_IndicatorHeight, &opt);
     const int listViewIconSize = indicatorWidth;
     const int pixmapWidth = indicatorWidth;
-    const int pixmapHeight = qMax(indicatorHeight, listViewIconSize);
+    const int pixmapHeight = std::max(indicatorHeight, listViewIconSize);
 
     opt.rect = QRect(0, 0, indicatorWidth, indicatorHeight);
     QPixmap pixmap = QPixmap(pixmapWidth, pixmapHeight);
@@ -3992,10 +3992,10 @@ void QtRectPropertyManager::setValue(QtProperty *property, const QRect &val)
     if (!data.constraint.isNull() && !data.constraint.contains(newRect)) {
         const QRect r1 = data.constraint;
         const QRect r2 = newRect;
-        newRect.setLeft(qMax(r1.left(), r2.left()));
-        newRect.setRight(qMin(r1.right(), r2.right()));
-        newRect.setTop(qMax(r1.top(), r2.top()));
-        newRect.setBottom(qMin(r1.bottom(), r2.bottom()));
+        newRect.setLeft(std::max(r1.left(), r2.left()));
+        newRect.setRight(std::min(r1.right(), r2.right()));
+        newRect.setTop(std::max(r1.top(), r2.top()));
+        newRect.setBottom(std::min(r1.bottom(), r2.bottom()));
         if (newRect.width() < 0 || newRect.height() < 0)
             return;
     }
@@ -4423,10 +4423,10 @@ void QtRectFPropertyManager::setValue(QtProperty *property, const QRectF &val)
     if (!data.constraint.isNull() && !data.constraint.contains(newRect)) {
         const QRectF r1 = data.constraint;
         const QRectF r2 = newRect;
-        newRect.setLeft(qMax(r1.left(), r2.left()));
-        newRect.setRight(qMin(r1.right(), r2.right()));
-        newRect.setTop(qMax(r1.top(), r2.top()));
-        newRect.setBottom(qMin(r1.bottom(), r2.bottom()));
+        newRect.setLeft(std::max(r1.left(), r2.left()));
+        newRect.setRight(std::min(r1.right(), r2.right()));
+        newRect.setTop(std::max(r1.top(), r2.top()));
+        newRect.setBottom(std::min(r1.bottom(), r2.bottom()));
         if (newRect.width() < 0 || newRect.height() < 0)
             return;
     }

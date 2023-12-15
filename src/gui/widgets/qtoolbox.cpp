@@ -190,7 +190,7 @@ QSize QToolBoxButton::sizeHint() const
     }
     QSize textSize = fontMetrics().size(Qt::TextShowMnemonic, text()) + QSize(0, 8);
 
-    QSize total(iconSize.width() + textSize.width(), qMax(iconSize.height(), textSize.height()));
+    QSize total(iconSize.width() + textSize.width(), std::max(iconSize.height(), textSize.height()));
     return total.expandedTo(QApplication::globalStrut());
 }
 

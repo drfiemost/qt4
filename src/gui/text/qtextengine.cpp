@@ -1231,7 +1231,7 @@ void QTextEngine::shapeTextWithHarfbuzz(int item) const
     if (option.useDesignMetrics())
         entire_shaper_item.shaperFlags |= HB_ShaperFlag_UseDesignMetrics;
 
-    entire_shaper_item.num_glyphs = qMax(layoutData->glyphLayout.numGlyphs - layoutData->used, int(entire_shaper_item.item.length));
+    entire_shaper_item.num_glyphs = std::max(layoutData->glyphLayout.numGlyphs - layoutData->used, int(entire_shaper_item.item.length));
     if (! ensureSpace(entire_shaper_item.num_glyphs)) {
         if (hasCaseChange(si))
             delete [] const_cast<HB_UChar16 *>(entire_shaper_item.string);
@@ -1308,9 +1308,9 @@ void QTextEngine::shapeTextWithHarfbuzz(int item) const
             actualFontEngine = static_cast<QFontEngineMulti *>(font)->engine(engineIdx);
         }
 
-        si.ascent = qMax(actualFontEngine->ascent(), si.ascent);
-        si.descent = qMax(actualFontEngine->descent(), si.descent);
-        si.leading = qMax(actualFontEngine->leading(), si.leading);
+        si.ascent = std::max(actualFontEngine->ascent(), si.ascent);
+        si.descent = std::max(actualFontEngine->descent(), si.descent);
+        si.leading = std::max(actualFontEngine->leading(), si.leading);
 
         shaper_item.font = actualFontEngine->harfbuzzFont();
         shaper_item.face = actualFontEngine->initializedHarfbuzzFace();
@@ -1779,10 +1779,10 @@ glyph_metrics_t QTextEngine::boundingBox(int from,  int len) const
                 glyphEnd = (charEnd == ilen) ? si->num_glyphs : logClusters[charEnd];
                 if (glyphStart <= glyphEnd ) {
                     glyph_metrics_t m = fe->boundingBox(glyphs.mid(glyphStart, glyphEnd - glyphStart));
-                    gm.x = qMin(gm.x, m.x + gm.xoff);
-                    gm.y = qMin(gm.y, m.y + gm.yoff);
-                    gm.width = qMax(gm.width, m.width+gm.xoff);
-                    gm.height = qMax(gm.height, m.height+gm.yoff);
+                    gm.x = std::min(gm.x, m.x + gm.xoff);
+                    gm.y = std::min(gm.y, m.y + gm.yoff);
+                    gm.width = std::max(gm.width, m.width+gm.xoff);
+                    gm.height = std::max(gm.height, m.height+gm.yoff);
                     gm.xoff += m.xoff;
                     gm.yoff += m.yoff;
                 }
@@ -1830,10 +1830,10 @@ glyph_metrics_t QTextEngine::tightBoundingBox(int from,  int len) const
                 if (glyphStart <= glyphEnd ) {
                     QFontEngine *fe = fontEngine(*si);
                     glyph_metrics_t m = fe->tightBoundingBox(glyphs.mid(glyphStart, glyphEnd - glyphStart));
-                    gm.x = qMin(gm.x, m.x + gm.xoff);
-                    gm.y = qMin(gm.y, m.y + gm.yoff);
-                    gm.width = qMax(gm.width, m.width+gm.xoff);
-                    gm.height = qMax(gm.height, m.height+gm.yoff);
+                    gm.x = std::min(gm.x, m.x + gm.xoff);
+                    gm.y = std::min(gm.y, m.y + gm.yoff);
+                    gm.width = std::max(gm.width, m.width+gm.xoff);
+                    gm.height = std::max(gm.height, m.height+gm.yoff);
                     gm.xoff += m.xoff;
                     gm.yoff += m.yoff;
                 }
@@ -2054,8 +2054,8 @@ void QTextEngine::justify(const QScriptLine &line)
         int kashida_type = HB_Arabic_Normal;
         int kashida_pos = -1;
 
-        int start = qMax(line.from - si.position, 0);
-        int end = qMin(line.from + line_length - (int)si.position, length(firstItem+i));
+        int start = std::max(line.from - si.position, 0);
+        int end = std::min(line.from + line_length - (int)si.position, length(firstItem+i));
 
         unsigned short *log_clusters = logClusters(&si);
 
@@ -2082,8 +2082,8 @@ void QTextEngine::justify(const QScriptLine &line)
 //                     qDebug("kashida position at %d in word", kashida_pos);
                     set(&justificationPoints[nPoints], kashida_type, g.mid(kashida_pos), fontEngine(si));
                     if (justificationPoints[nPoints].kashidaWidth > 0) {
-                        minKashida = qMin(minKashida, justificationPoints[nPoints].kashidaWidth);
-                        maxJustify = qMax(maxJustify, justificationPoints[nPoints].type);
+                        minKashida = std::min(minKashida, justificationPoints[nPoints].kashidaWidth);
+                        maxJustify = std::max(maxJustify, justificationPoints[nPoints].type);
                         ++nPoints;
                     }
                 }
@@ -2092,7 +2092,7 @@ void QTextEngine::justify(const QScriptLine &line)
                 // fall through
             case HB_Character      :
                 set(&justificationPoints[nPoints++], justification, g.mid(i), fontEngine(si));
-                maxJustify = qMax(maxJustify, justification);
+                maxJustify = std::max(maxJustify, justification);
                 break;
             case HB_Arabic_Normal  :
             case HB_Arabic_Waw     :
@@ -2110,8 +2110,8 @@ void QTextEngine::justify(const QScriptLine &line)
         if (kashida_pos >= 0) {
             set(&justificationPoints[nPoints], kashida_type, g.mid(kashida_pos), fontEngine(si));
             if (justificationPoints[nPoints].kashidaWidth > 0) {
-                minKashida = qMin(minKashida, justificationPoints[nPoints].kashidaWidth);
-                maxJustify = qMax(maxJustify, justificationPoints[nPoints].type);
+                minKashida = std::min(minKashida, justificationPoints[nPoints].kashidaWidth);
+                maxJustify = std::max(maxJustify, justificationPoints[nPoints].type);
                 ++nPoints;
             }
         }
@@ -2148,7 +2148,7 @@ void QTextEngine::justify(const QScriptLine &line)
     if (!need)
         goto end;
 
-    maxJustify = qMin(maxJustify, (int)HB_Space);
+    maxJustify = std::min(maxJustify, (int)HB_Space);
     for (int type = maxJustify; need != 0 && type > 0; --type) {
         int n = 0;
         for (int i = 0; i < nPoints; ++i) {
@@ -2196,9 +2196,9 @@ void QScriptLine::setDefaultHeight(QTextEngine *eng)
     QFixed other_ascent = e->ascent();
     QFixed other_descent = e->descent();
     QFixed other_leading = e->leading();
-    leading = qMax(leading + ascent, other_leading + other_ascent) - qMax(ascent, other_ascent);
-    ascent = qMax(ascent, other_ascent);
-    descent = qMax(descent, other_descent);
+    leading = std::max(leading + ascent, other_leading + other_ascent) - qMax(ascent, other_ascent);
+    ascent = std::max(ascent, other_ascent);
+    descent = std::max(descent, other_descent);
 }
 
 QTextEngine::LayoutData::LayoutData()
@@ -2348,7 +2348,7 @@ int QTextEngine::formatIndex(const QScriptItem *si) const
     int pos = si->position;
     if (specialData && si->position >= specialData->preeditPosition) {
         if (si->position < specialData->preeditPosition + specialData->preeditText.length())
-            pos = qMax(specialData->preeditPosition - 1, 0);
+            pos = std::max(specialData->preeditPosition - 1, 0);
         else
             pos -= specialData->preeditText.length();
     }
@@ -2752,7 +2752,7 @@ QFixed QTextEngine::calculateTabWidth(int item, QFixed x) const
                 }
                 else if (tabSpec.type == QTextOption::DelimiterTab)
                     // find delimitor character to calculate the width required
-                    tabSectionEnd = qMax(si.position, layoutData->string.indexOf(tabSpec.delimiter, si.position) + 1);
+                    tabSectionEnd = std::max(si.position, layoutData->string.indexOf(tabSpec.delimiter, si.position) + 1);
 
                 if (tabSectionEnd > si.position) {
                     QFixed length;
@@ -2763,7 +2763,7 @@ QFixed QTextEngine::calculateTabWidth(int item, QFixed x) const
                             continue;
                         shape(i); // first, lets make sure relevant text is already shaped
                         QGlyphLayout glyphs = this->shapedGlyphs(&item);
-                        const int end = qMin(item.position + item.num_glyphs, tabSectionEnd) - item.position;
+                        const int end = std::min(item.position + item.num_glyphs, tabSectionEnd) - item.position;
                         for (int i=0; i < end; i++)
                             length += glyphs.advances_x[i] * !glyphs.attributes[i].dontPrint;
                         if (end + item.position == tabSectionEnd && tabSpec.type == QTextOption::DelimiterTab) // remove half of matching char
@@ -3298,7 +3298,7 @@ QScriptItem &QTextLineItemIterator::next()
     unsigned short *logClusters = eng->logClusters(si);
     QGlyphLayout glyphs = eng->shapedGlyphs(si);
 
-    itemStart = qMax(line.from, si->position);
+    itemStart = std::max(line.from, si->position);
     glyphsStart = logClusters[itemStart - si->position];
     if (lineEnd < si->position + itemLength) {
         itemEnd = lineEnd;
@@ -3337,8 +3337,8 @@ bool QTextLineItemIterator::getSelectionBounds(QFixed *selectionX, QFixed *selec
         unsigned short *logClusters = eng->logClusters(si);
         QGlyphLayout glyphs = eng->shapedGlyphs(si);
 
-        int from = qMax(itemStart, selection->start) - si->position;
-        int to = qMin(itemEnd, selection->start + selection->length) - si->position;
+        int from = std::max(itemStart, selection->start) - si->position;
+        int to = std::min(itemEnd, selection->start + selection->length) - si->position;
         if (from >= to)
             return false;
 

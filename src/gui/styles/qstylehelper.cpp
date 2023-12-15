@@ -115,7 +115,7 @@ static QPointF calcRadialPos(const QStyleOptionSlider *dial, qreal offset)
 {
     const int width = dial->rect.width();
     const int height = dial->rect.height();
-    const int r = qMin(width, height) / 2;
+    const int r = std::min(width, height) / 2;
     const int currentSliderPosition = dial->upsideDown ? dial->sliderPosition : (dial->maximum - dial->sliderPosition);
     qreal a = 0;
     if (dial->maximum == dial->minimum)
@@ -171,7 +171,7 @@ QPolygonF calcLines(const QStyleOptionSlider *dial)
     QPolygonF poly;
     int width = dial->rect.width();
     int height = dial->rect.height();
-    qreal r = qMin(width, height) / 2;
+    qreal r = std::min(width, height) / 2;
     int bigLineSize = calcBigLineSize(int(r));
 
     qreal xc = width / 2 + 0.5;
@@ -217,7 +217,7 @@ void drawDial(const QStyleOptionSlider *option, QPainter *painter)
     const int width = option->rect.width();
     const int height = option->rect.height();
     const bool enabled = option->state & QStyle::State_Enabled;
-    qreal r = qMin(width, height) / 2;
+    qreal r = std::min(width, height) / 2;
     r -= r/50;
     const qreal penSize = r/20.0;
 
@@ -242,13 +242,13 @@ void drawDial(const QStyleOptionSlider *option, QPainter *painter)
                        int(r * 2 - 2 * d_ - 2),
                        int(r * 2 - 2 * d_ - 2));
     buttonColor.setHsv(buttonColor .hue(),
-                       qMin(140, buttonColor .saturation()),
-                       qMax(180, buttonColor.value()));
+                       std::min(140, buttonColor .saturation()),
+                       std::max(180, buttonColor.value()));
     QColor shadowColor(0, 0, 0, 20);
 
     if (enabled) {
         // Drop shadow
-        qreal shadowSize = qMax(1.0, penSize/2.0);
+        qreal shadowSize = std::max(1.0, penSize/2.0);
         QRectF shadowRect= br.adjusted(-2*shadowSize, -2*shadowSize,
                                        2*shadowSize, 2*shadowSize);
         QRadialGradient shadowGradient(shadowRect.center().x(),
@@ -284,8 +284,8 @@ void drawDial(const QStyleOptionSlider *option, QPainter *painter)
     if (option->state & QStyle::State_HasFocus) {
         QColor highlight = pal.highlight().color();
         highlight.setHsv(highlight.hue(),
-                         qMin(160, highlight.saturation()),
-                         qMax(230, highlight.value()));
+                         std::min(160, highlight.saturation()),
+                         std::max(230, highlight.value()));
         highlight.setAlpha(127);
         p->setPen(QPen(highlight, 2.0));
         p->setBrush(Qt::NoBrush);

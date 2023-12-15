@@ -398,17 +398,17 @@ void QOleDropSource::createCursors()
             int h = cpm.height();
 
             if (!pm.isNull()) {
-                int x1 = qMin(-hotSpot.x(), 0);
-                int x2 = qMax(pm.width() - hotSpot.x(), cpm.width());
-                int y1 = qMin(-hotSpot.y(), 0);
-                int y2 = qMax(pm.height() - hotSpot.y(), cpm.height());
+                int x1 = std::min(-hotSpot.x(), 0);
+                int x2 = std::max(pm.width() - hotSpot.x(), cpm.width());
+                int y1 = std::min(-hotSpot.y(), 0);
+                int y2 = std::max(pm.height() - hotSpot.y(), cpm.height());
 
                 w = x2 - x1 + 1;
                 h = y2 - y1 + 1;
             }
 
             QRect srcRect = pm.rect();
-            QPoint pmDest = QPoint(qMax(0, -hotSpot.x()), qMax(0, -hotSpot.y()));
+            QPoint pmDest = QPoint(std::max(0, -hotSpot.x()), qMax(0, -hotSpot.y()));
             QPoint newHotSpot = hotSpot;
 
 #if defined(Q_OS_WINCE)
@@ -444,14 +444,14 @@ void QOleDropSource::createCursors()
                 newCursor.fill(QColor(0, 0, 0, 0));
                 QPainter p(&newCursor);
                 p.drawPixmap(pmDest, pm, srcRect);
-                p.drawPixmap(qMax(0,newHotSpot.x()),qMax(0,newHotSpot.y()),cpm);
+                p.drawPixmap(std::max(0,newHotSpot.x()),qMax(0,newHotSpot.y()),cpm);
             } else {
                 newCursor = cpm;
             }
 
 #ifndef QT_NO_CURSOR
-            cursors[actions.at(cnum)] = QCursor(newCursor, pm.isNull() ? 0 : qMax(0,newHotSpot.x()),
-                                                pm.isNull() ? 0 : qMax(0,newHotSpot.y()));
+            cursors[actions.at(cnum)] = QCursor(newCursor, pm.isNull() ? 0 : std::max(0,newHotSpot.x()),
+                                                pm.isNull() ? 0 : std::max(0,newHotSpot.y()));
 #endif
         }
     }

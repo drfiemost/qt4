@@ -87,7 +87,7 @@ if (i) {
 
 //! [5]
 QRect r(listView->itemRect(item));
-r.setHeight(qMin(item->totalHeight(),
+r.setHeight(std::min(item->totalHeight(),
                  listView->viewport->height() - r.y()))
 //! [5]
 

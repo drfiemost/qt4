@@ -132,7 +132,7 @@ public:
     bool supportedBrush;
     bool supportedPen;
 
-    uint transformationType; // this is QTransform::type() + Matrix_NegativeScale if qMin(transform.m11(), transform.m22()) < 0
+    uint transformationType; // this is QTransform::type() + Matrix_NegativeScale if std::min(transform.m11(), transform.m22()) < 0
 
     SurfaceCache *surfaceCache;
     IDirectFB *fb;
@@ -1285,7 +1285,7 @@ void QDirectFBPaintEnginePrivate::drawTiledPixmap(const QRectF &dest, const QPix
     const QSize pixmapSize = dfbData->size();
     if (transform.isScaling() || pixmapTransform.isScaling()) {
         Q_ASSERT(supportsStretchBlit());
-        Q_ASSERT(qMin(transform.m11(), transform.m22()) >= 0);
+        Q_ASSERT(std::min(transform.m11(), transform.m22()) >= 0);
         offset.rx() *= transform.m11();
         offset.ry() *= transform.m22();
 
@@ -1304,10 +1304,10 @@ void QDirectFBPaintEnginePrivate::drawTiledPixmap(const QRectF &dest, const QPix
     } else {
         qreal y = fixCoord(destinationRect.y(), pixmapSize.height(), offset.y());
         const qreal startX = fixCoord(destinationRect.x(), pixmapSize.width(), offset.x());
-        int horizontal = qMax(1, destinationRect.width() / pixmapSize.width()) + 1;
+        int horizontal = std::max(1, destinationRect.width() / pixmapSize.width()) + 1;
         if (startX != destinationRect.x())
             ++horizontal;
-        int vertical = qMax(1, destinationRect.height() / pixmapSize.height()) + 1;
+        int vertical = std::max(1, destinationRect.height() / pixmapSize.height()) + 1;
         if (y != destinationRect.y())
             ++vertical;
 

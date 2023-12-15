@@ -256,7 +256,7 @@ static QString longestCommonPrefix(const QStringList &lst)
     for (int i = lst.size() - 2; (i >= 0) && !result.isEmpty(); --i) {
         const QString &s = lst.at(i);
         int j = 0;
-        for ( ; (j < qMin(s.length(), result.length())) && (s.at(j) == result.at(j)); ++j)
+        for ( ; (j < std::min(s.length(), result.length())) && (s.at(j) == result.at(j)); ++j)
             ;
         result = result.left(j);
     }

@@ -106,7 +106,7 @@ int QColumnViewGrip::moveGrip(int offset)
        newWidth -= offset;
     else
        newWidth += offset;
-    newWidth = qMax(parentWidget->minimumWidth(), newWidth);
+    newWidth = std::max(parentWidget->minimumWidth(), newWidth);
     parentWidget->resize(newWidth, parentWidget->height());
 
     // Then have the view move the widget

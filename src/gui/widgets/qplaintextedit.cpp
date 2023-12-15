@@ -186,7 +186,7 @@ QSizeF QPlainTextDocumentLayout::documentSize() const
 QRectF QPlainTextDocumentLayout::frameBoundingRect(QTextFrame *) const
 {
     Q_D(const QPlainTextDocumentLayout);
-    return QRectF(0, 0, qMax(d->width, d->maximumWidth), qreal(INT_MAX));
+    return QRectF(0, 0, std::max(d->width, d->maximumWidth), qreal(INT_MAX));
 }
 
 /*!
@@ -202,7 +202,7 @@ QRectF QPlainTextDocumentLayout::blockBoundingRect(const QTextBlock &block) cons
     if (block.isVisible()) {
         br = QRectF(QPointF(0, 0), tl->boundingRect().bottomRight());
         if (tl->lineCount() == 1)
-            br.setWidth(qMax(br.width(), tl->lineAt(0).naturalTextWidth()));
+            br.setWidth(std::max(br.width(), tl->lineAt(0).naturalTextWidth()));
         qreal margin = document()->documentMargin();
         br.adjust(0, 0, margin, 0);
         if (!block.next().isValid())
@@ -291,10 +291,10 @@ void QPlainTextDocumentLayout::documentChanged(int from, int charsRemoved, int c
     Q_D(QPlainTextDocumentLayout);
     QTextDocument *doc = document();
     int newBlockCount = doc->blockCount();
-    int charsChanged = qMax(charsRemoved, charsAdded);
+    int charsChanged = std::max(charsRemoved, charsAdded);
 
     QTextBlock changeStartBlock = doc->findBlock(from);
-    QTextBlock changeEndBlock = doc->findBlock(qMax(0, from + charsChanged - 1));
+    QTextBlock changeEndBlock = doc->findBlock(std::max(0, from + charsChanged - 1));
 
     if (changeStartBlock == changeEndBlock && newBlockCount == d->blockCount) {
         QTextBlock block = changeStartBlock;
@@ -385,7 +385,7 @@ void QPlainTextDocumentLayout::layoutBlock(const QTextBlock &block)
         line.setLineWidth(availableWidth);
         line.setPosition(QPointF(margin, height));
         height += line.height();
-        blockMaximumWidth = qMax(blockMaximumWidth, line.naturalTextWidth() + 2*margin);
+        blockMaximumWidth = std::max(blockMaximumWidth, line.naturalTextWidth() + 2*margin);
     }
     tl->endLayout();
 
@@ -429,7 +429,7 @@ qreal QPlainTextDocumentLayout::blockWidth(const QTextBlock &block)
     qreal blockWidth = 0;
     for (int i = 0; i < layout->lineCount(); ++i) {
         QTextLine line = layout->lineAt(i);
-        blockWidth = qMax(line.naturalTextWidth() + 8, blockWidth);
+        blockWidth = std::max(line.naturalTextWidth() + 8, blockWidth);
     }
     return blockWidth;
 }
@@ -549,9 +549,9 @@ int QPlainTextEditControl::hitTest(const QPointF &point, Qt::HitTestAccuracy ) c
         QTextLine line = layout->lineAt(i);
         const QRectF lr = line.naturalTextRect();
         if (lr.top() > pos.y()) {
-            off = qMin(off, line.textStart());
+            off = std::min(off, line.textStart());
         } else if (lr.bottom() <= pos.y()) {
-            off = qMax(off, line.textStart() + line.textLength());
+            off = std::max(off, line.textStart() + line.textLength());
         } else {
             off = line.xToCursor(pos.x(), overwriteMode() ?
                                  QTextLine::CursorOnCharacter : QTextLine::CursorBetweenCharacters);
@@ -626,8 +626,8 @@ void QPlainTextEditPrivate::setTopLine(int visualTopLine, int dx)
 void QPlainTextEditPrivate::setTopBlock(int blockNumber, int lineNumber, int dx)
 {
     Q_Q(QPlainTextEdit);
-    blockNumber = qMax(0, blockNumber);
-    lineNumber = qMax(0, lineNumber);
+    blockNumber = std::max(0, blockNumber);
+    lineNumber = std::max(0, lineNumber);
     QTextDocument *doc = control->document();
     QTextBlock block = doc->findBlockByNumber(blockNumber);
 
@@ -991,11 +991,11 @@ void QPlainTextEditPrivate::_q_adjustScrollbars()
             visibleFromBottom += layoutLineCount;
             block = block.previous();
         }
-        vmax = qMax(0, doc->lineCount() - visibleFromBottom);
+        vmax = std::max(0, doc->lineCount() - visibleFromBottom);
         vSliderLength = visibleFromBottom;
 
     } else {
-        vmax = qMax(0, doc->lineCount() - 1);
+        vmax = std::max(0, doc->lineCount() - 1);
         int lineSpacing = q->fontMetrics().lineSpacing();
         vSliderLength = lineSpacing != 0 ? viewport->height() / lineSpacing : 0;
     }
@@ -1003,7 +1003,7 @@ void QPlainTextEditPrivate::_q_adjustScrollbars()
 
 
     QSizeF documentSize = documentLayout->documentSize();
-    vbar->setRange(0, qMax(0, vmax));
+    vbar->setRange(0, std::max(0, vmax));
     vbar->setPageStep(vSliderLength);
     int visualTopLine = vmax;
     QTextBlock firstVisibleBlock = q->firstVisibleBlock();
@@ -1533,17 +1533,17 @@ void QPlainTextEdit::timerEvent(QTimerEvent *e)
         QPoint pos;
         if (d->inDrag) {
             pos = d->autoScrollDragPos;
-            visible.adjust(qMin(visible.width()/3,20), qMin(visible.height()/3,20),
-                           -qMin(visible.width()/3,20), -qMin(visible.height()/3,20));
+            visible.adjust(std::min(visible.width()/3,20), qMin(visible.height()/3,20),
+                           -std::min(visible.width()/3,20), -qMin(visible.height()/3,20));
         } else {
             const QPoint globalPos = QCursor::pos();
             pos = d->viewport->mapFromGlobal(globalPos);
             QMouseEvent ev(QEvent::MouseMove, pos, globalPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
             mouseMoveEvent(&ev);
         }
-        int deltaY = qMax(pos.y() - visible.top(), visible.bottom() - pos.y()) - visible.height();
-        int deltaX = qMax(pos.x() - visible.left(), visible.right() - pos.x()) - visible.width();
-        int delta = qMax(deltaX, deltaY);
+        int deltaY = std::max(pos.y() - visible.top(), visible.bottom() - pos.y()) - visible.height();
+        int deltaX = std::max(pos.x() - visible.left(), visible.right() - pos.x()) - visible.width();
+        int delta = std::max(deltaX, deltaY);
         if (delta >= 0) {
             if (delta < 7)
                 delta = 7;
@@ -1852,9 +1852,9 @@ void QPlainTextEdit::paintEvent(QPaintEvent *e)
     painter.setBrushOrigin(offset);
 
     // keep right margin clean from full-width selection
-    int maxX = offset.x() + qMax((qreal)viewportRect.width(), maximumWidth)
+    int maxX = offset.x() + std::max((qreal)viewportRect.width(), maximumWidth)
                - document()->documentMargin();
-    er.setRight(qMin(er.right(), maxX));
+    er.setRight(std::min(er.right(), maxX));
     painter.setClipRect(er);
 
 
@@ -1878,7 +1878,7 @@ void QPlainTextEdit::paintEvent(QPaintEvent *e)
             QBrush bg = blockFormat.background();
             if (bg != Qt::NoBrush) {
                 QRectF contentsRect = r;
-                contentsRect.setWidth(qMax(r.width(), maximumWidth));
+                contentsRect.setWidth(std::max(r.width(), maximumWidth));
                 fillBackground(&painter, contentsRect, bg);
             }
 

@@ -1374,7 +1374,7 @@ QSize QAbstractScrollArea::sizeHint() const
     return QSize(256, 192);
 #if 0
     Q_D(const QAbstractScrollArea);
-    int h = qMax(10, fontMetrics().height());
+    int h = std::max(10, fontMetrics().height());
     int f = 2 * d->frameWidth;
     return QSize((6 * h) + f, (4 * h) + f);
 #endif

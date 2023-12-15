@@ -536,9 +536,9 @@ void tst_QPainter::drawLine()
 
     const int offset = 5;
     QPixmap pixmapUnclipped =
-        rasterPixmap(qMin(line.x1(), line.x2())
+        rasterPixmap(std::min(line.x1(), line.x2())
                      + 2*offset + qAbs(line.dx()),
-                     qMin(line.y1(), line.y2())
+                     std::min(line.y1(), line.y2())
                      + 2*offset + qAbs(line.dy()));
     pixmapUnclipped.fill(Qt::white);
 
@@ -567,9 +567,9 @@ void tst_QPainter::drawLine_clipped()
 
     const int offset = 5;
     QPixmap pixmapClipped
-        = rasterPixmap(qMin(line.x1(), line.x2())
+        = rasterPixmap(std::min(line.x1(), line.x2())
                        + 2*offset + qAbs(line.dx()),
-                       qMin(line.y1(), line.y2())
+                       std::min(line.y1(), line.y2())
                        + 2*offset + qAbs(line.dy()));
 
     const QRect clip = QRect(line.p1(), line.p2()).normalized();
@@ -602,9 +602,9 @@ void tst_QPainter::drawLine_antialiased_clipped()
 
     const int offset = 5;
     QPixmap pixmapClipped
-        = rasterPixmap(qMin(line.x1(), line.x2())
+        = rasterPixmap(std::min(line.x1(), line.x2())
                        + 2*offset + qAbs(line.dx()),
-                       qMin(line.y1(), line.y2())
+                       std::min(line.y1(), line.y2())
                        + 2*offset + qAbs(line.dy()));
 
     const QRect clip = QRect(line.p1(), line.p2()).normalized();

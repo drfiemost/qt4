@@ -151,9 +151,9 @@ void ScreenWidget::createImage()
                 amount = 255 - convert(p);
 
             QColor newColor(
-                255 - qMin(int(amount * cyanInk), 255),
-                255 - qMin(int(amount * magentaInk), 255),
-                255 - qMin(int(amount * yellowInk), 255));
+                255 - std::min(int(amount * cyanInk), 255),
+                255 - std::min(int(amount * magentaInk), 255),
+                255 - std::min(int(amount * yellowInk), 255));
 
             newImage.setPixel(x, y, newColor.rgb());
         }

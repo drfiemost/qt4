@@ -484,22 +484,22 @@ glyph_metrics_t QFontEngineXLFD::boundingBox(const QGlyphLayout &glyphs)
         if (xcs) {
             QFixed x = overall.xoff + glyphs.offsets[i].x + xcs->lbearing;
             QFixed y = overall.yoff + glyphs.offsets[i].y - xcs->ascent;
-            overall.x = qMin(overall.x, x);
-            overall.y = qMin(overall.y, y);
+            overall.x = std::min(overall.x, x);
+            overall.y = std::min(overall.y, y);
             // XCharStruct::rbearing is defined as distance from left edge to rightmost pixel
-            xmax = qMax(xmax, overall.xoff + glyphs.offsets[i].x + xcs->rbearing);
-            ymax = qMax(ymax, y + xcs->ascent + xcs->descent);
+            xmax = std::max(xmax, overall.xoff + glyphs.offsets[i].x + xcs->rbearing);
+            ymax = std::max(ymax, y + xcs->ascent + xcs->descent);
             overall.xoff += glyphs.advances_x[i] + QFixed::fromFixed(glyphs.justifications[i].space_18d6);
         } else {
             QFixed size = _fs->ascent;
-            overall.x = qMin(overall.x, overall.xoff);
-            overall.y = qMin(overall.y, overall.yoff - size);
-            ymax = qMax(ymax, overall.yoff);
+            overall.x = std::min(overall.x, overall.xoff);
+            overall.y = std::min(overall.y, overall.yoff - size);
+            ymax = std::max(ymax, overall.yoff);
             overall.xoff += size;
-            xmax = qMax(xmax, overall.xoff);
+            xmax = std::max(xmax, overall.xoff);
         }
     }
-    overall.height = qMax(overall.height, ymax - overall.y);
+    overall.height = std::max(overall.height, ymax - overall.y);
     overall.width = xmax - overall.x;
 
     return overall;
@@ -533,8 +533,8 @@ QFixed QFontEngineXLFD::descent() const
 
 QFixed QFontEngineXLFD::leading() const
 {
-    QFixed l = QFixed(qMin<int>(_fs->ascent, _fs->max_bounds.ascent)
-                      + qMin<int>(_fs->descent, _fs->max_bounds.descent)) * QFixed::fromReal(0.15);
+    QFixed l = QFixed(std::min<int>(_fs->ascent, _fs->max_bounds.ascent)
+                      + std::min<int>(_fs->descent, _fs->max_bounds.descent)) * QFixed::fromReal(0.15);
     return l.ceil();
 }
 

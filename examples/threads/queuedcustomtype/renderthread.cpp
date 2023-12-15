@@ -68,14 +68,14 @@ void RenderThread::processImage(const QImage &image)
 
 void RenderThread::run()
 {
-    int size = qMax(m_image.width()/20, m_image.height()/20);
+    int size = std::max(m_image.width()/20, m_image.height()/20);
     for (int s = size; s > 0; --s) {
         for (int c = 0; c < 400; ++c) {
 //![processing the image (start)]
-            int x1 = qMax(0, (qrand() % m_image.width()) - s/2);
-            int x2 = qMin(x1 + s/2 + 1, m_image.width());
-            int y1 = qMax(0, (qrand() % m_image.height()) - s/2);
-            int y2 = qMin(y1 + s/2 + 1, m_image.height());
+            int x1 = std::max(0, (qrand() % m_image.width()) - s/2);
+            int x2 = std::min(x1 + s/2 + 1, m_image.width());
+            int y1 = std::max(0, (qrand() % m_image.height()) - s/2);
+            int y2 = std::min(y1 + s/2 + 1, m_image.height());
             int n = 0;
             int red = 0;
             int green = 0;

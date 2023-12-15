@@ -129,8 +129,8 @@ static QPoint deaccelerate(const QPoint &speed, int a = 1, int max = 64)
 {
     int x = qBound(-max, speed.x(), max);
     int y = qBound(-max, speed.y(), max);
-    x = (x == 0) ? x : (x > 0) ? qMax(0, x - a) : qMin(0, x + a);
-    y = (y == 0) ? y : (y > 0) ? qMax(0, y - a) : qMin(0, y + a);
+    x = (x == 0) ? x : (x > 0) ? std::max(0, x - a) : std::min(0, x + a);
+    y = (y == 0) ? y : (y > 0) ? std::max(0, y - a) : std::min(0, y + a);
     return QPoint(x, y);
 }
 

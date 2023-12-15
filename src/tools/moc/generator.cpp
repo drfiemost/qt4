@@ -99,7 +99,7 @@ static inline int lengthOfEscapeSequence(const QByteArray &s, int i)
             ++i;
         }
     } else { // single character escape sequence
-        i = qMin(i + 1, s.length());
+        i = std::min(i + 1, s.length());
     }
     return i - startPos;
 }
@@ -259,7 +259,7 @@ void Generator::generateCode()
                 col = 0;
                 fprintf(out, "\"\n    \"");
             }
-            int spanLen = qMin(70, s.length() - idx);
+            int spanLen = std::min(70, s.length() - idx);
             // don't cut escape sequences at the end of a line
             int backSlashPos = s.lastIndexOf('\\', idx + spanLen - 1);
             if (backSlashPos >= idx) {

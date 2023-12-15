@@ -443,8 +443,8 @@ void QAlphaPaintEnginePrivate::drawAlphaImage(const QRectF &rect)
 {
     Q_Q(QAlphaPaintEngine);
 
-    qreal dpiX = qMax(m_pdev->logicalDpiX(), 300);
-    qreal dpiY = qMax(m_pdev->logicalDpiY(), 300);
+    qreal dpiX = std::max(m_pdev->logicalDpiX(), 300);
+    qreal dpiY = std::max(m_pdev->logicalDpiY(), 300);
     qreal xscale = (dpiX / m_pdev->logicalDpiX());
     qreal yscale = (dpiY / m_pdev->logicalDpiY());
 

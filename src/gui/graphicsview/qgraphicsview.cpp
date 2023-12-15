@@ -875,8 +875,8 @@ static inline void QRect_unite(QRect *rect, const QRect &other)
     if (rect->isEmpty()) {
         *rect = other;
     } else {
-        rect->setCoords(qMin(rect->left(), other.left()), qMin(rect->top(), other.top()),
-                        qMax(rect->right(), other.right()), qMax(rect->bottom(), other.bottom()));
+        rect->setCoords(std::min(rect->left(), other.left()), qMin(rect->top(), other.top()),
+                        std::max(rect->right(), other.right()), qMax(rect->bottom(), other.bottom()));
     }
 }
 
@@ -1979,10 +1979,10 @@ void QGraphicsView::fitInView(const QRectF &rect, Qt::AspectRatioMode aspectRati
     // Respect the aspect ratio mode.
     switch (aspectRatioMode) {
     case Qt::KeepAspectRatio:
-        xratio = yratio = qMin(xratio, yratio);
+        xratio = yratio = std::min(xratio, yratio);
         break;
     case Qt::KeepAspectRatioByExpanding:
-        xratio = yratio = qMax(xratio, yratio);
+        xratio = yratio = std::max(xratio, yratio);
         break;
     case Qt::IgnoreAspectRatio:
         break;
@@ -2074,10 +2074,10 @@ void QGraphicsView::render(QPainter *painter, const QRectF &target, const QRect 
     // Scale according to the aspect ratio mode.
     switch (aspectRatioMode) {
     case Qt::KeepAspectRatio:
-        xratio = yratio = qMin(xratio, yratio);
+        xratio = yratio = std::min(xratio, yratio);
         break;
     case Qt::KeepAspectRatioByExpanding:
-        xratio = yratio = qMax(xratio, yratio);
+        xratio = yratio = std::max(xratio, yratio);
         break;
     case Qt::IgnoreAspectRatio:
         break;
@@ -3238,7 +3238,7 @@ void QGraphicsView::mouseMoveEvent(QMouseEvent *event)
             // Update rubberband position
             const QPoint &mp = d->mousePressViewPoint;
             QPoint ep = event->pos();
-            d->rubberBandRect = QRect(qMin(mp.x(), ep.x()), qMin(mp.y(), ep.y()),
+            d->rubberBandRect = QRect(std::min(mp.x(), ep.x()), qMin(mp.y(), ep.y()),
                                       qAbs(mp.x() - ep.x()) + 1, qAbs(mp.y() - ep.y()) + 1);
 
             // Update new rubberband

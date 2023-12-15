@@ -1489,7 +1489,7 @@ QSize QMainWindowLayout::sizeHint() const
     if (!szHint.isValid()) {
         szHint = layoutState.sizeHint();
         const QSize sbHint = statusbar ? statusbar->sizeHint() : QSize(0, 0);
-        szHint = QSize(qMax(sbHint.width(), szHint.width()),
+        szHint = QSize(std::max(sbHint.width(), szHint.width()),
                         sbHint.height() + szHint.height());
     }
     return szHint;
@@ -1500,7 +1500,7 @@ QSize QMainWindowLayout::minimumSize() const
     if (!minSize.isValid()) {
         minSize = layoutState.minimumSize();
         const QSize sbMin = statusbar ? statusbar->minimumSize() : QSize(0, 0);
-        minSize = QSize(qMax(sbMin.width(), minSize.width()),
+        minSize = QSize(std::max(sbMin.width(), minSize.width()),
                         sbMin.height() + minSize.height());
 #ifdef Q_WS_MAC
         const QSize storedSize = minSize;
@@ -1508,7 +1508,7 @@ QSize QMainWindowLayout::minimumSize() const
         foreach (QToolBar *toolbar, qtoolbarsInUnifiedToolbarList) {
             minWidth += toolbar->sizeHint().width() + 20;
         }
-        minSize = QSize(qMax(minWidth, storedSize.width()), storedSize.height());
+        minSize = QSize(std::max(minWidth, storedSize.width()), storedSize.height());
 #endif
     }
     return minSize;

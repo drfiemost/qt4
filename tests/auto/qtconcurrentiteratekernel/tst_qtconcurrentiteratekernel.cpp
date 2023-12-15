@@ -270,7 +270,7 @@ public:
     BlockSizeRecorder(TestIterator begin, TestIterator end) : IterateKernel<TestIterator, void>(begin, end) { }
     inline bool runIterations(TestIterator, int begin, int end, void *)
     {
-        peakBlockSize = qMax(peakBlockSize, end - begin);
+        peakBlockSize = std::max(peakBlockSize, end - begin);
         return false;
     }
 };

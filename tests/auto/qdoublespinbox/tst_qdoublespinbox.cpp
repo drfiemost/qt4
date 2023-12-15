@@ -432,7 +432,7 @@ void tst_QDoubleSpinBox::setWrapping()
     keys.simulate(&spin);
 
     QCOMPARE(actualValues.size(), expected.size());
-    for (int i=0; i<qMin(actualValues.size(), expected.size()); ++i) {
+    for (int i=0; i<std::min(actualValues.size(), expected.size()); ++i) {
         QCOMPARE(actualValues.at(i), expected.at(i));
     }
 }
@@ -521,7 +521,7 @@ void tst_QDoubleSpinBox::setSingleStep()
     QCOMPARE(actualValues.size(), 0);
     keys.simulate(&spin);
     QCOMPARE(actualValues.size(), expected.size());
-    for (int i=0; i<qMin(actualValues.size(), expected.size()); ++i) {
+    for (int i=0; i<std::min(actualValues.size(), expected.size()); ++i) {
         QCOMPARE(actualValues.at(i), expected.at(i));
     }
 }

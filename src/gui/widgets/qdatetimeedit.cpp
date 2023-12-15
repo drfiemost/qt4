@@ -892,7 +892,7 @@ void QDateTimeEdit::setDisplayFormat(const QString &format)
         d->sections = d->convertSections(d->display);
         d->clearCache();
 
-        d->currentSectionIndex = qMin(d->currentSectionIndex, d->sectionNodes.size() - 1);
+        d->currentSectionIndex = std::min(d->currentSectionIndex, d->sectionNodes.size() - 1);
         const bool timeShown = (d->sections & TimeSections_Mask);
         const bool dateShown = (d->sections & DateSections_Mask);
         Q_ASSERT(dateShown || timeShown);
@@ -981,12 +981,12 @@ QSize QDateTimeEdit::sizeHint() const
         int w = 0;
         QString s;
         s = d->textFromValue(d->minimum) + QLatin1String("   ");
-        w = qMax<int>(w, fm.width(s));
+        w = std::max<int>(w, fm.width(s));
         s = d->textFromValue(d->maximum) + QLatin1String("   ");
-        w = qMax<int>(w, fm.width(s));
+        w = std::max<int>(w, fm.width(s));
         if (d->specialValueText.size()) {
             s = d->specialValueText;
-            w = qMax<int>(w, fm.width(s));
+            w = std::max<int>(w, fm.width(s));
         }
         w += 2; // cursor blinking space
 
@@ -1908,7 +1908,7 @@ QDateTime QDateTimeEditPrivate::validateAndInterpret(QString &input, int &positi
         return cachedValue.toDateTime();
     } else if (!specialValueText.isEmpty()) {
         bool changeCase = false;
-        const int max = qMin(specialValueText.size(), input.size());
+        const int max = std::min(specialValueText.size(), input.size());
         int i;
         for (i=0; i<max; ++i) {
             const QChar ic = input.at(i);
@@ -2039,7 +2039,7 @@ QDateTime QDateTimeEditPrivate::stepBy(int sectionIndex, int steps, bool test) c
                 if (!(sn.type & (DaySection|DayOfWeekSection)) && sections & DateSectionMask) {
                     const int daysInMonth = v.date().daysInMonth();
                     if (v.date().day() < oldDay && v.date().day() < daysInMonth) {
-                        const int adds = qMin(oldDay, daysInMonth);
+                        const int adds = std::min(oldDay, daysInMonth);
                         v = v.addDays(adds - v.date().day());
                     }
                 }
@@ -2054,7 +2054,7 @@ QDateTime QDateTimeEditPrivate::stepBy(int sectionIndex, int steps, bool test) c
                 if (!(sn.type & (DaySection|DayOfWeekSection)) && sections & DateSectionMask) {
                     const int daysInMonth = v.date().daysInMonth();
                     if (v.date().day() < oldDay && v.date().day() < daysInMonth) {
-                        const int adds = qMin(oldDay, daysInMonth);
+                        const int adds = std::min(oldDay, daysInMonth);
                         v = v.addDays(adds - v.date().day());
                     }
                 }
@@ -2071,7 +2071,7 @@ QDateTime QDateTimeEditPrivate::stepBy(int sectionIndex, int steps, bool test) c
     }
     if (!test && oldDay != v.date().day() && !(sn.type & (DaySection|DayOfWeekSection))) {
         // this should not happen when called from stepEnabled
-        cachedDay = qMax<int>(oldDay, cachedDay);
+        cachedDay = std::max<int>(oldDay, cachedDay);
     }
 
     if (v < minimumDateTime) {
@@ -2180,7 +2180,7 @@ void QDateTimeEditPrivate::_q_editorCursorPositionChanged(int oldpos, int newpos
             c = -1;
         } else {
             int closest = closestSection(newpos, forward);
-            c = sectionPos(closest) + (forward ? 0 : qMax<int>(0, sectionSize(closest)));
+            c = sectionPos(closest) + (forward ? 0 : std::max<int>(0, sectionSize(closest)));
 
             if (allowChange) {
                 edit->setCursorPosition(c);
@@ -2526,13 +2526,13 @@ void QDateTimeEditPrivate::positionCalendarPopup()
         pos.setX(pos.x()-size.width());
         pos2.setX(pos2.x()-size.width());
         if (pos.x() < screen.left())
-            pos.setX(qMax(pos.x(), screen.left()));
+            pos.setX(std::max(pos.x(), screen.left()));
         else if (pos.x()+size.width() > screen.right())
-            pos.setX(qMax(pos.x()-size.width(), screen.right()-size.width()));
+            pos.setX(std::max(pos.x()-size.width(), screen.right()-size.width()));
     } else {
         if (pos.x()+size.width() > screen.right())
             pos.setX(screen.right()-size.width());
-        pos.setX(qMax(pos.x(), screen.left()));
+        pos.setX(std::max(pos.x(), screen.left()));
     }
     if (pos.y() + size.height() > screen.bottom())
         pos.setY(pos2.y() - size.height());

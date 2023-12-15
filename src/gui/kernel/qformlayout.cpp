@@ -406,7 +406,7 @@ void QFormLayoutPrivate::updateSizes()
                             if (!field) {
                                 int lblspacing = style->combinedLayoutSpacing(lbltoptypes, lbltypes, Qt::Vertical, 0, parent);
                                 int fldspacing = style->combinedLayoutSpacing(fldtoptypes, lbltypes, Qt::Vertical, 0, parent);
-                                label->vSpace = qMax(lblspacing, fldspacing);
+                                label->vSpace = std::max(lblspacing, fldspacing);
                             } else
                                 label->vSpace = style->combinedLayoutSpacing(lbltoptypes, lbltypes, Qt::Vertical, 0, parent);
                         }
@@ -416,7 +416,7 @@ void QFormLayoutPrivate::updateSizes()
                             if (!label) {
                                 int lblspacing = style->combinedLayoutSpacing(lbltoptypes, fldtypes, Qt::Vertical, 0, parent);
                                 int fldspacing = style->combinedLayoutSpacing(fldtoptypes, fldtypes, Qt::Vertical, 0, parent);
-                                field->vSpace = qMax(lblspacing, fldspacing);
+                                field->vSpace = std::max(lblspacing, fldspacing);
                             } else
                                 field->vSpace = style->combinedLayoutSpacing(fldtoptypes, fldtypes, Qt::Vertical, 0, parent);
                         }
@@ -438,15 +438,15 @@ void QFormLayoutPrivate::updateSizes()
             // edges of fields can be tolerated.
             // (Note - field->sbsHSpace is 0 for WrapAllRows mode)
             if (label) {
-                maxMinLblWidth = qMax(maxMinLblWidth, label->minSize.width());
-                maxShLblWidth = qMax(maxShLblWidth, label->sizeHint.width());
+                maxMinLblWidth = std::max(maxMinLblWidth, label->minSize.width());
+                maxShLblWidth = std::max(maxShLblWidth, label->sizeHint.width());
                 if (field) {
-                    maxMinFldWidth = qMax(maxMinFldWidth, field->minSize.width() + field->sbsHSpace);
-                    maxShFldWidth = qMax(maxShFldWidth, field->sizeHint.width() + field->sbsHSpace);
+                    maxMinFldWidth = std::max(maxMinFldWidth, field->minSize.width() + field->sbsHSpace);
+                    maxShFldWidth = std::max(maxShFldWidth, field->sizeHint.width() + field->sbsHSpace);
                 }
             } else if (field) {
-                maxMinIfldWidth = qMax(maxMinIfldWidth, field->minSize.width());
-                maxShIfldWidth = qMax(maxShIfldWidth, field->sizeHint.width());
+                maxMinIfldWidth = std::max(maxMinIfldWidth, field->minSize.width());
+                maxShIfldWidth = std::max(maxShIfldWidth, field->sizeHint.width());
             }
 
             prevLbl = label;
@@ -455,21 +455,21 @@ void QFormLayoutPrivate::updateSizes()
 
         // Now, finally update the min/sizeHint widths
         if (wrapAllRows) {
-            sh_width = qMax(maxShLblWidth, qMax(maxShIfldWidth, maxShFldWidth));
-            min_width = qMax(maxMinLblWidth, qMax(maxMinIfldWidth, maxMinFldWidth));
+            sh_width = std::max(maxShLblWidth, qMax(maxShIfldWidth, maxShFldWidth));
+            min_width = std::max(maxMinLblWidth, qMax(maxMinIfldWidth, maxMinFldWidth));
             // in two line, we don't care as much about the threshold width
             thresh_width = 0;
         } else if (dontWrapRows) {
             // This is just the max widths glommed together
-            sh_width = qMax(maxShLblWidth + maxShFldWidth, maxShIfldWidth);
-            min_width = qMax(maxMinLblWidth + maxMinFldWidth, maxMinIfldWidth);
+            sh_width = std::max(maxShLblWidth + maxShFldWidth, maxShIfldWidth);
+            min_width = std::max(maxMinLblWidth + maxMinFldWidth, maxMinIfldWidth);
             thresh_width = QWIDGETSIZE_MAX;
         } else {
             // This is just the max widths glommed together
-            sh_width = qMax(maxShLblWidth + maxShFldWidth, maxShIfldWidth);
+            sh_width = std::max(maxShLblWidth + maxShFldWidth, maxShIfldWidth);
             // min width needs to be the min when everything is wrapped,
             // otherwise we'll never get set with a width that causes wrapping
-            min_width = qMax(maxMinLblWidth, qMax(maxMinIfldWidth, maxMinFldWidth));
+            min_width = std::max(maxMinLblWidth, qMax(maxMinIfldWidth, maxMinFldWidth));
             // We split a pair at label sh + field min (### for now..)
             thresh_width = maxShLblWidth + maxMinFldWidth;
         }
@@ -495,12 +495,12 @@ void QFormLayoutPrivate::recalcHFW(int w)
     }
 
     if (sh_width > 0 && sh_width == w) {
-        hfw_sh_height = qMin(QLAYOUTSIZE_MAX, h);
-        hfw_sh_minheight = qMin(QLAYOUTSIZE_MAX, mh);
+        hfw_sh_height = std::min(QLAYOUTSIZE_MAX, h);
+        hfw_sh_minheight = std::min(QLAYOUTSIZE_MAX, mh);
     } else {
         hfw_width = w;
-        hfw_height = qMin(QLAYOUTSIZE_MAX, h);
-        hfw_minheight = qMin(QLAYOUTSIZE_MAX, mh);
+        hfw_height = std::min(QLAYOUTSIZE_MAX, h);
+        hfw_minheight = std::min(QLAYOUTSIZE_MAX, mh);
     }
 }
 
@@ -538,7 +538,7 @@ void QFormLayoutPrivate::setupHfwLayoutData()
                 hfwLayouts[label->vLayoutIndex].minimumSize = hfw;
                 hfwLayouts[label->vLayoutIndex].sizeHint = hfw;
             } else {
-                // Reset these here, so the field can do a qMax below (the previous value may have
+                // Reset these here, so the field can do a std::max below (the previous value may have
                 // been the fields non-hfw values, which are often larger than hfw)
                 hfwLayouts[label->vLayoutIndex].sizeHint = label->sizeHint.height();
                 hfwLayouts[label->vLayoutIndex].minimumSize = label->minSize.height();
@@ -554,8 +554,8 @@ void QFormLayoutPrivate::setupHfwLayoutData()
                 int oh = hfwLayouts.at(field->vLayoutIndex).sizeHint;
                 int omh = hfwLayouts.at(field->vLayoutIndex).minimumSize;
 
-                hfwLayouts[field->vLayoutIndex].sizeHint = qMax(h, oh);
-                hfwLayouts[field->vLayoutIndex].minimumSize = qMax(mh, omh);
+                hfwLayouts[field->vLayoutIndex].sizeHint = std::max(h, oh);
+                hfwLayouts[field->vLayoutIndex].minimumSize = std::max(mh, omh);
             } else {
                 hfwLayouts[field->vLayoutIndex].sizeHint = h;
                 hfwLayouts[field->vLayoutIndex].minimumSize = mh;
@@ -577,21 +577,21 @@ void QFormLayoutPrivate::setupHfwLayoutData()
 
   In particular:
 
-  1) the split label's row vspace needs to be changed to qMax(label/prevLabel, label/prevField)
+  1) the split label's row vspace needs to be changed to std::max(label/prevLabel, label/prevField)
     [call with item1 = label, item2 = null, prevItem1 & prevItem2 as before]
   2) the split field's row vspace needs to be changed to the label/field spacing
     [call with item1 = field, item2 = null, prevItem1 = label, prevItem2 = null]
 
  [if the next row has one item, 'item']
   3a) the following row's vspace needs to be changed to item/field spacing (would
-      previously been the qMax(item/label, item/field) spacings)
+      previously been the std::max(item/label, item/field) spacings)
     [call with item1 = item, item2 = null, prevItem1 = field, prevItem2 = null]
 
   [if the next row has two items, 'label2' and 'field2']
-  3b) the following row's vspace needs to be changed to be qMax(field/label2, field/field2) spacing
+  3b) the following row's vspace needs to be changed to be std::max(field/label2, field/field2) spacing
     [call with item1 = label2, item2 = field2, prevItem1 = field, prevItem2 = null]
 
-  In the (common) non split case, we can just use the precalculated vspace (possibly qMaxed between
+  In the (common) non split case, we can just use the precalculated vspace (possibly std::maxed between
   label and field).
 
   If recalculate is true, we expect:
@@ -610,7 +610,7 @@ static inline int spacingHelper(QWidget* parent, QStyle *style, int userVSpacing
             if (item1)
                 spacing = item1->vSpace;
             if (item2)
-                spacing = qMax(spacing, item2->vSpace);
+                spacing = std::max(spacing, item2->vSpace);
         } else {
             if (style && prevItem1) {
                 QSizePolicy::ControlTypes itemtypes =
@@ -625,19 +625,19 @@ static inline int spacingHelper(QWidget* parent, QStyle *style, int userVSpacing
                 else if (prevItem2)
                     spacing2 = style->combinedLayoutSpacing(itemtypes, prevItem2->controlTypes(), Qt::Vertical, 0, parent);
 
-                spacing = qMax(spacing, spacing2);
+                spacing = std::max(spacing, spacing2);
             }
         }
     } else {
         if (prevItem1) {
             QWidget *wid = prevItem1->item->widget();
             if (wid)
-                spacing = qMax(spacing, prevItem1->geometry().top() - wid->geometry().top() );
+                spacing = std::max(spacing, prevItem1->geometry().top() - wid->geometry().top() );
         }
         if (prevItem2) {
             QWidget *wid = prevItem2->item->widget();
             if (wid)
-                spacing = qMax(spacing, prevItem2->geometry().top() - wid->geometry().top() );
+                spacing = std::max(spacing, prevItem2->geometry().top() - wid->geometry().top() );
         }
     }
     return spacing;
@@ -693,7 +693,7 @@ void QFormLayoutPrivate::setupVerticalLayoutData(int width)
             const QFormLayoutItem *label = m_matrix(i, 0);
             const QFormLayoutItem *field = m_matrix(i, 1);
             if (label && (label->sizeHint.width() + (field ? field->minSize.width() : 0) <= width))
-                maxLabelWidth = qMax(maxLabelWidth, label->sizeHint.width());
+                maxLabelWidth = std::max(maxLabelWidth, label->sizeHint.width());
         }
     } else {
         maxLabelWidth = width;
@@ -796,9 +796,9 @@ void QFormLayoutPrivate::setupVerticalLayoutData(int width)
                 stretch2 = field->vStretch();
             }
 
-            vLayouts[vidx].init(qMax(stretch1, stretch2), qMax(min1.height(), min2.height()));
-            vLayouts[vidx].sizeHint = qMax(sh1.height(), sh2.height());
-            vLayouts[vidx].maximumSize = qMin(max1.height(), max2.height());
+            vLayouts[vidx].init(std::max(stretch1, stretch2), qMax(min1.height(), min2.height()));
+            vLayouts[vidx].sizeHint = std::max(sh1.height(), sh2.height());
+            vLayouts[vidx].maximumSize = std::min(max1.height(), max2.height());
             vLayouts[vidx].expansive = expanding || (vLayouts[vidx].stretch > 0);
             vLayouts[vidx].empty = false;
 
@@ -893,7 +893,7 @@ void QFormLayoutPrivate::setupHorizontalLayoutData(int width)
                 field->layoutPos = width - fldwidth;
             }
 
-            fieldMaxWidth = qMax(fieldMaxWidth, field->maxSize.width());
+            fieldMaxWidth = std::max(fieldMaxWidth, field->maxSize.width());
         }
     }
 
@@ -924,10 +924,10 @@ void QFormLayoutPrivate::calcSizeHints()
         mh += vLayouts.at(i).minimumSize + spacing;
     }
 
-    minSize.rwidth() = qMin(mw, QLAYOUTSIZE_MAX);
-    minSize.rheight() = qMin(mh, QLAYOUTSIZE_MAX);
-    prefSize.rwidth() = qMin(w, QLAYOUTSIZE_MAX);
-    prefSize.rheight() = qMin(h, QLAYOUTSIZE_MAX);
+    minSize.rwidth() = std::min(mw, QLAYOUTSIZE_MAX);
+    minSize.rheight() = std::min(mh, QLAYOUTSIZE_MAX);
+    prefSize.rwidth() = std::min(w, QLAYOUTSIZE_MAX);
+    prefSize.rheight() = std::min(h, QLAYOUTSIZE_MAX);
 }
 
 int QFormLayoutPrivate::insertRow(int row)
@@ -1943,12 +1943,12 @@ void QFormLayoutPrivate::arrangeWidgets(const QVector<QLayoutStruct>& layouts, Q
                     much. So we introduce a 7 / 4 factor so that it
                     gets some extra pixels at the top.
                 */
-                height = qMin(height,
-                              qMin(label->sizeHint.height() * 7 / 4,
+                height = std::min(height,
+                              std::min(label->sizeHint.height() * 7 / 4,
                                    label->maxSize.height()));
             }
 
-            QSize sz(qMin(label->layoutWidth, label->sizeHint.width()), height);
+            QSize sz(std::min(label->layoutWidth, label->sizeHint.width()), height);
             int x = leftOffset + rect.x() + label->layoutPos;
             if (fixedAlignment(q->labelAlignment(), layoutDirection) & Qt::AlignRight)
                 x += label->layoutWidth - sz.width();

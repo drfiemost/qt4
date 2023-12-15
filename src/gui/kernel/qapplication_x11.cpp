@@ -914,21 +914,21 @@ bool QApplicationPrivate::x11_apply_settings()
     strlist = settings.value(QLatin1String("Palette/active")).toStringList();
     if (!strlist.isEmpty()) {
         ++groupCount;
-        for (i = 0; i < qMin(strlist.count(), int(QPalette::NColorRoles)); i++)
+        for (i = 0; i < std::min(strlist.count(), int(QPalette::NColorRoles)); i++)
             pal.setColor(QPalette::Active, (QPalette::ColorRole) i,
                          QColor(strlist[i]));
     }
     strlist = settings.value(QLatin1String("Palette/inactive")).toStringList();
     if (!strlist.isEmpty()) {
         ++groupCount;
-        for (i = 0; i < qMin(strlist.count(), int(QPalette::NColorRoles)); i++)
+        for (i = 0; i < std::min(strlist.count(), int(QPalette::NColorRoles)); i++)
             pal.setColor(QPalette::Inactive, (QPalette::ColorRole) i,
                          QColor(strlist[i]));
     }
     strlist = settings.value(QLatin1String("Palette/disabled")).toStringList();
     if (!strlist.isEmpty()) {
         ++groupCount;
-        for (i = 0; i < qMin(strlist.count(), int(QPalette::NColorRoles)); i++)
+        for (i = 0; i < std::min(strlist.count(), int(QPalette::NColorRoles)); i++)
             pal.setColor(QPalette::Disabled, (QPalette::ColorRole) i,
                          QColor(strlist[i]));
     }
@@ -1841,7 +1841,7 @@ void qt_init(QApplicationPrivate *priv, int,
                 qt_ximServer = argv[i];
         } else if (arg == "-ncols") {   // xv and netscape use this name
             if (++i < argc)
-                X11->color_count = qMax(0,atoi(argv[i]));
+                X11->color_count = std::max(0,atoi(argv[i]));
         } else if (arg == "-visual") {  // xv and netscape use this name
             if (++i < argc && !X11->visual) {
                 QString s = QString::fromLocal8Bit(argv[i]).toLower();
@@ -2832,10 +2832,10 @@ void QApplicationPrivate::applyX11SpecificCommandLineArguments(QWidget *main_wid
             w = main_widget->width();
         if ((m & HeightValue) == 0)
             h = main_widget->height();
-        w = qMin(w,maxSize.width());
-        h = qMin(h,maxSize.height());
-        w = qMax(w,minSize.width());
-        h = qMax(h,minSize.height());
+        w = std::min(w,maxSize.width());
+        h = std::min(h,maxSize.height());
+        w = std::max(w,minSize.width());
+        h = std::max(h,minSize.height());
         if ((m & XNegative)) {
             x = QApplication::desktop()->width()  + x - w;
         }
@@ -3294,7 +3294,7 @@ int QApplication::x11ProcessEvent(XEvent* event)
 
 	    // both key press/release is required for some complex
 	    // input methods. don't eliminate anything.
-	    QKeyEventEx keyevent(type, code, modifiers, text, false, qMax(qMax(count, 1), text.length()),
+	    QKeyEventEx keyevent(type, code, modifiers, text, false, std::max(qMax(count, 1), text.length()),
                                  event->xkey.keycode, keySym, event->xkey.state);
 	    if(qic && qic->filterEvent(&keyevent))
 		return true;
@@ -5571,7 +5571,7 @@ static void sm_performSaveYourself(QSessionManagerPrivate* smd)
     // tell the session manager about our user as well.
     struct passwd *entryPtr = 0;
 #if defined(_POSIX_THREAD_SAFE_FUNCTIONS) && (_POSIX_THREAD_SAFE_FUNCTIONS - 0 > 0)
-    QVarLengthArray<char, 1024> buf(qMax<long>(sysconf(_SC_GETPW_R_SIZE_MAX), 1024L));
+    QVarLengthArray<char, 1024> buf(std::max<long>(sysconf(_SC_GETPW_R_SIZE_MAX), 1024L));
     struct passwd entry;
     while (getpwuid_r(geteuid(), &entry, buf.data(), buf.size(), &entryPtr) == ERANGE) {
         if (buf.size() >= 32768) {

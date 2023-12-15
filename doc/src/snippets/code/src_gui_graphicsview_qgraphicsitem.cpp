@@ -215,8 +215,8 @@ QVariant Component::itemChange(GraphicsItemChange change, const QVariant &value)
         QRectF rect = scene()->sceneRect();
         if (!rect.contains(newPos)) {
             // Keep the item inside the scene rect.
-            newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
-            newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
+            newPos.setX(std::min(rect.right(), std::max(newPos.x(), rect.left())));
+            newPos.setY(std::min(rect.bottom(), std::max(newPos.y(), rect.top())));
             return newPos;
         }
     }

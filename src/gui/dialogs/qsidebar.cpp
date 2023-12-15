@@ -242,7 +242,7 @@ void QUrlModel::addUrls(const QList<QUrl> &list, int row, bool move)
 {
     if (row == -1)
         row = rowCount();
-    row = qMin(row, rowCount());
+    row = std::min(row, rowCount());
     for (int i = list.count() - 1; i >= 0; --i) {
         QUrl url = list.at(i);
         if (!url.isValid() || url.scheme() != QLatin1String("file"))
@@ -264,7 +264,7 @@ void QUrlModel::addUrls(const QList<QUrl> &list, int row, bool move)
                 break;
             }
         }
-        row = qMax(row, 0);
+        row = std::max(row, 0);
         QModelIndex idx = fileSystemModel->index(cleanUrl);
         if (!fileSystemModel->isDir(idx))
             continue;

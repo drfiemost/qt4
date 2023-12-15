@@ -209,8 +209,8 @@ static inline int getMoveDeltaComponent(uint cflags, uint moveFlag, uint resizeF
 {
     if (cflags & moveFlag) {
         if (delta > 0)
-            return (cflags & resizeFlag) ? qMin(delta, maxDelta) : delta;
-        return (cflags & resizeFlag) ? qMax(delta, minDelta) : delta;
+            return (cflags & resizeFlag) ? std::min(delta, maxDelta) : delta;
+        return (cflags & resizeFlag) ? std::max(delta, minDelta) : delta;
     }
     return 0;
 }
@@ -1181,24 +1181,24 @@ void QMdiSubWindowPrivate::setNewGeometry(const QPoint &pos)
     if (restrictHorizontal || restrictVertical) {
         QRect parentRect = q->parentWidget()->rect();
         if (restrictVertical && (cflags & VResizeReverse || currentOperation == Move)) {
-            posY = qMin(qMax(mousePressPosition.y() - oldGeometry.y(), posY),
+            posY = std::min(std::max(mousePressPosition.y() - oldGeometry.y(), posY),
                         parentRect.height() - BoundaryMargin);
         }
         if (currentOperation == Move) {
             if (restrictHorizontal)
-                posX = qMin(qMax(BoundaryMargin, posX), parentRect.width() - BoundaryMargin);
+                posX = std::min(std::max(BoundaryMargin, posX), parentRect.width() - BoundaryMargin);
             if (restrictVertical)
-                posY = qMin(posY, parentRect.height() - BoundaryMargin);
+                posY = std::min(posY, parentRect.height() - BoundaryMargin);
         } else {
             if (restrictHorizontal) {
                 if (cflags & HResizeReverse)
-                    posX = qMax(mousePressPosition.x() - oldGeometry.x(), posX);
+                    posX = std::max(mousePressPosition.x() - oldGeometry.x(), posX);
                 else
-                    posX = qMin(parentRect.width() - (oldGeometry.x() + oldGeometry.width()
+                    posX = std::min(parentRect.width() - (oldGeometry.x() + oldGeometry.width()
                                                       - mousePressPosition.x()), posX);
             }
             if (restrictVertical && !(cflags & VResizeReverse)) {
-                posY = qMin(parentRect.height() - (oldGeometry.y() + oldGeometry.height()
+                posY = std::min(parentRect.height() - (oldGeometry.y() + oldGeometry.height()
                                                    - mousePressPosition.y()), posY);
             }
         }
@@ -3513,19 +3513,19 @@ QSize QMdiSubWindow::minimumSizeHint() const
 
     // Shaded window.
     if (parent() && isShaded())
-        return QSize(qMax(minWidth, width()), d->titleBarHeight());
+        return QSize(std::max(minWidth, width()), d->titleBarHeight());
 
     // Content
     if (layout()) {
         QSize minLayoutSize = layout()->minimumSize();
         if (minLayoutSize.isValid()) {
-            minWidth = qMax(minWidth, minLayoutSize.width() + 2 * margin);
+            minWidth = std::max(minWidth, minLayoutSize.width() + 2 * margin);
             minHeight += minLayoutSize.height();
         }
     } else if (d->baseWidget && d->baseWidget->isVisible()) {
         QSize minBaseWidgetSize = d->baseWidget->minimumSizeHint();
         if (minBaseWidgetSize.isValid()) {
-            minWidth = qMax(minWidth, minBaseWidgetSize.width() + 2 * margin);
+            minWidth = std::max(minWidth, minBaseWidgetSize.width() + 2 * margin);
             minHeight += minBaseWidgetSize.height();
         }
     }
@@ -3539,7 +3539,7 @@ QSize QMdiSubWindow::minimumSizeHint() const
     else if (parent() && qobject_cast<QMacStyle *>(style()) && !d->sizeGrip)
         sizeGripHeight = style()->pixelMetric(QStyle::PM_SizeGripSize, 0, this);
 #endif
-    minHeight = qMax(minHeight, decorationHeight + sizeGripHeight);
+    minHeight = std::max(minHeight, decorationHeight + sizeGripHeight);
 #endif
 
     return QSize(minWidth, minHeight).expandedTo(QApplication::globalStrut());

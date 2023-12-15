@@ -161,14 +161,14 @@ int QGraphicsLinearLayoutPrivate::gridRow(int index) const
 {
     if (orientation == Qt::Horizontal)
         return 0;
-    return int(qMin(uint(index), uint(engine.rowCount())));
+    return int(std::min(uint(index), uint(engine.rowCount())));
 }
 
 int QGraphicsLinearLayoutPrivate::gridColumn(int index) const
 {
     if (orientation == Qt::Vertical)
         return 0;
-    return int(qMin(uint(index), uint(engine.columnCount())));
+    return int(std::min(uint(index), uint(engine.columnCount())));
 }
 
 Q_GLOBAL_STATIC(QWidget, globalStyleInfoWidget)

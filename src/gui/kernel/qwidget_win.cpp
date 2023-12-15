@@ -421,15 +421,15 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
                 if (extra) {
                     int dx = rect.right - rect.left;
                     int dy = rect.bottom - rect.top;
-                    w = qMin(w, extra->maxw + dx);
-                    h = qMin(h, extra->maxh + dy);
-                    w = qMax(w, extra->minw + dx);
-                    h = qMax(h, extra->minh + dy);
+                    w = std::min(w, extra->maxw + dx);
+                    h = std::min(h, extra->maxh + dy);
+                    w = std::max(w, extra->minw + dx);
+                    h = std::max(h, extra->minh + dy);
                 }
             }
             if (!wasMoved) {
-                x = qMax(sw/2 - w/2, 0);
-                y = qMax(sh/2 - h/2, 0);
+                x = std::max(sw/2 - w/2, 0);
+                y = std::max(sh/2 - h/2, 0);
             }
         }
 
@@ -1375,10 +1375,10 @@ void QWidgetPrivate::setGeometry_sys(int x, int y, int w, int h, bool isMove)
     Q_Q(QWidget);
     Q_ASSERT(q->testAttribute(Qt::WA_WState_Created));
     if (extra) {                                // any size restrictions?
-        w = qMin(w,extra->maxw);
-        h = qMin(h,extra->maxh);
-        w = qMax(w,extra->minw);
-        h = qMax(h,extra->minh);
+        w = std::min(w,extra->maxw);
+        h = std::min(h,extra->maxh);
+        w = std::max(w,extra->minw);
+        h = std::max(h,extra->minh);
     }
     if (q->isWindow())
         topData()->normalGeometry = QRect(0, 0, -1, -1);

@@ -320,8 +320,8 @@ bool ParallelAnchorData::calculateSizeHints()
         secondMax = -secondEdge->minSize;
     }
 
-    minSize = qMax(firstEdge->minSize, secondMin);
-    maxSize = qMin(firstEdge->maxSize, secondMax);
+    minSize = std::max(firstEdge->minSize, secondMin);
+    maxSize = std::min(firstEdge->maxSize, secondMax);
 
     // This condition means that the maximum size of one anchor being simplified is smaller than
     // the minimum size of the other anchor. The consequence is that there won't be a valid size
@@ -370,9 +370,9 @@ bool ParallelAnchorData::calculateSizeHints()
     } else {
         // Calculate the intersection between the "preferred" regions of each child
         const qreal lowerBoundary =
-            qBound(minSize, qMax(firstEdge->minPrefSize, secondMinPref), maxSize);
+            qBound(minSize, std::max(firstEdge->minPrefSize, secondMinPref), maxSize);
         const qreal upperBoundary =
-            qBound(minSize, qMin(firstEdge->maxPrefSize, secondMaxPref), maxSize);
+            qBound(minSize, std::min(firstEdge->maxPrefSize, secondMaxPref), maxSize);
         const qreal prefMean =
             qBound(minSize, (firstEdge->prefSize + secondPref) / 2, maxSize);
 

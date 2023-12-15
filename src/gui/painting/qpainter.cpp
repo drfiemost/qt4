@@ -2145,7 +2145,7 @@ void QPainter::setOpacity(qreal opacity)
         return;
     }
 
-    opacity = qMin(qreal(1), qMax(qreal(0), opacity));
+    opacity = std::min(qreal(1), std::max(qreal(0), opacity));
 
     if (opacity == d->state->opacity)
         return;
@@ -5741,7 +5741,7 @@ void QPainter::drawGlyphRun(const QPointF &position, const QGlyphRun &glyphRun)
     const quint32 *glyphIndexes = glyphRun_d->glyphIndexData;
     const QPointF *glyphPositions = glyphRun_d->glyphPositionData;
 
-    int count = qMin(glyphRun_d->glyphIndexDataSize, glyphRun_d->glyphPositionDataSize);
+    int count = std::min(glyphRun_d->glyphIndexDataSize, glyphRun_d->glyphPositionDataSize);
     QVarLengthArray<QFixedPoint, 128> fixedPointPositions(count);
 
     QRawFontPrivate *fontD = QRawFontPrivate::get(font);
@@ -6327,7 +6327,7 @@ void QPainter::drawText(const QRectF &r, const QString &text, const QTextOption 
 
 static QPixmap generateWavyPixmap(qreal maxRadius, const QPen &pen)
 {
-    const qreal radiusBase = qMax(qreal(1), maxRadius);
+    const qreal radiusBase = std::max(qreal(1), maxRadius);
 
     QString key = QLatin1Literal("WaveUnderline-")
                   % pen.color().name()
@@ -6337,7 +6337,7 @@ static QPixmap generateWavyPixmap(qreal maxRadius, const QPen &pen)
     if (QPixmapCache::find(key, pixmap))
         return pixmap;
 
-    const qreal halfPeriod = qMax(qreal(2), qreal(radiusBase * 1.61803399)); // the golden ratio
+    const qreal halfPeriod = std::max(qreal(2), qreal(radiusBase * 1.61803399)); // the golden ratio
     const int width = qCeil(100 / (2 * halfPeriod)) * (2 * halfPeriod);
     const int radius = qFloor(radiusBase);
 
@@ -6419,11 +6419,11 @@ static void drawTextItemDecoration(QPainter *painter, const QPointF &pos, const 
             pen.setColor(uc);
 
         // Adapt wave to underlineOffset or pen width, whatever is larger, to make it work on all platforms
-        const QPixmap wave = generateWavyPixmap(qMax(underlineOffset, pen.widthF()), pen);
+        const QPixmap wave = generateWavyPixmap(std::max(underlineOffset, pen.widthF()), pen);
         const int descent = (int) fe->descent().toReal();
 
         painter->setBrushOrigin(painter->brushOrigin().x(), 0);
-        painter->fillRect(pos.x(), 0, qCeil(width), qMin(wave.height(), descent), wave);
+        painter->fillRect(pos.x(), 0, qCeil(width), std::min(wave.height(), descent), wave);
         painter->restore();
     } else if (underlineStyle != QTextCharFormat::NoUnderline) {
         QLineF underLine(line.x1(), underlinePos, line.x2(), underlinePos);
@@ -7814,7 +7814,7 @@ start_lengthVariant:
     } else {
         qreal lineWidth = 0x01000000;
         if (wordwrap || (tf & Qt::TextJustificationForced))
-            lineWidth = qMax<qreal>(0, r.width());
+            lineWidth = std::max<qreal>(0, r.width());
         if(!wordwrap)
             tf |= Qt::TextIncludeTrailingSpaces;
         textLayout.engine()->ignoreBidi = bool(tf & Qt::TextDontPrint);
@@ -7832,7 +7832,7 @@ start_lengthVariant:
             height += leading;
             l.setPosition(QPointF(0., height));
             height += l.height();
-            width = qMax(width, l.naturalTextWidth());
+            width = std::max(width, l.naturalTextWidth());
             if (!dontclip && !brect && height >= r.height())
                 break;
         }

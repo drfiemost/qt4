@@ -1399,7 +1399,7 @@ void tst_qdeclarativetextinput::maxLength()
     textinputObject->setText("");
     QTRY_VERIFY(textinputObject->hasActiveFocus() == true);
     for(int i=0; i<20; i++){
-        QCOMPARE(textinputObject->text().length(), qMin(i,10));
+        QCOMPARE(textinputObject->text().length(), std::min(i,10));
         //simulateKey(canvas, Qt::Key_A);
         QTest::keyPress(canvas, Qt::Key_A);
         QTest::keyRelease(canvas, Qt::Key_A, Qt::NoModifier ,10);
@@ -1422,7 +1422,7 @@ void tst_qdeclarativetextinput::masks()
     QVERIFY(textinputObject->text().length() == 0);
     QCOMPARE(textinputObject->inputMask(), QString("HHHHhhhh; "));
     for(int i=0; i<10; i++){
-        QCOMPARE(qMin(i,8), textinputObject->text().length());
+        QCOMPARE(std::min(i,8), textinputObject->text().length());
         QCOMPARE(i>=4, textinputObject->hasAcceptableInput());
         //simulateKey(canvas, Qt::Key_A);
         QTest::keyPress(canvas, Qt::Key_A);

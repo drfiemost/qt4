@@ -138,10 +138,10 @@ void tst_QContiguousCache::append()
         c.insert(start, i++);
     while (i < count) {
         c.append(i);
-        QCOMPARE(c.available(), qMax(0, cacheSize - i));
-        QCOMPARE(c.first(), qMax(1, i-cacheSize+1));
+        QCOMPARE(c.available(), std::max(0, cacheSize - i));
+        QCOMPARE(c.first(), std::max(1, i-cacheSize+1));
         QCOMPARE(c.last(), i);
-        QCOMPARE(c.count(), qMin(i, cacheSize));
+        QCOMPARE(c.count(), std::min(i, cacheSize));
         QCOMPARE(c.isFull(), i >= cacheSize);
         i++;
     }
@@ -189,10 +189,10 @@ void tst_QContiguousCache::prepend()
     c.insert(start, i++);
     while(i < count) {
         c.prepend(i);
-        QCOMPARE(c.available(), qMax(0, cacheSize - i));
-        QCOMPARE(c.last(), qMax(1, i-cacheSize+1));
+        QCOMPARE(c.available(), std::max(0, cacheSize - i));
+        QCOMPARE(c.last(), std::max(1, i-cacheSize+1));
         QCOMPARE(c.first(), i);
-        QCOMPARE(c.count(), qMin(i, cacheSize));
+        QCOMPARE(c.count(), std::min(i, cacheSize));
         QCOMPARE(c.isFull(), i >= cacheSize);
         i++;
     }

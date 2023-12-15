@@ -214,7 +214,7 @@ qreal QDeclarativeFlickablePrivate::overShootDistance(qreal size)
     if (maxVelocity <= 0)
         return 0.0;
 
-    return qMin(qreal(QML_FLICK_OVERSHOOT), size/3);
+    return std::min(qreal(QML_FLICK_OVERSHOOT), size/3);
 }
 
 void QDeclarativeFlickablePrivate::AxisData::addVelocitySample(qreal v, qreal maxVelocity)
@@ -965,10 +965,10 @@ void QDeclarativeFlickable::wheelEvent(QGraphicsSceneWheelEvent *event)
     } else if (yflick() && event->orientation() == Qt::Vertical) {
         bool valid = false;
         if (event->delta() > 0 && contentY() > -minYExtent()) {
-            d->vData.velocity = qMax(event->delta()*2 - d->vData.smoothVelocity.value(), qreal(d->maxVelocity/4));
+            d->vData.velocity = std::max(event->delta()*2 - d->vData.smoothVelocity.value(), qreal(d->maxVelocity/4));
             valid = true;
         } else if (event->delta() < 0 && contentY() < -maxYExtent()) {
-            d->vData.velocity = qMin(event->delta()*2 - d->vData.smoothVelocity.value(), qreal(-d->maxVelocity/4));
+            d->vData.velocity = std::min(event->delta()*2 - d->vData.smoothVelocity.value(), qreal(-d->maxVelocity/4));
             valid = true;
         }
         if (valid) {
@@ -983,10 +983,10 @@ void QDeclarativeFlickable::wheelEvent(QGraphicsSceneWheelEvent *event)
     } else if (xflick() && event->orientation() == Qt::Horizontal) {
         bool valid = false;
         if (event->delta() > 0 && contentX() > -minXExtent()) {
-            d->hData.velocity = qMax(event->delta()*2 - d->hData.smoothVelocity.value(), qreal(d->maxVelocity/4));
+            d->hData.velocity = std::max(event->delta()*2 - d->hData.smoothVelocity.value(), qreal(d->maxVelocity/4));
             valid = true;
         } else if (event->delta() < 0 && contentX() < -maxXExtent()) {
-            d->hData.velocity = qMin(event->delta()*2 - d->hData.smoothVelocity.value(), qreal(-d->maxVelocity/4));
+            d->hData.velocity = std::min(event->delta()*2 - d->hData.smoothVelocity.value(), qreal(-d->maxVelocity/4));
             valid = true;
         }
         if (valid) {

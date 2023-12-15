@@ -127,7 +127,7 @@ void PrintOut::addBox(int percent, const QString &text, Style style, Qt::Alignme
 
     Box b(r, text, f, options);
     cp.boxes.append(b);
-    cp.rect.setSize(QSize(cp.rect.width() + wd, qMax(cp.rect.height(), ht)));
+    cp.rect.setSize(QSize(cp.rect.width() + wd, std::max(cp.rect.height(), ht)));
 }
 
 // use init if initial vsize should be calculated (first breakPage call)
@@ -156,7 +156,7 @@ void PrintOut::breakPage(bool init)
     h2 = p.boundingRect(r2, RightAlign, QString::number(page)).height();
     if (!init)
         p.drawText(r2, RightAlign, QString::number(page));
-    voffset += qMax(h1, h2 );
+    voffset += std::max(h1, h2 );
 
     r1 = QRect(hmargin, voffset, hsize / 2, LeftAlign);
     p.setFont(f8);
@@ -164,7 +164,7 @@ void PrintOut::breakPage(bool init)
     if (!init)
         p.drawText(r1, LeftAlign, dateTime.toString());
     p.setFont(f10);
-    voffset += qMax(h1, h2);
+    voffset += std::max(h1, h2);
 
     voffset += 4;
     if (!init)

@@ -410,8 +410,8 @@ void QScanConverter::end()
                 if ((line.bottom < chunkTop) || (line.top > chunkBottom))
                     continue;
 
-                const int top = qMax(0, line.top - chunkTop);
-                const int bottom = qMin(CHUNK_SIZE, line.bottom + 1 - chunkTop);
+                const int top = std::max(0, line.top - chunkTop);
+                const int bottom = std::min(CHUNK_SIZE, line.bottom + 1 - chunkTop);
                 allocate(m_size + bottom - top);
 
                 isect.winding = line.winding;
@@ -450,7 +450,7 @@ void QScanConverter::end()
 inline void QScanConverter::allocate(int size)
 {
     if (m_alloc < size) {
-        int newAlloc = qMax(size, 2 * m_alloc);
+        int newAlloc = std::max(size, 2 * m_alloc);
         m_intersections = q_check_ptr((Intersection *)realloc(m_intersections, newAlloc * sizeof(Intersection)));
         m_alloc = newAlloc;
     }
@@ -602,8 +602,8 @@ void QScanConverter::mergeLine(QT_FT_Vector a, QT_FT_Vector b)
     b.x += COORD_OFFSET;
     b.y += COORD_OFFSET;
 
-    int iTop = qMax(m_top, int((a.y + 32 - COORD_ROUNDING) >> 6));
-    int iBottom = qMin(m_bottom, int((b.y - 32 - COORD_ROUNDING) >> 6));
+    int iTop = std::max(m_top, int((a.y + 32 - COORD_ROUNDING) >> 6));
+    int iBottom = std::min(m_bottom, int((b.y - 32 - COORD_ROUNDING) >> 6));
 
     if (iTop <= iBottom) {
         Q16Dot16 aFP = Q16Dot16Factor/2 + (a.x << 10) - COORD_ROUNDING;
@@ -895,8 +895,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
             const Q16Dot16 yPa = FloatToQ16Dot16(pa.y());
             const Q16Dot16 yPb = FloatToQ16Dot16(pb.y());
             for (Q16Dot16 yFP = iTopFP; yFP <= iBottomFP; yFP += Q16Dot16Factor) {
-                const Q16Dot16 rowHeight = qMin(yFP + Q16Dot16Factor, yPb)
-                                           - qMax(yFP, yPa);
+                const Q16Dot16 rowHeight = std::min(yFP + Q16Dot16Factor, yPb)
+                                           - std::max(yFP, yPa);
                 const int y = Q16Dot16ToInt(yFP);
                 if (y > d->clipRect.bottom())
                     break;
@@ -999,7 +999,7 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
             const Q16Dot16 yRightFP = FloatToQ16Dot16(right.y());
             const Q16Dot16 yBottomFP = FloatToQ16Dot16(bottom.y());
 
-            rowTop = qMax(iTopFP, yTopFP);
+            rowTop = std::max(iTopFP, yTopFP);
             topLeftIntersectAf = leftIntersectAf +
                                  Q16Dot16Multiply(topLeftSlopeFP, rowTop - iTopFP);
             topRightIntersectAf = rightIntersectAf +
@@ -1007,11 +1007,11 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
 
             Q16Dot16 yFP = iTopFP;
             while (yFP <= iBottomFP) {
-                rowBottomLeft = qMin(yFP + Q16Dot16Factor, yLeftFP);
-                rowBottomRight = qMin(yFP + Q16Dot16Factor, yRightFP);
-                rowTopLeft = qMax(yFP, yLeftFP);
-                rowTopRight = qMax(yFP, yRightFP);
-                rowBottom = qMin(yFP + Q16Dot16Factor, yBottomFP);
+                rowBottomLeft = std::min(yFP + Q16Dot16Factor, yLeftFP);
+                rowBottomRight = std::min(yFP + Q16Dot16Factor, yRightFP);
+                rowTopLeft = std::max(yFP, yLeftFP);
+                rowTopRight = std::max(yFP, yRightFP);
+                rowBottom = std::min(yFP + Q16Dot16Factor, yBottomFP);
 
                 if (yFP == iLeftFP) {
                     const int y = Q16Dot16ToInt(yFP);
@@ -1045,8 +1045,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
                     leftMin = Q16Dot16ToInt(bottomLeftIntersectAf);
                     leftMax = Q16Dot16ToInt(topLeftIntersectAf);
                 } else if (yFP == iLeftFP) {
-                    leftMin = Q16Dot16ToInt(qMax(bottomLeftIntersectAf, topLeftIntersectBf));
-                    leftMax = Q16Dot16ToInt(qMax(topLeftIntersectAf, bottomLeftIntersectBf));
+                    leftMin = Q16Dot16ToInt(std::max(bottomLeftIntersectAf, topLeftIntersectBf));
+                    leftMax = Q16Dot16ToInt(std::max(topLeftIntersectAf, bottomLeftIntersectBf));
                 } else {
                     leftMin = Q16Dot16ToInt(topLeftIntersectBf);
                     leftMax = Q16Dot16ToInt(bottomLeftIntersectBf);
@@ -1059,8 +1059,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
                     rightMin = Q16Dot16ToInt(topRightIntersectAf);
                     rightMax = Q16Dot16ToInt(bottomRightIntersectAf);
                 } else if (yFP == iRightFP) {
-                    rightMin = Q16Dot16ToInt(qMin(topRightIntersectAf, bottomRightIntersectBf));
-                    rightMax = Q16Dot16ToInt(qMin(bottomRightIntersectAf, topRightIntersectBf));
+                    rightMin = Q16Dot16ToInt(std::min(topRightIntersectAf, bottomRightIntersectBf));
+                    rightMax = Q16Dot16ToInt(std::min(bottomRightIntersectAf, topRightIntersectBf));
                 } else {
                     rightMin = Q16Dot16ToInt(bottomRightIntersectBf);
                     rightMax = Q16Dot16ToInt(topRightIntersectBf);
@@ -1142,7 +1142,7 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
             int iLeft = left.y() < 0.5f ? -1 : int(left.y() - 0.5f);
             int iRight = right.y() < 0.5f ? -1 : int(right.y() - 0.5f);
             int iBottom = bottom.y() < 0.5f? -1 : int(bottom.y() - 0.5f);
-            int iMiddle = qMin(iLeft, iRight);
+            int iMiddle = std::min(iLeft, iRight);
 
             Q16Dot16 leftIntersectAf = qSafeFloatToQ16Dot16(top.x() + 0.5f + (iTop + 0.5f - top.y()) * topLeftSlope);
             Q16Dot16 leftIntersectBf = qSafeFloatToQ16Dot16(left.x() + 0.5f + (iLeft + 1.5f - left.y()) * bottomLeftSlope);
@@ -1152,7 +1152,7 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
             int ny;
             int y = iTop;
 #define DO_SEGMENT(next, li, ri, ls, rs) \
-            ny = qMin(next + 1, d->clipRect.top()); \
+            ny = std::min(next + 1, d->clipRect.top()); \
             if (y < ny) { \
                 li += ls * (ny - y); \
                 ri += rs * (ny - y); \
@@ -1161,8 +1161,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
             if (next > d->clipRect.bottom()) \
                 next = d->clipRect.bottom(); \
             for (; y <= next; ++y) { \
-                const int x1 = qMax(Q16Dot16ToInt(li), d->clipRect.left()); \
-                const int x2 = qMin(Q16Dot16ToInt(ri), d->clipRect.right()); \
+                const int x1 = std::max(Q16Dot16ToInt(li), d->clipRect.left()); \
+                const int x2 = std::min(Q16Dot16ToInt(ri), d->clipRect.right()); \
                 if (x2 >= x1) \
                     buffer.addSpan(x1, x2 - x1 + 1, y, 255); \
                 li += ls; \
@@ -1193,12 +1193,12 @@ void QRasterizer::rasterize(const QT_FT_Outline *outline, Qt::FillRule fillRule)
     QT_FT_Pos min_y = points[0].y, max_y = points[0].y;
     for (int i = 1; i < outline->n_points; ++i) {
         const QT_FT_Vector &p = points[i];
-        min_y = qMin(p.y, min_y);
-        max_y = qMax(p.y, max_y);
+        min_y = std::min(p.y, min_y);
+        max_y = std::max(p.y, max_y);
     }
 
-    int iTopBound = qMax(d->clipRect.top(), int((min_y + 32 + COORD_OFFSET - COORD_ROUNDING) >> 6));
-    int iBottomBound = qMin(d->clipRect.bottom(), int((max_y - 32 + COORD_OFFSET - COORD_ROUNDING) >> 6));
+    int iTopBound = std::max(d->clipRect.top(), int((min_y + 32 + COORD_OFFSET - COORD_ROUNDING) >> 6));
+    int iBottomBound = std::min(d->clipRect.bottom(), int((max_y - 32 + COORD_OFFSET - COORD_ROUNDING) >> 6));
 
     if (iTopBound > iBottomBound)
         return;
@@ -1233,8 +1233,8 @@ void QRasterizer::rasterize(const QPainterPath &path, Qt::FillRule fillRule)
 
     QRectF bounds = path.controlPointRect();
 
-    int iTopBound = qMax(d->clipRect.top(), int(bounds.top() + qreal(0.5) + (COORD_OFFSET - COORD_ROUNDING)/qreal(64.)));
-    int iBottomBound = qMin(d->clipRect.bottom(), int(bounds.bottom() - qreal(0.5) + (COORD_OFFSET - COORD_ROUNDING)/qreal(64.)));
+    int iTopBound = std::max(d->clipRect.top(), int(bounds.top() + qreal(0.5) + (COORD_OFFSET - COORD_ROUNDING)/qreal(64.)));
+    int iBottomBound = std::min(d->clipRect.bottom(), int(bounds.bottom() - qreal(0.5) + (COORD_OFFSET - COORD_ROUNDING)/qreal(64.)));
 
     if (iTopBound > iBottomBound)
         return;

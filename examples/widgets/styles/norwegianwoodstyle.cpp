@@ -158,7 +158,7 @@ void NorwegianWoodStyle::drawPrimitive(PrimitiveElement element,
 //! [13]
             QPainterPath roundRect = roundRectPath(option->rect);
 //! [13] //! [14]
-            int radius = qMin(width, height) / 2;
+            int radius = std::min(width, height) / 2;
 //! [14]
 
 //! [15]
@@ -309,7 +309,7 @@ void NorwegianWoodStyle::setTexture(QPalette &palette, QPalette::ColorRole role,
 QPainterPath NorwegianWoodStyle::roundRectPath(const QRect &rect)
 //! [39] //! [40]
 {
-    int radius = qMin(rect.width(), rect.height()) / 2;
+    int radius = std::min(rect.width(), rect.height()) / 2;
     int diam = 2 * radius;
 
     int x1, y1, x2, y2;

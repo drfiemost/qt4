@@ -311,21 +311,21 @@ void QMessageBoxPrivate::updateSize()
     // the width of the screen, less the window border.
     int hardLimit = screenSize.width() - (q->frameGeometry().width() - q->geometry().width());
 #else
-    int hardLimit = qMin(screenSize.width() - 480, 1000); // can never get bigger than this
+    int hardLimit = std::min(screenSize.width() - 480, 1000); // can never get bigger than this
     // on small screens allows the messagebox be the same size as the screen
     if (screenSize.width() <= 1024)
         hardLimit = screenSize.width();
 #endif
 #ifdef Q_WS_MAC
-    int softLimit = qMin(screenSize.width()/2, 420);
+    int softLimit = std::min(screenSize.width()/2, 420);
 #elif defined(Q_WS_QWS)
-    int softLimit = qMin(hardLimit, 500);
+    int softLimit = std::min(hardLimit, 500);
 #else
     // note: ideally on windows, hard and soft limits but it breaks compat
 #ifndef Q_WS_WINCE
-    int softLimit = qMin(screenSize.width()/2, 500);
+    int softLimit = std::min(screenSize.width()/2, 500);
 #else
-    int softLimit = qMin(screenSize.width() * 3 / 4, 500);
+    int softLimit = std::min(screenSize.width() * 3 / 4, 500);
 #endif //Q_WS_WINCE
 #endif
 
@@ -337,7 +337,7 @@ void QMessageBoxPrivate::updateSize()
 
     if (width > softLimit) {
         label->setWordWrap(true);
-        width = qMax(softLimit, layoutMinimumWidth());
+        width = std::max(softLimit, layoutMinimumWidth());
 
         if (width > hardLimit) {
             label->d_func()->ensureTextControl();
@@ -355,7 +355,7 @@ void QMessageBoxPrivate::updateSize()
         QSizePolicy policy(QSizePolicy::Minimum, QSizePolicy::Preferred);
         policy.setHeightForWidth(true);
         informativeLabel->setSizePolicy(policy);
-        width = qMax(width, layoutMinimumWidth());
+        width = std::max(width, layoutMinimumWidth());
         if (width > hardLimit) { // longest word is really big, so wrap anywhere
             informativeLabel->d_func()->ensureTextControl();
             if (QTextControl *control = informativeLabel->d_func()->control) {
@@ -370,7 +370,7 @@ void QMessageBoxPrivate::updateSize()
     }
 
     QFontMetrics fm(QApplication::font("QWorkspaceTitleBar"));
-    int windowTitleWidth = qMin(fm.width(q->windowTitle()) + 50, hardLimit);
+    int windowTitleWidth = std::min(fm.width(q->windowTitle()) + 50, hardLimit);
     if (windowTitleWidth > width)
         width = windowTitleWidth;
 
@@ -385,7 +385,7 @@ void QMessageBoxPrivate::updateSize()
 
         //use custom pixel metric to deduce the minimum height of the messagebox
         if (s60Style)
-            height = qMax(height, s60Style->pixelMetric((QStyle::PixelMetric)PM_MessageBoxHeight));
+            height = std::max(height, s60Style->pixelMetric((QStyle::PixelMetric)PM_MessageBoxHeight));
 #endif
 
     q->setFixedSize(width, height);

@@ -79,7 +79,7 @@ painter.setWindow(QRect(-50, -50, 100, 100));
 
 
 //! [5]
-int side = qMin(width(), height())
+int side = std::min(width(), height())
 int x = (width() - side / 2);
 int y = (height() - side / 2);
 

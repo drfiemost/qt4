@@ -284,8 +284,8 @@ void QtResourceViewPrivate::applyExpansionState()
 
 QPixmap QtResourceViewPrivate::makeThumbnail(const QPixmap &pix) const
 {
-    int w = qMax(48, pix.width());
-    int h = qMax(48, pix.height());
+    int w = std::max(48, pix.width());
+    int h = std::max(48, pix.height());
     QRect imgRect(0, 0, w, h);
     QImage img(w, h, QImage::Format_ARGB32_Premultiplied);
     img.fill(0);

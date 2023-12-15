@@ -1461,7 +1461,7 @@ void QDeclarativeCompiledBindingsPrivate::run(int instrIndex,
         const Register &rhs = registers[instr->binaryop.src2];
         Register &output = registers[instr->binaryop.output];
         if (lhs.isUndefined() || rhs.isUndefined()) output.setNaN();
-        else output.setqreal(qMax(lhs.getqreal(), rhs.getqreal()));
+        else output.setqreal(std::max(lhs.getqreal(), rhs.getqreal()));
     }
     QML_END_INSTR(MaxReal)
 
@@ -1471,7 +1471,7 @@ void QDeclarativeCompiledBindingsPrivate::run(int instrIndex,
         const Register &rhs = registers[instr->binaryop.src2];
         Register &output = registers[instr->binaryop.output];
         if (lhs.isUndefined() || rhs.isUndefined()) output.setNaN();
-        else output.setqreal(qMin(lhs.getqreal(), rhs.getqreal()));
+        else output.setqreal(std::min(lhs.getqreal(), rhs.getqreal()));
     }
     QML_END_INSTR(MinReal)
 

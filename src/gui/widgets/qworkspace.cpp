@@ -1400,10 +1400,10 @@ void QWorkspacePrivate::place(QWidget *w)
                                             QRect(l->x(), l->y(), l->width(), l->height()));
 
                 if (r2.intersects(r1)) {
-                    r2.setCoords(qMax(r1.left(), r2.left()),
-                                 qMax(r1.top(), r2.top()),
-                                 qMin(r1.right(), r2.right()),
-                                 qMin(r1.bottom(), r2.bottom())
+                    r2.setCoords(std::max(r1.left(), r2.left()),
+                                 std::max(r1.top(), r2.top()),
+                                 std::min(r1.right(), r2.right()),
+                                 std::min(r1.bottom(), r2.bottom())
                                 );
 
                     overlap += (r2.right() - r2.left()) *
@@ -3084,8 +3084,8 @@ void QWorkspaceChild::adjustToFullscreen()
         int th = titlebar ? titlebar->sizeHint().height() : 0;
         int w = parentWidget()->width() + 2*fw;
         int h = parentWidget()->height() + (noBorder ? fw : 2*fw) + th;
-        w = qMax(w, childWidget->minimumWidth());
-        h = qMax(h, childWidget->minimumHeight());
+        w = std::max(w, childWidget->minimumWidth());
+        h = std::max(h, childWidget->minimumHeight());
         setGeometry(-fw, (noBorder ? 0 : -fw) - th, w, h);
     }
     childWidget->overrideWindowState(Qt::WindowMaximized);
@@ -3228,10 +3228,10 @@ QRect QWorkspacePrivate::updateWorkspace()
             vsbExt = 0;
 
         if (showv) {
-            vbar->setSingleStep(qMax(q->height() / 12, 30));
+            vbar->setSingleStep(std::max(q->height() / 12, 30));
             vbar->setPageStep(q->height() - hsbExt);
-            vbar->setMinimum(qMin(0, yoffset + qMin(0, r.top())));
-            vbar->setMaximum(qMax(0, yoffset + qMax(0, r.bottom() - q->height() + hsbExt + 1)));
+            vbar->setMinimum(std::min(0, yoffset + qMin(0, r.top())));
+            vbar->setMaximum(std::max(0, yoffset + qMax(0, r.bottom() - q->height() + hsbExt + 1)));
             vbar->setGeometry(q->width() - vsbExt, 0, vsbExt, q->height() - hsbExt);
             vbar->setValue(yoffset);
             vbar->show();
@@ -3240,10 +3240,10 @@ QRect QWorkspacePrivate::updateWorkspace()
         }
 
         if (showh) {
-            hbar->setSingleStep(qMax(q->width() / 12, 30));
+            hbar->setSingleStep(std::max(q->width() / 12, 30));
             hbar->setPageStep(q->width() - vsbExt);
-            hbar->setMinimum(qMin(0, xoffset + qMin(0, r.left())));
-            hbar->setMaximum(qMax(0, xoffset + qMax(0, r.right() - q->width() + vsbExt  + 1)));
+            hbar->setMinimum(std::min(0, xoffset + qMin(0, r.left())));
+            hbar->setMaximum(std::max(0, xoffset + qMax(0, r.right() - q->width() + vsbExt  + 1)));
             hbar->setGeometry(0, q->height() - hsbExt, q->width() - vsbExt, hsbExt);
             hbar->setValue(xoffset);
             hbar->show();

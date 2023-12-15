@@ -1043,17 +1043,17 @@ void QTextEdit::timerEvent(QTimerEvent *e)
         QPoint pos;
         if (d->inDrag) {
             pos = d->autoScrollDragPos;
-            visible.adjust(qMin(visible.width()/3,20), qMin(visible.height()/3,20),
-                           -qMin(visible.width()/3,20), -qMin(visible.height()/3,20));
+            visible.adjust(std::min(visible.width()/3,20), qMin(visible.height()/3,20),
+                           -std::min(visible.width()/3,20), -qMin(visible.height()/3,20));
         } else {
             const QPoint globalPos = QCursor::pos();
             pos = d->viewport->mapFromGlobal(globalPos);
             QMouseEvent ev(QEvent::MouseMove, pos, globalPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
             mouseMoveEvent(&ev);
         }
-        int deltaY = qMax(pos.y() - visible.top(), visible.bottom() - pos.y()) - visible.height();
-        int deltaX = qMax(pos.x() - visible.left(), visible.right() - pos.x()) - visible.width();
-        int delta = qMax(deltaX, deltaY);
+        int deltaY = std::max(pos.y() - visible.top(), visible.bottom() - pos.y()) - visible.height();
+        int deltaX = std::max(pos.x() - visible.left(), visible.right() - pos.x()) - visible.width();
+        int delta = std::max(deltaX, deltaY);
         if (delta >= 0) {
             if (delta < 7)
                 delta = 7;

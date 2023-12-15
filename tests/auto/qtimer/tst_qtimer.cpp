@@ -308,7 +308,7 @@ public:
         inTimerEvent = true;
 
         QEventLoop eventLoop;
-        QTimer::singleShot(qMax(100, interval * 2), &eventLoop, SLOT(quit()));
+        QTimer::singleShot(std::max(100, interval * 2), &eventLoop, SLOT(quit()));
         eventLoop.exec();
 
         inTimerEvent = false;
@@ -336,7 +336,7 @@ void tst_QTimer::timerInfiniteRecursion()
     (void) object.startTimer(interval);
 
     QEventLoop eventLoop;
-    QTimer::singleShot(qMax(100, interval * 2), &eventLoop, SLOT(quit()));
+    QTimer::singleShot(std::max(100, interval * 2), &eventLoop, SLOT(quit()));
     eventLoop.exec();
 
     QVERIFY(!object.timerEventRecursed);

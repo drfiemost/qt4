@@ -416,8 +416,8 @@ QRollEffect::QRollEffect(QWidget* w, Qt::WindowFlags f, DirFlags orient)
 */
 void QRollEffect::paintEvent(QPaintEvent*)
 {
-    int x = orientation & RightScroll ? qMin(0, currentWidth - totalWidth) : 0;
-    int y = orientation & DownScroll ? qMin(0, currentHeight - totalHeight) : 0;
+    int x = orientation & RightScroll ? std::min(0, currentWidth - totalWidth) : 0;
+    int y = orientation & DownScroll ? std::min(0, currentHeight - totalHeight) : 0;
 
     QPainter p(this);
     p.drawPixmap(x, y, pm);
@@ -459,13 +459,13 @@ void QRollEffect::run(int time)
             dist += totalWidth - currentWidth;
         if (orientation & (DownScroll|UpScroll))
             dist += totalHeight - currentHeight;
-        duration = qMin(qMax(dist/3, 50), 120);
+        duration = std::min(std::max(dist/3, 50), 120);
     }
 
     connect(&anim, SIGNAL(timeout()), this, SLOT(scroll()));
 
     move(widget->geometry().x(),widget->geometry().y());
-    resize(qMin(currentWidth, totalWidth), qMin(currentHeight, totalHeight));
+    resize(std::min(currentWidth, totalWidth), qMin(currentHeight, totalHeight));
 
     //This is roughly equivalent to calling setVisible(true) without actually showing the widget
     widget->setAttribute(Qt::WA_WState_ExplicitShowHide, true);
@@ -517,15 +517,15 @@ void QRollEffect::scroll()
         int y = widget->geometry().y();
 
         if (orientation & RightScroll || orientation & LeftScroll)
-            w = qMin(currentWidth, totalWidth);
+            w = std::min(currentWidth, totalWidth);
         if (orientation & DownScroll || orientation & UpScroll)
-            h = qMin(currentHeight, totalHeight);
+            h = std::min(currentHeight, totalHeight);
 
         setUpdatesEnabled(false);
         if (orientation & UpScroll)
-            y = widget->geometry().y() + qMax(0, totalHeight - currentHeight);
+            y = widget->geometry().y() + std::max(0, totalHeight - currentHeight);
         if (orientation & LeftScroll)
-            x = widget->geometry().x() + qMax(0, totalWidth - currentWidth);
+            x = widget->geometry().x() + std::max(0, totalWidth - currentWidth);
         if (orientation & UpScroll || orientation & LeftScroll)
             move(x, y);
 

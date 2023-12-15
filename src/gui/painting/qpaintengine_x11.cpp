@@ -280,7 +280,7 @@ public:
 void QXRenderTessellator::addTrap(const Trapezoid &trap)
 {
     if (size == allocated) {
-        allocated = qMax(2*allocated, 64);
+        allocated = std::max(2*allocated, 64);
         traps = q_check_ptr((XTrapezoid *)realloc(traps, allocated * sizeof(XTrapezoid)));
     }
     traps[size].top = Q27Dot5ToXFixed(trap.top);
@@ -1702,17 +1702,17 @@ void QX11PaintEnginePrivate::strokePolygon_dev(const QPointF *polygonPoints, int
             xpoints[i].x = qRound(clippedPoints[i].x + aliasedCoordinateDelta);
             xpoints[i].y = qRound(clippedPoints[i].y + aliasedCoordinateDelta);
         }
-        uint numberPoints = qMin(clippedCount, xlibMaxLinePoints);
+        uint numberPoints = std::min(clippedCount, xlibMaxLinePoints);
         XPoint *pts = xpoints.data();
         XDrawLines(dpy, hd, gc, pts, numberPoints, CoordModeOrigin);
         pts += numberPoints;
         clippedCount -= numberPoints;
-        numberPoints = qMin(clippedCount, xlibMaxLinePoints-1);
+        numberPoints = std::min(clippedCount, xlibMaxLinePoints-1);
         while (clippedCount) {
             XDrawLines(dpy, hd, gc, pts-1, numberPoints+1, CoordModeOrigin);
             pts += numberPoints;
             clippedCount -= numberPoints;
-            numberPoints = qMin(clippedCount, xlibMaxLinePoints-1);
+            numberPoints = std::min(clippedCount, xlibMaxLinePoints-1);
         }
     }
 }
@@ -2185,8 +2185,8 @@ void QX11PaintEngine::drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, co
                 yOff = 0;
             }
         } else {
-            w = qMin(w, d->pdev->width() - x);
-            h = qMin(h, d->pdev->height() - y);
+            w = std::min(w, d->pdev->width() - x);
+            h = std::min(h, d->pdev->height() - y);
             if (w <= 0 || h <= 0)
                 return;
 
@@ -2202,13 +2202,13 @@ void QX11PaintEngine::drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, co
             // first tile
             XRenderComposite(d->dpy, mode,
                              pixmap.x11PictureHandle(), XNone, pmPicture,
-                             0, 0, 0, 0, 0, 0, qMin(pw, pixmap.width()), qMin(ph, pixmap.height()));
+                             0, 0, 0, 0, 0, 0, std::min(pw, pixmap.width()), qMin(ph, pixmap.height()));
 
             // first row of tiles
             int xPos = pixmap.width();
-            const int sh = qMin(ph, pixmap.height());
+            const int sh = std::min(ph, pixmap.height());
             while (xPos < pw) {
-                const int sw = qMin(xPos, pw - xPos);
+                const int sw = std::min(xPos, pw - xPos);
                 XRenderComposite(d->dpy, mode,
                                  pmPicture, XNone, pmPicture,
                                  0, 0, 0, 0, xPos, 0, sw, sh);
@@ -2219,7 +2219,7 @@ void QX11PaintEngine::drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, co
             int yPos = pixmap.height();
             const int sw = pw;
             while (yPos < ph) {
-                const int sh = qMin(yPos, ph - yPos);
+                const int sh = std::min(yPos, ph - yPos);
                 XRenderComposite(d->dpy, mode,
                                  pmPicture, XNone, pmPicture,
                                  0, 0, 0, 0, 0, yPos, sw, sh);

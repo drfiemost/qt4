@@ -420,7 +420,7 @@ void QColumnViewPrivate::updateScrollbars()
     if (horizontalLength < viewportSize.width() && hbar->value() == 0) {
         hbar->setRange(0, 0);
     } else {
-        int visibleLength = qMin(horizontalLength + q->horizontalOffset(), viewportSize.width());
+        int visibleLength = std::min(horizontalLength + q->horizontalOffset(), viewportSize.width());
         int hiddenLength = horizontalLength - visibleLength;
         if (hiddenLength != hbar->maximum())
             hbar->setRange(0, hiddenLength);
@@ -467,12 +467,12 @@ QRegion QColumnView::visualRegionForSelection(const QItemSelection &selection) c
     int firstRow = selection.at(0).top();
     int lastRow = selection.at(0).top();
     for (int i = 0; i < ranges; ++i) {
-        firstRow = qMin(firstRow, selection.at(i).top());
-        lastRow = qMax(lastRow, selection.at(i).bottom());
+        firstRow = std::min(firstRow, selection.at(i).top());
+        lastRow = std::max(lastRow, selection.at(i).bottom());
     }
 
-    QModelIndex firstIdx = model()->index(qMin(firstRow, lastRow), 0, rootIndex());
-    QModelIndex lastIdx = model()->index(qMax(firstRow, lastRow), 0, rootIndex());
+    QModelIndex firstIdx = model()->index(std::min(firstRow, lastRow), 0, rootIndex());
+    QModelIndex lastIdx = model()->index(std::max(firstRow, lastRow), 0, rootIndex());
 
     if (firstIdx == lastIdx)
         return visualRect(firstIdx);
@@ -676,7 +676,7 @@ QAbstractItemView *QColumnViewPrivate::createColumn(const QModelIndex &index, bo
         if (!previewColumn)
             setPreviewWidget(new QWidget(q));
         view = previewColumn;
-        view->setMinimumWidth(qMax(view->minimumWidth(), previewWidget->minimumWidth()));
+        view->setMinimumWidth(std::max(view->minimumWidth(), previewWidget->minimumWidth()));
     }
 
     q->connect(view, SIGNAL(activated(QModelIndex)),
@@ -709,7 +709,7 @@ QAbstractItemView *QColumnViewPrivate::createColumn(const QModelIndex &index, bo
             view->setGeometry(viewport->width() - initialWidth, 0, initialWidth, viewport->height());
         else
             view->setGeometry(0, 0, initialWidth, viewport->height());
-        columnSizes.resize(qMax(columnSizes.count(), columns.count() + 1));
+        columnSizes.resize(std::max(columnSizes.count(), columns.count() + 1));
         columnSizes[columns.count()] = initialWidth;
     }
     if (!columns.isEmpty() && columns.last()->isHidden())
@@ -848,7 +848,7 @@ void QColumnViewPrivate::setPreviewWidget(QWidget *widget)
     previewColumn->setFrameShape(QFrame::NoFrame);
     previewColumn->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     previewColumn->setSelectionMode(QAbstractItemView::NoSelection);
-    previewColumn->setMinimumWidth(qMax(previewColumn->verticalScrollBar()->width(),
+    previewColumn->setMinimumWidth(std::max(previewColumn->verticalScrollBar()->width(),
                 previewColumn->minimumWidth()));
     previewWidget = widget;
     previewWidget->setParent(previewColumn->viewport());
@@ -963,7 +963,7 @@ void QColumnViewPrivate::_q_changeCurrentColumn()
     closeColumns(current, true);
 
     // Set up the "current" column with focus
-    int currentColumn = qMax(0, columns.size() - 2);
+    int currentColumn = std::max(0, columns.size() - 2);
     QAbstractItemView *parentColumn = columns.at(currentColumn);
     if (q->hasFocus())
         parentColumn->setFocus(Qt::OtherFocusReason);

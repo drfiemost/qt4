@@ -109,7 +109,7 @@ void QSystemTrayIconSys::setIconContents(NOTIFYICONDATA &tnd)
 
     if (!tip.isNull()) {
         tip = tip.left(maxTipLength - 1) + QChar();
-        memcpy(tnd.szTip, tip.utf16(), qMin(tip.length() + 1, maxTipLength) * sizeof(wchar_t));
+        memcpy(tnd.szTip, tip.utf16(), std::min(tip.length() + 1, maxTipLength) * sizeof(wchar_t));
     }
 }
 

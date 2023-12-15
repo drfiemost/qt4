@@ -1194,7 +1194,7 @@ bool QKeyMapper::sendKeyEvent(QWidget *widget, bool grab,
         return false;
 
     QKeyEventEx e(type, code, modifiers,
-                  text, autorepeat, qMax(1, int(text.length())),
+                  text, autorepeat, std::max(1, int(text.length())),
                   nativeScanCode, nativeVirtualKey, nativeModifiers);
     QETWidget::sendSpontaneousEvent(widget, &e);
 

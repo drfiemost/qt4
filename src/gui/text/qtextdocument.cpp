@@ -782,12 +782,12 @@ void QTextDocument::adjustSize()
     QSizeF size = documentLayout()->documentSize();
     if (size.width() != 0) {
         w = qt_int_sqrt((uint)(5 * size.height() * size.width() / 3));
-        setTextWidth(qMin(w, mw));
+        setTextWidth(std::min(w, mw));
 
         size = documentLayout()->documentSize();
         if (w*3 < 5*size.height()) {
             w = qt_int_sqrt((uint)(2 * size.height() * size.width()));
-            setTextWidth(qMin(w, mw));
+            setTextWidth(std::min(w, mw));
         }
     }
     setTextWidth(idealWidth());
@@ -875,7 +875,7 @@ QChar QTextDocument::characterAt(int pos) const
         return QChar();
     QTextDocumentPrivate::FragmentIterator fragIt = d->find(pos);
     const QTextFragmentData * const frag = fragIt.value();
-    const int offsetInFragment = qMax(0, pos - fragIt.position());
+    const int offsetInFragment = std::max(0, pos - fragIt.position());
     return d->text.at(frag->stringPosition + offsetInFragment);
 }
 
@@ -1352,7 +1352,7 @@ QTextCursor QTextDocument::find(const QRegExp & expr, int from, FindFlags option
     QTextBlock block = d->blocksFind(pos);
 
     if (!(options & FindBackward)) {
-       int blockOffset = qMax(0, pos - block.position());
+       int blockOffset = std::max(0, pos - block.position());
         while (block.isValid()) {
             if (findInBlock(block, expr, blockOffset, options, cursor))
                 return cursor;
@@ -1794,8 +1794,8 @@ void QTextDocument::print(QPrinter *printer) const
         toPage = doc->pageCount();
     }
     // paranoia check
-    fromPage = qMax(1, fromPage);
-    toPage = qMin(doc->pageCount(), toPage);
+    fromPage = std::max(1, fromPage);
+    toPage = std::min(doc->pageCount(), toPage);
 
     if (toPage < fromPage) {
         // if the user entered a page range outside the actual number
@@ -2811,7 +2811,7 @@ void QTextHtmlExporter::emitTable(const QTextTable *table)
     for (int i = 0; i < columns; ++i)
         widthEmittedForColumn[i] = false;
 
-    const int headerRowCount = qMin(format.headerRowCount(), rows);
+    const int headerRowCount = std::min(format.headerRowCount(), rows);
     if (headerRowCount > 0)
         html += QLatin1String("<thead>");
 

@@ -108,7 +108,7 @@ qreal FlowLayout::doLayout(const QRectF &geom, bool applyNewGeometry) const
     for (int i = 0; i < m_items.count(); ++i) {
         QGraphicsLayoutItem *item = m_items.at(i);
         pref = item->effectiveSizeHint(Qt::PreferredSize);
-        maxRowHeight = qMax(maxRowHeight, pref.height());
+        maxRowHeight = std::max(maxRowHeight, pref.height());
 
         qreal next_x;
         next_x = x + pref.width();
@@ -127,7 +127,7 @@ qreal FlowLayout::doLayout(const QRectF &geom, bool applyNewGeometry) const
             item->setGeometry(QRectF(QPointF(left + x, top + y), pref));
         x = next_x + spacing(Qt::Horizontal);
     }
-    maxRowHeight = qMax(maxRowHeight, pref.height());
+    maxRowHeight = std::max(maxRowHeight, pref.height());
     return top + y + maxRowHeight + bottom;
 }
 
@@ -163,7 +163,7 @@ QSizeF FlowLayout::prefSize() const
             totalWidth += spacing(Qt::Horizontal);
         QSizeF pref = item->effectiveSizeHint(Qt::PreferredSize);
         totalWidth += pref.width();
-        maxh = qMax(maxh, pref.height());
+        maxh = std::max(maxh, pref.height());
     }
     maxh += spacing(Qt::Vertical);
 

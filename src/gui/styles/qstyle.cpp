@@ -2340,7 +2340,7 @@ int QStyle::combinedLayoutSpacing(QSizePolicy::ControlTypes controls1,
     for (int i = 0; i < count1; ++i) {
         for (int j = 0; j < count2; ++j) {
             int spacing = layoutSpacing(array1[i], array2[j], orientation, option, widget);
-            result = qMax(spacing, result);
+            result = std::max(spacing, result);
         }
     }
     return result;

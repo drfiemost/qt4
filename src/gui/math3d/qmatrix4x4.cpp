@@ -1738,10 +1738,10 @@ QRect QMatrix4x4::mapRect(const QRect& rect) const
     QPoint br = map(QPoint(rect.x() + rect.width(),
                            rect.y() + rect.height()));
 
-    int xmin = qMin(qMin(tl.x(), tr.x()), qMin(bl.x(), br.x()));
-    int xmax = qMax(qMax(tl.x(), tr.x()), qMax(bl.x(), br.x()));
-    int ymin = qMin(qMin(tl.y(), tr.y()), qMin(bl.y(), br.y()));
-    int ymax = qMax(qMax(tl.y(), tr.y()), qMax(bl.y(), br.y()));
+    int xmin = std::min(qMin(tl.x(), tr.x()), qMin(bl.x(), br.x()));
+    int xmax = std::max(qMax(tl.x(), tr.x()), qMax(bl.x(), br.x()));
+    int ymin = std::min(qMin(tl.y(), tr.y()), qMin(bl.y(), br.y()));
+    int ymax = std::max(qMax(tl.y(), tr.y()), qMax(bl.y(), br.y()));
 
     return QRect(xmin, ymin, xmax - xmin, ymax - ymin);
 }
@@ -1779,10 +1779,10 @@ QRectF QMatrix4x4::mapRect(const QRectF& rect) const
     QPointF tl = map(rect.topLeft()); QPointF tr = map(rect.topRight());
     QPointF bl = map(rect.bottomLeft()); QPointF br = map(rect.bottomRight());
 
-    float xmin = qMin(qMin(tl.x(), tr.x()), qMin(bl.x(), br.x()));
-    float xmax = qMax(qMax(tl.x(), tr.x()), qMax(bl.x(), br.x()));
-    float ymin = qMin(qMin(tl.y(), tr.y()), qMin(bl.y(), br.y()));
-    float ymax = qMax(qMax(tl.y(), tr.y()), qMax(bl.y(), br.y()));
+    float xmin = std::min(qMin(tl.x(), tr.x()), qMin(bl.x(), br.x()));
+    float xmax = std::max(qMax(tl.x(), tr.x()), qMax(bl.x(), br.x()));
+    float ymin = std::min(qMin(tl.y(), tr.y()), qMin(bl.y(), br.y()));
+    float ymax = std::max(qMax(tl.y(), tr.y()), qMax(bl.y(), br.y()));
 
     return QRectF(QPointF(xmin, ymin), QPointF(xmax, ymax));
 }

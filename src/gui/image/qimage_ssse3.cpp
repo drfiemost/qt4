@@ -57,7 +57,7 @@ Q_GUI_EXPORT void QT_FASTCALL qt_convert_rgb888_to_rgb32_ssse3(quint32 *dst, con
     // Prologue, align dst to 16 bytes. The alignment is done on dst because it has 4 store()
     // for each 3 load() of src.
     const int offsetToAlignOn16Bytes = (4 - ((reinterpret_cast<quintptr>(dst) >> 2) & 0x3)) & 0x3;
-    const int prologLength = qMin(len, offsetToAlignOn16Bytes);
+    const int prologLength = std::min(len, offsetToAlignOn16Bytes);
 
     for (int i = 0; i < prologLength; ++i) {
         *dst++ = qRgb(src[0], src[1], src[2]);

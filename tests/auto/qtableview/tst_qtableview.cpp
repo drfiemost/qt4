@@ -715,22 +715,22 @@ void tst_QTableView::keyboardNavigation()
 
         switch (key) {
         case Qt::Key_Up:
-            row = qMax(0, row - 1);
+            row = std::max(0, row - 1);
             break;
         case Qt::Key_Down:
-            row = qMin(rowCount - 1, row + 1);
+            row = std::min(rowCount - 1, row + 1);
             break;
         case Qt::Key_Backtab:
             if (!tabKeyNavigation)
                 break;
         case Qt::Key_Left:
-            column = qMax(0, column - 1);
+            column = std::max(0, column - 1);
             break;
         case Qt::Key_Tab:
             if (!tabKeyNavigation)
                 break;
         case Qt::Key_Right:
-            column = qMin(columnCount - 1, column + 1);
+            column = std::min(columnCount - 1, column + 1);
             break;
         default:
             break;

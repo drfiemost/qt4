@@ -831,9 +831,9 @@ void qDrawBorderPixmap(QPainter *painter, const QRect &targetRect, const QMargin
     int columns = 3;
     int rows = 3;
     if (rules.horizontal != Qt::StretchTile && sourceCenterWidth != 0)
-        columns = qMax(3, 2 + qCeil(targetCenterWidth / qreal(sourceCenterWidth)));
+        columns = std::max(3, 2 + qCeil(targetCenterWidth / qreal(sourceCenterWidth)));
     if (rules.vertical != Qt::StretchTile && sourceCenterHeight != 0)
-        rows = qMax(3, 2 + qCeil(targetCenterHeight / qreal(sourceCenterHeight)));
+        rows = std::max(3, 2 + qCeil(targetCenterHeight / qreal(sourceCenterHeight)));
 
     xTarget.resize(columns + 1);
     yTarget.resize(rows + 1);

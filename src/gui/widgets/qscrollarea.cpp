@@ -200,7 +200,7 @@ void QScrollAreaPrivate::updateScrollBars()
         if ((widget->layout() ? widget->layout()->hasHeightForWidth() : widget->sizePolicy().hasHeightForWidth())) {
             QSize p_hfw = p.expandedTo(min).boundedTo(max);
             int h = widget->heightForWidth( p_hfw.width() );
-            min = QSize(p_hfw.width(), qMax(p_hfw.height(), h));
+            min = QSize(p_hfw.width(), std::max(p_hfw.height(), h));
         }
     }
 
@@ -435,15 +435,15 @@ void QScrollArea::ensureVisible(int x, int y, int xmargin, int ymargin)
     int logicalX = QStyle::visualPos(layoutDirection(), d->viewport->rect(), QPoint(x, y)).x();
 
     if (logicalX - xmargin < d->hbar->value()) {
-        d->hbar->setValue(qMax(0, logicalX - xmargin));
+        d->hbar->setValue(std::max(0, logicalX - xmargin));
     } else if (logicalX > d->hbar->value() + d->viewport->width() - xmargin) {
-        d->hbar->setValue(qMin(logicalX - d->viewport->width() + xmargin, d->hbar->maximum()));
+        d->hbar->setValue(std::min(logicalX - d->viewport->width() + xmargin, d->hbar->maximum()));
     }
 
     if (y - ymargin < d->vbar->value()) {
-        d->vbar->setValue(qMax(0, y - ymargin));
+        d->vbar->setValue(std::max(0, y - ymargin));
     } else if (y > d->vbar->value() + d->viewport->height() - ymargin) {
-        d->vbar->setValue(qMin(y - d->viewport->height() + ymargin, d->vbar->maximum()));
+        d->vbar->setValue(std::min(y - d->viewport->height() + ymargin, d->vbar->maximum()));
     }
 }
 

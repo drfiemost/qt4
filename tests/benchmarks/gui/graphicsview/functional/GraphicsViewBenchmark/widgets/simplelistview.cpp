@@ -151,7 +151,7 @@ public:
 
         qreal pos = 0.0;
         if ((m_content->boundingRect().height() - q->boundingRect().height()) != 0) {
-            qreal min = qMin(-contentRect.top(), m_content->pos().y());
+            qreal min = std::min(-contentRect.top(), m_content->pos().y());
             qreal diff = contentRect.height() - listRect.height();
             pos = qAbs(contentRect.top() + min) / diff;
         }
@@ -450,7 +450,7 @@ void SimpleListView::scrollContentsBy(qreal dx, qreal dy)
     QPointF contentPos = d->m_content->pos();
 
     qreal newy = contentPos.y() - dy;
-    qreal miny = qMin(qreal(0.0), -(contentRect.height() - viewportRect.height()));
+    qreal miny = std::min(qreal(0.0), -(contentRect.height() - viewportRect.height()));
 
     if (newy < miny)
         newy = miny;

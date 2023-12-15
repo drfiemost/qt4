@@ -177,8 +177,8 @@ void QBoxLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *b
             if (layoutDirection == Qt::RightToLeft)
                 qSwap(leftDelta, rightDelta);
 
-            l = qMax(l, leftDelta);
-            r = qMax(r, rightDelta);
+            l = std::max(l, leftDelta);
+            r = std::max(r, rightDelta);
         }
 
         int count = top || bottom ? list.count() : 0;
@@ -190,9 +190,9 @@ void QBoxLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *b
                 QRect lir = itm->geometry();
                 QRect wr = w->geometry();
                 if (top)
-                    t = qMax(t, lir.top() - wr.top());
+                    t = std::max(t, lir.top() - wr.top());
                 if (bottom)
-                    b = qMax(b, wr.bottom() - lir.bottom());
+                    b = std::max(b, wr.bottom() - lir.bottom());
             }
         }
     } else {    // vertical layout
@@ -210,14 +210,14 @@ void QBoxLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *b
                 QLayoutItem *itm = topBox->item;
                 QWidget *w = itm->widget();
                 if (w)
-                    t = qMax(t, itm->geometry().top() - w->geometry().top());
+                    t = std::max(t, itm->geometry().top() - w->geometry().top());
             }
 
             if (bottom && bottomBox) {
                 QLayoutItem *itm = bottomBox->item;
                 QWidget *w = itm->widget();
                 if (w)
-                    b = qMax(b, w->geometry().bottom() - itm->geometry().bottom());
+                    b = std::max(b, w->geometry().bottom() - itm->geometry().bottom());
             }
         }
 
@@ -230,9 +230,9 @@ void QBoxLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *b
                 QRect lir = itm->geometry();
                 QRect wr = w->geometry();
                 if (left)
-                    l = qMax(l, lir.left() - wr.left());
+                    l = std::max(l, lir.left() - wr.left());
                 if (right)
-                    r = qMax(r, wr.right() - lir.right());
+                    r = std::max(r, wr.right() - lir.right());
             }
         }        
     }
@@ -303,7 +303,7 @@ void QBoxLayoutPrivate::setupGeom()
                     if (sibling) {
                         QWidget *wid = sibling->item->widget();
                         if (wid)
-                            spacing = qMax(spacing, sibling->item->geometry().top() - wid->geometry().top());
+                            spacing = std::max(spacing, sibling->item->geometry().top() - wid->geometry().top());
                     }
                 }
 #endif
@@ -340,10 +340,10 @@ void QBoxLayoutPrivate::setupGeom()
             minw += spacing + min.width();
             hintw += spacing + hint.width();
             if (!ignore)
-                qMaxExpCalc(maxh, verexp, dummy,
+                std::maxExpCalc(maxh, verexp, dummy,
                             max.height(), exp & Qt::Vertical, box->item->isEmpty());
-            minh = qMax(minh, min.height());
-            hinth = qMax(hinth, hint.height());
+            minh = std::max(minh, min.height());
+            hinth = std::max(hinth, hint.height());
 
             a[i].sizeHint = hint.width();
             a[i].maximumSize = max.width();
@@ -357,10 +357,10 @@ void QBoxLayoutPrivate::setupGeom()
             minh += spacing + min.height();
             hinth += spacing + hint.height();
             if (!ignore)
-                qMaxExpCalc(maxw, horexp, dummy,
+                std::maxExpCalc(maxw, horexp, dummy,
                             max.width(), exp & Qt::Horizontal, box->item->isEmpty());
-            minw = qMax(minw, min.width());
-            hintw = qMax(hintw, hint.width());
+            minw = std::max(minw, min.width());
+            hintw = std::max(hintw, hint.width());
 
             a[i].sizeHint = hint.height();
             a[i].maximumSize = max.height();
@@ -412,8 +412,8 @@ void QBoxLayoutPrivate::calcHfw(int w)
         qGeomCalc(a, 0, n, 0, w);
         for (int i = 0; i < n; i++) {
             QBoxLayoutItem *box = list.at(i);
-            h = qMax(h, box->hfw(a.at(i).size));
-            mh = qMax(mh, box->mhfw(a.at(i).size));
+            h = std::max(h, box->hfw(a.at(i).size));
+            mh = std::max(mh, box->mhfw(a.at(i).size));
         }
     } else {
         for (int i = 0; i < n; ++i) {

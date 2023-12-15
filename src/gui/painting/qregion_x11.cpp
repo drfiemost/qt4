@@ -57,10 +57,10 @@ void QRegion::updateX11Region() const
     const QRect *rect = (n == 1 ? &d->qt_rgn->extents : d->qt_rgn->rects.constData());
     while (n--) {
         XRectangle r;
-        r.x = qMax(SHRT_MIN, rect->x());
-        r.y = qMax(SHRT_MIN, rect->y());
-        r.width = qMin((int)USHRT_MAX, rect->width());
-        r.height = qMin((int)USHRT_MAX, rect->height());
+        r.x = std::max(SHRT_MIN, rect->x());
+        r.y = std::max(SHRT_MIN, rect->y());
+        r.width = std::min((int)USHRT_MAX, rect->width());
+        r.height = std::min((int)USHRT_MAX, rect->height());
         XUnionRectWithRegion(&r, d->rgn, d->rgn);
         ++rect;
     }
@@ -74,10 +74,10 @@ void *QRegion::clipRectangles(int &num) const
         int n = d->qt_rgn->numRects;
         const QRect *rect = (n == 1 ? &d->qt_rgn->extents : d->qt_rgn->rects.constData());
         while (n--) {
-            r->x = qMax(SHRT_MIN, rect->x());
-            r->y = qMax(SHRT_MIN, rect->y());
-            r->width = qMin((int)USHRT_MAX, rect->width());
-            r->height = qMin((int)USHRT_MAX, rect->height());
+            r->x = std::max(SHRT_MIN, rect->x());
+            r->y = std::max(SHRT_MIN, rect->y());
+            r->width = std::min((int)USHRT_MAX, rect->width());
+            r->height = std::min((int)USHRT_MAX, rect->height());
             ++r;
             ++rect;
         }

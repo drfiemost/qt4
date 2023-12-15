@@ -2462,20 +2462,20 @@ void QStyleSheetStyle::setGeometry(QWidget *w)
     if (rule.hasGeometry()) {
         if (geo->minWidth != -1) {
             w->setProperty("_q_stylesheet_minw", true);
-            w->setMinimumWidth(rule.boxSize(QSize(qMax(geo->width, geo->minWidth), 0)).width());
+            w->setMinimumWidth(rule.boxSize(QSize(std::max(geo->width, geo->minWidth), 0)).width());
         }
         if (geo->minHeight != -1) {
             w->setProperty("_q_stylesheet_minh", true);
-            w->setMinimumHeight(rule.boxSize(QSize(0, qMax(geo->height, geo->minHeight))).height());
+            w->setMinimumHeight(rule.boxSize(QSize(0, std::max(geo->height, geo->minHeight))).height());
         }
         if (geo->maxWidth != -1) {
             w->setProperty("_q_stylesheet_maxw", true);
-            w->setMaximumWidth(rule.boxSize(QSize(qMin(geo->width == -1 ? QWIDGETSIZE_MAX : geo->width,
+            w->setMaximumWidth(rule.boxSize(QSize(std::min(geo->width == -1 ? QWIDGETSIZE_MAX : geo->width,
                                                        geo->maxWidth == -1 ? QWIDGETSIZE_MAX : geo->maxWidth), 0)).width());
         }
         if (geo->maxHeight != -1) {
             w->setProperty("_q_stylesheet_maxh", true);
-            w->setMaximumHeight(rule.boxSize(QSize(0, qMin(geo->height == -1 ? QWIDGETSIZE_MAX : geo->height,
+            w->setMaximumHeight(rule.boxSize(QSize(0, std::min(geo->height == -1 ? QWIDGETSIZE_MAX : geo->height,
                                                        geo->maxHeight == -1 ? QWIDGETSIZE_MAX : geo->maxHeight))).height());
         }
     }
@@ -3630,7 +3630,7 @@ void QStyleSheetStyle::drawControl(ControlElement ce, const QStyleOption *opt, Q
                 if (mi.checkType != QStyleOptionMenuItem::NotCheckable && !mi.checked) {
                     // We have a style defined, but QWindowsStyle won't draw anything if not checked.
                     // So we mimick what QWindowsStyle would do.
-                    int checkcol = qMax<int>(mi.maxIconWidth, QWindowsStylePrivate::windowsCheckMarkWidth);
+                    int checkcol = std::max<int>(mi.maxIconWidth, QWindowsStylePrivate::windowsCheckMarkWidth);
                     QRect vCheckRect = visualRect(opt->direction, mi.rect, QRect(mi.rect.x(), mi.rect.y(), checkcol, mi.rect.height()));
                     if (mi.state.testFlag(State_Enabled) && mi.state.testFlag(State_Selected)) {
                         qDrawShadePanel(p, vCheckRect, mi.palette, true, 1, &mi.palette.brush(QPalette::Button));
@@ -4763,7 +4763,7 @@ int QStyleSheetStyle::pixelMetric(PixelMetric m, const QStyleOption *opt, const 
         if (!subRule.hasContentsSize())
             break;
         QSize sz = subRule.size();
-        return qMax(sz.width(), sz.height());
+        return std::max(sz.width(), sz.height());
                                         }
 
     case PM_TitleBarHeight: {
@@ -4842,7 +4842,7 @@ QSize QStyleSheetStyle::sizeFromContents(ContentsType ct, const QStyleOption *op
                         bool nullIcon = hdr->icon.isNull();
                         int iconSize = nullIcon ? 0 : pixelMetric(QStyle::PM_SmallIconSize, hdr, w);
                         QSize txt = hdr->fontMetrics.size(0, hdr->text);
-                        nativeContentsSize.setHeight(qMax(iconSize, txt.height()));
+                        nativeContentsSize.setHeight(std::max(iconSize, txt.height()));
                         nativeContentsSize.setWidth(iconSize + txt.width());
                         sz = sz.expandedTo(nativeContentsSize);
                     }
@@ -4883,7 +4883,7 @@ QSize QStyleSheetStyle::sizeFromContents(ContentsType ct, const QStyleOption *op
                 int spacing = pixelMetric(isRadio ? PM_RadioButtonLabelSpacing
                                                   : PM_CheckBoxLabelSpacing, btn, w);
                 sz.setWidth(sz.width() + iw + spacing);
-                sz.setHeight(qMax(sz.height(), ih));
+                sz.setHeight(std::max(sz.height(), ih));
                 return rule.boxSize(sz);
             }
         }
@@ -4982,7 +4982,7 @@ QSize QStyleSheetStyle::sizeFromContents(ContentsType ct, const QStyleOption *op
                 QRenderRule subRule = renderRule(w, opt, layoutButton);
                 QSize sz = subRule.size();
                 width += sz.width();
-                height = qMax(height, sz.height());
+                height = std::max(height, sz.height());
             }
 
             return QSize(width, height);
@@ -5293,9 +5293,9 @@ QRect QStyleSheetStyle::subControlRect(ComplexControl cc, const QStyleOptionComp
 
                         int upSize = subControlRect(CC_SpinBox, opt, SC_SpinBoxUp, w).width();
                         int downSize = subControlRect(CC_SpinBox, opt, SC_SpinBoxDown, w).width();
-                        int widestL = qMax((upAlign & Qt::AlignLeft) ? upSize : 0,
+                        int widestL = std::max((upAlign & Qt::AlignLeft) ? upSize : 0,
                                 (downAlign & Qt::AlignLeft) ? downSize : 0);
-                        int widestR = qMax((upAlign & Qt::AlignRight) ? upSize : 0,
+                        int widestR = std::max((upAlign & Qt::AlignRight) ? upSize : 0,
                                 (downAlign & Qt::AlignRight) ? downSize : 0);
                         r.setRight(r.right() - widestR);
                         r.setLeft(r.left() + widestL);
@@ -5358,7 +5358,7 @@ QRect QStyleSheetStyle::subControlRect(ComplexControl cc, const QStyleOptionComp
 
                 if (gb->subControls & QStyle::SC_GroupBoxCheckBox) {
                     tw = tw + iw + spacing;
-                    th = qMax(th, ih);
+                    th = std::max(th, ih);
                 }
                 if (!labelRule.hasGeometry()) {
                     labelRule.geo = new QStyleSheetGeometryData(tw, th, tw, th, -1, -1);

@@ -97,8 +97,8 @@ uint ShadeWidget::colorAt(int x)
         if (pts.at(i-1).x() <= x && pts.at(i).x() >= x) {
             QLineF l(pts.at(i-1), pts.at(i));
             l.setLength(l.length() * ((x - l.x1()) / l.dx()));
-            return m_shade.pixel(qRound(qMin(l.x2(), (qreal(m_shade.width() - 1)))),
-                                 qRound(qMin(l.y2(), qreal(m_shade.height() - 1))));
+            return m_shade.pixel(qRound(std::min(l.x2(), (qreal(m_shade.width() - 1)))),
+                                 qRound(std::min(l.y2(), qreal(m_shade.height() - 1))));
         }
     }
     return 0;
@@ -493,7 +493,7 @@ void GradientRenderer::paint(QPainter *p)
         g = QLinearGradient(pts.at(0), pts.at(1));
 
     } else if (m_gradientType == Qt::RadialGradientPattern) {
-        g = QRadialGradient(pts.at(0), qMin(width(), height()) / 3.0, pts.at(1));
+        g = QRadialGradient(pts.at(0), std::min(width(), height()) / 3.0, pts.at(1));
 
     } else {
         QLineF l(pts.at(0), pts.at(1));

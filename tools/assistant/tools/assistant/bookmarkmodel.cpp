@@ -411,8 +411,8 @@ BookmarkModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     QString name, url;
     while (!stream.atEnd()) {
         stream >> depth >> name >> url >> expanded;
-        if (insertRow(qMax(0, row), parent)) {
-            const QModelIndex &current = index(qMax(0, row), 0, parent);
+        if (insertRow(std::max(0, row), parent)) {
+            const QModelIndex &current = index(std::max(0, row), 0, parent);
             if (current.isValid()) {
                 BookmarkItem* item = itemFromIndex(current);
                 item->setData(DataVector() << name << url << expanded);

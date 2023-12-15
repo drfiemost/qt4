@@ -423,7 +423,7 @@ void ValueExtractor::lengthValues(const Declaration &decl, int *m)
 
     LengthData datas[4];
     int i;
-    for (i = 0; i < qMin(decl.d->values.count(), 4); i++)
+    for (i = 0; i < std::min(decl.d->values.count(), 4); i++)
         datas[i] = lengthValue(decl.d->values[i]);
 
     if (i == 0) {
@@ -654,7 +654,7 @@ bool ValueExtractor::extractOutline(int *borders, QBrush *colors, BorderStyle *s
 static Qt::Alignment parseAlignment(const QCss::Value *values, int count)
 {
     Qt::Alignment a[2] = { 0, 0 };
-    for (int i = 0; i < qMin(2, count); i++) {
+    for (int i = 0; i < std::min(2, count); i++) {
         if (values[i].type != Value::KnownIdentifier)
             break;
         switch (values[i].variant.toInt()) {
@@ -712,7 +712,7 @@ static ColorData parseColorValue(QCss::Value v)
     if (!p.parseExpr(&colorDigits))
         return ColorData();
 
-    for (int i = 0; i < qMin(colorDigits.count(), 7); i += 2) {
+    for (int i = 0; i < std::min(colorDigits.count(), 7); i += 2) {
         if (colorDigits.at(i).type == Value::Percentage) {
             colorDigits[i].variant = colorDigits.at(i).variant.toReal() * (255. / 100.);
             colorDigits[i].type = Value::Number;
@@ -1114,7 +1114,7 @@ static bool setFontWeightFromValue(const QCss::Value &value, QFont *font)
     }
     if (value.type != Value::Number)
         return false;
-    font->setWeight(qMin(value.variant.toInt() / 8, 99));
+    font->setWeight(std::min(value.variant.toInt() / 8, 99));
     return true;
 }
 
@@ -1356,7 +1356,7 @@ void Declaration::brushValues(QBrush *c, const QPalette &pal) const
     if (d->parsed.isValid()) {
         needParse = 0;
         QList<QVariant> v = d->parsed.toList();
-        for (i = 0; i < qMin(v.count(), 4); i++) {
+        for (i = 0; i < std::min(v.count(), 4); i++) {
             if (v.at(i).type() == QVariant::Brush) {
                 c[i] = qvariant_cast<QBrush>(v.at(i));
             } else if (v.at(i).type() == QVariant::Int) {
@@ -1368,7 +1368,7 @@ void Declaration::brushValues(QBrush *c, const QPalette &pal) const
     }
     if (needParse != 0) {
         QList<QVariant> v;
-        for (i = 0; i < qMin(d->values.count(), 4); i++) {
+        for (i = 0; i < std::min(d->values.count(), 4); i++) {
             if (!(needParse & (1<<i)))
                 continue;
             BrushData data = parseBrushValue(d->values.at(i), pal);
@@ -1481,7 +1481,7 @@ void Declaration::colorValues(QColor *c, const QPalette &pal) const
     int i;
     if (d->parsed.isValid()) {
         QList<QVariant> v = d->parsed.toList();
-        for (i = 0; i < qMin(d->values.count(), 4); i++) {
+        for (i = 0; i < std::min(d->values.count(), 4); i++) {
             if (v.at(i).type() == QVariant::Color) {
                 c[i] = qvariant_cast<QColor>(v.at(i));
             } else {
@@ -1490,7 +1490,7 @@ void Declaration::colorValues(QColor *c, const QPalette &pal) const
         }
     } else {
         QList<QVariant> v;
-        for (i = 0; i < qMin(d->values.count(), 4); i++) {
+        for (i = 0; i < std::min(d->values.count(), 4); i++) {
             ColorData color = parseColorValue(d->values.at(i));
             if(color.type == ColorData::Role) {
                 v += QVariant::fromValue<int>(color.role);
@@ -1519,7 +1519,7 @@ BorderStyle Declaration::styleValue() const
 void Declaration::styleValues(BorderStyle *s) const
 {
     int i;
-    for (i = 0; i < qMin(d->values.count(), 4); i++)
+    for (i = 0; i < std::min(d->values.count(), 4); i++)
         s[i] = parseStyleValue(d->values.at(i));
     if (i == 0) s[0] = s[1] = s[2] = s[3] = BorderStyle_None;
     else if (i == 1) s[3] = s[2] = s[1] = s[0];
@@ -1621,7 +1621,7 @@ void Declaration::borderImageValue(QString *image, int *cuts,
 
     if (d->values.at(1).type == Value::Number) { // cuts!
         int i;
-        for (i = 0; i < qMin(d->values.count()-1, 4); i++) {
+        for (i = 0; i < std::min(d->values.count()-1, 4); i++) {
             const Value& v = d->values.at(i+1);
             if (v.type != Value::Number)
                 break;
@@ -2038,7 +2038,7 @@ QString Scanner::preprocess(const QString &input, bool *hasEscapeSequences)
                 continue;
             }
 
-            hexCount = qMin(hexCount, 6);
+            hexCount = std::min(hexCount, 6);
             bool ok = false;
             ushort code = output.mid(hexStart, hexCount).toUShort(&ok, 16);
             if (ok) {

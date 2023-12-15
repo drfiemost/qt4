@@ -81,7 +81,7 @@ void paint_QTextLayout(QPainter &p, bool useCache)
                 height += leading;
                 line.setPosition(QPointF(0, height));
                 height += line.height();
-                widthUsed = qMax(widthUsed, line.naturalTextWidth());
+                widthUsed = std::max(widthUsed, line.naturalTextWidth());
             }
             textLayout[i]->endLayout();
         }

@@ -92,7 +92,7 @@ Win32MakefileGenerator::findHighestVersion(const QString &d, const QString &stem
 				if (!regx.cap(3).isEmpty()) {
 					bool ok = true;
 					int num = regx.cap(3).toInt(&ok);
-					biggest = qMax(biggest, (!ok ? -1 : num));
+					biggest = std::max(biggest, (!ok ? -1 : num));
 				}
 			}
         }
@@ -100,7 +100,7 @@ Win32MakefileGenerator::findHighestVersion(const QString &d, const QString &stem
     if(libInfoRead
        && !libinfo.values("QMAKE_PRL_CONFIG").contains("staticlib")
        && !libinfo.isEmpty("QMAKE_PRL_VERSION"))
-       biggest = qMax(biggest, libinfo.first("QMAKE_PRL_VERSION").replace(".", "").toInt());
+       biggest = std::max(biggest, libinfo.first("QMAKE_PRL_VERSION").replace(".", "").toInt());
     return biggest;
 }
 
@@ -284,7 +284,7 @@ void Win32MakefileGenerator::processVars()
     //If the TARGET looks like a path split it into DESTDIR and the resulting TARGET
     if(!project->isEmpty("TARGET")) {
         QString targ = project->first("TARGET");
-        int slsh = qMax(targ.lastIndexOf('/'), targ.lastIndexOf(Option::dir_sep));
+        int slsh = std::max(targ.lastIndexOf('/'), targ.lastIndexOf(Option::dir_sep));
         if(slsh != -1) {
             if(project->isEmpty("DESTDIR"))
                 project->values("DESTDIR").append("");
@@ -568,7 +568,7 @@ void Win32MakefileGenerator::writeCleanParts(QTextStream &t)
                 for(QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
                     file = " " + escapeFilePath((*it));
                     if(del_statement.length() + files.length() +
-                       qMax(fixEnvVariables(file).length(), file.length()) > commandlineLimit) {
+                       std::max(fixEnvVariables(file).length(), file.length()) > commandlineLimit) {
                         t << "\n\t" << del_statement << files;
                         files.clear();
                     }
@@ -596,7 +596,7 @@ void Win32MakefileGenerator::writeCleanParts(QTextStream &t)
                 for(QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
                     file = " " + escapeFilePath((*it));
                     if(del_statement.length() + files.length() +
-                       qMax(fixEnvVariables(file).length(), file.length()) > commandlineLimit) {
+                       std::max(fixEnvVariables(file).length(), file.length()) > commandlineLimit) {
                         t << "\n\t" << del_statement << files;
                         files.clear();
                     }

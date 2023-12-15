@@ -1340,7 +1340,7 @@ void QDeclarativeVisualDataModel::_q_itemsMoved(int from, int to, int count)
         iter != d->m_cache.end(); ) {
 
         int diff = from > to ? count : -count;
-        if (iter.key() >= qMin(from,to) && iter.key() < qMax(from+count,to+count)) {
+        if (iter.key() >= std::min(from,to) && iter.key() < std::max(from+count,to+count)) {
             QDeclarativeVisualDataModelPrivate::ObjectRef objRef = *iter;
             int index = iter.key() + diff;
             iter = d->m_cache.erase(iter);

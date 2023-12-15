@@ -279,7 +279,7 @@ void AbstractItemView::rowsRemoved(const QModelIndex &parent,int start, int end)
     if (start <= m_currentIndex.row() && m_currentIndex.row() <= end) {
         QModelIndex newCurrentIndex = m_model->index(start, 0, m_rootIndex);
         if (!newCurrentIndex.isValid()) {
-            newCurrentIndex = m_model->index(qMax(0,start - 1), 0, m_rootIndex);
+            newCurrentIndex = m_model->index(std::max(0,start - 1), 0, m_rootIndex);
         }
 
         if (m_selectionModel) {

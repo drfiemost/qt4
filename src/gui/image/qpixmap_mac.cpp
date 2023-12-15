@@ -263,7 +263,7 @@ void QMacPixmapData::fromImage(const QImage &img,
             if (image.colorCount() == 2) {
                 QRgb c0 = image.color(0);       // Auto: convert to best
                 QRgb c1 = image.color(1);
-                conv8 = qMin(c0,c1) != qRgb(0,0,0) || qMax(c0,c1) != qRgb(255,255,255);
+                conv8 = std::min(c0,c1) != qRgb(0,0,0) || std::max(c0,c1) != qRgb(255,255,255);
             } else {
                 // eg. 1-color monochrome images (they do exist).
                 conv8 = true;
@@ -326,7 +326,7 @@ void QMacPixmapData::fromImage(const QImage &img,
             if (numColors > 0) {
                 for (int x = 0; x < w; ++x) {
                     int index = *(srow + x);
-                    *(drow+x) = PREMUL(image.color(qMin(index, numColors)));
+                    *(drow+x) = PREMUL(image.color(std::min(index, numColors)));
                 }
             }
         } break;
@@ -670,7 +670,7 @@ void QMacPixmapData::macCreatePixels()
 
     // only copy when both buffers exist
     if (pixels && base_pixels)
-        memcpy(base_pixels, pixels, qMin(pixelsSize, (uint) numBytes));
+        memcpy(base_pixels, pixels, std::min(pixelsSize, (uint) numBytes));
 
     // free pixels before assigning new memory
     if (pixels)

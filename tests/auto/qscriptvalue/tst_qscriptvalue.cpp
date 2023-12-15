@@ -3786,7 +3786,7 @@ void tst_QScriptValue::prettyPrinter()
     QScriptValue val = eng.evaluate("(" + function + ")");
     QVERIFY(val.isFunction());
     QString actual = val.toString();
-    int count = qMin(actual.size(), expected.size());
+    int count = std::min(actual.size(), expected.size());
 //    qDebug() << actual << expected;
     for (int i = 0; i < count; ++i) {
 //        qDebug() << i << actual.at(i) << expected.at(i);

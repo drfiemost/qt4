@@ -306,8 +306,8 @@ public:
 
 
     void setVolume(int lv, int rv) {
-	leftVolume = qMin(maxVolume, qMax(0, lv));
-	rightVolume = qMin(maxVolume, qMax(0, rv));
+	leftVolume = std::min(maxVolume, std::max(0, lv));
+	rightVolume = std::min(maxVolume, std::max(0, rv));
     }
 
     void setMute(bool m) { mMuted = m; }
@@ -352,7 +352,7 @@ public:
         int bytesPerSample = chunkdata.wBitsPerSample >> 3;
 
         if ( mMuted ) {
-            sampleRunin -= qMin(sampleRunin,count);
+            sampleRunin -= std::min(sampleRunin,count);
             while (count && (dev != -1)) {
                 if (out >= *max) {
                     // switch buffers
@@ -621,7 +621,7 @@ public:
 
 	if (wavedata_remaining) {
 	    if (size > 0 && dest != 0) {
-		int read = ::read(dev, dest, qMin(size, wavedata_remaining));
+		int read = ::read(dev, dest, std::min(size, wavedata_remaining));
 		// XXX check error? or don't we care?
 		wavedata_remaining -= read;
 		updateBuffer(read);
@@ -1251,7 +1251,7 @@ void  QWSSoundServerPrivate::feedDevice(int fd)
         bucket = active.at(i);
         int ready = bucket->readySamples(available);
         if (ready > 0) {
-            available = qMin(available, ready);
+            available = std::min(available, ready);
             running.append(bucket);
         }
     }
@@ -1285,16 +1285,16 @@ void  QWSSoundServerPrivate::feedDevice(int fd)
                 if ( sound_16bit ) {
                     short *d = (short*)data;
                     for (int i=0; i<available; i++) {
-                        *d++ = (short)qMax(qMin(left[i],32767),-32768);
+                        *d++ = (short)std::max(std::min(left[i],32767),-32768);
                         if ( sound_stereo )
-                            *d++ = (short)qMax(qMin(right[i],32767),-32768);
+                            *d++ = (short)std::max(std::min(right[i],32767),-32768);
                     }
                 } else {
                     signed char *d = (signed char *)data;
                     for (int i=0; i<available; i++) {
-                        *d++ = (signed char)qMax(qMin(left[i]/256,127),-128)+128;
+                        *d++ = (signed char)std::max(std::min(left[i]/256,127),-128)+128;
                         if ( sound_stereo )
-                            *d++ = (signed char)qMax(qMin(right[i]/256,127),-128)+128;
+                            *d++ = (signed char)std::max(std::min(right[i]/256,127),-128)+128;
                     }
                 }
                 unwritten = available*(sound_16bit+1)*(sound_stereo+1);

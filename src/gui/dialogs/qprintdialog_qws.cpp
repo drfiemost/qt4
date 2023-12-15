@@ -246,7 +246,7 @@ void QPrintDialogPrivate::_q_setFirstPage(int fp)
     Q_Q(QPrintDialog);
     if (printer) {
         lastPage->setMinimum(fp);
-        lastPage->setMaximum(qMax(fp, q->maxPage()));
+        lastPage->setMaximum(std::max(fp, q->maxPage()));
     }
 }
 
@@ -254,7 +254,7 @@ void QPrintDialogPrivate::_q_setLastPage(int lp)
 {
     Q_Q(QPrintDialog);
     if (printer) {
-        firstPage->setMinimum(qMin(lp, q->minPage()));
+        firstPage->setMinimum(std::min(lp, q->minPage()));
         firstPage->setMaximum(lp);
     }
 }

@@ -74,8 +74,8 @@ extern QRegion qt_dirtyRegion(QWidget *);
 */
 static inline bool qRectIntersects(const QRect &r1, const QRect &r2)
 {
-    return (qMax(r1.left(), r2.left()) <= qMin(r1.right(), r2.right())
-            && qMax(r1.top(), r2.top()) <= qMin(r1.bottom(), r2.bottom()));
+    return (std::max(r1.left(), r2.left()) <= std::min(r1.right(), r2.right())
+            && std::max(r1.top(), r2.top()) <= std::min(r1.bottom(), r2.bottom()));
 }
 
 /**
@@ -1523,8 +1523,8 @@ void QWidgetPrivate::invalidateBuffer_resizeHelper(const QPoint &oldPos, const Q
     // Move static content to its new position.
     if (!offset.isNull()) {
         if (sizeDecreased) {
-            const QSize minSize(qMin(oldSize.width(), data.crect.width()),
-                                qMin(oldSize.height(), data.crect.height()));
+            const QSize minSize(std::min(oldSize.width(), data.crect.width()),
+                                std::min(oldSize.height(), data.crect.height()));
             moveRect(QRect(oldPos, minSize), offset.x(), offset.y());
         } else {
             moveRect(QRect(oldPos, oldSize), offset.x(), offset.y());

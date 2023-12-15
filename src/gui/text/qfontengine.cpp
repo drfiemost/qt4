@@ -422,14 +422,14 @@ glyph_metrics_t QFontEngine::tightBoundingBox(const QGlyphLayout &glyphs)
         glyph_metrics_t bb = boundingBox(glyphs.glyphs[i]);
         QFixed x = overall.xoff + glyphs.offsets[i].x + bb.x;
         QFixed y = overall.yoff + glyphs.offsets[i].y + bb.y;
-        overall.x = qMin(overall.x, x);
-        overall.y = qMin(overall.y, y);
-        xmax = qMax(xmax, x + bb.width);
-        ymax = qMax(ymax, y + bb.height);
+        overall.x = std::min(overall.x, x);
+        overall.y = std::min(overall.y, y);
+        xmax = std::max(xmax, x + bb.width);
+        ymax = std::max(ymax, y + bb.height);
         overall.xoff += bb.xoff;
         overall.yoff += bb.yoff;
     }
-    overall.height = qMax(overall.height, ymax - overall.y);
+    overall.height = std::max(overall.height, ymax - overall.y);
     overall.width = xmax - overall.x;
 
     return overall;
@@ -1530,11 +1530,11 @@ glyph_metrics_t QFontEngineMulti::boundingBox(const QGlyphLayout &glyphs)
         // merge the bounding box for this run
         const glyph_metrics_t gm = engine(which)->boundingBox(glyphs.mid(start, end - start));
 
-        overall.x = qMin(overall.x, gm.x);
-        overall.y = qMin(overall.y, gm.y);
+        overall.x = std::min(overall.x, gm.x);
+        overall.y = std::min(overall.y, gm.y);
         overall.width = overall.xoff + gm.width;
-        overall.height = qMax(overall.height + overall.y, gm.height + gm.y) -
-                         qMin(overall.y, gm.y);
+        overall.height = std::max(overall.height + overall.y, gm.height + gm.y) -
+                         std::min(overall.y, gm.y);
         overall.xoff += gm.xoff;
         overall.yoff += gm.yoff;
 
@@ -1555,11 +1555,11 @@ glyph_metrics_t QFontEngineMulti::boundingBox(const QGlyphLayout &glyphs)
     // merge the bounding box for this run
     const glyph_metrics_t gm = engine(which)->boundingBox(glyphs.mid(start, end - start));
 
-    overall.x = qMin(overall.x, gm.x);
-    overall.y = qMin(overall.y, gm.y);
+    overall.x = std::min(overall.x, gm.x);
+    overall.y = std::min(overall.y, gm.y);
     overall.width = overall.xoff + gm.width;
-    overall.height = qMax(overall.height + overall.y, gm.height + gm.y) -
-                     qMin(overall.y, gm.y);
+    overall.height = std::max(overall.height + overall.y, gm.height + gm.y) -
+                     std::min(overall.y, gm.y);
     overall.xoff += gm.xoff;
     overall.yoff += gm.yoff;
 

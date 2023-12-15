@@ -502,7 +502,7 @@ void QWindowsVistaStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
             if (theme.isValid() && !decoration_size) {
                 SIZE size;
                 pGetThemePartSize(theme.handle(), 0, TVP_HOTGLYPH, GLPS_OPENED, 0, TS_TRUE, &size);
-                decoration_size = qMax(size.cx, size.cy);
+                decoration_size = std::max(size.cx, size.cy);
             }
             int mid_h = option->rect.x() + option->rect.width() / 2;
             int mid_v = option->rect.y() + option->rect.height() / 2;
@@ -1154,21 +1154,21 @@ void QWindowsVistaStyle::drawControl(ControlElement element, const QStyleOption 
                 }
             }
             else {
-                qint64 progress = qMax<qint64>(bar->progress, bar->minimum); // workaround for bug in QProgressBar
+                qint64 progress = std::max<qint64>(bar->progress, bar->minimum); // workaround for bug in QProgressBar
 
                 if (vertical) {
                     int maxHeight = option->rect.height();
                     int minHeight = 0;
-                    double vc6_workaround = ((progress - qint64(bar->minimum)) / qMax(double(1.0), double(qint64(bar->maximum) - qint64(bar->minimum))) * maxHeight);
-                    int height = isIndeterminate ? maxHeight: qMax(int(vc6_workaround), minHeight);
+                    double vc6_workaround = ((progress - qint64(bar->minimum)) / std::max(double(1.0), double(qint64(bar->maximum) - qint64(bar->minimum))) * maxHeight);
+                    int height = isIndeterminate ? maxHeight: std::max(int(vc6_workaround), minHeight);
                     theme.rect.setHeight(height);
                     if (!inverted)
                         theme.rect.moveTop(rect.height() - theme.rect.height());
                 } else {
                     int maxWidth = option->rect.width();
                     int minWidth = 0;
-                    double vc6_workaround = ((progress - qint64(bar->minimum)) / qMax(double(1.0), double(qint64(bar->maximum) - qint64(bar->minimum))) * maxWidth);
-                    int width = isIndeterminate ? maxWidth : qMax(int(vc6_workaround), minWidth);
+                    double vc6_workaround = ((progress - qint64(bar->minimum)) / std::max(double(1.0), double(qint64(bar->maximum) - qint64(bar->minimum))) * maxWidth);
+                    int width = isIndeterminate ? maxWidth : std::max(int(vc6_workaround), minWidth);
                     theme.rect.setWidth(width);
                     theme.rect = QStyle::visualRect(reverse ? Qt::RightToLeft : Qt::LeftToRight, 
                                                               option->rect, theme.rect);
@@ -1253,7 +1253,7 @@ void QWindowsVistaStyle::drawControl(ControlElement element, const QStyleOption 
                 XPThemeData theme(widget, 0, QLatin1String("MENU"), MENU_POPUPCHECKBACKGROUND, MBI_HOT);
                 pGetThemePartSize(theme.handle(), NULL, MENU_POPUPCHECK, 0, NULL,TS_TRUE, &size);
                 pGetThemeMargins(theme.handle(), NULL, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, NULL, &margins);
-                checkcol = qMax(menuitem->maxIconWidth, int(3 + size.cx + margins.cxLeftWidth + margins.cxRightWidth));
+                checkcol = std::max(menuitem->maxIconWidth, int(3 + size.cx + margins.cxLeftWidth + margins.cxRightWidth));
             }
             QRect rect = option->rect;
 
@@ -1944,7 +1944,7 @@ QSize QWindowsVistaStyle::sizeFromContents(ContentsType type, const QStyleOption
             XPThemeData theme(widget, 0, QLatin1String("MENU"), MENU_POPUPCHECKBACKGROUND, MBI_HOT);
             pGetThemePartSize(theme.handle(), NULL, MENU_POPUPCHECK, 0, NULL,TS_TRUE, &size);
             pGetThemeMargins(theme.handle(), NULL, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, NULL, &margins);
-            minimumHeight = qMax<qint32>(size.cy + margins.cyBottomHeight+ margins.cyTopHeight, sz.height());
+            minimumHeight = std::max<qint32>(size.cy + margins.cyBottomHeight+ margins.cyTopHeight, sz.height());
             sz.rwidth() += size.cx + margins.cxLeftWidth + margins.cxRightWidth;
         }
         

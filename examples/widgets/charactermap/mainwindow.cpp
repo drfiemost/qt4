@@ -172,7 +172,7 @@ void MainWindow::findSizes(const QFont &font)
     int sizeIndex = sizeCombo->findText(currentSize);
 
     if(sizeIndex == -1)
-        sizeCombo->setCurrentIndex(qMax(0, sizeCombo->count() / 3));
+        sizeCombo->setCurrentIndex(std::max(0, sizeCombo->count() / 3));
     else
         sizeCombo->setCurrentIndex(sizeIndex);
 }

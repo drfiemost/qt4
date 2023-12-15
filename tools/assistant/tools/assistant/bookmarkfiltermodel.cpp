@@ -307,7 +307,7 @@ BookmarkTreeModel::BookmarkTreeModel(QObject *parent)
 
 int BookmarkTreeModel::columnCount(const QModelIndex &parent) const
 {
-    return qMin(1, QSortFilterProxyModel::columnCount(parent));
+    return std::min(1, QSortFilterProxyModel::columnCount(parent));
 }
 
 bool BookmarkTreeModel::filterAcceptsRow(int row, const QModelIndex &parent) const

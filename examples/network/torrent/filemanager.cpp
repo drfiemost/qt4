@@ -334,7 +334,7 @@ QByteArray FileManager::readBlock(int pieceIndex, int offset, int length)
             }
 
             file->seek(startReadIndex - currentIndex);
-            QByteArray chunk = file->read(qMin<qint64>(length, currentFileSize - file->pos()));
+            QByteArray chunk = file->read(std::min<qint64>(length, currentFileSize - file->pos()));
             file->close();
 
             block += chunk;
@@ -375,7 +375,7 @@ bool FileManager::writeBlock(int pieceIndex, int offset, const QByteArray &data)
 
             file->seek(startWriteIndex - currentIndex);
             qint64 bytesWritten = file->write(data.constData() + written,
-                                              qMin<qint64>(bytesToWrite, currentFileSize - file->pos()));
+                                              std::min<qint64>(bytesToWrite, currentFileSize - file->pos()));
             file->close();
 
             if (bytesWritten <= 0) {

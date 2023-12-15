@@ -227,7 +227,7 @@ void TreeWidgetEditor::on_newItemButton_clicked()
     newItem->setFlags(newItem->flags() | Qt::ItemIsEditable);
     ui.treeWidget->blockSignals(false);
 
-    ui.treeWidget->setCurrentItem(newItem, qMax(ui.treeWidget->currentColumn(), 0));
+    ui.treeWidget->setCurrentItem(newItem, std::max(ui.treeWidget->currentColumn(), 0));
     updateEditor();
     ui.treeWidget->editItem(newItem, ui.treeWidget->currentColumn());
 }

@@ -717,9 +717,9 @@ qint64 QHttpNetworkReplyPrivate::readBodyVeryFast(QAbstractSocket *socket, char 
 qint64 QHttpNetworkReplyPrivate::readBodyFast(QAbstractSocket *socket, QByteDataBuffer *rb)
 {
 
-    qint64 toBeRead = qMin(socket->bytesAvailable(), bodyLength - contentRead);
+    qint64 toBeRead = std::min(socket->bytesAvailable(), bodyLength - contentRead);
     if (readBufferMaxSize)
-        toBeRead = qMin(toBeRead, readBufferMaxSize);
+        toBeRead = std::min(toBeRead, readBufferMaxSize);
     QByteArray bd;
     bd.resize(toBeRead);
     qint64 haveRead = socket->read(bd.data(), toBeRead);
@@ -766,9 +766,9 @@ qint64 QHttpNetworkReplyPrivate::readReplyBodyRaw(QAbstractSocket *socket, QByte
     Q_ASSERT(socket);
     Q_ASSERT(out);
 
-    int toBeRead = qMin<qint64>(128*1024, qMin<qint64>(size, socket->bytesAvailable()));
+    int toBeRead = std::min<qint64>(128*1024, qMin<qint64>(size, socket->bytesAvailable()));
     if (readBufferMaxSize)
-        toBeRead = qMin<qint64>(toBeRead, readBufferMaxSize);
+        toBeRead = std::min<qint64>(toBeRead, readBufferMaxSize);
 
     while (toBeRead > 0) {
         QByteArray byteData;
@@ -785,7 +785,7 @@ qint64 QHttpNetworkReplyPrivate::readReplyBodyRaw(QAbstractSocket *socket, QByte
         bytes += haveRead;
         size -= haveRead;
 
-        toBeRead = qMin<qint64>(128*1024, qMin<qint64>(size, socket->bytesAvailable()));
+        toBeRead = std::min<qint64>(128*1024, qMin<qint64>(size, socket->bytesAvailable()));
     }
     return bytes;
 

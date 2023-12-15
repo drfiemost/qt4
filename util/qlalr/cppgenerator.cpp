@@ -190,7 +190,7 @@ void CppGenerator::operator () ()
 
                   ++reduce_reduce_conflict_count;
 
-                  u = qMax (u, -r);
+                  u = std::max (u, -r);
 
                   if (verbose)
                     qout << "\tresolved using rule " << -u << endl;

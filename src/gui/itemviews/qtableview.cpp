@@ -114,7 +114,7 @@ void QSpanCollection::updateSpan(QSpanCollection::Span *span, int old_height)
         }
     } else if (old_height > span->height()) {
         //remove the span from all the subspans lists that intersect the columns not covered anymore
-        Index::iterator it_y = index.lowerBound(-qMax(span->bottom(), span->top())); //qMax useful if height is 0
+        Index::iterator it_y = index.lowerBound(-std::max(span->bottom(), span->top())); //qMax useful if height is 0
         Q_ASSERT(it_y != index.end()); //it_y must exist since the span is in the list
         while (-it_y.key() <= span->top() + old_height -1) {
             if (-it_y.key() > span->bottom()) {
@@ -1322,7 +1322,7 @@ void QTableView::paintEvent(QPaintEvent *event)
 
     //firstVisualRow is the visual index of the first visible row.  lastVisualRow is the visual index of the last visible Row.
     //same goes for ...VisualColumn
-    int firstVisualRow = qMax(verticalHeader->visualIndexAt(0),0);
+    int firstVisualRow = std::max(verticalHeader->visualIndexAt(0),0);
     int lastVisualRow = verticalHeader->visualIndexAt(verticalHeader->viewport()->height());
     if (lastVisualRow == -1)
         lastVisualRow = d->model->rowCount(d->root) - 1;
@@ -1345,11 +1345,11 @@ void QTableView::paintEvent(QPaintEvent *event)
 
     for (int i = 0; i < rects.size(); ++i) {
         QRect dirtyArea = rects.at(i);
-        dirtyArea.setBottom(qMin(dirtyArea.bottom(), int(y)));
+        dirtyArea.setBottom(std::min(dirtyArea.bottom(), int(y)));
         if (rightToLeft) {
-            dirtyArea.setLeft(qMax(dirtyArea.left(), d->viewport->width() - int(x)));
+            dirtyArea.setLeft(std::max(dirtyArea.left(), d->viewport->width() - int(x)));
         } else {
-            dirtyArea.setRight(qMin(dirtyArea.right(), int(x)));
+            dirtyArea.setRight(std::min(dirtyArea.right(), int(x)));
         }
 
         // get the horizontal start and end visual sections
@@ -1770,10 +1770,10 @@ QModelIndex QTableView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifi
 void QTableView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command)
 {
     Q_D(QTableView);
-    QModelIndex tl = indexAt(QPoint(isRightToLeft() ? qMax(rect.left(), rect.right())
-                                    : qMin(rect.left(), rect.right()), qMin(rect.top(), rect.bottom())));
-    QModelIndex br = indexAt(QPoint(isRightToLeft() ? qMin(rect.left(), rect.right()) :
-                                    qMax(rect.left(), rect.right()), qMax(rect.top(), rect.bottom())));
+    QModelIndex tl = indexAt(QPoint(isRightToLeft() ? std::max(rect.left(), rect.right())
+                                    : std::min(rect.left(), rect.right()), qMin(rect.top(), rect.bottom())));
+    QModelIndex br = indexAt(QPoint(isRightToLeft() ? std::min(rect.left(), rect.right()) :
+                                    std::max(rect.left(), rect.right()), qMax(rect.top(), rect.bottom())));
     if (!d->selectionModel || !tl.isValid() || !br.isValid() || !d->isIndexEnabled(tl) || !d->isIndexEnabled(br))
         return;
 
@@ -1784,10 +1784,10 @@ void QTableView::setSelection(const QRect &rect, QItemSelectionModel::SelectionF
 
     if (d->hasSpans()) {
         bool expanded;
-        int top = qMin(d->visualRow(tl.row()), d->visualRow(br.row()));
-        int left = qMin(d->visualColumn(tl.column()), d->visualColumn(br.column()));
-        int bottom = qMax(d->visualRow(tl.row()), d->visualRow(br.row()));
-        int right = qMax(d->visualColumn(tl.column()), d->visualColumn(br.column()));
+        int top = std::min(d->visualRow(tl.row()), d->visualRow(br.row()));
+        int left = std::min(d->visualColumn(tl.column()), d->visualColumn(br.column()));
+        int bottom = std::max(d->visualRow(tl.row()), d->visualRow(br.row()));
+        int right = std::max(d->visualColumn(tl.column()), d->visualColumn(br.column()));
         do {
             expanded = false;
             foreach (QSpanCollection::Span *it, d->spans.spans) {
@@ -2032,13 +2032,13 @@ void QTableView::updateGeometries()
 
     int width = 0;
     if (!d->verticalHeader->isHidden()) {
-        width = qMax(d->verticalHeader->minimumWidth(), d->verticalHeader->sizeHint().width());
-        width = qMin(width, d->verticalHeader->maximumWidth());
+        width = std::max(d->verticalHeader->minimumWidth(), d->verticalHeader->sizeHint().width());
+        width = std::min(width, d->verticalHeader->maximumWidth());
     }
     int height = 0;
     if (!d->horizontalHeader->isHidden()) {
-        height = qMax(d->horizontalHeader->minimumHeight(), d->horizontalHeader->sizeHint().height());
-        height = qMin(height, d->horizontalHeader->maximumHeight());
+        height = std::max(d->horizontalHeader->minimumHeight(), d->horizontalHeader->sizeHint().height());
+        height = std::min(height, d->horizontalHeader->maximumHeight());
     }
     bool reverse = isRightToLeft();
      if (reverse)
@@ -2091,7 +2091,7 @@ void QTableView::updateGeometries()
             ++columnsInViewport;
         }
     }
-    columnsInViewport = qMax(columnsInViewport, 1); //there must be always at least 1 column
+    columnsInViewport = std::max(columnsInViewport, 1); //there must be always at least 1 column
 
     if (horizontalScrollMode() == QAbstractItemView::ScrollPerItem) {
         const int visibleColumns = columnCount - d->horizontalHeader->hiddenSectionCount();
@@ -2103,7 +2103,7 @@ void QTableView::updateGeometries()
     } else { // ScrollPerPixel
         horizontalScrollBar()->setPageStep(vsize.width());
         horizontalScrollBar()->setRange(0, horizontalLength - vsize.width());
-        horizontalScrollBar()->setSingleStep(qMax(vsize.width() / (columnsInViewport + 1), 2));
+        horizontalScrollBar()->setSingleStep(std::max(vsize.width() / (columnsInViewport + 1), 2));
     }
 
     // vertical scroll bar
@@ -2119,7 +2119,7 @@ void QTableView::updateGeometries()
             ++rowsInViewport;
         }
     }
-    rowsInViewport = qMax(rowsInViewport, 1); //there must be always at least 1 row
+    rowsInViewport = std::max(rowsInViewport, 1); //there must be always at least 1 row
 
     if (verticalScrollMode() == QAbstractItemView::ScrollPerItem) {
         const int visibleRows = rowCount - d->verticalHeader->hiddenSectionCount();
@@ -2131,7 +2131,7 @@ void QTableView::updateGeometries()
     } else { // ScrollPerPixel
         verticalScrollBar()->setPageStep(vsize.height());
         verticalScrollBar()->setRange(0, verticalLength - vsize.height());
-        verticalScrollBar()->setSingleStep(qMax(vsize.height() / (rowsInViewport + 1), 2));
+        verticalScrollBar()->setSingleStep(std::max(vsize.height() / (rowsInViewport + 1), 2));
     }
 
     d->geometryRecursionBlock = false;
@@ -2161,7 +2161,7 @@ int QTableView::sizeHintForRow(int row) const
 
     ensurePolished();
 
-    int left = qMax(0, d->horizontalHeader->visualIndexAt(0));
+    int left = std::max(0, d->horizontalHeader->visualIndexAt(0));
     int right = d->horizontalHeader->visualIndexAt(d->viewport->width());
     if (right == -1) // the table don't have enough columns to fill the viewport
         right = d->model->columnCount(d->root) - 1;
@@ -2184,13 +2184,13 @@ int QTableView::sizeHintForRow(int row) const
         
         QWidget *editor = d->editorForIndex(index).widget.data();
         if (editor && d->persistent.contains(editor)) {
-            hint = qMax(hint, editor->sizeHint().height());
+            hint = std::max(hint, editor->sizeHint().height());
             int min = editor->minimumSize().height();
             int max = editor->maximumSize().height();
             hint = qBound(min, hint, max);
         }
         
-        hint = qMax(hint, itemDelegate(index)->sizeHint(option, index).height());
+        hint = std::max(hint, itemDelegate(index)->sizeHint(option, index).height());
     }
 
     return d->showGrid ? hint + 1 : hint;
@@ -2220,7 +2220,7 @@ int QTableView::sizeHintForColumn(int column) const
 
     ensurePolished();
 
-    int top = qMax(0, d->verticalHeader->visualIndexAt(0));
+    int top = std::max(0, d->verticalHeader->visualIndexAt(0));
     int bottom = d->verticalHeader->visualIndexAt(d->viewport->height());
     if (!isVisible() || bottom == -1) // the table don't have enough rows to fill the viewport
         bottom = d->model->rowCount(d->root) - 1;
@@ -2237,13 +2237,13 @@ int QTableView::sizeHintForColumn(int column) const
         
         QWidget *editor = d->editorForIndex(index).widget.data();
         if (editor && d->persistent.contains(editor)) {
-            hint = qMax(hint, editor->sizeHint().width());
+            hint = std::max(hint, editor->sizeHint().width());
             int min = editor->minimumSize().width();
             int max = editor->maximumSize().width();
             hint = qBound(min, hint, max);
         }
         
-        hint = qMax(hint, itemDelegate(index)->sizeHint(option, index).width());
+        hint = std::max(hint, itemDelegate(index)->sizeHint(option, index).width());
     }
 
     return d->showGrid ? hint + 1 : hint;
@@ -2771,7 +2771,7 @@ void QTableView::timerEvent(QTimerEvent *event)
             top = viewportHeight;
             for (int i = d->rowsToUpdate.size()-1; i >= 0; --i) {
                 int y = rowViewportPosition(d->rowsToUpdate.at(i));
-                top = qMin(top, y);
+                top = std::min(top, y);
             }
         }
 
@@ -2803,8 +2803,8 @@ void QTableView::rowMoved(int, int oldIndex, int newIndex)
         int newTop = rowViewportPosition(logicalNewIndex);
         int oldBottom = oldTop + rowHeight(logicalOldIndex);
         int newBottom = newTop + rowHeight(logicalNewIndex);
-        int top = qMin(oldTop, newTop);
-        int bottom = qMax(oldBottom, newBottom);
+        int top = std::min(oldTop, newTop);
+        int bottom = std::max(oldBottom, newBottom);
         int height = bottom - top;
         d->viewport->update(0, top, d->viewport->width(), height);
     }
@@ -2831,8 +2831,8 @@ void QTableView::columnMoved(int, int oldIndex, int newIndex)
         int newLeft = columnViewportPosition(logicalNewIndex);
         int oldRight = oldLeft + columnWidth(logicalOldIndex);
         int newRight = newLeft + columnWidth(logicalNewIndex);
-        int left = qMin(oldLeft, newLeft);
-        int right = qMax(oldRight, newRight);
+        int left = std::min(oldLeft, newLeft);
+        int right = std::max(oldRight, newRight);
         int width = right - left;
         d->viewport->update(left, 0, width, d->viewport->height());
     }
@@ -2915,7 +2915,7 @@ void QTableView::resizeRowToContents(int row)
     Q_D(QTableView);
     int content = sizeHintForRow(row);
     int header = d->verticalHeader->sectionSizeHint(row);
-    d->verticalHeader->resizeSection(row, qMax(content, header));
+    d->verticalHeader->resizeSection(row, std::max(content, header));
 }
 
 /*!
@@ -2940,7 +2940,7 @@ void QTableView::resizeColumnToContents(int column)
     Q_D(QTableView);
     int content = sizeHintForColumn(column);
     int header = d->horizontalHeader->sectionSizeHint(column);
-    d->horizontalHeader->resizeSection(column, qMax(content, header));
+    d->horizontalHeader->resizeSection(column, std::max(content, header));
 }
 
 /*!
@@ -3113,8 +3113,8 @@ void QTableViewPrivate::selectRow(int row, bool anchor)
                 command |= QItemSelectionModel::Current;
         }
 
-        QModelIndex tl = model->index(qMin(rowSectionAnchor, row), logicalColumn(0), root);
-        QModelIndex br = model->index(qMax(rowSectionAnchor, row), logicalColumn(model->columnCount(root) - 1), root);
+        QModelIndex tl = model->index(std::min(rowSectionAnchor, row), logicalColumn(0), root);
+        QModelIndex br = model->index(std::max(rowSectionAnchor, row), logicalColumn(model->columnCount(root) - 1), root);
         if ((verticalHeader->sectionsMoved() && tl.row() != br.row())
             || horizontalHeader->sectionsMoved()) {
             q->setSelection(q->visualRect(tl)|q->visualRect(br), command);        
@@ -3153,9 +3153,9 @@ void QTableViewPrivate::selectColumn(int column, bool anchor)
                 command |= QItemSelectionModel::Current;
         }
 
-        QModelIndex tl = model->index(0, qMin(columnSectionAnchor, column), root);
+        QModelIndex tl = model->index(0, std::min(columnSectionAnchor, column), root);
         QModelIndex br = model->index(model->rowCount(root) - 1,
-                                      qMax(columnSectionAnchor, column), root);
+                                      std::max(columnSectionAnchor, column), root);
         if (horizontalHeader->sectionsMoved() && tl.column() != br.column())
             q->setSelection(q->visualRect(tl)|q->visualRect(br), command);
         else

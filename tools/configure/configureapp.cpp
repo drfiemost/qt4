@@ -110,7 +110,7 @@ Configure::Configure(int& argc, char** argv)
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
     if (GetConsoleScreenBufferInfo(hStdout, &info))
         outputWidth = info.dwSize.X - 1;
-    outputWidth = qMin(outputWidth, 79); // Anything wider gets unreadable
+    outputWidth = std::min(outputWidth, 79); // Anything wider gets unreadable
     if (outputWidth < 35) // Insanely small, just use 79
         outputWidth = 79;
     int i;
@@ -1558,7 +1558,7 @@ void Configure::desc(const char *option, const char *description, bool skipInden
         printf("%*s", optionIndent, "");
 
     int remaining  = descIndent - optionIndent - strlen(option);
-    int wrapIndent = descIndent + qMax(0, 1 - remaining);
+    int wrapIndent = descIndent + std::max(0, 1 - remaining);
     printf("%s", option);
 
     if (remaining > 2) {
@@ -4498,7 +4498,7 @@ Configure::filesDiffer(const QString &fn1, const QString &fn2)
         if (!used2)
             used2 = file2.read(b2, chunk);
         if (used1 > 0 && used2 > 0) {
-            const int cmp = qMin(used1, used2);
+            const int cmp = std::min(used1, used2);
             if (memcmp(b1, b2, cmp))
                 return true;
             if ((used1 -= cmp))

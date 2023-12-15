@@ -2020,8 +2020,8 @@ bool QPainterPath::intersects(const QRectF &rect) const
     // QRectF::intersects returns false if one of the rects is a null rect
     // which would happen for a painter path consisting of a vertical or
     // horizontal line
-    if (qMax(rn.left(), cp.left()) > qMin(rn.right(), cp.right())
-        || qMax(rn.top(), cp.top()) > qMin(rn.bottom(), cp.bottom()))
+    if (std::max(rn.left(), cp.left()) > std::min(rn.right(), cp.right())
+        || std::max(rn.top(), cp.top()) > std::min(rn.bottom(), cp.bottom()))
         return false;
 
     // If any path element cross the rect its bound to be an intersection
@@ -3048,12 +3048,12 @@ void QPainterPath::addRoundedRect(const QRectF &rect, qreal xRadius, qreal yRadi
         if (w == 0) {
             xRadius = 0;
         } else {
-            xRadius = 100 * qMin(xRadius, w) / w;
+            xRadius = 100 * std::min(xRadius, w) / w;
         }
         if (h == 0) {
             yRadius = 0;
         } else {
-            yRadius = 100 * qMin(yRadius, h) / h;
+            yRadius = 100 * std::min(yRadius, h) / h;
         }
     } else {
         if (xRadius > 100)                          // fix ranges

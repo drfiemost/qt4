@@ -728,14 +728,14 @@ QRgb qt_compose_alpha(QRgb source, QRgb dest)
     int r1 = qRed(dest), g1 = qGreen(dest), b1 = qBlue(dest), a1 = qAlpha(dest);
     int r2 = qRed(source), g2 = qGreen(source), b2 = qBlue(source), a2 = qAlpha(source);
 
-    int alpha = qMin(a2 + ((255 - a2) * a1 + 127) / 255, 255);
+    int alpha = std::min(a2 + ((255 - a2) * a1 + 127) / 255, 255);
     if (alpha == 0)
         return qRgba(0, 0, 0, 0);
 
     return qRgba(
-        qMin((r2 * a2 + (255 - a2) * r1 * a1 / 255) / alpha, 255),
-        qMin((g2 * a2 + (255 - a2) * g1 * a1 / 255) / alpha, 255),
-        qMin((b2 * a2 + (255 - a2) * b1 * a1 / 255) / alpha, 255),
+        std::min((r2 * a2 + (255 - a2) * r1 * a1 / 255) / alpha, 255),
+        std::min((g2 * a2 + (255 - a2) * g1 * a1 / 255) / alpha, 255),
+        std::min((b2 * a2 + (255 - a2) * b1 * a1 / 255) / alpha, 255),
         alpha);
 }
 
@@ -1115,9 +1115,9 @@ void tst_QPainter::drawLine()
 
     QFETCH(QLine, line);
 
-    QPixmap pixmapUnclipped(qMin(line.x1(), line.x2())
+    QPixmap pixmapUnclipped(std::min(line.x1(), line.x2())
                             + 2*offset + qAbs(line.dx()),
-                            qMin(line.y1(), line.y2())
+                            std::min(line.y1(), line.y2())
                             + 2*offset + qAbs(line.dy()));
 
     { // unclipped
@@ -1134,15 +1134,15 @@ void tst_QPainter::drawLine()
         l.translate(offset, offset);
         QVERIFY(qAbs(painted.width() - qAbs(l.dx())) <= epsilon);
         QVERIFY(qAbs(painted.height() - qAbs(l.dy())) <= epsilon);
-        QVERIFY(qAbs(painted.top() - qMin(l.y1(), l.y2())) <= epsilon);
-        QVERIFY(qAbs(painted.left() - qMin(l.x1(), l.x2())) <= epsilon);
-        QVERIFY(qAbs(painted.bottom() - qMax(l.y1(), l.y2())) <= epsilon);
-        QVERIFY(qAbs(painted.right() - qMax(l.x1(), l.x2())) <= epsilon);
+        QVERIFY(qAbs(painted.top() - std::min(l.y1(), l.y2())) <= epsilon);
+        QVERIFY(qAbs(painted.left() - std::min(l.x1(), l.x2())) <= epsilon);
+        QVERIFY(qAbs(painted.bottom() - std::max(l.y1(), l.y2())) <= epsilon);
+        QVERIFY(qAbs(painted.right() - std::max(l.x1(), l.x2())) <= epsilon);
     }
 
-    QPixmap pixmapClipped(qMin(line.x1(), line.x2())
+    QPixmap pixmapClipped(std::min(line.x1(), line.x2())
                           + 2*offset + qAbs(line.dx()),
-                          qMin(line.y1(), line.y2())
+                          std::min(line.y1(), line.y2())
                           + 2*offset + qAbs(line.dy()));
     { // clipped
         const QRect clip = QRect(line.p1(), line.p2()).normalized();
@@ -1604,7 +1604,7 @@ void tst_QPainter::drawEllipse_data()
     // ratio between width and hight is too large/small (task 114874). Those
     // ratios are therefore currently avoided.
     for (int w = 10; w < 128; w += 7) {
-        for (int h = w/2; h < qMin(2*w, 128); h += 13) {
+        for (int h = w/2; h < std::min(2*w, 128); h += 13) {
             QString s = QString("%1x%2").arg(w).arg(h);
             QTest::newRow(QString("%1 with pen").arg(s).toLatin1()) << QSize(w, h) << true;
             QTest::newRow(QString("%1 no pen").arg(s).toLatin1()) << QSize(w, h) << false;
@@ -1645,7 +1645,7 @@ void tst_QPainter::drawClippedEllipse_data()
     QTest::addColumn<QRect>("rect");
 
     for (int w = 20; w < 128; w += 7) {
-        for (int h = w/2; h < qMin(2*w, 128); h += 13) {
+        for (int h = w/2; h < std::min(2*w, 128); h += 13) {
             QString s = QString("%1x%2").arg(w).arg(h);
             QTest::newRow(QString("%1 top").arg(s).toLatin1()) << QRect(0, -h/2, w, h);
             QTest::newRow(QString("%1 topright").arg(s).toLatin1()) << QRect(w/2, -h/2, w, h);

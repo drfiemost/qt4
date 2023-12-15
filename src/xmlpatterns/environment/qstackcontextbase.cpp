@@ -71,7 +71,7 @@ template<typename TSuperClass>
 ItemCacheCell &StackContextBase<TSuperClass>::itemCacheCell(const VariableSlotID slot)
 {
     if(slot >= m_itemCacheCells.size())
-        m_itemCacheCells.resize(qMax(slot + 1, m_itemCacheCells.size()));
+        m_itemCacheCells.resize(std::max(slot + 1, m_itemCacheCells.size()));
 
     return m_itemCacheCells[slot];
 }
@@ -80,7 +80,7 @@ template<typename TSuperClass>
 ItemSequenceCacheCell::Vector &StackContextBase<TSuperClass>::itemSequenceCacheCells(const VariableSlotID slot)
 {
     if(slot >= m_itemSequenceCacheCells.size())
-        m_itemSequenceCacheCells.resize(qMax(slot + 1, m_itemSequenceCacheCells.size()));
+        m_itemSequenceCacheCells.resize(std::max(slot + 1, m_itemSequenceCacheCells.size()));
 
     return m_itemSequenceCacheCells;
 }

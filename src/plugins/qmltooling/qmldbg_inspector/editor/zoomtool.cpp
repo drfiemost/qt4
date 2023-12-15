@@ -130,17 +130,17 @@ void ZoomTool::mouseReleaseEvent(QMouseEvent *event)
     if (m_dragStarted) {
         m_rubberbandManipulator->end();
 
-        int x1 = qMin(scenePos.x(), m_rubberbandManipulator->beginPoint().x());
-        int x2 = qMax(scenePos.x(), m_rubberbandManipulator->beginPoint().x());
-        int y1 = qMin(scenePos.y(), m_rubberbandManipulator->beginPoint().y());
-        int y2 = qMax(scenePos.y(), m_rubberbandManipulator->beginPoint().y());
+        int x1 = std::min(scenePos.x(), m_rubberbandManipulator->beginPoint().x());
+        int x2 = std::max(scenePos.x(), m_rubberbandManipulator->beginPoint().x());
+        int y1 = std::min(scenePos.y(), m_rubberbandManipulator->beginPoint().y());
+        int y2 = std::max(scenePos.y(), m_rubberbandManipulator->beginPoint().y());
 
         QPointF scenePosTopLeft = QPoint(x1, y1);
         QPointF scenePosBottomRight = QPoint(x2, y2);
 
         QRectF sceneArea(scenePosTopLeft, scenePosBottomRight);
 
-        m_currentScale = qMin(view()->rect().width() / sceneArea.width(),
+        m_currentScale = std::min(view()->rect().width() / sceneArea.width(),
                               view()->rect().height() / sceneArea.height());
 
 

@@ -982,7 +982,7 @@ QKeyMapper::sendKeyEvent(QWidget *widget, bool grab,
                    text.toLatin1().constData(), int(modifiers),
                    autorepeat ? " Repeat" : "");
 #endif
-            QKeyEventEx ke(type, code, modifiers, text, autorepeat, qMax(1, text.length()),
+            QKeyEventEx ke(type, code, modifiers, text, autorepeat, std::max(1, text.length()),
                            nativeScanCode, nativeVirtualKey, nativeModifiers);
             bool retMe = qt_sendSpontaneousEvent(widget,&ke);
             if (isAccepted)

@@ -1133,7 +1133,7 @@ void QSortFilterProxyModelPrivate::_q_sourceDataChanged(const QModelIndex &sourc
     QVector<int> source_rows_insert;
     QVector<int> source_rows_change;
     QVector<int> source_rows_resort;
-    int end = qMin(source_bottom_right.row(), m->proxy_rows.count() - 1);
+    int end = std::min(source_bottom_right.row(), m->proxy_rows.count() - 1);
     for (int source_row = source_top_left.row(); source_row <= end; ++source_row) {
         if (dynamic_sortfilter) {
             if (m->proxy_rows.at(source_row) != -1) {

@@ -2558,10 +2558,10 @@ void QApplicationPrivate::applyQWSSpecificCommandLineArguments(QWidget *main_wid
             w = main_widget->width();
         if ((m & HeightValue) == 0)
             h = main_widget->height();
-        w = qMin(w,maxSize.width());
-        h = qMin(h,maxSize.height());
-        w = qMax(w,minSize.width());
-        h = qMax(h,minSize.height());
+        w = std::min(w,maxSize.width());
+        h = std::min(h,maxSize.height());
+        w = std::max(w,minSize.width());
+        h = std::max(h,minSize.height());
         if ((m & XNegative)) {
             x = qApp->desktop()->width()  + x - w;
             x -= (main_widget->frameGeometry().width() - main_widget->width()) / 2;

@@ -120,7 +120,7 @@ public:
     tst_QMutex()
     {
         // at least 2 threads, even on single cpu/core machines
-        threadCount = qMax(2, QThread::idealThreadCount());
+        threadCount = std::max(2, QThread::idealThreadCount());
         qDebug("thread count: %d", threadCount);
     }
 

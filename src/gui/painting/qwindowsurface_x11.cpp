@@ -177,8 +177,8 @@ void QX11WindowSurface::setGeometry(const QRect &rect)
             GC tmpGc = XCreateGC(X11->display, oldData->hd, 0, 0);
             XSetClipRectangles(X11->display, tmpGc, 0, 0, rects, num, YXBanded);
             XCopyArea(X11->display, oldData->hd, newData->hd, tmpGc,
-                      dx, dy, qMin(boundingRect.width(), size.width()),
-                      qMin(boundingRect.height(), size.height()), dx, dy);
+                      dx, dy, std::min(boundingRect.width(), size.width()),
+                      std::min(boundingRect.height(), size.height()), dx, dy);
             XFreeGC(X11->display, tmpGc);
             newData->flags &= ~QX11PixmapData::Uninitialized;
 

@@ -409,8 +409,8 @@ QSize QPixelTool::sizeHint() const
 void QPixelTool::grabScreen()
 {
     if (m_preview_mode) {
-        int w = qMin(width() / m_zoom + 1, m_preview_image.width());
-        int h = qMin(height() / m_zoom + 1, m_preview_image.height());
+        int w = std::min(width() / m_zoom + 1, m_preview_image.width());
+        int h = std::min(height() / m_zoom + 1, m_preview_image.height());
         m_buffer = QPixmap::fromImage(m_preview_image).copy(0, 0, w, h);
         update();
         return;

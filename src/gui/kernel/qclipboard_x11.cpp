@@ -352,7 +352,7 @@ int QClipboardINCRTransaction::x11Event(XEvent *event)
 
     unsigned int bytes_left = data.size() - offset;
     if (bytes_left > 0) {
-        unsigned int xfer = qMin(increment, bytes_left);
+        unsigned int xfer = std::min(increment, bytes_left);
         VDEBUG("QClipboard: sending %d bytes, %d remaining (INCR transaction %p)",
                xfer, bytes_left - xfer, static_cast<void*>(this));
 

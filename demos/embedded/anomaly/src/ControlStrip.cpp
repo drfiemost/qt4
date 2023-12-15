@@ -66,7 +66,7 @@ QSize ControlStrip::minimumSizeHint() const
 void ControlStrip::mousePressEvent(QMouseEvent *event)
 {
     int h = height();
-    int spacing = qMin(h, (width() - h * 4) / 3);
+    int spacing = std::min(h, (width() - h * 4) / 3);
     int x = event->pos().x();
 
     if (x < h) {
@@ -97,7 +97,7 @@ void ControlStrip::mousePressEvent(QMouseEvent *event)
 void ControlStrip::paintEvent(QPaintEvent *event)
 {
     int h = height();
-    int spacing = qMin(h, (width() - h * 4) / 3);
+    int spacing = std::min(h, (width() - h * 4) / 3);
     int s = (height() - menuPixmap.height()) / 2;
 
     QPainter p(this);

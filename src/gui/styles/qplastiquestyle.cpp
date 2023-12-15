@@ -2493,7 +2493,7 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
                 painter->setTransform(m, true);
             }
 
-            int progressIndicatorPos = (bar->progress - qreal(bar->minimum)) / qMax(qreal(1.0), qreal(bar->maximum) - bar->minimum) * rect.width();
+            int progressIndicatorPos = (bar->progress - qreal(bar->minimum)) / std::max(qreal(1.0), qreal(bar->maximum) - bar->minimum) * rect.width();
 
             bool flip = (!vertical && (((bar->direction == Qt::RightToLeft) && !inverted)
                                        || ((bar->direction == Qt::LeftToRight) && inverted))) || (vertical && ((!inverted && !bottomToTop) || (inverted && bottomToTop)));
@@ -2560,9 +2560,9 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
 
             int maxWidth = rect.width() - 4;
             int minWidth = 4;
-            qint64 progress = qMax<qint64>(bar->progress, bar->minimum); // workaround for bug in QProgressBar
-            double vc6_workaround = ((progress - qint64(bar->minimum)) / qMax(double(1.0), double(qint64(bar->maximum) - qint64(bar->minimum))) * maxWidth);
-            int width = indeterminate ? maxWidth : qMax(int(vc6_workaround), minWidth);
+            qint64 progress = std::max<qint64>(bar->progress, bar->minimum); // workaround for bug in QProgressBar
+            double vc6_workaround = ((progress - qint64(bar->minimum)) / std::max(double(1.0), double(qint64(bar->maximum) - qint64(bar->minimum))) * maxWidth);
+            int width = indeterminate ? maxWidth : std::max(int(vc6_workaround), minWidth);
             bool reverse = (!vertical && (bar->direction == Qt::RightToLeft)) || vertical;
             if (inverted)
                 reverse = !reverse;
@@ -2873,7 +2873,7 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
                         button.palette = menuItem->palette;
                         proxy()->drawPrimitive(PE_IndicatorCheckBox, &button, painter, widget);
                     } else if (checked) {
-                        int iconSize = qMax(menuItem->maxIconWidth, 20);
+                        int iconSize = std::max(menuItem->maxIconWidth, 20);
                         QRect sunkenRect(option->rect.left() + 1,
                                          option->rect.top() + (option->rect.height() - iconSize) / 2 + 1,
                                          iconSize, iconSize);
@@ -2892,7 +2892,7 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
             bool act = menuItem->state & State_Selected;
             const QStyleOption *opt = option;
             const QStyleOptionMenuItem *menuitem = menuItem;
-            int checkcol = qMax(menuitem->maxIconWidth, 20);
+            int checkcol = std::max(menuitem->maxIconWidth, 20);
             QPainter *p = painter;
             QRect vCheckRect = visualRect(opt->direction, menuitem->rect,
                                           QRect(menuitem->rect.x(), menuitem->rect.y(),
@@ -3898,7 +3898,7 @@ void QPlastiqueStyle::drawComplexControl(ComplexControl control, const QStyleOpt
                 while (v <= slider->maximum + 1) {
                     if (v == slider->maximum + 1 && interval == 1)
                         break;
-                    const int v_ = qMin(v, slider->maximum);
+                    const int v_ = std::min(v, slider->maximum);
                     int pos = sliderPositionFromValue(slider->minimum, slider->maximum,
                                                       v_, (horizontal
                                                           ? slider->rect.width()
@@ -5510,7 +5510,7 @@ int QPlastiqueStyle::pixelMetric(PixelMetric metric, const QStyleOption *option,
         ret = 4;
         break;
     case PM_TitleBarHeight:
-        ret = qMax(widget ? widget->fontMetrics().height() :
+        ret = std::max(widget ? widget->fontMetrics().height() :
                    (option ? option->fontMetrics.height() : 0), 30);
         break;
     case PM_MaximumDragDistance:

@@ -605,7 +605,7 @@ typedef QList<QAbstractAnimation::State> StateList;
 static bool compareStates(const QSignalSpy& spy, const StateList &expectedStates)
 {
     bool equals = true;
-    for (int i = 0; i < qMax(expectedStates.count(), spy.count()); ++i) {
+    for (int i = 0; i < std::max(expectedStates.count(), spy.count()); ++i) {
         if (i >= spy.count() || i >= expectedStates.count()) {
             equals = false;
             break;
@@ -621,7 +621,7 @@ static bool compareStates(const QSignalSpy& spy, const StateList &expectedStates
     if (!equals) {
         const char *stateStrings[] = {"Stopped", "Paused", "Running"};
         QString e,a;
-        for (int i = 0; i < qMax(expectedStates.count(), spy.count()); ++i) {
+        for (int i = 0; i < std::max(expectedStates.count(), spy.count()); ++i) {
             if (i < expectedStates.count()) {
                 int exp = int(expectedStates.at(i));
                     if (!e.isEmpty())

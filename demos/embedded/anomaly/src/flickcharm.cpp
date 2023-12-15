@@ -253,8 +253,8 @@ static QPoint deaccelerate(const QPoint &speed, const int deltatime)
 
     int x = speed.x();
     int y = speed.y();
-    x = (x == 0) ? x : (x > 0) ? qMax(0, x - deltaSpeed) : qMin(0, x + deltaSpeed);
-    y = (y == 0) ? y : (y > 0) ? qMax(0, y - deltaSpeed) : qMin(0, y + deltaSpeed);
+    x = (x == 0) ? x : (x > 0) ? std::max(0, x - deltaSpeed) : std::min(0, x + deltaSpeed);
+    y = (y == 0) ? y : (y > 0) ? std::max(0, y - deltaSpeed) : std::min(0, y + deltaSpeed);
     return QPoint(x, y);
 }
 

@@ -573,10 +573,10 @@ void QWidgetPrivate::setGeometry_sys(int x, int y, int w, int h, bool isMove)
 {
     Q_Q(QWidget);
     if (extra) {                                // any size restrictions?
-        w = qMin(w,extra->maxw);
-        h = qMin(h,extra->maxh);
-        w = qMax(w,extra->minw);
-        h = qMax(h,extra->minh);
+        w = std::min(w,extra->maxw);
+        h = std::min(h,extra->maxh);
+        w = std::max(w,extra->minw);
+        h = std::max(h,extra->minh);
     }
 
     QPoint oldp = q->geometry().topLeft();

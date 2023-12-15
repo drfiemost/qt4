@@ -192,7 +192,7 @@ static void qt_graphicsItem_highlightSelected(
         return;
 
     const QRectF mbrect = painter->transform().mapRect(item->boundingRect());
-    if (qMin(mbrect.width(), mbrect.height()) < qreal(1.0))
+    if (std::min(mbrect.width(), mbrect.height()) < qreal(1.0))
         return;
 
     qreal itemPenWidth;

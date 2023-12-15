@@ -90,7 +90,7 @@ void MainWindow::setCompleted()
 
 void MainWindow::setupPuzzle()
 {
-    int size = qMin(puzzleImage.width(), puzzleImage.height());
+    int size = std::min(puzzleImage.width(), puzzleImage.height());
     puzzleImage = puzzleImage.copy((puzzleImage.width() - size)/2,
         (puzzleImage.height() - size)/2, size, size).scaled(puzzleWidget->imageSize(),
             puzzleWidget->imageSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);

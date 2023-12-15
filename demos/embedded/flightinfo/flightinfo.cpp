@@ -370,7 +370,7 @@ private:
             if (!ui.infoBox->isVisible())
                 space = height();
             int top = ui.titleBox->height();
-            int y = qMax(top, (space - m_map.height()) / 2);
+            int y = std::max(top, (space - m_map.height()) / 2);
             p.drawPixmap(x, y, m_map);
         }
         p.end();

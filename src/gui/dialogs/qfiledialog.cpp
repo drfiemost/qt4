@@ -494,7 +494,7 @@ bool QFileDialog::restoreState(const QByteArray &state)
     if (d->proxyModel)
         abstractModel = d->proxyModel;
 #endif
-    int total = qMin(abstractModel->columnCount(QModelIndex()), actions.count() + 1);
+    int total = std::min(abstractModel->columnCount(QModelIndex()), actions.count() + 1);
     for (int i = 1; i < total; ++i)
         actions.at(i - 1)->setChecked(!headerView->isSectionHidden(i));
 
@@ -581,7 +581,7 @@ void QFileDialogPrivate::retranslateStrings()
     if (proxyModel)
         abstractModel = proxyModel;
 #endif
-    int total = qMin(abstractModel->columnCount(QModelIndex()), actions.count() + 1);
+    int total = std::min(abstractModel->columnCount(QModelIndex()), actions.count() + 1);
     for (int i = 1; i < total; ++i) {
         actions.at(i - 1)->setText(QFileDialog::tr("Show ") + abstractModel->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
     }
@@ -3271,7 +3271,7 @@ void QFileDialogListView::init(QFileDialogPrivate *d_pointer)
 
 QSize QFileDialogListView::sizeHint() const
 {
-    int height = qMax(10, sizeHintForRow(0));
+    int height = std::max(10, sizeHintForRow(0));
     return QSize(QListView::sizeHint().width() * 2, height * 30);
 }
 
@@ -3326,7 +3326,7 @@ void QFileDialogTreeView::keyPressEvent(QKeyEvent *e)
 
 QSize QFileDialogTreeView::sizeHint() const
 {
-    int height = qMax(10, sizeHintForRow(0));
+    int height = std::max(10, sizeHintForRow(0));
     QSize sizeHint = header()->sizeHint();
     return QSize(sizeHint.width() * 4, height * 30);
 }

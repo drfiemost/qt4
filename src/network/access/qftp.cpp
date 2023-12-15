@@ -371,7 +371,7 @@ qint64 QFtpDTP::read(char *data, qint64 maxlen)
     if (socket && socket->state() == QTcpSocket::ConnectedState) {
         read = socket->read(data, maxlen);
     } else {
-        read = qMin(maxlen, qint64(bytesFromSocket.size()));
+        read = std::min(maxlen, qint64(bytesFromSocket.size()));
         memcpy(data, bytesFromSocket.data(), read);
         bytesFromSocket.remove(0, read);
     }

@@ -149,10 +149,10 @@ inline void QPaintBufferPrivate::updateBoundingRect(const QRectF &br)
     if (boundingRect.isEmpty()) {
         boundingRect = devRect;
     } else {
-        qreal min_x = qMin(devRect.left(), boundingRect.left());
-        qreal min_y = qMin(devRect.top(), boundingRect.top());
-        qreal max_x = qMax(devRect.right(), boundingRect.right());
-        qreal max_y = qMax(devRect.bottom(), boundingRect.bottom());
+        qreal min_x = std::min(devRect.left(), boundingRect.left());
+        qreal min_y = std::min(devRect.top(), boundingRect.top());
+        qreal max_x = std::max(devRect.right(), boundingRect.right());
+        qreal max_y = std::max(devRect.bottom(), boundingRect.bottom());
         boundingRect = QRectF(min_x, min_y, max_x - min_x, max_y - min_y);
     }
     if (painter->hasClipping())
@@ -979,18 +979,18 @@ void QPaintBufferEngine::drawLines(const QLine *lines, int lineCount)
             int p2_x = lines[i].p2().x();
             int p2_y = lines[i].p2().y();
             if (p1_x > p2_x) {
-                min_x = qMin(p2_x, min_x);
-                max_x = qMax(p1_x, max_x);
+                min_x = std::min(p2_x, min_x);
+                max_x = std::max(p1_x, max_x);
             } else {
-                min_x = qMin(p1_x, min_x);
-                max_x = qMax(p2_x, max_x);
+                min_x = std::min(p1_x, min_x);
+                max_x = std::max(p2_x, max_x);
             }
             if (p1_y > p2_y) {
-                min_y = qMin(p2_y, min_y);
-                max_y = qMax(p1_y, max_y);
+                min_y = std::min(p2_y, min_y);
+                max_y = std::max(p1_y, max_y);
             } else {
-                min_y = qMin(p1_y, min_y);
-                max_y = qMax(p2_y, max_y);
+                min_y = std::min(p1_y, min_y);
+                max_y = std::max(p2_y, max_y);
             }
         }
         buffer->updateBoundingRect(QRectF(min_x, min_y, max_x - min_x, max_y - min_y));
@@ -1021,18 +1021,18 @@ void QPaintBufferEngine::drawLines(const QLineF *lines, int lineCount)
             qreal p2_x = lines[i].p2().x();
             qreal p2_y = lines[i].p2().y();
             if (p1_x > p2_x) {
-                min_x = qMin(p2_x, min_x);
-                max_x = qMax(p1_x, max_x);
+                min_x = std::min(p2_x, min_x);
+                max_x = std::max(p1_x, max_x);
             } else {
-                min_x = qMin(p1_x, min_x);
-                max_x = qMax(p2_x, max_x);
+                min_x = std::min(p1_x, min_x);
+                max_x = std::max(p2_x, max_x);
             }
             if (p1_y > p2_y) {
-                min_y = qMin(p2_y, min_y);
-                max_y = qMax(p1_y, max_y);
+                min_y = std::min(p2_y, min_y);
+                max_y = std::max(p1_y, max_y);
             } else {
-                min_y = qMin(p1_y, min_y);
-                max_y = qMax(p2_y, max_y);
+                min_y = std::min(p1_y, min_y);
+                max_y = std::max(p2_y, max_y);
             }
         }
         buffer->updateBoundingRect(QRectF(min_x, min_y, max_x - min_x, max_y - min_y));
@@ -1087,10 +1087,10 @@ void QPaintBufferEngine::drawPoints(const QPoint *points, int pointCount)
         for (int i=1; i<pointCount; ++i) {
             int x = points[i].x();
             int y = points[i].y();
-            min_x = qMin(min_x, x);
-            min_y = qMin(min_y, y);
-            max_x = qMax(max_x, x+1);
-            max_y = qMax(max_y, y+1);
+            min_x = std::min(min_x, x);
+            min_y = std::min(min_y, y);
+            max_x = std::max(max_x, x+1);
+            max_y = std::max(max_y, y+1);
         }
         buffer->updateBoundingRect(QRectF(min_x, min_y, max_x - min_x, max_y - min_y));
     }
@@ -1111,10 +1111,10 @@ void QPaintBufferEngine::drawPoints(const QPointF *points, int pointCount)
         for (int i=1; i<pointCount; ++i) {
             qreal x = points[i].x();
             qreal y = points[i].y();
-            min_x = qMin(min_x, x);
-            min_y = qMin(min_y, y);
-            max_x = qMax(max_x, x+1);
-            max_y = qMax(max_y, y+1);
+            min_x = std::min(min_x, x);
+            min_y = std::min(min_y, y);
+            max_x = std::max(max_x, x+1);
+            max_y = std::max(max_y, y+1);
         }
         buffer->updateBoundingRect(QRectF(min_x, min_y, max_x - min_x, max_y - min_y));
     }
@@ -1143,10 +1143,10 @@ void QPaintBufferEngine::drawPolygon(const QPoint *pts, int count, PolygonDrawMo
         for (int i=1; i<count; ++i) {
             int x = pts[i].x();
             int y = pts[i].y();
-            min_x = qMin(min_x, x);
-            min_y = qMin(min_y, y);
-            max_x = qMax(max_x, x);
-            max_y = qMax(max_y, y);
+            min_x = std::min(min_x, x);
+            min_y = std::min(min_y, y);
+            max_x = std::max(max_x, x);
+            max_y = std::max(max_y, y);
         }
         buffer->updateBoundingRect(QRectF(min_x, min_y, max_x - min_x, max_y - min_y));
     }
@@ -1175,10 +1175,10 @@ void QPaintBufferEngine::drawPolygon(const QPointF *pts, int count, PolygonDrawM
         for (int i=1; i<count; ++i) {
             qreal x = pts[i].x();
             qreal y = pts[i].y();
-            min_x = qMin(min_x, x);
-            min_y = qMin(min_y, y);
-            max_x = qMax(max_x, x);
-            max_y = qMax(max_y, y);
+            min_x = std::min(min_x, x);
+            min_y = std::min(min_y, y);
+            max_x = std::max(max_x, x);
+            max_y = std::max(max_y, y);
         }
         buffer->updateBoundingRect(QRectF(min_x, min_y, max_x - min_x, max_y - min_y));
     }

@@ -1100,7 +1100,7 @@ static bool lineIntersectsRect(qfixed2d p1, qfixed2d p2, const qfixed2d &tl, con
 
 void QDashStroker::processCurrentSubpath()
 {
-    int dashCount = qMin(m_dashPattern.size(), 32);
+    int dashCount = std::min(m_dashPattern.size(), 32);
     qfixed dashes[32];
 
     if (m_stroker) {
@@ -1112,7 +1112,7 @@ void QDashStroker::processCurrentSubpath()
     qreal longestLength = 0;
     qreal sumLength = 0;
     for (int i=0; i<dashCount; ++i) {
-        dashes[i] = qMax(m_dashPattern.at(i), qreal(0)) * m_stroke_width;
+        dashes[i] = std::max(m_dashPattern.at(i), qreal(0)) * m_stroke_width;
         sumLength += dashes[i];
         if (dashes[i] > longestLength)
             longestLength = dashes[i];
@@ -1156,7 +1156,7 @@ void QDashStroker::processCurrentSubpath()
     qfixed2d line_to_pos;
 
     // Pad to avoid clipping the borders of thick pens.
-    qfixed padding = qt_real_to_fixed(qMax(m_stroke_width, m_miter_limit) * longestLength);
+    qfixed padding = qt_real_to_fixed(std::max(m_stroke_width, m_miter_limit) * longestLength);
     qfixed2d clip_tl = { qt_real_to_fixed(m_clip_rect.left()) - padding,
                          qt_real_to_fixed(m_clip_rect.top()) - padding };
     qfixed2d clip_br = { qt_real_to_fixed(m_clip_rect.right()) + padding ,

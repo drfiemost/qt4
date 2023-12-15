@@ -63,7 +63,7 @@ static inline void positionCluster(HB_ShaperItem *item, int gfrom,  int glast)
         offsetBase += HB_FIXED_CONSTANT(4);
     else
         offsetBase += size;
-    //qreal offsetBase = (size - 4) / 4 + qMin<qreal>(size, 4) + 1;
+    //qreal offsetBase = (size - 4) / 4 + std::min<qreal>(size, 4) + 1;
 //     qDebug("offset = %f", offsetBase);
 
     // To fix some Thai character heights check for two above glyphs

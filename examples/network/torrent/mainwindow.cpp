@@ -120,9 +120,9 @@ MainWindow::MainWindow(QWidget *parent)
     header->resizeSection(0, fm.width("typical-name-for-a-torrent.torrent"));
     header->resizeSection(1, fm.width(headers.at(1) + "  "));
     header->resizeSection(2, fm.width(headers.at(2) + "  "));
-    header->resizeSection(3, qMax(fm.width(headers.at(3) + "  "), fm.width(" 1234.0 KB/s ")));
-    header->resizeSection(4, qMax(fm.width(headers.at(4) + "  "), fm.width(" 1234.0 KB/s ")));
-    header->resizeSection(5, qMax(fm.width(headers.at(5) + "  "), fm.width(tr("Downloading") + "  ")));
+    header->resizeSection(3, std::max(fm.width(headers.at(3) + "  "), fm.width(" 1234.0 KB/s ")));
+    header->resizeSection(4, std::max(fm.width(headers.at(4) + "  "), fm.width(" 1234.0 KB/s ")));
+    header->resizeSection(5, std::max(fm.width(headers.at(5) + "  "), fm.width(tr("Downloading") + "  ")));
 
     // Create common actions
     QAction *newTorrentAction = new QAction(QIcon(":/icons/bottom.png"), tr("Add &new torrent"), this);

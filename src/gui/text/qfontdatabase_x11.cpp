@@ -1471,7 +1471,7 @@ static const char *styleHint(const QFontDef &request)
 
 void qt_addPatternProps(FcPattern *pattern, int screen, int script, const QFontDef &request)
 {
-    double size_value = qMax(qreal(1.), request.pixelSize);
+    double size_value = std::max(qreal(1.), request.pixelSize);
     FcPatternDel(pattern, FC_PIXEL_SIZE);
     FcPatternAddDouble(pattern, FC_PIXEL_SIZE, size_value);
 

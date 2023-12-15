@@ -1109,7 +1109,7 @@ int indentForBottomLine( const QStringList& program, QChar typedIn )
     }
     delete yyProgram;
     terminateIndenter();
-    return qMax( 0, indent );
+    return std::max( 0, indent );
 }
 
 QT_END_NAMESPACE

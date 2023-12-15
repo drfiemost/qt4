@@ -599,7 +599,7 @@ QSize QLineEdit::sizeHint() const
     Q_D(const QLineEdit);
     ensurePolished();
     QFontMetrics fm(font());
-    int h = qMax(fm.height(), 14) + 2*d->verticalMargin
+    int h = std::max(fm.height(), 14) + 2*d->verticalMargin
             + d->topTextMargin + d->bottomTextMargin
             + d->topmargin + d->bottommargin;
     int w = fm.width(QLatin1Char('x')) * 17 + 2*d->horizontalMargin
@@ -623,7 +623,7 @@ QSize QLineEdit::minimumSizeHint() const
     Q_D(const QLineEdit);
     ensurePolished();
     QFontMetrics fm = fontMetrics();
-    int h = fm.height() + qMax(2*d->verticalMargin, fm.leading())
+    int h = fm.height() + std::max(2*d->verticalMargin, fm.leading())
             + d->topmargin + d->bottommargin;
     int w = fm.maxWidth() + d->leftmargin + d->rightmargin;
     QStyleOptionFrame opt;
@@ -1773,8 +1773,8 @@ void QLineEdit::paintEvent(QPaintEvent *)
     }
     QRect lineRect(r.x() + d->horizontalMargin, d->vscroll, r.width() - 2*d->horizontalMargin, fm.height());
 
-    int minLB = qMax(0, -fm.minLeftBearing());
-    int minRB = qMax(0, -fm.minRightBearing());
+    int minLB = std::max(0, -fm.minLeftBearing());
+    int minRB = std::max(0, -fm.minRightBearing());
 
     if (d->control->text().isEmpty()) {
         if (!hasFocus() && !d->placeholderText.isEmpty()) {
@@ -1826,7 +1826,7 @@ void QLineEdit::paintEvent(QPaintEvent *)
         d->hscroll = widthUsed - lineRect.width() + 1;
     } else {
         //in case the text is bigger than the lineedit, the hscroll can never be negative
-        d->hscroll = qMax(0, d->hscroll);
+        d->hscroll = std::max(0, d->hscroll);
     }
 
     // the y offset is there to keep the baseline constant in case we have script changes in the text.

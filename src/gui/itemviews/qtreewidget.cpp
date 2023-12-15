@@ -623,7 +623,7 @@ void QTreeModel::ensureSorted(int column, Qt::SortOrder order,
         int oldRow = sorting.at(i).second;
         QTreeWidgetItem *item = lst.takeAt(oldRow);
         lit = sortedInsertionIterator(lit, lst.end(), order, item);
-        int newRow = qMax(lit - lst.begin(), 0);
+        int newRow = std::max(lit - lst.begin(), 0);
 
         if ((newRow < oldRow) && !(*item < *lst.at(oldRow - 1)) && !(*lst.at(oldRow - 1) < *item ))
             newRow = oldRow;
@@ -3419,9 +3419,9 @@ void QTreeWidget::dropEvent(QDropEvent *event) {
                     int r = dropRow.row() >= 0 ? dropRow.row() : row;
                     if (topIndex.isValid()) {
                         QTreeWidgetItem *parent = itemFromIndex(topIndex);
-                        parent->insertChild(qMin(r, parent->childCount()), taken.takeFirst());
+                        parent->insertChild(std::min(r, parent->childCount()), taken.takeFirst());
                     } else {
-                        insertTopLevelItem(qMin(r, topLevelItemCount()), taken.takeFirst());
+                        insertTopLevelItem(std::min(r, topLevelItemCount()), taken.takeFirst());
                     }
                 }
             }

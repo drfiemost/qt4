@@ -167,7 +167,7 @@ void QView3DWidget::addWidget(int depth, QWidget *widget)
 
     int w = m_form->size().width();
     int h = m_form->size().height();
-    int max = qMax(w, h);
+    int max = std::max(w, h);
     QRect r = widget->rect();
     QPoint pos = widget->mapToGlobal(QPoint(0, 0));
     r.moveTopLeft(m_form->mapFromGlobal(pos));

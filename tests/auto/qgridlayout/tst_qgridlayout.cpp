@@ -299,11 +299,11 @@ void tst_QGridLayout::setMinAndMaxSize()
     QCOMPARE(widget.minimumWidth(),
              leftChild.minimumWidth() + rightChild.minimumWidth());
     QCOMPARE(widget.minimumHeight(),
-             qMax(leftChild.minimumHeight(), rightChild.minimumHeight()));
+             std::max(leftChild.minimumHeight(), rightChild.minimumHeight()));
     QCOMPARE(widget.maximumWidth(),
              leftChild.maximumWidth() + rightChild.maximumWidth());
     QCOMPARE(widget.maximumHeight(),
-             qMax(leftChild.maximumHeight(), rightChild.maximumHeight()));
+             std::max(leftChild.maximumHeight(), rightChild.maximumHeight()));
 
 
     static const int colMin = 100;
@@ -316,9 +316,9 @@ void tst_QGridLayout::setMinAndMaxSize()
     QCOMPARE(widget.maximumWidth(),
              leftChild.maximumWidth() + rightChild.maximumWidth() + colMin);
     QCOMPARE(widget.minimumHeight(),
-             qMax(leftChild.minimumHeight(), rightChild.minimumHeight()));
+             std::max(leftChild.minimumHeight(), rightChild.minimumHeight()));
     QCOMPARE(widget.maximumHeight(),
-             qMax(leftChild.maximumHeight(), rightChild.maximumHeight()));
+             std::max(leftChild.maximumHeight(), rightChild.maximumHeight()));
 
 
 
@@ -328,9 +328,9 @@ void tst_QGridLayout::setMinAndMaxSize()
              leftChild.minimumWidth() + rightChild.minimumWidth() + colMin);
     QCOMPARE(widget.maximumWidth(), QLAYOUTSIZE_MAX);
     QCOMPARE(widget.minimumHeight(),
-             qMax(leftChild.minimumHeight(), rightChild.minimumHeight()));
+             std::max(leftChild.minimumHeight(), rightChild.minimumHeight()));
     QCOMPARE(widget.maximumHeight(),
-             qMax(leftChild.maximumHeight(), rightChild.maximumHeight()));
+             std::max(leftChild.maximumHeight(), rightChild.maximumHeight()));
 
 
 
@@ -341,9 +341,9 @@ void tst_QGridLayout::setMinAndMaxSize()
     QCOMPARE(widget.maximumWidth(),
              leftChild.maximumWidth() + rightChild.maximumWidth() + colMin);
     QCOMPARE(widget.minimumHeight(),
-             qMax(leftChild.minimumHeight(), rightChild.minimumHeight()));
+             std::max(leftChild.minimumHeight(), rightChild.minimumHeight()));
     QCOMPARE(widget.maximumHeight(),
-             qMax(leftChild.maximumHeight(), rightChild.maximumHeight()));
+             std::max(leftChild.maximumHeight(), rightChild.maximumHeight()));
 
 
 
@@ -358,9 +358,9 @@ void tst_QGridLayout::setMinAndMaxSize()
              leftChild.minimumWidth() + rightChild.minimumWidth() + spacerS);
     QCOMPARE(widget.maximumWidth(), QLAYOUTSIZE_MAX);
     QCOMPARE(widget.minimumHeight(),
-             qMax(qMax(leftChild.minimumHeight(), rightChild.minimumHeight()), spacerS));
+             std::max(qMax(leftChild.minimumHeight(), rightChild.minimumHeight()), spacerS));
     QCOMPARE(widget.maximumHeight(),
-             qMax(leftChild.maximumHeight(), rightChild.maximumHeight()));
+             std::max(leftChild.maximumHeight(), rightChild.maximumHeight()));
 
 
     spacer->changeSize(spacerS, spacerS, QSizePolicy::Fixed, QSizePolicy::Minimum);
@@ -395,11 +395,11 @@ void tst_QGridLayout::setMinAndMaxSize()
     QCOMPARE(widget.minimumHeight(),
              leftChild.minimumHeight() + bottomChild.minimumHeight());
     QCOMPARE(widget.minimumWidth(),
-             qMax(leftChild.minimumWidth(), bottomChild.minimumWidth()));
+             std::max(leftChild.minimumWidth(), bottomChild.minimumWidth()));
     QCOMPARE(widget.maximumHeight(),
              leftChild.maximumHeight() + bottomChild.maximumHeight());
     QCOMPARE(widget.maximumWidth(),
-             qMax(leftChild.maximumWidth(), bottomChild.maximumWidth()));
+             std::max(leftChild.maximumWidth(), bottomChild.maximumWidth()));
 
     bottomChild.hide();
     QApplication::sendPostedEvents(0, 0);

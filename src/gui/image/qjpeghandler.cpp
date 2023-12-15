@@ -318,11 +318,11 @@ static bool read_jpeg_image(QImage *outImage,
         if (!scaledSize.isEmpty()) {
             if (clipRect.isEmpty()) {
                 info->scale_denom =
-                    qMin(info->image_width / scaledSize.width(),
+                    std::min(info->image_width / scaledSize.width(),
                          info->image_height / scaledSize.height());
             } else {
                 info->scale_denom =
-                    qMin(clipRect.width() / scaledSize.width(),
+                    std::min(clipRect.width() / scaledSize.width(),
                          clipRect.height() / scaledSize.height());
             }
             if (info->scale_denom < 2) {
@@ -575,7 +575,7 @@ static bool do_write_jpeg_image(struct jpeg_compress_struct &cinfo,
         }
 
 
-        int quality = sourceQuality >= 0 ? qMin(sourceQuality,100) : 75;
+        int quality = sourceQuality >= 0 ? std::min(sourceQuality,100) : 75;
         jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
         jpeg_start_compress(&cinfo, TRUE);
 

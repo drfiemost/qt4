@@ -167,8 +167,8 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool /*destro
         int width = sw / 2;
         int height = 4 * sh / 10;
         if (extra) {
-            width = qMax(qMin(width, extra->maxw), extra->minw);
-            height = qMax(qMin(height, extra->maxh), extra->minh);
+            width = std::max(std::min(width, extra->maxw), extra->minw);
+            height = std::max(std::min(height, extra->maxh), extra->minh);
         }
         data.crect.setSize(QSize(width, height));
     }
@@ -841,10 +841,10 @@ void QWidgetPrivate::setGeometry_sys(int x, int y, int w, int h, bool isMove)
 {
     Q_Q(QWidget);
     if (extra) {                                // any size restrictions?
-        w = qMin(w,extra->maxw);
-        h = qMin(h,extra->maxh);
-        w = qMax(w,extra->minw);
-        h = qMax(h,extra->minh);
+        w = std::min(w,extra->maxw);
+        h = std::min(h,extra->maxh);
+        w = std::max(w,extra->minw);
+        h = std::max(h,extra->minh);
     }
 
     QPoint oldp = q->geometry().topLeft();
@@ -1101,8 +1101,8 @@ QRegion QWidgetPrivate::localAllocatedRegion() const
 
 inline bool QRect::intersects(const QRect &r) const
 {
-    return (qMax(x1, r.x1) <= qMin(x2, r.x2) &&
-             qMax(y1, r.y1) <= qMin(y2, r.y2));
+    return (std::max(x1, r.x1) <= std::min(x2, r.x2) &&
+             std::max(y1, r.y1) <= std::min(y2, r.y2));
 }
 
 void QWidgetPrivate::setMask_sys(const QRegion &region)

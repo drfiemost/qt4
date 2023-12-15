@@ -71,7 +71,7 @@ FluidLauncher::FluidLauncher(QStringList* args)
 
     const int h = screen_size.height() * SIZING_FACTOR_HEIGHT;
     const int w = screen_size.width() * SIZING_FACTOR_WIDTH;
-    const int hh = qMin(h, w);
+    const int hh = std::min(h, w);
     const int ww = hh / 3 * 2;
     pictureFlowWidget->setSlideSize(QSize(ww, hh));
 

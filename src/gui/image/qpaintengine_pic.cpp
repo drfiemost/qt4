@@ -361,10 +361,10 @@ void QPicturePaintEngine::writeCmdLength(int pos, const QRectF &r, bool corr)
             int maxy = qCeil(br.bottom());
 
             if (d->pic_d->brect.width() > 0 || d->pic_d->brect.height() > 0) {
-                minx = qMin(minx, d->pic_d->brect.left());
-                miny = qMin(miny, d->pic_d->brect.top());
-                maxx = qMax(maxx, d->pic_d->brect.x() + d->pic_d->brect.width());
-                maxy = qMax(maxy, d->pic_d->brect.y() + d->pic_d->brect.height());
+                minx = std::min(minx, d->pic_d->brect.left());
+                miny = std::min(miny, d->pic_d->brect.top());
+                maxx = std::max(maxx, d->pic_d->brect.x() + d->pic_d->brect.width());
+                maxy = std::max(maxy, d->pic_d->brect.y() + d->pic_d->brect.height());
                 d->pic_d->brect = QRect(minx, miny, maxx - minx, maxy - miny);
             } else {
                 d->pic_d->brect = QRect(minx, miny, maxx - minx, maxy - miny);

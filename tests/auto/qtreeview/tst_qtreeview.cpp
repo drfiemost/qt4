@@ -1627,7 +1627,7 @@ void tst_QTreeView::keyboardNavigation()
                 row = 0;
                 index = index.child(row, column);
             } else {
-                row = qMin(rows - 1, row + 1);
+                row = std::min(rows - 1, row + 1);
                 index = index.sibling(row, column);
             }
             break;
@@ -2260,7 +2260,7 @@ void tst_QTreeView::spanningItems()
     for (int i = 0; i < model.rowCount(QModelIndex()); ++i) {
         if (!view.isFirstColumnSpanned(i, QModelIndex())) {
             QModelIndex index = model.index(i, 0, QModelIndex());
-            w = qMax(w, view.itemDelegate(index)->sizeHint(option, index).width() + view.indentation());
+            w = std::max(w, view.itemDelegate(index)->sizeHint(option, index).width() + view.indentation());
         }
     }
     QCOMPARE(view.sizeHintForColumn(0), w);
@@ -2395,7 +2395,7 @@ void tst_QTreeView::extendedSelection()
     QStandardItemModel model(5, 2);
     QWidget topLevel;
     QTreeView view(&topLevel);
-    view.resize(qMax(mousePressPos.x() * 2, 200), qMax(mousePressPos.y() * 2, 200));
+    view.resize(std::max(mousePressPos.x() * 2, 200), qMax(mousePressPos.y() * 2, 200));
     view.setModel(&model);
 
     //ensure that mousePressPos is below the last row if we want to unselect

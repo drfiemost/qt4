@@ -193,7 +193,7 @@ void QHttpNetworkConnectionPrivate::prepareRequest(HttpMessagePair &messagePair)
     if (uploadByteDevice) {
         if (request.contentLength() != -1 && uploadByteDevice->size() != -1) {
             // both values known, take the smaller one.
-            request.setContentLength(qMin(uploadByteDevice->size(), request.contentLength()));
+            request.setContentLength(std::min(uploadByteDevice->size(), request.contentLength()));
         } else if (request.contentLength() == -1 && uploadByteDevice->size() != -1) {
             // content length not supplied by user, but the upload device knows it
             request.setContentLength(uploadByteDevice->size());

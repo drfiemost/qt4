@@ -361,14 +361,14 @@ void QDesktopWidget::resizeEvent(QResizeEvent *)
         qt_get_sip_info((*d->workrects)[i]);
 #endif
 
-    for (int i = 0; i < qMin(oldscreencount, d->screenCount); ++i) {
+    for (int i = 0; i < std::min(oldscreencount, d->screenCount); ++i) {
         const QRect oldrect = oldrects[i];
         const QRect newrect = d->rects->at(i);
         if (oldrect != newrect)
             emit resized(i);
     }
 
-    for (int j = 0; j < qMin(oldscreencount, d->screenCount); ++j) {
+    for (int j = 0; j < std::min(oldscreencount, d->screenCount); ++j) {
         const QRect oldrect = oldworkrects[j];
         const QRect newrect = d->workrects->at(j);
         if (oldrect != newrect)

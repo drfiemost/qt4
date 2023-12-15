@@ -132,8 +132,8 @@ void LightMaps::paintEvent(QPaintEvent *event)
     p.end();
 
     if (zoomed) {
-        int dim = qMin(width(), height());
-        int magnifierSize = qMin(MAX_MAGNIFIER, dim * 2 / 3);
+        int dim = std::min(width(), height());
+        int magnifierSize = std::min(MAX_MAGNIFIER, dim * 2 / 3);
         int radius = magnifierSize / 2;
         int ring = radius - 15;
         QSize box = QSize(magnifierSize, magnifierSize);

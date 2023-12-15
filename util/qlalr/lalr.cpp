@@ -564,7 +564,7 @@ void Automaton::visitReadNode (ReadNode node)
 
       visitReadNode (r);
 
-      node->dfn = qMin (N, r->dfn);
+      node->dfn = std::min (N, r->dfn);
 
       NameSet &dst = node->data.state->reads [node->data.nt];
       NameSet &src = r->data.state->reads [r->data.nt];
@@ -682,7 +682,7 @@ void Automaton::visitIncludeNode (IncludeNode node)
 
       visitIncludeNode (r);
 
-      node->dfn = qMin (N, r->dfn);
+      node->dfn = std::min (N, r->dfn);
 
 #ifndef QLALR_NO_DEBUG_INCLUDES
       qerr << "*** Merge. follows";

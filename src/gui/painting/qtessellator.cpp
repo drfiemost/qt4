@@ -406,7 +406,7 @@ void QTessellatorPrivate::Scanline::init(int maxActiveEdges)
     maxActiveEdges *= 2;
     if (!edges || maxActiveEdges > default_alloc) {
         max_edges = maxActiveEdges;
-        int s = qMax(maxActiveEdges + 1, default_alloc + 1);
+        int s = std::max(maxActiveEdges + 1, default_alloc + 1);
         edges = q_check_ptr((Edge **)realloc(edges, s*sizeof(Edge *)));
         edge_table = q_check_ptr((Edge *)realloc(edge_table, s*sizeof(Edge)));
         old = q_check_ptr((Edge **)realloc(old, s*sizeof(Edge *)));
@@ -566,7 +566,7 @@ QTessellatorPrivate::Vertices::~Vertices()
 void QTessellatorPrivate::Vertices::init(int maxVertices)
 {
     if (!storage || maxVertices > allocated) {
-        int size = qMax((int)default_alloc, maxVertices);
+        int size = std::max((int)default_alloc, maxVertices);
         storage = q_check_ptr((Vertex *)realloc(storage, size*sizeof(Vertex)));
         sorted = q_check_ptr((Vertex **)realloc(sorted, size*sizeof(Vertex *)));
         allocated = maxVertices;
@@ -632,10 +632,10 @@ QRectF QTessellatorPrivate::collectAndSortVertices(const QPointF *points, int *m
 
     next_point:
 
-        xmin = qMin(xmin, points[i+1].x());
-        xmax = qMax(xmax, points[i+1].x());
-        ymin = qMin(ymin, points[i+1].y());
-        ymax = qMax(ymax, points[i+1].y());
+        xmin = std::min(xmin, points[i+1].x());
+        xmax = std::max(xmax, points[i+1].x());
+        ymin = std::min(ymin, points[i+1].y());
+        ymax = std::max(ymax, points[i+1].y());
 
         y_next = FloatToQ27Dot5(points[i+1].y());
         x_next = FloatToQ27Dot5(points[i+1].x());
@@ -739,7 +739,7 @@ void QTessellatorPrivate::cancelCoincidingEdges()
                 break;
 
             if (testListSize > tlSize - 2) {
-                tlSize = qMax(tlSize*2, 16);
+                tlSize = std::max(tlSize*2, 16);
                 tl = q_check_ptr((QCoincidingEdge *)realloc(tl, tlSize*sizeof(QCoincidingEdge)));
             }
             if (n->flags & (LineBeforeStarts|LineBeforeHorizontal)) {
@@ -808,7 +808,7 @@ void QTessellatorPrivate::emitEdges(QTessellator *tessellator)
                 left->y_right = y;
                 right->y_left = y;
             } else if (!emit_clever || left->mark || right->mark) {
-                Q27Dot5 top = qMax(left->y_right, right->y_left);
+                Q27Dot5 top = std::max(left->y_right, right->y_left);
                 if (top != y) {
                     QTessellator::Trapezoid trap;
                     fillTrapezoid(top, y, left->edge, right->edge, vertices, &trap);
@@ -830,7 +830,7 @@ void QTessellatorPrivate::emitEdges(QTessellator *tessellator)
             Edge *left = scanline.old[i];
             Edge *right = scanline.old[i+1];
             if (!emit_clever || left->mark || right->mark) {
-                Q27Dot5 top = qMax(left->y_right, right->y_left);
+                Q27Dot5 top = std::max(left->y_right, right->y_left);
                 if (top != y) {
                     QTessellator::Trapezoid trap;
                     fillTrapezoid(top, y, left->edge, right->edge, vertices, &trap);
@@ -871,11 +871,11 @@ void QTessellatorPrivate::processIntersections()
             int edgePos = scanline.findEdge(i.edge);
             if (edgePos >= 0) {
                 ++num;
-                min = qMin(edgePos, min);
-                max = qMax(edgePos, max);
+                min = std::min(edgePos, min);
+                max = std::max(edgePos, max);
                 Edge *edge = scanline.edges[edgePos];
-                xmin = qMin(xmin, edge->positionAt(y));
-                xmax = qMax(xmax, edge->positionAt(y));
+                xmin = std::min(xmin, edge->positionAt(y));
+                xmax = std::max(xmax, edge->positionAt(y));
             }
             Intersection key;
             key.y = y;
@@ -1254,7 +1254,7 @@ QRectF QTessellator::tessellate(const QPointF *points, int nPoints)
 
         d->y = d->vertices.sorted[d->currentVertex]->y;
         if (!d->intersections.isEmpty())
-            d->y = qMin(d->y, d->intersections.constBegin().key().y);
+            d->y = std::min(d->y, d->intersections.constBegin().key().y);
 
         QDEBUG()<< "===== SCANLINE: y =" << Q27Dot5ToDouble(d->y) << " =====";
 
@@ -1354,8 +1354,8 @@ void QTessellator::tessellateConvex(const QPointF *points, int nPoints)
     }
 
     while (true) {
-        trap.top = qMax(lastRight->y, lastLeft->y);
-        trap.bottom = qMin(d->vertices[left]->y, d->vertices[right]->y);
+        trap.top = std::max(lastRight->y, lastLeft->y);
+        trap.bottom = std::min(d->vertices[left]->y, d->vertices[right]->y);
         trap.topLeft = lastLeft;
         trap.topRight = lastRight;
         trap.bottomLeft = d->vertices[left];

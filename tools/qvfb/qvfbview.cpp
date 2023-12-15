@@ -186,7 +186,7 @@ void QVFbView::setGamma(double gr, double gg, double gb)
 	gmax = 255;
 	bmax = 255;
     }
-    int mm = qMax(rmax,qMax(gmax,bmax))+1;
+    int mm = std::max(rmax,qMax(gmax,bmax))+1;
     if (gammatable)
 	delete [] gammatable;
     gammatable = new QRgb[mm];
@@ -378,9 +378,9 @@ QImage QVFbView::getBuffer(const QRect &r, int &leading) const
         const int pixelsPerByte = 8;
         quint8 *src = reinterpret_cast<quint8*>(mView->data())
                       + r.y() * mView->linestep() + r.x() / pixelsPerByte;
-        const int align = qMin(r.width(), (8 - (r.x() & 7)) & 7);
+        const int align = std::min(r.width(), (8 - (r.x() & 7)) & 7);
         const int doAlign = (align > 0 ? 1 : 0);
-        const int tail = qMin(r.width(), (r.width() - align) & 7);
+        const int tail = std::min(r.width(), (r.width() - align) & 7);
         const int doTail = (tail > 0 ? 1 : 0);
         const int width8 = (r.width() - align) / pixelsPerByte;
         const int stride = mView->linestep() - (width8 + doAlign);
@@ -462,9 +462,9 @@ QImage QVFbView::getBuffer(const QRect &r, int &leading) const
         const int pixelsPerByte = 4;
         quint8 *src = reinterpret_cast<quint8*>(mView->data())
                       + r.y() * mView->linestep() + r.x() / pixelsPerByte;
-        const int align = qMin(r.width(), (4 - (r.x() & 3)) & 3);
+        const int align = std::min(r.width(), (4 - (r.x() & 3)) & 3);
         const int doAlign = (align > 0 ? 1 : 0);
-        const int tail = qMin(r.width(), (r.width() - align) & 3);
+        const int tail = std::min(r.width(), (r.width() - align) & 3);
         const int doTail = (tail > 0 ? 1 : 0);
         const int width8 = (r.width() - align) / pixelsPerByte;
         const int stride = mView->linestep() - (width8 + doAlign);

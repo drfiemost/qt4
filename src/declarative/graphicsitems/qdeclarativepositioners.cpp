@@ -454,7 +454,7 @@ void QDeclarativeColumn::doPositioning(QSizeF *contentSize)
         if(child.item->y() != voffset)
             positionY(voffset, child);
 
-        contentSize->setWidth(qMax(contentSize->width(), QGraphicsItemPrivate::get(child.item)->width()));
+        contentSize->setWidth(std::max(contentSize->width(), QGraphicsItemPrivate::get(child.item)->width()));
 
         voffset += QGraphicsItemPrivate::get(child.item)->height();
         voffset += spacing();
@@ -649,7 +649,7 @@ void QDeclarativeRow::doPositioning(QSizeF *contentSize)
             hoffsets << hoffset;
         }
 
-        contentSize->setHeight(qMax(contentSize->height(), QGraphicsItemPrivate::get(child.item)->height()));
+        contentSize->setHeight(std::max(contentSize->height(), QGraphicsItemPrivate::get(child.item)->height()));
 
         hoffset += QGraphicsItemPrivate::get(child.item)->width();
         hoffset += spacing();
@@ -1320,17 +1320,17 @@ void QDeclarativeFlow::doPositioning(QSizeF *contentSize)
         if(child.item->y() != voffset)
             positionY(voffset, child);
 
-        contentSize->setWidth(qMax(contentSize->width(), hoffset + childPrivate->width()));
-        contentSize->setHeight(qMax(contentSize->height(), voffset + childPrivate->height()));
+        contentSize->setWidth(std::max(contentSize->width(), hoffset + childPrivate->width()));
+        contentSize->setHeight(std::max(contentSize->height(), voffset + childPrivate->height()));
 
         if (d->flow == LeftToRight)  {
             hoffset += childPrivate->width();
             hoffset += spacing();
-            linemax = qMax(linemax, qCeil(childPrivate->height()));
+            linemax = std::max(linemax, qCeil(childPrivate->height()));
         } else {
             voffset += childPrivate->height();
             voffset += spacing();
-            linemax = qMax(linemax, qCeil(childPrivate->width()));
+            linemax = std::max(linemax, qCeil(childPrivate->width()));
         }
     }
 

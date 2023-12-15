@@ -164,7 +164,7 @@ unsigned int** QImageScale::qimageCalcYPoints(unsigned int *src,
     val = up ? 0x8000 * sh / dh - 0x8000 : 0;
     inc = (sh << 16) / dh;
     for(i = 0; i < dh; i++){
-        p[j++] = src + qMax(0, val >> 16) * sw;
+        p[j++] = src + std::max(0, val >> 16) * sw;
         val += inc;
     }
     if(rv){
@@ -192,7 +192,7 @@ int* QImageScale::qimageCalcXPoints(int sw, int dw)
     val = up ? 0x8000 * sw / dw - 0x8000 : 0;
     inc = (sw << 16) / dw;
     for(i = 0; i < dw; i++){
-        p[j++] = qMax(0, val >> 16);
+        p[j++] = std::max(0, val >> 16);
         val += inc;
     }
 

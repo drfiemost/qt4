@@ -120,7 +120,7 @@ void ReplayWidget::paintEvent(QPaintEvent *)
 
                 for (int i = 0; i < iterationTimes.size(); ++i) {
                     mean += iterationTimes.at(i);
-                    min = qMin(min, iterationTimes.at(i));
+                    min = std::min(min, iterationTimes.at(i));
                 }
 
                 mean /= qreal(iterationTimes.size());

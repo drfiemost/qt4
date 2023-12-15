@@ -510,7 +510,7 @@ int QWindowsStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const QW
             NONCLIENTMETRICS ncm;
             ncm.cbSize = FIELD_OFFSET(NONCLIENTMETRICS, lfMessageFont) + sizeof(LOGFONT);
             if (SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0))
-                ret = qMax(ncm.iScrollHeight, ncm.iScrollWidth);
+                ret = std::max(ncm.iScrollHeight, ncm.iScrollWidth);
             else
 #endif
                 ret = QCommonStyle::pixelMetric(pm, opt, widget);
@@ -519,7 +519,7 @@ int QWindowsStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const QW
 #endif // Q_WS_WIN
 
     case PM_SplitterWidth:
-        ret = qMax(4, QApplication::globalStrut().width());
+        ret = std::max(4, QApplication::globalStrut().width());
         break;
 
 #if defined(Q_WS_WIN)
@@ -1397,7 +1397,7 @@ void QWindowsStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
             if (opt->rect.width() <= 1 || opt->rect.height() <= 1)
                 break;
             QRect r = opt->rect;
-            int size = qMin(r.height(), r.width());
+            int size = std::min(r.height(), r.width());
             QPixmap pixmap;
             QString pixmapName = QStyleHelper::uniqueName(QLatin1String("$qt_ia-")
                                                           % QLatin1String(metaObject()->className()), opt, QSize(size, size))
@@ -1852,7 +1852,7 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
             bool act = menuitem->state & State_Selected;
 
             // windows always has a check column, regardless whether we have an icon or not
-            int checkcol = qMax<int>(menuitem->maxIconWidth, QWindowsStylePrivate::windowsCheckMarkWidth);
+            int checkcol = std::max<int>(menuitem->maxIconWidth, QWindowsStylePrivate::windowsCheckMarkWidth);
 
             QBrush fill = menuitem->palette.brush(act ? QPalette::Highlight : QPalette::Button);
             p->fillRect(menuitem->rect.adjusted(0, 0, -1, 0), fill);
@@ -3053,7 +3053,7 @@ QSize QWindowsStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
 
             if (mi->menuItemType != QStyleOptionMenuItem::Separator && !mi->icon.isNull()) {
                 int iconExtent = proxy()->pixelMetric(PM_SmallIconSize, opt, widget);
-                sz.setHeight(qMax(sz.height(),
+                sz.setHeight(std::max(sz.height(),
                                   mi->icon.actualSize(QSize(iconExtent, iconExtent)).height()
                                   + 2 * QWindowsStylePrivate::windowsItemFrame));
             }
@@ -3073,7 +3073,7 @@ QSize QWindowsStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
                 w += fmBold.width(mi->text) - fm.width(mi->text);
             }
 
-            int checkcol = qMax<int>(maxpmw, QWindowsStylePrivate::windowsCheckMarkWidth); // Windows always shows a check column
+            int checkcol = std::max<int>(maxpmw, QWindowsStylePrivate::windowsCheckMarkWidth); // Windows always shows a check column
             w += checkcol;
             w += int(QWindowsStylePrivate::windowsRightBorder) + 10;
             sz.setWidth(w);

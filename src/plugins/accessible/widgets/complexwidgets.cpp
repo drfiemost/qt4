@@ -1265,7 +1265,7 @@ int QAccessibleItemView::selectedRows(int maxRows, QList<int> *rows)
     Q_ASSERT(rows);
 
     const QModelIndexList selRows = itemView()->selectionModel()->selectedRows();
-    int maxCount = qMin(selRows.count(), maxRows);
+    int maxCount = std::min(selRows.count(), maxRows);
 
     for (int i = 0; i < maxCount; ++i)
         rows->append(selRows.at(i).row());
@@ -1278,7 +1278,7 @@ int QAccessibleItemView::selectedColumns(int maxColumns, QList<int> *columns)
     Q_ASSERT(columns);
 
     const QModelIndexList selColumns = itemView()->selectionModel()->selectedColumns();
-    int maxCount = qMin(selColumns.count(), maxColumns);
+    int maxCount = std::min(selColumns.count(), maxColumns);
 
     for (int i = 0; i < maxCount; ++i)
         columns->append(selColumns.at(i).row());

@@ -237,7 +237,7 @@ void QTextCursorPrivate::adjustCursor(QTextCursor::MoveOperation m)
         }
         Q_ASSERT(positionChain.at(0) == anchorChain.at(0));
         int i = 1;
-        int l = qMin(positionChain.size(), anchorChain.size());
+        int l = std::min(positionChain.size(), anchorChain.size());
         for (; i < l; ++i) {
             if (positionChain.at(i) != anchorChain.at(i))
                 break;
@@ -423,7 +423,7 @@ bool QTextCursorPrivate::movePosition(QTextCursor::MoveOperation op, QTextCursor
     case QTextCursor::PreviousCharacter:
 #ifdef Q_WS_MAC
         if (mode == QTextCursor::MoveAnchor && position != adjusted_anchor)
-            newPosition = qMin(position, adjusted_anchor);
+            newPosition = std::min(position, adjusted_anchor);
         else
 #endif
             newPosition = priv->previousCursorPosition(position, QTextLayout::SkipCharacters);
@@ -431,8 +431,8 @@ bool QTextCursorPrivate::movePosition(QTextCursor::MoveOperation op, QTextCursor
     case QTextCursor::Left:
 #ifdef Q_WS_MAC
         if (mode == QTextCursor::MoveAnchor && position != adjusted_anchor)
-            newPosition = visualMovement ? qMax(position, adjusted_anchor)
-                                         : qMin(position, adjusted_anchor);
+            newPosition = visualMovement ? std::max(position, adjusted_anchor)
+                                         : std::min(position, adjusted_anchor);
         else
 #endif
             newPosition = visualMovement ? priv->leftCursorPosition(position)
@@ -547,7 +547,7 @@ bool QTextCursorPrivate::movePosition(QTextCursor::MoveOperation op, QTextCursor
     case QTextCursor::NextCharacter:
 #ifdef Q_WS_MAC
         if (mode == QTextCursor::MoveAnchor && position != adjusted_anchor)
-            newPosition = qMax(position, adjusted_anchor);
+            newPosition = std::max(position, adjusted_anchor);
         else
 #endif
             newPosition = priv->nextCursorPosition(position, QTextLayout::SkipCharacters);
@@ -555,8 +555,8 @@ bool QTextCursorPrivate::movePosition(QTextCursor::MoveOperation op, QTextCursor
     case QTextCursor::Right:
 #ifdef Q_WS_MAC
         if (mode == QTextCursor::MoveAnchor && position != adjusted_anchor)
-            newPosition = visualMovement ? qMin(position, adjusted_anchor)
-                                         : qMax(position, adjusted_anchor);
+            newPosition = visualMovement ? std::min(position, adjusted_anchor)
+                                         : std::max(position, adjusted_anchor);
         else
 #endif
             newPosition = visualMovement ? priv->rightCursorPosition(position)
@@ -722,10 +722,10 @@ void QTextCursorPrivate::selectedTableCells(int *firstRow, int *numRows, int *fi
     if (cell_pos == cell_anchor)
         return;
 
-    *firstRow = qMin(cell_pos.row(), cell_anchor.row());
-    *firstColumn = qMin(cell_pos.column(), cell_anchor.column());
-    *numRows = qMax(cell_pos.row() + cell_pos.rowSpan(), cell_anchor.row() + cell_anchor.rowSpan()) - *firstRow;
-    *numColumns = qMax(cell_pos.column() + cell_pos.columnSpan(), cell_anchor.column() + cell_anchor.columnSpan()) - *firstColumn;
+    *firstRow = std::min(cell_pos.row(), cell_anchor.row());
+    *firstColumn = std::min(cell_pos.column(), cell_anchor.column());
+    *numRows = std::max(cell_pos.row() + cell_pos.rowSpan(), cell_anchor.row() + cell_anchor.rowSpan()) - *firstRow;
+    *numColumns = std::max(cell_pos.column() + cell_pos.columnSpan(), cell_anchor.column() + cell_anchor.columnSpan()) - *firstColumn;
 }
 
 static void setBlockCharFormatHelper(QTextDocumentPrivate *priv, int pos1, int pos2,
@@ -1672,7 +1672,7 @@ int QTextCursor::selectionStart() const
 {
     if (!d || !d->priv)
         return -1;
-    return qMin(d->position, d->adjusted_anchor);
+    return std::min(d->position, d->adjusted_anchor);
 }
 
 /*!
@@ -1685,7 +1685,7 @@ int QTextCursor::selectionEnd() const
 {
     if (!d || !d->priv)
         return -1;
-    return qMax(d->position, d->adjusted_anchor);
+    return std::max(d->position, d->adjusted_anchor);
 }
 
 static void getText(QString &text, QTextDocumentPrivate *priv, const QString &docText, int pos, int end)
@@ -1694,8 +1694,8 @@ static void getText(QString &text, QTextDocumentPrivate *priv, const QString &do
         QTextDocumentPrivate::FragmentIterator fragIt = priv->find(pos);
         const QTextFragmentData * const frag = fragIt.value();
 
-        const int offsetInFragment = qMax(0, pos - fragIt.position());
-        const int len = qMin(int(frag->size_array[0] - offsetInFragment), end - pos);
+        const int offsetInFragment = std::max(0, pos - fragIt.position());
+        const int len = std::min(int(frag->size_array[0] - offsetInFragment), end - pos);
 
         text += QString(docText.constData() + frag->stringPosition + offsetInFragment, len);
         pos += len;

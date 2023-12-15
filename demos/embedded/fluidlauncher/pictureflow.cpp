@@ -523,7 +523,7 @@ void PictureFlowPrivate::showPrevious()
   }
   else
   {
-    target = qMax(0, centerIndex - 2);
+    target = std::max(0, centerIndex - 2);
   }
 }
 
@@ -539,14 +539,14 @@ void PictureFlowPrivate::showNext()
   }
   else
   {
-    target = qMin(centerIndex + 2, slideImages.count()-1);
+    target = std::min(centerIndex + 2, slideImages.count()-1);
   }
 }
 
 void PictureFlowPrivate::showSlide(int index)
 {
-  index = qMax(index, 0);
-  index = qMin(slideImages.count()-1, index);
+  index = std::max(index, 0);
+  index = std::min(slideImages.count()-1, index);
   if(index == centerSlide.slideIndex)
     return;
 
@@ -837,8 +837,8 @@ int col1, int col2)
 
   col1 = (col1 >= 0) ? col1 : 0;
   col2 = (col2 >= 0) ? col2 : w-1;
-  col1 = qMin(col1, w-1);
-  col2 = qMin(col2, w-1);
+  col1 = std::min(col1, w-1);
+  col2 = std::min(col2, w-1);
 
   int distance = h * 100 / zoom;
   PFreal sdx = fcos(slide.angle);
@@ -847,13 +847,13 @@ int col1, int col2)
   PFreal ys = slide.cy - slideWidth * sdy/2;
   PFreal dist = distance * PFREAL_ONE;
 
-  int xi = qMax((PFreal)0, ((w*PFREAL_ONE/2) + fdiv(xs*h, dist+ys)) >> PFREAL_SHIFT);
+  int xi = std::max((PFreal)0, ((w*PFREAL_ONE/2) + fdiv(xs*h, dist+ys)) >> PFREAL_SHIFT);
   if(xi >= w)
     return rect;
 
   bool flag = false;
   rect.setLeft(xi);
-  for(int x = qMax(xi, col1); x <= col2; x++)
+  for(int x = std::max(xi, col1); x <= col2; x++)
   {
     PFreal hity = 0;
     PFreal fk = rays[x];
@@ -1023,7 +1023,7 @@ void PictureFlowPrivate::updateAnimation()
     fi -= (target << 16);
     if(fi < 0)
       fi = -fi;
-    fi = qMin(fi, max);
+    fi = std::min(fi, max);
 
     int ia = IANGLE_MAX * (fi-max/2) / (max*2);
     speed = 512 + 16384 * (PFREAL_ONE+fsin(ia))/PFREAL_ONE;
@@ -1398,7 +1398,7 @@ void PictureFlow::timerEvent(QTimerEvent* event)
   {
 //    QTime now = QTime::currentTime();
     d->updateAnimation();
-//    d->animateTimer.start(qMax(0, 30-now.elapsed() ), this);
+//    d->animateTimer.start(std::max(0, 30-now.elapsed() ), this);
   }
   else
     QWidget::timerEvent(event);

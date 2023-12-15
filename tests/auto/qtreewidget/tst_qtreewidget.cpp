@@ -1528,7 +1528,7 @@ void tst_QTreeWidget::keyboardNavigation()
                 row = 0;
                 item = item->child(row);
             } else {
-                row = qMin(rows - 1, row + 1);
+                row = std::min(rows - 1, row + 1);
                 if (item->parent())
                     item = item->parent()->child(row);
                 else

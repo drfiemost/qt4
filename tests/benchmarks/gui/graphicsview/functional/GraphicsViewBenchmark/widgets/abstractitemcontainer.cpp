@@ -151,7 +151,7 @@ void AbstractItemContainer::addItem(const QModelIndex &index)
             m_items.last()->modelIndex().row() >= index.row())) {
         int itemPos = 0;
         if (m_items.count() != 0)
-            itemPos = qMax(0, index.row() - m_items.first()->modelIndex().row());
+            itemPos = std::max(0, index.row() - m_items.first()->modelIndex().row());
 
         if (itemPos >= m_items.count() || m_items.at(itemPos)->modelIndex() != index) {
             AbstractViewItem *item = 0;

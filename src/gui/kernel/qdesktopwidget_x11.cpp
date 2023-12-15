@@ -390,7 +390,7 @@ void QDesktopWidget::resizeEvent(QResizeEvent *event)
 
     d->init();
 
-    for (int i = 0; i < qMin(oldScreenCount, d->screenCount); ++i) {
+    for (int i = 0; i < std::min(oldScreenCount, d->screenCount); ++i) {
         if (oldRects.at(i) != d->rects[i])
             emit resized(i);
     }

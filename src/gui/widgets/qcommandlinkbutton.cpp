@@ -178,7 +178,7 @@ QRect QCommandLinkButtonPrivate::titleRect() const
     if (description.isEmpty())
     {
         QFontMetrics fm(titleFont());
-        r.setTop(r.top() + qMax(0, (q->icon().actualSize(q->iconSize()).height()
+        r.setTop(r.top() + std::max(0, (q->icon().actualSize(q->iconSize()).height()
                  - fm.height()) / 2));
     }
 
@@ -260,7 +260,7 @@ QSize QCommandLinkButton::minimumSizeHint() const
 {
     Q_D(const QCommandLinkButton);
     QSize size = sizeHint();
-    int minimumHeight = qMax(d->descriptionOffset() + d->bottomMargin(),
+    int minimumHeight = std::max(d->descriptionOffset() + d->bottomMargin(),
                              icon().actualSize(iconSize()).height() + d->topMargin());
     size.setHeight(minimumHeight);
     return size;
@@ -325,12 +325,12 @@ QSize QCommandLinkButton::sizeHint() const
 
     QSize size = QPushButton::sizeHint();
     QFontMetrics fm(d->titleFont());
-    int textWidth = qMax(fm.width(text()), 135);
+    int textWidth = std::max(fm.width(text()), 135);
     int buttonWidth = textWidth + d->textOffset() + d->rightMargin();
     int heightWithoutDescription = d->descriptionOffset() + d->bottomMargin();
 
-    size.setWidth(qMax(size.width(), buttonWidth));
-    size.setHeight(qMax(d->description.isEmpty() ? 41 : 60,
+    size.setWidth(std::max(size.width(), buttonWidth));
+    size.setHeight(std::max(d->description.isEmpty() ? 41 : 60,
                         heightWithoutDescription + d->descriptionHeight(buttonWidth)));
     return size;
 }
@@ -341,7 +341,7 @@ int QCommandLinkButton::heightForWidth(int width) const
     Q_D(const QCommandLinkButton);
     int heightWithoutDescription = d->descriptionOffset() + d->bottomMargin();
     // find the width available for the description area
-    return qMax(heightWithoutDescription + d->descriptionHeight(width),
+    return std::max(heightWithoutDescription + d->descriptionHeight(width),
                 icon().actualSize(iconSize()).height() + d->topMargin() +
                 d->bottomMargin());
 }

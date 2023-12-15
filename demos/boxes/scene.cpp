@@ -558,7 +558,7 @@ void Scene::initGL()
     QStringList list;
     list << ":/res/boxes/cubemap_posx.jpg" << ":/res/boxes/cubemap_negx.jpg" << ":/res/boxes/cubemap_posy.jpg"
          << ":/res/boxes/cubemap_negy.jpg" << ":/res/boxes/cubemap_posz.jpg" << ":/res/boxes/cubemap_negz.jpg";
-    m_environment = new GLTextureCube(list, qMin(1024, m_maxTextureSize));
+    m_environment = new GLTextureCube(list, std::min(1024, m_maxTextureSize));
     m_environmentShader = new QGLShader(QGLShader::Fragment);
     m_environmentShader->compileSourceCode(environmentShaderText);
     m_environmentProgram = new QGLShaderProgram;
@@ -599,7 +599,7 @@ void Scene::initGL()
     files = QDir(":/res/boxes/").entryInfoList(filter, QDir::Files | QDir::Readable);
 
     foreach (QFileInfo file, files) {
-        GLTexture *texture = new GLTexture2D(file.absoluteFilePath(), qMin(256, m_maxTextureSize), qMin(256, m_maxTextureSize));
+        GLTexture *texture = new GLTexture2D(file.absoluteFilePath(), std::min(256, m_maxTextureSize), qMin(256, m_maxTextureSize));
         if (texture->failed()) {
             delete texture;
             continue;
@@ -609,7 +609,7 @@ void Scene::initGL()
     }
 
     if (m_textures.size() == 0)
-        m_textures << new GLTexture2D(qMin(64, m_maxTextureSize), qMin(64, m_maxTextureSize));
+        m_textures << new GLTexture2D(std::min(64, m_maxTextureSize), qMin(64, m_maxTextureSize));
 
     // Load all .fsh files as fragment shaders
     m_currentShader = 0;
@@ -641,7 +641,7 @@ void Scene::initGL()
         m_renderOptions->addShader(file.baseName());
 
         program->bind();
-        m_cubemaps << ((program->uniformLocation("env") != -1) ? new GLRenderTargetCube(qMin(256, m_maxTextureSize)) : 0);
+        m_cubemaps << ((program->uniformLocation("env") != -1) ? new GLRenderTargetCube(std::min(256, m_maxTextureSize)) : 0);
         program->release();
     }
 

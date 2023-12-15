@@ -1445,28 +1445,28 @@ QRectF QTextControl::selectionRect(const QTextCursor &cursor) const
             const QTextTableCell cell = table->cellAt(firstRow, col);
             const qreal y = layout->blockBoundingRect(cell.firstCursorPosition().block()).top();
 
-            tableSelRect.setTop(qMin(tableSelRect.top(), y));
+            tableSelRect.setTop(std::min(tableSelRect.top(), y));
         }
 
         for (int row = firstRow; row < firstRow + numRows; ++row) {
             const QTextTableCell cell = table->cellAt(row, firstColumn);
             const qreal x = layout->blockBoundingRect(cell.firstCursorPosition().block()).left();
 
-            tableSelRect.setLeft(qMin(tableSelRect.left(), x));
+            tableSelRect.setLeft(std::min(tableSelRect.left(), x));
         }
 
         for (int col = firstColumn; col < firstColumn + numColumns; ++col) {
             const QTextTableCell cell = table->cellAt(firstRow + numRows - 1, col);
             const qreal y = layout->blockBoundingRect(cell.lastCursorPosition().block()).bottom();
 
-            tableSelRect.setBottom(qMax(tableSelRect.bottom(), y));
+            tableSelRect.setBottom(std::max(tableSelRect.bottom(), y));
         }
 
         for (int row = firstRow; row < firstRow + numRows; ++row) {
             const QTextTableCell cell = table->cellAt(row, firstColumn + numColumns - 1);
             const qreal x = layout->blockBoundingRect(cell.lastCursorPosition().block()).right();
 
-            tableSelRect.setRight(qMax(tableSelRect.right(), x));
+            tableSelRect.setRight(std::max(tableSelRect.right(), x));
         }
 
         r = tableSelRect.toRect();
@@ -1480,8 +1480,8 @@ QRectF QTextControl::selectionRect(const QTextCursor &cursor) const
             const QTextLine posLine = posBlock.layout()->lineForTextPosition(position - posBlock.position());
             const QTextLine anchorLine = anchorBlock.layout()->lineForTextPosition(anchor - anchorBlock.position());
 
-            const int firstLine = qMin(posLine.lineNumber(), anchorLine.lineNumber());
-            const int lastLine = qMax(posLine.lineNumber(), anchorLine.lineNumber());
+            const int firstLine = std::min(posLine.lineNumber(), anchorLine.lineNumber());
+            const int lastLine = std::max(posLine.lineNumber(), anchorLine.lineNumber());
             const QTextLayout *layout = posBlock.layout();
             r = QRectF();
             for (int i = firstLine; i <= lastLine; ++i) {
@@ -2645,7 +2645,7 @@ bool QTextControl::findNextPrevAnchor(const QTextCursor &startCursor, bool next,
                 } while (!it.atEnd());
 
                 if (anchorEnd == -1)
-                    anchorEnd = qMax(0, block.position());
+                    anchorEnd = std::max(0, block.position());
 
                 break;
             }

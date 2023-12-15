@@ -732,7 +732,7 @@ void QTextDocumentPrivate::setCharFormat(int pos, int length, const QTextCharFor
         Q_ASSERT(formats.format(fragment->format).type() == QTextFormat::CharFormat);
 
         int offset = pos - it.position();
-        int length = qMin(endPos - pos, int(fragment->size_array[0] - offset));
+        int length = std::min(endPos - pos, int(fragment->size_array[0] - offset));
         int oldFormat = fragment->format;
 
         if (mode == MergeFormat) {
@@ -1022,7 +1022,7 @@ int QTextDocumentPrivate::undoRedo(bool undo)
     if (editPos >=0)
         newCursorPos = editPos + editLength;
     else if (docChangeFrom >= 0)
-        newCursorPos= qMin(docChangeFrom + docChangeLength, length() - 1);
+        newCursorPos= std::min(docChangeFrom + docChangeLength, length() - 1);
 
     endEditBlock();
     emitUndoAvailable(isUndoAvailable());
@@ -1263,9 +1263,9 @@ void QTextDocumentPrivate::documentChange(int from, int length)
         docChangeLength = length;
         return;
     }
-    int start = qMin(from, docChangeFrom);
-    int end = qMax(from + length, docChangeFrom + docChangeLength);
-    int diff = qMax(0, end - start - docChangeLength);
+    int start = std::min(from, docChangeFrom);
+    int end = std::max(from + length, docChangeFrom + docChangeLength);
+    int diff = std::max(0, end - start - docChangeLength);
     docChangeFrom = start;
     docChangeOldLength += diff;
     docChangeLength += diff;
@@ -1309,8 +1309,8 @@ void QTextDocumentPrivate::adjustDocumentChangesAndCursors(int from, int addedOr
     }
 
     // have to merge the new change with the already existing one.
-    int added = qMax(0, addedOrRemoved);
-    int removed = qMax(0, -addedOrRemoved);
+    int added = std::max(0, addedOrRemoved);
+    int removed = std::max(0, -addedOrRemoved);
 
     int diff = 0;
     if(from + removed < docChangeFrom)
@@ -1318,13 +1318,13 @@ void QTextDocumentPrivate::adjustDocumentChangesAndCursors(int from, int addedOr
     else if(from > docChangeFrom + docChangeLength)
         diff = from - (docChangeFrom + docChangeLength);
 
-    int overlap_start = qMax(from, docChangeFrom);
-    int overlap_end = qMin(from + removed, docChangeFrom + docChangeLength);
-    int removedInside = qMax(0, overlap_end - overlap_start);
+    int overlap_start = std::max(from, docChangeFrom);
+    int overlap_end = std::min(from + removed, docChangeFrom + docChangeLength);
+    int removedInside = std::max(0, overlap_end - overlap_start);
     removed -= removedInside;
 
 //     qDebug("adjustDocumentChanges: from=%d, addedOrRemoved=%d, diff=%d, removedInside=%d", from, addedOrRemoved, diff, removedInside);
-    docChangeFrom = qMin(docChangeFrom, from);
+    docChangeFrom = std::min(docChangeFrom, from);
     docChangeOldLength += removed + diff;
     docChangeLength += added - removedInside + diff;
 //     qDebug("    -> %d %d %d", docChangeFrom, docChangeOldLength, docChangeLength);

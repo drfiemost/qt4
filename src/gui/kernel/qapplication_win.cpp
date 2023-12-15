@@ -2274,7 +2274,7 @@ extern "C" LRESULT QT_WIN_CALLBACK QtWndProc(HWND hwnd, UINT message, WPARAM wPa
                     mmi->ptMaxTrackSize.x = maxw + fs.right() + fs.left();
                     // windows with title bar have an implicit size limit of 112 pixels
                     if (widget->windowFlags() & Qt::WindowTitleHint)
-                        mmi->ptMaxTrackSize.x = qMax<long>(mmi->ptMaxTrackSize.x, 112);
+                        mmi->ptMaxTrackSize.x = std::max<long>(mmi->ptMaxTrackSize.x, 112);
                 }
                 if ( maxh < QWIDGETSIZE_MAX )
                     mmi->ptMaxTrackSize.y = maxh + fs.top() + fs.bottom();
@@ -2416,7 +2416,7 @@ extern "C" LRESULT QT_WIN_CALLBACK QtWndProc(HWND hwnd, UINT message, WPARAM wPa
                     QString text = acc->text(QAccessible::Name, 0);
                     if (text.isEmpty())
                         text = widget->objectName();
-                    ret = qMin<int>(wParam - 1, text.size());
+                    ret = std::min<int>(wParam - 1, text.size());
                     text.resize(ret);
                     memcpy((void *)lParam, text.utf16(), (text.size() + 1) * sizeof(ushort));
                     delete acc;

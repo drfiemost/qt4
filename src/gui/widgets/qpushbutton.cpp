@@ -412,7 +412,7 @@ QSize QPushButton::sizeHint() const
         int ih = opt.iconSize.height();
         int iw = opt.iconSize.width() + 4;
         w += iw;
-        h = qMax(h, ih);
+        h = std::max(h, ih);
     }
 #endif
     QString s(text());
@@ -424,7 +424,7 @@ QSize QPushButton::sizeHint() const
     if(!empty || !w)
         w += sz.width();
     if(!empty || !h)
-        h = qMax(h, sz.height());
+        h = std::max(h, sz.height());
     opt.rect.setSize(QSize(w, h)); // PM_MenuButtonIndicator depends on the height
 #ifndef QT_NO_MENU
     if (menu())

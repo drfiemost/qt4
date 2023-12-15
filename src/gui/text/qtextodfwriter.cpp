@@ -468,14 +468,14 @@ void QTextOdfWriter::writeBlockFormat(QXmlStreamWriter &writer, QTextBlockFormat
     }
 
     if (format.hasProperty(QTextFormat::BlockTopMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-top"), pixelToPoint(qMax(qreal(0.), format.topMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-top"), pixelToPoint(std::max(qreal(0.), format.topMargin())) );
     if (format.hasProperty(QTextFormat::BlockBottomMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-bottom"), pixelToPoint(qMax(qreal(0.), format.bottomMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-bottom"), pixelToPoint(std::max(qreal(0.), format.bottomMargin())) );
     if (format.hasProperty(QTextFormat::BlockLeftMargin) || format.hasProperty(QTextFormat::BlockIndent))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-left"), pixelToPoint(qMax(qreal(0.),
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-left"), pixelToPoint(std::max(qreal(0.),
             format.leftMargin() + format.indent())));
     if (format.hasProperty(QTextFormat::BlockRightMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-right"), pixelToPoint(qMax(qreal(0.), format.rightMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-right"), pixelToPoint(std::max(qreal(0.), format.rightMargin())) );
     if (format.hasProperty(QTextFormat::TextIndent))
         writer.writeAttribute(foNS, QString::fromLatin1("text-indent"), pixelToPoint(format.textIndent()));
     if (format.hasProperty(QTextFormat::PageBreakPolicy)) {
@@ -669,13 +669,13 @@ void QTextOdfWriter::writeFrameFormat(QXmlStreamWriter &writer, QTextFrameFormat
     writer.writeAttribute(styleNS, QString::fromLatin1("family"), QString::fromLatin1("section"));
     writer.writeEmptyElement(styleNS, QString::fromLatin1("section-properties"));
     if (format.hasProperty(QTextFormat::FrameTopMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-top"), pixelToPoint(qMax(qreal(0.), format.topMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-top"), pixelToPoint(std::max(qreal(0.), format.topMargin())) );
     if (format.hasProperty(QTextFormat::FrameBottomMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-bottom"), pixelToPoint(qMax(qreal(0.), format.bottomMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-bottom"), pixelToPoint(std::max(qreal(0.), format.bottomMargin())) );
     if (format.hasProperty(QTextFormat::FrameLeftMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-left"), pixelToPoint(qMax(qreal(0.), format.leftMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-left"), pixelToPoint(std::max(qreal(0.), format.leftMargin())) );
     if (format.hasProperty(QTextFormat::FrameRightMargin))
-        writer.writeAttribute(foNS, QString::fromLatin1("margin-right"), pixelToPoint(qMax(qreal(0.), format.rightMargin())) );
+        writer.writeAttribute(foNS, QString::fromLatin1("margin-right"), pixelToPoint(std::max(qreal(0.), format.rightMargin())) );
 
     writer.writeEndElement(); // style
 

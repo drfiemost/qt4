@@ -475,7 +475,7 @@ static inline void qt_rectfill_mono(quint8 *dest, quint8 value,
                                     int stride)
 {
     const int pixelsPerByte = 8;
-    const int alignWidth = qMin(width, (8 - (x & 7)) & 7);
+    const int alignWidth = std::min(width, (8 - (x & 7)) & 7);
     const int doAlign = (alignWidth > 0 ? 1 : 0);
     const int alignStart = pixelsPerByte - 1 - (x & 7);
     const int alignStop = alignStart - (alignWidth - 1);
@@ -1045,7 +1045,7 @@ inline void qt_rectconvert_mono(qmono *dest, const SRC *src,
     const int pixelsPerByte = 8;
     quint8 *dest8 = reinterpret_cast<quint8*>(dest)
                     + y * dstStride + x / pixelsPerByte;
-    const int alignWidth = qMin(width, (8 - (x & 7)) & 7);
+    const int alignWidth = std::min(width, (8 - (x & 7)) & 7);
     const int doAlign = (alignWidth > 0 ? 1 : 0);
     const int alignStart = pixelsPerByte - 1 - (x & 7);
     const int alignStop = alignStart - (alignWidth - 1);
@@ -2768,7 +2768,7 @@ void QScreen::compose(int level, const QRegion &exposed, QRegion &blend,
             int x = rects.at(i).x() - off.x();
             int len = rects.at(i).width();
             while (y < ye) {
-                int n = qMin(nspans, ye - y);
+                int n = std::min(nspans, ye - y);
                 int i = 0;
                 while (i < n) {
                     spans[i].x = x;
@@ -2817,7 +2817,7 @@ void QScreen::paintBackground(const QRegion &r)
             int x = rects.at(i).x() - off.x();
             int len = rects.at(i).width();
             while (y < ye) {
-                int n = qMin(nspans, ye - y);
+                int n = std::min(nspans, ye - y);
                 int i = 0;
                 while (i < n) {
                     spans[i].x = x;

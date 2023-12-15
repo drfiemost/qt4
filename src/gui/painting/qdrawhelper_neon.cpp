@@ -825,7 +825,7 @@ void qt_memrotate90_16_neon(const uchar *srcPixels, int w, int h, int sstride, u
 
     const int pack = sizeof(quint32) / sizeof(ushort);
     const int unaligned =
-        qMin(uint((quintptr(dest) & (sizeof(quint32)-1)) / sizeof(ushort)), uint(h));
+        std::min(uint((quintptr(dest) & (sizeof(quint32)-1)) / sizeof(ushort)), uint(h));
     const int restX = w % tileSize;
     const int restY = (h - unaligned) % tileSize;
     const int unoptimizedY = restY % pack;
@@ -834,7 +834,7 @@ void qt_memrotate90_16_neon(const uchar *srcPixels, int w, int h, int sstride, u
 
     for (int tx = 0; tx < numTilesX; ++tx) {
         const int startx = w - tx * tileSize - 1;
-        const int stopx = qMax(startx - tileSize, 0);
+        const int stopx = std::max(startx - tileSize, 0);
 
         if (unaligned) {
             for (int x = startx; x >= stopx; --x) {
@@ -847,7 +847,7 @@ void qt_memrotate90_16_neon(const uchar *srcPixels, int w, int h, int sstride, u
 
         for (int ty = 0; ty < numTilesY; ++ty) {
             const int starty = ty * tileSize + unaligned;
-            const int stopy = qMin(starty + tileSize, h - unoptimizedY);
+            const int stopy = std::min(starty + tileSize, h - unoptimizedY);
 
             int x = startx;
             // qt_rotate90_16_neon writes to eight rows, four pixels at a time
@@ -897,7 +897,7 @@ void qt_memrotate270_16_neon(const uchar *srcPixels, int w, int h,
 
     const int pack = sizeof(quint32) / sizeof(ushort);
     const int unaligned =
-        qMin(uint((long(dest) & (sizeof(quint32)-1)) / sizeof(ushort)), uint(h));
+        std::min(uint((long(dest) & (sizeof(quint32)-1)) / sizeof(ushort)), uint(h));
     const int restX = w % tileSize;
     const int restY = (h - unaligned) % tileSize;
     const int unoptimizedY = restY % pack;
@@ -906,7 +906,7 @@ void qt_memrotate270_16_neon(const uchar *srcPixels, int w, int h,
 
     for (int tx = 0; tx < numTilesX; ++tx) {
         const int startx = tx * tileSize;
-        const int stopx = qMin(startx + tileSize, w);
+        const int stopx = std::min(startx + tileSize, w);
 
         if (unaligned) {
             for (int x = startx; x < stopx; ++x) {
@@ -919,7 +919,7 @@ void qt_memrotate270_16_neon(const uchar *srcPixels, int w, int h,
 
         for (int ty = 0; ty < numTilesY; ++ty) {
             const int starty = h - 1 - unaligned - ty * tileSize;
-            const int stopy = qMax(starty - tileSize, unoptimizedY);
+            const int stopy = std::max(starty - tileSize, unoptimizedY);
 
             int x = startx;
             // qt_rotate90_16_neon writes to eight rows, four pixels at a time

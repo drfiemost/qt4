@@ -60,7 +60,7 @@ void PixelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 //! [1]
 
 //! [3]
-    int size = qMin(option.rect.width(), option.rect.height());
+    int size = std::min(option.rect.width(), option.rect.height());
 //! [3] //! [4]
     int brightness = index.model()->data(index, Qt::DisplayRole).toInt();
     double radius = (size/2.0) - (brightness/255.0 * size/2.0);

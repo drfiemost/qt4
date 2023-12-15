@@ -73,7 +73,7 @@ public:
     bool invertedAppearance;
     QProgressBar::Direction textDirection;
     QString format;
-    inline int bound(int val) const { return qMax(minimum-1, qMin(maximum, val)); }
+    inline int bound(int val) const { return std::max(minimum-1, std::min(maximum, val)); }
     bool repaintRequired() const;
 };
 
@@ -276,7 +276,7 @@ void QProgressBar::reset()
 */
 void QProgressBar::setMinimum(int minimum)
 {
-    setRange(minimum, qMax(d_func()->maximum, minimum));
+    setRange(minimum, std::max(d_func()->maximum, minimum));
 }
 
 int QProgressBar::minimum() const
@@ -297,7 +297,7 @@ int QProgressBar::minimum() const
 
 void QProgressBar::setMaximum(int maximum)
 {
-    setRange(qMin(d_func()->minimum, maximum), maximum);
+    setRange(std::min(d_func()->minimum, maximum), maximum);
 }
 
 int QProgressBar::maximum() const
@@ -351,7 +351,7 @@ void QProgressBar::setRange(int minimum, int maximum)
     Q_D(QProgressBar);
     if (minimum != d->minimum || maximum != d->maximum) {
         d->minimum = minimum;
-        d->maximum = qMax(minimum, maximum);
+        d->maximum = std::max(minimum, maximum);
 
         if (d->value < (d->minimum - 1) || d->value > d->maximum)
             reset();
@@ -421,7 +421,7 @@ QSize QProgressBar::sizeHint() const
     QStyleOptionProgressBar opt;
     initStyleOption(&opt);
     int cw = style()->pixelMetric(QStyle::PM_ProgressBarChunkWidth, &opt, this);
-    QSize size = QSize(qMax(9, cw) * 7 + fm.width(QLatin1Char('0')) * 4, fm.height() + 8);
+    QSize size = QSize(std::max(9, cw) * 7 + fm.width(QLatin1Char('0')) * 4, fm.height() + 8);
     if (opt.orientation == Qt::Vertical)
         size.transpose();
     return style()->sizeFromContents(QStyle::CT_ProgressBar, &opt, size, this);

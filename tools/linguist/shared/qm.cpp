@@ -321,7 +321,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
         else
             cpNext = commonPrefix(it.key(), next.key());
         offsets.insert(Offset(msgHash(it.key()), ms.device()->pos()), (void *)0);
-        writeMessage(it.key(), ms, mode, Prefix(qMax(cpPrev, cpNext + 1)));
+        writeMessage(it.key(), ms, mode, Prefix(std::max(cpPrev, cpNext + 1)));
     }
 
     QMap<Offset, void *>::Iterator offset;
@@ -392,7 +392,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
             do {
                 const char *con = entry.value().constData();
                 uint len = uint(entry.value().length());
-                len = qMin(len, 255u);
+                len = std::min(len, 255u);
                 t << quint8(len);
                 t.writeRawData(con, len);
                 upto += 1 + len;

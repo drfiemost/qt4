@@ -599,10 +599,10 @@ QByteArray QPdf::generateLinearGradientShader(const QLinearGradient *gradient, c
     for (int i = 0; i < 4; ++i) {
         qreal off = ((page_rect[i].x() - start.x()) * offset.x() + (page_rect[i].y() - start.y()) * offset.y())/length;
         qreal ort = ((page_rect[i].x() - start.x()) * orthogonal.x() + (page_rect[i].y() - start.y()) * orthogonal.y())/length;
-        off_min = qMin(off_min, qFloor(off));
-        off_max = qMax(off_max, qCeil(off));
-        ort_min = qMin(ort_min, ort);
-        ort_max = qMax(ort_max, ort);
+        off_min = std::min(off_min, qFloor(off));
+        off_max = std::max(off_max, qCeil(off));
+        ort_min = std::min(ort_min, ort);
+        ort_max = std::max(ort_max, ort);
     }
     ort_min -= 1;
     ort_max += 1;
@@ -620,10 +620,10 @@ QByteArray QPdf::generateLinearGradientShader(const QLinearGradient *gradient, c
     qreal ymin = gradient_rect[0].y();
     qreal ymax = gradient_rect[0].y();
     for (int i = 1; i < 4; ++i) {
-        xmin = qMin(xmin, gradient_rect[i].x());
-        xmax = qMax(xmax, gradient_rect[i].x());
-        ymin = qMin(ymin, gradient_rect[i].y());
-        ymax = qMax(ymax, gradient_rect[i].y());
+        xmin = std::min(xmin, gradient_rect[i].x());
+        xmax = std::max(xmax, gradient_rect[i].x());
+        ymin = std::min(ymin, gradient_rect[i].y());
+        ymax = std::max(ymax, gradient_rect[i].y());
     }
     xmin -= 1000;
     xmax += 1000;

@@ -223,9 +223,9 @@ QSizeF ScrollBar::sizeHint(Qt::SizeHint which,
     QSizeF s;
 
     if (d->orientation == Qt::Horizontal) 
-        s = QSizeF(-1, qMax(d->scrollBarPixmap.height(), d->scrollerPixmap.height()));
+        s = QSizeF(-1, std::max(d->scrollBarPixmap.height(), d->scrollerPixmap.height()));
     else 
-        s = QSizeF(qMax(d->scrollBarPixmap.width(), d->scrollerPixmap.width()), -1);
+        s = QSizeF(std::max(d->scrollBarPixmap.width(), d->scrollerPixmap.width()), -1);
 
     switch (which)
     {

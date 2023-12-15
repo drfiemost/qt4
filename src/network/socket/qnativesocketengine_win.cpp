@@ -1175,7 +1175,7 @@ qint64 QNativeSocketEnginePrivate::nativeReceiveDatagram(char *data, qint64 maxL
 
 #if defined (QNATIVESOCKETENGINE_DEBUG)
     qDebug("QNativeSocketEnginePrivate::nativeReceiveDatagram(%p \"%s\", %li, %s, %i) == %li",
-           data, qt_prettyDebug(data, qMin<qint64>(ret, 16), ret).data(), maxLength,
+           data, qt_prettyDebug(data, std::min<qint64>(ret, 16), ret).data(), maxLength,
            address ? address->toString().toLatin1().constData() : "(nil)",
            port ? *port : 0, ret);
 #endif
@@ -1223,7 +1223,7 @@ qint64 QNativeSocketEnginePrivate::nativeSendDatagram(const char *data, qint64 l
 
 #if defined (QNATIVESOCKETENGINE_DEBUG)
     qDebug("QNativeSocketEnginePrivate::nativeSendDatagram(%p \"%s\", %li, \"%s\", %i) == %li", data,
-           qt_prettyDebug(data, qMin<qint64>(len, 16), len).data(), 0, address.toString().toLatin1().constData(),
+           qt_prettyDebug(data, std::min<qint64>(len, 16), len).data(), 0, address.toString().toLatin1().constData(),
            port, ret);
 #endif
 
@@ -1278,12 +1278,12 @@ qint64 QNativeSocketEnginePrivate::nativeWrite(const char *data, qint64 len)
         }
 
         // for next send:
-        bytesToSend = qMin<qint64>(49152, len - ret);
+        bytesToSend = std::min<qint64>(49152, len - ret);
     }
 
 #if defined (QNATIVESOCKETENGINE_DEBUG)
     qDebug("QNativeSocketEnginePrivate::nativeWrite(%p \"%s\", %li) == %li",
-           data, qt_prettyDebug(data, qMin((int)ret, 16), (int)ret).data(), (int)len, (int)ret);
+           data, qt_prettyDebug(data, std::min((int)ret, 16), (int)ret).data(), (int)len, (int)ret);
 #endif
 
     return ret;
@@ -1329,7 +1329,7 @@ qint64 QNativeSocketEnginePrivate::nativeRead(char *data, qint64 maxLength)
 #if defined (QNATIVESOCKETENGINE_DEBUG)
     if (ret != -2) {
         qDebug("QNativeSocketEnginePrivate::nativeRead(%p \"%s\", %l) == %li",
-               data, qt_prettyDebug(data, qMin((int)bytesRead, 16), (int)bytesRead).data(), (int)maxLength, (int)ret);
+               data, qt_prettyDebug(data, std::min((int)bytesRead, 16), (int)bytesRead).data(), (int)maxLength, (int)ret);
     } else {
         qDebug("QNativeSocketEnginePrivate::nativeRead(%p, %l) == -2 (WOULD BLOCK)",
                data, int(maxLength));

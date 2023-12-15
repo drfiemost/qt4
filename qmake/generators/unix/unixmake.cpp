@@ -112,7 +112,7 @@ UnixMakefileGenerator::init()
     if(!project->isEmpty("TARGET")) {
         project->values("TARGET") = escapeFilePaths(project->values("TARGET"));
         QString targ = unescapeFilePath(project->first("TARGET"));
-        int slsh = qMax(targ.lastIndexOf('/'), targ.lastIndexOf(Option::dir_sep));
+        int slsh = std::max(targ.lastIndexOf('/'), targ.lastIndexOf(Option::dir_sep));
         if(slsh != -1) {
             if(project->isEmpty("DESTDIR"))
                 project->values("DESTDIR").append("");

@@ -258,7 +258,7 @@ QSize tst_QText::setupTextLayout(QTextLayout *layout, bool wrap, int wrapWidth)
 
     for (int i = 0; i < layout->lineCount(); ++i) {
         QTextLine line = layout->lineAt(i);
-        widthUsed = qMax(widthUsed, line.naturalTextWidth());
+        widthUsed = std::max(widthUsed, line.naturalTextWidth());
         line.setPosition(QPointF(0, height));
         height += int(line.height());
     }

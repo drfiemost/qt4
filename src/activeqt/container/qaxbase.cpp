@@ -3897,7 +3897,7 @@ bool QAxBase::dynamicCallHelper(const char *name, void *inout, QList<QVariant> &
         }
     }
     if (varc) {
-        varc = qMin(varc, d->metaobj->numParameter(normFunction));
+        varc = std::min(varc, d->metaobj->numParameter(normFunction));
         arg = varc <= QAX_NUM_PARAMS ? staticarg : new VARIANT[varc];
         for (int i = 0; i < varc; ++i) {
             QVariant var(vars.at(i));

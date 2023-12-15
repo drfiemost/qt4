@@ -540,7 +540,7 @@ void QDeclarativeParticlesPrivate::tick(int time)
             emission = (int)workingEmission;
             emission = std::max(emission, 0);
         }
-        emission = qMin(emission, bursts[i].first);
+        emission = std::min(emission, bursts[i].first);
         bursts[i].first -= emission;
         while(emission--)
             createParticle(time);

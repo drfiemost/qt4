@@ -566,7 +566,7 @@ int Config::numParams(const QString& value)
     for (int i = 0; i != value.length(); i++) {
         uint c = value[i].unicode();
         if (c > 0 && c < 8)
-            max = qMax(max, (int)c);
+            max = std::max(max, (int)c);
     }
     return max;
 }

@@ -173,7 +173,7 @@ void tst_QRingBuffer::readPointerAtPositionWriteRead()
         // write in chunks of 50 bytes
         // this ensures there will be multiple QByteArrays inside the QRingBuffer
         // since QRingBuffer is then only using individual arrays of around 4000 bytes
-        qint64 thisWrite = qMin(remaining, qint64(50));
+        qint64 thisWrite = std::min(remaining, qint64(50));
         char *pos = ringBuffer.reserve(thisWrite);
         inData.read(pos, thisWrite);
         remaining -= thisWrite;

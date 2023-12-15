@@ -670,7 +670,7 @@ void WidgetBoxTreeWidget::adjustSubListSize(QTreeWidgetItem *cat_item)
     WidgetBoxCategoryListView *list_widget = static_cast<WidgetBoxCategoryListView*>(itemWidget(embedItem, 0));
     list_widget->setFixedWidth(header()->width());
     list_widget->doItemsLayout();
-    const int height = qMax(list_widget->contentsSize().height() ,1);
+    const int height = std::max(list_widget->contentsSize().height() ,1);
     list_widget->setFixedHeight(height);
     embedItem->setSizeHint(0, QSize(-1, height - 1));
 }

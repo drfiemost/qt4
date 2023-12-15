@@ -278,9 +278,9 @@ int QComboBoxPrivate::computeWidthHint() const
     for (int i = 0; i < count; ++i) {
         const int textWidth = fontMetrics.width(q->itemText(i));
         if (q->itemIcon(i).isNull())
-            width = (qMax(width, textWidth));
+            width = (std::max(width, textWidth));
         else
-            width = (qMax(width, textWidth + iconWidth));
+            width = (std::max(width, textWidth + iconWidth));
     }
 
     QStyleOptionComboBox opt;
@@ -310,9 +310,9 @@ QSize QComboBoxPrivate::recomputeSizeHint(QSize &sh) const
                     for (int i = 0; i < count; ++i) {
                         if (!q->itemIcon(i).isNull()) {
                             hasIcon = true;
-                            sh.setWidth(qMax(sh.width(), fm.boundingRect(q->itemText(i)).width() + iconSize.width() + 4));
+                            sh.setWidth(std::max(sh.width(), fm.boundingRect(q->itemText(i)).width() + iconSize.width() + 4));
                         } else {
-                            sh.setWidth(qMax(sh.width(), fm.boundingRect(q->itemText(i)).width()));
+                            sh.setWidth(std::max(sh.width(), fm.boundingRect(q->itemText(i)).width()));
                         }
                     }
                 }
@@ -328,13 +328,13 @@ QSize QComboBoxPrivate::recomputeSizeHint(QSize &sh) const
                 hasIcon = !q->itemIcon(i).isNull();
         }
         if (minimumContentsLength > 0)
-            sh.setWidth(qMax(sh.width(), minimumContentsLength * fm.width(QLatin1Char('X')) + (hasIcon ? iconSize.width() + 4 : 0)));
+            sh.setWidth(std::max(sh.width(), minimumContentsLength * fm.width(QLatin1Char('X')) + (hasIcon ? iconSize.width() + 4 : 0)));
 
 
         // height
-        sh.setHeight(qMax(qCeil(QFontMetricsF(fm).height()), 14) + 2);
+        sh.setHeight(std::max(qCeil(QFontMetricsF(fm).height()), 14) + 2);
         if (hasIcon) {
-            sh.setHeight(qMax(sh.height(), iconSize.height() + 2));
+            sh.setHeight(std::max(sh.height(), iconSize.height() + 2));
         }
 
         // add style and strut values
@@ -1035,7 +1035,7 @@ void QComboBoxPrivate::_q_rowsRemoved(const QModelIndex &parent, int /*start*/, 
     // model has changed the currentIndex
     if (currentIndex.row() != indexBeforeChange) {
         if (!currentIndex.isValid() && q->count()) {
-            q->setCurrentIndex(qMin(q->count() - 1, qMax(indexBeforeChange, 0)));
+            q->setCurrentIndex(std::min(q->count() - 1, std::max(indexBeforeChange, 0)));
             return;
         }
         if (lineEdit) {
@@ -2149,7 +2149,7 @@ void QComboBox::insertItems(int index, const QStringList &list)
     if (list.isEmpty())
         return;
     index = qBound(0, index, count());
-    int insertCount = qMin(d->maxCount - index, list.count());
+    int insertCount = std::min(d->maxCount - index, list.count());
     if (insertCount <= 0)
         return;
     // For the common case where we are using the built in QStandardItemModel
@@ -2444,7 +2444,7 @@ void QComboBox::showPopup()
         // Clamp the listRect height and vertical position so we don't expand outside the
         // available screen geometry.This may override the vertical position, but it is more
         // important to show as much as possible of the popup.
-        const int height = !boundToScreen ? listRect.height() : qMin(listRect.height(), screen.height());
+        const int height = !boundToScreen ? listRect.height() : std::min(listRect.height(), screen.height());
         listRect.setHeight(height);
 
         if (boundToScreen) {

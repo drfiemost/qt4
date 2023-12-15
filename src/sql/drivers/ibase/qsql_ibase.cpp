@@ -423,11 +423,11 @@ bool QIBaseResultPrivate::writeBlob(int i, const QByteArray &ba)
                  QSqlError::StatementError)) {
         int i = 0;
         while (i < ba.size()) {
-            isc_put_segment(status, &handle, qMin(ba.size() - i, int(QIBaseChunkSize)),
+            isc_put_segment(status, &handle, std::min(ba.size() - i, int(QIBaseChunkSize)),
                             const_cast<char*>(ba.data()) + i);
             if (isError(QT_TRANSLATE_NOOP("QIBaseResult", "Unable to write BLOB")))
                 return false;
-            i += qMin(ba.size() - i, int(QIBaseChunkSize));
+            i += std::min(ba.size() - i, int(QIBaseChunkSize));
         }
     }
     isc_close_blob(status, &handle);

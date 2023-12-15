@@ -236,7 +236,7 @@ Node::Status Node::inheritedStatus() const
     Status parentStatus = Commendable;
     if (par)
         parentStatus = par->inheritedStatus();
-    return (Status)qMin((int)sta, (int)parentStatus);
+    return (Status)std::min((int)sta, (int)parentStatus);
 }
 
 /*!

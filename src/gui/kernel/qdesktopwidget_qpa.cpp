@@ -110,7 +110,7 @@ int QDesktopWidget::primaryScreen() const
 int QDesktopWidget::numScreens() const
 {
     QPlatformIntegration *pi = QApplicationPrivate::platformIntegration();
-    return qMax(pi->screens().size(), 1);
+    return std::max(pi->screens().size(), 1);
 }
 
 QWidget *QDesktopWidget::screen(int screen)

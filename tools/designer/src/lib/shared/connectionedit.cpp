@@ -715,8 +715,8 @@ void Connection::setTarget(QObject *target, const QPoint &pos)
 
 static QRect lineRect(const QPoint &a, const QPoint &b)
 {
-    const QPoint c(qMin(a.x(), b.x()), qMin(a.y(), b.y()));
-    const QPoint d(qMax(a.x(), b.x()), qMax(a.y(), b.y()));
+    const QPoint c(std::min(a.x(), b.x()), qMin(a.y(), b.y()));
+    const QPoint d(std::max(a.x(), b.x()), qMax(a.y(), b.y()));
 
     QRect result(c, d);
     return expand(result, LINE_PROXIMITY_RADIUS);

@@ -515,13 +515,13 @@ void WidgetHandle::trySetGeometry(QWidget *w, int x, int y, int width, int heigh
         return;
 
     int minw = w->minimumSize().width();
-    minw = qMax(minw, 2 * m_formWindow->grid().x());
+    minw = std::max(minw, 2 * m_formWindow->grid().x());
 
     int minh = w->minimumSize().height();
-    minh = qMax(minh, 2 * m_formWindow->grid().y());
+    minh = std::max(minh, 2 * m_formWindow->grid().y());
 
-    if (qMax(minw, width) > w->maximumWidth() ||
-         qMax(minh, height) > w->maximumHeight())
+    if (std::max(minw, width) > w->maximumWidth() ||
+         std::max(minh, height) > w->maximumHeight())
         return;
 
     if (width < minw && x != w->x())
@@ -530,18 +530,18 @@ void WidgetHandle::trySetGeometry(QWidget *w, int x, int y, int width, int heigh
     if (height < minh && y != w->y())
         y -= minh - height;
 
-    w->setGeometry(x, y, qMax(minw, width), qMax(minh, height));
+    w->setGeometry(x, y, std::max(minw, width), qMax(minh, height));
 }
 
 void WidgetHandle::tryResize(QWidget *w, int width, int height)
 {
     int minw = w->minimumSize().width();
-    minw = qMax(minw, 16);
+    minw = std::max(minw, 16);
 
     int minh = w->minimumSize().height();
-    minh = qMax(minh, 16);
+    minh = std::max(minh, 16);
 
-    w->resize(qMax(minw, width), qMax(minh, height));
+    w->resize(std::max(minw, width), qMax(minh, height));
 }
 
 // ------------------ WidgetSelection

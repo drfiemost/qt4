@@ -319,7 +319,7 @@ qint64 PeerWireClient::writeToSocket(qint64 bytes)
             outgoingBuffer += block.block;
         }
         qint64 written = socket.write(outgoingBuffer.constData(),
-                                      qMin<qint64>(bytes - totalWritten, outgoingBuffer.size()));
+                                      std::min<qint64>(bytes - totalWritten, outgoingBuffer.size()));
         if (written <= 0)
             return totalWritten ? totalWritten : written;
 
@@ -337,7 +337,7 @@ qint64 PeerWireClient::readFromSocket(qint64 bytes)
     char buffer[1024];
     qint64 totalRead = 0;
     do {
-        qint64 bytesRead = socket.read(buffer, qMin<qint64>(sizeof(buffer), bytes - totalRead));
+        qint64 bytesRead = socket.read(buffer, std::min<qint64>(sizeof(buffer), bytes - totalRead));
         if (bytesRead <= 0)
             break;
         qint64 oldSize = incomingBuffer.size();
@@ -643,7 +643,7 @@ void PeerWireClient::socketStateChanged(QAbstractSocket::SocketState state)
 
 qint64 PeerWireClient::readData(char *data, qint64 size)
 {
-    int n = qMin<int>(size, incomingBuffer.size());
+    int n = std::min<int>(size, incomingBuffer.size());
     memcpy(data, incomingBuffer.constData(), n);
     incomingBuffer.remove(0, n);
     return n;

@@ -1634,7 +1634,7 @@ int DitaXmlGenerator::generateAtom(const Atom *atom,
             }
 
             if (params.size() == 2) {
-                numColumns = qMax(columnText.toInt(), numColumns);
+                numColumns = std::max(columnText.toInt(), numColumns);
                 sectionUnit = (Doc::Sections)params.at(1).toInt();
             }
 

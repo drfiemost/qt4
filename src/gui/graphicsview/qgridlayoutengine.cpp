@@ -64,7 +64,7 @@ static void insertOrRemoveItems(QVector<T> &items, int index, int delta)
         if (delta > 0) {
             items.insert(index, delta, T());
         } else if (delta < 0) {
-            items.remove(index, qMin(-delta, count - index));
+            items.remove(index, std::min(-delta, count - index));
         }
     }
 }
@@ -111,30 +111,30 @@ void QGridLayoutBox::add(const QGridLayoutBox &other, int stretch, qreal spacing
 
 void QGridLayoutBox::combine(const QGridLayoutBox &other)
 {
-    q_minimumDescent = qMax(q_minimumDescent, other.q_minimumDescent);
-    q_minimumAscent = qMax(q_minimumAscent, other.q_minimumAscent);
+    q_minimumDescent = std::max(q_minimumDescent, other.q_minimumDescent);
+    q_minimumAscent = std::max(q_minimumAscent, other.q_minimumAscent);
 
-    q_minimumSize = qMax(q_minimumAscent + q_minimumDescent,
-                         qMax(q_minimumSize, other.q_minimumSize));
+    q_minimumSize = std::max(q_minimumAscent + q_minimumDescent,
+                         std::max(q_minimumSize, other.q_minimumSize));
     qreal maxMax;
     if (q_maximumSize == FLT_MAX && other.q_maximumSize != FLT_MAX)
         maxMax = other.q_maximumSize;
     else if (other.q_maximumSize == FLT_MAX && q_maximumSize != FLT_MAX)
         maxMax = q_maximumSize;
     else
-        maxMax = qMax(q_maximumSize, other.q_maximumSize);
+        maxMax = std::max(q_maximumSize, other.q_maximumSize);
 
-    q_maximumSize = qMax(q_minimumSize, maxMax);
-    q_preferredSize = qBound(q_minimumSize, qMax(q_preferredSize, other.q_preferredSize),
+    q_maximumSize = std::max(q_minimumSize, maxMax);
+    q_preferredSize = qBound(q_minimumSize, std::max(q_preferredSize, other.q_preferredSize),
                              q_maximumSize);
 }
 
 void QGridLayoutBox::normalize()
 {
-    q_maximumSize = qMax(qreal(0.0), q_maximumSize);
+    q_maximumSize = std::max(qreal(0.0), q_maximumSize);
     q_minimumSize = qBound(qreal(0.0), q_minimumSize, q_maximumSize);
     q_preferredSize = qBound(q_minimumSize, q_preferredSize, q_maximumSize);
-    q_minimumDescent = qMin(q_minimumDescent, q_minimumSize);
+    q_minimumDescent = std::min(q_minimumDescent, q_minimumSize);
 
     Q_ASSERT((q_minimumDescent < 0.0) == (q_minimumAscent < 0.0));
 }
@@ -196,7 +196,7 @@ void QGridLayoutRowData::distributeMultiCells(const QGridLayoutRowInfo &rowInfo)
         for (int k = 0; k < span; ++k) {
             boxes[start + k].combine(extras[k]);
             if (stretch != 0)
-                stretches[start + k] = qMax(stretches[start + k], stretch);
+                stretches[start + k] = std::max(stretches[start + k], stretch);
         }
     }
     multiCellMap.clear();
@@ -209,7 +209,7 @@ void QGridLayoutRowData::calculateGeometries(int start, int end, qreal targetSiz
 {
     Q_ASSERT(end > start);
 
-    targetSize = qMax(totalBox.q_minimumSize, targetSize);
+    targetSize = std::max(totalBox.q_minimumSize, targetSize);
 
     int n = end - start;
     QVarLengthArray<qreal> newSizes(n);
@@ -328,7 +328,7 @@ void QGridLayoutRowData::calculateGeometries(int start, int end, qreal targetSiz
                         if (!beta) {
                             factors[i] = 1;
                         } else {
-                            qreal alpha = qMin(sumCurrentAvailable, beta);
+                            qreal alpha = std::min(sumCurrentAvailable, beta);
                             qreal ultimateFactor = (stretch * ultimateSumSizes / sumStretches)
                                                    - (boxSize);
                             qreal transitionalFactor = sumCurrentAvailable * (ultimateSize - boxSize) / beta;
@@ -1128,8 +1128,8 @@ QRectF QGridLayoutEngine::cellRect(const QLayoutStyleInfo &styleInfo,
 
     ensureGeometries(styleInfo, contentsGeometry.size());
 
-    int lastColumn = qMax(column + columnSpan, columnCount()) - 1;
-    int lastRow = qMax(row + rowSpan, rowCount()) - 1;
+    int lastColumn = std::max(column + columnSpan, columnCount()) - 1;
+    int lastRow = std::max(row + rowSpan, rowCount()) - 1;
 
     qreal x = q_xx[column];
     qreal y = q_yy[row];
@@ -1317,8 +1317,8 @@ void QGridLayoutEngine::maybeExpandGrid(int row, int column, Qt::Orientation ori
     int oldGridRowCount = internalGridRowCount();
     int oldGridColumnCount = internalGridColumnCount();
 
-    q_infos[Ver].count = qMax(row + 1, rowCount());
-    q_infos[Hor].count = qMax(column + 1, columnCount());
+    q_infos[Ver].count = std::max(row + 1, rowCount());
+    q_infos[Hor].count = std::max(column + 1, columnCount());
 
     int newGridRowCount = internalGridRowCount();
     int newGridColumnCount = internalGridColumnCount();
@@ -1494,7 +1494,7 @@ void QGridLayoutEngine::fillRowData(QGridLayoutRowData *rowData, const QLayoutSt
                     if (effectiveRowSpan == 1) {
                         box = &rowBox;
                         if (!userRowStretch && itemStretch != 0)
-                            rowStretch = qMax(rowStretch, itemStretch);
+                            rowStretch = std::max(rowStretch, itemStretch);
                     } else {
                         QGridLayoutMultiCellData &multiCell =
                                 rowData->multiCellMap[qMakePair(row, itemRowSpan)];
@@ -1530,12 +1530,12 @@ void QGridLayoutEngine::fillRowData(QGridLayoutRowData *rowData, const QLayoutSt
         if (row < rowInfo.boxes.count()) {
             QGridLayoutBox rowBoxInfo = rowInfo.boxes.at(row);
             rowBoxInfo.normalize();
-            rowBox.q_minimumSize = qMax(rowBox.q_minimumSize, rowBoxInfo.q_minimumSize);
-            rowBox.q_maximumSize = qMax(rowBox.q_minimumSize,
+            rowBox.q_minimumSize = std::max(rowBox.q_minimumSize, rowBoxInfo.q_minimumSize);
+            rowBox.q_maximumSize = std::max(rowBox.q_minimumSize,
                                         (rowBoxInfo.q_maximumSize != FLT_MAX ?
                                         rowBoxInfo.q_maximumSize : rowBox.q_maximumSize));
             rowBox.q_preferredSize = qBound(rowBox.q_minimumSize,
-                                            qMax(rowBox.q_preferredSize, rowBoxInfo.q_preferredSize),
+                                            std::max(rowBox.q_preferredSize, rowBoxInfo.q_preferredSize),
                                             rowBox.q_maximumSize);
         }
         if (hasIgnoreFlag)
@@ -1601,7 +1601,7 @@ void QGridLayoutEngine::fillRowData(QGridLayoutRowData *rowData, const QLayoutSt
                                                                  rowDescent2);
                             spacing -= (height1 - (rect1.y() + rect1.height())) + rect2.y();
                         }
-                        rowSpacing = qMax(spacing, rowSpacing);
+                        rowSpacing = std::max(spacing, rowSpacing);
                     }
                 }
             }
@@ -1622,7 +1622,7 @@ void QGridLayoutEngine::fillRowData(QGridLayoutRowData *rowData, const QLayoutSt
                                                   &option, styleInfo.widget());
 
             qreal &rowSpacing = rowData->spacings[prevRow];
-            rowSpacing = qMax(windowMargin, rowSpacing);
+            rowSpacing = std::max(windowMargin, rowSpacing);
         }
     }
 }

@@ -114,7 +114,7 @@ bool QTableModel::removeRows(int row, int count, const QModelIndex &)
             oldItem->view = 0;
         delete oldItem;
     }
-    tableItems.remove(qMax(i, 0), n);
+    tableItems.remove(std::max(i, 0), n);
     for (int v = row; v < row + count; ++v) {
         oldItem = verticalHeaderItems.at(v);
         if (oldItem)
@@ -189,7 +189,7 @@ void QTableModel::setItem(int row, int column, QTableWidgetItem *item)
         } else {
             QVector<QTableWidgetItem*>::iterator it;
             it = sortedInsertionIterator(colItems.begin(), colItems.end(), order, item);
-            sortedRow = qMax((int)(it - colItems.begin()), 0);
+            sortedRow = std::max((int)(it - colItems.begin()), 0);
         }
         if (sortedRow != row) {
             emit layoutAboutToBeChanged();
@@ -375,9 +375,9 @@ void QTableModel::setRowCount(int rows)
     if (rows < 0 || rc == rows)
         return;
     if (rc < rows)
-        insertRows(qMax(rc, 0), rows - rc);
+        insertRows(std::max(rc, 0), rows - rc);
     else
-        removeRows(qMax(rows, 0), rc - rows);
+        removeRows(std::max(rows, 0), rc - rows);
 }
 
 void QTableModel::setColumnCount(int columns)
@@ -386,9 +386,9 @@ void QTableModel::setColumnCount(int columns)
     if (columns < 0 || cc == columns)
         return;
     if (cc < columns)
-        insertColumns(qMax(cc, 0), columns - cc);
+        insertColumns(std::max(cc, 0), columns - cc);
     else
-        removeColumns(qMax(columns, 0), cc - columns);
+        removeColumns(std::max(columns, 0), cc - columns);
 }
 
 int QTableModel::rowCount(const QModelIndex &parent) const
@@ -572,7 +572,7 @@ void QTableModel::ensureSorted(int column, Qt::SortOrder order,
         QTableWidgetItem *item = colItems.at(oldRow);
         colItems.remove(oldRow);
         vit = sortedInsertionIterator(vit, colItems.end(), order, item);
-        int newRow = qMax((int)(vit - colItems.begin()), 0);
+        int newRow = std::max((int)(vit - colItems.begin()), 0);
         if ((newRow < oldRow) && !(*item < *colItems.at(oldRow - 1)) && !(*colItems.at(oldRow - 1) < *item))
             newRow = oldRow;
         vit = colItems.insert(vit, item);
@@ -2655,8 +2655,8 @@ void QTableWidget::dropEvent(QDropEvent *event) {
             int top = INT_MAX;
             int left = INT_MAX;
             for (int i = 0; i < indexes.count(); ++i) {
-                top = qMin(indexes.at(i).row(), top);
-                left = qMin(indexes.at(i).column(), left);
+                top = std::min(indexes.at(i).row(), top);
+                left = std::min(indexes.at(i).column(), left);
             }
 
             QList<QTableWidgetItem *> taken;

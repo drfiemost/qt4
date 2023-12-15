@@ -975,8 +975,8 @@ void QListView::paintEvent(QPaintEvent *e)
     int previousRow = -2; // trigger the alternateBase adjustment on first pass
 
     int maxSize = (flow() == TopToBottom)
-        ? qMax(viewport()->size().width(), d->contentsSize().width()) - 2 * d->spacing()
-        : qMax(viewport()->size().height(), d->contentsSize().height()) - 2 * d->spacing();
+        ? std::max(viewport()->size().width(), d->contentsSize().width()) - 2 * d->spacing()
+        : std::max(viewport()->size().height(), d->contentsSize().height()) - 2 * d->spacing();
 
     QVector<QModelIndex>::const_iterator end = toBeRendered.constEnd();
     for (QVector<QModelIndex>::const_iterator it = toBeRendered.constBegin(); it != end; ++it) {
@@ -984,9 +984,9 @@ void QListView::paintEvent(QPaintEvent *e)
         option.rect = visualRect(*it);
 
         if (flow() == TopToBottom)
-            option.rect.setWidth(qMin(maxSize, option.rect.width()));
+            option.rect.setWidth(std::min(maxSize, option.rect.width()));
         else
-            option.rect.setHeight(qMin(maxSize, option.rect.height()));
+            option.rect.setHeight(std::min(maxSize, option.rect.height()));
 
         option.state = state;
         if (selections && selections->isSelected(*it))
@@ -1016,7 +1016,7 @@ void QListView::paintEvent(QPaintEvent *e)
             if (row != previousRow + 1) {
                 // adjust alternateBase according to rows in the "gap"
                 if (!d->hiddenRows.isEmpty()) {
-                    for (int r = qMax(previousRow + 1, 0); r < row; ++r) {
+                    for (int r = std::max(previousRow + 1, 0); r < row; ++r) {
                         if (!d->isHidden(r))
                             alternateBase = !alternateBase;
                     }
@@ -1256,8 +1256,8 @@ void QListView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFl
         return;
 
     // if we are wrapping, we can only selecte inside the contents rectangle
-    int w = qMax(d->contentsSize().width(), d->viewport->width());
-    int h = qMax(d->contentsSize().height(), d->viewport->height());
+    int w = std::max(d->contentsSize().width(), d->viewport->width());
+    int h = std::max(d->contentsSize().height(), d->viewport->height());
     if (d->wrap && !QRect(0, 0, w, h).intersects(rect))
         return;
 
@@ -1331,9 +1331,9 @@ void QListView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFl
                             middle.setTop(top.top() + gridSize().height());
                         else
                             middle.setTop(top.bottom() + 1);
-                        middle.setLeft(qMin(top.left(), bottom.left()));
+                        middle.setLeft(std::min(top.left(), bottom.left()));
                         middle.setBottom(bottom.top() - 1);
-                        middle.setRight(qMax(top.right(), bottom.right()));
+                        middle.setRight(std::max(top.right(), bottom.right()));
                     }
                 } else {    // TopToBottom
                     QRect &left = first;
@@ -1701,7 +1701,7 @@ bool QListViewPrivate::doItemsLayout(int delta)
 {
     int max = model->rowCount(root) - 1;
     int first = batchStartRow();
-    int last = qMin(first + delta - 1, max);
+    int last = std::min(first + delta - 1, max);
 
     if (first == 0) {
         layoutChildren(); // make sure the viewport has the right size
@@ -1923,7 +1923,7 @@ int QCommonListViewBase::verticalScrollToValue(int /*index*/, QListView::ScrollH
     if (hint == QListView::PositionAtTop || above)
         verticalValue += adjusted.top();
     else if (hint == QListView::PositionAtBottom || below)
-        verticalValue += qMin(adjusted.top(), adjusted.bottom() - area.height() + 1);
+        verticalValue += std::min(adjusted.top(), adjusted.bottom() - area.height() + 1);
     else if (hint == QListView::PositionAtCenter)
         verticalValue += adjusted.top() - ((area.height() - adjusted.height()) / 2);
     return verticalValue;
@@ -1945,7 +1945,7 @@ int QCommonListViewBase::horizontalScrollToValue(const int /*index*/, QListView:
             if (leftOf)
                 horizontalValue -= rect.left();
             else if (rightOf)
-                horizontalValue += qMin(rect.left(), area.width() - rect.right());
+                horizontalValue += std::min(rect.left(), area.width() - rect.right());
         }
     } else {
         if (hint == QListView::PositionAtCenter) {
@@ -1954,7 +1954,7 @@ int QCommonListViewBase::horizontalScrollToValue(const int /*index*/, QListView:
             if (leftOf)
                 horizontalValue += rect.left();
             else if (rightOf)
-                horizontalValue += qMin(rect.left(), rect.right() - area.width());
+                horizontalValue += std::min(rect.left(), rect.right() - area.width());
         }
     }
     return horizontalValue;
@@ -2336,7 +2336,7 @@ QListViewItem QListModeViewBase::indexToListViewItem(const QModelIndex &index) c
                      : segmentPositions.at(segment + 1));
             size.setWidth(right - pos.x());
         } else { // make the items as wide as the viewport
-            size.setWidth(qMax(size.width(), viewport()->width() - 2 * spacing()));
+            size.setWidth(std::max(size.width(), viewport()->width() - 2 * spacing()));
         }
     }
 
@@ -2449,7 +2449,7 @@ void QListModeViewBase::doStaticLayout(const QListViewLayoutInfo &info)
             scrollValueMap.append(flowPositions.count());
             flowPositions.append(flowPosition);
             // prepare for the next item
-            deltaSegPosition = qMax(deltaSegHint, deltaSegPosition);
+            deltaSegPosition = std::max(deltaSegHint, deltaSegPosition);
             flowPosition += info.spacing + deltaFlowPosition;
         }
     }
@@ -2546,10 +2546,10 @@ QRect QListModeViewBase::mapToViewport(const QRect &rect) const
     QRect result = rect;
     if (flow() == QListView::TopToBottom) {
         result.setLeft(spacing());
-        result.setWidth(qMax(rect.width(), qMax(contentsSize.width(), viewport()->width()) - 2 * spacing()));
+        result.setWidth(std::max(rect.width(), qMax(contentsSize.width(), viewport()->width()) - 2 * spacing()));
     } else { // LeftToRight
         result.setTop(spacing());
-        result.setHeight(qMax(rect.height(), qMax(contentsSize.height(), viewport()->height()) - 2 * spacing()));
+        result.setHeight(std::max(rect.height(), qMax(contentsSize.height(), viewport()->height()) - 2 * spacing()));
     }
     return result;
 }
@@ -2574,8 +2574,8 @@ int QListModeViewBase::perItemScrollingPageSteps(int length, int bounds, bool wr
     }
     int pageSteps = 0;
     int steps = positions.count() - 1;
-    int max = qMax(length, bounds);
-    int min = qMin(length, bounds);
+    int max = std::max(length, bounds);
+    int min = std::min(length, bounds);
     int pos = min - (max - positions.last());
 
     while (pos >= 0 && steps > 0) {
@@ -2586,7 +2586,7 @@ int QListModeViewBase::perItemScrollingPageSteps(int length, int bounds, bool wr
     }
 
     // at this point we know that positions has at least one entry
-    return qMax(pageSteps, 1);
+    return std::max(pageSteps, 1);
 }
 
 int QListModeViewBase::perItemScrollToValue(int index, int scrollValue, int viewportSize,
@@ -2822,7 +2822,7 @@ bool QIconModeViewBase::filterDragMoveEvent(QDragMoveEvent *e)
 
 void QIconModeViewBase::setRowCount(int rowCount)
 {
-    tree.create(qMax(rowCount - hiddenCount(), 0));
+    tree.create(std::max(rowCount - hiddenCount(), 0));
 }
 
 void QIconModeViewBase::scrollContentsBy(int dx, int dy, bool scrollElasticBand)
@@ -2839,7 +2839,7 @@ void QIconModeViewBase::dataChanged(const QModelIndex &topLeft, const QModelInde
 {
     if (column() >= topLeft.column() && column() <= bottomRight.column())  {
         QStyleOptionViewItem option = viewOptions();
-        int bottom = qMin(items.count(), bottomRight.row() + 1);
+        int bottom = std::min(items.count(), bottomRight.row() + 1);
         for (int row = topLeft.row(); row < bottom; ++row)
             items[row].resize(itemSize(option, modelIndex(row)));
     }
@@ -2957,8 +2957,8 @@ void QIconModeViewBase::doDynamicLayout(const QListViewLayoutInfo &info)
                 else
                     deltaFlowPosition = item->h + info.spacing;
             } else {
-                item->w = qMin<int>(info.grid.width(), item->w);
-                item->h = qMin<int>(info.grid.height(), item->h);
+                item->w = std::min<int>(info.grid.width(), item->w);
+                item->h = std::min<int>(info.grid.height(), item->h);
             }
 
             // create new segment
@@ -2977,7 +2977,7 @@ void QIconModeViewBase::doDynamicLayout(const QListViewLayoutInfo &info)
                     deltaSegHint = item->h + info.spacing;
                 else
                     deltaSegHint = item->w + info.spacing;
-                deltaSegPosition = qMax(deltaSegPosition, deltaSegHint);
+                deltaSegPosition = std::max(deltaSegPosition, deltaSegHint);
             }
 
             // set the position of the item

@@ -182,8 +182,8 @@ void QUnifiedToolbarSurface::prepareBuffer(QImage::Format format, QWidget *widge
     int width = geometry().width();
     int height = 100; // FIXME
     if (d->image) {
-        width = qMax(d->image->width(), width);
-        height = qMax(d->image->height(), height);
+        width = std::max(d->image->width(), width);
+        height = std::max(d->image->height(), height);
     }
 
     if (width == 0 || height == 0) {

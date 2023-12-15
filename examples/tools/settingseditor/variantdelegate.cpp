@@ -182,10 +182,10 @@ void VariantDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
         break;
     case QVariant::Color:
         colorExp.exactMatch(text);
-        value = QColor(qMin(colorExp.cap(1).toInt(), 255),
-                       qMin(colorExp.cap(2).toInt(), 255),
-                       qMin(colorExp.cap(3).toInt(), 255),
-                       qMin(colorExp.cap(4).toInt(), 255));
+        value = QColor(std::min(colorExp.cap(1).toInt(), 255),
+                       std::min(colorExp.cap(2).toInt(), 255),
+                       std::min(colorExp.cap(3).toInt(), 255),
+                       std::min(colorExp.cap(4).toInt(), 255));
         break;
     case QVariant::Date:
         {

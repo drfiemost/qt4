@@ -335,14 +335,14 @@ void MainWindow::printPage(int index, QPainter *painter, QPrinter *printer)
             QFontMetricsF fontMetrics(font);
             QRectF rect = fontMetrics.boundingRect(
             QString("%1 %2").arg(family).arg(style));
-            width = qMax(rect.width(), width);
+            width = std::max(rect.width(), width);
             height += rect.height();
         }
     }
 
     qreal xScale = printer->pageRect().width() / width;
     qreal yScale = printer->pageRect().height() / height;
-    qreal scale = qMin(xScale, yScale);
+    qreal scale = std::min(xScale, yScale);
 
     qreal remainingHeight = printer->pageRect().height()/scale - height;
     qreal spaceHeight = (remainingHeight/4.0) / (items.count() + 1);

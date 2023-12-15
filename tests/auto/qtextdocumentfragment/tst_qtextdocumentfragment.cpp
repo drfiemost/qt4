@@ -3274,7 +3274,7 @@ void tst_QTextDocumentFragment::html_hrMargins()
 
     cursor.movePosition(QTextCursor::NextBlock);
     block = cursor.block();
-    QVERIFY(qMax(first.blockFormat().bottomMargin(), block.blockFormat().topMargin()) > 0);
+    QVERIFY(std::max(first.blockFormat().bottomMargin(), block.blockFormat().topMargin()) > 0);
 
     cursor.movePosition(QTextCursor::NextBlock);
     block = cursor.block();

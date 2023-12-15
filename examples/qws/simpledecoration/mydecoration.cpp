@@ -211,7 +211,7 @@ QRegion MyDecoration::region(const QWidget *widget, const QRect &insideRect,
         rect.setHeight(titleHeight);
 
         // Adjust the width to accommodate buttons.
-        rect.setWidth(qMax(0, rect.width() + titleRightMargin));
+        rect.setWidth(std::max(0, rect.width() + titleRightMargin));
         region += rect;
     }
     if (decorationRegion & Top) {

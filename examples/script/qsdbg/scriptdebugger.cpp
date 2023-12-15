@@ -474,11 +474,11 @@ bool ScriptDebuggerPrivate::executeCommand(const QString &command, const QString
             bool ok;
             int line = args.value(0).toInt(&ok);
             if (ok) {
-                line = qMax(1, line - 5);
+                line = std::max(1, line - 5);
             } else {
                 line = listLineNumber();
                 if (line == -1)
-                    line = qMax(progInfo->lineNumber(), ctxInfo.lineNumber() - 5);
+                    line = std::max(progInfo->lineNumber(), ctxInfo.lineNumber() - 5);
             }
             for (int i = line; i < line + 10; ++i) {
                 message(QString::fromLatin1("%0\t%1").arg(i).arg(progInfo->lineText(i)));

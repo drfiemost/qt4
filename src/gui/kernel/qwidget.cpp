@@ -146,8 +146,8 @@ bool qt_mac_clearDirtyOnWidgetInsideDrawWidget = false;
 
 static inline bool qRectIntersects(const QRect &r1, const QRect &r2)
 {
-    return (qMax(r1.left(), r2.left()) <= qMin(r1.right(), r2.right()) &&
-            qMax(r1.top(), r2.top()) <= qMin(r1.bottom(), r2.bottom()));
+    return (std::max(r1.left(), r2.left()) <= std::min(r1.right(), r2.right()) &&
+            std::max(r1.top(), r2.top()) <= std::min(r1.bottom(), r2.bottom()));
 }
 
 static inline bool hasBackingStoreSupport()
@@ -3813,15 +3813,15 @@ bool QWidgetPrivate::setMinimumSize_helper(int &minw, int &minh)
                 "The largest allowed size is (%d,%d)",
                  q->objectName().toLocal8Bit().data(), q->metaObject()->className(), QWIDGETSIZE_MAX,
                 QWIDGETSIZE_MAX);
-        minw = mw = qMin<int>(minw, QWIDGETSIZE_MAX);
-        minh = mh = qMin<int>(minh, QWIDGETSIZE_MAX);
+        minw = mw = std::min<int>(minw, QWIDGETSIZE_MAX);
+        minh = mh = std::min<int>(minh, QWIDGETSIZE_MAX);
     }
     if (minw < 0 || minh < 0) {
         qWarning("QWidget::setMinimumSize: (%s/%s) Negative sizes (%d,%d) "
                 "are not possible",
                 q->objectName().toLocal8Bit().data(), q->metaObject()->className(), minw, minh);
-        minw = mw = qMax(minw, 0);
-        minh = mh = qMax(minh, 0);
+        minw = mw = std::max(minw, 0);
+        minh = mh = std::max(minh, 0);
     }
     createExtra();
     if (extra->minw == mw && extra->minh == mh)
@@ -3851,7 +3851,7 @@ void QWidget::setMinimumSize(int minw, int minh)
     if (minw > width() || minh > height()) {
         bool resized = testAttribute(Qt::WA_Resized);
         bool maximized = isMaximized();
-        resize(qMax(minw,width()), qMax(minh,height()));
+        resize(std::max(minw,width()), qMax(minh,height()));
         setAttribute(Qt::WA_Resized, resized); //not a user resize
         if (maximized)
             data->window_state = data->window_state | Qt::WindowMaximized;
@@ -3873,15 +3873,15 @@ bool QWidgetPrivate::setMaximumSize_helper(int &maxw, int &maxh)
                 "The largest allowed size is (%d,%d)",
                  q->objectName().toLocal8Bit().data(), q->metaObject()->className(), QWIDGETSIZE_MAX,
                 QWIDGETSIZE_MAX);
-        maxw = qMin<int>(maxw, QWIDGETSIZE_MAX);
-        maxh = qMin<int>(maxh, QWIDGETSIZE_MAX);
+        maxw = std::min<int>(maxw, QWIDGETSIZE_MAX);
+        maxh = std::min<int>(maxh, QWIDGETSIZE_MAX);
     }
     if (maxw < 0 || maxh < 0) {
         qWarning("QWidget::setMaximumSize: (%s/%s) Negative sizes (%d,%d) "
                 "are not possible",
                 q->objectName().toLocal8Bit().data(), q->metaObject()->className(), maxw, maxh);
-        maxw = qMax(maxw, 0);
-        maxh = qMax(maxh, 0);
+        maxw = std::max(maxw, 0);
+        maxh = std::max(maxh, 0);
     }
     createExtra();
     if (extra->maxw == maxw && extra->maxh == maxh)
@@ -3910,7 +3910,7 @@ void QWidget::setMaximumSize(int maxw, int maxh)
         d->setConstraints_sys();
     if (maxw < width() || maxh < height()) {
         bool resized = testAttribute(Qt::WA_Resized);
-        resize(qMin(maxw,width()), qMin(maxh,height()));
+        resize(std::min(maxw,width()), qMin(maxh,height()));
         setAttribute(Qt::WA_Resized, resized); //not a user resize
     }
 
@@ -6819,23 +6819,23 @@ bool QWidget::restoreGeometry(const QByteArray &geometry)
     // - (Mac only) The window is higher than the available geometry. It must
     //   be possible to bring the size grip on screen by moving the window.
 #ifdef Q_WS_MAC
-    restoredFrameGeometry.setHeight(qMin(restoredFrameGeometry.height(), availableGeometry.height()));
-    restoredNormalGeometry.setHeight(qMin(restoredNormalGeometry.height(), availableGeometry.height() - frameHeight));
+    restoredFrameGeometry.setHeight(std::min(restoredFrameGeometry.height(), availableGeometry.height()));
+    restoredNormalGeometry.setHeight(std::min(restoredNormalGeometry.height(), availableGeometry.height() - frameHeight));
 #endif
 
     if (!restoredFrameGeometry.intersects(availableGeometry)) {
-        restoredFrameGeometry.moveBottom(qMin(restoredFrameGeometry.bottom(), availableGeometry.bottom()));
-        restoredFrameGeometry.moveLeft(qMax(restoredFrameGeometry.left(), availableGeometry.left()));
-        restoredFrameGeometry.moveRight(qMin(restoredFrameGeometry.right(), availableGeometry.right()));
+        restoredFrameGeometry.moveBottom(std::min(restoredFrameGeometry.bottom(), availableGeometry.bottom()));
+        restoredFrameGeometry.moveLeft(std::max(restoredFrameGeometry.left(), availableGeometry.left()));
+        restoredFrameGeometry.moveRight(std::min(restoredFrameGeometry.right(), availableGeometry.right()));
     }
-    restoredFrameGeometry.moveTop(qMax(restoredFrameGeometry.top(), availableGeometry.top()));
+    restoredFrameGeometry.moveTop(std::max(restoredFrameGeometry.top(), availableGeometry.top()));
 
     if (!restoredNormalGeometry.intersects(availableGeometry)) {
-        restoredNormalGeometry.moveBottom(qMin(restoredNormalGeometry.bottom(), availableGeometry.bottom()));
-        restoredNormalGeometry.moveLeft(qMax(restoredNormalGeometry.left(), availableGeometry.left()));
-        restoredNormalGeometry.moveRight(qMin(restoredNormalGeometry.right(), availableGeometry.right()));
+        restoredNormalGeometry.moveBottom(std::min(restoredNormalGeometry.bottom(), availableGeometry.bottom()));
+        restoredNormalGeometry.moveLeft(std::max(restoredNormalGeometry.left(), availableGeometry.left()));
+        restoredNormalGeometry.moveRight(std::min(restoredNormalGeometry.right(), availableGeometry.right()));
     }
-    restoredNormalGeometry.moveTop(qMax(restoredNormalGeometry.top(), availableGeometry.top() + frameHeight));
+    restoredNormalGeometry.moveTop(std::max(restoredNormalGeometry.top(), availableGeometry.top() + frameHeight));
 
     if (maximized || fullScreen) {
         // set geomerty before setting the window state to make
@@ -7825,20 +7825,20 @@ QSize QWidgetPrivate::adjustedSize() const
             exp = q->sizePolicy().expandingDirections();
         }
         if (exp & Qt::Horizontal)
-            s.setWidth(qMax(s.width(), 200));
+            s.setWidth(std::max(s.width(), 200));
         if (exp & Qt::Vertical)
-            s.setHeight(qMax(s.height(), 100));
+            s.setHeight(std::max(s.height(), 100));
 #if defined(Q_WS_X11)
         QRect screen = QApplication::desktop()->screenGeometry(q->x11Info().screen());
 #else // all others
         QRect screen = QApplication::desktop()->screenGeometry(q->pos());
 #endif
 #if defined (Q_WS_WINCE)
-        s.setWidth(qMin(s.width(), screen.width()));
-        s.setHeight(qMin(s.height(), screen.height()));
+        s.setWidth(std::min(s.width(), screen.width()));
+        s.setHeight(std::min(s.height(), screen.height()));
 #else
-        s.setWidth(qMin(s.width(), screen.width()*2/3));
-        s.setHeight(qMin(s.height(), screen.height()*2/3));
+        s.setWidth(std::min(s.width(), screen.width()*2/3));
+        s.setHeight(std::min(s.height(), screen.height()*2/3));
 #endif
         if (QTLWExtra *extra = maybeTopData())
             extra->sizeAdjusted = true;

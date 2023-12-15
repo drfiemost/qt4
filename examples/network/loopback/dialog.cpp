@@ -187,7 +187,7 @@ void Dialog::updateClientProgress(qint64 numBytes)
 
     // only write more if not finished and when the Qt write buffer is below a certain size.
     if (bytesToWrite > 0 && tcpClient.bytesToWrite() <= 4*PayloadSize)
-        bytesToWrite -= (int)tcpClient.write(QByteArray(qMin(bytesToWrite, PayloadSize), '@'));
+        bytesToWrite -= (int)tcpClient.write(QByteArray(std::min(bytesToWrite, PayloadSize), '@'));
 
     clientProgressBar->setMaximum(TotalBytes);
     clientProgressBar->setValue(bytesWritten);

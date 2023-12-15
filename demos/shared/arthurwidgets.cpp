@@ -258,8 +258,8 @@ void ArthurFrame::paintDescription(QPainter *painter)
     if (!m_document)
         return;
 
-    int pageWidth = qMax(width() - 100, 100);
-    int pageHeight = qMax(height() - 100, 100);
+    int pageWidth = std::max(width() - 100, 100);
+    int pageHeight = std::max(height() - 100, 100);
     if (pageWidth != m_document->pageSize().width()) {
         m_document->setPageSize(QSize(pageWidth, pageHeight));
     }

@@ -384,16 +384,16 @@ void tst_QListView::cursorMove()
         QTest::keyClick(&view, key);
         switch (key) {
         case Qt::Key_Up:
-            displayRow = qMax(0, displayRow - 1);
+            displayRow = std::max(0, displayRow - 1);
             break;
         case Qt::Key_Down:
-            displayRow = qMin(rows / displayColumns - 1, displayRow + 1);
+            displayRow = std::min(rows / displayColumns - 1, displayRow + 1);
             break;
         case Qt::Key_Left:
-            displayColumn = qMax(0, displayColumn - 1);
+            displayColumn = std::max(0, displayColumn - 1);
             break;
         case Qt::Key_Right:
-            displayColumn = qMin(displayColumns-1, displayColumn + 1);
+            displayColumn = std::min(displayColumns-1, displayColumn + 1);
             break;
         default:
             QVERIFY(false);
@@ -1957,11 +1957,11 @@ void tst_QListView::taskQTBUG_5877_skippingItemInPageDownUp()
                                              QItemSelectionModel::SelectCurrent);
 
         QModelIndex idx = vu.moveCursor(QMoveCursorListView::MovePageDown, Qt::NoModifier);
-        int newCurrent = qMin(currentItemIndexes[i] + scrolledRowCount, 99);
+        int newCurrent = std::min(currentItemIndexes[i] + scrolledRowCount, 99);
         QCOMPARE(idx, model.index(newCurrent, 0));
 
         idx = vu.moveCursor(QMoveCursorListView::MovePageUp, Qt::NoModifier);
-        newCurrent = qMax(currentItemIndexes[i] - scrolledRowCount, 0);
+        newCurrent = std::max(currentItemIndexes[i] - scrolledRowCount, 0);
         QCOMPARE(idx, model.index(newCurrent, 0));
     }
 }

@@ -90,7 +90,7 @@ bool FileListModel::canFetchMore(const QModelIndex & /* index */) const
 void FileListModel::fetchMore(const QModelIndex & /* index */)
 {
     int remainder = fileList.size() - fileCount;
-    int itemsToFetch = qMin(100, remainder);
+    int itemsToFetch = std::min(100, remainder);
 
     beginInsertRows(QModelIndex(), fileCount, fileCount+itemsToFetch-1);
     

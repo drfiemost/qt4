@@ -192,7 +192,7 @@ QTipLabel::QTipLabel(const QString &text, QWidget *w)
 
 void QTipLabel::restartExpireTimer()
 {
-    int time = 10000 + 40 * qMax(0, text().length()-100);
+    int time = 10000 + 40 * std::max(0, text().length()-100);
     expireTimer.start(time, this);
     hideTimer.stop();
 }

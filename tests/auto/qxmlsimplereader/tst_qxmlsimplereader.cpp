@@ -112,7 +112,7 @@ void XmlServer::run()
             QByteArray data = file.readAll();
             for (int i = 0; i < data.size();) {
 //                sock->putChar(data.at(i));
-                int cnt = qMin(CHUNK_SIZE, data.size() - i);
+                int cnt = std::min(CHUNK_SIZE, data.size() - i);
                 sock->write(data.constData() + i, cnt);
                 i += cnt;
                 sock->flush();

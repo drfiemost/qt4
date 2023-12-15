@@ -635,7 +635,7 @@ void QZipReaderPrivate::scanFiles()
     int comment_length = readUShort(eod.comment_length);
     if (comment_length != i)
         qWarning() << "QZip: failed to parse zip file.";
-    comment = device->read(qMin(comment_length, i));
+    comment = device->read(std::min(comment_length, i));
 
 
     device->seek(start_of_directory);
@@ -1012,7 +1012,7 @@ QByteArray QZipReader::fileData(const QString &fileName) const
         //qDebug("compressed=%d", compressed.size());
         compressed.truncate(compressed_size);
         QByteArray baunzip;
-        ulong len = qMax(uncompressed_size,  1);
+        ulong len = std::max(uncompressed_size,  1);
         int res;
         do {
             baunzip.resize(len);

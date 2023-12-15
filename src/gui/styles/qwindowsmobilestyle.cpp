@@ -6420,7 +6420,7 @@ QSize QWindowsMobileStyle::sizeFromContents(ContentsType type, const QStyleOptio
              if (d_func()->doubleControls)
                  margins *= 2;
             newSize += QSize(irect.right() + margins, 1);
-            newSize.setHeight(qMax(newSize.height(), h));
+            newSize.setHeight(std::max(newSize.height(), h));
         }
         break;
 #ifndef QT_NO_COMBOBOX
@@ -6568,10 +6568,10 @@ QRect QWindowsMobileStyle::subControlRect(ComplexControl control, const QStyleOp
             switch (subControl) {
             case SC_ScrollBarSubLine:            // top/left button
                 if (scrollbar->orientation == Qt::Horizontal) {
-                    int buttonWidth = qMin(scrollbar->rect.width() / 2, sliderButtonExtentDir );
+                    int buttonWidth = std::min(scrollbar->rect.width() / 2, sliderButtonExtentDir );
                     rect.setRect(0, 0, buttonWidth, sliderButtonExtent);
                 } else {
-                    int buttonHeight = qMin(scrollbar->rect.height() / 2, sliderButtonExtentDir);
+                    int buttonHeight = std::min(scrollbar->rect.height() / 2, sliderButtonExtentDir);
                     rect.setRect(0, 0, sliderButtonExtent, buttonHeight);
                 }
                 if (d->smartphone)
@@ -6579,10 +6579,10 @@ QRect QWindowsMobileStyle::subControlRect(ComplexControl control, const QStyleOp
                 break;
             case SC_ScrollBarAddLine:            // bottom/right button
                 if (scrollbar->orientation == Qt::Horizontal) {
-                    int buttonWidth = qMin(scrollbar->rect.width()/2, sliderButtonExtentDir);
+                    int buttonWidth = std::min(scrollbar->rect.width()/2, sliderButtonExtentDir);
                     rect.setRect(scrollbar->rect.width() - buttonWidth, 0, buttonWidth, sliderButtonExtent);
                 } else {
-                    int buttonHeight = qMin(scrollbar->rect.height()/2, sliderButtonExtentDir );
+                    int buttonHeight = std::min(scrollbar->rect.height()/2, sliderButtonExtentDir );
                     rect.setRect(0, scrollbar->rect.height() - buttonHeight, sliderButtonExtent, buttonHeight);
                 }
                 if (d->smartphone)
@@ -6735,9 +6735,9 @@ QRect QWindowsMobileStyle::subControlRect(ComplexControl control, const QStyleOp
         if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
             QSize bs;
             int fw = spinBox->frame ? proxy()->pixelMetric(PM_SpinBoxFrameWidth, spinBox, widget) : 0;
-            bs.setHeight(qMax(d->doubleControls ? 28 : 14, (spinBox->rect.height())));
+            bs.setHeight(std::max(d->doubleControls ? 28 : 14, (spinBox->rect.height())));
             // 1.6 -approximate golden mean
-            bs.setWidth(qMax(d->doubleControls ? 28 : 14, qMin((bs.height()*7/8), (spinBox->rect.width() / 8))));
+            bs.setWidth(std::max(d->doubleControls ? 28 : 14, std::min((bs.height()*7/8), (spinBox->rect.width() / 8))));
             bs = bs.expandedTo(QApplication::globalStrut());
             int x, lx, rx;
             x = spinBox->rect.width() - bs.width()*2;
@@ -7107,7 +7107,7 @@ int QWindowsMobileStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, co
        }
        break;
     case PM_SplitterWidth:
-        ret = qMax(4, QApplication::globalStrut().width());
+        ret = std::max(4, QApplication::globalStrut().width());
         break;
 
 #if defined(Q_WS_WIN)

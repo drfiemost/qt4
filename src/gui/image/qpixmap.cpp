@@ -918,7 +918,7 @@ bool QPixmap::doImageIO(QImageWriter *writer, int quality) const
     if (quality > 100  || quality < -1)
         qWarning("QPixmap::save: quality out of range [-1,100]");
     if (quality >= 0)
-        writer->setQuality(qMin(quality,100));
+        writer->setQuality(std::min(quality,100));
     return writer->write(toImage());
 }
 
@@ -1323,8 +1323,8 @@ QPixmap QPixmap::scaled(const QSize& s, Qt::AspectRatioMode aspectMode, Qt::Tran
 
     QSize newSize = size();
     newSize.scale(s, aspectMode);
-    newSize.rwidth() = qMax(newSize.width(), 1);
-    newSize.rheight() = qMax(newSize.height(), 1);
+    newSize.rwidth() = std::max(newSize.width(), 1);
+    newSize.rheight() = std::max(newSize.height(), 1);
     if (newSize == size())
         return *this;
 

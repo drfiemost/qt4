@@ -169,8 +169,8 @@ static bool verifyArrangement(QMdiArea *mdiArea, Arrangement arrangement, const 
     {
         // Calculate the number of rows and columns.
         const int n = subWindows.count();
-        const int numColumns = qMax(qCeil(qSqrt(qreal(n))), 1);
-        const int numRows = qMax((n % numColumns) ? (n / numColumns + 1) : (n / numColumns), 1);
+        const int numColumns = std::max(qCeil(qSqrt(qreal(n))), 1);
+        const int numRows = std::max((n % numColumns) ? (n / numColumns + 1) : (n / numColumns), 1);
 
         // Ensure that the geometry of all the subwindows are as expected by using
         // QWidget::childAt starting from the middle of the topleft cell and subsequently
@@ -204,7 +204,7 @@ static bool verifyArrangement(QMdiArea *mdiArea, Arrangement arrangement, const 
             titleBarHeight -= 4;
 #endif
         const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QWorkspaceTitleBar"));
-        const int dy = qMax(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
+        const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
         const int dx = 10;
 
         // Current activation/stacking order.
@@ -1831,7 +1831,7 @@ void tst_QMdiArea::cascadeAndTileSubWindows()
     if (windows.at(1)->style()->inherits("QMacStyle"))
         titleBarHeight -= 4;
     const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QWorkspaceTitleBar"));
-    const int dy = qMax(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
+    const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
     QCOMPARE(windows.at(2)->geometry().top() - windows.at(1)->geometry().top(), dy);
 
     for (int i = 0; i < windows.count(); ++i) {

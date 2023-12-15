@@ -1330,7 +1330,7 @@ void QDeclarativeTextInputPrivate::updateHorizontalScroll()
             // check to ensure long pre-edit text doesn't push the cursor
             // off to the left
              cix = qRound(control->cursorToX(
-                     control->cursor() + qMax(0, control->preeditCursor() - 1)));
+                     control->cursor() + std::max(0, control->preeditCursor() - 1)));
              if (cix < hscroll)
                  hscroll = cix;
         }

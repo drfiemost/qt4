@@ -282,12 +282,12 @@ void QLineControl::setSelection(int start, int length)
         if (start == m_selstart && start + length == m_selend && m_cursor == m_selend)
             return;
         m_selstart = start;
-        m_selend = qMin(start + length, (int)m_text.length());
+        m_selend = std::min(start + length, (int)m_text.length());
         m_cursor = m_selend;
     } else if (length < 0){
         if (start == m_selend && start + length == m_selstart && m_cursor == m_selstart)
             return;
-        m_selstart = qMax(start + length, 0);
+        m_selstart = std::max(start + length, 0);
         m_selend = start;
         m_cursor = m_selstart;
     } else if (m_selstart != m_selend) {
@@ -422,8 +422,8 @@ void QLineControl::moveCursor(int pos, bool mark)
             anchor = m_selstart;
         else
             anchor = m_cursor;
-        m_selstart = qMin(anchor, pos);
-        m_selend = qMax(anchor, pos);
+        m_selstart = std::min(anchor, pos);
+        m_selend = std::max(anchor, pos);
         updateDisplayText();
     } else {
         internalDeselect();
@@ -466,7 +466,7 @@ void QLineControl::processInputMethodEvent(QInputMethodEvent *event)
 
     int c = m_cursor; // cursor position after insertion of commit string
     if (event->replacementStart() <= 0)
-        c += event->commitString().length() - qMin(-event->replacementStart(), event->replacementLength());
+        c += event->commitString().length() - std::min(-event->replacementStart(), event->replacementLength());
 
     m_cursor += event->replacementStart();
     if (m_cursor < 0)
@@ -490,7 +490,7 @@ void QLineControl::processInputMethodEvent(QInputMethodEvent *event)
         if (a.type == QInputMethodEvent::Selection) {
             m_cursor = qBound(0, a.start + a.length, m_text.length());
             if (a.length) {
-                m_selstart = qMax(0, qMin(a.start, m_text.length()));
+                m_selstart = std::max(0, std::min(a.start, m_text.length()));
                 m_selend = m_cursor;
                 if (m_selend < m_selstart) {
                     qSwap(m_selstart, m_selend);
@@ -836,7 +836,7 @@ void QLineControl::removeSelectedText()
             m_text.remove(m_selstart, m_selend - m_selstart);
         }
         if (m_cursor > m_selstart)
-            m_cursor -= qMin(m_cursor, m_selend) - m_selstart;
+            m_cursor -= std::min(m_cursor, m_selend) - m_selstart;
         internalDeselect();
         m_textDirty = true;
     }
@@ -1146,7 +1146,7 @@ QString QLineControl::clearString(uint pos, uint len) const
         return QString();
 
     QString s;
-    int end = qMin((uint)m_maxLength, pos + len);
+    int end = std::min((uint)m_maxLength, pos + len);
     for (int i = pos; i < end; ++i)
         if (m_maskData[i].separator)
             s += m_maskData[i].maskChar;
@@ -1168,7 +1168,7 @@ QString QLineControl::stripString(const QString &str) const
         return str;
 
     QString s;
-    int end = qMin(m_maxLength, (int)str.length());
+    int end = std::min(m_maxLength, (int)str.length());
     for (int i = 0; i < end; ++i)
         if (m_maskData[i].separator)
             s += m_maskData[i].maskChar;

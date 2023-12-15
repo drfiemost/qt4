@@ -170,7 +170,7 @@ QSizeF QItemDelegatePrivate::doTextLayout(int lineWidth) const
         line.setLineWidth(lineWidth);
         line.setPosition(QPointF(0, height));
         height += line.height();
-        widthUsed = qMax(widthUsed, line.naturalTextWidth());
+        widthUsed = std::max(widthUsed, line.naturalTextWidth());
     }
     textLayout.endLayout();
     return QSizeF(widthUsed, height);
@@ -886,12 +886,12 @@ void QItemDelegate::doLayout(const QStyleOptionViewItem &option,
         pm.rwidth() += 2 * pixmapMargin;
     }
     if (hint) {
-        h = qMax(checkRect->height(), qMax(textRect->height(), pm.height()));
+        h = std::max(checkRect->height(), qMax(textRect->height(), pm.height()));
         if (option.decorationPosition == QStyleOptionViewItem::Left
             || option.decorationPosition == QStyleOptionViewItem::Right) {
             w = textRect->width() + pm.width();
         } else {
-            w = qMax(textRect->width(), pm.width());
+            w = std::max(textRect->width(), pm.width());
         }
     } else {
         w = option.rect.width();

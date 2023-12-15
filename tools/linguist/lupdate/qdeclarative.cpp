@@ -316,7 +316,7 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
         if (column < 0)
             column = 0;
 
-        column = qMin(column, textLine.length());
+        column = std::min(column, textLine.length());
 
         for (int i = 0; i < column; ++i) {
             const QChar ch = textLine.at(i);

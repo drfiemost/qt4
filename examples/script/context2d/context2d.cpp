@@ -47,7 +47,7 @@ static const double Q_PI   = 3.14159265358979323846;   // pi
 
 #define DEGREES(t) ((t) * 180.0 / Q_PI)
 
-#define qClamp(val, min, max) qMin(qMax(val, min), max)
+#define qClamp(val, min, max) std::min(std::max(val, min), max)
 static QList<qreal> parseNumbersList(QString::const_iterator &itr)
 {
     QList<qreal> points;

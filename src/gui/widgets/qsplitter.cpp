@@ -436,10 +436,10 @@ void QSplitterPrivate::recalc(bool update)
             QSize minS = qSmartMinSize(s->widget);
             minl += pick(minS);
             maxl += pick(s->widget->maximumSize());
-            mint = qMax(mint, trans(minS));
+            mint = std::max(mint, trans(minS));
             int tm = trans(s->widget->maximumSize());
             if (tm > 0)
-                maxt = qMin(maxt, tm);
+                maxt = std::min(maxt, tm);
         }
     }
 
@@ -452,7 +452,7 @@ void QSplitterPrivate::recalc(bool update)
             maxl = QWIDGETSIZE_MAX;
         }
     } else {
-        maxl = qMin<int>(maxl, QWIDGETSIZE_MAX);
+        maxl = std::min<int>(maxl, QWIDGETSIZE_MAX);
     }
     if (maxt < mint)
         maxt = mint;
@@ -528,7 +528,7 @@ void QSplitterPrivate::doResize()
                 a[j].sizeHint = a[j].minimumSize;
                 a[j].expansive = true;
             } else {
-                a[j].sizeHint = qMax(s->getWidgetSize(orient), a[j].minimumSize);
+                a[j].sizeHint = std::max(s->getWidgetSize(orient), a[j].minimumSize);
             }
         }
         ++j;
@@ -631,8 +631,8 @@ void QSplitterPrivate::getRange(int index, int *farMin, int *min, int *max, int 
     int maxVal;
     int farMaxVal;
 
-    int smartMinBefore = qMax(minBefore, pick(r.size()) - maxAfter);
-    int smartMaxBefore = qMin(maxBefore, pick(r.size()) - minAfter);
+    int smartMinBefore = std::max(minBefore, pick(r.size()) - maxAfter);
+    int smartMaxBefore = std::min(maxBefore, pick(r.size()) - minAfter);
 
     minVal = pick(r.topLeft()) + smartMinBefore;
     maxVal = pick(r.topLeft()) + smartMaxBefore;
@@ -667,7 +667,7 @@ int QSplitterPrivate::adjustPos(int pos, int index, int *farMin, int *min, int *
             int delta = pos - *max;
             int width = *farMax - *max;
 
-            if (delta > width / 2 && delta >= qMin(Threshold, width)) {
+            if (delta > width / 2 && delta >= std::min(Threshold, width)) {
                 return *farMax;
             } else {
                 return *max;
@@ -677,7 +677,7 @@ int QSplitterPrivate::adjustPos(int pos, int index, int *farMin, int *min, int *
         int delta = *min - pos;
         int width = *min - *farMin;
 
-        if (delta > width / 2 && delta >= qMin(Threshold, width)) {
+        if (delta > width / 2 && delta >= std::min(Threshold, width)) {
             return *farMin;
         } else {
             return *min;
@@ -794,8 +794,8 @@ void QSplitterPrivate::doMove(bool backwards, int hPos, int index, int delta, bo
         int  ws = backwards ? hPos - pick(s->rect.topLeft())
                  : pick(s->rect.bottomRight()) - hPos -hs + 1;
         if (ws > 0 || (!s->collapsed && !mayCollapse)) {
-            ws = qMin(ws, pick(w->maximumSize()));
-            ws = qMax(ws, pick(qSmartMinSize(w)));
+            ws = std::min(ws, pick(w->maximumSize()));
+            ws = std::max(ws, pick(qSmartMinSize(w)));
         } else {
             ws = 0;
         }
@@ -1428,7 +1428,7 @@ QSize QSplitter::sizeHint() const
         QSize s = w->sizeHint();
         if (s.isValid()) {
             l += d->pick(s);
-            t = qMax(t, d->trans(s));
+            t = std::max(t, d->trans(s));
         }
     }
     return orientation() == Qt::Horizontal ? QSize(l, t) : QSize(t, l);
@@ -1455,14 +1455,14 @@ QSize QSplitter::minimumSizeHint() const
         QSize widgetSize = qSmartMinSize(s->widget);
         if (widgetSize.isValid()) {
             l += d->pick(widgetSize);
-            t = qMax(t, d->trans(widgetSize));
+            t = std::max(t, d->trans(widgetSize));
         }
         if (!s->handle || s->handle->isHidden())
             continue;
         QSize splitterSize = s->handle->sizeHint();
         if (splitterSize.isValid()) {
             l += d->pick(splitterSize);
-            t = qMax(t, d->trans(splitterSize));
+            t = std::max(t, d->trans(splitterSize));
         }
     }
     return orientation() == Qt::Horizontal ? QSize(l, t) : QSize(t, l);

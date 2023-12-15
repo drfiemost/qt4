@@ -307,8 +307,8 @@ bool QNetworkAccessHttpBackend::loadFromCacheIfAllowed(QHttpNetworkRequest &http
     int response_time = now;
 
     // Algorithm from RFC 2616 section 13.2.3
-    int apparent_age = qMax(0, response_time - date_value);
-    int corrected_received_age = qMax(apparent_age, age_value);
+    int apparent_age = std::max(0, response_time - date_value);
+    int corrected_received_age = std::max(apparent_age, age_value);
     int response_delay = response_time - request_time;
     int corrected_initial_age = corrected_received_age + response_delay;
     int resident_time = now - response_time;

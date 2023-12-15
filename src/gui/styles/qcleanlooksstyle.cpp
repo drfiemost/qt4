@@ -530,8 +530,8 @@ static void qt_cleanlooks_draw_mdibutton(QPainter *painter, const QStyleOptionTi
 {
     QColor dark;
     dark.setHsv(option->palette.button().color().hue(),
-                qMin(255, (int)(option->palette.button().color().saturation()*1.9)),
-                qMin(255, (int)(option->palette.button().color().value()*0.7)));
+                std::min(255, (int)(option->palette.button().color().saturation()*1.9)),
+                std::min(255, (int)(option->palette.button().color().value()*0.7)));
 
     QColor highlight = option->palette.highlight().color();
 
@@ -688,11 +688,11 @@ void QCleanlooksStyle::drawPrimitive(PrimitiveElement elem,
     QColor darkOutline;
     QColor dark;
     darkOutline.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*3.0)),
-                qMin(255, (int)(button.value()*0.6)));
+                std::min(255, (int)(button.saturation()*3.0)),
+                std::min(255, (int)(button.value()*0.6)));
     dark.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*1.9)),
-                qMin(255, (int)(button.value()*0.7)));
+                std::min(255, (int)(button.saturation()*1.9)),
+                std::min(255, (int)(button.value()*0.7)));
     QColor tabFrameColor = mergedColors(option->palette.background().color(),
                                                 dark.lighter(135), 60);
 
@@ -1107,8 +1107,8 @@ void QCleanlooksStyle::drawPrimitive(PrimitiveElement elem,
             QColor gradientMidColor = option->palette.button().color();
             QColor gradientStopColor;
             gradientStopColor.setHsv(buttonColor.hue(),
-                                     qMin(255, (int)(buttonColor.saturation()*1.9)),
-                                     qMin(255, (int)(buttonColor.value()*0.96)));
+                                     std::min(255, (int)(buttonColor.saturation()*1.9)),
+                                     std::min(255, (int)(buttonColor.value()*0.96)));
 
             QRect gradRect = rect.adjusted(1, 2, -1, -2);
             // gradient fill
@@ -1373,12 +1373,12 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
     QColor button = option->palette.button().color();
     QColor dark;
     dark.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*1.9)),
-                qMin(255, (int)(button.value()*0.7)));
+                std::min(255, (int)(button.saturation()*1.9)),
+                std::min(255, (int)(button.value()*0.7)));
     QColor darkOutline;
     darkOutline.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*2.0)),
-                qMin(255, (int)(button.value()*0.6)));
+                std::min(255, (int)(button.saturation()*2.0)),
+                std::min(255, (int)(button.value()*0.6)));
     QRect rect = option->rect;
     QColor shadow = mergedColors(option->palette.background().color().darker(120),
                                  dark.lighter(130), 60);
@@ -1457,7 +1457,7 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
         {
             int x, y, w, h;
             option->rect.getRect(&x, &y, &w, &h);
-            int sw = qMin(h, w);
+            int sw = std::min(h, w);
             if (h > w)
                 painter->translate(0, h - w);
             else
@@ -1652,8 +1652,8 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
             QColor gradientStopColor;
             QColor gradientStartColor = option->palette.button().color();
             gradientStopColor.setHsv(gradientStartColor.hue(),
-                                     qMin(255, (int)(gradientStartColor.saturation()*2)),
-                                     qMin(255, (int)(gradientStartColor.value()*0.96)));
+                                     std::min(255, (int)(gradientStartColor.saturation()*2)),
+                                     std::min(255, (int)(gradientStartColor.value()*0.96)));
             QLinearGradient gradient(rect.topLeft(), rect.bottomLeft());
             if (option->palette.background().gradient()) {
                 gradient.setStops(option->palette.background().gradient()->stops());
@@ -1751,9 +1751,9 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
 
             int maxWidth = rect.width() - 4;
             int minWidth = 4;
-            qreal progress = qMax(bar->progress, bar->minimum); // workaround for bug in QProgressBar
-            int progressBarWidth = (progress - bar->minimum) * qreal(maxWidth) / qMax(qreal(1.0), qreal(bar->maximum) - bar->minimum);
-            int width = indeterminate ? maxWidth : qMax(minWidth, progressBarWidth);
+            qreal progress = std::max(bar->progress, bar->minimum); // workaround for bug in QProgressBar
+            int progressBarWidth = (progress - bar->minimum) * qreal(maxWidth) / std::max(qreal(1.0), qreal(bar->maximum) - bar->minimum);
+            int width = indeterminate ? maxWidth : std::max(minWidth, progressBarWidth);
 
             bool reverse = (!vertical && (bar->direction == Qt::RightToLeft)) || vertical;
             if (inverted)
@@ -1768,7 +1768,7 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
                 }
             } else {
                 Q_D(const QCleanlooksStyle);
-                int slideWidth = (qMax(rect.width() - 4, minWidth) * 2) / 3;
+                int slideWidth = (std::max(rect.width() - 4, minWidth) * 2) / 3;
                 int step = ((d->animateStep * slideWidth) / d->animationFps) % slideWidth;
                 if ((((d->animateStep * slideWidth) / d->animationFps) % (2 * slideWidth)) >= slideWidth)
                     step = slideWidth - step;
@@ -1914,7 +1914,7 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
             bool enabled = menuItem->state & State_Enabled;
 
             bool ignoreCheckMark = false;
-            int checkcol = qMax(menuItem->maxIconWidth, 20);
+            int checkcol = std::max(menuItem->maxIconWidth, 20);
 
 #ifndef QT_NO_COMBOBOX
             if (qobject_cast<const QComboBox*>(widget))
@@ -2413,14 +2413,14 @@ void QCleanlooksStyle::drawComplexControl(ComplexControl control, const QStyleOp
     QColor grooveColor;
     QColor darkOutline;
     dark.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*1.9)),
-                qMin(255, (int)(button.value()*0.7)));
+                std::min(255, (int)(button.saturation()*1.9)),
+                std::min(255, (int)(button.value()*0.7)));
     grooveColor.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*2.6)),
-                qMin(255, (int)(button.value()*0.9)));
+                std::min(255, (int)(button.saturation()*2.6)),
+                std::min(255, (int)(button.value()*0.9)));
     darkOutline.setHsv(button.hue(),
-                qMin(255, (int)(button.saturation()*3.0)),
-                qMin(255, (int)(button.value()*0.6)));
+                std::min(255, (int)(button.saturation()*3.0)),
+                std::min(255, (int)(button.value()*0.6)));
 
     QColor alphaCornerColor;
     if (widget) {
@@ -2463,7 +2463,7 @@ void QCleanlooksStyle::drawComplexControl(ComplexControl control, const QStyleOp
                 QRect downRect = proxy()->subControlRect(CC_SpinBox, &spinBoxCopy, SC_SpinBoxDown, widget);
 
                 int fw = spinBoxCopy.frame ? proxy()->pixelMetric(PM_SpinBoxFrameWidth, &spinBoxCopy, widget) : 0;
-                cachePainter.fillRect(rect.adjusted(1, qMax(fw - 1, 0), -1, -fw),
+                cachePainter.fillRect(rect.adjusted(1, std::max(fw - 1, 0), -1, -fw),
                                       option->palette.base());
 
                 QRect r = rect.adjusted(0, 1, 0, -1);
@@ -3622,7 +3622,7 @@ void QCleanlooksStyle::drawComplexControl(ComplexControl control, const QStyleOp
                 while (v <= slider->maximum + 1) {
                     if (v == slider->maximum + 1 && interval == 1)
                         break;
-                    const int v_ = qMin(v, slider->maximum);
+                    const int v_ = std::min(v, slider->maximum);
                     int pos = sliderPositionFromValue(slider->minimum, slider->maximum,
                                                     v_, (horizontal
                                                         ? slider->rect.width()
@@ -3808,7 +3808,7 @@ QSize QCleanlooksStyle::sizeFromContents(ContentsType type, const QStyleOption *
                 baseWidth += proxy()->pixelMetric(QStyle::PM_IndicatorWidth, option, widget);
                 baseWidth += proxy()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing, option, widget);
             }
-            newSize.setWidth(qMax(baseWidth, newSize.width()));
+            newSize.setWidth(std::max(baseWidth, newSize.width()));
         }
         newSize += QSize(0, 1);
         break;
@@ -3845,7 +3845,7 @@ QSize QCleanlooksStyle::sizeFromContents(ContentsType type, const QStyleOption *
 #ifndef QT_NO_COMBOBOX
             else if (!menuItem->icon.isNull()) {
                 if (const QComboBox *combo = qobject_cast<const QComboBox*>(widget)) {
-                    newSize.setHeight(qMax(combo->iconSize().height() + 2, newSize.height()));
+                    newSize.setHeight(std::max(combo->iconSize().height() + 2, newSize.height()));
                 }
             }
 #endif // QT_NO_COMBOBOX
@@ -4037,7 +4037,7 @@ QRect QCleanlooksStyle::subControlRect(ComplexControl control, const QStyleOptio
             int center = spinbox->rect.height() / 2;
             int fw = spinbox->frame ? proxy()->pixelMetric(PM_SpinBoxFrameWidth, spinbox, widget) : 0;
             int y = fw;
-            bs.setHeight(qMax(8, spinbox->rect.height()/2 - y));
+            bs.setHeight(std::max(8, spinbox->rect.height()/2 - y));
             bs.setWidth(15);
             int x, lx, rx;
             x = spinbox->rect.width() - y - bs.width() + 2;
@@ -4059,7 +4059,7 @@ QRect QCleanlooksStyle::subControlRect(ComplexControl control, const QStyleOptio
                 if (spinbox->buttonSymbols == QAbstractSpinBox::NoButtons) {
                     rect = QRect(lx, fw, spinbox->rect.width() - 2*fw, spinbox->rect.height() - 2*fw);
                 } else {
-                    rect = QRect(lx, fw, rx - qMax(fw - 1, 0), spinbox->rect.height() - 2*fw);
+                    rect = QRect(lx, fw, rx - std::max(fw - 1, 0), spinbox->rect.height() - 2*fw);
                 }
                 break;
             case SC_SpinBoxFrame:

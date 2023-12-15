@@ -561,7 +561,7 @@ bool QVariantToVARIANT(const QVariant &var, VARIANT &arg, const QByteArray &type
                     for (LONG i = 0; i < count; ++i) {
                         rgIndices[0] = i;
                         QVariantList columns = list.at(i).toList();
-                        int columnCount = qMin(maxColumns, columns.count());
+                        int columnCount = std::min(maxColumns, columns.count());
                         for (LONG j = 0;  j < columnCount; ++j) {
                             QVariant elem = columns.at(j);
                             VariantInit(&variant);

@@ -365,7 +365,7 @@ private:
         m_statusItem->setRect(0, 0, width() / 2 - 1, height() - 1);
 
         if (!m_iconItem->boundingRect().isEmpty()) {
-            qreal dim = qMin(width() * 0.6, height() * 0.8);
+            qreal dim = std::min(width() * 0.6, height() * 0.8);
             qreal pad = (height()  - dim) / 2;
             qreal sw = dim / m_iconItem->boundingRect().width();
             qreal sh = dim / m_iconItem->boundingRect().height();
@@ -387,12 +387,12 @@ private:
             for (int i = 0; i < m_dayItems.count(); ++i) {
                 m_dayItems[i]->setFont(textFont);
                 QRectF brect = m_dayItems[i]->boundingRect();
-                statusWidth = qMax(statusWidth, brect.width());
+                statusWidth = std::max(statusWidth, brect.width());
                 brect = m_rangeItems[i]->boundingRect();
-                rangeWidth = qMax(rangeWidth, brect.width());
+                rangeWidth = std::max(rangeWidth, brect.width());
             }
             qreal space = width() - left - statusWidth - rangeWidth;
-            qreal dim = qMin(h, space);
+            qreal dim = std::min(h, space);
             qreal pad = statusWidth + (space  - dim) / 2;
             for (int i = 0; i < m_dayItems.count(); ++i) {
                 qreal base = h * i;
@@ -421,7 +421,7 @@ private:
         m_statusItem->setRect(0, 0, width() - 1, height() / 2 - 1);
 
         if (!m_iconItem->boundingRect().isEmpty()) {
-            qreal dim = qMin(width() * 0.8, height() * 0.4);
+            qreal dim = std::min(width() * 0.8, height() * 0.4);
             qreal ofsy = (height() / 2  - dim) / 2;
             qreal ofsx = (width() - dim) / 3;
             qreal sw = dim / m_iconItem->boundingRect().width();
@@ -443,12 +443,12 @@ private:
             for (int i = 0; i < m_dayItems.count(); ++i) {
                 m_dayItems[i]->setFont(font());
                 QRectF brect = m_dayItems[i]->boundingRect();
-                statusHeight = qMax(statusHeight, brect.height());
+                statusHeight = std::max(statusHeight, brect.height());
                 brect = m_rangeItems[i]->boundingRect();
-                rangeHeight = qMax(rangeHeight, brect.height());
+                rangeHeight = std::max(rangeHeight, brect.height());
             }
             qreal space = height() - top - statusHeight - rangeHeight;
-            qreal dim = qMin(w, space);
+            qreal dim = std::min(w, space);
 
             qreal boxh = statusHeight + rangeHeight + dim;
             qreal pad = (height() - top - boxh) / 2;

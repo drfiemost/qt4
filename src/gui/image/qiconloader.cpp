@@ -429,7 +429,7 @@ static int directorySizeDistance(const QIconDirInfo &dir, int iconsize)
 
 QIconLoaderEngineEntry *QIconLoaderEngine::entryForSize(const QSize &size)
 {
-    int iconsize = qMin(size.width(), size.height());
+    int iconsize = std::min(size.width(), size.height());
 
     // Note that m_entries are sorted so that png-files
     // come first
@@ -473,7 +473,7 @@ QSize QIconLoaderEngine::actualSize(const QSize &size, QIcon::Mode mode,
         if (dir.type == QIconDirInfo::Scalable)
             return size;
         else {
-            int result = qMin<int>(dir.size, qMin(size.width(), size.height()));
+            int result = std::min<int>(dir.size, qMin(size.width(), size.height()));
             return QSize(result, result);
         }
     }
@@ -489,7 +489,7 @@ QPixmap PixmapEntry::pixmap(const QSize &size, QIcon::Mode mode, QIcon::State st
     if (basePixmap.isNull())
         basePixmap.load(filename);
 
-    int actualSize = qMin(size.width(), size.height());
+    int actualSize = std::min(size.width(), size.height());
 
     QString key = QLatin1Literal("$qt_theme_")
                   % HexString<qint64>(basePixmap.cacheKey())

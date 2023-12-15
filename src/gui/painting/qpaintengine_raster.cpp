@@ -1056,8 +1056,8 @@ void QRasterPaintEnginePrivate::drawImage(const QPointF &pt,
 void QRasterPaintEnginePrivate::systemStateChanged()
 {
     deviceRectUnclipped = QRect(0, 0,
-            qMin(QT_RASTER_COORD_LIMIT, device->width()),
-            qMin(QT_RASTER_COORD_LIMIT, device->height()));
+            std::min(QT_RASTER_COORD_LIMIT, device->width()),
+            std::min(QT_RASTER_COORD_LIMIT, device->height()));
 
     if (!systemClip.isEmpty()) {
         QRegion clippedDeviceRgn = systemClip & deviceRectUnclipped;
@@ -1432,22 +1432,22 @@ static void fillRect_normalized(const QRect &r, QSpanData *data,
     bool rectClipped = true;
 
     if (data->clip) {
-        x1 = qMax(r.x(), data->clip->xmin);
-        x2 = qMin(r.x() + r.width(), data->clip->xmax);
-        y1 = qMax(r.y(), data->clip->ymin);
-        y2 = qMin(r.y() + r.height(), data->clip->ymax);
+        x1 = std::max(r.x(), data->clip->xmin);
+        x2 = std::min(r.x() + r.width(), data->clip->xmax);
+        y1 = std::max(r.y(), data->clip->ymin);
+        y2 = std::min(r.y() + r.height(), data->clip->ymax);
         rectClipped = data->clip->hasRectClip;
 
     } else if (pe) {
-        x1 = qMax(r.x(), pe->deviceRect.x());
-        x2 = qMin(r.x() + r.width(), pe->deviceRect.x() + pe->deviceRect.width());
-        y1 = qMax(r.y(), pe->deviceRect.y());
-        y2 = qMin(r.y() + r.height(), pe->deviceRect.y() + pe->deviceRect.height());
+        x1 = std::max(r.x(), pe->deviceRect.x());
+        x2 = std::min(r.x() + r.width(), pe->deviceRect.x() + pe->deviceRect.width());
+        y1 = std::max(r.y(), pe->deviceRect.y());
+        y2 = std::min(r.y() + r.height(), pe->deviceRect.y() + pe->deviceRect.height());
     } else {
-        x1 = qMax(r.x(), 0);
-        x2 = qMin(r.x() + r.width(), data->rasterBuffer->width());
-        y1 = qMax(r.y(), 0);
-        y2 = qMin(r.y() + r.height(), data->rasterBuffer->height());
+        x1 = std::max(r.x(), 0);
+        x2 = std::min(r.x() + r.width(), data->rasterBuffer->width());
+        y1 = std::max(r.y(), 0);
+        y2 = std::min(r.y() + r.height(), data->rasterBuffer->height());
     }
 
     if (x2 <= x1 || y2 <= y1)
@@ -1480,7 +1480,7 @@ static void fillRect_normalized(const QRect &r, QSpanData *data,
     Q_ASSERT(data->blend);
     int y = y1;
     while (y < y2) {
-        int n = qMin(nspans, y2 - y);
+        int n = std::min(nspans, y2 - y);
         int i = 0;
         while (i < n) {
             spans[i].x = x1;
@@ -2561,8 +2561,8 @@ void QRasterPaintEngine::alphaPenBlt(const void* src, int bpl, int depth, int rx
     bool unclipped = false;
     if (clip) {
         // inlined QRect::intersects
-        const bool intersects = qMax(clip->xmin, rect.left()) <= qMin(clip->xmax - 1, rect.right())
-                                && qMax(clip->ymin, rect.top()) <= qMin(clip->ymax - 1, rect.bottom());
+        const bool intersects = std::max(clip->xmin, rect.left()) <= std::min(clip->xmax - 1, rect.right())
+                                && std::max(clip->ymin, rect.top()) <= std::min(clip->ymax - 1, rect.bottom());
 
         if (clip->hasRectClip) {
             unclipped = rx > clip->xmin
@@ -2575,8 +2575,8 @@ void QRasterPaintEngine::alphaPenBlt(const void* src, int bpl, int depth, int rx
             return;
     } else {
         // inlined QRect::intersects
-        const bool intersects = qMax(0, rect.left()) <= qMin(rb->width() - 1, rect.right())
-                                && qMax(0, rect.top()) <= qMin(rb->height() - 1, rect.bottom());
+        const bool intersects = std::max(0, rect.left()) <= std::min(rb->width() - 1, rect.right())
+                                && std::max(0, rect.top()) <= std::min(rb->height() - 1, rect.bottom());
         if (!intersects)
             return;
 
@@ -2615,8 +2615,8 @@ void QRasterPaintEngine::alphaPenBlt(const void* src, int bpl, int depth, int rx
         } else if (d->deviceDepth == 32 && (depth == 8 || depth == 32)) {
             // (A)RGB Alpha mask where the alpha component is not used.
             if (!clip) {
-                int nx = qMax(0, rx);
-                int ny = qMax(0, ry);
+                int nx = std::max(0, rx);
+                int ny = std::max(0, ry);
 
                 // Move scanline pointer to compensate for moved x and y
                 int xdiff = nx - rx;
@@ -2659,8 +2659,8 @@ void QRasterPaintEngine::alphaPenBlt(const void* src, int bpl, int depth, int rx
         h -= y0;
     }
 
-    w = qMin(w, rb->width() - qMax(0, rx));
-    h = qMin(h, rb->height() - qMax(0, ry));
+    w = std::min(w, rb->width() - std::max(0, rx));
+    h = std::min(h, rb->height() - std::max(0, ry));
 
     if (w <= 0 || h <= 0)
         return;
@@ -3300,7 +3300,7 @@ void QRasterPaintEngine::drawEllipse(const QRectF &rect)
     if (((qpen_style(s->lastPen) == Qt::SolidLine && s->flags.fast_pen)
            || (qpen_style(s->lastPen) == Qt::NoPen))
         && !s->flags.antialiased
-        && qMax(rect.width(), rect.height()) < QT_RASTER_COORD_LIMIT
+        && std::max(rect.width(), rect.height()) < QT_RASTER_COORD_LIMIT
         && !rect.isEmpty()
         && s->matrix.type() <= QTransform::TxScale) // no shear
     {
@@ -3477,10 +3477,10 @@ void QRasterPaintEngine::drawBitmap(const QPointF &pos, const QImage &image, QSp
     // Boundaries
     int w = image.width();
     int h = image.height();
-    int ymax = qMin(qRound(pos.y() + h), d->rasterBuffer->height());
-    int ymin = qMax(qRound(pos.y()), 0);
-    int xmax = qMin(qRound(pos.x() + w), d->rasterBuffer->width());
-    int xmin = qMax(qRound(pos.x()), 0);
+    int ymax = std::min(qRound(pos.y() + h), d->rasterBuffer->height());
+    int ymin = std::max(qRound(pos.y()), 0);
+    int xmax = std::min(qRound(pos.x() + w), d->rasterBuffer->width());
+    int xmin = std::max(qRound(pos.x()), 0);
 
     int x_offset = xmin - qRound(pos.x());
 
@@ -3618,7 +3618,7 @@ static void qt_merge_clip(const QClipData *c1, const QClipData *c2, QClipData *r
         // we need to merge the two
 
         // find required length
-        int max = qMax(c1_spans[c1_count - 1].x + c1_spans[c1_count - 1].len,
+        int max = std::max(c1_spans[c1_count - 1].x + c1_spans[c1_count - 1].len,
                 c2_spans[c2_count - 1].x + c2_spans[c2_count - 1].len);
         buffer.resize(max);
         memset(buffer.data(), 0, buffer.size() * sizeof(short));
@@ -3867,8 +3867,8 @@ void QRasterBuffer::init()
 QImage::Format QRasterBuffer::prepare(QImage *image)
 {
     m_buffer = (uchar *)image->bits();
-    m_width = qMin(QT_RASTER_COORD_LIMIT, image->width());
-    m_height = qMin(QT_RASTER_COORD_LIMIT, image->height());
+    m_width = std::min(QT_RASTER_COORD_LIMIT, image->width());
+    m_height = std::min(QT_RASTER_COORD_LIMIT, image->height());
     bytes_per_pixel = image->depth()/8;
     bytes_per_line = image->bytesPerLine();
 
@@ -3893,8 +3893,8 @@ void QRasterBuffer::resetBuffer(int val)
 void QRasterBuffer::prepare(QCustomRasterPaintDevice *device)
 {
     m_buffer = reinterpret_cast<uchar*>(device->memory());
-    m_width = qMin(QT_RASTER_COORD_LIMIT, device->width());
-    m_height = qMin(QT_RASTER_COORD_LIMIT, device->height());
+    m_width = std::min(QT_RASTER_COORD_LIMIT, device->width());
+    m_height = std::min(QT_RASTER_COORD_LIMIT, device->height());
     bytes_per_pixel = device->depth() / 8;
     bytes_per_line = device->bytesPerLine();
     format = device->format();
@@ -4204,8 +4204,8 @@ void QClipData::setClipRect(const QRect &rect)
 
     xmin = rect.x();
     xmax = rect.x() + rect.width();
-    ymin = qMin(rect.y(), clipSpanHeight);
-    ymax = qMin(rect.y() + rect.height(), clipSpanHeight);
+    ymin = std::min(rect.y(), clipSpanHeight);
+    ymax = std::min(rect.y() + rect.height(), clipSpanHeight);
 
     if (m_spans) {
         free(m_spans);
@@ -4289,11 +4289,11 @@ static const QSpan *qt_intersect_spans(const QClipData *clip, int *currentClip,
             ++spans;
             continue;
         }
-        int x = qMax(sx1, cx1);
-        int len = qMin(sx2, cx2) - x;
+        int x = std::max(sx1, cx1);
+        int len = std::min(sx2, cx2) - x;
         if (len) {
-            out->x = qMax(sx1, cx1);
-            out->len = qMin(sx2, cx2) - out->x;
+            out->x = std::max(sx1, cx1);
+            out->len = std::min(sx2, cx2) - out->x;
             out->y = spans->y;
             out->coverage = qt_div_255(spans->coverage * clipSpans->coverage);
             ++out;
@@ -4356,11 +4356,11 @@ static int qt_intersect_spans(QT_FT_Span *spans, int numSpans,
             continue;
         }
         if (spans[i].x < minx) {
-            spans[n].len = qMin(spans[i].len - (minx - spans[i].x), maxx - minx + 1);
+            spans[n].len = std::min(spans[i].len - (minx - spans[i].x), maxx - minx + 1);
             spans[n].x = minx;
         } else {
             spans[n].x = spans[i].x;
-            spans[n].len = qMin(spans[i].len, ushort(maxx - spans[n].x + 1));
+            spans[n].len = std::min(spans[i].len, ushort(maxx - spans[n].x + 1));
         }
         if (spans[n].len == 0)
             continue;
@@ -4393,7 +4393,7 @@ static void qt_span_clip(int count, const QSpan *spans, void *userData)
     ClipData *clipData = reinterpret_cast<ClipData *>(userData);
 
 //     qDebug() << " qt_span_clip: " << count << clipData->operation;
-//     for (int i = 0; i < qMin(count, 10); ++i) {
+//     for (int i = 0; i < std::min(count, 10); ++i) {
 //         qDebug() << "    " << spans[i].x << spans[i].y << spans[i].len << spans[i].coverage;
 //     }
 
@@ -4448,8 +4448,8 @@ QImage QRasterBuffer::bufferImage() const
 
 void QRasterBuffer::flushToARGBImage(QImage *target) const
 {
-    int w = qMin(m_width, target->width());
-    int h = qMin(m_height, target->height());
+    int w = std::min(m_width, target->width());
+    int h = std::min(m_height, target->height());
 
     for (int y=0; y<h; ++y) {
         uint *sourceLine = (uint *)const_cast<QRasterBuffer *>(this)->scanLine(y);
@@ -4568,7 +4568,7 @@ void QGradientCache::generateGradientColorTable(const QGradient& gradient, uint 
         uint alpha_second = qAlpha(second_color) << 16;
 
         int i = 0;
-        for (; i <= qMin(GRADIENT_STOPTABLE_SIZE, first_index); ++i) {
+        for (; i <= std::min(GRADIENT_STOPTABLE_SIZE, first_index); ++i) {
             if (colorInterpolation)
                 colorTable[i] = first_color;
             else
@@ -4589,7 +4589,7 @@ void QGradientCache::generateGradientColorTable(const QGradient& gradient, uint 
             blue_first += 1 << 15;
             alpha_first += 1 << 15;
 
-            for (; i < qMin(GRADIENT_STOPTABLE_SIZE, second_index); ++i) {
+            for (; i < std::min(GRADIENT_STOPTABLE_SIZE, second_index); ++i) {
                 red_first += red_delta;
                 green_first += green_delta;
                 blue_first += blue_delta;
@@ -4961,8 +4961,8 @@ void QSpanData::initTexture(const QImage *image, int alpha, QTextureData::Type _
         } else {
             texture.x1 = sourceRect.x();
             texture.y1 = sourceRect.y();
-            texture.x2 = qMin(texture.x1 + sourceRect.width(), d->width);
-            texture.y2 = qMin(texture.y1 + sourceRect.height(), d->height);
+            texture.x2 = std::min(texture.x1 + sourceRect.width(), d->width);
+            texture.y2 = std::min(texture.y1 + sourceRect.height(), d->height);
         }
 
         texture.bytesPerLine = d->bytes_per_line;
@@ -4999,7 +4999,7 @@ static inline void drawEllipsePoints(int x, int y, int length,
 
     // topleft
     outline[0].x = midx + (midx - x) - (length - 1) - (rect.width() & 0x1);
-    outline[0].len = qMin(length, x - outline[0].x);
+    outline[0].len = std::min(length, x - outline[0].x);
     outline[0].y = y;
     outline[0].coverage = 255;
 
@@ -5026,13 +5026,13 @@ static inline void drawEllipsePoints(int x, int y, int length,
 
         // top fill
         fill[0].x = outline[0].x + outline[0].len - 1;
-        fill[0].len = qMax(0, outline[1].x - fill[0].x);
+        fill[0].len = std::max(0, outline[1].x - fill[0].x);
         fill[0].y = outline[1].y;
         fill[0].coverage = 255;
 
         // bottom fill
         fill[1].x = outline[2].x + outline[2].len - 1;
-        fill[1].len = qMax(0, outline[3].x - fill[1].x);
+        fill[1].len = std::max(0, outline[3].x - fill[1].x);
         fill[1].y = outline[3].y;
         fill[1].coverage = 255;
 
@@ -5132,11 +5132,11 @@ void dumpClip(int width, int height, const QClipData *clip)
         const QSpan *span = ((QClipData *) clip)->spans() + i;
         for (int j = 0; j < span->len; ++j)
             clipImg.setPixel(span->x + j, span->y, 0xffffff00);
-        x0 = qMin(x0, int(span->x));
-        x1 = qMax(x1, int(span->x + span->len - 1));
+        x0 = std::min(x0, int(span->x));
+        x1 = std::max(x1, int(span->x + span->len - 1));
 
-        y0 = qMin(y0, int(span->y));
-        y1 = qMax(y1, int(span->y));
+        y0 = std::min(y0, int(span->y));
+        y1 = std::max(y1, int(span->y));
     }
 
     static int counter = 0;

@@ -146,9 +146,9 @@ QRect QStatusBarPrivate::messageRect() const
         if (item->p && item->w->isVisible()) {
                 if (item->p) {
                     if (rtl)
-                        left = qMax(left, item->w->x() + item->w->width() + 2);
+                        left = std::max(left, item->w->x() + item->w->width() + 2);
                     else
-                        right = qMin(right, item->w->x() - 2);
+                        right = std::min(right, item->w->x() - 2);
                 }
                 break;
         }
@@ -504,8 +504,8 @@ void QStatusBar::reformat()
         if (!item || item->p)
             break;
         l->addWidget(item->w, item->s);
-        int itemH = qMin(qSmartMinSize(item->w).height(), item->w->maximumHeight());
-        maxH = qMax(maxH, itemH);
+        int itemH = std::min(qSmartMinSize(item->w).height(), item->w->maximumHeight());
+        maxH = std::max(maxH, itemH);
     }
 
     l->addStretch(0);
@@ -515,12 +515,12 @@ void QStatusBar::reformat()
         if (!item)
             break;
         l->addWidget(item->w, item->s);
-        int itemH = qMin(qSmartMinSize(item->w).height(), item->w->maximumHeight());
-        maxH = qMax(maxH, itemH);
+        int itemH = std::min(qSmartMinSize(item->w).height(), item->w->maximumHeight());
+        maxH = std::max(maxH, itemH);
     }
 #ifndef QT_NO_SIZEGRIP
     if (d->resizer) {
-        maxH = qMax(maxH, d->resizer->sizeHint().height());
+        maxH = std::max(maxH, d->resizer->sizeHint().height());
         d->box->addSpacing(1);
         d->box->addWidget(d->resizer, 0, Qt::AlignBottom);
     }
@@ -726,13 +726,13 @@ bool QStatusBar::event(QEvent *e)
             item = d->items.at(i);
             if (!item)
                 break;
-            int itemH = qMin(qSmartMinSize(item->w).height(), item->w->maximumHeight());
-            maxH = qMax(maxH, itemH);
+            int itemH = std::min(qSmartMinSize(item->w).height(), item->w->maximumHeight());
+            maxH = std::max(maxH, itemH);
         }
 
 #ifndef QT_NO_SIZEGRIP
         if (d->resizer)
-            maxH = qMax(maxH, d->resizer->sizeHint().height());
+            maxH = std::max(maxH, d->resizer->sizeHint().height());
 #endif
 
         if (maxH != d->savedStrut)

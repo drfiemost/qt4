@@ -125,7 +125,7 @@ void tst_lconvert::doCompare(QIODevice *actualDev, const QString &expectedFn)
         }
     }
     QByteArray diff;
-    for (int j = qMax(0, i - 3); j < i; j++)
+    for (int j = std::max(0, i - 3); j < i; j++)
         diff += expected.at(j) + '\n';
     diff += "<<<<<<< got\n";
     for (int j = i; j < gi; j++) {
@@ -144,7 +144,7 @@ void tst_lconvert::doCompare(QIODevice *actualDev, const QString &expectedFn)
         }
     }
     diff += ">>>>>>> expected\n";
-    for (int j = ei; j < qMin(ei + 3, expected.size()); j++)
+    for (int j = ei; j < std::min(ei + 3, expected.size()); j++)
         diff += expected.at(j) + '\n';
     QFAIL(qPrintable("Output for " + expectedFn + " does not meet expectations:\n" + diff));
 }

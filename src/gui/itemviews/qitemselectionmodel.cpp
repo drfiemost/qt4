@@ -239,11 +239,11 @@ bool QItemSelectionRange::intersects(const QItemSelectionRange &other) const
 QItemSelectionRange QItemSelectionRange::intersect(const QItemSelectionRange &other) const
 {
     if (model() == other.model() && parent() == other.parent()) {
-        QModelIndex topLeft = model()->index(qMax(top(), other.top()),
-                                             qMax(left(), other.left()),
+        QModelIndex topLeft = model()->index(std::max(top(), other.top()),
+                                             std::max(left(), other.left()),
                                              other.parent());
-        QModelIndex bottomRight = model()->index(qMin(bottom(), other.bottom()),
-                                                 qMin(right(), other.right()),
+        QModelIndex bottomRight = model()->index(std::min(bottom(), other.bottom()),
+                                                 std::min(right(), other.right()),
                                                  other.parent());
         return QItemSelectionRange(topLeft, bottomRight);
     }
@@ -406,10 +406,10 @@ void QItemSelection::select(const QModelIndex &topLeft, const QModelIndex &botto
         return;
     }
     if (topLeft.row() > bottomRight.row() || topLeft.column() > bottomRight.column()) {
-        int top = qMin(topLeft.row(), bottomRight.row());
-        int bottom = qMax(topLeft.row(), bottomRight.row());
-        int left = qMin(topLeft.column(), bottomRight.column());
-        int right = qMax(topLeft.column(), bottomRight.column());
+        int top = std::min(topLeft.row(), bottomRight.row());
+        int bottom = std::max(topLeft.row(), bottomRight.row());
+        int left = std::min(topLeft.column(), bottomRight.column());
+        int right = std::max(topLeft.column(), bottomRight.column());
         QModelIndex tl = topLeft.sibling(top, left);
         QModelIndex br = bottomRight.sibling(bottom, right);
         append(QItemSelectionRange(tl, br));
@@ -1297,7 +1297,7 @@ bool QItemSelectionModel::isRowSelected(int row, const QModelIndex &parent) cons
                     selectable = flags & Qt::ItemIsSelectable;
                 }
                 if (selectable){
-                    column = qMax(column, (*it).right());
+                    column = std::max(column, (*it).right());
                     break;
                 }
             }
@@ -1357,7 +1357,7 @@ bool QItemSelectionModel::isColumnSelected(int column, const QModelIndex &parent
              if ((*it).contains(row, column, parent)) {
                  Qt::ItemFlags flags = d->model->index(row, column, parent).flags();
                  if ((flags & Qt::ItemIsSelectable) && (flags & Qt::ItemIsEnabled)) {
-                     row = qMax(row, (*it).bottom());
+                     row = std::max(row, (*it).bottom());
                      break;
                  }
              }

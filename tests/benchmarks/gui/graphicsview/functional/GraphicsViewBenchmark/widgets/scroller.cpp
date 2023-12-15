@@ -211,8 +211,8 @@ void ScrollerPrivate::updateScrolling()
         scrollOngoing = true;
 
 
-        qreal x = qMax(-MaxScrollingSpeed, qMin(m_speed.x(), MaxScrollingSpeed));
-        qreal y = qMax(-MaxScrollingSpeed, qMin(m_speed.y(), MaxScrollingSpeed));
+        qreal x = std::max(-MaxScrollingSpeed, std::min(m_speed.x(), MaxScrollingSpeed));
+        qreal y = std::max(-MaxScrollingSpeed, std::min(m_speed.y(), MaxScrollingSpeed));
 
         int sinceLast = m_lastFrameTime.elapsed();
         int slowdown = (ScrollStep * sinceLast) + m_scrollSlowAccum;
@@ -220,14 +220,14 @@ void ScrollerPrivate::updateScrolling()
         slowdown >>= 6;
 
         if (x > 0)
-            x= qMax(qreal(0.0), x - slowdown);
+            x= std::max(qreal(0.0), x - slowdown);
         else
-            x = qMin(qreal(0.0), x + slowdown);
+            x = std::min(qreal(0.0), x + slowdown);
 
         if (y > 0)
-            y = qMax(qreal(0.0), y - slowdown);
+            y = std::max(qreal(0.0), y - slowdown);
         else
-            y = qMin(qreal(0.0), y + slowdown);
+            y = std::min(qreal(0.0), y + slowdown);
 
         m_speed = QPoint(x,y);
 

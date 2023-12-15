@@ -156,10 +156,10 @@ void AboutDialog::updateSize()
     TRACE_OBJ
     QSize screenSize = QApplication::desktop()->availableGeometry(QCursor::pos())
         .size();
-    int limit = qMin(screenSize.width()/2, 500);
+    int limit = std::min(screenSize.width()/2, 500);
 
 #ifdef Q_WS_MAC
-    limit = qMin(screenSize.width()/2, 420);
+    limit = std::min(screenSize.width()/2, 420);
 #endif
 
     layout()->activate();
@@ -169,7 +169,7 @@ void AboutDialog::updateSize()
         width = limit;
 
     QFontMetrics fm(qApp->font("QWorkspaceTitleBar"));
-    int windowTitleWidth = qMin(fm.width(windowTitle()) + 50, limit);
+    int windowTitleWidth = std::min(fm.width(windowTitle()) + 50, limit);
     if (windowTitleWidth > width)
         width = windowTitleWidth;
 

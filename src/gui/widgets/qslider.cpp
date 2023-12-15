@@ -562,7 +562,7 @@ QSlider::TickPosition QSlider::tickPosition() const
 
 void QSlider::setTickInterval(int ts)
 {
-    d_func()->tickInterval = qMax(0, ts);
+    d_func()->tickInterval = std::max(0, ts);
     update();
 }
 

@@ -1705,8 +1705,8 @@ void tst_QGraphicsAnchorLayout1::testBasicLayout()
     int widgetCount = -1;
     for (int i = 0; i < data.count(); ++i) {
         const BasicLayoutTestData item = data[i];
-        widgetCount = qMax(widgetCount, item.firstIndex);
-        widgetCount = qMax(widgetCount, item.secondIndex);
+        widgetCount = std::max(widgetCount, item.firstIndex);
+        widgetCount = std::max(widgetCount, item.secondIndex);
     }
     ++widgetCount; // widgetCount is max of indices.
 
@@ -2206,8 +2206,8 @@ void tst_QGraphicsAnchorLayout1::testRemoveCenterAnchor()
     int widgetCount = -1;
     for (int i = 0; i < data.count(); ++i) {
         const BasicLayoutTestData item = data[i];
-        widgetCount = qMax(widgetCount, item.firstIndex);
-        widgetCount = qMax(widgetCount, item.secondIndex);
+        widgetCount = std::max(widgetCount, item.firstIndex);
+        widgetCount = std::max(widgetCount, item.secondIndex);
     }
     ++widgetCount; // widgetCount is max of indices.
 
@@ -3037,8 +3037,8 @@ void tst_QGraphicsAnchorLayout1::testComplexCases()
     int widgetCount = -1;
     for (int i = 0; i < data.count(); ++i) {
         const BasicLayoutTestData item = data[i];
-        widgetCount = qMax(widgetCount, item.firstIndex);
-        widgetCount = qMax(widgetCount, item.secondIndex);
+        widgetCount = std::max(widgetCount, item.firstIndex);
+        widgetCount = std::max(widgetCount, item.secondIndex);
     }
     ++widgetCount; // widgetCount is max of indices.
 

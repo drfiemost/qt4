@@ -76,7 +76,7 @@ DragWidget::DragWidget(QWidget *parent)
     */
 
     setAcceptDrops(true);
-    setMinimumSize(400, qMax(200, y));
+    setMinimumSize(400, std::max(200, y));
     setWindowTitle(tr("Draggable Text"));
 }
 

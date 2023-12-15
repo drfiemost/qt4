@@ -341,7 +341,7 @@ protected:
             return -1;
         }
 
-        qint64 n = qMin(maxlen, toBeGeneratedCount);
+        qint64 n = std::min(maxlen, toBeGeneratedCount);
         toBeGeneratedCount -= n;
 
         if (toBeGeneratedCount <= 0) {
@@ -414,7 +414,7 @@ public slots:
 
         // send data
         if (client && client->bytesToWrite() < 100*1024 && dataSent < dataSize) {
-            qint64 amount = qMin(qint64(16*1024), dataSize - dataSent);
+            qint64 amount = std::min(qint64(16*1024), dataSize - dataSent);
             QByteArray data(amount, '@');
 
             if (chunkedEncoding) {

@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 static int menuBarHeightForWidth(QWidget *menubar, int w)
 {
     if (menubar && !menubar->isHidden() && !menubar->isWindow()) {
-        int result = menubar->heightForWidth(qMax(w, menubar->minimumWidth()));
+        int result = menubar->heightForWidth(std::max(w, menubar->minimumWidth()));
         if (result == -1)
             result = menubar->sizeHint().height();
         const int min = qSmartMinSize(menubar).height();
@@ -737,8 +737,8 @@ QSize QLayout::totalMaximumSize() const
 #endif
 
     if (d->topLevel)
-        s = QSize(qMin(s.width() + side, QLAYOUTSIZE_MAX),
-                   qMin(s.height() + top, QLAYOUTSIZE_MAX));
+        s = QSize(std::min(s.width() + side, QLAYOUTSIZE_MAX),
+                   std::min(s.height() + top, QLAYOUTSIZE_MAX));
     return s;
 }
 
@@ -1267,15 +1267,15 @@ QRect QLayout::alignmentRect(const QRect &r) const
 
     if ((expandingDirections() & Qt::Horizontal) ||
          !(a & Qt::AlignHorizontal_Mask)) {
-        s.setWidth(qMin(r.width(), ms.width()));
+        s.setWidth(std::min(r.width(), ms.width()));
     }
     if ((expandingDirections() & Qt::Vertical) ||
          !(a & Qt::AlignVertical_Mask)) {
-        s.setHeight(qMin(r.height(), ms.height()));
+        s.setHeight(std::min(r.height(), ms.height()));
     } else if (hasHeightForWidth()) {
         int hfw = heightForWidth(s.width());
         if (hfw < s.height())
-            s.setHeight(qMin(hfw, ms.height()));
+            s.setHeight(std::min(hfw, ms.height()));
     }
 
     s = s.boundedTo(r.size());
@@ -1393,10 +1393,10 @@ QSize QLayout::closestAcceptableSize(const QWidget *widget, const QSize &size)
         } else {
             // binary search; assume hfw is decreasing ###
 
-            int maxw = qMax(widget->width(),result.width());
-            int maxh = qMax(widget->height(), result.height());
-            int minw = qMin(widget->width(),result.width());
-            int minh = qMin(widget->height(), result.height());
+            int maxw = std::max(widget->width(),result.width());
+            int maxh = std::max(widget->height(), result.height());
+            int minw = std::min(widget->width(),result.width());
+            int minh = std::min(widget->height(), result.height());
 
             int minhfw = l->minimumHeightForWidth(minw);
             int maxhfw = l->minimumHeightForWidth(maxw);

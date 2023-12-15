@@ -581,7 +581,7 @@ void QBalloonTip::balloon(const QPoint& pos, int msecs, bool showArrow)
     path.lineTo(sz.width() - 1, sz.height() - 1);
     path.lineTo(0, sz.height() - 1);
     path.lineTo(0, 0);
-    move(qMax(pos.x() - sz.width(), scr.left()), pos.y());
+    move(std::max(pos.x() - sz.width(), scr.left()), pos.y());
 #else
     path.moveTo(ml + rc, mt);
     if (arrowAtTop && arrowAtLeft) {
@@ -590,14 +590,14 @@ void QBalloonTip::balloon(const QPoint& pos, int msecs, bool showArrow)
             path.lineTo(ml + ao, mt - ah);
             path.lineTo(ml + ao + aw, mt);
         }
-        move(qMax(pos.x() - ao, scr.left() + 2), pos.y());
+        move(std::max(pos.x() - ao, scr.left() + 2), pos.y());
     } else if (arrowAtTop && !arrowAtLeft) {
         if (showArrow) {
             path.lineTo(mr - ao - aw, mt);
             path.lineTo(mr - ao, mt - ah);
             path.lineTo(mr - ao, mt);
         }
-        move(qMin(pos.x() - sh.width() + ao, scr.right() - sh.width() - 2), pos.y());
+        move(std::min(pos.x() - sh.width() + ao, scr.right() - sh.width() - 2), pos.y());
     }
     path.lineTo(mr - rc, mt);
     path.arcTo(QRect(mr - rc*2, mt, rc*2, rc*2), 90, -90);
@@ -609,7 +609,7 @@ void QBalloonTip::balloon(const QPoint& pos, int msecs, bool showArrow)
             path.lineTo(mr - ao, mb + ah);
             path.lineTo(mr - ao - aw, mb);
         }
-        move(qMin(pos.x() - sh.width() + ao, scr.right() - sh.width() - 2),
+        move(std::min(pos.x() - sh.width() + ao, scr.right() - sh.width() - 2),
              pos.y() - sh.height());
     } else if (!arrowAtTop && arrowAtLeft) {
         if (showArrow) {
@@ -617,7 +617,7 @@ void QBalloonTip::balloon(const QPoint& pos, int msecs, bool showArrow)
             path.lineTo(ao, mb + ah);
             path.lineTo(ao, mb);
         }
-        move(qMax(pos.x() - ao, scr.x() + 2), pos.y() - sh.height());
+        move(std::max(pos.x() - ao, scr.x() + 2), pos.y() - sh.height());
     }
     path.lineTo(ml + rc, mb);
     path.arcTo(QRect(ml, mb - rc*2, rc*2, rc*2), -90, -90);

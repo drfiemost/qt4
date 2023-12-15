@@ -468,7 +468,7 @@ void QSvgText::draw_helper(QPainter *p, QSvgExtraStates &states, QRectF *boundin
         if (boundingRect) {
             brect.translate(m_coord * scale);
             if (bounds.height() > 0)
-                brect.setBottom(qMin(brect.bottom(), bounds.bottom()));
+                brect.setBottom(std::min(brect.bottom(), bounds.bottom()));
             *boundingRect = p->transform().mapRect(brect);
         }
     }

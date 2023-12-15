@@ -173,7 +173,7 @@ void QMenuPrivate::init()
 int QMenuPrivate::scrollerHeight() const
 {
     Q_Q(const QMenu);
-    return qMax(QApplication::globalStrut().height(), q->style()->pixelMetric(QStyle::PM_MenuScrollerHeight, 0, q));
+    return std::max(QApplication::globalStrut().height(), q->style()->pixelMetric(QStyle::PM_MenuScrollerHeight, 0, q));
 }
 
 //Windows and KDE allows menus to cover the taskbar, while GNOME and Mac don't
@@ -269,7 +269,7 @@ void QMenuPrivate::updateActionRects(const QRect &screen) const
         hasCheckableItems |= action->isCheckable();
         QIcon is = action->icon();
         if (!is.isNull()) {
-            maxIconWidth = qMax<uint>(maxIconWidth, icone + 4);
+            maxIconWidth = std::max<uint>(maxIconWidth, icone + 4);
         }
     }
 
@@ -301,17 +301,17 @@ void QMenuPrivate::updateActionRects(const QRect &screen) const
                 QString s = action->text();
                 int t = s.indexOf(QLatin1Char('\t'));
                 if (t != -1) {
-                    tabWidth = qMax(int(tabWidth), qfm.width(s.mid(t+1)));
+                    tabWidth = std::max(int(tabWidth), qfm.width(s.mid(t+1)));
                     s = s.left(t);
     #ifndef QT_NO_SHORTCUT
                 } else {
                     QKeySequence seq = action->shortcut();
                     if (!seq.isEmpty())
-                        tabWidth = qMax(int(tabWidth), qfm.width(seq));
+                        tabWidth = std::max(int(tabWidth), qfm.width(seq));
     #endif
                 }
                 sz.setWidth(fm.boundingRect(QRect(), Qt::TextSingleLine | Qt::TextShowMnemonic, s).width());
-                sz.setHeight(qMax(fm.height(), qfm.height()));
+                sz.setHeight(std::max(fm.height(), qfm.height()));
 
                 QIcon is = action->icon();
                 if (!is.isNull()) {
@@ -325,7 +325,7 @@ void QMenuPrivate::updateActionRects(const QRect &screen) const
 
 
         if (!sz.isEmpty()) {
-            max_column_width = qMax(max_column_width, sz.width());
+            max_column_width = std::max(max_column_width, sz.width());
             //wrapping
             if (!scroll &&
                y+sz.height()+vmargin > dh - (deskFw * 2)) {
@@ -341,7 +341,7 @@ void QMenuPrivate::updateActionRects(const QRect &screen) const
     max_column_width += tabWidth; //finally add in the tab width
     const int sfcMargin = style->sizeFromContents(QStyle::CT_Menu, &opt, QApplication::globalStrut(), q).width() - QApplication::globalStrut().width();
     const int min_column_width = q->minimumWidth() - (sfcMargin + leftmargin + rightmargin + 2 * (fw + hmargin));
-    max_column_width = qMax(min_column_width, max_column_width);
+    max_column_width = std::max(min_column_width, max_column_width);
 
     //calculate position
     const int base_y = vmargin + fw + topmargin +
@@ -826,7 +826,7 @@ void QMenuPrivate::scrollMenu(QAction *action, QMenuScroller::ScrollLocation loc
     }
 
     //actually update flags
-    const int delta = qMin(0, newOffset) - scroll->scrollOffset; //make sure the new offset is always negative
+    const int delta = std::min(0, newOffset) - scroll->scrollOffset; //make sure the new offset is always negative
     if (!itemsDirty && delta) {
         //we've scrolled so we need to update the action rects
         for (int i = 0; i < actionRects.count(); ++i) {
@@ -1882,9 +1882,9 @@ void QMenu::popup(const QPoint &p, QAction *atAction)
 #endif //QT_NO_MENUBAR
 
             if (pos.x() < screen.left() + desktopFrame)
-                pos.setX(qMax(p.x(), screen.left() + desktopFrame));
+                pos.setX(std::max(p.x(), screen.left() + desktopFrame));
             if (pos.x() + size.width() - 1 > screen.right() - desktopFrame)
-                pos.setX(qMax(p.x() - size.width(), screen.right() - desktopFrame - size.width() + 1));
+                pos.setX(std::max(p.x() - size.width(), screen.right() - desktopFrame - size.width() + 1));
         } else {
             if (pos.x() + size.width() - 1 > screen.right() - desktopFrame)
                 pos.setX(screen.right() - desktopFrame - size.width() + 1);
@@ -1893,9 +1893,9 @@ void QMenu::popup(const QPoint &p, QAction *atAction)
         }
         if (pos.y() + size.height() - 1 > screen.bottom() - desktopFrame) {
             if(snapToMouse)
-                pos.setY(qMin(mouse.y() - (size.height() + desktopFrame), screen.bottom()-desktopFrame-size.height()+1));
+                pos.setY(std::min(mouse.y() - (size.height() + desktopFrame), screen.bottom()-desktopFrame-size.height()+1));
             else
-                pos.setY(qMax(p.y() - (size.height() + desktopFrame), screen.bottom()-desktopFrame-size.height()+1));
+                pos.setY(std::max(p.y() - (size.height() + desktopFrame), screen.bottom()-desktopFrame-size.height()+1));
         } else if (pos.y() < screen.top() + desktopFrame) {
             pos.setY(screen.top() + desktopFrame);
         }
@@ -1905,7 +1905,7 @@ void QMenu::popup(const QPoint &p, QAction *atAction)
         if (pos.y() + menuSize.height() - 1 > screen.bottom() - desktopFrame) {
             if (d->scroll) {
                 d->scroll->scrollFlags |= uint(QMenuPrivate::QMenuScroller::ScrollDown);
-                int y = qMax(screen.y(),pos.y());
+                int y = std::max(screen.y(),pos.y());
                 size.setHeight(screen.bottom() - (desktopFrame * 2) - y);
             } else {
                 // Too big for screen, bias to see bottom of menu (for some reason)

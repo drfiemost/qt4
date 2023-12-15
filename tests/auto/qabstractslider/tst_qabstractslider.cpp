@@ -1196,7 +1196,7 @@ void tst_QAbstractSlider::waitUntilTimeElapsed(const QTime& t, int ms)
 {
     const int eps = 80;
     while (t.elapsed() < ms + eps)
-        QTest::qWait(qMax(ms - t.elapsed() + eps, 25));
+        QTest::qWait(std::max(ms - t.elapsed() + eps, 25));
 }
 
 void tst_QAbstractSlider::setRepeatAction()

@@ -394,7 +394,7 @@ QPixmap QDecorationDefault::pixmapFor(const QWidget *widget,
 */
 int QDecorationDefault::titleBarHeight(const QWidget *)
 {
-    return qMax(20, QApplication::fontMetrics().height() + BORDER_WIDTH);
+    return std::max(20, QApplication::fontMetrics().height() + BORDER_WIDTH);
 }
 
 /*!

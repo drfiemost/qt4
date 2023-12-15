@@ -231,7 +231,7 @@ void MainWindow::updateRecentFileActions()
     QSettings settings;
     QStringList files = settings.value("recentFileList").toStringList();
 
-    int numRecentFiles = qMin(files.size(), (int)MaxRecentFiles);
+    int numRecentFiles = std::min(files.size(), (int)MaxRecentFiles);
 
     for (int i = 0; i < numRecentFiles; ++i) {
         QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));

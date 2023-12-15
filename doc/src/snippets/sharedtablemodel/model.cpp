@@ -57,11 +57,11 @@ TableModel::TableModel(int rows, int columns, QObject *parent)
 {
     QStringList newList;
 
-    for (int column = 0; column < qMax(1, columns); ++column) {
+    for (int column = 0; column < std::max(1, columns); ++column) {
         newList.append("");
     }
 
-    for (int row = 0; row < qMax(1, rows); ++row) {
+    for (int row = 0; row < std::max(1, rows); ++row) {
         rowList.append(newList);
     }
 }

@@ -429,7 +429,7 @@ void MainWindow::updateRecentFileActions()
     const QStringList files(settings.value(QLatin1String("RecentFileList")).toStringList());
     settings.endGroup();
 
-    const int numRecentFiles = qMin(files.size(), static_cast<int>(MaximumRecentFiles));
+    const int numRecentFiles = std::min(files.size(), static_cast<int>(MaximumRecentFiles));
 
     for(int i = 0; i < numRecentFiles; ++i)
     {

@@ -186,7 +186,7 @@ void QSystemTrayIconSys::setIconContents(NOTIFYICONDATA &tnd)
 
     if (!tip.isNull()) {
         tip = tip.left(maxTipLength - 1) + QChar();
-        memcpy(tnd.szTip, tip.utf16(), qMin(tip.length() + 1, maxTipLength) * sizeof(wchar_t));
+        memcpy(tnd.szTip, tip.utf16(), std::min(tip.length() + 1, maxTipLength) * sizeof(wchar_t));
     }
 }
 
@@ -212,8 +212,8 @@ bool QSystemTrayIconSys::showMessage(const QString &title, const QString &messag
     NOTIFYICONDATA tnd;
     memset(&tnd, 0, notifyIconSize);
 
-    memcpy(tnd.szInfo, message.utf16(), qMin(message.length() + 1, 256) * sizeof(wchar_t));
-    memcpy(tnd.szInfoTitle, title.utf16(), qMin(title.length() + 1, 64) * sizeof(wchar_t));
+    memcpy(tnd.szInfo, message.utf16(), std::min(message.length() + 1, 256) * sizeof(wchar_t));
+    memcpy(tnd.szInfoTitle, title.utf16(), std::min(title.length() + 1, 64) * sizeof(wchar_t));
 
     tnd.uID = q_uNOTIFYICONID;
     tnd.dwInfoFlags = iconFlag(type);

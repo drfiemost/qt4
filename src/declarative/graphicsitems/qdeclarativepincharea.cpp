@@ -434,7 +434,7 @@ void QDeclarativePinchArea::updatePinch()
             emit pinchUpdated(&pe);
             if (d->pinch && d->pinch->target()) {
                 qreal s = d->pinchStartScale * scale;
-                s = qMin(qMax(pinch()->minimumScale(),s), pinch()->maximumScale());
+                s = std::min(std::max(pinch()->minimumScale(),s), pinch()->maximumScale());
                 pinch()->target()->setScale(s);
                 QPointF pos = sceneCenter - d->sceneStartCenter + d->pinchStartPos;
                 if (pinch()->axis() & QDeclarativePinch::XAxis) {
@@ -456,7 +456,7 @@ void QDeclarativePinchArea::updatePinch()
                 if (d->pinchStartRotation >= pinch()->minimumRotation()
                         && d->pinchStartRotation <= pinch()->maximumRotation()) {
                     qreal r = d->pinchRotation + d->pinchStartRotation;
-                    r = qMin(qMax(pinch()->minimumRotation(),r), pinch()->maximumRotation());
+                    r = std::min(std::max(pinch()->minimumRotation(),r), pinch()->maximumRotation());
                     pinch()->target()->setRotation(r);
                 }
             }

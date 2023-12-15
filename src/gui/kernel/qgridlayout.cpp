@@ -122,7 +122,7 @@ public:
     inline int numRows() const { return rr; }
     inline int numCols() const { return cc; }
     inline void expand(int rows, int cols)
-        { setSize(qMax(rows, rr), qMax(cols, cc)); }
+        { setSize(std::max(rows, rr), qMax(cols, cc)); }
     inline void setRowStretch(int r, int s)
         { expand(r + 1, 0); rStretch[r] = s; setDirty(); }
     inline void setColStretch(int c, int s)
@@ -262,9 +262,9 @@ void QGridLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *
                         l = leftMargin;
                 }
                 if (visualHReversed) {
-                    r = qMax(r, wr.right() - lir.right());
+                    r = std::max(r, wr.right() - lir.right());
                 } else {
-                    l = qMax(l, lir.left() - wr.left());
+                    l = std::max(l, lir.left() - wr.left());
                 }
             }
             if (box->row <= topMost) {
@@ -277,9 +277,9 @@ void QGridLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *
                         t = topMargin;
                 }
                 if (vReversed)
-                    b = qMax(b, wr.bottom() - lir.bottom());
+                    b = std::max(b, wr.bottom() - lir.bottom());
                 else
-                    t = qMax(t, lir.top() - wr.top());
+                    t = std::max(t, lir.top() - wr.top());
             }
             if (box->toCol(cc) >= rightMost) {
                 if (box->toCol(cc) > rightMost) {
@@ -291,9 +291,9 @@ void QGridLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *
                         r = rightMargin;
                 }
                 if (visualHReversed) {
-                    l = qMax(l, lir.left() - wr.left());
+                    l = std::max(l, lir.left() - wr.left());
                 } else {
-                    r = qMax(r, wr.right() - lir.right());
+                    r = std::max(r, wr.right() - lir.right());
                 }
 
             }
@@ -307,9 +307,9 @@ void QGridLayoutPrivate::effectiveMargins(int *left, int *top, int *right, int *
                         b = bottomMargin;
                 }
                 if (vReversed)
-                    t = qMax(t, lir.top() - wr.top());
+                    t = std::max(t, lir.top() - wr.top());
                 else
-                    b = qMax(b, wr.bottom() - lir.bottom());
+                    b = std::max(b, wr.bottom() - lir.bottom());
             }
         }
     }
@@ -392,8 +392,8 @@ void QGridLayoutPrivate::recalcHFW(int w)
     }
 
     hfw_width = w;
-    hfw_height = qMin(QLAYOUTSIZE_MAX, h);
-    hfw_minheight = qMin(QLAYOUTSIZE_MAX, mh);
+    hfw_height = std::min(QLAYOUTSIZE_MAX, h);
+    hfw_minheight = std::min(QLAYOUTSIZE_MAX, mh);
 }
 
 int QGridLayoutPrivate::heightForWidth(int w, int hSpacing, int vSpacing)
@@ -435,8 +435,8 @@ QSize QGridLayoutPrivate::findSize(int QLayoutStruct::*size, int hSpacing, int v
     for (int c = 0; c < cc; c++)
         w += colData.at(c).*size + colData.at(c).spacing;
 
-    w = qMin(QLAYOUTSIZE_MAX, w);
-    h = qMin(QLAYOUTSIZE_MAX, h);
+    w = std::min(QLAYOUTSIZE_MAX, w);
+    h = std::min(QLAYOUTSIZE_MAX, h);
 
     return QSize(w, h);
 }
@@ -480,7 +480,7 @@ QSize QGridLayoutPrivate::minimumSize(int hSpacing, int vSpacing) const
 void QGridLayoutPrivate::setSize(int r, int c)
 {
     if ((int)rowData.size() < r) {
-        int newR = qMax(r, rr * 2);
+        int newR = std::max(r, rr * 2);
         rowData.resize(newR);
         rStretch.resize(newR);
         rMinHeights.resize(newR);
@@ -494,7 +494,7 @@ void QGridLayoutPrivate::setSize(int r, int c)
         }
     }
     if ((int)colData.size() < c) {
-        int newC = qMax(c, cc * 2);
+        int newC = std::max(c, cc * 2);
         colData.resize(newC);
         cStretch.resize(newC);
         cMinWidths.resize(newC);
@@ -585,21 +585,21 @@ void QGridLayoutPrivate::addData(QGridBox *box, const QGridLayoutSizeTriple &siz
     if (c) {
         QLayoutStruct *data = &colData[box->col];
         if (!cStretch.at(box->col))
-            data->stretch = qMax(data->stretch, box->hStretch());
-        data->sizeHint = qMax(sizes.hint.width(), data->sizeHint);
-        data->minimumSize = qMax(sizes.minS.width(), data->minimumSize);
+            data->stretch = std::max(data->stretch, box->hStretch());
+        data->sizeHint = std::max(sizes.hint.width(), data->sizeHint);
+        data->minimumSize = std::max(sizes.minS.width(), data->minimumSize);
 
-        qMaxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.width(),
+        std::maxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.width(),
                     box->expandingDirections() & Qt::Horizontal, box->isEmpty());
     }
     if (r) {
         QLayoutStruct *data = &rowData[box->row];
         if (!rStretch.at(box->row))
-            data->stretch = qMax(data->stretch, box->vStretch());
-        data->sizeHint = qMax(sizes.hint.height(), data->sizeHint);
-        data->minimumSize = qMax(sizes.minS.height(), data->minimumSize);
+            data->stretch = std::max(data->stretch, box->vStretch());
+        data->sizeHint = std::max(sizes.hint.height(), data->sizeHint);
+        data->minimumSize = std::max(sizes.minS.height(), data->minimumSize);
 
-        qMaxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.height(),
+        std::maxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.height(),
                     box->expandingDirections() & Qt::Vertical, box->isEmpty());
     }
 }
@@ -628,7 +628,7 @@ static void distributeMultiBox(QVector<QLayoutStruct> &chain, int start, int end
         wh += data->sizeHint;
         max += data->maximumSize;
         if (stretchArray.at(i) == 0)
-            data->stretch = qMax(data->stretch, stretch);
+            data->stretch = std::max(data->stretch, stretch);
 
         if (i != end) {
             int spacing = data->spacing;
@@ -737,7 +737,7 @@ void QGridLayoutPrivate::setupSpacings(QVector<QLayoutStruct> &chain,
                         if (sibling) {
                             QWidget *wid = sibling->item()->widget();
                             if (wid)
-                                spacing = qMax(spacing, sibling->item()->geometry().top() - wid->geometry().top() );
+                                spacing = std::max(spacing, sibling->item()->geometry().top() - wid->geometry().top() );
                         }
                     }
                 }
@@ -856,13 +856,13 @@ void QGridLayoutPrivate::addHfwData(QGridBox *box, int width)
     QVector<QLayoutStruct> &rData = *hfwData;
     if (box->hasHeightForWidth()) {
         int hint = box->heightForWidth(width);
-        rData[box->row].sizeHint = qMax(hint, rData.at(box->row).sizeHint);
-        rData[box->row].minimumSize = qMax(hint, rData.at(box->row).minimumSize);
+        rData[box->row].sizeHint = std::max(hint, rData.at(box->row).sizeHint);
+        rData[box->row].minimumSize = std::max(hint, rData.at(box->row).minimumSize);
     } else {
         QSize hint = box->sizeHint();
         QSize minS = box->minimumSize();
-        rData[box->row].sizeHint = qMax(hint.height(), rData.at(box->row).sizeHint);
-        rData[box->row].minimumSize = qMax(minS.height(), rData.at(box->row).minimumSize);
+        rData[box->row].sizeHint = std::max(hint.height(), rData.at(box->row).sizeHint);
+        rData[box->row].minimumSize = std::max(minS.height(), rData.at(box->row).minimumSize);
     }
 }
 
