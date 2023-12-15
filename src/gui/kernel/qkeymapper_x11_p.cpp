@@ -288,7 +288,7 @@ static struct {
     // name = kg, description = Kyrgyzstan
     { "kg", "", Qt::LeftToRight, QLocale::Kirghiz, QLocale::Kyrgyzstan },
     // name = la, description = Laos
-    { "la", "", Qt::LeftToRight, QLocale::Laothian, QLocale::Lao },
+    { "la", "", Qt::LeftToRight, QLocale::Lao, QLocale::Laos },
     // name = latam, description = Latin American
     { "latam", "", Qt::LeftToRight, QLocale::Spanish, QLocale::Mexico },
     // name = latam:nodeadkeys, description = Latin American
@@ -362,21 +362,21 @@ static struct {
     // name = ru:winkeys, description = Russia
     { "ru", "winkeys", Qt::LeftToRight, QLocale::Russian, QLocale::RussianFederation },
     // name = srp, description = Serbian
-    { "srp", "", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:yz, description = Serbian
-    { "srp", "yz", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "yz", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:latin, description = Serbian
-    { "srp", "latin", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "latin", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:latinunicode, description = Serbian
-    { "srp", "latinunicode", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "latinunicode", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:latinyz, description = Serbian
-    { "srp", "latinyz", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "latinyz", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:latinunicodeyz, description = Serbian
-    { "srp", "latinunicodeyz", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "latinunicodeyz", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:alternatequotes, description = Serbian
-    { "srp", "alternatequotes", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "alternatequotes", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = srp:latinalternatequotes, description = Serbian
-    { "srp", "latinalternatequotes", Qt::LeftToRight, QLocale::Serbian, QLocale::SerbiaAndMontenegro },
+    { "srp", "latinalternatequotes", Qt::LeftToRight, QLocale::Serbian, QLocale::Serbia },
     // name = si, description = Slovenia
     { "si", "", Qt::LeftToRight, QLocale::Slovenian, QLocale::Slovenia },
     // name = sk, description = Slovakia
@@ -428,7 +428,7 @@ static struct {
     // name = tj, description = Tajikistan
     { "tj", "", Qt::LeftToRight, QLocale::Tajik, QLocale::Tajikistan },
     // name = lk, description = Sri Lanka
-    { "lk", "", Qt::LeftToRight, QLocale::Singhalese, QLocale::SriLanka },
+    { "lk", "", Qt::LeftToRight, QLocale::Sinhala, QLocale::SriLanka },
     // name = lk:tam_unicode, description = Sri Lanka
     { "lk", "tam_unicode", Qt::LeftToRight, QLocale::Tamil, QLocale::SriLanka },
     // name = lk:tam_TAB, description = Sri Lanka
@@ -436,7 +436,7 @@ static struct {
     // name = lk:tam_TSCII, description = Sri Lanka
     { "lk", "tam_TSCII", Qt::LeftToRight, QLocale::Tamil, QLocale::SriLanka },
     // name = lk:sin_phonetic, description = Sri Lanka
-    { "lk", "sin_phonetic", Qt::LeftToRight, QLocale::Singhalese, QLocale::SriLanka },
+    { "lk", "sin_phonetic", Qt::LeftToRight, QLocale::Sinhala, QLocale::SriLanka },
     // name = th, description = Thailand
     { "th", "", Qt::LeftToRight, QLocale::Thai, QLocale::Thailand },
     // name = th:tis, description = Thailand
@@ -470,7 +470,7 @@ static struct {
     // name = uz, description = Uzbekistan
     { "uz", "", Qt::LeftToRight, QLocale::Uzbek, QLocale::Uzbekistan },
     // name = vn, description = Vietnam
-    { "vn", "", Qt::LeftToRight, QLocale::Vietnamese, QLocale::VietNam },
+    { "vn", "", Qt::LeftToRight, QLocale::Vietnamese, QLocale::Vietnam },
     // name = nec_vndr/jp, description = PC-98xx Series
     { "nec_vndr/jp", "", Qt::LeftToRight, QLocale::Japanese, QLocale::Japan },
     // name = ie, description = Ireland
