@@ -589,7 +589,7 @@ void QGridLayoutPrivate::addData(QGridBox *box, const QGridLayoutSizeTriple &siz
         data->sizeHint = std::max(sizes.hint.width(), data->sizeHint);
         data->minimumSize = std::max(sizes.minS.width(), data->minimumSize);
 
-        std::maxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.width(),
+        qMaxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.width(),
                     box->expandingDirections() & Qt::Horizontal, box->isEmpty());
     }
     if (r) {
@@ -599,7 +599,7 @@ void QGridLayoutPrivate::addData(QGridBox *box, const QGridLayoutSizeTriple &siz
         data->sizeHint = std::max(sizes.hint.height(), data->sizeHint);
         data->minimumSize = std::max(sizes.minS.height(), data->minimumSize);
 
-        std::maxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.height(),
+        qMaxExpCalc(data->maximumSize, data->expansive, data->empty, sizes.maxS.height(),
                     box->expandingDirections() & Qt::Vertical, box->isEmpty());
     }
 }

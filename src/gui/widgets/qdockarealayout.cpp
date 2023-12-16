@@ -2577,8 +2577,8 @@ void QDockAreaLayout::remove(const QList<int> &path)
     docks[index].remove(path.mid(1));
 }
 
-static inline int std::min(int i1, int i2, int i3) { return qMin(i1, qMin(i2, i3)); }
-static inline int std::max(int i1, int i2, int i3) { return qMax(i1, qMax(i2, i3)); }
+static inline int qMin(int i1, int i2, int i3) { return std::min(i1, std::min(i2, i3)); }
+static inline int qMax(int i1, int i2, int i3) { return std::max(i1, std::max(i2, i3)); }
 
 void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
                                 QVector<QLayoutStruct> *_hor_struct_list)
@@ -2665,11 +2665,11 @@ void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
 
         int left = (tl_significant && bl_significant) ? left_hint.height() : 0;
         int right = (tr_significant && br_significant) ? right_hint.height() : 0;
-        ver_struct_list[1].sizeHint = std::max(left, center_hint.height(), right);
+        ver_struct_list[1].sizeHint = qMax(left, center_hint.height(), right);
 
         left = (tl_significant && bl_significant) ? left_min.height() : 0;
         right = (tr_significant && br_significant) ? right_min.height() : 0;
-        ver_struct_list[1].minimumSize = std::max(left, center_min.height(), right);
+        ver_struct_list[1].minimumSize = qMax(left, center_min.height(), right);
         ver_struct_list[1].maximumSize = center_max.height();
         ver_struct_list[1].expansive = have_central;
         ver_struct_list[1].empty = docks[QInternal::LeftDock].isEmpty()
@@ -2728,11 +2728,11 @@ void QDockAreaLayout::getGrid(QVector<QLayoutStruct> *_ver_struct_list,
 
         int top = (tl_significant && tr_significant) ? top_hint.width() : 0;
         int bottom = (bl_significant && br_significant) ? bottom_hint.width() : 0;
-        hor_struct_list[1].sizeHint = std::max(top, center_hint.width(), bottom);
+        hor_struct_list[1].sizeHint = qMax(top, center_hint.width(), bottom);
 
         top = (tl_significant && tr_significant) ? top_min.width() : 0;
         bottom = (bl_significant && br_significant) ? bottom_min.width() : 0;
-        hor_struct_list[1].minimumSize = std::max(top, center_min.width(), bottom);
+        hor_struct_list[1].minimumSize = qMax(top, center_min.width(), bottom);
 
         hor_struct_list[1].maximumSize = center_max.width();
         hor_struct_list[1].expansive = have_central;
@@ -2925,7 +2925,7 @@ QSize QDockAreaLayout::sizeHint() const
     else
         col3 += bottom.height();
 
-    return QSize(std::max(row1, row2, row3), qMax(col1, col2, col3));
+    return QSize(qMax(row1, row2, row3), qMax(col1, col2, col3));
 }
 
 QSize QDockAreaLayout::minimumSize() const
@@ -2975,7 +2975,7 @@ QSize QDockAreaLayout::minimumSize() const
     else
         col3 += bottom.height();
 
-    return QSize(std::max(row1, row2, row3), qMax(col1, col2, col3));
+    return QSize(qMax(row1, row2, row3), qMax(col1, col2, col3));
 }
 
 bool QDockAreaLayout::restoreDockWidget(QDockWidget *dockWidget)

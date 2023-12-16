@@ -340,7 +340,7 @@ void QBoxLayoutPrivate::setupGeom()
             minw += spacing + min.width();
             hintw += spacing + hint.width();
             if (!ignore)
-                std::maxExpCalc(maxh, verexp, dummy,
+                qMaxExpCalc(maxh, verexp, dummy,
                             max.height(), exp & Qt::Vertical, box->item->isEmpty());
             minh = std::max(minh, min.height());
             hinth = std::max(hinth, hint.height());
@@ -357,7 +357,7 @@ void QBoxLayoutPrivate::setupGeom()
             minh += spacing + min.height();
             hinth += spacing + hint.height();
             if (!ignore)
-                std::maxExpCalc(maxw, horexp, dummy,
+                qMaxExpCalc(maxw, horexp, dummy,
                             max.width(), exp & Qt::Horizontal, box->item->isEmpty());
             minw = std::max(minw, min.width());
             hintw = std::max(hintw, hint.width());
