@@ -48,9 +48,6 @@
 #ifndef QT_NO_DATASTREAM
 #include <qdatastream.h>
 #endif
-#if defined(Q_OS_WINCE)
-#include <winsock.h>
-#endif
 
 #ifdef QT_LINUXBASE
 #  include <arpa/inet.h>
@@ -65,20 +62,7 @@ QT_BEGIN_NAMESPACE
     } while (0)
 
 #ifdef Q_OS_WIN
-// sockaddr_in6 size changed between old and new SDK
-// Only the new version is the correct one, so always
-// use this structure.
-#if defined(Q_OS_WINCE)
-#  if !defined(u_char)
-#    define u_char unsigned char
-#  endif
-#  if !defined(u_short)
-#    define u_short unsigned short
-#  endif
-#  if !defined(u_long)
-#    define u_long unsigned long
-#  endif
-#endif
+
 struct qt_in6_addr {
     u_char qt_s6_addr[16];
 };

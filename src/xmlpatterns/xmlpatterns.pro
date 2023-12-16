@@ -26,12 +26,3 @@ include($$PWD/schema/schema.pri)
 include($$PWD/type/type.pri)
 include($$PWD/utils/utils.pri)
 include($$PWD/qobjectmodel/qobjectmodel.pri, "", true)
-
-wince* {
-    # The Microsoft MIPS compiler crashes if /Og is specified.
-    # -O2/1 expands to /Og plus additional arguments.
-    contains(DEFINES, MIPS) {
-        QMAKE_CXXFLAGS_RELEASE ~= s/-O2/-Oi -Ot -Oy -Ob2/
-        QMAKE_CXXFLAGS_RELEASE ~= s/-O1/-Os -Oy -Ob2/
-    }
-}

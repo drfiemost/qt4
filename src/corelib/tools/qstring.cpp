@@ -66,11 +66,6 @@
 
 #include <private/qfunctions_p.h>
 
-#if defined(Q_OS_WINCE)
-#include <windows.h>
-#include <winnls.h>
-#endif
-
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
@@ -4757,7 +4752,7 @@ int QString::localeAwareCompare(const QString &other) const
     return localeAwareCompare_helper(constData(), length(), other.constData(), other.length());
 }
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
 QT_END_NAMESPACE
 #include "qt_windows.h"
 QT_BEGIN_NAMESPACE
@@ -4774,7 +4769,7 @@ int QString::localeAwareCompare_helper(const QChar *data1, int length1,
     if (length1 == 0 || length2 == 0)
         return ucstrcmp(data1, length1, data2, length2);
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     int res = CompareString(GetUserDefaultLCID(), 0, (wchar_t*)data1, length1, (wchar_t*)data2, length2);
 
     switch (res) {

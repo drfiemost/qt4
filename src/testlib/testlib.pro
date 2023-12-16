@@ -63,14 +63,6 @@ DEFINES *= QT_NO_CAST_TO_ASCII \
     QTESTLIB_MAKEDLL \
     QT_NO_DATASTREAM
 embedded:QMAKE_CXXFLAGS += -fno-rtti
-wince*::LIBS += libcmt.lib \
-    corelibc.lib \
-    ole32.lib \
-    oleaut32.lib \
-    uuid.lib \
-    commctrl.lib \
-    coredll.lib \
-    winsock.lib
 mac:LIBS += -framework IOKit \
     -framework Security
 !qpa:mac: LIBS += -framework ApplicationServices

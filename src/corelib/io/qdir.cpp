@@ -2011,7 +2011,7 @@ QString QDir::cleanPath(const QString &path)
     for (int i = 0, last = -1, iwrite = 0; i < len; ++i) {
         if (p[i] == QLatin1Char('/')) {
             while (i+1 < len && p[i+1] == QLatin1Char('/')) {
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE) //allow unc paths
+#if defined(Q_OS_WIN) //allow unc paths
                 if (!i)
                     break;
 #endif

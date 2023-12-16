@@ -121,7 +121,7 @@ public:
     bool wakeup;
     pthread_mutex_t mutex;
     pthread_cond_t cond;
-#elif defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#elif defined(Q_OS_WIN32)
     HANDLE event;
 #endif
 };

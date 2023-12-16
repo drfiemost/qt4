@@ -13,17 +13,3 @@ CONFIG(debug_and_release_target) {
 } else {
   DESTDIR = ..
 }
-
-wince* {
-   addFile_processUniqueness.files = $$OUT_PWD/../testProcessUniqueness/testProcessUniqueness.exe 
-   addFile_processUniqueness.path = testProcessUniqueness
-
-   DEPLOYMENT += addFile_processUniqueness
-}
-
-symbian {
-   binDep.files = testProcessUniqueness.exe
-   binDep.path = \\sys\\bin
-
-   DEPLOYMENT += binDep
-}

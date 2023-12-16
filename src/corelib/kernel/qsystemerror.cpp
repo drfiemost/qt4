@@ -41,15 +41,9 @@
 
 #include <qglobal.h>
 #include "qsystemerror_p.h"
-#if !defined(Q_OS_WINCE)
-#  include <errno.h>
-#  if defined(Q_CC_MSVC)
-#    include <crtdbg.h>
-#  endif
-#else
-#  if (_WIN32_WCE >= 0x700)
-#    include <errno.h>
-#  endif
+#include <errno.h>
+#if defined(Q_CC_MSVC)
+#  include <crtdbg.h>
 #endif
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -121,16 +115,12 @@ static QString standardLibraryErrorString(int errorCode)
         s = QT_TRANSLATE_NOOP("QIODevice", "No space left on device");
         break;
     default: {
-    #ifdef Q_OS_WINCE
-        ret = windowsErrorString(errorCode);
-    #else
         #if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && _POSIX_VERSION >= 200112L
             QByteArray buf(1024, '\0');
             ret = fromstrerror_helper(strerror_r(errorCode, buf.data(), buf.size()), buf);
         #else
             ret = QString::fromLocal8Bit(strerror(errorCode));
         #endif
-    #endif
     break; }
     }
     if (s) {

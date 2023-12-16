@@ -81,19 +81,11 @@
 #   endif
 #endif
 
-#ifdef Q_OS_WINCE
-#define CALLBACK_CALL_TYPE        __cdecl
-#else
 #define CALLBACK_CALL_TYPE
-#endif
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_OS_WINCE) && defined(STANDARDSHELL_UI_MODEL)
-#  define Q_INTERNAL_WIN_NO_THROW __declspec(nothrow)
-#else
-#  define Q_INTERNAL_WIN_NO_THROW
-#endif
+#define Q_INTERNAL_WIN_NO_THROW
 
 // avoid going through QImage::scanLine() which calls detach
 #define FAST_SCAN_LINE(data, bpl, y) (data + (y) * bpl)

@@ -81,14 +81,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_OS_WINCE)
-HINSTANCE QSystemLibrary::load(const wchar_t *libraryName, bool onlySystemDirectory /* = true */)
-{
-    Q_UNUSED(onlySystemDirectory);
-    return ::LoadLibrary(libraryName);
-}
-#else
-
 #if !defined(QT_BOOTSTRAPPED)
 extern QString qAppFileName();
 #endif
@@ -135,7 +127,5 @@ HINSTANCE QSystemLibrary::load(const wchar_t *libraryName, bool onlySystemDirect
 
     return 0;
 }
-
-#endif // !Q_OS_WINCE
 
 QT_END_NAMESPACE

@@ -145,7 +145,7 @@ void QAlphaWidget::run(int time)
     checkTime.start();
 
     showWidget = true;
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     qApp->installEventFilter(this);
     widget->setWindowOpacity(0.0);
     widget->show();
@@ -253,7 +253,7 @@ void QAlphaWidget::render()
     else
         alpha = 1;
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     if (alpha >= 1 || !showWidget) {
         anim.stop();
         qApp->removeEventFilter(this);
@@ -290,7 +290,7 @@ void QAlphaWidget::render()
         pm = QPixmap::fromImage(mixedImage);
         repaint();
     }
-#endif // defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#endif // defined(Q_OS_WIN)
 }
 
 /*

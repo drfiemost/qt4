@@ -1,13 +1,13 @@
 TEMPLATE      = subdirs
 
-SUBDIRS             =   drilldown
+SUBDIRS       =   drilldown
 SUBDIRS   +=  cachedtable \
                         relationaltablemodel \
                         sqlwidgetmapper
 
-!wince*:  SUBDIRS   +=  masterdetail
+SUBDIRS   +=  masterdetail
 
-!wince*: SUBDIRS += \
+SUBDIRS += \
                         querymodel \
                         tablemodel
 

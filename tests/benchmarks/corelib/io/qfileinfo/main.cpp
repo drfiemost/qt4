@@ -53,7 +53,7 @@ class qfileinfo : public QObject
     Q_OBJECT
 private slots:
     void canonicalFileNamePerformance();
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     void symLinkTargetPerformanceLNK();
     void symLinkTargetPerformanceMounpoint();
 #endif
@@ -83,7 +83,7 @@ void qfileinfo::canonicalFileNamePerformance()
     }
 }
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
 void qfileinfo::symLinkTargetPerformanceLNK()
 {
     QVERIFY(QFile::link("file","link.lnk"));

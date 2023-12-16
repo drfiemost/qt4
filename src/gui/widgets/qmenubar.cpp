@@ -1072,7 +1072,7 @@ void QMenuBar::setVisible(bool visible)
     Q_D(QMenuBar);
     d->platformMenuBar->setVisible(visible);
 #else
-#if defined(Q_WS_MAC) || defined(Q_OS_WINCE)
+#if defined(Q_WS_MAC)
     if (isNativeMenuBar()) {
         if (!visible)
             QWidget::setVisible(false);
@@ -1279,7 +1279,7 @@ void QMenuBar::actionEvent(QActionEvent *e)
 #ifdef Q_WS_X11
     d->platformMenuBar->actionEvent(e);
 #endif
-#if defined (Q_WS_MAC) || defined(Q_OS_WINCE)
+#if defined (Q_WS_MAC)
     if (isNativeMenuBar()) {
 #ifdef Q_WS_MAC
         QMenuBarPrivate::QMacMenuBarPrivate *nativeMenuBar = d->mac_menubar;

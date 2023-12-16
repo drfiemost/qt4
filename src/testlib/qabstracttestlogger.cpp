@@ -75,7 +75,7 @@ void QAbstractTestLogger::startLogging(const char *filename)
         QTest::stream = stdout;
         return;
     }
-#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(Q_OS_WINCE)
+#if defined(_MSC_VER) && _MSC_VER >= 1400
     if (::fopen_s(&QTest::stream, filename, "wt")) {
 #else
     QTest::stream = ::fopen(filename, "wt");

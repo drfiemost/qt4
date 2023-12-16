@@ -46,13 +46,13 @@ mac: {
                qaccessibility_mac
 }
 
-embedded:!wince* {
+embedded: {
     SUBDIRS += qcopchannel \
                qdirectpainter \
                qmultiscreen
 }
 
-!win32-msvc*:!wince*:SUBDIRS += exceptionsafety_objects
+!win32-msvc*:SUBDIRS += exceptionsafety_objects
 
 # Following tests depends on private API
 !contains(QT_CONFIG, private_tests): SUBDIRS -= \

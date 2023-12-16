@@ -190,11 +190,7 @@ namespace QT_NAMESPACE {}
 #  define Q_OS_WIN32
 #  define Q_OS_WIN64
 #elif !defined(SAG_COM) && (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
-#  if defined(WINCE) || defined(_WIN32_WCE)
-#    define Q_OS_WINCE
-#  else
 #    define Q_OS_WIN32
-#  endif
 #elif defined(__MWERKS__) && defined(__INTEL__)
 #  define Q_OS_WIN32
 #elif defined(__ultrix) || defined(ultrix)
@@ -232,7 +228,7 @@ namespace QT_NAMESPACE {}
 #  error "Qt has not been ported to this OS - talk to qt-bugs@trolltech.com"
 #endif
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WIN64) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
 #  define Q_OS_WIN
 #endif
 
@@ -894,12 +890,6 @@ namespace QT_NAMESPACE {}
 #  if defined(Q_OS_WIN64)
 #    define Q_WS_WIN64
 #  endif
-#elif defined(Q_OS_WINCE)
-#  define Q_WS_WIN32
-#  define Q_WS_WINCE
-#  if defined(Q_OS_WINCE_WM)
-#    define Q_WS_WINCE_WM
-#  endif
 #elif defined(Q_OS_UNIX)
 #  if defined(Q_OS_MAC) && !defined(__USE_WS_X11__) && !defined(Q_WS_QWS) && !defined(Q_WS_QPA)
 #    define Q_WS_MAC
@@ -951,7 +941,7 @@ typedef quint64 qulonglong;
 #ifndef QT_POINTER_SIZE
 #  if defined(Q_OS_WIN64)
 #   define QT_POINTER_SIZE 8
-#  elif defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#  elif defined(Q_OS_WIN32)
 #   define QT_POINTER_SIZE 4
 #  endif
 #endif
@@ -1203,7 +1193,7 @@ QT_END_INCLUDE_NAMESPACE
 
 typedef int QNoImplicitBoolCast;
 
-#if defined(QT_ARCH_ARM) || defined(QT_ARCH_ARMV6) || defined(QT_ARCH_AVR32) || (defined(QT_ARCH_MIPS) && (defined(Q_WS_QWS) || defined(Q_WS_QPA) || defined(Q_OS_WINCE))) || defined(QT_ARCH_SH) || defined(QT_ARCH_SH4A)
+#if defined(QT_ARCH_ARM) || defined(QT_ARCH_ARMV6) || defined(QT_ARCH_AVR32) || (defined(QT_ARCH_MIPS) && (defined(Q_WS_QWS) || defined(Q_WS_QPA))) || defined(QT_ARCH_SH) || defined(QT_ARCH_SH4A)
 #define QT_NO_FPU
 #endif
 

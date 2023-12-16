@@ -72,10 +72,6 @@ private slots:
 
 void tst_qdiriterator::data()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-    QByteArray qtdir = qPrintable(QCoreApplication::applicationDirPath());
-    qtdir += "/depot";
-#else
 #if defined(Q_OS_WIN)
     const char *qtdir = "C:\\depot\\qt\\main";
 #else
@@ -85,7 +81,6 @@ void tst_qdiriterator::data()
         fprintf(stderr, "QTDIR not set\n");
         exit(1);
     }
-#endif
 
     QTest::addColumn<QByteArray>("dirpath");
     QByteArray ba = QByteArray(qtdir) + "/src/corelib";

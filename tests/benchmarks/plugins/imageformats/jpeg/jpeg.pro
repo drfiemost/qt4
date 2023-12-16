@@ -6,11 +6,7 @@ INCLUDEPATH += .
 
 CONFIG += release
 
-wince*: {
-   DEFINES += SRCDIR=\\\"\\\"
-} else {
-   DEFINES += SRCDIR=\\\"$$PWD/\\\"
-}
+DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 # Input
 SOURCES += jpeg.cpp

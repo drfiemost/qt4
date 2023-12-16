@@ -59,10 +59,6 @@
 #include <zlib.h>
 #endif
 
-#if defined(Q_OS_WINCE)
-#include "qwinfunctions_wince.h"
-#endif
-
 #include "qprintengine_pdf_p.h"
 #include "private/qdrawhelper_p.h"
 

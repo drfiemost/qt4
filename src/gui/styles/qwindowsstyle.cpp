@@ -123,7 +123,7 @@ enum QSliderDirection { SlUp, SlDown, SlLeft, SlRight };
 QWindowsStylePrivate::QWindowsStylePrivate()
     : alt_down(false), menuBarTimer(0), animationFps(10), animateTimer(0), animateStep(0)
 {
-#if defined(Q_WS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_WS_WIN)
     if ((QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA
         && (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based))) {
         QSystemLibrary shellLib(QLatin1String("shell32"));
@@ -473,11 +473,7 @@ int QWindowsStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const QW
         break;
 #if defined(Q_WS_WIN)
     case PM_DockWidgetFrameWidth:
-#if defined(Q_OS_WINCE)
-        ret = GetSystemMetrics(SM_CXDLGFRAME);
-#else
         ret = GetSystemMetrics(SM_CXFRAME);
-#endif
         break;
 #else
     case PM_DockWidgetFrameWidth:
@@ -493,11 +489,7 @@ int QWindowsStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const QW
     case PM_TitleBarHeight:
         if (widget && (widget->windowType() == Qt::Tool)) {
             // MS always use one less than they say
-#if defined(Q_OS_WINCE)
-            ret = GetSystemMetrics(SM_CYCAPTION) - 1;
-#else
             ret = GetSystemMetrics(SM_CYSMCAPTION) - 1;
-#endif
         } else {
             ret = GetSystemMetrics(SM_CYCAPTION) - 1;
         }
@@ -506,13 +498,11 @@ int QWindowsStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const QW
 
     case PM_ScrollBarExtent:
         {
-#ifndef Q_OS_WINCE
             NONCLIENTMETRICS ncm;
             ncm.cbSize = FIELD_OFFSET(NONCLIENTMETRICS, lfMessageFont) + sizeof(LOGFONT);
             if (SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0))
                 ret = std::max(ncm.iScrollHeight, ncm.iScrollWidth);
             else
-#endif
                 ret = QCommonStyle::pixelMetric(pm, opt, widget);
         }
         break;
@@ -524,11 +514,7 @@ int QWindowsStyle::pixelMetric(PixelMetric pm, const QStyleOption *opt, const QW
 
 #if defined(Q_WS_WIN)
     case PM_MdiSubWindowFrameWidth:
-#if defined(Q_OS_WINCE)
-        ret = GetSystemMetrics(SM_CYDLGFRAME);
-#else
         ret = GetSystemMetrics(SM_CYFRAME);
-#endif
         break;
     case PM_TextCursorWidth: {
         DWORD caretWidth = 1;
@@ -931,11 +917,7 @@ static const char *const question_xpm[] = {
 #ifdef Q_OS_WIN
 static QPixmap loadIconFromShell32( int resourceId, int size )
 {
-#ifdef Q_OS_WINCE
-    HMODULE hmod = LoadLibrary(L"ceshell");
-#else
     HMODULE hmod = QSystemLibrary::load(L"shell32");
-#endif
     if( hmod ) {
         HICON iconHandle = (HICON)LoadImage(hmod, MAKEINTRESOURCE(resourceId), IMAGE_ICON, size, size, 0);
         if( iconHandle ) {
@@ -954,7 +936,7 @@ static QPixmap loadIconFromShell32( int resourceId, int size )
 QPixmap QWindowsStyle::standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
                                       const QWidget *widget) const
 {
-#if defined(Q_WS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_WS_WIN)
     QPixmap desktopIcon;
     switch(standardPixmap) {
     case SP_DriveCDIcon:

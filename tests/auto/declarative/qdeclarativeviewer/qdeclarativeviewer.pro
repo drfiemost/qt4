@@ -8,13 +8,6 @@ SOURCES += tst_qdeclarativeviewer.cpp
 
 include(../symbianlibs.pri)
 
-wince*|symbian: {
-    importFiles.files = data
-    importFiles.path = .
-    DEPLOYMENT += importFiles
-    wince*: DEFINES += SRCDIR=\\\".\\\"
-} else {
-    DEFINES += SRCDIR=\\\"$$PWD\\\"
-}
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
 CONFIG += parallel_test

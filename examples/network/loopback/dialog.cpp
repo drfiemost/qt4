@@ -43,11 +43,7 @@
 
 #include "dialog.h"
 
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_SYMBIAN)
 static const int TotalBytes = 50 * 1024 * 1024;
-#else
-static const int TotalBytes = 5 * 1024 * 1024;
-#endif
 static const int PayloadSize = 64 * 1024; // 64 KB
 
 Dialog::Dialog(QWidget *parent)

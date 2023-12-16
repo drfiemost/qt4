@@ -253,11 +253,7 @@ QIcon QFileIconProviderPrivate::getWinIcon(const QFileInfo &fileInfo) const
 
     //Get the small icon
     unsigned int flags =
-#ifndef Q_OS_WINCE
         SHGFI_ICON|SHGFI_SYSICONINDEX|SHGFI_ADDOVERLAYS|SHGFI_OVERLAYINDEX;
-#else
-        SHGFI_SYSICONINDEX;
-#endif
 
     if (cacheableDirIcon && !useCustomDirectoryIcons) {
         flags |= SHGFI_USEFILEATTRIBUTES;
@@ -286,11 +282,7 @@ QIcon QFileIconProviderPrivate::getWinIcon(const QFileInfo &fileInfo) const
             }
         }
         if (pixmap.isNull()) {
-#ifndef Q_OS_WINCE
             pixmap = QPixmap::fromWinHICON(info.hIcon);
-#else
-            pixmap = QPixmap::fromWinHICON(ImageList_GetIcon((HIMAGELIST) val, info.iIcon, ILD_NORMAL));
-#endif
             if (!pixmap.isNull()) {
                 retIcon.addPixmap(pixmap);
                 if (!key.isEmpty())
@@ -312,11 +304,7 @@ QIcon QFileIconProviderPrivate::getWinIcon(const QFileInfo &fileInfo) const
             //using the unique icon index provided by windows save us from duplicate keys
             key = QString::fromLatin1("qt_dir_%1").arg(info.iIcon);
         }
-#ifndef Q_OS_WINCE
         pixmap = QPixmap::fromWinHICON(info.hIcon);
-#else
-        pixmap = QPixmap::fromWinHICON(ImageList_GetIcon((HIMAGELIST) val, info.iIcon, ILD_NORMAL));
-#endif
         if (!pixmap.isNull()) {
             retIcon.addPixmap(pixmap);
             if (!key.isEmpty())

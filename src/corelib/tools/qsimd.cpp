@@ -43,10 +43,6 @@
 #include <QByteArray>
 #include <stdio.h>
 
-#if defined(Q_OS_WINCE)
-#include <windows.h>
-#endif
-
 #if defined(Q_OS_WIN64)
 #include <intrin.h>
 #endif
@@ -71,28 +67,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined (Q_OS_WINCE)
-static inline uint detectProcessorFeatures()
-{
-    uint features = 0;
-
-#if defined(_X86_)
-    features = 0;
-#if defined QT_HAVE_MMX
-    if (IsProcessorFeaturePresent(PF_MMX_INSTRUCTIONS_AVAILABLE))
-        features |= MMX;
-#endif
-#if defined QT_HAVE_3DNOW
-    if (IsProcessorFeaturePresent(PF_3DNOW_INSTRUCTIONS_AVAILABLE))
-        features |= MMX3DNOW;
-#endif
-    return features;
-#endif
-    features = 0;
-    return features;
-}
-
-#elif defined(__arm__) || defined(__arm) || defined(QT_HAVE_NEON)
+#if defined(__arm__) || defined(__arm) || defined(QT_HAVE_NEON)
 static inline uint detectProcessorFeatures()
 {
     uint features = 0;

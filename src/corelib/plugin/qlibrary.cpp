@@ -540,7 +540,7 @@ bool QLibraryPrivate::loadPlugin()
  */
 bool QLibrary::isLibrary(const QString &fileName)
 {
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     return fileName.endsWith(QLatin1String(".dll"), Qt::CaseInsensitive);
 #else
     QString completeSuffix = QFileInfo(fileName).completeSuffix();
@@ -716,11 +716,8 @@ bool QLibraryPrivate::isPlugin(QSettings *settings)
                 }
 #ifdef Q_OS_WIN
                 QtPluginQueryVerificationDataFunction qtPluginQueryVerificationDataFunction = hTempModule ? (QtPluginQueryVerificationDataFunction)
-#ifdef Q_OS_WINCE
-                        ::GetProcAddress(hTempModule, L"qt_plugin_query_verification_data")
-#else
                         ::GetProcAddress(hTempModule, "qt_plugin_query_verification_data")
-#endif
+
                 : (QtPluginQueryVerificationDataFunction) resolve("qt_plugin_query_verification_data");
 #else
                 QtPluginQueryVerificationDataFunction qtPluginQueryVerificationDataFunction = NULL;

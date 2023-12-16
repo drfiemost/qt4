@@ -20,23 +20,6 @@ build_all:!build_pass {
     CONFIG += release
 }
 
-wince* {
-    QT += xml
-
-    contains(QT_CONFIG, scripttools) {
-        QT += scripttools
-    }
-    contains(QT_CONFIG, phonon) {
-        QT += phonon
-    }
-    contains(QT_CONFIG, xmlpatterns) {
-        QT += xmlpatterns
-    }
-    contains(QT_CONFIG, webkit) {
-        QT += webkit
-    }
-}
-
 mac {
     QMAKE_INFO_PLIST=Info_mac.plist
     TARGET=QMLViewer

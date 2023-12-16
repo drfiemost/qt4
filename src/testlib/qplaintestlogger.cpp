@@ -55,10 +55,6 @@
 #include "windows.h"
 #endif
 
-#ifdef Q_OS_WINCE
-#include <QtCore/QString>
-#endif
-
 #include <QtCore/QByteArray>
 #include <QtCore/qmath.h>
 
@@ -66,7 +62,7 @@ QT_BEGIN_NAMESPACE
 
 namespace QTest {
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     static CRITICAL_SECTION outputCriticalSection;
 #endif
 
@@ -113,16 +109,7 @@ namespace QTest {
 
     static void outputMessage(const char *str)
     {
-#if defined(Q_OS_WINCE)
-        QString strUtf16 = QString::fromLatin1(str);
-        const int maxOutputLength = 255;
-        do {
-            QString tmp = strUtf16.left(maxOutputLength);
-            OutputDebugString((wchar_t*)tmp.utf16());
-            strUtf16.remove(0, maxOutputLength);
-        } while (!strUtf16.isEmpty());
-        if (QTestLog::outputFileName())
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
         EnterCriticalSection(&outputCriticalSection);
         // OutputDebugString is not threadsafe
         OutputDebugStringA(str);
@@ -322,14 +309,14 @@ namespace QTest {
 QPlainTestLogger::QPlainTestLogger()
 : randomSeed(9), hasRandomSeed(false)
 {
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     InitializeCriticalSection(&QTest::outputCriticalSection);
 #endif
 }
 
 QPlainTestLogger::~QPlainTestLogger()
 {
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
 	DeleteCriticalSection(&QTest::outputCriticalSection);
 #endif
 }

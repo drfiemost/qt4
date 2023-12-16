@@ -37,10 +37,6 @@ sources.files += 3rdparty
 sources.path = $$[QT_INSTALL_DEMOS]/boxes
 INSTALLS += target sources
 
-wince*: {
-    DEPLOYMENT_PLUGIN += qjpeg
-}
-
 win32-msvc* {
     QMAKE_CXXFLAGS -= -Zm200
     QMAKE_CFLAGS -= -Zm200

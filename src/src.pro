@@ -7,7 +7,7 @@ SRC_SUBDIRS += src_corelib src_xml src_network src_sql src_testlib
 contains(QT_CONFIG, dbus):SRC_SUBDIRS += src_dbus
 !contains(QT_CONFIG, no-gui): SRC_SUBDIRS += src_gui
 
-!wince*:include(tools/tools.pro)
+include(tools/tools.pro)
 win32:SRC_SUBDIRS += src_activeqt
 
 contains(QT_CONFIG, opengl)|contains(QT_CONFIG, opengles1)|contains(QT_CONFIG, opengles2): SRC_SUBDIRS += src_opengl
@@ -58,7 +58,7 @@ src_declarative.subdir = $$QT_SOURCE_TREE/src/declarative
 src_declarative.target = sub-declarative
 
 #CONFIG += ordered
-!wince*:!ordered {
+!ordered {
    src_corelib.depends = src_tools_moc src_tools_rcc
    src_gui.depends = src_corelib src_tools_uic
    embedded: src_gui.depends += src_network

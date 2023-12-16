@@ -6,11 +6,4 @@ SOURCES = tst_qdeclarativemoduleplugin.cpp \
 QT += declarative network
 CONFIG -= app_bundle
 
-wince*|symbian: {
-    importFiles.files = data
-    importFiles.path = .
-    DEPLOYMENT += importFiles
-    wince*: DEFINES += SRCDIR=\\\".\\\"
-} else {
-    DEFINES += SRCDIR=\\\"$$PWD\\\"
-}
+DEFINES += SRCDIR=\\\"$$PWD\\\"

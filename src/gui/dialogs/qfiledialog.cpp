@@ -64,9 +64,6 @@
 #else
 #define Q_EMBEDDED_SMALLSCREEN
 #include "ui_qfiledialog_embedded.h"
-#if defined(Q_OS_WINCE)
-extern bool qt_priv_ptr_valid;
-#endif
 #if defined(Q_OS_UNIX)
 #include <pwd.h>
 #endif
@@ -3367,7 +3364,7 @@ QString QFSCompleter::pathFromIndex(const QModelIndex &index) const
     QString currentLocation = dirModel->rootPath();
     QString path = index.data(QFileSystemModel::FilePathRole).toString();
     if (!currentLocation.isEmpty() && path.startsWith(currentLocation)) {
-#if defined(Q_OS_UNIX) || defined(Q_OS_WINCE)
+#if defined(Q_OS_UNIX)
         if (currentLocation == QDir::separator())
             return path.mid(currentLocation.length());
 #endif

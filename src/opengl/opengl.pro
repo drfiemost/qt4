@@ -125,17 +125,10 @@ mac:!qpa {
                          qglpixelbuffer_mac.mm
     LIBS_PRIVATE += -framework AppKit -framework Carbon
 }
-win32:!wince*: {
+win32: {
     DEFINES += QT_NO_EGL
     SOURCES += qgl_win.cpp \
 	           qglpixelbuffer_win.cpp
-}
-wince*: {
-    SOURCES += qgl_wince.cpp \
-               qglpixelbuffer_egl.cpp \
-               qgl_egl.cpp
-
-    HEADERS += qgl_egl_p.h
 }
 
 embedded {

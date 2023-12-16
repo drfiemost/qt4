@@ -8,15 +8,7 @@ SOURCES += tst_qdeclarativepixmapcache.cpp
 INCLUDEPATH += ../shared/
 HEADERS += ../shared/testhttpserver.h
 SOURCES += ../shared/testhttpserver.cpp
-
-wince*|symbian: {
-    importFiles.files = data
-    importFiles.path = .
-    DEPLOYMENT += importFiles
-    wince*: DEFINES += SRCDIR=\\\".\\\"
-} else {
-    DEFINES += SRCDIR=\\\"$$PWD\\\"
-}
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
 # QMAKE_CXXFLAGS = -fprofile-arcs -ftest-coverage
 # LIBS += -lgcov

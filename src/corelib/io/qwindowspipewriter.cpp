@@ -52,13 +52,8 @@ QWindowsPipeWriter::QWindowsPipeWriter(HANDLE pipe, QObject * parent)
       quitNow(false),
       hasWritten(false)
 {
-#if !defined(Q_OS_WINCE) || (_WIN32_WCE >= 0x600)
     DuplicateHandle(GetCurrentProcess(), pipe, GetCurrentProcess(),
                          &writePipe, 0, false, DUPLICATE_SAME_ACCESS);
-#else
-    Q_UNUSED(pipe);
-    writePipe = GetCurrentProcess();
-#endif
 }
 
 QWindowsPipeWriter::~QWindowsPipeWriter()
@@ -69,9 +64,7 @@ QWindowsPipeWriter::~QWindowsPipeWriter()
     lock.unlock();
     if (!wait(30000))
         terminate();
-#if !defined(Q_OS_WINCE) || (_WIN32_WCE >= 0x600)
     CloseHandle(writePipe);
-#endif
 }
 
 bool QWindowsPipeWriter::waitForWrite(int msecs)
@@ -136,7 +129,6 @@ void QWindowsPipeWriter::run()
                     msleep(100);
                     continue;
                 }
-#ifndef Q_OS_WINCE
                 if (GetLastError() == ERROR_IO_PENDING) {
                   if (!GetOverlappedResult(writePipe, &overl, &written, true)) {
                       CloseHandle(overl.hEvent);
@@ -146,9 +138,6 @@ void QWindowsPipeWriter::run()
                     CloseHandle(overl.hEvent);
                     return;
                 }
-#else
-                return;
-#endif
             }
             totalWritten += written;
 #if defined QPIPEWRITER_DEBUG

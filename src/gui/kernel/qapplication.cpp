@@ -4732,29 +4732,6 @@ bool QApplicationPrivate::notify_helper(QObject *receiver, QEvent * e)
 #ifndef QT_NO_SESSIONMANAGER
 #if defined(Q_WS_WIN) || defined(Q_WS_MAC) || defined(Q_WS_QWS)
 
-#if defined(Q_OS_WINCE)
-HRESULT qt_CoCreateGuid(GUID* guid)
-{
-    // We will use the following information to create the GUID
-    // 1. absolute path to application
-    wchar_t tempFilename[MAX_PATH];
-    if (!GetModuleFileName(0, tempFilename, MAX_PATH))
-        return S_FALSE;
-    unsigned int hash = qHash(QString::fromWCharArray(tempFilename));
-    guid->Data1 = hash;
-    // 2. creation time of file
-    QFileInfo info(QString::fromWCharArray(tempFilename));
-    guid->Data2 = qHash(info.created().toTime_t());
-    // 3. current system time
-    guid->Data3 = qHash(QDateTime::currentDateTime().toTime_t());
-    return S_OK;
-}
-#if !defined(OLE32_MCOMGUID) || defined(QT_WINCE_FORCE_CREATE_GUID)
-#define CoCreateGuid qt_CoCreateGuid
-#endif
-
-#endif
-
 class QSessionManagerPrivate : public QObjectPrivate
 {
 public:

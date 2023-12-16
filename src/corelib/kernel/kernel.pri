@@ -82,14 +82,6 @@ win32 {
                 kernel/qwineventnotifier_p.h
 }
 
-
-wince*: {
-        SOURCES += \
-                kernel/qfunctions_wince.cpp
-        HEADERS += \
-                kernel/qfunctions_wince.h
-}
-
 mac:!embedded:!qpa{
     SOURCES += \
         kernel/qcoreapplication_mac.cpp

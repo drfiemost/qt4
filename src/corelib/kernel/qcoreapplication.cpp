@@ -1858,7 +1858,7 @@ QString QCoreApplication::applicationFilePath()
 */
 qint64 QCoreApplication::applicationPid()
 {
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     return GetCurrentProcessId();
 #else
     return getpid();
@@ -1940,14 +1940,6 @@ QStringList QCoreApplication::arguments()
     }
 #ifdef Q_OS_WIN
     QString cmdline = QString::fromWCharArray(GetCommandLine());
-
-#if defined(Q_OS_WINCE)
-    wchar_t tempFilename[MAX_PATH+1];
-    if (GetModuleFileName(0, tempFilename, MAX_PATH)) {
-        tempFilename[MAX_PATH] = 0;
-        cmdline.prepend(QLatin1Char('\"') + QString::fromWCharArray(tempFilename) + QLatin1String("\" "));
-    }
-#endif // Q_OS_WINCE
 
     list = qWinCmdArgs(cmdline);
     if (self->d_func()->application_type) { // GUI app? Skip known - see qapplication.cpp

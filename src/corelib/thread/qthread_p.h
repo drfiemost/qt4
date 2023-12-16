@@ -168,7 +168,7 @@ public:
 
 #endif // Q_OS_UNIX
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     HANDLE handle;
     unsigned int id;
     int waiters;
@@ -177,7 +177,7 @@ public:
     static void finish(void *, bool lockAnyway=true);
 #endif // Q_OS_WIN32
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     bool terminationEnabled, terminatePending;
 # endif
 

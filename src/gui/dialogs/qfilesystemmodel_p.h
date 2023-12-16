@@ -97,7 +97,7 @@ public:
         }
 
         QString fileName;
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
         QString volumeName;
 #endif
 

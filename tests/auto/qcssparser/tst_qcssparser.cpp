@@ -40,9 +40,6 @@
 ****************************************************************************/
 #include <QtTest/QtTest>
 #include <QtXml/QtXml>
-#if defined(Q_OS_WINCE)
-#include <QtGui/QFontDatabase>
-#endif
 
 //TESTED_CLASS=QCss
 //TESTED_FILES=gui/text/qcssparser.cpp gui/text/qcssparser_p.h
@@ -99,31 +96,14 @@ private slots:
     void extractBorder();
     void noTextDecoration();
     void quotedAndUnquotedIdentifiers();
-
-private:
-#if defined(Q_OS_WINCE)
-    int m_timesFontId;
-#endif
 };
 
 void tst_QCssParser::initTestCase()
 {
-#if defined(Q_OS_WINCE)
-    QFontDatabase fontDB;
-    m_timesFontId = -1;
-    if (!fontDB.families().contains("Times New Roman")) {
-        m_timesFontId = QFontDatabase::addApplicationFont("times.ttf");
-        QVERIFY(m_timesFontId != -1);
-    }
-#endif
 }
 
 void tst_QCssParser::cleanupTestCase()
 {
-#if defined(Q_OS_WINCE)
-    if (m_timesFontId != -1)
-        QFontDatabase::removeApplicationFont(m_timesFontId);
-#endif
 }
 
 void tst_QCssParser::scanner_data()
@@ -131,11 +111,7 @@ void tst_QCssParser::scanner_data()
     QTest::addColumn<QString>("input");
     QTest::addColumn<QString>("output");
 
-#if !defined(Q_OS_WINCE)
     QDir d(SRCDIR);
-#else
-    QDir d(QDir::current());
-#endif
     d.cd("testdata");
     d.cd("scanner");
     foreach (QFileInfo test, d.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {

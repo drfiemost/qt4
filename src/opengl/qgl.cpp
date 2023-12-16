@@ -4259,7 +4259,7 @@ void QGLWidget::resizeOverlayGL(int, int)
 /*! \fn bool QGLWidget::event(QEvent *e)
   \reimp
 */
-#if !defined(Q_OS_WINCE) && !defined(Q_WS_QWS) && !defined(Q_WS_QPA)
+#if !defined(Q_WS_QWS) && !defined(Q_WS_QPA)
 bool QGLWidget::event(QEvent *e)
 {
     Q_D(QGLWidget);

@@ -4,34 +4,7 @@ macx:CONFIG -= app_bundle
 
 SOURCES += tst_qmlvisual.cpp
 
-wince*|symbian: {
-    importFiles.path = .
-    importFiles.files = animation \
-    fillmode \
-    focusscope \
-    ListView \
-    qdeclarativeborderimage \
-    qdeclarativeflickable \
-    qdeclarativeflipable \
-    qdeclarativegridview \
-    qdeclarativemousearea \
-    qdeclarativeparticles \
-    qdeclarativepathview \
-    qdeclarativepositioners \
-    qdeclarativesmoothedanimation \
-    qdeclarativespringanimation \
-    qdeclarativetext \
-    qdeclarativetextedit \
-    qdeclarativetextinput \
-    rect \
-    repeater \
-    selftest_noimages \
-    webview
-    DEPLOYMENT += importFiles
-    wince*: DEFINES += QT_TEST_SOURCE_DIR=\\\".\\\"
-} else {
-    DEFINES += QT_TEST_SOURCE_DIR=\"\\\"$$PWD\\\"\"
-}
+DEFINES += QT_TEST_SOURCE_DIR=\"\\\"$$PWD\\\"\"
 
 CONFIG += parallel_test
 

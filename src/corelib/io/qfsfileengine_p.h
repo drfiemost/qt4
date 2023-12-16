@@ -64,10 +64,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_OS_WINCE_STD) && _WIN32_WCE < 0x600
-#define Q_USE_DEPRECATED_MAP_API 1
-#endif
-
 class Q_AUTOTEST_EXPORT QFSFileEnginePrivate : public QAbstractFileEnginePrivate
 {
     Q_DECLARE_PUBLIC(QFSFileEngine)
@@ -119,9 +115,7 @@ public:
     HANDLE mapHandle;
     QHash<uchar *, DWORD /* offset % AllocationGranularity */> maps;
 
-#ifndef Q_OS_WINCE
     mutable int cachedFd;
-#endif
 
     mutable DWORD fileAttrib;
 #else
@@ -142,10 +136,8 @@ public:
     mutable uint is_sequential : 2;
     mutable uint could_stat : 1;
     mutable uint tried_stat : 1;
-#if !defined(Q_OS_WINCE)
     mutable uint need_lstat : 1;
     mutable uint is_link : 1;
-#endif
 
 #if defined(Q_OS_WIN)
     bool doStat(QFileSystemMetaData::MetaDataFlags flags) const;

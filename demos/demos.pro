@@ -18,23 +18,6 @@ SUBDIRS     = \
             demos_undo \
             demos_sub-attaq
 
-wince*:  SUBDIRS = \
-            demos_shared \
-            demos_deform \
-            demos_gradients \
-            demos_pathstroke \
-            demos_affine \
-            demos_composition \
-            demos_books \
-            demos_interview \
-            demos_mainwindow \
-            demos_spreadsheet \
-            demos_textedit \
-            # demos_chip \
-            demos_embeddeddialogs \
-            demos_undo \
-            demos_sub-attaq
-
 contains(QT_CONFIG, opengl):!contains(QT_CONFIG, opengles1):!contains(QT_CONFIG, opengles2):{
 SUBDIRS += demos_boxes
 }
@@ -43,14 +26,13 @@ SUBDIRS += demos_glhypnotizer
 }
 
 mac* && !qpa: SUBDIRS += demos_macmainwindow
-wince*|embedded|x11: SUBDIRS += demos_embedded
+embedded|x11: SUBDIRS += demos_embedded
 
-!contains(QT_EDITION, Console):!cross_compile:!embedded:!wince*:SUBDIRS += demos_arthurplugin
+!contains(QT_EDITION, Console):!cross_compile:!embedded:SUBDIRS += demos_arthurplugin
 
 !cross_compile:{
 contains(QT_BUILD_PARTS, tools):{
-!wince*:SUBDIRS += demos_sqlbrowser demos_qtdemo
-wince*:SUBDIRS += demos_sqlbrowser
+SUBDIRS += demos_sqlbrowser demos_qtdemo
 }
 }
 contains(QT_CONFIG, declarative):SUBDIRS += demos_declarative demos_helper

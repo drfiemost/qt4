@@ -24,8 +24,7 @@ unix|win32-g++* {
     QMAKE_PKGCONFIG_REQUIRES = QtCore
 }
 win32 { 
-    wince*:LIBS_PRIVATE += -lws2
-    else:LIBS_PRIVATE += -lws2_32 \
+    LIBS_PRIVATE += -lws2_32 \
         -ladvapi32 \
         -lnetapi32 \
         -luser32

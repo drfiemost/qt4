@@ -80,9 +80,6 @@
 #  include <qt_windows.h>
 #  include <qvarlengtharray.h>
 #  include <private/qfontengine_p.h>
-#  if defined(Q_OS_WINCE)
-#    include "qguifunctions_wince.h"
-#  endif
 #elif defined(Q_WS_MAC)
 #  include <private/qt_mac_p.h>
 #  include <private/qpixmap_mac_p.h>

@@ -45,9 +45,7 @@
 #include <qdebug.h>
 #include <qstring.h>
 #include <ctype.h>
-#if !defined(Q_OS_WINCE)
 #include <errno.h>
-#endif
 
 QT_BEGIN_NAMESPACE
 /*
@@ -1858,15 +1856,6 @@ qint64 QProcess::writeData(const char *data, qint64 len)
 {
     Q_D(QProcess);
 
-#if defined(Q_OS_WINCE)
-    Q_UNUSED(data);
-    Q_UNUSED(len);
-    d->processError = QProcess::WriteError;
-    setErrorString(tr("Error writing to process"));
-    emit error(d->processError);
-    return -1;
-#endif
-
     if (d->stdinChannel.closed) {
 #if defined QPROCESS_DEBUG
     qDebug("QProcess::writeData(%p \"%s\", %lld) == 0 (write channel closing)",
@@ -2272,7 +2261,7 @@ QT_BEGIN_INCLUDE_NAMESPACE
 #if defined(Q_OS_MAC) && !defined(Q_OS_IOS)
 # include <crt_externs.h>
 # define environ (*_NSGetEnviron())
-#elif defined(Q_OS_WINCE) || (defined(Q_OS_MAC) && defined(Q_OS_IOS))
+#elif (defined(Q_OS_MAC) && defined(Q_OS_IOS))
   static char *qt_empty_environ[] = { 0 };
 #define environ qt_empty_environ
 #elif !defined(Q_OS_WIN)

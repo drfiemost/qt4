@@ -14,14 +14,6 @@ win32 {
     DESTDIR = ../
 }
 
-wince*|symbian: {
-    addApp.files = ../clientserver/clientserver.exe
-    addApp.path = clientserver
-    DEPLOYMENT += addApp
-}
-
 TARGET = tst_qudpsocket
-
-symbian: TARGET.CAPABILITY += NetworkServices
 
 CONFIG+=insignificant_test # QTQAINFRA-428

@@ -90,10 +90,6 @@
 #include <langinfo.h>
 #endif
 
-#if defined(Q_OS_WINCE)
-#  define QT_NO_SETLOCALE
-#endif
-
 
 // enabling this is not exception safe!
 // #define Q_DEBUG_TEXTCODEC
@@ -229,7 +225,7 @@ bool QTextCodec::validCodecs()
 }
 
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
 class QWindowsLocalCodec: public QTextCodec
 {
 public:
@@ -357,8 +353,7 @@ QString QWindowsLocalCodec::convertToUnicodeCharByChar(const char *chars, int le
         state->remainingChars = 0;
     }
     const char *mb = mbcs;
-#ifndef Q_OS_WINCE
-    const char *next = 0;
+    const char *next = nullptr;
     QString s;
     while((next = CharNextExA(CP_ACP, mb, 0)) != mb) {
         wchar_t wc[2] ={0};
@@ -376,21 +371,6 @@ QString QWindowsLocalCodec::convertToUnicodeCharByChar(const char *chars, int le
         }
         mb = next;
     }
-#else
-    QString s;
-    int size = mbstowcs(NULL, mb, length);
-    if (size < 0) {
-        Q_ASSERT("Error in CE TextCodec");
-        return QString();
-    }
-    wchar_t* ws = new wchar_t[size + 2];
-    ws[size +1] = 0;
-    ws[size] = 0;
-    size = mbstowcs(ws, mb, length);
-    for (int i=0; i< size; i++)
-        s.append(QChar(ws[i]));
-    delete [] ws;
-#endif
     delete [] mbcs;
     return s;
 }
@@ -548,7 +528,7 @@ static QTextCodec * ru_RU_hack(const char * i) {
 
 #endif
 
-#if !defined(Q_OS_WIN32) && !defined(Q_OS_WINCE)
+#if !defined(Q_OS_WIN32) 
 static QTextCodec *checkForCodec(const QByteArray &name) {
     QTextCodec *c = QTextCodec::codecForName(name);
     if (!c) {
@@ -566,7 +546,7 @@ static QTextCodec *checkForCodec(const QByteArray &name) {
 */
 static void setupLocaleMapper()
 {
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     localeMapper = QTextCodec::codecForName("System");
 #else
 
@@ -748,7 +728,7 @@ static void setup()
 #  endif // QT_NO_ICONV && !QT_BOOTSTRAPPED && !QT_CODEC_PLUGINS
 #endif // QT_NO_CODECS
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     (void) new QWindowsLocalCodec;
 #endif // Q_OS_WIN32
 

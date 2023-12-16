@@ -368,13 +368,13 @@ QFileSystemModelPrivate::QFileSystemNode *QFileSystemModelPrivate::node(const QS
     // ### TODO can we use bool QAbstractFileEngine::caseSensitive() const?
     QStringList pathElements = absolutePath.split(QLatin1Char('/'), QString::SkipEmptyParts);
     if ((pathElements.isEmpty())
-#if !defined(Q_OS_WIN) || defined(Q_OS_WINCE)
+#if !defined(Q_OS_WIN)
         && QDir::fromNativeSeparators(longPath) != QLatin1String("/")
 #endif
         )
         return const_cast<QFileSystemModelPrivate::QFileSystemNode*>(&root);
     QModelIndex index = QModelIndex(); // start with "My Computer"
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     if (absolutePath.startsWith(QLatin1String("//"))) { // UNC path
         QString host = QLatin1String("\\\\") + pathElements.first();
         if (absolutePath == QDir::fromNativeSeparators(host))
@@ -400,7 +400,7 @@ QFileSystemModelPrivate::QFileSystemNode *QFileSystemModelPrivate::node(const QS
     } else
 #endif
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     {
         if (!pathElements.at(0).contains(QLatin1String(":"))) {
             QString rootPath = QDir(longPath).rootPath();
@@ -817,7 +817,7 @@ QString QFileSystemModelPrivate::name(const QModelIndex &index) const
 */
 QString QFileSystemModelPrivate::displayName(const QModelIndex &index) const
 {
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     QFileSystemNode *dirNode = node(index);
     if (!dirNode->volumeName.isNull())
         return dirNode->volumeName + QLatin1String(" (") + name(index) + QLatin1Char(')');
@@ -1329,7 +1329,7 @@ QString QFileSystemModelPrivate::filePath(const QModelIndex &index) const
         idx = idx.parent();
     }
     QString fullPath = QDir::fromNativeSeparators(path.join(QDir::separator()));
-#if !defined(Q_OS_WIN) || defined(Q_OS_WINCE)
+#if !defined(Q_OS_WIN)
     if ((fullPath.length() > 2) && fullPath[0] == QLatin1Char('/') && fullPath[1] == QLatin1Char('/'))
         fullPath = fullPath.mid(1);
 #endif
@@ -1701,7 +1701,7 @@ QFileSystemModelPrivate::QFileSystemNode* QFileSystemModelPrivate::addNode(QFile
 #ifndef QT_NO_FILESYSTEMWATCHER
     node->populate(info);
 #endif
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     //The parentNode is "" so we are listing the drives
     if (parentNode->fileName.isEmpty()) {
         wchar_t name[MAX_PATH + 1];

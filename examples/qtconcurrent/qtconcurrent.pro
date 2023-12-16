@@ -1,12 +1,9 @@
 TEMPLATE      = subdirs
 SUBDIRS       = imagescaling \
                 map \
+                progressdialog \
                 runfunction \
                 wordcount
-
-!wince* {
-    SUBDIRS += progressdialog
-}
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/qtconcurrent

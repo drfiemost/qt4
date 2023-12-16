@@ -49,9 +49,7 @@
 
 #ifndef QT_NO_FSFILEENGINE
 
-#if !defined(Q_OS_WINCE)
 #include <errno.h>
-#endif
 #if defined(Q_OS_UNIX)
 #include "private/qcore_unix_p.h"
 #endif
@@ -113,10 +111,8 @@ void QFSFileEnginePrivate::init()
 {
     is_sequential = 0;
     tried_stat = 0;
-#if !defined(Q_OS_WINCE)
     need_lstat = 1;
     is_link = 0;
-#endif
     openMode = QIODevice::NotOpen;
     fd = -1;
     fh = nullptr;
@@ -127,9 +123,7 @@ void QFSFileEnginePrivate::init()
     fileAttrib = INVALID_FILE_ATTRIBUTES;
     fileHandle = INVALID_HANDLE_VALUE;
     mapHandle = NULL;
-#ifndef Q_OS_WINCE
     cachedFd = -1;
-#endif
 #endif
 }
 

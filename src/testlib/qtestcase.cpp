@@ -1859,7 +1859,7 @@ int QTest::qExec(QObject *testObject, int argc, char **argv)
     try {
 #endif
 
- #if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+ #if defined(Q_OS_WIN)
      SetErrorMode(SetErrorMode(0) | SEM_NOGPFAULTERRORBOX);
  #endif
 

@@ -34,11 +34,9 @@ contains(DEFINES, QT_NO_GESTURES): SUBDIRS -= gestures
 contains(QT_CONFIG, script): SUBDIRS += script
 
 embedded:SUBDIRS += qws
-!wince*: {
+{
     !contains(QT_EDITION, Console):!contains(QT_CONFIG, no-gui):contains(QT_BUILD_PARTS, tools):SUBDIRS += designer
     contains(QT_BUILD_PARTS, tools):!contains(QT_CONFIG, no-gui):SUBDIRS += qtestlib help
-} else {
-    contains(QT_BUILD_PARTS, tools):!contains(QT_CONFIG, no-gui):SUBDIRS += qtestlib
 }
 contains(QT_CONFIG, opengl): SUBDIRS += opengl
 contains(QT_CONFIG, openvg): SUBDIRS += openvg

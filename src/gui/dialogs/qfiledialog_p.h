@@ -143,16 +143,11 @@ public:
 #if defined(Q_OS_UNIX)
         return ::pathconf(QFile::encodeName(path).data(), _PC_NAME_MAX);
 #elif defined(Q_OS_WIN)
-#ifndef Q_OS_WINCE
         DWORD maxLength;
         QString drive = path.left(3);
         if (::GetVolumeInformation(reinterpret_cast<const wchar_t *>(drive.utf16()), NULL, 0, NULL, &maxLength, NULL, NULL, 0) == FALSE)
             return -1;
         return maxLength;
-#else
-        Q_UNUSED(path);
-        return MAX_PATH;
-#endif //Q_OS_WINCE
 #else
         Q_UNUSED(path);
 #endif
@@ -186,10 +181,6 @@ public:
         QString n(path);
         for (int i = 0; i < (int)n.length(); ++i)
             if (n[i] == QLatin1Char('\\')) n[i] = QLatin1Char('/');
-#if defined(Q_OS_WINCE)
-        if ((n.size() > 1) && (n.startsWith(QLatin1String("//"))))
-            n = n.mid(1);
-#endif
         return n;
 #else // the compile should optimize away this
         return path;

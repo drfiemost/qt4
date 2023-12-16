@@ -860,7 +860,7 @@ QString QDeclarativeImportDatabase::resolvePlugin(const QDir &qmldirPath, const 
 QString QDeclarativeImportDatabase::resolvePlugin(const QDir &qmldirPath, const QString &qmldirPluginPath, 
                                                   const QString &baseName)
 {
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
     return resolvePlugin(qmldirPath, qmldirPluginPath, baseName,
                          QStringList()
 # ifdef QT_DEBUG

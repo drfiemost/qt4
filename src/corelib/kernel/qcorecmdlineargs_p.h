@@ -58,11 +58,11 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
 
 QT_BEGIN_INCLUDE_NAMESPACE
 #include "QtCore/qvector.h"
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
 #  include "qt_windows.h"
 #endif
 QT_END_INCLUDE_NAMESPACE
@@ -129,7 +129,7 @@ static QVector<Char*> qWinCmdLine(Char *cmdParam, int length, int &argc)
     return argv;
 }
 
-#if defined(Q_OS_WIN32) || defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN32)
 static inline QStringList qWinCmdArgs(QString cmdLine) // not const-ref: this might be modified
 {
     QStringList args;

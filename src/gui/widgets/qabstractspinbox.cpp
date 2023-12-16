@@ -1160,7 +1160,7 @@ void QAbstractSpinBox::hideEvent(QHideEvent *event)
 */
 static int getKeyboardAutoRepeatRate() {
     int ret = 30;
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     DWORD time;
     if (SystemParametersInfo(SPI_GETKEYBOARDSPEED, 0, &time, 0) != FALSE)
         ret = static_cast<int>(1000 / static_cast<int>(time)); // msecs

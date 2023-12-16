@@ -2745,8 +2745,6 @@ quint64 QGLMaskTextureCache::hash(const QPainterPath &p, const QTransform &m, qr
     }
 
     h += FloatToQuint64(m.m11());
-#ifndef Q_OS_WINCE    //  ###
-    //Compiler crashes for arm on WinCE
     h += FloatToQuint64(m.m12()) << 4;
     h += FloatToQuint64(m.m13()) << 8;
     h += FloatToQuint64(m.m21()) << 12;
@@ -2754,9 +2752,7 @@ quint64 QGLMaskTextureCache::hash(const QPainterPath &p, const QTransform &m, qr
     h += FloatToQuint64(m.m23()) << 20;
     h += FloatToQuint64(m.m31()) << 24;
     h += FloatToQuint64(m.m32()) << 28;
-#endif
     h += FloatToQuint64(m.m33()) << 32;
-
     h += FloatToQuint64(w);
 
     return h;

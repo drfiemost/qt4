@@ -7,14 +7,7 @@ HEADERS += ../shared/testhttpserver.h
 SOURCES += tst_qdeclarativeloader.cpp \
            ../shared/testhttpserver.cpp
 
-wince*|symbian: {
-    importFiles.files = data
-    importFiles.path = .
-    DEPLOYMENT += importFiles
-    wince*: DEFINES += SRCDIR=\\\".\\\"
-} else {
-    DEFINES += SRCDIR=\\\"$$PWD\\\"
-}
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
 CONFIG += parallel_test
 

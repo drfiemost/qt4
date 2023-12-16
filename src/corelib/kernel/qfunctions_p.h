@@ -55,10 +55,6 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(Q_OS_WINCE)
-#  include "QtCore/qfunctions_wince.h"
-#endif
-
 #define Q_STATIC_GLOBAL_OPERATOR static
 #define Q_STATIC_GLOBAL_INLINE_OPERATOR static inline
 

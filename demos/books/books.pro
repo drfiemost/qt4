@@ -12,10 +12,3 @@ target.path = $$[QT_INSTALL_DEMOS]/books
 sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS *.pro images
 sources.path = $$[QT_INSTALL_DEMOS]/books
 INSTALLS += target sources
-
-wince*: {
-    CONFIG(debug, debug|release):sqlPlugins.files = $$QT_BUILD_TREE/plugins/sqldrivers/*d4.dll
-    CONFIG(release, debug|release):sqlPlugins.files = $$QT_BUILD_TREE/plugins/sqldrivers/*[^d]4.dll
-    sqlPlugins.path = sqldrivers
-    DEPLOYMENT += sqlPlugins
-}

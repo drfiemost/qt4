@@ -2,9 +2,9 @@ TEMPLATE = subdirs
 SUBDIRS = customclass
 !contains(QT_CONFIG, no-gui):SUBDIRS += helloscript context2d defaultprototypes
 
-!wince*:!contains(QT_CONFIG, no-gui):SUBDIRS += qscript marshal
-!wince*:SUBDIRS *= marshal
-!wince*:!cross_compile:!contains(QT_CONFIG, no-gui):SUBDIRS += calculator qstetrix
+!contains(QT_CONFIG, no-gui):SUBDIRS += qscript marshal
+SUBDIRS *= marshal
+!cross_compile:!contains(QT_CONFIG, no-gui):SUBDIRS += calculator qstetrix
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/script

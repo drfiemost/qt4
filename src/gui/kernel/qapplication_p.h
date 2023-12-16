@@ -97,12 +97,9 @@ extern bool qt_is_gui_used;
 extern QClipboard *qt_clipboard;
 #endif
 
-#if defined (Q_OS_WIN32) || defined (Q_OS_CYGWIN) || defined(Q_OS_WINCE)
+#if defined (Q_OS_WIN32) || defined (Q_OS_CYGWIN)
 extern QSysInfo::WinVersion qt_winver;
 enum { QT_TABLET_NPACKETQSIZE = 128 };
-# ifdef Q_OS_WINCE
-  extern DWORD qt_cever;
-# endif
 #elif defined (Q_OS_MAC)
 extern QSysInfo::MacVersion qt_macver;
 #endif

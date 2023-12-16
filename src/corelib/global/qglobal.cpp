@@ -65,11 +65,9 @@
 #  include <exception>
 #endif
 
-#if !defined(Q_OS_WINCE)
-#  include <errno.h>
-#  if defined(Q_CC_MSVC)
-#    include <crtdbg.h>
-#  endif
+#include <errno.h>
+#if defined(Q_CC_MSVC)
+#  include <crtdbg.h>
 #endif
 
 #if defined(Q_OS_MACX) && !defined(Q_OS_IOS)
@@ -1326,13 +1324,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_OS_WINCE
-    \relates <QtGlobal>
-
-    Defined on Windows CE.
-*/
-
-/*!
     \macro Q_OS_CYGWIN
     \relates <QtGlobal>
 
@@ -1603,13 +1594,11 @@ static QSysInfo::MacVersion macVersion()
 }
 const QSysInfo::MacVersion QSysInfo::MacintoshVersion = macVersion();
 
-#elif defined(Q_OS_WIN32) || defined(Q_OS_CYGWIN) || defined(Q_OS_WINCE)
+#elif defined(Q_OS_WIN32) || defined(Q_OS_CYGWIN)
 
 QT_BEGIN_INCLUDE_NAMESPACE
 #include "qt_windows.h"
 QT_END_INCLUDE_NAMESPACE
-
-#  ifndef Q_OS_WINCE
 
 // Determine Windows versions >= 8 by querying the version of kernel32.dll.
 static inline bool determineWinOsVersionPost8(OSVERSIONINFO *result)
@@ -1670,8 +1659,6 @@ static inline void determineWinOsVersionFallbackPost8(OSVERSIONINFO *result)
         result->dwMinorVersion = checkVersion.dwMinorVersion;
 }
 
-#  endif // !Q_OS_WINCE
-
 static inline OSVERSIONINFO winOsVersion()
 {
     OSVERSIONINFO result = { sizeof(OSVERSIONINFO), 0, 0, 0, 0, {'\0'}};
@@ -1685,12 +1672,10 @@ static inline OSVERSIONINFO winOsVersion()
 #  if defined(_MSC_VER) && _MSC_VER >= 1800
 #    pragma warning( pop )
 #  endif
-#  ifndef Q_OS_WINCE
     if (result.dwMajorVersion == 6 && result.dwMinorVersion == 2) {
         if (!determineWinOsVersionPost8(&result))
             determineWinOsVersionFallbackPost8(&result);
     }
-#  endif // !Q_OS_WINCE
     return result;
 }
 
@@ -1714,11 +1699,6 @@ QSysInfo::WinVersion QSysInfo::windowsVersion()
         return winver;
     winver = QSysInfo::WV_NT;
     const OSVERSIONINFO osver = winOsVersion();
-#ifdef Q_OS_WINCE
-    DWORD qt_cever = 0;
-    qt_cever = osver.dwMajorVersion * 100;
-    qt_cever += osver.dwMinorVersion * 10;
-#endif
     switch (osver.dwPlatformId) {
     case VER_PLATFORM_WIN32s:
         winver = QSysInfo::WV_32s;
@@ -1732,18 +1712,6 @@ QSysInfo::WinVersion QSysInfo::windowsVersion()
         else
             winver = QSysInfo::WV_95;
         break;
-#ifdef Q_OS_WINCE
-    case VER_PLATFORM_WIN32_CE:
-        if (qt_cever >= 600)
-            winver = QSysInfo::WV_CE_6;
-        if (qt_cever >= 500)
-            winver = QSysInfo::WV_CE_5;
-        else if (qt_cever >= 400)
-            winver = QSysInfo::WV_CENET;
-        else
-            winver = QSysInfo::WV_CE;
-        break;
-#endif
     default: // VER_PLATFORM_WIN32_NT
         if (osver.dwMajorVersion < 5) {
             winver = QSysInfo::WV_NT;
@@ -2168,10 +2136,6 @@ void qt_message_output(QtMsgType msgType, const char *buf)
         mac_default_handler(buf);
 #elif defined(QT_USE_SLOG2)
         slog2_default_handler(msgType, buf);
-#elif defined(Q_OS_WINCE)
-        QString fstr = QString::fromLatin1(buf);
-        fstr += QLatin1Char('\n');
-        OutputDebugString(reinterpret_cast<const wchar_t *> (fstr.utf16()));
 #else
         fprintf(stderr, "%s\n", buf);
         fflush(stderr);
@@ -2186,12 +2150,7 @@ void qt_message_output(QtMsgType msgType, const char *buf)
         // get the current report mode
         int reportMode = _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_WNDW);
         _CrtSetReportMode(_CRT_ERROR, reportMode);
-#if !defined(Q_OS_WINCE)
         int ret = _CrtDbgReport(_CRT_ERROR, __FILE__, __LINE__, QT_VERSION_STR, buf);
-#else
-        int ret = _CrtDbgReportW(_CRT_ERROR, _CRT_WIDE(__FILE__),
-            __LINE__, _CRT_WIDE(QT_VERSION_STR), reinterpret_cast<const wchar_t *> (QString::fromLatin1(buf).utf16()));
-#endif
         if (ret == 0  && reportMode & _CRTDBG_MODE_WNDW)
             return; // ignore
         else if (ret == 1)

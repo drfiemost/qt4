@@ -4,9 +4,7 @@ TEMPLATE        = subdirs
     no-png {
         message("Some graphics-related tools are unavailable without PNG support")
     } else {
-        wince* {
-            SUBDIRS = qtestlib designer
-        } else {
+        {
             SUBDIRS = assistant \
                       pixeltool \
                       qtestlib \
@@ -18,15 +16,15 @@ TEMPLATE        = subdirs
             }
         }
         unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
-        win32:!wince*:SUBDIRS += activeqt
+        win32:SUBDIRS += activeqt
     }
     contains(QT_CONFIG, declarative) {
         SUBDIRS += qml
-        !wince*: SUBDIRS += qmlplugindump
+        SUBDIRS += qmlplugindump
     }
 }
 
-!wince*:SUBDIRS += linguist
+SUBDIRS += linguist
 
 mac {
     SUBDIRS += macdeployqt
@@ -36,10 +34,10 @@ embedded:SUBDIRS += kmap2qmap
 
 contains(QT_CONFIG, dbus):SUBDIRS += qdbus
 # We don't need these command line utilities on embedded platforms.
-!wince*:contains(QT_CONFIG, xmlpatterns): SUBDIRS += xmlpatterns xmlpatternsvalidator
+contains(QT_CONFIG, xmlpatterns): SUBDIRS += xmlpatterns xmlpatternsvalidator
 embedded: SUBDIRS += makeqpf
 
-!wince*:!cross_compile:SUBDIRS += qdoc3
+!cross_compile:SUBDIRS += qdoc3
 
 CONFIG+=ordered
 QTDIR_build:REQUIRES = "contains(QT_CONFIG, full-config)"

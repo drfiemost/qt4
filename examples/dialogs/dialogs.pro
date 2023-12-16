@@ -5,11 +5,11 @@ SUBDIRS       = classwizard \
                 tabdialog \
                 trivialwizard
 
-!wince*: SUBDIRS += licensewizard \
-                    extension \
-                    findfiles
+SUBDIRS += licensewizard \
+           extension \
+           findfiles
 
-wince*: SUBDIRS += sipdialog
+SUBDIRS += sipdialog
 
 # install
 sources.files = README *.pro

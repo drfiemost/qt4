@@ -31,14 +31,6 @@ include($$WEBKITDIR/WebKit.pri)
 # These are in addition to the ones disabled in WebKit.pri
 win32-msvc*: QMAKE_CXXFLAGS += -wd4396 -wd4099
 
-# Windows CE-specific stuff copied from WebCore.pro
-# ### Should rather be in JavaScriptCore.pri?
-wince* {
-    INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/os-wince
-    INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/os-win32
-    LIBS += -lmmtimer
-}
-
 !qpa:mac {
     DEFINES += ENABLE_JSC_MULTIPLE_THREADS=0
     LIBS_PRIVATE += -framework AppKit

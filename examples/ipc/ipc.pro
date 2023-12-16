@@ -1,7 +1,7 @@
 TEMPLATE      = subdirs
 # no QSharedMemory
 SUBDIRS = sharedmemory
-!wince*: SUBDIRS += localfortuneserver localfortuneclient
+SUBDIRS += localfortuneserver localfortuneclient
 
 # install
 sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS ipc.pro README

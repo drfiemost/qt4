@@ -63,7 +63,7 @@ BearerMonitor::BearerMonitor(QWidget *parent)
     delete tabWidget->currentWidget();
     sessionGroup->hide();
 #endif
-#if defined(Q_OS_SYMBIAN) || defined(Q_OS_WINCE) || defined(MAEMO_UI) || defined(Q_WS_SIMULATOR)
+#if defined(MAEMO_UI) || defined(Q_WS_SIMULATOR)
     setWindowState(Qt::WindowMaximized);
 #endif
     updateConfigurations();

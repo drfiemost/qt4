@@ -1028,11 +1028,8 @@ static QString windowsConfigPath(int type)
 {
     QString result;
 
-#ifndef Q_OS_WINCE
     QSystemLibrary library(QLatin1String("shell32"));
-#else
-    QSystemLibrary library(QLatin1String("coredll"));
-#endif // Q_OS_WINCE
+
     typedef BOOL (WINAPI*GetSpecialFolderPath)(HWND, LPWSTR, int, BOOL);
     GetSpecialFolderPath SHGetSpecialFolderPath = (GetSpecialFolderPath)library.resolve("SHGetSpecialFolderPathW");
     if (SHGetSpecialFolderPath) {
@@ -1043,21 +1040,12 @@ static QString windowsConfigPath(int type)
 
     if (result.isEmpty()) {
         switch (type) {
-#ifndef Q_OS_WINCE
         case CSIDL_COMMON_APPDATA:
             result = QLatin1String("C:\\temp\\qt-common");
             break;
         case CSIDL_APPDATA:
             result = QLatin1String("C:\\temp\\qt-user");
             break;
-#else
-        case CSIDL_COMMON_APPDATA:
-            result = QLatin1String("\\Temp\\qt-common");
-            break;
-        case CSIDL_APPDATA:
-            result = QLatin1String("\\Temp\\qt-user");
-            break;
-#endif
         default:
             ;
         }

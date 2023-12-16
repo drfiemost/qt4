@@ -4480,12 +4480,6 @@ void QWindowsMobileStylePrivate::drawScrollbarHandleDown(QPainter *p, QStyleOpti
 void QWindowsMobileStylePrivate::drawScrollbarGroove(QPainter *p,const QStyleOptionSlider *opt)
 {
 #ifndef QT_NO_SCROLLBAR
-#ifdef Q_OS_WINCE_WM
-    if (wm65) {
-        p->fillRect(opt->rect, QColor(231, 231, 231));
-        return ;
-    }
-#endif
             QBrush fill;
             if (smartphone) {
                 fill = opt->palette.light();

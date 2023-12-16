@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 TOOLS_SUBDIRS = src_tools_bootstrap src_tools_moc src_tools_rcc
 !contains(QT_CONFIG, no-gui): TOOLS_SUBDIRS += src_tools_uic
 !cross_compile {
-    win32:!wince*: SRC_SUBDIRS += src_tools_idc
+    win32: SRC_SUBDIRS += src_tools_idc
 }
 
 # Set subdir and respective target name
@@ -18,7 +18,7 @@ src_tools_uic.target = sub-uic
 src_tools_idc.subdir = $$QT_SOURCE_TREE/src/tools/idc
 src_tools_idc.target = sub-idc
 
-!wince*:!ordered {
+!ordered {
     # Set dependencies for each subdir
     src_tools_moc.depends = src_tools_bootstrap
     src_tools_rcc.depends = src_tools_bootstrap
