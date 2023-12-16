@@ -125,11 +125,7 @@ void Q_CORE_EXPORT qRegisterStaticPluginInstanceFunction(QtPluginInstanceFunctio
 #  define Q_PLUGIN_VERIFICATION_SECTION
 #  endif
 
-#  if defined (Q_OS_WIN32) && defined(Q_CC_BOR)
-#     define Q_STANDARD_CALL __stdcall
-#  else
-#     define Q_STANDARD_CALL
-#  endif
+#  define Q_STANDARD_CALL
 
 #  define Q_EXPORT_PLUGIN2(PLUGIN, PLUGINCLASS)      \
             Q_PLUGIN_VERIFICATION_SECTION Q_PLUGIN_VERIFICATION_DATA \

@@ -108,9 +108,6 @@ class QList
 {
     struct Node {
         void *v;
-#if defined(Q_CC_BOR)
-        Q_INLINE_TEMPLATE T &t();
-#else
         Q_INLINE_TEMPLATE T &t()
         {
             if constexpr (QTypeInfo<T>::isLarge || QTypeInfo<T>::isStatic)
@@ -118,7 +115,6 @@ class QList
             else
                 return *reinterpret_cast<T*>(this);
         }
-#endif
     };
 
     union { QListData p; QListData::Data *d; };
@@ -361,12 +357,6 @@ private:
     void node_copy(Node *from, Node *to, Node *src);
     void node_destruct(Node *from, Node *to);
 };
-
-#if defined(Q_CC_BOR)
-template <typename T>
-Q_INLINE_TEMPLATE T &QList<T>::Node::t()
-{ return QTypeInfo<T>::isLarge || QTypeInfo<T>::isStatic ? *(T*)v:*(T*)this; }
-#endif
 
 template <typename T>
 Q_INLINE_TEMPLATE void QList<T>::node_construct(Node *n, const T &t)

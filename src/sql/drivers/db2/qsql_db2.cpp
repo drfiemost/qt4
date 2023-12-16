@@ -51,14 +51,6 @@
 #include <qvector.h>
 #include <QDebug>
 
-#if defined(Q_CC_BOR)
-// DB2's sqlsystm.h (included through sqlcli1.h) defines the SQL_BIGINT_TYPE
-// and SQL_BIGUINT_TYPE to wrong the types for Borland; so do the defines to
-// the right type before including the header
-#define SQL_BIGINT_TYPE qint64
-#define SQL_BIGUINT_TYPE quint64
-#endif
-
 #define UNICODE
 
 #include <sqlcli1.h>

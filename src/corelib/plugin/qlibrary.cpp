@@ -605,11 +605,7 @@ const char* qt_try_versioninfo(void *pfn, bool *exceptionThrown)
 }
 #endif
 
-#ifdef Q_CC_BOR
-typedef const char * __stdcall (*QtPluginQueryVerificationDataFunction)();
-#else
 typedef const char * (*QtPluginQueryVerificationDataFunction)();
-#endif
 
 bool qt_get_verificationdata(QtPluginQueryVerificationDataFunction pfn, uint *qt_version, bool *debug, bool *exceptionThrown)
 {

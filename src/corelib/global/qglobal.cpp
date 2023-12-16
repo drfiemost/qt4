@@ -1476,20 +1476,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_CC_BOR
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Borland/Turbo C++.
-*/
-
-/*!
-    \macro Q_CC_WAT
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Watcom C++.
-*/
-
-/*!
     \macro Q_CC_GNU
     \relates <QtGlobal>
 

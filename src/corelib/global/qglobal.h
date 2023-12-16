@@ -425,17 +425,6 @@ namespace QT_NAMESPACE {}
 #    undef QT_HAVE_3DNOW
 #  endif
 
-#elif defined(__BORLANDC__) || defined(__TURBOC__)
-#  define Q_CC_BOR
-#  define Q_INLINE_TEMPLATE
-#  if __BORLANDC__ < 0x502
-#    define Q_NO_BOOL_TYPE
-#    define Q_NO_EXPLICIT_KEYWORD
-#  endif
-
-#elif defined(__WATCOMC__)
-#  define Q_CC_WAT
-
 /* ARM Realview Compiler Suite
    RVCT compiler also defines __EDG__ and __GNUC__ (if --gnu flag is given),
    so check for it before that */
@@ -1428,10 +1417,6 @@ class QDataStream;
 #  endif
 #  define Q_NO_DECLARED_NOT_DEFINED
 #else
-#  if defined(Q_OS_LINUX) && defined(Q_CC_BOR)
-#    define Q_TEMPLATEDLL
-#    define Q_NO_DECLARED_NOT_DEFINED
-#  endif
 #  undef QT_MAKEDLL /* ignore these for other platforms */
 #  undef QT_DLL
 #endif
@@ -1947,14 +1932,6 @@ Q_CORE_EXPORT void qFreeAligned(void *ptr);
 #    pragma warning(disable: 4231) /* nonstandard extension used : 'extern' before template explicit instantiation */
 #    pragma warning(disable: 4710) /* function not inlined */
 #    pragma warning(disable: 4530) /* C++ exception handler used, but unwind semantics are not enabled. Specify -GX */
-#  elif defined(Q_CC_BOR)
-#    pragma option -w-inl
-#    pragma option -w-aus
-#    pragma warn -inl
-#    pragma warn -pia
-#    pragma warn -ccc
-#    pragma warn -rch
-#    pragma warn -sig
 #  endif
 #endif
 
