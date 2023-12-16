@@ -1319,20 +1319,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_OS_OS2
-    \relates <QtGlobal>
-
-    Defined on OS/2.
-*/
-
-/*!
-    \macro Q_OS_OS2EMX
-    \relates <QtGlobal>
-
-    Defined on XFree86 on OS/2 (not PM).
-*/
-
-/*!
     \macro Q_OS_WIN32
     \relates <QtGlobal>
 

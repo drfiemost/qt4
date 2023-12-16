@@ -186,12 +186,6 @@ namespace QT_NAMESPACE {}
 #  endif
 #elif defined(__CYGWIN__)
 #  define Q_OS_CYGWIN
-#elif defined(__OS2__)
-#  if defined(__EMX__)
-#    define Q_OS_OS2EMX
-#  else
-#    define Q_OS_OS2
-#  endif
 #elif !defined(SAG_COM) && (defined(WIN64) || defined(_WIN64) || defined(__WIN64__))
 #  define Q_OS_WIN32
 #  define Q_OS_WIN64
@@ -262,7 +256,7 @@ namespace QT_NAMESPACE {}
 #error "You are building a 64-bit application, but using a 32-bit version of Qt. Check your build configuration."
 #endif
 
-#if defined(Q_OS_OS2) || defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
 #  undef Q_OS_UNIX
 #elif !defined(Q_OS_UNIX)
 #  define Q_OS_UNIX
@@ -906,9 +900,6 @@ namespace QT_NAMESPACE {}
 #  if defined(Q_OS_WINCE_WM)
 #    define Q_WS_WINCE_WM
 #  endif
-#elif defined(Q_OS_OS2)
-#  define Q_WS_PM
-#  error "Qt does not work with OS/2 Presentation Manager or Workplace Shell"
 #elif defined(Q_OS_UNIX)
 #  if defined(Q_OS_MAC) && !defined(__USE_WS_X11__) && !defined(Q_WS_QWS) && !defined(Q_WS_QPA)
 #    define Q_WS_MAC

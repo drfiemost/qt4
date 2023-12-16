@@ -182,7 +182,7 @@ public:
 
     static inline QString toInternal(const QString &path)
     {
-#if defined(Q_FS_FAT) || defined(Q_OS_OS2EMX)
+#if defined(Q_FS_FAT)
         QString n(path);
         for (int i = 0; i < (int)n.length(); ++i)
             if (n[i] == QLatin1Char('\\')) n[i] = QLatin1Char('/');

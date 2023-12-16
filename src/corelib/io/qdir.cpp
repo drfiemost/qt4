@@ -792,7 +792,7 @@ QString QDir::convertSeparators(const QString &pathName)
 */
 QString QDir::toNativeSeparators(const QString &pathName)
 {
-#if defined(Q_FS_FAT) || defined(Q_OS_OS2EMX)
+#if defined(Q_FS_FAT)
     int i = pathName.indexOf(QLatin1Char('/'));
     if (i != -1) {
         QString n(pathName);
@@ -825,7 +825,7 @@ QString QDir::toNativeSeparators(const QString &pathName)
 */
 QString QDir::fromNativeSeparators(const QString &pathName)
 {
-#if defined(Q_FS_FAT) || defined(Q_OS_OS2EMX)
+#if defined(Q_FS_FAT)
     int i = pathName.indexOf(QLatin1Char('\\'));
     if (i != -1) {
         QString n(pathName);
