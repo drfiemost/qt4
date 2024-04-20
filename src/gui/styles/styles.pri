@@ -23,11 +23,8 @@ SOURCES += \
         styles/qstylesheetstyle.cpp \
         styles/qstylesheetstyle_default.cpp
 
-wince* {
-    RESOURCES += styles/qstyle_wince.qrc
-} else {
-    RESOURCES += styles/qstyle.qrc
-}
+
+RESOURCES += styles/qstyle.qrc
 
 contains( styles, all ) {
 	styles = mac windows windowsxp windowsvista

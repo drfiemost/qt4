@@ -72,9 +72,7 @@ typedef struct {
 
 QNativeImage::QNativeImage(int width, int height, QImage::Format format, bool isTextBuffer, QWidget *)
 {
-#ifndef Q_WS_WINCE
     Q_UNUSED(isTextBuffer);
-#endif
     BITMAPINFO_MASK bmi;
     memset(&bmi, 0, sizeof(bmi));
     bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
@@ -85,20 +83,10 @@ QNativeImage::QNativeImage(int width, int height, QImage::Format format, bool is
 
     if (format == QImage::Format_RGB16) {
         bmi.bmiHeader.biBitCount = 16;
-#ifdef Q_WS_WINCE
-        if (isTextBuffer) {
-            bmi.bmiHeader.biCompression = BI_RGB;
-            bmi.redMask = 0;
-            bmi.greenMask = 0;
-            bmi.blueMask = 0;
-        } else
-#endif
-        {
-            bmi.bmiHeader.biCompression = BI_BITFIELDS;
-            bmi.redMask = 0xF800;
-            bmi.greenMask = 0x07E0;
-            bmi.blueMask = 0x001F;
-        }
+        bmi.bmiHeader.biCompression = BI_BITFIELDS;
+        bmi.redMask = 0xF800;
+        bmi.greenMask = 0x07E0;
+        bmi.blueMask = 0x001F;
     } else {
         bmi.bmiHeader.biBitCount    = 32;
         bmi.bmiHeader.biCompression = BI_RGB;
@@ -123,9 +111,7 @@ QNativeImage::QNativeImage(int width, int height, QImage::Format format, bool is
     Q_ASSERT(image.paintEngine()->type() == QPaintEngine::Raster);
     static_cast<QRasterPaintEngine *>(image.paintEngine())->setDC(hdc);
 
-#ifndef Q_WS_WINCE
     GdiFlush();
-#endif
 }
 
 QNativeImage::~QNativeImage()

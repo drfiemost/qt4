@@ -20,10 +20,7 @@ SOURCES += \
         util/qundoview.cpp
 
 
-wince* {
-		SOURCES += \
-				util/qsystemtrayicon_wince.cpp
-} else:win32 {
+win32 {
 		SOURCES += \
 				util/qsystemtrayicon_win.cpp
 }

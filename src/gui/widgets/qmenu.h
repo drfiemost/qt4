@@ -47,10 +47,6 @@
 #include <QtGui/qicon.h>
 #include <QtGui/qaction.h>
 
-#ifdef Q_WS_WINCE
-#include <windef.h> // for HMENU
-#endif
-
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -134,10 +130,6 @@ public:
     OSMenuRef macMenu(OSMenuRef merge=0);
 #endif
 
-#ifdef Q_WS_WINCE
-    HMENU wceMenu();
-#endif
-
     bool separatorsCollapsible() const;
     void setSeparatorsCollapsible(bool collapse);
 
@@ -167,10 +159,6 @@ protected:
     bool event(QEvent *);
     bool focusNextPrevChild(bool next);
     void initStyleOption(QStyleOptionMenuItem *option, const QAction *action) const;
-
-#ifdef Q_WS_WINCE
-    QAction* wceCommands(uint command);
-#endif
 
 private Q_SLOTS:
     void internalSetSloppyAction();

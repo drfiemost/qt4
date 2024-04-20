@@ -3369,7 +3369,7 @@ bool QRasterPaintEngine::supportsTransformations(const QFontEngine *fontEngine) 
     if (!state()->WxF)
         return false;
     const QTransform &m = state()->matrix;
-#if defined(Q_WS_WIN) && !defined(Q_WS_WINCE)
+#if defined(Q_WS_WIN)
     QFontEngine::Type fontEngineType = fontEngine->type();
     if ((fontEngineType == QFontEngine::Win && !((QFontEngineWin *) fontEngine)->ttf && m.type() > QTransform::TxTranslate)
         || (m.type() <= QTransform::TxTranslate

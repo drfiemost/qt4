@@ -69,14 +69,6 @@
 #include <qs60style.h>
 #endif
 
-#ifdef Q_WS_WINCE
-extern bool qt_wince_is_mobile();    //defined in qguifunctions_wince.cpp
-extern bool qt_wince_is_smartphone();//defined in qguifunctions_wince.cpp
-extern bool qt_wince_is_pocket_pc(); //defined in qguifunctions_wince.cpp
-
-#include "qguifunctions_wince.h"
-#endif
-
 QT_BEGIN_NAMESPACE
 
 enum Button { Old_Ok = 1, Old_Cancel = 2, Old_Yes = 3, Old_No = 4, Old_Abort = 5, Old_Retry = 6,
@@ -185,10 +177,6 @@ public:
     void updateSize();
     int layoutMinimumWidth();
     void retranslateStrings();
-
-#ifdef Q_WS_WINCE
-    void hideSpecial();
-#endif
 
     static int showOldMessageBox(QWidget *parent, QMessageBox::Icon icon,
                                  const QString &title, const QString &text,
@@ -307,7 +295,7 @@ void QMessageBoxPrivate::updateSize()
         return;
 
     QSize screenSize = QApplication::desktop()->availableGeometry(QCursor::pos()).size();
-#if defined(Q_WS_QWS) || defined(Q_WS_WINCE)
+#if defined(Q_WS_QWS)
     // the width of the screen, less the window border.
     int hardLimit = screenSize.width() - (q->frameGeometry().width() - q->geometry().width());
 #else
@@ -322,11 +310,7 @@ void QMessageBoxPrivate::updateSize()
     int softLimit = std::min(hardLimit, 500);
 #else
     // note: ideally on windows, hard and soft limits but it breaks compat
-#ifndef Q_WS_WINCE
     int softLimit = std::min(screenSize.width()/2, 500);
-#else
-    int softLimit = std::min(screenSize.width() * 3 / 4, 500);
-#endif //Q_WS_WINCE
 #endif
 
     if (informativeLabel)
@@ -392,27 +376,6 @@ void QMessageBoxPrivate::updateSize()
     QCoreApplication::removePostedEvents(q, QEvent::LayoutRequest);
 }
 
-
-#ifdef Q_WS_WINCE
-/*!
-  \internal
-  Hides special buttons which are rather shown in the title bar
-  on WinCE, to conserve screen space.
-*/
-
-void QMessageBoxPrivate::hideSpecial()
-{
-    Q_Q(QMessageBox);
-    QList<QPushButton*> list = q->findChildren<QPushButton*>();
-        for (int i=0; i<list.size(); ++i) {
-            QPushButton *pb = list.at(i);
-            QString text = pb->text();
-            text.remove(QChar::fromLatin1('&'));
-            if (text == QApplication::translate("QMessageBox", "OK" ))
-                pb->setFixedSize(0,0);
-        }
-}
-#endif
 
 static int oldButton(int button)
 {
@@ -1248,24 +1211,6 @@ bool QMessageBox::event(QEvent *e)
         case QEvent::LanguageChange:
             d_func()->retranslateStrings();
             break;
-#ifdef Q_WS_WINCE
-        case QEvent::OkRequest:
-        case QEvent::HelpRequest: {
-          QString bName =
-              (e->type() == QEvent::OkRequest)
-              ? QApplication::translate("QMessageBox", "OK")
-              : QApplication::translate("QMessageBox", "Help");
-          QList<QPushButton*> list = findChildren<QPushButton*>();
-          for (int i=0; i<list.size(); ++i) {
-              QPushButton *pb = list.at(i);
-              if (pb->text() == bName) {
-                  if (pb->isEnabled())
-                      pb->click();
-                  return pb->isEnabled();
-              }
-          }
-        }
-#endif
         default:
             break;
     }
@@ -1391,20 +1336,6 @@ void QMessageBox::keyPressEvent(QKeyEvent *e)
     QDialog::keyPressEvent(e);
 }
 
-#ifdef Q_WS_WINCE
-/*!
-    \reimp
-*/
-void QMessageBox::setVisible(bool visible)
-{
-    Q_D(QMessageBox);
-    if (visible)
-        d->hideSpecial();
-    QDialog::setVisible(visible);
-}
-#endif
-
-
 /*!
     \overload
 
@@ -1462,9 +1393,6 @@ void QMessageBox::showEvent(QShowEvent *e)
     Q_D(QMessageBox);
     if (d->autoAddOkButton) {
         addButton(Ok);
-#if defined(Q_WS_WINCE)
-        d->hideSpecial();
-#endif
     }
     if (d->detailsButton)
         addButton(d->detailsButton, QMessageBox::ActionRole);
@@ -1784,9 +1712,6 @@ void QMessageBox::aboutQt(QWidget *parent, const QString &title)
     QPixmap pm(QLatin1String(":/trolltech/qmessagebox/images/qtlogo-64.png"));
     if (!pm.isNull())
         msgBox->setIconPixmap(pm);
-#if defined(Q_WS_WINCE)
-    msgBox->setDefaultButton(msgBox->addButton(QMessageBox::Ok));
-#endif
 
     // should perhaps be a style hint
 #ifdef Q_WS_MAC

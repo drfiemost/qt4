@@ -248,17 +248,6 @@ typedef struct tagGESTURECONFIG
 
 #endif // WM_GESTURE
 
-#if defined(Q_WS_WINCE_WM) && defined(QT_WINCE_GESTURES)
-#undef GID_ZOOM
-#define GID_ZOOM 0xf000
-#undef GID_ROTATE
-#define GID_ROTATE 0xf001
-#undef GID_TWOFINGERTAP
-#define GID_TWOFINGERTAP 0xf002
-#undef GID_ROLLOVER
-#define GID_ROLLOVER 0xf003
-#endif
-
 #endif // QT_NO_GESTURES
 
 #endif // Q_WS_WIN
@@ -287,9 +276,6 @@ public:
 #endif
     static bool quitOnLastWindowClosed;
     static void emitLastWindowClosed();
-#ifdef Q_WS_WINCE
-    static int autoMaximizeThreshold;
-#endif
     static bool autoSipEnabled;
     static QString desktopStyleKey();
 

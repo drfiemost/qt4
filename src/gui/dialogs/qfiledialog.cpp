@@ -59,15 +59,7 @@
 #include <qapplication.h>
 #include <qstylepainter.h>
 #include <private/qfileiconprovider_p.h>
-#if !defined(Q_WS_WINCE)
 #include "ui_qfiledialog.h"
-#else
-#define Q_EMBEDDED_SMALLSCREEN
-#include "ui_qfiledialog_embedded.h"
-#if defined(Q_OS_UNIX)
-#include <pwd.h>
-#endif
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -2027,9 +2019,6 @@ QString QFileDialog::getExistingDirectory(QWidget *parent,
 
 #if defined(Q_WS_WIN)
     if (qt_use_native_dialogs && !(args.options & DontUseNativeDialog) && (options & ShowDirsOnly)
-#if defined(Q_WS_WINCE)
-        && qt_priv_ptr_valid
-#endif
         ) {
         return qt_win_get_existing_directory(args);
     }

@@ -93,10 +93,6 @@ public:
     void hideDefault();
     void resetModalitySetByOpen();
 
-#ifdef Q_WS_WINCE_WM
-    void _q_doneAction();
-#endif
-
 #ifdef Q_WS_MAC
     virtual void mac_nativeDialogModalHelp() {}
 #endif

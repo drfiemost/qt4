@@ -319,17 +319,7 @@ void addFontToDatabase(QString familyName, const QString &scriptName,
                 signature->fsUsb[0], signature->fsUsb[1],
                 signature->fsUsb[2], signature->fsUsb[3]
             };
-#ifdef Q_WS_WINCE
-            if (signature->fsUsb[0] == 0) {
-                // If the unicode ranges bit mask is zero then
-                // EnumFontFamiliesEx failed to determine it properly.
-                // In this case we just pretend that the font supports all languages.
-                unicodeRange[0] = 0xbfffffff;   // second most significant bit must be zero
-                unicodeRange[1] = 0xffffffff;
-                unicodeRange[2] = 0xffffffff;
-                unicodeRange[3] = 0xffffffff;
-            }
-#endif
+
             quint32 codePageRange[2] = {
                 signature->fsCsb[0], signature->fsCsb[1]
             };
@@ -711,7 +701,6 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
             f = deffnt;
         else if (fam == QLatin1String("system"))
             f = SYSTEM_FONT;
-#ifndef Q_WS_WINCE
         else if (fam == QLatin1String("system_fixed"))
             f = SYSTEM_FIXED_FONT;
         else if (fam == QLatin1String("ansi_fixed"))
@@ -722,7 +711,6 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
             f = DEVICE_DEFAULT_FONT;
         else if (fam == QLatin1String("oem_fixed"))
             f = OEM_FIXED_FONT;
-#endif
         else if (fam[0] == QLatin1Char('#'))
             f = fam.right(fam.length()-1).toInt();
         else
@@ -770,14 +758,12 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
         int strat = OUT_DEFAULT_PRECIS;
         if (request.styleStrategy & QFont::PreferBitmap) {
             strat = OUT_RASTER_PRECIS;
-#ifndef Q_WS_WINCE
         } else if (request.styleStrategy & QFont::PreferDevice) {
             strat = OUT_DEVICE_PRECIS;
         } else if (request.styleStrategy & QFont::PreferOutline) {
             strat = OUT_OUTLINE_PRECIS;
         } else if (request.styleStrategy & QFont::ForceOutline) {
             strat = OUT_TT_ONLY_PRECIS;
-#endif
         }
 
         lf.lfOutPrecision   = strat;
@@ -786,10 +772,8 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
 
         if (request.styleStrategy & QFont::PreferMatch)
             qual = DRAFT_QUALITY;
-#ifndef Q_WS_WINCE
         else if (request.styleStrategy & QFont::PreferQuality)
             qual = PROOF_QUALITY;
-#endif
 
         if (request.styleStrategy & QFont::PreferAntialias) {
             if (QSysInfo::WindowsVersion >= QSysInfo::WV_XP) {
@@ -850,18 +834,10 @@ static QFontEngine *loadEngine(int script, const QFontDef &request,
                     qErrnoWarning("QFontEngine::loadEngine: CreateFontIndirect with stretch failed");
             }
 
-#ifndef Q_WS_WINCE
             if (hfont == 0) {
                 hfont = (HFONT)GetStockObject(ANSI_VAR_FONT);
                 stockFont = true;
             }
-#else
-            if (hfont == 0) {
-                hfont = (HFONT)GetStockObject(SYSTEM_FONT);
-                stockFont = true;
-            }
-#endif
-
         }
 
 #if !defined(QT_NO_DIRECTWRITE)

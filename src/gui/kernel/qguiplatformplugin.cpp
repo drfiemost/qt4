@@ -50,13 +50,6 @@
 #include "qplatformdefs.h"
 #include "qicon.h"
 
-#ifdef Q_WS_WINCE
-#include "qguifunctions_wince.h"
-extern bool qt_wince_is_smartphone(); //qguifunctions_wince.cpp
-extern bool qt_wince_is_mobile();     //qguifunctions_wince.cpp
-extern bool qt_wince_is_pocket_pc();  //qguifunctions_wince.cpp
-#endif
-
 
 #if defined(Q_WS_X11)
 #include <private/qkde_p.h>
@@ -129,12 +122,7 @@ QGuiPlatformPlugin::~QGuiPlatformPlugin() {}
 /* return the string key to be used by default the application */
 QString QGuiPlatformPlugin::styleName()
 {
-#if defined(Q_WS_WIN) && defined(Q_WS_WINCE)
-    if (qt_wince_is_smartphone() || qt_wince_is_pocket_pc())
-        return QLatin1String("WindowsMobile");
-    else
-        return QLatin1String("WindowsCE");
-#elif defined(Q_WS_WIN)
+#if defined(Q_WS_WIN)
     if ((QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA
         && (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based)))
         return QLatin1String("WindowsVista");

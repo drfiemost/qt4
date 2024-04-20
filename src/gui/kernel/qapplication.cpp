@@ -112,14 +112,6 @@
 #include "qlibrary.h"
 #endif
 
-#ifdef Q_WS_WINCE
-#include "qdatetime.h"
-#include "qguifunctions_wince.h"
-extern bool qt_wince_is_smartphone(); //qguifunctions_wince.cpp
-extern bool qt_wince_is_mobile();     //qguifunctions_wince.cpp
-extern bool qt_wince_is_pocket_pc();  //qguifunctions_wince.cpp
-#endif
-
 #include "qdatetime.h"
 
 #ifdef QT_MAC_USE_COCOA
@@ -130,13 +122,8 @@ extern bool qt_wince_is_pocket_pc();  //qguifunctions_wince.cpp
 
 static void initResources()
 {
-#if defined(Q_WS_WINCE)
-    Q_INIT_RESOURCE_EXTERN(qstyle_wince)
-    Q_INIT_RESOURCE(qstyle_wince);
-#else
     Q_INIT_RESOURCE_EXTERN(qstyle)
     Q_INIT_RESOURCE(qstyle);
-#endif
     Q_INIT_RESOURCE_EXTERN(qmessagebox)
     Q_INIT_RESOURCE(qmessagebox);
 #if !defined(QT_NO_PRINTDIALOG)
@@ -160,12 +147,7 @@ QInputContext *QApplicationPrivate::inputContext = 0;
 
 bool QApplicationPrivate::quitOnLastWindowClosed = true;
 
-#ifdef Q_WS_WINCE
-int QApplicationPrivate::autoMaximizeThreshold = -1;
-bool QApplicationPrivate::autoSipEnabled = false;
-#else
 bool QApplicationPrivate::autoSipEnabled = true;
-#endif
 
 QApplicationPrivate::QApplicationPrivate(int &argc, char **argv, QApplication::Type type, int flags)
     : QCoreApplicationPrivate(argc, argv, flags)
@@ -966,17 +948,6 @@ void QApplicationPrivate::initialize()
     if (qgetenv("QT_USE_NATIVE_WINDOWS").toInt() > 0)
         q->setAttribute(Qt::AA_NativeWindows);
 
-#ifdef Q_WS_WINCE
-#ifdef QT_AUTO_MAXIMIZE_THRESHOLD
-    autoMaximizeThreshold = QT_AUTO_MAXIMIZE_THRESHOLD;
-#else
-    if (qt_wince_is_mobile())
-        autoMaximizeThreshold = 50;
-    else
-        autoMaximizeThreshold = -1;
-#endif //QT_AUTO_MAXIMIZE_THRESHOLD
-#endif //Q_WS_WINCE
-
     // Set up which span functions should be used in raster engine...
     qInitDrawhelperAsm();
     // and QImage conversion functions
@@ -1330,18 +1301,6 @@ bool QApplication::compressEvent(QEvent *event, QObject *receiver, QPostEventLis
 
     The default is platform dependent.
 */
-
-#ifdef Q_WS_WINCE
-void QApplication::setAutoMaximizeThreshold(const int threshold)
-{
-    QApplicationPrivate::autoMaximizeThreshold = threshold;
-}
-
-int QApplication::autoMaximizeThreshold() const
-{
-    return QApplicationPrivate::autoMaximizeThreshold;
-}
-#endif
 
 void QApplication::setAutoSipEnabled(const bool enabled)
 {
@@ -4410,7 +4369,7 @@ bool QApplicationPrivate::notify_helper(QObject *receiver, QEvent * e)
     if (receiver->isWidgetType()) {
         QWidget *widget = static_cast<QWidget *>(receiver);
 
-#if !defined(Q_WS_WINCE) || (defined(GWES_ICONCURS) && !defined(QT_NO_CURSOR))
+#if (defined(GWES_ICONCURS) && !defined(QT_NO_CURSOR))
         // toggle HasMouse widget state on enter and leave
         if ((e->type() == QEvent::Enter || e->type() == QEvent::DragEnter) &&
             (!QApplication::activePopupWidget() || QApplication::activePopupWidget() == widget->window()))

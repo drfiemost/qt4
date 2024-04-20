@@ -104,14 +104,6 @@ public:
     static bool macUpdateMenuBar();
 #endif
 
-#ifdef Q_WS_WINCE
-    void setDefaultAction(QAction *);
-    QAction *defaultAction() const;
-
-    static void wceCommands(uint command);
-    static void wceRefresh();
-#endif
-
     bool isNativeMenuBar() const;
     void setNativeMenuBar(bool nativeMenuBar);
 
@@ -146,10 +138,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_actionHovered())
     Q_PRIVATE_SLOT(d_func(), void _q_internalShortcutActivated(int))
     Q_PRIVATE_SLOT(d_func(), void _q_updateLayout())
-
-#ifdef Q_WS_WINCE
-    Q_PRIVATE_SLOT(d_func(), void _q_updateDefaultAction())
-#endif
 
     friend class QMenu;
     friend class QMenuPrivate;

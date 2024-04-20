@@ -1091,14 +1091,10 @@ QColorShower::QColorShower(QColorDialog *parent)
     gl->setMargin(gl->spacing());
     lab = new QColorShowLabel(this);
 
-#ifndef Q_WS_WINCE
 #ifdef QT_SMALL_COLORDIALOG
     lab->setMinimumHeight(60);
 #endif
     lab->setMinimumWidth(60);
-#else
-    lab->setMinimumWidth(20);
-#endif
 
 // In S60, due to small screen and different screen layouts need to re-arrange the widgets.
 // For QVGA screens only the comboboxes and color label are visible.
@@ -1480,7 +1476,7 @@ void QColorDialogPrivate::init(const QColor &initial)
 
     leftLay = 0;
 
-#if defined(Q_WS_WINCE) || defined(QT_SMALL_COLORDIALOG)
+#if defined(QT_SMALL_COLORDIALOG)
     smallDisplay = true;
     const int lumSpace = 20;
 #else
@@ -1520,9 +1516,7 @@ void QColorDialogPrivate::init(const QColor &initial)
         leftLay->addWidget(lblBasicColors);
         leftLay->addWidget(standard);
 
-#if !defined(Q_WS_WINCE)
         leftLay->addStretch();
-#endif
 
         custom = new QColorWell(q, 2, 8, cusrgb);
         custom->setAcceptDrops(true);

@@ -904,7 +904,7 @@ namespace QT_NAMESPACE {}
 #  endif
 #endif
 
-#if defined(Q_WS_WIN16) || defined(Q_WS_WIN32) || defined(Q_WS_WINCE)
+#if defined(Q_WS_WIN16) || defined(Q_WS_WIN32)
 #  define Q_WS_WIN
 #endif
 
@@ -2106,7 +2106,7 @@ Q_CORE_EXPORT int qrand();
 #  endif
 #endif
 
-#if !(defined(Q_WS_WIN) && !defined(Q_WS_WINCE)) \
+#if !(defined(Q_WS_WIN)) \
     && !(defined(Q_WS_MAC) && defined(QT_MAC_USE_COCOA)) \
     && !(defined(Q_WS_X11) && !defined(QT_NO_FREETYPE)) \
     && !(defined(Q_WS_QPA))

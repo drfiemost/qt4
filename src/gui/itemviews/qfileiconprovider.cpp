@@ -405,7 +405,7 @@ QIcon QFileIconProvider::icon(const QFileInfo &info) const
         return icon;
 #endif
     if (info.isRoot())
-#if defined (Q_WS_WIN) && !defined(Q_WS_WINCE)
+#if defined (Q_WS_WIN)
     {
         UINT type = GetDriveType((wchar_t *)info.absoluteFilePath().utf16());
 

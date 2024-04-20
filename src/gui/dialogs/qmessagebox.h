@@ -144,10 +144,6 @@ public:
     QPushButton *addButton(StandardButton button);
     void removeButton(QAbstractButton *button);
 
-#ifdef Q_WS_WINCE
-    void setVisible(bool visible);
-#endif
-
     using QDialog::open;
 
     void open(QObject *receiver, const char *member);

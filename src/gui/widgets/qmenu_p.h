@@ -112,15 +112,6 @@ struct QMenuMergeItem
 typedef QList<QMenuMergeItem> QMenuMergeList;
 #endif
 
-#ifdef Q_WS_WINCE
-struct QWceMenuAction {
-    uint command;
-    QPointer<QAction> action;
-    HMENU menuHandle;
-    QWceMenuAction() : menuHandle(0), command(0) {}
-};
-#endif
-
 class QMenuPrivate : public QWidgetPrivate
 {
     Q_DECLARE_PUBLIC(QMenu)
@@ -137,18 +128,12 @@ public:
 #ifdef Q_WS_MAC
                       ,mac_menu(0)
 #endif
-#if defined(Q_WS_WINCE) && !defined(QT_NO_MENUBAR)
-                      ,wce_menu(0)
-#endif
     { }
     ~QMenuPrivate()
     {
         delete scroll;
 #ifdef Q_WS_MAC
         delete mac_menu;
-#endif
-#if defined(Q_WS_WINCE) && !defined(QT_NO_MENUBAR)
-        delete wce_menu;
 #endif
     }
     void init();
@@ -307,31 +292,6 @@ public:
 
     QPointer<QAction> actionAboutToTrigger;
 
-#if defined(Q_WS_WINCE) && !defined(QT_NO_MENUBAR)
-    struct QWceMenuPrivate {
-        QList<QWceMenuAction*> actionItems;
-        HMENU menuHandle;
-        QWceMenuPrivate();
-        ~QWceMenuPrivate();
-        void addAction(QAction *, QWceMenuAction* =0);
-        void addAction(QWceMenuAction *, QWceMenuAction* =0);
-        void syncAction(QWceMenuAction *);
-        inline void syncAction(QAction *a) { syncAction(findAction(a)); }
-        void removeAction(QWceMenuAction *);
-        void rebuild();
-        inline void removeAction(QAction *a) { removeAction(findAction(a)); }
-        inline QWceMenuAction *findAction(QAction *a) {
-            for(int i = 0; i < actionItems.size(); i++) {
-                QWceMenuAction *act = actionItems[i];
-                if(a == act->action)
-                    return act;
-            }
-            return 0;
-        }
-    } *wce_menu;
-    HMENU wceMenu();
-    QAction* wceCommands(uint command);
-#endif
     QPointer<QWidget> noReplayFor;
 };
 

@@ -1790,8 +1790,6 @@ int QPixmap::defaultDepth()
     return QScreen::instance()->depth();
 #elif defined(Q_WS_X11)
     return QX11Info::appDepth();
-#elif defined(Q_WS_WINCE)
-    return QColormap::instance().depth();
 #elif defined(Q_WS_WIN)
     return 32; // XXX
 #elif defined(Q_WS_MAC)

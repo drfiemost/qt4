@@ -143,9 +143,9 @@ void QRasterWindowSurface::beginPaint(const QRegion &rgn)
     syncX();
 #endif
 
-#if (defined(Q_WS_X11) && !defined(QT_NO_XRENDER)) || (defined(Q_WS_WIN) && !defined(Q_WS_WINCE))
+#if (defined(Q_WS_X11) && !defined(QT_NO_XRENDER)) || (defined(Q_WS_WIN))
     if (!qt_widget_private(window())->isOpaque && window()->testAttribute(Qt::WA_TranslucentBackground)) {
-#if defined(Q_WS_WIN) && !defined(Q_WS_WINCE)
+#if defined(Q_WS_WIN)
         if (d_ptr->image->image.format() != QImage::Format_ARGB32_Premultiplied)
             prepareBuffer(QImage::Format_ARGB32_Premultiplied, window());
 #endif
@@ -174,7 +174,6 @@ void QRasterWindowSurface::flush(QWidget *widget, const QRegion &rgn, const QPoi
 #ifdef Q_WS_WIN
     QRect br = rgn.boundingRect();
 
-#ifndef Q_WS_WINCE
     if (!qt_widget_private(window())->isOpaque
         && window()->testAttribute(Qt::WA_TranslucentBackground)
         && (qt_widget_private(window())->data.window_flags & Qt::FramelessWindowHint))
@@ -192,7 +191,6 @@ void QRasterWindowSurface::flush(QWidget *widget, const QRegion &rgn, const QPoi
         Q_UPDATELAYEREDWINDOWINFO info = {sizeof(info), NULL, &ptDst, &size, d->image->hdc, &ptSrc, 0, &blend, Q_ULW_ALPHA, &dirty};
         ptrUpdateLayeredWindowIndirect(window()->internalWinId(), &info);
     } else
-#endif
     {
         QPoint wOffset = qt_qwidget_data(widget)->wrect.topLeft();
 
@@ -339,7 +337,7 @@ void QRasterWindowSurface::setGeometry(const QRect &rect)
     Q_D(QRasterWindowSurface);
     d->inSetGeometry = true;
     if (d->image == 0 || d->image->width() < rect.width() || d->image->height() < rect.height()) {
-#if (defined(Q_WS_X11) && !defined(QT_NO_XRENDER)) || (defined(Q_WS_WIN) && !defined(Q_WS_WINCE))
+#if (defined(Q_WS_X11) && !defined(QT_NO_XRENDER)) || (defined(Q_WS_WIN))
 #ifndef Q_WS_WIN
         if (d_ptr->translucentBackground)
 #else

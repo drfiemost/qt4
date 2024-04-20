@@ -57,10 +57,6 @@
 #include "QtGui/qstyleoption.h"
 #include <private/qmenu_p.h> // Mac needs what in this file!
 
-#ifdef Q_WS_WINCE
-#include "qguifunctions_wince.h"
-#endif
-
 #ifdef Q_WS_X11
 #include "qabstractplatformmenubar_p.h"
 #endif
@@ -89,9 +85,6 @@ public:
 #ifdef Q_WS_X11
                          , platformMenuBar(0)
 #endif
-#ifdef Q_WS_WINCE
-                         , wce_menubar(0), wceClassicMenu(false)
-#endif
 
         { }
     ~QMenuBarPrivate()
@@ -101,9 +94,6 @@ public:
 #endif
 #ifdef Q_WS_MAC
             delete mac_menubar;
-#endif
-#ifdef Q_WS_WINCE
-            delete wce_menubar;
 #endif
         }
 
@@ -146,10 +136,6 @@ public:
     void _q_actionHovered();
     void _q_internalShortcutActivated(int);
     void _q_updateLayout();
-
-#ifdef Q_WS_WINCE
-    void _q_updateDefaultAction();
-#endif
 
     //extra widgets in the menubar
     QPointer<QWidget> leftWidget, rightWidget;
@@ -202,45 +188,6 @@ public:
     void macCreateMenuBar(QWidget *);
     void macDestroyMenuBar();
     OSMenuRef macMenu();
-#endif
-#ifdef Q_WS_WINCE
-    void wceCreateMenuBar(QWidget *);
-    void wceDestroyMenuBar();
-    struct QWceMenuBarPrivate {
-        QList<QWceMenuAction*> actionItems;
-        QList<QWceMenuAction*> actionItemsLeftButton;
-        QList<QList<QWceMenuAction*>> actionItemsClassic;
-        HMENU menuHandle;
-        HMENU leftButtonMenuHandle;
-        HWND menubarHandle;
-        HWND parentWindowHandle;
-        bool leftButtonIsMenu;
-        QPointer<QAction> leftButtonAction;
-        QMenuBarPrivate *d;
-        int leftButtonCommand;
-
-        QWceMenuBarPrivate(QMenuBarPrivate *menubar);
-        ~QWceMenuBarPrivate();
-        void addAction(QAction *, QAction* =0);
-        void addAction(QWceMenuAction *, QWceMenuAction* =0);
-        void syncAction(QWceMenuAction *);
-        inline void syncAction(QAction *a) { syncAction(findAction(a)); }
-        void removeAction(QWceMenuAction *);
-        void rebuild();
-        inline void removeAction(QAction *a) { removeAction(findAction(a)); }
-        inline QWceMenuAction *findAction(QAction *a) {
-            for(int i = 0; i < actionItems.size(); i++) {
-                QWceMenuAction *act = actionItems[i];
-                if(a == act->action)
-                    return act;
-            }
-            return 0;
-        }
-    } *wce_menubar;
-    bool wceClassicMenu;
-    void wceCommands(uint command);
-    void wceRefresh();
-    bool wceEmitSignals(QList<QWceMenuAction*> actions, uint command);
 #endif
 #ifdef QT_SOFTKEYS_ENABLED
     QAction *menuBarAction;

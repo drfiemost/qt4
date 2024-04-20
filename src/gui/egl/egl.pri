@@ -22,8 +22,6 @@ contains(QT_CONFIG, egl): {
             !isEmpty(QMAKE_LIBS_EGL): LIBS += $$QMAKE_LIBS_EGL
         }
 
-	wince*: SOURCES += egl/qegl_wince.cpp
-
 	unix {
 	    embedded {
 	        SOURCES += egl/qegl_qws.cpp
