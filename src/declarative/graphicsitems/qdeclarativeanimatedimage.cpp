@@ -239,11 +239,11 @@ void QDeclarativeAnimatedImage::setSource(const QUrl &url)
         return;
 
     delete d->_movie;
-    d->_movie = 0;
+    d->_movie = nullptr;
 
     if (d->reply) {
         d->reply->deleteLater();
-        d->reply = 0;
+        d->reply = nullptr;
     }
 
     d->url = url;
@@ -278,7 +278,7 @@ void QDeclarativeAnimatedImage::load()
             if (!d->_movie->isValid()){
                 qmlInfo(this) << "Error Reading Animated Image File " << d->url.toString();
                 delete d->_movie;
-                d->_movie = 0;
+                d->_movie = nullptr;
                 d->status = Error;
                 if (d->status != oldStatus)
                     emit statusChanged(d->status);
@@ -331,7 +331,7 @@ void QDeclarativeAnimatedImage::movieRequestFinished()
         if (redirect.isValid()) {
             QUrl url = d->reply->url().resolved(redirect.toUrl());
             d->reply->deleteLater();
-            d->reply = 0;
+            d->reply = nullptr;
             setSource(url);
             return;
         }
@@ -344,7 +344,7 @@ void QDeclarativeAnimatedImage::movieRequestFinished()
         qmlInfo(this) << "Error Reading Animated Image File " << d->url;
 #endif
         delete d->_movie;
-        d->_movie = 0;
+        d->_movie = nullptr;
         d->status = Error;
         emit statusChanged(d->status);
         return;

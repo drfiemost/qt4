@@ -55,7 +55,7 @@
 
 QT_USE_NAMESPACE
 
-QtMsgHandler systemMsgOutput = 0;
+QtMsgHandler systemMsgOutput = nullptr;
 
 static QDeclarativeViewer *openFile(const QString &fileName);
 static void showViewer(QDeclarativeViewer *viewer);
@@ -100,7 +100,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
     }
 }
 
-static QDeclarativeViewer* globalViewer = 0;
+static QDeclarativeViewer* globalViewer = nullptr;
 
 // The qml file that is shown if the user didn't specify a QML file
 QString initialFile = QLatin1String("qrc:/startup/startup.qml");
@@ -275,7 +275,7 @@ static void parseScriptOptions()
     QStringList options =
         opts.scriptopts.split(QLatin1Char(','), QString::SkipEmptyParts);
 
-    QDeclarativeViewer::ScriptOptions scriptOptions = 0;
+    QDeclarativeViewer::ScriptOptions scriptOptions = nullptr;
     for (int i = 0; i < options.count(); ++i) {
         const QString &option = options.at(i);
         if (option == QLatin1String("help")) {
@@ -429,7 +429,7 @@ static QDeclarativeViewer *createViewer()
     if (opts.stayOnTop)
         wflags |= Qt::WindowStaysOnTopHint;
 
-    QDeclarativeViewer *viewer = new QDeclarativeViewer(0, wflags);
+    QDeclarativeViewer *viewer = new QDeclarativeViewer(nullptr, wflags);
     viewer->setAttribute(Qt::WA_DeleteOnClose, true);
     viewer->setUseGL(opts.useGL);
 

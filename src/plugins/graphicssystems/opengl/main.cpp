@@ -87,7 +87,7 @@ QGraphicsSystem* QGLGraphicsSystemPlugin::create(const QString& system)
     if (system.toLower() == QLatin1String("opengl"))
         return new QGLGraphicsSystem(false);
 
-    return 0;
+    return nullptr;
 }
 
 Q_EXPORT_PLUGIN2(opengl, QGLGraphicsSystemPlugin)

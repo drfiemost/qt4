@@ -69,7 +69,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerMemberSheet: public QObject, public QDesi
     Q_INTERFACES(QDesignerMemberSheetExtension)
 
 public:
-    explicit QDesignerMemberSheet(QObject *object, QObject *parent = 0);
+    explicit QDesignerMemberSheet(QObject *object, QObject *parent = nullptr);
     virtual ~QDesignerMemberSheet();
 
     virtual int indexOf(const QString &name) const;
@@ -109,7 +109,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerMemberSheetFactory: public QExtensionFact
     Q_INTERFACES(QAbstractExtensionFactory)
 
 public:
-    QDesignerMemberSheetFactory(QExtensionManager *parent = 0);
+    QDesignerMemberSheetFactory(QExtensionManager *parent = nullptr);
 
 protected:
     virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;

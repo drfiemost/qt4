@@ -76,7 +76,7 @@ QScriptValue QDeclarativeListScriptClass::newList(QObject *object, int propId, i
     ListData *data = new ListData;
     data->object = object;
     data->propertyType = propType;
-    void *args[] = { &data->property, 0 };
+    void *args[] = { &data->property, nullptr };
     QMetaObject::metacall(object, QMetaObject::ReadProperty, propId, args);
 
     return newObject(scriptEngine, this, data);
@@ -110,7 +110,7 @@ QDeclarativeListScriptClass::queryProperty(Object *object, const Identifier &nam
         lastIndex = idx;
         return QScriptClass::HandlesReadAccess;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 

@@ -299,7 +299,7 @@ namespace QPatternist
         bool queueSelectOrSequenceConstructor(const ReportContext::ErrorCode code,
                                               const bool emptynessAllowed,
                                               TokenSource::Queue *const to,
-                                              const QXmlStreamAttributes *const atts = 0,
+                                              const QXmlStreamAttributes *const atts = nullptr,
                                               const bool queueEmptyOnEmpty = true);
 
         /**
@@ -376,7 +376,7 @@ namespace QPatternist
         void handleXSLTVersion(TokenSource::Queue *const to,
                                QStack<Token> *const queueOnExit,
                                const bool isXSLTElement,
-                               const QXmlStreamAttributes *atts = 0,
+                               const QXmlStreamAttributes *atts = nullptr,
                                const bool generateCode = true,
                                const bool setGlobalVersion = false);
 
@@ -386,7 +386,7 @@ namespace QPatternist
         void handleXMLBase(TokenSource::Queue *const to,
                            QStack<Token> *const queueOnExit,
                            const bool isInstruction = true,
-                           const QXmlStreamAttributes *atts = 0);
+                           const QXmlStreamAttributes *atts = nullptr);
 
         /**
          * Concatenates text nodes, ignores comments and processing
@@ -425,7 +425,7 @@ namespace QPatternist
         bool readToggleAttribute(const QString &attributeName,
                                  const QString &isTrue,
                                  const QString &isFalse,
-                                 const QXmlStreamAttributes *const atts = 0) const;
+                                 const QXmlStreamAttributes *const atts = nullptr) const;
 
         int readAlternativeAttribute(const QHash<QString, int> &alternatives,
                                      const QXmlStreamAttribute &attr) const;

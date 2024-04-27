@@ -80,7 +80,7 @@ QDesignerFormEditorInterface *QDesignerFormWindowCommand::core() const
     if (QDesignerFormWindowInterface *fw = formWindow())
         return fw->core();
 
-    return 0;
+    return nullptr;
 }
 
 void QDesignerFormWindowCommand::undo()

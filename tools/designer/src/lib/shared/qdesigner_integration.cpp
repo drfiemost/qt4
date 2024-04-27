@@ -76,7 +76,7 @@ namespace qdesigner_internal {
 class QDesignerIntegrationPrivate {
 public:
     QDesignerIntegrationPrivate()
-        : m_gradientManager(0),
+        : m_gradientManager(nullptr),
           m_fileWatcherBehaviour(QDesignerIntegration::PromptAndReload),
           m_resourceEditingEnabled(true),
           m_slotNavigationEnabled(false)
@@ -271,7 +271,7 @@ void QDesignerIntegration::updateGeometry()
 void QDesignerIntegration::updateSelection()
 {
     QDesignerFormWindowInterface *formWindow = core()->formWindowManager()->activeFormWindow();
-    QWidget *selection = 0;
+    QWidget *selection = nullptr;
 
     if (formWindow) {
         selection = formWindow->cursor()->current();
@@ -345,7 +345,7 @@ QObject *QDesignerIntegration::propertyEditorObject()
 {
     QDesignerPropertyEditorInterface *propertyEditor = core()->propertyEditor();
     if (!propertyEditor)
-        return 0;
+        return nullptr;
     return propertyEditor->object();
 }
 
@@ -410,7 +410,7 @@ void QDesignerIntegration::requestHelp(const QDesignerFormEditorInterface *core,
 
 QDesignerResourceBrowserInterface *QDesignerIntegration::createResourceBrowser(QWidget *)
 {
-    return 0;
+    return nullptr;
 }
 
 void QDesignerIntegration::setResourceFileWatcherBehaviour(ResourceFileWatcherBehaviour behaviour)

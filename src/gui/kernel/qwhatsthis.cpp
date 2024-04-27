@@ -172,7 +172,7 @@ private:
     QPixmap background;
 };
 
-QWhatsThat *QWhatsThat::instance = 0;
+QWhatsThat *QWhatsThat::instance = nullptr;
 
 // shadowWidth not const, for XP drop-shadow-fu turns it to 0
 static int shadowWidth = 6;   // also used as '5' and '6' and even '8' below
@@ -195,7 +195,7 @@ QWhatsThat::QWhatsThat(const QString& txt, QWidget* parent, QWidget *showTextFor
     setCursor(Qt::ArrowCursor);
 #endif
     QRect r;
-    doc = 0;
+    doc = nullptr;
     ensurePolished(); // Ensures style sheet font before size calc
     if (Qt::mightBeRichText(text)) {
         doc = new QTextDocument();
@@ -239,7 +239,7 @@ QWhatsThat::QWhatsThat(const QString& txt, QWidget* parent, QWidget *showTextFor
 
 QWhatsThat::~QWhatsThat()
 {
-    instance = 0;
+    instance = nullptr;
     if (doc)
         delete doc;
 }
@@ -404,7 +404,7 @@ void QWhatsThisPrivate::notifyToplevels(QEvent *e)
     }
 }
 
-QWhatsThisPrivate *QWhatsThisPrivate::instance = 0;
+QWhatsThisPrivate *QWhatsThisPrivate::instance = nullptr;
 
 QWhatsThisPrivate::QWhatsThisPrivate()
     : leaveOnMouseRelease(false)
@@ -440,7 +440,7 @@ QWhatsThisPrivate::~QWhatsThisPrivate()
 #ifndef QT_NO_ACCESSIBILITY
     QAccessible::updateAccessibility(this, 0, QAccessible::ContextHelpEnd);
 #endif
-    instance = 0;
+    instance = nullptr;
 }
 
 bool QWhatsThisPrivate::eventFilter(QObject *o, QEvent *e)
@@ -511,7 +511,7 @@ class QWhatsThisAction: public QAction
     Q_OBJECT
 
 public:
-    explicit QWhatsThisAction(QObject* parent = 0);
+    explicit QWhatsThisAction(QObject* parent = nullptr);
 
 private slots:
     void actionTriggered();
@@ -566,7 +566,7 @@ void QWhatsThis::enterWhatsThisMode()
 */
 bool QWhatsThis::inWhatsThisMode()
 {
-    return (QWhatsThisPrivate::instance != 0);
+    return (QWhatsThisPrivate::instance != nullptr);
 }
 
 /*!

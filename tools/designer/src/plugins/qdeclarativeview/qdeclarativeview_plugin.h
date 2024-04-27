@@ -51,7 +51,7 @@ class QDeclarativeViewPlugin: public QObject, public QDesignerCustomWidgetInterf
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    QDeclarativeViewPlugin(QObject *parent = 0);
+    QDeclarativeViewPlugin(QObject *parent = nullptr);
 
     virtual QString name() const;
     virtual QString group() const;

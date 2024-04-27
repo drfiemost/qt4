@@ -156,7 +156,7 @@ void FieldsWriter::addDocument(Document* doc)
                         fieldsStream->writeVInt(rl);
                         fieldsStream->writeBytes((uint8_t*)sd, rl);
                     }
-                } else if (field->stringValue() == NULL ) {
+                } else if (field->stringValue() == nullptr ) {
                     // we must be using readerValue
                     CND_PRECONDITION(!field->isIndexed(),
                         "Cannot store reader if it is indexed too")
@@ -171,7 +171,7 @@ void FieldsWriter::addDocument(Document* doc)
                         rl = 0;
 
                     fieldsStream->writeString( rv, (int32_t)rl);
-                } else if (field->stringValue() != NULL ) {
+                } else if (field->stringValue() != nullptr ) {
                     fieldsStream->writeString(field->stringValue(),
                         _tcslen(field->stringValue()));
                 } else {

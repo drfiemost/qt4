@@ -196,7 +196,7 @@ QtFontEncoding *QtFontSize::encodingID(int id, uint xpoint, uint xres,
             return encodings + i;
     }
 
-    if (!add) return 0;
+    if (!add) return nullptr;
 
     if (!(count % 4)) {
         QtFontEncoding *newEncodings = (QtFontEncoding *)
@@ -242,10 +242,10 @@ struct QtFontStyle
 
     QtFontStyle(const Key &k)
         : key(k), bitmapScalable(false), smoothScalable(false),
-          count(0), pixelSizes(0)
+          count(0), pixelSizes(nullptr)
     {
 #if defined(Q_WS_X11)
-        weightName = setwidthName = 0;
+        weightName = setwidthName = nullptr;
 #endif // Q_WS_X11
     }
 
@@ -313,7 +313,7 @@ QtFontSize *QtFontStyle::pixelSize(unsigned short size, bool add)
             return pixelSizes + i;
     }
     if (!add)
-        return 0;
+        return nullptr;
 
     if (!pixelSizes) {
         // Most style have only one font size, we avoid waisting memory
@@ -330,7 +330,7 @@ QtFontSize *QtFontStyle::pixelSize(unsigned short size, bool add)
     pixelSizes[count].pixelSize = size;
 #ifdef Q_WS_X11
     pixelSizes[count].count = 0;
-    pixelSizes[count].encodings = 0;
+    pixelSizes[count].encodings = nullptr;
 #endif
 #if defined(Q_WS_QWS)
     new (&pixelSizes[count].fileName) QByteArray;
@@ -344,7 +344,7 @@ QtFontSize *QtFontStyle::pixelSize(unsigned short size, bool add)
 
 struct QtFontFoundry
 {
-    QtFontFoundry(const QString &n) : name(n), count(0), styles(0) {}
+    QtFontFoundry(const QString &n) : name(n), count(0), styles(nullptr) {}
     ~QtFontFoundry() {
         while (count--)
             delete styles[count];
@@ -372,7 +372,7 @@ QtFontStyle *QtFontFoundry::style(const QtFontStyle::Key &key, const QString &st
         }
     }
     if (!create)
-        return 0;
+        return nullptr;
 
     // qDebug("adding key (weight=%d, style=%d, stretch=%d) at %d", key.weight, key.style, key.stretch, pos);
     if (!(count % 8)) {
@@ -414,7 +414,7 @@ struct  QtFontFamily
 #if !defined(QWS) && defined(Q_OS_MAC)
         fixedPitchComputed(false),
 #endif
-        name(n), count(0), foundries(0)
+        name(n), count(0), foundries(nullptr)
 #if defined(Q_WS_QWS) || defined(Q_WS_QPA) && !defined(QT_NO_FREETYPE)
         , bogusWritingSystems(false)
 #endif
@@ -492,7 +492,7 @@ QtFontFoundry *QtFontFamily::foundry(const QString &f, bool create)
             return foundries[i];
     }
     if (!create)
-        return 0;
+        return nullptr;
 
     if (!(count % 8)) {
         QtFontFoundry **newFoundries = (QtFontFoundry **)
@@ -637,7 +637,7 @@ class QFontDatabasePrivate
 {
 public:
     QFontDatabasePrivate()
-        : count(0), families(0), reregisterAppFonts(false)
+        : count(0), families(nullptr), reregisterAppFonts(false)
 #if defined(Q_WS_QWS)
           , stream(0)
 #endif
@@ -661,7 +661,7 @@ public:
         while (count--)
             delete families[count];
         ::free(families);
-        families = 0;
+        families = nullptr;
         count = 0;
         // don't clear the memory fonts!
     }
@@ -743,7 +743,7 @@ QtFontFamily *QFontDatabasePrivate::family(const QString &f, bool create)
             return families[pos];
     }
     if (!create)
-        return 0;
+        return nullptr;
 
     if (res < 0)
         pos++;
@@ -980,7 +980,7 @@ static void parseFontName(const QString &name, QString &foundry, QString &family
 
 struct QtFontDesc
 {
-    inline QtFontDesc() : family(0), foundry(0), style(0), size(0), encoding(0), familyIndex(-1) {}
+    inline QtFontDesc() : family(nullptr), foundry(nullptr), style(nullptr), size(nullptr), encoding(nullptr), familyIndex(-1) {}
     QtFontFamily *family;
     QtFontFoundry *foundry;
     QtFontStyle *style;
@@ -1139,7 +1139,7 @@ static QtFontStyle *bestStyle(QtFontFoundry *foundry, const QtFontStyle::Key &st
 static QtFontEncoding *findEncoding(int script, int styleStrategy,
                                     QtFontSize *size, int force_encoding_id)
 {
-    QtFontEncoding *encoding = 0;
+    QtFontEncoding *encoding = nullptr;
 
     if (force_encoding_id >= 0) {
         encoding = size->encodingID(force_encoding_id);
@@ -1167,7 +1167,7 @@ static QtFontEncoding *findEncoding(int script, int styleStrategy,
             supportsScript = writingSystems_for_xlfd_encoding[encoding->encoding][ws];
         }
         if (!supportsScript)
-            encoding = 0;
+            encoding = nullptr;
     }
     // find the first encoding that supports the requested script
     for (int ws = 1; !encoding && ws < QFontDatabase::WritingSystemsCount; ++ws) {
@@ -1195,10 +1195,10 @@ unsigned int bestFoundry(int script, unsigned int score, int styleStrategy,
     Q_UNUSED(script);
     Q_UNUSED(pitch);
 
-    desc->foundry = 0;
-    desc->style = 0;
-    desc->size = 0;
-    desc->encoding = 0;
+    desc->foundry = nullptr;
+    desc->style = nullptr;
+    desc->size = nullptr;
+    desc->encoding = nullptr;
 
 
     FM_DEBUG("  REMARK: looking for best foundry for family '%s' [%d]", family->name.toLatin1().constData(), family->count);
@@ -1219,7 +1219,7 @@ unsigned int bestFoundry(int script, unsigned int score, int styleStrategy,
         }
 
         int px = -1;
-        QtFontSize *size = 0;
+        QtFontSize *size = nullptr;
 
         // 1. see if we have an exact matching size
         if (!(styleStrategy & QFont::ForceOutline)) {
@@ -1249,7 +1249,7 @@ unsigned int bestFoundry(int script, unsigned int score, int styleStrategy,
         }
 
 #ifdef Q_WS_X11
-        QtFontEncoding *encoding = 0;
+        QtFontEncoding *encoding = nullptr;
 #endif
 
         // 4. find closest size match
@@ -1302,7 +1302,7 @@ unsigned int bestFoundry(int script, unsigned int score, int styleStrategy,
 #ifdef Q_WS_X11
         if (size) {
             encoding = findEncoding(script, styleStrategy, size, force_encoding_id);
-            if (!encoding) size = 0;
+            if (!encoding) size = nullptr;
         }
         if (! encoding) {
             FM_DEBUG("          foundry doesn't support the script we want");
@@ -1400,11 +1400,11 @@ static void match(int script, const QFontDef &request,
     }
 #endif
 
-    desc->family = 0;
-    desc->foundry = 0;
-    desc->style = 0;
-    desc->size = 0;
-    desc->encoding = 0;
+    desc->family = nullptr;
+    desc->foundry = nullptr;
+    desc->style = nullptr;
+    desc->size = nullptr;
+    desc->encoding = nullptr;
     desc->familyIndex = -1;
 
     unsigned int score = ~0u;
@@ -1455,7 +1455,7 @@ static void match(int script, const QFontDef &request,
             bestFoundry(script, score, request.styleStrategy,
                         test.family, foundry_name, styleKey, request.pixelSize, pitch,
                         &test, force_encoding_id);
-        if (test.foundry == 0) {
+        if (test.foundry == nullptr) {
             // the specific foundry was not found, so look for
             // any foundry matching our requirements
             newscore = bestFoundry(script, score, request.styleStrategy, test.family,
@@ -2215,7 +2215,7 @@ bool QFontDatabase::hasFamily(const QString &family) const
 */
 QString QFontDatabase::writingSystemName(WritingSystem writingSystem)
 {
-    const char *name = 0;
+    const char *name = nullptr;
     switch (writingSystem) {
     case Any:
         name = QT_TRANSLATE_NOOP("QFontDatabase", "Any");

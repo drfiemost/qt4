@@ -76,9 +76,9 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
       m_newFormWidget(QDesignerNewFormWidgetInterface::createNewFormWidget(workbench->core())),
       m_workbench(workbench),
       m_chkShowOnStartup(new QCheckBox(tr("Show this Dialog on Startup"))),
-      m_createButton(new QPushButton(QApplication::translate("NewForm", "C&reate", 0, QApplication::UnicodeUTF8))),
-      m_recentButton(new QPushButton(QApplication::translate("NewForm", "Recent", 0,  QApplication::UnicodeUTF8))),
-      m_buttonBox(0)
+      m_createButton(new QPushButton(QApplication::translate("NewForm", "C&reate", nullptr, QApplication::UnicodeUTF8))),
+      m_recentButton(new QPushButton(QApplication::translate("NewForm", "Recent", nullptr,  QApplication::UnicodeUTF8))),
+      m_buttonBox(nullptr)
 {
     setWindowTitle(tr("New Form"));
     QDesignerSettings settings(m_workbench->core());
@@ -109,10 +109,10 @@ QDialogButtonBox *NewForm::createButtonBox()
 {
     // Dialog buttons with 'recent files'
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
-    buttonBox->addButton(QApplication::translate("NewForm", "&Close", 0,
+    buttonBox->addButton(QApplication::translate("NewForm", "&Close", nullptr,
                                         QApplication::UnicodeUTF8), QDialogButtonBox::RejectRole);
     buttonBox->addButton(m_createButton, QDialogButtonBox::AcceptRole);
-    buttonBox->addButton(QApplication::translate("NewForm", "&Open...", 0,
+    buttonBox->addButton(QApplication::translate("NewForm", "&Open...", nullptr,
                                     QApplication::UnicodeUTF8), QDialogButtonBox::ActionRole);
     buttonBox->addButton(m_recentButton, QDialogButtonBox::ActionRole);
     QDesignerActions *da = m_workbench->actionManager();

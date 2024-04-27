@@ -492,7 +492,7 @@ QTemporaryFile::QTemporaryFile(const QString &templateName)
     \sa setFileTemplate(), QDir::tempPath()
 */
 QTemporaryFile::QTemporaryFile()
-    : QFile(*new QTemporaryFilePrivate, 0)
+    : QFile(*new QTemporaryFilePrivate, nullptr)
 {
     Q_D(QTemporaryFile);
     d->templateName = QDir::tempPath() + QLatin1String("/qt_temp.XXXXXX");
@@ -513,7 +513,7 @@ QTemporaryFile::QTemporaryFile()
     \sa open(), fileTemplate()
 */
 QTemporaryFile::QTemporaryFile(const QString &templateName)
-    : QFile(*new QTemporaryFilePrivate, 0)
+    : QFile(*new QTemporaryFilePrivate, nullptr)
 {
     Q_D(QTemporaryFile);
     d->templateName = templateName;

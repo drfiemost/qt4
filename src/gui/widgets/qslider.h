@@ -71,8 +71,8 @@ public:
         TicksBothSides = 3
     };
 
-    explicit QSlider(QWidget *parent = 0);
-    explicit QSlider(Qt::Orientation orientation, QWidget *parent = 0);
+    explicit QSlider(QWidget *parent = nullptr);
+    explicit QSlider(Qt::Orientation orientation, QWidget *parent = nullptr);
 
     ~QSlider();
 

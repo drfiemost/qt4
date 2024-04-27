@@ -58,7 +58,7 @@ FontPanel::FontPanel(QWidget *parentWidget) :
     m_familyComboBox(new QFontComboBox),
     m_styleComboBox(new QComboBox),
     m_pointSizeComboBox(new QComboBox),
-    m_previewFontUpdateTimer(0)
+    m_previewFontUpdateTimer(nullptr)
 {
     setTitle(tr("Font"));
 

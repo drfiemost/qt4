@@ -99,7 +99,7 @@ namespace JSC {
         // do not individully ref the executable pool containing the trampoline.
         static JITCode HostFunction(CodePtr code)
         {
-            return JITCode(code.dataLocation(), 0, 0);
+            return JITCode(code.dataLocation(), nullptr, 0);
         }
 
     private:

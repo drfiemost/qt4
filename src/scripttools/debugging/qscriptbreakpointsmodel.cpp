@@ -474,7 +474,7 @@ QVariant QScriptBreakpointsModel::headerData(int section, Qt::Orientation orient
 Qt::ItemFlags QScriptBreakpointsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return 0;
+        return nullptr;
     Qt::ItemFlags ret = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
     switch (index.column()) {
     case 0:

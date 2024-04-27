@@ -59,7 +59,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTranslate : public QGraphicsTransform
     Q_PROPERTY(qreal y READ y WRITE setY NOTIFY yChanged)
 
 public:
-    QDeclarativeTranslate(QObject *parent = 0);
+    QDeclarativeTranslate(QObject *parent = nullptr);
     ~QDeclarativeTranslate();
 
     qreal x() const;

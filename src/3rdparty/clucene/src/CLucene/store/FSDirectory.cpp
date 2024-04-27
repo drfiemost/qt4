@@ -152,7 +152,7 @@ FSDirectory::FSIndexInput::FSIndexInput(const QString& path, int32_t bufferSize)
 FSDirectory::FSIndexInput::FSIndexInput(const FSIndexInput& other)
     : BufferedIndexInput(other)
 {
-    if (other.handle == NULL)
+    if (other.handle == nullptr)
         _CLTHROWA(CL_ERR_NullPointer, "other handle is null");
 
     SCOPED_LOCK_MUTEX(*other.handle->THIS_LOCK)
@@ -170,7 +170,7 @@ void FSDirectory::FSIndexInput::close()
 {
     BufferedIndexInput::close();
 #ifdef _LUCENE_THREADMUTEX
-    if (handle != NULL) {
+    if (handle != nullptr) {
         // Here we have a bit of a problem... We need to lock the handle to
         // ensure that we can safely delete the handle... But if we delete the
         // handle, then the scoped unlock, won't be able to unlock the mutex...
@@ -483,14 +483,14 @@ QString FSDirectory::getDirName() const
 //static
 FSDirectory* FSDirectory::getDirectory(const QString& file, const bool _create)
 {
-    FSDirectory* dir = NULL;
+    FSDirectory* dir = nullptr;
     {
         if (file.isEmpty())
             _CLTHROWA(CL_ERR_IO, "Invalid directory");
 
         SCOPED_LOCK_MUTEX(DIRECTORIES.THIS_LOCK)
             dir = DIRECTORIES.get(file);
-        if ( dir == NULL  ){
+        if ( dir == nullptr  ){
             dir = _CLNEW FSDirectory(file, _create);
             DIRECTORIES.put(dir->directory, dir);
         } else if (_create) {

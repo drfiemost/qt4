@@ -84,7 +84,7 @@ static JSValue JSC_HOST_CALL stringProtoFuncTrimRight(ExecState*, JSObject*, JSV
 
 namespace JSC {
 
-const ClassInfo StringPrototype::info = { "String", &StringObject::info, 0, ExecState::stringTable };
+const ClassInfo StringPrototype::info = { "String", &StringObject::info, nullptr, ExecState::stringTable };
 
 /* Source for StringPrototype.lut.h
 @begin stringTable 26
@@ -377,7 +377,7 @@ JSValue JSC_HOST_CALL stringProtoFuncReplace(ExecState* exec, JSObject*, JSValue
     }
 
     int ovector[2] = { matchPos, matchPos + matchLen };
-    return jsString(exec, source.replaceRange(matchPos, matchLen, substituteBackreferences(replacementString, source, ovector, 0)));
+    return jsString(exec, source.replaceRange(matchPos, matchLen, substituteBackreferences(replacementString, source, ovector, nullptr)));
 }
 
 JSValue JSC_HOST_CALL stringProtoFuncToString(ExecState* exec, JSObject*, JSValue thisValue, const ArgList&)
@@ -490,7 +490,7 @@ JSValue JSC_HOST_CALL stringProtoFuncMatch(ExecState* exec, JSObject*, JSValue t
 
     UString u = s;
     RefPtr<RegExp> reg;
-    RegExpObject* imp = 0;
+    RegExpObject* imp = nullptr;
     if (a0.inherits(&RegExpObject::info))
         reg = asRegExpObject(a0)->regExp();
     else {

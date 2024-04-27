@@ -237,7 +237,7 @@ QString QIconEngineV2::key() const
  */
 QIconEngineV2 *QIconEngineV2::clone() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

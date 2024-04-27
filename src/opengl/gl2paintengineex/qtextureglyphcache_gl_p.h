@@ -148,9 +148,9 @@ public:
 
     void contextDeleted(const QGLContext *context) {
         if (ctx == context)
-            ctx = 0;
+            ctx = nullptr;
     }
-    void freeResource(void *) { ctx = 0; }
+    void freeResource(void *) { ctx = nullptr; }
 
 private:
     QGLContextGroupResource<QGLGlyphTexture> m_textureResource;

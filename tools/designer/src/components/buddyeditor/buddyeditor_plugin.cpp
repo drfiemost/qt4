@@ -127,7 +127,7 @@ QAction *BuddyEditorPlugin::action() const
 
 void BuddyEditorPlugin::activeFormWindowChanged(QDesignerFormWindowInterface *formWindow)
 {
-    m_action->setEnabled(formWindow != 0);
+    m_action->setEnabled(formWindow != nullptr);
 }
 
 QT_END_NAMESPACE

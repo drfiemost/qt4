@@ -263,7 +263,7 @@ FormMultiWidget::FormMultiWidget(const QString &label, QWidget *parent)
     m_label->setText(label);
 
     m_plusButtons.append(
-            new ButtonWrapper(makeButton(m_plusIcon, SLOT(plusButtonClicked())), 0));
+            new ButtonWrapper(makeButton(m_plusIcon, SLOT(plusButtonClicked())), nullptr));
 }
 
 QAbstractButton *FormMultiWidget::makeButton(const QIcon &icon, const char *slot)

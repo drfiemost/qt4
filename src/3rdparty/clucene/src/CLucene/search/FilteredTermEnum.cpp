@@ -17,8 +17,8 @@ CL_NS_DEF(search)
 	//Pre  - true
 	//Post - Instance has been created
 		
-        currentTerm = NULL;
-        actualEnum = NULL;
+        currentTerm = nullptr;
+        actualEnum = nullptr;
     }
 
     FilteredTermEnum::~FilteredTermEnum() {
@@ -34,7 +34,7 @@ CL_NS_DEF(search)
 	//Pre  - next() must have been called at least once
 	//Post - if actualEnum is NULL result is -1 otherwise the frequencey is returned
 
-		if (actualEnum == NULL){
+		if (actualEnum == nullptr){
 			return -1;
 		}
         return actualEnum->docFreq();
@@ -46,7 +46,7 @@ CL_NS_DEF(search)
 	//Post - Returns True if the enumeration has been moved to the next element otherwise false
 
 		//The actual enumerator is not initialized!
-		if (actualEnum == NULL){
+		if (actualEnum == nullptr){
 			return false; 
 		    }
 
@@ -54,7 +54,7 @@ CL_NS_DEF(search)
        _CLDECDELETE( currentTerm );
 
 		//Iterate through the enumeration
-        while (currentTerm == NULL) {
+        while (currentTerm == nullptr) {
             if (endEnum()) 
 				return false;
             if (actualEnum->next()) {
@@ -72,7 +72,7 @@ CL_NS_DEF(search)
                 return false;
         }
         _CLDECDELETE(currentTerm);
-        currentTerm = NULL;
+        currentTerm = nullptr;
 
         return false;
     }
@@ -125,7 +125,7 @@ CL_NS_DEF(search)
         // Find the first term that matches
         //Ordered term not to return reference ownership here.
         Term* term = actualEnum->term(false);
-        if (term != NULL && termCompare(term)){
+        if (term != nullptr && termCompare(term)){
             _CLDECDELETE(currentTerm);
             currentTerm = _CL_POINTER(term);
         }else{

@@ -69,7 +69,7 @@ void QDeclarativeListAccessor::setList(const QVariant &v, QDeclarativeEngine *en
 {
     d = v;
 
-    QDeclarativeEnginePrivate *enginePrivate = engine?QDeclarativeEnginePrivate::get(engine):0;
+    QDeclarativeEnginePrivate *enginePrivate = engine?QDeclarativeEnginePrivate::get(engine):nullptr;
 
     if (!d.isValid()) {
         m_type = Invalid;

@@ -229,68 +229,68 @@ struct QGLExtensionFuncs
 {
     QGLExtensionFuncs() {
 #if !defined(QT_OPENGL_ES_2)
-        qt_glProgramStringARB = 0;
-        qt_glBindProgramARB = 0;
-        qt_glDeleteProgramsARB = 0;
-        qt_glGenProgramsARB = 0;
-        qt_glProgramLocalParameter4fvARB = 0;
+        qt_glProgramStringARB = nullptr;
+        qt_glBindProgramARB = nullptr;
+        qt_glDeleteProgramsARB = nullptr;
+        qt_glGenProgramsARB = nullptr;
+        qt_glProgramLocalParameter4fvARB = nullptr;
 
         // GLSL
-        qt_glCreateShader = 0;
-        qt_glShaderSource = 0;
-        qt_glShaderBinary = 0;
-        qt_glCompileShader = 0;
-        qt_glDeleteShader = 0;
-        qt_glIsShader = 0;
+        qt_glCreateShader = nullptr;
+        qt_glShaderSource = nullptr;
+        qt_glShaderBinary = nullptr;
+        qt_glCompileShader = nullptr;
+        qt_glDeleteShader = nullptr;
+        qt_glIsShader = nullptr;
 
-        qt_glCreateProgram = 0;
-        qt_glAttachShader = 0;
-        qt_glDetachShader = 0;
-        qt_glLinkProgram = 0;
-        qt_glUseProgram = 0;
-        qt_glDeleteProgram = 0;
-        qt_glIsProgram = 0;
+        qt_glCreateProgram = nullptr;
+        qt_glAttachShader = nullptr;
+        qt_glDetachShader = nullptr;
+        qt_glLinkProgram = nullptr;
+        qt_glUseProgram = nullptr;
+        qt_glDeleteProgram = nullptr;
+        qt_glIsProgram = nullptr;
 
-        qt_glGetShaderInfoLog = 0;
-        qt_glGetShaderiv = 0;
-        qt_glGetShaderSource = 0;
-        qt_glGetProgramiv = 0;
-        qt_glGetProgramInfoLog = 0;
+        qt_glGetShaderInfoLog = nullptr;
+        qt_glGetShaderiv = nullptr;
+        qt_glGetShaderSource = nullptr;
+        qt_glGetProgramiv = nullptr;
+        qt_glGetProgramInfoLog = nullptr;
 
-        qt_glGetUniformLocation = 0;
-        qt_glUniform4fv = 0;
-        qt_glUniform3fv = 0;
-        qt_glUniform2fv = 0;
-        qt_glUniform1fv = 0;
-        qt_glUniform1i = 0;
-        qt_glUniform1iv = 0;
-        qt_glUniformMatrix2fv = 0;
-        qt_glUniformMatrix3fv = 0;
-        qt_glUniformMatrix4fv = 0;
-        qt_glUniformMatrix2x3fv = 0;
-        qt_glUniformMatrix2x4fv = 0;
-        qt_glUniformMatrix3x2fv = 0;
-        qt_glUniformMatrix3x4fv = 0;
-        qt_glUniformMatrix4x2fv = 0;
-        qt_glUniformMatrix4x3fv = 0;
+        qt_glGetUniformLocation = nullptr;
+        qt_glUniform4fv = nullptr;
+        qt_glUniform3fv = nullptr;
+        qt_glUniform2fv = nullptr;
+        qt_glUniform1fv = nullptr;
+        qt_glUniform1i = nullptr;
+        qt_glUniform1iv = nullptr;
+        qt_glUniformMatrix2fv = nullptr;
+        qt_glUniformMatrix3fv = nullptr;
+        qt_glUniformMatrix4fv = nullptr;
+        qt_glUniformMatrix2x3fv = nullptr;
+        qt_glUniformMatrix2x4fv = nullptr;
+        qt_glUniformMatrix3x2fv = nullptr;
+        qt_glUniformMatrix3x4fv = nullptr;
+        qt_glUniformMatrix4x2fv = nullptr;
+        qt_glUniformMatrix4x3fv = nullptr;
 
-        qt_glBindAttribLocation = 0;
-        qt_glGetAttribLocation = 0;
-        qt_glVertexAttrib1fv = 0;
-        qt_glVertexAttrib2fv = 0;
-        qt_glVertexAttrib3fv = 0;
-        qt_glVertexAttrib4fv = 0;
-        qt_glVertexAttribPointer = 0;
-        qt_glDisableVertexAttribArray = 0;
-        qt_glEnableVertexAttribArray = 0;
+        qt_glBindAttribLocation = nullptr;
+        qt_glGetAttribLocation = nullptr;
+        qt_glVertexAttrib1fv = nullptr;
+        qt_glVertexAttrib2fv = nullptr;
+        qt_glVertexAttrib3fv = nullptr;
+        qt_glVertexAttrib4fv = nullptr;
+        qt_glVertexAttribPointer = nullptr;
+        qt_glDisableVertexAttribArray = nullptr;
+        qt_glEnableVertexAttribArray = nullptr;
 
         // Extras for GL2 engine:
-        qt_glActiveTexture = 0;
-        qt_glStencilOpSeparate = 0;
-        qt_glBlendColor = 0;
+        qt_glActiveTexture = nullptr;
+        qt_glStencilOpSeparate = nullptr;
+        qt_glBlendColor = nullptr;
 
-        qt_glActiveStencilFaceEXT = 0;
-        qt_glMultiTexCoord4f = 0;
+        qt_glActiveStencilFaceEXT = nullptr;
+        qt_glMultiTexCoord4f = nullptr;
 #else
         qt_glslResolved = false;
 
@@ -300,47 +300,47 @@ struct QGLExtensionFuncs
 
         // FBOs
 #if !defined(QT_OPENGL_ES_2)
-        qt_glIsRenderbuffer = 0;
-        qt_glBindRenderbuffer = 0;
-        qt_glDeleteRenderbuffers = 0;
-        qt_glGenRenderbuffers = 0;
-        qt_glRenderbufferStorage = 0;
-        qt_glGetRenderbufferParameteriv = 0;
-        qt_glIsFramebuffer = 0;
-        qt_glBindFramebuffer = 0;
-        qt_glDeleteFramebuffers = 0;
-        qt_glGenFramebuffers = 0;
-        qt_glCheckFramebufferStatus = 0;
-        qt_glFramebufferTexture2D = 0;
-        qt_glFramebufferRenderbuffer = 0;
-        qt_glGetFramebufferAttachmentParameteriv = 0;
-        qt_glGenerateMipmap = 0;
+        qt_glIsRenderbuffer = nullptr;
+        qt_glBindRenderbuffer = nullptr;
+        qt_glDeleteRenderbuffers = nullptr;
+        qt_glGenRenderbuffers = nullptr;
+        qt_glRenderbufferStorage = nullptr;
+        qt_glGetRenderbufferParameteriv = nullptr;
+        qt_glIsFramebuffer = nullptr;
+        qt_glBindFramebuffer = nullptr;
+        qt_glDeleteFramebuffers = nullptr;
+        qt_glGenFramebuffers = nullptr;
+        qt_glCheckFramebufferStatus = nullptr;
+        qt_glFramebufferTexture2D = nullptr;
+        qt_glFramebufferRenderbuffer = nullptr;
+        qt_glGetFramebufferAttachmentParameteriv = nullptr;
+        qt_glGenerateMipmap = nullptr;
 #endif
-        qt_glBlitFramebufferEXT = 0;
-        qt_glRenderbufferStorageMultisampleEXT = 0;
+        qt_glBlitFramebufferEXT = nullptr;
+        qt_glRenderbufferStorageMultisampleEXT = nullptr;
 
         // Buffer objects:
 #if defined(QGL_RESOLVE_BUFFER_FUNCS)
-        qt_glBindBuffer = 0;
-        qt_glDeleteBuffers = 0;
-        qt_glGenBuffers = 0;
-        qt_glBufferData = 0;
-        qt_glBufferSubData = 0;
-        qt_glGetBufferSubData = 0;
-        qt_glGetBufferParameteriv = 0;
+        qt_glBindBuffer = nullptr;
+        qt_glDeleteBuffers = nullptr;
+        qt_glGenBuffers = nullptr;
+        qt_glBufferData = nullptr;
+        qt_glBufferSubData = nullptr;
+        qt_glGetBufferSubData = nullptr;
+        qt_glGetBufferParameteriv = nullptr;
 #endif
-        qt_glMapBufferARB = 0;
-        qt_glUnmapBufferARB = 0;
+        qt_glMapBufferARB = nullptr;
+        qt_glUnmapBufferARB = nullptr;
 
         qt_bufferFuncsResolved = false;
 
-        qt_glProgramParameteriEXT = 0;
-        qt_glFramebufferTextureEXT = 0;
-        qt_glFramebufferTextureLayerEXT = 0;
-        qt_glFramebufferTextureFaceEXT = 0;
+        qt_glProgramParameteriEXT = nullptr;
+        qt_glFramebufferTextureEXT = nullptr;
+        qt_glFramebufferTextureLayerEXT = nullptr;
+        qt_glFramebufferTextureFaceEXT = nullptr;
 #if !defined(QT_OPENGL_ES)
         // Texture compression
-        qt_glCompressedTexImage2DARB = 0;
+        qt_glCompressedTexImage2DARB = nullptr;
 #endif
 
 #ifndef QT_NO_EGL

@@ -126,11 +126,11 @@ static void qt_cleanup_icon_cache()
 }
 
 QIconPrivate::QIconPrivate()
-    : engine(0), ref(1),
+    : engine(nullptr), ref(1),
     serialNum(serialNumCounter.fetchAndAddRelaxed(1)),
     detach_no(0),
     engine_version(2),
-    v1RefCount(0)
+    v1RefCount(nullptr)
 {
 }
 
@@ -184,7 +184,7 @@ static QPixmapIconEngineEntry *bestSizeMatch( const QSize &size, QPixmapIconEngi
 
 QPixmapIconEngineEntry *QPixmapIconEngine::tryMatch(const QSize &size, QIcon::Mode mode, QIcon::State state)
 {
-    QPixmapIconEngineEntry *pe = 0;
+    QPixmapIconEngineEntry *pe = nullptr;
     for (int i = 0; i < pixmaps.count(); ++i)
         if (pixmaps.at(i).mode == mode && pixmaps.at(i).state == state) {
             if (pe)
@@ -528,7 +528,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loaderV2,
   Constructs a null icon.
 */
 QIcon::QIcon()
-    : d(0)
+    : d(nullptr)
 {
 }
 
@@ -536,7 +536,7 @@ QIcon::QIcon()
   Constructs an icon from a \a pixmap.
  */
 QIcon::QIcon(const QPixmap &pixmap)
-    :d(0)
+    :d(nullptr)
 {
     addPixmap(pixmap);
 }
@@ -570,7 +570,7 @@ QIcon::QIcon(const QIcon &other)
     complete list of the supported file formats.
 */
 QIcon::QIcon(const QString &fileName)
-    : d(0)
+    : d(nullptr)
 {
     addFile(fileName);
 }

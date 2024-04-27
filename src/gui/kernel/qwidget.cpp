@@ -177,7 +177,7 @@ extern QDesktopWidget *qt_desktopWidget; // qapplication.cpp
  */
 
 QWidgetBackingStoreTracker::QWidgetBackingStoreTracker()
-    :   m_ptr(0)
+    :   m_ptr(nullptr)
 {
 
 }
@@ -207,7 +207,7 @@ void QWidgetBackingStoreTracker::create(QWidget *widget)
 void QWidgetBackingStoreTracker::destroy()
 {
     delete m_ptr;
-    m_ptr = 0;
+    m_ptr = nullptr;
     m_widgets.clear();
 }
 
@@ -235,7 +235,7 @@ void QWidgetBackingStoreTracker::unregisterWidget(QWidget *w)
 {
     if (m_widgets.remove(w) && m_widgets.isEmpty()) {
         delete m_ptr;
-        m_ptr = 0;
+        m_ptr = nullptr;
     }
 }
 
@@ -253,17 +253,17 @@ void QWidgetBackingStoreTracker::unregisterWidgetSubtree(QWidget *widget)
 
 QWidgetPrivate::QWidgetPrivate(int version)
     : QObjectPrivate(version)
-      , extra(0)
-      , focus_next(0)
-      , focus_prev(0)
-      , focus_child(0)
-      , layout(0)
-      , needsFlush(0)
-      , redirectDev(0)
-      , widgetItem(0)
-      , extraPaintEngine(0)
-      , polished(0)
-      , graphicsEffect(0)
+      , extra(nullptr)
+      , focus_next(nullptr)
+      , focus_prev(nullptr)
+      , focus_child(nullptr)
+      , layout(nullptr)
+      , needsFlush(nullptr)
+      , redirectDev(nullptr)
+      , widgetItem(nullptr)
+      , extraPaintEngine(nullptr)
+      , polished(nullptr)
+      , graphicsEffect(nullptr)
 #if !defined(QT_NO_IM)
       , imHints(Qt::ImhNone)
 #endif
@@ -335,7 +335,7 @@ QWidgetPrivate::QWidgetPrivate(int version)
 QWidgetPrivate::~QWidgetPrivate()
 {
     if (widgetItem)
-        widgetItem->wid = 0;
+        widgetItem->wid = nullptr;
 
     if (extra)
         deleteExtra();
@@ -409,7 +409,7 @@ QInputContext *QWidgetPrivate::assignedInputContext() const
             return qic;
         widget = widget->parentWidget();
     }
-    return 0;
+    return nullptr;
 }
 
 QInputContext *QWidgetPrivate::inputContext() const
@@ -433,7 +433,7 @@ QInputContext *QWidget::inputContext()
 {
     Q_D(QWidget);
     if (!testAttribute(Qt::WA_InputMethodEnabled))
-        return 0;
+        return nullptr;
 
     return d->inputContext();
 }
@@ -1058,8 +1058,8 @@ void QWidget::setAutoFillBackground(bool enabled)
 
 */
 
-QWidgetMapper *QWidgetPrivate::mapper = 0;          // widget with wid
-QWidgetSet *QWidgetPrivate::allWidgets = 0;         // widgets with no wid
+QWidgetMapper *QWidgetPrivate::mapper = nullptr;          // widget with wid
+QWidgetSet *QWidgetPrivate::allWidgets = nullptr;         // widgets with no wid
 
 
 /*****************************************************************************
@@ -1145,7 +1145,7 @@ struct QWidgetExceptionCleaner
     \sa windowFlags
 */
 QWidget::QWidget(QWidget *parent, Qt::WindowFlags f)
-    : QObject(*new QWidgetPrivate, 0), QPaintDevice()
+    : QObject(*new QWidgetPrivate, nullptr), QPaintDevice()
 {
     QT_TRY {
         d_func()->init(parent, f);
@@ -1158,7 +1158,7 @@ QWidget::QWidget(QWidget *parent, Qt::WindowFlags f)
 /*! \internal
 */
 QWidget::QWidget(QWidgetPrivate &dd, QWidget* parent, Qt::WindowFlags f)
-    : QObject(dd, 0), QPaintDevice()
+    : QObject(dd, nullptr), QPaintDevice()
 {
     Q_D(QWidget);
     QT_TRY {
@@ -1241,10 +1241,10 @@ void QWidgetPrivate::init(QWidget *parentWidget, Qt::WindowFlags f)
     if (allWidgets)
         allWidgets->insert(q);
 
-    QWidget *desktopWidget = 0;
+    QWidget *desktopWidget = nullptr;
     if (parentWidget && parentWidget->windowType() == Qt::Desktop) {
         desktopWidget = parentWidget;
-        parentWidget = 0;
+        parentWidget = nullptr;
     }
 
     q->data = &data;
@@ -1338,7 +1338,7 @@ void QWidgetPrivate::init(QWidget *parentWidget, Qt::WindowFlags f)
     QApplication::sendEvent(q, &e);
     QApplication::postEvent(q, new QEvent(QEvent::PolishRequest));
 
-    extraPaintEngine = 0;
+    extraPaintEngine = nullptr;
 }
 
 
@@ -1513,7 +1513,7 @@ QWidget::~QWidget()
 
     // delete layout while we still are a valid widget
     delete d->layout;
-    d->layout = 0;
+    d->layout = nullptr;
     // Remove myself from focus list
 
     Q_ASSERT(d->focus_next->d_func()->focus_prev == this);
@@ -1522,7 +1522,7 @@ QWidget::~QWidget()
     if (d->focus_next != this) {
         d->focus_next->d_func()->focus_prev = d->focus_prev;
         d->focus_prev->d_func()->focus_next = d->focus_next;
-        d->focus_next = d->focus_prev = 0;
+        d->focus_next = d->focus_prev = nullptr;
     }
 
     QT_TRY {
@@ -1563,7 +1563,7 @@ QWidget::~QWidget()
     }
 
     delete d->needsFlush;
-    d->needsFlush = 0;
+    d->needsFlush = nullptr;
 
     // set all QPointers for this object to zero
     if (d->hasGuards)
@@ -1571,7 +1571,7 @@ QWidget::~QWidget()
 
     if (d->declarativeData) {
         QAbstractDeclarativeData::destroyed(d->declarativeData, this);
-        d->declarativeData = 0;                 // don't activate again in ~QObject
+        d->declarativeData = nullptr;                 // don't activate again in ~QObject
     }
 
 #ifdef QT_MAC_USE_COCOA
@@ -1621,7 +1621,7 @@ void QWidgetPrivate::setWinId(WId id)                // set widget identifier
     // will have the same windowid (the root window id) as the
     // qt_desktopWidget. We should not add the second desktop widget
     // to the mapper.
-    bool userDesktopWidget = qt_desktopWidget != 0 && qt_desktopWidget != q && q->windowType() == Qt::Desktop;
+    bool userDesktopWidget = qt_desktopWidget != nullptr && qt_desktopWidget != q && q->windowType() == Qt::Desktop;
     if (mapper && data.winid && !userDesktopWidget) {
         mapper->remove(data.winid);
     }
@@ -1648,15 +1648,15 @@ void QWidgetPrivate::createTLExtra()
         createExtra();
     if (!extra->topextra) {
         QTLWExtra* x = extra->topextra = new QTLWExtra;
-        x->icon = 0;
-        x->iconPixmap = 0;
-        x->windowSurface = 0;
-        x->sharedPainter = 0;
+        x->icon = nullptr;
+        x->iconPixmap = nullptr;
+        x->windowSurface = nullptr;
+        x->sharedPainter = nullptr;
         x->incw = x->inch = 0;
         x->basew = x->baseh = 0;
         x->frameStrut.setCoords(0, 0, 0, 0);
         x->normalGeometry = QRect(0,0,-1,-1);
-        x->savedFlags = 0;
+        x->savedFlags = nullptr;
         x->opacity = 255;
         x->posFromMove = false;
         x->sizeAdjusted = false;
@@ -1685,13 +1685,13 @@ void QWidgetPrivate::createExtra()
 {
     if (!extra) {                                // if not exists
         extra = new QWExtra;
-        extra->glContext = 0;
-        extra->topextra = 0;
+        extra->glContext = nullptr;
+        extra->topextra = nullptr;
 #ifndef QT_NO_GRAPHICSVIEW
-        extra->proxyWidget = 0;
+        extra->proxyWidget = nullptr;
 #endif
 #ifndef QT_NO_CURSOR
-        extra->curs = 0;
+        extra->curs = nullptr;
 #endif
         extra->minw = 0;
         extra->minh = 0;
@@ -1744,7 +1744,7 @@ void QWidgetPrivate::deleteExtra()
         }
         delete extra;
         // extra->xic destroyed in QWidget::destroy()
-        extra = 0;
+        extra = nullptr;
     }
 }
 
@@ -2346,10 +2346,10 @@ void QWidgetPrivate::deactivateWidgetCleanup()
     Q_Q(QWidget);
     // If this was the active application window, reset it
     if (QApplication::activeWindow() == q)
-        QApplication::setActiveWindow(0);
+        QApplication::setActiveWindow(nullptr);
     // If the is the active mouse press widget, reset it
     if (q == qt_button_down)
-        qt_button_down = 0;
+        qt_button_down = nullptr;
 }
 
 
@@ -2565,7 +2565,7 @@ void QWidget::setStyleSheet(const QString& styleSheet)
     if (testAttribute(Qt::WA_SetStyle)) {
         d->setStyle_helper(new QStyleSheetStyle(d->extra->style), true);
     } else {
-        d->setStyle_helper(new QStyleSheetStyle(0), true);
+        d->setStyle_helper(new QStyleSheetStyle(nullptr), true);
     }
 }
 
@@ -2608,7 +2608,7 @@ QStyle *QWidget::style() const
 void QWidget::setStyle(QStyle *style)
 {
     Q_D(QWidget);
-    setAttribute(Qt::WA_SetStyle, style != 0);
+    setAttribute(Qt::WA_SetStyle, style != nullptr);
     d->createExtra();
 #ifndef QT_NO_STYLE_STYLESHEET
     if (QStyleSheetStyle *proxy = qobject_cast<QStyleSheetStyle *>(style)) {
@@ -2708,9 +2708,9 @@ void QWidgetPrivate::inheritStyle()
         return;
     }
 
-    QStyle *origStyle = proxy ? proxy->base : (extra ? (QStyle*)extra->style : 0);
+    QStyle *origStyle = proxy ? proxy->base : (extra ? (QStyle*)extra->style : nullptr);
     QWidget *parent = q->parentWidget();
-    QStyle *parentStyle = (parent && parent->d_func()->extra) ? (QStyle*)parent->d_func()->extra->style : 0;
+    QStyle *parentStyle = (parent && parent->d_func()->extra) ? (QStyle*)parent->d_func()->extra->style : nullptr;
     // If we have stylesheet on app or parent has stylesheet style, we need
     // to be running a proxy
     if (!qApp->styleSheet().isEmpty() || qobject_cast<QStyleSheetStyle *>(parentStyle)) {
@@ -2726,14 +2726,14 @@ void QWidgetPrivate::inheritStyle()
 
     // So, we have no stylesheet on parent/app and we have an empty stylesheet
     // we just need our original style back
-    if (origStyle == (extra ? (QStyle*)extra->style : 0)) // is it any different?
+    if (origStyle == (extra ? (QStyle*)extra->style : nullptr)) // is it any different?
         return;
 
     // We could have inherited the proxy from our parent (which has a custom style)
     // In such a case we need to start following the application style (i.e revert
     // the propagation behavior of QStyleSheetStyle)
     if (!q->testAttribute(Qt::WA_SetStyle))
-        origStyle = 0;
+        origStyle = nullptr;
 
     setStyle_helper(origStyle, true);
 #endif // QT_NO_STYLE_STYLESHEET
@@ -3092,7 +3092,7 @@ bool QWidget::isEnabledTo(QWidget* ancestor) const
 */
 void QWidget::addAction(QAction *action)
 {
-    insertAction(0, action);
+    insertAction(nullptr, action);
 }
 
 /*!
@@ -3103,7 +3103,7 @@ void QWidget::addAction(QAction *action)
 void QWidget::addActions(QList<QAction*> actions)
 {
     for(int i = 0; i < actions.count(); i++)
-        insertAction(0, actions.at(i));
+        insertAction(nullptr, actions.at(i));
 }
 
 /*!
@@ -3128,7 +3128,7 @@ void QWidget::insertAction(QAction *before, QAction *action)
 
     int pos = d->actions.indexOf(before);
     if (pos < 0) {
-        before = 0;
+        before = nullptr;
         pos = d->actions.size();
     }
     d->actions.insert(pos, action);
@@ -3265,7 +3265,7 @@ void QWidgetPrivate::setEnabled_helper(bool enable)
                 qic->setFocusWidget(focusWidget);
         } else {
             qic->reset();
-            qic->setFocusWidget(0);
+            qic->setFocusWidget(nullptr);
         }
     }
 #endif //QT_NO_IM
@@ -3777,7 +3777,7 @@ QSize QWidget::sizeIncrement() const
 QSize QWidget::baseSize() const
 {
     Q_D(const QWidget);
-    return (d->extra != 0 && d->extra->topextra != 0)
+    return (d->extra != nullptr && d->extra->topextra != nullptr)
         ? QSize(d->extra->topextra->basew, d->extra->topextra->baseh)
         : QSize(0, 0);
 }
@@ -4826,7 +4826,7 @@ void QWidget::unsetCursor()
     Q_D(QWidget);
     if (d->extra) {
         delete d->extra->curs;
-        d->extra->curs = 0;
+        d->extra->curs = nullptr;
     }
     if (!isWindow())
         setAttribute(Qt::WA_SetCursor, false);
@@ -5021,7 +5021,7 @@ void QWidget::setGraphicsEffect(QGraphicsEffect *effect)
     if (d->graphicsEffect) {
         d->invalidateBuffer(rect());
         delete d->graphicsEffect;
-        d->graphicsEffect = 0;
+        d->graphicsEffect = nullptr;
     }
 
     if (effect) {
@@ -5219,7 +5219,7 @@ void QWidgetPrivate::drawWidget(QPaintDevice *pdev, const QRegion &rgn, const QP
                 graphicsEffect->draw(sharedPainter);
                 sharedPainter->restore();
             }
-            sourced->context = 0;
+            sourced->context = nullptr;
             return;
         }
     }
@@ -5310,7 +5310,7 @@ void QWidgetPrivate::drawWidget(QPaintDevice *pdev, const QRegion &rgn, const QP
                 if (!sharedPainter)
                     paintEngine->d_func()->systemRect = QRect();
                 else
-                    paintEngine->d_func()->currentClipWidget = 0;
+                    paintEngine->d_func()->currentClipWidget = nullptr;
                 paintEngine->d_func()->systemClip = QRegion();
             }
             q->setAttribute(Qt::WA_WState_InPaintEvent, false);
@@ -5368,7 +5368,7 @@ void QWidgetPrivate::render(QPaintDevice *target, const QPoint &targetOffset,
         return;
 
 #ifndef Q_WS_MAC
-    QPainter *oldSharedPainter = inRenderWithPainter ? sharedPainter() : 0;
+    QPainter *oldSharedPainter = inRenderWithPainter ? sharedPainter() : nullptr;
 
     // Use the target's shared painter if set (typically set when doing
     // "other->render(widget);" in the widget's paintEvent.
@@ -5388,7 +5388,7 @@ void QWidgetPrivate::render(QPaintDevice *target, const QPoint &targetOffset,
     QPoint offset = targetOffset;
     offset -= paintRegion.boundingRect().topLeft();
     QPoint redirectionOffset;
-    QPaintDevice *redirected = 0;
+    QPaintDevice *redirected = nullptr;
 
     if (target->devType() == QInternal::Widget)
         redirected = static_cast<QWidget *>(target)->d_func()->redirected(&redirectionOffset);
@@ -5448,7 +5448,7 @@ void QWidgetPrivate::paintSiblingsRecursive(QPaintDevice *pdev, const QObjectLis
 #endif
                                             , QPainter *sharedPainter, QWidgetBackingStore *backingStore)
 {
-    QWidget *w = 0;
+    QWidget *w = nullptr;
     QRect boundingRect;
     bool dirtyBoundingRect = true;
     const bool exludeOpaqueChildren = (flags & DontDrawOpaqueChildren);
@@ -5598,7 +5598,7 @@ QGraphicsProxyWidget * QWidgetPrivate::nearestGraphicsProxyWidget(const QWidget 
             return extra->proxyWidget;
         return nearestGraphicsProxyWidget(origin->parentWidget());
     }
-    return 0;
+    return nullptr;
 }
 #endif
 
@@ -5757,7 +5757,7 @@ QString qt_setWindowTitle_helperHelper(const QString &title, const QWidget *widg
         if (count%2) { // odd number of [*] -> replace last one
             int lastIndex = cap.lastIndexOf(placeHolder, index - 1);
             if (widget->isWindowModified()
-             && widget->style()->styleHint(QStyle::SH_TitleBar_ModifyNotification, 0, widget))
+             && widget->style()->styleHint(QStyle::SH_TitleBar_ModifyNotification, nullptr, widget))
                 cap.replace(lastIndex, 3, QWidget::tr("*"));
             else
                 cap.remove(lastIndex, 3);
@@ -5857,7 +5857,7 @@ void QWidget::setWindowIcon(const QIcon &icon)
     *d->extra->topextra->icon = icon;
 
     delete d->extra->topextra->iconPixmap;
-    d->extra->topextra->iconPixmap = 0;
+    d->extra->topextra->iconPixmap = nullptr;
 
     d->setWindowIcon_sys();
     d->setWindowIcon_helper();
@@ -6038,7 +6038,7 @@ void QWidget::setFocusProxy(QWidget * w)
 QWidget * QWidget::focusProxy() const
 {
     Q_D(const QWidget);
-    return d->extra ? (QWidget *)d->extra->focus_proxy : 0;
+    return d->extra ? (QWidget *)d->extra->focus_proxy : nullptr;
 }
 
 
@@ -6121,7 +6121,7 @@ void QWidget::setFocus(Qt::FocusReason reason)
         return;
 
 #ifndef QT_NO_GRAPHICSVIEW
-    QWidget *previousProxyFocus = 0;
+    QWidget *previousProxyFocus = nullptr;
     if (QWExtra *topData = window()->d_func()->extra) {
         if (topData->proxyWidget && topData->proxyWidget->hasFocus()) {
             previousProxyFocus = topData->proxyWidget->widget()->focusWidget();
@@ -6137,12 +6137,12 @@ void QWidget::setFocus(Qt::FocusReason reason)
     if (isHidden()) {
         while (w && w->isHidden()) {
             w->d_func()->focus_child = f;
-            w = w->isWindow() ? 0 : w->parentWidget();
+            w = w->isWindow() ? nullptr : w->parentWidget();
         }
     } else {
         while (w) {
             w->d_func()->focus_child = f;
-            w = w->isWindow() ? 0 : w->parentWidget();
+            w = w->isWindow() ? nullptr : w->parentWidget();
         }
     }
 
@@ -6230,7 +6230,7 @@ void QWidget::clearFocus()
     QWidget *w = this;
     while (w) {
         if (w->d_func()->focus_child == this)
-            w->d_func()->focus_child = 0;
+            w->d_func()->focus_child = nullptr;
         w = w->parentWidget();
     }
 #ifndef QT_NO_GRAPHICSVIEW
@@ -6241,7 +6241,7 @@ void QWidget::clearFocus()
 
     if (hasFocus()) {
         // Update proxy state
-        QApplicationPrivate::setFocusWidget(0, Qt::OtherFocusReason);
+        QApplicationPrivate::setFocusWidget(nullptr, Qt::OtherFocusReason);
 #if defined(Q_WS_WIN)
         if (!(windowType() == Qt::Popup) && GetFocus() == internalWinId())
             SetFocus(0);
@@ -6391,7 +6391,7 @@ bool QWidget::isActiveWindow() const
     if (QApplication::testAttribute(Qt::AA_MacPluginApplication) && qt_mac_insideKeyWindow(tlw))
         return true;
 #endif
-    if(style()->styleHint(QStyle::SH_Widget_ShareActivation, 0, this)) {
+    if(style()->styleHint(QStyle::SH_Widget_ShareActivation, nullptr, this)) {
         if(tlw->windowType() == Qt::Tool &&
            !tlw->isModal() &&
            (!tlw->parentWidget() || tlw->parentWidget()->isActiveWindow()))
@@ -6513,9 +6513,9 @@ void QWidgetPrivate::reparentFocusWidgets(QWidget * oldtlw)
         focus_child->clearFocus();
 
     // separate the focus chain into new (children of myself) and old (the rest)
-    QWidget *firstOld = 0;
+    QWidget *firstOld = nullptr;
     //QWidget *firstNew = q; //invariant
-    QWidget *o = 0; // last in the old list
+    QWidget *o = nullptr; // last in the old list
     QWidget *n = q; // last in the new list
 
     bool prevWasNew = true;
@@ -7273,7 +7273,7 @@ void QWidgetPrivate::show_helper()
 #endif
 
     if (QApplicationPrivate::hidden_focus_widget == q) {
-        QApplicationPrivate::hidden_focus_widget = 0;
+        QApplicationPrivate::hidden_focus_widget = nullptr;
         q->setFocus(Qt::OtherFocusReason);
     }
 
@@ -7307,7 +7307,7 @@ void QWidgetPrivate::hide_helper()
 
     bool isEmbedded = false;
 #if !defined QT_NO_GRAPHICSVIEW
-    isEmbedded = q->isWindow() && !bypassGraphicsProxyWidget(q) && nearestGraphicsProxyWidget(q->parentWidget()) != 0;
+    isEmbedded = q->isWindow() && !bypassGraphicsProxyWidget(q) && nearestGraphicsProxyWidget(q->parentWidget()) != nullptr;
 #else
     Q_UNUSED(isEmbedded);
 #endif
@@ -7494,7 +7494,7 @@ void QWidget::setVisible(bool visible)
         }
 #endif
         if (QApplicationPrivate::hidden_focus_widget == this)
-            QApplicationPrivate::hidden_focus_widget = 0;
+            QApplicationPrivate::hidden_focus_widget = nullptr;
 
         Q_D(QWidget);
 
@@ -8227,7 +8227,7 @@ bool QWidget::event(QEvent *event)
         case Qt::ActionsContextMenu:
             if (d->actions.count()) {
                 QMenu::exec(d->actions, static_cast<QContextMenuEvent *>(event)->globalPos(),
-                            0, this);
+                            nullptr, this);
                 break;
             }
             [[fallthrough]];
@@ -9486,9 +9486,9 @@ QLayout *QWidget::takeLayout()
     Q_D(QWidget);
     QLayout *l =  layout();
     if (!l)
-        return 0;
-    d->layout = 0;
-    l->setParent(0);
+        return nullptr;
+    d->layout = nullptr;
+    l->setParent(nullptr);
     return l;
 }
 
@@ -9610,7 +9610,7 @@ QWidget *QWidget::childAt(const QPoint &p) const
 QWidget *QWidgetPrivate::childAt_helper(const QPoint &p, bool ignoreChildrenInDestructor) const
 {
     if (children.isEmpty())
-        return 0;
+        return nullptr;
 
 #ifdef Q_WS_MAC
     Q_Q(const QWidget);
@@ -9623,7 +9623,7 @@ QWidget *QWidgetPrivate::childAt_helper(const QPoint &p, bool ignoreChildrenInDe
 #endif
 
     if (!pointInsideRectAndMask(p))
-        return 0;
+        return nullptr;
     return childAtRecursiveHelper(p, ignoreChildrenInDestructor);
 }
 
@@ -9662,7 +9662,7 @@ QWidget *QWidgetPrivate::childAtRecursiveHelper(const QPoint &p, bool ignoreChil
         // We have found our target; namely the child at position 'p'.
         return child;
     }
-    return 0;
+    return nullptr;
 }
 
 void QWidgetPrivate::updateGeometry_helper(bool forceUpdate)
@@ -9813,7 +9813,7 @@ void QWidget::setParent(QWidget *parent, Qt::WindowFlags f)
     bool wasCreated = testAttribute(Qt::WA_WState_Created);
     QWidget *oldtlw = window();
 
-    QWidget *desktopWidget = 0;
+    QWidget *desktopWidget = nullptr;
     if (parent && parent->windowType() == Qt::Desktop)
         desktopWidget = parent;
     bool newParent = (parent != parentWidget()) || !wasCreated || desktopWidget;
@@ -9847,17 +9847,17 @@ void QWidget::setParent(QWidget *parent, Qt::WindowFlags f)
         focusWidget()->clearFocus();
 
     QTLWExtra *oldTopExtra = window()->d_func()->maybeTopData();
-    QWidgetBackingStoreTracker *oldBsTracker = oldTopExtra ? &oldTopExtra->backingStore : 0;
+    QWidgetBackingStoreTracker *oldBsTracker = oldTopExtra ? &oldTopExtra->backingStore : nullptr;
 
     d->setParent_sys(parent, f);
 
     QTLWExtra *topExtra = window()->d_func()->maybeTopData();
-    QWidgetBackingStoreTracker *bsTracker = topExtra ? &topExtra->backingStore : 0;
+    QWidgetBackingStoreTracker *bsTracker = topExtra ? &topExtra->backingStore : nullptr;
     if (oldBsTracker && oldBsTracker != bsTracker)
         oldBsTracker->unregisterWidgetSubtree(this);
 
     if (desktopWidget)
-        parent = 0;
+        parent = nullptr;
 
 #ifdef Q_BACKINGSTORE_SUBSURFACES
     QTLWExtra *extra = d->maybeTopData();
@@ -10411,13 +10411,13 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
     case Qt::WA_NativeWindow: {
 #ifndef QT_NO_IM
         QWidget *focusWidget = d->effectiveFocusWidget();
-        QInputContext *ic = 0;
+        QInputContext *ic = nullptr;
         if (on && !internalWinId() && hasFocus()
             && focusWidget->testAttribute(Qt::WA_InputMethodEnabled)) {
             ic = focusWidget->d_func()->inputContext();
             if (ic) {
                 ic->reset();
-                ic->setFocusWidget(0);
+                ic->setFocusWidget(nullptr);
             }
         }
         if (!qApp->testAttribute(Qt::AA_DontCreateNativeWidgetSiblings) && parentWidget()
@@ -10475,7 +10475,7 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
                 ic->setFocusWidget(focusWidget);
             } else if (!on && ic->focusWidget() == focusWidget) {
                 ic->reset();
-                ic->setFocusWidget(0);
+                ic->setFocusWidget(nullptr);
             }
         }
 #endif //QT_NO_IM
@@ -11795,7 +11795,7 @@ QWindowSurface *QWidget::windowSurface() const
     }
 #endif // Q_BACKINGSTORE_SUBSURFACES
 
-    return bs ? bs->windowSurface : 0;
+    return bs ? bs->windowSurface : nullptr;
 }
 
 void QWidgetPrivate::getLayoutItemMargins(int *left, int *top, int *right, int *bottom) const
@@ -11892,7 +11892,7 @@ QGraphicsProxyWidget *QWidget::graphicsProxyWidget() const
     if (d->extra) {
         return d->extra->proxyWidget;
     }
-    return 0;
+    return nullptr;
 }
 #endif
 

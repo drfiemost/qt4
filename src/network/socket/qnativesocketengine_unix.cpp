@@ -342,7 +342,7 @@ bool QNativeSocketEnginePrivate::nativeConnect(const QHostAddress &addr, quint16
 #endif
 
     struct sockaddr_in sockAddrIPv4;
-    struct sockaddr *sockAddrPtr = 0;
+    struct sockaddr *sockAddrPtr = nullptr;
     QT_SOCKLEN_T sockAddrSize = 0;
 
     struct sockaddr_in6 sockAddrIPv6;
@@ -447,7 +447,7 @@ bool QNativeSocketEnginePrivate::nativeConnect(const QHostAddress &addr, quint16
 bool QNativeSocketEnginePrivate::nativeBind(const QHostAddress &address, quint16 port)
 {
     struct sockaddr_in sockAddrIPv4;
-    struct sockaddr *sockAddrPtr = 0;
+    struct sockaddr *sockAddrPtr = nullptr;
     QT_SOCKLEN_T sockAddrSize = 0;
 
     struct sockaddr_in6 sockAddrIPv6;
@@ -542,7 +542,7 @@ bool QNativeSocketEnginePrivate::nativeListen(int backlog)
 
 int QNativeSocketEnginePrivate::nativeAccept()
 {
-    int acceptedDescriptor = qt_safe_accept(socketDescriptor, 0, 0);
+    int acceptedDescriptor = qt_safe_accept(socketDescriptor, nullptr, nullptr);
     if (acceptedDescriptor == -1) {
         switch (errno) {
         case EBADF:
@@ -843,7 +843,7 @@ qint64 QNativeSocketEnginePrivate::nativeSendDatagram(const char *data, qint64 l
                                                    const QHostAddress &host, quint16 port)
 {
     struct sockaddr_in sockAddrIPv4;
-    struct sockaddr *sockAddrPtr = 0;
+    struct sockaddr *sockAddrPtr = nullptr;
     QT_SOCKLEN_T sockAddrSize = 0;
 
     struct sockaddr_in6 sockAddrIPv6;
@@ -1064,9 +1064,9 @@ int QNativeSocketEnginePrivate::nativeSelect(int timeout, bool selectForRead) co
 
     int retval;
     if (selectForRead)
-        retval = qt_safe_select(socketDescriptor + 1, &fds, 0, 0, timeout < 0 ? 0 : &tv);
+        retval = qt_safe_select(socketDescriptor + 1, &fds, nullptr, nullptr, timeout < 0 ? nullptr : &tv);
     else
-        retval = qt_safe_select(socketDescriptor + 1, 0, &fds, 0, timeout < 0 ? 0 : &tv);
+        retval = qt_safe_select(socketDescriptor + 1, nullptr, &fds, nullptr, timeout < 0 ? nullptr : &tv);
 
     return retval;
 }
@@ -1089,7 +1089,7 @@ int QNativeSocketEnginePrivate::nativeSelect(int timeout, bool checkRead, bool c
     tv.tv_nsec = (timeout % 1000) * 1000 * 1000;
 
     int ret;
-    ret = qt_safe_select(socketDescriptor + 1, &fdread, &fdwrite, 0, timeout < 0 ? 0 : &tv);
+    ret = qt_safe_select(socketDescriptor + 1, &fdread, &fdwrite, nullptr, timeout < 0 ? nullptr : &tv);
 
     if (ret <= 0)
         return ret;

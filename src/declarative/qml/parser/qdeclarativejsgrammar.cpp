@@ -51,11 +51,11 @@ const char *const QDeclarativeJSGrammar::spell [] = {
   "if", "in", "instanceof", "{", "[", "<=", "(", "<", "<<", "<<=", 
   "-", "-=", "--", "new", "!", "!=", "!==", "numeric literal", "|", "|=", 
   "||", "+", "+=", "++", "?", "}", "]", "%", "%=", "return", 
-  ")", ";", 0, "*", "*=", "string literal", "property", "signal", "readonly", "switch", 
+  ")", ";", nullptr, "*", "*=", "string literal", "property", "signal", "readonly", "switch", 
   "this", "throw", "~", "try", "typeof", "var", "void", "while", "with", "^", 
   "^=", "null", "true", "false", "const", "debugger", "reserved word", "multiline string literal", "comment", "public", 
-  "import", "as", "on", 0, 0, 0, 0, 0, 0, 0, 
-  0};
+  "import", "as", "on", nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 
+  nullptr};
 
 const short QDeclarativeJSGrammar::lhs [] = {
   101, 101, 101, 101, 101, 101, 102, 108, 108, 111, 

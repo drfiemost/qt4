@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
     sigAction.sa_handler = &sigSegvHandler;
     sigAction.sa_flags   = 0;
 
-    sigaction(SIGSEGV, &sigAction, 0);
+    sigaction(SIGSEGV, &sigAction, nullptr);
 #endif
 
 #ifdef QT_SIMULATOR

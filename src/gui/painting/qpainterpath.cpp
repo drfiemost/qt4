@@ -505,7 +505,7 @@ static void qt_debug_path(const QPainterPath &path)
     Constructs an empty QPainterPath object.
 */
 QPainterPath::QPainterPath()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -931,7 +931,7 @@ void QPainterPath::arcMoveTo(const QRectF &rect, qreal angle)
         return;
 
     QPointF pt;
-    qt_find_ellipse_coords(rect, angle, 0, &pt, 0);
+    qt_find_ellipse_coords(rect, angle, 0, &pt, nullptr);
     moveTo(pt);
 }
 
@@ -1154,7 +1154,7 @@ void QPainterPath::addText(const QPointF &point, const QFont &f, const QString &
             fe->addOutlineToPath(x, y, glyphs, this,
                                  si.analysis.bidiLevel % 2
                                  ? QTextItem::RenderFlags(QTextItem::RightToLeft)
-                                 : QTextItem::RenderFlags(0));
+                                 : QTextItem::RenderFlags(nullptr));
 
             const qreal lw = fe->lineThickness().toReal();
             if (f.d->underline) {
@@ -3328,7 +3328,7 @@ void QPainterPath::setDirty(bool dirty)
     d_func()->dirtyBounds        = dirty;
     d_func()->dirtyControlBounds = dirty;
     delete d_func()->pathConverter;
-    d_func()->pathConverter = 0;
+    d_func()->pathConverter = nullptr;
     d_func()->convex = false;
 }
 

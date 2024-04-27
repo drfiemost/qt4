@@ -89,7 +89,7 @@ using namespace QDeclarativeParser;
     Instantiate a new QDeclarativeCompiler.
 */
 QDeclarativeCompiler::QDeclarativeCompiler()
-: output(0), engine(0), unitRoot(0), unit(0)
+: output(nullptr), engine(nullptr), unitRoot(nullptr), unit(nullptr)
 {
 }
 
@@ -635,11 +635,11 @@ bool QDeclarativeCompiler::compile(QDeclarativeEngine *engine,
 
     compileState = ComponentCompileState();
     savedCompileStates.clear();
-    output = 0;
-    this->engine = 0;
-    this->enginePrivate = 0;
-    this->unit = 0;
-    this->unitRoot = 0;
+    output = nullptr;
+    this->engine = nullptr;
+    this->enginePrivate = nullptr;
+    this->unit = nullptr;
+    this->unitRoot = nullptr;
 
     return !isError();
 }
@@ -769,7 +769,7 @@ bool QDeclarativeCompiler::buildObject(QDeclarativeParser::Object *obj, const Bi
     // assignments to non-existent properties.  These assignments are then
     // compiled by the type.
     bool isCustomParser = output->types.at(obj->type).type &&
-                          output->types.at(obj->type).type->customParser() != 0;
+                          output->types.at(obj->type).type->customParser() != nullptr;
     QList<QDeclarativeCustomParserProperty> customProps;
 
     // Fetch the list of deferred properties
@@ -786,8 +786,8 @@ bool QDeclarativeCompiler::buildObject(QDeclarativeParser::Object *obj, const Bi
     }
 
     // Merge 
-    Property *defaultProperty = 0;
-    Property *skipProperty = 0;
+    Property *defaultProperty = nullptr;
+    Property *skipProperty = nullptr;
     if (obj->defaultProperty) {
         const QMetaObject *metaObject = obj->metaObject();
         Q_ASSERT(metaObject);
@@ -820,7 +820,7 @@ bool QDeclarativeCompiler::buildObject(QDeclarativeParser::Object *obj, const Bi
         }
     }
 
-    QDeclarativeCustomParser *cp = 0;
+    QDeclarativeCustomParser *cp = nullptr;
     if (isCustomParser)
         cp = output->types.at(obj->type).type->customParser();
 
@@ -892,8 +892,8 @@ bool QDeclarativeCompiler::buildObject(QDeclarativeParser::Object *obj, const Bi
         cp->compiler = this;
         cp->object = obj;
         obj->custom = cp->compile(customProps);
-        cp->compiler = 0;
-        cp->object = 0;
+        cp->compiler = nullptr;
+        cp->object = nullptr;
         foreach (QDeclarativeError err, cp->errors()) {
             err.setUrl(output->url);
             exceptions << err;
@@ -1239,7 +1239,7 @@ bool QDeclarativeCompiler::buildComponent(QDeclarativeParser::Object *obj,
     // default property, that actually defines the component's tree
 
     // Find, check and set the "id" property (if any)
-    Property *idProp = 0;
+    Property *idProp = nullptr;
     if (obj->properties.count() > 1 ||
        (obj->properties.count() == 1 && obj->properties.begin().key() != "id"))
         COMPILE_EXCEPTION(*obj->properties.begin(), tr("Component elements may not contain properties other than id"));
@@ -1274,7 +1274,7 @@ bool QDeclarativeCompiler::buildComponent(QDeclarativeParser::Object *obj,
     if (!obj->dynamicSlots.isEmpty())
         COMPILE_EXCEPTION(obj, tr("Component objects cannot declare new functions."));
 
-    QDeclarativeParser::Object *root = 0;
+    QDeclarativeParser::Object *root = nullptr;
     if (obj->defaultProperty && obj->defaultProperty->values.count())
         root = obj->defaultProperty->values.first()->object;
 
@@ -1362,7 +1362,7 @@ bool QDeclarativeCompiler::buildSignal(QDeclarativeParser::Property *prop, QDecl
 
     if (sigIdx == -1) {
 
-        if (notInRevision && -1 == indexOfProperty(obj, prop->name, 0)) {
+        if (notInRevision && -1 == indexOfProperty(obj, prop->name, nullptr)) {
             Q_ASSERT(obj->type != -1);
             const QList<QDeclarativeTypeData::TypeReference>  &resolvedTypes = unit->resolvedTypes();
             const QDeclarativeTypeData::TypeReference &type = resolvedTypes.at(obj->type);
@@ -1419,7 +1419,7 @@ bool QDeclarativeCompiler::doesPropertyExist(QDeclarativeParser::Property *prop,
     if (mo) {
         if (prop->isDefault) {
             QMetaProperty p = QDeclarativeMetaType::defaultProperty(mo);
-            return p.name() != 0;
+            return p.name() != nullptr;
         } else {
             int idx = indexOfProperty(obj, prop->name);
             return idx != -1 && mo->property(idx).isScriptable();
@@ -1449,9 +1449,9 @@ bool QDeclarativeCompiler::buildProperty(QDeclarativeParser::Property *prop,
             COMPILE_EXCEPTION(prop, tr("Attached properties cannot be used here"));
         }
 
-        QDeclarativeType *type = 0;
-        QDeclarativeImportedNamespace *typeNamespace = 0;
-        unit->imports().resolveType(prop->name, &type, 0, 0, 0, &typeNamespace);
+        QDeclarativeType *type = nullptr;
+        QDeclarativeImportedNamespace *typeNamespace = nullptr;
+        unit->imports().resolveType(prop->name, &type, nullptr, nullptr, nullptr, &typeNamespace);
 
         if (typeNamespace) {
             // ### We might need to indicate that this property is a namespace 
@@ -1584,8 +1584,8 @@ bool QDeclarativeCompiler::buildPropertyInNamespace(QDeclarativeImportedNamespac
 
         // Setup attached property data
 
-        QDeclarativeType *type = 0;
-        unit->imports().resolveType(ns, prop->name, &type, 0, 0, 0);
+        QDeclarativeType *type = nullptr;
+        unit->imports().resolveType(ns, prop->name, &type, nullptr, nullptr, nullptr);
 
         if (!type || !type->attachedPropertiesType()) 
             COMPILE_EXCEPTION(prop, tr("Non-existent attached object"));
@@ -2210,7 +2210,7 @@ bool QDeclarativeCompiler::buildPropertyLiteralAssignment(QDeclarativeParser::Pr
 struct StaticQtMetaObject : public QObject
 {
     static const QMetaObject *get()
-        { return &static_cast<StaticQtMetaObject*> (0)->staticQtMetaObject; }
+        { return &static_cast<StaticQtMetaObject*> (nullptr)->staticQtMetaObject; }
 };
 
 bool QDeclarativeCompiler::testQualifiedEnumAssignment(const QMetaProperty &prop,
@@ -2234,8 +2234,8 @@ bool QDeclarativeCompiler::testQualifiedEnumAssignment(const QMetaProperty &prop
         return true;
 
     QString typeName = parts.at(0);
-    QDeclarativeType *type = 0;
-    unit->imports().resolveType(typeName.toUtf8(), &type, 0, 0, 0, 0);
+    QDeclarativeType *type = nullptr;
+    unit->imports().resolveType(typeName.toUtf8(), &type, nullptr, nullptr, nullptr, nullptr);
 
     //handle enums on value types (where obj->typeName is empty)
     QByteArray objTypeName = obj->typeName;
@@ -2281,8 +2281,8 @@ int QDeclarativeCompiler::evaluateEnum(const QByteArray& script) const
 {
     int dot = script.indexOf('.');
     if (dot > 0) {
-        QDeclarativeType *type = 0;
-        unit->imports().resolveType(script.left(dot), &type, 0, 0, 0, 0);
+        QDeclarativeType *type = nullptr;
+        unit->imports().resolveType(script.left(dot), &type, nullptr, nullptr, nullptr, nullptr);
         if (!type)
             return -1;
         const QMetaObject *mo = type->metaObject();
@@ -2299,11 +2299,11 @@ int QDeclarativeCompiler::evaluateEnum(const QByteArray& script) const
 
 const QMetaObject *QDeclarativeCompiler::resolveType(const QByteArray& name) const
 {
-    QDeclarativeType *qmltype = 0;
-    if (!unit->imports().resolveType(name, &qmltype, 0, 0, 0, 0)) 
-        return 0;
+    QDeclarativeType *qmltype = nullptr;
+    if (!unit->imports().resolveType(name, &qmltype, nullptr, nullptr, nullptr, nullptr)) 
+        return nullptr;
     if (!qmltype)
-        return 0;
+        return nullptr;
     return qmltype->metaObject();
 }
 
@@ -2314,7 +2314,7 @@ int QDeclarativeCompiler::rewriteBinding(const QString& expression, const QByteA
     QDeclarativeRewrite::RewriteBinding rewriteBinding;
     rewriteBinding.setName('$' + name.mid(name.lastIndexOf('.') + 1));
     bool isSharable = false;
-    QString rewrite = rewriteBinding(expression, 0, &isSharable);
+    QString rewrite = rewriteBinding(expression, nullptr, &isSharable);
 
     quint32 length = rewrite.length();
     quint32 pc;
@@ -2402,7 +2402,7 @@ bool QDeclarativeCompiler::mergeDynamicMetaProperties(QDeclarativeParser::Object
         if (!p.defaultValue || p.type == Object::DynamicProperty::Alias)
             continue;
 
-        Property *property = 0;
+        Property *property = nullptr;
         if (p.isDefaultProperty) {
             property = obj->getDefaultProperty();
         } else {
@@ -2484,9 +2484,9 @@ bool QDeclarativeCompiler::buildDynamicMeta(QDeclarativeParser::Object *obj, Dyn
         case Object::DynamicProperty::Custom:
             {
                 QByteArray customTypeName;
-                QDeclarativeType *qmltype = 0;
+                QDeclarativeType *qmltype = nullptr;
                 QUrl url;
-                if (!unit->imports().resolveType(p.customType, &qmltype, &url, 0, 0, 0)) 
+                if (!unit->imports().resolveType(p.customType, &qmltype, &url, nullptr, nullptr, nullptr)) 
                     COMPILE_EXCEPTION(&p, tr("Invalid property type"));
 
                 if (!qmltype) {
@@ -2647,7 +2647,7 @@ bool QDeclarativeCompiler::buildDynamicMeta(QDeclarativeParser::Object *obj, Dyn
 
     if (obj->synthCache) {
         obj->synthCache->release();
-        obj->synthCache = 0;
+        obj->synthCache = nullptr;
     }
 
     if (obj->type != -1) {
@@ -3059,7 +3059,7 @@ QDeclarativeType *QDeclarativeCompiler::toQmlType(QDeclarativeParser::Object *fr
 {
     // ### Optimize
     const QMetaObject *mo = from->metatype;
-    QDeclarativeType *type = 0;
+    QDeclarativeType *type = nullptr;
     while (!type && mo) {
         type = QDeclarativeMetaType::qmlType(mo);
         mo = mo->superClass();

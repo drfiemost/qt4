@@ -37,7 +37,7 @@ FileInputStream::FileInputStream(const char *filepath, int32_t buffersize) {
     // try to open the file for reading
     file = fopen(filepath, "rb");
     this->filepath = filepath;
-    if (file == 0) {
+    if (file == nullptr) {
         // handle error
         error = "Could not read file '";
         error += filepath;
@@ -64,7 +64,7 @@ FileInputStream::FileInputStream(const char *filepath, int32_t buffersize) {
             fseek(file, 0, SEEK_SET);
         } else {
             fclose(file);
-            file = 0;
+            file = nullptr;
             return;
         }
     }
@@ -83,20 +83,20 @@ FileInputStream::~FileInputStream() {
 }
 int32_t
 FileInputStream::fillBuffer(char* start, int32_t space) {
-    if (file == 0) return -1;
+    if (file == nullptr) return -1;
     // read into the buffer
     int32_t nwritten = fread(start, 1, space, file);
     // check the file stream status
     if (ferror(file)) {
         error = "Could not read from file '" + filepath + "'.";
         fclose(file);
-        file = 0;
+        file = nullptr;
         status = Error;
         return -1;
     }
     if (feof(file)) {
         fclose(file);
-        file = 0;
+        file = nullptr;
     }
     return nwritten;
 }

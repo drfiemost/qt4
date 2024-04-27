@@ -63,7 +63,7 @@ Q_SIGNALS:
     void newConnection();
 
 public:
-    QLocalServer(QObject *parent = 0);
+    QLocalServer(QObject *parent = nullptr);
     ~QLocalServer();
 
     void close();
@@ -78,7 +78,7 @@ public:
     static bool removeServer(const QString &name);
     QAbstractSocket::SocketError serverError() const;
     void setMaxPendingConnections(int numConnections);
-    bool waitForNewConnection(int msec = 0, bool *timedOut = 0);
+    bool waitForNewConnection(int msec = 0, bool *timedOut = nullptr);
 
 protected:
     virtual void incomingConnection(quintptr socketDescriptor);

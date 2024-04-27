@@ -83,8 +83,8 @@ public:
     class QFileSystemNode
     {
     public:
-        QFileSystemNode(const QString &filename = QString(), QFileSystemNode *p = 0)
-            : fileName(filename), populatedChildren(false), isVisible(false), dirtyChildrenIndex(-1), parent(p), info(0) {}
+        QFileSystemNode(const QString &filename = QString(), QFileSystemNode *p = nullptr)
+            : fileName(filename), populatedChildren(false), isVisible(false), dirtyChildrenIndex(-1), parent(p), info(nullptr) {}
         ~QFileSystemNode() {
             QHash<QString, QFileSystemNode*>::const_iterator i = children.constBegin();
             while (i != children.constEnd()) {
@@ -92,8 +92,8 @@ public:
                     ++i;
             }
             delete info;
-            info = 0;
-            parent = 0;
+            info = nullptr;
+            parent = nullptr;
         }
 
         QString fileName;
@@ -104,7 +104,7 @@ public:
         inline qint64 size() const { if (info && !info->isDir()) return info->size(); return 0; }
         inline QString type() const { if (info) return info->displayType; return QLatin1String(""); }
         inline QDateTime lastModified() const { if (info) return info->lastModified(); return QDateTime(); }
-        inline QFile::Permissions permissions() const { if (info) return info->permissions(); return 0; }
+        inline QFile::Permissions permissions() const { if (info) return info->permissions(); return nullptr; }
         inline bool isReadable() const { return ((permissions() & QFile::ReadUser) != 0); }
         inline bool isWritable() const { return ((permissions() & QFile::WriteUser) != 0); }
         inline bool isExecutable() const { return ((permissions() & QFile::ExeUser) != 0); }
@@ -149,7 +149,7 @@ public:
             return info && (*info == fileInfo);
         }
 
-        inline bool hasInformation() const { return info != 0; }
+        inline bool hasInformation() const { return info != nullptr; }
 
         void populate(const QExtendedInformation &fileInfo) {
             if (!info)

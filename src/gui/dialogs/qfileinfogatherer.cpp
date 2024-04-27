@@ -71,7 +71,7 @@ Q_AUTOTEST_EXPORT bool qt_test_isFetchedRoot()
 QFileInfoGatherer::QFileInfoGatherer(QObject *parent)
     : QThread(parent), abort(false),
 #ifndef QT_NO_FILESYSTEMWATCHER
-      watcher(0),
+      watcher(nullptr),
 #endif
       m_resolveSymlinks(false), m_iconProvider(&defaultProvider)
 {

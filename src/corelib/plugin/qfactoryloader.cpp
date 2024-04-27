@@ -110,7 +110,7 @@ void QFactoryLoader::updateDir(const QString &pluginDir, QSettings& settings)
         return;
 
     QStringList plugins = QDir(path).entryList(QDir::Files);
-    QLibraryPrivate *library = 0;
+    QLibraryPrivate *library = nullptr;
     for (int j = 0; j < plugins.count(); ++j) {
         QString fileName = QDir::cleanPath(path + QLatin1Char('/') + plugins.at(j));
 
@@ -255,7 +255,7 @@ QObject *QFactoryLoader::instance(const QString &key) const
             }
         }
     }
-    return 0;
+    return nullptr;
 }
 
 #ifdef Q_WS_X11

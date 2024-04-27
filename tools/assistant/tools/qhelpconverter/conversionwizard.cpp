@@ -102,7 +102,7 @@ ConversionWizard::ConversionWizard()
     connect(this, SIGNAL(currentIdChanged(int)),
         this, SLOT(pageChanged(int)));
 
-    m_helpWindow = 0;
+    m_helpWindow = nullptr;
     qApp->installEventFilter(this);
 
     QAbstractButton *btn = button(QWizard::HelpButton);

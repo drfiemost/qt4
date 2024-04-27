@@ -81,7 +81,7 @@ QSjisCodec::QSjisCodec() : conv(QJpUnicodeConv::newConverter(QJpUnicodeConv::Def
 QSjisCodec::~QSjisCodec()
 {
     delete (QJpUnicodeConv*)conv;
-    conv = 0;
+    conv = nullptr;
 }
 
 

@@ -63,7 +63,7 @@ namespace JSC {
 class FunctionPtr {
 public:
     FunctionPtr()
-        : m_value(0)
+        : m_value(nullptr)
     {
     }
 
@@ -97,7 +97,7 @@ private:
 class ReturnAddressPtr {
 public:
     ReturnAddressPtr()
-        : m_value(0)
+        : m_value(nullptr)
     {
     }
 
@@ -125,7 +125,7 @@ private:
 class MacroAssemblerCodePtr {
 public:
     MacroAssemblerCodePtr()
-        : m_value(0)
+        : m_value(nullptr)
     {
     }
 

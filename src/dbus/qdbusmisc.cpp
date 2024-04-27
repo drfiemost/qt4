@@ -61,7 +61,7 @@ bool qDBusCheckAsyncTag(const char *tag)
         return false;
 
     const char *p = strstr(tag, noReplyTag);
-    if (p != NULL &&
+    if (p != nullptr &&
         (p == tag || *(p-1) == ' ') &&
         (p[sizeof noReplyTag - 1] == '\0' || p[sizeof noReplyTag - 1] == ' '))
         return true;
@@ -163,7 +163,7 @@ int qDBusParametersForMethod(const QMetaMethod &mm, QList<int>& metaTypes)
                 //qWarning("Could not parse the method '%s'", mm.signature());
                 // invalid type in method parameter list
                 return -1;
-            } else if (QDBusMetaType::typeToSignature(id) == 0)
+            } else if (QDBusMetaType::typeToSignature(id) == nullptr)
                 return -1;
 
             metaTypes.append( id );
@@ -186,7 +186,7 @@ int qDBusParametersForMethod(const QMetaMethod &mm, QList<int>& metaTypes)
 
         if (id == QDBusMetaTypeId::message())
             seenMessage = true;
-        else if (QDBusMetaType::typeToSignature(id) == 0)
+        else if (QDBusMetaType::typeToSignature(id) == nullptr)
             return -1;
 
         metaTypes.append(id);

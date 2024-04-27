@@ -32,23 +32,23 @@ TermVectorsWriter::TermVectorsWriter(CL_NS(store)::Directory* directory,
 
     this->fieldInfos = fieldInfos;
 
-    currentField = NULL;
+    currentField = nullptr;
     currentDocPointer = -1;
 }
 
 TermVectorsWriter::~TermVectorsWriter()
 {
-    if (tvx != NULL) {
+    if (tvx != nullptr) {
         tvx->close();
         _CLDELETE(tvx);
     }
 
-    if (tvd != NULL) {
+    if (tvd != nullptr) {
         tvd->close();
         _CLDELETE(tvd);
     }
 
-    if (tvf != NULL){
+    if (tvf != nullptr){
         tvf->close();
         _CLDELETE(tvf);
     }
@@ -105,13 +105,13 @@ void TermVectorsWriter::closeField()
         writeField();
         fields.push_back(currentField);
         terms.clear();
-        currentField = NULL;
+        currentField = nullptr;
     }
 }
 
 bool TermVectorsWriter::isFieldOpen() const
 {
-    return currentField != NULL;
+    return currentField != nullptr;
 }
 
 void TermVectorsWriter::addTerm(const TCHAR* termText, int32_t freq, 
@@ -145,12 +145,12 @@ void TermVectorsWriter::addAllDocVectors(Array<TermFreqVector*>& vectors)
         bool storePositionWithTermVector = false;
         bool storeOffsetWithTermVector = false;
 
-        if ( vectors[i]->__asTermPositionVector() != NULL ) {
+        if ( vectors[i]->__asTermPositionVector() != nullptr ) {
             TermPositionVector* tpVector = vectors[i]->__asTermPositionVector();
 
-            if (tpVector->size() > 0 && tpVector->getTermPositions(0) != NULL)
+            if (tpVector->size() > 0 && tpVector->getTermPositions(0) != nullptr)
                 storePositionWithTermVector = true;
-            if (tpVector->size() > 0 && tpVector->getOffsets(0) != NULL)
+            if (tpVector->size() > 0 && tpVector->getOffsets(0) != nullptr)
                 storeOffsetWithTermVector = true;
 
             FieldInfo* fieldInfo = fieldInfos->fieldInfo(tpVector->getField());
@@ -172,7 +172,7 @@ void TermVectorsWriter::addAllDocVectors(Array<TermFreqVector*>& vectors)
 
             for (int32_t j = 0; j < tfVector->size(); ++j)
                 addTermInternal(tfVector->getTerms()[j], 
-                (*tfVector->getTermFrequencies())[j], NULL, NULL);
+                (*tfVector->getTermFrequencies())[j], nullptr, nullptr);
 
             closeField();
         }
@@ -253,7 +253,7 @@ void TermVectorsWriter::writeField()
         lastTermTextLen = term->getTermTextLen();
 
         if (storePositions) {
-            if(term->positions == NULL)
+            if(term->positions == nullptr)
                 _CLTHROWA(CL_ERR_IllegalState, "Trying to write positions that are NULL!");
 
             // use delta encoding for positions
@@ -265,7 +265,7 @@ void TermVectorsWriter::writeField()
         }
 
         if (storeOffsets) {
-            if(term->offsets == NULL)
+            if(term->offsets == nullptr)
                 _CLTHROWA(CL_ERR_IllegalState, "Trying to write offsets that are NULL!");
 
             // use delta encoding for offsets
@@ -334,10 +334,10 @@ void TermVectorsWriter::TVTerm::setTermText(const TCHAR* val)
 
 TermVectorsWriter::TVTerm::TVTerm()
     : freq(0)
-    , positions(NULL)
-    , offsets(NULL)
+    , positions(nullptr)
+    , offsets(nullptr)
 {
-    termText=NULL;  
+    termText=nullptr;  
     termTextLen=-1;
 }
 

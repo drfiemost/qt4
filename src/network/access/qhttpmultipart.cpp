@@ -112,7 +112,7 @@ QHttpPart::QHttpPart(const QHttpPart &other) : d(other.d)
 */
 QHttpPart::~QHttpPart()
 {
-    d = 0;
+    d = nullptr;
 }
 
 /*!

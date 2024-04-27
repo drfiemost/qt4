@@ -14,10 +14,10 @@ CL_NS_DEF(search)
 
 		
   /** Represents sorting by document score (relevancy). */
-  SortField* SortField::FIELD_SCORE = _CLNEW SortField (NULL, DOCSCORE,false);
+  SortField* SortField::FIELD_SCORE = _CLNEW SortField (nullptr, DOCSCORE,false);
 
   /** Represents sorting by document number (index order). */
-  SortField* SortField::FIELD_DOC = _CLNEW SortField (NULL, DOC,false);
+  SortField* SortField::FIELD_DOC = _CLNEW SortField (nullptr, DOC,false);
 
   
 	/** Represents sorting by computed relevance. Using this sort criteria
@@ -39,7 +39,7 @@ CL_NS_DEF(search)
      this->type = AUTO;
      this->reverse = false;
      this->field = CLStringIntern::intern(field  CL_FILELINE);
-	 this->factory = NULL;
+	 this->factory = nullptr;
   }
 
   /** Creates a sort, possibly in reverse, by terms in the given field where
@@ -63,14 +63,14 @@ CL_NS_DEF(search)
    * @param reverse True if natural order should be reversed (default=false).
    */
   SortField::SortField (const TCHAR* field, int32_t type, bool reverse) {
-    this->field = (field != NULL) ? CLStringIntern::intern(field  CL_FILELINE) : field;
+    this->field = (field != nullptr) ? CLStringIntern::intern(field  CL_FILELINE) : field;
     this->type = type;
     this->reverse = reverse;
-	 this->factory = NULL;
+	 this->factory = nullptr;
   }
   
   SortField::SortField(const SortField& clone){
-    this->field = (clone.field != NULL) ? CLStringIntern::intern(clone.field  CL_FILELINE) : clone.field;
+    this->field = (clone.field != nullptr) ? CLStringIntern::intern(clone.field  CL_FILELINE) : clone.field;
     this->type = clone.type;
     this->reverse = clone.reverse;
 	 this->factory = clone.factory;
@@ -109,7 +109,7 @@ CL_NS_DEF(search)
    * @param reverse True if natural order should be reversed (default=false).
    */
   SortField::SortField (const TCHAR* field, SortComparatorSource* comparator, bool reverse) {
-    this->field = (field != NULL) ? CLStringIntern::intern(field  CL_FILELINE): field;
+    this->field = (field != nullptr) ? CLStringIntern::intern(field  CL_FILELINE): field;
     this->type = CUSTOM;
     this->reverse = reverse;
     this->factory = comparator;
@@ -163,11 +163,11 @@ CL_NS_DEF(search)
 	 * calling {@link Searcher#search(Query) Searcher#search()} without a sort criteria, only with
 	 * slightly more overhead. */
 	Sort::Sort() {
-		fields=NULL;
+		fields=nullptr;
 		SortField** fields=_CL_NEWARRAY(SortField*,3);
 		fields[0]=SortField::FIELD_SCORE;
 		fields[1]=SortField::FIELD_DOC;
-		fields[2]=NULL;
+		fields[2]=nullptr;
 		setSort (fields);
         _CLDELETE_ARRAY(fields);
 	}
@@ -176,9 +176,9 @@ CL_NS_DEF(search)
 		clear();
 	}
 	void Sort::clear(){
-		if ( fields != NULL ){
+		if ( fields != nullptr ){
 			int32_t i=0;
-			while ( fields[i] != NULL ){
+			while ( fields[i] != nullptr ){
 				if ( fields[i] != SortField::FIELD_SCORE &&
 					 fields[i] != SortField::FIELD_DOC ){
 					_CLDELETE(fields[i]);
@@ -195,7 +195,7 @@ CL_NS_DEF(search)
 	 * @see SortField#AUTO
 	 */
 	Sort::Sort (const TCHAR* field, bool reverse) {
-		this->fields=NULL;
+		this->fields=nullptr;
 		setSort (field, reverse);
 	}
 
@@ -206,21 +206,21 @@ CL_NS_DEF(search)
 	 * @see SortField#AUTO
 	 */
 	Sort::Sort (const TCHAR** fields) {
-		this->fields=NULL;
+		this->fields=nullptr;
 		setSort (fields);
 	}
 
 
 	/** Sorts by the criteria in the given SortField. */
 	Sort::Sort (SortField* field) {
-		this->fields=NULL;
+		this->fields=nullptr;
 		setSort (field);
 	}
 
 
 	/** Sorts in succession by the criteria in each SortField. */
 	Sort::Sort (SortField** fields) {
-		this->fields=NULL;
+		this->fields=nullptr;
 		setSort (fields);
 	}
 
@@ -232,7 +232,7 @@ CL_NS_DEF(search)
 		fields = _CL_NEWARRAY(SortField*,3);
 		fields[0] = _CLNEW SortField (field, SortField::AUTO, reverse);
 		fields[1] = SortField::FIELD_DOC;
-		fields[2] = NULL;
+		fields[2] = nullptr;
 	}
 
 
@@ -241,14 +241,14 @@ CL_NS_DEF(search)
 		clear();
 
 		int32_t n = 0;
-		while ( fieldnames[n] != NULL )
+		while ( fieldnames[n] != nullptr )
 		   n++;
 
 		fields = _CL_NEWARRAY(SortField*,n+1);
 		for (int32_t i = 0; i < n; ++i) {
 			fields[i] = _CLNEW SortField (fieldnames[i], SortField::AUTO,false);
 		}
-		fields[n]=NULL;
+		fields[n]=nullptr;
 	}
 
 
@@ -258,7 +258,7 @@ CL_NS_DEF(search)
 
         this->fields = _CL_NEWARRAY(SortField*,2);
 		this->fields[0] = field;
-		this->fields[1] = NULL;
+		this->fields[1] = nullptr;
 	}
 
 
@@ -267,7 +267,7 @@ CL_NS_DEF(search)
 		clear();
         
         int n=0;
-		while ( fields[n] != NULL )
+		while ( fields[n] != nullptr )
 		   n++;
         this->fields = _CL_NEWARRAY(SortField*,n+1);
         for (int i=0;i<n+1;i++)
@@ -278,7 +278,7 @@ CL_NS_DEF(search)
 		CL_NS(util)::StringBuffer buffer;
 
 		int32_t i = 0;
-		while ( fields[i] != NULL ){
+		while ( fields[i] != nullptr ){
 			if (i>0)
 				buffer.appendChar(',');
 

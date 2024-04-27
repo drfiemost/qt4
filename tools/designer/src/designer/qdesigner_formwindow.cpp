@@ -277,7 +277,7 @@ void QDesignerFormWindow::geometryChanged()
     // so, do not do it for the main container only
     const QDesignerFormEditorInterface *core = m_editor->core();
     QObject *object = core->propertyEditor()->object();
-    if (object == 0 || !object->isWidgetType())
+    if (object == nullptr || !object->isWidgetType())
         return;
     static const QString geometryProperty = QLatin1String("geometry");
     const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), object);

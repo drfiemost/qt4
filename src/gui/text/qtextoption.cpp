@@ -63,7 +63,7 @@ QTextOption::QTextOption()
       unused(0),
       f(0),
       tab(-1),
-      d(0)
+      d(nullptr)
 {
     direction = Qt::LayoutDirectionAuto;
 }
@@ -80,7 +80,7 @@ QTextOption::QTextOption(Qt::Alignment alignment)
       unused(0),
       f(0),
       tab(-1),
-      d(0)
+      d(nullptr)
 {
     direction = QApplication::layoutDirection();
 }
@@ -106,7 +106,7 @@ QTextOption::QTextOption(const QTextOption &o)
       unused(o.unused),
       f(o.f),
       tab(o.tab),
-      d(0)
+      d(nullptr)
 {
     if (o.d)
         d = new QTextOptionPrivate(*o.d);
@@ -123,7 +123,7 @@ QTextOption &QTextOption::operator=(const QTextOption &o)
     if (this == &o)
         return *this;
 
-    QTextOptionPrivate* dNew = 0;
+    QTextOptionPrivate* dNew = nullptr;
     if (o.d)
         dNew = new QTextOptionPrivate(*o.d);
     delete d;

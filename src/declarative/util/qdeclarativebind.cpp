@@ -61,7 +61,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeBindPrivate : public QObjectPrivate
 {
 public:
-    QDeclarativeBindPrivate() : when(true), componentComplete(true), obj(0) {}
+    QDeclarativeBindPrivate() : when(true), componentComplete(true), obj(nullptr) {}
 
     bool when : 1;
     bool componentComplete : 1;

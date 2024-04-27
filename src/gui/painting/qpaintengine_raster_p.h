@@ -497,7 +497,7 @@ Q_GUI_EXPORT
 QRasterBuffer
 {
 public:
-    QRasterBuffer() : m_width(0), m_height(0), m_buffer(0) { init(); }
+    QRasterBuffer() : m_width(0), m_height(0), m_buffer(nullptr) { init(); }
 
     ~QRasterBuffer();
 

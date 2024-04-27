@@ -47,8 +47,8 @@
 QT_BEGIN_NAMESPACE
 
 struct TypeNameData : public QScriptDeclarativeClass::Object {
-    TypeNameData(QObject *o, QDeclarativeType *t, QDeclarativeTypeNameScriptClass::TypeNameMode m) : object(o), type(t), typeNamespace(0), mode(m) {}
-    TypeNameData(QObject *o, QDeclarativeTypeNameCache *n, QDeclarativeTypeNameScriptClass::TypeNameMode m) : object(o), type(0), typeNamespace(n), mode(m) {
+    TypeNameData(QObject *o, QDeclarativeType *t, QDeclarativeTypeNameScriptClass::TypeNameMode m) : object(o), type(t), typeNamespace(nullptr), mode(m) {}
+    TypeNameData(QObject *o, QDeclarativeTypeNameCache *n, QDeclarativeTypeNameScriptClass::TypeNameMode m) : object(o), type(nullptr), typeNamespace(n), mode(m) {
         if (typeNamespace) typeNamespace->addref();
     }
     ~TypeNameData() {
@@ -63,7 +63,7 @@ struct TypeNameData : public QScriptDeclarativeClass::Object {
 
 QDeclarativeTypeNameScriptClass::QDeclarativeTypeNameScriptClass(QDeclarativeEngine *bindEngine)
 : QScriptDeclarativeClass(QDeclarativeEnginePrivate::getScriptEngine(bindEngine)), 
-  engine(bindEngine), object(0), type(0)
+  engine(bindEngine), object(nullptr), type(nullptr)
 {
 }
 
@@ -93,8 +93,8 @@ QDeclarativeTypeNameScriptClass::queryProperty(Object *obj, const Identifier &na
 
     TypeNameData *data = (TypeNameData *)obj;
 
-    object = 0;
-    type = 0;
+    object = nullptr;
+    type = nullptr;
     QDeclarativeEnginePrivate *ep = QDeclarativeEnginePrivate::get(engine);
 
     if (data->typeNamespace) {
@@ -104,7 +104,7 @@ QDeclarativeTypeNameScriptClass::queryProperty(Object *obj, const Identifier &na
             type = d->type;
             return QScriptClass::HandlesReadAccess;
         } else {
-            return 0;
+            return nullptr;
         }
 
     } else if (data->type) {
@@ -125,17 +125,17 @@ QDeclarativeTypeNameScriptClass::queryProperty(Object *obj, const Identifier &na
                     }
                 }
             }
-            return 0;
+            return nullptr;
         } else if (data->object) {
             // Must be an attached property
             object = qmlAttachedPropertiesObjectById(data->type->attachedPropertiesId(), data->object);
-            if (!object) return 0;
-            return ep->objectClass->queryProperty(object, name, flags, 0);
+            if (!object) return nullptr;
+            return ep->objectClass->queryProperty(object, name, flags, nullptr);
         }
 
     }
 
-    return 0;
+    return nullptr;
 }
 
 QDeclarativeTypeNameScriptClass::Value 

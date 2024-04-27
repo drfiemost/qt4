@@ -127,7 +127,7 @@ static void* TrySbrk(size_t size, size_t *actual_size, size_t alignment) {
   void* result = sbrk(size);
   if (result == reinterpret_cast<void*>(-1)) {
     sbrk_failure = true;
-    return NULL;
+    return nullptr;
   }
 
   // Is it aligned?
@@ -147,7 +147,7 @@ static void* TrySbrk(size_t size, size_t *actual_size, size_t alignment) {
   result = sbrk(size + alignment - 1);
   if (result == reinterpret_cast<void*>(-1)) {
     sbrk_failure = true;
-    return NULL;
+    return nullptr;
   }
   ptr = reinterpret_cast<uintptr_t>(result);
   if ((ptr & (alignment-1)) != 0) {
@@ -176,13 +176,13 @@ static void* TryMmap(size_t size, size_t *actual_size, size_t alignment) {
   if (alignment > pagesize) {
     extra = alignment - pagesize;
   }
-  void* result = mmap(NULL, size + extra,
+  void* result = mmap(nullptr, size + extra,
                       PROT_READ | PROT_WRITE,
                       MAP_PRIVATE|MAP_ANONYMOUS,
                       VM_TAG_FOR_TCMALLOC_MEMORY, 0);
   if (result == reinterpret_cast<void*>(MAP_FAILED)) {
     mmap_failure = true;
-    return NULL;
+    return nullptr;
   }
 
   // Adjust the return memory so it is aligned
@@ -340,7 +340,7 @@ static void* TryDevMem(size_t size, size_t *actual_size, size_t alignment) {
 
 void* TCMalloc_SystemAlloc(size_t size, size_t *actual_size, size_t alignment) {
   // Discard requests that overflow
-  if (size + alignment < size) return NULL;
+  if (size + alignment < size) return nullptr;
     
   SpinLockHolder lock_holder(&spinlock);
 
@@ -361,14 +361,14 @@ void* TCMalloc_SystemAlloc(size_t size, size_t *actual_size, size_t alignment) {
 #if HAVE(SBRK)
     if (use_sbrk && !sbrk_failure) {
       void* result = TrySbrk(size, actual_size, alignment);
-      if (result != NULL) return result;
+      if (result != nullptr) return result;
     }
 #endif
 
 #if HAVE(MMAP)    
     if (use_mmap && !mmap_failure) {
       void* result = TryMmap(size, actual_size, alignment);
-      if (result != NULL) return result;
+      if (result != nullptr) return result;
     }
 #endif
 
@@ -385,7 +385,7 @@ void* TCMalloc_SystemAlloc(size_t size, size_t *actual_size, size_t alignment) {
     mmap_failure = false;
     VirtualAlloc_failure = false;
   }
-  return NULL;
+  return nullptr;
 }
 
 #if HAVE(MADV_FREE_REUSE)

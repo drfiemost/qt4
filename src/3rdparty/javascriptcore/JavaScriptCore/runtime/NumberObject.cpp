@@ -29,7 +29,7 @@ namespace JSC {
 
 ASSERT_CLASS_FITS_IN_CELL(NumberObject);
 
-const ClassInfo NumberObject::info = { "Number", 0, 0, 0 };
+const ClassInfo NumberObject::info = { "Number", nullptr, nullptr, nullptr };
 
 NumberObject::NumberObject(NonNullPassRefPtr<Structure> structure)
     : JSWrapperObject(structure)

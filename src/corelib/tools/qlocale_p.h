@@ -168,8 +168,8 @@ static const QLocaleData *findLocaleData(QLocale::Language language,
     quint64 stringToUnsLongLong(const QChar *begin, int len, int base, bool *ok, GroupSeparatorMode group_sep_mode) const;
 
     // these functions are used in QIntValidator (QtGui)
-    Q_CORE_EXPORT static double bytearrayToDouble(const char *num, bool *ok, bool *overflow = 0);
-    Q_CORE_EXPORT static qint64 bytearrayToLongLong(const char *num, int base, bool *ok, bool *overflow = 0);
+    Q_CORE_EXPORT static double bytearrayToDouble(const char *num, bool *ok, bool *overflow = nullptr);
+    Q_CORE_EXPORT static qint64 bytearrayToLongLong(const char *num, int base, bool *ok, bool *overflow = nullptr);
     Q_CORE_EXPORT static quint64 bytearrayToUnsLongLong(const char *num, int base, bool *ok);
 
     bool numberToCLocale(const QChar *str, int len,

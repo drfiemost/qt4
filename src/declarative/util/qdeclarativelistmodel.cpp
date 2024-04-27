@@ -217,12 +217,12 @@ QDeclarativeListModelParser::ListInstruction *QDeclarativeListModelParser::ListM
 */
 
 QDeclarativeListModel::QDeclarativeListModel(QObject *parent)
-: QListModelInterface(parent), m_agent(0), m_nested(new NestedListModel(this)), m_flat(0)
+: QListModelInterface(parent), m_agent(nullptr), m_nested(new NestedListModel(this)), m_flat(nullptr)
 {
 }
 
 QDeclarativeListModel::QDeclarativeListModel(const QDeclarativeListModel *orig, QDeclarativeListModelWorkerAgent *parent)
-: QListModelInterface(parent), m_agent(0), m_nested(0), m_flat(0)
+: QListModelInterface(parent), m_agent(nullptr), m_nested(nullptr), m_flat(nullptr)
 {
     m_flat = new FlatListModel(this);
     m_flat->m_parentAgent = parent;
@@ -277,7 +277,7 @@ bool QDeclarativeListModel::flatten()
 
     m_flat = flat;
     delete m_nested;
-    m_nested = 0;
+    m_nested = nullptr;
     return true;
 }
 
@@ -293,7 +293,7 @@ QDeclarativeListModelWorkerAgent *QDeclarativeListModel::agent()
 
     if (!flatten()) {
         qmlInfo(this) << "List contains list-type data and cannot be used from a worker script";
-        return 0;
+        return nullptr;
     }
 
     m_agent = new QDeclarativeListModelWorkerAgent(this);
@@ -916,7 +916,7 @@ bool QDeclarativeListModelParser::definesEmptyList(const QString &s)
 */
 
 FlatListModel::FlatListModel(QDeclarativeListModel *base)
-    : m_scriptEngine(0), m_listModel(base), m_scriptClass(0), m_parentAgent(0)
+    : m_scriptEngine(nullptr), m_listModel(base), m_scriptClass(nullptr), m_parentAgent(nullptr)
 {
 }
 
@@ -969,7 +969,7 @@ bool FlatListModel::insert(int index, const QScriptValue &value)
     Q_ASSERT(index >= 0 && index <= m_values.count());
 
     QHash<int, QVariant> row;
-    if (!addValue(value, &row, 0))
+    if (!addValue(value, &row, nullptr))
         return false;
 
     m_values.insert(index, row);
@@ -1110,7 +1110,7 @@ FlatNodeData::~FlatNodeData()
 {
     for (QSet<FlatNodeObjectData *>::Iterator iter = objects.begin(); iter != objects.end(); ++iter) {
         FlatNodeObjectData *data = *iter;
-        data->nodeData = 0;
+        data->nodeData = nullptr;
     }
 }
 
@@ -1201,7 +1201,7 @@ bool FlatListScriptClass::compare(Object *obj1, Object *obj2)
 
 
 NestedListModel::NestedListModel(QDeclarativeListModel *base)
-    : _root(0), m_ownsRoot(false), m_listModel(base), _rolesOk(false)
+    : _root(nullptr), m_ownsRoot(false), m_listModel(base), _rolesOk(false)
 {
 }
 
@@ -1213,7 +1213,7 @@ NestedListModel::~NestedListModel()
 
 QVariant NestedListModel::valueForNode(ModelNode *node, bool *hasNested) const
 {
-    QObject *rv = 0;
+    QObject *rv = nullptr;
     if (hasNested)
         *hasNested = false;
 
@@ -1436,15 +1436,15 @@ QString NestedListModel::toString(int role) const
 
 
 ModelNode::ModelNode(NestedListModel *model)
-: modelCache(0), objectCache(0), isArray(false), m_model(model), listIndex(-1)
+: modelCache(nullptr), objectCache(nullptr), isArray(false), m_model(model), listIndex(-1)
 {
 }
 
 ModelNode::~ModelNode()
 {
     clear();
-    if (modelCache) { modelCache->m_nested->_root = 0/* ==this */; delete modelCache; modelCache = 0; }
-    if (objectCache) { delete objectCache; objectCache = 0; }
+    if (modelCache) { modelCache->m_nested->_root = nullptr/* ==this */; delete modelCache; modelCache = nullptr; }
+    if (objectCache) { delete objectCache; objectCache = nullptr; }
 }
 
 void ModelNode::clear()
@@ -1452,7 +1452,7 @@ void ModelNode::clear()
     ModelNode *node;
     for (int ii = 0; ii < values.count(); ++ii) {
         node = qvariant_cast<ModelNode *>(values.at(ii));
-        if (node) { delete node; node = 0; }
+        if (node) { delete node; node = nullptr; }
     }
     values.clear();
 

@@ -221,7 +221,7 @@ void QVariantAnimationPrivate::updateInterpolator()
     if (type == currentInterval.end.second.userType())
         interpolator = getInterpolator(type);
     else
-        interpolator = 0;
+        interpolator = nullptr;
     
     //we make sure that the interpolator is always set to something
     if (!interpolator)
@@ -462,7 +462,7 @@ QVariantAnimation::Interpolator QVariantAnimationPrivate::getInterpolator(int in
 #ifndef QT_NO_THREAD
     QMutexLocker locker(QMutexPool::globalInstanceGet(interpolators));
 #endif
-    QVariantAnimation::Interpolator ret = 0;
+    QVariantAnimation::Interpolator ret = nullptr;
     if (interpolationType < interpolators->count()) {
         ret = interpolators->at(interpolationType);
         if (ret) return ret;
@@ -495,7 +495,7 @@ QVariantAnimation::Interpolator QVariantAnimationPrivate::getInterpolator(int in
     case QMetaType::QRectF:
         return castToInterpolator(_q_interpolateVariant<QRectF>);
     default:
-        return 0; //this type is not handled
+        return nullptr; //this type is not handled
     }
 }
 

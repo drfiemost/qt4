@@ -55,7 +55,7 @@ class QDeclarativeParticleMotion : public QObject
 {
     Q_OBJECT
 public:
-    QDeclarativeParticleMotion(QObject *parent=0);
+    QDeclarativeParticleMotion(QObject *parent=nullptr);
 
     virtual void advance(QDeclarativeParticle &, int interval);
     virtual void created(QDeclarativeParticle &);
@@ -66,7 +66,7 @@ class QDeclarativeParticleMotionLinear : public QDeclarativeParticleMotion
 {
     Q_OBJECT
 public:
-    QDeclarativeParticleMotionLinear(QObject *parent=0)
+    QDeclarativeParticleMotionLinear(QObject *parent=nullptr)
         : QDeclarativeParticleMotion(parent) {}
 
     virtual void advance(QDeclarativeParticle &, int interval);
@@ -80,7 +80,7 @@ class QDeclarativeParticleMotionGravity : public QDeclarativeParticleMotion
     Q_PROPERTY(qreal yattractor READ yAttractor WRITE setYAttractor NOTIFY yattractorChanged)
     Q_PROPERTY(qreal acceleration READ acceleration WRITE setAcceleration NOTIFY accelerationChanged)
 public:
-    QDeclarativeParticleMotionGravity(QObject *parent=0)
+    QDeclarativeParticleMotionGravity(QObject *parent=nullptr)
         : QDeclarativeParticleMotion(parent), _xAttr(0.0), _yAttr(0.0), _accel(0.00005) {}
 
     qreal xAttractor() const { return _xAttr; }
@@ -110,7 +110,7 @@ class QDeclarativeParticleMotionWander : public QDeclarativeParticleMotion
     Q_OBJECT
 public:
     QDeclarativeParticleMotionWander()
-        : QDeclarativeParticleMotion(), particles(0), _xvariance(0), _yvariance(0), _pace(100) {}
+        : QDeclarativeParticleMotion(), particles(nullptr), _xvariance(0), _yvariance(0), _pace(100) {}
 
     virtual void advance(QDeclarativeParticle &, int interval);
     virtual void created(QDeclarativeParticle &);
@@ -170,7 +170,7 @@ class QDeclarativeParticles : public QDeclarativeItem
     Q_CLASSINFO("DefaultProperty", "motion")
 
 public:
-    QDeclarativeParticles(QDeclarativeItem *parent=0);
+    QDeclarativeParticles(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeParticles();
 
     QUrl source() const;

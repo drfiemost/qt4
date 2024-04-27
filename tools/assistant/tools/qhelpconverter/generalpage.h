@@ -52,7 +52,7 @@ class GeneralPage : public QWizardPage
     Q_OBJECT
 
 public:
-    GeneralPage(QWidget *parent = 0);
+    GeneralPage(QWidget *parent = nullptr);
 
 private:
     bool validatePage();

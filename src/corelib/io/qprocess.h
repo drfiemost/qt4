@@ -131,7 +131,7 @@ public:
         CrashExit
     };
 
-    explicit QProcess(QObject *parent = 0);
+    explicit QProcess(QObject *parent = nullptr);
     virtual ~QProcess();
 
     void start(const QString &program, const QStringList &arguments, OpenMode mode = ReadWrite);
@@ -190,7 +190,7 @@ public:
     static int execute(const QString &program);
 
     static bool startDetached(const QString &program, const QStringList &arguments, const QString &workingDirectory,
-                              qint64 *pid = 0);
+                              qint64 *pid = nullptr);
     static bool startDetached(const QString &program, const QStringList &arguments);
     static bool startDetached(const QString &program);
 

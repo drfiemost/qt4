@@ -205,7 +205,7 @@ void QProcessEnvironmentPrivate::insert(const QProcessEnvironmentPrivate &other)
     environment variables to be removed.
 */
 QProcessEnvironment::QProcessEnvironment()
-    : d(0)
+    : d(nullptr)
 {
 }
 
@@ -437,18 +437,18 @@ void QProcessPrivate::Channel::clear()
     case PipeSource:
         Q_ASSERT(process);
         process->stdinChannel.type = Normal;
-        process->stdinChannel.process = 0;
+        process->stdinChannel.process = nullptr;
         break;
     case PipeSink:
         Q_ASSERT(process);
         process->stdoutChannel.type = Normal;
-        process->stdoutChannel.process = 0;
+        process->stdoutChannel.process = nullptr;
         break;
     }
 
     type = Normal;
     file.clear();
-    process = 0;
+    process = nullptr;
 }
 
 /*! \fn bool QProcessPrivate::startDetached(const QString &program, const QStringList &arguments, const QString &workingDirectory, qint64 *pid)
@@ -778,10 +778,10 @@ QProcessPrivate::QProcessPrivate()
     sequenceNumber = 0;
     exitCode = 0;
     exitStatus = QProcess::NormalExit;
-    startupSocketNotifier = 0;
-    deathNotifier = 0;
-    notifier = 0;
-    pipeWriter = 0;
+    startupSocketNotifier = nullptr;
+    deathNotifier = nullptr;
+    notifier = nullptr;
+    pipeWriter = nullptr;
     childStartedPipe[0] = INVALID_Q_PIPE;
     childStartedPipe[1] = INVALID_Q_PIPE;
     deathPipe[0] = INVALID_Q_PIPE;
@@ -836,31 +836,31 @@ void QProcessPrivate::cleanup()
     if (stdoutChannel.notifier) {
         stdoutChannel.notifier->setEnabled(false);
         qDeleteInEventHandler(stdoutChannel.notifier);
-        stdoutChannel.notifier = 0;
+        stdoutChannel.notifier = nullptr;
     }
     if (stderrChannel.notifier) {
         stderrChannel.notifier->setEnabled(false);
         qDeleteInEventHandler(stderrChannel.notifier);
-        stderrChannel.notifier = 0;
+        stderrChannel.notifier = nullptr;
     }
     if (stdinChannel.notifier) {
         stdinChannel.notifier->setEnabled(false);
         qDeleteInEventHandler(stdinChannel.notifier);
-        stdinChannel.notifier = 0;
+        stdinChannel.notifier = nullptr;
     }
     if (startupSocketNotifier) {
         startupSocketNotifier->setEnabled(false);
         qDeleteInEventHandler(startupSocketNotifier);
-        startupSocketNotifier = 0;
+        startupSocketNotifier = nullptr;
     }
     if (deathNotifier) {
         deathNotifier->setEnabled(false);
         qDeleteInEventHandler(deathNotifier);
-        deathNotifier = 0;
+        deathNotifier = nullptr;
     }
     if (notifier) {
         qDeleteInEventHandler(notifier);
-        notifier = 0;
+        notifier = nullptr;
     }
     destroyPipe(stdoutChannel.pipe);
     destroyPipe(stderrChannel.pipe);
@@ -1125,7 +1125,7 @@ void QProcessPrivate::closeWriteChannel()
         stdinChannel.notifier->setEnabled(false);
         if (stdinChannel.notifier) {
             qDeleteInEventHandler(stdinChannel.notifier);
-            stdinChannel.notifier = 0;
+            stdinChannel.notifier = nullptr;
         }
     }
 #ifdef Q_OS_WIN
@@ -2291,7 +2291,7 @@ QT_END_INCLUDE_NAMESPACE
 QStringList QProcess::systemEnvironment()
 {
     QStringList tmp;
-    char *entry = 0;
+    char *entry = nullptr;
     int count = 0;
     while ((entry = environ[count++]))
         tmp << QString::fromLocal8Bit(entry);

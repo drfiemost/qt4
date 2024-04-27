@@ -155,7 +155,7 @@ public:
         : QHttpNetworkConnection(hostName, port, encrypt)
 #else
     QNetworkAccessCachedHttpConnection(const QString &hostName, quint16 port, bool encrypt, QSharedPointer<QNetworkSession> networkSession)
-        : QHttpNetworkConnection(hostName, port, encrypt, /*parent=*/0, networkSession)
+        : QHttpNetworkConnection(hostName, port, encrypt, /*parent=*/nullptr, networkSession)
 #endif
     {
         setExpires(true);
@@ -196,17 +196,17 @@ QHttpThreadDelegate::QHttpThreadDelegate(QObject *parent) :
     , downloadBufferMaximumSize(0)
     , readBufferMaxSize(0)
     , bytesEmitted(0)
-    , pendingDownloadData(0)
-    , pendingDownloadProgress(0)
+    , pendingDownloadData(nullptr)
+    , pendingDownloadProgress(nullptr)
     , synchronous(false)
     , incomingStatusCode(0)
     , isPipeliningUsed(false)
     , incomingContentLength(-1)
     , incomingErrorCode(QNetworkReply::NoError)
-    , downloadBuffer(0)
-    , httpConnection(0)
-    , httpReply(0)
-    , synchronousRequestLoop(0)
+    , downloadBuffer(nullptr)
+    , httpConnection(nullptr)
+    , httpReply(nullptr)
+    , synchronousRequestLoop(nullptr)
 {
 }
 
@@ -259,12 +259,12 @@ void QHttpThreadDelegate::startRequest()
         cacheKey = makeCacheKey(urlCopy, &cacheProxy);
     else
 #endif
-        cacheKey = makeCacheKey(urlCopy, 0);
+        cacheKey = makeCacheKey(urlCopy, nullptr);
 
 
     // the http object is actually a QHttpNetworkConnection
     httpConnection = static_cast<QNetworkAccessCachedHttpConnection *>(connections.localData()->requestEntryNow(cacheKey));
-    if (httpConnection == 0) {
+    if (httpConnection == nullptr) {
         // no entry in cache; create an object
         // the http object is actually a QHttpNetworkConnection
 #ifdef QT_NO_BEARERMANAGEMENT
@@ -338,7 +338,7 @@ void QHttpThreadDelegate::abortRequest()
 #endif
     if (httpReply) {
         delete httpReply;
-        httpReply = 0;
+        httpReply = nullptr;
     }
 
     // Got aborted by the timeout timer
@@ -440,7 +440,7 @@ void QHttpThreadDelegate::finishedSlot()
 
     QMetaObject::invokeMethod(httpReply, "deleteLater", Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "deleteLater", Qt::QueuedConnection);
-    httpReply = 0;
+    httpReply = nullptr;
 }
 
 void QHttpThreadDelegate::synchronousFinishedSlot()
@@ -463,7 +463,7 @@ void QHttpThreadDelegate::synchronousFinishedSlot()
 
     QMetaObject::invokeMethod(httpReply, "deleteLater", Qt::QueuedConnection);
     QMetaObject::invokeMethod(synchronousRequestLoop, "quit", Qt::QueuedConnection);
-    httpReply = 0;
+    httpReply = nullptr;
 }
 
 void QHttpThreadDelegate::finishedWithErrorSlot(QNetworkReply::NetworkError errorCode, const QString &detail)
@@ -485,7 +485,7 @@ void QHttpThreadDelegate::finishedWithErrorSlot(QNetworkReply::NetworkError erro
 
     QMetaObject::invokeMethod(httpReply, "deleteLater", Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "deleteLater", Qt::QueuedConnection);
-    httpReply = 0;
+    httpReply = nullptr;
 }
 
 
@@ -502,7 +502,7 @@ void QHttpThreadDelegate::synchronousFinishedWithErrorSlot(QNetworkReply::Networ
 
     QMetaObject::invokeMethod(httpReply, "deleteLater", Qt::QueuedConnection);
     QMetaObject::invokeMethod(synchronousRequestLoop, "quit", Qt::QueuedConnection);
-    httpReply = 0;
+    httpReply = nullptr;
 }
 
 static void downloadBufferDeleter(char *ptr)

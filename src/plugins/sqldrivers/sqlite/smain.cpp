@@ -65,7 +65,7 @@ QSqlDriver* QSQLiteDriverPlugin::create(const QString &name)
         QSQLiteDriver* driver = new QSQLiteDriver();
         return driver;
     }
-    return 0;
+    return nullptr;
 }
 
 QStringList QSQLiteDriverPlugin::keys() const

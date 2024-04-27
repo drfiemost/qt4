@@ -80,7 +80,7 @@ QScriptScriptDataPrivate::~QScriptScriptDataPrivate()
 }
 
 QScriptScriptData::QScriptScriptData()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -159,7 +159,7 @@ QDateTime QScriptScriptData::timeStamp() const
 bool QScriptScriptData::isValid() const
 {
     Q_D(const QScriptScriptData);
-    return (d != 0);
+    return (d != nullptr);
 }
 
 bool QScriptScriptData::operator==(const QScriptScriptData &other) const

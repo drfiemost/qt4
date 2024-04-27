@@ -11,12 +11,12 @@ CL_NS_DEF(queryParser)
 
 
 QueryToken::QueryToken():
-	Value(NULL)
+	Value(nullptr)
 {
     set(UNKNOWN_);
 }
 QueryToken::QueryToken(TCHAR* value, const int32_t start, const int32_t end, const QueryToken::Types type):
-	Value(NULL)
+	Value(nullptr)
 {
   set(value,start,end,type);
 }
@@ -34,7 +34,7 @@ QueryToken::~QueryToken(){
 // Initializes a new instance of the Token class LUCENE_EXPORT.
 //
 QueryToken::QueryToken(TCHAR* value, const QueryToken::Types type):
-	Value(NULL)
+	Value(nullptr)
 {
     set(value,type);
 }
@@ -42,7 +42,7 @@ QueryToken::QueryToken(TCHAR* value, const QueryToken::Types type):
 // Initializes a new instance of the Token class LUCENE_EXPORT.
 //
 QueryToken::QueryToken(QueryToken::Types type):
-	Value(NULL)
+	Value(nullptr)
 {
   set(type);
 }

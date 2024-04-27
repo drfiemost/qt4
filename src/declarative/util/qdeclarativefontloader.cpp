@@ -85,7 +85,7 @@ private:
 };
 
 QDeclarativeFontObject::QDeclarativeFontObject(int _id)
-    : QObject(0), id(_id), reply(0), redirectCount(0) {}
+    : QObject(nullptr), id(_id), reply(nullptr), redirectCount(0) {}
 
 
 void QDeclarativeFontObject::download(const QUrl &url, QNetworkAccessManager *manager)
@@ -106,7 +106,7 @@ void QDeclarativeFontObject::replyFinished()
                 QUrl url = reply->url().resolved(redirect.toUrl());
                 QNetworkAccessManager *manager = reply->manager();
                 reply->deleteLater();
-                reply = 0;
+                reply = nullptr;
                 download(url, manager);
                 return;
             }
@@ -123,7 +123,7 @@ void QDeclarativeFontObject::replyFinished()
             emit fontDownloaded(QString(), QDeclarativeFontLoader::Error);
         }
         reply->deleteLater();
-        reply = 0;
+        reply = nullptr;
     }
 }
 

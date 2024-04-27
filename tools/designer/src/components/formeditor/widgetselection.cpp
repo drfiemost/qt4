@@ -76,18 +76,18 @@ enum { debugWidgetSelection = 0 };
 template <class Layout>
 static inline Layout *managedLayoutOf(const QDesignerFormEditorInterface *core,
                                       QWidget *w,
-                                      const Layout * /* vs6dummy */ = 0)
+                                      const Layout * /* vs6dummy */ = nullptr)
 {
     if (QWidget *p = w->parentWidget())
         if (QLayout *l = LayoutInfo::managedLayout(core, p))
             return qobject_cast<Layout*>(l);
-    return 0;
+    return nullptr;
 }
 
 // ----------- WidgetHandle
 WidgetHandle::WidgetHandle(FormWindow *parent, WidgetHandle::Type t, WidgetSelection *s) :
     InvisibleWidget(parent->formContainer()),
-    m_widget(0),
+    m_widget(nullptr),
     m_type(t),
     m_formWindow( parent),
     m_sel(s),
@@ -146,7 +146,7 @@ QDesignerFormEditorInterface *WidgetHandle::core() const
     if (m_formWindow)
         return m_formWindow->core();
 
-    return 0;
+    return nullptr;
 }
 
 void WidgetHandle::setActive(bool a)
@@ -394,7 +394,7 @@ static inline int formLayoutRightHandleOperation(int dx, unsigned possibleOperat
 // Change form layout item horizontal span
 void WidgetHandle::changeFormLayoutItemSpan()
 {
-    QUndoCommand *cmd = 0;
+    QUndoCommand *cmd = nullptr;
     // Figure out command according to the movement
     const int dx = m_widget->geometry().center().x() - m_origGeom.center().x();
     if (qAbs(dx) >= QApplication::startDragDistance()) {
@@ -448,7 +448,7 @@ void WidgetHandle::changeGridLayoutItemSpan()
 
     const QPoint pt = m_origGeom.center() - m_widget->geometry().center();
 
-    ChangeLayoutItemGeometry *cmd = 0;
+    ChangeLayoutItemGeometry *cmd = nullptr;
 
     switch (m_type) {
     default:
@@ -499,7 +499,7 @@ void WidgetHandle::changeGridLayoutItemSpan()
        break;
     }
 
-    if (cmd != 0) {
+    if (cmd != nullptr) {
        m_formWindow->commandHistory()->push(cmd);
     } else {
        grid->invalidate();
@@ -566,7 +566,7 @@ WidgetSelection::WidgetState WidgetSelection::widgetState(const QDesignerFormEdi
 }
 
 WidgetSelection::WidgetSelection(FormWindow *parent)   :
-    m_widget(0),
+    m_widget(nullptr),
     m_formWindow(parent)
 {
     for (int i = WidgetHandle::LeftTop; i < WidgetHandle::TypeCount; ++i)
@@ -576,12 +576,12 @@ WidgetSelection::WidgetSelection(FormWindow *parent)   :
 
 void WidgetSelection::setWidget(QWidget *w)
 {
-    if (m_widget != 0)
+    if (m_widget != nullptr)
         m_widget->removeEventFilter(this);
 
-    if (w == 0) {
+    if (w == nullptr) {
         hide();
-        m_widget = 0;
+        m_widget = nullptr;
         return;
     }
 
@@ -627,7 +627,7 @@ void WidgetSelection::updateActive()
 
 bool WidgetSelection::isUsed() const
 {
-    return m_widget != 0;
+    return m_widget != nullptr;
 }
 
 void WidgetSelection::updateGeometry()
@@ -716,7 +716,7 @@ QDesignerFormEditorInterface *WidgetSelection::core() const
     if (m_formWindow)
         return m_formWindow->core();
 
-    return 0;
+    return nullptr;
 }
 
 bool WidgetSelection::eventFilter(QObject *object, QEvent *event)

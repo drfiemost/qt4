@@ -65,7 +65,7 @@ namespace JSC {
     // and the implicit conversion to raw pointer
     template <class T> class ProtectedPtr {
     public:
-        ProtectedPtr() : m_ptr(0) {}
+        ProtectedPtr() : m_ptr(nullptr) {}
         ProtectedPtr(T* ptr);
         ProtectedPtr(const ProtectedPtr&);
         ~ProtectedPtr();

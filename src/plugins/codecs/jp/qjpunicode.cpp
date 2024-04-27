@@ -5569,12 +5569,12 @@ static unsigned short const unicode_to_jisx0208_ff[] = {
 static unsigned short const * const unicode_to_jisx0208_map[0x100] = {
         /* 0x00XX - 0x0fXX */
         unicode_to_jisx0208_00,
-        0, 0,
+        nullptr, nullptr,
         unicode_to_jisx0208_03,
         unicode_to_jisx0208_04,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x10XX - 0x1fXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x20XX - 0x2fXX */
         unicode_to_jisx0208_20,
         unicode_to_jisx0208_21,
@@ -5583,15 +5583,15 @@ static unsigned short const * const unicode_to_jisx0208_map[0x100] = {
         unicode_to_jisx0208_24,
         unicode_to_jisx0208_25,
         unicode_to_jisx0208_26,
-        0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x30XX - 0x3fXX */
         unicode_to_jisx0208_30,
-        0,
+        nullptr,
         unicode_to_jisx0208_32,
         unicode_to_jisx0208_33,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x40XX - 0x4fXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         unicode_to_jisx0208_4e,
         unicode_to_jisx0208_4f,
         /* 0x50XX - 0x5fXX */
@@ -5680,17 +5680,17 @@ static unsigned short const * const unicode_to_jisx0208_map[0x100] = {
         unicode_to_jisx0208_9e,
         unicode_to_jisx0208_9f,
         /* 0xa0XX - 0xafXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xb0XX - 0xbfXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xc0XX - 0xcfXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xd0XX - 0xdfXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xe0XX - 0xefXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xf0XX - 0xffXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         unicode_to_jisx0208_ff,
 };
 
@@ -5699,7 +5699,7 @@ static uint unicode11ToJisx0208(uint h, uint l)
     unsigned short const *table;
 
     table = unicode_to_jisx0208_map[h];
-    if (table != 0) {
+    if (table != nullptr) {
         return table[l];
     }
     return 0x0000;
@@ -10280,19 +10280,19 @@ static unsigned short const * const unicode_to_jisx0212_map[0x100] = {
         unicode_to_jisx0212_02,
         unicode_to_jisx0212_03,
         unicode_to_jisx0212_04,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x10XX - 0x1fXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x20XX - 0x2fXX */
-        0,
+        nullptr,
         unicode_to_jisx0212_21,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x30XX - 0x3fXX */
-        0, 0,
+        nullptr, nullptr,
         unicode_to_jisx0212_32,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0x40XX - 0x4fXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         unicode_to_jisx0212_4e,
         unicode_to_jisx0212_4f,
         /* 0x50XX - 0x5fXX */
@@ -10381,20 +10381,20 @@ static unsigned short const * const unicode_to_jisx0212_map[0x100] = {
         unicode_to_jisx0212_9e,
         unicode_to_jisx0212_9f,
         /* 0xa0XX - 0xafXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xb0XX - 0xbfXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xc0XX - 0xcfXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xd0XX - 0xdfXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xe0XX - 0xefXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         /* 0xf0XX - 0xffXX */
-        0, 0, 0, 0, 0, 0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
         unicode_to_jisx0212_f9,
         unicode_to_jisx0212_fa,
-        0, 0, 0, 0,
+        nullptr, nullptr, nullptr, nullptr,
         unicode_to_jisx0212_ff,
 };
 
@@ -10406,7 +10406,7 @@ static uint unicode11ToJisx0212(uint h, uint l)
     unsigned short const *table;
 
     table = unicode_to_jisx0212_map[h];
-    if (table != 0) {
+    if (table != nullptr) {
         return table[l];
     }
     return 0x0000;

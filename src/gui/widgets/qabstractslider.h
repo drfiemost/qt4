@@ -68,7 +68,7 @@ class Q_GUI_EXPORT QAbstractSlider : public QWidget
     Q_PROPERTY(bool sliderDown READ isSliderDown WRITE setSliderDown DESIGNABLE false)
 
 public:
-    explicit QAbstractSlider(QWidget *parent=0);
+    explicit QAbstractSlider(QWidget *parent=nullptr);
     ~QAbstractSlider();
 
     Qt::Orientation orientation() const;
@@ -154,7 +154,7 @@ protected:
     void changeEvent(QEvent *e);
 
 protected:
-    QAbstractSlider(QAbstractSliderPrivate &dd, QWidget *parent=0);
+    QAbstractSlider(QAbstractSliderPrivate &dd, QWidget *parent=nullptr);
 
 private:
     Q_DISABLE_COPY(QAbstractSlider)

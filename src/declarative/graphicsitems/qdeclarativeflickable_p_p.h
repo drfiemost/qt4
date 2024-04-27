@@ -214,7 +214,7 @@ class QDeclarativeFlickableVisibleArea : public QObject
     Q_PROPERTY(qreal heightRatio READ heightRatio NOTIFY heightRatioChanged)
 
 public:
-    QDeclarativeFlickableVisibleArea(QDeclarativeFlickable *parent=0);
+    QDeclarativeFlickableVisibleArea(QDeclarativeFlickable *parent=nullptr);
 
     qreal xPosition() const;
     qreal widthRatio() const;

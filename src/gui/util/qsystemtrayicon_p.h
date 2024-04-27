@@ -74,7 +74,7 @@ class QSystemTrayIconPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QSystemTrayIcon)
 
 public:
-    QSystemTrayIconPrivate() : sys(0), visible(false) { }
+    QSystemTrayIconPrivate() : sys(nullptr), visible(false) { }
 
     void install_sys();
     void remove_sys();

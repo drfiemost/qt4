@@ -636,7 +636,7 @@ static const struct {
     { Qt::Key_Hangul_PostHanja,QT_TRANSLATE_NOOP("QShortcut", "Hangul PostHanja") },
     { Qt::Key_Hangul_Special,  QT_TRANSLATE_NOOP("QShortcut", "Hangul Special") },
 
-    { 0, 0 }
+    { 0, nullptr }
 };
 
 //Table of key bindings. It must be sorted on key sequence.

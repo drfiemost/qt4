@@ -72,7 +72,7 @@ class Q_AUTOTEST_EXPORT QGraphicsSceneLinearIndex : public QGraphicsSceneIndex
     Q_OBJECT
 
 public:
-    QGraphicsSceneLinearIndex(QGraphicsScene *scene = 0) : QGraphicsSceneIndex(scene)
+    QGraphicsSceneLinearIndex(QGraphicsScene *scene = nullptr) : QGraphicsSceneIndex(scene)
     { }
 
     QList<QGraphicsItem *> items(Qt::SortOrder order = Qt::DescendingOrder) const

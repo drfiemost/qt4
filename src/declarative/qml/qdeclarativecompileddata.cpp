@@ -162,7 +162,7 @@ int QDeclarativeCompiledData::indexForLocation(const QDeclarativeParser::Locatio
 }
 
 QDeclarativeCompiledData::QDeclarativeCompiledData(QDeclarativeEngine *engine)
-: QDeclarativeCleanup(engine), importCache(0), root(0), rootPropertyCache(0)
+: QDeclarativeCleanup(engine), importCache(nullptr), root(nullptr), rootPropertyCache(nullptr)
 {
 }
 

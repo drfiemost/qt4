@@ -366,7 +366,7 @@ QSslSocket::~QSslSocket()
     qDebug() << "QSslSocket::~QSslSocket(), this =" << (void *)this;
 #endif
     delete d->plainSocket;
-    d->plainSocket = 0;
+    d->plainSocket = nullptr;
 }
 
 /*!
@@ -1858,9 +1858,9 @@ QSslSocketPrivate::QSslSocketPrivate()
     , connectionEncrypted(false)
     , shutdown(false)
     , ignoreAllSslErrors(false)
-    , readyReadEmittedPointer(0)
+    , readyReadEmittedPointer(nullptr)
     , allowRootCertOnDemandLoading(true)
-    , plainSocket(0)
+    , plainSocket(nullptr)
 {
     QSslConfigurationPrivate::deepCopyDefaultConfiguration(&configuration);
 }

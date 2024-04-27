@@ -329,7 +329,7 @@ class DitaXmlGenerator : public PageGenerator
     const Node* findNodeForTarget(const QString& target, 
                                   const Node* relative,
                                   CodeMarker* marker, 
-                                  const Atom* atom = 0);
+                                  const Atom* atom = nullptr);
     void generateHeader(const Node* node, 
                         const QString& name,
                         bool subpage = false);
@@ -339,10 +339,10 @@ class DitaXmlGenerator : public PageGenerator
                                  CodeMarker* marker,
                                  Doc::Sections sectioningUnit,
                                  int numColumns, 
-                                 const Node* relative = 0);
+                                 const Node* relative = nullptr);
     void generateTableOfContents(const Node* node, 
                                  CodeMarker* marker, 
-                                 QList<Section>* sections = 0);
+                                 QList<Section>* sections = nullptr);
     void generateLowStatusMembers(const InnerNode* inner,
                                   CodeMarker* marker,
                                   CodeMarker::Status status);
@@ -399,7 +399,7 @@ class DitaXmlGenerator : public PageGenerator
     void generateFullName(const Node* apparentNode, 
                           const Node* relative, 
                           CodeMarker* marker,
-			  const Node* actualNode = 0);
+			  const Node* actualNode = nullptr);
     void generateLink(const Atom* atom, 
                       const Node* relative, 
                       CodeMarker* marker);

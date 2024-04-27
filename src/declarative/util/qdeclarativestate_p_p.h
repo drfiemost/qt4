@@ -185,7 +185,7 @@ class QDeclarativeStateOperationPrivate : public QObjectPrivate
 public:
 
     QDeclarativeStateOperationPrivate()
-    : m_state(0) {}
+    : m_state(nullptr) {}
 
     QDeclarativeState *m_state;
 };
@@ -196,7 +196,7 @@ class QDeclarativeStatePrivate : public QObjectPrivate
 
 public:
     QDeclarativeStatePrivate()
-    : when(0), named(false), inState(false), group(0) {}
+    : when(nullptr), named(false), inState(false), group(nullptr) {}
 
     typedef QList<QDeclarativeSimpleAction> SimpleActionList;
 
@@ -226,7 +226,7 @@ public:
         QList<OperationGuard> *list = static_cast<QList<OperationGuard> *>(prop->data);
         QMutableListIterator<OperationGuard> listIterator(*list);
         while(listIterator.hasNext())
-            listIterator.next()->setState(0);
+            listIterator.next()->setState(nullptr);
         list->clear();
     }
     static int operations_count(QDeclarativeListProperty<QDeclarativeStateOperation> *prop) {

@@ -46,7 +46,7 @@ PassRefPtr<ProfileGenerator> ProfileGenerator::create(const UString& title, Exec
 }
 
 ProfileGenerator::ProfileGenerator(const UString& title, ExecState* originatingExec, unsigned uid)
-    : m_originatingGlobalExec(originatingExec ? originatingExec->lexicalGlobalObject()->globalExec() : 0)
+    : m_originatingGlobalExec(originatingExec ? originatingExec->lexicalGlobalObject()->globalExec() : nullptr)
     , m_profileGroup(originatingExec ? originatingExec->lexicalGlobalObject()->profileGroup() : 0)
 {
     m_profile = Profile::create(title, uid);
@@ -63,7 +63,7 @@ void ProfileGenerator::addParentForConsoleStart(ExecState* exec)
     JSValue function;
 
     exec->interpreter()->retrieveLastCaller(exec, lineNumber, sourceID, sourceURL, function);
-    m_currentNode = ProfileNode::create(Profiler::createCallIdentifier(exec, function ? function.toThisObject(exec) : 0, sourceURL, lineNumber), m_head.get(), m_head.get());
+    m_currentNode = ProfileNode::create(Profiler::createCallIdentifier(exec, function ? function.toThisObject(exec) : nullptr, sourceURL, lineNumber), m_head.get(), m_head.get());
     m_head->insertNode(m_currentNode.get());
 }
 
@@ -124,7 +124,7 @@ void ProfileGenerator::stopProfiling()
     m_currentNode = m_currentNode->parent();
 
    if (double headSelfTime = m_head->selfTime()) {
-        RefPtr<ProfileNode> idleNode = ProfileNode::create(CallIdentifier(NonJSExecution, 0, 0), m_head.get(), m_head.get());
+        RefPtr<ProfileNode> idleNode = ProfileNode::create(CallIdentifier(NonJSExecution, nullptr, 0), m_head.get(), m_head.get());
 
         idleNode->setTotalTime(headSelfTime);
         idleNode->setSelfTime(headSelfTime);
@@ -138,7 +138,7 @@ void ProfileGenerator::stopProfiling()
 // The console.ProfileGenerator that started this ProfileGenerator will be the first child.
 void ProfileGenerator::removeProfileStart()
 {
-    ProfileNode* currentNode = 0;
+    ProfileNode* currentNode = nullptr;
     for (ProfileNode* next = m_head.get(); next; next = next->firstChild())
         currentNode = next;
 
@@ -153,7 +153,7 @@ void ProfileGenerator::removeProfileStart()
 // The console.ProfileGeneratorEnd that stopped this ProfileGenerator will be the last child.
 void ProfileGenerator::removeProfileEnd()
 {
-    ProfileNode* currentNode = 0;
+    ProfileNode* currentNode = nullptr;
     for (ProfileNode* next = m_head.get(); next; next = next->lastChild())
         currentNode = next;
 

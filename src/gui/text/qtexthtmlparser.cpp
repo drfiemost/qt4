@@ -458,7 +458,7 @@ static const QTextHtmlElement *lookupElementHelper(const QString &element)
     const QTextHtmlElement *end = &elements[Html_NumElements];
     const QTextHtmlElement *e = std::lower_bound(start, end, element);
     if ((e == end) || (element < *e))
-        return 0;
+        return nullptr;
     return e;
 }
 
@@ -507,7 +507,7 @@ void QTextHtmlParser::dumpHtml()
 QTextHtmlParserNode *QTextHtmlParser::newNode(int parent)
 {
     QTextHtmlParserNode *lastNode = &nodes.last();
-    QTextHtmlParserNode *newNode = 0;
+    QTextHtmlParserNode *newNode = nullptr;
 
     bool reuseLastNode = true;
 
@@ -1877,7 +1877,7 @@ QVector<QCss::Declaration> QTextHtmlParser::declarationsForNode(int node) const
     QCss::StyleSelector::NodePtr n;
     n.id = node;
 
-    const char *extraPseudo = 0;
+    const char *extraPseudo = nullptr;
     if (nodes.at(node).id == Html_a && nodes.at(node).hasHref)
         extraPseudo = "link";
     decls = selector.declarationsForNode(n, extraPseudo);

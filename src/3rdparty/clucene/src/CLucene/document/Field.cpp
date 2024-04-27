@@ -30,8 +30,8 @@ Field::Field(const TCHAR* Name, const TCHAR* String, bool store, bool index, boo
 
 	_name        = CLStringIntern::intern( Name CL_FILELINE);
 	_stringValue = stringDuplicate( String );
-	_readerValue = NULL;
-	_streamValue = NULL;
+	_readerValue = nullptr;
+	_streamValue = nullptr;
 	boost=1.0f;
 	omitNorms = false;
 
@@ -63,9 +63,9 @@ Field::Field(const TCHAR* Name, Reader* reader, bool store, bool index, bool tok
 	CND_PRECONDITION(reader != NULL, "reader is NULL");
 
 	_name        = CLStringIntern::intern( Name  CL_FILELINE);
-	_stringValue = NULL;
+	_stringValue = nullptr;
 	_readerValue = reader;
-	_streamValue = NULL;
+	_streamValue = nullptr;
 	boost=1.0f;
 	omitNorms = false;
 
@@ -89,9 +89,9 @@ Field::Field(const TCHAR* Name, Reader* reader, int config)
 	CND_PRECONDITION(reader != NULL, "reader is NULL");
 
 	_name        = CLStringIntern::intern( Name  CL_FILELINE);
-	_stringValue = NULL;
+	_stringValue = nullptr;
 	_readerValue = reader;
-	_streamValue = NULL;
+	_streamValue = nullptr;
 	boost=1.0f;
 	omitNorms = false;
 
@@ -106,8 +106,8 @@ Field::Field(const TCHAR* Name, const TCHAR* Value, int config)
 
 	_name        = CLStringIntern::intern( Name  CL_FILELINE);
 	_stringValue = stringDuplicate( Value );
-	_readerValue = NULL;
-	_streamValue = NULL;
+	_readerValue = nullptr;
+	_streamValue = nullptr;
 	boost=1.0f;
 	omitNorms = false;
 
@@ -120,8 +120,8 @@ Field::Field(const TCHAR* Name, jstreams::StreamBase<char>* Value, int config)
 	CND_PRECONDITION(Value != NULL, "value is NULL");
 
 	_name        = CLStringIntern::intern( Name  CL_FILELINE);
-	_stringValue = NULL;
-	_readerValue = NULL;
+	_stringValue = nullptr;
+	_readerValue = nullptr;
 	_streamValue = Value;
 	boost=1.0f;
 	omitNorms = false;
@@ -151,7 +151,7 @@ bool	Field::isStored() 	{ return (config & STORE_YES) != 0; }
 bool 	Field::isIndexed() 	{ return (config & INDEX_TOKENIZED)!=0 || (config & INDEX_UNTOKENIZED)!=0; }
 bool 	Field::isTokenized() 	{ return (config & INDEX_TOKENIZED) != 0; }
 bool 	Field::isCompressed() 	{ return (config & STORE_COMPRESS) != 0; }
-bool 	Field::isBinary() 	{ return _streamValue!=NULL; }
+bool 	Field::isBinary() 	{ return _streamValue!=nullptr; }
 
 bool	Field::isTermVectorStored() { return (config & TERMVECTOR_YES) != 0; }
 bool	Field::isStoreOffsetWithTermVector() { return (config & TERMVECTOR_YES) != 0 && (config & TERMVECTOR_WITH_OFFSETS) != 0; }
@@ -269,11 +269,11 @@ TCHAR* Field::toString() {
     result.append(name());
     result.appendChar(':');
     
-    if (_stringValue != NULL)
+    if (_stringValue != nullptr)
     	result.append(_stringValue);
-    else if ( _readerValue != NULL )
+    else if ( _readerValue != nullptr )
     	result.append( _T("Reader") );
-    else if ( _streamValue != NULL )
+    else if ( _streamValue != nullptr )
     	result.append( _T("Stream") );
     else
     	result.append( _T("NULL") );

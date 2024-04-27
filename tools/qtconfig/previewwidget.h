@@ -56,7 +56,7 @@ class PreviewWidget : public QWidget
     Q_OBJECT
 
 public:
-    PreviewWidget(QWidget *parent = 0);
+    PreviewWidget(QWidget *parent = nullptr);
     ~PreviewWidget();
 
     bool eventFilter(QObject *, QEvent *);

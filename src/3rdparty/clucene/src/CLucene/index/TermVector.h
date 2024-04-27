@@ -215,7 +215,7 @@ public:
 	* @throws IllegalStateException if document or field is not open
 	*/
 	void addTerm(const TCHAR* termText, int32_t freq,
-		Array<int32_t>* positions = NULL, Array<TermVectorOffsetInfo>* offsets = NULL);
+		Array<int32_t>* positions = nullptr, Array<TermVectorOffsetInfo>* offsets = nullptr);
 };
 
 class SegmentTermVector : public virtual TermFreqVector

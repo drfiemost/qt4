@@ -79,7 +79,7 @@ QT_BEGIN_NAMESPACE
 
 /*! \internal */
 QDeclarativeParserStatus::QDeclarativeParserStatus()
-: d(0)
+: d(nullptr)
 {
 }
 
@@ -87,7 +87,7 @@ QDeclarativeParserStatus::QDeclarativeParserStatus()
 QDeclarativeParserStatus::~QDeclarativeParserStatus()
 {
     if(d)
-        (*d) = 0;
+        (*d) = nullptr;
 }
 
 /*!

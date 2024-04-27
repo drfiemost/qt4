@@ -58,8 +58,8 @@ BoundingBox::BoundingBox(QGraphicsObject *itemToHighlight, QGraphicsItem *parent
                          QObject *parent)
     : QObject(parent),
       highlightedObject(itemToHighlight),
-      highlightPolygon(0),
-      highlightPolygonEdge(0)
+      highlightPolygon(nullptr),
+      highlightPolygonEdge(nullptr)
 {
     highlightPolygon = new BoundingBoxPolygonItem(parentItem);
     highlightPolygonEdge = new BoundingBoxPolygonItem(parentItem);
@@ -112,7 +112,7 @@ BoundingBox *BoundingRectHighlighter::boxFor(QGraphicsObject *item) const
         if (box->highlightedObject.data() == item)
             return box;
     }
-    return 0;
+    return nullptr;
 }
 
 void BoundingRectHighlighter::highlight(QList<QGraphicsObject*> items)
@@ -181,7 +181,7 @@ BoundingBox *BoundingRectHighlighter::createBoundingBox(QGraphicsObject *itemToH
 void BoundingRectHighlighter::removeBoundingBox(BoundingBox *box)
 {
     delete box;
-    box = 0;
+    box = nullptr;
 }
 
 void BoundingRectHighlighter::freeBoundingBox(BoundingBox *box)

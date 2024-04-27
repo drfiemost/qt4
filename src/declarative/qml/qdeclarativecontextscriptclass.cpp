@@ -52,9 +52,9 @@
 QT_BEGIN_NAMESPACE
 
 struct ContextData : public QScriptDeclarativeClass::Object {
-    ContextData() : overrideObject(0), isSharedContext(true) {}
+    ContextData() : overrideObject(nullptr), isSharedContext(true) {}
     ContextData(QDeclarativeContextData *c, QObject *o) 
-    : context(c), scopeObject(o), overrideObject(0), isSharedContext(false), isUrlContext(false) {}
+    : context(c), scopeObject(o), overrideObject(nullptr), isSharedContext(false), isUrlContext(false) {}
     QDeclarativeGuardedContextData context;
     QDeclarativeGuard<QObject> scopeObject;
     QObject *overrideObject;
@@ -84,7 +84,7 @@ struct UrlContextData : public ContextData {
         isUrlContext = true;
     }
     UrlContextData(const QString &u) 
-    : ContextData(0, 0), url(u) {
+    : ContextData(nullptr, nullptr), url(u) {
         isUrlContext = true;
     }
     QString url;
@@ -96,7 +96,7 @@ struct UrlContextData : public ContextData {
  */
 QDeclarativeContextScriptClass::QDeclarativeContextScriptClass(QDeclarativeEngine *bindEngine)
 : QScriptDeclarativeClass(QDeclarativeEnginePrivate::getScriptEngine(bindEngine)), engine(bindEngine),
-  lastScopeObject(0), lastContext(0), lastData(0), lastPropertyIndex(-1)
+  lastScopeObject(nullptr), lastContext(nullptr), lastData(nullptr), lastPropertyIndex(-1)
 {
 }
 
@@ -136,7 +136,7 @@ QScriptValue QDeclarativeContextScriptClass::newSharedContext()
 QDeclarativeContextData *QDeclarativeContextScriptClass::contextFromValue(const QScriptValue &v)
 {
     if (scriptClass(v) != this)
-        return 0;
+        return nullptr;
 
     ContextData *data = (ContextData *)object(v);
     return data->getContext(engine);
@@ -158,7 +158,7 @@ QUrl QDeclarativeContextScriptClass::urlFromValue(const QScriptValue &v)
 QObject *QDeclarativeContextScriptClass::setOverrideObject(QScriptValue &v, QObject *override)
 {
     if (scriptClass(v) != this)
-        return 0;
+        return nullptr;
 
     ContextData *data = (ContextData *)object(v);
     QObject *rv = data->overrideObject;
@@ -172,15 +172,15 @@ QDeclarativeContextScriptClass::queryProperty(Object *object, const Identifier &
 {
     Q_UNUSED(flags);
     
-    lastScopeObject = 0;
-    lastContext = 0;
-    lastData = 0;
+    lastScopeObject = nullptr;
+    lastContext = nullptr;
+    lastData = nullptr;
     lastPropertyIndex = -1;
 
     QDeclarativeContextData *bindContext = ((ContextData *)object)->getContext(engine);
     QObject *scopeObject = ((ContextData *)object)->getScope(engine);
     if (!bindContext)
-        return 0;
+        return nullptr;
 
     QObject *overrideObject = ((ContextData *)object)->overrideObject;
     if (overrideObject) {
@@ -200,13 +200,13 @@ QDeclarativeContextScriptClass::queryProperty(Object *object, const Identifier &
     while (bindContext) {
         QScriptClass::QueryFlags rv = 
             queryProperty(bindContext, scopeObject, name, flags, includeTypes);
-        scopeObject = 0; // Only applies to the first context
+        scopeObject = nullptr; // Only applies to the first context
         includeTypes = false; // Only applies to the first context
         if (rv) return rv;
         bindContext = bindContext->parent;
     }
 
-    return 0;
+    return nullptr;
 }
 
 QScriptClass::QueryFlags 
@@ -257,7 +257,7 @@ QDeclarativeContextScriptClass::queryProperty(QDeclarativeContextData *bindConte
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 QDeclarativeContextScriptClass::Value

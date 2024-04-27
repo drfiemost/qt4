@@ -55,7 +55,7 @@ Q_GLOBAL_STATIC(QDeclarativeInspectorService, serviceInstance)
 
 QDeclarativeInspectorService::QDeclarativeInspectorService()
     : QDeclarativeDebugService(QLatin1String("QDeclarativeObserverMode"))
-    , m_inspectorPlugin(0)
+    , m_inspectorPlugin(nullptr)
 {
 }
 
@@ -142,7 +142,7 @@ QDeclarativeInspectorInterface *QDeclarativeInspectorService::loadInspectorPlugi
             return inspector;
         loader.unload();
     }
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

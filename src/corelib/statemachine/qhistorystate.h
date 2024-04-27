@@ -64,8 +64,8 @@ public:
         DeepHistory
     };
 
-    QHistoryState(QState *parent = 0);
-    QHistoryState(HistoryType type, QState *parent = 0);
+    QHistoryState(QState *parent = nullptr);
+    QHistoryState(HistoryType type, QState *parent = nullptr);
     ~QHistoryState();
 
     QAbstractState *defaultState() const;

@@ -29,18 +29,18 @@ const int32_t FastCharStream::maxRewindSize = LUCENE_MAX_WORD_LEN*2;
 	try{
 		int32_t r = input->read();
 		if ( r == -1 )
-			input = NULL;
+			input = nullptr;
 		c = r;
 	}catch(CLuceneError& err){
 		if ( err.number() == CL_ERR_IO )
-			input = 0;
+			input = nullptr;
 		throw err;
 	}
   }
   int FastCharStream::GetNext()
   {
  //   printf("getnext\n");
-    if (input == 0 ) // end of file
+    if (input == nullptr ) // end of file
     {
       _CLTHROWA(CL_ERR_IO,"warning : FileReader.GetNext : Read TCHAR over EOS.");
     }
@@ -59,7 +59,7 @@ const int32_t FastCharStream::maxRewindSize = LUCENE_MAX_WORD_LEN*2;
     TCHAR ch;
     readChar(ch);
 
-    if (input == NULL) { // eof
+    if (input == nullptr) { // eof
         return -1;
     }
     if (rewindPos == 0) {
@@ -76,7 +76,7 @@ const int32_t FastCharStream::maxRewindSize = LUCENE_MAX_WORD_LEN*2;
 
   void FastCharStream::UnGet(){
 //      printf("UnGet \n");
-    if (input == 0) 
+    if (input == nullptr) 
 		return;
     if ( pos == 0 ) {
       _CLTHROWA(CL_ERR_IO,"error : No character can be UnGet");
@@ -94,7 +94,7 @@ const int32_t FastCharStream::maxRewindSize = LUCENE_MAX_WORD_LEN*2;
   }
 
   bool FastCharStream::Eos() const {
-	return input==NULL;
+	return input==nullptr;
   }
 
   int32_t FastCharStream::Column() const {

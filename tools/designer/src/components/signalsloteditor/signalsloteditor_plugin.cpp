@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 using namespace qdesigner_internal;
 
 SignalSlotEditorPlugin::SignalSlotEditorPlugin()
-    : m_initialized(false), m_action(0)
+    : m_initialized(false), m_action(nullptr)
 {
 }
 
@@ -127,7 +127,7 @@ QAction *SignalSlotEditorPlugin::action() const
 
 void SignalSlotEditorPlugin::activeFormWindowChanged(QDesignerFormWindowInterface *formWindow)
 {
-    m_action->setEnabled(formWindow != 0);
+    m_action->setEnabled(formWindow != nullptr);
 }
 
 QT_END_NAMESPACE

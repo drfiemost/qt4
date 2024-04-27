@@ -127,12 +127,12 @@ namespace JSC {
         void* executableCopy(ExecutablePool* allocator)
         {
             if (!m_size)
-                return 0;
+                return nullptr;
 
             void* result = allocator->alloc(m_size);
 
             if (!result)
-                return 0;
+                return nullptr;
 
             ExecutableAllocator::makeWritable(result, m_size);
 

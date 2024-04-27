@@ -181,10 +181,10 @@ public:
 QHash<const QMetaObject *, int> QDeclarativeTypePrivate::m_attachedPropertyIds;
 
 QDeclarativeTypePrivate::QDeclarativeTypePrivate()
-: m_isInterface(false), m_iid(0), m_typeId(0), m_listId(0), m_revision(0), m_containsRevisionedAttributes(false),
-  m_superType(0), m_allocationSize(0), m_newFunc(0), m_baseMetaObject(0), m_attachedPropertiesFunc(0), 
-  m_attachedPropertiesType(0), m_parserStatusCast(-1), m_propertyValueSourceCast(-1), 
-  m_propertyValueInterceptorCast(-1), m_extFunc(0), m_extMetaObject(0), m_index(-1), m_customParser(0), 
+: m_isInterface(false), m_iid(nullptr), m_typeId(0), m_listId(0), m_revision(0), m_containsRevisionedAttributes(false),
+  m_superType(nullptr), m_allocationSize(0), m_newFunc(nullptr), m_baseMetaObject(nullptr), m_attachedPropertiesFunc(nullptr), 
+  m_attachedPropertiesType(nullptr), m_parserStatusCast(-1), m_propertyValueSourceCast(-1), 
+  m_propertyValueInterceptorCast(-1), m_extFunc(nullptr), m_extMetaObject(nullptr), m_index(-1), m_customParser(nullptr), 
   m_isSetup(false), m_haveSuperType(false)
 {
 }
@@ -197,7 +197,7 @@ QDeclarativeType::QDeclarativeType(int index, const QDeclarativePrivate::Registe
     d->m_iid = interface.iid;
     d->m_typeId = interface.typeId;
     d->m_listId = interface.listId;
-    d->m_newFunc = 0;
+    d->m_newFunc = nullptr;
     d->m_index = index;
     d->m_isSetup = true;
     d->m_version_maj = 0;
@@ -406,7 +406,7 @@ void QDeclarativeTypePrivate::init() const
     
     // Check for revisioned details
     {
-        const QMetaObject *mo = 0;
+        const QMetaObject *mo = nullptr;
         if (m_metaObjects.isEmpty())
             mo = m_baseMetaObject;
         else
@@ -489,7 +489,7 @@ int QDeclarativeType::createSize() const
 
 bool QDeclarativeType::isCreatable() const
 {
-    return d->m_newFunc != 0;
+    return d->m_newFunc != nullptr;
 }
 
 bool QDeclarativeType::isExtendedType() const
@@ -782,7 +782,7 @@ QObject *QDeclarativeMetaType::toQObject(const QVariant &v, bool *ok)
 {
     if (!isQObject(v.userType())) {
         if (ok) *ok = false;
-        return 0;
+        return nullptr;
     }
 
     if (ok) *ok = true;
@@ -829,7 +829,7 @@ int QDeclarativeMetaType::attachedPropertiesFuncId(const QMetaObject *mo)
 QDeclarativeAttachedPropertiesFunc QDeclarativeMetaType::attachedPropertiesFuncById(int id)
 {
     if (id < 0)
-        return 0;
+        return nullptr;
     QReadLocker lock(metaTypeDataLock());
     QDeclarativeMetaTypeData *data = metaTypeData();
     return data->types.at(id)->attachedPropertiesFunction();
@@ -920,7 +920,7 @@ const char *QDeclarativeMetaType::interfaceIId(int userType)
     if (type && type->isInterface() && type->typeId() == userType)
         return type->interfaceIId();
     else
-        return 0;
+        return nullptr;
 }
 
 bool QDeclarativeMetaType::isList(int userType)
@@ -982,7 +982,7 @@ QDeclarativeType *QDeclarativeMetaType::qmlType(const QByteArray &name, int vers
         if (version_major<0 || t->availableInVersion(version_major,version_minor))
             return t;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1015,7 +1015,7 @@ QDeclarativeType *QDeclarativeMetaType::qmlType(const QMetaObject *metaObject, c
         ++it;
     }
 
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1031,7 +1031,7 @@ QDeclarativeType *QDeclarativeMetaType::qmlType(int userType)
     if (type && type->typeId() == userType)
         return type;
     else
-        return 0;
+        return nullptr;
 }
 
 /*!
@@ -1410,7 +1410,7 @@ bool QDeclarativeMetaType::copy(int type, void *data, const void *copy)
         case QMetaType::VoidStar:
         case QMetaType::QObjectStar:
         case QMetaType::QWidgetStar:
-            *static_cast<void **>(data) = 0;
+            *static_cast<void **>(data) = nullptr;
             return true;
         case QMetaType::Long:
             *static_cast<long *>(data) = long(0);
@@ -1601,7 +1601,7 @@ bool QDeclarativeMetaType::copy(int type, void *data, const void *copy)
                 *static_cast<NS(QScriptValue) *>(data) = NS(QScriptValue)();
                 return true;
             } else if (typeCategory(type) != Unknown) {
-                *static_cast<void **>(data) = 0;
+                *static_cast<void **>(data) = nullptr;
                 return true;
             }
             break;

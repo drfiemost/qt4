@@ -108,15 +108,15 @@ QDeclarativeValueTypeScriptClass::queryProperty(Object *obj, const Identifier &n
 
     m_lastIndex = o->type->metaObject()->indexOfProperty(propName.constData());
     if (m_lastIndex == -1)
-        return 0;
+        return nullptr;
 
-    QScriptClass::QueryFlags rv = 0;
+    QScriptClass::QueryFlags rv = nullptr;
 
     if (o->objectType == QDeclarativeValueTypeObject::Reference) {
         QDeclarativeValueTypeReference *ref = static_cast<QDeclarativeValueTypeReference *>(o);
 
         if (!ref->object)
-            return 0;
+            return nullptr;
 
         QMetaProperty prop = ref->object->metaObject()->property(m_lastIndex);
 
@@ -166,7 +166,7 @@ void QDeclarativeValueTypeScriptClass::setProperty(Object *obj, const Identifier
         ref->type->read(ref->object, ref->property);
         QMetaProperty p = ref->type->metaObject()->property(m_lastIndex);
 
-        QDeclarativeBinding *newBinding = 0;
+        QDeclarativeBinding *newBinding = nullptr;
         if (value.isFunction() && !value.isRegExp()) {
             QDeclarativeContextData *ctxt = QDeclarativeEnginePrivate::get(engine)->getContext(context());
 
@@ -196,7 +196,7 @@ void QDeclarativeValueTypeScriptClass::setProperty(Object *obj, const Identifier
         if (p.isEnumType() && (QMetaType::Type)v.type() == QMetaType::Double) 
             v = v.toInt();
         p.write(ref->type, v);
-        ref->type->write(ref->object, ref->property, 0);
+        ref->type->write(ref->object, ref->property, nullptr);
 
     } else {
         QDeclarativeValueTypeCopy *copy = static_cast<QDeclarativeValueTypeCopy *>(obj);
@@ -235,7 +235,7 @@ QVariant QDeclarativeValueTypeScriptClass::toVariant(const QScriptValue &value)
 {
     Q_ASSERT(scriptClass(value) == this);
 
-    return toVariant(object(value), 0);
+    return toVariant(object(value), nullptr);
 }
 
 QT_END_NAMESPACE

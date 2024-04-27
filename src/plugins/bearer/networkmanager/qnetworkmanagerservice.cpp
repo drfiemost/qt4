@@ -191,7 +191,7 @@ public:
 };
 
 QNetworkManagerInterfaceAccessPoint::QNetworkManagerInterfaceAccessPoint(const QString &dbusPathName, QObject *parent)
-        : QObject(parent), nmDBusHelper(0)
+        : QObject(parent), nmDBusHelper(nullptr)
 {
     d = new QNetworkManagerInterfaceAccessPointPrivate();
     d->path = dbusPathName;
@@ -299,7 +299,7 @@ public:
 };
 
 QNetworkManagerInterfaceDevice::QNetworkManagerInterfaceDevice(const QString &deviceObjectPath, QObject *parent)
-        : QObject(parent), nmDBusHelper(0)
+        : QObject(parent), nmDBusHelper(nullptr)
 {
     d = new QNetworkManagerInterfaceDevicePrivate();
     d->path = deviceObjectPath;
@@ -390,7 +390,7 @@ public:
 };
 
 QNetworkManagerInterfaceDeviceWired::QNetworkManagerInterfaceDeviceWired(const QString &ifaceDevicePath, QObject *parent)
-    : QObject(parent), nmDBusHelper(0)
+    : QObject(parent), nmDBusHelper(nullptr)
 {
     d = new QNetworkManagerInterfaceDeviceWiredPrivate();
     d->path = ifaceDevicePath;
@@ -467,7 +467,7 @@ public:
 };
 
 QNetworkManagerInterfaceDeviceWireless::QNetworkManagerInterfaceDeviceWireless(const QString &ifaceDevicePath, QObject *parent)
-    : QObject(parent), nmDBusHelper(0)
+    : QObject(parent), nmDBusHelper(nullptr)
 {
     d = new QNetworkManagerInterfaceDeviceWirelessPrivate();
     d->path = ifaceDevicePath;
@@ -646,7 +646,7 @@ public:
 };
 
 QNetworkManagerSettingsConnection::QNetworkManagerSettingsConnection(const QString &settingsService, const QString &connectionObjectPath, QObject *parent)
-    : QObject(parent), nmDBusHelper(0)
+    : QObject(parent), nmDBusHelper(nullptr)
 {
     qDBusRegisterMetaType<QNmSettingsMap>();
     d = new QNetworkManagerSettingsConnectionPrivate();
@@ -801,7 +801,7 @@ public:
 };
 
 QNetworkManagerConnectionActive::QNetworkManagerConnectionActive( const QString &activeConnectionObjectPath, QObject *parent)
-    : QObject(parent), nmDBusHelper(0)
+    : QObject(parent), nmDBusHelper(nullptr)
 {
     d = new QNetworkManagerConnectionActivePrivate();
     d->path = activeConnectionObjectPath;

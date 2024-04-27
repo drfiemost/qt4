@@ -171,7 +171,7 @@ struct QTexturedBrushData : public QBrushData
 {
     QTexturedBrushData() {
         m_has_pixmap_texture = false;
-        m_pixmap = 0;
+        m_pixmap = nullptr;
     }
     ~QTexturedBrushData() {
         delete m_pixmap;
@@ -181,7 +181,7 @@ struct QTexturedBrushData : public QBrushData
         delete m_pixmap;
 
         if (pm.isNull()) {
-            m_pixmap = 0;
+            m_pixmap = nullptr;
             m_has_pixmap_texture = false;
         } else {
             m_pixmap = new QPixmap(pm);
@@ -194,7 +194,7 @@ struct QTexturedBrushData : public QBrushData
     void setImage(const QImage &image) {
         m_image = image;
         delete m_pixmap;
-        m_pixmap = 0;
+        m_pixmap = nullptr;
         m_has_pixmap_texture = false;
     }
 
@@ -802,7 +802,7 @@ const QGradient *QBrush::gradient() const
         || d->style == Qt::ConicalGradientPattern) {
         return &static_cast<const QGradientBrushData *>(d.data())->gradient;
     }
-    return 0;
+    return nullptr;
 }
 
 Q_GUI_EXPORT bool qt_isExtendedRadialGradient(const QBrush &brush)
@@ -986,7 +986,7 @@ QDebug operator<<(QDebug dbg, const QBrush &b)
      "LinearGradientPattern",
      "RadialGradientPattern",
      "ConicalGradientPattern",
-     0, 0, 0, 0, 0, 0,
+     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
      "TexturePattern" // 24
     };
 
@@ -1279,7 +1279,7 @@ QDataStream &operator>>(QDataStream &s, QBrush &b)
     \internal
 */
 QGradient::QGradient()
-    : m_type(NoGradient), dummy(0)
+    : m_type(NoGradient), dummy(nullptr)
 {
 }
 

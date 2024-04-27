@@ -87,7 +87,7 @@ in doc/dnd.doc, where the documentation system can see it. */
 QT_BEGIN_NAMESPACE
 
 static Window sourceWindow = XNone;
-static QWidget *dropWidget = 0;
+static QWidget *dropWidget = nullptr;
 static Qt::DropAction lastAcceptedAction = Qt::IgnoreAction;
 
 static Atom Dnd_selection = 0;
@@ -352,7 +352,7 @@ static void DndReadSourceProperty(Display * dpy,
                                   Window window, Atom dnd_selection,
                                   Atom ** targets, unsigned short * num_targets)
 {
-    unsigned char *retval = 0;
+    unsigned char *retval = nullptr;
     Atom type ;
     int format ;
     unsigned long bytesafter, lengthRtn;
@@ -537,7 +537,7 @@ static Window MotifWindow(Display *display)
     int             format;
     unsigned long   size;
     unsigned long   bytes_after;
-    unsigned char  *property = 0;
+    unsigned char  *property = nullptr;
     Window            motif_window ;
 
     /* this version does no caching, so it's slow: round trip each time */
@@ -599,7 +599,7 @@ static DndTargetsTable TargetsTable(Display *display)
                              &retval) != Success) ||
         type == XNone) {
         qWarning("QMotifDND: Cannot get property on Motif window");
-        return 0;
+        return nullptr;
     }
 
     DndTargets * target_prop = (DndTargets *)retval;
@@ -696,10 +696,10 @@ static ushort _DndIndexToTargets(Display * display,
 QByteArray QX11Data::motifdndFormat(int n)
 {
     if (!motifdnd_active)
-        return 0; // should not happen
+        return nullptr; // should not happen
 
     if (n >= num_src_targets)
-        return 0;
+        return nullptr;
 
     Atom target = src_targets[n];
 
@@ -769,7 +769,7 @@ QVariant QX11Data::motifdndObtainData(const char *mimeType)
     if (got) {
         Atom type;
 
-        if (X11->clipboardReadProperty(tw->internalWinId(), Dnd_selection, true, &result, 0, &type, 0)) {
+        if (X11->clipboardReadProperty(tw->internalWinId(), Dnd_selection, true, &result, nullptr, &type, nullptr)) {
         }
     }
 
@@ -819,7 +819,7 @@ void QX11Data::motifdndHandle(QWidget *widget, const XEvent * xe, bool /* passiv
                     QDragLeaveEvent dragLeaveEvent;
                     QApplication::sendEvent(dropWidget, &dragLeaveEvent);
 
-                    dropWidget = 0;
+                    dropWidget = nullptr;
                     lastAcceptedAction = Qt::IgnoreAction;
 
                     dnd_data.reason = DND_DROP_SITE_LEAVE;
@@ -938,7 +938,7 @@ void QX11Data::motifdndHandle(QWidget *widget, const XEvent * xe, bool /* passiv
             }
 
             sourceWindow = XNone;
-            dropWidget = 0;
+            dropWidget = nullptr;
             lastAcceptedAction = Qt::IgnoreAction;
 
             motifdnd_active = false;
@@ -975,7 +975,7 @@ void QX11Data::motifdndHandle(QWidget *widget, const XEvent * xe, bool /* passiv
 
                 motifdnd_active = false;
                 sourceWindow = XNone;
-                dropWidget = 0;
+                dropWidget = nullptr;
                 lastAcceptedAction = Qt::IgnoreAction;
 
                 return;
@@ -1013,7 +1013,7 @@ void QX11Data::motifdndHandle(QWidget *widget, const XEvent * xe, bool /* passiv
             XSendEvent(event.xbutton.display, sourceWindow, False, 0, (XEvent *)&cm);
 
             sourceWindow = XNone;
-            dropWidget = 0;
+            dropWidget = nullptr;
             lastAcceptedAction = Qt::IgnoreAction;
 
             motifdnd_active = false;

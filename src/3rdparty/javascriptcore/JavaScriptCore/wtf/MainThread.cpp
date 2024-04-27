@@ -41,7 +41,7 @@ struct FunctionWithContext {
     void* context;
     ThreadCondition* syncFlag;
 
-    FunctionWithContext(MainThreadFunction* function = 0, void* context = 0, ThreadCondition* syncFlag = 0)
+    FunctionWithContext(MainThreadFunction* function = nullptr, void* context = nullptr, ThreadCondition* syncFlag = nullptr)
         : function(function)
         , context(context)
         , syncFlag(syncFlag)

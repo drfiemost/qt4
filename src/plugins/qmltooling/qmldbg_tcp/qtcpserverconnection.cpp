@@ -66,10 +66,10 @@ public:
 QTcpServerConnectionPrivate::QTcpServerConnectionPrivate() :
     port(0),
     block(false),
-    socket(0),
-    protocol(0),
-    tcpServer(0),
-    debugServer(0)
+    socket(nullptr),
+    protocol(nullptr),
+    tcpServer(nullptr),
+    debugServer(nullptr)
 {
 }
 
@@ -117,9 +117,9 @@ void QTcpServerConnection::disconnect()
 
     // protocol might still be processing packages at this point
     d->protocol->deleteLater();
-    d->protocol = 0;
+    d->protocol = nullptr;
     d->socket->deleteLater();
-    d->socket = 0;
+    d->socket = nullptr;
 }
 
 bool QTcpServerConnection::waitForMessage()

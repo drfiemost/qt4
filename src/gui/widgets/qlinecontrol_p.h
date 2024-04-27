@@ -84,7 +84,7 @@ public:
         m_dragEnabled(0), m_echoMode(0), m_textDirty(0), m_selDirty(0),
         m_validInput(1), m_blinkStatus(0), m_blinkPeriod(0), m_blinkTimer(0), m_deleteAllTimer(0),
         m_ascent(0), m_maxLength(32767), m_lastCursorPos(-1),
-        m_tripleClickTimer(0), m_maskData(0), m_modifiedState(0), m_undoState(0),
+        m_tripleClickTimer(0), m_maskData(nullptr), m_modifiedState(0), m_undoState(0),
         m_selstart(0), m_selend(0), m_passwordEchoEditing(false)
 #ifdef QT_GUI_PASSWORD_ECHO_DELAY
         , m_passwordEchoTimer(0)

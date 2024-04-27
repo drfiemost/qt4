@@ -65,7 +65,7 @@ class QDeclarativeRectanglePrivate : public QDeclarativeItemPrivate
 
 public:
     QDeclarativeRectanglePrivate() :
-    color(Qt::white), gradient(0), pen(0), radius(0), paintmargin(0)
+    color(Qt::white), gradient(nullptr), pen(nullptr), radius(0), paintmargin(0)
     {
         QGraphicsItemPrivate::flags = QGraphicsItemPrivate::flags & ~QGraphicsItem::ItemHasNoContents;
     }

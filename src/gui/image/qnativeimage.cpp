@@ -137,7 +137,7 @@ QImage::Format QNativeImage::systemFormat()
 #elif defined(Q_WS_X11) && !defined(QT_NO_MITSHM)
 
 QNativeImage::QNativeImage(int width, int height, QImage::Format format,bool /* isTextBuffer */, QWidget *widget)
-    : xshmimg(0), xshmpm(0)
+    : xshmimg(nullptr), xshmpm(0)
 {
     QX11Info info = widget->x11Info();
 
@@ -148,13 +148,13 @@ QNativeImage::QNativeImage(int width, int height, QImage::Format format,bool /* 
         image = QImage(width, height, format);
         // follow good coding practice and set xshminfo attributes, though values not used in this case
         xshminfo.readOnly = true;
-        xshminfo.shmaddr = 0;
+        xshminfo.shmaddr = nullptr;
         xshminfo.shmid = 0;
         xshminfo.shmseg = 0;
         return;
     }
 
-    xshmimg = XShmCreateImage(X11->display, vis, dd, ZPixmap, 0, &xshminfo, width, height);
+    xshmimg = XShmCreateImage(X11->display, vis, dd, ZPixmap, nullptr, &xshminfo, width, height);
     if (!xshmimg) {
         qWarning("QNativeImage: Unable to create shared XImage.");
         return;
@@ -165,7 +165,7 @@ QNativeImage::QNativeImage(int width, int height, QImage::Format format,bool /* 
                             IPC_CREAT | 0700);
     ok = xshminfo.shmid != -1;
     if (ok) {
-        xshmimg->data = (char*)shmat(xshminfo.shmid, 0, 0);
+        xshmimg->data = (char*)shmat(xshminfo.shmid, nullptr, 0);
         xshminfo.shmaddr = xshmimg->data;
         ok = (xshminfo.shmaddr != (char*)-1);
         if (ok)
@@ -175,21 +175,21 @@ QNativeImage::QNativeImage(int width, int height, QImage::Format format,bool /* 
     if (ok) {
         ok = XShmAttach(X11->display, &xshminfo);
         XSync(X11->display, False);
-        if (shmctl(xshminfo.shmid, IPC_RMID, 0) == -1)
+        if (shmctl(xshminfo.shmid, IPC_RMID, nullptr) == -1)
             qWarning() << "Error while marking the shared memory segment to be destroyed";
     }
     if (!ok) {
         qWarning() << "QNativeImage: Unable to attach to shared memory segment.";
         if (xshmimg->data) {
             free(xshmimg->data);
-            xshmimg->data = 0;
+            xshmimg->data = nullptr;
         }
         XDestroyImage(xshmimg);
-        xshmimg = 0;
+        xshmimg = nullptr;
         if (xshminfo.shmaddr)
             shmdt(xshminfo.shmaddr);
         if (xshminfo.shmid != -1)
-            shmctl(xshminfo.shmid, IPC_RMID, 0);
+            shmctl(xshminfo.shmid, IPC_RMID, nullptr);
         return;
     }
     if (X11->use_mitshm_pixmaps) {
@@ -212,11 +212,11 @@ QNativeImage::~QNativeImage()
         xshmpm = 0;
     }
     XShmDetach(X11->display, &xshminfo);
-    xshmimg->data = 0;
+    xshmimg->data = nullptr;
     XDestroyImage(xshmimg);
-    xshmimg = 0;
+    xshmimg = nullptr;
     shmdt(xshminfo.shmaddr);
-    shmctl(xshminfo.shmid, IPC_RMID, 0);
+    shmctl(xshminfo.shmid, IPC_RMID, nullptr);
 }
 
 QImage::Format QNativeImage::systemFormat()

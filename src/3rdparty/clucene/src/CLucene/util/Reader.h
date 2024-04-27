@@ -33,7 +33,7 @@ public:
 	virtual ~Reader(){
 		if ( deleteReader )
 			delete reader;
-		reader = NULL;
+		reader = nullptr;
 	}
 	inline int read(){
 		const TCHAR*b;

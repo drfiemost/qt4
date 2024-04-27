@@ -73,42 +73,42 @@ Q_GUI_EXPORT void qDrawShadeLine(QPainter *p, const QPoint &p1, const QPoint &p2
 Q_GUI_EXPORT void qDrawShadeRect(QPainter *p, int x, int y, int w, int h,
                               const QPalette &pal, bool sunken = false,
                               int lineWidth = 1, int midLineWidth = 0,
-                              const QBrush *fill = 0);
+                              const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawShadeRect(QPainter *p, const QRect &r,
                               const QPalette &pal, bool sunken = false,
                               int lineWidth = 1, int midLineWidth = 0,
-                              const QBrush *fill = 0);
+                              const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawShadePanel(QPainter *p, int x, int y, int w, int h,
                                const QPalette &pal, bool sunken = false,
-                               int lineWidth = 1, const QBrush *fill = 0);
+                               int lineWidth = 1, const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawShadePanel(QPainter *p, const QRect &r,
                                const QPalette &pal, bool sunken = false,
-                               int lineWidth = 1, const QBrush *fill = 0);
+                               int lineWidth = 1, const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawWinButton(QPainter *p, int x, int y, int w, int h,
                               const QPalette &pal, bool sunken = false,
-                              const QBrush *fill = 0);
+                              const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawWinButton(QPainter *p, const QRect &r,
                               const QPalette &pal, bool sunken = false,
-                              const QBrush *fill = 0);
+                              const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawWinPanel(QPainter *p, int x, int y, int w, int h,
                               const QPalette &pal, bool sunken = false,
-                             const QBrush *fill = 0);
+                             const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawWinPanel(QPainter *p, const QRect &r,
                               const QPalette &pal, bool sunken = false,
-                             const QBrush *fill = 0);
+                             const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawPlainRect(QPainter *p, int x, int y, int w, int h, const QColor &,
-                              int lineWidth = 1, const QBrush *fill = 0);
+                              int lineWidth = 1, const QBrush *fill = nullptr);
 
 Q_GUI_EXPORT void qDrawPlainRect(QPainter *p, const QRect &r, const QColor &,
-                              int lineWidth = 1, const QBrush *fill = 0);
+                              int lineWidth = 1, const QBrush *fill = nullptr);
 
 
 struct QTileRules
@@ -154,7 +154,7 @@ Q_GUI_EXPORT void qDrawBorderPixmap(QPainter *painter,
                                     const QMargins &sourceMargins,
                                     const QTileRules &rules = QTileRules()
 #ifndef Q_QDOC
-                                    , QDrawBorderPixmap::DrawingHints hints = 0
+                                    , QDrawBorderPixmap::DrawingHints hints = nullptr
 #endif
                                     );
 

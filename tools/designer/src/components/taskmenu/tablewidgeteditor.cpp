@@ -60,7 +60,7 @@ QT_BEGIN_NAMESPACE
 namespace qdesigner_internal {
 
 TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog *dialog)
-    : AbstractItemEditor(form, 0), m_updatingBrowser(false)
+    : AbstractItemEditor(form, nullptr), m_updatingBrowser(false)
 {
     m_columnEditor = new ItemListEditor(form, this);
     m_columnEditor->setObjectName(QLatin1String("columnEditor"));
@@ -121,11 +121,11 @@ static AbstractItemEditor::PropertyDefinition tableHeaderPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
 //    { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, 0, "font" },
+    { Qt::FontRole, QVariant::Font, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Color, 0, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, 0, "foreground" },
-    { 0, 0, 0, 0 }
+    { Qt::BackgroundRole, QVariant::Color, nullptr, "background" },
+    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
+    { 0, 0, nullptr, nullptr }
 };
 
 static AbstractItemEditor::PropertyDefinition tableItemPropList[] = {
@@ -134,13 +134,13 @@ static AbstractItemEditor::PropertyDefinition tableItemPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
 //    { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, 0, "font" },
+    { Qt::FontRole, QVariant::Font, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Brush, 0, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, 0, "foreground" },
+    { Qt::BackgroundRole, QVariant::Brush, nullptr, "background" },
+    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
     { ItemFlagsShadowRole, 0, QtVariantPropertyManager::flagTypeId, "flags" },
     { Qt::CheckStateRole, 0, QtVariantPropertyManager::enumTypeId, "checkState" },
-    { 0, 0, 0, 0 }
+    { 0, 0, nullptr, nullptr }
 };
 
 TableWidgetContents TableWidgetEditor::fillContentsFromTableWidget(QTableWidget *tableWidget)

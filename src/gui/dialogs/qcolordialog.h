@@ -71,8 +71,8 @@ public:
 
     Q_DECLARE_FLAGS(ColorDialogOptions, ColorDialogOption)
 
-    explicit QColorDialog(QWidget *parent = 0);
-    explicit QColorDialog(const QColor &initial, QWidget *parent = 0);
+    explicit QColorDialog(QWidget *parent = nullptr);
+    explicit QColorDialog(const QColor &initial, QWidget *parent = nullptr);
     ~QColorDialog();
 
     void setCurrentColor(const QColor &color);
@@ -93,11 +93,11 @@ public:
 
     // ### Qt 5: merge overloads with title = QString()
     static QColor getColor(const QColor &initial, QWidget *parent, const QString &title,
-                           ColorDialogOptions options = 0);
-    static QColor getColor(const QColor &initial = Qt::white, QWidget *parent = 0);
+                           ColorDialogOptions options = nullptr);
+    static QColor getColor(const QColor &initial = Qt::white, QWidget *parent = nullptr);
 
     // obsolete
-    static QRgb getRgba(QRgb rgba = 0xffffffff, bool *ok = 0, QWidget *parent = 0);
+    static QRgb getRgba(QRgb rgba = 0xffffffff, bool *ok = nullptr, QWidget *parent = nullptr);
 
     // ### Qt 5: use QColor in signatures
     static int customCount();

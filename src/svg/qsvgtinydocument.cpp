@@ -62,7 +62,7 @@
 QT_BEGIN_NAMESPACE
 
 QSvgTinyDocument::QSvgTinyDocument()
-    : QSvgStructureNode(0)
+    : QSvgStructureNode(nullptr)
     , m_widthPercent(false)
     , m_heightPercent(false)
     , m_animated(false)
@@ -112,7 +112,7 @@ static QByteArray qt_inflateSvgzDataFrom(QIODevice *device, bool doCheckContent)
     // Adding 16 to the window size gives us gzip decoding
     if (inflateInit2(&zlibStream, MAX_WBITS + 16) != Z_OK) {
         qWarning("Cannot initialize zlib, because: %s",
-                (zlibStream.msg != NULL ? zlibStream.msg : "Unknown error"));
+                (zlibStream.msg != nullptr ? zlibStream.msg : "Unknown error"));
         return QByteArray();
     }
 
@@ -151,7 +151,7 @@ static QByteArray qt_inflateSvgzDataFrom(QIODevice *device, bool doCheckContent)
                 case Z_MEM_ERROR: {
                     inflateEnd(&zlibStream);
                     qWarning("Error while inflating gzip file: %s",
-                            (zlibStream.msg != NULL ? zlibStream.msg : "Unknown error"));
+                            (zlibStream.msg != nullptr ? zlibStream.msg : "Unknown error"));
                     return QByteArray();;
                 }
             }
@@ -197,7 +197,7 @@ QSvgTinyDocument * QSvgTinyDocument::load(const QString &fileName)
     if (!file.open(QFile::ReadOnly)) {
         qWarning("Cannot open file '%s', because: %s",
                  qPrintable(fileName), qPrintable(file.errorString()));
-        return 0;
+        return nullptr;
     }
 
     if (fileName.endsWith(QLatin1String(".svgz"), Qt::CaseInsensitive)
@@ -205,7 +205,7 @@ QSvgTinyDocument * QSvgTinyDocument::load(const QString &fileName)
         return load(qt_inflateSvgzDataFrom(&file));
     }
 
-    QSvgTinyDocument *doc = 0;
+    QSvgTinyDocument *doc = nullptr;
     QSvgHandler handler(&file);
     if (handler.ok()) {
         doc = handler.document();
@@ -234,7 +234,7 @@ QSvgTinyDocument * QSvgTinyDocument::load(const QByteArray &contents)
 
     QSvgHandler handler(svg);
 
-    QSvgTinyDocument *doc = 0;
+    QSvgTinyDocument *doc = nullptr;
     if (handler.ok()) {
         doc = handler.document();
         doc->m_animationDuration = handler.animationDuration();
@@ -508,7 +508,7 @@ bool QSvgTinyDocument::elementExists(const QString &id) const
 {
     QSvgNode *node = scopeNode(id);
 
-    return (node!=0);
+    return (node!=nullptr);
 }
 
 QMatrix QSvgTinyDocument::matrixForElement(const QString &id) const

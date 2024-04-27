@@ -45,7 +45,7 @@
 QT_BEGIN_NAMESPACE
 
 QDeclarativeProxyMetaObject::QDeclarativeProxyMetaObject(QObject *obj, QList<ProxyData> *mList)
-: metaObjects(mList), proxies(0), parent(0), object(obj)
+: metaObjects(mList), proxies(nullptr), parent(nullptr), object(obj)
 {
     *static_cast<QMetaObject *>(this) = *metaObjects->first().metaObject;
 
@@ -60,11 +60,11 @@ QDeclarativeProxyMetaObject::~QDeclarativeProxyMetaObject()
 {
     if (parent)
         delete parent;
-    parent = 0;
+    parent = nullptr;
 
     if (proxies)
         delete [] proxies;
-    proxies = 0;
+    proxies = nullptr;
 }
 
 int QDeclarativeProxyMetaObject::metaCall(QMetaObject::Call c, int id, void **a)

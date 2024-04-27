@@ -67,7 +67,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeScaleGrid : public QObject
     Q_PROPERTY(int bottom READ bottom WRITE setBottom NOTIFY borderChanged)
 
 public:
-    QDeclarativeScaleGrid(QObject *parent=0);
+    QDeclarativeScaleGrid(QObject *parent=nullptr);
     ~QDeclarativeScaleGrid();
 
     bool isNull() const;

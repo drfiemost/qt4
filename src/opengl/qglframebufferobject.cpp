@@ -458,7 +458,7 @@ void QGLFramebufferObjectPrivate::init(QGLFramebufferObject *q, const QSize &sz,
         glGenTextures(1, &texture);
         glBindTexture(target, texture);
         glTexImage2D(target, 0, internal_format, size.width(), size.height(), 0,
-                GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+                GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         if (mipmap)
             glGenerateMipmap(GL_TEXTURE_2D);
 #ifndef QT_OPENGL_ES
@@ -1158,7 +1158,7 @@ bool QGLFramebufferObject::bindDefault()
 #endif
     }
 
-    return ctx != 0;
+    return ctx != nullptr;
 }
 
 /*!

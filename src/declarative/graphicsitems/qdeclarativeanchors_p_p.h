@@ -62,7 +62,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeAnchorLine
 {
 public:
-    QDeclarativeAnchorLine() : item(0), anchorLine(Invalid) {}
+    QDeclarativeAnchorLine() : item(nullptr), anchorLine(Invalid) {}
 
     enum AnchorLine {
         Invalid = 0x0,
@@ -92,8 +92,8 @@ class QDeclarativeAnchorsPrivate : public QObjectPrivate, public QDeclarativeIte
 public:
     QDeclarativeAnchorsPrivate(QGraphicsObject *i)
       : componentComplete(true), updatingMe(false), updatingHorizontalAnchor(0),
-        updatingVerticalAnchor(0), updatingFill(0), updatingCenterIn(0), item(i), usedAnchors(0), fill(0),
-        centerIn(0), leftMargin(0), rightMargin(0), topMargin(0), bottomMargin(0),
+        updatingVerticalAnchor(0), updatingFill(0), updatingCenterIn(0), item(i), usedAnchors(nullptr), fill(nullptr),
+        centerIn(nullptr), leftMargin(0), rightMargin(0), topMargin(0), bottomMargin(0),
         margins(0), vCenterOffset(0), hCenterOffset(0), baselineOffset(0)
     {
     }

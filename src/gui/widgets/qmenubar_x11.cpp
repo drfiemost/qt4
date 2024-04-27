@@ -120,7 +120,7 @@ struct QX11MenuBarFactory : public QPlatformMenuBarFactoryInterface
 
 QPlatformMenuBarFactoryInterface *qt_guiPlatformMenuBarFactory()
 {
-    static QPlatformMenuBarFactoryInterface *factory = 0;
+    static QPlatformMenuBarFactoryInterface *factory = nullptr;
     if (!factory) {
 #ifndef QT_NO_LIBRARY
         QFactoryLoader loader(QPlatformMenuBarFactoryInterface_iid, QLatin1String("/menubar"));

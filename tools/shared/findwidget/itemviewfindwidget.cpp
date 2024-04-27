@@ -80,7 +80,7 @@ QT_BEGIN_NAMESPACE
  */
 ItemViewFindWidget::ItemViewFindWidget(FindFlags flags, QWidget *parent)
     : AbstractFindWidget(flags, parent)
-    , m_itemView(0)
+    , m_itemView(nullptr)
 {
 }
 

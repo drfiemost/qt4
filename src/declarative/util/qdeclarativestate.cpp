@@ -58,8 +58,8 @@ QT_BEGIN_NAMESPACE
 DEFINE_BOOL_CONFIG_OPTION(stateChangeDebug, STATECHANGE_DEBUG)
 
 QDeclarativeAction::QDeclarativeAction()
-: restore(true), actionDone(false), reverseEvent(false), deletableToBinding(false), fromBinding(0), event(0),
-  specifiedObject(0)
+: restore(true), actionDone(false), reverseEvent(false), deletableToBinding(false), fromBinding(nullptr), event(nullptr),
+  specifiedObject(nullptr)
 {
 }
 
@@ -67,7 +67,7 @@ QDeclarativeAction::QDeclarativeAction(QObject *target, const QString &propertyN
                const QVariant &value)
 : restore(true), actionDone(false), reverseEvent(false), deletableToBinding(false), 
   property(target, propertyName, qmlEngine(target)), toValue(value),
-  fromBinding(0), event(0),
+  fromBinding(nullptr), event(nullptr),
   specifiedObject(target), specifiedProperty(propertyName)
 {
     if (property.isValid())
@@ -78,7 +78,7 @@ QDeclarativeAction::QDeclarativeAction(QObject *target, const QString &propertyN
                QDeclarativeContext *context, const QVariant &value)
 : restore(true), actionDone(false), reverseEvent(false), deletableToBinding(false),
   property(target, propertyName, context), toValue(value),
-  fromBinding(0), event(0),
+  fromBinding(nullptr), event(nullptr),
   specifiedObject(target), specifiedProperty(propertyName)
 {
     if (property.isValid())
@@ -215,7 +215,7 @@ bool QDeclarativeState::isNamed() const
 bool QDeclarativeState::isWhenKnown() const
 {
     Q_D(const QDeclarativeState);
-    return d->when != 0;
+    return d->when != nullptr;
 }
 
 /*!
@@ -379,9 +379,9 @@ void QDeclarativeState::cancel()
 void QDeclarativeAction::deleteFromBinding()
 {
     if (fromBinding) {
-        QDeclarativePropertyPrivate::setBinding(property, 0);
+        QDeclarativePropertyPrivate::setBinding(property, nullptr);
         fromBinding->destroy();
-        fromBinding = 0;
+        fromBinding = nullptr;
     }
 }
 
@@ -455,7 +455,7 @@ bool QDeclarativeState::removeEntryFromRevertList(QObject *target, const QString
             if (simpleAction.property().object() == target && simpleAction.property().name() == name) {
                 QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::binding(simpleAction.property());
                 if (oldBinding) {
-                    QDeclarativePropertyPrivate::setBinding(simpleAction.property(), 0);
+                    QDeclarativePropertyPrivate::setBinding(simpleAction.property(), nullptr);
                     oldBinding->destroy();
                 }
 
@@ -493,7 +493,7 @@ void QDeclarativeState::removeAllEntriesFromRevertList(QObject *target)
              if (simpleAction.property().object() == target) {
                  QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::binding(simpleAction.property());
                  if (oldBinding) {
-                     QDeclarativePropertyPrivate::setBinding(simpleAction.property(), 0);
+                     QDeclarativePropertyPrivate::setBinding(simpleAction.property(), nullptr);
                      oldBinding->destroy();
                  }
 
@@ -521,7 +521,7 @@ void QDeclarativeState::addEntriesToRevertList(const QList<QDeclarativeAction> &
             if (!action.toBinding.isNull()) {
                 QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::binding(simpleAction.property());
                 if (oldBinding)
-                    QDeclarativePropertyPrivate::setBinding(simpleAction.property(), 0);
+                    QDeclarativePropertyPrivate::setBinding(simpleAction.property(), nullptr);
                 QDeclarativePropertyPrivate::setBinding(simpleAction.property(), action.toBinding.data(), QDeclarativePropertyPrivate::DontRemoveBinding);
             }
 
@@ -563,7 +563,7 @@ QDeclarativeAbstractBinding *QDeclarativeState::bindingInRevertList(QObject *tar
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 bool QDeclarativeState::isStateActive() const
@@ -682,7 +682,7 @@ void QDeclarativeState::apply(QDeclarativeStateGroup *group, QDeclarativeTransit
         if (!found) {
             QVariant cur = d->revertList.at(ii).property().read();
             QDeclarativeAbstractBinding *delBinding = 
-                QDeclarativePropertyPrivate::setBinding(d->revertList.at(ii).property(), 0);
+                QDeclarativePropertyPrivate::setBinding(d->revertList.at(ii).property(), nullptr);
             if (delBinding)
                 delBinding->destroy();
 

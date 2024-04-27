@@ -76,8 +76,8 @@ class QPrinterPrivate
     Q_DECLARE_PUBLIC(QPrinter)
 public:
     QPrinterPrivate(QPrinter *printer)
-        : printEngine(0)
-        , paintEngine(0)
+        : printEngine(nullptr)
+        , paintEngine(nullptr)
         , q_ptr(printer)
         , options(QAbstractPrintDialog::PrintToFile | QAbstractPrintDialog::PrintPageRange |
                 QAbstractPrintDialog::PrintCollateCopies | QAbstractPrintDialog::PrintShowPageSize)

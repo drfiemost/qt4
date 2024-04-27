@@ -82,7 +82,7 @@ class CppCodeParser : public CodeParser
 
     const FunctionNode *findFunctionNode(const QString& synopsis, 
                                          Tree *tree, 
-                                         Node *relative = 0, 
+                                         Node *relative = nullptr, 
                                          bool fuzzy = false);
 
  protected:
@@ -121,13 +121,13 @@ class CppCodeParser : public CodeParser
     bool match(int target);
     bool skipTo(int target);
     bool matchCompat();
-    bool matchTemplateAngles(CodeChunk *type = 0);
+    bool matchTemplateAngles(CodeChunk *type = nullptr);
     bool matchTemplateHeader();
-    bool matchDataType(CodeChunk *type, QString *var = 0);
+    bool matchDataType(CodeChunk *type, QString *var = nullptr);
     bool matchParameter(FunctionNode *func);
     bool matchFunctionDecl(InnerNode *parent, 
-                           QStringList *parentPathPtr = 0,
-                           FunctionNode **funcPtr = 0, 
+                           QStringList *parentPathPtr = nullptr,
+                           FunctionNode **funcPtr = nullptr, 
                            const QString &templateStuff = QString(),
                            Node::Type type = Node::Function,
                            bool attached = false);
@@ -146,7 +146,7 @@ class CppCodeParser : public CodeParser
     bool makeFunctionNode(const QString &synopsis, 
                           QStringList *parentPathPtr,
 			  FunctionNode **funcPtr, 
-                          InnerNode *root = 0,
+                          InnerNode *root = nullptr,
                           Node::Type type = Node::Function,
                           bool attached = false);
     FunctionNode* makeFunctionNode(const Doc& doc,

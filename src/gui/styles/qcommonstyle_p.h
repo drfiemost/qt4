@@ -69,7 +69,7 @@ class QCommonStylePrivate : public QStylePrivate
 public:
     inline QCommonStylePrivate()
 #ifndef QT_NO_ITEMVIEWS
-    : cachedOption(0)
+    : cachedOption(nullptr)
 #endif
     { }
 

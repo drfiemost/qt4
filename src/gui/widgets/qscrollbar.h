@@ -59,8 +59,8 @@ class Q_GUI_EXPORT QScrollBar : public QAbstractSlider
 {
     Q_OBJECT
 public:
-    explicit QScrollBar(QWidget *parent=0);
-    explicit QScrollBar(Qt::Orientation, QWidget *parent=0);
+    explicit QScrollBar(QWidget *parent=nullptr);
+    explicit QScrollBar(Qt::Orientation, QWidget *parent=nullptr);
     ~QScrollBar();
 
     QSize sizeHint() const;

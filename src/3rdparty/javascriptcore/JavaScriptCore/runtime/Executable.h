@@ -180,7 +180,7 @@ namespace JSC {
     private:
         EvalExecutable(ExecState* exec, const SourceCode& source)
             : ScriptExecutable(exec, source)
-            , m_evalCodeBlock(0)
+            , m_evalCodeBlock(nullptr)
         {
         }
         EvalCodeBlock* m_evalCodeBlock;
@@ -221,12 +221,12 @@ namespace JSC {
         JSObject* compile(ExecState*, ScopeChainNode*);
 
         // CodeBlocks for program code are transient and therefore do not gain from from throwing out there exception information.
-        ExceptionInfo* reparseExceptionInfo(JSGlobalData*, ScopeChainNode*, CodeBlock*) { ASSERT_NOT_REACHED(); return 0; }
+        ExceptionInfo* reparseExceptionInfo(JSGlobalData*, ScopeChainNode*, CodeBlock*) { ASSERT_NOT_REACHED(); return nullptr; }
 
     private:
         ProgramExecutable(ExecState* exec, const SourceCode& source)
             : ScriptExecutable(exec, source)
-            , m_programCodeBlock(0)
+            , m_programCodeBlock(nullptr)
         {
         }
         ProgramCodeBlock* m_programCodeBlock;
@@ -295,14 +295,14 @@ namespace JSC {
         void recompile(ExecState*);
         ExceptionInfo* reparseExceptionInfo(JSGlobalData*, ScopeChainNode*, CodeBlock*);
         void markAggregate(MarkStack& markStack);
-        static PassRefPtr<FunctionExecutable> fromGlobalCode(const Identifier&, ExecState*, Debugger*, const SourceCode&, int* errLine = 0, UString* errMsg = 0);
+        static PassRefPtr<FunctionExecutable> fromGlobalCode(const Identifier&, ExecState*, Debugger*, const SourceCode&, int* errLine = nullptr, UString* errMsg = nullptr);
 
     private:
         FunctionExecutable(JSGlobalData* globalData, const Identifier& name, const SourceCode& source, bool forceUsesArguments, FunctionParameters* parameters, int firstLine, int lastLine)
             : ScriptExecutable(globalData, source)
             , m_forceUsesArguments(forceUsesArguments)
             , m_parameters(parameters)
-            , m_codeBlock(0)
+            , m_codeBlock(nullptr)
             , m_name(name)
             , m_numVariables(0)
         {
@@ -314,7 +314,7 @@ namespace JSC {
             : ScriptExecutable(exec, source)
             , m_forceUsesArguments(forceUsesArguments)
             , m_parameters(parameters)
-            , m_codeBlock(0)
+            , m_codeBlock(nullptr)
             , m_name(name)
             , m_numVariables(0)
         {

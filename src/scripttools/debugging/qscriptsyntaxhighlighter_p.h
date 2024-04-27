@@ -66,7 +66,7 @@ QT_BEGIN_NAMESPACE
 class Q_AUTOTEST_EXPORT QScriptSyntaxHighlighter : public QSyntaxHighlighter
 {
 public:
-    QScriptSyntaxHighlighter(QTextDocument *document = 0);
+    QScriptSyntaxHighlighter(QTextDocument *document = nullptr);
     ~QScriptSyntaxHighlighter();
 
 protected:

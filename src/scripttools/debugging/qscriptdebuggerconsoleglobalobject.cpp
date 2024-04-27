@@ -67,10 +67,10 @@ public:
 
 QScriptDebuggerConsoleGlobalObjectPrivate::QScriptDebuggerConsoleGlobalObjectPrivate()
 {
-    scheduler = 0;
-    responseHandler = 0;
-    messageHandler = 0;
-    console = 0;
+    scheduler = nullptr;
+    responseHandler = nullptr;
+    messageHandler = nullptr;
+    console = nullptr;
 }
 
 QScriptDebuggerConsoleGlobalObjectPrivate::~QScriptDebuggerConsoleGlobalObjectPrivate()

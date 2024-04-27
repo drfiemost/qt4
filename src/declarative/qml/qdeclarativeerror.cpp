@@ -91,7 +91,7 @@ QDeclarativeErrorPrivate::QDeclarativeErrorPrivate()
     Creates an empty error object.
 */
 QDeclarativeError::QDeclarativeError()
-: d(0)
+: d(nullptr)
 {
 }
 
@@ -99,7 +99,7 @@ QDeclarativeError::QDeclarativeError()
     Creates a copy of \a other.
 */
 QDeclarativeError::QDeclarativeError(const QDeclarativeError &other)
-: d(0)
+: d(nullptr)
 {
     *this = other;
 }
@@ -111,7 +111,7 @@ QDeclarativeError &QDeclarativeError::operator=(const QDeclarativeError &other)
 {
     if (!other.d) {
         delete d;
-        d = 0;
+        d = nullptr;
     } else {
         if (!d) d = new QDeclarativeErrorPrivate;
         d->url = other.d->url;
@@ -127,7 +127,7 @@ QDeclarativeError &QDeclarativeError::operator=(const QDeclarativeError &other)
 */
 QDeclarativeError::~QDeclarativeError()
 {
-    delete d; d = 0;
+    delete d; d = nullptr;
 }
 
 /*!
@@ -135,7 +135,7 @@ QDeclarativeError::~QDeclarativeError()
 */
 bool QDeclarativeError::isValid() const
 {
-    return d != 0;
+    return d != nullptr;
 }
 
 /*!

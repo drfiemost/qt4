@@ -63,7 +63,7 @@ class QSize;
 class Q_GUI_EXPORT QLayoutItem
 {
 public:
-    inline explicit QLayoutItem(Qt::Alignment alignment = 0);
+    inline explicit QLayoutItem(Qt::Alignment alignment = nullptr);
     virtual ~QLayoutItem();
     virtual QSize sizeHint() const = 0;
     virtual QSize minimumSize() const = 0;

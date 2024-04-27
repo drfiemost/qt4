@@ -70,7 +70,7 @@ public:
     // Returns an enumeration of terms starting at or after the named term. 
     // If no term is specified, an enumeration of all the Terms 
     // and TermInfos in the set is returned.
-    SegmentTermEnum* terms(const Term* term = NULL);
+    SegmentTermEnum* terms(const Term* term = nullptr);
 
     // Returns the TermInfo for a Term in the set
     // synchronized

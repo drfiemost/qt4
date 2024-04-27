@@ -569,7 +569,7 @@ void QDeclarativeEngineDebugService::setBinding(int objectId,
                     if (state->isStateActive() && state->containsPropertyInRevertList(object, propertyName)) {
                         inBaseState = false;
 
-                        QDeclarativeBinding *newBinding = 0;
+                        QDeclarativeBinding *newBinding = nullptr;
                         if (!isLiteralValue) {
                             newBinding = new QDeclarativeBinding(expression.toString(), object, context);
                             newBinding->setTarget(property);
@@ -631,7 +631,7 @@ void QDeclarativeEngineDebugService::resetBinding(int objectId, const QString &p
             QDeclarativeProperty property(object, propertyName);
             QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::binding(property);
             if (oldBinding) {
-                QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::setBinding(property, 0);
+                QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::setBinding(property, nullptr);
                 if (oldBinding)
                     oldBinding->destroy();
             }
@@ -657,7 +657,7 @@ void QDeclarativeEngineDebugService::resetBinding(int objectId, const QString &p
             }
         } else if (hasValidSignal(object, propertyName)) {
             QDeclarativeProperty property(object, propertyName, context);
-            QDeclarativePropertyPrivate::setSignalExpression(property, 0);
+            QDeclarativePropertyPrivate::setSignalExpression(property, nullptr);
     } else {
             if (QDeclarativePropertyChanges *propertyChanges = qobject_cast<QDeclarativePropertyChanges *>(object)) {
                 propertyChanges->removeProperty(propertyName);
@@ -702,7 +702,7 @@ void QDeclarativeEngineDebugService::setMethodBody(int objectId, const QString &
     Q_ASSERT(vmeMetaObject); // the fact we found the property above should guarentee this
 
     int lineNumber = vmeMetaObject->vmeMethodLineNumber(prop->coreIndex);
-    vmeMetaObject->setVmeMethod(prop->coreIndex, QDeclarativeExpressionPrivate::evalInObjectScope(contextData, object, jsfunction, contextData->url.toString(), lineNumber, 0));
+    vmeMetaObject->setVmeMethod(prop->coreIndex, QDeclarativeExpressionPrivate::evalInObjectScope(contextData, object, jsfunction, contextData->url.toString(), lineNumber, nullptr));
 }
 
 void QDeclarativeEngineDebugService::propertyChanged(int id, int objectId, const QMetaProperty &property, const QVariant &value)

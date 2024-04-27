@@ -59,7 +59,7 @@ class QDBusViewer: public QWidget
 {
     Q_OBJECT
 public:
-    QDBusViewer(const QDBusConnection &connection, QWidget *parent = 0);
+    QDBusViewer(const QDBusConnection &connection, QWidget *parent = nullptr);
 
 public slots:
     void refresh();

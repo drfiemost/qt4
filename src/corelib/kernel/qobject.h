@@ -166,7 +166,7 @@ public:
             QList<void *> *voidList;
         } u;
         u.typedList = &list;
-        qt_qFindChildren_helper(this, aName, 0, reinterpret_cast<T>(0)->staticMetaObject, u.voidList);
+        qt_qFindChildren_helper(this, aName, nullptr, reinterpret_cast<T>(0)->staticMetaObject, u.voidList);
         return list;
     }
 
@@ -335,7 +335,7 @@ inline T qobject_cast(const QObject *object)
 
 
 template <class T> inline const char * qobject_interface_iid()
-{ return 0; }
+{ return nullptr; }
 
 #ifndef Q_MOC_RUN
 #  define Q_DECLARE_INTERFACE(IFace, IId) \

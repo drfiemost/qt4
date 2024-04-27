@@ -164,7 +164,7 @@ void RemoteControl::handleCommandString(const QString &cmdString)
         splitInputString(*it, cmd, arg);
 
         if (m_debug)
-            QMessageBox::information(0, tr("Debugging Remote Control"),
+            QMessageBox::information(nullptr, tr("Debugging Remote Control"),
                 tr("Received Command: %1 %2").arg(cmd).arg(arg));
 
         if (cmd == QLatin1String("debug"))

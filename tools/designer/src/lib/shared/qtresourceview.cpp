@@ -85,7 +85,7 @@ static const char *ResourceViewDialogC = "ResourceDialog";
 // ---------------- ResourceListWidget: A list widget that has drag enabled
 class ResourceListWidget : public QListWidget {
 public:
-    ResourceListWidget(QWidget *parent = 0);
+    ResourceListWidget(QWidget *parent = nullptr);
 
 protected:
     virtual void startDrag(Qt::DropActions supportedActions);
@@ -185,16 +185,16 @@ public:
 };
 
 QtResourceViewPrivate::QtResourceViewPrivate(QDesignerFormEditorInterface *core) :
-    q_ptr(0),
+    q_ptr(nullptr),
     m_core(core),
-    m_resourceModel(0),
+    m_resourceModel(nullptr),
     m_toolBar(new QToolBar),
     m_treeWidget(new QTreeWidget),
     m_listWidget(new ResourceListWidget),
-    m_splitter(0),
-    m_editResourcesAction(0),
-    m_reloadResourcesAction(0),
-    m_copyResourcePathAction(0),
+    m_splitter(nullptr),
+    m_editResourcesAction(nullptr),
+    m_reloadResourcesAction(nullptr),
+    m_copyResourcePathAction(nullptr),
     m_ignoreGuiSignals(false),
     m_resourceEditingEnabled(true)
 {
@@ -397,7 +397,7 @@ void QtResourceViewPrivate::createPaths()
     }
 
     QQueue<QPair<QString, QTreeWidgetItem *> > pathToParentItemQueue;
-    pathToParentItemQueue.enqueue(qMakePair(root, static_cast<QTreeWidgetItem *>(0)));
+    pathToParentItemQueue.enqueue(qMakePair(root, static_cast<QTreeWidgetItem *>(nullptr)));
     while (!pathToParentItemQueue.isEmpty()) {
         QPair<QString, QTreeWidgetItem *> pathToParentItem = pathToParentItemQueue.dequeue();
         const QString path = pathToParentItem.first;
@@ -524,7 +524,7 @@ void QtResourceViewPrivate::filterOutResources()
 
 QTreeWidgetItem *QtResourceViewPrivate::createPath(const QString &path, QTreeWidgetItem *parent)
 {
-    QTreeWidgetItem *item = 0;
+    QTreeWidgetItem *item = nullptr;
     if (parent)
         item = new QTreeWidgetItem(parent);
     else
@@ -836,7 +836,7 @@ public:
 };
 
 QtResourceViewDialogPrivate::QtResourceViewDialogPrivate(QDesignerFormEditorInterface *core) :
-    q_ptr(0),
+    q_ptr(nullptr),
     m_core(core),
     m_view(new QtResourceView(core)),
     m_box(new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel))

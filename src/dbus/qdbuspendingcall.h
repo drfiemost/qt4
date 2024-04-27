@@ -99,7 +99,7 @@ class Q_DBUS_EXPORT QDBusPendingCallWatcher: public QObject, public QDBusPending
 {
     Q_OBJECT
 public:
-    explicit QDBusPendingCallWatcher(const QDBusPendingCall &call, QObject *parent = 0);
+    explicit QDBusPendingCallWatcher(const QDBusPendingCall &call, QObject *parent = nullptr);
     ~QDBusPendingCallWatcher();
 
 #ifdef Q_QDOC

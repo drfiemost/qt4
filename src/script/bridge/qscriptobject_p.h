@@ -53,7 +53,7 @@ public:
         QScriptObjectDelegate *delegate;
         bool isMarking; // recursion guard
 
-        Data() : delegate(0), isMarking(false) {}
+        Data() : delegate(nullptr), isMarking(false) {}
         ~Data();
     };
 
@@ -158,7 +158,7 @@ inline void QScriptObject::setData(JSC::JSValue data)
 inline QScriptObjectDelegate *QScriptObject::delegate() const
 {
     if (!d)
-        return 0;
+        return nullptr;
     return d->delegate;
 }
 

@@ -59,7 +59,7 @@ class QDeclarativeLayoutItem : public QDeclarativeItem, public QGraphicsLayoutIt
     Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
     Q_PROPERTY(QSizeF preferredSize READ preferredSize WRITE setPreferredSize NOTIFY preferredSizeChanged)
 public:
-    QDeclarativeLayoutItem(QDeclarativeItem* parent=0);
+    QDeclarativeLayoutItem(QDeclarativeItem* parent=nullptr);
 
     QSizeF maximumSize() const { return m_maximumSize; }
     void setMaximumSize(const QSizeF &s) { if(s==m_maximumSize) return; m_maximumSize = s; emit maximumSizeChanged(); }

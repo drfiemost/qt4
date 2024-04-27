@@ -62,7 +62,7 @@ QT_BEGIN_NAMESPACE
 QSvgExtraStates::QSvgExtraStates()
     : fillOpacity(1.0)
     , strokeOpacity(1.0)
-    , svgFont(0)
+    , svgFont(nullptr)
     , textAnchor(Qt::AlignLeft)
     , fontWeight(400)
     , fillRule(Qt::WindingFill)
@@ -131,7 +131,7 @@ void QSvgQualityStyle::revert(QPainter *p, QSvgExtraStates &states)
 }
 
 QSvgFillStyle::QSvgFillStyle()
-    : m_style(0)
+    : m_style(nullptr)
     , m_fillRule(Qt::WindingFill)
     , m_oldFillRule(Qt::WindingFill)
     , m_fillOpacity(1.0)
@@ -164,7 +164,7 @@ void QSvgFillStyle::setFillStyle(QSvgFillStyleProperty* style)
 void QSvgFillStyle::setBrush(QBrush brush)
 {
     m_fill = std::move(brush);
-    m_style = 0;
+    m_style = nullptr;
     m_fillSet = 1;
 }
 
@@ -225,8 +225,8 @@ QSvgFontStyle::QSvgFontStyle(QSvgFont *font, QSvgTinyDocument *doc)
 }
 
 QSvgFontStyle::QSvgFontStyle()
-    : m_svgFont(0)
-    , m_doc(0)
+    : m_svgFont(nullptr)
+    , m_doc(nullptr)
     , m_familySet(0)
     , m_sizeSet(0)
     , m_styleSet(0)
@@ -310,7 +310,7 @@ QSvgStrokeStyle::QSvgStrokeStyle()
     , m_oldStrokeOpacity(0.0)
     , m_strokeDashOffset(0)
     , m_oldStrokeDashOffset(0)
-    , m_style(0)
+    , m_style(nullptr)
     , m_gradientResolved(1)
     , m_vectorEffect(0)
     , m_oldVectorEffect(0)

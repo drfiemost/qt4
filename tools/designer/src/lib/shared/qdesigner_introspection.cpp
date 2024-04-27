@@ -114,7 +114,7 @@ namespace  {
         virtual Kind kind() const { return m_kind; }
 
         virtual AccessFlags accessFlags() const { return m_access; }
-        virtual Attributes attributes(const QObject *object = 0) const;
+        virtual Attributes attributes(const QObject *object = nullptr) const;
 
         virtual QVariant::Type type() const { return m_property.type(); }
         virtual QString name() const        { return m_name; }
@@ -141,7 +141,7 @@ namespace  {
         m_name(charToQString(m_property.name())),
         m_typeName(charToQString(m_property.typeName())),
         m_kind(OtherKind),
-        m_enumerator(0)
+        m_enumerator(nullptr)
     {
         if (m_property.isFlagType() || m_property.isEnumType()) {
             const QMetaEnum metaEnum = m_property.enumerator();
@@ -305,7 +305,7 @@ namespace  {
        m_className(charToQString(metaObject->className())),
        m_introspection(introspection),
        m_metaObject(metaObject),
-       m_userProperty(0)
+       m_userProperty(nullptr)
     {
         const int numEnumerators = metaObject->enumeratorCount();
         m_enumerators.reserve(numEnumerators);
@@ -338,7 +338,7 @@ namespace  {
     {
         const QMetaObject *qSuperClass = m_metaObject->superClass();
         if (!qSuperClass)
-            return 0;
+            return nullptr;
         return m_introspection->metaObjectForQMetaObject(qSuperClass);
     }
 

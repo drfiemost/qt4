@@ -202,7 +202,7 @@ public:
     QGLFunctions::OpenGLFeatures openGLFeatures() const;
     bool hasOpenGLFeature(QGLFunctions::OpenGLFeature feature) const;
 
-    void initializeGLFunctions(const QGLContext *context = 0);
+    void initializeGLFunctions(const QGLContext *context = nullptr);
 
     void glActiveTexture(GLenum texture);
     void glAttachShader(GLuint program, GLuint shader);
@@ -304,14 +304,14 @@ public:
 
 private:
     QGLFunctionsPrivate *d_ptr;
-    static bool isInitialized(const QGLFunctionsPrivate *d) { return d != 0; }
+    static bool isInitialized(const QGLFunctionsPrivate *d) { return d != nullptr; }
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QGLFunctions::OpenGLFeatures)
 
 struct QGLFunctionsPrivate
 {
-    QGLFunctionsPrivate(const QGLContext *context = 0);
+    QGLFunctionsPrivate(const QGLContext *context = nullptr);
 
 #ifndef QT_OPENGL_ES_2
     void (QGLF_APIENTRYP activeTexture)(GLenum texture);

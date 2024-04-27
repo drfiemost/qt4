@@ -58,7 +58,7 @@ class SearchWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SearchWidget(QHelpSearchEngine *engine, QWidget *parent = 0);
+    explicit SearchWidget(QHelpSearchEngine *engine, QWidget *parent = nullptr);
     ~SearchWidget();
 
     void zoomIn();

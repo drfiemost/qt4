@@ -52,7 +52,7 @@ class FilesPage : public QWizardPage
     Q_OBJECT
 
 public:
-    FilesPage(QWidget *parent = 0);
+    FilesPage(QWidget *parent = nullptr);
     void setFilesToRemove(const QStringList &files);
     QStringList filesToRemove() const;
 

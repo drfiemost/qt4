@@ -167,7 +167,7 @@ class Generator
                         const Node *apparentNode,
                         const Node *relative, 
                         CodeMarker *marker,
-                        const Node *actualNode = 0);
+                        const Node *actualNode = nullptr);
     void appendFullName(Text& text,
                         const Node *apparentNode,
                         const QString& fullName,

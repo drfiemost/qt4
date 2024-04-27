@@ -55,7 +55,7 @@ class QTestTablePrivate
 public:
     struct ElementList
     {
-        ElementList(): elementName(0), elementType(0), next(0) {}
+        ElementList(): elementName(nullptr), elementType(0), next(nullptr) {}
         const char *elementName;
         int elementType;
         ElementList *next;
@@ -63,12 +63,12 @@ public:
 
     struct DataList
     {
-        DataList(): data(0), next(0) {}
+        DataList(): data(nullptr), next(nullptr) {}
         QTestData *data;
         DataList *next;
     };
 
-    QTestTablePrivate(): list(0), dataList(0) {}
+    QTestTablePrivate(): list(nullptr), dataList(nullptr) {}
     ~QTestTablePrivate();
 
     ElementList *list;
@@ -83,15 +83,15 @@ public:
     static QTestTable *gTable;
 };
 
-QTestTable *QTestTablePrivate::currentTestTable = 0;
-QTestTable *QTestTablePrivate::gTable = 0;
+QTestTable *QTestTablePrivate::currentTestTable = nullptr;
+QTestTable *QTestTablePrivate::gTable = nullptr;
 
 QTestTablePrivate::ElementList *QTestTablePrivate::elementAt(int index)
 {
     ElementList *iter = list;
     for (int i = 0; i < index; ++i) {
         if (!iter)
-            return 0;
+            return nullptr;
         iter = iter->next;
     }
     return iter;
@@ -102,10 +102,10 @@ QTestData *QTestTablePrivate::dataAt(int index)
     DataList *iter = dataList;
     for (int i = 0; i < index; ++i) {
         if (!iter)
-            return 0;
+            return nullptr;
         iter = iter->next;
     }
-    return iter ? iter->data : 0;
+    return iter ? iter->data : nullptr;
 }
 
 QTestTablePrivate::~QTestTablePrivate()
@@ -135,7 +135,7 @@ void QTestTablePrivate::append(int elemType, const char *elemName)
         return;
     }
     ElementList *last = list;
-    while (last->next != 0)
+    while (last->next != nullptr)
         last = last->next;
     last->next = item;
 }
@@ -149,7 +149,7 @@ void QTestTablePrivate::append(QTestData *data)
         return;
     }
     DataList *last = dataList;
-    while (last->next != 0)
+    while (last->next != nullptr)
         last = last->next;
     last->next = item;
 }
@@ -205,7 +205,7 @@ QTestTable::QTestTable()
 
 QTestTable::~QTestTable()
 {
-    QTestTablePrivate::currentTestTable = 0;
+    QTestTablePrivate::currentTestTable = nullptr;
     delete d;
 }
 
@@ -221,7 +221,7 @@ const char *QTestTable::dataTag(int index) const
 {
     QTestTablePrivate::ElementList *item = d->elementAt(index);
     if (!item)
-        return 0;
+        return nullptr;
     return item->elementName;
 }
 
@@ -255,7 +255,7 @@ QTestTable *QTestTable::globalTestTable()
 void QTestTable::clearGlobalTestTable()
 {
     delete QTestTablePrivate::gTable;
-    QTestTablePrivate::gTable = 0;
+    QTestTablePrivate::gTable = nullptr;
 }
 
 QTestTable *QTestTable::currentTestTable()

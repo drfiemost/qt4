@@ -186,7 +186,7 @@ Colormap qt_gl_choose_cmap(Display *dpy, XVisualInfo *vi)
     if (first_time) {
         const char *v = glXQueryServerString(dpy, vi->screen, GLX_VERSION);
         if (v)
-            mesa_gl = (strstr(v, "Mesa") != 0);
+            mesa_gl = (strstr(v, "Mesa") != nullptr);
         first_time = false;
     }
 
@@ -301,7 +301,7 @@ static void find_trans_colors()
         int actualFormat;
         ulong nItems;
         ulong bytesAfter;
-        unsigned char *retval = 0;
+        unsigned char *retval = nullptr;
         int res = XGetWindowProperty(appDisplay, rootWin->winId(),
                                       overlayVisualsAtom, 0, 10000, False,
                                       overlayVisualsAtom, &actualType,
@@ -342,14 +342,14 @@ void* qglx_getProcAddress(const char* procName)
     // the symbols wont be in the GL library, but rather in a plugin loaded by
     // the GL library.
     typedef void* (*qt_glXGetProcAddressARB)(const char *);
-    static qt_glXGetProcAddressARB glXGetProcAddressARB = 0;
+    static qt_glXGetProcAddressARB glXGetProcAddressARB = nullptr;
     static bool triedResolvingGlxGetProcAddress = false;
     if (!triedResolvingGlxGetProcAddress) {
         triedResolvingGlxGetProcAddress = true;
         QGLExtensionMatcher extensions(glXGetClientString(QX11Info::display(), GLX_EXTENSIONS));
         if (extensions.match("GLX_ARB_get_proc_address")) {
 #if defined(Q_OS_LINUX) || defined(Q_OS_BSD4)
-            void *handle = dlopen(NULL, RTLD_LAZY);
+            void *handle = dlopen(nullptr, RTLD_LAZY);
             if (handle) {
                 glXGetProcAddressARB = (qt_glXGetProcAddressARB) dlsym(handle, "glXGetProcAddressARB");
                 dlclose(handle);
@@ -367,14 +367,14 @@ void* qglx_getProcAddress(const char* procName)
         }
     }
 
-    void *procAddress = 0;
+    void *procAddress = nullptr;
     if (glXGetProcAddressARB)
         procAddress = glXGetProcAddressARB(procName);
 
     // If glXGetProcAddress didn't work, try looking the symbol up in the GL library
 #if defined(Q_OS_LINUX) || defined(Q_OS_BSD4)
     if (!procAddress) {
-        void *handle = dlopen(NULL, RTLD_LAZY);
+        void *handle = dlopen(nullptr, RTLD_LAZY);
         if (handle) {
             procAddress = dlsym(handle, procName);
             dlclose(handle);
@@ -395,7 +395,7 @@ void* qglx_getProcAddress(const char* procName)
 
 bool QGLFormat::hasOpenGL()
 {
-    return glXQueryExtension(X11->display, 0, 0) != 0;
+    return glXQueryExtension(X11->display, nullptr, nullptr) != 0;
 }
 
 
@@ -420,7 +420,7 @@ static bool buildSpec(int* spec, const QGLFormat& f, QPaintDevice* paintDevice,
       HPUX defines GLX_VERSION_1_3 but does not implement the corresponding functions.
       Specifically glXChooseFBConfig and glXGetVisualFromFBConfig are not implemented.
      */
-    QWidget* widget = 0;
+    QWidget* widget = nullptr;
     if (paintDevice->devType() == QInternal::Widget)
         widget = static_cast<QWidget*>(paintDevice);
 
@@ -625,7 +625,7 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
     if (shareContext &&
          (!shareContext->isValid() || !shareContext->d_func()->cx)) {
             qWarning("QGLContext::chooseContext(): Cannot share with invalid context");
-            shareContext = 0;
+            shareContext = nullptr;
     }
 
     // 1. Sharing between rgba and color-index will give wrong colors.
@@ -638,7 +638,7 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
             || (deviceIsPixmap() && glXIsDirect(disp, (GLXContext)shareContext->d_func()->cx))
             || (shareContext->d_func()->screen != xinfo->screen())))
     {
-        shareContext = 0;
+        shareContext = nullptr;
     }
 
     const int major = d->reqFormat.majorVersion();
@@ -647,7 +647,7 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
         ? GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
         : GLX_CONTEXT_CORE_PROFILE_BIT_ARB;
 
-    d->cx = 0;
+    d->cx = nullptr;
 
 #if defined(GLX_VERSION_1_3)
     /*
@@ -655,7 +655,7 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
       Specifically glXChooseFBConfig and glXGetVisualFromFBConfig are not implemented.
      */
     if ((major == 3 && minor >= 2) || major > 3) {
-        QGLTemporaryContext *tmpContext = 0;
+        QGLTemporaryContext *tmpContext = nullptr;
         if (!QGLContext::currentContext())
             tmpContext = new QGLTemporaryContext;
 
@@ -682,10 +682,10 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
 
             if (configs && configCount > 0) {
                 d->cx = glXCreateContextAttribs(disp, configs[0],
-                    shareContext ? (GLXContext)shareContext->d_func()->cx : 0, direct, attributes);
+                    shareContext ? (GLXContext)shareContext->d_func()->cx : nullptr, direct, attributes);
                 if (!d->cx && shareContext) {
-                    shareContext = 0;
-                    d->cx = glXCreateContextAttribs(disp, configs[0], 0, direct, attributes);
+                    shareContext = nullptr;
+                    d->cx = glXCreateContextAttribs(disp, configs[0], nullptr, direct, attributes);
                 }
                 d->screen = ((XVisualInfo*)d->vi)->screen;
             }
@@ -709,9 +709,9 @@ bool QGLContext::chooseContext(const QGLContext* shareContext)
         d->screen = ((XVisualInfo*)d->vi)->screen;
     }
     if (!d->cx) {
-        d->cx = glXCreateContext(disp, (XVisualInfo *)d->vi, NULL, direct);
+        d->cx = glXCreateContext(disp, (XVisualInfo *)d->vi, nullptr, direct);
         d->screen = ((XVisualInfo*)d->vi)->screen;
-        shareContext = 0;
+        shareContext = nullptr;
     }
 
     if (shareContext && d->cx) {
@@ -753,7 +753,7 @@ void *QGLContext::chooseVisual()
     Q_D(QGLContext);
     static const int bufDepths[] = { 8, 4, 2, 1 };        // Try 16, 12 also?
     //todo: if pixmap, also make sure that vi->depth == pixmap->depth
-    void* vis = 0;
+    void* vis = nullptr;
     int i = 0;
     bool fail = false;
     QGLFormat fmt = format();
@@ -821,7 +821,7 @@ void *QGLContext::tryVisual(const QGLFormat& f, int bufDepth)
     const QX11Info *xinfo = qt_x11Info(d->paintDevice);
     bool useFBConfig = buildSpec(spec, f, d->paintDevice, bufDepth, false);
 
-    XVisualInfo* chosenVisualInfo = 0;
+    XVisualInfo* chosenVisualInfo = nullptr;
 
 #if defined(GLX_VERSION_1_3)
     while (useFBConfig) {
@@ -839,7 +839,7 @@ void *QGLContext::tryVisual(const QGLFormat& f, int bufDepth)
                 continue;
 
 #if !defined(QT_NO_XRENDER)
-            QWidget* w = 0;
+            QWidget* w = nullptr;
             if (d->paintDevice->devType() == QInternal::Widget)
                 w = static_cast<QWidget*>(d->paintDevice);
 
@@ -895,8 +895,8 @@ void QGLContext::reset()
     glXDestroyContext(xinfo->display(), (GLXContext)d->cx);
     if (d->vi)
         XFree(d->vi);
-    d->vi = 0;
-    d->cx = 0;
+    d->vi = nullptr;
+    d->cx = nullptr;
     d->crWin = false;
     d->sharing = false;
     d->valid = false;
@@ -932,8 +932,8 @@ void QGLContext::makeCurrent()
 void QGLContext::doneCurrent()
 {
     Q_D(QGLContext);
-    glXMakeCurrent(qt_x11Info(d->paintDevice)->display(), 0, 0);
-    QGLContextPrivate::setCurrentContext(0);
+    glXMakeCurrent(qt_x11Info(d->paintDevice)->display(), 0, nullptr);
+    QGLContextPrivate::setCurrentContext(nullptr);
 }
 
 
@@ -947,8 +947,8 @@ void QGLContext::swapBuffers() const
         if (interval > 0) {
             typedef int (*qt_glXGetVideoSyncSGI)(uint *);
             typedef int (*qt_glXWaitVideoSyncSGI)(int, int, uint *);
-            static qt_glXGetVideoSyncSGI glXGetVideoSyncSGI = 0;
-            static qt_glXWaitVideoSyncSGI glXWaitVideoSyncSGI = 0;
+            static qt_glXGetVideoSyncSGI glXGetVideoSyncSGI = nullptr;
+            static qt_glXWaitVideoSyncSGI glXWaitVideoSyncSGI = nullptr;
             static bool resolved = false;
             if (!resolved) {
                 const QX11Info *xinfo = qt_x11Info(d->paintDevice);
@@ -1004,7 +1004,7 @@ uint QGLContext::colorIndex(const QColor& c) const
         CMapEntryHash *hash = cmap_handler()->cmap_hash;
         CMapEntryHash::ConstIterator it = hash->constFind(long(info->visualid)
                 + (info->screen * 256));
-        QCMapEntry *x = 0;
+        QCMapEntry *x = nullptr;
         if (it != hash->constEnd())
             x = it.value();
         if (x && !x->alloc) {                // It's a standard colormap
@@ -1105,8 +1105,8 @@ static void qgl_use_font(QFontEngineFT *engine, int first, int count, int listBa
         dx = face->glyph->metrics.horiAdvance >> 6;
         dy = 0;
         int sz = bm.pitch * bm.rows;
-        uint *aa_glyph = 0;
-        uchar *ua_glyph = 0;
+        uint *aa_glyph = nullptr;
+        uchar *ua_glyph = nullptr;
 
         if (antialiased)
             aa_glyph = new uint[sz];
@@ -1132,9 +1132,9 @@ static void qgl_use_font(QFontEngineFT *engine, int first, int count, int listBa
         if (antialiased) {
             // calling glBitmap() is just a trick to move the current
             // raster pos, since glGet*() won't work in display lists
-            glBitmap(0, 0, 0, 0, x0, -y0, 0);
+            glBitmap(0, 0, 0, 0, x0, -y0, nullptr);
             glDrawPixels(bm.pitch, bm.rows, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, aa_glyph);
-            glBitmap(0, 0, 0, 0, dx-x0, y0, 0);
+            glBitmap(0, 0, 0, 0, dx-x0, y0, nullptr);
         } else {
             glBitmap(bm.pitch*8, bm.rows, -x0, y0, dx, dy, ua_glyph);
         }
@@ -1178,16 +1178,16 @@ void QGLContext::generateFontDisplayLists(const QFont & fnt, int listBase)
 void *QGLContext::getProcAddress(const QString &proc) const
 {
     typedef void *(*qt_glXGetProcAddressARB)(const GLubyte *);
-    static qt_glXGetProcAddressARB glXGetProcAddressARB = 0;
+    static qt_glXGetProcAddressARB glXGetProcAddressARB = nullptr;
     static bool resolved = false;
 
     if (resolved && !glXGetProcAddressARB)
-        return 0;
+        return nullptr;
     if (!glXGetProcAddressARB) {
         QGLExtensionMatcher extensions(glXGetClientString(QX11Info::display(), GLX_EXTENSIONS));
         if (extensions.match("GLX_ARB_get_proc_address")) {
 #if defined(Q_OS_LINUX) || defined(Q_OS_BSD4)
-            void *handle = dlopen(NULL, RTLD_LAZY);
+            void *handle = dlopen(nullptr, RTLD_LAZY);
             if (handle) {
                 glXGetProcAddressARB = (qt_glXGetProcAddressARB) dlsym(handle, "glXGetProcAddressARB");
                 dlclose(handle);
@@ -1206,7 +1206,7 @@ void *QGLContext::getProcAddress(const QString &proc) const
         resolved = true;
     }
     if (!glXGetProcAddressARB)
-        return 0;
+        return nullptr;
     return glXGetProcAddressARB(reinterpret_cast<const GLubyte *>(proc.toLatin1().data()));
 }
 
@@ -1228,7 +1228,7 @@ QGLTemporaryContext::QGLTemporaryContext(bool, QWidget *)
 {
     d->initialized = false;
     d->oldDrawable = 0;
-    d->oldContext = 0;
+    d->oldContext = nullptr;
     int screen = 0;
 
     int attribs[] = {GLX_RGBA, XNone};
@@ -1254,7 +1254,7 @@ QGLTemporaryContext::QGLTemporaryContext(bool, QWidget *)
                                 0, 0, 1, 1, 0,
                                 vi->depth, InputOutput, vi->visual,
                                 CWColormap, &a);
-    d->context = glXCreateContext(X11->display, vi, 0, True);
+    d->context = glXCreateContext(X11->display, vi, nullptr, True);
     if (d->context && glXMakeCurrent(X11->display, d->drawable, d->context)) {
         d->initialized = true;
     } else {
@@ -1267,7 +1267,7 @@ QGLTemporaryContext::QGLTemporaryContext(bool, QWidget *)
 QGLTemporaryContext::~QGLTemporaryContext()
 {
     if (d->initialized) {
-        glXMakeCurrent(X11->display, 0, 0);
+        glXMakeCurrent(X11->display, 0, nullptr);
         glXDestroyContext(X11->display, d->context);
         XDestroyWindow(X11->display, d->drawable);
     }
@@ -1283,7 +1283,7 @@ class QGLOverlayWidget : public QGLWidget
 {
     Q_OBJECT
 public:
-    QGLOverlayWidget(const QGLFormat& format, QGLWidget* parent, const QGLWidget* shareWidget=0);
+    QGLOverlayWidget(const QGLFormat& format, QGLWidget* parent, const QGLWidget* shareWidget=nullptr);
 
 protected:
     void                initializeGL();
@@ -1301,7 +1301,7 @@ private:
 
 QGLOverlayWidget::QGLOverlayWidget(const QGLFormat& format, QGLWidget* parent,
                                    const QGLWidget* shareWidget)
-    : QGLWidget(format, parent, shareWidget ? shareWidget->d_func()->olw : 0)
+    : QGLWidget(format, parent, shareWidget ? shareWidget->d_func()->olw : nullptr)
 {
     setAttribute(Qt::WA_X11OpenGLOverlay);
     realWidget = parent;
@@ -1344,7 +1344,7 @@ void QGLWidgetPrivate::init(QGLContext *context, const QGLWidget *shareWidget)
 {
     Q_Q(QGLWidget);
     initContext(context, shareWidget);
-    olw = 0;
+    olw = nullptr;
 
     if (q->isValid() && context->format().hasOverlay()) {
         QString olwName = q->objectName();
@@ -1357,7 +1357,7 @@ void QGLWidgetPrivate::init(QGLContext *context, const QGLWidget *shareWidget)
         }
         else {
             delete olw;
-            olw = 0;
+            olw = nullptr;
             glcx->d_func()->glFormat.setOverlay(false);
         }
     }
@@ -1438,7 +1438,7 @@ const QGLContext* QGLWidget::overlayContext() const
     if (d->olw)
         return d->olw->context();
     else
-        return 0;
+        return nullptr;
 }
 
 
@@ -1469,7 +1469,7 @@ void QGLWidget::setContext(QGLContext *context,
                             bool deleteOldContext)
 {
     Q_D(QGLWidget);
-    if (context == 0) {
+    if (context == nullptr) {
         qWarning("QGLWidget::setContext: Cannot set null context");
         return;
     }
@@ -1560,7 +1560,7 @@ void QGLWidget::setContext(QGLContext *context,
 #endif
     if (deleteOldContext)
         delete oldcx;
-    oldcx = 0;
+    oldcx = nullptr;
 
     if (testAttribute(Qt::WA_WState_Created))
         create(w);
@@ -1709,8 +1709,8 @@ void QGLWidget::setColormap(const QGLColormap & c)
 #if defined(GLX_VERSION_1_3)
 typedef void (*qt_glXBindTexImageEXT)(Display*, GLXDrawable, int, const int*);
 typedef void (*qt_glXReleaseTexImageEXT)(Display*, GLXDrawable, int);
-static qt_glXBindTexImageEXT glXBindTexImageEXT = 0;
-static qt_glXReleaseTexImageEXT glXReleaseTexImageEXT = 0;
+static qt_glXBindTexImageEXT glXBindTexImageEXT = nullptr;
+static qt_glXReleaseTexImageEXT glXReleaseTexImageEXT = nullptr;
 
 static bool qt_resolveTextureFromPixmap(QPaintDevice *paintDevice)
 {
@@ -1757,7 +1757,7 @@ QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, cons
     int minorVersion = 0;
     glXQueryVersion(X11->display, &majorVersion, &minorVersion);
     if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 3))
-        return 0;
+        return nullptr;
 
     Q_Q(QGLContext);
 
@@ -1766,24 +1766,24 @@ QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, cons
 
     // We can't use TFP if the pixmap has a separate X11 mask
     if (pixmapData->x11_mask)
-        return 0;
+        return nullptr;
 
     if (!qt_resolveTextureFromPixmap(paintDevice))
-        return 0;
+        return nullptr;
 
     const QX11Info &x11Info = pixmapData->xinfo;
 
     // Store the configs (Can be static because configs aren't dependent on current context)
-    static GLXFBConfig glxRGBPixmapConfig = 0;
+    static GLXFBConfig glxRGBPixmapConfig = nullptr;
     static bool RGBConfigInverted = false;
-    static GLXFBConfig glxRGBAPixmapConfig = 0;
+    static GLXFBConfig glxRGBAPixmapConfig = nullptr;
     static bool RGBAConfigInverted = false;
 
     bool hasAlpha = pixmapData->hasAlphaChannel();
 
     // Check to see if we need a config
     if ( (hasAlpha && !glxRGBAPixmapConfig) || (!hasAlpha && !glxRGBPixmapConfig) ) {
-        GLXFBConfig    *configList = 0;
+        GLXFBConfig    *configList = nullptr;
         int             configCount = 0;
 
         int configAttribs[] = {
@@ -1796,7 +1796,7 @@ QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, cons
         };
         configList = glXChooseFBConfig(x11Info.display(), x11Info.screen(), configAttribs, &configCount);
         if (!configList)
-            return 0;
+            return nullptr;
 
         int yInv;
         glXGetFBConfigAttrib(x11Info.display(), configList[0], GLX_Y_INVERTED_EXT, &yInv);
@@ -1837,7 +1837,7 @@ QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, cons
                                     pixmapData->handle(), pixmapAttribs);
 
         if (!glxPixmap)
-            return 0;
+            return nullptr;
 
         pixmapData->gl_surface = (void*)glxPixmap;
 
@@ -1848,7 +1848,7 @@ QGLTexture *QGLContextPrivate::bindTextureFromNativePixmap(QPixmap *pixmap, cons
     GLuint textureId;
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
-    glXBindTexImageEXT(x11Info.display(), (GLXPixmap)pixmapData->gl_surface, GLX_FRONT_LEFT_EXT, 0);
+    glXBindTexImageEXT(x11Info.display(), (GLXPixmap)pixmapData->gl_surface, GLX_FRONT_LEFT_EXT, nullptr);
 
     glBindTexture(GL_TEXTURE_2D, textureId);
     GLuint filtering = (options & QGLContext::LinearFilteringBindOption) ? GL_LINEAR : GL_NEAREST;
@@ -1877,7 +1877,7 @@ void QGLContextPrivate::destroyGlSurfaceForPixmap(QPixmapData* pmd)
     QX11PixmapData *pixmapData = static_cast<QX11PixmapData*>(pmd);
     if (pixmapData->gl_surface) {
         glXDestroyPixmap(QX11Info::display(), (GLXPixmap)pixmapData->gl_surface);
-        pixmapData->gl_surface = 0;
+        pixmapData->gl_surface = nullptr;
     }
 #endif
 }

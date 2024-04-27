@@ -115,8 +115,8 @@ public:
         int revision; 
         int metaObjectOffset;
 
-        static Flags flagsForProperty(const QMetaProperty &, QDeclarativeEngine *engine = 0);
-        void load(const QMetaProperty &, QDeclarativeEngine *engine = 0);
+        static Flags flagsForProperty(const QMetaProperty &, QDeclarativeEngine *engine = nullptr);
+        void load(const QMetaProperty &, QDeclarativeEngine *engine = nullptr);
         void load(const QMetaMethod &);
         QString name(QObject *);
         QString name(const QMetaObject *);
@@ -180,7 +180,7 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(QDeclarativePropertyCache::Data::Flags)
   
 QDeclarativePropertyCache::Data::Data()
-: flags(0), propType(0), coreIndex(-1), notifyIndex(-1), overrideIndexIsProperty(false), overrideIndex(-1),
+: flags(nullptr), propType(0), coreIndex(-1), notifyIndex(-1), overrideIndexIsProperty(false), overrideIndex(-1),
   revision(0), metaObjectOffset(-1)
 {
 }
@@ -198,7 +198,7 @@ QDeclarativePropertyCache::Data *
 QDeclarativePropertyCache::overrideData(Data *data) const
 {
     if (data->overrideIndex < 0)
-        return 0;
+        return nullptr;
 
     if (data->overrideIndexIsProperty)
         return indexCache.at(data->overrideIndex);

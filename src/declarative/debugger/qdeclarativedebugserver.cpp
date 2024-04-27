@@ -100,7 +100,7 @@ private:
 };
 
 QDeclarativeDebugServerPrivate::QDeclarativeDebugServerPrivate() :
-    connection(0),
+    connection(nullptr),
     gotHello(false),
     waitingForMsgSucceeded(false)
 {
@@ -141,7 +141,7 @@ QDeclarativeDebugServerConnection *QDeclarativeDebugServerPrivate::loadConnectio
         if (!loader->load()) {
             continue;
         }
-        QDeclarativeDebugServerConnection *connection = 0;
+        QDeclarativeDebugServerConnection *connection = nullptr;
         if (QObject *instance = loader->instance())
             connection = qobject_cast<QDeclarativeDebugServerConnection*>(instance);
 
@@ -150,7 +150,7 @@ QDeclarativeDebugServerConnection *QDeclarativeDebugServerPrivate::loadConnectio
         loader->unload();
     }
 #endif
-    return 0;
+    return nullptr;
 }
 
 bool QDeclarativeDebugServer::hasDebuggingClient() const
@@ -164,7 +164,7 @@ bool QDeclarativeDebugServer::hasDebuggingClient() const
 QDeclarativeDebugServer *QDeclarativeDebugServer::instance()
 {
     static bool commandLineTested = false;
-    static QDeclarativeDebugServer *server = 0;
+    static QDeclarativeDebugServer *server = nullptr;
 
     if (!commandLineTested) {
         commandLineTested = true;
@@ -183,7 +183,7 @@ QDeclarativeDebugServer *QDeclarativeDebugServer::instance()
                                   "QDeclarativeDebugServer: Ignoring \"-qmljsdebugger=%1\". "
                                   "Debugging has not been enabled.").arg(
                                   appD->qmljsDebugArguments());
-                return 0;
+                return nullptr;
             }
 
             QString pluginName;
@@ -384,7 +384,7 @@ bool QDeclarativeDebugServer::removeService(QDeclarativeDebugService *service)
     d->advertisePlugins();
 
     QDeclarativeDebugService::Status newStatus = QDeclarativeDebugService::NotConnected;
-    service->d_func()->server = 0;
+    service->d_func()->server = nullptr;
     service->d_func()->status = newStatus;
     service->statusChanged(newStatus);
     return true;

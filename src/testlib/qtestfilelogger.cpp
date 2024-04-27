@@ -53,7 +53,7 @@ QT_BEGIN_NAMESPACE
 
 namespace QTest
 {
-    static FILE *stream = 0;
+    static FILE *stream = nullptr;
 }
 
 QTestFileLogger::QTestFileLogger()
@@ -65,7 +65,7 @@ QTestFileLogger::~QTestFileLogger()
     if(QTest::stream)
         fclose(QTest::stream);
 
-    QTest::stream = 0;
+    QTest::stream = nullptr;
 }
 
 void QTestFileLogger::init()

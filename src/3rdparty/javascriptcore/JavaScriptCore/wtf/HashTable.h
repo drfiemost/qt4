@@ -415,7 +415,7 @@ namespace WTF {
 
     template<typename Key, typename Value, typename Extractor, typename HashFunctions, typename Traits, typename KeyTraits>
     inline HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::HashTable()
-        : m_table(0)
+        : m_table(nullptr)
         , m_tableSize(0)
         , m_tableSizeMask(0)
         , m_keyCount(0)
@@ -475,7 +475,7 @@ namespace WTF {
         int i = h & sizeMask;
 
         if (!table)
-            return 0;
+            return nullptr;
 
 #if DUMP_HASHTABLE_STATS
         atomicIncrement(&HashTableStats::numAccesses);
@@ -491,10 +491,10 @@ namespace WTF {
                     return entry;
                 
                 if (isEmptyBucket(*entry))
-                    return 0;
+                    return nullptr;
             } else {
                 if (isEmptyBucket(*entry))
-                    return 0;
+                    return nullptr;
                 
                 if (!isDeletedBucket(*entry) && HashTranslator::equal(Extractor::extract(*entry), key))
                     return entry;
@@ -527,7 +527,7 @@ namespace WTF {
         int probeCount = 0;
 #endif
 
-        ValueType* deletedEntry = 0;
+        ValueType* deletedEntry = nullptr;
 
         while (1) {
             ValueType* entry = table + i;
@@ -579,7 +579,7 @@ namespace WTF {
         int probeCount = 0;
 #endif
 
-        ValueType* deletedEntry = 0;
+        ValueType* deletedEntry = nullptr;
 
         while (1) {
             ValueType* entry = table + i;
@@ -639,7 +639,7 @@ namespace WTF {
         int probeCount = 0;
 #endif
 
-        ValueType* deletedEntry = 0;
+        ValueType* deletedEntry = nullptr;
         ValueType* entry;
         while (1) {
             entry = table + i;
@@ -922,7 +922,7 @@ namespace WTF {
     {
         invalidateIterators();
         deallocateTable(m_table, m_tableSize);
-        m_table = 0;
+        m_table = nullptr;
         m_tableSize = 0;
         m_tableSizeMask = 0;
         m_keyCount = 0;
@@ -930,7 +930,7 @@ namespace WTF {
 
     template<typename Key, typename Value, typename Extractor, typename HashFunctions, typename Traits, typename KeyTraits>
     HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::HashTable(const HashTable& other)
-        : m_table(0)
+        : m_table(nullptr)
         , m_tableSize(0)
         , m_tableSizeMask(0)
         , m_keyCount(0)

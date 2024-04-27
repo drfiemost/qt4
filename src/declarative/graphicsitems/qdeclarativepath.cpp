@@ -226,7 +226,7 @@ void QDeclarativePath::processPath()
 
     d->_path.moveTo(d->startX, d->startY);
 
-    QDeclarativeCurve *lastCurve = 0;
+    QDeclarativeCurve *lastCurve = nullptr;
     foreach (QDeclarativePathElement *pathElement, d->_pathElements) {
         if (QDeclarativeCurve *curve = qobject_cast<QDeclarativeCurve *>(pathElement)) {
             curve->addToPath(d->_path);

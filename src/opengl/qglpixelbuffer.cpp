@@ -140,8 +140,8 @@ void QGLPixelBufferPrivate::common_init(const QSize &size, const QGLFormat &form
         req_shareWidget = shareWidget;
         invalid = false;
         qctx = new QGLContext(format);
-        qctx->d_func()->sharing = (shareWidget != 0);
-        if (shareWidget != 0 && shareWidget->d_func()->glcx) {
+        qctx->d_func()->sharing = (shareWidget != nullptr);
+        if (shareWidget != nullptr && shareWidget->d_func()->glcx) {
             QGLContextGroup::addShare(qctx, shareWidget->d_func()->glcx);
             shareWidget->d_func()->glcx->d_func()->sharing = true;
         }
@@ -155,7 +155,7 @@ void QGLPixelBufferPrivate::common_init(const QSize &size, const QGLFormat &form
 #elif (defined(Q_WS_X11) && defined(QT_NO_EGL))
         qctx->d_func()->cx = ctx;
         qctx->d_func()->pbuf = (void *) pbuf;
-        qctx->d_func()->vi = 0;
+        qctx->d_func()->vi = nullptr;
 #elif defined(Q_WS_MAC)
         qctx->d_func()->cx = ctx;
         qctx->d_func()->vi = 0;
@@ -276,7 +276,7 @@ GLuint QGLPixelBuffer::generateDynamicTexture() const
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, d->req_size.width(), d->req_size.height(), 0, GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, d->req_size.width(), d->req_size.height(), 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     return texture;

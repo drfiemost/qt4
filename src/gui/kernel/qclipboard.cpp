@@ -581,7 +581,7 @@ const char* QMimeDataWrapper::format(int n) const
             formats.append(fmts.at(i).toLatin1());
     }
     if (n < 0 || n >= formats.size())
-        return 0;
+        return nullptr;
     return formats.at(n).data();
 }
 

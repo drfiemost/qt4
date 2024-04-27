@@ -70,7 +70,7 @@ class QDeclarativeViewer
     Q_OBJECT
 
 public:
-    QDeclarativeViewer(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    QDeclarativeViewer(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     ~QDeclarativeViewer();
 
     static void registerTypes();

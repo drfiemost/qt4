@@ -59,17 +59,17 @@ public:
     explicit QCDEStyle(bool useHighlightCols = false);
     virtual ~QCDEStyle();
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
-                    const QWidget *widget = 0) const;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
+                    const QWidget *widget = nullptr) const;
     void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
-                     const QWidget *w = 0) const;
+                     const QWidget *w = nullptr) const;
     void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p,
-                       const QWidget *w = 0) const;
+                       const QWidget *w = nullptr) const;
     QPalette standardPalette() const;
 
 protected Q_SLOTS:
-    QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = 0,
-                                     const QWidget *widget = 0) const;
+    QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = nullptr,
+                                     const QWidget *widget = nullptr) const;
 };
 
 #endif // QT_NO_STYLE_CDE

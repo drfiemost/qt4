@@ -71,7 +71,7 @@ class ExpandingTextEdit : public QTextEdit
     Q_OBJECT
 
 public:
-    ExpandingTextEdit(QWidget *parent = 0);
+    ExpandingTextEdit(QWidget *parent = nullptr);
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
@@ -90,7 +90,7 @@ class FormatTextEdit : public ExpandingTextEdit
 {
     Q_OBJECT
 public:
-    FormatTextEdit(QWidget *parent = 0);
+    FormatTextEdit(QWidget *parent = nullptr);
     ~FormatTextEdit();
     void setEditable(bool editable);
 
@@ -111,7 +111,7 @@ class FormWidget : public QWidget
 {
     Q_OBJECT
 public:
-    FormWidget(const QString &label, bool isEditable, QWidget *parent = 0);
+    FormWidget(const QString &label, bool isEditable, QWidget *parent = nullptr);
     void setLabel(const QString &label) { m_label->setText(label); }
     void setTranslation(const QString &text, bool userAction = false);
     void clearTranslation() { setTranslation(QString(), false); }
@@ -142,7 +142,7 @@ class FormMultiWidget : public QWidget
 {
     Q_OBJECT
 public:
-    FormMultiWidget(const QString &label, QWidget *parent = 0);
+    FormMultiWidget(const QString &label, QWidget *parent = nullptr);
     void setLabel(const QString &label) { m_label->setText(label); }
     void setTranslation(const QString &text, bool userAction = false);
     void clearTranslation() { setTranslation(QString(), false); }

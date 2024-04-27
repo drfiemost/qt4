@@ -71,7 +71,7 @@ class QDeclarativeEngineDebugService : public QDeclarativeDebugService
 {
     Q_OBJECT
 public:
-    QDeclarativeEngineDebugService(QObject * = 0);
+    QDeclarativeEngineDebugService(QObject * = nullptr);
 
     struct QDeclarativeObjectData {
         QUrl url;

@@ -143,7 +143,7 @@ ZoomView::ZoomView(QWidget *parent) :
     m_zoom(100),
     m_zoomFactor(1.0),
     m_zoomContextMenuEnabled(false),
-    m_zoomMenu(0)
+    m_zoomMenu(nullptr)
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -310,7 +310,7 @@ bool ZoomedEventFilterRedirector::eventFilter(QObject *watched, QEvent *event)
 
 ZoomWidget::ZoomWidget(QWidget *parent) :
     ZoomView(parent),
-    m_proxy(0),
+    m_proxy(nullptr),
     m_viewResizeBlocked(false),
     m_widgetResizeBlocked(false),
     m_widgetZoomContextMenuEnabled(false)
@@ -334,7 +334,7 @@ void ZoomWidget::setWidget(QWidget *w, Qt::WindowFlags wFlags)
         m_proxy->deleteLater();
     }
     // Set window flags on the outer proxy for them to take effect
-    m_proxy = createProxyWidget(0, Qt::Window);
+    m_proxy = createProxyWidget(nullptr, Qt::Window);
     m_proxy->setWidget(w);
 
     m_proxy->setWindowFlags(wFlags);

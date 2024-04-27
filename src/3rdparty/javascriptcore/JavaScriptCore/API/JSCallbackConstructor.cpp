@@ -35,7 +35,7 @@
 
 namespace JSC {
 
-const ClassInfo JSCallbackConstructor::info = { "CallbackConstructor", 0, 0, 0 };
+const ClassInfo JSCallbackConstructor::info = { "CallbackConstructor", nullptr, nullptr, nullptr };
 
 JSCallbackConstructor::JSCallbackConstructor(NonNullPassRefPtr<Structure> structure, JSClassRef jsClass, JSObjectCallAsConstructorCallback callback)
     : JSObject(structure)
@@ -64,7 +64,7 @@ static JSObject* constructJSCallback(ExecState* exec, JSObject* constructor, con
         for (int i = 0; i < argumentCount; i++)
             arguments[i] = toRef(exec, args.at(i));
 
-        JSValueRef exception = 0;
+        JSValueRef exception = nullptr;
         JSObjectRef result;
         {
             APICallbackShim callbackShim(exec);
@@ -75,7 +75,7 @@ static JSObject* constructJSCallback(ExecState* exec, JSObject* constructor, con
         return toJS(result);
     }
     
-    return toJS(JSObjectMake(ctx, static_cast<JSCallbackConstructor*>(constructor)->classRef(), 0));
+    return toJS(JSObjectMake(ctx, static_cast<JSCallbackConstructor*>(constructor)->classRef(), nullptr));
 }
 
 ConstructType JSCallbackConstructor::getConstructData(ConstructData& constructData)

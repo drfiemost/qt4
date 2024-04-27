@@ -12730,7 +12730,7 @@ static const Summary16 big5hkscs_uni2index_page2f8[30] = {
 
 int qt_UnicodeToBig5hkscs (uint wc, uchar *r)
 {
-    const Summary16 *summary = NULL;
+    const Summary16 *summary = nullptr;
     if (wc < 0x80) {
         r[0] = (uchar) wc;
         return 1;

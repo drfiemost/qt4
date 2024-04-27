@@ -91,7 +91,7 @@ public:
         InvalidConfigurationError
     };
 
-    explicit QNetworkSession(const QNetworkConfiguration &connConfig, QObject *parent = 0);
+    explicit QNetworkSession(const QNetworkConfiguration &connConfig, QObject *parent = nullptr);
     virtual ~QNetworkSession();
 
     bool isOpen() const;

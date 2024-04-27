@@ -339,21 +339,21 @@ QGraphicsViewPrivate::QGraphicsViewPrivate()
       hasUpdateClip(false),
       mousePressButton(Qt::NoButton),
       leftIndent(0), topIndent(0),
-      lastMouseEvent(QEvent::None, QPoint(), Qt::NoButton, 0, 0),
+      lastMouseEvent(QEvent::None, QPoint(), Qt::NoButton, nullptr, nullptr),
       alignment(Qt::AlignCenter),
       transformationAnchor(QGraphicsView::AnchorViewCenter), resizeAnchor(QGraphicsView::NoAnchor),
       viewportUpdateMode(QGraphicsView::MinimalViewportUpdate),
-      optimizationFlags(0),
-      scene(0),
+      optimizationFlags(nullptr),
+      scene(nullptr),
 #ifndef QT_NO_RUBBERBAND
       rubberBanding(false),
       rubberBandSelectionMode(Qt::IntersectsItemShape),
 #endif
-      handScrollMotions(0), cacheMode(0),
+      handScrollMotions(0), cacheMode(nullptr),
 #ifndef QT_NO_CURSOR
       hasStoredOriginalCursor(false),
 #endif
-      lastDragDropEvent(0),
+      lastDragDropEvent(nullptr),
       updateSceneSlotReimplementedChecked(false)
 {
     styleOptions.reserve(QGRAPHICSVIEW_PREALLOC_STYLE_OPTIONS);
@@ -371,7 +371,7 @@ void QGraphicsViewPrivate::recalculateContentSize()
     int height = maxSize.height();
     QRectF viewRect = matrix.mapRect(q->sceneRect());
 
-    bool frameOnlyAround = (q->style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents, 0, q));
+    bool frameOnlyAround = (q->style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents, nullptr, q));
     if (frameOnlyAround) {
         if (hbarpolicy == Qt::ScrollBarAlwaysOn)
             height -= frameWidth * 2;
@@ -381,7 +381,7 @@ void QGraphicsViewPrivate::recalculateContentSize()
 
     // Adjust the maximum width and height of the viewport based on the width
     // of visible scroll bars.
-    int scrollBarExtent = q->style()->pixelMetric(QStyle::PM_ScrollBarExtent, 0, q);
+    int scrollBarExtent = q->style()->pixelMetric(QStyle::PM_ScrollBarExtent, nullptr, q);
     if (frameOnlyAround)
         scrollBarExtent += frameWidth * 2;
 
@@ -1084,19 +1084,19 @@ QList<QGraphicsItem *> QGraphicsViewPrivate::findItems(const QRegion &exposedReg
 void QGraphicsViewPrivate::updateInputMethodSensitivity()
 {
     Q_Q(QGraphicsView);
-    QGraphicsItem *focusItem = 0;
+    QGraphicsItem *focusItem = nullptr;
     bool enabled = scene && (focusItem = scene->focusItem())
                    && (focusItem->d_ptr->flags & QGraphicsItem::ItemAcceptsInputMethod);
     q->setAttribute(Qt::WA_InputMethodEnabled, enabled);
     q->viewport()->setAttribute(Qt::WA_InputMethodEnabled, enabled);
 
     if (!enabled) {
-        q->setInputMethodHints(0);
+        q->setInputMethodHints(nullptr);
         return;
     }
 
     QGraphicsProxyWidget *proxy = focusItem->d_ptr->isWidget && focusItem->d_ptr->isProxyWidget()
-                                    ? static_cast<QGraphicsProxyWidget *>(focusItem) : 0;
+                                    ? static_cast<QGraphicsProxyWidget *>(focusItem) : nullptr;
     if (!proxy) {
         q->setInputMethodHints(focusItem->inputMethodHints());
     } else if (QWidget *widget = proxy->widget()) {
@@ -1104,7 +1104,7 @@ void QGraphicsViewPrivate::updateInputMethodSensitivity()
             widget = fw;
         q->setInputMethodHints(widget->inputMethodHints());
     } else {
-        q->setInputMethodHints(0);
+        q->setInputMethodHints(nullptr);
     }
 }
 
@@ -1114,7 +1114,7 @@ void QGraphicsViewPrivate::updateInputMethodSensitivity()
 QGraphicsView::QGraphicsView(QWidget *parent)
     : QAbstractScrollArea(*new QGraphicsViewPrivate, parent)
 {
-    setViewport(0);
+    setViewport(nullptr);
     setAcceptDrops(true);
     setBackgroundRole(QPalette::Base);
     // Investigate leaving these disabled by default.
@@ -1130,7 +1130,7 @@ QGraphicsView::QGraphicsView(QGraphicsScene *scene, QWidget *parent)
     : QAbstractScrollArea(*new QGraphicsViewPrivate, parent)
 {
     setScene(scene);
-    setViewport(0);
+    setViewport(nullptr);
     setAcceptDrops(true);
     setBackgroundRole(QPalette::Base);
     // Investigate leaving these disabled by default.
@@ -1144,7 +1144,7 @@ QGraphicsView::QGraphicsView(QGraphicsScene *scene, QWidget *parent)
 QGraphicsView::QGraphicsView(QGraphicsViewPrivate &dd, QWidget *parent)
   : QAbstractScrollArea(dd, parent)
 {
-    setViewport(0);
+    setViewport(nullptr);
     setAcceptDrops(true);
     setBackgroundRole(QPalette::Base);
     // Investigate leaving these disabled by default.
@@ -2279,7 +2279,7 @@ QGraphicsItem *QGraphicsView::itemAt(const QPoint &pos) const
 {
     Q_D(const QGraphicsView);
     if (!d->scene)
-        return 0;
+        return nullptr;
     QList<QGraphicsItem *> itemsAtPos = items(pos);
     return itemsAtPos.isEmpty() ? 0 : itemsAtPos.first();
 }
@@ -2917,7 +2917,7 @@ void QGraphicsView::dropEvent(QDropEvent *event)
         event->setDropAction(sceneEvent.dropAction());
 
     delete d->lastDragDropEvent;
-    d->lastDragDropEvent = 0;
+    d->lastDragDropEvent = nullptr;
 
 #else
     Q_UNUSED(event)
@@ -2984,7 +2984,7 @@ void QGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
     sceneEvent.setWidget(d->lastDragDropEvent->widget());
     sceneEvent.setSource(d->lastDragDropEvent->source());
     delete d->lastDragDropEvent;
-    d->lastDragDropEvent = 0;
+    d->lastDragDropEvent = nullptr;
 
     // Send it to the scene.
     QApplication::sendEvent(d->scene, &sceneEvent);
@@ -3467,7 +3467,7 @@ void QGraphicsView::paintEvent(QPaintEvent *event)
             d->scene->d_func()->rectAdjust = 1;
         else
             d->scene->d_func()->rectAdjust = 2;
-        d->scene->d_func()->drawItems(&painter, viewTransformed ? &viewTransform : 0,
+        d->scene->d_func()->drawItems(&painter, viewTransformed ? &viewTransform : nullptr,
                                       &d->exposedRegion, viewport());
         d->scene->d_func()->rectAdjust = oldRectAdjust;
         // Make sure the painter's world transform is restored correctly when
@@ -3734,7 +3734,7 @@ void QGraphicsView::drawItems(QPainter *painter, int numItems,
 {
     Q_D(QGraphicsView);
     if (d->scene) {
-        QWidget *widget = painter->device() == viewport() ? viewport() : 0;
+        QWidget *widget = painter->device() == viewport() ? viewport() : nullptr;
         d->scene->drawItems(painter, numItems, items, options, widget);
     }
 }

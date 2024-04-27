@@ -45,7 +45,7 @@
 
 QT_BEGIN_NAMESPACE
 
-const QRegion::QRegionData QRegion::shared_empty = {Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0};
+const QRegion::QRegionData QRegion::shared_empty = {Q_REFCOUNT_INITIALIZE_STATIC, nullptr, nullptr, nullptr};
 
 void QRegion::updateX11Region() const
 {

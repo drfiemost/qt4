@@ -83,7 +83,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathView : public QDeclarativeItem
     Q_ENUMS(HighlightRangeMode)
 
 public:
-    QDeclarativePathView(QDeclarativeItem *parent=0);
+    QDeclarativePathView(QDeclarativeItem *parent=nullptr);
     virtual ~QDeclarativePathView();
 
     QVariant model() const;

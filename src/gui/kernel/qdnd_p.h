@@ -227,9 +227,9 @@ public:
     void move(const QPoint &);
     void drop();
     void updatePixmap();
-    QWidget *source() const { return object ? object->d_func()->source : 0; }
-    QDragPrivate *dragPrivate() const { return object ? object->d_func() : 0; }
-    static QDragPrivate *dragPrivate(QDrag *drag) { return drag ? drag->d_func() : 0; }
+    QWidget *source() const { return object ? object->d_func()->source : nullptr; }
+    QDragPrivate *dragPrivate() const { return object ? object->d_func() : nullptr; }
+    static QDragPrivate *dragPrivate(QDrag *drag) { return drag ? drag->d_func() : nullptr; }
 
     static QDragManager *self();
     Qt::DropAction defaultAction(Qt::DropActions possibleActions,

@@ -84,7 +84,7 @@ public Q_SLOTS:
 };
 
 QDeclarativeDebugConnectionPrivate::QDeclarativeDebugConnectionPrivate(QDeclarativeDebugConnection *c)
-: QObject(c), q(c), protocol(0), gotHello(false)
+: QObject(c), q(c), protocol(nullptr), gotHello(false)
 {
     protocol = new QPacketProtocol(q, this);
     QObject::connect(c, SIGNAL(connected()), this, SLOT(connected()));
@@ -202,7 +202,7 @@ QDeclarativeDebugConnection::~QDeclarativeDebugConnection()
 {
     QHash<QString, QDeclarativeDebugClient*>::iterator iter = d->plugins.begin();
     for (; iter != d->plugins.end(); ++iter) {
-         iter.value()->d_func()->connection = 0;
+         iter.value()->d_func()->connection = nullptr;
          iter.value()->statusChanged(QDeclarativeDebugClient::NotConnected);
     }
 }
@@ -213,7 +213,7 @@ bool QDeclarativeDebugConnection::isConnected() const
 }
 
 QDeclarativeDebugClientPrivate::QDeclarativeDebugClientPrivate()
-: connection(0)
+: connection(nullptr)
 {
 }
 
@@ -230,7 +230,7 @@ QDeclarativeDebugClient::QDeclarativeDebugClient(const QString &name,
 
     if (d->connection->d->plugins.contains(name)) {
         qWarning() << "QDeclarativeDebugClient: Conflicting plugin name" << name;
-        d->connection = 0;
+        d->connection = nullptr;
     } else {
         d->connection->d->plugins.insert(name, this);
         d->connection->d->advertisePlugins();

@@ -68,7 +68,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeParentChange : public QDeclarativ
     Q_PROPERTY(QDeclarativeScriptString scale READ scale WRITE setScale)
     Q_PROPERTY(QDeclarativeScriptString rotation READ rotation WRITE setRotation)
 public:
-    QDeclarativeParentChange(QObject *parent=0);
+    QDeclarativeParentChange(QObject *parent=nullptr);
     ~QDeclarativeParentChange();
 
     QDeclarativeItem *object() const;
@@ -126,7 +126,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeStateChangeScript : public QDeclarativeState
     Q_PROPERTY(QString name READ name WRITE setName)
 
 public:
-    QDeclarativeStateChangeScript(QObject *parent=0);
+    QDeclarativeStateChangeScript(QObject *parent=nullptr);
     ~QDeclarativeStateChangeScript();
 
     virtual ActionList actions();
@@ -168,7 +168,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeAnchorSet : public QObject
     Q_PROPERTY(qreal baselineOffset READ baselineOffset WRITE setBaselineOffset NOTIFY baselineOffsetChanged())*/
 
 public:
-    QDeclarativeAnchorSet(QObject *parent=0);
+    QDeclarativeAnchorSet(QObject *parent=nullptr);
     virtual ~QDeclarativeAnchorSet();
 
     QDeclarativeScriptString left() const;
@@ -259,7 +259,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeAnchorChanges : public QDeclarati
     Q_PROPERTY(QDeclarativeAnchorSet *anchors READ anchors CONSTANT)
 
 public:
-    QDeclarativeAnchorChanges(QObject *parent=0);
+    QDeclarativeAnchorChanges(QObject *parent=nullptr);
     ~QDeclarativeAnchorChanges();
 
     virtual ActionList actions();

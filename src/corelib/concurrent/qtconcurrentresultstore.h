@@ -70,8 +70,8 @@ class ResultItem
 public:
     ResultItem(const void *_result, int _count) : m_count(_count), result(_result) { } // contruct with vector of results
     ResultItem(const void *_result) : m_count(0), result(_result) { } // construct with result
-    ResultItem() : m_count(0), result(0) { }
-    bool isValid() const { return result != 0; }
+    ResultItem() : m_count(0), result(nullptr) { }
+    bool isValid() const { return result != nullptr; }
     bool isVector() const { return m_count != 0; }
     int count() const { return (m_count == 0) ?  1 : m_count; }
     int m_count;          // result is either a pointer to a result or to a vector of results,

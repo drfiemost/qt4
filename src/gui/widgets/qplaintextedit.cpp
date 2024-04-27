@@ -82,7 +82,7 @@ class QPlainTextDocumentLayoutPrivate : public QAbstractTextDocumentLayoutPrivat
     Q_DECLARE_PUBLIC(QPlainTextDocumentLayout)
 public:
     QPlainTextDocumentLayoutPrivate() {
-        mainViewPrivate = 0;
+        mainViewPrivate = nullptr;
         width = 0;
         maximumWidth = 0;
         maximumWidthBlockNumber = 0;
@@ -740,7 +740,7 @@ void QPlainTextEditPrivate::updateViewport()
 }
 
 QPlainTextEditPrivate::QPlainTextEditPrivate()
-    : control(0),
+    : control(nullptr),
       tabChangesFocus(false),
       lineWrap(QPlainTextEdit::WidgetWidth),
       wordWrap(QTextOption::WrapAtWordBoundaryOrAnywhere),
@@ -1266,7 +1266,7 @@ QPlainTextEdit::~QPlainTextEdit()
     Q_D(QPlainTextEdit);
     if (d->documentLayoutPtr) {
         if (d->documentLayoutPtr->priv()->mainViewPrivate == d)
-            d->documentLayoutPtr->priv()->mainViewPrivate = 0;
+            d->documentLayoutPtr->priv()->mainViewPrivate = nullptr;
     }
 }
 
@@ -1285,7 +1285,7 @@ QPlainTextEdit::~QPlainTextEdit()
 void QPlainTextEdit::setDocument(QTextDocument *document)
 {
     Q_D(QPlainTextEdit);
-    QPlainTextDocumentLayout *documentLayout = 0;
+    QPlainTextDocumentLayout *documentLayout = nullptr;
 
     if (!document) {
         document = new QTextDocument(d->control);
@@ -1804,7 +1804,7 @@ void QPlainTextEditPrivate::relayoutDocument()
 
     int width = viewport->width();
 
-    if (documentLayout->priv()->mainViewPrivate == 0
+    if (documentLayout->priv()->mainViewPrivate == nullptr
         || documentLayout->priv()->mainViewPrivate == this
         || width > documentLayout->textWidth()) {
         documentLayout->priv()->mainViewPrivate = this;

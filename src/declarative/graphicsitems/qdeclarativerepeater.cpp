@@ -50,7 +50,7 @@
 
 QT_BEGIN_NAMESPACE
 QDeclarativeRepeaterPrivate::QDeclarativeRepeaterPrivate()
-: model(0), ownModel(false)
+: model(nullptr), ownModel(false)
 {
 }
 
@@ -199,7 +199,7 @@ void QDeclarativeRepeater::setModel(const QVariant &model)
     }
     d->dataSource = model;
     QObject *object = qvariant_cast<QObject*>(model);
-    QDeclarativeVisualModel *vim = 0;
+    QDeclarativeVisualModel *vim = nullptr;
     if (object && (vim = qobject_cast<QDeclarativeVisualModel *>(object))) {
         if (d->ownModel) {
             delete d->model;
@@ -270,7 +270,7 @@ QDeclarativeComponent *QDeclarativeRepeater::delegate() const
             return dataModel->delegate();
     }
 
-    return 0;
+    return nullptr;
 }
 
 void QDeclarativeRepeater::setDelegate(QDeclarativeComponent *delegate)
@@ -316,7 +316,7 @@ QDeclarativeItem *QDeclarativeRepeater::itemAt(int index) const
     Q_D(const QDeclarativeRepeater);
     if (index >= 0 && index < d->deletables.count())
         return d->deletables[index];
-    return 0;
+    return nullptr;
 
 }
 

@@ -83,7 +83,7 @@ void LiveSingleSelectionManipulator::select(SelectionType selectionType,
                                             const QList<QGraphicsItem*> &items,
                                             bool /*selectOnlyContentItems*/)
 {
-    QGraphicsItem *selectedItem = 0;
+    QGraphicsItem *selectedItem = nullptr;
 
     foreach (QGraphicsItem* item, items)
     {

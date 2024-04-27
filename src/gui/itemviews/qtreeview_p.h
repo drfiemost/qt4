@@ -85,7 +85,7 @@ public:
 
     QTreeViewPrivate()
         : QAbstractItemViewPrivate(),
-          header(0), indent(20), lastViewedItem(0), defaultItemHeight(-1),
+          header(nullptr), indent(20), lastViewedItem(0), defaultItemHeight(-1),
           uniformRowHeights(false), rootDecoration(true),
           itemsExpandable(true), sortingEnabled(false),
           expandsOnDoubleClick(true),
@@ -147,7 +147,7 @@ public:
     bool checkViewItems() const;
 #endif
 
-    int firstVisibleItem(int *offset = 0) const;
+    int firstVisibleItem(int *offset = nullptr) const;
     int columnAt(int x) const;
     bool hasVisibleChildren( const QModelIndex& parent) const;
 

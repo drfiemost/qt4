@@ -152,7 +152,7 @@ public slots:
      */
     void styleSheetParentDestroyed() {
         setProperty("_q_stylesheet_parent", QVariant());
-        styleSheetParent = 0;
+        styleSheetParent = nullptr;
     }
 
 private:
@@ -164,11 +164,11 @@ private:
     QRect rect;
 };
 
-QTipLabel *QTipLabel::instance = 0;
+QTipLabel *QTipLabel::instance = nullptr;
 
 QTipLabel::QTipLabel(const QString &text, QWidget *w)
 #ifndef QT_NO_STYLE_STYLESHEET
-    : QLabel(w, Qt::ToolTip | Qt::BypassGraphicsProxyWidget), styleSheetParent(0), widget(0)
+    : QLabel(w, Qt::ToolTip | Qt::BypassGraphicsProxyWidget), styleSheetParent(nullptr), widget(nullptr)
 #else
     : QLabel(w, Qt::ToolTip | Qt::BypassGraphicsProxyWidget), widget(0)
 #endif
@@ -179,12 +179,12 @@ QTipLabel::QTipLabel(const QString &text, QWidget *w)
     setBackgroundRole(QPalette::ToolTipBase);
     setPalette(QToolTip::palette());
     ensurePolished();
-    setMargin(1 + style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth, 0, this));
+    setMargin(1 + style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth, nullptr, this));
     setFrameStyle(QFrame::NoFrame);
     setAlignment(Qt::AlignLeft);
     setIndent(1);
     qApp->installEventFilter(this);
-    setWindowOpacity(style()->styleHint(QStyle::SH_ToolTipLabel_Opacity, 0, this) / qreal(255.0));
+    setWindowOpacity(style()->styleHint(QStyle::SH_ToolTipLabel_Opacity, nullptr, this) / qreal(255.0));
     setMouseTracking(true);
     fadingOut = false;
     reuseTip(text);
@@ -203,7 +203,7 @@ void QTipLabel::reuseTip(const QString &text)
     if (styleSheetParent){
         disconnect(styleSheetParent, SIGNAL(destroyed()),
                    QTipLabel::instance, SLOT(styleSheetParentDestroyed()));
-        styleSheetParent = 0;
+        styleSheetParent = nullptr;
     }
 #endif
 
@@ -254,7 +254,7 @@ void QTipLabel::mouseMoveEvent(QMouseEvent *e)
 
 QTipLabel::~QTipLabel()
 {
-    instance = 0;
+    instance = nullptr;
 }
 
 void QTipLabel::hideTip()
@@ -518,7 +518,7 @@ void QToolTip::showText(const QPoint &pos, const QString &text, QWidget *w)
  */
 bool QToolTip::isVisible()
 {
-    return (QTipLabel::instance != 0 && QTipLabel::instance->isVisible());
+    return (QTipLabel::instance != nullptr && QTipLabel::instance->isVisible());
 }
 
 /*!

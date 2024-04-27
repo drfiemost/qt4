@@ -59,13 +59,13 @@ class Q_CORE_EXPORT QTranslator : public QObject
 {
     Q_OBJECT
 public:
-    explicit QTranslator(QObject *parent = 0);
+    explicit QTranslator(QObject *parent = nullptr);
 
     ~QTranslator();
 
     // ### Qt 5: Merge (with "int n = -1")
     virtual QString translate(const char *context, const char *sourceText,
-                              const char *disambiguation = 0) const;
+                              const char *disambiguation = nullptr) const;
     QString translate(const char *context, const char *sourceText, const char *disambiguation,
                       int n) const;
 

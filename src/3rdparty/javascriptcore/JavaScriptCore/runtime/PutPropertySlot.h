@@ -40,7 +40,7 @@ namespace JSC {
 
         PutPropertySlot()
             : m_type(Uncachable)
-            , m_base(0)
+            , m_base(nullptr)
         {
         }
 

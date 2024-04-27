@@ -83,10 +83,10 @@ public:
 
 private:
     inline bool fastTryLock() noexcept {
-        return d_ptr.testAndSetAcquire(0, dummyLocked());
+        return d_ptr.testAndSetAcquire(nullptr, dummyLocked());
     }
     inline bool fastTryUnlock() noexcept {
-        return d_ptr.testAndSetRelease(dummyLocked(), 0);
+        return d_ptr.testAndSetRelease(dummyLocked(), nullptr);
     }
     void lockInternal() QT_MUTEX_LOCK_NOEXCEPT;
     bool lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT;

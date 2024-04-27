@@ -23,7 +23,7 @@ CL_NS_DEF(search)
   MultiSearcher::MultiSearcher(Searchable** _searchables):
 		_maxDoc(0) {
 	searchablesLen = 0;
-	while ( _searchables[searchablesLen] != NULL )
+	while ( _searchables[searchablesLen] != nullptr )
 		++searchablesLen;
 
     searchables=_CL_NEWARRAY(Searchable*,searchablesLen+1);
@@ -46,7 +46,7 @@ CL_NS_DEF(search)
   void MultiSearcher::close() {
 	for (int32_t i = 0; i < searchablesLen; ++i){
       searchables[i]->close();
-      searchables[i]=NULL;
+      searchables[i]=nullptr;
      }
   }
 
@@ -164,7 +164,7 @@ CL_NS_DEF(search)
   }
 
   TopFieldDocs* MultiSearcher::_search (Query* query, Filter* filter, const int32_t n, const Sort* sort){
-    FieldDocSortedHitQueue* hq = NULL;
+    FieldDocSortedHitQueue* hq = nullptr;
     int32_t totalHits = 0;
 	TopFieldDocs* docs;
 	int32_t j;
@@ -172,9 +172,9 @@ CL_NS_DEF(search)
 
 	for (int32_t i = 0; i < searchablesLen; ++i) { // search each searcher
 		docs = searchables[i]->_search (query, filter, n, sort);
-		if (hq == NULL){
+		if (hq == nullptr){
 			hq = _CLNEW FieldDocSortedHitQueue (docs->fields, n);
-			docs->fields = NULL; //hit queue takes fields memory
+			docs->fields = nullptr; //hit queue takes fields memory
 		}
 
       totalHits += docs->totalHits;		  // update totalHits
@@ -185,7 +185,7 @@ CL_NS_DEF(search)
 			break;                                  // no more scores > minScore
       }
 	  for ( int32_t x=0;x<j;++x )
-			fieldDocs[x]=NULL; //move ownership of FieldDoc to the hitqueue
+			fieldDocs[x]=nullptr; //move ownership of FieldDoc to the hitqueue
 
 	  _CLDELETE(docs);
     }
@@ -196,7 +196,7 @@ CL_NS_DEF(search)
       fieldDocs[j] = hq->pop();
 
 	SortField** hqFields = hq->getFields();
-	hq->setFields(NULL); //move ownership of memory over to TopFieldDocs
+	hq->setFields(nullptr); //move ownership of memory over to TopFieldDocs
     _CLDELETE(hq);
 
     return _CLNEW TopFieldDocs (totalHits, fieldDocs, hqlen, hqFields);
@@ -206,7 +206,7 @@ CL_NS_DEF(search)
     Query** queries = _CL_NEWARRAY(Query*,searchablesLen+1);
 	for (int32_t i = 0; i < searchablesLen; ++i)
       queries[i] = searchables[i]->rewrite(original);
-    queries[searchablesLen]=NULL;
+    queries[searchablesLen]=nullptr;
     return original->combine(queries);
   }
 

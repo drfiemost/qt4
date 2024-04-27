@@ -1934,7 +1934,7 @@ XSLTTokenLookup::NodeName XSLTTokenLookup::classifier2(const QChar *data)
             
                 QString XSLTTokenLookup::toString(NodeName token)
                 {
-                    const unsigned short *data = 0;
+                    const unsigned short *data = nullptr;
                     int length = 0;
 
                     switch(token)

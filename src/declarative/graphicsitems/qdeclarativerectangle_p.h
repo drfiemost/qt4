@@ -59,7 +59,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativePen : public QObject
     Q_PROPERTY(int width READ width WRITE setWidth NOTIFY penChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY penChanged)
 public:
-    QDeclarativePen(QObject *parent=0)
+    QDeclarativePen(QObject *parent=nullptr)
         : QObject(parent), _width(1), _color("#000000"), _valid(false)
     {}
 
@@ -88,7 +88,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeGradientStop : public QObject
     Q_PROPERTY(QColor color READ color WRITE setColor)
 
 public:
-    QDeclarativeGradientStop(QObject *parent=0) : QObject(parent) {}
+    QDeclarativeGradientStop(QObject *parent=nullptr) : QObject(parent) {}
 
     qreal position() const { return m_position; }
     void setPosition(qreal position) { m_position = position; updateGradient(); }
@@ -112,7 +112,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeGradient : public QObject
     Q_CLASSINFO("DefaultProperty", "stops")
 
 public:
-    QDeclarativeGradient(QObject *parent=0) : QObject(parent), m_gradient(0) {}
+    QDeclarativeGradient(QObject *parent=nullptr) : QObject(parent), m_gradient(nullptr) {}
     ~QDeclarativeGradient() { delete m_gradient; }
 
     QDeclarativeListProperty<QDeclarativeGradientStop> stops() { return QDeclarativeListProperty<QDeclarativeGradientStop>(this, m_stops); }
@@ -141,7 +141,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeRectangle : public QDeclarativeIt
     Q_PROPERTY(QDeclarativePen * border READ border CONSTANT)
     Q_PROPERTY(qreal radius READ radius WRITE setRadius NOTIFY radiusChanged)
 public:
-    QDeclarativeRectangle(QDeclarativeItem *parent=0);
+    QDeclarativeRectangle(QDeclarativeItem *parent=nullptr);
 
     QColor color() const;
     void setColor(const QColor &);

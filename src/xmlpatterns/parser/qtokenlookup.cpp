@@ -434,7 +434,7 @@ TokenLookup::value (const char *str, size_t len)
             return &wordlist[key];
         }
     }
-  return 0;
+  return nullptr;
 }
 #line 219 "TokenLookup.gperf"
 

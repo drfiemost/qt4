@@ -64,7 +64,7 @@ class QScriptNewBreakpointWidget : public QWidget
 {
     Q_OBJECT
 public:
-    QScriptNewBreakpointWidget(QWidget *parent = 0)
+    QScriptNewBreakpointWidget(QWidget *parent = nullptr)
         : QWidget(parent) {
 	QString system = QLatin1String("win");
         QHBoxLayout *hboxLayout = new QHBoxLayout(this);
@@ -204,7 +204,7 @@ class QScriptBreakpointsItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    QScriptBreakpointsItemDelegate(QObject *parent = 0)
+    QScriptBreakpointsItemDelegate(QObject *parent = nullptr)
         : QStyledItemDelegate(parent) {}
 
     QWidget *createEditor(QWidget *parent,
@@ -274,7 +274,7 @@ private Q_SLOTS:
 };
 
 QScriptBreakpointsWidget::QScriptBreakpointsWidget(QWidget *parent)
-    : QScriptBreakpointsWidgetInterface(*new QScriptBreakpointsWidgetPrivate, parent, 0)
+    : QScriptBreakpointsWidgetInterface(*new QScriptBreakpointsWidgetPrivate, parent, nullptr)
 {
     Q_D(QScriptBreakpointsWidget);
     d->view = new QTreeView();

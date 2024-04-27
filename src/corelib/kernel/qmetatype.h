@@ -281,7 +281,7 @@ namespace QtPrivate {
 template <typename T>
 int qRegisterMetaType(const char *typeName
 #ifndef qdoc
-    , T * dummy = 0
+    , T * dummy = nullptr
 #endif
 )
 {
@@ -302,7 +302,7 @@ int qRegisterMetaType(const char *typeName
 template <typename T>
 void qRegisterMetaTypeStreamOperators(const char *typeName
 #ifndef qdoc
-    , T * /* dummy */ = 0
+    , T * /* dummy */ = nullptr
 #endif
 )
 {
@@ -320,7 +320,7 @@ void qRegisterMetaTypeStreamOperators(const char *typeName
 template <typename T>
 inline int qMetaTypeId(
 #ifndef qdoc
-    T * /* dummy */ = 0
+    T * /* dummy */ = nullptr
 #endif
 )
 {
@@ -330,7 +330,7 @@ inline int qMetaTypeId(
 template <typename T>
 inline int qRegisterMetaType(
 #if !defined(qdoc) && !defined(Q_CC_SUN)
-    T * dummy = 0
+    T * dummy = nullptr
 #endif
 )
 {

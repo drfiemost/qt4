@@ -82,8 +82,8 @@ class RewriteBinding: protected AST::Visitor
     QByteArray _name;
 
 public:
-    QString operator()(const QString &code, bool *ok = 0, bool *sharable = 0);
-    QString operator()(QDeclarativeJS::AST::Node *node, const QString &code, bool *sharable = 0);
+    QString operator()(const QString &code, bool *ok = nullptr, bool *sharable = nullptr);
+    QString operator()(QDeclarativeJS::AST::Node *node, const QString &code, bool *sharable = nullptr);
 
     //name of the function:  used for the debugger
     void setName(const QByteArray &name) { _name = name; }

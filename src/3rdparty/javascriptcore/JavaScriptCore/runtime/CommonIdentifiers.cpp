@@ -23,7 +23,7 @@
 
 namespace JSC {
 
-static const char* const nullCString = 0;
+static const char* const nullCString = nullptr;
 
 #define INITIALIZE_PROPERTY_NAME(name) , name(globalData, #name)
 

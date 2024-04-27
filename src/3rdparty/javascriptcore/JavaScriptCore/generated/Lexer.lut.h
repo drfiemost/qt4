@@ -41,9 +41,9 @@ static const struct HashTableValue mainTableValues[37] = {
    { "extends", 0, (intptr_t)RESERVED, (intptr_t)0 },
    { "import", 0, (intptr_t)RESERVED, (intptr_t)0 },
    { "super", 0, (intptr_t)RESERVED, (intptr_t)0 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable mainTable =
-    { 133, 127, mainTableValues, 0 };
+    { 133, 127, mainTableValues, nullptr };
 } // namespace

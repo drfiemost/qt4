@@ -62,7 +62,7 @@ class QHELP_EXPORT QHelpEngine : public QHelpEngineCore
     Q_OBJECT
 
 public:
-    explicit QHelpEngine(const QString &collectionFile, QObject *parent = 0);
+    explicit QHelpEngine(const QString &collectionFile, QObject *parent = nullptr);
     ~QHelpEngine();
 
     QHelpContentModel *contentModel() const;

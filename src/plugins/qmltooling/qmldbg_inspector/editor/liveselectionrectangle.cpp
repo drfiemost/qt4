@@ -57,7 +57,7 @@ namespace QmlJSDebugger {
 class SelectionRectShape : public QGraphicsRectItem
 {
 public:
-    SelectionRectShape(QGraphicsItem *parent = 0) : QGraphicsRectItem(parent) {}
+    SelectionRectShape(QGraphicsItem *parent = nullptr) : QGraphicsRectItem(parent) {}
     int type() const { return Constants::EditorItemType; }
 };
 

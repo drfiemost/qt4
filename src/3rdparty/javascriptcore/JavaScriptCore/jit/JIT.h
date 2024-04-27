@@ -80,7 +80,7 @@ namespace JSC {
         {
         }
 
-        CallRecord(MacroAssembler::Call from, unsigned bytecodeIndex, void* to = 0)
+        CallRecord(MacroAssembler::Call from, unsigned bytecodeIndex, void* to = nullptr)
             : from(from)
             , bytecodeIndex(bytecodeIndex)
             , to(to)
@@ -348,7 +348,7 @@ namespace JSC {
             }
         };
 
-        JIT(JSGlobalData*, CodeBlock* = 0);
+        JIT(JSGlobalData*, CodeBlock* = nullptr);
 
         void privateCompileMainPass();
         void privateCompileLinkPass();

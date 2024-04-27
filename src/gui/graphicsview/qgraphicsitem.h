@@ -162,10 +162,10 @@ public:
         SceneModal
     };
 
-    QGraphicsItem(QGraphicsItem *parent = 0
+    QGraphicsItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                   // ### obsolete argument
-                  , QGraphicsScene *scene = 0
+                  , QGraphicsScene *scene = nullptr
 #endif
         );
     virtual ~QGraphicsItem();
@@ -201,7 +201,7 @@ public:
 
     PanelModality panelModality() const;
     void setPanelModality(PanelModality panelModality);
-    bool isBlockedByModalPanel(QGraphicsItem **blockingPanel = 0) const;
+    bool isBlockedByModalPanel(QGraphicsItem **blockingPanel = nullptr) const;
 
 #ifndef QT_NO_TOOLTIP
     QString toolTip() const;
@@ -296,7 +296,7 @@ public:
     QTransform transform() const;
     QTransform sceneTransform() const;
     QTransform deviceTransform(const QTransform &viewportTransform) const;
-    QTransform itemTransform(const QGraphicsItem *other, bool *ok = 0) const;
+    QTransform itemTransform(const QGraphicsItem *other, bool *ok = nullptr) const;
     void setTransform(const QTransform &matrix, bool combine = false);
     void resetTransform();
 
@@ -348,7 +348,7 @@ public:
     void setBoundingRegionGranularity(qreal granularity);
 
     // Drawing
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) = 0;
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) = 0;
     void update(const QRectF &rect = QRectF());
     inline void update(qreal x, qreal y, qreal width, qreal height);
     void scroll(qreal dx, qreal dy, const QRectF &rect = QRectF());
@@ -605,10 +605,10 @@ class QAbstractGraphicsShapeItemPrivate;
 class Q_GUI_EXPORT QAbstractGraphicsShapeItem : public QGraphicsItem
 {
 public:
-    QAbstractGraphicsShapeItem(QGraphicsItem *parent = 0
+    QAbstractGraphicsShapeItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                                // ### obsolete argument
-                               , QGraphicsScene *scene = 0
+                               , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QAbstractGraphicsShapeItem();
@@ -635,16 +635,16 @@ class QGraphicsPathItemPrivate;
 class Q_GUI_EXPORT QGraphicsPathItem : public QAbstractGraphicsShapeItem
 {
 public:
-    QGraphicsPathItem(QGraphicsItem *parent = 0
+    QGraphicsPathItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsPathItem(const QPainterPath &path, QGraphicsItem *parent = 0
+    QGraphicsPathItem(const QPainterPath &path, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsPathItem();
@@ -656,7 +656,7 @@ public:
     QPainterPath shape() const;
     bool contains(const QPointF &point) const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     bool isObscuredBy(const QGraphicsItem *item) const;
     QPainterPath opaqueArea() const;
@@ -678,22 +678,22 @@ class QGraphicsRectItemPrivate;
 class Q_GUI_EXPORT QGraphicsRectItem : public QAbstractGraphicsShapeItem
 {
 public:
-    QGraphicsRectItem(QGraphicsItem *parent = 0
+    QGraphicsRectItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsRectItem(const QRectF &rect, QGraphicsItem *parent = 0
+    QGraphicsRectItem(const QRectF &rect, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = 0
+    QGraphicsRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsRectItem();
@@ -706,7 +706,7 @@ public:
     QPainterPath shape() const;
     bool contains(const QPointF &point) const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     bool isObscuredBy(const QGraphicsItem *item) const;
     QPainterPath opaqueArea() const;
@@ -731,22 +731,22 @@ class QGraphicsEllipseItemPrivate;
 class Q_GUI_EXPORT QGraphicsEllipseItem : public QAbstractGraphicsShapeItem
 {
 public:
-    QGraphicsEllipseItem(QGraphicsItem *parent = 0
+    QGraphicsEllipseItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                          // ### obsolete argument
-                         , QGraphicsScene *scene = 0
+                         , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsEllipseItem(const QRectF &rect, QGraphicsItem *parent = 0
+    QGraphicsEllipseItem(const QRectF &rect, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                          // ### obsolete argument
-                         , QGraphicsScene *scene = 0
+                         , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsEllipseItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = 0
+    QGraphicsEllipseItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                          // ### obsolete argument
-                         , QGraphicsScene *scene = 0
+                         , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsEllipseItem();
@@ -765,7 +765,7 @@ public:
     QPainterPath shape() const;
     bool contains(const QPointF &point) const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     bool isObscuredBy(const QGraphicsItem *item) const;
     QPainterPath opaqueArea() const;
@@ -790,17 +790,17 @@ class QGraphicsPolygonItemPrivate;
 class Q_GUI_EXPORT QGraphicsPolygonItem : public QAbstractGraphicsShapeItem
 {
 public:
-    QGraphicsPolygonItem(QGraphicsItem *parent = 0
+    QGraphicsPolygonItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                          // ### obsolete argument
-                         , QGraphicsScene *scene = 0
+                         , QGraphicsScene *scene = nullptr
 #endif
         );
     QGraphicsPolygonItem(const QPolygonF &polygon,
-                         QGraphicsItem *parent = 0
+                         QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                          // ### obsolete argument
-                         , QGraphicsScene *scene = 0
+                         , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsPolygonItem();
@@ -815,7 +815,7 @@ public:
     QPainterPath shape() const;
     bool contains(const QPointF &point) const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     bool isObscuredBy(const QGraphicsItem *item) const;
     QPainterPath opaqueArea() const;
@@ -837,22 +837,22 @@ class QGraphicsLineItemPrivate;
 class Q_GUI_EXPORT QGraphicsLineItem : public QGraphicsItem
 {
 public:
-    QGraphicsLineItem(QGraphicsItem *parent = 0
+    QGraphicsLineItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsLineItem(const QLineF &line, QGraphicsItem *parent = 0
+    QGraphicsLineItem(const QLineF &line, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsLineItem(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent = 0
+    QGraphicsLineItem(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsLineItem();
@@ -869,7 +869,7 @@ public:
     QPainterPath shape() const;
     bool contains(const QPointF &point) const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     bool isObscuredBy(const QGraphicsItem *item) const;
     QPainterPath opaqueArea() const;
@@ -897,16 +897,16 @@ public:
         HeuristicMaskShape
     };
 
-    QGraphicsPixmapItem(QGraphicsItem *parent = 0
+    QGraphicsPixmapItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                         // ### obsolete argument
-                        , QGraphicsScene *scene = 0
+                        , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsPixmapItem(const QPixmap &pixmap, QGraphicsItem *parent = 0
+    QGraphicsPixmapItem(const QPixmap &pixmap, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                         // ### obsolete argument
-                        , QGraphicsScene *scene = 0
+                        , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsPixmapItem();
@@ -959,16 +959,16 @@ class Q_GUI_EXPORT QGraphicsTextItem : public QGraphicsObject
     QDOC_PROPERTY(QTextCursor textCursor READ textCursor WRITE setTextCursor)
 
 public:
-    QGraphicsTextItem(QGraphicsItem *parent = 0
+    QGraphicsTextItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsTextItem(const QString &text, QGraphicsItem *parent = 0
+    QGraphicsTextItem(const QString &text, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                       // ### obsolete argument
-                      , QGraphicsScene *scene = 0
+                      , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsTextItem();
@@ -1060,16 +1060,16 @@ class QGraphicsSimpleTextItemPrivate;
 class Q_GUI_EXPORT QGraphicsSimpleTextItem : public QAbstractGraphicsShapeItem
 {
 public:
-    QGraphicsSimpleTextItem(QGraphicsItem *parent = 0
+    QGraphicsSimpleTextItem(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                             // ### obsolete argument
-                            , QGraphicsScene *scene = 0
+                            , QGraphicsScene *scene = nullptr
 #endif
         );
-    QGraphicsSimpleTextItem(const QString &text, QGraphicsItem *parent = 0
+    QGraphicsSimpleTextItem(const QString &text, QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                             // ### obsolete argument
-                            , QGraphicsScene *scene = 0
+                            , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsSimpleTextItem();
@@ -1106,10 +1106,10 @@ class QGraphicsItemGroupPrivate;
 class Q_GUI_EXPORT QGraphicsItemGroup : public QGraphicsItem
 {
 public:
-    QGraphicsItemGroup(QGraphicsItem *parent = 0
+    QGraphicsItemGroup(QGraphicsItem *parent = nullptr
 #ifndef Q_QDOC
                        // ### obsolete argument
-                       , QGraphicsScene *scene = 0
+                       , QGraphicsScene *scene = nullptr
 #endif
         );
     ~QGraphicsItemGroup();
@@ -1118,7 +1118,7 @@ public:
     void removeFromGroup(QGraphicsItem *item);
 
     QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     bool isObscuredBy(const QGraphicsItem *item) const;
     QPainterPath opaqueArea() const;

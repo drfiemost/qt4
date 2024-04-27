@@ -72,7 +72,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerFormWindowCommand: public QUndoCommand
 public:
     QDesignerFormWindowCommand(const QString &description,
                                QDesignerFormWindowInterface *formWindow,
-                               QUndoCommand *parent = 0);
+                               QUndoCommand *parent = nullptr);
 
     virtual void undo();
     virtual void redo();

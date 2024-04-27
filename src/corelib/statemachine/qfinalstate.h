@@ -56,7 +56,7 @@ class Q_CORE_EXPORT QFinalState : public QAbstractState
 {
     Q_OBJECT
 public:
-    QFinalState(QState *parent = 0);
+    QFinalState(QState *parent = nullptr);
     ~QFinalState();
 
 protected:

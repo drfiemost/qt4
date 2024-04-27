@@ -57,7 +57,7 @@ using namespace WREC;
 inline RegExp::RegExp(JSGlobalData* globalData, const UString& pattern)
     : m_pattern(pattern)
     , m_flagBits(0)
-    , m_constructionError(0)
+    , m_constructionError(nullptr)
     , m_numSubpatterns(0)
 {
     compile(globalData);
@@ -66,7 +66,7 @@ inline RegExp::RegExp(JSGlobalData* globalData, const UString& pattern)
 inline RegExp::RegExp(JSGlobalData* globalData, const UString& pattern, const UString& flags)
     : m_pattern(pattern)
     , m_flagBits(0)
-    , m_constructionError(0)
+    , m_constructionError(nullptr)
     , m_numSubpatterns(0)
 {
     // NOTE: The global flag is handled on a case-by-case basis by functions like

@@ -21,7 +21,7 @@ Token::Token():
 {
     _termTextLen = 0;
 #ifndef LUCENE_TOKEN_WORD_LENGTH
-    _termText = NULL;
+    _termText = nullptr;
 	bufferTextLen = 0;
 #else
     _termText[0] = 0; //make sure null terminated
@@ -43,7 +43,7 @@ Token::Token(const TCHAR* text, const int32_t start, const int32_t end, const TC
 {
     _termTextLen = 0;
 #ifndef LUCENE_TOKEN_WORD_LENGTH
-    _termText = NULL;
+    _termText = nullptr;
 	bufferTextLen = 0;
 #else
     _termText[0] = 0; //make sure null terminated
@@ -81,7 +81,7 @@ void Token::growBuffer(size_t size){
 	if(bufferTextLen>=size)
 		return;
 #ifndef LUCENE_TOKEN_WORD_LENGTH
-	if ( _termText == NULL )
+	if ( _termText == nullptr )
 		_termText = (TCHAR*)malloc( size * sizeof(TCHAR) );
 	else
 		_termText = (TCHAR*)realloc( _termText, size * sizeof(TCHAR) );
@@ -161,18 +161,18 @@ TokenFilter::~TokenFilter(){
 
 // Close the input TokenStream.
 void TokenFilter::close() {
-    if ( input != NULL ){
+    if ( input != nullptr ){
 		input->close();
         if ( deleteTokenStream )
 			_CLDELETE( input );
     }
-    input = NULL;
+    input = nullptr;
 }
 
 
 
 Tokenizer::Tokenizer() {
-	input = NULL;
+	input = nullptr;
 }
 
 Tokenizer::Tokenizer(CL_NS(util)::Reader* _input):
@@ -181,9 +181,9 @@ Tokenizer::Tokenizer(CL_NS(util)::Reader* _input):
 }
 
 void Tokenizer::close(){
-	if (input != NULL) {
+	if (input != nullptr) {
 		// ? delete input;
-		input = NULL;
+		input = nullptr;
 	}
 }
 

@@ -172,8 +172,8 @@ QDeclarativeFlickablePrivate::QDeclarativeFlickablePrivate()
     , stealMouse(false), pressed(false), interactive(true), calcVelocity(false)
     , deceleration(QML_FLICK_DEFAULTDECELERATION)
     , maxVelocity(QML_FLICK_DEFAULTMAXVELOCITY), reportedVelocitySmoothing(100)
-    , delayedPressEvent(0), delayedPressTarget(0), pressDelay(0), fixupDuration(400)
-    , fixupMode(Normal), vTime(0), visibleArea(0)
+    , delayedPressEvent(nullptr), delayedPressTarget(nullptr), pressDelay(0), fixupDuration(400)
+    , fixupMode(Normal), vTime(0), visibleArea(nullptr)
     , flickableDirection(QDeclarativeFlickable::AutoFlickDirection)
     , boundsBehavior(QDeclarativeFlickable::DragAndOvershootBounds)
 {
@@ -1052,7 +1052,7 @@ void QDeclarativeFlickablePrivate::clearDelayedPress()
     if (delayedPressEvent) {
         delayedPressTimer.stop();
         delete delayedPressEvent;
-        delayedPressEvent = 0;
+        delayedPressEvent = nullptr;
     }
 }
 
@@ -1083,7 +1083,7 @@ void QDeclarativeFlickable::timerEvent(QTimerEvent *event)
             } else {
                 delete d->delayedPressEvent;
             }
-            d->delayedPressEvent = 0;
+            d->delayedPressEvent = nullptr;
         }
     }
 }
@@ -1222,7 +1222,7 @@ void QDeclarativeFlickablePrivate::data_append(QDeclarativeListProperty<QObject>
         if (static_cast<QDeclarativeItemPrivate*>(d)->componentComplete) {
             i->setParentItem(static_cast<QDeclarativeFlickablePrivate*>(prop->data)->contentItem);
         } else {
-            d->setParentItemHelper(static_cast<QDeclarativeFlickablePrivate*>(prop->data)->contentItem, 0, 0);
+            d->setParentItemHelper(static_cast<QDeclarativeFlickablePrivate*>(prop->data)->contentItem, nullptr, nullptr);
         }
     } else {
         o->setParent(prop->object);
@@ -1242,7 +1242,7 @@ QObject *QDeclarativeFlickablePrivate::data_at(QDeclarativeListProperty<QObject>
     int childItemCount = contentItem->childItems().count();
 
     if (index < 0)
-        return 0;
+        return nullptr;
 
     if (index < childItemCount) {
         return contentItem->childItems().at(index)->toGraphicsObject();
@@ -1250,7 +1250,7 @@ QObject *QDeclarativeFlickablePrivate::data_at(QDeclarativeListProperty<QObject>
         return contentItem->children().at(index - childItemCount);
     }
 
-    return 0;
+    return nullptr;
 }
 
 void QDeclarativeFlickablePrivate::data_clear(QDeclarativeListProperty<QObject> *property)
@@ -1263,7 +1263,7 @@ void QDeclarativeFlickablePrivate::data_clear(QDeclarativeListProperty<QObject> 
 
     const QList<QObject*> objects = contentItem->children();
     for (int i = 0; i < objects.count(); i++)
-        objects[i]->setParent(0);
+        objects[i]->setParent(nullptr);
 }
 
 QDeclarativeListProperty<QObject> QDeclarativeFlickable::flickableData()
@@ -1505,7 +1505,7 @@ bool QDeclarativeFlickable::sendMouseEvent(QGraphicsSceneMouseEvent *event)
 
     QGraphicsScene *s = scene();
     QDeclarativeItem *grabber = s ? qobject_cast<QDeclarativeItem*>(s->mouseGrabberItem()) : 0;
-    QGraphicsItem *grabberItem = s ? s->mouseGrabberItem() : 0;
+    QGraphicsItem *grabberItem = s ? s->mouseGrabberItem() : nullptr;
     bool disabledItem = grabberItem && !grabberItem->isEnabled();
     bool stealThisEvent = d->stealMouse;
     if ((stealThisEvent || myRect.contains(event->scenePos().toPoint())) && (!grabber || !grabber->keepMouseGrab() || disabledItem)) {

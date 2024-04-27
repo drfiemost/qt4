@@ -80,8 +80,8 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeAnchors : public QObject
     Q_PROPERTY(QGraphicsObject *centerIn READ centerIn WRITE setCenterIn RESET resetCenterIn NOTIFY centerInChanged)
 
 public:
-    QDeclarativeAnchors(QObject *parent=0);
-    QDeclarativeAnchors(QGraphicsObject *item, QObject *parent=0);
+    QDeclarativeAnchors(QObject *parent=nullptr);
+    QDeclarativeAnchors(QGraphicsObject *item, QObject *parent=nullptr);
     virtual ~QDeclarativeAnchors();
 
     enum Anchor {

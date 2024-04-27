@@ -457,8 +457,8 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader,
 
 Q_GLOBAL_STATIC(QList<QAccessible::InterfaceFactory>, qAccessibleFactories)
 
-QAccessible::UpdateHandler QAccessible::updateHandler = 0;
-QAccessible::RootObjectHandler QAccessible::rootObjectHandler = 0;
+QAccessible::UpdateHandler QAccessible::updateHandler = nullptr;
+QAccessible::RootObjectHandler QAccessible::rootObjectHandler = nullptr;
 
 static bool accessibility_active = false;
 static bool cleanupAdded = false;
@@ -582,9 +582,9 @@ QAccessible::RootObjectHandler QAccessible::installRootObjectHandler(RootObjectH
 QAccessibleInterface *QAccessible::queryAccessibleInterface(QObject *object)
 {
     accessibility_active = true;
-    QAccessibleInterface *iface = 0;
+    QAccessibleInterface *iface = nullptr;
     if (!object)
-        return 0;
+        return nullptr;
 
     const QMetaObject *mo = object->metaObject();
     while (mo) {
@@ -612,7 +612,7 @@ QAccessibleInterface *QAccessible::queryAccessibleInterface(QObject *object)
     else if (object == qApp)
         return new QAccessibleApplication();
 
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1149,7 +1149,7 @@ QAccessible2Interface *QAccessibleInterface::cast_helper(QAccessible2::Interface
 {
     if (state(0) & HasInvokeExtension)
         return static_cast<QAccessibleInterfaceEx *>(this)->interface_cast(t);
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

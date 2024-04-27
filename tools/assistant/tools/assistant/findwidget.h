@@ -54,7 +54,7 @@ class FindWidget : public QWidget
 {
     Q_OBJECT
 public:
-    FindWidget(QWidget *parent = 0);
+    FindWidget(QWidget *parent = nullptr);
     ~FindWidget();
 
     void show();

@@ -210,7 +210,7 @@ Qt::Corner QSizeGripPrivate::corner() const
     parent.
 */
 QSizeGrip::QSizeGrip(QWidget * parent)
-    : QWidget(*new QSizeGripPrivate, parent, 0)
+    : QWidget(*new QSizeGripPrivate, parent, nullptr)
 {
     Q_D(QSizeGrip);
     d->init();
@@ -221,7 +221,7 @@ void QSizeGripPrivate::init()
     Q_Q(QSizeGrip);
     dxMax = 0;
     dyMax = 0;
-    tlw = 0;
+    tlw = nullptr;
     m_corner = q->isLeftToRight() ? Qt::BottomRightCorner : Qt::BottomLeftCorner;
     gotMousePress = false;
 

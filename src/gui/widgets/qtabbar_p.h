@@ -77,7 +77,7 @@ public:
         :currentIndex(-1), pressedIndex(-1), shape(QTabBar::RoundedNorth), layoutDirty(false),
         drawBase(true), scrollOffset(0), elideModeSetByUser(false), useScrollButtonsSetByUser(false), expanding(true), closeButtonOnTabs(false),
         selectionBehaviorOnRemove(QTabBar::SelectRightTab), paintWithOffsets(true), movable(false),
-        dragInProgress(false), documentMode(false), movingTab(0)
+        dragInProgress(false), documentMode(false), movingTab(nullptr)
 #ifdef Q_WS_MAC
         , previousPressedIndex(-1)
 #endif
@@ -93,9 +93,9 @@ public:
     struct Tab {
         inline Tab(const QIcon &ico, const QString &txt)
             : enabled(true) , shortcutId(0), text(txt), icon(ico),
-            leftWidget(0), rightWidget(0), lastTab(-1), dragOffset(0)
+            leftWidget(nullptr), rightWidget(nullptr), lastTab(-1), dragOffset(0)
 #ifndef QT_NO_ANIMATION
-            , animation(0)
+            , animation(nullptr)
 #endif //QT_NO_ANIMATION
         {}
         bool operator==(const Tab &other) const { return &other == this; }
@@ -245,7 +245,7 @@ class CloseButton : public QAbstractButton
     Q_OBJECT
 
 public:
-    CloseButton(QWidget *parent = 0);
+    CloseButton(QWidget *parent = nullptr);
 
     QSize sizeHint() const;
     inline QSize minimumSizeHint() const

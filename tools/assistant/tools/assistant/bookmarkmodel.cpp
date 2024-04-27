@@ -55,7 +55,7 @@ BookmarkModel::BookmarkModel()
     : QAbstractItemModel()
     , m_folder(false)
     , m_editable(false)
-    , rootItem(0)
+    , rootItem(nullptr)
 {
 }
 
@@ -376,7 +376,7 @@ QMimeData*
 BookmarkModel::mimeData(const QModelIndexList &indexes) const
 {
     if (indexes.isEmpty())
-        return 0;
+        return nullptr;
 
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);

@@ -396,9 +396,9 @@ bool QTessellatorPrivate::EdgeSorter::operator() (const Edge *e1, const Edge *e2
 
 QTessellatorPrivate::Scanline::Scanline()
 {
-    edges = 0;
-    edge_table = 0;
-    old = 0;
+    edges = nullptr;
+    edge_table = nullptr;
+    old = nullptr;
 }
 
 void QTessellatorPrivate::Scanline::init(int maxActiveEdges)
@@ -425,9 +425,9 @@ void QTessellatorPrivate::Scanline::done()
         free(edges);
         free(old);
         free(edge_table);
-        edges = 0;
-        old = 0;
-        edge_table = 0;
+        edges = nullptr;
+        old = nullptr;
+        edge_table = nullptr;
     }
 }
 
@@ -549,8 +549,8 @@ void QTessellatorPrivate::Scanline::markEdges(int pos1, int pos2)
 
 QTessellatorPrivate::Vertices::Vertices()
 {
-    storage = 0;
-    sorted = 0;
+    storage = nullptr;
+    sorted = nullptr;
     allocated = 0;
     nPoints = 0;
 }
@@ -578,8 +578,8 @@ void QTessellatorPrivate::Vertices::done()
     if (allocated > default_alloc) {
         free(storage);
         free(sorted);
-        storage = 0;
-        sorted = 0;
+        storage = nullptr;
+        sorted = nullptr;
         allocated = 0;
     }
 }
@@ -727,7 +727,7 @@ void QTessellatorPrivate::cancelCoincidingEdges()
 {
     Vertex **vv = vertices.sorted;
 
-    QCoincidingEdge *tl = 0;
+    QCoincidingEdge *tl = nullptr;
     int tlSize = 0;
 
     for (int i = 0; i < vertices.nPoints - 1; ++i) {

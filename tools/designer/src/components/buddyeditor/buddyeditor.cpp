@@ -86,7 +86,7 @@ static bool canBeBuddy(QWidget *w, QDesignerFormWindowInterface *form)
 static QString buddy(QLabel *label, QDesignerFormEditorInterface *core)
 {
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), label);
-    if (sheet == 0)
+    if (sheet == nullptr)
         return QString();
     const int prop_idx = sheet->indexOf(QLatin1String(buddyPropertyC));
     if (prop_idx == -1)
@@ -114,24 +114,24 @@ QWidget *BuddyEditor::widgetAt(const QPoint &pos) const
 {
     QWidget *w = ConnectionEdit::widgetAt(pos);
 
-    while (w != 0 && !m_formWindow->isManaged(w))
+    while (w != nullptr && !m_formWindow->isManaged(w))
         w = w->parentWidget();
     if (!w)
         return w;
 
     if (state() == Editing) {
         QLabel *label = qobject_cast<QLabel*>(w);
-        if (label == 0)
-            return 0;
+        if (label == nullptr)
+            return nullptr;
         const int cnt = connectionCount();
         for (int i = 0; i < cnt; ++i) {
             Connection *con = connection(i);
             if (con->widget(EndPoint::Source) == w)
-                return 0;
+                return nullptr;
         }
     } else {
         if (!canBeBuddy(w, m_formWindow))
-            return 0;
+            return nullptr;
     }
 
     return w;
@@ -149,7 +149,7 @@ QDesignerFormWindowInterface *BuddyEditor::formWindow() const
 
 void BuddyEditor::updateBackground()
 {
-    if (m_updating || background() == 0)
+    if (m_updating || background() == nullptr)
         return;
     ConnectionEdit::updateBackground();
 
@@ -165,7 +165,7 @@ void BuddyEditor::updateBackground()
         if (targets.isEmpty())
             continue;
 
-        QWidget *target = 0;
+        QWidget *target = nullptr;
 
         QListIterator<QWidget *> it(targets);
         while (it.hasNext()) {
@@ -176,7 +176,7 @@ void BuddyEditor::updateBackground()
             }
         }
 
-        if (target == 0)
+        if (target == nullptr)
             continue;
 
         Connection *con = new Connection(this);
@@ -246,7 +246,7 @@ void BuddyEditor::setBackground(QWidget *background)
         if (buddy_name.isEmpty())
             continue;
         QWidget *target = background->findChild<QWidget*>(buddy_name);
-        if (target == 0)
+        if (target == nullptr)
             continue;
 
         Connection *con = new Connection(this);
@@ -277,7 +277,7 @@ void BuddyEditor::endConnection(QWidget *target, const QPoint &pos)
     setEnabled(false);
     Connection *new_con = createConnection(source, target);
     setEnabled(true);
-    if (new_con != 0) {
+    if (new_con != nullptr) {
         new_con->setEndPoint(EndPoint::Source, source, tmp_con->endPointPos(EndPoint::Source));
         new_con->setEndPoint(EndPoint::Target, target, tmp_con->endPointPos(EndPoint::Target));
 
@@ -336,7 +336,7 @@ void BuddyEditor::deleteSelected()
     if (selectedConnections.isEmpty())
         return;
 
-    undoStack()->beginMacro(tr("Remove %n buddies", 0, selectedConnections.size()));
+    undoStack()->beginMacro(tr("Remove %n buddies", nullptr, selectedConnections.size()));
     foreach (Connection *con, selectedConnections) {
         setSelected(con, false);
         con->update();
@@ -368,7 +368,7 @@ void BuddyEditor::autoBuddy()
     QWidgetList buddies;
     for (LabelList::iterator it = labelList.begin(); it != labelList.end(); ) {
         QLabel *label = *it;
-        QWidget *newBuddy = 0;
+        QWidget *newBuddy = nullptr;
         if (m_formWindow->isManaged(label)) {
             const QString buddy_name = buddy(label, m_formWindow->core());
             if (buddy_name.isEmpty())
@@ -387,7 +387,7 @@ void BuddyEditor::autoBuddy()
         return;
     const int count = labelList.size();
     Q_ASSERT(count == buddies.size());
-    undoStack()->beginMacro(tr("Add %n buddies", 0, count));
+    undoStack()->beginMacro(tr("Add %n buddies", nullptr, count));
     for (int i = 0; i < count; i++)
         undoStack()->push(createBuddyCommand(m_formWindow, labelList.at(i), buddies.at(i)));
     undoStack()->endMacro();
@@ -405,7 +405,7 @@ QWidget *BuddyEditor::findBuddy(QLabel *l, const QWidgetList &existingBuddies) c
     // Try to find next managed neighbour on horizontal line
     const QRect geom = l->geometry();
     const int y = geom.center().y();
-    QWidget *neighbour = 0;
+    QWidget *neighbour = nullptr;
     switch (l->layoutDirection()) {
     case Qt::LayoutDirectionAuto:
     case Qt::LeftToRight: { // Walk right to find next managed neighbour
@@ -430,7 +430,7 @@ QWidget *BuddyEditor::findBuddy(QLabel *l, const QWidgetList &existingBuddies) c
     if (neighbour && !existingBuddies.contains(neighbour) && canBeBuddy(neighbour, m_formWindow))
         return neighbour;
 
-    return 0;
+    return nullptr;
 }
 
 void BuddyEditor::createContextMenu(QMenu &menu)

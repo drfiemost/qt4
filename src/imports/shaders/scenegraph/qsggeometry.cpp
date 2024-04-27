@@ -86,7 +86,7 @@ QSGGeometry::QSGGeometry(const QSGGeometry::AttributeSet &attributes,
     , m_index_count(0)
     , m_index_type(indexType)
     , m_attributes(attributes)
-    , m_data(0)
+    , m_data(nullptr)
     , m_index_data_offset(-1)
     , m_owns_data(false)
 {

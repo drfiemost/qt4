@@ -263,7 +263,7 @@ void Identifier::checkSameIdentifierTable(JSGlobalData*, UString::Rep*)
 
 #endif
 
-ThreadSpecific<ThreadIdentifierTableData>* g_identifierTableSpecific = 0;
+ThreadSpecific<ThreadIdentifierTableData>* g_identifierTableSpecific = nullptr;
 
 #if ENABLE(JSC_MULTIPLE_THREADS)
 

@@ -66,13 +66,13 @@ using namespace QDeclarativeJS;
 using namespace QDeclarativeParser;
 
 QDeclarativeParser::Object::Object()
-: type(-1), majorVersion(-1), minorVersion(-1), idIndex(-1), metatype(0), synthCache(0), defaultProperty(0), parserStatusCast(-1)
+: type(-1), majorVersion(-1), minorVersion(-1), idIndex(-1), metatype(nullptr), synthCache(nullptr), defaultProperty(nullptr), parserStatusCast(-1)
 {
     // initialize the members in the meta object
-    extObject.d.superdata = 0;
-    extObject.d.stringdata = 0;
-    extObject.d.data = 0;
-    extObject.d.extradata = 0;
+    extObject.d.superdata = nullptr;
+    extObject.d.stringdata = nullptr;
+    extObject.d.data = nullptr;
+    extObject.d.extradata = nullptr;
 }
 
 QDeclarativeParser::Object::~Object() 
@@ -169,14 +169,14 @@ Property *QDeclarativeParser::Object::getProperty(const QByteArray &name, bool c
             property->parent = this;
             properties.insert(name, property);
         } else {
-            return 0;
+            return nullptr;
         }
     }
     return properties[name];
 }
 
 QDeclarativeParser::Object::DynamicProperty::DynamicProperty()
-: isDefaultProperty(false), type(Variant), defaultValue(0)
+: isDefaultProperty(false), type(Variant), defaultValue(nullptr)
 {
 }
 
@@ -210,13 +210,13 @@ QDeclarativeParser::Object::DynamicSlot::DynamicSlot(const DynamicSlot &o)
 }
 
 QDeclarativeParser::Property::Property()
-: parent(0), type(0), index(-1), value(0), isDefault(true), isDeferred(false), 
+: parent(nullptr), type(0), index(-1), value(nullptr), isDefault(true), isDeferred(false), 
   isValueTypeSubProperty(false), isAlias(false)
 {
 }
 
 QDeclarativeParser::Property::Property(const QByteArray &n)
-: parent(0), type(0), index(-1), value(0), name(n), isDefault(false), 
+: parent(nullptr), type(0), index(-1), value(nullptr), name(n), isDefault(false), 
   isDeferred(false), isValueTypeSubProperty(false), isAlias(false)
 {
 }
@@ -252,7 +252,7 @@ bool QDeclarativeParser::Property::isEmpty() const
 }
 
 QDeclarativeParser::Value::Value()
-: type(Unknown), object(0)
+: type(Unknown), object(nullptr)
 {
 }
 
@@ -385,7 +385,7 @@ QDeclarativeJS::AST::Node *QDeclarativeParser::Variant::asAST() const
     if (type() == Script)
         return n;
     else
-        return 0;
+        return nullptr;
 }
 
 bool QDeclarativeParser::Variant::isStringList() const

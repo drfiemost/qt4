@@ -491,25 +491,25 @@ Translator merge(const Translator &tor, const Translator &virginTor,
 
     if (options & Verbose) {
         int totalFound = neww + known;
-        err += LU::tr("    Found %n source text(s) (%1 new and %2 already existing)\n", 0, totalFound).arg(neww).arg(known);
+        err += LU::tr("    Found %n source text(s) (%1 new and %2 already existing)\n", nullptr, totalFound).arg(neww).arg(known);
 
         if (obsoleted) {
             if (options & NoObsolete) {
-                err += LU::tr("    Removed %n obsolete entries\n", 0, obsoleted);
+                err += LU::tr("    Removed %n obsolete entries\n", nullptr, obsoleted);
             } else {
-                err += LU::tr("    Kept %n obsolete entries\n", 0, obsoleted);
+                err += LU::tr("    Kept %n obsolete entries\n", nullptr, obsoleted);
             }
         }
 
         if (sameNumberHeuristicCount)
             err += LU::tr("    Number heuristic provided %n translation(s)\n",
-                      0, sameNumberHeuristicCount);
+                      nullptr, sameNumberHeuristicCount);
         if (sameTextHeuristicCount)
             err += LU::tr("    Same-text heuristic provided %n translation(s)\n",
-                      0, sameTextHeuristicCount);
+                      nullptr, sameTextHeuristicCount);
         if (similarTextHeuristicCount)
             err += LU::tr("    Similar-text heuristic provided %n translation(s)\n",
-                      0, similarTextHeuristicCount);
+                      nullptr, similarTextHeuristicCount);
     }
     return outTor;
 }

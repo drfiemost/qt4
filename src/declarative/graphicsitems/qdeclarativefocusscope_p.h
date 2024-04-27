@@ -55,7 +55,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeFocusScope : public QDeclarativeItem
     Q_OBJECT
     Q_DECLARE_PRIVATE_D(QGraphicsItem::d_ptr.data(), QDeclarativeItem)
 public:
-    QDeclarativeFocusScope(QDeclarativeItem *parent=0);
+    QDeclarativeFocusScope(QDeclarativeItem *parent=nullptr);
     virtual ~QDeclarativeFocusScope();
 };
 

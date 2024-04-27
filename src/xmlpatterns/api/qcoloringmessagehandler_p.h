@@ -67,7 +67,7 @@ namespace QPatternist
                                  , private ColorOutput
     {
     public:
-        ColoringMessageHandler(QObject *parent = 0);
+        ColoringMessageHandler(QObject *parent = nullptr);
 
     protected:
         virtual void handleMessage(QtMsgType type,

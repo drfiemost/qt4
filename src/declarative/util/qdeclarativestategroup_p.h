@@ -61,7 +61,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeStateGroup : public QObject, public QDecl
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeTransition> transitions READ transitionsProperty DESIGNABLE false)
 
 public:
-    QDeclarativeStateGroup(QObject * = 0);
+    QDeclarativeStateGroup(QObject * = nullptr);
     virtual ~QDeclarativeStateGroup();
 
     QString state() const;

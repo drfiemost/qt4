@@ -80,9 +80,9 @@ public:
 
     bool find_helper(QDeclarativeTypeLoader *typeLoader, int i, const QByteArray& type, int *vmajor, int *vminor,
                                  QDeclarativeType** type_return, QUrl* url_return,
-                                 QUrl *base = 0, bool *typeRecursionDetected = 0);
+                                 QUrl *base = nullptr, bool *typeRecursionDetected = nullptr);
     bool find(QDeclarativeTypeLoader *typeLoader, const QByteArray& type, int *vmajor, int *vminor, QDeclarativeType** type_return,
-              QUrl* url_return, QUrl *base = 0, QString *errorString = 0);
+              QUrl* url_return, QUrl *base = nullptr, QString *errorString = nullptr);
 };
 
 class QDeclarativeImportsPrivate {
@@ -135,7 +135,7 @@ QDeclarativeImports::operator =(const QDeclarativeImports &copy)
 }
 
 QDeclarativeImports::QDeclarativeImports()
-    : d(new QDeclarativeImportsPrivate(0)){
+    : d(new QDeclarativeImportsPrivate(nullptr)){
 }
 
 QDeclarativeImports::QDeclarativeImports(QDeclarativeTypeLoader *typeLoader)
@@ -205,7 +205,7 @@ void QDeclarativeImports::populateCache(QDeclarativeTypeNameCache *cache, QDecla
             if (!d->typeNamespace)
                 cacheForNamespace(engine, *(*iter), d->typeNamespace);
         } else {
-            QDeclarativeTypeNameCache *nc = cacheForNamespace(engine, *(*iter), 0);
+            QDeclarativeTypeNameCache *nc = cacheForNamespace(engine, *(*iter), nullptr);
             cache->add(iter.key(), nc);
             nc->release();
         }
@@ -622,7 +622,7 @@ bool QDeclarativeImportsPrivate::find(const QByteArray& type, int *vmajor, int *
                                       QUrl* url_return, QString *errorString)
 {
     Q_ASSERT(typeLoader);
-    QDeclarativeImportedNamespace *s = 0;
+    QDeclarativeImportedNamespace *s = nullptr;
     int slash = type.indexOf('/');
     if (slash >= 0) {
         QString namespaceName = QString::fromUtf8(type.left(slash));
@@ -669,7 +669,7 @@ bool QDeclarativeImportedNamespace::find(QDeclarativeTypeLoader *typeLoader, con
             if (qmlCheckTypes()) {
                 // check for type clashes
                 for (int j = i+1; j<urls.count(); ++j) {
-                    if (find_helper(typeLoader, j, type, vmajor, vminor, 0, 0, base)) {
+                    if (find_helper(typeLoader, j, type, vmajor, vminor, nullptr, nullptr, base)) {
                         if (errorString) {
                             QString u1 = urls.at(i);
                             QString u2 = urls.at(j);

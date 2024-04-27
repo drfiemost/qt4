@@ -102,7 +102,7 @@ namespace JSC {
 #if ENABLE(JIT)
     struct CallLinkInfo {
         CallLinkInfo()
-            : callee(0)
+            : callee(nullptr)
         {
         }
     
@@ -114,7 +114,7 @@ namespace JSC {
         CodeBlock* callee;
         unsigned position;
         
-        void setUnlinked() { callee = 0; }
+        void setUnlinked() { callee = nullptr; }
         bool isLinked() { return callee; }
 
         bool seenOnce()
@@ -130,7 +130,7 @@ namespace JSC {
 
     struct MethodCallLinkInfo {
         MethodCallLinkInfo()
-            : cachedStructure(0)
+            : cachedStructure(nullptr)
         {
         }
 
@@ -163,7 +163,7 @@ namespace JSC {
 
     struct GlobalResolveInfo {
         GlobalResolveInfo(unsigned bytecodeOffset)
-            : structure(0)
+            : structure(nullptr)
             , offset(0)
             , bytecodeOffset(bytecodeOffset)
         {
@@ -580,7 +580,7 @@ namespace JSC {
                 m_globalObject->codeBlocks().remove(this);
         }
 
-        void clearGlobalObject() { m_globalObject = 0; }
+        void clearGlobalObject() { m_globalObject = nullptr; }
 
     private:
         JSGlobalObject* m_globalObject; // For program and eval nodes, the global object that marks the constant pool.

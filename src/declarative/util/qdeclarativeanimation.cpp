@@ -1540,9 +1540,9 @@ void QDeclarativeAnimationGroupPrivate::clear_animation(QDeclarativeListProperty
     if (q) {
         while (q->d_func()->animations.count()) {
             QDeclarativeAbstractAnimation *firstAnim = q->d_func()->animations.at(0);
-            QDeclarative_setParent_noEvent(firstAnim->qtAnimation(), 0);
+            QDeclarative_setParent_noEvent(firstAnim->qtAnimation(), nullptr);
             q->d_func()->ag->removeAnimation(firstAnim->qtAnimation());
-            firstAnim->setGroup(0);
+            firstAnim->setGroup(nullptr);
         }
     }
 }
@@ -2319,7 +2319,7 @@ void QDeclarativeAnimationPropertyUpdater::setValue(qreal v)
         if (deleted)
             return;
     }
-    wasDeleted = 0;
+    wasDeleted = nullptr;
     fromSourced = true;
 }
 
@@ -2431,9 +2431,9 @@ void QDeclarativePropertyAnimation::transition(QDeclarativeStateActions &actions
         d->actions = &data->actions;
     } else {
         delete data;
-        d->va->setFromSourcedValue(0);  //clear previous data
-        d->va->setAnimValue(0, QAbstractAnimation::DeleteWhenStopped);  //clear previous data
-        d->actions = 0;
+        d->va->setFromSourcedValue(nullptr);  //clear previous data
+        d->va->setAnimValue(nullptr, QAbstractAnimation::DeleteWhenStopped);  //clear previous data
+        d->actions = nullptr;
     }
 }
 
@@ -2770,10 +2770,10 @@ void QDeclarativeParentAnimation::transition(QDeclarativeStateActions &actions,
     if (data->actions.count()) {
         if (direction == QDeclarativeAbstractAnimation::Forward) {
             d->startAction->setAnimAction(d->via ? viaData : data, QActionAnimation::DeleteWhenStopped);
-            d->endAction->setAnimAction(d->via ? data : 0, QActionAnimation::DeleteWhenStopped);
+            d->endAction->setAnimAction(d->via ? data : nullptr, QActionAnimation::DeleteWhenStopped);
         } else {
             d->endAction->setAnimAction(d->via ? viaData : data, QActionAnimation::DeleteWhenStopped);
-            d->startAction->setAnimAction(d->via ? data : 0, QActionAnimation::DeleteWhenStopped);
+            d->startAction->setAnimAction(d->via ? data : nullptr, QActionAnimation::DeleteWhenStopped);
         }
         if (!d->via)
             delete viaData;
@@ -2952,7 +2952,7 @@ void QDeclarativeAnchorAnimation::transition(QDeclarativeStateActions &actions,
 }
 
 QDeclarativeScriptActionPrivate::QDeclarativeScriptActionPrivate()
-    : QDeclarativeAbstractAnimationPrivate(), hasRunScriptScript(false), reversing(false), proxy(this), rsa(0) {}
+    : QDeclarativeAbstractAnimationPrivate(), hasRunScriptScript(false), reversing(false), proxy(this), rsa(nullptr) {}
 
 
 QT_END_NAMESPACE

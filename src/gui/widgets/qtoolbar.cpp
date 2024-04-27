@@ -98,7 +98,7 @@ void QToolBarPrivate::init()
     q->setAttribute(Qt::WA_X11NetWmWindowTypeToolBar);
 
     QStyle *style = q->style();
-    int e = style->pixelMetric(QStyle::PM_ToolBarIconSize, 0, q);
+    int e = style->pixelMetric(QStyle::PM_ToolBarIconSize, nullptr, q);
     iconSize = QSize(e, e);
 
     layout = new QToolBarLayout(q);
@@ -117,7 +117,7 @@ void QToolBarPrivate::init()
 
     toggleViewAction = new QAction(q);
     toggleViewAction->setCheckable(true);
-    q->setMovable(q->style()->styleHint(QStyle::SH_ToolBar_Movable, 0, q ));
+    q->setMovable(q->style()->styleHint(QStyle::SH_ToolBar_Movable, nullptr, q ));
     QObject::connect(toggleViewAction, SIGNAL(triggered(bool)), q, SLOT(_q_toggleView(bool)));
 }
 
@@ -195,21 +195,21 @@ void QToolBarPrivate::initDrag(const QPoint &pos)
 {
     Q_Q(QToolBar);
 
-    if (state != 0)
+    if (state != nullptr)
         return;
 
     QMainWindow *win = qobject_cast<QMainWindow*>(parent);
     Q_ASSERT(win != 0);
     QMainWindowLayout *layout = qt_mainwindow_layout(win);
     Q_ASSERT(layout != 0);
-    if (layout->pluggingWidget != 0) // the main window is animating a docking operation
+    if (layout->pluggingWidget != nullptr) // the main window is animating a docking operation
         return;
 
     state = new DragState;
     state->pressPos = pos;
     state->dragging = false;
     state->moving = false;
-    state->widgetItem = 0;
+    state->widgetItem = nullptr;
 
     if (q->isRightToLeft())
         state->pressPos = QPoint(q->width() - state->pressPos.x(), state->pressPos.y());
@@ -268,7 +268,7 @@ void QToolBarPrivate::endDrag()
     }
 
     delete state;
-    state = 0;
+    state = nullptr;
 }
 
 bool QToolBarPrivate::mousePressEvent(QMouseEvent *event)
@@ -307,7 +307,7 @@ bool QToolBarPrivate::mousePressEvent(QMouseEvent *event)
 
 bool QToolBarPrivate::mouseReleaseEvent(QMouseEvent*)
 {
-    if (state != 0) {
+    if (state != nullptr) {
         endDrag();
         return true;
     } else {
@@ -339,13 +339,13 @@ bool QToolBarPrivate::mouseMoveEvent(QMouseEvent *event)
     }
 
     QMainWindow *win = qobject_cast<QMainWindow*>(parent);
-    if (win == 0)
+    if (win == nullptr)
         return true;
 
     QMainWindowLayout *layout = qt_mainwindow_layout(win);
     Q_ASSERT(layout != 0);
 
-    if (layout->pluggingWidget == 0
+    if (layout->pluggingWidget == nullptr
         && (event->pos() - state->pressPos).manhattanLength() > QApplication::startDragDistance()) {
             const bool wasDragging = state->dragging;
             const bool moving = !q->isWindow() && (orientation == Qt::Vertical ?
@@ -537,7 +537,7 @@ void QToolBarPrivate::plug(const QRect &r)
     Constructs a QToolBar with the given \a parent.
 */
 QToolBar::QToolBar(QWidget *parent)
-    : QWidget(*new QToolBarPrivate, parent, 0)
+    : QWidget(*new QToolBarPrivate, parent, nullptr)
 {
     Q_D(QToolBar);
     d->init();
@@ -552,7 +552,7 @@ QToolBar::QToolBar(QWidget *parent)
     \sa setWindowTitle()
 */
 QToolBar::QToolBar(const QString &title, QWidget *parent)
-    : QWidget(*new QToolBarPrivate, parent, 0)
+    : QWidget(*new QToolBarPrivate, parent, nullptr)
 {
     Q_D(QToolBar);
     d->init();
@@ -724,16 +724,16 @@ void QToolBar::setIconSize(const QSize &iconSize)
         if (mw && mw->layout()) {
             QLayout *layout = mw->layout();
             int i = 0;
-            QLayoutItem *item = 0;
+            QLayoutItem *item = nullptr;
             do {
                 item = layout->itemAt(i++);
                 if (item && (item->widget() == this))
                     sz = mw->iconSize();
-            } while (!sz.isValid() && item != 0);
+            } while (!sz.isValid() && item != nullptr);
         }
     }
     if (!sz.isValid()) {
-        const int metric = style()->pixelMetric(QStyle::PM_ToolBarIconSize, 0, this);
+        const int metric = style()->pixelMetric(QStyle::PM_ToolBarIconSize, nullptr, this);
         sz = QSize(metric, metric);
     }
     if (d->iconSize != sz) {
@@ -941,7 +941,7 @@ QAction *QToolBar::actionAt(const QPoint &p) const
     QWidget *widget = childAt(p);
     int index = d->layout->indexOf(widget);
     if (index == -1)
-        return 0;
+        return nullptr;
     QLayoutItem *item = d->layout->itemAt(index);
     return static_cast<QToolBarItem*>(item)->action;
 }
@@ -970,7 +970,7 @@ void QToolBar::actionEvent(QActionEvent *event)
             // preserve Qt 4.1.x behavior. The widget is already
             // reparented to us due to the createWidget call inside
             // createItem()
-            if (widgetAction != 0 && widgetAction->d_func()->autoCreated)
+            if (widgetAction != nullptr && widgetAction->d_func()->autoCreated)
                 widgetAction->setParent(this);
 
             int index = d->layout->count();
@@ -1055,18 +1055,18 @@ void QToolBar::paintEvent(QPaintEvent *)
 */
 static bool waitForPopup(QToolBar *tb, QWidget *popup)
 {
-    if (popup == 0 || popup->isHidden())
+    if (popup == nullptr || popup->isHidden())
         return false;
 
     QWidget *w = popup;
-    while (w != 0) {
+    while (w != nullptr) {
         if (w == tb)
             return true;
         w = w->parentWidget();
     }
 
     QMenu *menu = qobject_cast<QMenu*>(popup);
-    if (menu == 0)
+    if (menu == nullptr)
         return false;
 
     QAction *action = menu->menuAction();
@@ -1189,7 +1189,7 @@ bool QToolBar::event(QEvent *event)
             return true;
         break;
     case QEvent::Leave:
-        if (d->state != 0 && d->state->dragging) {
+        if (d->state != nullptr && d->state->dragging) {
 #ifdef Q_OS_WIN
             // This is a workaround for loosing the mouse on Vista.
             QPoint pos = QCursor::pos();
@@ -1253,7 +1253,7 @@ QWidget *QToolBar::widgetForAction(QAction *action) const
 
     int index = d->layout->indexOf(action);
     if (index == -1)
-        return 0;
+        return nullptr;
 
     return d->layout->itemAt(index)->widget();
 }
@@ -1273,7 +1273,7 @@ void QToolBar::initStyleOption(QStyleOptionToolBar *option) const
     option->initFrom(this);
     if (orientation() == Qt::Horizontal)
         option->state |= QStyle::State_Horizontal;
-    option->lineWidth = style()->pixelMetric(QStyle::PM_ToolBarFrameWidth, 0, this);
+    option->lineWidth = style()->pixelMetric(QStyle::PM_ToolBarFrameWidth, nullptr, this);
     option->features = d->layout->movable()
                         ? QStyleOptionToolBar::Movable
                         : QStyleOptionToolBar::None;

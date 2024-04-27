@@ -441,7 +441,7 @@ QTextObjectInterface *QAbstractTextDocumentLayout::handlerForObject(int objectTy
 
     QTextObjectHandler handler = d->handlers.value(objectType);
     if (!handler.component)
-        return 0;
+        return nullptr;
 
     return handler.iface;
 }

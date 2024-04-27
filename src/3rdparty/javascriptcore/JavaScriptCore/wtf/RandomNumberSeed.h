@@ -67,7 +67,7 @@ inline void initializeRandomNumberGenerator()
 #elif OS(UNIX)
     // srandomdev is not guaranteed to exist on linux so we use this poor seed, this should be improved
     timeval time;
-    gettimeofday(&time, 0);
+    gettimeofday(&time, nullptr);
     srandom(static_cast<unsigned>(time.tv_usec * getpid()));
 #else
     srand(static_cast<unsigned>(time(0)));

@@ -157,9 +157,9 @@ QT_BEGIN_NAMESPACE
 */
 
 QAbstractScrollAreaPrivate::QAbstractScrollAreaPrivate()
-    :hbar(0), vbar(0), vbarpolicy(Qt::ScrollBarAsNeeded), hbarpolicy(Qt::ScrollBarAsNeeded),
-     viewport(0), cornerWidget(0), left(0), top(0), right(0), bottom(0),
-     xoffset(0), yoffset(0), viewportFilter(0)
+    :hbar(nullptr), vbar(nullptr), vbarpolicy(Qt::ScrollBarAsNeeded), hbarpolicy(Qt::ScrollBarAsNeeded),
+     viewport(nullptr), cornerWidget(nullptr), left(0), top(0), right(0), bottom(0),
+     xoffset(0), yoffset(0), viewportFilter(nullptr)
 #ifdef Q_WS_WIN
      , singleFingerPanEnabled(false)
 #endif
@@ -361,7 +361,7 @@ void QAbstractScrollAreaPrivate::layoutChildren()
     QStyleOption opt(0);
     opt.init(q);
 
-    const bool hasCornerWidget = (cornerWidget != 0);
+    const bool hasCornerWidget = (cornerWidget != nullptr);
 
 // If the scroll bars are at the very right and bottom of the window we
 // move their positions to be aligned with the size grip.
@@ -813,7 +813,7 @@ void QAbstractScrollArea::addScrollBarWidget(QWidget *widget, Qt::Alignment alig
 {
     Q_D(QAbstractScrollArea);
 
-    if (widget == 0)
+    if (widget == nullptr)
         return;
 
     const Qt::Orientation scrollBarOrientation

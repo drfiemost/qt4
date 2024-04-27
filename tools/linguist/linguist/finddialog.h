@@ -53,7 +53,7 @@ class FindDialog : public QDialog, public Ui::FindDialog
 {
     Q_OBJECT
 public:
-    FindDialog(QWidget *parent = 0);
+    FindDialog(QWidget *parent = nullptr);
 
 signals:
     void findNext(const QString& text, DataModel::FindLocation where, bool matchCase, bool ignoreAccelerators);

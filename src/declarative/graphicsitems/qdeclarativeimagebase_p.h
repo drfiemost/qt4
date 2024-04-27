@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeImageBase : public QDeclarativeImplicitSizeI
     Q_PROPERTY(bool mirror READ mirror WRITE setMirror NOTIFY mirrorChanged REVISION 1)
 
 public:
-    QDeclarativeImageBase(QDeclarativeItem *parent=0);
+    QDeclarativeImageBase(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeImageBase();
     enum Status { Null, Ready, Loading, Error };
     Status status() const;

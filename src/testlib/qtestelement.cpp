@@ -45,8 +45,8 @@ QT_BEGIN_NAMESPACE
 
 QTestElement::QTestElement(int type)
     :QTestCoreElement<QTestElement>(type),
-    listOfChildren(0),
-    parent(0)
+    listOfChildren(nullptr),
+    parent(nullptr)
 {
 }
 

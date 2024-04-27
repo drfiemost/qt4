@@ -60,7 +60,7 @@ QT_BEGIN_NAMESPACE
   Constructs an invalid QScriptString.
 */
 QScriptString::QScriptString()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 

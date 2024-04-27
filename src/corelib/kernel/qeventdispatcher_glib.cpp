@@ -124,9 +124,9 @@ static GSourceFuncs socketNotifierSourceFuncs = {
     socketNotifierSourcePrepare,
     socketNotifierSourceCheck,
     socketNotifierSourceDispatch,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 struct GTimerSource
@@ -198,9 +198,9 @@ static GSourceFuncs timerSourceFuncs = {
     timerSourcePrepare,
     timerSourceCheck,
     timerSourceDispatch,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 struct GIdleTimerSource
@@ -237,7 +237,7 @@ static gboolean idleTimerSourceCheck(GSource *source)
 static gboolean idleTimerSourceDispatch(GSource *source, GSourceFunc, gpointer)
 {
     GTimerSource *timerSource = reinterpret_cast<GIdleTimerSource *>(source)->timerSource;
-    (void) timerSourceDispatch(&timerSource->source, 0, 0);
+    (void) timerSourceDispatch(&timerSource->source, nullptr, nullptr);
     return true;
 }
 
@@ -245,9 +245,9 @@ static GSourceFuncs idleTimerSourceFuncs = {
     idleTimerSourcePrepare,
     idleTimerSourceCheck,
     idleTimerSourceDispatch,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 struct GPostEventSource
@@ -285,7 +285,7 @@ static gboolean postEventSourcePrepare(GSource *s, gint *timeout)
 
 static gboolean postEventSourceCheck(GSource *source)
 {
-    return postEventSourcePrepare(source, 0);
+    return postEventSourcePrepare(source, nullptr);
 }
 
 static gboolean postEventSourceDispatch(GSource *s, GSourceFunc, gpointer)
@@ -307,9 +307,9 @@ static GSourceFuncs postEventSourceFuncs = {
     postEventSourcePrepare,
     postEventSourceCheck,
     postEventSourceDispatch,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 
@@ -399,10 +399,10 @@ QEventDispatcherGlib::~QEventDispatcherGlib()
     d->timerSource->timerList.~QTimerInfoList();
     g_source_destroy(&d->timerSource->source);
     g_source_unref(&d->timerSource->source);
-    d->timerSource = 0;
+    d->timerSource = nullptr;
     g_source_destroy(&d->idleTimerSource->source);
     g_source_unref(&d->idleTimerSource->source);
-    d->idleTimerSource = 0;
+    d->idleTimerSource = nullptr;
 
     // destroy socket notifier source
     for (int i = 0; i < d->socketNotifierSource->pollfds.count(); ++i) {
@@ -413,19 +413,19 @@ QEventDispatcherGlib::~QEventDispatcherGlib()
     d->socketNotifierSource->pollfds.~QList<GPollFDWithQSocketNotifier *>();
     g_source_destroy(&d->socketNotifierSource->source);
     g_source_unref(&d->socketNotifierSource->source);
-    d->socketNotifierSource = 0;
+    d->socketNotifierSource = nullptr;
 
     // destroy post event source
     g_source_destroy(&d->postEventSource->source);
     g_source_unref(&d->postEventSource->source);
-    d->postEventSource = 0;
+    d->postEventSource = nullptr;
 
     Q_ASSERT(d->mainContext != 0);
 #if GLIB_CHECK_VERSION (2, 22, 0)
     g_main_context_pop_thread_default (d->mainContext);
 #endif
     g_main_context_unref(d->mainContext);
-    d->mainContext = 0;
+    d->mainContext = nullptr;
 }
 
 bool QEventDispatcherGlib::processEvents(QEventLoop::ProcessEventsFlags flags)

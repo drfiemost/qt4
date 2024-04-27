@@ -160,7 +160,7 @@ void *QDeclarativeVMEVariant::dataPtr()
 QObject *QDeclarativeVMEVariant::asQObject() 
 {
     if (type != QMetaType::QObjectStar) 
-        setValue((QObject *)0);
+        setValue((QObject *)nullptr);
 
     return *(QDeclarativeGuard<QObject> *)(dataPtr());
 }
@@ -383,7 +383,7 @@ QDeclarativeVMEMetaObject::QDeclarativeVMEMetaObject(QObject *obj,
                                                      const QDeclarativeVMEMetaData *meta,
                                                      QDeclarativeCompiledData *cdata)
 : object(obj), compiledData(cdata), ctxt(QDeclarativeData::get(obj, true)->outerContext),
-  metaData(meta), data(0), methods(0), parent(0)
+  metaData(meta), data(nullptr), methods(nullptr), parent(nullptr)
 {
     compiledData->addref();
 
@@ -436,8 +436,8 @@ int QDeclarativeVMEMetaObject::metaCall(QMetaObject::Call c, int _id, void **a)
 
             if (type != QVariant::Invalid) {
                 if (valueIndex != -1) {
-                    QDeclarativeEnginePrivate *ep = ctxt?QDeclarativeEnginePrivate::get(ctxt->engine):0;
-                    QDeclarativeValueType *valueType = 0;
+                    QDeclarativeEnginePrivate *ep = ctxt?QDeclarativeEnginePrivate::get(ctxt->engine):nullptr;
+                    QDeclarativeValueType *valueType = nullptr;
                     if (ep) valueType = ep->valueTypes[type];
                     else valueType = QDeclarativeValueTypeFactory::valueType(type);
                     Q_ASSERT(valueType);
@@ -561,7 +561,7 @@ int QDeclarativeVMEMetaObject::metaCall(QMetaObject::Call c, int _id, void **a)
                 }
 
                 if (c == QMetaObject::WriteProperty && needActivate) {
-                    activate(object, methodOffset + id, 0);
+                    activate(object, methodOffset + id, nullptr);
                 }
 
                 return -1;
@@ -574,7 +574,7 @@ int QDeclarativeVMEMetaObject::metaCall(QMetaObject::Call c, int _id, void **a)
                 QDeclarativeVMEMetaData::AliasData *d = metaData->aliasData() + id;
 
                 if (d->flags & QML_ALIAS_FLAG_PTR && c == QMetaObject::ReadProperty) 
-                        *reinterpret_cast<void **>(a[0]) = 0;
+                        *reinterpret_cast<void **>(a[0]) = nullptr;
 
                 if (!ctxt) return -1;
 
@@ -598,7 +598,7 @@ int QDeclarativeVMEMetaObject::metaCall(QMetaObject::Call c, int _id, void **a)
                     if (flags & QDeclarativePropertyPrivate::RemoveBindingOnAliasWrite) {
                         QDeclarativeData *targetData = QDeclarativeData::get(target);
                         if (targetData && targetData->hasBindingBit(d->propertyIndex())) {
-                            QDeclarativeAbstractBinding *binding = QDeclarativePropertyPrivate::setBinding(target, d->propertyIndex(), d->isValueTypeAlias()?d->valueTypeIndex():-1, 0);
+                            QDeclarativeAbstractBinding *binding = QDeclarativePropertyPrivate::setBinding(target, d->propertyIndex(), d->isValueTypeAlias()?d->valueTypeIndex():-1, nullptr);
                             if (binding) binding->destroy();
                         }
                     }
@@ -615,7 +615,7 @@ int QDeclarativeVMEMetaObject::metaCall(QMetaObject::Call c, int _id, void **a)
                     int rv = QMetaObject::metacall(valueType, c, d->valueTypeIndex(), a);
                     
                     if (c == QMetaObject::WriteProperty)
-                        valueType->write(target, d->propertyIndex(), 0x00);
+                        valueType->write(target, d->propertyIndex(), nullptr);
 
                     return rv;
 
@@ -691,7 +691,7 @@ QScriptValue QDeclarativeVMEMetaObject::method(int index)
         // improve the call time between dynamic methods defined on the same
         // object
         methods[index] = QDeclarativeExpressionPrivate::evalInObjectScope(ctxt, object, code, ctxt->url.toString(),
-                                                                          data->lineNumber, 0);
+                                                                          data->lineNumber, nullptr);
     }
 
     return methods[index];
@@ -720,7 +720,7 @@ QVariant QDeclarativeVMEMetaObject::readVarPropertyAsVariant(int id)
 void QDeclarativeVMEMetaObject::writeVarProperty(int id, const QScriptValue &value)
 {
     data[id].setValue(value);
-    activate(object, methodOffset + id, 0);
+    activate(object, methodOffset + id, nullptr);
 }
 
 void QDeclarativeVMEMetaObject::writeVarProperty(int id, const QVariant &value)
@@ -737,19 +737,19 @@ void QDeclarativeVMEMetaObject::writeVarProperty(int id, const QVariant &value)
         data[id].setValue(value);
     }
     if (needActivate)
-        activate(object, methodOffset + id, 0);
+        activate(object, methodOffset + id, nullptr);
 }
 
 void QDeclarativeVMEMetaObject::listChanged(int id)
 {
-    activate(object, methodOffset + id, 0);
+    activate(object, methodOffset + id, nullptr);
 }
 
 void QDeclarativeVMEMetaObject::list_append(QDeclarativeListProperty<QObject> *prop, QObject *o)
 {
     List *list = static_cast<List *>(prop->data);
     list->append(o);
-    QMetaObject::activate(prop->object, list->notifyIndex, 0);
+    QMetaObject::activate(prop->object, list->notifyIndex, nullptr);
 }
 
 int QDeclarativeVMEMetaObject::list_count(QDeclarativeListProperty<QObject> *prop)
@@ -766,7 +766,7 @@ void QDeclarativeVMEMetaObject::list_clear(QDeclarativeListProperty<QObject> *pr
 {
     List *list = static_cast<List *>(prop->data);
     list->clear();
-    QMetaObject::activate(prop->object, list->notifyIndex, 0);
+    QMetaObject::activate(prop->object, list->notifyIndex, nullptr);
 }
 
 void QDeclarativeVMEMetaObject::registerInterceptor(int index, int valueIndex, QDeclarativePropertyValueInterceptor *interceptor)
@@ -840,7 +840,7 @@ bool QDeclarativeVMEMetaObject::aliasTarget(int index, QObject **target, int *co
 {
     Q_ASSERT(index >= propOffset + metaData->propertyCount);
 
-    *target = 0;
+    *target = nullptr;
     *coreIndex = -1;
     *valueTypeIndex = -1;
 

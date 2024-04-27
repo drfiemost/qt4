@@ -390,7 +390,7 @@ void QScrollBarPrivate::init()
 /*! \reimp */
 void QScrollBar::contextMenuEvent(QContextMenuEvent *event)
 {
-    if (!style()->styleHint(QStyle::SH_ScrollBar_ContextMenu, 0, this)) {
+    if (!style()->styleHint(QStyle::SH_ScrollBar_ContextMenu, nullptr, this)) {
         QAbstractSlider::contextMenuEvent(event);
         return ;
     }
@@ -410,7 +410,7 @@ void QScrollBar::contextMenuEvent(QContextMenuEvent *event)
     QAction *actScrollDn = menu->addAction(horiz ? tr("Scroll right") : tr("Scroll down"));
     QAction *actionSelected = menu->exec(event->globalPos());
     delete menu;
-    if (actionSelected == 0)
+    if (actionSelected == nullptr)
         /* do nothing */ ;
     else if (actionSelected == actScrollHere)
         setValue(d_func()->pixelPosToRangeValue(horiz ? event->pos().x() : event->pos().y()));
@@ -526,7 +526,7 @@ void QScrollBar::mousePressEvent(QMouseEvent *e)
         d->stopRepeatAction();
 
     bool midButtonAbsPos = style()->styleHint(QStyle::SH_ScrollBar_MiddleClickAbsolutePosition,
-                                             0, this);
+                                             nullptr, this);
     QStyleOptionSlider opt;
     initStyleOption(&opt);
 

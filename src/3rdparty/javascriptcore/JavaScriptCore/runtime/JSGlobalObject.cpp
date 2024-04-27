@@ -100,7 +100,7 @@ JSGlobalObject::~JSGlobalObject()
         d()->debugger->detach(this);
 
     Profiler** profiler = Profiler::enabledProfilerReference();
-    if (UNLIKELY(*profiler != 0)) {
+    if (UNLIKELY(*profiler != nullptr)) {
         (*profiler)->stopProfiling(globalExec(), UString());
     }
 
@@ -110,7 +110,7 @@ JSGlobalObject::~JSGlobalObject()
     if (headObject == this)
         headObject = d()->next;
     if (headObject == this)
-        headObject = 0;
+        headObject = nullptr;
 
     HashSet<GlobalCodeBlock*>::const_iterator end = codeBlocks().end();
     for (HashSet<GlobalCodeBlock*>::const_iterator it = codeBlocks().begin(); it != end; ++it)
@@ -118,7 +118,7 @@ JSGlobalObject::~JSGlobalObject()
         
     RegisterFile& registerFile = globalData()->interpreter->registerFile();
     if (registerFile.globalObject() == this) {
-        registerFile.setGlobalObject(0);
+        registerFile.setGlobalObject(nullptr);
         registerFile.setNumGlobals(0);
     }
     d()->destructor(d());
@@ -133,7 +133,7 @@ void JSGlobalObject::init(JSObject* thisValue)
     d()->globalData = Heap::heap(this)->globalData();
     d()->globalScopeChain = ScopeChain(this, d()->globalData.get(), this, thisValue);
 
-    JSGlobalObject::globalExec()->init(0, 0, d()->globalScopeChain.node(), CallFrame::noCaller(), 0, 0, 0);
+    JSGlobalObject::globalExec()->init(nullptr, nullptr, d()->globalScopeChain.node(), CallFrame::noCaller(), 0, 0, nullptr);
 
     if (JSGlobalObject*& headObject = head()) {
         d()->prev = headObject;
@@ -144,7 +144,7 @@ void JSGlobalObject::init(JSObject* thisValue)
         headObject = d()->next = d()->prev = this;
 
     d()->recursion = 0;
-    d()->debugger = 0;
+    d()->debugger = nullptr;
 
     d()->profileGroup = 0;
 
@@ -207,8 +207,8 @@ void JSGlobalObject::reset(JSValue prototype)
 
     d()->functionPrototype = new (exec) FunctionPrototype(exec, FunctionPrototype::createStructure(jsNull())); // The real prototype will be set once ObjectPrototype is created.
     d()->prototypeFunctionStructure = PrototypeFunction::createStructure(d()->functionPrototype);
-    NativeFunctionWrapper* callFunction = 0;
-    NativeFunctionWrapper* applyFunction = 0;
+    NativeFunctionWrapper* callFunction = nullptr;
+    NativeFunctionWrapper* applyFunction = nullptr;
     d()->functionPrototype->addFunctionProperties(exec, d()->prototypeFunctionStructure.get(), &callFunction, &applyFunction);
     d()->callFunction = callFunction;
     d()->applyFunction = applyFunction;
@@ -442,7 +442,7 @@ void JSGlobalObject::copyGlobalsFrom(RegisterFile& registerFile)
 
     int numGlobals = registerFile.numGlobals();
     if (!numGlobals) {
-        d()->registers = 0;
+        d()->registers = nullptr;
         return;
     }
     
@@ -461,7 +461,7 @@ void JSGlobalObject::copyGlobalsTo(RegisterFile& registerFile)
 
     if (d()->registerArray) {
         memcpy(registerFile.start() - d()->registerArraySize, d()->registerArray.get(), d()->registerArraySize * sizeof(Register));
-        setRegisters(registerFile.start(), 0, 0);
+        setRegisters(registerFile.start(), nullptr, 0);
     }
 }
 

@@ -241,7 +241,7 @@ static double parseInt(const UString& s, int radix)
 
     if (number >= mantissaOverflowLowerBound) {
         if (radix == 10)
-            number = WTF::strtod(s.substr(firstDigitPosition, p - firstDigitPosition).ascii(), 0);
+            number = WTF::strtod(s.substr(firstDigitPosition, p - firstDigitPosition).ascii(), nullptr);
         else if (radix == 2 || radix == 4 || radix == 8 || radix == 16 || radix == 32)
             number = parseIntOverflow(s.substr(firstDigitPosition, p - firstDigitPosition).ascii(), p - firstDigitPosition, radix);
     }

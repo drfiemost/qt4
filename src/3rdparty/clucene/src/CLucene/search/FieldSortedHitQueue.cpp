@@ -19,7 +19,7 @@ FieldSortedHitQueue::FieldSortedHitQueue (IndexReader* reader, SortField** _fiel
 	fieldsLen(0),
 	maxscore(1.0f)
 {
-	while ( _fields[fieldsLen] != 0 )
+	while ( _fields[fieldsLen] != nullptr )
 		fieldsLen++;
 
 	comparators = _CL_NEWARRAY(ScoreDocComparator*,fieldsLen+1);
@@ -31,8 +31,8 @@ FieldSortedHitQueue::FieldSortedHitQueue (IndexReader* reader, SortField** _fiel
 		tmp[i] = _CLNEW SortField (fieldname, comparators[i]->sortType(), _fields[i]->getReverse());
 	}
 	comparatorsLen = fieldsLen;
-	comparators[fieldsLen]=NULL;
-	tmp[fieldsLen] = NULL;
+	comparators[fieldsLen]=nullptr;
+	tmp[fieldsLen] = nullptr;
 	this->fields = tmp;
 
 	initialize(size,true);
@@ -114,7 +114,7 @@ ScoreDocComparator* FieldSortedHitQueue::comparatorInt (IndexReader* reader, con
 	if (type == SortField::DOCSCORE) 
 		return ScoreDocComparator::RELEVANCE;
     ScoreDocComparator* comparator = lookup (reader, fieldname, type, factory);
-    if (comparator == NULL) {
+    if (comparator == nullptr) {
       switch (type) {
 		case SortField::AUTO:
           comparator = comparatorAuto (reader, fieldname);
@@ -150,7 +150,7 @@ ScoreDocComparator* FieldSortedHitQueue::comparatorInt (IndexReader* reader, con
     Comparable** fields = _CL_NEWARRAY(Comparable*,n+1);
     for (int32_t i=0; i<n; ++i)
 		fields[i] = comparators[i]->sortValue(&doc->scoreDoc);
-	fields[n]=NULL;
+	fields[n]=nullptr;
     doc->fields = fields;
     if (maxscore > 1.0f) 
         doc->scoreDoc.score /= maxscore;   // normalize scores
@@ -158,17 +158,17 @@ ScoreDocComparator* FieldSortedHitQueue::comparatorInt (IndexReader* reader, con
   }
 
   ScoreDocComparator* FieldSortedHitQueue::lookup (IndexReader* reader, const TCHAR* field, int32_t type, SortComparatorSource* factory) {
-    ScoreDocComparator* sdc = NULL;
-    FieldCacheImpl::FileEntry* entry = (factory != NULL)
+    ScoreDocComparator* sdc = nullptr;
+    FieldCacheImpl::FileEntry* entry = (factory != nullptr)
 	  ? _CLNEW FieldCacheImpl::FileEntry (field, factory)
       : _CLNEW FieldCacheImpl::FileEntry (field, type);
 	
 	{
 		SCOPED_LOCK_MUTEX(Comparators.THIS_LOCK)
 		hitqueueCacheReaderType* readerCache = Comparators.get(reader);
-		if (readerCache == NULL){
+		if (readerCache == nullptr){
 			_CLDELETE(entry);
-			return NULL;
+			return nullptr;
 		}
 		
 		sdc = readerCache->get (entry);
@@ -184,17 +184,17 @@ ScoreDocComparator* FieldSortedHitQueue::comparatorInt (IndexReader* reader, con
 	
   //static
   void FieldSortedHitQueue::store (IndexReader* reader, const TCHAR* field, int32_t type, SortComparatorSource* factory, ScoreDocComparator* value) {
-	FieldCacheImpl::FileEntry* entry = (factory != NULL)
+	FieldCacheImpl::FileEntry* entry = (factory != nullptr)
 		? _CLNEW FieldCacheImpl::FileEntry (field, factory)
 		: _CLNEW FieldCacheImpl::FileEntry (field, type);
 
 	{
 		SCOPED_LOCK_MUTEX(Comparators.THIS_LOCK)
 		hitqueueCacheReaderType* readerCache = Comparators.get(reader);
-		if (readerCache == NULL) {
+		if (readerCache == nullptr) {
 			readerCache = _CLNEW hitqueueCacheReaderType(true);
 			Comparators.put(reader,readerCache);
-			reader->addCloseCallback(FieldSortedHitQueue::closeCallback,NULL);
+			reader->addCloseCallback(FieldSortedHitQueue::closeCallback,nullptr);
 		}
 		readerCache->put (entry, value);
 		//return NULL; //supposed to return previous value...
@@ -203,8 +203,8 @@ ScoreDocComparator* FieldSortedHitQueue::comparatorInt (IndexReader* reader, con
 
 FieldSortedHitQueue::~FieldSortedHitQueue(){
 	_CLDELETE_ARRAY(comparators);
-    if ( fields != NULL ){
-       for ( int i=0;fields[i]!=NULL;i++ )
+    if ( fields != nullptr ){
+       for ( int i=0;fields[i]!=nullptr;i++ )
            _CLDELETE(fields[i]);
        _CLDELETE_ARRAY(fields);
     }

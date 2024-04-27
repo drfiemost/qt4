@@ -137,11 +137,11 @@ public:
     static QPalette palette();
     static QPalette palette(const QWidget *);
     static QPalette palette(const char *className);
-    static void setPalette(const QPalette &, const char* className = 0);
+    static void setPalette(const QPalette &, const char* className = nullptr);
     static QFont font();
     static QFont font(const QWidget*);
     static QFont font(const char *className);
-    static void setFont(const QFont &, const char* className = 0);
+    static void setFont(const QFont &, const char* className = nullptr);
     static QFontMetrics fontMetrics();
 
     static void setWindowIcon(const QIcon &icon);

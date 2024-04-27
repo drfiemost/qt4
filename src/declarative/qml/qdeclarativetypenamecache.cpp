@@ -60,7 +60,7 @@ void QDeclarativeTypeNameCache::clear()
     qDeleteAll(stringCache);
     stringCache.clear();
     identifierCache.clear();
-    engine = 0;
+    engine = nullptr;
 }
 
 void QDeclarativeTypeNameCache::add(const QString &name, int importedScriptIndex)

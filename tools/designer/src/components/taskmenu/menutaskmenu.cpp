@@ -61,7 +61,7 @@ namespace qdesigner_internal {
 
     QAction *MenuTaskMenu::preferredEditAction() const
     {
-        return 0;
+        return nullptr;
     }
 
     QList<QAction*> MenuTaskMenu::taskActions() const
@@ -94,7 +94,7 @@ namespace qdesigner_internal {
 
     QAction *MenuBarTaskMenu::preferredEditAction() const
     {
-        return 0;
+        return nullptr;
     }
 
     QList<QAction*> MenuBarTaskMenu::taskActions() const

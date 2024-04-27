@@ -71,7 +71,7 @@ class QPrintPreviewMainWindow : public QMainWindow
 {
 public:
     QPrintPreviewMainWindow(QWidget *parent) : QMainWindow(parent) {}
-    QMenu *createPopupMenu() { return 0; }
+    QMenu *createPopupMenu() { return nullptr; }
 };
 
 class ZoomFactorValidator : public QDoubleValidator
@@ -107,7 +107,7 @@ class LineEdit : public QLineEdit
 {
     Q_OBJECT
 public:
-    LineEdit(QWidget* parent = 0)
+    LineEdit(QWidget* parent = nullptr)
         : QLineEdit(parent)
     {
         setContextMenuPolicy(Qt::NoContextMenu);
@@ -144,7 +144,7 @@ class QPrintPreviewDialogPrivate : public QDialogPrivate
     Q_DECLARE_PUBLIC(QPrintPreviewDialog)
 public:
     QPrintPreviewDialogPrivate()
-        : printDialog(0), ownPrinter(false),
+        : printDialog(nullptr), ownPrinter(false),
           initialized(false) {}
 
     // private slots
@@ -159,7 +159,7 @@ public:
     void _q_previewChanged();
     void _q_zoomFactorChanged();
 
-    void init(QPrinter *printer = 0);
+    void init(QPrinter *printer = nullptr);
     void populateScene();
     void layoutPages();
     void setupActions();
@@ -742,7 +742,7 @@ void QPrintPreviewDialog::done(int result)
     if (d->receiverToDisconnectOnClose) {
         disconnect(this, SIGNAL(finished(int)),
                    d->receiverToDisconnectOnClose, d->memberToDisconnectOnClose);
-        d->receiverToDisconnectOnClose = 0;
+        d->receiverToDisconnectOnClose = nullptr;
     }
     d->memberToDisconnectOnClose.clear();
 }

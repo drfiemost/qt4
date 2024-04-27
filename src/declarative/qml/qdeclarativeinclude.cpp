@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
 QDeclarativeInclude::QDeclarativeInclude(const QUrl &url, 
                                                        QDeclarativeEngine *engine, 
                                                        QScriptContext *ctxt)
-: QObject(engine), m_engine(engine), m_network(0), m_reply(0), m_url(url), m_redirectCount(0)
+: QObject(engine), m_engine(engine), m_network(nullptr), m_reply(nullptr), m_url(url), m_redirectCount(0)
 {
     QDeclarativeEnginePrivate *ep = QDeclarativeEnginePrivate::get(engine);
     m_context = ep->contextClass->contextFromValue(QScriptDeclarativeClass::scopeChainValue(ctxt, -3));
@@ -135,7 +135,7 @@ void QDeclarativeInclude::finished()
 
         QString urlString = m_url.toString();
         QScriptContext *scriptContext = QScriptDeclarativeClass::pushCleanContext(m_scriptEngine);
-        scriptContext->pushScope(ep->contextClass->newUrlContext(m_context, 0, urlString));
+        scriptContext->pushScope(ep->contextClass->newUrlContext(m_context, nullptr, urlString));
         scriptContext->pushScope(m_scope[0]);
 
         scriptContext->pushScope(m_scope[1]);
@@ -219,7 +219,7 @@ QScriptValue QDeclarativeInclude::include(QScriptContext *ctxt, QScriptEngine *e
                 ep->contextClass->contextFromValue(QScriptDeclarativeClass::scopeChainValue(ctxt, -3));
 
             QScriptContext *scriptContext = QScriptDeclarativeClass::pushCleanContext(engine);
-            scriptContext->pushScope(ep->contextClass->newUrlContext(context, 0, urlString));
+            scriptContext->pushScope(ep->contextClass->newUrlContext(context, nullptr, urlString));
             scriptContext->pushScope(ep->globalClass->staticGlobalObject());
             QScriptValue scope = QScriptDeclarativeClass::scopeChainValue(ctxt, -5);
             scriptContext->pushScope(scope);

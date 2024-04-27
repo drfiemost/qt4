@@ -62,7 +62,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeLoader : public QDeclarativeImplicitSizeItem
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
 
 public:
-    QDeclarativeLoader(QDeclarativeItem *parent=0);
+    QDeclarativeLoader(QDeclarativeItem *parent=nullptr);
     virtual ~QDeclarativeLoader();
 
     QUrl source() const;

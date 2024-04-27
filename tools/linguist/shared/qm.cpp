@@ -165,7 +165,7 @@ public:
 
     enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88 };
 
-    Releaser() : m_codec(0) {}
+    Releaser() : m_codec(nullptr) {}
 
     void setCodecName(const QByteArray &codecName)
     {
@@ -320,7 +320,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
             cpNext = 0;
         else
             cpNext = commonPrefix(it.key(), next.key());
-        offsets.insert(Offset(msgHash(it.key()), ms.device()->pos()), (void *)0);
+        offsets.insert(Offset(msgHash(it.key()), ms.device()->pos()), (void *)nullptr);
         writeMessage(it.key(), ms, mode, Prefix(std::max(cpPrev, cpNext + 1)));
     }
 
@@ -501,8 +501,8 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88 };
 
     // for squeezed but non-file data, this is what needs to be deleted
-    const uchar *messageArray = 0;
-    const uchar *offsetArray = 0;
+    const uchar *messageArray = nullptr;
+    const uchar *offsetArray = nullptr;
     uint offsetLength = 0;
 
     bool ok = true;
@@ -540,7 +540,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
 
     QTextCodec *codec = QTextCodec::codecForName(
         cd.m_codecForSource.isEmpty() ? QByteArray("Latin1") : cd.m_codecForSource);
-    QTextCodec *utf8Codec = 0;
+    QTextCodec *utf8Codec = nullptr;
     if (codec->name() != "UTF-8")
         utf8Codec = QTextCodec::codecForName("UTF-8");
 
@@ -550,7 +550,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     Translator::languageAndCountry(translator.languageCode(), &l, &c);
     QStringList numerusForms;
     bool guessPlurals = true;
-    if (getNumerusInfo(l, c, 0, &numerusForms, 0))
+    if (getNumerusInfo(l, c, nullptr, &numerusForms, nullptr))
         guessPlurals = (numerusForms.count() == 1);
 
     QString context, contextUtf8;
@@ -690,7 +690,7 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
     QLocale::Country c;
     Translator::languageAndCountry(translator.languageCode(), &l, &c);
     QByteArray rules;
-    if (getNumerusInfo(l, c, &rules, 0, 0))
+    if (getNumerusInfo(l, c, &rules, nullptr, nullptr))
         releaser.setNumerusRules(rules);
     releaser.setCodecName(translator.codecName());
 
@@ -747,11 +747,11 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     if (missingIds)
         cd.appendError(QCoreApplication::translate("LRelease",
-            "Dropped %n message(s) which had no ID.", 0,
+            "Dropped %n message(s) which had no ID.", nullptr,
             QCoreApplication::Latin1, missingIds));
     if (droppedData)
         cd.appendError(QCoreApplication::translate("LRelease",
-            "Excess context/disambiguation dropped from %n message(s).", 0,
+            "Excess context/disambiguation dropped from %n message(s).", nullptr,
             QCoreApplication::Latin1, droppedData));
 
     releaser.squeeze(cd.m_saveMode);
@@ -759,11 +759,11 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
     if (saved && cd.isVerbose()) {
         int generatedCount = finished + unfinished;
         cd.appendError(QCoreApplication::translate("LRelease",
-            "    Generated %n translation(s) (%1 finished and %2 unfinished)", 0,
+            "    Generated %n translation(s) (%1 finished and %2 unfinished)", nullptr,
             QCoreApplication::Latin1, generatedCount).arg(finished).arg(unfinished));
         if (untranslated)
             cd.appendError(QCoreApplication::translate("LRelease",
-                "    Ignored %n untranslated source text(s)", 0,
+                "    Ignored %n untranslated source text(s)", nullptr,
                 QCoreApplication::Latin1, untranslated));
     }
     return saved;

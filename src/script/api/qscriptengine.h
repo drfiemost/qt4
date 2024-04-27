@@ -186,10 +186,10 @@ public:
 
 #ifndef QT_NO_QOBJECT
     QScriptValue newQObject(QObject *object, ValueOwnership ownership = QtOwnership,
-                            const QObjectWrapOptions &options = 0);
+                            const QObjectWrapOptions &options = nullptr);
     QScriptValue newQObject(const QScriptValue &scriptObject, QObject *qtObject,
                             ValueOwnership ownership = QtOwnership,
-                            const QObjectWrapOptions &options = 0);
+                            const QObjectWrapOptions &options = nullptr);
 
     QScriptValue newQMetaObject(const QMetaObject *metaObject, const QScriptValue &ctor = QScriptValue());
 
@@ -266,7 +266,7 @@ protected:
 
     QScriptEngine(QScriptEnginePrivate &dd);
 #else
-    QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = 0);
+    QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = nullptr);
 #endif
 
 private:
@@ -296,7 +296,7 @@ template <class T> QScriptValue QScriptEngine::scriptValueFromQMetaObject()
     typedef QScriptValue(*ConstructPtr)(QScriptContext *, QScriptEngine *, T *);
     ConstructPtr cptr = qscriptQMetaObjectConstructor<T>;
     return newQMetaObject(&T::staticMetaObject,
-                            newFunction(reinterpret_cast<FunctionWithArgSignature>(cptr), 0));
+                            newFunction(reinterpret_cast<FunctionWithArgSignature>(cptr), nullptr));
 }
 
 #ifdef QT_DEPRECATED
@@ -382,7 +382,7 @@ int qScriptRegisterMetaType(
     void (*fromScriptValue)(const QScriptValue &, T &t),
     const QScriptValue &prototype = QScriptValue()
 #ifndef qdoc
-    , T * /* dummy */ = 0
+    , T * /* dummy */ = nullptr
 #endif
 )
 {
@@ -424,7 +424,7 @@ int qScriptRegisterSequenceMetaType(
     QScriptEngine *engine,
     const QScriptValue &prototype = QScriptValue()
 #ifndef qdoc
-    , T * /* dummy */ = 0
+    , T * /* dummy */ = nullptr
 #endif
 )
 {

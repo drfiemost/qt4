@@ -89,12 +89,12 @@ public:
     {
         QLibrarySettings *ls = qt_library_settings();
         if (ls)
-            ls->settings.reset(0);
+            ls->settings.reset(nullptr);
     }
     static QSettings *configuration()
     {
         QLibrarySettings *ls = qt_library_settings();
-        return ls ? ls->settings.data() : 0;
+        return ls ? ls->settings.data() : nullptr;
     }
 };
 
@@ -136,7 +136,7 @@ QSettings *QLibraryInfoPrivate::findConfiguration()
 #endif
     if (QFile::exists(qtconfig))
         return new QSettings(qtconfig, QSettings::IniFormat);
-    return 0;     //no luck
+    return nullptr;     //no luck
 }
 
 /*!
@@ -221,7 +221,7 @@ QLibraryInfo::location(LibraryLocation loc)
 {
     QString ret;
     if(!QLibraryInfoPrivate::configuration()) {
-        const char *path = 0;
+        const char *path = nullptr;
         switch (loc) {
 #ifdef QT_CONFIGURE_PREFIX_PATH
         case PrefixPath:

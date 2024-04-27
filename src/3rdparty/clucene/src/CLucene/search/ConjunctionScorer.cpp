@@ -14,13 +14,13 @@ CL_NS_DEF(search)
 
   Scorer* ConjunctionScorer::first()  const{ 
 	 if ( scorers.end() == scorers.begin() )
-		return NULL;
+		return nullptr;
 
 	 return *scorers.begin(); 
   } //get First
   Scorer* ConjunctionScorer::last() {
 	 if ( scorers.end() == scorers.begin() )
-		return NULL;
+		return nullptr;
 
 	 CL_NS_STD(list)<Scorer*>::iterator i = scorers.end();
 	 --i;

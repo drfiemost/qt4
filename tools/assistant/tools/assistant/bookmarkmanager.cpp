@@ -107,7 +107,7 @@ void BookmarkManager::BookmarkTreeView::setExpandedData(const QModelIndex &index
 // -- BookmarkManager
 
 QMutex BookmarkManager::mutex;
-BookmarkManager* BookmarkManager::bookmarkManager = 0;
+BookmarkManager* BookmarkManager::bookmarkManager = nullptr;
 
 // -- public
 
@@ -126,7 +126,7 @@ void BookmarkManager::destroy()
 {
     TRACE_OBJ
     delete bookmarkManager;
-    bookmarkManager = 0;
+    bookmarkManager = nullptr;
 }
 
 QWidget* BookmarkManager::bookmarkDockWidget() const
@@ -134,7 +134,7 @@ QWidget* BookmarkManager::bookmarkDockWidget() const
     TRACE_OBJ
     if (bookmarkWidget)
         return bookmarkWidget;
-    return 0;
+    return nullptr;
 }
 
 void BookmarkManager::setBookmarksMenu(QMenu* menu)
@@ -164,14 +164,14 @@ void BookmarkManager::addBookmark(const QString &title, const QString &url)
 
 BookmarkManager::BookmarkManager()
     : typeAndSearch(false)
-    , bookmarkMenu(0)
-    , m_toolBar(0)
+    , bookmarkMenu(nullptr)
+    , m_toolBar(nullptr)
     , bookmarkModel(new BookmarkModel)
-    , bookmarkFilterModel(0)
-    , typeAndSearchModel(0)
+    , bookmarkFilterModel(nullptr)
+    , typeAndSearchModel(nullptr)
     , bookmarkWidget(new BookmarkWidget)
     , bookmarkTreeView(new BookmarkTreeView)
-    , bookmarkManagerWidget(0)
+    , bookmarkManagerWidget(nullptr)
 {
     TRACE_OBJ
     bookmarkWidget->installEventFilter(this);
@@ -362,7 +362,7 @@ void BookmarkManager::removeBookmark()
 void BookmarkManager::manageBookmarks()
 {
     TRACE_OBJ
-    if (bookmarkManagerWidget == 0) {
+    if (bookmarkManagerWidget == nullptr) {
         bookmarkManagerWidget = new BookmarkManagerWidget(bookmarkModel);
         connect(bookmarkManagerWidget, SIGNAL(setSource(QUrl)), this,
             SIGNAL(setSource(QUrl)));
@@ -496,10 +496,10 @@ void BookmarkManager::customContextMenuRequested(const QPoint &point)
     if (!typeAndSearch && !bookmarkModel->parent(index).isValid())
         return;
 
-    QAction *remove = 0;
-    QAction *rename = 0;
-    QAction *showItem = 0;
-    QAction *showItemInNewTab = 0;
+    QAction *remove = nullptr;
+    QAction *rename = nullptr;
+    QAction *showItem = nullptr;
+    QAction *showItemInNewTab = nullptr;
 
     QMenu menu(QLatin1String(""));
     if (!typeAndSearch && bookmarkModel->data(index, UserRoleFolder).toBool()) {
@@ -533,7 +533,7 @@ void BookmarkManager::focusInEvent()
 void BookmarkManager::managerWidgetAboutToClose()
 {
     delete bookmarkManagerWidget;
-    bookmarkManagerWidget = 0;
+    bookmarkManagerWidget = nullptr;
 }
 
 void BookmarkManager::textChanged(const QString &text)

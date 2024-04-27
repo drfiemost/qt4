@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 void QAbstractEventDispatcherPrivate::init()
 {
     Q_Q(QAbstractEventDispatcher);
-    if (threadData.loadRelaxed()->eventDispatcher.loadRelaxed() != 0) {
+    if (threadData.loadRelaxed()->eventDispatcher.loadRelaxed() != nullptr) {
         qWarning("QAbstractEventDispatcher: An event dispatcher has already been created for this thread");
     } else {
         threadData.loadRelaxed()->eventDispatcher.storeRelaxed(q);

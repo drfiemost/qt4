@@ -62,7 +62,7 @@ uint ProString::hash(const QChar *p, int n)
 }
 
 ProString::ProString() :
-    m_offset(0), m_length(0), m_file(0), m_hash(0x80000000)
+    m_offset(0), m_length(0), m_file(nullptr), m_hash(0x80000000)
 {
 }
 
@@ -77,40 +77,40 @@ ProString::ProString(const ProString &other, OmitPreHashing) :
 }
 
 ProString::ProString(const QString &str) :
-    m_string(str), m_offset(0), m_length(str.length()), m_file(0)
+    m_string(str), m_offset(0), m_length(str.length()), m_file(nullptr)
 {
     updatedHash();
 }
 
 ProString::ProString(const QString &str, OmitPreHashing) :
-    m_string(str), m_offset(0), m_length(str.length()), m_file(0), m_hash(0x80000000)
+    m_string(str), m_offset(0), m_length(str.length()), m_file(nullptr), m_hash(0x80000000)
 {
 }
 
 ProString::ProString(const char *str) :
-    m_string(QString::fromLatin1(str)), m_offset(0), m_length(qstrlen(str)), m_file(0)
+    m_string(QString::fromLatin1(str)), m_offset(0), m_length(qstrlen(str)), m_file(nullptr)
 {
     updatedHash();
 }
 
 ProString::ProString(const char *str, OmitPreHashing) :
-    m_string(QString::fromLatin1(str)), m_offset(0), m_length(qstrlen(str)), m_file(0), m_hash(0x80000000)
+    m_string(QString::fromLatin1(str)), m_offset(0), m_length(qstrlen(str)), m_file(nullptr), m_hash(0x80000000)
 {
 }
 
 ProString::ProString(const QString &str, int offset, int length) :
-    m_string(str), m_offset(offset), m_length(length), m_file(0)
+    m_string(str), m_offset(offset), m_length(length), m_file(nullptr)
 {
     updatedHash();
 }
 
 ProString::ProString(const QString &str, int offset, int length, uint hash) :
-    m_string(str), m_offset(offset), m_length(length), m_file(0), m_hash(hash)
+    m_string(str), m_offset(offset), m_length(length), m_file(nullptr), m_hash(hash)
 {
 }
 
 ProString::ProString(const QString &str, int offset, int length, ProStringConstants::OmitPreHashing) :
-    m_string(str), m_offset(offset), m_length(length), m_file(0), m_hash(0x80000000)
+    m_string(str), m_offset(offset), m_length(length), m_file(nullptr), m_hash(0x80000000)
 {
 }
 

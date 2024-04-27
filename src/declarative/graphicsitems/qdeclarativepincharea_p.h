@@ -79,7 +79,7 @@ public:
     void resetTarget() {
         if (!m_target)
             return;
-        m_target = 0;
+        m_target = nullptr;
         emit targetChanged();
     }
 
@@ -264,7 +264,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePinchArea : public QDeclarativeItem
     Q_PROPERTY(QDeclarativePinch *pinch READ pinch CONSTANT)
 
 public:
-    QDeclarativePinchArea(QDeclarativeItem *parent=0);
+    QDeclarativePinchArea(QDeclarativeItem *parent=nullptr);
     ~QDeclarativePinchArea();
 
     bool isEnabled() const;

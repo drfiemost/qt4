@@ -57,12 +57,12 @@ class QGraphicsGridLayoutPrivate;
 class Q_GUI_EXPORT QGraphicsGridLayout : public QGraphicsLayout
 {
 public:
-    QGraphicsGridLayout(QGraphicsLayoutItem *parent = 0);
+    QGraphicsGridLayout(QGraphicsLayoutItem *parent = nullptr);
     virtual ~QGraphicsGridLayout();
 
     void addItem(QGraphicsLayoutItem *item, int row, int column, int rowSpan, int columnSpan,
-                   Qt::Alignment alignment = 0);
-    inline void addItem(QGraphicsLayoutItem *item, int row, int column, Qt::Alignment alignment = 0);
+                   Qt::Alignment alignment = nullptr);
+    inline void addItem(QGraphicsLayoutItem *item, int row, int column, Qt::Alignment alignment = nullptr);
 
     void setHorizontalSpacing(qreal spacing);
     qreal horizontalSpacing() const;

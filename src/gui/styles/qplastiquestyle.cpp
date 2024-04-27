@@ -918,7 +918,7 @@ static void qt_plastique_draw_mdibutton(QPainter *painter, const QStyleOptionTit
 }
 
 #ifndef QT_NO_DOCKWIDGET
-static QString elliditide(const QString &text, const QFontMetrics &fontMetrics, const QRect &rect, int *textWidth = 0)
+static QString elliditide(const QString &text, const QFontMetrics &fontMetrics, const QRect &rect, int *textWidth = nullptr)
 {
     // Chop and insert ellide into title if text is too wide
     QString title = text;
@@ -3151,7 +3151,7 @@ void QPlastiqueStyle::drawControl(ControlElement element, const QStyleOption *op
 
             const QStyleOptionDockWidgetV2 *v2
                 = qstyleoption_cast<const QStyleOptionDockWidgetV2*>(dockWidget);
-            bool verticalTitleBar = v2 == 0 ? false : v2->verticalTitleBar;
+            bool verticalTitleBar = v2 == nullptr ? false : v2->verticalTitleBar;
 
             // Find text width and title rect
             int textWidth = option->fontMetrics.width(dockWidget->title);

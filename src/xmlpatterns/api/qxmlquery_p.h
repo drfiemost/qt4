@@ -86,10 +86,10 @@ class QXmlQueryPrivate
 public:
 
     inline QXmlQueryPrivate(const QXmlNamePool &np = QXmlNamePool()) : namePool(np)
-                                                                     , messageHandler(0)
-                                                                     , uriResolver(0)
+                                                                     , messageHandler(nullptr)
+                                                                     , uriResolver(nullptr)
                                                                      , queryLanguage(QXmlQuery::XQuery10)
-                                                                     , m_networkAccessDelegator(new QPatternist::NetworkAccessDelegator(0, 0))
+                                                                     , m_networkAccessDelegator(new QPatternist::NetworkAccessDelegator(nullptr, nullptr))
     {
         m_networkAccessDelegator->m_variableURIManager = new QPatternist::URILoader(ownerObject(), namePool.d, variableLoader());
     }
@@ -172,7 +172,7 @@ public:
         return m_staticContext;
     }
 
-    inline QPatternist::DynamicContext::Ptr dynamicContext(QAbstractXmlReceiver *const callback = 0)
+    inline QPatternist::DynamicContext::Ptr dynamicContext(QAbstractXmlReceiver *const callback = nullptr)
     {
         const QPatternist::StaticContext::Ptr statContext(staticContext());
         Q_ASSERT(statContext);
@@ -231,7 +231,7 @@ public:
         }
     }
 
-    QPatternist::Expression::Ptr expression(QIODevice *const queryDevice = 0)
+    QPatternist::Expression::Ptr expression(QIODevice *const queryDevice = nullptr)
     {
         if(m_expr && !queryDevice)
             return m_expr;

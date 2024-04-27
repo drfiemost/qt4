@@ -748,7 +748,7 @@ QCalendarWidget *QDateTimeEdit::calendarWidget() const
 {
     Q_D(const QDateTimeEdit);
     if (!d->calendarPopup || !(d->sections & QDateTimeParser::DateSectionMask))
-        return 0;
+        return nullptr;
     if (!d->monthCalendar) {
         const_cast<QDateTimeEditPrivate*>(d)->initCalendarPopup();
     }
@@ -1234,7 +1234,7 @@ void QDateTimeEdit::focusInEvent(QFocusEvent *event)
 {
     Q_D(QDateTimeEdit);
     QAbstractSpinBox::focusInEvent(event);
-    QString *frm = 0;
+    QString *frm = nullptr;
     const int oldPos = d->edit->cursorPosition();
     if (!d->formatExplicitlySet) {
         if (d->displayFormat == d->defaultTimeFormat) {
@@ -1429,12 +1429,12 @@ QDateTimeEdit::StepEnabled QDateTimeEdit::stepEnabled() const
 {
     Q_D(const QDateTimeEdit);
     if (d->readOnly)
-        return StepEnabled(0);
+        return StepEnabled(nullptr);
     if (d->specialValue()) {
-        return (d->minimum == d->maximum ? StepEnabled(0) : StepEnabled(StepUpEnabled));
+        return (d->minimum == d->maximum ? StepEnabled(nullptr) : StepEnabled(StepUpEnabled));
     }
 
-    QAbstractSpinBox::StepEnabled ret = 0;
+    QAbstractSpinBox::StepEnabled ret = nullptr;
 
 #ifdef QT_KEYPAD_NAVIGATION
     if (QApplication::keypadNavigationEnabled() && !hasEditFocus()) {
@@ -1469,7 +1469,7 @@ QDateTimeEdit::StepEnabled QDateTimeEdit::stepEnabled() const
     switch (d->sectionType(d->currentSectionIndex)) {
     case QDateTimeParser::NoSection:
     case QDateTimeParser::FirstSection:
-    case QDateTimeParser::LastSection: return 0;
+    case QDateTimeParser::LastSection: return nullptr;
     default: break;
     }
     if (d->wrapping)
@@ -1654,7 +1654,7 @@ QDateTimeEditPrivate::QDateTimeEditPrivate()
     cacheGuard = false;
     fixday = true;
     type = QVariant::DateTime;
-    sections = 0;
+    sections = nullptr;
     cachedDay = -1;
     currentSectionIndex = FirstSectionIndex;
 
@@ -1664,12 +1664,12 @@ QDateTimeEditPrivate::QDateTimeEditPrivate()
     first.pos = 0;
     last.pos = -1;
     none.pos = -1;
-    sections = 0;
+    sections = nullptr;
     calendarPopup = false;
     minimum = QDATETIMEEDIT_COMPAT_DATETIME_MIN;
     maximum = QDATETIMEEDIT_DATETIME_MAX;
     arrowState = QStyle::State_None;
-    monthCalendar = 0;
+    monthCalendar = nullptr;
     readLocaleSettings();
 
 #ifdef QT_KEYPAD_NAVIGATION
@@ -2253,7 +2253,7 @@ QDateTimeEdit::Section QDateTimeEditPrivate::convertToPublic(QDateTimeParser::Se
 
 QDateTimeEdit::Sections QDateTimeEditPrivate::convertSections(QDateTimeParser::Sections s)
 {
-    QDateTimeEdit::Sections ret = 0;
+    QDateTimeEdit::Sections ret = nullptr;
     if (s & QDateTimeParser::MSecSection)
         ret |= QDateTimeEdit::MSecSection;
     if (s & QDateTimeParser::SecondSection)

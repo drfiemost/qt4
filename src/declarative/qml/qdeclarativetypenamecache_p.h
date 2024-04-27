@@ -99,7 +99,7 @@ private:
 };
 
 QDeclarativeTypeNameCache::Data::Data()
-: type(0), typeNamespace(0), importedScriptIndex(-1)
+: type(nullptr), typeNamespace(nullptr), importedScriptIndex(-1)
 {
 }
 

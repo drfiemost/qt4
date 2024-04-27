@@ -61,11 +61,11 @@ class ShaderEffectItem : public QDeclarativeItem
     Q_PROPERTY(QSize meshResolution READ meshResolution WRITE setMeshResolution NOTIFY meshResolutionChanged)
 
 public:
-    ShaderEffectItem(QDeclarativeItem* parent = 0);
+    ShaderEffectItem(QDeclarativeItem* parent = nullptr);
     ~ShaderEffectItem();
 
     virtual void componentComplete();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     QString fragmentShader() const { return m_fragment_code; }
     void setFragmentShader(const QString &code);

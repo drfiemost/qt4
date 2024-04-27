@@ -73,7 +73,7 @@ void QGraphicsWidgetPrivate::init(QGraphicsItem *parentItem, Qt::WindowFlags wFl
     windowFlags = wFlags;
 
     if (parentItem)
-        setParentItemHelper(parentItem, 0, 0);
+        setParentItemHelper(parentItem, nullptr, nullptr);
 
     q->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred, QSizePolicy::DefaultType));
     q->setGraphicsItem(q);
@@ -338,7 +338,7 @@ void QGraphicsWidgetPrivate::initStyleOptionTitleBar(QStyleOptionTitleBar *optio
         option->titleBarState = Qt::WindowNoState;
     }
     QFont windowTitleFont = QApplication::font("QWorkspaceTitleBar");
-    QRect textRect = q->style()->subControlRect(QStyle::CC_TitleBar, option, QStyle::SC_TitleBarLabel, 0);
+    QRect textRect = q->style()->subControlRect(QStyle::CC_TitleBar, option, QStyle::SC_TitleBarLabel, nullptr);
     option->text = QFontMetrics(windowTitleFont).elidedText(
         windowData->windowTitle, Qt::ElideRight, textRect.width());
 }
@@ -706,7 +706,7 @@ void QGraphicsWidgetPrivate::windowFrameHoverMoveEvent(QGraphicsSceneHoverEvent 
             break;
         case Qt::TitleBarArea:
             windowData->buttonRect = q->style()->subControlRect(
-                QStyle::CC_TitleBar, &bar, QStyle::SC_TitleBarCloseButton, 0);
+                QStyle::CC_TitleBar, &bar, QStyle::SC_TitleBarCloseButton, nullptr);
 #ifdef Q_WS_MAC
             // On mac we should hover if we are in the 'area' of the buttons
             windowData->buttonRect |= q->style()->subControlRect(
@@ -727,7 +727,7 @@ void QGraphicsWidgetPrivate::windowFrameHoverMoveEvent(QGraphicsSceneHoverEvent 
         q->setCursor(cursorShape);
 #endif
     // update buttons if we hover over them
-    windowData->hoveredSubControl = q->style()->hitTestComplexControl(QStyle::CC_TitleBar, &bar, pos.toPoint(), 0);
+    windowData->hoveredSubControl = q->style()->hitTestComplexControl(QStyle::CC_TitleBar, &bar, pos.toPoint(), nullptr);
     if (windowData->hoveredSubControl != QStyle::SC_TitleBarCloseButton)
         windowData->hoveredSubControl = QStyle::SC_TitleBarLabel;
 
@@ -780,11 +780,11 @@ void QGraphicsWidgetPrivate::fixFocusChainBeforeReparenting(QGraphicsWidget *new
     Q_ASSERT(focusNext && focusPrev);
 
     QGraphicsWidget *n = q;     //last one in 'new' list
-    QGraphicsWidget *o = 0;     //last one in 'old' list
+    QGraphicsWidget *o = nullptr;     //last one in 'old' list
 
     QGraphicsWidget *w = focusNext;
 
-    QGraphicsWidget *firstOld = 0;
+    QGraphicsWidget *firstOld = nullptr;
     bool wasPreviousNew = true;
 
     while (w != q) {
@@ -821,10 +821,10 @@ void QGraphicsWidgetPrivate::fixFocusChainBeforeReparenting(QGraphicsWidget *new
         newScene = newParent->scene();
 
     if (oldScene && newScene != oldScene)
-        oldScene->d_func()->tabFocusFirst = (firstOld && firstOld->scene() == oldScene) ? firstOld : 0;
+        oldScene->d_func()->tabFocusFirst = (firstOld && firstOld->scene() == oldScene) ? firstOld : nullptr;
 
-    QGraphicsItem *topLevelItem = newParent ? newParent->topLevelItem() : 0;
-    QGraphicsWidget *topLevel = 0;
+    QGraphicsItem *topLevelItem = newParent ? newParent->topLevelItem() : nullptr;
+    QGraphicsWidget *topLevel = nullptr;
     if (topLevelItem && topLevelItem->isWidget())
         topLevel = static_cast<QGraphicsWidget *>(topLevelItem);
 

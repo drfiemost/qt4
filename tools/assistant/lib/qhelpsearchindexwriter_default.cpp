@@ -135,7 +135,7 @@ void Writer::insertInIndex(const QString &string, int docNum)
     if (string == QLatin1String("amp") || string == QLatin1String("nbsp"))
         return;
 
-    Entry *entry = 0;
+    Entry *entry = nullptr;
     if (index.count())
         entry = index[string];
 
@@ -210,7 +210,7 @@ void QHelpSearchIndexWriter::run()
     
     mutex.unlock();
 
-    QHelpEngineCore engine(collectionFile, 0);
+    QHelpEngineCore engine(collectionFile, nullptr);
     if (!engine.setupData())
         return;
 

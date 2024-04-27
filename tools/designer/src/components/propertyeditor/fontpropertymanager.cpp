@@ -65,7 +65,7 @@ namespace qdesigner_internal {
     };
 
     FontPropertyManager::FontPropertyManager() :
-        m_createdFontProperty(0)
+        m_createdFontProperty(nullptr)
     {
         const int nameCount = sizeof(aliasingC)/sizeof(const char *);
         for (int  i = 0; i < nameCount; i++)
@@ -143,7 +143,7 @@ namespace qdesigner_internal {
             familyProperty->setAttribute(enumNamesAttribute, m_designerFamilyNames);
         }
         // Next
-        m_createdFontProperty = 0;
+        m_createdFontProperty = nullptr;
     }
 
     bool FontPropertyManager::uninitializeProperty(QtProperty *property)

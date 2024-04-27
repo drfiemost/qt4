@@ -842,7 +842,7 @@ startNumber:
 doneNumber:
     // Null-terminate string for strtod.
     m_buffer8.append('\0');
-    lvalp->doubleValue = WTF::strtod(m_buffer8.data(), 0);
+    lvalp->doubleValue = WTF::strtod(m_buffer8.data(), nullptr);
     m_buffer8.resize(0);
 
     // Fall through into doneNumeric.
@@ -1009,7 +1009,7 @@ bool Lexer::skipRegExp()
 
 void Lexer::clear()
 {
-    m_arena = 0;
+    m_arena = nullptr;
     m_codeWithoutBOMs.clear();
 
     Vector<char> newBuffer8;

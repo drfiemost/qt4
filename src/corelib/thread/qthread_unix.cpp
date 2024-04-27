@@ -127,7 +127,7 @@ static void destroy_current_thread_data(void *p)
     // ... but we must reset it to zero before returning so we aren't
     // called again (POSIX allows implementations to call destructor
     // functions repeatedly until all values are zero)
-    pthread_setspecific(current_thread_data_key, 0);
+    pthread_setspecific(current_thread_data_key, nullptr);
 }
 
 static void create_current_thread_data_key()
@@ -217,7 +217,7 @@ QThreadData *QThreadData::current()
             } QT_CATCH(...) {
                 clear_thread_data();
                 data->deref();
-                data = 0;
+                data = nullptr;
                 QT_RETHROW;
             }
             data->deref();
@@ -286,7 +286,7 @@ static void setCurrentThreadName(pthread_t threadId, const char *name)
 
 void *QThreadPrivate::start(void *arg)
 {
-    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, nullptr);
     pthread_cleanup_push(QThreadPrivate::finish, arg);
 
     QThread *thr = reinterpret_cast<QThread *>(arg);
@@ -322,13 +322,13 @@ void *QThreadPrivate::start(void *arg)
 #endif
 
     emit thr->started();
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, nullptr);
     pthread_testcancel();
     thr->run();
 
     pthread_cleanup_pop(1);
 
-    return 0;
+    return nullptr;
 }
 
 void QThreadPrivate::finish(void *arg)
@@ -346,7 +346,7 @@ void QThreadPrivate::finish(void *arg)
     if (terminated)
         emit thr->terminated();
     emit thr->finished();
-    QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
     QThreadStorageData::finish((void **)data);
     locker.relock();
     d->terminated = false;
@@ -630,7 +630,7 @@ void QThread::setTerminationEnabled(bool enabled)
                "Current thread was not started with QThread.");
 
     Q_UNUSED(thr)
-    pthread_setcancelstate(enabled ? PTHREAD_CANCEL_ENABLE : PTHREAD_CANCEL_DISABLE, NULL);
+    pthread_setcancelstate(enabled ? PTHREAD_CANCEL_ENABLE : PTHREAD_CANCEL_DISABLE, nullptr);
     if (enabled)
         pthread_testcancel();
 }

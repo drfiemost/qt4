@@ -515,7 +515,7 @@ QRegion QWidgetBackingStore::staticContents(QWidget *parent, const QRect &within
         wd->clipToEffectiveMask(visible);
         if (visible.isEmpty())
             continue;
-        wd->subtractOpaqueSiblings(visible, 0, /*alsoNonOpaque=*/true);
+        wd->subtractOpaqueSiblings(visible, nullptr, /*alsoNonOpaque=*/true);
 
         visible.translate(offset);
         region += visible;
@@ -882,7 +882,7 @@ void QWidgetBackingStore::updateLists(QWidget *cur)
 }
 
 QWidgetBackingStore::QWidgetBackingStore(QWidget *topLevel)
-    : tlw(topLevel), dirtyOnScreenWidgets(0), hasDirtyFromPreviousSync(false)
+    : tlw(topLevel), dirtyOnScreenWidgets(nullptr), hasDirtyFromPreviousSync(false)
     , fullUpdatePending(0)
 {
     windowSurface = tlw->windowSurface();
@@ -894,7 +894,7 @@ QWidgetBackingStore::QWidgetBackingStore(QWidget *topLevel)
 #ifdef Q_BACKINGSTORE_SUBSURFACES
     Q_ASSERT(topLevel->d_func()->topData()->windowSurface == windowSurface);
 #endif
-    topLevel->d_func()->topData()->windowSurface = 0;
+    topLevel->d_func()->topData()->windowSurface = nullptr;
 
     // Ensure all existing subsurfaces and static widgets are added to their respective lists.
     updateLists(topLevel);
@@ -907,9 +907,9 @@ QWidgetBackingStore::~QWidgetBackingStore()
     }
 
     delete windowSurface;
-    windowSurface = 0;
+    windowSurface = nullptr;
     delete dirtyOnScreenWidgets;
-    dirtyOnScreenWidgets = 0;
+    dirtyOnScreenWidgets = nullptr;
 }
 
 //parent's coordinates; move whole rect; update parent and widget
@@ -1197,7 +1197,7 @@ void QWidgetBackingStore::sync()
         if (hasStaticContents()) {
             // Repaint existing dirty area and newly visible area.
             const QRect clipRect(0, 0, surfaceGeometry.width(), surfaceGeometry.height());
-            const QRegion staticRegion(staticContents(0, clipRect));
+            const QRegion staticRegion(staticContents(nullptr, clipRect));
             QRegion newVisible(0, 0, tlwRect.width(), tlwRect.height());
             newVisible -= staticRegion;
             dirty += newVisible;
@@ -1362,7 +1362,7 @@ void QWidgetBackingStore::sync()
         QPoint offset(tlwOffset);
         if (w != tlw)
             offset += w->mapTo(tlw, QPoint());
-        wd->drawWidget(windowSurface->paintDevice(), toBePainted, offset, flags, 0, this);
+        wd->drawWidget(windowSurface->paintDevice(), toBePainted, offset, flags, nullptr, this);
 #endif
     }
 
@@ -1370,7 +1370,7 @@ void QWidgetBackingStore::sync()
 #ifndef Q_BACKINGSTORE_SUBSURFACES
     if (repaintAllWidgets || !dirtyCopy.isEmpty()) {
         const int flags = QWidgetPrivate::DrawAsRoot | QWidgetPrivate::DrawRecursive;
-        tlw->d_func()->drawWidget(windowSurface->paintDevice(), dirtyCopy, tlwOffset, flags, 0, this);
+        tlw->d_func()->drawWidget(windowSurface->paintDevice(), dirtyCopy, tlwOffset, flags, nullptr, this);
     }
 
     endPaint(toClean, windowSurface, &beginPaintInfo);
@@ -1484,7 +1484,7 @@ void QWidgetPrivate::invalidateBuffer_resizeHelper(const QPoint &oldPos, const Q
 
     if (!staticContents || graphicsEffect) {
         QRegion staticChildren;
-        QWidgetBackingStore *bs = 0;
+        QWidgetBackingStore *bs = nullptr;
         if (offset.isNull() && (bs = maybeBackingStore()))
             staticChildren = bs->staticContents(q, oldWidgetRect);
         const bool hasStaticChildren = !staticChildren.isEmpty();
@@ -1653,7 +1653,7 @@ void QWidgetPrivate::repaint_sys(const QRegion &rgn)
     bool flushed = QWidgetBackingStore::flushPaint(q, toBePainted);
 #endif
 
-    drawWidget(q, toBePainted, QPoint(), QWidgetPrivate::DrawAsRoot | QWidgetPrivate::DrawPaintOnScreen, 0);
+    drawWidget(q, toBePainted, QPoint(), QWidgetPrivate::DrawAsRoot | QWidgetPrivate::DrawPaintOnScreen, nullptr);
 
 #ifndef QT_NO_PAINT_DEBUG
     if (flushed)

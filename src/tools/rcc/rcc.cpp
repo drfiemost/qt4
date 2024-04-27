@@ -138,7 +138,7 @@ RCCFileInfo::RCCFileInfo(const QString &name, const QFileInfo &fileInfo,
     m_language = language;
     m_country = country;
     m_flags = flags;
-    m_parent = 0;
+    m_parent = nullptr;
     m_nameOffset = 0;
     m_dataOffset = 0;
     m_childOffset = 0;
@@ -337,7 +337,7 @@ RCCResourceLibrary::Strings::Strings() :
 }
 
 RCCResourceLibrary::RCCResourceLibrary()
-  : m_root(0),
+  : m_root(nullptr),
     m_format(C_Code),
     m_verbose(false),
     m_compressLevel(CONSTANT_COMPRESSLEVEL_DEFAULT),
@@ -346,7 +346,7 @@ RCCResourceLibrary::RCCResourceLibrary()
     m_namesOffset(0),
     m_dataOffset(0),
     m_useNameSpace(CONSTANT_USENAMESPACE),
-    m_errorDevice(0)
+    m_errorDevice(nullptr)
 {
     m_out.reserve(30 * 1000 * 1000);
 }
@@ -505,7 +505,7 @@ bool RCCResourceLibrary::interpretResourceFile(QIODevice *inputDevice,
             }
         }
     }
-    if (m_root == 0) {
+    if (m_root == nullptr) {
         const QString msg = QString::fromLatin1("RCC: Warning: No resources in '%1'.\n").arg(fname);
         m_errorDevice->write(msg.toUtf8());
         if (!ignoreErrors && m_format == Binary) {
@@ -561,9 +561,9 @@ void RCCResourceLibrary::reset()
 {
      if (m_root) {
         delete m_root;
-        m_root = 0;
+        m_root = nullptr;
     }
-    m_errorDevice = 0;
+    m_errorDevice = nullptr;
     m_failedResources.clear();
 }
 

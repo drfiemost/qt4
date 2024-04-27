@@ -93,7 +93,7 @@ void TabOrderEditorPlugin::initialize(QDesignerFormEditorInterface *core)
 
 void TabOrderEditorPlugin::activeFormWindowChanged(QDesignerFormWindowInterface *formWindow)
 {
-    m_action->setEnabled(formWindow != 0);
+    m_action->setEnabled(formWindow != nullptr);
 }
 
 QDesignerFormEditorInterface *TabOrderEditorPlugin::core() const

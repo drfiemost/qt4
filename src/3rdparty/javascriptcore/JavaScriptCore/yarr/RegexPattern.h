@@ -206,7 +206,7 @@ struct PatternAlternative : FastAllocBase {
 };
 
 struct PatternDisjunction : FastAllocBase {
-    PatternDisjunction(PatternAlternative* parent = 0)
+    PatternDisjunction(PatternAlternative* parent = nullptr)
         : m_parent(parent)
     {
     }
@@ -248,13 +248,13 @@ struct RegexPattern {
         , m_multiline(multiline)
         , m_numSubpatterns(0)
         , m_maxBackReference(0)
-        , newlineCached(0)
-        , digitsCached(0)
-        , spacesCached(0)
-        , wordcharCached(0)
-        , nondigitsCached(0)
-        , nonspacesCached(0)
-        , nonwordcharCached(0)
+        , newlineCached(nullptr)
+        , digitsCached(nullptr)
+        , spacesCached(nullptr)
+        , wordcharCached(nullptr)
+        , nondigitsCached(nullptr)
+        , nonspacesCached(nullptr)
+        , nonwordcharCached(nullptr)
     {
     }
 
@@ -269,13 +269,13 @@ struct RegexPattern {
         m_numSubpatterns = 0;
         m_maxBackReference = 0;
 
-        newlineCached = 0;
-        digitsCached = 0;
-        spacesCached = 0;
-        wordcharCached = 0;
-        nondigitsCached = 0;
-        nonspacesCached = 0;
-        nonwordcharCached = 0;
+        newlineCached = nullptr;
+        digitsCached = nullptr;
+        spacesCached = nullptr;
+        wordcharCached = nullptr;
+        nondigitsCached = nullptr;
+        nonspacesCached = nullptr;
+        nonwordcharCached = nullptr;
 
         deleteAllValues(m_disjunctions);
         m_disjunctions.clear();

@@ -28,13 +28,13 @@ SegmentReader::Norm::Norm(IndexInput* instrm, int32_t n, SegmentReader* r,
     , reader(r)
     , segment(seg)
     , in(instrm)
-    , bytes(NULL)
+    , bytes(nullptr)
     , dirty(false)
 {
     //Func - Constructor
     //Pre  - instrm is a valid reference to an IndexInput
     //Post - A Norm instance has been created with an empty bytes array
-    bytes = NULL;
+    bytes = nullptr;
     dirty = false;
 }
 
@@ -68,7 +68,7 @@ void SegmentReader::Norm::reWrite()
         );
 
     QString fileName(segment);
-    if (reader->cfsReader == NULL)
+    if (reader->cfsReader == nullptr)
         fileName.append(QLatin1String(".f%1")).arg(number);
     else // use a different file name if we have compound format
         fileName.append(QLatin1String(".s%1")).arg(number);
@@ -97,8 +97,8 @@ void SegmentReader::initialize(SegmentInfo* si)
     //       identified by si->
     //Post - All files of the segment have been read
 
-    deletedDocs      = NULL;
-    ones			   = NULL;
+    deletedDocs      = nullptr;
+    ones			   = nullptr;
     //There are no documents yet marked as deleted
     deletedDocsDirty = false;
 
@@ -109,8 +109,8 @@ void SegmentReader::initialize(SegmentInfo* si)
     segment          = si->name;
     // make sure that all index files have been read or are kept open
     // so that if an index update removes them we'll still have them
-    freqStream       = NULL;
-    proxStream       = NULL;
+    freqStream       = nullptr;
+    proxStream       = nullptr;
 
     //instantiate a buffer large enough to hold a directory path
     QString buf;
@@ -122,7 +122,7 @@ void SegmentReader::initialize(SegmentInfo* si)
         cfsReader = _CLNEW CompoundFileReader(cfsDir, buf);
         cfsDir = cfsReader;
     }else
-        cfsReader = NULL;
+        cfsReader = nullptr;
 
     // Create the name of the field info file with suffix .fnm in buf
     SegmentName(buf, CL_MAX_PATH, QLatin1String(".fnm"));
@@ -182,7 +182,7 @@ void SegmentReader::initialize(SegmentInfo* si)
     // on that field
     openNorms(cfsDir);
 
-    termVectorsReaderOrig = NULL;
+    termVectorsReaderOrig = nullptr;
     if (fieldInfos->hasVectors()) // open term vector files only as needed
         termVectorsReaderOrig = _CLNEW TermVectorsReader(cfsDir, segment, fieldInfos); 
 }
@@ -250,27 +250,27 @@ void SegmentReader::doClose()
     tis->close();
 
     //Close the frequency stream
-    if (freqStream != NULL){
+    if (freqStream != nullptr){
         freqStream->close();
     }
     //Close the prox stream
-    if (proxStream != NULL){
+    if (proxStream != nullptr){
         proxStream->close();
     }
 
     //Close the norm file
     closeNorms();
 
-    if (termVectorsReaderOrig != NULL) 
+    if (termVectorsReaderOrig != nullptr) 
         termVectorsReaderOrig->close();
 
-    if (cfsReader != NULL)
+    if (cfsReader != nullptr)
         cfsReader->close();
 }
 
 bool SegmentReader::hasDeletions() const
 {
-    return deletedDocs != NULL;
+    return deletedDocs != nullptr;
 }
 
 //static 
@@ -328,7 +328,7 @@ void SegmentReader::doDelete(const int32_t docNum)
         "docNum is bigger than the total number of documents");
 
     //Check if deletedDocs exists
-    if (deletedDocs == NULL) {
+    if (deletedDocs == nullptr) {
         deletedDocs = _CLNEW BitSet(maxDoc());
 
         //Condition check to see if deletedDocs points to a valid instance
@@ -386,7 +386,7 @@ void SegmentReader::files(QStringList& retarray)
         //Check if the field has been indexed
         if (fi->isIndexed && !fi->omitNorms) {
             QString name;
-            if (cfsReader == NULL)
+            if (cfsReader == nullptr)
                 name = SegmentName(QLatin1String(".f"), i);
             else
                 name = SegmentName(QLatin1String(".s"), i);
@@ -452,7 +452,7 @@ bool SegmentReader::isDeleted(const int32_t n)
     CND_PRECONDITION(n >= 0, "n is a negative number");
 
     //Is document n deleted
-    return (deletedDocs != NULL && deletedDocs->get(n));
+    return (deletedDocs != nullptr && deletedDocs->get(n));
 }
 
 TermDocs* SegmentReader::termDocs() const
@@ -506,7 +506,7 @@ int32_t SegmentReader::numDocs()
     int32_t n = maxDoc();
 
     //Check if there any deleted docs
-    if (deletedDocs != NULL)
+    if (deletedDocs != nullptr)
         //Substract the number of deleted docs from the number returned by maxDoc
         n -= deletedDocs->count();
 
@@ -603,12 +603,12 @@ void SegmentReader::norms(const TCHAR* field, uint8_t* bytes)
     SCOPED_LOCK_MUTEX(THIS_LOCK)
 
     Norm* norm = _norms.get(field);
-    if ( norm == NULL ){
+    if ( norm == nullptr ){
         memcpy(bytes, fakeNorms(), maxDoc());
         return;
     }
     
-    if (norm->bytes != NULL) { // can copy from cache
+    if (norm->bytes != nullptr) { // can copy from cache
         memcpy(bytes, norm->bytes, maxDoc());
         return;
     }
@@ -637,7 +637,7 @@ uint8_t* SegmentReader::createFakeNorms(int32_t size)
 
 uint8_t* SegmentReader::fakeNorms()
 {
-    if (ones == NULL) 
+    if (ones == nullptr) 
         ones = createFakeNorms(maxDoc());
     return ones;
 }
@@ -647,10 +647,10 @@ uint8_t* SegmentReader::getNorms(const TCHAR* field)
 {
     SCOPED_LOCK_MUTEX(THIS_LOCK)
     Norm* norm = _norms.get(field);
-    if (norm == NULL) 
-        return NULL;  // not indexed, or norms not stored
+    if (norm == nullptr) 
+        return nullptr;  // not indexed, or norms not stored
 
-    if (norm->bytes == NULL) {                     // value not yet read
+    if (norm->bytes == nullptr) {                     // value not yet read
         uint8_t* bytes = _CL_NEWARRAY(uint8_t, maxDoc());
         norms(field, bytes);
         norm->bytes = bytes;                         // cache it
@@ -671,7 +671,7 @@ uint8_t* SegmentReader::norms(const TCHAR* field)
     SCOPED_LOCK_MUTEX(THIS_LOCK)
 
     uint8_t* bytes = getNorms(field);
-    if (bytes == NULL) 
+    if (bytes == nullptr) 
         bytes = fakeNorms();
     return bytes;
 }
@@ -679,7 +679,7 @@ uint8_t* SegmentReader::norms(const TCHAR* field)
 void SegmentReader::doSetNorm(int32_t doc, const TCHAR* field, uint8_t value)
 {
     Norm* norm = _norms.get(field);
-    if (norm == NULL)                             // not an indexed field
+    if (norm == nullptr)                             // not an indexed field
         return;
 
     norm->dirty = true;                            // mark it dirty
@@ -776,7 +776,7 @@ void SegmentReader::closeNorms()
 TermVectorsReader* SegmentReader::getTermVectorsReader()
 {
     TermVectorsReader* tvReader = termVectorsLocal.get();
-    if (tvReader == NULL) {
+    if (tvReader == nullptr) {
         tvReader = termVectorsReaderOrig->clone();
         termVectorsLocal.set(tvReader);
     }
@@ -789,13 +789,13 @@ TermFreqVector* SegmentReader::getTermFreqVector(int32_t docNumber,
     if (field) {
         FieldInfo* fi = fieldInfos->fieldInfo(field);
         // Check if this field is invalid or has no stored term vector
-        if (fi == NULL || !fi->storeTermVector || termVectorsReaderOrig == NULL) 
-            return NULL;
+        if (fi == nullptr || !fi->storeTermVector || termVectorsReaderOrig == nullptr) 
+            return nullptr;
     }
 
     TermVectorsReader* termVectorsReader = getTermVectorsReader();
-    if (termVectorsReader == NULL)
-        return NULL;
+    if (termVectorsReader == nullptr)
+        return nullptr;
 
     return termVectorsReader->get(docNumber, field);
 }
@@ -803,11 +803,11 @@ TermFreqVector* SegmentReader::getTermFreqVector(int32_t docNumber,
 bool SegmentReader::getTermFreqVectors(int32_t docNumber,
     Array<TermFreqVector*>& result)
 {
-    if (termVectorsReaderOrig == NULL)
+    if (termVectorsReaderOrig == nullptr)
         return false;
 
     TermVectorsReader* termVectorsReader = getTermVectorsReader();
-    if (termVectorsReader == NULL)
+    if (termVectorsReader == nullptr)
         return false;
 
     return termVectorsReader->get(docNumber, result);

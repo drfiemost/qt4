@@ -57,7 +57,7 @@ class BookmarkFilterModel : public QAbstractProxyModel
 {
     Q_OBJECT
 public:
-    explicit BookmarkFilterModel(QObject *parent = 0);
+    explicit BookmarkFilterModel(QObject *parent = nullptr);
 
     void setSourceModel(QAbstractItemModel *sourceModel);
 
@@ -106,7 +106,7 @@ class BookmarkTreeModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    BookmarkTreeModel(QObject *parent = 0);
+    BookmarkTreeModel(QObject *parent = nullptr);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
 protected:

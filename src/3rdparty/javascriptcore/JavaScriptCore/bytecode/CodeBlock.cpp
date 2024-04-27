@@ -1275,7 +1275,7 @@ CodeBlock::CodeBlock(ScriptExecutable* ownerExecutable, CodeType codeType, PassR
     , m_numVars(0)
     , m_numParameters(0)
     , m_ownerExecutable(ownerExecutable)
-    , m_globalData(0)
+    , m_globalData(nullptr)
 #ifndef NDEBUG
     , m_instructionCount(0)
 #endif
@@ -1466,7 +1466,7 @@ HandlerInfo* CodeBlock::handlerForBytecodeOffset(unsigned bytecodeOffset)
     ASSERT(bytecodeOffset < m_instructionCount);
 
     if (!m_rareData)
-        return 0;
+        return nullptr;
     
     Vector<HandlerInfo>& exceptionHandlers = m_rareData->m_exceptionHandlers;
     for (size_t i = 0; i < exceptionHandlers.size(); ++i) {
@@ -1476,7 +1476,7 @@ HandlerInfo* CodeBlock::handlerForBytecodeOffset(unsigned bytecodeOffset)
             return &exceptionHandlers[i];
     }
 
-    return 0;
+    return nullptr;
 }
 
 int CodeBlock::lineNumberForBytecodeOffset(CallFrame* callFrame, unsigned bytecodeOffset)

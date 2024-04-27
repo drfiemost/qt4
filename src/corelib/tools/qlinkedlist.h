@@ -124,7 +124,7 @@ public:
         typedef T *pointer;
         typedef T &reference;
         Node *i;
-        inline iterator() : i(0) {}
+        inline iterator() : i(nullptr) {}
         inline iterator(Node *n) : i(n) {}
         inline iterator(const iterator &o) : i(o.i) {}
         inline iterator &operator=(const iterator &o) { i = o.i; return *this; }

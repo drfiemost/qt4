@@ -64,7 +64,7 @@ static QBearerEngineImpl *getEngineFromId(const QString &id)
             return engineImpl;
     }
 
-    return 0;
+    return nullptr;
 }
 
 class QNetworkSessionManagerPrivate : public QObject
@@ -72,7 +72,7 @@ class QNetworkSessionManagerPrivate : public QObject
     Q_OBJECT
 
 public:
-    QNetworkSessionManagerPrivate(QObject *parent = 0) : QObject(parent) {}
+    QNetworkSessionManagerPrivate(QObject *parent = nullptr) : QObject(parent) {}
     ~QNetworkSessionManagerPrivate() {}
 
     inline void forceSessionClose(const QNetworkConfiguration &config)
@@ -120,7 +120,7 @@ void QNetworkSessionPrivateImpl::syncStateWithInterface()
         // Defer setting serviceConfig and activeConfig until open().
         // fall through
     default:
-        engine = 0;
+        engine = nullptr;
     }
 
     networkConfigurationsChanged();

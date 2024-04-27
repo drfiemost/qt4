@@ -84,8 +84,8 @@ QFormBuilderExtra::CustomWidgetData::CustomWidgetData(const DomCustomWidget *dcw
 
 QFormBuilderExtra::QFormBuilderExtra() :
     m_layoutWidget(false),
-    m_resourceBuilder(0),
-    m_textBuilder(0)
+    m_resourceBuilder(nullptr),
+    m_textBuilder(nullptr)
 {
 }
 
@@ -98,7 +98,7 @@ QFormBuilderExtra::~QFormBuilderExtra()
 void QFormBuilderExtra::clear()
 {
     m_buddies.clear();
-    m_parentWidget = 0;
+    m_parentWidget = nullptr;
     m_parentWidgetIsSet = false;
 #ifndef QT_FORMBUILDER_NO_SCRIPT
     m_FormScriptRunner.clearErrors();
@@ -132,13 +132,13 @@ void QFormBuilderExtra::applyInternalProperties() const
 bool QFormBuilderExtra::applyBuddy(const QString &buddyName, BuddyMode applyMode, QLabel *label)
 {
     if (buddyName.isEmpty()) {
-        label->setBuddy(0);
+        label->setBuddy(nullptr);
         return false;
     }
 
     const QWidgetList widgets = label->topLevelWidget()->findChildren<QWidget*>(buddyName);
     if (widgets.empty()) {
-        label->setBuddy(0);
+        label->setBuddy(nullptr);
         return false;
     }
 
@@ -150,7 +150,7 @@ bool QFormBuilderExtra::applyBuddy(const QString &buddyName, BuddyMode applyMode
         }
     }
 
-    label->setBuddy(0);
+    label->setBuddy(nullptr);
     return false;
 }
 
@@ -270,7 +270,7 @@ void QFormBuilderExtra::clearResourceBuilder()
 {
     if (m_resourceBuilder) {
         delete m_resourceBuilder;
-        m_resourceBuilder = 0;
+        m_resourceBuilder = nullptr;
     }
 }
 
@@ -291,7 +291,7 @@ void QFormBuilderExtra::clearTextBuilder()
 {
     if (m_textBuilder) {
         delete m_textBuilder;
-        m_textBuilder = 0;
+        m_textBuilder = nullptr;
     }
 }
 

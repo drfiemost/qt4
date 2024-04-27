@@ -79,7 +79,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeComponentPrivate : public QObjectPrivate, pu
     Q_DECLARE_PUBLIC(QDeclarativeComponent)
         
 public:
-    QDeclarativeComponentPrivate() : typeData(0), progress(0.), start(-1), count(-1), cc(0), engine(0), creationContext(0) {}
+    QDeclarativeComponentPrivate() : typeData(nullptr), progress(0.), start(-1), count(-1), cc(nullptr), engine(nullptr), creationContext(nullptr) {}
 
     QObject *beginCreate(QDeclarativeContextData *, const QBitField &);
     void completeCreate();
@@ -98,7 +98,7 @@ public:
     QDeclarativeCompiledData *cc;
 
     struct ConstructionState {
-        ConstructionState() : componentAttached(0), completePending(false) {}
+        ConstructionState() : componentAttached(nullptr), completePending(false) {}
         QList<QDeclarativeEnginePrivate::SimpleList<QDeclarativeAbstractBinding> > bindValues;
         QList<QDeclarativeEnginePrivate::SimpleList<QDeclarativeParserStatus> > parserStatus;
         QList<QPair<QDeclarativeGuard<QObject>, int> > finalizedParserStatus;
@@ -132,7 +132,7 @@ class QDeclarativeComponentAttached : public QObject
 {
     Q_OBJECT
 public:
-    QDeclarativeComponentAttached(QObject *parent = 0);
+    QDeclarativeComponentAttached(QObject *parent = nullptr);
     ~QDeclarativeComponentAttached();
 
     void add(QDeclarativeComponentAttached **a) {
@@ -142,7 +142,7 @@ public:
     void rem() {
         if (next) next->prev = prev;
         *prev = next;
-        next = 0; prev = 0;
+        next = nullptr; prev = nullptr;
     }
     QDeclarativeComponentAttached **prev;
     QDeclarativeComponentAttached *next;

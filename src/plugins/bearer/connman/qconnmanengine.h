@@ -70,7 +70,7 @@ class QConnmanEngine : public QBearerEngineImpl
     Q_OBJECT
 
 public:
-    QConnmanEngine(QObject *parent = 0);
+    QConnmanEngine(QObject *parent = nullptr);
     ~QConnmanEngine();
 
     bool connmanAvailable() const;

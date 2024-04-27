@@ -103,7 +103,7 @@ static QSqlError qMakeError(sqlite3 *access, const QString &descr, QSqlError::Er
 class QSQLiteDriverPrivate
 {
 public:
-    inline QSQLiteDriverPrivate() : access(0) {}
+    inline QSQLiteDriverPrivate() : access(nullptr) {}
     sqlite3 *access;
     QList <QSQLiteResult *> results;
 };
@@ -130,8 +130,8 @@ public:
     QVector<QVariant> firstRow;
 };
 
-QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult* res) : q(res), access(0),
-    stmt(0), skippedStatus(false), skipRow(false)
+QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult* res) : q(res), access(nullptr),
+    stmt(nullptr), skippedStatus(false), skipRow(false)
 {
 }
 
@@ -152,7 +152,7 @@ void QSQLiteResultPrivate::finalize()
         return;
 
     sqlite3_finalize(stmt);
-    stmt = 0;
+    stmt = nullptr;
 }
 
 void QSQLiteResultPrivate::initColumns(bool emptyResultset)
@@ -352,7 +352,7 @@ bool QSQLiteResult::prepare(const QString &query)
 
     setSelect(false);
 
-    const void *pzTail = NULL;
+    const void *pzTail = nullptr;
 
 #if (SQLITE_VERSION_NUMBER >= 3003011)
     int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
@@ -567,7 +567,7 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
 
     sqlite3_enable_shared_cache(sharedCache);
 
-    if (sqlite3_open_v2(db.toUtf8().constData(), &d->access, openMode, NULL) == SQLITE_OK) {
+    if (sqlite3_open_v2(db.toUtf8().constData(), &d->access, openMode, nullptr) == SQLITE_OK) {
         sqlite3_busy_timeout(d->access, timeOut);
         setOpen(true);
         setOpenError(false);
@@ -589,7 +589,7 @@ void QSQLiteDriver::close()
         if (sqlite3_close(d->access) != SQLITE_OK)
             setLastError(qMakeError(d->access, tr("Error closing database"),
                                     QSqlError::ConnectionError));
-        d->access = 0;
+        d->access = nullptr;
         setOpen(false);
         setOpenError(false);
     }

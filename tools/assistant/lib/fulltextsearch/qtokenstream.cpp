@@ -25,7 +25,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneTokenStreamPrivate::QCLuceneTokenStreamPrivate()
     : QSharedData()
 {
-    tokenStream = 0;
+    tokenStream = nullptr;
     deleteCLuceneTokenStream = true;
 }
 

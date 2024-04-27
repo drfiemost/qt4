@@ -82,7 +82,7 @@ class Q_AUTOTEST_EXPORT QGraphicsSceneIndex : public QObject
     Q_OBJECT
 
 public:
-    QGraphicsSceneIndex(QGraphicsScene *scene = 0);
+    QGraphicsSceneIndex(QGraphicsScene *scene = nullptr);
     virtual ~QGraphicsSceneIndex();
 
     QGraphicsScene *scene() const;

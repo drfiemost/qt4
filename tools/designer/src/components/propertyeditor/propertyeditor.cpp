@@ -107,7 +107,7 @@ namespace qdesigner_internal {
 class ElidingLabel : public QWidget
 {
 public:
-    ElidingLabel(const QString &text = QString(), QWidget *parent = 0)
+    ElidingLabel(const QString &text = QString(), QWidget *parent = nullptr)
         : QWidget(parent),
         m_text(text),
         m_mode(Qt::ElideRight) {
@@ -172,10 +172,10 @@ QDesignerMetaDataBaseItemInterface* PropertyEditor::metaDataBaseItem() const
 {
     QObject *o = object();
     if (!o)
-        return 0;
+        return nullptr;
     QDesignerMetaDataBaseInterface *db = core()->metaDataBase();
     if (!db)
-        return 0;
+        return nullptr;
     return db->item(o);
 }
 
@@ -208,7 +208,7 @@ void PropertyEditor::setupPaletteProperty(QtVariantProperty *property)
     m_updatingBrowser = false;
 }
 
-static inline QToolButton *createDropDownButton(QAction *defaultAction, QWidget *parent = 0)
+static inline QToolButton *createDropDownButton(QAction *defaultAction, QWidget *parent = nullptr)
 {
     QToolButton *rc = new QToolButton(parent);
     rc->setDefaultAction(defaultAction);
@@ -219,14 +219,14 @@ static inline QToolButton *createDropDownButton(QAction *defaultAction, QWidget 
 PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent, Qt::WindowFlags flags)  :
     QDesignerPropertyEditor(parent, flags),
     m_core(core),
-    m_propertySheet(0),
-    m_currentBrowser(0),
-    m_treeBrowser(0),
+    m_propertySheet(nullptr),
+    m_currentBrowser(nullptr),
+    m_treeBrowser(nullptr),
     m_propertyManager(new DesignerPropertyManager(m_core, this)),
-    m_dynamicGroup(0),
+    m_dynamicGroup(nullptr),
     m_updatingBrowser(false),
     m_stackedWidget(new QStackedWidget),
-    m_filterWidget(new FilterWidget(0, FilterWidget::LayoutAlignNone)),
+    m_filterWidget(new FilterWidget(nullptr, FilterWidget::LayoutAlignNone)),
     m_buttonIndex(-1),
     m_treeIndex(-1),
     m_addDynamicAction(new QAction(createIconSet(QLatin1String("plus.png")), tr("Add Dynamic Property..."), this)),
@@ -811,7 +811,7 @@ static inline QLayout *layoutOfQLayoutWidget(QObject *o)
 {
     if (o->isWidgetType() && !qstrcmp(o->metaObject()->className(), "QLayoutWidget"))
         return static_cast<QWidget*>(o)->layout();
-    return 0;
+    return nullptr;
 }
 
 void PropertyEditor::updateToolBarLabel()
@@ -932,7 +932,7 @@ void PropertyEditor::setObject(QObject *object)
 {
     QDesignerFormWindowInterface *oldFormWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
     // In the first setObject() call following the addition of a dynamic property, focus and edit it.
-    const bool editNewDynamicProperty = object != 0 && m_object == object && !m_recentlyAddedDynamicProperty.isEmpty();
+    const bool editNewDynamicProperty = object != nullptr && m_object == object && !m_recentlyAddedDynamicProperty.isEmpty();
     m_object = object;
     m_propertyManager->setObject(object);
     QDesignerFormWindowInterface *formWindow = QDesignerFormWindowInterface::findFormWindow(m_object);
@@ -998,8 +998,8 @@ void PropertyEditor::setObject(QObject *object)
     m_groups.clear();
 
     if (m_propertySheet) {
-        QtProperty *lastProperty = 0;
-        QtProperty *lastGroup = 0;
+        QtProperty *lastProperty = nullptr;
+        QtProperty *lastGroup = nullptr;
         const int propertyCount = m_propertySheet->count();
         for (int i = 0; i < propertyCount; ++i) {
             if (!m_propertySheet->isVisible(i))
@@ -1013,7 +1013,7 @@ void PropertyEditor::setObject(QObject *object)
             const int type = toBrowserType(value, propertyName);
 
             QtVariantProperty *property = m_nameToProperty.value(propertyName, 0);
-            bool newProperty = property == 0;
+            bool newProperty = property == nullptr;
             if (newProperty) {
                 property = m_propertyManager->addProperty(type, propertyName);
                 if (property) {
@@ -1045,7 +1045,7 @@ void PropertyEditor::setObject(QObject *object)
                 }
             }
 
-            if (property != 0) {
+            if (property != nullptr) {
                 const bool dynamicProperty = (dynamicSheet && dynamicSheet->isDynamicProperty(i))
                             || (sheet && sheet->isDefaultDynamicProperty(i));
                 switch (type) {
@@ -1063,13 +1063,13 @@ void PropertyEditor::setObject(QObject *object)
                 property->setAttribute(m_strings.m_resettableAttribute, m_propertySheet->hasReset(i));
 
                 const QString groupName = m_propertySheet->propertyGroup(i);
-                QtVariantProperty *groupProperty = 0;
+                QtVariantProperty *groupProperty = nullptr;
 
                 if (newProperty) {
                     QMap<QString, QtVariantProperty*>::const_iterator itPrev = m_nameToProperty.insert(propertyName, property);
                     m_propertyToGroup[property] = groupName;
                     if (m_sorting) {
-                        QtProperty *previous = 0;
+                        QtProperty *previous = nullptr;
                         if (itPrev != m_nameToProperty.constBegin())
                             previous = (--itPrev).value();
                         m_currentBrowser->insertProperty(property, previous);
@@ -1080,7 +1080,7 @@ void PropertyEditor::setObject(QObject *object)
                     groupProperty = gnit.value();
                 } else {
                     groupProperty = m_propertyManager->addProperty(QtVariantPropertyManager::groupTypeId(), groupName);
-                    QtBrowserItem *item = 0;
+                    QtBrowserItem *item = nullptr;
                     if (!m_sorting)
                          item = m_currentBrowser->insertProperty(groupProperty, lastGroup);
                     m_nameToGroup[groupName] = groupProperty;
@@ -1100,7 +1100,7 @@ void PropertyEditor::setObject(QObject *object)
                  * actual class group, goto last element. */
                 if (lastGroup != groupProperty) {
                     lastGroup = groupProperty;
-                    lastProperty = 0;  // Append at end
+                    lastProperty = nullptr;  // Append at end
                     const QList<QtProperty*> subProperties = lastGroup->subProperties();
                     if (!subProperties.empty())
                         lastProperty = subProperties.back();
@@ -1135,7 +1135,7 @@ void PropertyEditor::setObject(QObject *object)
         QtVariantProperty *groupProperty = itGroup.next().value();
         if (groupProperty->subProperties().empty()) {
             if (groupProperty == m_dynamicGroup)
-                m_dynamicGroup = 0;
+                m_dynamicGroup = nullptr;
             delete groupProperty;
             m_nameToGroup.remove(itGroup.key());
         }
@@ -1173,7 +1173,7 @@ QtBrowserItem *PropertyEditor::nonFakePropertyBrowserItem(QtBrowserItem *item) c
             return item;
         item = item->parent();
     } while (item);
-    return 0;
+    return nullptr;
 }
 
 QString PropertyEditor::currentPropertyName() const
@@ -1255,13 +1255,13 @@ bool PropertyEditor::isDynamicProperty(const QtBrowserItem* item) const
 void PropertyEditor::editProperty(const QString &name)
 {
     // find the browser item belonging to the property, make it current and edit it
-    QtBrowserItem *browserItem = 0;
+    QtBrowserItem *browserItem = nullptr;
     if (QtVariantProperty *property = m_nameToProperty.value(name, 0)) {
         const QList<QtBrowserItem *> items = m_currentBrowser->items(property);
         if (items.size() == 1)
             browserItem = items.front();
     }
-    if (browserItem == 0)
+    if (browserItem == nullptr)
         return;
     m_currentBrowser->setFocus(Qt::OtherFocusReason);
     if (m_currentBrowser == m_treeBrowser) { // edit is currently only supported in tree view

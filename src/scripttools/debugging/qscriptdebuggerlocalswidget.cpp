@@ -65,7 +65,7 @@ namespace {
 class CustomProxyModel : public QSortFilterProxyModel
 {
 public:
-    CustomProxyModel(QObject *parent = 0)
+    CustomProxyModel(QObject *parent = nullptr)
         : QSortFilterProxyModel(parent) {}
 
     bool hasChildren(const QModelIndex &parent) const
@@ -104,9 +104,9 @@ public:
 
 QScriptDebuggerLocalsWidgetPrivate::QScriptDebuggerLocalsWidgetPrivate()
 {
-    completingEditor = 0;
-    completer = 0;
-    proxy = 0;
+    completingEditor = nullptr;
+    completer = nullptr;
+    proxy = nullptr;
 }
 
 QScriptDebuggerLocalsWidgetPrivate::~QScriptDebuggerLocalsWidgetPrivate()
@@ -116,7 +116,7 @@ QScriptDebuggerLocalsWidgetPrivate::~QScriptDebuggerLocalsWidgetPrivate()
 void QScriptDebuggerLocalsWidgetPrivate::complete(QLineEdit *le)
 {
     Q_Q(QScriptDebuggerLocalsWidget);
-    QScriptCompletionTaskInterface *task = 0;
+    QScriptCompletionTaskInterface *task = nullptr;
     // ### need to pass the current frame #
     task = completionProvider->createCompletionTask(
         le->text(), le->cursorPosition(),
@@ -130,7 +130,7 @@ void QScriptDebuggerLocalsWidgetPrivate::complete(QLineEdit *le)
 void QScriptDebuggerLocalsWidgetPrivate::_q_onCompletionTaskFinished()
 {
     Q_Q(QScriptDebuggerLocalsWidget);
-    QScriptCompletionTaskInterface *task = 0;
+    QScriptCompletionTaskInterface *task = nullptr;
     task = qobject_cast<QScriptCompletionTaskInterface*>(q_func()->sender());
     if (!completingEditor) {
         task->deleteLater();
@@ -145,7 +145,7 @@ void QScriptDebuggerLocalsWidgetPrivate::_q_onCompletionTaskFinished()
         tmp.remove(task->position(), task->length());
         tmp.insert(task->position(), completion);
         completingEditor->setText(tmp);
-        completingEditor = 0;
+        completingEditor = nullptr;
     } else if (task->resultCount() > 1) {
         // popup completion
         if (!completer) {
@@ -169,7 +169,7 @@ void QScriptDebuggerLocalsWidgetPrivate::_q_onCompletionTaskFinished()
         completer->setCompletionPrefix(prefix);
         completingEditor->setCompleter(completer);
         // we want to handle the insertion ourselves
-        QObject::disconnect(completer, 0, completingEditor, 0);
+        QObject::disconnect(completer, nullptr, completingEditor, nullptr);
         completer->complete();
     }
     task->deleteLater();
@@ -181,7 +181,7 @@ void QScriptDebuggerLocalsWidgetPrivate::_q_insertCompletion(const QString &text
     QString tmp = completingEditor->text();
     tmp.insert(completingEditor->cursorPosition(), text.mid(completer->completionPrefix().length()));
     completingEditor->setText(tmp);
-    completingEditor = 0;
+    completingEditor = nullptr;
 }
 
 void QScriptDebuggerLocalsWidgetPrivate::_q_expandIndex(const QModelIndex &index)
@@ -349,7 +349,7 @@ void QScriptDebuggerLocalsItemDelegate::paint(QPainter *painter, const QStyleOpt
 }
 
 QScriptDebuggerLocalsWidget::QScriptDebuggerLocalsWidget(QWidget *parent)
-    : QScriptDebuggerLocalsWidgetInterface(*new QScriptDebuggerLocalsWidgetPrivate, parent, 0)
+    : QScriptDebuggerLocalsWidgetInterface(*new QScriptDebuggerLocalsWidgetPrivate, parent, nullptr)
 {
     Q_D(QScriptDebuggerLocalsWidget);
     d->view = new QTreeView();
@@ -380,7 +380,7 @@ QScriptDebuggerLocalsModel *QScriptDebuggerLocalsWidget::localsModel() const
 {
     Q_D(const QScriptDebuggerLocalsWidget);
     if (!d->proxy)
-        return 0;
+        return nullptr;
     return qobject_cast<QScriptDebuggerLocalsModel*>(d->proxy->sourceModel());
 }
 
@@ -391,7 +391,7 @@ void QScriptDebuggerLocalsWidget::setLocalsModel(QScriptDebuggerLocalsModel *mod
 {
     Q_D(QScriptDebuggerLocalsWidget);
     if (localsModel()) {
-        QObject::disconnect(localsModel(), 0, d->view, 0);
+        QObject::disconnect(localsModel(), nullptr, d->view, nullptr);
     }
     if (model) {
         QObject::connect(model, SIGNAL(scopeObjectAvailable(QModelIndex)),

@@ -62,7 +62,7 @@ namespace JSC {
 
 ASSERT_CLASS_FITS_IN_CELL(RegExpConstructor);
 
-const ClassInfo RegExpConstructor::info = { "Function", &InternalFunction::info, 0, ExecState::regExpConstructorTable };
+const ClassInfo RegExpConstructor::info = { "Function", &InternalFunction::info, nullptr, ExecState::regExpConstructorTable };
 
 /* Source for RegExpConstructor.lut.h
 @begin regExpConstructorTable
@@ -141,7 +141,7 @@ void RegExpMatchesArray::fillArrayInstance(ExecState* exec)
     JSArray::put(exec, exec->propertyNames().input, jsString(exec, d->input), slot);
 
     delete d;
-    setLazyCreationData(0);
+    setLazyCreationData(nullptr);
 }
 
 JSObject* RegExpConstructor::arrayOfMatches(ExecState* exec) const

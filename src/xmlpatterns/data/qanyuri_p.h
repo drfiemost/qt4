@@ -108,7 +108,7 @@ namespace QPatternist
         static inline QUrl toQUrl(const QString &value,
                                   const TReportContext &context,
                                   const SourceLocationReflection *const r,
-                                  bool *const isValid = 0,
+                                  bool *const isValid = nullptr,
                                   const bool issueError = true)
         {
             /* QUrl doesn't flag ":/..." so we workaround it. */

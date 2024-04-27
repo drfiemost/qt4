@@ -192,7 +192,7 @@ void QmlCodeParser::extractPragmas(QString &script)
     const QString pragma(QLatin1String("pragma"));
     const QString library(QLatin1String("library"));
 
-    QDeclarativeJS::Lexer l(0);
+    QDeclarativeJS::Lexer l(nullptr);
     l.setCode(script, 0);
 
     int token = l.lex();

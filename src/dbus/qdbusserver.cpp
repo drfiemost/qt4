@@ -67,7 +67,7 @@ QDBusServer::QDBusServer(const QString &address, QObject *parent)
         return;
 
     if (!qdbus_loadLibDBus()) {
-        d = 0;
+        d = nullptr;
         return;
     }
     d = new QDBusConnectionPrivate(this);

@@ -166,22 +166,22 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
     if (widgetName.isEmpty()) {
         //: Empty class name passed to widget factory method
         qWarning() << QCoreApplication::translate("QFormBuilder", "An empty class name was passed on to %1 (object name: '%2').").arg(QString::fromUtf8(Q_FUNC_INFO), name);
-        return 0;
+        return nullptr;
     }
 
-    QWidget *w = 0;
+    QWidget *w = nullptr;
 
 #ifndef QT_NO_TABWIDGET
     if (qobject_cast<QTabWidget*>(parentWidget))
-        parentWidget = 0;
+        parentWidget = nullptr;
 #endif
 #ifndef QT_NO_STACKEDWIDGET
     if (qobject_cast<QStackedWidget*>(parentWidget))
-        parentWidget = 0;
+        parentWidget = nullptr;
 #endif
 #ifndef QT_NO_TOOLBOX
     if (qobject_cast<QToolBox*>(parentWidget))
-        parentWidget = 0;
+        parentWidget = nullptr;
 #endif
 
     // ### special-casing for Line (QFrame) -- fix for 4.2
@@ -213,12 +213,12 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
 
         // try with a registered custom widget
         QDesignerCustomWidgetInterface *factory = m_customWidgets.value(widgetName);
-        if (factory != 0)
+        if (factory != nullptr)
             w = factory->createWidget(parentWidget);
     } while(false);
 
     QFormBuilderExtra *fb = QFormBuilderExtra::instance(this);
-    if (w == 0) { // Attempt to instantiate base class of promoted/custom widgets
+    if (w == nullptr) { // Attempt to instantiate base class of promoted/custom widgets
         const QString baseClassName = fb->customWidgetBaseClass(widgetName);
         if (!baseClassName.isEmpty()) {
             qWarning() << QCoreApplication::translate("QFormBuilder", "QFormBuilder was unable to create a custom widget of the class '%1'; defaulting to base class '%2'.").arg(widgetName, baseClassName);
@@ -226,9 +226,9 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
         }
     }
 
-    if (w == 0) { // nothing to do
+    if (w == nullptr) { // nothing to do
         qWarning() << QCoreApplication::translate("QFormBuilder", "QFormBuilder was unable to create a widget of the class '%1'.").arg(widgetName);
-        return 0;
+        return nullptr;
     }
 
     w->setObjectName(name);
@@ -244,7 +244,7 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
 */
 QLayout *QFormBuilder::createLayout(const QString &layoutName, QObject *parent, const QString &name)
 {
-    QLayout *l = 0;
+    QLayout *l = nullptr;
 
     QWidget *parentWidget = qobject_cast<QWidget*>(parent);
     QLayout *parentLayout = qobject_cast<QLayout*>(parent);
@@ -339,7 +339,7 @@ void QFormBuilder::createConnections(DomConnections *ui_connections, QWidget *wi
     typedef QList<DomConnection*> DomConnectionList;
     Q_ASSERT(widget != 0);
 
-    if (ui_connections == 0)
+    if (ui_connections == nullptr)
         return;
 
     const DomConnectionList connections = ui_connections->elementConnection();

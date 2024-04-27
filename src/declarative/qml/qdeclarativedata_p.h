@@ -76,9 +76,9 @@ class Q_AUTOTEST_EXPORT QDeclarativeData : public QAbstractDeclarativeData
 public:
     QDeclarativeData()
         : ownMemory(true), ownContext(false), indestructible(true), explicitIndestructibleSet(false), 
-          context(0), outerContext(0), bindings(0), nextContextObject(0), prevContextObject(0), bindingBitsSize(0), 
-          bindingBits(0), lineNumber(0), columnNumber(0), deferredComponent(0), deferredIdx(0), 
-          scriptValue(0), objectDataRefCount(0), propertyCache(0), guards(0), extendedData(0) {
+          context(nullptr), outerContext(nullptr), bindings(nullptr), nextContextObject(nullptr), prevContextObject(nullptr), bindingBitsSize(0), 
+          bindingBits(nullptr), lineNumber(0), columnNumber(0), deferredComponent(nullptr), deferredIdx(0), 
+          scriptValue(nullptr), objectDataRefCount(0), propertyCache(nullptr), guards(nullptr), extendedData(nullptr) {
           init(); 
       }
 
@@ -141,18 +141,18 @@ public:
         QObjectPrivate *priv = QObjectPrivate::get(const_cast<QObject *>(object));
         if (priv->wasDeleted) {
             Q_ASSERT(!create);
-            return 0;
+            return nullptr;
         } else if (priv->declarativeData) {
             return static_cast<QDeclarativeData *>(priv->declarativeData);
         } else if (create) {
             priv->declarativeData = new QDeclarativeData;
             return static_cast<QDeclarativeData *>(priv->declarativeData);
         } else {
-            return 0;
+            return nullptr;
         }
     }
 
-    bool hasExtendedData() const { return extendedData != 0; }
+    bool hasExtendedData() const { return extendedData != nullptr; }
     QDeclarativeNotifier *objectNameNotifier() const;
     QHash<int, QObject *> *attachedProperties() const;
     void addBoundSignal(QDeclarativeAbstractBoundSignal *signal);

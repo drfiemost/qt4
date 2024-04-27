@@ -26,9 +26,9 @@ static const struct HashTableValue arrayTableValues[22] = {
    { "reduce", DontEnum|Function, (intptr_t)arrayProtoFuncReduce, (intptr_t)1 },
    { "reduceRight", DontEnum|Function, (intptr_t)arrayProtoFuncReduceRight, (intptr_t)1 },
    { "map", DontEnum|Function, (intptr_t)arrayProtoFuncMap, (intptr_t)1 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable arrayTable =
-    { 65, 63, arrayTableValues, 0 };
+    { 65, 63, arrayTableValues, nullptr };
 } // namespace

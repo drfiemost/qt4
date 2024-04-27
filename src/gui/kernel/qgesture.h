@@ -72,7 +72,7 @@ class Q_GUI_EXPORT QGesture : public QObject
     Q_PROPERTY(bool hasHotSpot READ hasHotSpot)
 
 public:
-    explicit QGesture(QObject *parent = 0);
+    explicit QGesture(QObject *parent = nullptr);
     ~QGesture();
 
     Qt::GestureType gestureType() const;

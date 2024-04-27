@@ -391,7 +391,7 @@ QtVariantProperty *QtVariantPropertyManagerPrivate::createSubProperty(QtVariantP
 {
     int type = internalPropertyToType(internal);
     if (!type)
-        return 0;
+        return nullptr;
 
     bool wasCreatingSubProperties = m_creatingSubProperties;
     m_creatingSubProperties = true;
@@ -433,7 +433,7 @@ void QtVariantPropertyManagerPrivate::slotPropertyInserted(QtProperty *property,
     if (!varParent)
         return;
 
-    QtVariantProperty *varAfter = 0;
+    QtVariantProperty *varAfter = nullptr;
     if (after) {
         varAfter = m_internalToProperty.value(after, 0);
         if (!varAfter)
@@ -1245,7 +1245,7 @@ QtVariantProperty *QtVariantPropertyManager::variantProperty(const QtProperty *p
 {
     const QMap<const QtProperty *, QPair<QtVariantProperty *, int> >::const_iterator it = d_ptr->m_propertyToType.constFind(property);
     if (it == d_ptr->m_propertyToType.constEnd())
-        return 0;
+        return nullptr;
     return it.value().first;
 }
 
@@ -1279,7 +1279,7 @@ bool QtVariantPropertyManager::isPropertyTypeSupported(int propertyType) const
 QtVariantProperty *QtVariantPropertyManager::addProperty(int propertyType, const QString &name)
 {
     if (!isPropertyTypeSupported(propertyType))
-        return 0;
+        return nullptr;
 
     bool wasCreating = d_ptr->m_creatingProperty;
     d_ptr->m_creatingProperty = true;
@@ -1289,7 +1289,7 @@ QtVariantProperty *QtVariantPropertyManager::addProperty(int propertyType, const
     d_ptr->m_propertyType = 0;
 
     if (!property)
-        return 0;
+        return nullptr;
 
     return variantProperty(property);
 }
@@ -1305,7 +1305,7 @@ QtVariantProperty *QtVariantPropertyManager::addProperty(int propertyType, const
 QVariant QtVariantPropertyManager::value(const QtProperty *property) const
 {
     QtProperty *internProp = propertyToWrappedProperty()->value(property, 0);
-    if (internProp == 0)
+    if (internProp == nullptr)
         return QVariant();
 
     QtAbstractPropertyManager *manager = internProp->propertyManager();
@@ -1423,7 +1423,7 @@ QVariant QtVariantPropertyManager::attributeValue(const QtProperty *property, co
         return QVariant();
 
     QtProperty *internProp = propertyToWrappedProperty()->value(property, 0);
-    if (internProp == 0)
+    if (internProp == nullptr)
         return QVariant();
 
     QtAbstractPropertyManager *manager = internProp->propertyManager();
@@ -1562,7 +1562,7 @@ void QtVariantPropertyManager::setValue(QtProperty *property, const QVariant &va
         return;
 
     QtProperty *internProp = propertyToWrappedProperty()->value(property, 0);
-    if (internProp == 0)
+    if (internProp == nullptr)
         return;
 
 
@@ -1666,7 +1666,7 @@ void QtVariantPropertyManager::setAttribute(QtProperty *property,
         return;
 
     QtProperty *internProp = propertyToWrappedProperty()->value(property, 0);
-    if (internProp == 0)
+    if (internProp == nullptr)
         return;
 
     QtAbstractPropertyManager *manager = internProp->propertyManager();
@@ -1779,7 +1779,7 @@ void QtVariantPropertyManager::initializeProperty(QtProperty *property)
     QMap<int, QtAbstractPropertyManager *>::ConstIterator it =
             d_ptr->m_typeToPropertyManager.find(d_ptr->m_propertyType);
     if (it != d_ptr->m_typeToPropertyManager.constEnd()) {
-        QtProperty *internProp = 0;
+        QtProperty *internProp = nullptr;
         if (!d_ptr->m_creatingSubProperties) {
             QtAbstractPropertyManager *manager = it.value();
             internProp = manager->addProperty();
@@ -1789,7 +1789,7 @@ void QtVariantPropertyManager::initializeProperty(QtProperty *property)
         if (internProp) {
             QList<QtProperty *> children = internProp->subProperties();
             QListIterator<QtProperty *> itChild(children);
-            QtVariantProperty *lastProperty = 0;
+            QtVariantProperty *lastProperty = nullptr;
             while (itChild.hasNext()) {
                 QtVariantProperty *prop = d_ptr->createSubProperty(varProp, lastProperty, itChild.next());
                 lastProperty = prop ? prop : lastProperty;
@@ -1827,7 +1827,7 @@ void QtVariantPropertyManager::uninitializeProperty(QtProperty *property)
 QtProperty *QtVariantPropertyManager::createProperty()
 {
     if (!d_ptr->m_creatingProperty)
-        return 0;
+        return nullptr;
 
     QtVariantProperty *property = new QtVariantProperty(this);
     d_ptr->m_propertyToType.insert(property, qMakePair(property, d_ptr->m_propertyType));
@@ -2130,7 +2130,7 @@ QWidget *QtVariantEditorFactory::createEditor(QtVariantPropertyManager *manager,
     const int propType = manager->propertyType(property);
     QtAbstractEditorFactoryBase *factory = d_ptr->m_typeToFactory.value(propType, 0);
     if (!factory)
-        return 0;
+        return nullptr;
     return factory->createEditor(wrappedProperty(property), parent);
 }
 

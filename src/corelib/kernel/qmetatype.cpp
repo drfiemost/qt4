@@ -379,7 +379,7 @@ const char *QMetaType::typeName(int type)
         QReadLocker locker(customTypesLock());
         return ct && ct->count() > type - User && !ct->at(type - User).typeName.isEmpty()
                 ? ct->at(type - User).typeName.constData()
-                : static_cast<const char *>(0);
+                : static_cast<const char *>(nullptr);
     }
 
     return nullptr;

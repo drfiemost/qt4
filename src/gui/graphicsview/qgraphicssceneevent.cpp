@@ -272,8 +272,8 @@ class QGraphicsSceneEventPrivate
 {
 public:
     inline QGraphicsSceneEventPrivate()
-        : widget(0),
-          q_ptr(0)
+        : widget(nullptr),
+          q_ptr(nullptr)
     { }
 
     inline virtual ~QGraphicsSceneEventPrivate()
@@ -339,7 +339,7 @@ class QGraphicsSceneMouseEventPrivate : public QGraphicsSceneEventPrivate
 public:
     inline QGraphicsSceneMouseEventPrivate()
         : button(Qt::NoButton),
-          buttons(0), modifiers(0)
+          buttons(nullptr), modifiers(nullptr)
     { }
 
     QPointF pos;
@@ -630,7 +630,7 @@ class QGraphicsSceneWheelEventPrivate : public QGraphicsSceneEventPrivate
     Q_DECLARE_PUBLIC(QGraphicsSceneWheelEvent)
 public:
     inline QGraphicsSceneWheelEventPrivate()
-        : buttons(0), modifiers(0), delta(0), orientation(Qt::Horizontal)
+        : buttons(nullptr), modifiers(nullptr), delta(0), orientation(Qt::Horizontal)
     { }
 
     QPointF pos;
@@ -811,7 +811,7 @@ class QGraphicsSceneContextMenuEventPrivate : public QGraphicsSceneEventPrivate
     Q_DECLARE_PUBLIC(QGraphicsSceneContextMenuEvent)
         public:
     inline QGraphicsSceneContextMenuEventPrivate()
-        : modifiers(0), reason(QGraphicsSceneContextMenuEvent::Other)
+        : modifiers(nullptr), reason(QGraphicsSceneContextMenuEvent::Other)
         { }
 
     QPointF pos;
@@ -1233,7 +1233,7 @@ class QGraphicsSceneDragDropEventPrivate : public QGraphicsSceneEventPrivate
     Q_DECLARE_PUBLIC(QGraphicsSceneDragDropEvent)
 public:
     inline QGraphicsSceneDragDropEventPrivate()
-        : source(0), mimeData(0)
+        : source(nullptr), mimeData(nullptr)
     { }
 
     QPointF pos;

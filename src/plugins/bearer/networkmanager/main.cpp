@@ -83,7 +83,7 @@ QBearerEngine *QNetworkManagerEnginePlugin::create(const QString &key) const
             delete engine;
     }
 
-    return 0;
+    return nullptr;
 }
 
 Q_EXPORT_STATIC_PLUGIN(QNetworkManagerEnginePlugin)

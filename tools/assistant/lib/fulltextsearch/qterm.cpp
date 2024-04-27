@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneTermPrivate::QCLuceneTermPrivate()
     : QSharedData()
 {
-    term = 0;
+    term = nullptr;
     deleteCLuceneTerm = true;
 }
 

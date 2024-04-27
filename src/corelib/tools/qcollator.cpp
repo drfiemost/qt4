@@ -75,13 +75,13 @@ public:
         if (collator)
             ucol_close(collator);
 #endif
-        collator = 0;
+        collator = nullptr;
         indexCharacters.clear();
     }
 
     QCollatorPrivate()
         : collation(QCollator::Default),
-          collator(0)
+          collator(nullptr)
     { ref.storeRelaxed(1); }
     ~QCollatorPrivate();
 
@@ -211,7 +211,7 @@ void QCollator::detach()
         x->ref.storeRelaxed(1);
         x->locale = d->locale;
         x->collation = d->collation;
-        x->collator = 0;
+        x->collator = nullptr;
         if (!d->ref.deref())
             delete d;
         d = x;
@@ -553,7 +553,7 @@ QStringList QCollator::indexCharacters() const
     QByteArray id = identifier().toLatin1();
 
     UErrorCode status = U_ZERO_ERROR;
-    UResourceBundle *res = ures_open(NULL, id, &status);
+    UResourceBundle *res = ures_open(nullptr, id, &status);
 
     if (U_FAILURE(status)) {
         d->indexCharacters = englishIndexCharacters();

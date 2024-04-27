@@ -191,7 +191,7 @@ namespace {
 
     ReverseClassesMemberIterator::ReverseClassesMemberIterator(qdesigner_internal::ClassesMemberFunctions *result) :
        m_result(result),
-       m_memberList(0)
+       m_memberList(nullptr)
     {
     }
 
@@ -244,7 +244,7 @@ namespace qdesigner_internal {
     ClassesMemberFunctions reverseClassesMemberFunctions(const QString &obj_name, MemberType member_type,
                                                          const QString &peer, QDesignerFormWindowInterface *form)
     {
-        QObject *object = 0;
+        QObject *object = nullptr;
         if (obj_name == form->mainContainer()->objectName()) {
             object = form->mainContainer();
         } else {

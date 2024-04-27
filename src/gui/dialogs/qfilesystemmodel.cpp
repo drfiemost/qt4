@@ -562,8 +562,8 @@ QModelIndex QFileSystemModel::parent(const QModelIndex &index) const
 
     QFileSystemModelPrivate::QFileSystemNode *indexNode = d->node(index);
     Q_ASSERT(indexNode != 0);
-    QFileSystemModelPrivate::QFileSystemNode *parentNode = (indexNode ? indexNode->parent : 0);
-    if (parentNode == 0 || parentNode == &d->root)
+    QFileSystemModelPrivate::QFileSystemNode *parentNode = (indexNode ? indexNode->parent : nullptr);
+    if (parentNode == nullptr || parentNode == &d->root)
         return QModelIndex();
 
     // get the parent's row
@@ -583,7 +583,7 @@ QModelIndex QFileSystemModel::parent(const QModelIndex &index) const
 QModelIndex QFileSystemModelPrivate::index(const QFileSystemModelPrivate::QFileSystemNode *node) const
 {
     Q_Q(const QFileSystemModel);
-    QFileSystemModelPrivate::QFileSystemNode *parentNode = (node ? node->parent : 0);
+    QFileSystemModelPrivate::QFileSystemNode *parentNode = (node ? node->parent : nullptr);
     if (node == &root || !parentNode)
         return QModelIndex();
 
@@ -857,7 +857,7 @@ bool QFileSystemModel::setData(const QModelIndex &idx, const QVariant &value, in
         || QDir::toNativeSeparators(newName).contains(QDir::separator())
         || !QDir(filePath(parent(idx))).rename(oldName, newName)) {
 #ifndef QT_NO_MESSAGEBOX
-        QMessageBox::information(0, QFileSystemModel::tr("Invalid filename"),
+        QMessageBox::information(nullptr, QFileSystemModel::tr("Invalid filename"),
                                 QFileSystemModel::tr("<b>The name \"%1\" can not be used.</b><p>Try using another name, with fewer characters or no punctuations marks.")
                                 .arg(newName),
                                  QMessageBox::Ok);

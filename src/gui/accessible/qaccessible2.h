@@ -96,13 +96,13 @@ public:
 };
 
 // catch-all functions. If an accessible class doesn't implement interface T, return 0
-inline QAccessible2Interface *qAccessibleValueCastHelper() { return 0; }
-inline QAccessible2Interface *qAccessibleTextCastHelper() { return 0; }
-inline QAccessible2Interface *qAccessibleEditableTextCastHelper() { return 0; }
-inline QAccessible2Interface *qAccessibleTableCastHelper() { return 0; }
-inline QAccessible2Interface *qAccessibleActionCastHelper() { return 0; }
-inline QAccessible2Interface *qAccessibleImageCastHelper() { return 0; }
-inline QAccessible2Interface *qAccessibleTable2CastHelper() { return 0; }
+inline QAccessible2Interface *qAccessibleValueCastHelper() { return nullptr; }
+inline QAccessible2Interface *qAccessibleTextCastHelper() { return nullptr; }
+inline QAccessible2Interface *qAccessibleEditableTextCastHelper() { return nullptr; }
+inline QAccessible2Interface *qAccessibleTableCastHelper() { return nullptr; }
+inline QAccessible2Interface *qAccessibleActionCastHelper() { return nullptr; }
+inline QAccessible2Interface *qAccessibleImageCastHelper() { return nullptr; }
+inline QAccessible2Interface *qAccessibleTable2CastHelper() { return nullptr; }
 
 #define Q_ACCESSIBLE_OBJECT \
     public: \

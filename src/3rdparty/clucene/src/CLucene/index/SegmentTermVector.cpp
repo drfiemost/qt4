@@ -28,7 +28,7 @@ SegmentTermVector::~SegmentTermVector(){
   _CLDELETE(termFreqs);
 }
 TermPositionVector* SegmentTermVector::__asTermPositionVector(){
-	return NULL;
+	return nullptr;
 }
 
 const TCHAR* SegmentTermVector::getField() {
@@ -42,7 +42,7 @@ sb.append(field);
 sb.append(_T(": "));
 
 int32_t i=0;
-while ( terms && terms[i] != NULL ){
+while ( terms && terms[i] != nullptr ){
   if (i>0) 
 	  sb.append(_T(", "));
   sb.append(terms[i]);
@@ -55,12 +55,12 @@ return sb.toString();
 }
 
 int32_t SegmentTermVector::size() {
-if ( terms == NULL )
+if ( terms == nullptr )
 	return 0;
 
 if ( termsLen == -1 ){
 	termsLen=0;
-	while ( terms[termsLen] != 0 )
+	while ( terms[termsLen] != nullptr )
 		termsLen++;
 }
 return termsLen;
@@ -95,7 +95,7 @@ int32_t SegmentTermVector::binarySearch(TCHAR** a, const int32_t arraylen, const
 }
 
 int32_t SegmentTermVector::indexOf(const TCHAR* termText) {
-	if(terms == NULL)
+	if(terms == nullptr)
 		return -1;
 	int32_t res = binarySearch(terms, size(), termText);
 	return res >= 0 ? res : -1;
@@ -127,7 +127,7 @@ SegmentTermPositionVector::SegmentTermPositionVector(const TCHAR* field, TCHAR**
 SegmentTermPositionVector::~SegmentTermPositionVector(){
 	if ( offsets ){
 		for (size_t i=0;i<offsets->length;i++){
-			if ( offsets->values != NULL ){
+			if ( offsets->values != nullptr ){
 				Array<TermVectorOffsetInfo>& offs = offsets->values[i];
 				for ( size_t j=0;j<offs.length;j++ ){
 					_CLDELETE_ARRAY(offs.values);
@@ -139,7 +139,7 @@ SegmentTermPositionVector::~SegmentTermPositionVector(){
 	}
 	if ( positions ){
 		for (size_t i=0;i<positions->length;i++){
-			if ( positions->values != NULL ){
+			if ( positions->values != nullptr ){
 				Array<int32_t>& pos = positions->values[i];
 				for ( size_t j=0;j<pos.length;j++ ){
 					_CLDELETE_ARRAY(pos.values);
@@ -162,8 +162,8 @@ TermPositionVector* SegmentTermPositionVector::__asTermPositionVector(){
 * @see org.apache.lucene.analysis.Token
 */
 Array<TermVectorOffsetInfo>* SegmentTermPositionVector::getOffsets(int32_t index) {
-	if(offsets == NULL)
-		return NULL;
+	if(offsets == nullptr)
+		return nullptr;
 	if (index >=0 && index < offsets->length)
 		return &offsets->values[index];
 	else
@@ -176,8 +176,8 @@ Array<TermVectorOffsetInfo>* SegmentTermPositionVector::getOffsets(int32_t index
 * term String array obtained from the <code>indexOf</code> method.
 */
 Array<int32_t>* SegmentTermPositionVector::getTermPositions(int32_t index) {
-	if(positions == NULL)
-		return NULL;
+	if(positions == nullptr)
+		return nullptr;
 
 	if (index >=0 && index < positions->length)
 		return &positions->values[index];

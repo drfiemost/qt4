@@ -240,7 +240,7 @@ QFileSystemEntry QFileSystemEngine::canonicalName(const QFileSystemEntry &entry,
     Q_UNUSED(data);
     return QFileSystemEntry(slowCanonicalized(absoluteName(entry).filePath()));
 #else
-    char *ret = 0;
+    char *ret = nullptr;
 # if defined(Q_OS_MAC) && !defined(Q_OS_IOS)
     // When using -mmacosx-version-min=10.4, we get the legacy realpath implementation,
     // which does not work properly with the realpath(X,0) form. See QTBUG-28282.
@@ -267,7 +267,7 @@ QFileSystemEntry QFileSystemEngine::canonicalName(const QFileSystemEntry &entry,
     }
 # else
 #  if _POSIX_VERSION >= 200801L
-    ret = realpath(entry.nativeFilePath().constData(), (char*)0);
+    ret = realpath(entry.nativeFilePath().constData(), (char*)nullptr);
 #  else
     ret = (char*)malloc(PATH_MAX + 1);
     if (realpath(entry.nativeFilePath().constData(), (char*)ret) == 0) {
@@ -336,7 +336,7 @@ QString QFileSystemEngine::resolveUserName(uint userId)
     QVarLengthArray<char, 1024> buf(size_max);
 #endif
 
-    struct passwd *pw = 0;
+    struct passwd *pw = nullptr;
 #if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_OPENBSD)
     struct passwd entry;
     getpwuid_r(userId, &entry, buf.data(), buf.size(), &pw);
@@ -358,7 +358,7 @@ QString QFileSystemEngine::resolveGroupName(uint groupId)
     QVarLengthArray<char, 1024> buf(size_max);
 #endif
 
-    struct group *gr = 0;
+    struct group *gr = nullptr;
 #if !defined(QT_NO_THREAD) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_OPENBSD)
     size_max = sysconf(_SC_GETGR_R_SIZE_MAX);
     if (size_max == -1)

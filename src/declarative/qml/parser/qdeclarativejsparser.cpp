@@ -87,11 +87,11 @@ Parser::Parser(Engine *engine):
     driver(engine),
     tos(0),
     stack_size(0),
-    sym_stack(0),
-    state_stack(0),
-    location_stack(0),
-    first_token(0),
-    last_token(0)
+    sym_stack(nullptr),
+    state_stack(nullptr),
+    location_stack(nullptr),
+    first_token(nullptr),
+    last_token(nullptr)
 {
 }
 
@@ -154,7 +154,7 @@ bool Parser::parse(int startToken)
     last_token = &token_buffer[1];
 
     tos = -1;
-    program = 0;
+    program = nullptr;
 
     do {
         if (++tos == stack_size)
@@ -267,7 +267,7 @@ case 19: {
 } break;
 
 case 20: {
-    AST::UiImport *node = 0;
+    AST::UiImport *node = nullptr;
 
     if (AST::StringLiteral *importIdLiteral = AST::cast<AST::StringLiteral *>(sym(2).Expression)) {
         node = makeAstNode<AST::UiImport>(driver->nodePool(), importIdLiteral->value);
@@ -290,7 +290,7 @@ case 20: {
 } break;
 
 case 21: {
-    sym(1).Node = 0;
+    sym(1).Node = nullptr;
 } break;
 
 case 22: {
@@ -319,7 +319,7 @@ case 26: {
 } break;
 
 case 27: {
-    AST::UiObjectInitializer *node = makeAstNode<AST::UiObjectInitializer> (driver->nodePool(), (AST::UiObjectMemberList*)0);
+    AST::UiObjectInitializer *node = makeAstNode<AST::UiObjectInitializer> (driver->nodePool(), (AST::UiObjectMemberList*)nullptr);
     node->lbraceToken = loc(1);
     node->rbraceToken = loc(2);
     sym(1).Node = node;
@@ -377,7 +377,7 @@ case 39: {
 }
 
 case 41: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 42: {
@@ -398,7 +398,7 @@ case 44: {
 } break;
 
 case 46: {
-    AST::UiPublicMember *node = makeAstNode<AST::UiPublicMember> (driver->nodePool(), (NameId *)0, sym(2).sval);
+    AST::UiPublicMember *node = makeAstNode<AST::UiPublicMember> (driver->nodePool(), (NameId *)nullptr, sym(2).sval);
     node->type = AST::UiPublicMember::Signal;
     node->propertyToken = loc(1);
     node->typeToken = loc(2);
@@ -409,7 +409,7 @@ case 46: {
 }   break;
 
 case 48: {
-    AST::UiPublicMember *node = makeAstNode<AST::UiPublicMember> (driver->nodePool(), (NameId *)0, sym(2).sval);
+    AST::UiPublicMember *node = makeAstNode<AST::UiPublicMember> (driver->nodePool(), (NameId *)nullptr, sym(2).sval);
     node->type = AST::UiPublicMember::Signal;
     node->propertyToken = loc(1);
     node->typeToken = loc(2);
@@ -497,7 +497,7 @@ case 61: {
 
     AST::UiQualifiedId *propertyName = makeAstNode<AST::UiQualifiedId>(driver->nodePool(), sym(6).sval);
     propertyName->identifierToken = loc(6);
-    propertyName->next = 0;
+    propertyName->next = nullptr;
 
     AST::UiArrayBinding *binding = makeAstNode<AST::UiArrayBinding> (driver->nodePool(),
         propertyName, sym(9).UiArrayMemberList->finish());
@@ -519,7 +519,7 @@ case 62: {
 
     AST::UiQualifiedId *propertyName = makeAstNode<AST::UiQualifiedId>(driver->nodePool(), sym(3).sval);
     propertyName->identifierToken = loc(3);
-    propertyName->next = 0;
+    propertyName->next = nullptr;
 
     AST::UiObjectBinding *binding = makeAstNode<AST::UiObjectBinding> (driver->nodePool(),
       propertyName, sym(5).UiQualifiedId, sym(6).UiObjectInitializer);
@@ -633,7 +633,7 @@ case 79: {
 } break;
 
 case 80: {
-  AST::ArrayLiteral *node = makeAstNode<AST::ArrayLiteral> (driver->nodePool(), (AST::Elision *) 0);
+  AST::ArrayLiteral *node = makeAstNode<AST::ArrayLiteral> (driver->nodePool(), (AST::Elision *) nullptr);
   node->lbracketToken = loc(1);
   node->rbracketToken = loc(2);
   sym(1).Node = node;
@@ -655,7 +655,7 @@ case 82: {
 
 case 83: {
   AST::ArrayLiteral *node = makeAstNode<AST::ArrayLiteral> (driver->nodePool(), sym(2).ElementList->finish (),
-    (AST::Elision *) 0);
+    (AST::Elision *) nullptr);
   node->lbracketToken = loc(1);
   node->commaToken = loc(3);
   node->rbracketToken = loc(4);
@@ -672,7 +672,7 @@ case 84: {
 } break;
 
 case 85: {
-  AST::ObjectLiteral *node = 0;
+  AST::ObjectLiteral *node = nullptr;
   if (sym(2).Node)
     node = makeAstNode<AST::ObjectLiteral> (driver->nodePool(),
         sym(2).PropertyNameAndValueList->finish ());
@@ -709,7 +709,7 @@ case 88: {
   if (AST::UiQualifiedId *qualifiedId = reparseAsQualifiedId(sym(1).Expression)) {
     sym(1).UiQualifiedId = qualifiedId;
   } else {
-    sym(1).UiQualifiedId = 0;
+    sym(1).UiQualifiedId = nullptr;
 
     diagnostic_messages.append(DiagnosticMessage(DiagnosticMessage::Error, loc(1),
       QLatin1String("Expected a qualified name id")));
@@ -719,7 +719,7 @@ case 88: {
 } break;
 
 case 89: {
-  sym(1).Node = makeAstNode<AST::ElementList> (driver->nodePool(), (AST::Elision *) 0, sym(1).Expression);
+  sym(1).Node = makeAstNode<AST::ElementList> (driver->nodePool(), (AST::Elision *) nullptr, sym(1).Expression);
 } break;
 
 case 90: {
@@ -728,7 +728,7 @@ case 90: {
 
 case 91: {
   AST::ElementList *node = makeAstNode<AST::ElementList> (driver->nodePool(), sym(1).ElementList,
-    (AST::Elision *) 0, sym(3).Expression);
+    (AST::Elision *) nullptr, sym(3).Expression);
   node->commaToken = loc(2);
   sym(1).Node = node;
 } break;
@@ -919,7 +919,7 @@ case 146: {
 } break;
 
 case 147: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 148: {
@@ -1346,7 +1346,7 @@ case 241: {
 } break;
 
 case 242: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 245: {
@@ -1356,7 +1356,7 @@ case 245: {
 } break;
 
 case 246: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 263: {
@@ -1375,7 +1375,7 @@ case 265: {
 } break;
 
 case 266: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 267: {
@@ -1435,7 +1435,7 @@ case 278: {
 } break;
 
 case 279: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 281: {
@@ -1444,7 +1444,7 @@ case 281: {
 } break;
 
 case 282: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 284: {
@@ -1615,7 +1615,7 @@ case 311: {
 } break;
 
 case 312: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 313: {
@@ -1734,7 +1734,7 @@ case 331: {
 } break;
 
 case 332: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 333: {
@@ -1742,7 +1742,7 @@ case 333: {
 } break;
 
 case 334: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
 case 336: {
@@ -1770,11 +1770,11 @@ case 341: {
 } break;
 
 case 342: {
-  sym(1).sval = 0;
+  sym(1).sval = nullptr;
 } break;
 
 case 344: {
-  sym(1).Node = 0;
+  sym(1).Node = nullptr;
 } break;
 
             } // switch

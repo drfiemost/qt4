@@ -55,7 +55,7 @@ void QDeclarativeNotifier::emitNotify(QDeclarativeNotifierEndpoint *endpoint)
         emitNotify(n->next);
 
     if (endpoint) {
-        void *args[] = { 0 };
+        void *args[] = { nullptr };
 
         QMetaObject::metacall(endpoint->target, QMetaObject::InvokeMetaMethod, 
                               endpoint->targetMethod, args);
@@ -101,7 +101,7 @@ void QDeclarativeNotifierEndpoint::copyAndClear(QDeclarativeNotifierEndpoint &ot
 
         other_s->source = s->source;
         other_s->sourceSignal = s->sourceSignal;
-        s->source = 0;
+        s->source = nullptr;
     } else if(NotifierType == type) {
         Notifier *other_n = other.toNotifier();
         Notifier *n = asNotifier();
@@ -117,10 +117,10 @@ void QDeclarativeNotifierEndpoint::copyAndClear(QDeclarativeNotifierEndpoint &ot
         other_n->prev = n->prev;
         *other_n->prev = &other;
 
-        n->prev = 0;
-        n->next = 0;
-        n->disconnected = 0;
-        n->notifier = 0;
+        n->prev = nullptr;
+        n->next = nullptr;
+        n->disconnected = nullptr;
+        n->notifier = nullptr;
     } 
 }
 

@@ -99,14 +99,14 @@ const QVector<QRgb> *qt_image_colortable(const QImage &image)
 QBasicAtomicInt qimage_serial_number = Q_BASIC_ATOMIC_INITIALIZER(1);
 
 QImageData::QImageData()
-    : ref(0), width(0), height(0), depth(0), nbytes(0), data(0),
+    : ref(0), width(0), height(0), depth(0), nbytes(0), data(nullptr),
       format(QImage::Format_ARGB32), bytes_per_line(0),
       ser_no(qimage_serial_number.fetchAndAddRelaxed(1)),
       detach_no(0),
       dpmx(qt_defaultDpiX() * 100 / qreal(2.54)),
       dpmy(qt_defaultDpiY() * 100 / qreal(2.54)),
       offset(0, 0), own_data(true), ro_data(false), has_alpha_clut(false),
-      is_cached(false), paintEngine(0)
+      is_cached(false), paintEngine(nullptr)
 {
 }
 
@@ -120,7 +120,7 @@ QImageData::QImageData()
 QImageData * QImageData::create(const QSize &size, QImage::Format format, int numColors)
 {
     if (!size.isValid() || numColors < 0 || format == QImage::Format_Invalid)
-        return 0;                                // invalid parameter(s)
+        return nullptr;                                // invalid parameter(s)
 
     uint width = size.width();
     uint height = size.height();
@@ -147,7 +147,7 @@ QImageData * QImageData::create(const QSize &size, QImage::Format format, int nu
         || height <= 0
         || INT_MAX/uint(bytes_per_line) < height
         || INT_MAX/sizeof(uchar *) < uint(height))
-        return 0;
+        return nullptr;
 
     QScopedPointer<QImageData> d(new QImageData);
     d->colortable.resize(numColors);
@@ -172,7 +172,7 @@ QImageData * QImageData::create(const QSize &size, QImage::Format format, int nu
     d->data  = (uchar *)malloc(d->nbytes);
 
     if (!d->data) {
-        return 0;
+        return nullptr;
     }
 
     d->ref.ref();
@@ -187,7 +187,7 @@ QImageData::~QImageData()
     delete paintEngine;
     if (data && own_data)
         free(data);
-    data = 0;
+    data = nullptr;
 }
 
 
@@ -732,7 +732,7 @@ const uchar *qt_get_bitflip_array()                        // called from QPixma
 QImage::QImage()
     : QPaintDevice()
 {
-    d = 0;
+    d = nullptr;
 }
 
 /*!
@@ -770,7 +770,7 @@ QImage::QImage(const QSize &size, Format format)
 
 QImageData *QImageData::create(uchar *data, int width, int height,  int bpl, QImage::Format format, bool readOnly)
 {
-    QImageData *d = 0;
+    QImageData *d = nullptr;
 
     if (format == QImage::Format_Invalid)
         return d;
@@ -925,7 +925,7 @@ QImage::QImage(const uchar *data, int width, int height, int bytesPerLine, Forma
 QImage::QImage(const QString &fileName, const char *format)
     : QPaintDevice()
 {
-    d = 0;
+    d = nullptr;
     load(fileName, format);
 }
 
@@ -960,7 +960,7 @@ QImage::QImage(const char *fileName, const char *format)
     // ### Qt 5: if you remove the QImage(const QByteArray &) QT3_SUPPORT
     // constructor, remove this constructor as well. The constructor here
     // exists so that QImage("foo.png") compiles without ambiguity.
-    d = 0;
+    d = nullptr;
     load(QString::fromAscii(fileName), format);
 }
 #endif
@@ -987,10 +987,10 @@ extern bool qt_read_xpm_image_or_array(QIODevice *device, const char * const *so
 QImage::QImage(const char * const xpm[])
     : QPaintDevice()
 {
-    d = 0;
+    d = nullptr;
     if (!xpm)
         return;
-    if (!qt_read_xpm_image_or_array(0, xpm, *this))
+    if (!qt_read_xpm_image_or_array(nullptr, xpm, *this))
         // Issue: Warning because the constructor may be ambigious
         qWarning("QImage::QImage(), XPM is not supported");
 }
@@ -1026,7 +1026,7 @@ QImage::QImage(const QImage &image)
     : QPaintDevice()
 {
     if (image.paintingActive()) {
-        d = 0;
+        d = nullptr;
         operator=(image.copy());
     } else {
         d = image.d;
@@ -1527,13 +1527,13 @@ void QImage::setColor(int i, QRgb c)
 uchar *QImage::scanLine(int i)
 {
     if (!d)
-        return 0;
+        return nullptr;
 
     detach();
 
     // In case detach() ran out of memory
     if (!d)
-        return 0;
+        return nullptr;
 
     return d->data + i * d->bytes_per_line;
 }
@@ -1544,7 +1544,7 @@ uchar *QImage::scanLine(int i)
 const uchar *QImage::scanLine(int i) const
 {
     if (!d)
-        return 0;
+        return nullptr;
 
     Q_ASSERT(i >= 0 && i < height());
     return d->data + i * d->bytes_per_line;
@@ -1567,7 +1567,7 @@ const uchar *QImage::scanLine(int i) const
 const uchar *QImage::constScanLine(int i) const
 {
     if (!d)
-        return 0;
+        return nullptr;
 
     Q_ASSERT(i >= 0 && i < height());
     return d->data + i * d->bytes_per_line;
@@ -1587,12 +1587,12 @@ const uchar *QImage::constScanLine(int i) const
 uchar *QImage::bits()
 {
     if (!d)
-        return 0;
+        return nullptr;
     detach();
 
     // In case detach ran out of memory...
     if (!d)
-        return 0;
+        return nullptr;
 
     return d->data;
 }
@@ -1606,7 +1606,7 @@ uchar *QImage::bits()
 */
 const uchar *QImage::bits() const
 {
-    return d ? d->data : 0;
+    return d ? d->data : nullptr;
 }
 
 
@@ -1622,7 +1622,7 @@ const uchar *QImage::bits() const
 */
 const uchar *QImage::constBits() const
 {
-    return d ? d->data : 0;
+    return d ? d->data : nullptr;
 }
 
 /*!
@@ -2968,8 +2968,8 @@ static void convert_generic(QImageData *dest, const QImageData *src, Qt::ImageCo
         while (x < src->width) {
             int l = std::min(src->width - x, buffer_size);
             const uint *ptr = fetch(buffer, srcData, x, l);
-            ptr = srcLayout->convertToARGB32PM(buffer, ptr, l, srcLayout, 0);
-            ptr = destLayout->convertFromARGB32PM(buffer, ptr, l, destLayout, 0);
+            ptr = srcLayout->convertToARGB32PM(buffer, ptr, l, srcLayout, nullptr);
+            ptr = destLayout->convertFromARGB32PM(buffer, ptr, l, destLayout, nullptr);
             store(destData, ptr, x, l);
             x += l;
         }
@@ -2982,71 +2982,71 @@ static void convert_generic(QImageData *dest, const QImageData *src, Qt::ImageCo
 static Image_Converter converter_map[QImage::NImageFormats][QImage::NImageFormats] =
 {
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     },
     {
-        0,
-        0,
+        nullptr,
+        nullptr,
         swap_bit_order,
         convert_Mono_to_Indexed8,
         convert_Mono_to_X32,
         convert_Mono_to_X32,
         convert_Mono_to_X32,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_Mono
 
     {
-        0,
+        nullptr,
         swap_bit_order,
-        0,
+        nullptr,
         convert_Mono_to_Indexed8,
         convert_Mono_to_X32,
         convert_Mono_to_X32,
         convert_Mono_to_X32,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_MonoLSB
 
     {
-        0,
+        nullptr,
         convert_X_to_Mono,
         convert_X_to_Mono,
-        0,
+        nullptr,
         convert_Indexed8_to_X32,
         convert_Indexed8_to_X32,
         convert_Indexed8_to_X32,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_Indexed8
 
     {
-        0,
+        nullptr,
         convert_X_to_Mono,
         convert_X_to_Mono,
         convert_RGB_to_Indexed8,
-        0,
+        nullptr,
         mask_alpha_converter,
         mask_alpha_converter,
         convert_generic,
@@ -3061,12 +3061,12 @@ static Image_Converter converter_map[QImage::NImageFormats][QImage::NImageFormat
     }, // Format_RGB32
 
     {
-        0,
+        nullptr,
         convert_X_to_Mono,
         convert_X_to_Mono,
         convert_ARGB_to_Indexed8,
         mask_alpha_converter,
-        0,
+        nullptr,
         convert_ARGB_to_ARGB_PM,
         convert_generic,
         convert_generic,
@@ -3080,109 +3080,109 @@ static Image_Converter converter_map[QImage::NImageFormats][QImage::NImageFormat
     }, // Format_ARGB32
 
     {
-        0,
+        nullptr,
         convert_ARGB_PM_to_Mono,
         convert_ARGB_PM_to_Mono,
         convert_ARGB_PM_to_Indexed8,
         convert_ARGB_PM_to_RGB,
         convert_ARGB_PM_to_ARGB,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     },  // Format_ARGB32_Premultiplied
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
 #if !defined(Q_WS_QWS) || (defined(QT_QWS_DEPTH_15) && defined(QT_QWS_DEPTH_16))
         convert_generic,
 #else
         0,
 #endif
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_RGB16
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_ARGB8565_Premultiplied
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_RGB666
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_ARGB6666_Premultiplied
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
@@ -3191,187 +3191,187 @@ static Image_Converter converter_map[QImage::NImageFormats][QImage::NImageFormat
 #else
         0,
 #endif
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_RGB555
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_ARGB8555_Premultiplied
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_RGB888
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     }, // Format_RGB444
 
     {
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_generic,
         convert_generic,
         convert_generic,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
     } // Format_ARGB4444_Premultiplied
 };
 
 static InPlace_Image_Converter inplace_converter_map[QImage::NImageFormats][QImage::NImageFormats] =
 {
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     },
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_Mono
     {
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+       nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_MonoLSB
     {
-        0,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_indexed8_to_RGB_inplace,
         convert_indexed8_to_ARGB_PM_inplace,
         convert_indexed8_to_RGB16_inplace,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
     }, // Format_Indexed8
     {
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_RGB_to_RGB16_inplace,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
     }, // Format_ARGB32
     {
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         convert_ARGB_to_ARGB_PM_inplace,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
     }, // Format_ARGB32
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     },  // Format_ARGB32_Premultiplied
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_RGB16
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_ARGB8565_Premultiplied
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_RGB666
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_ARGB6666_Premultiplied
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_RGB555
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_ARGB8555_Premultiplied
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_RGB888
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     }, // Format_RGB444
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
     } // Format_ARGB4444_Premultiplied
 };
 
@@ -3719,7 +3719,7 @@ QRgb QImage::pixel(int x, int y) const
     const QPixelLayout *layout = &qPixelLayouts[d->format];
     uint result;
     const uint *ptr = qFetchPixels[layout->bpp](&result, s, x, 1);
-    return *layout->convertToARGB32PM(&result, ptr, 1, layout, 0);
+    return *layout->convertToARGB32PM(&result, ptr, 1, layout, nullptr);
 }
 
 /*!
@@ -3806,7 +3806,7 @@ void QImage::setPixel(int x, int y, uint index_or_rgb)
 
     const QPixelLayout *layout = &qPixelLayouts[d->format];
     uint result;
-    const uint *ptr = layout->convertFromARGB32PM(&result, &index_or_rgb, 1, layout, 0);
+    const uint *ptr = layout->convertFromARGB32PM(&result, &index_or_rgb, 1, layout, nullptr);
     qStorePixels[layout->bpp](s, ptr, x, 1);
 }
 
@@ -3955,7 +3955,7 @@ bool QImage::allGray() const
         while (x < d->width) {
             int l = std::min(d->width - x, buffer_size);
             const uint *ptr = fetch(buffer, b, x, l);
-            ptr = layout->convertToARGB32PM(buffer, ptr, l, layout, 0);
+            ptr = layout->convertToARGB32PM(buffer, ptr, l, layout, nullptr);
             for (int i = 0; i < l; ++i) {
                 if (!qIsGray(ptr[i]))
                     return false;
@@ -4278,11 +4278,11 @@ QImage QImage::createHeuristicMask(bool clipTight) const
     while(!done) {
         done = true;
         ypn = m.scanLine(0);
-        ypc = 0;
+        ypc = nullptr;
         for (y = 0; y < h; y++) {
             ypp = ypc;
             ypc = ypn;
-            ypn = (y == h-1) ? 0 : m.scanLine(y+1);
+            ypn = (y == h-1) ? nullptr : m.scanLine(y+1);
             QRgb *p = (QRgb *)scanLine(y);
             for (x = 0; x < w; x++) {
                 // slowness here - it's possible to do six of these tests
@@ -4304,11 +4304,11 @@ QImage QImage::createHeuristicMask(bool clipTight) const
 
     if (!clipTight) {
         ypn = m.scanLine(0);
-        ypc = 0;
+        ypc = nullptr;
         for (y = 0; y < h; y++) {
             ypp = ypc;
             ypc = ypn;
-            ypn = (y == h-1) ? 0 : m.scanLine(y+1);
+            ypn = (y == h-1) ? nullptr : m.scanLine(y+1);
             QRgb *p = (QRgb *)scanLine(y);
             for (x = 0; x < w; x++) {
                 if ((*p & 0x00ffffff) != background) {
@@ -4853,7 +4853,7 @@ QDataStream &operator>>(QDataStream &s, QImage &image)
             return s;
         }
     }
-    image = QImageReader(s.device(), 0).read();
+    image = QImageReader(s.device(), nullptr).read();
     return s;
 }
 #endif // QT_NO_DATASTREAM

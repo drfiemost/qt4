@@ -261,18 +261,18 @@ bool FocusWatcher::eventFilter(QObject *, QEvent *event)
 }
 
 MainWindow::MainWindow()
-    : QMainWindow(0, Qt::Window),
-      m_assistantProcess(0),
-      m_printer(0),
+    : QMainWindow(nullptr, Qt::Window),
+      m_assistantProcess(nullptr),
+      m_printer(nullptr),
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
       m_findWhere(DataModel::NoLocation),
       m_foundWhere(DataModel::NoLocation),
-      m_translationSettingsDialog(0),
+      m_translationSettingsDialog(nullptr),
       m_settingCurrentMessage(false),
       m_fileActiveModel(-1),
       m_editActiveModel(-1),
-      m_statistics(0)
+      m_statistics(nullptr)
 {
     setUnifiedTitleAndToolBarOnMac(true);
     m_ui.setupUi(this);
@@ -371,8 +371,8 @@ MainWindow::MainWindow()
     m_sourceAndFormDock->setWidget(m_sourceAndFormView);
     //connect(m_sourceAndDock, SIGNAL(visibilityChanged(bool)),
     //    m_sourceCodeView, SLOT(setActivated(bool)));
-    m_formPreviewView = new FormPreviewView(0, m_dataModel);
-    m_sourceCodeView = new SourceCodeView(0);
+    m_formPreviewView = new FormPreviewView(nullptr, m_dataModel);
+    m_sourceCodeView = new SourceCodeView(nullptr);
     m_sourceAndFormView->addWidget(m_sourceCodeView);
     m_sourceAndFormView->addWidget(m_formPreviewView);
 
@@ -483,7 +483,7 @@ MainWindow::MainWindow()
     resize(QSize(1000, 800).boundedTo(as));
     show();
     readConfig();
-    m_statistics = 0;
+    m_statistics = nullptr;
 
     connect(m_ui.actionLengthVariants, SIGNAL(toggled(bool)),
             m_messageEditor, SLOT(setLengthVariants(bool)));
@@ -562,7 +562,7 @@ void MainWindow::modelCountChanged()
     m_ui.actionFind->setEnabled(m_dataModel->contextCount() > 0);
     m_ui.actionFindNext->setEnabled(false);
 
-    m_formPreviewView->setSourceContext(-1, 0);
+    m_formPreviewView->setSourceContext(-1, nullptr);
 }
 
 struct OpenedFile {
@@ -695,7 +695,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
             updatePhraseDictInternal(m_phraseDict.size() - 1);
         totalCount += op.dataModel->messageCount();
     }
-    statusBar()->showMessage(tr("%n translation unit(s) loaded.", 0, totalCount), MessageMS);
+    statusBar()->showMessage(tr("%n translation unit(s) loaded.", nullptr, totalCount), MessageMS);
     modelCountChanged();
     recentFiles().addFiles(m_dataModel->srcFileNames());
 
@@ -1119,7 +1119,7 @@ void MainWindow::translate(int mode)
         if (translatedCount) {
             refreshItemViews();
             QMessageBox::warning(m_translateDialog, tr("Translate - Qt Linguist"),
-                    tr("Translated %n entry(s)", 0, translatedCount));
+                    tr("Translated %n entry(s)", nullptr, translatedCount));
         }
     } else {
         if (mode == TranslateDialog::Translate) {
@@ -1209,7 +1209,7 @@ void MainWindow::openPhraseBook()
         if (!isPhraseBookOpen(name)) {
             if (PhraseBook *phraseBook = openPhraseBook(name)) {
                 int n = phraseBook->phrases().count();
-                statusBar()->showMessage(tr("%n phrase(s) loaded.", 0, n), MessageMS);
+                statusBar()->showMessage(tr("%n phrase(s) loaded.", nullptr, n), MessageMS);
             }
         }
     }
@@ -1507,7 +1507,7 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
                         index.column() - 1 : m_currentIndex.model();
         m_currentIndex = m_messageModel->dataIndex(index, model);
         m_messageEditor->showMessage(m_currentIndex);
-        MessageItem *m = 0;
+        MessageItem *m = nullptr;
         if (model >= 0 && (m = m_dataModel->messageItem(m_currentIndex))) {
             if (m_dataModel->isModelWritable(model) && !m->isObsolete())
                 m_phraseView->setSourceText(m_currentIndex.model(), m->text());
@@ -2238,7 +2238,7 @@ PhraseBook *MainWindow::openPhraseBook(const QString& name)
         QMessageBox::warning(this, tr("Qt Linguist"),
             tr("Cannot read from phrase book '%1'.").arg(name));
         delete pb;
-        return 0;
+        return nullptr;
     }
     if (langGuessed) {
         if (!m_translationSettingsDialog)

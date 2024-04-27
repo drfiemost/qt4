@@ -141,13 +141,13 @@ namespace QtSharedPointer {
 
         inline T *data() const { return value; }
         inline bool isNull() const { return !data(); }
-        inline operator RestrictedBool() const { return isNull() ? 0 : &Basic::value; }
+        inline operator RestrictedBool() const { return isNull() ? nullptr : &Basic::value; }
         inline bool operator !() const { return isNull(); }
         inline T &operator*() const { return *data(); }
         inline T *operator->() const { return data(); }
 
     protected:
-        inline Basic(T *ptr = 0) : value(ptr) { }
+        inline Basic(T *ptr = nullptr) : value(ptr) { }
         inline Basic(Qt::Initialization) { }
         // ~Basic();
 
@@ -338,7 +338,7 @@ namespace QtSharedPointer {
             if (ptr)
                 d = ExternalRefCountWithCustomDeleter<T, Deleter>::create(ptr, deleter);
             else
-                d = 0;
+                d = nullptr;
             internalFinishConstruction(ptr);
         }
 
@@ -358,7 +358,7 @@ namespace QtSharedPointer {
             if (ptr) d->setQObjectShared(ptr, true);
         }
 
-        inline ExternalRefCount() : d(0) { }
+        inline ExternalRefCount() : d(nullptr) { }
         inline ExternalRefCount(Qt::Initialization i) : Basic<T>(i) { }
 
         template <typename Deleter>
@@ -416,14 +416,14 @@ namespace QtSharedPointer {
                     o->weakref.ref();
                 } else {
                     o->checkQObjectShared(actual);
-                    o = 0;
+                    o = nullptr;
                 }
             }
 
             qSwap(d, o);
             qSwap(this->value, actual);
             if (!d || d->strongref.loadRelaxed() == 0)
-                this->value = 0;
+                this->value = nullptr;
 
             // dereference saved data
             deref(o);
@@ -476,7 +476,7 @@ public:
 
     template <class X>
     inline QSharedPointer(const QWeakPointer<X> &other) : BaseClass(Qt::Uninitialized)
-    { this->d = 0; *this = other; }
+    { this->d = nullptr; *this = other; }
 
     template <class X>
     inline QSharedPointer<T> &operator=(const QWeakPointer<X> &other)
@@ -554,7 +554,7 @@ public:
     typedef qptrdiff difference_type;
 
     inline bool isNull() const { return d == nullptr || d->strongref.loadRelaxed() == 0 || value == nullptr; }
-    inline operator RestrictedBool() const { return isNull() ? 0 : &QWeakPointer::value; }
+    inline operator RestrictedBool() const { return isNull() ? nullptr : &QWeakPointer::value; }
     inline bool operator !() const { return isNull(); }
     inline T *data() const { return d == nullptr || d->strongref.loadRelaxed() == 0 ? nullptr : value; }
 

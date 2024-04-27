@@ -52,7 +52,7 @@ class Workspace : public QMdiArea
     Q_OBJECT
 
 public:
-    Workspace(PreviewFrame *parent = 0);
+    Workspace(PreviewFrame *parent = nullptr);
     ~Workspace() {}
 
 protected:
@@ -67,7 +67,7 @@ class PreviewFrame : public QFrame
     Q_OBJECT
 
 public:
-    PreviewFrame(QWidget *parent = 0);
+    PreviewFrame(QWidget *parent = nullptr);
     void setPreviewPalette(QPalette);
     void setPreviewVisible(bool val);
     QString previewText() const;

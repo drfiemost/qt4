@@ -70,7 +70,7 @@ private:
 	
 	void _countsize(){
 		fieldsLen=0;
-		while(fields[fieldsLen]!=NULL)
+		while(fields[fieldsLen]!=nullptr)
 			fieldsLen++;
 	}
 

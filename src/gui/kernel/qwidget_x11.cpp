@@ -90,8 +90,8 @@ QT_BEGIN_NAMESPACE
 
 extern bool qt_nograb();
 
-QWidget *QWidgetPrivate::mouseGrabber = 0;
-QWidget *QWidgetPrivate::keyboardGrabber = 0;
+QWidget *QWidgetPrivate::mouseGrabber = nullptr;
+QWidget *QWidgetPrivate::keyboardGrabber = nullptr;
 
 void qt_net_remove_user_time(QWidget *tlw);
 void qt_net_update_user_time(QWidget *tlw, unsigned long timestamp);
@@ -142,7 +142,7 @@ static QtMWMHints GetMWMHints(Display *display, Window window)
     Atom type;
     int format;
     ulong nitems, bytesLeft;
-    uchar *data = 0;
+    uchar *data = nullptr;
     if ((XGetWindowProperty(display, window, ATOM(_MOTIF_WM_HINTS), 0, 5, false,
                             ATOM(_MOTIF_WM_HINTS), &type, &format, &nitems, &bytesLeft,
                             &data) == Success)
@@ -301,7 +301,7 @@ void qt_x11_enforce_cursor(QWidget * w, bool force)
     if (!w->testAttribute(Qt::WA_WState_Created))
         return;
 
-    static QPointer<QWidget> lastUnderMouse = 0;
+    static QPointer<QWidget> lastUnderMouse = nullptr;
     if (force) {
         lastUnderMouse = w;
     } else if (lastUnderMouse && lastUnderMouse->effectiveWinId() == w->effectiveWinId()) {
@@ -448,14 +448,14 @@ static QVector<Atom> getNetWmState(QWidget *w)
     int actualFormat;
     ulong propertyLength;
     ulong bytesLeft;
-    uchar *propertyData = 0;
+    uchar *propertyData = nullptr;
     if (XGetWindowProperty(X11->display, w->internalWinId(), ATOM(_NET_WM_STATE), 0, 0,
                            False, XA_ATOM, &actualType, &actualFormat,
                            &propertyLength, &bytesLeft, &propertyData) == Success
         && actualType == XA_ATOM && actualFormat == 32) {
         returnValue.resize(bytesLeft / 4);
         XFree((char*) propertyData);
-        propertyData = 0;
+        propertyData = nullptr;
 
         // fetch all data
         if (XGetWindowProperty(X11->display, w->internalWinId(), ATOM(_NET_WM_STATE), 0,
@@ -528,7 +528,7 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
     if (!window)
         initializeWindow = true;
 
-    QX11Info *parentXinfo = parentWidget ? &parentWidget->d_func()->xinfo : 0;
+    QX11Info *parentXinfo = parentWidget ? &parentWidget->d_func()->xinfo : nullptr;
 
     if (desktop &&
         qt_x11_create_desktop_on_screen >= 0 &&
@@ -681,7 +681,7 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
     if (X11->use_xrender && !desktop && q->internalWinId()) {
         XRenderPictFormat *format = XRenderFindVisualFormat(dpy, (Visual *) xinfo.visual());
         if (format)
-            picture = XRenderCreatePicture(dpy, id, format, 0, 0);
+            picture = XRenderCreatePicture(dpy, id, format, 0, nullptr);
     }
 #endif // QT_NO_XRENDER
 
@@ -801,7 +801,7 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
         class_hint.res_name = appName.data(); // application name
         class_hint.res_class = const_cast<char *>(QX11Info::appClass());   // application class
 
-        XSetWMProperties(dpy, id, 0, 0,
+        XSetWMProperties(dpy, id, nullptr, nullptr,
                          qApp->d_func()->argv, qApp->d_func()->argc,
                          &size_hints, &wm_hints, &class_hint);
 
@@ -1131,7 +1131,7 @@ void QWidgetPrivate::setParent_sys(QWidget *parent, Qt::WindowFlags f)
         // make sure the widget is created on the same screen as the
         // programmer specified desktop widget
         xinfo = parent->d_func()->xinfo;
-        parent = 0;
+        parent = nullptr;
     }
 
     QTLWExtra *topData = maybeTopData();
@@ -1216,7 +1216,7 @@ void QWidgetPrivate::setParent_sys(QWidget *parent, Qt::WindowFlags f)
                     // ### setParent will add child back to the list
                     // ### of children so we need to make sure the
                     // ### widget won't be added twice.
-                    w->d_func()->parent = 0;
+                    w->d_func()->parent = nullptr;
                     this->children.removeOne(w);
                     w->setParent(q);
                 } else if (!w->isWindow()) {
@@ -1299,7 +1299,7 @@ void QWidgetPrivate::setParent_sys(QWidget *parent, Qt::WindowFlags f)
         q->setAttribute(Qt::WA_DropSiteRegistered, true);
     }
 #if !defined(QT_NO_IM)
-    ic = 0;
+    ic = nullptr;
 #endif
     invalidateBuffer(q->rect());
 #ifdef ALIEN_DEBUG
@@ -1404,13 +1404,13 @@ void QWidgetPrivate::unsetCursor_sys()
 static XTextProperty*
 qstring_to_xtp(const QString& s)
 {
-    static XTextProperty tp = { 0, 0, 0, 0 };
+    static XTextProperty tp = { nullptr, 0, 0, 0 };
     static bool free_prop = true; // we can't free tp.value in case it references
     // the data of the static QCString below.
     if (tp.value) {
         if (free_prop)
             XFree(tp.value);
-        tp.value = 0;
+        tp.value = nullptr;
         free_prop = true;
     }
 
@@ -1420,7 +1420,7 @@ qstring_to_xtp(const QString& s)
         QByteArray mapped = mapper->fromUnicode(s);
         char* tl[2];
         tl[0] = mapped.data();
-        tl[1] = 0;
+        tl[1] = nullptr;
         errCode = XmbTextListToTextProperty(X11->display, tl, 1, XStdICCTextStyle, &tp);
 #if defined(QT_DEBUG)
         if (errCode < 0)
@@ -1643,7 +1643,7 @@ void QWidget::releaseMouse()
     if (!qt_nograb() && QWidgetPrivate::mouseGrabber == this) {
         XUngrabPointer(X11->display, X11->time);
         XFlush(X11->display);
-        QWidgetPrivate::mouseGrabber = 0;
+        QWidgetPrivate::mouseGrabber = nullptr;
     }
 }
 
@@ -1664,7 +1664,7 @@ void QWidget::releaseKeyboard()
 {
     if (!qt_nograb() && QWidgetPrivate::keyboardGrabber == this) {
         XUngrabKeyboard(X11->display, X11->time);
-        QWidgetPrivate::keyboardGrabber = 0;
+        QWidgetPrivate::keyboardGrabber = nullptr;
     }
 }
 
@@ -1778,7 +1778,7 @@ void QWidget::setWindowState(Qt::WindowStates newstate)
                     const QPoint fullScreenOffset = d->frameStrut().topLeft();
 
                     top->savedFlags = windowFlags();
-                    setParent(0, Qt::Window | Qt::FramelessWindowHint);
+                    setParent(nullptr, Qt::Window | Qt::FramelessWindowHint);
                     const QRect r = top->normalGeometry;
                     setGeometry(qApp->desktop()->screenGeometry(this));
                     top->normalGeometry = r;
@@ -1788,7 +1788,7 @@ void QWidget::setWindowState(Qt::WindowStates newstate)
                         top->fullScreenOffset = fullScreenOffset;
                     }
                 } else {
-                    setParent(0, top->savedFlags);
+                    setParent(nullptr, top->savedFlags);
 
                     if (newstate & Qt::WindowMaximized) {
                         // from fullscreen to maximized
@@ -1874,7 +1874,7 @@ void QWidgetPrivate::show_sys()
     if (q->isWindow()) {
         XWMHints *h = XGetWMHints(X11->display, q->internalWinId());
         XWMHints  wm_hints;
-        bool got_hints = h != 0;
+        bool got_hints = h != nullptr;
         if (!got_hints) {
             memset(&wm_hints, 0, sizeof(wm_hints)); // make valgrind happy
             h = &wm_hints;
@@ -2105,7 +2105,7 @@ void QWidgetPrivate::show_sys()
         QByteArray message("remove: ID=");
         message.append(X11->startupId);
         sendStartupMessage(message.constData());
-        X11->startupId = 0;
+        X11->startupId = nullptr;
     }
 }
 
@@ -2743,7 +2743,7 @@ void QWidgetPrivate::scroll_sys(int dx, int dy, const QRect &r)
     Display *dpy = X11->display;
     // Want expose events
     if (w > 0 && h > 0 && !just_update && q->internalWinId()) {
-        GC gc = XCreateGC(dpy, q->internalWinId(), 0, 0);
+        GC gc = XCreateGC(dpy, q->internalWinId(), 0, nullptr);
         XSetGraphicsExposures(dpy, gc, True);
         XCopyArea(dpy, q->internalWinId(), q->internalWinId(), gc, x1, y1, w, h, x2, y2);
         XFreeGC(dpy, gc);
@@ -2934,7 +2934,7 @@ void QWidgetPrivate::updateFrameStrut()
 
         // if the parent window is the root window, an Enlightenment virtual root or
         // a NET WM virtual root window, stop here
-        data_ret = 0;
+        data_ret = nullptr;
         if (p == r ||
             (XGetWindowProperty(X11->display, p,
                                 ATOM(ENLIGHTENMENT_DESKTOP), 0, 1, False, XA_CARDINAL,

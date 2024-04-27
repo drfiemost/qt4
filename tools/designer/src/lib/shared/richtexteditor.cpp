@@ -134,7 +134,7 @@ static inline bool isWhiteSpace(const QStringRef &in)
 // Richtext simplification filter: Remove hard-coded font settings,
 // <style> elements, <p> attributes other than 'align' and
 // and unnecessary meta-information.
-QString simplifyRichTextFilter(const QString &in, bool *isPlainTextPtr = 0)
+QString simplifyRichTextFilter(const QString &in, bool *isPlainTextPtr = nullptr)
 {
     unsigned elementCount = 0;
     bool paragraphAlignmentFound = false;
@@ -180,10 +180,10 @@ class RichTextEditor : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit RichTextEditor(QWidget *parent = 0);
+    explicit RichTextEditor(QWidget *parent = nullptr);
     void setDefaultFont(QFont font);
 
-    QToolBar *createToolBar(QDesignerFormEditorInterface *core, QWidget *parent = 0);
+    QToolBar *createToolBar(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
 
     bool simplifyRichText() const      { return m_simplifyRichText; }
 
@@ -207,7 +207,7 @@ class AddLinkDialog : public QDialog
     Q_OBJECT
 
 public:
-    AddLinkDialog(RichTextEditor *editor, QWidget *parent = 0);
+    AddLinkDialog(RichTextEditor *editor, QWidget *parent = nullptr);
     ~AddLinkDialog();
 
     int showDialog();
@@ -276,7 +276,7 @@ class HtmlTextEdit : public QTextEdit
     Q_OBJECT
 
 public:
-    HtmlTextEdit(QWidget *parent = 0)
+    HtmlTextEdit(QWidget *parent = nullptr)
         : QTextEdit(parent)
     {}
 
@@ -368,7 +368,7 @@ void ColorAction::setColor(const QColor &color)
 
 void ColorAction::chooseColor()
 {
-    const QColor col = QColorDialog::getColor(m_color, 0);
+    const QColor col = QColorDialog::getColor(m_color, nullptr);
     if (col.isValid() && col != m_color) {
         setColor(col);
         emit colorChanged(m_color);
@@ -381,7 +381,7 @@ class RichTextEditorToolBar : public QToolBar
 public:
     RichTextEditorToolBar(QDesignerFormEditorInterface *core,
                           RichTextEditor *editor,
-                          QWidget *parent = 0);
+                          QWidget *parent = nullptr);
 
 public slots:
     void updateActions();
@@ -417,7 +417,7 @@ private:
 
 static QAction *createCheckableAction(const QIcon &icon, const QString &text,
                                       QObject *receiver, const char *slot,
-                                      QObject *parent = 0)
+                                      QObject *parent = nullptr)
 {
     QAction *result = new QAction(parent);
     result->setIcon(icon);
@@ -482,22 +482,22 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     m_align_left_action = createCheckableAction(
             createIconSet(QLatin1String("textleft.png")),
-            tr("Left Align"), editor, 0, alignment_group);
+            tr("Left Align"), editor, nullptr, alignment_group);
     addAction(m_align_left_action);
 
     m_align_center_action = createCheckableAction(
             createIconSet(QLatin1String("textcenter.png")),
-            tr("Center"), editor, 0, alignment_group);
+            tr("Center"), editor, nullptr, alignment_group);
     addAction(m_align_center_action);
 
     m_align_right_action = createCheckableAction(
             createIconSet(QLatin1String("textright.png")),
-            tr("Right Align"), editor, 0, alignment_group);
+            tr("Right Align"), editor, nullptr, alignment_group);
     addAction(m_align_right_action);
 
     m_align_justify_action = createCheckableAction(
             createIconSet(QLatin1String("textjustify.png")),
-            tr("Justify"), editor, 0, alignment_group);
+            tr("Justify"), editor, nullptr, alignment_group);
     addAction(m_align_justify_action);
 
     addSeparator();
@@ -628,7 +628,7 @@ void RichTextEditorToolBar::insertImage()
 
 void RichTextEditorToolBar::updateActions()
 {
-    if (m_editor == 0) {
+    if (m_editor == nullptr) {
         setEnabled(false);
         return;
     }

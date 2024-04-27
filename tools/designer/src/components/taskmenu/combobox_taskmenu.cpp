@@ -118,9 +118,9 @@ QComboBox *ComboBoxTaskMenuFactory::checkObject(QObject *qObject) const
 {
     QComboBox *combo = qobject_cast<QComboBox*>(qObject);
     if (!combo)
-        return 0;
+        return nullptr;
     if (qobject_cast<QFontComboBox*>(combo))
-        return 0;
+        return nullptr;
     return combo;
 }
 

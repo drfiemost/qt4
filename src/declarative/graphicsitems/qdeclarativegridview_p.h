@@ -91,7 +91,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeGridView : public QDeclarativeFlickable
     Q_CLASSINFO("DefaultProperty", "data")
 
 public:
-    QDeclarativeGridView(QDeclarativeItem *parent=0);
+    QDeclarativeGridView(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeGridView();
 
     QVariant model() const;
@@ -228,7 +228,7 @@ class QDeclarativeGridViewAttached : public QObject
     Q_OBJECT
 public:
     QDeclarativeGridViewAttached(QObject *parent)
-        : QObject(parent), m_view(0), m_isCurrent(false), m_delayRemove(false) {}
+        : QObject(parent), m_view(nullptr), m_isCurrent(false), m_delayRemove(false) {}
     ~QDeclarativeGridViewAttached() {}
 
     Q_PROPERTY(QDeclarativeGridView *view READ view NOTIFY viewChanged)

@@ -57,14 +57,14 @@ QT_BEGIN_NAMESPACE
 #ifdef QT_BOOTSTRAPPED
 class QObject {
 public:
-    static QString tr(const char *sourceText, const char * = 0, int n = -1);
+    static QString tr(const char *sourceText, const char * = nullptr, int n = -1);
 };
 class QCoreApplication : public QObject {
 public:
     enum Encoding { Latin1 };
-    static QString translate(const char *, const char *sourceText, const char * = 0,
+    static QString translate(const char *, const char *sourceText, const char * = nullptr,
                              Encoding = Latin1, int n = -1)
-        { return tr(sourceText, 0, n); }
+        { return tr(sourceText, nullptr, n); }
 };
 #endif
 
@@ -204,7 +204,7 @@ public:
     typedef bool (*SaveFunction)(const Translator &, QIODevice &out, ConversionData &data);
     typedef bool (*LoadFunction)(Translator &, QIODevice &in, ConversionData &data);
     struct FileFormat {
-        FileFormat() : loader(0), saver(0), priority(-1) {}
+        FileFormat() : loader(nullptr), saver(nullptr), priority(-1) {}
         QString extension; // such as "ts", "xlf", ...
         QString description; // human-readable description
         LoadFunction loader;

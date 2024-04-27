@@ -49,7 +49,7 @@ namespace JSC {
     public:
         CString()
             : m_length(0)
-            , m_data(0)
+            , m_data(nullptr)
         {
         }
 
@@ -185,11 +185,11 @@ namespace JSC {
         double toDouble(bool tolerateTrailingJunk) const;
         double toDouble() const;
 
-        uint32_t toUInt32(bool* ok = 0) const;
+        uint32_t toUInt32(bool* ok = nullptr) const;
         uint32_t toUInt32(bool* ok, bool tolerateEmptyString) const;
-        uint32_t toStrictUInt32(bool* ok = 0) const;
+        uint32_t toStrictUInt32(bool* ok = nullptr) const;
 
-        unsigned toArrayIndex(bool* ok = 0) const;
+        unsigned toArrayIndex(bool* ok = nullptr) const;
 
         int find(const UString& f, int pos = 0) const;
         int find(UChar, int pos = 0) const;

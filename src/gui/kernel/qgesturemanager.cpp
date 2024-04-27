@@ -109,7 +109,7 @@ QGestureManager::~QGestureManager()
 
 Qt::GestureType QGestureManager::registerGestureRecognizer(QGestureRecognizer *recognizer)
 {
-    QGesture *dummy = recognizer->create(0);
+    QGesture *dummy = recognizer->create(nullptr);
     if (!dummy) {
         qWarning("QGestureManager::registerGestureRecognizer: "
                  "the recognizer fails to create a gesture object, skipping registration.");
@@ -193,7 +193,7 @@ QGesture *QGestureManager::getState(QObject *object, QGestureRecognizer *recogni
     // from the destructor.
     if (object->isWidgetType()) {
         if (static_cast<QWidget *>(object)->d_func()->data.in_destructor)
-            return 0;
+            return nullptr;
     } else if (QGesture *g = qobject_cast<QGesture *>(object)) {
         return g;
 #ifndef QT_NO_GRAPHICSVIEW
@@ -201,7 +201,7 @@ QGesture *QGestureManager::getState(QObject *object, QGestureRecognizer *recogni
         Q_ASSERT(qobject_cast<QGraphicsObject *>(object));
         QGraphicsObject *graphicsObject = static_cast<QGraphicsObject *>(object);
         if (graphicsObject->QGraphicsItem::d_func()->inDestructor)
-            return 0;
+            return nullptr;
 #endif
     }
 
@@ -214,7 +214,7 @@ QGesture *QGestureManager::getState(QObject *object, QGestureRecognizer *recogni
     Q_ASSERT(recognizer);
     QGesture *state = recognizer->create(object);
     if (!state)
-        return 0;
+        return nullptr;
     state->setParent(this);
     if (state->gestureType() == Qt::CustomGesture) {
         // if the recognizer didn't fill in the gesture type, then this
@@ -423,13 +423,13 @@ void QGestureManager::cancelGesturesForChildren(QGesture *original)
     // sort them per target widget by cherry picking from almostCanceledGestures and delivering
     QSet<QGesture *> almostCanceledGestures = cancelledGestures;
     while (!almostCanceledGestures.isEmpty()) {
-        QWidget *target = 0;
+        QWidget *target = nullptr;
         QSet<QGesture*> gestures;
         iter = almostCanceledGestures.begin();
         // sort per target widget
         while (iter != almostCanceledGestures.end()) {
             QWidget *widget = m_gestureTargets.value(*iter);
-            if (target == 0)
+            if (target == nullptr)
                 target = widget;
             if (target == widget) {
                 gestures << *iter;
@@ -477,7 +477,7 @@ bool QGestureManager::filterEvent(QWidget *receiver, QEvent *event)
         }
     }
     // find all gesture contexts for the widget tree
-    w = w->isWindow() ? 0 : w->parentWidget();
+    w = w->isWindow() ? nullptr : w->parentWidget();
     while (w)
     {
         for (ContextIterator it = w->d_func()->gestureContext.begin(),
@@ -571,7 +571,7 @@ void QGestureManager::getGestureTargets(const QSet<QGesture*> &gestures,
                     }
                 }
                 if (w->isWindow()) {
-                    w = 0;
+                    w = nullptr;
                     break;
                 }
                 w = w->parentWidget();

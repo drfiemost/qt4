@@ -65,7 +65,7 @@ class Q_CORE_EXPORT QAbstractEventDispatcherPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QAbstractEventDispatcher)
 public:
     inline QAbstractEventDispatcherPrivate()
-        : event_filter(0)
+        : event_filter(nullptr)
     { }
     void init();
     QAbstractEventDispatcher::EventFilter event_filter;

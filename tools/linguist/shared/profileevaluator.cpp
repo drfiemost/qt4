@@ -264,9 +264,9 @@ public:
     ProStringList values(const ProString &variableName) const;
     QString propertyValue(const QString &val, bool complain) const;
 
-    ProStringList split_value_list(const QString &vals, const ProFile *source = 0);
+    ProStringList split_value_list(const QString &vals, const ProFile *source = nullptr);
     bool isActiveConfig(const QString &config, bool regex = false);
-    ProStringList expandVariableReferences(const ProString &value, int *pos = 0, bool joined = false);
+    ProStringList expandVariableReferences(const ProString &value, int *pos = nullptr, bool joined = false);
     ProStringList expandVariableReferences(const ushort *&tokPtr, int sizeHint = 0, bool joined = false);
     ProStringList evaluateExpandFunction(const ProString &function, const ProString &arguments);
     ProStringList evaluateExpandFunction(const ProString &function, const ushort *&tokPtr);
@@ -324,7 +324,7 @@ public:
 #endif
 
     struct Location {
-        Location() : pro(0), line(0) {}
+        Location() : pro(nullptr), line(0) {}
         Location(ProFile *_pro, int _line) : pro(_pro), line(_line) {}
         ProFile *pro;
         int line;
@@ -1295,7 +1295,7 @@ ProFileEvaluator::Private::VisitReturn ProFileEvaluator::Private::visitProFile(
                     qmake_cache = resolvePath(qmake_cache);
                     QHash<ProString, ProStringList> cache_valuemap;
                     if (evaluateFileInto(qmake_cache, ProFileEvaluatorHandler::EvalConfigFile,
-                                         &cache_valuemap, 0, EvalProOnly)) {
+                                         &cache_valuemap, nullptr, EvalProOnly)) {
                         if (m_option->qmakespec.isEmpty()) {
                             const ProStringList &vals = cache_valuemap.value(ProString("QMAKESPEC"));
                             if (!vals.isEmpty())
@@ -1563,7 +1563,7 @@ ProFile *ProFileEvaluator::Private::currentProFile() const
 {
     if (m_profileStack.count() > 0)
         return m_profileStack.top();
-    return 0;
+    return nullptr;
 }
 
 QString ProFileEvaluator::Private::currentFileName() const
@@ -2134,7 +2134,7 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
     QHash<ProString, FunctionDef>::ConstIterator it =
             m_functionDefs.replaceFunctions.constFind(func);
     if (it != m_functionDefs.replaceFunctions.constEnd())
-        return evaluateFunction(*it, prepareFunctionArgs(tokPtr), 0);
+        return evaluateFunction(*it, prepareFunctionArgs(tokPtr), nullptr);
 
     //why don't the builtin functions just use args_list? --Sam
     return evaluateExpandFunction(func, expandVariableReferences(tokPtr, 5, true));
@@ -2146,7 +2146,7 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
     QHash<ProString, FunctionDef>::ConstIterator it =
             m_functionDefs.replaceFunctions.constFind(func);
     if (it != m_functionDefs.replaceFunctions.constEnd())
-        return evaluateFunction(*it, prepareFunctionArgs(arguments), 0);
+        return evaluateFunction(*it, prepareFunctionArgs(arguments), nullptr);
 
     //why don't the builtin functions just use args_list? --Sam
     int pos = 0;
@@ -2939,7 +2939,7 @@ ProFileEvaluator::Private::VisitReturn ProFileEvaluator::Private::evaluateCondit
             } else {
                 QHash<ProString, ProStringList> symbols;
                 if ((ok = evaluateFileInto(fn, ProFileEvaluatorHandler::EvalAuxFile,
-                                           &symbols, 0, EvalWithSetup))) {
+                                           &symbols, nullptr, EvalWithSetup))) {
                     QHash<ProString, ProStringList> newMap;
                     for (QHash<ProString, ProStringList>::ConstIterator
                             it = m_valuemapStack.top().constBegin(),
@@ -3061,12 +3061,12 @@ QHash<ProString, ProStringList> *ProFileEvaluator::Private::findValues(
         QHash<ProString, ProStringList>::Iterator it = m_valuemapStack[i].find(variableName);
         if (it != m_valuemapStack[i].end()) {
             if (it->constBegin() == statics.fakeValue.constBegin())
-                return 0;
+                return nullptr;
             *rit = it;
             return &m_valuemapStack[i];
         }
     }
-    return 0;
+    return nullptr;
 }
 
 ProStringList &ProFileEvaluator::Private::valuesRef(const ProString &variableName)

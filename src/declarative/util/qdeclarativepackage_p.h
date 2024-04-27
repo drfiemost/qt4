@@ -60,7 +60,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePackage : public QObject
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data SCRIPTABLE false)
 
 public:
-    QDeclarativePackage(QObject *parent=0);
+    QDeclarativePackage(QObject *parent=nullptr);
     virtual ~QDeclarativePackage();
 
     QDeclarativeListProperty<QObject> data();

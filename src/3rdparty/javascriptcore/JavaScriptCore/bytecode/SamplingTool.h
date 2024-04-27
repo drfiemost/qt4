@@ -97,10 +97,10 @@ namespace JSC {
     struct ScriptSampleRecord {
         ScriptSampleRecord(ScriptExecutable* executable)
             : m_executable(executable)
-            , m_codeBlock(0)
+            , m_codeBlock(nullptr)
             , m_sampleCount(0)
             , m_opcodeSampleCount(0)
-            , m_samples(0)
+            , m_samples(nullptr)
             , m_size(0)
         {
         }
@@ -194,7 +194,7 @@ namespace JSC {
 
         SamplingTool(Interpreter* interpreter)
             : m_interpreter(interpreter)
-            , m_codeBlock(0)
+            , m_codeBlock(nullptr)
             , m_sample(0)
             , m_sampleCount(0)
             , m_opcodeSampleCount(0)

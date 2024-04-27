@@ -78,7 +78,7 @@ namespace qdesigner_internal {
 TabOrderEditor::TabOrderEditor(QDesignerFormWindowInterface *form, QWidget *parent) :
     QWidget(parent),
     m_form_window(form),
-    m_bg_widget(0),
+    m_bg_widget(nullptr),
     m_undo_stack(form->commandHistory()),
     m_font_metrics(font()),
     m_current_index(0),
@@ -111,7 +111,7 @@ void TabOrderEditor::setBackground(QWidget *background)
 
 void TabOrderEditor::updateBackground()
 {
-    if (m_bg_widget == 0) {
+    if (m_bg_widget == nullptr) {
         // nothing to do
         return;
     }

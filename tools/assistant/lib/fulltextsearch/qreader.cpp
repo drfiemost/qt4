@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneReaderPrivate::QCLuceneReaderPrivate()
     : QSharedData()
 {
-    reader = 0;
+    reader = nullptr;
     deleteCLuceneReader = true;
 }
 

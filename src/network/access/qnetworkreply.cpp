@@ -590,7 +590,7 @@ QSslConfiguration QNetworkReply::sslConfiguration() const
     // determine if we support this extension
     int id = metaObject()->indexOfMethod("sslConfigurationImplementation()");
     if (id != -1) {
-        void *arr[] = { &config, 0 };
+        void *arr[] = { &config, nullptr };
         const_cast<QNetworkReply *>(this)->qt_metacall(QMetaObject::InvokeMetaMethod, id, arr);
     }
     return config;
@@ -608,7 +608,7 @@ void QNetworkReply::setSslConfiguration(const QSslConfiguration &config)
     int id = metaObject()->indexOfMethod("setSslConfigurationImplementation(QSslConfiguration)");
     if (id != -1) {
         QSslConfiguration copy(config);
-        void *arr[] = { 0, &copy };
+        void *arr[] = { nullptr, &copy };
         qt_metacall(QMetaObject::InvokeMetaMethod, id, arr);
     }
 }
@@ -641,7 +641,7 @@ void QNetworkReply::ignoreSslErrors(const QList<QSslError> &errors)
     int id = metaObject()->indexOfMethod("ignoreSslErrorsImplementation(QList<QSslError>)");
     if (id != -1) {
         QList<QSslError> copy(errors);
-        void *arr[] = { 0, &copy };
+        void *arr[] = { nullptr, &copy };
         qt_metacall(QMetaObject::InvokeMetaMethod, id, arr);
     }
 }

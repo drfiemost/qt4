@@ -103,10 +103,10 @@ public:
     void invalidate();
 
     inline void addWidget(QWidget *w) { QLayout::addWidget(w); }
-    void addWidget(QWidget *, int row, int column, Qt::Alignment = 0);
-    void addWidget(QWidget *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = 0);
-    void addLayout(QLayout *, int row, int column, Qt::Alignment = 0);
-    void addLayout(QLayout *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = 0);
+    void addWidget(QWidget *, int row, int column, Qt::Alignment = nullptr);
+    void addWidget(QWidget *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = nullptr);
+    void addLayout(QLayout *, int row, int column, Qt::Alignment = nullptr);
+    void addLayout(QLayout *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = nullptr);
 
     void setOriginCorner(Qt::Corner);
     Qt::Corner originCorner() const;
@@ -117,7 +117,7 @@ public:
     int count() const;
     void setGeometry(const QRect&);
 
-    void addItem(QLayoutItem *item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment = 0);
+    void addItem(QLayoutItem *item, int row, int column, int rowSpan = 1, int columnSpan = 1, Qt::Alignment = nullptr);
 
     void setDefaultPositioning(int n, Qt::Orientation orient);
     void getItemPosition(int idx, int *row, int *column, int *rowSpan, int *columnSpan);

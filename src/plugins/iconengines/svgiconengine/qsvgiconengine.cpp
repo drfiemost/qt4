@@ -59,7 +59,7 @@ class QSvgIconEnginePrivate : public QSharedData
 {
 public:
     QSvgIconEnginePrivate()
-        : svgBuffers(0), addedPixmaps(0)
+        : svgBuffers(nullptr), addedPixmaps(nullptr)
         { stepSerialNum(); }
 
     ~QSvgIconEnginePrivate()

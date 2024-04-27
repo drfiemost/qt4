@@ -89,7 +89,7 @@ public:
     struct TypeReference 
     {
         TypeReference()
-        : type(0), typePropertyCache(0), component(0) {}
+        : type(nullptr), typePropertyCache(nullptr), component(nullptr) {}
 
         QByteArray className;
         QDeclarativeType *type;
@@ -171,7 +171,7 @@ private:
 
     struct BindingContext {
         BindingContext()
-            : stack(0), owner(0), object(0) {}
+            : stack(0), owner(0), object(nullptr) {}
         BindingContext(QDeclarativeParser::Object *o)
             : stack(0), owner(0), object(o) {}
         BindingContext incr() const {
@@ -262,13 +262,13 @@ private:
     void genListProperty(QDeclarativeParser::Property *prop, QDeclarativeParser::Object *obj);
     void genPropertyAssignment(QDeclarativeParser::Property *prop, 
                                QDeclarativeParser::Object *obj,
-                               QDeclarativeParser::Property *valueTypeProperty = 0);
+                               QDeclarativeParser::Property *valueTypeProperty = nullptr);
     void genLiteralAssignment(const QMetaProperty &prop, 
                               QDeclarativeParser::Value *value);
     void genBindingAssignment(QDeclarativeParser::Value *binding, 
                               QDeclarativeParser::Property *prop, 
                               QDeclarativeParser::Object *obj,
-                              QDeclarativeParser::Property *valueTypeProperty = 0);
+                              QDeclarativeParser::Property *valueTypeProperty = nullptr);
     int genContextCache();
 
     int genValueTypeData(QDeclarativeParser::Property *prop, QDeclarativeParser::Property *valueTypeProp);
@@ -280,8 +280,8 @@ private:
     bool canCoerce(int to, QDeclarativeParser::Object *from);
 
     QStringList deferredProperties(QDeclarativeParser::Object *);
-    int indexOfProperty(QDeclarativeParser::Object *, const QByteArray &, bool *notInRevision = 0);
-    int indexOfSignal(QDeclarativeParser::Object *, const QByteArray &, bool *notInRevision = 0);
+    int indexOfProperty(QDeclarativeParser::Object *, const QByteArray &, bool *notInRevision = nullptr);
+    int indexOfSignal(QDeclarativeParser::Object *, const QByteArray &, bool *notInRevision = nullptr);
 
     void addId(const QString &, QDeclarativeParser::Object *);
 
@@ -305,7 +305,7 @@ private:
     struct ComponentCompileState
     {
         ComponentCompileState() 
-            : parserStatusCount(0), pushedProperties(0), root(0) {}
+            : parserStatusCount(0), pushedProperties(0), root(nullptr) {}
         QHash<QString, QDeclarativeParser::Object *> ids;
         QHash<int, QDeclarativeParser::Object *> idIndexes;
         int parserStatusCount;

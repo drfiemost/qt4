@@ -63,7 +63,7 @@ static QSet<QString> *qmlFilesInDirectory(const QString &path)
 {
     QDirIterator dir(path, QDir::Files | QDir::NoDotAndDotDot);
     if (!dir.hasNext())
-        return 0;
+        return nullptr;
     QSet<QString> *files = new QSet<QString>;
     while (dir.hasNext()) {
         dir.next();
@@ -129,7 +129,7 @@ This enum describes the type of the data blob.
 Create a new QDeclarativeDataBlob for \a url and of the provided \a type.
 */
 QDeclarativeDataBlob::QDeclarativeDataBlob(const QUrl &url, Type type)
-: m_type(type), m_status(Null), m_progress(0), m_url(url), m_finalUrl(url), m_manager(0),
+: m_type(type), m_status(Null), m_progress(0), m_url(url), m_finalUrl(url), m_manager(nullptr),
   m_redirectCount(0), m_inCallback(false), m_isDone(false)
 {
 }
@@ -324,7 +324,7 @@ void QDeclarativeDataBlob::networkError(QNetworkReply::NetworkError networkError
     QDeclarativeError error;
     error.setUrl(m_finalUrl);
 
-    const char *errorString = 0;
+    const char *errorString = nullptr;
     switch (networkError) {
         default:
             errorString = "Network error";
@@ -793,7 +793,7 @@ QString QDeclarativeTypeLoader::absoluteFilePath(const QString &path)
     int lastSlash = lowPath.lastIndexOf(QLatin1Char('/'));
     QString dirPath = lowPath.left(lastSlash);
 
-    StringSet *fileSet = 0;
+    StringSet *fileSet = nullptr;
     QHash<QString,StringSet*>::const_iterator it = m_importDirCache.find(dirPath);
     if (it == m_importDirCache.end()) {
         StringSet *files = qmlFilesInDirectory(path.left(lastSlash));
@@ -858,7 +858,7 @@ void QDeclarativeTypeLoader::clearCache()
 QDeclarativeTypeData::QDeclarativeTypeData(const QUrl &url, QDeclarativeTypeLoader::Options options, 
                                            QDeclarativeTypeLoader *manager)
 : QDeclarativeDataBlob(url, QmlFile), m_options(options), m_imports(manager), m_typesResolved(false),
-  m_compiledData(0), m_typeLoader(manager)
+  m_compiledData(nullptr), m_typeLoader(manager)
 {
 }
 
@@ -1045,7 +1045,7 @@ void QDeclarativeTypeData::compile()
     if (!compiler.compile(typeLoader()->engine(), this, m_compiledData)) {
         setError(compiler.errors());
         m_compiledData->release();
-        m_compiledData = 0;
+        m_compiledData = nullptr;
     }
     QDeclarativeDebugTrace::endRange(QDeclarativeDebugTrace::Compiling);
 }
@@ -1103,7 +1103,7 @@ void QDeclarativeTypeData::resolveTypes()
         QUrl url;
         int majorVersion;
         int minorVersion;
-        QDeclarativeImportedNamespace *typeNamespace = 0;
+        QDeclarativeImportedNamespace *typeNamespace = nullptr;
         QString errorString;
 
         if (!m_imports.resolveType(typeName, &ref.type, &url, &majorVersion, &minorVersion,
@@ -1123,11 +1123,11 @@ void QDeclarativeTypeData::resolveTypes()
                 if (QDeclarativeQmldirData *qmldir = qmldirForUrl(finalUrl().resolved(QUrl(QLatin1String("./qmldir"))))) {
                     m_imports.addImport(importDatabase, QLatin1String("."),
                                         QString(), -1, -1, QDeclarativeScriptParser::Import::Implicit,
-                                        qmldir->dirComponents(), 0);
+                                        qmldir->dirComponents(), nullptr);
                 } else {
                     m_imports.addImport(importDatabase, QLatin1String("."),
                                         QString(), -1, -1, QDeclarativeScriptParser::Import::Implicit,
-                                        QDeclarativeDirComponents(), 0);
+                                        QDeclarativeDirComponents(), nullptr);
                 }
                 if (m_imports.resolveType(typeName, &ref.type, &url, &majorVersion, &minorVersion,
                                            &typeNamespace, &errorString) || typeNamespace) {
@@ -1182,7 +1182,7 @@ QDeclarativeQmldirData *QDeclarativeTypeData::qmldirForUrl(const QUrl &url)
         if (m_qmldirs.at(ii)->url() == url)
             return m_qmldirs.at(ii);
     }
-    return 0;
+    return nullptr;
 }
 
 QDeclarativeScriptData::QDeclarativeScriptData(const QUrl &url)

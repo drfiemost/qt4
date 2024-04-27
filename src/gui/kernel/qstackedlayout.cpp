@@ -137,7 +137,7 @@ public:
     \sa addWidget(), insertWidget()
 */
 QStackedLayout::QStackedLayout()
-    : QLayout(*new QStackedLayoutPrivate, 0, 0)
+    : QLayout(*new QStackedLayoutPrivate, nullptr, nullptr)
 {
 }
 
@@ -148,7 +148,7 @@ QStackedLayout::QStackedLayout()
     manage the geometry of its children.
 */
 QStackedLayout::QStackedLayout(QWidget *parent)
-    : QLayout(*new QStackedLayoutPrivate, 0, parent)
+    : QLayout(*new QStackedLayoutPrivate, nullptr, parent)
 {
 }
 
@@ -157,7 +157,7 @@ QStackedLayout::QStackedLayout(QWidget *parent)
     the given \a parentLayout.
 */
 QStackedLayout::QStackedLayout(QLayout *parentLayout)
-    : QLayout(*new QStackedLayoutPrivate, parentLayout, 0)
+    : QLayout(*new QStackedLayoutPrivate, parentLayout, nullptr)
 {
 }
 
@@ -251,7 +251,7 @@ QLayoutItem *QStackedLayout::takeAt(int index)
 {
     Q_D(QStackedLayout);
     if (index <0 || index >= d->list.size())
-        return 0;
+        return nullptr;
     QLayoutItem *item = d->list.takeAt(index);
     if (index == d->index) {
         d->index = -1;
@@ -294,7 +294,7 @@ void QStackedLayout::setCurrentIndex(int index)
         parent->setUpdatesEnabled(false);
     }
 
-    QPointer<QWidget> fw = parent ? parent->window()->focusWidget() : 0;
+    QPointer<QWidget> fw = parent ? parent->window()->focusWidget() : nullptr;
     const bool focusWasOnOldPage = fw && (prev && prev->isAncestorOf(fw));
 
     if (prev) {
@@ -374,7 +374,7 @@ void QStackedLayout::setCurrentWidget(QWidget *widget)
 QWidget *QStackedLayout::currentWidget() const
 {
     Q_D(const QStackedLayout);
-    return d->index >= 0 ? d->list.at(d->index)->widget() : 0;
+    return d->index >= 0 ? d->list.at(d->index)->widget() : nullptr;
 }
 
 /*!
@@ -387,7 +387,7 @@ QWidget *QStackedLayout::widget(int index) const
 {
     Q_D(const QStackedLayout);
      if (index < 0 || index >= d->list.size())
-        return 0;
+        return nullptr;
     return d->list.at(index)->widget();
 }
 

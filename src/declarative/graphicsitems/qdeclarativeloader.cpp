@@ -48,7 +48,7 @@
 QT_BEGIN_NAMESPACE
 
 QDeclarativeLoaderPrivate::QDeclarativeLoaderPrivate()
-    : item(0), component(0), ownComponent(false), updatingSize(false),
+    : item(nullptr), component(nullptr), ownComponent(false), updatingSize(false),
       itemWidthValid(false), itemHeightValid(false)
 {
 }
@@ -73,7 +73,7 @@ void QDeclarativeLoaderPrivate::clear()
 {
     if (ownComponent) {
         component->deleteLater();
-        component = 0;
+        component = nullptr;
         ownComponent = false;
     }
     source = QUrl();
@@ -90,11 +90,11 @@ void QDeclarativeLoaderPrivate::clear()
         if (item->scene()) {
             item->scene()->removeItem(item);
         } else {
-            item->setParentItem(0);
+            item->setParentItem(nullptr);
             item->setVisible(false);
         }
         item->deleteLater();
-        item = 0;
+        item = nullptr;
     }
 }
 
@@ -341,7 +341,7 @@ void QDeclarativeLoader::setSourceComponent(QDeclarativeComponent *comp)
 
 void QDeclarativeLoader::resetSourceComponent()
 {
-    setSourceComponent(0);
+    setSourceComponent(nullptr);
 }
 
 void QDeclarativeLoaderPrivate::load()

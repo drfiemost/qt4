@@ -69,26 +69,26 @@ public:
     void polish(QPalette &);
 
     void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p,
-                       const QWidget *w = 0) const;
+                       const QWidget *w = nullptr) const;
     void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
-                     const QWidget *w = 0) const;
-    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = 0) const;
+                     const QWidget *w = nullptr) const;
+    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = nullptr) const;
     void drawComplexControl(ComplexControl cc, const QStyleOptionComplex *opt, QPainter *p,
-                            const QWidget *w = 0) const;
+                            const QWidget *w = nullptr) const;
     QSize sizeFromContents(ContentsType ct, const QStyleOption *opt,
-                           const QSize &contentsSize, const QWidget *widget = 0) const;
+                           const QSize &contentsSize, const QWidget *widget = nullptr) const;
 
-    int pixelMetric(PixelMetric pm, const QStyleOption *option = 0, const QWidget *widget = 0) const;
+    int pixelMetric(PixelMetric pm, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
 
-    int styleHint(StyleHint hint, const QStyleOption *opt = 0, const QWidget *widget = 0,
-                  QStyleHintReturn *returnData = 0) const;
+    int styleHint(StyleHint hint, const QStyleOption *opt = nullptr, const QWidget *widget = nullptr,
+                  QStyleHintReturn *returnData = nullptr) const;
 
     QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                           const QWidget *widget = 0) const;
+                           const QWidget *widget = nullptr) const;
 
 protected Q_SLOTS:
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
-                                     const QWidget *widget = 0) const;
+                                     const QWidget *widget = nullptr) const;
 
 protected:
     bool eventFilter(QObject *o, QEvent *e);

@@ -105,7 +105,7 @@ class DocumentImpl;
 class NodeImpl 
 {
 public:
-    NodeImpl() : type(Element), document(0), parent(0) {}
+    NodeImpl() : type(Element), document(nullptr), parent(nullptr) {}
     virtual ~NodeImpl() { 
         for (int ii = 0; ii < children.count(); ++ii)
             delete children.at(ii);
@@ -148,7 +148,7 @@ public:
 class DocumentImpl : public QDeclarativeRefCount, public NodeImpl
 {
 public:
-    DocumentImpl() : root(0) { type = Document; }
+    DocumentImpl() : root(nullptr) { type = Document; }
     virtual ~DocumentImpl() {
         if (root) delete root;
     }
@@ -631,7 +631,7 @@ QScriptValue Document::load(QScriptEngine *engine, const QByteArray &data)
 {
     Q_ASSERT(engine);
 
-    DocumentImpl *document = 0;
+    DocumentImpl *document = nullptr;
     QStack<NodeImpl *> nodeStack;
 
     QXmlStreamReader reader(data);
@@ -716,7 +716,7 @@ QScriptValue Document::load(QScriptEngine *engine, const QByteArray &data)
 }
 
 Node::Node()
-: d(0)
+: d(nullptr)
 {
 }
 
@@ -733,7 +733,7 @@ Node::~Node()
 
 bool Node::isNull() const
 {
-    return d == 0;
+    return d == nullptr;
 }
 
 QScriptValue NamedNodeMap::length(QScriptContext *context, QScriptEngine *engine)
@@ -774,7 +774,7 @@ QScriptValue NamedNodeMap::create(QScriptEngine *engine, NodeImpl *data, QList<N
 }
 
 NamedNodeMap::NamedNodeMap()
-: d(0), list(0)
+: d(nullptr), list(nullptr)
 {
 }
 
@@ -791,7 +791,7 @@ NamedNodeMap::~NamedNodeMap()
 
 bool NamedNodeMap::isNull()
 {
-    return d == 0;
+    return d == nullptr;
 }
 
 QScriptValue NodeList::length(QScriptContext *context, QScriptEngine *engine)
@@ -831,7 +831,7 @@ QScriptValue NodeList::create(QScriptEngine *engine, NodeImpl *data)
 }
 
 NodeList::NodeList()
-: d(0)
+: d(nullptr)
 {
 }
 
@@ -848,13 +848,13 @@ NodeList::~NodeList()
 
 bool NodeList::isNull()
 {
-    return d == 0;
+    return d == nullptr;
 }
 
 NamedNodeMapClass::QueryFlags NamedNodeMapClass::queryProperty(const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id)
 {
     if (!(flags & HandlesReadAccess))
-        return 0;
+        return nullptr;
 
     NamedNodeMap map = qscriptvalue_cast<NamedNodeMap>(object.data());
     Q_ASSERT(!map.isNull());
@@ -864,7 +864,7 @@ NamedNodeMapClass::QueryFlags NamedNodeMapClass::queryProperty(const QScriptValu
     uint index = nameString.toUInt(&ok);
     if (ok) {
         if ((uint)map.list->count() <= index)
-            return 0;
+            return nullptr;
 
         *id = index;
         return HandlesReadAccess;
@@ -877,7 +877,7 @@ NamedNodeMapClass::QueryFlags NamedNodeMapClass::queryProperty(const QScriptValu
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 QScriptValue NamedNodeMapClass::property(const QScriptValue &object, const QScriptString &, uint id)
@@ -889,16 +889,16 @@ QScriptValue NamedNodeMapClass::property(const QScriptValue &object, const QScri
 NodeListClass::QueryFlags NodeListClass::queryProperty(const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id)
 {
     if (!(flags & HandlesReadAccess))
-        return 0;
+        return nullptr;
 
     bool ok = false;
     uint index = name.toString().toUInt(&ok);
     if (!ok)
-        return 0;
+        return nullptr;
 
     NodeList list = qscriptvalue_cast<NodeList>(object.data());
     if (list.isNull() || (uint)list.d->children.count() <= index)
-        return 0; // ### I think we're meant to raise an exception
+        return nullptr; // ### I think we're meant to raise an exception
 
     *id = index;
     return HandlesReadAccess;
@@ -1018,7 +1018,7 @@ private:
 
 QDeclarativeXMLHttpRequest::QDeclarativeXMLHttpRequest(QNetworkAccessManager *manager)
 : m_state(Unsent), m_errorFlag(false), m_sendFlag(false),
-  m_redirectCount(0), m_gotXml(false), m_textCodec(0), m_network(0), m_nam(manager)
+  m_redirectCount(0), m_gotXml(false), m_textCodec(nullptr), m_network(nullptr), m_nam(manager)
 {
 }
 
@@ -1356,7 +1356,7 @@ bool QDeclarativeXMLHttpRequest::receivedXml() const
 #ifndef QT_NO_TEXTCODEC
 QTextCodec* QDeclarativeXMLHttpRequest::findTextCodec() const
 {
-    QTextCodec *codec = 0;
+    QTextCodec *codec = nullptr;
 
     if (!m_charset.isEmpty()) 
         codec = QTextCodec::codecForName(m_charset);
@@ -1368,10 +1368,10 @@ QTextCodec* QDeclarativeXMLHttpRequest::findTextCodec() const
     }
 
     if (!codec && m_mime == "text/html") 
-        codec = QTextCodec::codecForHtml(m_responseEntityBody, 0);
+        codec = QTextCodec::codecForHtml(m_responseEntityBody, nullptr);
 
     if (!codec)
-        codec = QTextCodec::codecForUtfText(m_responseEntityBody, 0);
+        codec = QTextCodec::codecForUtfText(m_responseEntityBody, nullptr);
 
     if (!codec)
         codec = QTextCodec::codecForName("UTF-8");
@@ -1415,7 +1415,7 @@ void QDeclarativeXMLHttpRequest::destroyNetwork()
     if (m_network) {
         m_network->disconnect();
         m_network->deleteLater();
-        m_network = 0;
+        m_network = nullptr;
     }
 }
 

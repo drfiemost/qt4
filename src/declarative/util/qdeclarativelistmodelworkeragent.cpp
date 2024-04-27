@@ -83,7 +83,7 @@ void QDeclarativeListModelWorkerAgent::Data::changedChange(int index, int count,
 }
 
 QDeclarativeListModelWorkerAgent::QDeclarativeListModelWorkerAgent(QDeclarativeListModel *model)
-    : m_engine(0), 
+    : m_engine(nullptr), 
       m_ref(1), 
       m_orig(model), 
       m_copy(new QDeclarativeListModel(model, this))

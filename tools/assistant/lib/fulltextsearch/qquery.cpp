@@ -27,7 +27,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneQueryPrivate::QCLuceneQueryPrivate()
     : QSharedData()
 {
-    query = 0;
+    query = nullptr;
     deleteCLuceneQuery = true;
 }
 
@@ -163,7 +163,7 @@ bool QCLuceneRangeQuery::isInclusive() const
     lucene::search::RangeQuery *query = 
         static_cast<lucene::search::RangeQuery*> (d->query);
 
-    if (query == 0)
+    if (query == nullptr)
         return false;
 
     return query->isInclusive();
@@ -174,7 +174,7 @@ QString QCLuceneRangeQuery::getField() const
     lucene::search::RangeQuery *query = 
         static_cast<lucene::search::RangeQuery*> (d->query);
 
-    if (query == 0)
+    if (query == nullptr)
         return QString();
 
     return TCharToQString(query->getField());
@@ -225,7 +225,7 @@ quint32 QCLuceneBooleanQuery::getClauseCount() const
     lucene::search::BooleanQuery *query = 
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
-    if (query == 0)
+    if (query == nullptr)
         return 1024;
 
     return quint32(query->getClauseCount());
@@ -236,7 +236,7 @@ quint32 QCLuceneBooleanQuery::getMaxClauseCount() const
     lucene::search::BooleanQuery *query = 
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
-    if (query == 0)
+    if (query == nullptr)
         return 1024;
 
     return quint32(query->getMaxClauseCount());
@@ -247,7 +247,7 @@ void QCLuceneBooleanQuery::setMaxClauseCount(quint32 maxClauseCount)
     lucene::search::BooleanQuery *query = 
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
-    if (query == 0)
+    if (query == nullptr)
         return;
 
     query->setMaxClauseCount(size_t(maxClauseCount));
@@ -264,7 +264,7 @@ void QCLuceneBooleanQuery::add(QCLuceneQuery *query, bool delQuery,
     lucene::search::BooleanQuery *booleanQuery = 
         static_cast<lucene::search::BooleanQuery*> (d->query);
 
-    if (booleanQuery == 0)
+    if (booleanQuery == nullptr)
         return;
 
     booleanQuery->add(query->d->query, delQuery, required, prohibited);
@@ -297,7 +297,7 @@ qint32 QCLucenePhraseQuery::getSlop() const
     lucene::search::PhraseQuery *phraseQuery = 
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
-    if (phraseQuery == 0)
+    if (phraseQuery == nullptr)
         return 0;
 
     return qint32(phraseQuery->getSlop());
@@ -308,7 +308,7 @@ void QCLucenePhraseQuery::setSlop(const qint32 slop)
     lucene::search::PhraseQuery *phraseQuery = 
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
-    if (phraseQuery == 0)
+    if (phraseQuery == nullptr)
         return;
 
     phraseQuery->setSlop(int32_t(slop));
@@ -319,7 +319,7 @@ void QCLucenePhraseQuery::addTerm(const QCLuceneTerm &term)
     lucene::search::PhraseQuery *phraseQuery = 
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
-    if (phraseQuery == 0)
+    if (phraseQuery == nullptr)
         return;
 
     termList.append(term);
@@ -331,7 +331,7 @@ void QCLucenePhraseQuery::addTerm(const QCLuceneTerm &term, qint32 position)
     lucene::search::PhraseQuery *phraseQuery = 
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
-    if (phraseQuery == 0)
+    if (phraseQuery == nullptr)
         return;
 
     termList.insert(position, term);
@@ -344,7 +344,7 @@ QString QCLucenePhraseQuery::getFieldName() const
     lucene::search::PhraseQuery *phraseQuery = 
         static_cast<lucene::search::PhraseQuery*> (d->query);
 
-    if (phraseQuery == 0)
+    if (phraseQuery == nullptr)
         return QString();
 
     return TCharToQString(phraseQuery->getFieldName());

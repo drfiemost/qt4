@@ -149,8 +149,8 @@ namespace qdesigner_internal {
         const QSet<QString> usedPromotedClasses = m_core->promotion()->referencedPromotedClassNames();
 
         QDesignerWidgetDataBaseInterface *widgetDataBase = m_core->widgetDataBase();
-        QDesignerWidgetDataBaseItemInterface *baseClass = 0;
-        QStandardItem *baseItem = 0;
+        QDesignerWidgetDataBaseItemInterface *baseClass = nullptr;
+        QStandardItem *baseItem = nullptr;
 
         const PromotedClasses::const_iterator bcend = promotedClasses.constEnd();
         for (PromotedClasses::const_iterator it = promotedClasses.constBegin(); it !=  bcend; ++it) {
@@ -194,7 +194,7 @@ namespace qdesigner_internal {
             return databaseItem(item, referenced);
 
         *referenced = false;
-        return 0;
+        return nullptr;
     }
 
     QDesignerWidgetDataBaseItemInterface *PromotionModel::databaseItem(const QStandardItem * item, bool *referenced) const {
@@ -202,7 +202,7 @@ namespace qdesigner_internal {
         const QVariant data =  item->data();
         if (data.type() != QVariant::List) {
             *referenced = false;
-            return 0;
+            return nullptr;
         }
 
         const QVariantList dataList = data.toList();

@@ -50,7 +50,7 @@
 QT_BEGIN_NAMESPACE
 
 QHelpDBReader::QHelpDBReader(const QString &dbName)
-    : QObject(0)
+    : QObject(nullptr)
 {
     initObject(dbName,
         QHelpGlobal::uniquifyConnectionName(QLatin1String("QHelpDBReader"),
@@ -69,7 +69,7 @@ void QHelpDBReader::initObject(const QString &dbName, const QString &uniqueId)
     m_dbName = dbName;
     m_uniqueId = uniqueId;
     m_initDone = false;
-    m_query = 0;
+    m_query = nullptr;
     m_useAttributesCache = false;
 }
 

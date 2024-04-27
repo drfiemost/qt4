@@ -51,7 +51,7 @@ class PropertyDialog: public QDialog
 {
     Q_OBJECT
 public:
-    explicit PropertyDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit PropertyDialog(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
 
     void addProperty(const QString &name, QVariant::Type type);
     void setInfo(const QString &caption);

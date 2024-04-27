@@ -94,7 +94,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QGLColormap::QGLColormapData QGLColormap::shared_null = { Q_BASIC_ATOMIC_INITIALIZER(1), 0, 0 };
+QGLColormap::QGLColormapData QGLColormap::shared_null = { Q_BASIC_ATOMIC_INITIALIZER(1), nullptr, 0 };
 
 /*!
     Construct a QGLColormap.
@@ -128,7 +128,7 @@ QGLColormap::~QGLColormap()
 void QGLColormap::cleanup(QGLColormap::QGLColormapData *x)
 {
     delete x->cells;
-    x->cells = 0;
+    x->cells = nullptr;
     delete x;
 }
 
@@ -156,7 +156,7 @@ void QGLColormap::detach_helper()
     QGLColormapData *x = new QGLColormapData;
     x->ref.storeRelaxed(1);
     x->cmapHandle = 0;
-    x->cells = 0;
+    x->cells = nullptr;
     if (d->cells) {
         x->cells = new QVector<QRgb>(256);
         *x->cells = *d->cells;
@@ -242,7 +242,7 @@ QColor QGLColormap::entryColor(int idx) const
 */
 bool QGLColormap::isEmpty() const
 {
-    return d == &shared_null || d->cells == 0 || d->cells->size() == 0 || d->cmapHandle == 0;
+    return d == &shared_null || d->cells == nullptr || d->cells->size() == 0 || d->cmapHandle == 0;
 }
 
 

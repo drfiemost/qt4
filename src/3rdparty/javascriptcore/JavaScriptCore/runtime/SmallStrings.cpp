@@ -46,7 +46,7 @@ private:
 
 SmallStringsStorage::SmallStringsStorage()
 {
-    UChar* characterBuffer = 0;
+    UChar* characterBuffer = nullptr;
     RefPtr<UStringImpl> baseString = UStringImpl::createUninitialized(numCharactersToStore, characterBuffer);
     for (unsigned i = 0; i < numCharactersToStore; ++i) {
         characterBuffer[i] = i;
@@ -55,13 +55,13 @@ SmallStringsStorage::SmallStringsStorage()
 }
 
 SmallStrings::SmallStrings()
-    : m_emptyString(0)
-    , m_storage(0)
+    : m_emptyString(nullptr)
+    , m_storage(nullptr)
 {
     COMPILE_ASSERT(numCharactersToStore == sizeof(m_singleCharacterStrings) / sizeof(m_singleCharacterStrings[0]), IsNumCharactersConstInSyncWithClassUsage);
 
     for (unsigned i = 0; i < numCharactersToStore; ++i)
-        m_singleCharacterStrings[i] = 0;
+        m_singleCharacterStrings[i] = nullptr;
 }
 
 SmallStrings::~SmallStrings()

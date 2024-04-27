@@ -299,14 +299,14 @@ static QByteArray slurpEscapedString(const QList<QByteArray> &lines, int &l,
                     while ((c = line[offset]) >= '0' && c <= '7')
                         if (++offset == line.length())
                             goto premature_eol;
-                    msg += line.mid(stoff, offset - stoff).toUInt(0, 8);
+                    msg += line.mid(stoff, offset - stoff).toUInt(nullptr, 8);
                     break;
                 case 'x':
                     stoff = offset;
                     while (isxdigit(line[offset]))
                         if (++offset == line.length())
                             goto premature_eol;
-                    msg += line.mid(stoff, offset - stoff).toUInt(0, 16);
+                    msg += line.mid(stoff, offset - stoff).toUInt(nullptr, 16);
                     break;
                 default:
                     cd.appendError(QString::fromLatin1(
@@ -755,7 +755,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &cd)
         QLocale::Country c;
         Translator::languageAndCountry(translator.languageCode(), &l, &c);
         const char *gettextRules;
-        if (getNumerusInfo(l, c, 0, 0, &gettextRules))
+        if (getNumerusInfo(l, c, nullptr, nullptr, &gettextRules))
             addPoHeader(headers, hdrOrder, "Plural-Forms", QLatin1String(gettextRules));
         addPoHeader(headers, hdrOrder, "X-Language", translator.languageCode());
     }

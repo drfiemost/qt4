@@ -69,7 +69,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerLocalsModel
 public:
     QScriptDebuggerLocalsModel(QScriptDebuggerJobSchedulerInterface *jobScheduler,
                                QScriptDebuggerCommandSchedulerInterface *commandScheduler,
-                               QObject *parent = 0);
+                               QObject *parent = nullptr);
     ~QScriptDebuggerLocalsModel();
 
     void init(int frameIndex);

@@ -68,7 +68,7 @@ QT_BEGIN_NAMESPACE
     Constructs an empty QX11Info object.
 */
 QX11Info::QX11Info()
-    : x11data(0)
+    : x11data(nullptr)
 {
 }
 
@@ -113,7 +113,7 @@ QX11Info::~QX11Info()
 
 void QX11Info::copyX11Data(const QPaintDevice *fromDevice)
 {
-    QX11InfoData *xd = 0;
+    QX11InfoData *xd = nullptr;
     if (fromDevice) {
         if (fromDevice->devType() == QInternal::Widget)
             xd = static_cast<const QWidget *>(fromDevice)->x11Info().x11data;
@@ -131,7 +131,7 @@ void QX11Info::copyX11Data(const QPaintDevice *fromDevice)
 
 void QX11Info::cloneX11Data(const QPaintDevice *fromDevice)
 {
-    QX11InfoData *d = 0;
+    QX11InfoData *d = nullptr;
     if (fromDevice) {
         QX11InfoData *xd;
         if (fromDevice->devType() == QInternal::Widget) {
@@ -176,7 +176,7 @@ void QX11Info::setX11Data(const QX11InfoData* d)
 
 QX11InfoData* QX11Info::getX11Data(bool def) const
 {
-    QX11InfoData* res = 0;
+    QX11InfoData* res = nullptr;
     if (def) {
         res = new QX11InfoData;
         res->ref = 0;
@@ -346,7 +346,7 @@ void QX11Info::setAppUserTime(unsigned long time)
 
 Display *QX11Info::display()
 {
-    return X11 ? X11->display : 0;
+    return X11 ? X11->display : nullptr;
 }
 
 /*!
@@ -389,7 +389,7 @@ Qt::HANDLE QX11Info::appColormap(int screen)
 
 void *QX11Info::appVisual(int screen)
 {
-    return X11 ? X11->screens[screen == -1 ? X11->defaultScreen : screen].visual : 0;
+    return X11 ? X11->screens[screen == -1 ? X11->defaultScreen : screen].visual : nullptr;
 }
 
 /*!

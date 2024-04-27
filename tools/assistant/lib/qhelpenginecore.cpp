@@ -264,7 +264,7 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
 
     if (d->collectionHandler) {
         delete d->collectionHandler;
-        d->collectionHandler = 0;
+        d->collectionHandler = nullptr;
         d->clearMaps();
     }
     d->init(fileName, this);
@@ -317,7 +317,7 @@ QString QHelpEngineCore::namespaceName(const QString &documentationFileName)
 {
     QHelpDBReader reader(documentationFileName,
         QHelpGlobal::uniquifyConnectionName(QLatin1String("GetNamespaceName"),
-        QThread::currentThread()), 0);
+        QThread::currentThread()), nullptr);
     if (reader.init())
         return reader.namespaceName();
     return QString();
@@ -562,7 +562,7 @@ QUrl QHelpEngineCore::findFile(const QUrl &url) const
     QString virtualFolder = filePath.mid(0, filePath.indexOf(QLatin1Char('/'), 1));
     filePath = filePath.mid(virtualFolder.length()+1);
 
-    QHelpDBReader *defaultReader = 0;
+    QHelpDBReader *defaultReader = nullptr;
     if (d->readerMap.contains(ns)) {
         defaultReader = d->readerMap.value(ns);
         if (defaultReader->fileExists(virtualFolder, filePath))
@@ -613,7 +613,7 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
     filePath = filePath.mid(virtualFolder.length()+1);
 
     QByteArray ba;
-    QHelpDBReader *defaultReader = 0;
+    QHelpDBReader *defaultReader = nullptr;
     if (d->readerMap.contains(ns)) {
         defaultReader = d->readerMap.value(ns);
         ba = defaultReader->fileData(virtualFolder, filePath);
@@ -701,7 +701,7 @@ bool QHelpEngineCore::setCustomValue(const QString &key, const QVariant &value)
 QVariant QHelpEngineCore::metaData(const QString &documentationFileName,
                                    const QString &name)
 {
-    QHelpDBReader reader(documentationFileName, QLatin1String("GetMetaData"), 0);
+    QHelpDBReader reader(documentationFileName, QLatin1String("GetMetaData"), nullptr);
 
     if (reader.init())
         return reader.metaData(name);

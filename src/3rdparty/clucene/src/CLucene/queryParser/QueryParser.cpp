@@ -35,8 +35,8 @@ CL_NS_DEF(queryParser)
 		if ( _field )
 			field = STRDUP_TtoT(_field);
 		else
-			field = NULL;
-		tokens = NULL;
+			field = nullptr;
+		tokens = nullptr;
 		lowercaseExpandedTerms = true;
 	}
 
@@ -79,7 +79,7 @@ CL_NS_DEF(queryParser)
 		CND_CONDITION(r != NULL, "Could not allocate memory for StringReader r");
 
 		//Pointer for the return value
-		Query* ret = NULL;
+		Query* ret = nullptr;
 
 		try{
 			//Parse the query managed by the StringReader R and return a parsed Query instance
@@ -119,7 +119,7 @@ CL_NS_DEF(queryParser)
 
 		//Return the parsed Query instance
 		Query* ret = MatchQuery(field);
-		this->tokens = NULL;
+		this->tokens = nullptr;
 		return ret;
 	}
 
@@ -181,7 +181,7 @@ CL_NS_DEF(queryParser)
 
 		CL_NS_STD(vector)<BooleanClause*> clauses;
 
-		Query* q = NULL;
+		Query* q = nullptr;
 
 		int32_t mods = MOD_NONE;
 		int32_t conj = CONJ_NONE;
@@ -213,7 +213,7 @@ CL_NS_DEF(queryParser)
 			mods = MatchModifier();
 
 			q = MatchClause(field);
-			if ( q != NULL )
+			if ( q != nullptr )
 				AddClause(clauses, conj, mods, q);
 		}
 
@@ -243,11 +243,11 @@ CL_NS_DEF(queryParser)
 	//Pre  - field != NULL
 	//Post -
 
-		Query* q = NULL;
+		Query* q = nullptr;
 		const TCHAR* sfield = field;
 		bool delField = false;
 
-		QueryToken *DelToken = NULL;
+		QueryToken *DelToken = nullptr;
 
 		//match for [TERM <COLON>]
 		QueryToken* term = tokens->extract();
@@ -264,7 +264,7 @@ CL_NS_DEF(queryParser)
 			_CLDELETE(term);
 		}else{
 			tokens->push(term);
-			term = NULL;
+			term = nullptr;
 		}
 
 		// match for
@@ -309,18 +309,18 @@ CL_NS_DEF(queryParser)
 	//Pre  - field != NULL
 	//Post -
 
-		QueryToken* term = NULL;
-		QueryToken* slop = NULL;
-		QueryToken* boost = NULL;
+		QueryToken* term = nullptr;
+		QueryToken* slop = nullptr;
+		QueryToken* boost = nullptr;
 
 		bool prefix = false;
 		bool wildcard = false;
 		bool fuzzy = false;
 		bool rangein = false;
-		Query* q = NULL;
+		Query* q = nullptr;
 
 		term = tokens->extract();
-		QueryToken* DelToken = NULL; //Token that is about to be deleted
+		QueryToken* DelToken = nullptr; //Token that is about to be deleted
 
 		switch(term->Type){
 			case QueryToken::TERM:
@@ -431,7 +431,7 @@ CL_NS_DEF(queryParser)
 				quotedValue[_tcslen(quotedValue)-1] = '\0';
 
 				int32_t islop = phraseSlop;
-				if(slop != NULL ){
+				if(slop != nullptr ){
 				   try {
                        TCHAR* end; //todo: should parse using float...
 					   islop = (int32_t)_tcstoi64(slop->Value+1, &end, 10);
@@ -448,7 +448,7 @@ CL_NS_DEF(queryParser)
 		_CLDELETE(term);
 
 
-		if( q!=NULL && boost != NULL ){
+		if( q!=nullptr && boost != nullptr ){
 			qreal f = 1.0F;
 			try {
 				TCHAR* tmp;

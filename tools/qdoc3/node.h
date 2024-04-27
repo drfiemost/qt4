@@ -197,7 +197,7 @@ class Node
     PageType pageType() const { return pageTyp; }
     virtual void addPageKeywords(const QString& ) { }
 
-    void clearRelated() { rel = 0; }
+    void clearRelated() { rel = nullptr; }
 
     virtual QString fileBase() const;
     QString guid() const;

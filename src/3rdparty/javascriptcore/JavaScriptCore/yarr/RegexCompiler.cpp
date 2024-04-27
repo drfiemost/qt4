@@ -719,7 +719,7 @@ const char* compileRegex(const UString& patternString, RegexPattern& pattern)
 
     constructor.setupOffsets();
 
-    return NULL;
+    return nullptr;
 };
 
 

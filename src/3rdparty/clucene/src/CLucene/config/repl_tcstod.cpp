@@ -11,7 +11,7 @@
 double lucene_tcstod(const TCHAR *value, TCHAR **end){
     int32_t len = _tcslen(value)+1;
     char* avalue=_CL_NEWARRAY(char,len);
-    char* aend=NULL;
+    char* aend=nullptr;
     STRCPY_TtoA(avalue,value,len);
     
     double ret = strtod(avalue,&aend);

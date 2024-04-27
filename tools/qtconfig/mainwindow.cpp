@@ -180,7 +180,7 @@ MainWindow::MainWindow()
     : ui(new Ui::MainWindow),
       editPalette(palette()),
       previewPalette(palette()),
-      previewstyle(0)
+      previewstyle(nullptr)
 {
     ui->setupUi(this);
     statusBar();
@@ -661,7 +661,7 @@ void MainWindow::updateStyleLayout()
 
 void MainWindow::styleSelected(const QString &stylename)
 {
-    QStyle *style = 0;
+    QStyle *style = nullptr;
     if (stylename == desktopThemeName) {
         setModified(true);
     } else {

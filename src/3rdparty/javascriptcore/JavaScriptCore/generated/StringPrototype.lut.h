@@ -40,9 +40,9 @@ static const struct HashTableValue stringTableValues[36] = {
    { "trim", DontEnum|Function, (intptr_t)stringProtoFuncTrim, (intptr_t)0 },
    { "trimLeft", DontEnum|Function, (intptr_t)stringProtoFuncTrimLeft, (intptr_t)0 },
    { "trimRight", DontEnum|Function, (intptr_t)stringProtoFuncTrimRight, (intptr_t)0 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable stringTable =
-    { 133, 127, stringTableValues, 0 };
+    { 133, 127, stringTableValues, nullptr };
 } // namespace

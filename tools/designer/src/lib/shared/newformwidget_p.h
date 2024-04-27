@@ -90,7 +90,7 @@ public:
     virtual ~NewFormWidget();
 
     virtual bool hasCurrentTemplate() const;
-    virtual QString currentTemplate(QString *errorMessage = 0);
+    virtual QString currentTemplate(QString *errorMessage = nullptr);
 
     // Convenience for implementing file dialogs with preview
     static QImage grabForm(QDesignerFormEditorInterface *core,

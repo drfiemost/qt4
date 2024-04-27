@@ -63,7 +63,7 @@ Q_DECLARE_EXTENSION_INTERFACE(QDesignerTaskMenuExtension, "com.trolltech.Qt.Desi
 
 
 inline QAction *QDesignerTaskMenuExtension::preferredEditAction() const
-{ return 0; }
+{ return nullptr; }
 
 QT_END_NAMESPACE
 

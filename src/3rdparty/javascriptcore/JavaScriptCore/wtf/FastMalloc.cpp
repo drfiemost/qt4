@@ -200,7 +200,7 @@ TryMallocReturnValue tryFastZeroedMalloc(size_t n)
 {
     void* result;
     if (!tryFastMalloc(n).getValue(result))
-        return 0;
+        return nullptr;
     memset(result, 0, n);
     return result;
 }
@@ -732,8 +732,8 @@ static inline void *SLL_Pop(void **list) {
 // function is called.
 static inline void SLL_PopRange(void **head, int N, void **start, void **end) {
   if (N == 0) {
-    *start = NULL;
-    *end = NULL;
+    *start = nullptr;
+    *end = nullptr;
     return;
   }
 
@@ -746,7 +746,7 @@ static inline void SLL_PopRange(void **head, int N, void **start, void **end) {
   *end = tmp;
   *head = SLL_Next(tmp);
   // Unlink range from list.
-  SLL_SetNext(tmp, NULL);
+  SLL_SetNext(tmp, nullptr);
 }
 
 static inline void SLL_PushRange(void **head, void *start, void *end) {
@@ -931,8 +931,8 @@ static void InitSizeClasses() {
 // Metadata allocator -- keeps stats about how many bytes allocated
 static uint64_t metadata_system_bytes = 0;
 static void* MetaDataAlloc(size_t bytes) {
-  void* result = TCMalloc_SystemAlloc(bytes, 0);
-  if (result != NULL) {
+  void* result = TCMalloc_SystemAlloc(bytes, nullptr);
+  if (result != nullptr) {
     metadata_system_bytes += bytes;
   }
   return result;
@@ -965,16 +965,16 @@ class PageHeapAllocator {
   void Init() {
     ASSERT(kAlignedSize <= kAllocIncrement);
     inuse_ = 0;
-    allocated_regions_ = 0;
-    free_area_ = NULL;
+    allocated_regions_ = nullptr;
+    free_area_ = nullptr;
     free_avail_ = 0;
-    free_list_ = NULL;
+    free_list_ = nullptr;
   }
 
   T* New() {
     // Consult free list
     void* result;
-    if (free_list_ != NULL) {
+    if (free_list_ != nullptr) {
       result = free_list_;
       free_list_ = *(reinterpret_cast<void**>(result));
     } else {
@@ -1120,8 +1120,8 @@ static inline void DLL_Init(Span* list) {
 static inline void DLL_Remove(Span* span) {
   span->prev->next = span->next;
   span->next->prev = span->prev;
-  span->prev = NULL;
-  span->next = NULL;
+  span->prev = nullptr;
+  span->next = nullptr;
 }
 
 static ALWAYS_INLINE bool DLL_IsEmpty(const Span* list) {
@@ -1452,11 +1452,11 @@ void TCMalloc_PageHeap::init()
 
 void TCMalloc_PageHeap::initializeScavenger()
 {
-  pthread_mutex_init(&m_scavengeMutex, 0);
-  pthread_cond_init(&m_scavengeCondition, 0);
+  pthread_mutex_init(&m_scavengeMutex, nullptr);
+  pthread_cond_init(&m_scavengeCondition, nullptr);
   m_scavengeThreadActive = true;
   pthread_t thread;
-  pthread_create(&thread, 0, runScavengerThread, this);
+  pthread_create(&thread, nullptr, runScavengerThread, this);
 }
 
 void* TCMalloc_PageHeap::runScavengerThread(void* context)
@@ -1544,7 +1544,7 @@ inline Span* TCMalloc_PageHeap::New(Length n) {
 
   // Find first size >= n that has a non-empty list
   for (Length s = n; s < kMaxPages; s++) {
-    Span* ll = NULL;
+    Span* ll = nullptr;
     bool released = false;
     if (!DLL_IsEmpty(&free_[s].normal)) {
       // Found normal span
@@ -1581,7 +1581,7 @@ inline Span* TCMalloc_PageHeap::New(Length n) {
   }
 
   Span* result = AllocLarge(n);
-  if (result != NULL) {
+  if (result != nullptr) {
       ASSERT_SPAN_COMMITTED(result);
       return result;
   }
@@ -1589,7 +1589,7 @@ inline Span* TCMalloc_PageHeap::New(Length n) {
   // Grow the heap and try again
   if (!GrowHeap(n)) {
     ASSERT(Check());
-    return NULL;
+    return nullptr;
   }
 
   return AllocLarge(n);
@@ -1599,14 +1599,14 @@ Span* TCMalloc_PageHeap::AllocLarge(Length n) {
   // find the best span (closest to n in size).
   // The following loops implements address-ordered best-fit.
   bool from_released = false;
-  Span *best = NULL;
+  Span *best = nullptr;
 
   // Search through normal list
   for (Span* span = large_.normal.next;
        span != &large_.normal;
        span = span->next) {
     if (span->length >= n) {
-      if ((best == NULL)
+      if ((best == nullptr)
           || (span->length < best->length)
           || ((span->length == best->length) && (span->start < best->start))) {
         best = span;
@@ -1620,7 +1620,7 @@ Span* TCMalloc_PageHeap::AllocLarge(Length n) {
        span != &large_.returned;
        span = span->next) {
     if (span->length >= n) {
-      if ((best == NULL)
+      if ((best == nullptr)
           || (span->length < best->length)
           || ((span->length == best->length) && (span->start < best->start))) {
         best = span;
@@ -1629,7 +1629,7 @@ Span* TCMalloc_PageHeap::AllocLarge(Length n) {
     }
   }
 
-  if (best != NULL) {
+  if (best != nullptr) {
     Carve(best, n, from_released);
     if (best->decommitted) {
         TCMalloc_SystemCommit(reinterpret_cast<void*>(best->start << kPageShift), static_cast<size_t>(n << kPageShift));
@@ -1650,7 +1650,7 @@ Span* TCMalloc_PageHeap::AllocLarge(Length n) {
     free_pages_ -= n;
     return best;
   }
-  return NULL;
+  return nullptr;
 }
 
 Span* TCMalloc_PageHeap::Split(Span* span, Length n) {
@@ -1734,7 +1734,7 @@ inline void TCMalloc_PageHeap::Delete(Span* span) {
   const PageID p = span->start;
   const Length n = span->length;
   Span* prev = GetDescriptor(p-1);
-  if (prev != NULL && prev->free) {
+  if (prev != nullptr && prev->free) {
     // Merge preceding span into this span
     ASSERT(prev->start + prev->length == p);
     const Length len = prev->length;
@@ -1751,7 +1751,7 @@ inline void TCMalloc_PageHeap::Delete(Span* span) {
     Event(span, 'L', len);
   }
   Span* next = GetDescriptor(p+n);
-  if (next != NULL && next->free) {
+  if (next != nullptr && next->free) {
     // Merge next span into this span
     ASSERT(next->start == p+n);
     const Length len = next->length;
@@ -1941,13 +1941,13 @@ bool TCMalloc_PageHeap::GrowHeap(Length n) {
   Length ask = (n>kMinSystemAlloc) ? n : static_cast<Length>(kMinSystemAlloc);
   size_t actual_size;
   void* ptr = TCMalloc_SystemAlloc(ask << kPageShift, &actual_size, kPageSize);
-  if (ptr == NULL) {
+  if (ptr == nullptr) {
     if (n < ask) {
       // Try growing just "n" pages
       ask = n;
       ptr = TCMalloc_SystemAlloc(ask << kPageShift, &actual_size, kPageSize);
     }
-    if (ptr == NULL) return false;
+    if (ptr == nullptr) return false;
   }
   ask = actual_size >> kPageShift;
 
@@ -2050,7 +2050,7 @@ class TCMalloc_ThreadCache_FreeList {
 
  public:
   void Init() {
-    list_ = NULL;
+    list_ = nullptr;
     length_ = 0;
     lowater_ = 0;
   }
@@ -2062,7 +2062,7 @@ class TCMalloc_ThreadCache_FreeList {
 
   // Is list empty?
   bool empty() const {
-    return list_ == NULL;
+    return list_ == nullptr;
   }
 
   // Low-water mark management
@@ -2421,7 +2421,7 @@ static ALWAYS_INLINE void setThreadHeap(TCMalloc_ThreadCache* heap)
 static PageHeapAllocator<TCMalloc_ThreadCache> threadheap_allocator;
 
 // Linked list of heap objects.  Protected by pageheap_lock.
-static TCMalloc_ThreadCache* thread_heaps = NULL;
+static TCMalloc_ThreadCache* thread_heaps = nullptr;
 static int thread_heap_count = 0;
 
 // Overall thread cache size.  Protected by pageheap_lock.
@@ -2464,7 +2464,7 @@ ALWAYS_INLINE void TCMalloc_Central_FreeList::ReleaseToSpans(void* object) {
   ASSERT(span->refcount > 0);
 
   // If span is empty, move it to non-empty list
-  if (span->objects == NULL) {
+  if (span->objects == nullptr) {
     DLL_Remove(span);
     DLL_Prepend(&nonempty_, span);
     Event(span, 'N', 0);
@@ -2474,7 +2474,7 @@ ALWAYS_INLINE void TCMalloc_Central_FreeList::ReleaseToSpans(void* object) {
   if (false) {
     // Check that object does not occur in list
     unsigned got = 0;
-    for (void* p = span->objects; p != NULL; p = *((void**) p)) {
+    for (void* p = span->objects; p != nullptr; p = *((void**) p)) {
       ASSERT(p != object);
       got++;
     }
@@ -2605,12 +2605,12 @@ void TCMalloc_Central_FreeList::RemoveRange(void **start, void **end, int *N) {
   void *tail = FetchFromSpansSafe();
   if (!tail) {
     // We are completely out of memory.
-    *start = *end = NULL;
+    *start = *end = nullptr;
     *N = 0;
     return;
   }
 
-  SLL_SetNext(tail, NULL);
+  SLL_SetNext(tail, nullptr);
   void *head = tail;
   int count = 1;
   while (count < num) {
@@ -2635,7 +2635,7 @@ void* TCMalloc_Central_FreeList::FetchFromSpansSafe() {
 }
 
 void* TCMalloc_Central_FreeList::FetchFromSpans() {
-  if (DLL_IsEmpty(&nonempty_)) return NULL;
+  if (DLL_IsEmpty(&nonempty_)) return nullptr;
   Span* span = nonempty_.next;
 
   ASSERT(span->objects != NULL);
@@ -2643,7 +2643,7 @@ void* TCMalloc_Central_FreeList::FetchFromSpans() {
   span->refcount++;
   void* result = span->objects;
   span->objects = *(reinterpret_cast<void**>(result));
-  if (span->objects == NULL) {
+  if (span->objects == nullptr) {
     // Move to empty list
     DLL_Remove(span);
     DLL_Prepend(&empty_, span);
@@ -2665,7 +2665,7 @@ ALWAYS_INLINE void TCMalloc_Central_FreeList::Populate() {
     span = pageheap->New(npages);
     if (span) pageheap->RegisterSizeClass(span, size_class_);
   }
-  if (span == NULL) {
+  if (span == nullptr) {
     MESSAGE("allocation failed: %d\n", errno);
     lock_.Lock();
     return;
@@ -2694,7 +2694,7 @@ ALWAYS_INLINE void TCMalloc_Central_FreeList::Populate() {
     num++;
   }
   ASSERT(ptr <= limit);
-  *tail = NULL;
+  *tail = nullptr;
   span->refcount = 0; // No sub-object in use yet
 
   // Add span to list of non-empty spans
@@ -2719,8 +2719,8 @@ inline bool TCMalloc_ThreadCache::SampleAllocation(size_t k) {
 
 void TCMalloc_ThreadCache::Init(ThreadIdentifier tid) {
   size_ = 0;
-  next_ = NULL;
-  prev_ = NULL;
+  next_ = nullptr;
+  prev_ = nullptr;
   tid_  = tid;
   in_setspecific_ = false;
   for (size_t cl = 0; cl < kNumClasses; ++cl) {
@@ -2751,7 +2751,7 @@ ALWAYS_INLINE void* TCMalloc_ThreadCache::Allocate(size_t size) {
   size_t allocationSize = ByteSizeForClass(cl);
   if (list->empty()) {
     FetchFromCentralCache(cl, allocationSize);
-    if (list->empty()) return NULL;
+    if (list->empty()) return nullptr;
   }
   size_ -= allocationSize;
   return list->Pop();
@@ -2904,8 +2904,8 @@ inline TCMalloc_ThreadCache* TCMalloc_ThreadCache::NewHeap(ThreadIdentifier tid)
   TCMalloc_ThreadCache *heap = threadheap_allocator.New();
   heap->Init(tid);
   heap->next_ = thread_heaps;
-  heap->prev_ = NULL;
-  if (thread_heaps != NULL) thread_heaps->prev_ = heap;
+  heap->prev_ = nullptr;
+  if (thread_heaps != nullptr) thread_heaps->prev_ = heap;
   thread_heaps = heap;
   thread_heap_count++;
   RecomputeThreadCacheSize();
@@ -2925,13 +2925,13 @@ inline TCMalloc_ThreadCache* TCMalloc_ThreadCache::GetThreadHeap() {
 }
 
 inline TCMalloc_ThreadCache* TCMalloc_ThreadCache::GetCache() {
-  TCMalloc_ThreadCache* ptr = NULL;
+  TCMalloc_ThreadCache* ptr = nullptr;
   if (!tsd_inited) {
     InitModule();
   } else {
     ptr = GetThreadHeap();
   }
-  if (ptr == NULL) ptr = CreateCacheIfNecessary();
+  if (ptr == nullptr) ptr = CreateCacheIfNecessary();
   return ptr;
 }
 
@@ -2939,7 +2939,7 @@ inline TCMalloc_ThreadCache* TCMalloc_ThreadCache::GetCache() {
 // because we may be in the thread destruction code and may have
 // already cleaned up the cache for this thread.
 inline TCMalloc_ThreadCache* TCMalloc_ThreadCache::GetCacheIfPresent() {
-  if (!tsd_inited) return NULL;
+  if (!tsd_inited) return nullptr;
   void* const p = GetThreadHeap();
   return reinterpret_cast<TCMalloc_ThreadCache*>(p);
 }
@@ -2962,7 +2962,7 @@ void TCMalloc_ThreadCache::InitTSD() {
 #else
   ASSERT(pageheap_lock.IsHeld());
 #endif
-  for (TCMalloc_ThreadCache* h = thread_heaps; h != NULL; h = h->next_) {
+  for (TCMalloc_ThreadCache* h = thread_heaps; h != nullptr; h = h->next_) {
 #if COMPILER(MSVC)
     if (h->tid_ == 0) {
       h->tid_ = GetCurrentThreadId();
@@ -2977,7 +2977,7 @@ void TCMalloc_ThreadCache::InitTSD() {
 
 TCMalloc_ThreadCache* TCMalloc_ThreadCache::CreateCacheIfNecessary() {
   // Initialize per-thread data if necessary
-  TCMalloc_ThreadCache* heap = NULL;
+  TCMalloc_ThreadCache* heap = nullptr;
   {
     SpinLockHolder lockholder(&pageheap_lock);
 
@@ -3001,7 +3001,7 @@ TCMalloc_ThreadCache* TCMalloc_ThreadCache::CreateCacheIfNecessary() {
     // This may be a recursive malloc call from pthread_setspecific()
     // In that case, the heap for this thread has already been created
     // and added to the linked list.  So we search for that first.
-    for (TCMalloc_ThreadCache* h = thread_heaps; h != NULL; h = h->next_) {
+    for (TCMalloc_ThreadCache* h = thread_heaps; h != nullptr; h = h->next_) {
 #if COMPILER(MSVC)
       if (h->tid_ == me) {
 #else
@@ -3012,7 +3012,7 @@ TCMalloc_ThreadCache* TCMalloc_ThreadCache::CreateCacheIfNecessary() {
       }
     }
 
-    if (heap == NULL) heap = NewHeap(me);
+    if (heap == nullptr) heap = NewHeap(me);
   }
 
   // We call pthread_setspecific() outside the lock because it may
@@ -3029,11 +3029,11 @@ TCMalloc_ThreadCache* TCMalloc_ThreadCache::CreateCacheIfNecessary() {
 void TCMalloc_ThreadCache::BecomeIdle() {
   if (!tsd_inited) return;              // No caches yet
   TCMalloc_ThreadCache* heap = GetThreadHeap();
-  if (heap == NULL) return;             // No thread cache to remove
+  if (heap == nullptr) return;             // No thread cache to remove
   if (heap->in_setspecific_) return;    // Do not disturb the active caller
 
   heap->in_setspecific_ = true;
-  pthread_setspecific(heap_key, NULL);
+  pthread_setspecific(heap_key, nullptr);
 #ifdef HAVE_TLS
   // Also update the copy in __thread
   threadlocal_heap = NULL;
@@ -3053,7 +3053,7 @@ void TCMalloc_ThreadCache::DestroyThreadCache(void* ptr) {
   // Note that "ptr" cannot be NULL since pthread promises not
   // to invoke the destructor on NULL values, but for safety,
   // we check anyway.
-  if (ptr == NULL) return;
+  if (ptr == nullptr) return;
 #ifdef HAVE_TLS
   // Prevent fast path of GetThreadHeap() from returning heap.
   threadlocal_heap = NULL;
@@ -3067,8 +3067,8 @@ void TCMalloc_ThreadCache::DeleteCache(TCMalloc_ThreadCache* heap) {
 
   // Remove from linked list
   SpinLockHolder h(&pageheap_lock);
-  if (heap->next_ != NULL) heap->next_->prev_ = heap->prev_;
-  if (heap->prev_ != NULL) heap->prev_->next_ = heap->next_;
+  if (heap->next_ != nullptr) heap->next_->prev_ = heap->prev_;
+  if (heap->prev_ != nullptr) heap->prev_->next_ = heap->next_;
   if (thread_heaps == heap) thread_heaps = heap->next_;
   thread_heap_count--;
   RecomputeThreadCacheSize();
@@ -3457,7 +3457,7 @@ static inline void* SpanToMallocResult(Span *span) {
 template <bool crashOnFailure>
 #endif
 static ALWAYS_INLINE void* do_malloc(size_t size) {
-  void* ret = NULL;
+  void* ret = nullptr;
 
 #ifdef WTF_CHANGES
     ASSERT(!isForbidden());
@@ -3477,7 +3477,7 @@ static ALWAYS_INLINE void* do_malloc(size_t size) {
     // Use page-level allocator
     SpinLockHolder h(&pageheap_lock);
     Span* span = pageheap->New(pages(size));
-    if (span != NULL) {
+    if (span != nullptr) {
       ret = SpanToMallocResult(span);
     }
   } else {
@@ -3497,10 +3497,10 @@ static ALWAYS_INLINE void* do_malloc(size_t size) {
 }
 
 static ALWAYS_INLINE void do_free(void* ptr) {
-  if (ptr == NULL) return;
+  if (ptr == nullptr) return;
   ASSERT(pageheap != NULL);  // Should not call free() before malloc()
   const PageID p = reinterpret_cast<uintptr_t>(ptr) >> kPageShift;
-  Span* span = NULL;
+  Span* span = nullptr;
   size_t cl = pageheap->GetSizeClassIfCached(p);
 
   if (cl == 0) {
@@ -3513,11 +3513,11 @@ static ALWAYS_INLINE void do_free(void* ptr) {
     ASSERT(!pageheap->GetDescriptor(p)->sample);
 #endif
     TCMalloc_ThreadCache* heap = TCMalloc_ThreadCache::GetCacheIfPresent();
-    if (heap != NULL) {
+    if (heap != nullptr) {
       heap->Deallocate(ptr, cl);
     } else {
       // Delete directly into central cache
-      SLL_SetNext(ptr, NULL);
+      SLL_SetNext(ptr, nullptr);
       central_cache[cl].InsertRange(ptr, ptr, 1);
     }
   } else {
@@ -3741,7 +3741,7 @@ void* calloc(size_t n, size_t elem_size) {
     
   // Protect against overflow
   if (n > 1 && elem_size && (totalBytes / elem_size) != n)
-    return 0;
+    return nullptr;
 
 #if ENABLE(FAST_MALLOC_MATCH_VALIDATION)
     if (std::numeric_limits<size_t>::max() - sizeof(AllocAlignmentInteger) <= totalBytes)  // If overflow would occur...
@@ -3757,7 +3757,7 @@ void* calloc(size_t n, size_t elem_size) {
     result = static_cast<AllocAlignmentInteger*>(result) + 1;
 #else
     void* result = do_malloc(totalBytes);
-    if (result != NULL) {
+    if (result != nullptr) {
         memset(result, 0, totalBytes);
     }
 #endif
@@ -3801,7 +3801,7 @@ template <bool crashOnFailure>
 ALWAYS_INLINE
 #endif
 void* realloc(void* old_ptr, size_t new_size) {
-  if (old_ptr == NULL) {
+  if (old_ptr == nullptr) {
 #if ENABLE(FAST_MALLOC_MATCH_VALIDATION)
     void* result = malloc(new_size);
 #else
@@ -3817,7 +3817,7 @@ void* realloc(void* old_ptr, size_t new_size) {
     MallocHook::InvokeDeleteHook(old_ptr);
 #endif
     free(old_ptr);
-    return NULL;
+    return nullptr;
   }
 
 #if ENABLE(FAST_MALLOC_MATCH_VALIDATION)
@@ -3833,7 +3833,7 @@ void* realloc(void* old_ptr, size_t new_size) {
   // Get the size of the old entry
   const PageID p = reinterpret_cast<uintptr_t>(old_ptr) >> kPageShift;
   size_t cl = pageheap->GetSizeClassIfCached(p);
-  Span *span = NULL;
+  Span *span = nullptr;
   size_t old_size;
   if (cl == 0) {
     span = pageheap->GetDescriptor(p);
@@ -3852,8 +3852,8 @@ void* realloc(void* old_ptr, size_t new_size) {
   if ((new_size > old_size) || (AllocationSize(new_size) < old_size)) {
     // Need to reallocate
     void* new_ptr = do_malloc(new_size);
-    if (new_ptr == NULL) {
-      return NULL;
+    if (new_ptr == nullptr) {
+      return nullptr;
     }
 #ifndef WTF_CHANGES
     MallocHook::InvokeNewHook(new_ptr, new_size);

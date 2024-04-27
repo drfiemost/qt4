@@ -93,8 +93,8 @@ void QBlittablePixmapData::setBlittable(QBlittable *blittable)
 void QBlittablePixmapData::resize(int width, int height)
 {
 
-    m_blittable.reset(0);
-    m_engine.reset(0);
+    m_blittable.reset(nullptr);
+    m_engine.reset(nullptr);
 #ifdef Q_WS_QPA
     d = QApplicationPrivate::platformIntegration()->screens().at(0)->depth();
 #endif
@@ -144,15 +144,15 @@ void QBlittablePixmapData::fill(const QColor &color)
         // if we could just change the format, e.g. when going from
         // RGB32 -> ARGB8888.
         if (color.alpha() != 255 && !hasAlphaChannel()) {
-            m_blittable.reset(0);
-            m_engine.reset(0);
+            m_blittable.reset(nullptr);
+            m_engine.reset(nullptr);
             m_alpha = true;
         }
 
         uint pixel = PREMUL(color.rgba());
         const QPixelLayout *layout = &qPixelLayouts[blittable()->lock()->format()];
         Q_ASSERT(layout->convertFromARGB32PM);
-        layout->convertFromARGB32PM(&pixel, &pixel, 1, layout, 0);
+        layout->convertFromARGB32PM(&pixel, &pixel, 1, layout, nullptr);
 
         //so premultiplied formats are supported and ARGB32 and RGB32
         blittable()->lock()->fill(pixel);

@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerScriptsModel
 {
     Q_OBJECT
 public:
-    QScriptDebuggerScriptsModel(QObject *parent = 0);
+    QScriptDebuggerScriptsModel(QObject *parent = nullptr);
     ~QScriptDebuggerScriptsModel();
 
     void removeScript(qint64 id);

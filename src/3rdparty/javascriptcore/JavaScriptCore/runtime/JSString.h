@@ -126,7 +126,7 @@ namespace JSC {
                 void* allocation;
                 if (tryFastMalloc(sizeof(Rope) + (ropeLength - 1) * sizeof(Fiber)).getValue(allocation))
                     return adoptRef(new (allocation) Rope(ropeLength));
-                return 0;
+                return nullptr;
             }
 
             ~Rope();
@@ -301,7 +301,7 @@ namespace JSC {
     private:
         enum VPtrStealingHackType { VPtrStealingHack };
         JSString(VPtrStealingHackType) 
-            : JSCell(0)
+            : JSCell(nullptr)
             , m_ropeLength(0)
         {
         }

@@ -1414,7 +1414,7 @@ QTextCursor QTextDocument::find(const QRegExp &expr, const QTextCursor &from, Fi
 */
 QTextObject *QTextDocument::createObject(const QTextFormat &f)
 {
-    QTextObject *obj = 0;
+    QTextObject *obj = nullptr;
     if (f.isListFormat())
         obj = new QTextList(this);
     else if (f.isTableFormat())
@@ -2140,7 +2140,7 @@ bool QTextHtmlExporter::emitCharFormatStyle(const QTextCharFormat &format)
         static const char * const sizeNames[] = {
             "small", "medium", "large", "x-large", "xx-large"
         };
-        const char *name = 0;
+        const char *name = nullptr;
         const int idx = format.intProperty(QTextFormat::FontSizeAdjustment) + 1;
         if (idx >= 0 && idx <= 4) {
             name = sizeNames[idx];
@@ -2906,7 +2906,7 @@ void QTextHtmlExporter::emitFrame(QTextFrame::Iterator frameIt)
         QTextFrame::Iterator next = frameIt;
         ++next;
         if (next.atEnd()
-            && frameIt.currentFrame() == 0
+            && frameIt.currentFrame() == nullptr
             && frameIt.parentFrame() != doc->rootFrame()
             && frameIt.currentBlock().begin().atEnd())
             return;

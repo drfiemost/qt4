@@ -128,7 +128,7 @@ QIcon IconProvider::icon (const QFileInfo &info) const
 
 // ---------------- DialogGui
 DialogGui::DialogGui() :
-    m_iconProvider(0)
+    m_iconProvider(nullptr)
 {
 }
 

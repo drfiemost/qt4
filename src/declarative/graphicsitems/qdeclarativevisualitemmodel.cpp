@@ -217,7 +217,7 @@ QDeclarativeVisualModel::ReleaseFlags QDeclarativeVisualItemModel::release(QDecl
             QDeclarative_setParent_noEvent(item, this);
         }
     }
-    return 0;
+    return nullptr;
 }
 
 bool QDeclarativeVisualItemModel::completePending() const
@@ -331,14 +331,14 @@ public:
     }
 
     struct ObjectRef {
-        ObjectRef(QObject *object=0) : obj(object), ref(1) {}
+        ObjectRef(QObject *object=nullptr) : obj(object), ref(1) {}
         QObject *obj;
         int ref;
     };
     class Cache : public QHash<int, ObjectRef> {
     public:
         QObject *getItem(int index) {
-            QObject *item = 0;
+            QObject *item = nullptr;
             QHash<int,ObjectRef>::iterator it = find(index);
             if (it != end()) {
                 (*it).ref++;
@@ -347,7 +347,7 @@ public:
             return item;
         }
         QObject *item(int index) {
-            QObject *item = 0;
+            QObject *item = nullptr;
             QHash<int, ObjectRef>::const_iterator it = find(index);
             if (it != end())
                 item = (*it).obj;
@@ -623,9 +623,9 @@ QDeclarativeVisualDataModelParts::QDeclarativeVisualDataModelParts(QDeclarativeV
 }
 
 QDeclarativeVisualDataModelPrivate::QDeclarativeVisualDataModelPrivate(QDeclarativeContext *ctxt)
-: m_listModelInterface(0), m_abstractItemModel(0), m_visualItemModel(0), m_delegate(0)
-, m_context(ctxt), m_modelDataPropId(-1), m_parts(0), m_delegateDataType(0), m_metaDataCreated(false)
-, m_metaDataCacheable(false), m_delegateValidated(false), m_completePending(false), m_listAccessor(0)
+: m_listModelInterface(nullptr), m_abstractItemModel(nullptr), m_visualItemModel(nullptr), m_delegate(nullptr)
+, m_context(ctxt), m_modelDataPropId(-1), m_parts(nullptr), m_delegateDataType(nullptr), m_metaDataCreated(false)
+, m_metaDataCacheable(false), m_delegateValidated(false), m_completePending(false), m_listAccessor(nullptr)
 {
 }
 
@@ -659,7 +659,7 @@ QDeclarativeVisualDataModelData *QDeclarativeVisualDataModelPrivate::data(QObjec
 */
 
 QDeclarativeVisualDataModel::QDeclarativeVisualDataModel()
-: QDeclarativeVisualModel(*(new QDeclarativeVisualDataModelPrivate(0)))
+: QDeclarativeVisualModel(*(new QDeclarativeVisualDataModelPrivate(nullptr)))
 {
 }
 
@@ -701,7 +701,7 @@ void QDeclarativeVisualDataModel::setModel(const QVariant &model)
 {
     Q_D(QDeclarativeVisualDataModel);
     delete d->m_listAccessor;
-    d->m_listAccessor = 0;
+    d->m_listAccessor = nullptr;
     d->m_modelVariant = model;
     if (d->m_listModelInterface) {
         // Assume caller has released all items.
@@ -713,7 +713,7 @@ void QDeclarativeVisualDataModel::setModel(const QVariant &model)
                 this, SLOT(_q_itemsRemoved(int,int)));
         QObject::disconnect(d->m_listModelInterface, SIGNAL(itemsMoved(int,int,int)),
                 this, SLOT(_q_itemsMoved(int,int,int)));
-        d->m_listModelInterface = 0;
+        d->m_listModelInterface = nullptr;
     } else if (d->m_abstractItemModel) {
         QObject::disconnect(d->m_abstractItemModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                             this, SLOT(_q_rowsInserted(QModelIndex,int,int)));
@@ -725,7 +725,7 @@ void QDeclarativeVisualDataModel::setModel(const QVariant &model)
                             this, SLOT(_q_rowsMoved(QModelIndex,int,int,QModelIndex,int)));
         QObject::disconnect(d->m_abstractItemModel, SIGNAL(modelReset()), this, SLOT(_q_modelReset()));
         QObject::disconnect(d->m_abstractItemModel, SIGNAL(layoutChanged()), this, SLOT(_q_layoutChanged()));
-        d->m_abstractItemModel = 0;
+        d->m_abstractItemModel = nullptr;
     } else if (d->m_visualItemModel) {
         QObject::disconnect(d->m_visualItemModel, SIGNAL(itemsInserted(int,int)),
                          this, SIGNAL(itemsInserted(int,int)));
@@ -737,7 +737,7 @@ void QDeclarativeVisualDataModel::setModel(const QVariant &model)
                          this, SLOT(_q_createdPackage(int,QDeclarativePackage*)));
         QObject::disconnect(d->m_visualItemModel, SIGNAL(destroyingPackage(QDeclarativePackage*)),
                          this, SLOT(_q_destroyingPackage(QDeclarativePackage*)));
-        d->m_visualItemModel = 0;
+        d->m_visualItemModel = nullptr;
     }
 
     d->m_roles.clear();
@@ -819,7 +819,7 @@ QDeclarativeComponent *QDeclarativeVisualDataModel::delegate() const
 void QDeclarativeVisualDataModel::setDelegate(QDeclarativeComponent *delegate)
 {
     Q_D(QDeclarativeVisualDataModel);
-    bool wasValid = d->m_delegate != 0;
+    bool wasValid = d->m_delegate != nullptr;
     d->m_delegate = delegate;
     d->m_delegateValidated = false;
     if (!wasValid && d->modelCount() && d->m_delegate) {
@@ -967,7 +967,7 @@ QDeclarativeVisualDataModel::ReleaseFlags QDeclarativeVisualDataModel::release(Q
     if (d->m_visualItemModel)
         return d->m_visualItemModel->release(item);
 
-    ReleaseFlags stat = 0;
+    ReleaseFlags stat = nullptr;
     QObject *obj = item;
     bool inPackage = false;
 
@@ -1046,7 +1046,7 @@ QDeclarativeItem *QDeclarativeVisualDataModel::item(int index, const QByteArray 
         return d->m_visualItemModel->item(index, viewId, complete);
 
     if (d->modelCount() <= 0 || !d->m_delegate)
-        return 0;
+        return nullptr;
     QObject *nobj = d->m_cache.getItem(index);
     bool needComplete = false;
     if (!nobj) {
@@ -1143,7 +1143,7 @@ QString QDeclarativeVisualDataModel::stringValue(int index, const QString &name)
         return QString();
 
     QString val;
-    QObject *data = 0;
+    QObject *data = nullptr;
     bool tempData = false;
 
     if (QObject *nobj = d->m_cache.item(index))
@@ -1158,11 +1158,11 @@ QString QDeclarativeVisualDataModel::stringValue(int index, const QString &name)
         QDeclarativePropertyCache::Data *prop = ddata->propertyCache->property(name);
         if (prop) {
             if (prop->propType == QVariant::String) {
-                void *args[] = { &val, 0 };
+                void *args[] = { &val, nullptr };
                 QMetaObject::metacall(data, QMetaObject::ReadProperty, prop->coreIndex, args);
             } else if (prop->propType == qMetaTypeId<QVariant>()) {
                 QVariant v;
-                void *args[] = { &v, 0 };
+                void *args[] = { &v, nullptr };
                 QMetaObject::metacall(data, QMetaObject::ReadProperty, prop->coreIndex, args);
                 val = v.toString();
             }

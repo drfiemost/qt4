@@ -149,7 +149,7 @@ class GraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    GraphicsView(QWidget* parent = 0)
+    GraphicsView(QWidget* parent = nullptr)
         : QGraphicsView(parent)
     {
 #ifdef Q_WS_MAC
@@ -180,7 +180,7 @@ class QPrintPreviewWidgetPrivate : public QWidgetPrivate
     Q_DECLARE_PUBLIC(QPrintPreviewWidget)
 public:
     QPrintPreviewWidgetPrivate()
-        : scene(0), curPage(1),
+        : scene(nullptr), curPage(1),
           viewMode(QPrintPreviewWidget::SinglePageView),
           zoomMode(QPrintPreviewWidget::FitInView),
           zoomFactor(1), initialized(false), fitting(true)

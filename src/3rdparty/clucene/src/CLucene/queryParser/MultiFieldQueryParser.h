@@ -60,7 +60,7 @@ typedef CL_NS(util)::CLHashMap<const TCHAR*,
         * <p>In other words, all the query's terms must appear, but it doesn't matter in
         * what fields they appear.</p>
         */
-		MultiFieldQueryParser(const TCHAR** fields, CL_NS(analysis)::Analyzer* a, BoostMap* boosts = NULL);
+		MultiFieldQueryParser(const TCHAR** fields, CL_NS(analysis)::Analyzer* a, BoostMap* boosts = nullptr);
 		virtual ~MultiFieldQueryParser();
     
         /**

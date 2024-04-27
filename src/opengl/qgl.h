@@ -306,7 +306,7 @@ public:
     QGLContext(const QGLFormat& format);
     virtual ~QGLContext();
 
-    virtual bool create(const QGLContext* shareContext = 0);
+    virtual bool create(const QGLContext* shareContext = nullptr);
     bool isValid() const;
     bool isSharing() const;
     void reset();
@@ -386,7 +386,7 @@ public:
     static QGLContext *fromWindowContext(QWindowContext *platformContext);
 #endif
 protected:
-    virtual bool chooseContext(const QGLContext* shareContext = 0);
+    virtual bool chooseContext(const QGLContext* shareContext = nullptr);
 
 #if defined(Q_WS_WIN)
     virtual int choosePixelFormat(void* pfd, HDC pdc);
@@ -467,12 +467,12 @@ class Q_OPENGL_EXPORT QGLWidget : public QWidget
     Q_OBJECT
     Q_DECLARE_PRIVATE(QGLWidget)
 public:
-    explicit QGLWidget(QWidget* parent=0,
-                       const QGLWidget* shareWidget = 0, Qt::WindowFlags f=0);
-    explicit QGLWidget(QGLContext *context, QWidget* parent=0,
-                       const QGLWidget* shareWidget = 0, Qt::WindowFlags f=0);
-    explicit QGLWidget(const QGLFormat& format, QWidget* parent=0,
-                       const QGLWidget* shareWidget = 0, Qt::WindowFlags f=0);
+    explicit QGLWidget(QWidget* parent=nullptr,
+                       const QGLWidget* shareWidget = nullptr, Qt::WindowFlags f=nullptr);
+    explicit QGLWidget(QGLContext *context, QWidget* parent=nullptr,
+                       const QGLWidget* shareWidget = nullptr, Qt::WindowFlags f=nullptr);
+    explicit QGLWidget(const QGLFormat& format, QWidget* parent=nullptr,
+                       const QGLWidget* shareWidget = nullptr, Qt::WindowFlags f=nullptr);
 
     ~QGLWidget();
 
@@ -493,7 +493,7 @@ public:
     void setFormat(const QGLFormat& format);
 
     const QGLContext* context() const;
-    void setContext(QGLContext* context, const QGLContext* shareContext = 0,
+    void setContext(QGLContext* context, const QGLContext* shareContext = nullptr,
                     bool deleteOldContext = true);
 
     QPixmap renderPixmap(int w = 0, int h = 0, bool useContext = false);

@@ -76,7 +76,7 @@ QScriptDebuggerAgentPrivate *QScriptDebuggerAgentPrivate::get(
     QScriptDebuggerAgent *q)
 {
     if (!q)
-        return 0;
+        return nullptr;
     return q->d_func();
 }
 
@@ -442,7 +442,7 @@ QPair<QList<qint64>, QList<qint64> > QScriptDebuggerAgent::contextsCheckpoint()
 void QScriptDebuggerAgent::nullifyBackendPointer()
 {
     Q_D(QScriptDebuggerAgent);
-    d->backend = 0;
+    d->backend = nullptr;
 }
 
 /*!

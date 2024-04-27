@@ -53,7 +53,7 @@ class FinishPage : public QWizardPage
     Q_OBJECT
 
 public:
-    FinishPage(QWidget *parent = 0);
+    FinishPage(QWidget *parent = nullptr);
     void appendMessage(const QString &msg);
     
 private:

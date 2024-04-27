@@ -104,7 +104,7 @@ void JSGlobalData::storeVPtrs()
 
 JSGlobalData::JSGlobalData(bool isShared)
     : isSharedInstance(isShared)
-    , clientData(0)
+    , clientData(nullptr)
     , arrayTable(fastNew<HashTable>(JSC::arrayTable))
     , dateTable(fastNew<HashTable>(JSC::dateTable))
     , jsonTable(fastNew<HashTable>(JSC::jsonTable))
@@ -138,10 +138,10 @@ JSGlobalData::JSGlobalData(bool isShared)
     , timeoutChecker(new TimeoutChecker)
     , heap(this)
     , initializingLazyNumericCompareFunction(false)
-    , head(0)
-    , dynamicGlobalObject(0)
-    , functionCodeBlockBeingReparsed(0)
-    , firstStringifierToMark(0)
+    , head(nullptr)
+    , dynamicGlobalObject(nullptr)
+    , functionCodeBlockBeingReparsed(nullptr)
+    , firstStringifierToMark(nullptr)
     , markStack(jsArrayVPtr)
 #ifndef NDEBUG
     , mainThreadOnly(false)
@@ -244,7 +244,7 @@ const Vector<Instruction>& JSGlobalData::numericCompareFunction(ExecState* exec)
 {
     if (!lazyNumericCompareFunction.size() && !initializingLazyNumericCompareFunction) {
         initializingLazyNumericCompareFunction = true;
-        RefPtr<FunctionExecutable> function = FunctionExecutable::fromGlobalCode(Identifier(exec, "numericCompare"), exec, 0, makeSource(UString("(function (v1, v2) { return v1 - v2; })")), 0, 0);
+        RefPtr<FunctionExecutable> function = FunctionExecutable::fromGlobalCode(Identifier(exec, "numericCompare"), exec, nullptr, makeSource(UString("(function (v1, v2) { return v1 - v2; })")), nullptr, nullptr);
         lazyNumericCompareFunction = function->bytecode(exec, exec->scopeChain()).instructions();
         initializingLazyNumericCompareFunction = false;
     }

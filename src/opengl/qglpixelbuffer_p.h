@@ -88,7 +88,7 @@ private:
 class QGLPixelBufferPrivate {
     Q_DECLARE_PUBLIC(QGLPixelBuffer)
 public:
-    QGLPixelBufferPrivate(QGLPixelBuffer *q) : q_ptr(q), invalid(true), qctx(0), pbuf(0), ctx(0)
+    QGLPixelBufferPrivate(QGLPixelBuffer *q) : q_ptr(q), invalid(true), qctx(nullptr), pbuf(0), ctx(nullptr)
     {
 #ifdef Q_WS_WIN
         dc = 0;

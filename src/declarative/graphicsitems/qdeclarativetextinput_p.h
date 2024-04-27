@@ -98,7 +98,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTextInput : public QDeclarativeImplicitSizeP
     Q_PROPERTY(bool inputMethodComposing READ isInputMethodComposing NOTIFY inputMethodComposingChanged REVISION 1)
 
 public:
-    QDeclarativeTextInput(QDeclarativeItem* parent=0);
+    QDeclarativeTextInput(QDeclarativeItem* parent=nullptr);
     ~QDeclarativeTextInput();
 
     enum EchoMode {//To match QLineEdit::EchoMode

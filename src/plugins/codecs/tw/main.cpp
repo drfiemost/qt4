@@ -110,7 +110,7 @@ QTextCodec *TWTextCodecs::createForMib(int mib)
     if (mib == QFontBig5Codec::_mibEnum())
         return new QFontBig5Codec;
 #endif
-    return 0;
+    return nullptr;
 }
 
 
@@ -126,7 +126,7 @@ QTextCodec *TWTextCodecs::createForName(const QByteArray &name)
     if (name == QFontBig5Codec::_name() || QFontBig5Codec::_aliases().contains(name))
         return new QFontBig5Codec;
 #endif
-    return 0;
+    return nullptr;
 }
 
 

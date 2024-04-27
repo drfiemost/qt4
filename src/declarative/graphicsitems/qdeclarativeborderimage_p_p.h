@@ -65,7 +65,7 @@ class QDeclarativeBorderImagePrivate : public QDeclarativeImageBasePrivate
 
 public:
     QDeclarativeBorderImagePrivate()
-      : border(0), sciReply(0),
+      : border(nullptr), sciReply(nullptr),
         horizontalTileMode(QDeclarativeBorderImage::Stretch),
         verticalTileMode(QDeclarativeBorderImage::Stretch),
         redirectCount(0)

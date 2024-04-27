@@ -61,8 +61,8 @@ class Q_GUI_EXPORT QUndoCommand
     QUndoCommandPrivate *d;
 
 public:
-    explicit QUndoCommand(QUndoCommand *parent = 0);
-    explicit QUndoCommand(const QString &text, QUndoCommand *parent = 0);
+    explicit QUndoCommand(QUndoCommand *parent = nullptr);
+    explicit QUndoCommand(const QString &text, QUndoCommand *parent = nullptr);
     virtual ~QUndoCommand();
 
     virtual void undo();
@@ -95,7 +95,7 @@ class Q_GUI_EXPORT QUndoStack : public QObject
     Q_PROPERTY(int undoLimit READ undoLimit WRITE setUndoLimit)
 
 public:
-    explicit QUndoStack(QObject *parent = 0);
+    explicit QUndoStack(QObject *parent = nullptr);
     ~QUndoStack();
     void clear();
 

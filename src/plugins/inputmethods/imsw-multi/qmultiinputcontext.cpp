@@ -198,7 +198,7 @@ void QMultiInputContext::changeSlave(QAction *a)
             QInputContext *qic = slaves.at(current);
             QWidget *oldWidget = qic->focusWidget();
             qic->reset();
-            qic->setFocusWidget(0);
+            qic->setFocusWidget(nullptr);
             current = i;
             qic = slaves.at(current);
             qic->setFocusWidget(oldWidget);

@@ -68,7 +68,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QtCrashHandler QSegfaultHandler::callback = 0;
+QtCrashHandler QSegfaultHandler::callback = nullptr;
 
 #if defined(__GLIBC__) && (__GLIBC__ >= 2) && !defined(__UCLIBC__) && !defined(QT_LINUXBASE)
 QT_BEGIN_INCLUDE_NAMESPACE
@@ -250,8 +250,8 @@ QSegfaultHandler::initialize(char **argv, int argc)
     SignalAction.sa_flags = 0;
     SignalAction.sa_handler = qt_signal_handler;
     sigemptyset(&SignalAction.sa_mask);
-    sigaction(SIGSEGV, &SignalAction, NULL);
-    sigaction(SIGBUS, &SignalAction, NULL);
+    sigaction(SIGSEGV, &SignalAction, nullptr);
+    sigaction(SIGBUS, &SignalAction, nullptr);
 }
 
 QT_END_NAMESPACE

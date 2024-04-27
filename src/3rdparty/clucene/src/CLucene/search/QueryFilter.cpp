@@ -56,7 +56,7 @@ BitSet* QueryFilter::bits( IndexReader* reader )
 
 	IndexSearcher s(reader);
 	QFHitCollector hc(bits);
-	s._search(query, NULL, &hc);
+	s._search(query, nullptr, &hc);
     return bits;
 }
 

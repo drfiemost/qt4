@@ -84,7 +84,7 @@ class Q_GUI_EXPORT QGraphicsWidget : public QGraphicsObject, public QGraphicsLay
     Q_PROPERTY(bool autoFillBackground READ autoFillBackground WRITE setAutoFillBackground)
     Q_PROPERTY(QGraphicsLayout* layout READ layout WRITE setLayout NOTIFY layoutChanged)
 public:
-    QGraphicsWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+    QGraphicsWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr);
     ~QGraphicsWidget();
     QGraphicsLayout *layout() const;
     void setLayout(QGraphicsLayout *layout);
@@ -162,8 +162,8 @@ public:
     };
     int type() const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-    virtual void paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    virtual void paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     QRectF boundingRect() const;
     QPainterPath shape() const;
 
@@ -223,7 +223,7 @@ protected:
     virtual void ungrabMouseEvent(QEvent *event);
     virtual void grabKeyboardEvent(QEvent *event);
     virtual void ungrabKeyboardEvent(QEvent *event);
-    QGraphicsWidget(QGraphicsWidgetPrivate &, QGraphicsItem *parent, QGraphicsScene *, Qt::WindowFlags wFlags = 0);
+    QGraphicsWidget(QGraphicsWidgetPrivate &, QGraphicsItem *parent, QGraphicsScene *, Qt::WindowFlags wFlags = nullptr);
 
 private:
     Q_DISABLE_COPY(QGraphicsWidget)

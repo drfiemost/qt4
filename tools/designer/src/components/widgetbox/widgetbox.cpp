@@ -71,7 +71,7 @@ WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::Wi
     l->setSpacing(0);
 
     // Prevent the filter from grabbing focus since Our view has Qt::NoFocus
-    FilterWidget *filterWidget = new FilterWidget(0, FilterWidget::LayoutAlignNone);
+    FilterWidget *filterWidget = new FilterWidget(nullptr, FilterWidget::LayoutAlignNone);
     filterWidget->setRefuseFocus(true);
     connect(filterWidget, SIGNAL(filterChanged(QString)), m_view, SLOT(filter(QString)));
 
@@ -102,7 +102,7 @@ void WidgetBox::handleMousePress(const QString &name, const QString &xml, const 
         return;
 
     DomUI *ui = xmlToUi(name, xml, true);
-    if (ui == 0)
+    if (ui == nullptr)
         return;
     QList<QDesignerDnDItemInterface*> item_list;
     item_list.append(new WidgetBoxDnDItem(core(), ui, global_mouse_pos));
@@ -185,14 +185,14 @@ static const QDesignerMimeData *checkDragEvent(QDropEvent * event,
     const QDesignerMimeData *mimeData = qobject_cast<const QDesignerMimeData *>(event->mimeData());
     if (!mimeData) {
         event->ignore();
-        return 0;
+        return nullptr;
     }
     // If desired, ignore a widget box drag and drop, where widget==0.
     if (!acceptEventsFromWidgetBox) {
         const bool fromWidgetBox = !mimeData->items().first()->widget();
         if (fromWidgetBox) {
             event->ignore();
-            return 0;
+            return nullptr;
         }
     }
 

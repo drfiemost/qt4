@@ -79,15 +79,15 @@ static int qUnregisterGuiGetInterpolator()
 {
     // casts required by Sun CC 5.5
     qRegisterAnimationInterpolator<QColor>(
-        (QVariant (*)(const QColor &, const QColor &, qreal))0);
+        (QVariant (*)(const QColor &, const QColor &, qreal))nullptr);
     qRegisterAnimationInterpolator<QVector2D>(
-        (QVariant (*)(const QVector2D &, const QVector2D &, qreal))0);
+        (QVariant (*)(const QVector2D &, const QVector2D &, qreal))nullptr);
     qRegisterAnimationInterpolator<QVector3D>(
-        (QVariant (*)(const QVector3D &, const QVector3D &, qreal))0);
+        (QVariant (*)(const QVector3D &, const QVector3D &, qreal))nullptr);
     qRegisterAnimationInterpolator<QVector4D>(
-        (QVariant (*)(const QVector4D &, const QVector4D &, qreal))0);
+        (QVariant (*)(const QVector4D &, const QVector4D &, qreal))nullptr);
     qRegisterAnimationInterpolator<QQuaternion>(
-        (QVariant (*)(const QQuaternion &, const QQuaternion &, qreal))0);
+        (QVariant (*)(const QQuaternion &, const QQuaternion &, qreal))nullptr);
 
     return 1;
 }

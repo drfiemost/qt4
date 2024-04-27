@@ -246,14 +246,14 @@ ALWAYS_INLINE CallFrame* Interpreter::slideRegisterWindowForCall(CodeBlock* newC
 
     if (LIKELY(argc == newCodeBlock->m_numParameters)) { // correct number of arguments
         if (UNLIKELY(!registerFile->grow(newEnd)))
-            return 0;
+            return nullptr;
         r += registerOffset;
     } else if (argc < newCodeBlock->m_numParameters) { // too few arguments -- fill in the blanks
         size_t omittedArgCount = newCodeBlock->m_numParameters - argc;
         registerOffset += omittedArgCount;
         newEnd += omittedArgCount;
         if (!registerFile->grow(newEnd))
-            return 0;
+            return nullptr;
         r += registerOffset;
 
         Register* argv = r - RegisterFile::CallFrameHeaderSize - omittedArgCount;
@@ -265,7 +265,7 @@ ALWAYS_INLINE CallFrame* Interpreter::slideRegisterWindowForCall(CodeBlock* newC
         newEnd += numParameters;
 
         if (!registerFile->grow(newEnd))
-            return 0;
+            return nullptr;
         r += registerOffset;
 
         Register* argv = r - RegisterFile::CallFrameHeaderSize - numParameters - argc;
@@ -533,7 +533,7 @@ NEVER_INLINE HandlerInfo* Interpreter::throwException(CallFrame*& callFrame, JSV
                 while (unwindCallFrame(callFrame, exceptionValue, bytecodeOffset, codeBlock)) {
                     // Don't need handler checks or anything, we just want to unroll all the JS callframes possible.
                 }
-                return 0;
+                return nullptr;
             }
         }
     }
@@ -563,7 +563,7 @@ NEVER_INLINE HandlerInfo* Interpreter::throwException(CallFrame*& callFrame, JSV
 
     // Calculate an exception handler vPC, unwinding call frames as necessary.
 
-    HandlerInfo* handler = 0;
+    HandlerInfo* handler = nullptr;
 
 #ifdef QT_BUILD_SCRIPT_LIB
     //try to find handler
@@ -588,7 +588,7 @@ NEVER_INLINE HandlerInfo* Interpreter::throwException(CallFrame*& callFrame, JSV
 
     while (!(handler = codeBlock->handlerForBytecodeOffset(bytecodeOffset))) {
         if (!unwindCallFrame(callFrame, exceptionValue, bytecodeOffset, codeBlock)) {
-            return 0;
+            return nullptr;
         }
     }
     // Now unwind the scope chain within the exception handler's call frame.
@@ -632,7 +632,7 @@ JSValue Interpreter::execute(ProgramExecutable* program, CallFrame* callFrame, S
 
     CallFrame* newCallFrame = CallFrame::create(oldEnd + codeBlock->m_numParameters + RegisterFile::CallFrameHeaderSize);
     newCallFrame->r(codeBlock->thisRegister()) = JSValue(thisObj);
-    newCallFrame->init(codeBlock, 0, scopeChain, CallFrame::noCaller(), 0, 0, 0);
+    newCallFrame->init(codeBlock, nullptr, scopeChain, CallFrame::noCaller(), 0, 0, nullptr);
 
     if (codeBlock->needsFullScopeChain())
         scopeChain->ref();
@@ -701,7 +701,7 @@ JSValue Interpreter::execute(FunctionExecutable* functionExecutable, CallFrame* 
         return jsNull();
     }
     // a 0 codeBlock indicates a built-in caller
-    newCallFrame->init(codeBlock, 0, scopeChain, callFrame->addHostCallFrameFlag(), 0, argc, function);
+    newCallFrame->init(codeBlock, nullptr, scopeChain, callFrame->addHostCallFrameFlag(), 0, argc, function);
 
     Profiler** profiler = Profiler::enabledProfilerReference();
     if (*profiler)
@@ -759,7 +759,7 @@ CallFrameClosure Interpreter::prepareForRepeatCall(FunctionExecutable* FunctionE
         return CallFrameClosure();
     }
     // a 0 codeBlock indicates a built-in caller
-    newCallFrame->init(codeBlock, 0, scopeChain, callFrame->addHostCallFrameFlag(), 0, argc, function);
+    newCallFrame->init(codeBlock, nullptr, scopeChain, callFrame->addHostCallFrameFlag(), 0, argc, function);
 #if ENABLE(JIT)
     FunctionExecutable->jitCode(newCallFrame, scopeChain);
 #endif
@@ -868,7 +868,7 @@ JSValue Interpreter::execute(EvalExecutable* eval, CallFrame* callFrame, JSObjec
 
     // a 0 codeBlock indicates a built-in caller
     newCallFrame->r(codeBlock->thisRegister()) = JSValue(thisObj);
-    newCallFrame->init(codeBlock, 0, scopeChain, callFrame->addHostCallFrameFlag(), 0, 0, 0);
+    newCallFrame->init(codeBlock, nullptr, scopeChain, callFrame->addHostCallFrameFlag(), 0, 0, nullptr);
 
     if (codeBlock->needsFullScopeChain())
         scopeChain->ref();
@@ -1154,7 +1154,7 @@ JSValue Interpreter::privateExecute(ExecutionFlag flag, RegisterFile* registerFi
 
     JSGlobalData* globalData = &callFrame->globalData();
     JSValue exceptionValue;
-    HandlerInfo* handler = 0;
+    HandlerInfo* handler = nullptr;
 
     Instruction* vPC = callFrame->codeBlock()->instructions().begin();
     Profiler** enabledProfilerReference = Profiler::enabledProfilerReference();
@@ -3123,7 +3123,7 @@ JSValue Interpreter::privateExecute(ExecutionFlag flag, RegisterFile* registerFi
             ScopeChainNode* scopeChain = callFrame->scopeChain();
             CallFrame* newCallFrame = CallFrame::create(callFrame->registers() + registerOffset);
 #ifdef QT_BUILD_SCRIPT_LIB //we need the returnValue to be 0 as it is used as flags
-            newCallFrame->init(0, vPC + 5, scopeChain, callFrame, 0, argCount, asObject(v));
+            newCallFrame->init(nullptr, vPC + 5, scopeChain, callFrame, 0, argCount, asObject(v));
 #else
             newCallFrame->init(0, vPC + 5, scopeChain, callFrame, dst, argCount, asObject(v));
 #endif
@@ -3280,7 +3280,7 @@ JSValue Interpreter::privateExecute(ExecutionFlag flag, RegisterFile* registerFi
             ScopeChainNode* scopeChain = callFrame->scopeChain();
             CallFrame* newCallFrame = CallFrame::create(callFrame->registers() + registerOffset);
 #ifdef QT_BUILD_SCRIPT_LIB //we need the returnValue to be 0 as it is used as flags
-            newCallFrame->init(0, vPC + 5, scopeChain, callFrame, 0, argCount, asObject(v));
+            newCallFrame->init(nullptr, vPC + 5, scopeChain, callFrame, 0, argCount, asObject(v));
 #else
             newCallFrame->init(0, vPC + 5, scopeChain, callFrame, dst, argCount, asObject(v));
 #endif
@@ -3557,7 +3557,7 @@ JSValue Interpreter::privateExecute(ExecutionFlag flag, RegisterFile* registerFi
             ScopeChainNode* scopeChain = callFrame->scopeChain();
             CallFrame* newCallFrame = CallFrame::create(callFrame->registers() + registerOffset);
 #ifdef QT_BUILD_SCRIPT_LIB //we need the returnValue to be 0 as it is used as flags
-            newCallFrame->init(0, vPC + 7, scopeChain, callFrame, 0, argCount, asObject(v));
+            newCallFrame->init(nullptr, vPC + 7, scopeChain, callFrame, 0, argCount, asObject(v));
 #else
             newCallFrame->init(0, vPC + 7, scopeChain, callFrame, dst, argCount, asObject(v));
 #endif
@@ -4046,7 +4046,7 @@ CallFrame* Interpreter::findFunctionCallFrame(CallFrame* callFrame, InternalFunc
         if (candidate->callee() == function)
             return candidate;
     }
-    return 0;
+    return nullptr;
 }
 
 void Interpreter::enableSampler()

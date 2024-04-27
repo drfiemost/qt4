@@ -128,7 +128,7 @@ public:
 
     static QPixmapData *create(int w, int h, PixelType type);
 
-    virtual QPixmapData *runtimeData() const { return 0; }
+    virtual QPixmapData *runtimeData() const { return nullptr; }
 
 protected:
 

@@ -58,7 +58,7 @@ public:
     }
 
     void updateSorting() {
-        QDir::SortFlags flags = 0;
+        QDir::SortFlags flags = nullptr;
         switch(sortField) {
         case QDeclarativeFolderListModel::Unsorted:
             flags |= QDir::Unsorted;

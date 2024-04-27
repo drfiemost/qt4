@@ -52,7 +52,7 @@ class PathPage : public QWizardPage
     Q_OBJECT
 
 public:
-    PathPage(QWidget *parent = 0);
+    PathPage(QWidget *parent = nullptr);
     void setPath(const QString &path);
     QStringList paths() const;
     QStringList filters() const;

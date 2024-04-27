@@ -127,7 +127,7 @@ void QDBusAbstractInterfacePrivate::property(const QMetaProperty &mp, QVariant &
     const char *expectedSignature = "";
     if (int(mp.type()) != QMetaType::QVariant) {
         expectedSignature = QDBusMetaType::typeToSignature(where.userType());
-        if (expectedSignature == 0) {
+        if (expectedSignature == nullptr) {
             qWarning("QDBusAbstractInterface: type %s must be registered with QtDBus before it can be "
                      "used to read property %s.%s",
                      mp.typeName(), qPrintable(interface), mp.name());
@@ -161,7 +161,7 @@ void QDBusAbstractInterfacePrivate::property(const QMetaProperty &mp, QVariant &
     }
 
     QByteArray foundSignature;
-    const char *foundType = 0;
+    const char *foundType = nullptr;
     QVariant value = qvariant_cast<QDBusVariant>(reply.arguments().at(0)).variant();
 
     if (value.userType() == where.userType() || mp.userType() == QMetaType::QVariant
@@ -571,7 +571,7 @@ bool QDBusAbstractInterface::callWithCallback(const QString &method,
                                               QObject *receiver,
                                               const char *slot)
 {
-    return callWithCallback(method, args, receiver, slot, 0);
+    return callWithCallback(method, args, receiver, slot, nullptr);
 }
 
 /*!

@@ -100,8 +100,8 @@ public:
 
     Q_DECLARE_FLAGS(AutoFormatting, AutoFormattingFlag)
 
-    explicit QTextEdit(QWidget *parent = 0);
-    explicit QTextEdit(const QString &text, QWidget *parent = 0);
+    explicit QTextEdit(QWidget *parent = nullptr);
+    explicit QTextEdit(const QString &text, QWidget *parent = nullptr);
     virtual ~QTextEdit();
 
     void setDocument(QTextDocument *document);
@@ -156,7 +156,7 @@ public:
     QTextOption::WrapMode wordWrapMode() const;
     void setWordWrapMode(QTextOption::WrapMode policy);
 
-    bool find(const QString &exp, QTextDocument::FindFlags options = 0);
+    bool find(const QString &exp, QTextDocument::FindFlags options = nullptr);
 
     inline QString toPlainText() const
     { return document()->toPlainText(); }

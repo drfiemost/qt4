@@ -46,7 +46,7 @@
 BookmarkFilterModel::BookmarkFilterModel(QObject *parent)
     : QAbstractProxyModel(parent)
     , hideBookmarks(true)
-    , sourceModel(0)
+    , sourceModel(nullptr)
 {
 }
 

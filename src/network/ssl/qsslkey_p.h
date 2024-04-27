@@ -65,8 +65,8 @@ class QSslKeyPrivate
 {
 public:
     inline QSslKeyPrivate()
-        : rsa(0)
-        , dsa(0)
+        : rsa(nullptr)
+        , dsa(nullptr)
     {
         clear();
     }

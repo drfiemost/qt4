@@ -170,12 +170,12 @@ static unsigned long id_function()
 #endif //OPENSSL_VERSION_NUMBER >= 0x10100000L
 
 QSslSocketBackendPrivate::QSslSocketBackendPrivate()
-    : ssl(0),
-      ctx(0),
-      pkey(0),
-      readBio(0),
-      writeBio(0),
-      session(0)
+    : ssl(nullptr),
+      ctx(nullptr),
+      pkey(nullptr),
+      readBio(nullptr),
+      writeBio(nullptr),
+      session(nullptr)
 {
     // Calls SSL_library_init().
     ensureInitialized();
@@ -265,14 +265,14 @@ init_context:
 #ifndef OPENSSL_NO_SSL2
         ctx = q_SSL_CTX_new(client ? q_SSLv2_client_method() : q_SSLv2_server_method());
 #else
-        ctx = 0; // SSL 2 not supported by the system, but chosen deliberately -> error
+        ctx = nullptr; // SSL 2 not supported by the system, but chosen deliberately -> error
 #endif
         break;
     case QSsl::SslV3:
 #ifndef OPENSSL_NO_SSL3
         ctx = q_SSL_CTX_new(client ? q_SSLv3_client_method() : q_SSLv3_server_method());
 #else
-        ctx = 0; // SSL 3 not supported by the system, but chosen deliberately -> error
+        ctx = nullptr; // SSL 3 not supported by the system, but chosen deliberately -> error
 #endif
         break;
     case QSsl::SecureProtocols: // SslV2 will be disabled below
@@ -391,7 +391,7 @@ init_context:
         // tell OpenSSL the directories where to look up the root certs on demand
         QList<QByteArray> unixDirs = unixRootCertDirectories();
         for (int a = 0; a < unixDirs.count(); ++a)
-            q_SSL_CTX_load_verify_locations(ctx, 0, unixDirs.at(a).constData());
+            q_SSL_CTX_load_verify_locations(ctx, nullptr, unixDirs.at(a).constData());
     }
 
     if (!configuration.localCertificate.isNull()) {
@@ -438,7 +438,7 @@ init_context:
 
     // Initialize peer verification.
     if (configuration.peerVerifyMode == QSslSocket::VerifyNone) {
-        q_SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
+        q_SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, nullptr);
     } else {
         q_SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, q_X509Callback);
     }
@@ -506,15 +506,15 @@ void QSslSocketBackendPrivate::destroySslContext()
 {
     if (ssl) {
         q_SSL_free(ssl);
-        ssl = 0;
+        ssl = nullptr;
     }
     if (ctx) {
         q_SSL_CTX_free(ctx);
-        ctx = 0;
+        ctx = nullptr;
     }
     if (pkey) {
         q_EVP_PKEY_free(pkey);
-        pkey = 0;
+        pkey = nullptr;
     }
 }
 
@@ -576,7 +576,7 @@ bool QSslSocketPrivate::ensureLibraryLoaded()
                 if (attempts < 500) {
 #ifdef Q_OS_UNIX
                     struct timespec ts = {0, 33333333};
-                    nanosleep(&ts, 0);
+                    nanosleep(&ts, nullptr);
 #else
                     Sleep(3);
 #endif
@@ -1342,7 +1342,7 @@ QString QSslSocketBackendPrivate::getErrorsFromOpenSsl()
     while((errNum = q_ERR_get_error())) {
         if (! errorString.isEmpty())
             errorString.append(QLatin1String(", "));
-        const char *error = q_ERR_error_string(errNum, NULL);
+        const char *error = q_ERR_error_string(errNum, nullptr);
         errorString.append(QString::fromAscii(error)); // error is ascii according to man ERR_error_string
     }
     return errorString;

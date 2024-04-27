@@ -61,7 +61,7 @@ inline QString tr(const char *sourceText, const char *comment = 0)
     return QString( QLatin1String(sourceText) );
 }
 #else
-inline QString tr(const char *sourceText, const char *comment = 0)
+inline QString tr(const char *sourceText, const char *comment = nullptr)
 {
     return QCoreApplication::instance()->translate("", sourceText, comment);
 }

@@ -284,7 +284,7 @@ QObject *QMetaObject::cast(QObject *obj) const
                 return obj;
         } while ((m = m->d.superdata));
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -302,7 +302,7 @@ const QObject *QMetaObject::cast(const QObject *obj) const
                 return obj;
         } while ((m = m->d.superdata));
     }
-    return 0;
+    return nullptr;
 }
 
 #ifndef QT_NO_TRANSLATION
@@ -747,7 +747,7 @@ int QMetaObject::indexOfProperty(const char *name) const
         QAbstractDynamicMetaObject *me = 
             const_cast<QAbstractDynamicMetaObject *>(static_cast<const QAbstractDynamicMetaObject *>(this));
 
-        return me->createProperty(name, 0);
+        return me->createProperty(name, nullptr);
     }
 
     return -1;
@@ -860,7 +860,7 @@ QMetaProperty QMetaObject::property(int index) const
             if (!result.menum.isValid()) {
                 const char *enum_name = type;
                 const char *scope_name = d.stringdata;
-                char *scope_buffer = 0;
+                char *scope_buffer = nullptr;
 
                 const char *colon = strrchr(enum_name, ':');
                 // ':' will always appear in pairs
@@ -873,7 +873,7 @@ QMetaProperty QMetaObject::property(int index) const
                     scope_name = scope_buffer;
                     enum_name = colon+1;
                 }
-                const QMetaObject *scope = 0;
+                const QMetaObject *scope = nullptr;
                 if (qstrcmp(scope_name, "Qt") == 0)
                     scope = &QObject::staticQtMetaObject;
                 else
@@ -1300,7 +1300,7 @@ bool QMetaObject::invokeMethod(QObject *obj,
 const char *QMetaMethod::signature() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     return mobj->d.stringdata + mobj->d.data[handle];
 }
 
@@ -1355,7 +1355,7 @@ QList<QByteArray> QMetaMethod::parameterNames() const
 const char *QMetaMethod::typeName() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     return mobj->d.stringdata + mobj->d.data[handle + 2];
 }
 
@@ -1392,7 +1392,7 @@ const char *QMetaMethod::typeName() const
 const char *QMetaMethod::tag() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     return mobj->d.stringdata + mobj->d.data[handle + 3];
 }
 
@@ -1677,7 +1677,7 @@ bool QMetaMethod::invoke(QObject *object,
         int *types = (int *) malloc(paramCount * sizeof(int));
         Q_CHECK_PTR(types);
         types[0] = 0; // return type
-        args[0] = 0;
+        args[0] = nullptr;
 
         for (int i = 1; i < paramCount; ++i) {
             types[i] = QMetaType::type(typeNames[i]);
@@ -1698,7 +1698,7 @@ bool QMetaMethod::invoke(QObject *object,
         }
 
         QCoreApplication::postEvent(object, new QMetaCallEvent(idx_offset, idx_relative, callFunction,
-                                                        0, -1, nargs, types, args));
+                                                        nullptr, -1, nargs, types, args));
     } else { // blocking queued connection
 #ifndef QT_NO_THREAD
         if (receiverInSameThread) {
@@ -1709,7 +1709,7 @@ bool QMetaMethod::invoke(QObject *object,
 
         QSemaphore semaphore;
         QCoreApplication::postEvent(object, new QMetaCallEvent(idx_offset, idx_relative, callFunction,
-                                                        0, -1, 0, 0, param, &semaphore));
+                                                        nullptr, -1, 0, nullptr, param, &semaphore));
         semaphore.acquire();
 #endif // QT_NO_THREAD
     }
@@ -1822,7 +1822,7 @@ bool QMetaMethod::invoke(QObject *object,
 const char *QMetaEnum::name() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     return mobj->d.stringdata + mobj->d.data[handle];
 }
 
@@ -1847,12 +1847,12 @@ int QMetaEnum::keyCount() const
 const char *QMetaEnum::key(int index) const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     int count = mobj->d.data[handle + 2];
     int data = mobj->d.data[handle + 3];
     if (index >= 0  && index < count)
         return mobj->d.stringdata + mobj->d.data[data + 2*index];
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1898,7 +1898,7 @@ bool QMetaEnum::isFlag() const
 */
 const char *QMetaEnum::scope() const
 {
-    return mobj?mobj->d.stringdata : 0;
+    return mobj?mobj->d.stringdata : nullptr;
 }
 
 /*!
@@ -1942,13 +1942,13 @@ int QMetaEnum::keyToValue(const char *key) const
 const char* QMetaEnum::valueToKey(int value) const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     int count = mobj->d.data[handle + 2];
     int data = mobj->d.data[handle + 3];
     for (int i = 0; i < count; ++i)
         if (value == (int)mobj->d.data[data + 2*i + 1])
             return mobj->d.stringdata + mobj->d.data[data + 2*i];
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -2076,7 +2076,7 @@ static QByteArray qualifiedName(const QMetaEnum &e)
     \internal
 */
 QMetaProperty::QMetaProperty()
-    : mobj(0), handle(0), idx(0)
+    : mobj(nullptr), handle(0), idx(0)
 {
 }
 
@@ -2089,7 +2089,7 @@ QMetaProperty::QMetaProperty()
 const char *QMetaProperty::name() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     int handle = priv(mobj->d.data)->propertyData + 3*idx;
     return mobj->d.stringdata + mobj->d.data[handle];
 }
@@ -2102,7 +2102,7 @@ const char *QMetaProperty::name() const
 const char *QMetaProperty::typeName() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     int handle = priv(mobj->d.data)->propertyData + 3*idx;
     return mobj->d.stringdata + mobj->d.data[handle + 1];
 }
@@ -2273,11 +2273,11 @@ QVariant QMetaProperty::read(const QObject *object) const
     // changed: result stored directly in value
     int status = -1;
     QVariant value;
-    void *argv[] = { 0, &value, &status };
+    void *argv[] = { nullptr, &value, &status };
     if (t == QMetaType::QVariant) {
         argv[0] = &value;
     } else {
-        value = QVariant(t, (void*)0);
+        value = QVariant(t, (void*)nullptr);
         argv[0] = value.data();
     }
     QMetaObject::metacall(const_cast<QObject*>(object), QMetaObject::ReadProperty,
@@ -2345,7 +2345,7 @@ bool QMetaProperty::write(QObject *object, const QVariant &value) const
     // the flags variable is used by the declarative module to implement
     // interception of property writes.
     int flags = 0;
-    void *argv[] = { 0, &v, &status, &flags };
+    void *argv[] = { nullptr, &v, &status, &flags };
     if (t == QMetaType::QVariant)
         argv[0] = &v;
     else
@@ -2366,7 +2366,7 @@ bool QMetaProperty::reset(QObject *object) const
 {
     if (!object || !mobj || !isResettable())
         return false;
-    void *argv[] = { 0 };
+    void *argv[] = { nullptr };
     QMetaObject::metacall(object, QMetaObject::ResetProperty, idx + mobj->propertyOffset(), argv);
     return true;
 }
@@ -2688,7 +2688,7 @@ bool QMetaProperty::isEditable(const QObject *object) const
 const char *QMetaClassInfo::name() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     return mobj->d.stringdata + mobj->d.data[handle];
 }
 
@@ -2700,7 +2700,7 @@ const char *QMetaClassInfo::name() const
 const char* QMetaClassInfo::value() const
 {
     if (!mobj)
-        return 0;
+        return nullptr;
     return mobj->d.stringdata + mobj->d.data[handle + 1];
 }
 

@@ -188,25 +188,25 @@ QIODevice *QNetworkDiskCache::prepare(const QNetworkCacheMetaData &metaData)
 #endif
     Q_D(QNetworkDiskCache);
     if (!metaData.isValid() || !metaData.url().isValid() || !metaData.saveToDisk())
-        return 0;
+        return nullptr;
 
     if (d->cacheDirectory.isEmpty()) {
         qWarning() << "QNetworkDiskCache::prepare() The cache directory is not set";
-        return 0;
+        return nullptr;
     }
 
     foreach (QNetworkCacheMetaData::RawHeader header, metaData.rawHeaders()) {
         if (header.first.toLower() == "content-length") {
             qint64 size = header.second.toInt();
             if (size > (maximumCacheSize() * 3)/4)
-                return 0;
+                return nullptr;
             break;
         }
     }
     QScopedPointer<QCacheItem> cacheItem(new QCacheItem);
     cacheItem->metaData = metaData;
 
-    QIODevice *device = 0;
+    QIODevice *device = nullptr;
     if (cacheItem->canCompress()) {
         cacheItem->data.open(QBuffer::ReadWrite);
         device = &(cacheItem->data);
@@ -215,12 +215,12 @@ QIODevice *QNetworkDiskCache::prepare(const QNetworkCacheMetaData &metaData)
         QT_TRY {
             cacheItem->file = new QTemporaryFile(templateName, &cacheItem->data);
         } QT_CATCH(...) {
-            cacheItem->file = 0;
+            cacheItem->file = nullptr;
         }
         if (!cacheItem->file || !cacheItem->file->open()) {
             qWarning() << "QNetworkDiskCache::prepare() unable to open temporary file";
             cacheItem.reset();
-            return 0;
+            return nullptr;
         }
         cacheItem->writeHeader(cacheItem->file);
         device = cacheItem->file;
@@ -406,19 +406,19 @@ QIODevice *QNetworkDiskCache::data(const QUrl &url)
     Q_D(QNetworkDiskCache);
     QScopedPointer<QBuffer> buffer;
     if (!url.isValid())
-        return 0;
+        return nullptr;
     if (d->lastItem.metaData.url() == url && d->lastItem.data.isOpen()) {
         buffer.reset(new QBuffer);
         buffer->setData(d->lastItem.data.data());
     } else {
         QScopedPointer<QFile> file(new QFile(d->cacheFileName(url)));
         if (!file->open(QFile::ReadOnly | QIODevice::Unbuffered))
-            return 0;
+            return nullptr;
 
         if (!d->lastItem.read(file.data(), true)) {
             file->close();
             remove(url);
-            return 0;
+            return nullptr;
         }
         if (d->lastItem.data.isOpen()) {
             // compressed

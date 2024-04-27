@@ -142,7 +142,7 @@ class QGestureEventPrivate
 {
 public:
     inline QGestureEventPrivate(const QList<QGesture *> &list)
-        : gestures(list), widget(0)
+        : gestures(list), widget(nullptr)
     {
     }
 

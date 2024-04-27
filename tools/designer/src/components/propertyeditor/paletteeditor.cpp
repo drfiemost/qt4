@@ -512,7 +512,7 @@ ColorDelegate::ColorDelegate(QDesignerFormEditorInterface *core, QObject *parent
 QWidget *ColorDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &,
                 const QModelIndex &index) const
 {
-    QWidget *ed = 0;
+    QWidget *ed = nullptr;
     if (index.column() == 0) {
         RoleEditor *editor = new RoleEditor(parent);
         connect(editor, SIGNAL(changed(QWidget*)), this, SIGNAL(commitData(QWidget*)));

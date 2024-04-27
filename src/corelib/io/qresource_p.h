@@ -110,7 +110,7 @@ public:
     virtual Iterator *beginEntryList(QDir::Filters filters, const QStringList &filterNames);
     virtual Iterator *endEntryList();
     
-    bool extension(Extension extension, const ExtensionOption *option = 0, ExtensionReturn *output = 0);
+    bool extension(Extension extension, const ExtensionOption *option = nullptr, ExtensionReturn *output = nullptr);
     bool supportsExtension(Extension extension) const;
 };
 

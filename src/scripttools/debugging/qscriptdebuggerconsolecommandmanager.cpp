@@ -126,7 +126,7 @@ void QScriptDebuggerConsoleCommandManager::addCommand(QScriptDebuggerConsoleComm
                  qPrintable(command->name()));
         return;
     }
-    if (findCommand(command->name()) != 0) {
+    if (findCommand(command->name()) != nullptr) {
         qWarning("addCommand(): duplicate command '%s' (group '%s') ignored",
                  qPrintable(command->name()), qPrintable(command->group()));
         return;
@@ -171,7 +171,7 @@ QScriptDebuggerConsoleCommand *QScriptDebuggerConsoleCommandManager::findCommand
         else if (cmd->aliases().contains(name))
             return cmd;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!

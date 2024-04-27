@@ -116,7 +116,7 @@ class QScriptDebuggerBackendEventReceiver : public QObject
 {
 public:
     QScriptDebuggerBackendEventReceiver(QScriptDebuggerBackendPrivate *backend,
-                                        QObject *parent = 0)
+                                        QObject *parent = nullptr)
         : QObject(parent), m_backend(backend) {}
     ~QScriptDebuggerBackendEventReceiver() {}
 
@@ -131,12 +131,12 @@ private:
 
 
 QScriptDebuggerBackendPrivate::QScriptDebuggerBackendPrivate()
-    : agent(0), commandExecutor(0),
+    : agent(nullptr), commandExecutor(nullptr),
         pendingEvaluateContextIndex(-1), pendingEvaluateLineNumber(-1),
         ignoreExceptions(false),
         nextScriptValueIteratorId(0), nextScriptObjectSnapshotId(0),
-        eventReceiver(0),
-        q_ptr(0) // q_ptr will be set later by QScriptDebuggerBackend constructor
+        eventReceiver(nullptr),
+        q_ptr(nullptr) // q_ptr will be set later by QScriptDebuggerBackend constructor
 {
 }
 
@@ -175,7 +175,7 @@ void QScriptDebuggerBackendPrivate::agentDestroyed(QScriptDebuggerAgent *ag)
     // that the engine has been destroyed. Invalidate our pointer so we
     // don't crash later.
     if (agent == ag)
-        agent = 0;
+        agent = nullptr;
 }
 
 /*!
@@ -435,7 +435,7 @@ void QScriptDebuggerBackend::detach()
     if (d->agent) {
         QScriptEngine *eng = d->agent->engine();
         if (eng && eng->agent() == d->agent) {
-            eng->setAgent(0);
+            eng->setAgent(nullptr);
             QScriptValue global = eng->globalObject();
             global.setProperty(QString::fromLatin1("print"), d->origTraceFunction);
             d->origTraceFunction = QScriptValue();
@@ -449,7 +449,7 @@ void QScriptDebuggerBackend::detach()
             global.setProperty(QString::fromLatin1("__LINE__"), d->origLineNumberFunction);
             d->origLineNumberFunction = QScriptValue();
             d->agent->nullifyBackendPointer();
-            d->agent = 0; // agent is owned by engine
+            d->agent = nullptr; // agent is owned by engine
         }
     }
 
@@ -472,7 +472,7 @@ QScriptEngine *QScriptDebuggerBackend::engine() const
 {
     Q_D(const QScriptDebuggerBackend);
     if (!d->agent)
-        return 0;
+        return nullptr;
     return d->agent->engine();
 }
 
@@ -814,7 +814,7 @@ int QScriptDebuggerBackend::contextCount() const
 QScriptContext *QScriptDebuggerBackend::context(int index) const
 {
     if (index < 0)
-        return 0;
+        return nullptr;
     QScriptContext *ctx = engine()->currentContext();
     while (ctx) {
         if (index == 0)
@@ -822,7 +822,7 @@ QScriptContext *QScriptDebuggerBackend::context(int index) const
         ctx = ctx->parentContext();
         --index;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!

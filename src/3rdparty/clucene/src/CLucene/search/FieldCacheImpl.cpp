@@ -21,7 +21,7 @@ FieldCacheImpl::~FieldCacheImpl(){
 FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
    this->field = CLStringIntern::intern(field CL_FILELINE);
    this->type = type;
-   this->custom = NULL;
+   this->custom = nullptr;
    this->_hashCode = 0;
  }
 
@@ -40,7 +40,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
  	if ( _hashCode == 0 ){
     //todo: cache hashcode?
      size_t ret = Misc::thashCode(field);
-     if ( custom != NULL )
+     if ( custom != nullptr )
          ret = ret ^ custom->hashCode();
      ret = ret ^ (type*7); //type with a seed
 	     _hashCode = ret;
@@ -50,12 +50,12 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
  int32_t FieldCacheImpl::FileEntry::compareTo(const FieldCacheImpl::FileEntry* other) const{
      if ( other->field == this->field ){
          if ( other->type == this->type ){
-            if ( other->custom == NULL ){
-                if ( this->custom == NULL )
+            if ( other->custom == nullptr ){
+                if ( this->custom == nullptr )
                     return 0; //both null
                 else
                     return 1;
-            }else if ( this->custom == NULL )
+            }else if ( this->custom == nullptr )
                 return -1;
             else if ( other->custom < this->custom )
                 return -1;
@@ -95,12 +95,12 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 
   /** See if an object is in the cache. */
   FieldCacheAuto* FieldCacheImpl::lookup (IndexReader* reader, const TCHAR* field, int32_t type) {
-    FieldCacheAuto* ret = NULL;
+    FieldCacheAuto* ret = nullptr;
     FileEntry* entry = _CLNEW FileEntry (field, type);
     {
     	SCOPED_LOCK_MUTEX(THIS_LOCK)
       	fieldcacheCacheReaderType* readerCache = cache.get(reader);
-      	if (readerCache != NULL) 
+      	if (readerCache != nullptr) 
           ret = readerCache->get (entry);
       	_CLDELETE(entry);
 	}
@@ -110,12 +110,12 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
  
   /** See if a custom object is in the cache. */
   FieldCacheAuto* FieldCacheImpl::lookup (IndexReader* reader, const TCHAR* field, SortComparatorSource* comparer) {
-    FieldCacheAuto* ret = NULL;
+    FieldCacheAuto* ret = nullptr;
     FileEntry* entry = _CLNEW FileEntry (field, comparer);
     {
     	SCOPED_LOCK_MUTEX(THIS_LOCK)
       	fieldcacheCacheReaderType* readerCache = cache.get(reader);
-      	if (readerCache != NULL)
+      	if (readerCache != nullptr)
         	ret = readerCache->get (entry);
       	_CLDELETE(entry);
 }
@@ -134,7 +134,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
     {
     	SCOPED_LOCK_MUTEX(THIS_LOCK)
 	  fieldcacheCacheReaderType* readerCache = cache.get(reader);
-	  if (readerCache == NULL) {
+	  if (readerCache == nullptr) {
 	    readerCache = _CLNEW fieldcacheCacheReaderType;
 	    cache.put(reader,readerCache);
 	    reader->addCloseCallback(closeCallback, this);
@@ -150,7 +150,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
     {
       SCOPED_LOCK_MUTEX(THIS_LOCK)
       fieldcacheCacheReaderType* readerCache = cache.get(reader);
-      if (readerCache == NULL) {
+      if (readerCache == nullptr) {
         readerCache = _CLNEW fieldcacheCacheReaderType;
         cache.put(reader, readerCache);
 		reader->addCloseCallback(FieldCacheImpl::closeCallback, this);
@@ -168,7 +168,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
  FieldCacheAuto* FieldCacheImpl::getInts (IndexReader* reader, const TCHAR* field) {
     field = CLStringIntern::intern(field CL_FILELINE);
     FieldCacheAuto* ret = lookup (reader, field, SortField::INT);
-    if (ret == NULL) {
+    if (ret == nullptr) {
       int32_t retLen = reader->maxDoc();
       int32_t* retArray = _CL_NEWARRAY(int32_t,retLen);
 	  memset(retArray,0,sizeof(int32_t)*retLen);
@@ -179,7 +179,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
         TermEnum* termEnum = reader->terms (term);
 		_CLDECDELETE(term);
         try {
-          if (termEnum->term(false) == NULL) {
+          if (termEnum->term(false) == nullptr) {
 			 _CLTHROWA(CL_ERR_Runtime,"no terms in field"); //todo: add detailed error:  + field);
           }
           do {
@@ -217,7 +217,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
   FieldCacheAuto* FieldCacheImpl::getFloats (IndexReader* reader, const TCHAR* field){
 	field = CLStringIntern::intern(field CL_FILELINE);
     FieldCacheAuto* ret = lookup (reader, field, SortField::FLOAT);
-    if (ret == NULL) {
+    if (ret == nullptr) {
 	  int32_t retLen = reader->maxDoc();
       qreal* retArray = _CL_NEWARRAY(qreal,retLen);
 	  memset(retArray,0,sizeof(qreal)*retLen);
@@ -229,7 +229,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 		_CLDECDELETE(term);
 
         try {
-          if (termEnum->term(false) == NULL) {
+          if (termEnum->term(false) == nullptr) {
             _CLTHROWA(CL_ERR_Runtime,"no terms in field "); //todo: make richer error + field);
           }
           do {
@@ -269,7 +269,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
    //todo: this is not really used, i think?
 	field = CLStringIntern::intern(field CL_FILELINE);
     FieldCacheAuto* ret = lookup (reader, field, SortField::STRING);
-    if (ret == NULL) {
+    if (ret == nullptr) {
 	  int32_t retLen = reader->maxDoc();
       TCHAR** retArray = _CL_NEWARRAY(TCHAR*,retLen+1);
       memset(retArray,0,sizeof(TCHAR*)*(retLen+1));
@@ -281,7 +281,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 		_CLDECDELETE(term);
 
         try {
-          if (termEnum->term(false) == NULL) {
+          if (termEnum->term(false) == nullptr) {
             _CLTHROWA(CL_ERR_Runtime,"no terms in field "); //todo: extend to + field);
           }
           do {
@@ -295,7 +295,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
             }
           } while (termEnum->next());
         } _CLFINALLY(
-		  retArray[retLen]=NULL;
+		  retArray[retLen]=nullptr;
           termDocs->close();
           _CLDELETE(termDocs);
           termEnum->close();
@@ -320,13 +320,13 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 	field = CLStringIntern::intern(field CL_FILELINE);
     FieldCacheAuto* ret = lookup (reader, field, STRING_INDEX);
     int32_t t = 0;  // current term number
-    if (ret == NULL) {
+    if (ret == nullptr) {
 	  int32_t retLen = reader->maxDoc();
       int32_t* retArray = _CL_NEWARRAY(int32_t,retLen);
 	  memset(retArray,0,sizeof(int32_t)*retLen);
 
       TCHAR** mterms = _CL_NEWARRAY(TCHAR*,retLen+2);
-      mterms[0]=NULL;
+      mterms[0]=nullptr;
       if ( retLen > 0 ) {
         TermDocs* termDocs = reader->termDocs();
 
@@ -341,10 +341,10 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
         // should a document with no terms be at top or bottom?
         // this puts them at the top - if it is changed, FieldDocSortedHitQueue
         // needs to change as well.
-        mterms[t++] = NULL;
+        mterms[t++] = nullptr;
 
         try {
-          if (termEnum->term(false) == NULL) {
+          if (termEnum->term(false) == nullptr) {
             _CLTHROWA(CL_ERR_Runtime,"no terms in field"); //todo: make rich message " + field);
           }
           do {
@@ -366,7 +366,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
             t++;
           } while (termEnum->next());
 		  CND_PRECONDITION(t<retLen+2,"t out of bounds");
-		  mterms[t] = NULL;
+		  mterms[t] = nullptr;
         } _CLFINALLY(
           termDocs->close();
 		  _CLDELETE(termDocs);
@@ -379,7 +379,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
           // have a single NULL entry
 		  _CLDELETE_ARRAY(mterms);
           mterms = _CL_NEWARRAY(TCHAR*,1); //todo: delete old mterms?
-		  mterms[0]=NULL;
+		  mterms[0]=nullptr;
         } else if (t < retLen) { //todo: check, was mterms.length
           // if there are less terms than documents,
           // trim off the dead array space
@@ -408,14 +408,14 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
   FieldCacheAuto* FieldCacheImpl::getAuto (IndexReader* reader, const TCHAR* field) {
 	field = CLStringIntern::intern(field CL_FILELINE);
     FieldCacheAuto* ret = lookup (reader, field, SortField::AUTO);
-    if (ret == NULL) {
+    if (ret == nullptr) {
 	  Term* term = _CLNEW Term (field, LUCENE_BLANK_STRING, false);
       TermEnum* enumerator = reader->terms (term);
 	  _CLDECDELETE(term);
 
       try {
         Term* term = enumerator->term(false);
-        if (term == NULL) {
+        if (term == nullptr) {
           _CLTHROWA(CL_ERR_Runtime,"no terms in field - cannot determine sort type"); //todo: make rich error: " + field + " 
         }
         if (term->field() == field) {
@@ -424,7 +424,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 
 		  bool isint=true;
 		  for ( size_t i=0;i<termTextLen;i++ ){
-			  if ( _tcschr(_T("0123456789 +-"),termtext[i]) == NULL ){
+			  if ( _tcschr(_T("0123456789 +-"),termtext[i]) == nullptr ){
 				isint = false;
 				break;
 			  }
@@ -438,7 +438,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 			  if ( termtext[termTextLen-1] == 'f' )
 				  searchLen--;
 			  for ( int32_t i=0;i<searchLen;i++ ){
-				  if ( _tcschr(_T("0123456789 Ee.+-"),termtext[i]) == NULL ){
+				  if ( _tcschr(_T("0123456789 Ee.+-"),termtext[i]) == nullptr ){
 					isfloat = false;
 					break;
 				  }
@@ -450,7 +450,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 			  }
 		  }
 
-          if (ret != NULL) {
+          if (ret != nullptr) {
 			  store (reader, field, SortField::AUTO, ret);
           }
         } else {
@@ -469,7 +469,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
 	field = CLStringIntern::intern(field CL_FILELINE);
 
     FieldCacheAuto* ret = lookup (reader, field, comparator);
-    if (ret == NULL) {
+    if (ret == nullptr) {
 	  int32_t retLen = reader->maxDoc();
       Comparable** retArray = _CL_NEWARRAY(Comparable*,retLen);
 	  memset(retArray,0,sizeof(Comparable*)*retLen); 
@@ -478,7 +478,7 @@ FieldCacheImpl::FileEntry::FileEntry (const TCHAR* field, int32_t type) {
         TermEnum* termEnum = reader->terms ();
 
         try {
-          if (termEnum->term(false) == NULL) {
+          if (termEnum->term(false) == nullptr) {
             _CLTHROWA(CL_ERR_Runtime,"no terms in field "); //todo: make rich error + field);
           }
           do {

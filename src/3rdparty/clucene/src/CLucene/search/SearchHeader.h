@@ -161,7 +161,7 @@ CL_NS_DEF(search)
 		int32_t maxDocs;			  // max to cache
 
     public:
-		Hits(Searcher* s, Query* q, Filter* f, const Sort* sort=NULL);
+		Hits(Searcher* s, Query* q, Filter* f, const Sort* sort=nullptr);
 		~Hits();
 
 		/** Returns the total number of hits available in this set. */
@@ -298,7 +298,7 @@ CL_NS_DEF(search)
 
 		// Returns the documents matching <code>query</code>.
 		Hits* search(Query* query) {
-			return search(query, (Filter*)NULL );
+			return search(query, (Filter*)nullptr );
 		}
 
 		// Returns the documents matching <code>query</code> and
@@ -311,7 +311,7 @@ CL_NS_DEF(search)
 		* <code>sort</code>.
 		*/
 		Hits* search(Query* query, const Sort* sort){
-			return _CLNEW Hits(this, query, NULL, sort);
+			return _CLNEW Hits(this, query, nullptr, sort);
 		}
 
 		/** Returns documents matching <code>query</code> and <code>filter</code>,
@@ -335,7 +335,7 @@ CL_NS_DEF(search)
 		* between 0 and 1.
 		*/
 		void _search(Query* query, HitCollector* results) {
-			Searchable::_search(query, NULL, results);
+			Searchable::_search(query, nullptr, results);
 		}
 
 		/** Expert: Set the Similarity implementation used by this Searcher.

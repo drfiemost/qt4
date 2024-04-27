@@ -328,7 +328,7 @@ public:
     // {@link #setMaxFieldLength(int)} terms for a given field, the remainder
     // are discarded.
 	void addDocument(CL_NS(document)::Document* doc,
-        CL_NS(analysis)::Analyzer* analyzer = NULL);
+        CL_NS(analysis)::Analyzer* analyzer = nullptr);
   
 
 	// Merges all segments together into a single segment, optimizing an index

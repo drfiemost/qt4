@@ -89,7 +89,7 @@ public:
         if (flags & HandlesWriteAccess)
             if (name == str_forwardOnly)
                 return flags;
-        return 0;
+        return nullptr;
     }
 
     QScriptValue property(const QScriptValue &object,
@@ -162,7 +162,7 @@ static const char* sqlerror[] = {
     "SYNTAX_ERR",
     "CONSTRAINT_ERR",
     "TIMEOUT_ERR",
-    0
+    nullptr
 };
 
 #define THROW_SQL(error, desc) \

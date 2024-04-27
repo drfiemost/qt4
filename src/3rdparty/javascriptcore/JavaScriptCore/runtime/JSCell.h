@@ -196,7 +196,7 @@ namespace JSC {
 
     inline JSObject* JSValue::getObject() const
     {
-        return isCell() ? asCell()->getObject() : 0;
+        return isCell() ? asCell()->getObject() : nullptr;
     }
 
     inline CallType JSValue::getCallData(CallData& callData)
@@ -343,7 +343,7 @@ namespace JSC {
     inline Heap* Heap::heap(JSValue v)
     {
         if (!v.isCell())
-            return 0;
+            return nullptr;
         return heap(v.asCell());
     }
 

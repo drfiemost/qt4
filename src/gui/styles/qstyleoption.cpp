@@ -2866,7 +2866,7 @@ QStyleOptionTitleBar::QStyleOptionTitleBar()
     \internal
 */
 QStyleOptionTitleBar::QStyleOptionTitleBar(int version)
-    : QStyleOptionComplex(version, SO_TitleBar), titleBarState(0), titleBarFlags(0)
+    : QStyleOptionComplex(version, SO_TitleBar), titleBarState(0), titleBarFlags(nullptr)
 {
 }
 

@@ -61,7 +61,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader,
 #endif
 
 QNetworkConfigurationManagerPrivate::QNetworkConfigurationManagerPrivate()
-    : QObject(), pollTimer(0), bearerThread(0), mutex(QMutex::Recursive), forcedPolling(0), firstUpdate(true)
+    : QObject(), pollTimer(nullptr), bearerThread(nullptr), mutex(QMutex::Recursive), forcedPolling(0), firstUpdate(true)
 {
     qRegisterMetaType<QNetworkConfiguration>("QNetworkConfiguration");
     qRegisterMetaType<QNetworkConfigurationPrivatePointer>("QNetworkConfigurationPrivatePointer");
@@ -377,7 +377,7 @@ void QNetworkConfigurationManagerPrivate::updateConfigurations()
         updating = false;
 
 #ifndef QT_NO_LIBRARY
-        QBearerEngine *generic = 0;
+        QBearerEngine *generic = nullptr;
 
         QFactoryLoader *l = loader();
         foreach (const QString &key, l->keys()) {

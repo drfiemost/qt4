@@ -92,16 +92,16 @@ static const char *kwords[] = {
 static const int KwordHashTableSize = 4096;
 static int kwordHashTable[KwordHashTableSize];
 
-static QHash<QByteArray, bool> *ignoredTokensAndDirectives = 0;
+static QHash<QByteArray, bool> *ignoredTokensAndDirectives = nullptr;
 
-static QRegExp *comment = 0;
-static QRegExp *versionX = 0;
-static QRegExp *definedX = 0;
+static QRegExp *comment = nullptr;
+static QRegExp *versionX = nullptr;
+static QRegExp *definedX = nullptr;
 
-static QRegExp *defines = 0;
-static QRegExp *falsehoods = 0;
+static QRegExp *defines = nullptr;
+static QRegExp *falsehoods = nullptr;
 
-static QTextCodec *sourceCodec = 0;
+static QTextCodec *sourceCodec = nullptr;
 
 /*
   This function is a perfect hash function for the 37 keywords of C99
@@ -529,17 +529,17 @@ void Tokenizer::initialize(const Config &config)
 void Tokenizer::terminate()
 {
     delete comment;
-    comment = 0;
+    comment = nullptr;
     delete versionX;
-    versionX = 0;
+    versionX = nullptr;
     delete definedX;
-    definedX = 0;
+    definedX = nullptr;
     delete defines;
-    defines = 0;
+    defines = nullptr;
     delete falsehoods;
-    falsehoods = 0;
+    falsehoods = nullptr;
     delete ignoredTokensAndDirectives;
-    ignoredTokensAndDirectives = 0;
+    ignoredTokensAndDirectives = nullptr;
 }
 
 void Tokenizer::init()

@@ -215,7 +215,7 @@ QAbstractXmlReceiver::QAbstractXmlReceiver(QAbstractXmlReceiverPrivate *d)
 /*!
   Constructs an abstract xml receiver.
  */
-QAbstractXmlReceiver::QAbstractXmlReceiver() : d_ptr(0)
+QAbstractXmlReceiver::QAbstractXmlReceiver() : d_ptr(nullptr)
 {
 }
 

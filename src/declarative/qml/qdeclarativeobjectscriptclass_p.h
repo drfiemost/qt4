@@ -122,12 +122,12 @@ public:
     QScriptClass::QueryFlags queryProperty(QObject *, const Identifier &, 
                                            QScriptClass::QueryFlags flags, 
                                            QDeclarativeContextData *evalContext,
-                                           QueryHints hints = 0);
+                                           QueryHints hints = nullptr);
 
     Value property(QObject *, const Identifier &);
 
     void setProperty(QObject *, const Identifier &name, const QScriptValue &,
-                     QScriptContext *context, QDeclarativeContextData *evalContext = 0);
+                     QScriptContext *context, QDeclarativeContextData *evalContext = nullptr);
     virtual QStringList propertyNames(Object *);
     virtual bool compare(Object *, Object *);
 
@@ -138,7 +138,7 @@ protected:
     virtual Value property(Object *, const Identifier &);
     virtual void setProperty(Object *, const Identifier &name, const QScriptValue &);
     virtual bool isQObject() const;
-    virtual QObject *toQObject(Object *, bool *ok = 0);
+    virtual QObject *toQObject(Object *, bool *ok = nullptr);
 
 private:
     friend class QDeclarativeObjectMethodScriptClass;

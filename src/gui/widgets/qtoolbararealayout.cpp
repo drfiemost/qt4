@@ -95,7 +95,7 @@ bool QToolBarAreaLayoutItem::skip() const
 {
     if (gap)
         return false;
-    return widgetItem == 0 || widgetItem->isEmpty();
+    return widgetItem == nullptr || widgetItem->isEmpty();
 }
 
 /******************************************************************************
@@ -306,7 +306,7 @@ QLayoutItem *QToolBarAreaLayoutInfo::insertToolBar(QToolBar *before, QToolBar *t
 
 void QToolBarAreaLayoutInfo::insertItem(QToolBar *before, QLayoutItem *item)
 {
-    if (before == 0) {
+    if (before == nullptr) {
         if (lines.isEmpty())
             lines.append(QToolBarAreaLayoutLine(o));
         lines.last().toolBarItems.append(item);
@@ -334,7 +334,7 @@ void QToolBarAreaLayoutInfo::removeToolBar(QToolBar *toolBar)
             QToolBarAreaLayoutItem &item = line.toolBarItems[k];
             if (item.widgetItem->widget() == toolBar) {
                 delete item.widgetItem;
-                item.widgetItem = 0;
+                item.widgetItem = nullptr;
                 line.toolBarItems.removeAt(k);
 
                 if (line.toolBarItems.isEmpty() && j < lines.count() - 1)
@@ -348,7 +348,7 @@ void QToolBarAreaLayoutInfo::removeToolBar(QToolBar *toolBar)
 
 void QToolBarAreaLayoutInfo::insertToolBarBreak(QToolBar *before)
 {
-    if (before == 0) {
+    if (before == nullptr) {
         if (!lines.isEmpty() && lines.last().toolBarItems.isEmpty())
             return;
         lines.append(QToolBarAreaLayoutLine(o));
@@ -746,7 +746,7 @@ QLayoutItem *QToolBarAreaLayout::itemAt(int *x, int index) const
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 QLayoutItem *QToolBarAreaLayout::takeAt(int *x, int index)
@@ -770,7 +770,7 @@ QLayoutItem *QToolBarAreaLayout::takeAt(int *x, int index)
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 void QToolBarAreaLayout::deleteAllLayoutItems()
@@ -785,7 +785,7 @@ void QToolBarAreaLayout::deleteAllLayoutItems()
                 QToolBarAreaLayoutItem &item = line.toolBarItems[k];
                 if (!item.gap)
                     delete item.widgetItem;
-                item.widgetItem = 0;
+                item.widgetItem = nullptr;
             }
         }
     }
@@ -813,7 +813,7 @@ QLayoutItem *QToolBarAreaLayout::insertToolBar(QToolBar *before, QToolBar *toolB
 {
     QInternal::DockPosition pos = findToolBar(before);
     if (pos == QInternal::DockCount)
-        return 0;
+        return nullptr;
     
     return docks[pos].insertToolBar(before, toolBar);
 }
@@ -828,7 +828,7 @@ void QToolBarAreaLayout::removeToolBar(QToolBar *toolBar)
 
 QLayoutItem *QToolBarAreaLayout::addToolBar(QInternal::DockPosition pos, QToolBar *toolBar)
 {
-    return docks[pos].insertToolBar(0, toolBar);
+    return docks[pos].insertToolBar(nullptr, toolBar);
 }
 
 void QToolBarAreaLayout::insertToolBarBreak(QToolBar *before)
@@ -849,7 +849,7 @@ void QToolBarAreaLayout::removeToolBarBreak(QToolBar *before)
 
 void QToolBarAreaLayout::addToolBarBreak(QInternal::DockPosition pos)
 {
-    docks[pos].insertToolBarBreak(0);
+    docks[pos].insertToolBarBreak(nullptr);
 }
 
 void QToolBarAreaLayout::moveToolBar(QToolBar *toolbar, int p)
@@ -1115,13 +1115,13 @@ QToolBarAreaLayoutItem *QToolBarAreaLayout::item(const QList<int> &path)
     Q_ASSERT(path.count() == 3);
 
     if (path.at(0) < 0 || path.at(0) >= QInternal::DockCount)
-        return 0;
+        return nullptr;
     QToolBarAreaLayoutInfo &info = docks[path.at(0)];
     if (path.at(1) < 0 || path.at(1) >= info.lines.count())
-        return 0;
+        return nullptr;
     QToolBarAreaLayoutLine &line = info.lines[path.at(1)];
     if (path.at(2) < 0 || path.at(2) >= line.toolBarItems.count())
-        return 0;
+        return nullptr;
     return &(line.toolBarItems[path.at(2)]);
 }
 
@@ -1141,7 +1141,7 @@ QLayoutItem *QToolBarAreaLayout::plug(const QList<int> &path)
     QToolBarAreaLayoutItem *item = this->item(path);
     if (!item) {
         qWarning() << Q_FUNC_INFO << "No item at" << path;
-        return 0;
+        return nullptr;
     }
     Q_ASSERT(item->gap);
     Q_ASSERT(item->widgetItem != 0);
@@ -1359,14 +1359,14 @@ bool QToolBarAreaLayout::restoreState(QDataStream &stream, const QList<QToolBar*
                 rect = unpackRect(geom0, geom1, &floating);
             }
 
-            QToolBar *toolBar = 0;
+            QToolBar *toolBar = nullptr;
             for (int x = 0; x < toolBars.count(); ++x) {
                 if (toolBars.at(x)->objectName() == objectName) {
                     toolBar = toolBars.takeAt(x);
                     break;
                 }
             }
-            if (toolBar == 0) {
+            if (toolBar == nullptr) {
                 continue;
             }
 

@@ -83,7 +83,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeInfoPrivate
 {
 public:
-    QDeclarativeInfoPrivate() : ref (1), object(0) {}
+    QDeclarativeInfoPrivate() : ref (1), object(nullptr) {}
 
     int ref;
     const QObject *object;
@@ -108,7 +108,7 @@ QDeclarativeInfo::~QDeclarativeInfo()
     if (0 == --d->ref) {
         QList<QDeclarativeError> errors = d->errors;
 
-        QDeclarativeEngine *engine = 0;
+        QDeclarativeEngine *engine = nullptr;
 
         if (!d->buffer.isEmpty()) {
             QDeclarativeError error;

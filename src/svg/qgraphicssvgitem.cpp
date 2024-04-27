@@ -60,7 +60,7 @@ public:
     Q_DECLARE_PUBLIC(QGraphicsSvgItem)
 
     QGraphicsSvgItemPrivate()
-        : renderer(0), shared(false)
+        : renderer(nullptr), shared(false)
     {
     }
 
@@ -140,7 +140,7 @@ public:
     Constructs a new SVG item with the given \a parent.
 */
 QGraphicsSvgItem::QGraphicsSvgItem(QGraphicsItem *parent)
-    : QGraphicsObject(*new QGraphicsSvgItemPrivate(), 0, 0)
+    : QGraphicsObject(*new QGraphicsSvgItemPrivate(), nullptr, nullptr)
 {
     Q_D(QGraphicsSvgItem);
     d->init(parent);
@@ -151,7 +151,7 @@ QGraphicsSvgItem::QGraphicsSvgItem(QGraphicsItem *parent)
     SVG file with the specified \a fileName.
 */
 QGraphicsSvgItem::QGraphicsSvgItem(const QString &fileName, QGraphicsItem *parent)
-    : QGraphicsObject(*new QGraphicsSvgItemPrivate(), 0, 0)
+    : QGraphicsObject(*new QGraphicsSvgItemPrivate(), nullptr, nullptr)
 {
     Q_D(QGraphicsSvgItem);
     d->init(parent);

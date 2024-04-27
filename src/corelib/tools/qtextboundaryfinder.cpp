@@ -170,10 +170,10 @@ static void init(QTextBoundaryFinder::BoundaryType type, const QChar *chars, int
 */
 QTextBoundaryFinder::QTextBoundaryFinder()
     : t(Grapheme)
-    , chars(0)
+    , chars(nullptr)
     , length(0)
     , freePrivate(true)
-    , d(0)
+    , d(nullptr)
 {
 }
 
@@ -208,7 +208,7 @@ QTextBoundaryFinder &QTextBoundaryFinder::operator=(const QTextBoundaryFinder &o
     pos = other.pos;
 
     QTextBoundaryFinderPrivate *newD = (QTextBoundaryFinderPrivate *)
-        realloc(freePrivate ? d : 0, length*sizeof(QCharAttributes));
+        realloc(freePrivate ? d : nullptr, length*sizeof(QCharAttributes));
     Q_CHECK_PTR(newD);
     freePrivate = true;
     d = newD;

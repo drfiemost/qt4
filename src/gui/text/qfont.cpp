@@ -236,9 +236,9 @@ Q_GUI_EXPORT int qt_defaultDpi()
 }
 
 QFontPrivate::QFontPrivate()
-    : engineData(0), dpi(qt_defaultDpi()), screen(0),
+    : engineData(nullptr), dpi(qt_defaultDpi()), screen(0),
       rawMode(false), underline(false), overline(false), strikeOut(false), kerning(true),
-      capital(0), letterSpacingIsAbsolute(false), scFont(0)
+      capital(0), letterSpacingIsAbsolute(false), scFont(nullptr)
 {
 #ifdef Q_WS_X11
     if (QX11Info::display())
@@ -252,7 +252,7 @@ QFontPrivate::QFontPrivate()
 }
 
 QFontPrivate::QFontPrivate(const QFontPrivate &other)
-    : request(other.request), engineData(0), dpi(other.dpi), screen(other.screen),
+    : request(other.request), engineData(nullptr), dpi(other.dpi), screen(other.screen),
       rawMode(other.rawMode), underline(other.underline), overline(other.overline),
       strikeOut(other.strikeOut), kerning(other.kerning),
       capital(other.capital), letterSpacingIsAbsolute(other.letterSpacingIsAbsolute),
@@ -270,10 +270,10 @@ QFontPrivate::~QFontPrivate()
 {
     if (engineData && !engineData->ref.deref())
         delete engineData;
-    engineData = 0;
+    engineData = nullptr;
     if (scFont && scFont != this)
         scFont->ref.deref();
-    scFont = 0;
+    scFont = nullptr;
 }
 
 extern QMutex *qt_fontdatabase_mutex();
@@ -293,7 +293,7 @@ QFontEngine *QFontPrivate::engineForScript(int script) const
         // throw out engineData that came from a different thread
         if (!engineData->ref.deref())
             delete engineData;
-        engineData = 0;
+        engineData = nullptr;
     }
     if (!engineData || !QT_FONT_ENGINE_FROM_DATA(engineData, script))
         QFontDatabase::load(this, script);
@@ -413,7 +413,7 @@ QFontEngineData::~QFontEngineData()
     for (int i = 0; i < QUnicodeTables::ScriptCount; ++i) {
         if (engines[i] && !engines[i]->ref.deref())
             delete engines[i];
-        engines[i] = 0;
+        engines[i] = nullptr;
     }
 #else
     if (engine && !engine->ref.deref())
@@ -766,10 +766,10 @@ void QFont::detach()
     if (d->ref.loadRelaxed() == 1) {
         if (d->engineData && !d->engineData->ref.deref())
             delete d->engineData;
-        d->engineData = 0;
+        d->engineData = nullptr;
         if (d->scFont && d->scFont != d.data())
             d->scFont->ref.deref();
-        d->scFont = 0;
+        d->scFont = nullptr;
         return;
     }
 
@@ -1917,7 +1917,7 @@ static void initFontSubst()
         "sans serif",   "arial",
 #endif
 
-        0,              0
+        nullptr,              nullptr
     };
 
     QFontSubst *fontSubst = globalFontSubst();
@@ -1929,7 +1929,7 @@ static void initFontSubst()
         return;
 #endif
 
-    for (int i=0; initTbl[i] != 0; i += 2) {
+    for (int i=0; initTbl[i] != nullptr; i += 2) {
         QStringList &list = (*fontSubst)[QString::fromLatin1(initTbl[i])];
         list.append(QString::fromLatin1(initTbl[i+1]));
     }
@@ -2735,7 +2735,7 @@ QFontCache *QFontCache::instance()
 
 void QFontCache::cleanup()
 {
-    QThreadStorage<QFontCache *> *cache = 0;
+    QThreadStorage<QFontCache *> *cache = nullptr;
     QT_TRY {
         cache = theFontCache();
     } QT_CATCH (const std::bad_alloc &) {
@@ -2780,7 +2780,7 @@ void QFontCache::clear()
             for (int i = 0; i < QUnicodeTables::ScriptCount; ++i) {
                 if (data->engines[i] && !data->engines[i]->ref.deref())
                     delete data->engines[i];
-                data->engines[i] = 0;
+                data->engines[i] = nullptr;
             }
 #else
             if (data->engine && !data->engine->ref.deref())
@@ -2795,7 +2795,7 @@ void QFontCache::clear()
          it != end; ++it) {
         if (it->data->ref.deref() == 0) {
             delete it->data;
-            it->data = 0;
+            it->data = nullptr;
         }
     }
 
@@ -2818,7 +2818,7 @@ QFontEngineData *QFontCache::findEngineData(const Key &key) const
 {
     EngineDataCache::ConstIterator it = engineDataCache.find(key),
                                   end = engineDataCache.end();
-    if (it == end) return 0;
+    if (it == end) return nullptr;
 
     // found
     return it.value();
@@ -2838,7 +2838,7 @@ QFontEngine *QFontCache::findEngine(const Key &key)
 {
     EngineCache::Iterator it = engineCache.find(key),
                          end = engineCache.end();
-    if (it == end) return 0;
+    if (it == end) return nullptr;
 
     // found... update the hitcount and timestamp
     it.value().hits++;

@@ -81,13 +81,13 @@ public:
     // fileName is expected to be absolute and cleanPath()ed.
     // If contents is non-null, it will be used instead of the file's actual content
     ProFile *parsedProFile(const QString &fileName, bool cache = false,
-                           const QString *contents = 0);
+                           const QString *contents = nullptr);
     ProFile *parsedProBlock(const QString &name, const QString &contents)
         { return parsedProFile(name, false, &contents); }
 
 private:
     struct BlockScope {
-        BlockScope() : start(0), braceLevel(0), special(false), inBranch(false) {}
+        BlockScope() : start(nullptr), braceLevel(0), special(false), inBranch(false) {}
         BlockScope(const BlockScope &other) { *this = other; }
         BlockScope& operator=(const ProFileParser::BlockScope&) = default;
         ushort *start; // Where this block started; store length here

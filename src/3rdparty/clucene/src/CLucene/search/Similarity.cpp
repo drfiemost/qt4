@@ -130,14 +130,14 @@ CL_NS_DEF(search)
 #endif
 
    /** The Similarity implementation used by default. */
-   Similarity* _defaultImpl=NULL;
+   Similarity* _defaultImpl=nullptr;
 
    void Similarity::setDefault(Similarity* similarity) {
       _defaultImpl = similarity;
    }
 
    Similarity* Similarity::getDefault() {
-	   if ( _defaultImpl == NULL ){
+	   if ( _defaultImpl == nullptr ){
 			_defaultImpl = _CLNEW DefaultSimilarity();
 	   }
       return _defaultImpl;

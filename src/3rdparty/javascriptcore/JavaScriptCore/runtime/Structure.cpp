@@ -125,8 +125,8 @@ void Structure::dumpStatistics()
 Structure::Structure(JSValue prototype, const TypeInfo& typeInfo)
     : m_typeInfo(typeInfo)
     , m_prototype(prototype)
-    , m_specificValueInPrevious(0)
-    , m_propertyTable(0)
+    , m_specificValueInPrevious(nullptr)
+    , m_propertyTable(nullptr)
     , m_propertyStorageCapacity(JSObject::inlineStorageCapacity)
     , m_offset(noOffset)
     , m_dictionaryKind(NoneDictionaryKind)
@@ -164,7 +164,7 @@ Structure::~Structure()
     }
     
     if (m_enumerationCache)
-        m_enumerationCache->setCachedStructure(0);
+        m_enumerationCache->setCachedStructure(nullptr);
 
     if (m_propertyTable) {
         unsigned entryCount = m_propertyTable->keyCount + m_propertyTable->deletedSentinelCount;
@@ -312,7 +312,7 @@ void Structure::despecifyDictionaryFunction(const Identifier& propertyName)
     ASSERT(entryIndex != emptyEntryIndex);
 
     if (rep == m_propertyTable->entries()[entryIndex - 1].key) {
-        m_propertyTable->entries()[entryIndex - 1].specificValue = 0;
+        m_propertyTable->entries()[entryIndex - 1].specificValue = nullptr;
         return;
     }
 
@@ -333,7 +333,7 @@ void Structure::despecifyDictionaryFunction(const Identifier& propertyName)
         ASSERT(entryIndex != emptyEntryIndex);
 
         if (rep == m_propertyTable->entries()[entryIndex - 1].key) {
-            m_propertyTable->entries()[entryIndex - 1].specificValue = 0;
+            m_propertyTable->entries()[entryIndex - 1].specificValue = nullptr;
             return;
         }
     }
@@ -350,7 +350,7 @@ PassRefPtr<Structure> Structure::addPropertyTransitionToExistingStructure(Struct
         return existingTransition;
     }
 
-    return 0;
+    return nullptr;
 }
 
 PassRefPtr<Structure> Structure::addPropertyTransition(Structure* structure, const Identifier& propertyName, unsigned attributes, JSCell* specificValue, size_t& offset)
@@ -360,7 +360,7 @@ PassRefPtr<Structure> Structure::addPropertyTransition(Structure* structure, con
     ASSERT(!Structure::addPropertyTransitionToExistingStructure(structure, propertyName, attributes, specificValue, offset));
     
     if (structure->m_specificFunctionThrashCount == maxSpecificFunctionThrashCount)
-        specificValue = 0;
+        specificValue = nullptr;
 
     if (structure->transitionCount() > s_maxTransitionLength) {
         RefPtr<Structure> transition = toCacheableDictionaryTransition(structure);
@@ -388,7 +388,7 @@ PassRefPtr<Structure> Structure::addPropertyTransition(Structure* structure, con
             transition->m_propertyTable = structure->copyPropertyTable();
         else {
             transition->m_propertyTable = structure->m_propertyTable;
-            structure->m_propertyTable = 0;
+            structure->m_propertyTable = nullptr;
         }
     } else {
         if (structure->m_previous)
@@ -474,10 +474,10 @@ PassRefPtr<Structure> Structure::addAnonymousSlotsTransition(Structure* structur
     
     transition->m_cachedPrototypeChain = structure->m_cachedPrototypeChain;
     transition->m_previous = structure;
-    transition->m_nameInPrevious = 0;
+    transition->m_nameInPrevious = nullptr;
     transition->m_attributesInPrevious = 0;
     transition->m_anonymousSlotsInPrevious = count;
-    transition->m_specificValueInPrevious = 0;
+    transition->m_specificValueInPrevious = nullptr;
     transition->m_propertyStorageCapacity = structure->m_propertyStorageCapacity;
     transition->m_hasGetterSetterProperties = structure->m_hasGetterSetterProperties;
     transition->m_hasNonEnumerableProperties = structure->m_hasNonEnumerableProperties;
@@ -488,7 +488,7 @@ PassRefPtr<Structure> Structure::addAnonymousSlotsTransition(Structure* structur
             transition->m_propertyTable = structure->copyPropertyTable();
         else {
             transition->m_propertyTable = structure->m_propertyTable;
-            structure->m_propertyTable = 0;
+            structure->m_propertyTable = nullptr;
         }
     } else {
         if (structure->m_previous)
@@ -585,7 +585,7 @@ PassRefPtr<Structure> Structure::flattenDictionaryStructure(JSObject* object)
 
         if (m_propertyTable->deletedOffsets) {
             delete m_propertyTable->deletedOffsets;
-            m_propertyTable->deletedOffsets = 0;
+            m_propertyTable->deletedOffsets = nullptr;
         }
     }
 
@@ -598,7 +598,7 @@ size_t Structure::addPropertyWithoutTransition(const Identifier& propertyName, u
     ASSERT(!m_enumerationCache);
 
     if (m_specificFunctionThrashCount == maxSpecificFunctionThrashCount)
-        specificValue = 0;
+        specificValue = nullptr;
 
     materializePropertyMapIfNecessary();
 
@@ -659,7 +659,7 @@ inline void Structure::checkConsistency()
 PropertyMapHashTable* Structure::copyPropertyTable()
 {
     if (!m_propertyTable)
-        return 0;
+        return nullptr;
 
     size_t tableSize = PropertyMapHashTable::allocationSize(m_propertyTable->size);
     PropertyMapHashTable* newTable = static_cast<PropertyMapHashTable*>(fastMalloc(tableSize));
@@ -748,7 +748,7 @@ bool Structure::despecifyFunction(const Identifier& propertyName)
 
     if (rep == m_propertyTable->entries()[entryIndex - 1].key) {
         ASSERT(m_propertyTable->entries()[entryIndex - 1].specificValue);
-        m_propertyTable->entries()[entryIndex - 1].specificValue = 0;
+        m_propertyTable->entries()[entryIndex - 1].specificValue = nullptr;
         return true;
     }
 
@@ -771,7 +771,7 @@ bool Structure::despecifyFunction(const Identifier& propertyName)
 
         if (rep == m_propertyTable->entries()[entryIndex - 1].key) {
             ASSERT(m_propertyTable->entries()[entryIndex - 1].specificValue);
-            m_propertyTable->entries()[entryIndex - 1].specificValue = 0;
+            m_propertyTable->entries()[entryIndex - 1].specificValue = nullptr;
             return true;
         }
     }
@@ -785,7 +785,7 @@ void Structure::despecifyAllFunctions()
     
     unsigned entryCount = m_propertyTable->keyCount + m_propertyTable->deletedSentinelCount;
     for (unsigned i = 1; i <= entryCount; ++i)
-        m_propertyTable->entries()[i].specificValue = 0;
+        m_propertyTable->entries()[i].specificValue = nullptr;
 }
 
 size_t Structure::put(const Identifier& propertyName, unsigned attributes, JSCell* specificValue)
@@ -911,7 +911,7 @@ size_t Structure::remove(const Identifier& propertyName)
     unsigned i = rep->existingHash();
     unsigned k = 0;
     unsigned entryIndex;
-    UString::Rep* key = 0;
+    UString::Rep* key = nullptr;
     while (1) {
         entryIndex = m_propertyTable->entryIndices[i & m_propertyTable->sizeMask];
         if (entryIndex == emptyEntryIndex)
@@ -942,9 +942,9 @@ size_t Structure::remove(const Identifier& propertyName)
     size_t offset = m_propertyTable->entries()[entryIndex - 1].offset;
 
     key->deref();
-    m_propertyTable->entries()[entryIndex - 1].key = 0;
+    m_propertyTable->entries()[entryIndex - 1].key = nullptr;
     m_propertyTable->entries()[entryIndex - 1].attributes = 0;
-    m_propertyTable->entries()[entryIndex - 1].specificValue = 0;
+    m_propertyTable->entries()[entryIndex - 1].specificValue = nullptr;
     m_propertyTable->entries()[entryIndex - 1].offset = 0;
 
     if (!m_propertyTable->deletedOffsets)

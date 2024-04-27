@@ -181,7 +181,7 @@ bool QDBusPendingCallPrivate::setReplyCallback(QObject *target, const char *memb
         --count;
 
     if (count == 0) {
-        setMetaTypes(count, 0);
+        setMetaTypes(count, nullptr);
     } else {
         QVector<int> types = QVector<int>::fromList(metaTypes);
         setMetaTypes(count, types.constData() + 1);
@@ -465,10 +465,10 @@ QDBusPendingCall QDBusPendingCall::fromError(const QDBusError &error)
 */
 QDBusPendingCall QDBusPendingCall::fromCompletedCall(const QDBusMessage &msg)
 {
-    QDBusPendingCallPrivate *d = 0;
+    QDBusPendingCallPrivate *d = nullptr;
     if (msg.type() == QDBusMessage::ErrorMessage ||
         msg.type() == QDBusMessage::ReplyMessage) {
-        d = new QDBusPendingCallPrivate(QDBusMessage(), 0);
+        d = new QDBusPendingCallPrivate(QDBusMessage(), nullptr);
         d->replyMessage = msg;
         d->ref = 1;
     }

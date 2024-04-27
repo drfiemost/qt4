@@ -802,7 +802,7 @@ namespace JSC {
     
     // 0x0 can never occur naturally because it has a tag of 00, indicating a pointer value, but a payload of 0x0, which is in the (invalid) zero page.
     inline JSValue::JSValue()
-        : m_ptr(0)
+        : m_ptr(nullptr)
     {
     }
 

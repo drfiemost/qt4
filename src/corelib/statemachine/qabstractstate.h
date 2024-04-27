@@ -72,7 +72,7 @@ private: // can only be emitted by QAbstractState
     void exited();
 
 protected:
-    QAbstractState(QState *parent = 0);
+    QAbstractState(QState *parent = nullptr);
 
     virtual void onEntry(QEvent *event) = 0;
     virtual void onExit(QEvent *event) = 0;

@@ -205,7 +205,7 @@ static QString cleanType(const QString &type, const Tree *tree)
 CppCodeParser::CppCodeParser()
     : varComment("/\\*\\s*([a-zA-Z_0-9]+)\\s*\\*/"), sep("(?:<[^>]+>)?::")
 {
-    reset(0);
+    reset(nullptr);
 }
 
 /*!
@@ -423,7 +423,7 @@ const FunctionNode *CppCodeParser::findFunctionNode(const QString& synopsis,
 {
     QStringList parentPath;
     FunctionNode *clone;
-    FunctionNode *func = 0;
+    FunctionNode *func = nullptr;
     int flags = fuzzy ? int(Tree::SearchBaseClasses) : 0;
 
     reset(tree);
@@ -455,7 +455,7 @@ const FunctionNode *CppCodeParser::findFunctionNode(const QString& synopsis,
                         candidates << overload;
                 }
                 if (candidates.count() == 0)
-                    return 0;
+                    return nullptr;
 
                 /*
                     There's only one function with the correct number
@@ -516,7 +516,7 @@ const FunctionNode *CppCodeParser::findFunctionNode(const QString& synopsis,
                 if (candidates.count() == 1)
                     return static_cast<FunctionNode *>(candidates.first());
 
-                return 0;
+                return nullptr;
             }
         }
         delete clone;
@@ -568,8 +568,8 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
 {
     if (command == COMMAND_FN) {
         QStringList parentPath;
-        FunctionNode *func = 0;
-        FunctionNode *clone = 0;
+        FunctionNode *func = nullptr;
+        FunctionNode *clone = nullptr;
 
         if (!makeFunctionNode(arg, &parentPath, &clone) &&
              !makeFunctionNode("void " + arg, &parentPath, &clone)) {
@@ -586,13 +586,13 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
                 }
             }
             // Search the root namespace if no match was found.
-            if (func == 0)
+            if (func == nullptr)
                 func = tre->findFunctionNode(parentPath, clone);
 
-            if (func == 0) {
+            if (func == nullptr) {
                 if (parentPath.isEmpty() && !lastPath.isEmpty())
                     func = tre->findFunctionNode(lastPath, clone);
-                if (func == 0) {
+                if (func == nullptr) {
                     doc.location().warning(tr("Cannot find '%1' in '\\%2'")
                                            .arg(clone->name() + "(...)")
                                            .arg(COMMAND_FN),
@@ -621,14 +621,14 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
     }
     else if (command == COMMAND_MACRO) {
         QStringList parentPath;
-        FunctionNode *func = 0;
+        FunctionNode *func = nullptr;
 
         if (makeFunctionNode(arg, &parentPath, &func, tre->root())) {
             if (!parentPath.isEmpty()) {
                 doc.location().warning(tr("Invalid syntax in '\\%1'")
                                         .arg(COMMAND_MACRO));
                 delete func;
-                func = 0;
+                func = nullptr;
             }
             else {
                 func->setMetaness(FunctionNode::MacroWithParams);
@@ -663,7 +663,7 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
         // ### split(" ") hack is there to support header file syntax
         QStringList paths = arg.split(" ");
         QStringList path = paths[0].split("::");
-        Node *node = 0;
+        Node *node = nullptr;
         if (!usedNamespaces.isEmpty()) {
             foreach (const QString &usedNamespace, usedNamespaces) {
                 QStringList newPath = usedNamespace.split("::") + path;
@@ -675,10 +675,10 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
             }
         }
         // Search the root namespace if no match was found.
-        if (node == 0)
+        if (node == nullptr)
             node = tre->findNode(path, nodeTypeMap[command]);
 
-        if (node == 0) {
+        if (node == nullptr) {
             doc.location().warning(tr("Cannot find '%1' specified with '\\%2' in any header file")
                                    .arg(arg).arg(command));
             lastPath = path;
@@ -727,7 +727,7 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
     }
 #ifdef QDOC_QML
     else if (command == COMMAND_QMLCLASS) {
-        const ClassNode* classNode = 0;
+        const ClassNode* classNode = nullptr;
         QStringList names = arg.split(" ");
         if (names.size() > 1) {
             Node* n = tre->findNode(names[1].split("::"),Node::Class);
@@ -748,7 +748,7 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
              (command == COMMAND_QMLATTACHEDMETHOD)) {
         QString element;
         QString type;
-        QmlClassNode* qmlClass = 0;
+        QmlClassNode* qmlClass = nullptr;
         if (splitQmlMethodArg(doc,arg,type,element)) {
             if (element.startsWith(QLatin1String("Qt")))
                 element = QLatin1String("QML:") + element;
@@ -764,12 +764,12 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
                 else if (command == COMMAND_QMLATTACHEDMETHOD)
                     return makeFunctionNode(doc,arg,qmlClass,Node::QmlMethod,true,COMMAND_QMLATTACHEDMETHOD);
                 else
-                    return 0; // never get here.
+                    return nullptr; // never get here.
             }
         }
     }
 #endif
-    return 0;
+    return nullptr;
 }
 
 #ifdef QDOC_QML
@@ -850,7 +850,7 @@ Node *CppCodeParser::processTopicCommandGroup(const Doc& doc,
                                               const QString& command,
                                               const QStringList& args)
 {
-    QmlPropGroupNode* qmlPropGroup = 0;
+    QmlPropGroupNode* qmlPropGroup = nullptr;
     if ((command == COMMAND_QMLPROPERTY) ||
         (command == COMMAND_QMLATTACHEDPROPERTY)) {
         QString type;
@@ -872,7 +872,7 @@ Node *CppCodeParser::processTopicCommandGroup(const Doc& doc,
             const ClassNode *correspondingClass = static_cast<const QmlClassNode*>(qmlPropGroup->parent())->classNode();
             QmlPropertyNode *qmlPropNode = new QmlPropertyNode(qmlPropGroup,property,type,attached);
 
-            const PropertyNode *correspondingProperty = 0;
+            const PropertyNode *correspondingProperty = nullptr;
             if (correspondingClass) {
                 correspondingProperty = qmlPropNode->correspondingProperty(tre);
             }
@@ -934,7 +934,7 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
                                             Node *node)
 {
     if (command == COMMAND_INHEADERFILE) {
-        if (node != 0 && node->isInnerNode()) {
+        if (node != nullptr && node->isInnerNode()) {
             ((InnerNode *) node)->addInclude(arg);
         }
         else {
@@ -943,7 +943,7 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
         }
     }
     else if (command == COMMAND_OVERLOAD) {
-        if (node != 0 && node->type() == Node::Function) {
+        if (node != nullptr && node->type() == Node::Function) {
             ((FunctionNode *) node)->setOverload(true);
         }
         else {
@@ -952,10 +952,10 @@ void CppCodeParser::processOtherMetaCommand(const Doc& doc,
         }
     }
     else if (command == COMMAND_REIMP) {
-        if (node != 0 && node->type() == Node::Function) {
+        if (node != nullptr && node->type() == Node::Function) {
             FunctionNode *func = (FunctionNode *) node;
             const FunctionNode *from = func->reimplementedFrom();
-            if (from == 0) {
+            if (from == nullptr) {
                 doc.location().warning(
                     tr("Cannot find base function for '\\%1' in %2()")
                     .arg(COMMAND_REIMP).arg(node->name()),
@@ -1065,7 +1065,7 @@ void CppCodeParser::processOtherMetaCommands(const Doc& doc, Node *node)
 void CppCodeParser::reset(Tree *tree)
 {
     tre = tree;
-    tokenizer = 0;
+    tokenizer = nullptr;
     tok = 0;
     access = Node::Public;
     metaness = FunctionNode::Plain;
@@ -1172,7 +1172,7 @@ bool CppCodeParser::matchTemplateAngles(CodeChunk *dataType)
                     return false;
             }
 
-            if (dataType != 0)
+            if (dataType != nullptr)
                 dataType->append(lexeme());
             readToken();
         } while (leftAngleDepth > 0 && tok != Tok_Eoi);
@@ -1259,7 +1259,7 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
         */
         dataType->append(previousLexeme());
         dataType->appendHotspot();
-        if (var != 0 && match(Tok_Ident))
+        if (var != nullptr && match(Tok_Ident))
             *var = previousLexeme();
         if (!match(Tok_RightParen) || tok != Tok_LeftParen)
             return false;
@@ -1280,7 +1280,7 @@ bool CppCodeParser::matchDataType(CodeChunk *dataType, QString *var)
         */
         dataType->appendHotspot();
 
-        if (var != 0) {
+        if (var != nullptr) {
             if (match(Tok_Ident)) {
                 *var = previousLexeme();
             }
@@ -1538,9 +1538,9 @@ bool CppCodeParser::matchFunctionDecl(InnerNode *parent,
             readToken();
         match(Tok_RightBrace);
     }
-    if (parentPathPtr != 0)
+    if (parentPathPtr != nullptr)
         *parentPathPtr = parentPath;
-    if (funcPtr != 0)
+    if (funcPtr != nullptr)
         *funcPtr = func;
     return true;
 }
@@ -1655,7 +1655,7 @@ bool CppCodeParser::matchNamespaceDecl(InnerNode *parent)
         So far, so good. We have 'namespace Foo {'.
     */
     QString namespaceName = previousLexeme();
-    NamespaceNode *namespasse = 0;
+    NamespaceNode *namespasse = nullptr;
     if (parent) {
         namespasse = static_cast<NamespaceNode*>(parent->findNode(namespaceName, Node::Namespace));
     }
@@ -1765,7 +1765,7 @@ bool CppCodeParser::matchEnumDecl(InnerNode *parent)
     if (tok != Tok_LeftBrace)
         return false;
 
-    EnumNode *enume = 0;
+    EnumNode *enume = nullptr;
 
     if (!name.isEmpty()) {
         enume = new EnumNode(parent, name);
@@ -2034,7 +2034,7 @@ bool CppCodeParser::matchDeclList(InnerNode *parent)
             match(Tok_RightParen);
             break;
         default:
-            if (!matchFunctionDecl(parent, 0, 0, templateStuff)) {
+            if (!matchFunctionDecl(parent, nullptr, nullptr, templateStuff)) {
                 while (tok != Tok_Eoi &&
                        (tokenizer->braceDepth() > braceDepth0 ||
                         (!match(Tok_Semicolon) &&
@@ -2098,16 +2098,16 @@ bool CppCodeParser::matchDocsAndStuff()
             if (topic.isEmpty()) {
                 QStringList parentPath;
                 FunctionNode *clone;
-                FunctionNode *func = 0;
+                FunctionNode *func = nullptr;
 
-                if (matchFunctionDecl(0, &parentPath, &clone)) {
+                if (matchFunctionDecl(nullptr, &parentPath, &clone)) {
                     foreach (const QString &usedNamespace, usedNamespaces) {
                         QStringList newPath = usedNamespace.split("::") + parentPath;
                         func = tre->findFunctionNode(newPath, clone);
                         if (func)
                             break;
                     }
-                    if (func == 0)
+                    if (func == nullptr)
                         func = tre->findFunctionNode(parentPath, clone);
 
                     if (func) {
@@ -2136,7 +2136,7 @@ bool CppCodeParser::matchDocsAndStuff()
                     (topic == COMMAND_QMLATTACHEDPROPERTY)) {
                     Doc nodeDoc = doc;
                     Node *node = processTopicCommandGroup(nodeDoc,topic,args);
-                    if (node != 0) {
+                    if (node != nullptr) {
                         nodes.append(node);
                         docs.append(nodeDoc);
                     }
@@ -2146,7 +2146,7 @@ bool CppCodeParser::matchDocsAndStuff()
                     while (a != args.end()) {
                         Doc nodeDoc = doc;
                         Node *node = processTopicCommand(nodeDoc,topic,*a);
-                        if (node != 0) {
+                        if (node != nullptr) {
                             nodes.append(node);
                             docs.append(nodeDoc);
                         }
@@ -2192,9 +2192,9 @@ bool CppCodeParser::matchDocsAndStuff()
         else {
             QStringList parentPath;
             FunctionNode *clone;
-            FunctionNode *node = 0;
+            FunctionNode *node = nullptr;
 
-            if (matchFunctionDecl(0, &parentPath, &clone)) {
+            if (matchFunctionDecl(nullptr, &parentPath, &clone)) {
                 /*
                   The location of the definition is more interesting
                   than that of the declaration. People equipped with
@@ -2205,7 +2205,7 @@ bool CppCodeParser::matchDocsAndStuff()
                   generated by moc.
                 */
                 node = tre->findFunctionNode(parentPath, clone);
-                if (node != 0 && node->metaness() != FunctionNode::Signal)
+                if (node != nullptr && node->metaness() != FunctionNode::Signal)
                     node->setLocation(clone->location());
                 delete clone;
             }
@@ -2258,14 +2258,14 @@ FunctionNode* CppCodeParser::makeFunctionNode(const Doc& doc,
                                               QString qdoctag)
 {
     QStringList pp;
-    FunctionNode* fn = 0;
+    FunctionNode* fn = nullptr;
     if (!makeFunctionNode(sig,&pp,&fn,parent,type,attached) &&
         !makeFunctionNode("void "+sig,&pp,&fn,parent,type,attached)) {
         doc.location().warning(tr("Invalid syntax in '\\%1'").arg(qdoctag));
     }
     if (fn)
         return fn;
-    return 0;
+    return nullptr;
 }
 
 void CppCodeParser::parseQiteratorDotH(const Location &location,

@@ -272,7 +272,7 @@ QConfFile *QConfFile::fromName(const QString &fileName, bool _userPerms)
     ConfFileHash *usedHash = usedHashFunc();
     ConfFileCache *unusedCache = unusedCacheFunc();
 
-    QConfFile *confFile = 0;
+    QConfFile *confFile = nullptr;
     QMutexLocker locker(&settingsGlobalMutex);
 
     if (!(confFile = usedHash->value(absPath))) {
@@ -296,7 +296,7 @@ void QConfFile::clearCache()
 // QSettingsPrivate
 
 QSettingsPrivate::QSettingsPrivate(QSettings::Format format)
-    : format(format), scope(QSettings::UserScope /* nothing better to put */), iniCodec(0), spec(0), fallbacks(true),
+    : format(format), scope(QSettings::UserScope /* nothing better to put */), iniCodec(nullptr), spec(0), fallbacks(true),
       pendingChanges(false), status(QSettings::NoError)
 {
 }
@@ -304,7 +304,7 @@ QSettingsPrivate::QSettingsPrivate(QSettings::Format format)
 QSettingsPrivate::QSettingsPrivate(QSettings::Format format, QSettings::Scope scope,
                                    const QString &organization, const QString &application)
     : format(format), scope(scope), organizationName(organization), applicationName(application),
-      iniCodec(0), spec(0), fallbacks(true), pendingChanges(false), status(QSettings::NoError)
+      iniCodec(nullptr), spec(0), fallbacks(true), pendingChanges(false), status(QSettings::NoError)
 {
 }
 
@@ -988,8 +988,8 @@ QStringList QSettingsPrivate::splitArgs(const QString &s, int idx)
 void QConfFileSettingsPrivate::initFormat()
 {
     extension = (format == QSettings::NativeFormat) ? QLatin1String(".conf") : QLatin1String(".ini");
-    readFunc = 0;
-    writeFunc = 0;
+    readFunc = nullptr;
+    writeFunc = nullptr;
 #if defined(Q_OS_MAC)
     caseSensitivity = (format == QSettings::NativeFormat) ? Qt::CaseSensitive : IniCaseSensitivity;
 #else
@@ -1092,7 +1092,7 @@ static void initDefaultPaths(QMutexLocker *locker)
 #else
         QString userPath;
         char *env = getenv("XDG_CONFIG_HOME");
-        if (env == 0) {
+        if (env == nullptr) {
             userPath = homePath;
             userPath += QLatin1Char('/');
 #if defined(Q_WS_QWS) || defined(Q_WS_QPA)
@@ -3348,7 +3348,7 @@ bool QSettings::contains(const QString &key) const
 {
     Q_D(const QSettings);
     QString k = d->actualKey(key);
-    return d->get(k, 0);
+    return d->get(k, nullptr);
 }
 
 /*!

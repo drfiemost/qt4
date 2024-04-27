@@ -429,7 +429,7 @@ bool QSharedMemory::attach(AccessMode mode)
 bool QSharedMemory::isAttached() const
 {
     Q_D(const QSharedMemory);
-    return (0 != d->memory);
+    return (nullptr != d->memory);
 }
 
 /*!

@@ -27,7 +27,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneFieldPrivate::QCLuceneFieldPrivate()
     : QSharedData()
 {
-    field = 0;
+    field = nullptr;
     deleteCLuceneField = true;
 }
 
@@ -47,14 +47,14 @@ QCLuceneFieldPrivate::~QCLuceneFieldPrivate()
 
 QCLuceneField::QCLuceneField()
     : d(new QCLuceneFieldPrivate())
-    , reader(0)
+    , reader(nullptr)
 {
     // nothing todo
 }
 
 QCLuceneField::QCLuceneField(const QString &name, const QString &value, int configs)
     : d(new QCLuceneFieldPrivate())
-    , reader(0)
+    , reader(nullptr)
 {
     TCHAR* fieldName = QStringToTChar(name);
     TCHAR* fieldValue = QStringToTChar(value);

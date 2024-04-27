@@ -57,8 +57,8 @@ class QGraphicsLinearLayoutPrivate;
 class Q_GUI_EXPORT QGraphicsLinearLayout : public QGraphicsLayout
 {
 public:
-    QGraphicsLinearLayout(QGraphicsLayoutItem *parent = 0);
-    QGraphicsLinearLayout(Qt::Orientation orientation, QGraphicsLayoutItem *parent = 0);
+    QGraphicsLinearLayout(QGraphicsLayoutItem *parent = nullptr);
+    QGraphicsLinearLayout(Qt::Orientation orientation, QGraphicsLayoutItem *parent = nullptr);
     virtual ~QGraphicsLinearLayout();
 
     void setOrientation(Qt::Orientation orientation);

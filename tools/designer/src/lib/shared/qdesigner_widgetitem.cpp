@@ -77,7 +77,7 @@ static QWidgetItem *createDesignerWidgetItem(const QLayout *layout, QWidget *wid
     if (DebugWidgetItem)
         qDebug() << "QDesignerWidgetItem: Noncontainer: " << layout << widget;
 
-    return 0;
+    return nullptr;
 }
 
 static QString sizePolicyToString(const QSizePolicy &p)
@@ -107,7 +107,7 @@ static const QLayout *findLayoutOfItem(const QLayout *haystack, const QLayoutIte
             if (const QLayout *containing = findLayoutOfItem(childLayout, needle))
                 return containing;
     }
-    return 0;
+    return nullptr;
 }
 
 
@@ -238,7 +238,7 @@ bool QDesignerWidgetItem::check(const QLayout *layout, QWidget *w, Qt::Orientati
     // well. Avoid nested layouts (as the effective stretch cannot be easily
     // computed and may mess things up). Won't work for Q3 Group boxes.
     if (ptrToOrientations)
-        *ptrToOrientations = 0;
+        *ptrToOrientations = nullptr;
 
     const QObject *layoutParent = layout->parent();
     if (!layoutParent || !layoutParent->isWidgetType() || !WidgetFactory::isFormEditorObject(layoutParent))
@@ -286,7 +286,7 @@ void QDesignerWidgetItem::install()
 
 void QDesignerWidgetItem::deinstall()
 {
-    QLayoutPrivate::widgetItemFactoryMethod = 0;
+    QLayoutPrivate::widgetItemFactoryMethod = nullptr;
 }
 
 const QLayout *QDesignerWidgetItem::containingLayout() const
@@ -308,7 +308,7 @@ void QDesignerWidgetItem::layoutChanged()
 {
     if (DebugWidgetItem)
         qDebug() << Q_FUNC_INFO;
-    m_cachedContainingLayout = 0;
+    m_cachedContainingLayout = nullptr;
 }
 
 bool QDesignerWidgetItem::eventFilter(QObject * /* watched */, QEvent *event)

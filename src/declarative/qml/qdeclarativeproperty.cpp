@@ -106,7 +106,7 @@ qWarning() << "Pixel size should now be 24:" << property.read().toInt();
     Create an invalid QDeclarativeProperty.
 */
 QDeclarativeProperty::QDeclarativeProperty()
-: d(0)
+: d(nullptr)
 {
 }
 
@@ -115,7 +115,7 @@ QDeclarativeProperty::~QDeclarativeProperty()
 {
     if (d)
         d->release();
-    d = 0;
+    d = nullptr;
 }
 
 /*!
@@ -137,8 +137,8 @@ QDeclarativeProperty::QDeclarativeProperty(QObject *obj)
 QDeclarativeProperty::QDeclarativeProperty(QObject *obj, QDeclarativeContext *ctxt)
 : d(new QDeclarativePropertyPrivate)
 {
-    d->context = ctxt?QDeclarativeContextData::get(ctxt):0;
-    d->engine = ctxt?ctxt->engine():0;
+    d->context = ctxt?QDeclarativeContextData::get(ctxt):nullptr;
+    d->engine = ctxt?ctxt->engine():nullptr;
     d->initDefault(obj);
 }
 
@@ -151,7 +151,7 @@ QDeclarativeProperty::QDeclarativeProperty(QObject *obj, QDeclarativeContext *ct
 QDeclarativeProperty::QDeclarativeProperty(QObject *obj, QDeclarativeEngine *engine)
   : d(new QDeclarativePropertyPrivate)
 {
-    d->context = 0;
+    d->context = nullptr;
     d->engine = engine;
     d->initDefault(obj);
 }
@@ -177,7 +177,7 @@ QDeclarativeProperty::QDeclarativeProperty(QObject *obj, const QString &name)
 : d(new QDeclarativePropertyPrivate)
 {
     d->initProperty(obj, name);
-    if (!isValid()) d->object = 0;
+    if (!isValid()) d->object = nullptr;
 }
 
 /*!
@@ -190,10 +190,10 @@ QDeclarativeProperty::QDeclarativeProperty(QObject *obj, const QString &name)
 QDeclarativeProperty::QDeclarativeProperty(QObject *obj, const QString &name, QDeclarativeContext *ctxt)
 : d(new QDeclarativePropertyPrivate)
 {
-    d->context = ctxt?QDeclarativeContextData::get(ctxt):0;
-    d->engine = ctxt?ctxt->engine():0;
+    d->context = ctxt?QDeclarativeContextData::get(ctxt):nullptr;
+    d->engine = ctxt?ctxt->engine():nullptr;
     d->initProperty(obj, name);
-    if (!isValid()) { d->object = 0; d->context = 0; d->engine = 0; }
+    if (!isValid()) { d->object = nullptr; d->context = nullptr; d->engine = nullptr; }
 }
 
 /*!
@@ -204,10 +204,10 @@ QDeclarativeProperty::QDeclarativeProperty(QObject *obj, const QString &name, QD
 QDeclarativeProperty::QDeclarativeProperty(QObject *obj, const QString &name, QDeclarativeEngine *engine)
 : d(new QDeclarativePropertyPrivate)
 {
-    d->context = 0;
+    d->context = nullptr;
     d->engine = engine;
     d->initProperty(obj, name);
-    if (!isValid()) { d->object = 0; d->context = 0; d->engine = 0; }
+    if (!isValid()) { d->object = nullptr; d->context = nullptr; d->engine = nullptr; }
 }
 
 Q_GLOBAL_STATIC(QDeclarativeValueTypeFactory, qmlValueTypes)
@@ -216,7 +216,7 @@ void QDeclarativePropertyPrivate::initProperty(QObject *obj, const QString &name
 {
     if (!obj) return;
 
-    QDeclarativeTypeNameCache *typeNameCache = context?context->imports:0;
+    QDeclarativeTypeNameCache *typeNameCache = context?context->imports:nullptr;
 
     QStringList path = name.split(QLatin1Char('.'));
     if (path.isEmpty()) return;
@@ -227,7 +227,7 @@ void QDeclarativePropertyPrivate::initProperty(QObject *obj, const QString &name
     for (int ii = 0; ii < path.count() - 1; ++ii) {
         const QString &pathName = path.at(ii);
 
-        if (QDeclarativeTypeNameCache::Data *data = typeNameCache?typeNameCache->data(pathName):0) {
+        if (QDeclarativeTypeNameCache::Data *data = typeNameCache?typeNameCache->data(pathName):nullptr) {
             if (data->type) {
                 QDeclarativeAttachedPropertiesFunc func = data->type->attachedPropertiesFunction();
                 if (!func) return; // Not an attachable type
@@ -279,7 +279,7 @@ void QDeclarativePropertyPrivate::initProperty(QObject *obj, const QString &name
                 if (!(property->flags & QDeclarativePropertyCache::Data::IsQObjectDerived)) 
                     return; // Not an object property
 
-                void *args[] = { &currentObject, 0 };
+                void *args[] = { &currentObject, nullptr };
                 QMetaObject::metacall(currentObject, QMetaObject::ReadProperty, property->coreIndex, args);
                 if (!currentObject) return; // No value
 
@@ -388,11 +388,11 @@ QDeclarativePropertyPrivate::propertyTypeCategory() const
 const char *QDeclarativeProperty::propertyTypeName() const
 {
     if (!d)
-        return 0;
+        return nullptr;
     if (d->isValueType()) {
 
         QDeclarativeEnginePrivate *ep = QDeclarativeEnginePrivate::get(d->context);
-        QDeclarativeValueType *valueType = 0;
+        QDeclarativeValueType *valueType = nullptr;
         if (ep) valueType = ep->valueTypes[d->core.propType];
         else valueType = QDeclarativeValueTypeFactory::valueType(d->core.propType);
         Q_ASSERT(valueType);
@@ -405,7 +405,7 @@ const char *QDeclarativeProperty::propertyTypeName() const
     } else if (d->object && type() & Property && d->core.isValid()) {
         return d->object->metaObject()->property(d->core.coreIndex).typeName();
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -492,7 +492,7 @@ bool QDeclarativeProperty::isSignalProperty() const
 */
 QObject *QDeclarativeProperty::object() const
 {
-    return d ? d->object : 0;
+    return d ? d->object : nullptr;
 }
 
 /*!
@@ -578,8 +578,8 @@ QString QDeclarativeProperty::name() const
         } else if (d->isValueType()) {
             QString rv = d->core.name(d->object) + QLatin1Char('.');
 
-            QDeclarativeEnginePrivate *ep = d->engine?QDeclarativeEnginePrivate::get(d->engine):0;
-            QDeclarativeValueType *valueType = 0;
+            QDeclarativeEnginePrivate *ep = d->engine?QDeclarativeEnginePrivate::get(d->engine):nullptr;
+            QDeclarativeValueType *valueType = nullptr;
             if (ep) valueType = ep->valueTypes[d->core.propType];
             else valueType = QDeclarativeValueTypeFactory::valueType(d->core.propType);
             Q_ASSERT(valueType);
@@ -638,7 +638,7 @@ QDeclarativeAbstractBinding *
 QDeclarativePropertyPrivate::binding(const QDeclarativeProperty &that) 
 {
     if (!that.d || !that.isProperty() || !that.d->object)
-        return 0;
+        return nullptr;
 
     return binding(that.d->object, that.d->core.coreIndex, that.d->valueType.valueTypeCoreIdx);
 }
@@ -664,7 +664,7 @@ QDeclarativePropertyPrivate::setBinding(const QDeclarativeProperty &that,
     if (!that.d || !that.isProperty() || !that.d->object) {
         if (newBinding)
             newBinding->destroy();
-        return 0;
+        return nullptr;
     }
 
     return that.d->setBinding(that.d->object, that.d->core.coreIndex, 
@@ -676,17 +676,17 @@ QDeclarativePropertyPrivate::binding(QObject *object, int coreIndex, int valueTy
 {
     QDeclarativeData *data = QDeclarativeData::get(object);
     if (!data)
-        return 0;
+        return nullptr;
 
     QDeclarativePropertyCache::Data *propertyData = 
-        data->propertyCache?data->propertyCache->property(coreIndex):0;
+        data->propertyCache?data->propertyCache->property(coreIndex):nullptr;
     if (propertyData && propertyData->flags & QDeclarativePropertyCache::Data::IsAlias) {
         const QDeclarativeVMEMetaObject *vme = 
             static_cast<const QDeclarativeVMEMetaObject *>(metaObjectForProperty(object->metaObject(), coreIndex));
 
-        QObject *aObject = 0; int aCoreIndex = -1; int aValueTypeIndex = -1;
+        QObject *aObject = nullptr; int aCoreIndex = -1; int aValueTypeIndex = -1;
         if (!vme->aliasTarget(coreIndex, &aObject, &aCoreIndex, &aValueTypeIndex) || aCoreIndex == -1)
-            return 0;
+            return nullptr;
 
         // This will either be a value type sub-reference or an alias to a value-type sub-reference not both
         Q_ASSERT(valueTypeIndex == -1 || aValueTypeIndex == -1);
@@ -694,7 +694,7 @@ QDeclarativePropertyPrivate::binding(QObject *object, int coreIndex, int valueTy
     }
 
     if (!data->hasBindingBit(coreIndex))
-        return 0;
+        return nullptr;
 
     QDeclarativeAbstractBinding *binding = data->bindings;
     while (binding && binding->propertyIndex() != coreIndex)
@@ -720,11 +720,11 @@ void QDeclarativePropertyPrivate::findAliasTarget(QObject *object, int bindingIn
     QDeclarativeData *data = QDeclarativeData::get(object, false);
     if (data) {
         QDeclarativePropertyCache::Data *propertyData = 
-            data->propertyCache?data->propertyCache->property(coreIndex):0;
+            data->propertyCache?data->propertyCache->property(coreIndex):nullptr;
         if (propertyData && propertyData->flags & QDeclarativePropertyCache::Data::IsAlias) {
             const QDeclarativeVMEMetaObject *vme = 
                 static_cast<const QDeclarativeVMEMetaObject *>(metaObjectForProperty(object->metaObject(), coreIndex));
-            QObject *aObject = 0; int aCoreIndex = -1; int aValueTypeIndex = -1;
+            QObject *aObject = nullptr; int aCoreIndex = -1; int aValueTypeIndex = -1;
             if (vme->aliasTarget(coreIndex, &aObject, &aCoreIndex, &aValueTypeIndex)) {
                 // This will either be a value type sub-reference or an alias to a value-type sub-reference not both
                 Q_ASSERT(valueTypeIndex == -1 || aValueTypeIndex == -1);
@@ -749,20 +749,20 @@ QDeclarativeAbstractBinding *
 QDeclarativePropertyPrivate::setBinding(QObject *object, int coreIndex, int valueTypeIndex,
                                         QDeclarativeAbstractBinding *newBinding, WriteFlags flags)
 {
-    QDeclarativeData *data = QDeclarativeData::get(object, 0 != newBinding);
-    QDeclarativeAbstractBinding *binding = 0;
+    QDeclarativeData *data = QDeclarativeData::get(object, nullptr != newBinding);
+    QDeclarativeAbstractBinding *binding = nullptr;
 
     if (data) {
         QDeclarativePropertyCache::Data *propertyData = 
-            data->propertyCache?data->propertyCache->property(coreIndex):0;
+            data->propertyCache?data->propertyCache->property(coreIndex):nullptr;
         if (propertyData && propertyData->flags & QDeclarativePropertyCache::Data::IsAlias) {
             const QDeclarativeVMEMetaObject *vme = 
                 static_cast<const QDeclarativeVMEMetaObject *>(metaObjectForProperty(object->metaObject(), coreIndex));
 
-            QObject *aObject = 0; int aCoreIndex = -1; int aValueTypeIndex = -1;
+            QObject *aObject = nullptr; int aCoreIndex = -1; int aValueTypeIndex = -1;
             if (!vme->aliasTarget(coreIndex, &aObject, &aCoreIndex, &aValueTypeIndex)) {
                 if (newBinding) newBinding->destroy();
-                return 0;
+                return nullptr;
             }
 
             // This will either be a value type sub-reference or an alias to a value-type sub-reference not both
@@ -788,7 +788,7 @@ QDeclarativePropertyPrivate::setBinding(QObject *object, int coreIndex, int valu
 
     if (binding) {
         binding->removeFromObject();
-        binding->setEnabled(false, 0);
+        binding->setEnabled(false, nullptr);
     }
 
     if (newBinding) {
@@ -803,20 +803,20 @@ QDeclarativeAbstractBinding *
 QDeclarativePropertyPrivate::setBindingNoEnable(QObject *object, int coreIndex, int valueTypeIndex,
                                                 QDeclarativeAbstractBinding *newBinding)
 {
-    QDeclarativeData *data = QDeclarativeData::get(object, 0 != newBinding);
-    QDeclarativeAbstractBinding *binding = 0;
+    QDeclarativeData *data = QDeclarativeData::get(object, nullptr != newBinding);
+    QDeclarativeAbstractBinding *binding = nullptr;
 
     if (data) {
         QDeclarativePropertyCache::Data *propertyData = 
-            data->propertyCache?data->propertyCache->property(coreIndex):0;
+            data->propertyCache?data->propertyCache->property(coreIndex):nullptr;
         if (propertyData && propertyData->flags & QDeclarativePropertyCache::Data::IsAlias) {
             const QDeclarativeVMEMetaObject *vme = 
                 static_cast<const QDeclarativeVMEMetaObject *>(metaObjectForProperty(object->metaObject(), coreIndex));
 
-            QObject *aObject = 0; int aCoreIndex = -1; int aValueTypeIndex = -1;
+            QObject *aObject = nullptr; int aCoreIndex = -1; int aValueTypeIndex = -1;
             if (!vme->aliasTarget(coreIndex, &aObject, &aCoreIndex, &aValueTypeIndex)) {
                 if (newBinding) newBinding->destroy();
-                return 0;
+                return nullptr;
             }
 
             // This will either be a value type sub-reference or an alias to a value-type sub-reference not both
@@ -857,7 +857,7 @@ QDeclarativeExpression *
 QDeclarativePropertyPrivate::signalExpression(const QDeclarativeProperty &that)
 {
     if (!(that.type() & QDeclarativeProperty::SignalProperty))
-        return 0;
+        return nullptr;
 
     const QObjectList &children = that.d->object->children();
     
@@ -869,7 +869,7 @@ QDeclarativePropertyPrivate::signalExpression(const QDeclarativeProperty &that)
             return signal->expression();
     }
 
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -885,7 +885,7 @@ QDeclarativePropertyPrivate::setSignalExpression(const QDeclarativeProperty &tha
 {
     if (!(that.type() & QDeclarativeProperty::SignalProperty)) {
         delete expr;
-        return 0;
+        return nullptr;
     }
 
     const QObjectList &children = that.d->object->children();
@@ -902,7 +902,7 @@ QDeclarativePropertyPrivate::setSignalExpression(const QDeclarativeProperty &tha
         QDeclarativeBoundSignal *signal = new QDeclarativeBoundSignal(that.d->object, that.method(), that.d->object);
         return signal->setExpression(expr);
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -979,7 +979,7 @@ QVariant QDeclarativePropertyPrivate::readValueProperty()
     if (isValueType()) {
 
         QDeclarativeEnginePrivate *ep = QDeclarativeEnginePrivate::get(context);
-        QDeclarativeValueType *valueType = 0;
+        QDeclarativeValueType *valueType = nullptr;
         if (ep) valueType = ep->valueTypes[core.propType];
         else valueType = QDeclarativeValueTypeFactory::valueType(core.propType);
         Q_ASSERT(valueType);
@@ -995,14 +995,14 @@ QVariant QDeclarativePropertyPrivate::readValueProperty()
     } else if (core.flags & QDeclarativePropertyCache::Data::IsQList) {
 
         QDeclarativeListProperty<QObject> prop;
-        void *args[] = { &prop, 0 };
+        void *args[] = { &prop, nullptr };
         QMetaObject::metacall(object, QMetaObject::ReadProperty, core.coreIndex, args);
         return QVariant::fromValue(QDeclarativeListReferencePrivate::init(prop, core.propType, engine)); 
 
     } else if (core.flags & QDeclarativePropertyCache::Data::IsQObjectDerived) {
 
-        QObject *rv = 0;
-        void *args[] = { &rv, 0 };
+        QObject *rv = nullptr;
+        void *args[] = { &rv, nullptr };
         QMetaObject::metacall(object, QMetaObject::ReadProperty, core.coreIndex, args);
         return QVariant::fromValue(rv);
 
@@ -1053,7 +1053,7 @@ bool QDeclarativePropertyPrivate::writeValueProperty(const QVariant &value, Writ
     if (!(flags & DontRemoveBinding) &&
         (type() & QDeclarativeProperty::Property) && object) {
         QDeclarativeAbstractBinding *binding = setBinding(object, core.coreIndex,
-                                                          valueType.valueTypeCoreIdx, 0, flags);
+                                                          valueType.valueTypeCoreIdx, nullptr, flags);
         if (binding) binding->destroy();
     }
 
@@ -1061,7 +1061,7 @@ bool QDeclarativePropertyPrivate::writeValueProperty(const QVariant &value, Writ
     if (isValueType()) {
         QDeclarativeEnginePrivate *ep = QDeclarativeEnginePrivate::get(context);
 
-        QDeclarativeValueType *writeBack = 0;
+        QDeclarativeValueType *writeBack = nullptr;
         if (ep) {
             writeBack = ep->valueTypes[core.propType];
         } else {
@@ -1134,17 +1134,17 @@ bool QDeclarativePropertyPrivate::write(QObject *object, const QDeclarativePrope
         if (context && u.isRelative() && !u.isEmpty())
             u = context->resolvedUrl(u);
         int status = -1;
-        void *argv[] = { &u, 0, &status, &flags };
+        void *argv[] = { &u, nullptr, &status, &flags };
         QMetaObject::metacall(object, QMetaObject::WriteProperty, coreIdx, argv);
 
     } else if (variantType == propertyType) {
 
-        void *a[] = { (void *)value.constData(), 0, &status, &flags };
+        void *a[] = { (void *)value.constData(), nullptr, &status, &flags };
         QMetaObject::metacall(object, QMetaObject::WriteProperty, coreIdx, a);
 
     } else if (qMetaTypeId<QVariant>() == propertyType) {
 
-        void *a[] = { (void *)&value, 0, &status, &flags };
+        void *a[] = { (void *)&value, nullptr, &status, &flags };
         QMetaObject::metacall(object, QMetaObject::WriteProperty, coreIdx, a);
 
     } else if (property.flags & QDeclarativePropertyCache::Data::IsQObjectDerived) {
@@ -1160,14 +1160,14 @@ bool QDeclarativePropertyPrivate::write(QObject *object, const QDeclarativePrope
         if (o) valMo = o->metaObject();
 
         if (canConvert(valMo, propMo)) {
-            void *args[] = { &o, 0, &status, &flags };
+            void *args[] = { &o, nullptr, &status, &flags };
             QMetaObject::metacall(object, QMetaObject::WriteProperty, coreIdx, 
                                   args);
         } else if (!o && canConvert(propMo, valMo)) {
             // In the case of a null QObject, we assign the null if there is 
             // any change that the null variant type could be up or down cast to 
             // the property type.
-            void *args[] = { &o, 0, &status, &flags };
+            void *args[] = { &o, nullptr, &status, &flags };
             QMetaObject::metacall(object, QMetaObject::WriteProperty, coreIdx, 
                                   args);
         } else {
@@ -1176,7 +1176,7 @@ bool QDeclarativePropertyPrivate::write(QObject *object, const QDeclarativePrope
 
     } else if (property.flags & QDeclarativePropertyCache::Data::IsQList) {
 
-        const QMetaObject *listType = 0;
+        const QMetaObject *listType = nullptr;
         if (enginePriv) {
             listType = enginePriv->rawMetaObjectForType(enginePriv->listType(property.propType));
         } else {
@@ -1187,7 +1187,7 @@ bool QDeclarativePropertyPrivate::write(QObject *object, const QDeclarativePrope
         if (!listType) return false;
 
         QDeclarativeListProperty<void> prop;
-        void *args[] = { &prop, 0 };
+        void *args[] = { &prop, nullptr };
         QMetaObject::metacall(object, QMetaObject::ReadProperty, coreIdx, args);
 
         if (!prop.clear) return false;
@@ -1200,13 +1200,13 @@ bool QDeclarativePropertyPrivate::write(QObject *object, const QDeclarativePrope
             for (int ii = 0; ii < list.count(); ++ii) {
                 QObject *o = list.at(ii);
                 if (o && !canConvert(o->metaObject(), listType))
-                    o = 0;
+                    o = nullptr;
                 prop.append(&prop, (void *)o);
             }
         } else {
             QObject *o = enginePriv?enginePriv->toQObject(value):QDeclarativeMetaType::toQObject(value);
             if (o && !canConvert(o->metaObject(), listType))
-                o = 0;
+                o = nullptr;
             prop.append(&prop, (void *)o);
         }
 
@@ -1231,7 +1231,7 @@ bool QDeclarativePropertyPrivate::write(QObject *object, const QDeclarativePrope
             }
         }
         if (ok) {
-            void *a[] = { (void *)v.constData(), 0, &status, &flags};
+            void *a[] = { (void *)v.constData(), nullptr, &status, &flags};
             QMetaObject::metacall(object, QMetaObject::WriteProperty, coreIdx, a);
         } else {
             return false;
@@ -1247,7 +1247,7 @@ const QMetaObject *QDeclarativePropertyPrivate::rawMetaObjectForType(QDeclarativ
         return engine->rawMetaObjectForType(userType);
     } else {
         QDeclarativeType *type = QDeclarativeMetaType::qmlType(userType);
-        return type?type->baseMetaObject():0;
+        return type?type->baseMetaObject():nullptr;
     }
 }
 
@@ -1258,7 +1258,7 @@ const QMetaObject *QDeclarativePropertyPrivate::rawMetaObjectForType(QDeclarativ
  */
 bool QDeclarativeProperty::write(const QVariant &value) const
 {
-    return QDeclarativePropertyPrivate::write(*this, value, 0);
+    return QDeclarativePropertyPrivate::write(*this, value, nullptr);
 }
 
 /*!
@@ -1321,7 +1321,7 @@ bool QDeclarativeProperty::write(QObject *object, const QString &name, const QVa
 bool QDeclarativeProperty::reset() const
 {
     if (isResettable()) {
-        void *args[] = { 0 };
+        void *args[] = { nullptr };
         QMetaObject::metacall(d->object, QMetaObject::ResetProperty, d->core.coreIndex, args);
         return true;
     } else {

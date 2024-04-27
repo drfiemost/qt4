@@ -313,7 +313,7 @@ public:
     bool dynamicTr;
     bool trEnabled;
 
-    FormBuilderPrivate(): loader(0), dynamicTr(false), trEnabled(true), m_trwatch(0) {}
+    FormBuilderPrivate(): loader(nullptr), dynamicTr(false), trEnabled(true), m_trwatch(nullptr) {}
 
     QWidget *defaultCreateWidget(const QString &className, QWidget *parent, const QString &name)
     {
@@ -342,7 +342,7 @@ public:
             return widget;
         }
 
-        return 0;
+        return nullptr;
     }
 
     virtual QLayout *createLayout(const QString &className, QObject *parent, const QString &name)
@@ -352,7 +352,7 @@ public:
             return layout;
         }
 
-        return 0;
+        return nullptr;
     }
 
     virtual QActionGroup *createActionGroup(QObject *parent, const QString &name)
@@ -362,7 +362,7 @@ public:
             return actionGroup;
         }
 
-        return 0;
+        return nullptr;
     }
 
     virtual QAction *createAction(QObject *parent, const QString &name)
@@ -372,7 +372,7 @@ public:
             return action;
         }
 
-        return 0;
+        return nullptr;
     }
 
     virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
@@ -440,7 +440,7 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
 QWidget *FormBuilderPrivate::create(DomUI *ui, QWidget *parentWidget)
 {
     m_class = ui->elementClass().toUtf8();
-    m_trwatch = 0;
+    m_trwatch = nullptr;
     setTextBuilder(new TranslatingTextBuilder(trEnabled, m_class));
     return QFormBuilder::create(ui, parentWidget);
 }
@@ -448,8 +448,8 @@ QWidget *FormBuilderPrivate::create(DomUI *ui, QWidget *parentWidget)
 QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
 {
     QWidget *w = QFormBuilder::create(ui_widget, parentWidget);
-    if (w == 0)
-        return 0;
+    if (w == nullptr)
+        return nullptr;
 
     if (0) {
 #ifndef QT_NO_TABWIDGET
@@ -495,7 +495,7 @@ QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
 
 bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget)
 {
-    if (parentWidget == 0)
+    if (parentWidget == nullptr)
         return true;
 
     if (!ParentClass::addItem(ui_widget, widget, parentWidget))

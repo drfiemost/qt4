@@ -72,33 +72,33 @@ Q_OBJECT
 public:
     enum Status { NotConnected, Unavailable, Enabled };
 
-    explicit QDeclarativeEngineDebug(QDeclarativeDebugConnection *, QObject * = 0);
+    explicit QDeclarativeEngineDebug(QDeclarativeDebugConnection *, QObject * = nullptr);
 
     Status status() const;
 
     QDeclarativeDebugPropertyWatch *addWatch(const QDeclarativeDebugPropertyReference &,
-                            QObject *parent = 0);
+                            QObject *parent = nullptr);
     QDeclarativeDebugWatch *addWatch(const QDeclarativeDebugContextReference &, const QString &,
-                            QObject *parent = 0);
+                            QObject *parent = nullptr);
     QDeclarativeDebugObjectExpressionWatch *addWatch(const QDeclarativeDebugObjectReference &, const QString &,
-                            QObject *parent = 0);
+                            QObject *parent = nullptr);
     QDeclarativeDebugWatch *addWatch(const QDeclarativeDebugObjectReference &,
-                            QObject *parent = 0);
+                            QObject *parent = nullptr);
     QDeclarativeDebugWatch *addWatch(const QDeclarativeDebugFileReference &,
-                            QObject *parent = 0);
+                            QObject *parent = nullptr);
 
     void removeWatch(QDeclarativeDebugWatch *watch);
 
-    QDeclarativeDebugEnginesQuery *queryAvailableEngines(QObject *parent = 0);
+    QDeclarativeDebugEnginesQuery *queryAvailableEngines(QObject *parent = nullptr);
     QDeclarativeDebugRootContextQuery *queryRootContexts(const QDeclarativeDebugEngineReference &,
-                                                QObject *parent = 0);
+                                                QObject *parent = nullptr);
     QDeclarativeDebugObjectQuery *queryObject(const QDeclarativeDebugObjectReference &, 
-                                     QObject *parent = 0);
+                                     QObject *parent = nullptr);
     QDeclarativeDebugObjectQuery *queryObjectRecursive(const QDeclarativeDebugObjectReference &, 
-                                              QObject *parent = 0);
+                                              QObject *parent = nullptr);
     QDeclarativeDebugExpressionQuery *queryExpressionResult(int objectDebugId, 
                                                    const QString &expr,
-                                                   QObject *parent = 0);
+                                                   QObject *parent = nullptr);
     bool setBindingForObject(int objectDebugId, const QString &propertyName,
                              const QVariant &bindingExpression, bool isLiteralValue,
                              QString source = QString(), int line = -1);

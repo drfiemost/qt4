@@ -61,7 +61,7 @@ void QDeclarativeIntegerCache::clear()
     qDeleteAll(stringCache);
     stringCache.clear();
     identifierCache.clear();
-    engine = 0;
+    engine = nullptr;
 }
 
 QString QDeclarativeIntegerCache::findId(int value) const

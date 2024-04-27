@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneIndexWriterPrivate::QCLuceneIndexWriterPrivate()
     : QSharedData()
 {
-    writer = 0;
+    writer = nullptr;
     deleteCLuceneIndexWriter = true;
 }
 

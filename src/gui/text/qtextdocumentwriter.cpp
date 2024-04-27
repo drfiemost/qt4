@@ -103,7 +103,7 @@ public:
     \internal
 */
 QTextDocumentWriterPrivate::QTextDocumentWriterPrivate(QTextDocumentWriter *qq)
-    : device(0),
+    : device(nullptr),
     deleteDevice(false),
 #ifndef QT_NO_TEXTCODEC
     codec(QTextCodec::codecForName("utf-8")),
@@ -307,7 +307,7 @@ bool QTextDocumentWriter::write(const QTextDocument *document)
 */
 bool QTextDocumentWriter::write(const QTextDocumentFragment &fragment)
 {
-    if (fragment.d == 0)
+    if (fragment.d == nullptr)
         return false; // invalid fragment.
     QTextDocument *doc = fragment.d->doc;
     if (doc)
@@ -324,7 +324,7 @@ bool QTextDocumentWriter::write(const QTextDocumentFragment &fragment)
 #ifndef QT_NO_TEXTCODEC
 void QTextDocumentWriter::setCodec(QTextCodec *codec)
 {
-    if (codec == 0)
+    if (codec == nullptr)
         codec = QTextCodec::codecForName("UTF-8");
     Q_ASSERT(codec);
     d->codec = codec;

@@ -87,11 +87,11 @@ public:
     {}
 
     QMetaTypeInterface()
-        : constr(0)
-        , destr(0)
+        : constr(nullptr)
+        , destr(nullptr)
     #ifndef QT_NO_DATASTREAM
-        , saveOp(0)
-        , loadOp(0)
+        , saveOp(nullptr)
+        , loadOp(nullptr)
     #endif
     {}
 

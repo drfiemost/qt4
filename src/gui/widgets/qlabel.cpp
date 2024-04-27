@@ -210,16 +210,16 @@ void QLabelPrivate::init()
     valid_hints = false;
     margin = 0;
 #ifndef QT_NO_MOVIE
-    movie = 0;
+    movie = nullptr;
 #endif
 #ifndef QT_NO_SHORTCUT
     shortcutId = 0;
 #endif
-    pixmap = 0;
-    scaledpixmap = 0;
-    cachedimage = 0;
+    pixmap = nullptr;
+    scaledpixmap = nullptr;
+    cachedimage = nullptr;
 #ifndef QT_NO_PICTURE
-    picture = 0;
+    picture = nullptr;
 #endif
     align = Qt::AlignLeft | Qt::AlignVCenter | Qt::TextExpandTabs;
     indent = -1;
@@ -227,7 +227,7 @@ void QLabelPrivate::init()
     textLayoutDirty = false;
     textDirty = false;
     textformat = Qt::AutoText;
-    control = 0;
+    control = nullptr;
     textInteractionFlags = Qt::LinksAccessibleByMouse;
     isRichText = false;
     isTextLabel = false;
@@ -281,7 +281,7 @@ void QLabel::setText(const QString &text)
         return;
 
     QTextControl *oldControl = d->control;
-    d->control = 0;
+    d->control = nullptr;
 
     d->clearContents();
     d->text = text;
@@ -296,7 +296,7 @@ void QLabel::setText(const QString &text)
         d->ensureTextControl();
     } else {
         delete d->control;
-        d->control = 0;
+        d->control = nullptr;
     }
 
     if (d->isRichText) {
@@ -703,7 +703,7 @@ void QLabel::setTextInteractionFlags(Qt::TextInteractionFlags flags)
         d->ensureTextControl();
     } else {
         delete d->control;
-        d->control = 0;
+        d->control = nullptr;
     }
 
     if (d->control)
@@ -1014,7 +1014,7 @@ void QLabel::paintEvent(QPaintEvent *)
 #endif
         if (d->control) {
 #ifndef QT_NO_SHORTCUT
-            const bool underline = (bool)style->styleHint(QStyle::SH_UnderlineShortcut, 0, this, 0);
+            const bool underline = (bool)style->styleHint(QStyle::SH_UnderlineShortcut, nullptr, this, nullptr);
             if (d->shortcutId != 0
                 && underline != d->shortcutCursor.charFormat().fontUnderline()) {
                 QTextCharFormat fmt;
@@ -1275,20 +1275,20 @@ void QLabel::setMovie(QMovie *movie)
 void QLabelPrivate::clearContents()
 {
     delete control;
-    control = 0;
+    control = nullptr;
     isTextLabel = false;
     hasShortcut = false;
 
 #ifndef QT_NO_PICTURE
     delete picture;
-    picture = 0;
+    picture = nullptr;
 #endif
     delete scaledpixmap;
-    scaledpixmap = 0;
+    scaledpixmap = nullptr;
     delete cachedimage;
-    cachedimage = 0;
+    cachedimage = nullptr;
     delete pixmap;
-    pixmap = 0;
+    pixmap = nullptr;
 
     text.clear();
     Q_Q(QLabel);
@@ -1302,7 +1302,7 @@ void QLabelPrivate::clearContents()
         QObject::disconnect(movie, SIGNAL(resized(QSize)), q, SLOT(_q_movieResized(QSize)));
         QObject::disconnect(movie, SIGNAL(updated(QRect)), q, SLOT(_q_movieUpdated(QRect)));
     }
-    movie = 0;
+    movie = nullptr;
 #endif
 #ifndef QT_NO_CURSOR
     if (onAnchor) {
@@ -1409,9 +1409,9 @@ void QLabel::setScaledContents(bool enable)
     d->scaledcontents = enable;
     if (!enable) {
         delete d->scaledpixmap;
-        d->scaledpixmap = 0;
+        d->scaledpixmap = nullptr;
         delete d->cachedimage;
-        d->cachedimage = 0;
+        d->cachedimage = nullptr;
     }
     update(contentsRect());
 }
@@ -1618,7 +1618,7 @@ QMenu *QLabelPrivate::createStandardContextMenu(const QPoint &pos)
     }
 
     if (linkToCopy.isEmpty() && !control)
-        return 0;
+        return nullptr;
 
     return control->createStandardContextMenu(p, q_func());
 }

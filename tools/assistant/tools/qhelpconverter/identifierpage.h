@@ -52,7 +52,7 @@ class IdentifierPage : public QWizardPage
     Q_OBJECT
 
 public:
-    IdentifierPage(QWidget *parent = 0);
+    IdentifierPage(QWidget *parent = nullptr);
     
 private slots:
     void setupButtons(bool checked);

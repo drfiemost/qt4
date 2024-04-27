@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
 class QStackedLayoutHFW : public QStackedLayout
 {
 public:
-    QStackedLayoutHFW(QWidget *parent = 0) : QStackedLayout(parent) {}
+    QStackedLayoutHFW(QWidget *parent = nullptr) : QStackedLayout(parent) {}
     bool hasHeightForWidth() const;
     int heightForWidth(int width) const;
 };
@@ -98,7 +98,7 @@ class QStackedWidgetPrivate : public QFramePrivate
 {
     Q_DECLARE_PUBLIC(QStackedWidget)
 public:
-    QStackedWidgetPrivate():layout(0){}
+    QStackedWidgetPrivate():layout(nullptr){}
     QStackedLayoutHFW *layout;
     bool blockChildAdd;
 };

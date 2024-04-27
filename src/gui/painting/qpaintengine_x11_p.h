@@ -147,15 +147,15 @@ public:
         scrn = -1;
         hd = 0;
         picture = 0;
-        gc = gc_brush = 0;
-        dpy  = 0;
-        xinfo = 0;
+        gc = gc_brush = nullptr;
+        dpy  = nullptr;
+        xinfo = nullptr;
         txop = QTransform::TxNone;
         has_clipping = false;
         render_hints = 0;
         xform_scale = 1;
 #ifndef QT_NO_XRENDER
-        tessellator = 0;
+        tessellator = nullptr;
 #endif
     }
     enum GCMode {

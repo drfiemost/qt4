@@ -190,7 +190,7 @@ public:
         : flags(0)
     {
         superClass = &QObject::staticMetaObject;
-        staticMetacallFunction = 0;
+        staticMetacallFunction = nullptr;
     }
 
     QByteArray className;
@@ -710,10 +710,10 @@ void QMetaObjectBuilder::addMetaObject
             if (extra)
                 objects = extra->objects;
             else
-                objects = 0;
+                objects = nullptr;
         }
         if (objects) {
-            while (*objects != 0) {
+            while (*objects != nullptr) {
                 addRelatedMetaObject(*objects);
                 ++objects;
             }
@@ -798,7 +798,7 @@ const QMetaObject *QMetaObjectBuilder::relatedMetaObject(int index) const
     if (index >= 0 && index < d->relatedMetaObjects.size())
         return d->relatedMetaObjects[index];
     else
-        return 0;
+        return nullptr;
 }
 
 /*!
@@ -1121,7 +1121,7 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
     ALIGN(size, int);
     if (buf) {
         if (!relocatable) meta->d.superdata = d->superClass;
-        meta->d.extradata = 0;
+        meta->d.extradata = nullptr;
     }
 
     // Populate the QMetaObjectPrivate structure.
@@ -1343,9 +1343,9 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
                 extra->objects = objects;
                 for (index = 0; index < d->relatedMetaObjects.size(); ++index)
                     objects[index] = d->relatedMetaObjects[index];
-                objects[index] = 0;
+                objects[index] = nullptr;
             } else {
-                extra->objects = 0;
+                extra->objects = nullptr;
             }
             extra->static_metacall = d->staticMetacallFunction;
             meta->d.extradata = reinterpret_cast<void *>(extra);
@@ -1371,7 +1371,7 @@ static int buildMetaObject(QMetaObjectBuilderPrivate *d, char *buf,
 */
 QMetaObject *QMetaObjectBuilder::toMetaObject() const
 {
-    int size = buildMetaObject(d, 0, false);
+    int size = buildMetaObject(d, nullptr, false);
     char *buf = reinterpret_cast<char *>(malloc(size));
     memset(buf, 0, size);
     buildMetaObject(d, buf, false);
@@ -1394,7 +1394,7 @@ QMetaObject *QMetaObjectBuilder::toMetaObject() const
 */
 QByteArray QMetaObjectBuilder::toRelocatableData(bool *ok) const
 {
-    int size = buildMetaObject(d, 0, true);
+    int size = buildMetaObject(d, nullptr, true);
     if (size == -1) {
         if (ok) *ok = false;
         return QByteArray();
@@ -1594,14 +1594,14 @@ void QMetaObjectBuilder::deserialize
     d->enumerators.clear();
     d->constructors.clear();
     d->relatedMetaObjects.clear();
-    d->staticMetacallFunction = 0;
+    d->staticMetacallFunction = nullptr;
 
     // Read the class and super class names.
     stream >> d->className;
     stream >> name;
     if (name.isEmpty()) {
-        d->superClass = 0;
-    } else if ((cl = resolveClassName(references, name)) != 0) {
+        d->superClass = nullptr;
+    } else if ((cl = resolveClassName(references, name)) != nullptr) {
         d->superClass = cl;
     } else {
         stream.setStatus(QDataStream::ReadCorruptData);
@@ -1745,7 +1745,7 @@ QMetaMethodBuilderPrivate *QMetaMethodBuilder::d_func() const
     else if (_mobj && -_index >= 1 && -_index <= _mobj->d->constructors.size())
         return &(_mobj->d->constructors[(-_index) - 1]);
     else
-        return 0;
+        return nullptr;
 }
 
 /*!
@@ -1939,7 +1939,7 @@ QMetaPropertyBuilderPrivate *QMetaPropertyBuilder::d_func() const
     if (_mobj && _index >= 0 && _index < _mobj->d->properties.size())
         return &(_mobj->d->properties[_index]);
     else
-        return 0;
+        return nullptr;
 }
 
 /*!
@@ -2382,7 +2382,7 @@ QMetaEnumBuilderPrivate *QMetaEnumBuilder::d_func() const
     if (_mobj && _index >= 0 && _index < _mobj->d->enumerators.size())
         return &(_mobj->d->enumerators[_index]);
     else
-        return 0;
+        return nullptr;
 }
 
 /*!

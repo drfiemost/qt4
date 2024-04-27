@@ -56,7 +56,7 @@ static inline void setCurrentContainerIndex(int index, Container *container)
 static inline void ensureNoParent(QWidget *widget)
 {
     if (widget->parentWidget())
-        widget->setParent(0);
+        widget->setParent(nullptr);
 }
 
 static const char *PageLabel = "Page";
@@ -158,7 +158,7 @@ void QToolBoxContainer::remove(int index)
 
 QScrollAreaContainer::QScrollAreaContainer(QScrollArea *widget, QObject *parent) :
     QObject(parent),
-    SingleChildContainer<QScrollArea>(widget, widget->widget() == 0)
+    SingleChildContainer<QScrollArea>(widget, widget->widget() == nullptr)
 {
 }
 // ------------------- QDockWidgetContainer

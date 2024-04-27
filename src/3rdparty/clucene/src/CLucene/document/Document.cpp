@@ -36,10 +36,10 @@ CL_NS_DEF(document)
         }
         
 		DocumentFieldList* cur = next;	
-		while (cur != NULL)
+		while (cur != nullptr)
 		{
 			DocumentFieldList* temp = cur->next;
-			cur->next = NULL;
+			cur->next = nullptr;
 			
 			_CLDELETE(cur);
 			cur = temp;
@@ -63,7 +63,7 @@ CL_NS_DEF(document)
 	}
 
 	bool DocumentFieldEnumeration::hasMoreElements() const {
-		return fields == NULL ? false : true;
+		return fields == nullptr ? false : true;
 	}
 
 	Field* DocumentFieldEnumeration::nextElement() {
@@ -72,7 +72,7 @@ CL_NS_DEF(document)
 	//Post - The next element is returned or NULL
 
 
-		Field* result = NULL;
+		Field* result = nullptr;
 		//Check if fields is still valid
         if (fields){
 			result = fields->field;
@@ -87,7 +87,7 @@ CL_NS_DEF(document)
 	//Pre  - true
 	//Post - Instance has been created
         boost = 1.0f;
-	    fieldList = NULL; 
+	    fieldList = nullptr; 
 	}
 
 	Document::~Document(){
@@ -118,22 +118,22 @@ CL_NS_DEF(document)
 	 Field* Document::getField(const TCHAR* name)  const{
 	    CND_PRECONDITION(name != NULL, "name is NULL");
 
-		for (DocumentFieldEnumeration::DocumentFieldList* list = fieldList; list != NULL; list = list->next)
+		for (DocumentFieldEnumeration::DocumentFieldList* list = fieldList; list != nullptr; list = list->next)
 		   //cannot use interning here, because name is probably not interned
 			if ( _tcscmp(list->field->name(), name) == 0 ){ 
 				return list->field;
 			}
 		
-		return NULL;
+		return nullptr;
 	}
 
 	const TCHAR* Document::get(const TCHAR* field) const {
 	    CND_PRECONDITION(field != NULL, "field is NULL");
 		Field *f = getField(field);
-		if (f!=NULL)
+		if (f!=nullptr)
 			return f->stringValue(); //this returns null it is a binary(reader)
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	DocumentFieldEnumeration* Document::fields() const {
@@ -143,10 +143,10 @@ CL_NS_DEF(document)
 
 	TCHAR* Document::toString() const {
 		StringBuffer ret(_T("Document<"));
-		for (DocumentFieldEnumeration::DocumentFieldList* list = fieldList; list != NULL; list = list->next) {
+		for (DocumentFieldEnumeration::DocumentFieldList* list = fieldList; list != nullptr; list = list->next) {
     		TCHAR* tmp = list->field->toString();
 			ret.append( tmp );
-    		if (list->next != NULL)
+    		if (list->next != nullptr)
     		    ret.append(_T(" "));
 			_CLDELETE_ARRAY( tmp ); 
 		}
@@ -159,16 +159,16 @@ CL_NS_DEF(document)
    void Document::removeField(const TCHAR* name) {
 	  CND_PRECONDITION(name != NULL, "name is NULL");
 
-      DocumentFieldEnumeration::DocumentFieldList* previous = NULL;
+      DocumentFieldEnumeration::DocumentFieldList* previous = nullptr;
       DocumentFieldEnumeration::DocumentFieldList* current = fieldList;
-      while (current != NULL) {
+      while (current != nullptr) {
          //cannot use interning here, because name is probably not interned
          if ( _tcscmp(current->field->name(),name) == 0 ){
             if (previous){
                previous->next = current->next;
             }else
                fieldList = current->next;
-            current->next=NULL; //ensure fieldlist destructor doesnt delete it
+            current->next=nullptr; //ensure fieldlist destructor doesnt delete it
             _CLDELETE(current);
             return;
          }
@@ -180,9 +180,9 @@ CL_NS_DEF(document)
    void Document::removeFields(const TCHAR* name) {
 	  CND_PRECONDITION(name != NULL, "name is NULL");
 
-      DocumentFieldEnumeration::DocumentFieldList* previous = NULL;
+      DocumentFieldEnumeration::DocumentFieldList* previous = nullptr;
       DocumentFieldEnumeration::DocumentFieldList* current = fieldList;
-      while (current != NULL) {
+      while (current != nullptr) {
          //cannot use interning here, because name is probably not interned
          if ( _tcscmp(current->field->name(),name) == 0 ){
             if (previous){
@@ -190,7 +190,7 @@ CL_NS_DEF(document)
             }else
                fieldList = current->next;
 
-            current->next=NULL; //ensure fieldlist destructor doesnt delete it
+            current->next=nullptr; //ensure fieldlist destructor doesnt delete it
             _CLDELETE(current);
 			
 			if ( previous )
@@ -210,26 +210,26 @@ CL_NS_DEF(document)
       while ( it->hasMoreElements() ){
       	Field* f = it->nextElement();
          //cannot use interning here, because name is probably not interned
-         if ( _tcscmp(f->name(),name) == 0 && f->stringValue() != NULL )
+         if ( _tcscmp(f->name(),name) == 0 && f->stringValue() != nullptr )
             count++;
       }
       _CLDELETE(it);
       it = fields();
 
       //todo: there must be a better way of doing this, we are doing two iterations of the fields
-      TCHAR** ret = NULL;
+      TCHAR** ret = nullptr;
 	    if ( count > 0 ){
          //start again
          ret = _CL_NEWARRAY(TCHAR*,count+1);
          int32_t i=0;
          while ( it->hasMoreElements() ){
             Field* fld=it->nextElement();
-            if ( _tcscmp(fld->name(),name)== 0 && fld->stringValue() != NULL ){
+            if ( _tcscmp(fld->name(),name)== 0 && fld->stringValue() != nullptr ){
                ret[i] = stringDuplicate(fld->stringValue());
                i++;
             }
          }
-         ret[count]=NULL;
+         ret[count]=nullptr;
 	  }
      _CLDELETE(it);
      return ret;

@@ -93,7 +93,7 @@ namespace {
 
         const int index =  promotedWidgetDataBaseIndex(widgetDataBase, className, errorMessage);
         if (index == -1)
-            return 0;
+            return nullptr;
         return widgetDataBase->item(index);
     }
 

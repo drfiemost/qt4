@@ -81,7 +81,7 @@ void FieldInfos::add(const TCHAR* name, bool isIndexed, bool storeTermVector,
     bool storePositionWithTermVector, bool storeOffsetWithTermVector, bool omitNorms)
 {
 	FieldInfo* fi = fieldInfo(name);
-	if (fi == NULL) {
+	if (fi == nullptr) {
 		addInternal(name, isIndexed, storeTermVector, 
 			storePositionWithTermVector, 
 			storeOffsetWithTermVector, omitNorms);
@@ -117,7 +117,7 @@ void FieldInfos::add(const TCHAR** names, bool isIndexed, bool storeTermVectors,
     bool storePositionWithTermVector, bool storeOffsetWithTermVector, bool omitNorms)
 {
     int32_t i=0;
-    while (names[i] != NULL) {
+    while (names[i] != nullptr) {
         add(names[i], isIndexed, storeTermVectors, storePositionWithTermVector, 
             storeOffsetWithTermVector, omitNorms);
         ++i;
@@ -127,7 +127,7 @@ void FieldInfos::add(const TCHAR** names, bool isIndexed, bool storeTermVectors,
 int32_t FieldInfos::fieldNumber(const TCHAR* fieldName) const
 {
 	FieldInfo* fi = fieldInfo(fieldName);
-	return (fi != NULL) ? fi->number : -1;
+	return (fi != nullptr) ? fi->number : -1;
 }
 
 FieldInfo* FieldInfos::fieldInfo(const TCHAR* fieldName) const
@@ -138,13 +138,13 @@ FieldInfo* FieldInfos::fieldInfo(const TCHAR* fieldName) const
 const TCHAR* FieldInfos::fieldName(const int32_t fieldNumber) const
 {
 	FieldInfo* fi = fieldInfo(fieldNumber);
-	return (fi == NULL) ? LUCENE_BLANK_STRING : fi->name;
+	return (fi == nullptr) ? LUCENE_BLANK_STRING : fi->name;
 }
 
 FieldInfo* FieldInfos::fieldInfo(const int32_t fieldNumber) const
 {
 	if (fieldNumber < 0 || (size_t)fieldNumber >= byNumber.size())
-        return NULL;
+        return nullptr;
     return byNumber[fieldNumber];
 }
 

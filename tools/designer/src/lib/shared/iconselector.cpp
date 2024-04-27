@@ -101,7 +101,7 @@ private:
 };
 
 LanguageResourceDialogPrivate::LanguageResourceDialogPrivate(QDesignerResourceBrowserInterface *rb) :
-    q_ptr(0),
+    q_ptr(nullptr),
     m_browser(rb),
     m_dialogButtonBox(new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel))
 {
@@ -176,12 +176,12 @@ QString LanguageResourceDialog::currentPath() const
 LanguageResourceDialog* LanguageResourceDialog::create(QDesignerFormEditorInterface *core, QWidget *parent)
 {
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core))
-        if (QDesignerResourceBrowserInterface *rb = lang->createResourceBrowser(0))
+        if (QDesignerResourceBrowserInterface *rb = lang->createResourceBrowser(nullptr))
             return new LanguageResourceDialog(rb, parent);
     if (QDesignerIntegration *di = qobject_cast<QDesignerIntegration*>(core->integration()))
-        if (QDesignerResourceBrowserInterface *rb = di->createResourceBrowser(0))
+        if (QDesignerResourceBrowserInterface *rb = di->createResourceBrowser(nullptr))
             return new LanguageResourceDialog(rb, parent);
-    return 0;
+    return nullptr;
 }
 
 // ------------ IconSelectorPrivate
@@ -226,16 +226,16 @@ public:
 };
 
 IconSelectorPrivate::IconSelectorPrivate() :
-    q_ptr(0),
+    q_ptr(nullptr),
     m_emptyIcon(emptyPixmap()),
-    m_stateComboBox(0),
-    m_iconButton(0),
-    m_resetAction(0),
-    m_resetAllAction(0),
-    m_iconCache(0),
-    m_pixmapCache(0),
-    m_resourceModel(0),
-    m_core(0)
+    m_stateComboBox(nullptr),
+    m_iconButton(nullptr),
+    m_resetAction(nullptr),
+    m_resetAllAction(nullptr),
+    m_iconCache(nullptr),
+    m_pixmapCache(nullptr),
+    m_resourceModel(nullptr),
+    m_core(nullptr)
 {
 }
 void IconSelectorPrivate::slotUpdate()
@@ -549,7 +549,7 @@ void IconSelector::setPixmapCache(DesignerPixmapCache *pixmapCache)
 // Validator for theme line edit, accepts empty or non-blank strings.
 class BlankSuppressingValidator : public QValidator {
 public:
-    explicit BlankSuppressingValidator(QObject * parent = 0) : QValidator(parent) {}
+    explicit BlankSuppressingValidator(QObject * parent = nullptr) : QValidator(parent) {}
 
     virtual State validate(QString &input, int &pos) const {
         const int blankPos = input.indexOf(QLatin1Char(' '));
@@ -630,7 +630,7 @@ void IconThemeEditor::updatePreview(const QString &t)
     // Update preview label with icon.
     if (t.isEmpty() || !QIcon::hasThemeIcon(t)) { // Empty
         const QPixmap *currentPixmap = d->m_themeLabel->pixmap();
-        if (currentPixmap == 0 || currentPixmap->serialNumber() != d->m_emptyPixmap.serialNumber())
+        if (currentPixmap == nullptr || currentPixmap->serialNumber() != d->m_emptyPixmap.serialNumber())
             d->m_themeLabel->setPixmap(d->m_emptyPixmap);
     } else {
         const QIcon icon = QIcon::fromTheme(t);

@@ -87,7 +87,7 @@ void JSString::resolveRope(ExecState* exec) const
     else {
         for (unsigned i = 0; i < m_ropeLength; ++i) {
             m_fibers[i].deref();
-            m_fibers[i] = static_cast<void*>(0);
+            m_fibers[i] = static_cast<void*>(nullptr);
         }
         m_ropeLength = 0;
         ASSERT(!isRope());
@@ -124,7 +124,7 @@ void JSString::resolveRope(ExecState* exec) const
                 ASSERT(buffer == position);
                 for (unsigned i = 0; i < m_ropeLength; ++i) {
                     m_fibers[i].deref();
-                    m_fibers[i] = static_cast<void*>(0);
+                    m_fibers[i] = static_cast<void*>(nullptr);
                 }
                 m_ropeLength = 0;
 

@@ -653,7 +653,7 @@ bool ValueExtractor::extractOutline(int *borders, QBrush *colors, BorderStyle *s
 
 static Qt::Alignment parseAlignment(const QCss::Value *values, int count)
 {
-    Qt::Alignment a[2] = { 0, 0 };
+    Qt::Alignment a[2] = { nullptr, nullptr };
     for (int i = 0; i < std::min(2, count); i++) {
         if (values[i].type != Value::KnownIdentifier)
             break;

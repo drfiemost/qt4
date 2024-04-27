@@ -62,7 +62,7 @@ private:
     void setColor(const QColor &color);
     void setPosition(qreal position);
     friend class QtGradientStopsModel;
-    QtGradientStop(QtGradientStopsModel *model = 0);
+    QtGradientStop(QtGradientStopsModel *model = nullptr);
     ~QtGradientStop();
     QScopedPointer<class QtGradientStopPrivate> d_ptr;
 };
@@ -73,7 +73,7 @@ class QtGradientStopsModel : public QObject
 public:
     typedef QMap<qreal, QtGradientStop *> PositionStopMap;
 
-    QtGradientStopsModel(QObject *parent = 0);
+    QtGradientStopsModel(QObject *parent = nullptr);
     ~QtGradientStopsModel();
 
     PositionStopMap stops() const;

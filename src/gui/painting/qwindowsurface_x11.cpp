@@ -64,7 +64,7 @@ struct QX11WindowSurfacePrivate
 };
 
 QX11WindowSurface::QX11WindowSurface(QWidget *widget)
-    : QWindowSurface(widget), d_ptr(new QX11WindowSurfacePrivate), gc(0)
+    : QWindowSurface(widget), d_ptr(new QX11WindowSurfacePrivate), gc(nullptr)
 {
     d_ptr->widget = widget;
 #ifndef QT_NO_XRENDER
@@ -79,7 +79,7 @@ QX11WindowSurface::~QX11WindowSurface()
     delete d_ptr;
     if (gc) {
         XFreeGC(X11->display, gc);
-        gc = 0;
+        gc = nullptr;
     }
 }
 
@@ -174,7 +174,7 @@ void QX11WindowSurface::setGeometry(const QRect &rect)
 
             int num;
             XRectangle *rects = (XRectangle *)qt_getClipRects(staticRegion, num);
-            GC tmpGc = XCreateGC(X11->display, oldData->hd, 0, 0);
+            GC tmpGc = XCreateGC(X11->display, oldData->hd, 0, nullptr);
             XSetClipRectangles(X11->display, tmpGc, 0, 0, rects, num, YXBanded);
             XCopyArea(X11->display, oldData->hd, newData->hd, tmpGc,
                       dx, dy, std::min(boundingRect.width(), size.width()),
@@ -190,10 +190,10 @@ void QX11WindowSurface::setGeometry(const QRect &rect)
 
     if (gc) {
         XFreeGC(X11->display, gc);
-        gc = 0;
+        gc = nullptr;
     }
     if (!d_ptr->device.isNull()) {
-        gc = XCreateGC(X11->display, d_ptr->device.handle(), 0, 0);
+        gc = XCreateGC(X11->display, d_ptr->device.handle(), 0, nullptr);
         XSetGraphicsExposures(X11->display, gc, False);
     }
 }
@@ -205,7 +205,7 @@ bool QX11WindowSurface::scroll(const QRegion &area, int dx, int dy)
     if (d_ptr->device.isNull())
         return false;
 
-    GC gc = XCreateGC(X11->display, d_ptr->device.handle(), 0, 0);
+    GC gc = XCreateGC(X11->display, d_ptr->device.handle(), 0, nullptr);
     XCopyArea(X11->display, d_ptr->device.handle(), d_ptr->device.handle(), gc,
               rect.x(), rect.y(), rect.width(), rect.height(),
               rect.x()+dx, rect.y()+dy);
@@ -238,7 +238,7 @@ QPixmap QX11WindowSurface::grabWidget(const QWidget *widget,
     QPixmap::x11SetDefaultScreen(widget->x11Info().screen());
     QPixmap px(srcRect.width(), srcRect.height());
 
-    GC tmpGc = XCreateGC(X11->display, d_ptr->device.handle(), 0, 0);
+    GC tmpGc = XCreateGC(X11->display, d_ptr->device.handle(), 0, nullptr);
 
     // Copy srcRect from the backing store to the new pixmap
     XSetGraphicsExposures(X11->display, tmpGc, False);

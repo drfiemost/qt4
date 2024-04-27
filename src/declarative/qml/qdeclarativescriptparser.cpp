@@ -64,8 +64,8 @@ namespace {
 class ProcessAST: protected AST::Visitor
 {
     struct State {
-        State() : object(0), property(0) {}
-        State(QDeclarativeParser::Object *o) : object(o), property(0) {}
+        State() : object(nullptr), property(nullptr) {}
+        State(QDeclarativeParser::Object *o) : object(o), property(nullptr) {}
         State(QDeclarativeParser::Object *o, Property *p) : object(o), property(p) {}
 
         QDeclarativeParser::Object *object;
@@ -109,7 +109,7 @@ protected:
                                 const QString &objectType,
                                 AST::SourceLocation typeLocation,
                                 LocationSpan location,
-                                AST::UiObjectInitializer *initializer = 0);
+                                AST::UiObjectInitializer *initializer = nullptr);
 
     QDeclarativeParser::Variant getVariant(AST::ExpressionNode *expr);
 
@@ -255,7 +255,7 @@ ProcessAST::defineObjectBinding(AST::UiQualifiedId *propertyName,
         error.setLine(this->location(propertyName).start.line);
         error.setColumn(this->location(propertyName).start.column);
         _parser->_errors << error;
-        return 0;
+        return nullptr;
     }
 
     if (!isType) {
@@ -266,7 +266,7 @@ ProcessAST::defineObjectBinding(AST::UiQualifiedId *propertyName,
             error.setLine(typeLocation.startLine);
             error.setColumn(typeLocation.startColumn);
             _parser->_errors << error;
-            return 0;
+            return nullptr;
         }
 
         LocationSpan loc = ProcessAST::location(typeLocation, typeLocation);
@@ -277,7 +277,7 @@ ProcessAST::defineObjectBinding(AST::UiQualifiedId *propertyName,
        accept(initializer);
         _stateStack.pop();
 
-        return 0;
+        return nullptr;
 
     } else {
         // Class
@@ -491,7 +491,7 @@ bool ProcessAST::visit(AST::UiPublicMember *node)
         AST::UiParameterList *p = node->parameters;
         while (p) {
             const QString memberType = p->type->asString();
-            const char *qtType = 0;
+            const char *qtType = nullptr;
             for(int ii = 0; !qtType && ii < propTypeNameToTypesCount; ++ii) {
                 if(QLatin1String(propTypeNameToTypes[ii].name) == memberType)
                     qtType = propTypeNameToTypes[ii].qtName;
@@ -620,7 +620,7 @@ bool ProcessAST::visit(AST::UiObjectDefinition *node)
     const QString objectType = asString(node->qualifiedTypeNameId);
     const AST::SourceLocation typeLocation = node->qualifiedTypeNameId->identifierToken;
 
-    defineObjectBinding(/*propertyName = */ 0, false, objectType,
+    defineObjectBinding(/*propertyName = */ nullptr, false, objectType,
                         typeLocation, l, node->initializer);
 
     return false;
@@ -798,7 +798,7 @@ bool ProcessAST::visit(AST::UiSourceElement *node)
 
 
 QDeclarativeScriptParser::QDeclarativeScriptParser()
-: root(0), data(0)
+: root(nullptr), data(nullptr)
 {
 
 }
@@ -908,7 +908,7 @@ QDeclarativeParser::Object::ScriptBlock::Pragmas QDeclarativeScriptParser::extra
     const QString pragma(QLatin1String("pragma"));
     const QString library(QLatin1String("library"));
 
-    QDeclarativeJS::Lexer l(0);
+    QDeclarativeJS::Lexer l(nullptr);
     l.setCode(script, 0);
 
     int token = l.lex();
@@ -1014,7 +1014,7 @@ QDeclarativeScriptParser::JavaScriptMetaData QDeclarativeScriptParser::extractMe
     const QString js(QLatin1String(".js"));
     const QString library(QLatin1String("library"));
 
-    QDeclarativeJS::Lexer l(0);
+    QDeclarativeJS::Lexer l(nullptr);
     l.setCode(script, 0);
 
     int token = l.lex();
@@ -1165,7 +1165,7 @@ void QDeclarativeScriptParser::clear()
 {
     if (root) {
         root->release();
-        root = 0;
+        root = nullptr;
     }
     _imports.clear();
     qDeleteAll(_refTypes);
@@ -1174,13 +1174,13 @@ void QDeclarativeScriptParser::clear()
 
     if (data) {
         delete data;
-        data = 0;
+        data = nullptr;
     }
 }
 
 QDeclarativeScriptParser::TypeReference *QDeclarativeScriptParser::findOrCreateType(const QString &name)
 {
-    TypeReference *type = 0;
+    TypeReference *type = nullptr;
     int i = 0;
     for (; i < _refTypes.size(); ++i) {
         if (_refTypes.at(i)->name == name) {

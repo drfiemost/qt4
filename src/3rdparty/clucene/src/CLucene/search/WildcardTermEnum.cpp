@@ -11,7 +11,7 @@ CL_NS_USE(index)
 CL_NS_DEF(search)
 
     bool WildcardTermEnum::termCompare(Term* term) {
-        if ( term!=NULL && __term->field() == term->field() ) {
+        if ( term!=nullptr && __term->field() == term->field() ) {
             const TCHAR* searchText = term->text();
             const TCHAR* patternText = __term->text();
 			if ( _tcsncmp( searchText, pre, preLen ) == 0 ){
@@ -35,7 +35,7 @@ CL_NS_DEF(search)
 		const TCHAR* sidx = _tcschr( pre, LUCENE_WILDCARDTERMENUM_WILDCARD_STRING );
 		const TCHAR* cidx = _tcschr( pre, LUCENE_WILDCARDTERMENUM_WILDCARD_CHAR );
 		const TCHAR* tidx = sidx;
-		if (tidx == NULL) 
+		if (tidx == nullptr) 
 			tidx = cidx;
 		else if ( cidx && cidx > pre) 
 			tidx = min(sidx, cidx);
@@ -52,11 +52,11 @@ CL_NS_DEF(search)
 
     void WildcardTermEnum::close()
     {
-       if ( __term != NULL ){
+       if ( __term != nullptr ){
          FilteredTermEnum::close();
 
          _CLDECDELETE(__term);
-         __term = NULL;
+         __term = nullptr;
 
          _CLDELETE_CARRAY( pre );
        }

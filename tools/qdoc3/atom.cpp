@@ -242,7 +242,7 @@ static const struct {
     { "Target", Atom::Target },
     { "UnhandledFormat", Atom::UnhandledFormat },
     { "UnknownCommand", Atom::UnknownCommand },
-    { 0, 0 }
+    { nullptr, 0 }
 };
 
 /*! \fn Atom::Atom(Type type, const QString& string)
@@ -286,7 +286,7 @@ static const struct {
  */
 const Atom* Atom::next(Type t) const
 {
-    return (nxt && (nxt->type() == t)) ? nxt : 0;
+    return (nxt && (nxt->type() == t)) ? nxt : nullptr;
 }
 
 /*!
@@ -295,7 +295,7 @@ const Atom* Atom::next(Type t) const
  */
 const Atom* Atom::next(Type t, const QString& s) const
 {
-    return (nxt && (nxt->type() == t) && (nxt->string() == s)) ? nxt : 0;
+    return (nxt && (nxt->type() == t) && (nxt->string() == s)) ? nxt : nullptr;
 }
 
 /*! \fn const Atom *Atom::next() const
@@ -322,7 +322,7 @@ QString Atom::typeString() const
 
     if (!deja) {
 	int i = 0;
-	while (atms[i].english != 0) {
+	while (atms[i].english != nullptr) {
 	    if (atms[i].no != i)
 		Location::internalError(tr("atom %1 missing").arg(i));
 	    i++;

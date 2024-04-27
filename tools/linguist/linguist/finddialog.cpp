@@ -70,7 +70,7 @@ void FindDialog::verifyText(const QString &text)
 void FindDialog::emitFindNext()
 {
     DataModel::FindLocation where;
-    if (sourceText != 0)
+    if (sourceText != nullptr)
         where =
             DataModel::FindLocation(
                 (sourceText->isChecked() ? DataModel::SourceText : 0) |

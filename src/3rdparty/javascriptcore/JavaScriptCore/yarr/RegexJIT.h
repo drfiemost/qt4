@@ -55,7 +55,7 @@ class RegexCodeBlock {
 
 public:
     RegexCodeBlock()
-        : m_fallback(0)
+        : m_fallback(nullptr)
     {
     }
 

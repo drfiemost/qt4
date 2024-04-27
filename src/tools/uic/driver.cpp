@@ -136,7 +136,7 @@ const DomButtonGroup *Driver::findButtonGroup(const QString &attributeName) cons
     for (ButtonGroupNameHash::const_iterator it = m_buttonGroups.constBegin(); it != cend; ++it)
         if (it.key()->attributeName() == attributeName)
             return it.key();
-    return 0;
+    return nullptr;
 }
 
 
@@ -264,7 +264,7 @@ bool Driver::uic(const QString &fileName, DomUI *ui, QTextStream *out)
 
     QTextStream *oldOutput = m_output;
 
-    m_output = out != 0 ? out : &m_stdout;
+    m_output = out != nullptr ? out : &m_stdout;
 
     Uic tool(this);
     bool rtn = false;
@@ -326,10 +326,10 @@ bool Driver::uic(const QString &fileName, QTextStream *out)
 
 void Driver::reset()
 {
-    Q_ASSERT( m_output == 0 );
+    Q_ASSERT( m_output == nullptr );
 
     m_option = Option();
-    m_output = 0;
+    m_output = nullptr;
     m_problems.clear();
 
     QStringList m_problems;

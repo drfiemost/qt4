@@ -34,13 +34,13 @@ namespace JSC {
 // A smart pointer whose get() function returns 0 for cells awaiting destruction.
 template <typename T> class WeakGCPtr : Noncopyable {
 public:
-    WeakGCPtr() : m_ptr(0) { }
+    WeakGCPtr() : m_ptr(nullptr) { }
     WeakGCPtr(T* ptr) { assign(ptr); }
 
     T* get() const
     {
         if (!m_ptr || !Heap::isCellMarked(m_ptr))
-            return 0;
+            return nullptr;
         return m_ptr;
     }
     

@@ -75,12 +75,12 @@ class QProgressDialogPrivate : public QDialogPrivate
     Q_DECLARE_PUBLIC(QProgressDialog)
 
 public:
-    QProgressDialogPrivate() : label(0), cancel(0), bar(0),
+    QProgressDialogPrivate() : label(nullptr), cancel(nullptr), bar(nullptr),
         shown_once(false),
         cancellation_flag(false),
         showTime(defaultShowTime),
 #ifndef QT_NO_SHORTCUT
-        escapeShortcut(0),
+        escapeShortcut(nullptr),
 #endif
 #ifdef QT_SOFTKEYS_ENABLED
         cancelAction(0),
@@ -124,7 +124,7 @@ void QProgressDialogPrivate::init(const QString &labelText, const QString &cance
 {
     Q_Q(QProgressDialog);
     label = new QLabel(labelText, q);
-    int align = q->style()->styleHint(QStyle::SH_ProgressDialog_TextLabelAlignment, 0, q);
+    int align = q->style()->styleHint(QStyle::SH_ProgressDialog_TextLabelAlignment, nullptr, q);
     label->setAlignment(Qt::Alignment(align));
     bar = new QProgressBar(q);
     bar->setRange(min, max);
@@ -148,7 +148,7 @@ void QProgressDialogPrivate::layout()
     int mtb = q->style()->pixelMetric(QStyle::PM_DefaultTopLevelMargin);
     int mlr = std::min(q->width() / 10, mtb);
     const bool centered =
-        bool(q->style()->styleHint(QStyle::SH_ProgressDialog_CenterCancelButton, 0, q));
+        bool(q->style()->styleHint(QStyle::SH_ProgressDialog_CenterCancelButton, nullptr, q));
 
     int additionalSpacing = 0;
 
@@ -201,7 +201,7 @@ void QProgressDialogPrivate::_q_disconnectOnClose()
     if (receiverToDisconnectOnClose) {
         QObject::disconnect(q, SIGNAL(canceled()), receiverToDisconnectOnClose,
                             memberToDisconnectOnClose);
-        receiverToDisconnectOnClose = 0;
+        receiverToDisconnectOnClose = nullptr;
     }
     memberToDisconnectOnClose.clear();
 }
@@ -371,7 +371,7 @@ void QProgressDialog::setLabel(QLabel *label)
         if (label->parentWidget() == this) {
             label->hide(); // until we resize
         } else {
-            label->setParent(this, 0);
+            label->setParent(this, nullptr);
         }
     }
     int w = std::max(isVisible() ? width() : 0, sizeHint().width());
@@ -428,7 +428,7 @@ void QProgressDialog::setCancelButton(QPushButton *cancelButton)
         if (cancelButton->parentWidget() == this) {
             cancelButton->hide(); // until we resize
         } else {
-            cancelButton->setParent(this, 0);
+            cancelButton->setParent(this, nullptr);
         }
         connect(d->cancel, SIGNAL(clicked()), this, SIGNAL(canceled()));
 #ifndef QT_NO_SHORTCUT
@@ -437,7 +437,7 @@ void QProgressDialog::setCancelButton(QPushButton *cancelButton)
     } else {
 #ifndef QT_NO_SHORTCUT
         delete d->escapeShortcut;
-        d->escapeShortcut = 0;
+        d->escapeShortcut = nullptr;
 #endif
     }
     int w = std::max(isVisible() ? width() : 0, sizeHint().width());
@@ -479,7 +479,7 @@ void QProgressDialog::setCancelButtonText(const QString &cancelButtonText)
             setCancelButton(new QPushButton(cancelButtonText, this));
         }
     } else {
-        setCancelButton(0);
+        setCancelButton(nullptr);
     }
     int w = std::max(isVisible() ? width() : 0, sizeHint().width());
     int h = std::max(isVisible() ? height() : 0, sizeHint().height());

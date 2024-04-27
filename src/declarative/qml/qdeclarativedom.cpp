@@ -54,7 +54,7 @@
 QT_BEGIN_NAMESPACE
 
 QDeclarativeDomDocumentPrivate::QDeclarativeDomDocumentPrivate()
-: root(0)
+: root(nullptr)
 {
 }
 
@@ -211,7 +211,7 @@ QDeclarativeDomObject QDeclarativeDomDocument::rootObject() const
 }
 
 QDeclarativeDomPropertyPrivate::QDeclarativeDomPropertyPrivate()
-: property(0)
+: property(nullptr)
 {
 }
 
@@ -278,7 +278,7 @@ QDeclarativeDomProperty &QDeclarativeDomProperty::operator=(const QDeclarativeDo
 */
 bool QDeclarativeDomProperty::isValid() const
 {
-    return d->property != 0;
+    return d->property != nullptr;
 }
 
 
@@ -581,7 +581,7 @@ int QDeclarativeDomDynamicProperty::length() const
 }
 
 QDeclarativeDomObjectPrivate::QDeclarativeDomObjectPrivate()
-: object(0)
+: object(nullptr)
 {
 }
 
@@ -696,7 +696,7 @@ QDeclarativeDomObject &QDeclarativeDomObject::operator=(const QDeclarativeDomObj
 */
 bool QDeclarativeDomObject::isValid() const
 {
-    return d->object != 0;
+    return d->object != nullptr;
 }
 
 /*!
@@ -949,7 +949,7 @@ QUrl QDeclarativeDomObject::url() const
 }
 
 QDeclarativeDomBasicValuePrivate::QDeclarativeDomBasicValuePrivate()
-: value(0)
+: value(nullptr)
 {
 }
 
@@ -1232,7 +1232,7 @@ QDeclarativeDomObject QDeclarativeDomValueValueInterceptor::object() const
 }
 
 QDeclarativeDomValuePrivate::QDeclarativeDomValuePrivate()
-: property(0), value(0)
+: property(nullptr), value(nullptr)
 {
 }
 
@@ -1738,7 +1738,7 @@ QDeclarativeDomObject QDeclarativeDomComponent::componentRoot() const
 {
     QDeclarativeDomObject rv;
     if (d->object) {
-        QDeclarativeParser::Object *obj = 0;
+        QDeclarativeParser::Object *obj = nullptr;
         if (d->object->defaultProperty &&
            d->object->defaultProperty->values.count() == 1 &&
            d->object->defaultProperty->values.at(0)->object)

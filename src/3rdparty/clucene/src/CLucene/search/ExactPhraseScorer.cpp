@@ -46,7 +46,7 @@ CL_NS_DEF(search)
 		//Add the nodes of the list of PhrasePositions and store them
 		//into the PhraseQueue pq so it can used to build
 		//a list of sorted nodes
-		for (PhrasePositions* pp = first; pp != NULL; pp = pp->_next) {
+		for (PhrasePositions* pp = first; pp != nullptr; pp = pp->_next) {
 			//Read the first TermPosition of the current PhrasePositions pp
 			pp->firstPosition();
 			//Store the current PhrasePositions pp into the PhraseQueue pq

@@ -59,8 +59,8 @@ class Q_GUI_EXPORT QCheckBox : public QAbstractButton
     Q_PROPERTY(bool tristate READ isTristate WRITE setTristate)
 
 public:
-    explicit QCheckBox(QWidget *parent=0);
-    explicit QCheckBox(const QString &text, QWidget *parent=0);
+    explicit QCheckBox(QWidget *parent=nullptr);
+    explicit QCheckBox(const QString &text, QWidget *parent=nullptr);
     ~QCheckBox();
 
     QSize sizeHint() const;

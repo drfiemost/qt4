@@ -78,7 +78,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \internal
 */
-QSimplex::QSimplex() : objective(0), rows(0), columns(0), firstArtificial(0), matrix(0)
+QSimplex::QSimplex() : objective(nullptr), rows(0), columns(0), firstArtificial(0), matrix(nullptr)
 {
 }
 
@@ -95,7 +95,7 @@ QSimplex::~QSimplex()
 */
 void QSimplex::clearDataStructures()
 {
-    if (matrix == 0)
+    if (matrix == nullptr)
         return;
 
     // Matrix
@@ -103,7 +103,7 @@ void QSimplex::clearDataStructures()
     columns = 0;
     firstArtificial = 0;
     free(matrix);
-    matrix = 0;
+    matrix = nullptr;
 
     // Constraints
     for (int i = 0; i < constraints.size(); ++i) {
@@ -115,7 +115,7 @@ void QSimplex::clearDataStructures()
 
     // Other
     variables.clear();
-    objective = 0;
+    objective = nullptr;
 }
 
 /*!

@@ -96,7 +96,7 @@ class QClipboardPrivate : public QObjectPrivate
 public:
     QClipboardPrivate() : QObjectPrivate() {
         for (int i = 0; i <= QClipboard::LastMode; ++i) {
-            compat_data[i] = 0;
+            compat_data[i] = nullptr;
             wrapper[i] = new QMimeDataWrapper();
         }
     }
@@ -122,7 +122,7 @@ inline QMimeSourceWrapper::QMimeSourceWrapper(QClipboardPrivate *priv, QClipboar
 inline QMimeSourceWrapper::~QMimeSourceWrapper()
 {
     if (d->compat_data[mode] == source)
-        d->compat_data[mode] = 0;
+        d->compat_data[mode] = nullptr;
     delete source;
 }
 

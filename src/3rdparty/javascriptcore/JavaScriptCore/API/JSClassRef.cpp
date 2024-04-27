@@ -37,11 +37,11 @@
 using namespace std;
 using namespace JSC;
 
-const JSClassDefinition kJSClassDefinitionEmpty = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+const JSClassDefinition kJSClassDefinitionEmpty = { 0, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 OpaqueJSClass::OpaqueJSClass(const JSClassDefinition* definition, OpaqueJSClass* protoClass) 
     : parentClass(definition->parentClass)
-    , prototypeClass(0)
+    , prototypeClass(nullptr)
     , initialize(definition->initialize)
     , finalize(definition->finalize)
     , hasProperty(definition->hasProperty)
@@ -54,8 +54,8 @@ OpaqueJSClass::OpaqueJSClass(const JSClassDefinition* definition, OpaqueJSClass*
     , hasInstance(definition->hasInstance)
     , convertToType(definition->convertToType)
     , m_className(UString::createFromUTF8(definition->className).rep()->ref())
-    , m_staticValues(0)
-    , m_staticFunctions(0)
+    , m_staticValues(nullptr)
+    , m_staticFunctions(nullptr)
 {
     initializeThreading();
 
@@ -111,14 +111,14 @@ OpaqueJSClass::~OpaqueJSClass()
 
 PassRefPtr<OpaqueJSClass> OpaqueJSClass::createNoAutomaticPrototype(const JSClassDefinition* definition)
 {
-    return adoptRef(new OpaqueJSClass(definition, 0));
+    return adoptRef(new OpaqueJSClass(definition, nullptr));
 }
 
 static void clearReferenceToPrototype(JSObjectRef prototype)
 {
     OpaqueJSClassContextData* jsClassData = static_cast<OpaqueJSClassContextData*>(JSObjectGetPrivate(prototype));
     ASSERT(jsClassData);
-    jsClassData->cachedPrototype = 0;
+    jsClassData->cachedPrototype = nullptr;
 }
 
 PassRefPtr<OpaqueJSClass> OpaqueJSClass::create(const JSClassDefinition* clientDefinition)
@@ -131,7 +131,7 @@ PassRefPtr<OpaqueJSClass> OpaqueJSClass::create(const JSClassDefinition* clientD
     
     // We are supposed to use JSClassRetain/Release but since we know that we currently have
     // the only reference to this class object we cheat and use a RefPtr instead.
-    RefPtr<OpaqueJSClass> protoClass = adoptRef(new OpaqueJSClass(&protoDefinition, 0));
+    RefPtr<OpaqueJSClass> protoClass = adoptRef(new OpaqueJSClass(&protoDefinition, nullptr));
     return adoptRef(new OpaqueJSClass(&definition, protoClass.get()));
 }
 
@@ -150,7 +150,7 @@ OpaqueJSClassContextData::OpaqueJSClassContextData(OpaqueJSClass* jsClass)
         }
             
     } else
-        staticValues = 0;
+        staticValues = nullptr;
         
 
     if (jsClass->m_staticFunctions) {
@@ -164,7 +164,7 @@ OpaqueJSClassContextData::OpaqueJSClassContextData(OpaqueJSClass* jsClass)
         }
             
     } else
-        staticFunctions = 0;
+        staticFunctions = nullptr;
 }
 
 OpaqueJSClassContextData::~OpaqueJSClassContextData()
@@ -182,7 +182,7 @@ OpaqueJSClassContextData::~OpaqueJSClassContextData()
 
 OpaqueJSClassContextData& OpaqueJSClass::contextData(ExecState* exec)
 {
-    OpaqueJSClassContextData*& contextData = exec->globalData().opaqueJSClassData.add(this, 0).first->second;
+    OpaqueJSClassContextData*& contextData = exec->globalData().opaqueJSClassData.add(this, nullptr).first->second;
     if (!contextData)
         contextData = new OpaqueJSClassContextData(this);
     return *contextData;
@@ -225,7 +225,7 @@ JSObject* OpaqueJSClass::prototype(ExecState* exec)
      */
     
     if (!prototypeClass)
-        return 0;
+        return nullptr;
 
     OpaqueJSClassContextData& jsClassData = contextData(exec);
 

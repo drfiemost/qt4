@@ -23,7 +23,7 @@
 
 namespace JSC {
 
-const ClassInfo ErrorInstance::info = { "Error", 0, 0, 0 };
+const ClassInfo ErrorInstance::info = { "Error", nullptr, nullptr, nullptr };
 
 ErrorInstance::ErrorInstance(NonNullPassRefPtr<Structure> structure)
     : JSObject(structure)

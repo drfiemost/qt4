@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeOpenMetaObjectTypePrivate
 {
 public:
-    QDeclarativeOpenMetaObjectTypePrivate() : mem(0), cache(0), engine(0) {}
+    QDeclarativeOpenMetaObjectTypePrivate() : mem(nullptr), cache(nullptr), engine(nullptr) {}
 
     void init(const QMetaObject *metaObj);
 
@@ -139,7 +139,7 @@ class QDeclarativeOpenMetaObjectPrivate
 {
 public:
     QDeclarativeOpenMetaObjectPrivate(QDeclarativeOpenMetaObject *_q)
-        : q(_q), parent(0), type(0), cacheProperties(false) {}
+        : q(_q), parent(nullptr), type(nullptr), cacheProperties(false) {}
 
     inline QVariant &getData(int idx) {
         while (data.count() <= idx)
@@ -181,7 +181,7 @@ QDeclarativeOpenMetaObject::QDeclarativeOpenMetaObject(QObject *obj, bool automa
     d->autoCreate = automatic;
     d->object = obj;
 
-    d->type = new QDeclarativeOpenMetaObjectType(obj->metaObject(), 0);
+    d->type = new QDeclarativeOpenMetaObjectType(obj->metaObject(), nullptr);
     d->type->d->referers.insert(this);
 
     QObjectPrivate *op = QObjectPrivate::get(obj);
@@ -233,7 +233,7 @@ int QDeclarativeOpenMetaObject::metaCall(QMetaObject::Call c, int id, void **a)
                 propertyWrite(propId);
                 d->writeData(propId, *reinterpret_cast<QVariant *>(a[0]));
                 propertyWritten(propId);
-                activate(d->object, d->type->d->signalOffset + propId, 0);
+                activate(d->object, d->type->d->signalOffset + propId, nullptr);
             }
         } 
         return -1;
@@ -258,7 +258,7 @@ QVariant QDeclarativeOpenMetaObject::value(int id) const
 void QDeclarativeOpenMetaObject::setValue(int id, const QVariant &value)
 {
     d->writeData(id, value);
-    activate(d->object, id + d->type->d->signalOffset, 0);
+    activate(d->object, id + d->type->d->signalOffset, nullptr);
 }
 
 QVariant QDeclarativeOpenMetaObject::value(const QByteArray &name) const
@@ -300,7 +300,7 @@ void QDeclarativeOpenMetaObject::setValue(const QByteArray &name, const QVariant
             return;
 
         dataVal = val;
-        activate(d->object, id + d->type->d->signalOffset, 0);
+        activate(d->object, id + d->type->d->signalOffset, nullptr);
     }
 }
 
@@ -326,7 +326,7 @@ void QDeclarativeOpenMetaObject::setCached(bool c)
     } else {
         if (d->type->d->cache)
             d->type->d->cache->release();
-        qmldata->propertyCache = 0;
+        qmldata->propertyCache = nullptr;
     }
 }
 

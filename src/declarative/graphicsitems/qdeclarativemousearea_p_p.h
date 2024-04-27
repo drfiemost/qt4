@@ -68,7 +68,7 @@ class QDeclarativeMouseAreaPrivate : public QDeclarativeItemPrivate
 public:
     QDeclarativeMouseAreaPrivate()
       : absorb(true), hovered(false), pressed(false), longPress(false),
-      moved(false), stealMouse(false), doubleClick(false), preventStealing(false), drag(0)
+      moved(false), stealMouse(false), doubleClick(false), preventStealing(false), drag(nullptr)
     {
     }
 

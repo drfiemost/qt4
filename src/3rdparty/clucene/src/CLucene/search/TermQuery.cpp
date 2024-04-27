@@ -60,7 +60,7 @@ CL_NS_DEF(search)
 	/** Prints a user-readable version of this query. */
 	TCHAR* TermQuery::toString(const TCHAR* field) const{
 		CL_NS(util)::StringBuffer buffer;
-		if ( field==NULL || _tcscmp(term->field(),field)!= 0 ) {
+		if ( field==nullptr || _tcscmp(term->field(),field)!= 0 ) {
 			buffer.append(term->field());
 			buffer.append(_T(":"));
 		}
@@ -118,8 +118,8 @@ CL_NS_DEF(search)
 	Scorer* TermQuery::TermWeight::scorer(IndexReader* reader) {
 		TermDocs* termDocs = reader->termDocs(_term);
 		    
-		if (termDocs == NULL)
-			return NULL;
+		if (termDocs == nullptr)
+			return nullptr;
 		    
 		return _CLNEW TermScorer(this, termDocs, _this->getSimilarity(searcher),
 								reader->norms(_term->field()));
@@ -182,7 +182,7 @@ CL_NS_DEF(search)
 		Explanation* fieldNormExpl = _CLNEW Explanation();
 		uint8_t* fieldNorms = reader->norms(field);
 		qreal fieldNorm =
-			fieldNorms!=NULL ? Similarity::decodeNorm(fieldNorms[doc]) : 0.0f;
+			fieldNorms!=nullptr ? Similarity::decodeNorm(fieldNorms[doc]) : 0.0f;
 		fieldNormExpl->setValue(fieldNorm);
 
 		_sntprintf(buf,LUCENE_SEARCH_EXPLANATION_DESC_LEN,

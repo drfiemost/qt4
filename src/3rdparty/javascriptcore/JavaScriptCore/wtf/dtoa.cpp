@@ -468,7 +468,7 @@ static void mult(BigInt& aRef, const BigInt& bRef)
     const BigInt* b = &bRef;
     BigInt c;
     int wa, wb, wc;
-    const uint32_t *x = 0, *xa, *xb, *xae, *xbe;
+    const uint32_t *x = nullptr, *xa, *xb, *xae, *xbe;
     uint32_t *xc, *xc0;
     uint32_t y;
 #ifdef USE_LONG_LONG
@@ -588,7 +588,7 @@ static ALWAYS_INLINE void pow5mult(BigInt& b, int k)
         /* first time */
         p5 = new P5Node;
         i2b(p5->val, 625);
-        p5->next = 0;
+        p5->next = nullptr;
         p5s = p5;
         p5s_count = 1;
     }
@@ -613,7 +613,7 @@ static ALWAYS_INLINE void pow5mult(BigInt& b, int k)
             if (p5s_used == p5s_count) {
                 ASSERT(!p5->next);
                 p5->next = new P5Node;
-                p5->next->next = 0;
+                p5->next->next = nullptr;
                 p5->next->val = p5->val;
                 mult(p5->next->val, p5->next->val);
                 ++p5s_count;
@@ -2413,7 +2413,7 @@ void doubleToStringInJavaScriptFormat(double d, DtoaBuffer buffer, unsigned* res
     int sign;
 
     DtoaBuffer result;
-    char* resultEnd = 0;
+    char* resultEnd = nullptr;
     WTF::dtoa(result, d, 0, &decimalPoint, &sign, &resultEnd);
     int length = resultEnd - result;
 

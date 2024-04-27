@@ -56,7 +56,7 @@ QT_BEGIN_NAMESPACE
 
 namespace QTest
 {
-    static FILE *stream = 0;
+    static FILE *stream = nullptr;
 }
 
 void QAbstractTestLogger::outputString(const char *msg)
@@ -92,7 +92,7 @@ void QAbstractTestLogger::stopLogging()
     if (QTest::stream != stdout) {
         fclose(QTest::stream);
     }
-    QTest::stream = 0;
+    QTest::stream = nullptr;
 }
 
 namespace QTest

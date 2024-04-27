@@ -63,7 +63,7 @@ class QDefaultResultWidget : public QTreeWidget
     Q_OBJECT
 
 public:
-    QDefaultResultWidget(QWidget *parent = 0)
+    QDefaultResultWidget(QWidget *parent = nullptr)
         : QTreeWidget(parent)
     {
         header()->hide();
@@ -96,7 +96,7 @@ class QCLuceneResultWidget : public QTextBrowser
     Q_OBJECT
 
 public:
-    QCLuceneResultWidget(QWidget *parent = 0)
+    QCLuceneResultWidget(QWidget *parent = nullptr)
         : QTextBrowser(parent)
     {
         connect(this, SIGNAL(anchorClicked(QUrl)),
@@ -256,17 +256,17 @@ private:
         , searchEngine(engine)
         , isIndexing(false)
     {
-        resultTreeWidget = 0;
-        resultTextBrowser = 0;
+        resultTreeWidget = nullptr;
+        resultTextBrowser = nullptr;
 
         resultLastToShow = 20;
         resultFirstToShow = 0;
 
-        firstResultPage = 0;
-        previousResultPage = 0;
-        hitsLabel = 0;
-        nextResultPage = 0;
-        lastResultPage = 0;
+        firstResultPage = nullptr;
+        previousResultPage = nullptr;
+        hitsLabel = nullptr;
+        nextResultPage = nullptr;
+        lastResultPage = nullptr;
 
         connect(searchEngine, SIGNAL(indexingStarted()),
             this, SLOT(indexingStarted()));
@@ -304,7 +304,7 @@ private:
                 last = resultLastToShow > count ? count : resultLastToShow;
             }
         }
-        hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", 0, count).arg(first).arg(last));
+        hitsLabel->setText(QHelpSearchResultWidget::tr("%1 - %2 of %n Hits", nullptr, count).arg(first).arg(last));
     }
 
 private:
@@ -346,7 +346,7 @@ private:
 */
 
 QHelpSearchResultWidget::QHelpSearchResultWidget(QHelpSearchEngine *engine)
-    : QWidget(0)
+    : QWidget(nullptr)
     , d(new QHelpSearchResultWidgetPrivate(engine))
 {
     QVBoxLayout *vLayout = new QVBoxLayout(this);

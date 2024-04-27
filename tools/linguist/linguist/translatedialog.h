@@ -58,7 +58,7 @@ public:
         TranslateAll
     };
 
-    TranslateDialog(QWidget *parent = 0);
+    TranslateDialog(QWidget *parent = nullptr);
 
     bool markFinished() const { return m_ui.ckMarkFinished->isChecked(); }
     Qt::CaseSensitivity caseSensitivity() const

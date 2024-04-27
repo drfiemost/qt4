@@ -165,12 +165,12 @@ CL_NS_DEF(search)
             }
          }
 
-         BooleanQuery* clone = NULL;                    // recursively rewrite
+         BooleanQuery* clone = nullptr;                    // recursively rewrite
 		 for (uint32_t i = 0 ; i < clauses.size(); i++) {
             BooleanClause* c = clauses[i];
             Query* query = c->query->rewrite(reader);
             if (query != c->query) {                     // clause rewrote: must clone
-               if (clone == NULL)
+               if (clone == nullptr)
                   clone = (BooleanQuery*)this->clone();
 			   //todo: check if delete query should be on...
 			   //in fact we should try and get rid of these
@@ -178,7 +178,7 @@ CL_NS_DEF(search)
                clone->clauses.set (i, _CLNEW BooleanClause(query, true, c->required, c->prohibited));
             }
          }
-         if (clone != NULL) {
+         if (clone != nullptr) {
 			 return clone;                               // some clauses rewrote
          } else
             return this;                                // no clauses rewrote
@@ -272,8 +272,8 @@ CL_NS_DEF(search)
         for (uint32_t i = 0 ; i < weights.size(); i++) {
           Weight* w = weights[i];
           Scorer* subScorer = w->scorer(reader);
-          if (subScorer == NULL)
-            return NULL;
+          if (subScorer == nullptr)
+            return nullptr;
           result->add(subScorer);
         }
         return result;
@@ -287,10 +287,10 @@ CL_NS_DEF(search)
 			BooleanClause* c = (*clauses)[i];
 			Weight* w = weights[i];
 			Scorer* subScorer = w->scorer(reader);
-			if (subScorer != NULL)
+			if (subScorer != nullptr)
 			  result->add(subScorer, c->required, c->prohibited);
 			else if (c->required)
-			  return NULL;
+			  return nullptr;
 		  }
 	  }
 
@@ -314,7 +314,7 @@ CL_NS_DEF(search)
             sumExpl->addDetail(e);
             sum += e->getValue();
             coord++;
-            e = NULL; //prevent e from being deleted
+            e = nullptr; //prevent e from being deleted
           } else {
             //we want to return something else...
             _CLDELETE(sumExpl);

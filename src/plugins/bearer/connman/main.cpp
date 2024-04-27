@@ -81,7 +81,7 @@ QBearerEngine *QConnmanEnginePlugin::create(const QString &key) const
         else
             delete engine;
     }
-    return 0;
+    return nullptr;
 }
 
 Q_EXPORT_STATIC_PLUGIN(QConnmanEnginePlugin)

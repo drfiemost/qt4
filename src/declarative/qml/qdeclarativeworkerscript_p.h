@@ -71,7 +71,7 @@ class QDeclarativeWorkerScriptEngine : public QThread
 {
 Q_OBJECT
 public:
-    QDeclarativeWorkerScriptEngine(QDeclarativeEngine *parent = 0);
+    QDeclarativeWorkerScriptEngine(QDeclarativeEngine *parent = nullptr);
     virtual ~QDeclarativeWorkerScriptEngine();
 
     int registerWorkerScript(QDeclarativeWorkerScript *);
@@ -93,7 +93,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeWorkerScript : public QObject, public QDecla
 
     Q_INTERFACES(QDeclarativeParserStatus)
 public:
-    QDeclarativeWorkerScript(QObject *parent = 0);
+    QDeclarativeWorkerScript(QObject *parent = nullptr);
     virtual ~QDeclarativeWorkerScript();
 
     QUrl source() const;

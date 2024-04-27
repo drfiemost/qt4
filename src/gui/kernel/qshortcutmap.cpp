@@ -75,11 +75,11 @@ QT_BEGIN_NAMESPACE
 struct QShortcutEntry
 {
     QShortcutEntry()
-        : keyseq(0), context(Qt::WindowShortcut), enabled(false), autorepeat(1), id(0), owner(0)
+        : keyseq(0), context(Qt::WindowShortcut), enabled(false), autorepeat(1), id(0), owner(nullptr)
     {}
 
     QShortcutEntry(const QKeySequence &k)
-        : keyseq(k), context(Qt::WindowShortcut), enabled(false), autorepeat(1), id(0), owner(0)
+        : keyseq(k), context(Qt::WindowShortcut), enabled(false), autorepeat(1), id(0), owner(nullptr)
     {}
 
     QShortcutEntry(QObject *o, const QKeySequence &k, Qt::ShortcutContext c, int i)
@@ -194,7 +194,7 @@ int QShortcutMap::removeShortcut(int id, QObject *owner, const QKeySequence &key
 {
     Q_D(QShortcutMap);
     int itemsRemoved = 0;
-    bool allOwners = (owner == 0);
+    bool allOwners = (owner == nullptr);
     bool allKeys = key.isEmpty();
     bool allIds = id == 0;
 
@@ -240,7 +240,7 @@ int QShortcutMap::setShortcutEnabled(bool enable, int id, QObject *owner, const 
 {
     Q_D(QShortcutMap);
     int itemsChanged = 0;
-    bool allOwners = (owner == 0);
+    bool allOwners = (owner == nullptr);
     bool allKeys = key.isEmpty();
     bool allIds = id == 0;
 
@@ -278,7 +278,7 @@ int QShortcutMap::setShortcutAutoRepeat(bool on, int id, QObject *owner, const Q
 {
     Q_D(QShortcutMap);
     int itemsChanged = 0;
-    bool allOwners = (owner == 0);
+    bool allOwners = (owner == nullptr);
     bool allKeys = key.isEmpty();
     bool allIds = id == 0;
 
@@ -673,7 +673,7 @@ bool QShortcutMap::correctWidgetContext(Qt::ShortcutContext context, QWidget *w,
         return false;
 
     if (context == Qt::ApplicationShortcut)
-        return QApplicationPrivate::tryModalHelper(w, 0); // true, unless w is shadowed by a modal dialog
+        return QApplicationPrivate::tryModalHelper(w, nullptr); // true, unless w is shadowed by a modal dialog
 
     if (context == Qt::WidgetShortcut)
         return w == QApplication::focusWidget();
@@ -741,7 +741,7 @@ bool QShortcutMap::correctGraphicsWidgetContext(Qt::ShortcutContext context, QGr
         // must still check if all views are shadowed.
         QList<QGraphicsView *> views = w->scene()->views();
         for (int i = 0; i < views.size(); ++i) {
-            if (QApplicationPrivate::tryModalHelper(views.at(i), 0))
+            if (QApplicationPrivate::tryModalHelper(views.at(i), nullptr))
                 return true;
         }
         return false;
@@ -765,7 +765,7 @@ bool QShortcutMap::correctGraphicsWidgetContext(Qt::ShortcutContext context, QGr
 
     // Find the active view (if any).
     QList<QGraphicsView *> views = w->scene()->views();
-    QGraphicsView *activeView = 0;
+    QGraphicsView *activeView = nullptr;
     for (int i = 0; i < views.size(); ++i) {
         QGraphicsView *view = views.at(i);
         if (view->window() == active_window) {
@@ -861,7 +861,7 @@ void QShortcutMap::dispatchEvent(QKeyEvent *e)
         d->prevSequence = curKey;
     }
     // Find next
-    const QShortcutEntry *current = 0, *next = 0;
+    const QShortcutEntry *current = nullptr, *next = nullptr;
     int i = 0, enabledShortcuts = 0;
     while(i < d->identicals.size()) {
         current = d->identicals.at(i);

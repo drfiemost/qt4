@@ -63,10 +63,10 @@ QT_BEGIN_NAMESPACE
 // TODO: Put channel specific stuff here so it does not polute qhttpnetworkconnection.cpp
 
 QHttpNetworkConnectionChannel::QHttpNetworkConnectionChannel()
-    : socket(0)
+    : socket(nullptr)
     , ssl(false)
     , state(IdleState)
-    , reply(0)
+    , reply(nullptr)
     , written(0)
     , bytesTotal(0)
     , resendCurrent(false)
@@ -81,7 +81,7 @@ QHttpNetworkConnectionChannel::QHttpNetworkConnectionChannel()
     , ignoreAllSslErrors(false)
 #endif
     , pipeliningSupported(PipeliningSupportUnknown)
-    , connection(0)
+    , connection(nullptr)
 {
     // Inlining this function in the header leads to compiler error on
     // release-armv5, on at least timebox 9.2 and 10.1.
@@ -280,7 +280,7 @@ bool QHttpNetworkConnectionChannel::sendRequest()
                 // premature eof happened
                 connection->d_func()->emitReplyError(socket, reply, QNetworkReply::UnknownNetworkError);
                 return false;
-            } else if (readPointer == 0 || currentReadSize == 0) {
+            } else if (readPointer == nullptr || currentReadSize == 0) {
                 // nothing to read currently, break the loop
                 break;
             } else {
@@ -753,7 +753,7 @@ void QHttpNetworkConnectionChannel::allDone()
     // problem.
     if (!resendCurrent) {
         request = QHttpNetworkRequest();
-        reply = 0;
+        reply = nullptr;
     }
 
     // move next from pipeline to current request
@@ -1163,7 +1163,7 @@ void QHttpNetworkConnectionChannel::_q_error(QAbstractSocket::SocketError socket
     if (reply) {
         reply->d_func()->errorString = errorString;
         emit reply->finishedWithError(errorCode, errorString);
-        reply = 0;
+        reply = nullptr;
     }
     // send the next request
     QMetaObject::invokeMethod(that, "_q_startNextRequest", Qt::QueuedConnection);

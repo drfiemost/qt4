@@ -125,11 +125,11 @@ class Q_GUI_EXPORT QTextDocument : public QObject
     QDOC_PROPERTY(QTextOption defaultTextOption READ defaultTextOption WRITE setDefaultTextOption)
 
 public:
-    explicit QTextDocument(QObject *parent = 0);
-    explicit QTextDocument(const QString &text, QObject *parent = 0);
+    explicit QTextDocument(QObject *parent = nullptr);
+    explicit QTextDocument(const QString &text, QObject *parent = nullptr);
     ~QTextDocument();
 
-    QTextDocument *clone(QObject *parent = 0) const;
+    QTextDocument *clone(QObject *parent = nullptr) const;
 
     bool isEmpty() const;
     virtual void clear();
@@ -173,11 +173,11 @@ public:
     };
     Q_DECLARE_FLAGS(FindFlags, FindFlag)
 
-    QTextCursor find(const QString &subString, int from = 0, FindFlags options = 0) const;
-    QTextCursor find(const QString &subString, const QTextCursor &from, FindFlags options = 0) const;
+    QTextCursor find(const QString &subString, int from = 0, FindFlags options = nullptr) const;
+    QTextCursor find(const QString &subString, const QTextCursor &from, FindFlags options = nullptr) const;
 
-    QTextCursor find(const QRegExp &expr, int from = 0, FindFlags options = 0) const;
-    QTextCursor find(const QRegExp &expr, const QTextCursor &from, FindFlags options = 0) const;
+    QTextCursor find(const QRegExp &expr, int from = 0, FindFlags options = nullptr) const;
+    QTextCursor find(const QRegExp &expr, const QTextCursor &from, FindFlags options = nullptr) const;
 
     QTextFrame *frameAt(int pos) const;
     QTextFrame *rootFrame() const;

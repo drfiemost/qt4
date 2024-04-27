@@ -153,7 +153,7 @@ QAdoptedThread::~QAdoptedThread()
 
 QThread *QAdoptedThread::createThreadForAdoption()
 {
-    QScopedPointer<QThread> t(new QAdoptedThread(0));
+    QScopedPointer<QThread> t(new QAdoptedThread(nullptr));
     t->moveToThread(t.data());
     return t.take();
 }
@@ -618,7 +618,7 @@ void QThread::initialize()
 */
 void QThread::cleanup()
 {
-    qt_global_mutexpool = 0;
+    qt_global_mutexpool = nullptr;
 }
 
 /*!

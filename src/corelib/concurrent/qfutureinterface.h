@@ -307,7 +307,7 @@ public:
 
     void reportResult(const void *, int) { }
     void reportResults(const QVector<void> &, int) { }
-    void reportFinished(void * = 0) { QFutureInterfaceBase::reportFinished(); }
+    void reportFinished(void * = nullptr) { QFutureInterfaceBase::reportFinished(); }
 };
 
 QT_END_NAMESPACE

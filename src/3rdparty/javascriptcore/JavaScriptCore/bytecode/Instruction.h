@@ -68,7 +68,7 @@ namespace JSC {
             {
                 stubRoutine = _stubRoutine;
                 base = _base;
-                u.proto = 0;
+                u.proto = nullptr;
                 isChain = false;
             }
             
@@ -128,7 +128,7 @@ namespace JSC {
 #if !HAVE(COMPUTED_GOTO)
             // We have to initialize one of the pointer members to ensure that
             // the entire struct is initialized, when opcode is not a pointer.
-            u.jsCell = 0;
+            u.jsCell = nullptr;
 #endif
             u.opcode = opcode;
         }
@@ -137,7 +137,7 @@ namespace JSC {
         {
             // We have to initialize one of the pointer members to ensure that
             // the entire struct is initialized in 64-bit.
-            u.jsCell = 0;
+            u.jsCell = nullptr;
             u.operand = operand;
         }
 

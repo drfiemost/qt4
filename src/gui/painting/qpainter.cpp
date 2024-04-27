@@ -339,7 +339,7 @@ void QPainterPrivate::detachPainterPrivate(QPainter *q)
         original = new QPainterPrivate(q);
     }
 
-    d_ptrs[refcount - 1] = 0;
+    d_ptrs[refcount - 1] = nullptr;
     q->restore();
     q->d_ptr.take();
     q->d_ptr.reset(original);
@@ -347,7 +347,7 @@ void QPainterPrivate::detachPainterPrivate(QPainter *q)
     if (emulationEngine) {
         extended = emulationEngine->real_engine;
         delete emulationEngine;
-        emulationEngine = 0;
+        emulationEngine = nullptr;
     }
 }
 
@@ -1498,7 +1498,7 @@ QPainter::QPainter()
 */
 
 QPainter::QPainter(QPaintDevice *pd)
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
     Q_ASSERT(pd != 0);
     if (!QPainterPrivate::attachPainterPrivate(this, pd)) {
@@ -1727,9 +1727,9 @@ static inline void qt_cleanup_painter_state(QPainterPrivate *d)
 {
     d->states.clear();
     delete d->state;
-    d->state = 0;
-    d->engine = 0;
-    d->device = 0;
+    d->state = nullptr;
+    d->engine = nullptr;
+    d->device = nullptr;
 }
 
 bool QPainter::begin(QPaintDevice *pd)
@@ -1753,7 +1753,7 @@ bool QPainter::begin(QPaintDevice *pd)
 
     d->helper_device = pd;
     d->original_device = pd;
-    QPaintDevice *rpd = 0;
+    QPaintDevice *rpd = nullptr;
 
     QPoint redirectionOffset;
     // We know for sure that redirection is broken when the widget is inside
@@ -1791,13 +1791,13 @@ bool QPainter::begin(QPaintDevice *pd)
 
     d->device = pd;
 
-    d->extended = d->engine->isExtended() ? static_cast<QPaintEngineEx *>(d->engine) : 0;
+    d->extended = d->engine->isExtended() ? static_cast<QPaintEngineEx *>(d->engine) : nullptr;
     if (d->emulationEngine)
         d->emulationEngine->real_engine = d->extended;
 
     // Setup new state...
     Q_ASSERT(!d->state);
-    d->state = d->extended ? d->extended->createState(0) : new QPainterState;
+    d->state = d->extended ? d->extended->createState(nullptr) : new QPainterState;
     d->state->painter = this;
     d->states.push_back(d->state);
 
@@ -1961,11 +1961,11 @@ bool QPainter::end()
 
     if (d->engine->isActive()) {
         ended = d->engine->end();
-        d->updateState(0);
+        d->updateState(nullptr);
 
         --d->device->painters;
         if (d->device->painters == 0) {
-            d->engine->setPaintDevice(0);
+            d->engine->setPaintDevice(nullptr);
             d->engine->setActive(false);
         }
     }
@@ -1981,11 +1981,11 @@ bool QPainter::end()
 
     if (d->emulationEngine) {
         delete d->emulationEngine;
-        d->emulationEngine = 0;
+        d->emulationEngine = nullptr;
     }
 
     if (d->extended) {
-        d->extended = 0;
+        d->extended = nullptr;
     }
 
     qt_cleanup_painter_state(d);
@@ -2802,7 +2802,7 @@ void QPainter::setClipRect(const QRectF &rect, Qt::ClipOperation op)
                         right, rect.y(),
                         right, bottom,
                         rect.x(), bottom };
-        QVectorPath vp(pts, 4, 0, QVectorPath::RectangleHint);
+        QVectorPath vp(pts, 4, nullptr, QVectorPath::RectangleHint);
         d->state->clipEnabled = true;
         d->extended->clip(vp, op);
         if (op == Qt::ReplaceClip || op == Qt::NoClip)
@@ -5746,7 +5746,7 @@ void QPainter::drawGlyphRun(const QPointF &position, const QGlyphRun &glyphRun)
 
     QRawFontPrivate *fontD = QRawFontPrivate::get(font);
     bool supportsTransformations;
-    if (d->extended != 0) {
+    if (d->extended != nullptr) {
         supportsTransformations = d->extended->supportsTransformations(fontD->fontEngine->fontDef.pixelSize,
                                                                        d->state->matrix);
     } else {
@@ -5798,7 +5798,7 @@ void QPainterPrivate::drawGlyphs(const quint32 *glyphArray, QFixedPoint *positio
 
     QFixed width = rightMost - leftMost;
 
-    if (extended != 0 && state->matrix.isAffine()) {
+    if (extended != nullptr && state->matrix.isAffine()) {
         QStaticTextItem staticTextItem;
         staticTextItem.color = state->pen.color();
         staticTextItem.font = state->font;
@@ -5928,7 +5928,7 @@ void QPainter::drawStaticText(const QPointF &topLeftPosition, const QStaticText 
 
     // If we don't have an extended paint engine, or if the painter is projected,
     // we go through standard code path
-    if (d->extended == 0 || !d->state->matrix.isAffine()) {
+    if (d->extended == nullptr || !d->state->matrix.isAffine()) {
         staticText_d->paintText(topLeftPosition, this);
         return;
     }
@@ -6038,9 +6038,9 @@ void QPainter::drawText(const QPointF &p, const QString &str, int tf, int justif
         int numGlyphs = len;
         QVarLengthGlyphLayoutArray glyphs(len);
         QFontEngine *fontEngine = d->state->font.d->engineForScript(QUnicodeTables::Common);
-        if (!fontEngine->stringToCMap(str.data(), len, &glyphs, &numGlyphs, 0)) {
+        if (!fontEngine->stringToCMap(str.data(), len, &glyphs, &numGlyphs, nullptr)) {
             glyphs.resize(numGlyphs);
-            if (!fontEngine->stringToCMap(str.data(), len, &glyphs, &numGlyphs, 0))
+            if (!fontEngine->stringToCMap(str.data(), len, &glyphs, &numGlyphs, nullptr))
                 Q_ASSERT_X(false, Q_FUNC_INFO, "stringToCMap shouldn't fail twice");
         }
 
@@ -6119,7 +6119,7 @@ void QPainter::drawText(const QRect &r, int flags, const QString &str, QRect *br
         d->updateState(d->state);
 
     QRectF bounds;
-    qt_format_text(d->state->font, r, flags, 0, str, br ? &bounds : 0, 0, 0, 0, this);
+    qt_format_text(d->state->font, r, flags, nullptr, str, br ? &bounds : nullptr, 0, nullptr, 0, this);
     if (br)
         *br = bounds.toAlignedRect();
 }
@@ -6194,7 +6194,7 @@ void QPainter::drawText(const QRectF &r, int flags, const QString &str, QRectF *
     if (!d->extended)
         d->updateState(d->state);
 
-    qt_format_text(d->state->font, r, flags, 0, str, br, 0, 0, 0, this);
+    qt_format_text(d->state->font, r, flags, nullptr, str, br, 0, nullptr, 0, this);
 }
 
 /*!
@@ -6287,7 +6287,7 @@ void QPainter::drawText(const QRectF &r, const QString &text, const QTextOption 
     if (!d->extended)
         d->updateState(d->state);
 
-    qt_format_text(d->state->font, r, 0, &o, text, 0, 0, 0, 0, this);
+    qt_format_text(d->state->font, r, 0, &o, text, nullptr, 0, nullptr, 0, this);
 }
 
 /*!
@@ -6486,7 +6486,7 @@ Q_GUI_EXPORT void qt_draw_decoration_for_glyphs(QPainter *painter, const glyph_t
     }
 
     QFixed width = rightMost - leftMost;
-    QTextItem::RenderFlags flags = 0;
+    QTextItem::RenderFlags flags = nullptr;
 
     if (font.underline())
         flags |= QTextItem::Underline;
@@ -6752,7 +6752,7 @@ QRectF QPainter::boundingRect(const QRectF &r, const QString &text, const QTextO
         return QRectF(r.x(),r.y(), 0,0);
 
     QRectF br;
-    qt_format_text(d->state->font, r, Qt::TextDontPrint, &o, text, &br, 0, 0, 0, this);
+    qt_format_text(d->state->font, r, Qt::TextDontPrint, &o, text, &br, 0, nullptr, 0, this);
     return br;
 }
 
@@ -7241,7 +7241,7 @@ QPainter::RenderHints QPainter::renderHints() const
     Q_D(const QPainter);
 
     if (!d->engine)
-        return 0;
+        return nullptr;
 
     return d->state->renderHints;
 }
@@ -7460,7 +7460,7 @@ void QPainter::setViewTransformEnabled(bool enable)
 
 struct QPaintDeviceRedirection
 {
-    QPaintDeviceRedirection() : device(0), replacement(0), internalWidgetRedirectionIndex(-1) {}
+    QPaintDeviceRedirection() : device(nullptr), replacement(nullptr), internalWidgetRedirectionIndex(-1) {}
     QPaintDeviceRedirection(const QPaintDevice *device, QPaintDevice *replacement,
                             const QPoint& offset, int internalWidgetRedirectionIndex)
         : device(device), replacement(replacement), offset(offset),
@@ -7656,7 +7656,7 @@ void qt_format_text(const QFont &fnt, const QRectF &_r,
                     QPainter *painter)
 {
     qt_format_text(fnt, _r,
-                    tf, 0, str, brect,
+                    tf, nullptr, str, brect,
                     tabstops, ta, tabarraylen,
                     painter);
 }
@@ -7957,15 +7957,15 @@ QPainterState::QPainterState(const QPainterState *s)
 
 QPainterState::QPainterState()
     : brushOrigin(0, 0), bgBrush(Qt::white), clipOperation(Qt::NoClip),
-      renderHints(0),
+      renderHints(nullptr),
       wx(0), wy(0), ww(0), wh(0), vx(0), vy(0), vw(0), vh(0),
       opacity(1), WxF(false), VxF(false), clipEnabled(true),
-      bgMode(Qt::TransparentMode), painter(0),
+      bgMode(Qt::TransparentMode), painter(nullptr),
       layoutDirection(QApplication::layoutDirection()),
       composition_mode(QPainter::CompositionMode_SourceOver),
       emulationSpecifier(0), changeFlags(0)
 {
-    dirtyFlags = 0;
+    dirtyFlags = nullptr;
 }
 
 QPainterState::~QPainterState()
@@ -7994,9 +7994,9 @@ void QPainterState::init(QPainter *p) {
     layoutDirection = QApplication::layoutDirection();
     composition_mode = QPainter::CompositionMode_SourceOver;
     emulationSpecifier = 0;
-    dirtyFlags = 0;
+    dirtyFlags = nullptr;
     changeFlags = 0;
-    renderHints = 0;
+    renderHints = nullptr;
     opacity = 1;
 }
 

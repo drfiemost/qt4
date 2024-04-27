@@ -64,7 +64,7 @@ QT_BEGIN_NAMESPACE
 struct QPropertyAssignment
 {
     QPropertyAssignment()
-        : object(0), explicitlySet(true) {}
+        : object(nullptr), explicitlySet(true) {}
     QPropertyAssignment(QObject *o, const QByteArray &n,
                         const QVariant &v, bool es = true)
         : object(o), propertyName(n), value(v), explicitlySet(es)
@@ -86,8 +86,8 @@ public:
     QStatePrivate();
     ~QStatePrivate();
 
-    static QStatePrivate *get(QState *q) { return q ? q->d_func() : 0; }
-    static const QStatePrivate *get(const QState *q) { return q? q->d_func() : 0; }
+    static QStatePrivate *get(QState *q) { return q ? q->d_func() : nullptr; }
+    static const QStatePrivate *get(const QState *q) { return q? q->d_func() : nullptr; }
 
     QList<QAbstractState*> childStates() const;
     QList<QHistoryState*> historyStates() const;

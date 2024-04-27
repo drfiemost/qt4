@@ -135,7 +135,7 @@ EmbeddedOptionsControlPrivate::EmbeddedOptionsControlPrivate(QDesignerFormEditor
     m_editButton(new QToolButton),
     m_deleteButton(new QToolButton),
     m_descriptionLabel(new QLabel),
-    m_q(0),
+    m_q(nullptr),
     m_dirty(false)
 {
     m_descriptionLabel->setMinimumHeight(80);

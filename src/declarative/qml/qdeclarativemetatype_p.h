@@ -71,7 +71,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeMetaType
 {
 public:
     static bool canCopy(int type);
-    static bool copy(int type, void *data, const void *copy = 0);
+    static bool copy(int type, void *data, const void *copy = nullptr);
 
     static QList<QByteArray> qmlTypeNames();
     static QList<QDeclarativeType*> qmlTypes();
@@ -89,7 +89,7 @@ public:
     static QMetaMethod defaultMethod(QObject *);
 
     static bool isQObject(int);
-    static QObject *toQObject(const QVariant &, bool *ok = 0);
+    static QObject *toQObject(const QVariant &, bool *ok = nullptr);
 
     static int listType(int);
     static int attachedPropertiesFuncId(const QMetaObject *);

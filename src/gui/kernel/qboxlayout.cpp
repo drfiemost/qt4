@@ -279,7 +279,7 @@ void QBoxLayoutPrivate::setupGeom()
     int fixedSpacing = q->spacing();
     int previousNonEmptyIndex = -1;
 
-    QStyle *style = 0;
+    QStyle *style = nullptr;
     if (fixedSpacing < 0) {
         if (QWidget *parentWidget = q->parentWidget())
             style = parentWidget->style();
@@ -319,7 +319,7 @@ void QBoxLayoutPrivate::setupGeom()
                     if (style) {
                         spacing = style->combinedLayoutSpacing(actual1, actual2,
                                              horz(dir) ? Qt::Horizontal : Qt::Vertical,
-                                             0, q->parentWidget());
+                                             nullptr, q->parentWidget());
                         if (spacing < 0)
                             spacing = 0;
                     }
@@ -536,7 +536,7 @@ void QBoxLayoutPrivate::calcHfw(int w)
     \sa direction()
 */
 QBoxLayout::QBoxLayout(Direction dir, QWidget *parent)
-    : QLayout(*new QBoxLayoutPrivate, 0, parent)
+    : QLayout(*new QBoxLayoutPrivate, nullptr, parent)
 {
     Q_D(QBoxLayout);
     d->dir = dir;
@@ -667,7 +667,7 @@ int QBoxLayout::minimumHeightForWidth(int w) const
     Q_D(const QBoxLayout);
     (void) heightForWidth(w);
     int top, bottom;
-    d->effectiveMargins(0, &top, 0, &bottom);
+    d->effectiveMargins(nullptr, &top, nullptr, &bottom);
     return d->hasHfw ? (d->hfwMinHeight + top + bottom) : -1;
 }
 
@@ -696,7 +696,7 @@ int QBoxLayout::count() const
 QLayoutItem *QBoxLayout::itemAt(int index) const
 {
     Q_D(const QBoxLayout);
-    return index >= 0 && index < d->list.count() ? d->list.at(index)->item : 0;
+    return index >= 0 && index < d->list.count() ? d->list.at(index)->item : nullptr;
 }
 
 /*!
@@ -706,16 +706,16 @@ QLayoutItem *QBoxLayout::takeAt(int index)
 {
     Q_D(QBoxLayout);
     if (index < 0 || index >= d->list.count())
-        return 0;
+        return nullptr;
     QBoxLayoutItem *b = d->list.takeAt(index);
     QLayoutItem *item = b->item;
-    b->item = 0;
+    b->item = nullptr;
     delete b;
 
     if (QLayout *l = item->layout()) {
         // sanity check in case the user passed something weird to QObject::setParent()
         if (l->parent() == this)
-            l->setParent(0);
+            l->setParent(nullptr);
     }
 
     invalidate();
@@ -1180,7 +1180,7 @@ void QBoxLayout::setDirection(Direction direction)
             if (box->magic) {
                 QSpacerItem *sp = box->item->spacerItem();
                 if (sp) {
-                    if (sp->expandingDirections() == Qt::Orientations(0) /*No Direction*/) {
+                    if (sp->expandingDirections() == Qt::Orientations(nullptr) /*No Direction*/) {
                         //spacing or strut
                         QSize s = sp->sizeHint();
                         sp->changeSize(s.height(), s.width(),

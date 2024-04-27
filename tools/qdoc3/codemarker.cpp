@@ -117,7 +117,7 @@ void CodeMarker::terminate()
 CodeMarker *CodeMarker::markerForCode(const QString& code)
 {
     CodeMarker *defaultMarker = markerForLanguage(defaultLang);
-    if (defaultMarker != 0 && defaultMarker->recognizeCode(code))
+    if (defaultMarker != nullptr && defaultMarker->recognizeCode(code))
 	return defaultMarker;
 
     QList<CodeMarker *>::ConstIterator m = markers.begin();
@@ -135,7 +135,7 @@ CodeMarker *CodeMarker::markerForFileName(const QString& fileName)
     int dot = -1;
     while ((dot = fileName.lastIndexOf(QLatin1Char('.'), dot)) != -1) {
 	QString ext = fileName.mid(dot + 1);
-	if (defaultMarker != 0 && defaultMarker->recognizeExtension(ext))
+	if (defaultMarker != nullptr && defaultMarker->recognizeExtension(ext))
 	    return defaultMarker;
 	QList<CodeMarker *>::ConstIterator m = markers.begin();
 	while (m != markers.end()) {
@@ -156,7 +156,7 @@ CodeMarker *CodeMarker::markerForLanguage(const QString& lang)
 	    return *m;
 	++m;
     }
-    return 0;
+    return nullptr;
 }
 
 const Node *CodeMarker::nodeForString(const QString& string)
@@ -442,7 +442,7 @@ bool CodeMarker::insertReimpFunc(FastSection& fs, Node* node, Status status)
         return false;
 
     const FunctionNode* fn = static_cast<const FunctionNode*>(node);
-    if ((fn->reimplementedFrom() != 0) && (status == Okay)) {
+    if ((fn->reimplementedFrom() != nullptr) && (status == Okay)) {
         bool inherited = (!fn->relates() && (fn->parent() != (const InnerNode*)fs.innerNode));
         if (!inherited) {
             QString key = sortName(fn);
@@ -630,7 +630,7 @@ const Node* CodeMarker::resolveTarget(const QString& ,
 		                      const Node* ,
                                       const Node* )
 {
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

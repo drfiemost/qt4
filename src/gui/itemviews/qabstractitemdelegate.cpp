@@ -238,7 +238,7 @@ QWidget *QAbstractItemDelegate::createEditor(QWidget *,
                                              const QStyleOptionViewItem &,
                                              const QModelIndex &) const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

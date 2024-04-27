@@ -299,7 +299,7 @@ const HashEntry* JSObject::findPropertyHashEntry(ExecState* exec, const Identifi
                 return entry;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void JSObject::defineGetter(ExecState* exec, const Identifier& propertyName, JSObject* getterFunction, unsigned attributes)
@@ -549,7 +549,7 @@ void JSObject::allocatePropertyStorage(size_t oldSize, size_t newSize)
 bool JSObject::getOwnPropertyDescriptor(ExecState*, const Identifier& propertyName, PropertyDescriptor& descriptor)
 {
     unsigned attributes = 0;
-    JSCell* cell = 0;
+    JSCell* cell = nullptr;
     size_t offset = m_structure->get(propertyName, attributes, cell);
     if (offset == WTF::notFound)
         return false;

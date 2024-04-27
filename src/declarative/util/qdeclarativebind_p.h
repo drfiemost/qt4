@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeBind : public QObject, public QDeclarativePa
     Q_PROPERTY(bool when READ when WRITE setWhen)
 
 public:
-    QDeclarativeBind(QObject *parent=0);
+    QDeclarativeBind(QObject *parent=nullptr);
     ~QDeclarativeBind();
 
     bool when() const;

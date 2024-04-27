@@ -69,8 +69,8 @@ private:
     Q_PROPERTY(bool separatorsCollapsible READ separatorsCollapsible WRITE setSeparatorsCollapsible)
 
 public:
-    explicit QMenu(QWidget *parent = 0);
-    explicit QMenu(const QString &title, QWidget *parent = 0);
+    explicit QMenu(QWidget *parent = nullptr);
+    explicit QMenu(const QString &title, QWidget *parent = nullptr);
     ~QMenu();
 
     using QWidget::addAction;
@@ -104,12 +104,12 @@ public:
     void setActiveAction(QAction *act);
     QAction *activeAction() const;
 
-    void popup(const QPoint &pos, QAction *at=0);
+    void popup(const QPoint &pos, QAction *at=nullptr);
     QAction *exec();
-    QAction *exec(const QPoint &pos, QAction *at=0);
+    QAction *exec(const QPoint &pos, QAction *at=nullptr);
 
     // ### Qt 5: merge
-    static QAction *exec(QList<QAction*> actions, const QPoint &pos, QAction *at=0);
+    static QAction *exec(QList<QAction*> actions, const QPoint &pos, QAction *at=nullptr);
     static QAction *exec(QList<QAction*> actions, const QPoint &pos, QAction *at, QWidget *parent);
 
     QSize sizeHint() const;
@@ -170,7 +170,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_overrideMenuActionDestroyed())
 
 protected:
-    QMenu(QMenuPrivate &dd, QWidget* parent = 0);
+    QMenu(QMenuPrivate &dd, QWidget* parent = nullptr);
 
 private:
     Q_DISABLE_COPY(QMenu)

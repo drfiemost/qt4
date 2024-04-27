@@ -79,8 +79,8 @@
 QT_BEGIN_NAMESPACE
 
 static int qfswd_fileChanged_pipe[2];
-static void (*qfswd_old_sigio_handler)(int) = 0;
-static void (*qfswd_old_sigio_action)(int, siginfo_t *, void *) = 0;
+static void (*qfswd_old_sigio_handler)(int) = nullptr;
+static void (*qfswd_old_sigio_action)(int, siginfo_t *, void *) = nullptr;
 static void qfswd_sigio_monitor(int signum, siginfo_t *i, void *v)
 {
     qt_safe_write(qfswd_fileChanged_pipe[1], reinterpret_cast<char*>(&i->si_fd), sizeof(int));
@@ -258,7 +258,7 @@ QStringList QDnotifyFileSystemWatcherEngine::addPaths(const QStringList &paths, 
 
             QT_DIR *d = QT_OPENDIR(path.toUtf8().constData());
             if(!d) continue; // Could not open directory
-            QT_DIR *parent = 0;
+            QT_DIR *parent = nullptr;
 
             QDir parentDir(path);
             if(!parentDir.isRoot()) {

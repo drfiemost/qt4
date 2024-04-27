@@ -110,7 +110,7 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
                                    QString *errorMessage)
 {
     QXmlStreamReader reader(xml);
-    DomUI *ui = 0;
+    DomUI *ui = nullptr;
 
     // The xml description must either contain a root element "ui" with a child element "widget"
     // or "widget" as the root element (4.3 legacy)
@@ -144,14 +144,14 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
                            "specified for the widget %3: %4\n%5")
                            .arg(reader.lineNumber()).arg(reader.columnNumber()).arg(name)
                            .arg(reader.errorString()).arg(xml);
-        return 0;
+        return nullptr;
     }
 
     if (!ui || !ui->elementWidget()) {
         delete ui;
         *errorMessage = tr("The XML code specified for the widget %1 does not contain "
                            "any widget elements.\n%2").arg(name).arg(xml);
-        return 0;
+        return nullptr;
     }
 
     if (insertFakeTopLevel)  {

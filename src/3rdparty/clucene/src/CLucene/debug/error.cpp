@@ -20,7 +20,7 @@ CL_NS_USE(util)
 	{
 		error_number = num;
 		_awhat=STRDUP_AtoA(str);
-		_twhat=NULL;
+		_twhat=nullptr;
 		if ( ownstr )
 			_CLDELETE_CaARRAY(str);
     }
@@ -28,12 +28,12 @@ CL_NS_USE(util)
 	CLuceneError::CLuceneError(const CLuceneError& clone)
 	{
 		this->error_number = clone.error_number;
-		this->_awhat = NULL;
-		this->_twhat = NULL;
+		this->_awhat = nullptr;
+		this->_twhat = nullptr;
 
-		if ( clone._awhat != NULL )
+		if ( clone._awhat != nullptr )
 			this->_awhat = STRDUP_AtoA(clone._awhat);
-		if ( clone._twhat != NULL )
+		if ( clone._twhat != nullptr )
 			this->_twhat = STRDUP_TtoT(clone._twhat);
 	}
 	CLuceneError::~CLuceneError() throw(){
@@ -45,7 +45,7 @@ CL_NS_USE(util)
 		if ( _twhat != NULL )
 			return _twhat;
 #endif
-		if ( _awhat == NULL )
+		if ( _awhat == nullptr )
 			_awhat = STRDUP_TtoA(_twhat);
 		return _awhat;
 	}
@@ -54,7 +54,7 @@ CL_NS_USE(util)
 		if ( _awhat != NULL )
 			return _awhat;
 #endif
-		if ( _twhat == NULL )
+		if ( _twhat == nullptr )
 			_twhat = STRDUP_AtoT(_awhat);
 		return _twhat;
 	}
@@ -63,7 +63,7 @@ CL_NS_USE(util)
 	CLuceneError::CLuceneError(int num, const TCHAR* str, bool ownstr)
 	{
 		error_number = 0;
-		_awhat=NULL;
+		_awhat=nullptr;
 		_twhat=STRDUP_TtoT(str);
 		if ( ownstr )
 			_CLDELETE_CARRAY(str);

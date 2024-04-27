@@ -52,7 +52,7 @@ class OutputPage : public QWizardPage
     Q_OBJECT
 
 public:
-    OutputPage(QWidget *parent = 0);
+    OutputPage(QWidget *parent = nullptr);
     void setPath(const QString &path);
     void setCollectionComponentEnabled(bool enabled);
 

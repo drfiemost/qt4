@@ -92,7 +92,7 @@ public:
     };
     Q_DECLARE_FLAGS(DockOptions, DockOption)
 
-    explicit QMainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit QMainWindow(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     ~QMainWindow();
 
     QSize iconSize() const;

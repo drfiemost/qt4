@@ -83,13 +83,13 @@ public:
     virtual bool copy(QIODevice *dev, const FormBuilderClipboard &selection);
     virtual DomUI *copy(const FormBuilderClipboard &selection);
 
-    virtual FormBuilderClipboard paste(DomUI *ui, QWidget *widgetParent, QObject *actionParent = 0);
-    virtual FormBuilderClipboard paste(QIODevice *dev,  QWidget *widgetParent, QObject *actionParent = 0);
+    virtual FormBuilderClipboard paste(DomUI *ui, QWidget *widgetParent, QObject *actionParent = nullptr);
+    virtual FormBuilderClipboard paste(QIODevice *dev,  QWidget *widgetParent, QObject *actionParent = nullptr);
 
     bool saveRelative() const;
     void setSaveRelative(bool relative);
 
-    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget = 0);
+    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget = nullptr);
 
 protected:
     using QEditorFormBuilder::create;

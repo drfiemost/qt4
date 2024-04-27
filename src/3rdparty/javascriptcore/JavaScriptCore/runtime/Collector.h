@@ -283,7 +283,7 @@ namespace JSC {
     inline void* Heap::allocateNumber(size_t s)
     {
         if (void* result = m_heap.nextNumber) {
-            m_heap.nextNumber = 0;
+            m_heap.nextNumber = nullptr;
             return result;
         }
 

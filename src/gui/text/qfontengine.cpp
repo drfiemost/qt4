@@ -114,7 +114,7 @@ static void hb_getAdvances(HB_Font font, const HB_Glyph *glyphs, hb_uint32 numGl
     for (hb_uint32 i = 0; i < numGlyphs; ++i)
         qglyphs.glyphs[i] = glyphs[i];
 
-    fe->recalcAdvances(&qglyphs, flags & HB_ShaperFlag_UseDesignMetrics ? QFlags<QFontEngine::ShaperFlag>(QFontEngine::DesignMetrics) : QFlags<QFontEngine::ShaperFlag>(0));
+    fe->recalcAdvances(&qglyphs, flags & HB_ShaperFlag_UseDesignMetrics ? QFlags<QFontEngine::ShaperFlag>(QFontEngine::DesignMetrics) : QFlags<QFontEngine::ShaperFlag>(nullptr));
 
     for (hb_uint32 i = 0; i < numGlyphs; ++i)
         advances[i] = qglyphs.advances_x[i].value();
@@ -195,7 +195,7 @@ QFontEngine::QFontEngine()
     hbFont.klass = &hb_fontClass;
     hbFont.userData = this;
 
-    hbFace = 0;
+    hbFace = nullptr;
     glyphFormat = -1;
 }
 
@@ -247,7 +247,7 @@ HB_Face QFontEngine::harfbuzzFace() const
 HB_Face QFontEngine::initializedHarfbuzzFace() const
 {
     HB_Face face = harfbuzzFace();
-    if (face != 0 && face->font_for_init != 0)
+    if (face != nullptr && face->font_for_init != nullptr)
         face = qHBLoadFace(face);
 
     return face;
@@ -340,7 +340,7 @@ void QFontEngine::getGlyphPositions(const QGlyphLayout &glyphs, const QTransform
                 QChar ch(0x640); // Kashida character
                 QGlyphLayoutArray<8> g;
                 int nglyphs = 7;
-                stringToCMap(&ch, 1, &g, &nglyphs, 0);
+                stringToCMap(&ch, 1, &g, &nglyphs, nullptr);
                 for (uint k = 0; k < glyphs.justifications[i].nKashidas; ++k) {
                     xpos -= g.advances_x[0];
                     ypos -= g.advances_y[0];
@@ -406,9 +406,9 @@ void QFontEngine::getGlyphBearings(glyph_t glyph, qreal *leftBearing, qreal *rig
 {
     glyph_metrics_t gi = boundingBox(glyph);
     bool isValid = gi.isValid();
-    if (leftBearing != 0)
+    if (leftBearing != nullptr)
         *leftBearing = isValid ? gi.x.toReal() : qreal(0.0);
-    if (rightBearing != 0)
+    if (rightBearing != nullptr)
         *rightBearing = isValid ? (gi.xoff - gi.x - gi.width).toReal() : qreal(0.0);
 }
 
@@ -680,7 +680,7 @@ QImage QFontEngine::alphaMapForGlyph(glyph_t glyph)
     im.fill(Qt::transparent);
     QPainter p(&im);
     p.setRenderHint(QPainter::Antialiasing);
-    addGlyphsToPath(&glyph, &pt, 1, &path, 0);
+    addGlyphsToPath(&glyph, &pt, 1, &path, nullptr);
     p.setPen(Qt::NoPen);
     p.setBrush(Qt::black);
     p.drawPath(path);
@@ -740,7 +740,7 @@ QByteArray QFontEngine::getSfntTable(uint tag) const
 {
     QByteArray table;
     uint len = 0;
-    if (!getSfntTableData(tag, 0, &len))
+    if (!getSfntTableData(tag, nullptr, &len))
         return table;
     if (!len)
         return table;
@@ -779,7 +779,7 @@ QFontEngineGlyphCache *QFontEngine::glyphCache(void *key, QFontEngineGlyphCache:
             return c;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 #if defined(Q_WS_WIN) || defined(Q_WS_X11) || defined(Q_WS_QWS) || defined(Q_WS_QPA) 
@@ -937,11 +937,11 @@ const uchar *QFontEngine::getCMap(const uchar *table, uint tableSize, bool *isSy
     // version check
     quint16 version;
     if (!qSafeFromBigEndian(header, endPtr, &version) || version != 0)
-        return 0;
+        return nullptr;
 
     quint16 numTables;
     if (!qSafeFromBigEndian(header + 2, endPtr, &numTables))
-        return 0;
+        return nullptr;
 
     const uchar *maps = table + 4;
 
@@ -961,11 +961,11 @@ const uchar *QFontEngine::getCMap(const uchar *table, uint tableSize, bool *isSy
     for (int n = 0; n < numTables; ++n) {
         quint16 platformId;
         if (!qSafeFromBigEndian(maps + 8 * n, endPtr, &platformId))
-            return 0;
+            return nullptr;
 
         quint16 platformSpecificId;
         if (!qSafeFromBigEndian(maps + 8 * n + 2, endPtr, &platformSpecificId))
-            return 0;
+            return nullptr;
 
         switch (platformId) {
         case 0: // Unicode
@@ -1015,38 +1015,38 @@ const uchar *QFontEngine::getCMap(const uchar *table, uint tableSize, bool *isSy
         }
     }
     if(tableToUse < 0)
-        return 0;
+        return nullptr;
 
 resolveTable:
     *isSymbolFont = (symbolTable > -1);
 
     quint32 unicode_table;
     if (!qSafeFromBigEndian(maps + 8 * tableToUse + 4, endPtr, &unicode_table))
-        return 0;
+        return nullptr;
 
     if (!unicode_table)
-        return 0;
+        return nullptr;
 
     // get the header of the unicode table
     header = table + unicode_table;
 
     quint16 format;
     if (!qSafeFromBigEndian(header, endPtr, &format))
-        return 0;
+        return nullptr;
 
     quint32 length;
     if (format < 8) {
         quint16 tmp;
         if (!qSafeFromBigEndian(header + 2, endPtr, &tmp))
-            return 0;
+            return nullptr;
         length = tmp;
     } else {
         if (!qSafeFromBigEndian(header + 4, endPtr, &length))
-            return 0;
+            return nullptr;
     }
 
     if (table + unicode_table + length > endPtr)
-        return 0;
+        return nullptr;
     *cmapSize = length;
 
     // To support symbol fonts that contain a unicode table for the symbol area

@@ -121,7 +121,7 @@ QT_BEGIN_NAMESPACE
 
 QHistoryStatePrivate::QHistoryStatePrivate()
     : QAbstractStatePrivate(HistoryState),
-      defaultState(0), historyType(QHistoryState::ShallowHistory)
+      defaultState(nullptr), historyType(QHistoryState::ShallowHistory)
 {
 }
 

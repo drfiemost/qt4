@@ -58,9 +58,9 @@ QT_BEGIN_NAMESPACE
 
 Window QSystemTrayIconSys::sysTrayWindow = XNone;
 QList<QSystemTrayIconSys *> QSystemTrayIconSys::trayIcons;
-QCoreApplication::EventFilter QSystemTrayIconSys::oldEventFilter = 0;
+QCoreApplication::EventFilter QSystemTrayIconSys::oldEventFilter = nullptr;
 Atom QSystemTrayIconSys::sysTraySelection = XNone;
-XVisualInfo QSystemTrayIconSys::sysTrayVisual = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+XVisualInfo QSystemTrayIconSys::sysTrayVisual = {nullptr, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // Locate the system tray
 Window QSystemTrayIconSys::locateSystemTray()
@@ -85,7 +85,7 @@ XVisualInfo* QSystemTrayIconSys::getSysTrayVisualInfo()
             Atom actual_type;
             int actual_format;
             ulong nitems, bytes_remaining;
-            uchar *data = 0;
+            uchar *data = nullptr;
             int result = XGetWindowProperty(display, win, ATOM(_NET_SYSTEM_TRAY_VISUAL), 0, 1,
                                             False, XA_VISUALID, &actual_type,
                                             &actual_format, &nitems, &bytes_remaining, &data);
@@ -96,7 +96,7 @@ XVisualInfo* QSystemTrayIconSys::getSysTrayVisualInfo()
             if (data)
                 XFree(data);
             if (vid == 0)
-                return 0;
+                return nullptr;
 
             uint mask = VisualIDMask;
             XVisualInfo *vi, rvi;
@@ -112,7 +112,7 @@ XVisualInfo* QSystemTrayIconSys::getSysTrayVisualInfo()
         }
     }
 
-    return sysTrayVisual.visual ? &sysTrayVisual : 0;
+    return sysTrayVisual.visual ? &sysTrayVisual : nullptr;
 }
 
 bool QSystemTrayIconSys::sysTrayTracker(void *message, long *result)
@@ -163,7 +163,7 @@ bool QSystemTrayIconSys::sysTrayTracker(void *message, long *result)
 }
 
 QSystemTrayIconSys::QSystemTrayIconSys(QSystemTrayIcon *q)
-    : QWidget(0, Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint),
+    : QWidget(nullptr, Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint),
       q(q), colormap(0)
 {
     setAttribute(Qt::WA_AlwaysShowToolTips);
@@ -352,7 +352,7 @@ void QSystemTrayIconPrivate::remove_sys()
     QBalloonTip::hideBalloon();
     sys->hide(); // this should do the trick, but...
     delete sys; // wm may resize system tray only for DestroyEvents
-    sys = 0;
+    sys = nullptr;
 }
 
 void QSystemTrayIconPrivate::updateIcon_sys()

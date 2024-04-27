@@ -105,7 +105,7 @@ MessageItem *ContextItem::messageItem(int i) const
     if (i >= 0 && i < msgItemList.count())
         return const_cast<MessageItem *>(&msgItemList[i]);
     Q_ASSERT(i >= 0 && i < msgItemList.count());
-    return 0;
+    return nullptr;
 }
 
 MessageItem *ContextItem::findMessage(const QString &sourcetext, const QString &comment) const
@@ -115,7 +115,7 @@ MessageItem *ContextItem::findMessage(const QString &sourcetext, const QString &
         if (mi->text() == sourcetext && mi->comment() == comment)
             return mi;
     }
-    return 0;
+    return nullptr;
 }
 
 /******************************************************************************
@@ -147,14 +147,14 @@ ContextItem *DataModel::contextItem(int context) const
     if (context >= 0 && context < m_contextList.count())
         return const_cast<ContextItem *>(&m_contextList[context]);
     Q_ASSERT(context >= 0 && context < m_contextList.count());
-    return 0;
+    return nullptr;
 }
 
 MessageItem *DataModel::messageItem(const DataIndex &index) const
 {
     if (ContextItem *c = contextItem(index.context()))
         return c->messageItem(index.message());
-    return 0;
+    return nullptr;
 }
 
 ContextItem *DataModel::findContext(const QString &context) const
@@ -164,7 +164,7 @@ ContextItem *DataModel::findContext(const QString &context) const
         if (ctx->context() == context)
             return ctx;
     }
-    return 0;
+    return nullptr;
 }
 
 MessageItem *DataModel::findMessage(const QString &context,
@@ -172,7 +172,7 @@ MessageItem *DataModel::findMessage(const QString &context,
 {
     if (ContextItem *ctx = findContext(context))
         return ctx->findMessage(sourcetext, comment);
-    return 0;
+    return nullptr;
 }
 
 static int calcMergeScore(const DataModel *one, const DataModel *two)
@@ -409,7 +409,7 @@ bool DataModel::setLanguageAndCountry(QLocale::Language lang, QLocale::Country c
     if (lang == QLocale::C || uint(lang) > uint(QLocale::LastLanguage)) // XXX does this make any sense?
         lang = QLocale::English;
     QByteArray rules;
-    bool ok = getNumerusInfo(lang, country, &rules, &m_numerusForms, 0);
+    bool ok = getNumerusInfo(lang, country, &rules, &m_numerusForms, nullptr);
     m_localizedLanguage = QCoreApplication::translate("MessageEditor", QLocale::languageToString(lang).toAscii());
     m_countRefNeeds.clear();
     for (int i = 0; i < rules.size(); ++i) {
@@ -549,7 +549,7 @@ MultiContextItem::MultiContextItem(int oldCount, ContextItem *ctx, bool writable
         m_contextList.append(0);
     }
     m_messageLists.append(mList);
-    m_writableMessageLists.append(writable ? &m_messageLists.last() : 0);
+    m_writableMessageLists.append(writable ? &m_messageLists.last() : nullptr);
     m_contextList.append(ctx);
 }
 
@@ -954,7 +954,7 @@ MultiContextItem *MultiDataModel::findContext(const QString &context) const
         if (mc.context() == context)
             return const_cast<MultiContextItem *>(&mc);
     }
-    return 0;
+    return nullptr;
 }
 
 MessageItem *MultiDataModel::messageItem(const MultiDataIndex &index, int model) const
@@ -966,7 +966,7 @@ MessageItem *MultiDataModel::messageItem(const MultiDataIndex &index, int model)
     }
     Q_ASSERT(model >= 0 && model < modelCount());
     Q_ASSERT(index.context() < contextCount());
-    return 0;
+    return nullptr;
 }
 
 void MultiDataModel::setTranslation(const MultiDataIndex &index, const QString &translation)

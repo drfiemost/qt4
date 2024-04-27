@@ -17,7 +17,7 @@ CL_NS_USE(document)
 
 ChainedFilter::ChainedFilter( Filter ** _filters, int _op ):
 	filters(_filters),
-	logicArray(NULL),
+	logicArray(nullptr),
 	logic(_op)
 {
 }
@@ -92,7 +92,7 @@ BitSet* ChainedFilter::bits( IndexReader* reader )
 {
 	if( logic != -1 )
 		return bits( reader, logic );
-	else if( logicArray != NULL )
+	else if( logicArray != nullptr )
 		return bits( reader, logicArray );
 	else
 		return bits( reader, DEFAULT );
@@ -101,7 +101,7 @@ BitSet* ChainedFilter::bits( IndexReader* reader )
 
 BitSet* ChainedFilter::bits( IndexReader* reader, int logic )
 {
-	BitSet* bts = NULL;
+	BitSet* bts = nullptr;
 	
 	Filter** filter = filters;
 	
@@ -110,7 +110,7 @@ BitSet* ChainedFilter::bits( IndexReader* reader, int logic )
 		BitSet* tmp = (*filter)->bits( reader );
 		if ( (*filter)->shouldDeleteBitSet(tmp) ) //if we are supposed to delete this BitSet, then 
 			bts = tmp; //we can safely call it our own
-		else if ( tmp == NULL ){
+		else if ( tmp == nullptr ){
 			int32_t len = reader->maxDoc();
 			bts = _CLNEW BitSet( len ); //bitset returned null, which means match _all_
 			for (int32_t i=0;i<len;i++ )
@@ -134,7 +134,7 @@ BitSet* ChainedFilter::bits( IndexReader* reader, int logic )
 
 BitSet* ChainedFilter::bits( IndexReader* reader, int* _logicArray )
 {
-	BitSet* bts = NULL;
+	BitSet* bts = nullptr;
 	
 	Filter** filter = filters;
 	int* logic = _logicArray;
@@ -144,7 +144,7 @@ BitSet* ChainedFilter::bits( IndexReader* reader, int* _logicArray )
 		BitSet* tmp = (*filter)->bits( reader );
 		if ( (*filter)->shouldDeleteBitSet(tmp) ) //if we are supposed to delete this BitSet, then 
 			bts = tmp; //we can safely call it our own
-		else if ( tmp == NULL ){
+		else if ( tmp == nullptr ){
 			int32_t len = reader->maxDoc();
 			bts = _CLNEW BitSet( len ); //bitset returned null, which means match _all_
 			for (int32_t i=0;i<len;i++ )
@@ -185,19 +185,19 @@ BitSet* ChainedFilter::doChain( BitSet* resultset, IndexReader* reader, int logi
 		{
 		case OR:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, (resultset->get(i) || (filterbits==NULL || filterbits->get(i) ))?1:0 );
+				resultset->set( i, (resultset->get(i) || (filterbits==nullptr || filterbits->get(i) ))?1:0 );
 			break;
 		case AND:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, (resultset->get(i) && (filterbits==NULL || filterbits->get(i) ))?1:0 );
+				resultset->set( i, (resultset->get(i) && (filterbits==nullptr || filterbits->get(i) ))?1:0 );
 			break;
 		case ANDNOT:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, (resultset->get(i) && (filterbits==NULL || filterbits->get(i)))?0:1 );
+				resultset->set( i, (resultset->get(i) && (filterbits==nullptr || filterbits->get(i)))?0:1 );
 			break;
 		case XOR:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, resultset->get(i) ^ ((filterbits==NULL || filterbits->get(i) )?1:0) );
+				resultset->set( i, resultset->get(i) ^ ((filterbits==nullptr || filterbits->get(i) )?1:0) );
 			break;
 		default:
 			doChain( resultset, reader, DEFAULT, filter );

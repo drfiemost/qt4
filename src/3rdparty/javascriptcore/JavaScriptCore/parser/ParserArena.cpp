@@ -32,8 +32,8 @@
 namespace JSC {
 
 ParserArena::ParserArena()
-    : m_freeableMemory(0)
-    , m_freeablePoolEnd(0)
+    : m_freeableMemory(nullptr)
+    , m_freeablePoolEnd(nullptr)
     , m_identifierArena(new IdentifierArena)
 {
 }
@@ -89,8 +89,8 @@ void ParserArena::reset()
 
     deallocateObjects();
 
-    m_freeableMemory = 0;
-    m_freeablePoolEnd = 0;
+    m_freeableMemory = nullptr;
+    m_freeablePoolEnd = nullptr;
     m_identifierArena->clear();
     m_freeablePools.clear();
     m_deletableObjects.clear();

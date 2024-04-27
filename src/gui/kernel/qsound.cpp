@@ -49,7 +49,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static QList<QAuServer*> *servers=0;
+static QList<QAuServer*> *servers=nullptr;
 
 QAuServer::QAuServer(QObject* parent)
     : QObject(parent)
@@ -64,7 +64,7 @@ QAuServer::~QAuServer()
     servers->removeAll(this);
     if (servers->count() == 0) {
         delete servers;
-        servers = 0;
+        servers = nullptr;
     }
 }
 
@@ -86,7 +86,7 @@ class QSoundPrivate : public QObjectPrivate
 {
 public:
     QSoundPrivate(const QString& fname)
-        : filename(fname), bucket(0), looprem(0), looptotal(1)
+        : filename(fname), bucket(nullptr), looprem(0), looptotal(1)
     {
     }
 

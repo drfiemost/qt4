@@ -65,7 +65,7 @@ static void *qt_gl_getProcAddress_search
     if (name4)
         return ctx->getProcAddress(QLatin1String(name4));
 
-    return 0;
+    return nullptr;
 }
 
 // Search for an extension function starting with the most likely
@@ -98,11 +98,11 @@ bool qt_resolve_framebufferobject_extensions(QGLContext *ctx)
         return true;
     have_resolved = true;
 #else
-    if (glIsRenderbuffer != 0)
+    if (glIsRenderbuffer != nullptr)
         return true;
 #endif
 
-    if (ctx == 0) {
+    if (ctx == nullptr) {
         qWarning("QGLFramebufferObject: Unable to resolve framebuffer object extensions -"
                  " make sure there is a current context when creating the framebuffer object.");
         return false;
@@ -134,7 +134,7 @@ bool qt_resolve_framebufferobject_extensions(QGLContext *ctx)
         (_glGetFramebufferAttachmentParameteriv) qt_gl_getProcAddressEXT(ctx, "glGetFramebufferAttachmentParameteriv");
     glGenerateMipmap = (_glGenerateMipmap) qt_gl_getProcAddressEXT(ctx, "glGenerateMipmap");
 
-    return glIsRenderbuffer != 0;
+    return glIsRenderbuffer != nullptr;
 #else
     return true;
 #endif
@@ -143,7 +143,7 @@ bool qt_resolve_framebufferobject_extensions(QGLContext *ctx)
 #if !defined(QT_OPENGL_ES_2)
 bool qt_resolve_version_1_3_functions(QGLContext *ctx)
 {
-    if (glMultiTexCoord4f != 0)
+    if (glMultiTexCoord4f != nullptr)
         return true;
 
     QGLContext cx(QGLFormat::defaultFormat());
@@ -157,7 +157,7 @@ bool qt_resolve_version_1_3_functions(QGLContext *ctx)
 #if !defined(QT_OPENGL_ES_2)
 bool qt_resolve_stencil_face_extension(QGLContext *ctx)
 {
-    if (glActiveStencilFaceEXT != 0)
+    if (glActiveStencilFaceEXT != nullptr)
         return true;
 
     QGLContext cx(QGLFormat::defaultFormat());
@@ -171,7 +171,7 @@ bool qt_resolve_stencil_face_extension(QGLContext *ctx)
 #if !defined(QT_OPENGL_ES_2)
 bool qt_resolve_frag_program_extensions(QGLContext *ctx)
 {
-    if (glProgramStringARB != 0)
+    if (glProgramStringARB != nullptr)
         return true;
 
     // ARB_fragment_program
@@ -324,7 +324,7 @@ bool qt_resolve_glsl_extensions(QGLContext *ctx)
         glShaderBinary = (_glShaderBinary) ctx->getProcAddress(QLatin1String("glShaderBinaryARB"));
         glCompileShader = (_glCompileShader) ctx->getProcAddress(QLatin1String("glCompileShaderARB"));
         glDeleteShader = (_glDeleteShader) ctx->getProcAddress(QLatin1String("glDeleteObjectARB"));
-        glIsShader = 0;
+        glIsShader = nullptr;
 
         glCreateProgram = (_glCreateProgram) ctx->getProcAddress(QLatin1String("glCreateProgramObjectARB"));
         glAttachShader = (_glAttachShader) ctx->getProcAddress(QLatin1String("glAttachObjectARB"));
@@ -332,7 +332,7 @@ bool qt_resolve_glsl_extensions(QGLContext *ctx)
         glLinkProgram = (_glLinkProgram) ctx->getProcAddress(QLatin1String("glLinkProgramARB"));
         glUseProgram = (_glUseProgram) ctx->getProcAddress(QLatin1String("glUseProgramObjectARB"));
         glDeleteProgram = (_glDeleteProgram) ctx->getProcAddress(QLatin1String("glDeleteObjectARB"));
-        glIsProgram = 0;
+        glIsProgram = nullptr;
 
         glGetShaderInfoLog = (_glGetShaderInfoLog) ctx->getProcAddress(QLatin1String("glGetInfoLogARB"));
         glGetShaderiv = (_glGetShaderiv) ctx->getProcAddress(QLatin1String("glGetObjectParameterivARB"));

@@ -1313,7 +1313,7 @@ Qt::ItemFlags QSqlTableModel::flags(const QModelIndex &index) const
     Q_D(const QSqlTableModel);
     if (index.internalPointer() || index.column() < 0 || index.column() >= d->rec.count()
         || index.row() < 0)
-        return 0;
+        return nullptr;
     if (d->rec.field(index.column()).isReadOnly())
         return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;

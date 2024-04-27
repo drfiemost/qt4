@@ -110,7 +110,7 @@ public:
 
     Call call()
     {
-        DataLabelPtr label = moveWithPatch(ImmPtr(0), scratchRegister);
+        DataLabelPtr label = moveWithPatch(ImmPtr(nullptr), scratchRegister);
         Call result = Call(m_assembler.call(scratchRegister), Call::Linkable);
         ASSERT(differenceBetween(label, result) == REPTACH_OFFSET_CALL_R11);
         return result;
@@ -118,7 +118,7 @@ public:
 
     Call tailRecursiveCall()
     {
-        DataLabelPtr label = moveWithPatch(ImmPtr(0), scratchRegister);
+        DataLabelPtr label = moveWithPatch(ImmPtr(nullptr), scratchRegister);
         Jump newJump = Jump(m_assembler.jmp_r(scratchRegister));
         ASSERT(differenceBetween(label, newJump) == REPTACH_OFFSET_CALL_R11);
         return Call::fromTailJump(newJump);
@@ -127,7 +127,7 @@ public:
     Call makeTailRecursiveCall(Jump oldJump)
     {
         oldJump.link(this);
-        DataLabelPtr label = moveWithPatch(ImmPtr(0), scratchRegister);
+        DataLabelPtr label = moveWithPatch(ImmPtr(nullptr), scratchRegister);
         Jump newJump = Jump(m_assembler.jmp_r(scratchRegister));
         ASSERT(differenceBetween(label, newJump) == REPTACH_OFFSET_CALL_R11);
         return Call::fromTailJump(newJump);
@@ -392,13 +392,13 @@ public:
         return DataLabelPtr(this);
     }
 
-    Jump branchPtrWithPatch(Condition cond, RegisterID left, DataLabelPtr& dataLabel, ImmPtr initialRightValue = ImmPtr(0))
+    Jump branchPtrWithPatch(Condition cond, RegisterID left, DataLabelPtr& dataLabel, ImmPtr initialRightValue = ImmPtr(nullptr))
     {
         dataLabel = moveWithPatch(initialRightValue, scratchRegister);
         return branchPtr(cond, left, scratchRegister);
     }
 
-    Jump branchPtrWithPatch(Condition cond, Address left, DataLabelPtr& dataLabel, ImmPtr initialRightValue = ImmPtr(0))
+    Jump branchPtrWithPatch(Condition cond, Address left, DataLabelPtr& dataLabel, ImmPtr initialRightValue = ImmPtr(nullptr))
     {
         dataLabel = moveWithPatch(initialRightValue, scratchRegister);
         return branchPtr(cond, left, scratchRegister);

@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 
 QScriptDebuggerLocalsWidgetInterfacePrivate::QScriptDebuggerLocalsWidgetInterfacePrivate()
 {
-    completionProvider = 0;
+    completionProvider = nullptr;
 }
 
 QScriptDebuggerLocalsWidgetInterfacePrivate::~QScriptDebuggerLocalsWidgetInterfacePrivate()

@@ -116,7 +116,7 @@ static inline unsigned hertz2us(unsigned hertz)
 }
 
 
-SamplingTool* SamplingTool::s_samplingTool = 0;
+SamplingTool* SamplingTool::s_samplingTool = nullptr;
 
 
 bool SamplingThread::s_running = false;
@@ -136,7 +136,7 @@ void* SamplingThread::threadStartFunc(void*)
 #endif
     }
 
-    return 0;
+    return nullptr;
 }
 
 
@@ -146,14 +146,14 @@ void SamplingThread::start(unsigned hertz)
     s_running = true;
     s_hertz = hertz;
 
-    s_samplingThread = createThread(threadStartFunc, 0, "JavaScriptCore::Sampler");
+    s_samplingThread = createThread(threadStartFunc, nullptr, "JavaScriptCore::Sampler");
 }
 
 void SamplingThread::stop()
 {
     ASSERT(s_running);
     s_running = false;
-    waitForThreadCompletion(s_samplingThread, 0);
+    waitForThreadCompletion(s_samplingThread, nullptr);
 }
 
 

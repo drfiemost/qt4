@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeAnimatedImage : public QDeclarativeImage
     Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged)
 
 public:
-    QDeclarativeAnimatedImage(QDeclarativeItem *parent=0);
+    QDeclarativeAnimatedImage(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeAnimatedImage();
 
     bool isPlaying() const;

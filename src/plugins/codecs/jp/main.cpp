@@ -120,7 +120,7 @@ QTextCodec *JPTextCodecs::createForMib(int mib)
     if (mib == QFontJis0201Codec::_mibEnum())
         return new QFontJis0201Codec;
 #endif
-    return 0;
+    return nullptr;
 }
 
 
@@ -138,7 +138,7 @@ QTextCodec *JPTextCodecs::createForName(const QByteArray &name)
     if (name == QFontJis0201Codec::_name() || QFontJis0201Codec::_aliases().contains(name))
         return new QFontJis0201Codec;
 #endif
-    return 0;
+    return nullptr;
 }
 
 Q_EXPORT_STATIC_PLUGIN(JPTextCodecs)

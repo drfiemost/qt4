@@ -114,7 +114,7 @@ class QObjectPrototypeObject : public QObject
 {
     Q_OBJECT
 public:
-    QObjectPrototypeObject(QObject *parent = 0)
+    QObjectPrototypeObject(QObject *parent = nullptr)
         : QObject(parent) { }
     ~QObjectPrototypeObject() { }
 };
@@ -206,7 +206,7 @@ public:
     const QMetaObject *metaObject() const;
     int initialIndex() const;
     bool maybeOverloaded() const;
-    int mostGeneralMethod(QMetaMethod *out = 0) const;
+    int mostGeneralMethod(QMetaMethod *out = nullptr) const;
     QList<int> overloadedIndexes() const;
 
 private:

@@ -247,7 +247,7 @@ void QPageSetupDialogPrivate::init()
         cups = new QCUPSSupport;
         widget->selectPrinter(cups);
     } else {
-        cups = 0;
+        cups = nullptr;
     }
 #endif
 
@@ -264,9 +264,9 @@ void QPageSetupDialogPrivate::init()
 
 QPageSetupWidget::QPageSetupWidget(QWidget *parent)
     : QWidget(parent),
-    m_printer(0),
+    m_printer(nullptr),
     m_blockSignals(false),
-    m_cups(0)
+    m_cups(nullptr)
 {
     widget.setupUi(this);
 
@@ -439,7 +439,7 @@ void QPageSetupWidget::selectPrinter(QCUPSSupport *cups)
 
 void QPageSetupWidget::selectPdfPsPrinter(const QPrinter *p)
 {
-    m_cups = 0;
+    m_cups = nullptr;
     widget.paperSize->clear();
     populatePaperSizes(widget.paperSize);
     widget.paperSize->setCurrentIndex(widget.paperSize->findData(p->paperSize()));
@@ -593,7 +593,7 @@ QPageSetupDialog::QPageSetupDialog(QPrinter *printer, QWidget *parent)
 
 
 QPageSetupDialog::QPageSetupDialog(QWidget *parent)
-    : QAbstractPageSetupDialog(*(new QPageSetupDialogPrivate), 0, parent)
+    : QAbstractPageSetupDialog(*(new QPageSetupDialogPrivate), nullptr, parent)
 {
     Q_D(QPageSetupDialog);
     d->init();

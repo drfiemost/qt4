@@ -374,10 +374,10 @@ void QDeclarativeContents::childAdded(QDeclarativeItem *item)
 }
 
 QDeclarativeItemKeyFilter::QDeclarativeItemKeyFilter(QDeclarativeItem *item)
-: m_processPost(false), m_next(0)
+: m_processPost(false), m_next(nullptr)
 {
     QDeclarativeItemPrivate *p =
-        item?static_cast<QDeclarativeItemPrivate *>(QGraphicsItemPrivate::get(item)):0;
+        item?static_cast<QDeclarativeItemPrivate *>(QGraphicsItemPrivate::get(item)):nullptr;
     if (p) {
         m_next = p->keyHandler;
         p->keyHandler = this;
@@ -805,7 +805,7 @@ void QDeclarativeKeyNavigationAttached::setFocusNavigation(QDeclarativeItem *cur
     The default value is false.
 */
 
-QDeclarativeLayoutMirroringAttached::QDeclarativeLayoutMirroringAttached(QObject *parent) : QObject(parent), itemPrivate(0)
+QDeclarativeLayoutMirroringAttached::QDeclarativeLayoutMirroringAttached(QObject *parent) : QObject(parent), itemPrivate(nullptr)
 {
     if (QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>(parent)) {
         itemPrivate = QDeclarativeItemPrivate::get(item);
@@ -1322,7 +1322,7 @@ const QDeclarativeKeysAttached::SigMap QDeclarativeKeysAttached::sigMap[] = {
     { Qt::Key_Menu, "menuPressed" },
     { Qt::Key_VolumeUp, "volumeUpPressed" },
     { Qt::Key_VolumeDown, "volumeDownPressed" },
-    { 0, 0 }
+    { 0, nullptr }
 };
 
 bool QDeclarativeKeysAttachedPrivate::isConnected(const char *signalName)
@@ -1639,7 +1639,7 @@ static RegisterAnchorLineAtStartup registerAnchorLineAtStartup;
     Constructs a QDeclarativeItem with the given \a parent.
 */
 QDeclarativeItem::QDeclarativeItem(QDeclarativeItem* parent)
-  : QGraphicsObject(*(new QDeclarativeItemPrivate), parent, 0)
+  : QGraphicsObject(*(new QDeclarativeItemPrivate), parent, nullptr)
 {
     Q_D(QDeclarativeItem);
     d->init(parent);
@@ -1648,7 +1648,7 @@ QDeclarativeItem::QDeclarativeItem(QDeclarativeItem* parent)
 /*! \internal
 */
 QDeclarativeItem::QDeclarativeItem(QDeclarativeItemPrivate &dd, QDeclarativeItem *parent)
-  : QGraphicsObject(dd, parent, 0)
+  : QGraphicsObject(dd, parent, nullptr)
 {
     Q_D(QDeclarativeItem);
     d->init(parent);
@@ -1678,10 +1678,10 @@ QDeclarativeItem::~QDeclarativeItem()
             change.listener->itemDestroyed(this);
     }
     d->changeListeners.clear();
-    delete d->_anchorLines; d->_anchorLines = 0;
-    delete d->_anchors; d->_anchors = 0;
-    delete d->_stateGroup; d->_stateGroup = 0;
-    delete d->_contents; d->_contents = 0;
+    delete d->_anchorLines; d->_anchorLines = nullptr;
+    delete d->_anchors; d->_anchors = nullptr;
+    delete d->_stateGroup; d->_stateGroup = nullptr;
+    delete d->_contents; d->_contents = nullptr;
 }
 
 /*!
@@ -1800,7 +1800,7 @@ void QDeclarativeItemPrivate::data_append(QDeclarativeListProperty<QObject> *pro
         if (contentItemPrivate->componentComplete) {
             graphicsObject->setParentItem(that);
         } else {
-            contentItemPrivate->setParentItemHelper(that, /*newParentVariant=*/0, /*thisPointerVariant=*/0);
+            contentItemPrivate->setParentItemHelper(that, /*newParentVariant=*/nullptr, /*thisPointerVariant=*/nullptr);
         }
     } else {
         o->setParent(that);
@@ -1819,7 +1819,7 @@ static inline QObject *children_at_helper(QDeclarativeListProperty<QObject> *pro
     if (index >= 0 && index < d->children.count())
         return d->children.at(index)->toGraphicsObject();
     else
-        return 0;
+        return nullptr;
 }
 
 static inline void children_clear_helper(QDeclarativeListProperty<QObject> *prop)
@@ -1828,10 +1828,10 @@ static inline void children_clear_helper(QDeclarativeListProperty<QObject> *prop
     int childCount = d->children.count();
     if (d->componentComplete) {
         for (int index = 0 ;index < childCount; index++)
-            d->children.at(0)->setParentItem(0);
+            d->children.at(0)->setParentItem(nullptr);
     } else {
         for (int index = 0 ;index < childCount; index++)
-            QGraphicsItemPrivate::get(d->children.at(0))->setParentItemHelper(0, /*newParentVariant=*/0, /*thisPointerVariant=*/0);
+            QGraphicsItemPrivate::get(d->children.at(0))->setParentItemHelper(nullptr, /*newParentVariant=*/nullptr, /*thisPointerVariant=*/nullptr);
     }
 }
 
@@ -1848,7 +1848,7 @@ QObject *QDeclarativeItemPrivate::data_at(QDeclarativeListProperty<QObject> *pro
     const int j = i - resourcesCount;
     if (j < children_count_helper(prop))
         return children_at_helper(prop, j);
-    return 0;
+    return nullptr;
 }
 
 void QDeclarativeItemPrivate::data_clear(QDeclarativeListProperty<QObject> *prop)
@@ -1863,7 +1863,7 @@ QObject *QDeclarativeItemPrivate::resources_at(QDeclarativeListProperty<QObject>
     if (index < children.count())
         return children.at(index);
     else
-        return 0;
+        return nullptr;
 }
 
 void QDeclarativeItemPrivate::resources_append(QDeclarativeListProperty<QObject> *prop, QObject *o)
@@ -1880,7 +1880,7 @@ void QDeclarativeItemPrivate::resources_clear(QDeclarativeListProperty<QObject> 
 {
     const QObjectList children = prop->object->children();
     for (int index = 0; index < children.count(); index++)
-        children.at(index)->setParent(0);
+        children.at(index)->setParent(nullptr);
 }
 
 int QDeclarativeItemPrivate::transform_count(QDeclarativeListProperty<QGraphicsTransform> *list)
@@ -1907,10 +1907,10 @@ QGraphicsTransform *QDeclarativeItemPrivate::transform_at(QDeclarativeListProper
     if (object) {
         QGraphicsItemPrivate *d = QGraphicsItemPrivate::get(object);
         if (!d->transformData)
-            return 0;
+            return nullptr;
         return d->transformData->graphicsTransforms.at(idx);
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -1969,7 +1969,7 @@ void QDeclarativeItemPrivate::parentProperty(QObject *o, void *rv, QDeclarativeN
 
 QDeclarativeListProperty<QObject> QDeclarativeItemPrivate::data()
 {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, QDeclarativeItemPrivate::data_append,
+    return QDeclarativeListProperty<QObject>(q_func(), nullptr, QDeclarativeItemPrivate::data_append,
                                              QDeclarativeItemPrivate::data_count,
                                              QDeclarativeItemPrivate::data_at,
                                              QDeclarativeItemPrivate::data_clear
@@ -2630,7 +2630,7 @@ QScriptValue QDeclarativeItem::mapFromItem(const QScriptValue &item, qreal x, qr
     QScriptEngine* const se = itemObj ? item.engine() : QDeclarativeEnginePrivate::getScriptEngine(qmlEngine(this));
 
     // Engine-less items are unlikely, but nevertheless possible. Handle them.
-    if (0 == se)
+    if (nullptr == se)
         return QScriptValue(QScriptValue::UndefinedValue);
 
     QScriptValue sv = se->newObject();
@@ -2675,7 +2675,7 @@ QScriptValue QDeclarativeItem::mapToItem(const QScriptValue &item, qreal x, qrea
     QScriptEngine* const se = itemObj ? item.engine() : QDeclarativeEnginePrivate::getScriptEngine(qmlEngine(this));
 
     // Engine-less items are unlikely, but nevertheless possible. Handle them.
-    if (0 == se)
+    if (nullptr == se)
         return QScriptValue(QScriptValue::UndefinedValue);
 
     QScriptValue sv = se->newObject();
@@ -2734,7 +2734,7 @@ QDeclarativeItem *QDeclarativeItem::childAt(qreal x, qreal y) const
                 return child;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void QDeclarativeItemPrivate::focusChanged(bool flag)
@@ -2765,7 +2765,7 @@ void QDeclarativeItemPrivate::focusChanged(bool flag)
 
 QDeclarativeListProperty<QObject> QDeclarativeItemPrivate::resources()
 {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, QDeclarativeItemPrivate::resources_append,
+    return QDeclarativeListProperty<QObject>(q_func(), nullptr, QDeclarativeItemPrivate::resources_append,
                                              QDeclarativeItemPrivate::resources_count,
                                              QDeclarativeItemPrivate::resources_at,
                                              QDeclarativeItemPrivate::resources_clear
@@ -2920,7 +2920,7 @@ void QDeclarativeItemPrivate::setState(const QString &state)
 QDeclarativeListProperty<QGraphicsTransform> QDeclarativeItem::transform()
 {
     Q_D(QDeclarativeItem);
-    return QDeclarativeListProperty<QGraphicsTransform>(this, 0, d->transform_append, d->transform_count,
+    return QDeclarativeListProperty<QGraphicsTransform>(this, nullptr, d->transform_append, d->transform_count,
                                                d->transform_at, d->transform_clear);
 }
 

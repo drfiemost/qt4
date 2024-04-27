@@ -65,7 +65,7 @@ class QScriptDebuggerFrontendEventReceiver : public QObject
 {
 public:
     QScriptDebuggerFrontendEventReceiver(QScriptDebuggerFrontendPrivate *frontend,
-                                         QObject *parent = 0);
+                                         QObject *parent = nullptr);
     ~QScriptDebuggerFrontendEventReceiver();
 
     bool event(QEvent *);
@@ -92,7 +92,7 @@ bool QScriptDebuggerFrontendEventReceiver::event(QEvent *e)
 
 QScriptDebuggerFrontendPrivate::QScriptDebuggerFrontendPrivate()
 {
-    eventHandler = 0;
+    eventHandler = nullptr;
     nextCommandId = 0;
     eventReceiver = new QScriptDebuggerFrontendEventReceiver(this);
 }
@@ -115,7 +115,7 @@ bool QScriptDebuggerFrontendPrivate::event(QEvent *e)
         bool handled = q->notifyEvent(de->event());
         if (handled) {
             q->scheduleCommand(QScriptDebuggerCommand::resumeCommand(),
-                               /*responseHandler=*/0);
+                               /*responseHandler=*/nullptr);
         }
         return true;
     } else if (e->type() == QEvent::User+2) {

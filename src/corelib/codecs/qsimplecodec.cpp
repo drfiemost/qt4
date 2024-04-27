@@ -669,7 +669,7 @@ QByteArray QSimpleTextCodec::convertFromUnicode(const QChar *in, int length, Con
     QByteArray *rmap = reverseMap.loadRelaxed();
     if (!rmap){
         rmap = buildReverseMap(this->forwardIndex);
-        if (!reverseMap.testAndSetRelease(0, rmap)) {
+        if (!reverseMap.testAndSetRelease(nullptr, rmap)) {
             delete rmap;
             rmap = reverseMap.loadRelaxed();
         }

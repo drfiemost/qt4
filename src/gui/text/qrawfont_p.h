@@ -68,9 +68,9 @@ class Q_AUTOTEST_EXPORT QRawFontPrivate
 {
 public:
     QRawFontPrivate()
-        : fontEngine(0)
+        : fontEngine(nullptr)
         , hintingPreference(QFont::PreferDefaultHinting)
-        , thread(0)
+        , thread(nullptr)
 #if defined(Q_WS_WIN)
         , fontHandle(NULL)
 #endif
@@ -84,7 +84,7 @@ public:
         , fontHandle(NULL)
 #endif
     {
-        if (fontEngine != 0)
+        if (fontEngine != nullptr)
             fontEngine->ref.ref();
     }
 
@@ -97,7 +97,7 @@ public:
     inline bool isValid() const
     {
         Q_ASSERT(thread == 0 || thread == QThread::currentThread());
-        return fontEngine != 0;
+        return fontEngine != nullptr;
     }
 
     void cleanUp();

@@ -17,7 +17,7 @@ CL_NS_USE(util)
 CL_NS_DEF(index)
 
 MultiReader::MultiReader(IndexReader** subReaders):
-  IndexReader(subReaders == NULL || subReaders[0] == NULL ? NULL : subReaders[0]->getDirectory()),
+  IndexReader(subReaders == nullptr || subReaders[0] == nullptr ? nullptr : subReaders[0]->getDirectory()),
   normsCache(true, true)
 {
 	initialize(subReaders);
@@ -55,14 +55,14 @@ void MultiReader::initialize(IndexReader** subReaders){
   this->subReaders = subReaders;
 
   //count the subReaders size
-  if ( subReaders != NULL ){
-     while ( subReaders[subReadersLength] != NULL ){
+  if ( subReaders != nullptr ){
+     while ( subReaders[subReadersLength] != nullptr ){
         subReadersLength++;
      }
   }
   _maxDoc        = 0;
   _numDocs       = -1;
-  ones           = NULL;
+  ones           = nullptr;
 
   starts = _CL_NEWARRAY(int32_t,subReadersLength + 1);    // build starts array
   for (int32_t i = 0; i < subReadersLength; i++) {
@@ -116,7 +116,7 @@ uint8_t* MultiReader::norms(const TCHAR* field){
 	SCOPED_LOCK_MUTEX(THIS_LOCK)
 	uint8_t* bytes;
 	bytes = normsCache.get(field);
-	if (bytes != NULL){
+	if (bytes != nullptr){
 	  return bytes;				  // cache hit
 	}
 	
@@ -140,10 +140,10 @@ uint8_t* MultiReader::norms(const TCHAR* field){
 void MultiReader::norms(const TCHAR* field, uint8_t* result) {
 	SCOPED_LOCK_MUTEX(THIS_LOCK)
 	uint8_t* bytes = normsCache.get(field);
-	if (bytes==NULL && !hasNorms(field)) 
+	if (bytes==nullptr && !hasNorms(field)) 
 		bytes=fakeNorms();
     
-	if (bytes != NULL){                            // cache hit
+	if (bytes != nullptr){                            // cache hit
 	   int32_t len = maxDoc();
 	   memcpy(result,bytes,len * sizeof(int32_t));
 	}
@@ -160,7 +160,7 @@ void MultiReader::doSetNorm(int32_t n, const TCHAR* field, uint8_t value){
 }
 
 TermEnum* MultiReader::terms() const {
-	return _CLNEW MultiTermEnum(subReaders, starts, NULL);
+	return _CLNEW MultiTermEnum(subReaders, starts, nullptr);
 }
 
 TermEnum* MultiReader::terms(const Term* term) const {
@@ -220,7 +220,7 @@ bool MultiReader::hasNorms(const TCHAR* field) {
 	return false;
 }
 uint8_t* MultiReader::fakeNorms() {
-	if (ones==NULL) 
+	if (ones==nullptr) 
 		ones=SegmentReader::createFakeNorms(maxDoc());
 	return ones;
 }
@@ -276,14 +276,14 @@ MultiTermDocs::MultiTermDocs(){
 //Pre  - true
 //Post - An empty
 
-	subReaders       = NULL;
+	subReaders       = nullptr;
 	subReadersLength = 0;
-	starts        = NULL;
+	starts        = nullptr;
 	base          = 0;
 	pointer       = 0;
-	current       = NULL;
-	term          = NULL;
-	readerTermDocs   = NULL;
+	current       = nullptr;
+	term          = nullptr;
+	readerTermDocs   = nullptr;
 }
 
 MultiTermDocs::MultiTermDocs(IndexReader** r, const int32_t* s){
@@ -298,28 +298,28 @@ MultiTermDocs::MultiTermDocs(IndexReader** r, const int32_t* s){
 	
 	CND_PRECONDITION(s != NULL, "s is NULL");
 	
-	if ( subReaders != NULL ){
-		while ( subReaders[subReadersLength] != NULL )
+	if ( subReaders != nullptr ){
+		while ( subReaders[subReadersLength] != nullptr )
 			subReadersLength++;
 	}
 
 	starts        = s;
 	base          = 0;
 	pointer       = 0;
-	current       = NULL;
-	term          = NULL;
+	current       = nullptr;
+	term          = nullptr;
 	
-	readerTermDocs   = NULL;
+	readerTermDocs   = nullptr;
 
 	//Check if there are subReaders
-	if(subReaders != NULL && subReadersLength > 0){
+	if(subReaders != nullptr && subReadersLength > 0){
 	  readerTermDocs = _CL_NEWARRAY(TermDocs*, subReadersLength+1);
 	
 	  CND_CONDITION(readerTermDocs != NULL,"No memory could be allocated for readerTermDocs");
 	
 	  //Initialize the readerTermDocs pointer array to NULLs
 	  for ( int32_t i=0;i<subReadersLength+1;i++){
-	     readerTermDocs[i]=NULL;
+	     readerTermDocs[i]=nullptr;
 	  }
 	}
 }
@@ -334,7 +334,7 @@ MultiTermDocs::~MultiTermDocs(){
 
 
 TermPositions* MultiTermDocs::__asTermPositions(){
-  return NULL;
+  return nullptr;
 }
 
 int32_t MultiTermDocs::doc() const {
@@ -373,11 +373,11 @@ void MultiTermDocs::seek( Term* tterm) {
 	
 	base = 0;
 	pointer = 0;
-	current = NULL;
+	current = nullptr;
 }
 
 bool MultiTermDocs::next() {
-	if (current != NULL && current->next()) {
+	if (current != nullptr && current->next()) {
 	  return true;
 	} else if (pointer < subReadersLength) {
 	  base = starts[pointer];
@@ -389,7 +389,7 @@ bool MultiTermDocs::next() {
 
 int32_t MultiTermDocs::read(int32_t* docs, int32_t* freqs, int32_t length) {
 	while (true) {
-	  while (current == NULL) {
+	  while (current == nullptr) {
 	    if (pointer < subReadersLength) {		  // try next segment
 	      base = starts[pointer];
 	      current = termDocs(pointer++);
@@ -399,7 +399,7 @@ int32_t MultiTermDocs::read(int32_t* docs, int32_t* freqs, int32_t length) {
 	  }
 	  int32_t end = current->read(docs, freqs,length);
 	  if (end == 0) {				  // none left in segment
-	    current = NULL;
+	    current = nullptr;
 	  } else {					  // got some
 	    int32_t b = base;			  // adjust doc numbers
 	    for (int32_t i = 0; i < end; i++)
@@ -425,14 +425,14 @@ void MultiTermDocs::close() {
 
 	//Check if readerTermDocs is valid
 	if (readerTermDocs){
-        TermDocs* curTD = NULL;
+        TermDocs* curTD = nullptr;
         //iterate through the readerTermDocs array
         for (int32_t i = 0; i < subReadersLength; i++) {
             //Retrieve the i-th TermDocs instance
             curTD = readerTermDocs[i];
             
             //Check if it is a valid pointer
-            if (curTD != NULL) {
+            if (curTD != nullptr) {
                 //Close it
                 curTD->close();
                 _CLDELETE(curTD);
@@ -444,7 +444,7 @@ void MultiTermDocs::close() {
 	
 	//current previously pointed to a member of readerTermDocs; ensure that
 	//it doesn't now point to invalid memory.
-	current = NULL;
+	current = nullptr;
 	base          = 0;
 	pointer       = 0;
 	
@@ -457,10 +457,10 @@ TermDocs* MultiTermDocs::termDocs(const IndexReader* reader) const {
 }
 
 TermDocs* MultiTermDocs::termDocs(const int32_t i) const {
-	if (term == NULL)
-	  return NULL;
+	if (term == nullptr)
+	  return nullptr;
 	TermDocs* result = readerTermDocs[i];
-	if (result == NULL){
+	if (result == nullptr){
 	  readerTermDocs[i] = termDocs(subReaders[i]);
 	  result = readerTermDocs[i];
 	}
@@ -485,18 +485,18 @@ MultiTermEnum::MultiTermEnum(
 //Post - The instance has been created
 	
 	int32_t subReadersLength = 0;
-	if ( subReaders != NULL ){
-		while ( subReaders[subReadersLength] != NULL )
+	if ( subReaders != nullptr ){
+		while ( subReaders[subReadersLength] != nullptr )
 			subReadersLength++;
 	}
 	CND_PRECONDITION(starts != NULL,"starts is NULL");
 	
 	//Temporary variables
-	IndexReader*   reader    = NULL;
-	TermEnum* termEnum  = NULL;
-	SegmentMergeInfo* smi      = NULL;
+	IndexReader*   reader    = nullptr;
+	TermEnum* termEnum  = nullptr;
+	SegmentMergeInfo* smi      = nullptr;
 	_docFreq = 0;
-	_term = NULL;
+	_term = nullptr;
 	queue                      = _CLNEW SegmentMergeQueue(subReadersLength);
 	
 	CND_CONDITION (queue != NULL, "Could not allocate memory for queue");
@@ -507,7 +507,7 @@ MultiTermEnum::MultiTermEnum(
 		reader = subReaders[i];
 		
 		//Check if the enumeration must start from term t
-		if (t != NULL) {
+		if (t != nullptr) {
 			//termEnum is an enumeration of terms starting at or after the named term t
 			termEnum = reader->terms(t);
 		}else{
@@ -521,7 +521,7 @@ MultiTermEnum::MultiTermEnum(
 		// Note that in the call termEnum->getTerm(false) below false is required because
 		// otherwise a reference is leaked. By passing false getTerm is
 		// ordered to return an unowned reference instead. (Credits for DSR)
-		if (t == NULL ? smi->next() : termEnum->term(false) != NULL){
+		if (t == nullptr ? smi->next() : termEnum->term(false) != nullptr){
 			// initialize queue
 			queue->put(smi);
 		} else{
@@ -533,7 +533,7 @@ MultiTermEnum::MultiTermEnum(
 	}
 	
 	//Check if the queue has elements
-	if (t != NULL && queue->size() > 0) {
+	if (t != nullptr && queue->size() > 0) {
 		next();
 	}
 }
@@ -557,9 +557,9 @@ bool MultiTermEnum::next(){
 //       Returns false if this was not possible
 
 	SegmentMergeInfo* top = queue->top();
-	if (top == NULL) {
+	if (top == nullptr) {
 	    _CLDECDELETE(_term); 
-	    _term = NULL;
+	    _term = nullptr;
 	    return false;
 	}
 	
@@ -573,7 +573,7 @@ bool MultiTermEnum::next(){
 	_docFreq = 0;
 	
 	//Find the next term
-	while (top != NULL && _term->compareTo(top->term) == 0) {
+	while (top != nullptr && _term->compareTo(top->term) == 0) {
 		//don't delete, this is the top
 		queue->pop(); 
 		// increment freq
@@ -648,8 +648,8 @@ MultiTermPositions::MultiTermPositions(IndexReader** r, const int32_t* s){
 
 	subReaders       = r;
 	subReadersLength    = 0;
-	if ( subReaders != NULL ){
-		while ( subReaders[subReadersLength] != NULL )
+	if ( subReaders != nullptr ){
+		while ( subReaders[subReadersLength] != nullptr )
 		subReadersLength ++ ;
 	}
 	
@@ -658,20 +658,20 @@ MultiTermPositions::MultiTermPositions(IndexReader** r, const int32_t* s){
 	starts        = s;
 	base          = 0;
 	pointer       = 0;
-	current       = NULL;
-	term          = NULL;
+	current       = nullptr;
+	term          = nullptr;
 	
-	readerTermDocs   = NULL;
+	readerTermDocs   = nullptr;
 
 	//Check if there are readers
-	if(subReaders != NULL && subReadersLength > 0){
+	if(subReaders != nullptr && subReadersLength > 0){
 		readerTermDocs = (TermDocs**)_CL_NEWARRAY(SegmentTermPositions*,subReadersLength);
 		
 		CND_CONDITION(readerTermDocs != NULL,"No memory could be allocated for readerTermDocs");
 		
 		//Initialize the readerTermDocs pointer array
 		for ( int32_t i=0;i<subReadersLength;i++){
-			readerTermDocs[i]=NULL;
+			readerTermDocs[i]=nullptr;
 		}
 	}
 }

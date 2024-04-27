@@ -41,7 +41,7 @@ Term::~Term()
 {
     if (internF)
         CLStringIntern::unintern(_field);
-    _field = NULL;
+    _field = nullptr;
 
 #ifndef LUCENE_TERM_TEXT_LENGTH
     if (_text != LUCENE_BLANK_STRING)
@@ -87,14 +87,14 @@ void Term::set(const TCHAR* fld, const TCHAR* txt,bool internField)
         if (_text != LUCENE_BLANK_STRING) {
             _CLDELETE_ARRAY(_text);
         } else {
-            _text = NULL;
+            _text = nullptr;
         }
         textLenBuf = 0;
     }
 
     if (_text == LUCENE_BLANK_STRING) {
         _text = LUCENE_BLANK_STRING;
-    } else if (_text == NULL) {
+    } else if (_text == nullptr) {
         if (txt[0] == 0) {
             //if the string is blank and we aren't re-using the buffer...
             _text = LUCENE_BLANK_STRING;

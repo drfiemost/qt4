@@ -48,7 +48,7 @@ QT_BEGIN_NAMESPACE
 
 // qt_global_mutexpool is here for backwards compatibility only,
 // use QMutexpool::instance() in new clode.
-Q_CORE_EXPORT QMutexPool *qt_global_mutexpool = 0;
+Q_CORE_EXPORT QMutexPool *qt_global_mutexpool = nullptr;
 Q_GLOBAL_STATIC_WITH_ARGS(QMutexPool, globalMutexPool, (QMutex::Recursive))
 
 /*!
@@ -99,7 +99,7 @@ QMutexPool::QMutexPool(QMutex::RecursionMode recursionMode, int size)
     : mutexes(size), recursionMode(recursionMode)
 {
     for (int index = 0; index < mutexes.count(); ++index) {
-        mutexes[index].storeRelaxed(0);
+        mutexes[index].storeRelaxed(nullptr);
     }
 }
 
@@ -134,7 +134,7 @@ QMutex *QMutexPool::createMutex(int index)
 {
     // mutex not created, create one
     QMutex *newMutex = new QMutex(recursionMode);
-    if (!mutexes[index].testAndSetRelease(0, newMutex))
+    if (!mutexes[index].testAndSetRelease(nullptr, newMutex))
         delete newMutex;
     return mutexes[index].loadRelaxed();
 }
@@ -145,8 +145,8 @@ QMutex *QMutexPool::createMutex(int index)
 QMutex *QMutexPool::globalInstanceGet(const void *address)
 {
     QMutexPool * const globalInstance = globalMutexPool();
-    if (globalInstance == 0)
-        return 0;
+    if (globalInstance == nullptr)
+        return nullptr;
     return globalInstance->get(address);
 }
 

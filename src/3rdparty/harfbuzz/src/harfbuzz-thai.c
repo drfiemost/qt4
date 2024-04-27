@@ -46,11 +46,11 @@ typedef int (*th_render_cell_mac_def) (struct thcell_t cell, unsigned char res[]
 typedef size_t (*th_next_cell_def) (const unsigned char *, size_t, struct thcell_t *, int);
 
 /* libthai releated function handles */
-static th_brk_def th_brk = 0;
-static th_next_cell_def th_next_cell = 0;
-static th_render_cell_tis_def th_render_cell_tis = 0;
-static th_render_cell_win_def th_render_cell_win = 0;
-static th_render_cell_mac_def th_render_cell_mac = 0;
+static th_brk_def th_brk = nullptr;
+static th_next_cell_def th_next_cell = nullptr;
+static th_render_cell_tis_def th_render_cell_tis = nullptr;
+static th_render_cell_win_def th_render_cell_win = nullptr;
+static th_render_cell_mac_def th_render_cell_mac = nullptr;
 
 static int init_libthai() {
     static HB_Bool initialized = false;
@@ -364,7 +364,7 @@ HB_Bool HB_ThaiShape (HB_ShaperItem *shaper_item)
 #ifndef NO_OPENTYPE
     const int availableGlyphs = shaper_item->num_glyphs;
     if ( HB_SelectScript (shaper_item, thai_features) ) {
-        HB_OpenTypeShape (shaper_item, /*properties*/0);
+        HB_OpenTypeShape (shaper_item, /*properties*/nullptr);
         return HB_OpenTypePosition (shaper_item, availableGlyphs, /*doLogClusters*/true);
     }
 #endif
@@ -380,7 +380,7 @@ static void HB_ThaiAssignAttributes(const HB_UChar16 *string, hb_uint32 len, HB_
 {
     char s[128];
     char *cstr = s;
-    int *break_positions = 0;
+    int *break_positions = nullptr;
     int brp[128];
     int brp_size = 0;
     hb_uint32 numbreaks, i, j, cell_length;

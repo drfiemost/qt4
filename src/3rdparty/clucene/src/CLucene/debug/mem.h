@@ -97,7 +97,7 @@ public:
 	}
 
 	Array(){
-		values = NULL;
+		values = nullptr;
 		length = 0;
 	}
 	Array(T* values, size_t length){

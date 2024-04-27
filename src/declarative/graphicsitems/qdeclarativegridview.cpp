@@ -146,16 +146,16 @@ class QDeclarativeGridViewPrivate : public QDeclarativeFlickablePrivate
 
 public:
     QDeclarativeGridViewPrivate()
-    : currentItem(0), layoutDirection(Qt::LeftToRight), flow(QDeclarativeGridView::LeftToRight)
+    : currentItem(nullptr), layoutDirection(Qt::LeftToRight), flow(QDeclarativeGridView::LeftToRight)
     , visibleIndex(0) , currentIndex(-1)
     , cellWidth(100), cellHeight(100), columns(1), requestedIndex(-1), itemCount(0)
     , highlightRangeStart(0), highlightRangeEnd(0)
     , highlightRangeStartValid(false), highlightRangeEndValid(false)
     , highlightRange(QDeclarativeGridView::NoHighlightRange)
-    , highlightComponent(0), highlight(0), trackedItem(0)
-    , moveReason(Other), buffer(0), highlightXAnimator(0), highlightYAnimator(0)
+    , highlightComponent(nullptr), highlight(nullptr), trackedItem(nullptr)
+    , moveReason(Other), buffer(0), highlightXAnimator(nullptr), highlightYAnimator(nullptr)
     , highlightMoveDuration(150)
-    , footerComponent(0), footer(0), headerComponent(0), header(0)
+    , footerComponent(nullptr), footer(nullptr), headerComponent(nullptr), header(nullptr)
     , bufferMode(BufferBefore | BufferAfter), snapMode(QDeclarativeGridView::NoSnap)
     , ownModel(false), wrap(false), autoHighlight(true)
     , fixCurrentVisibility(false), lazyRelease(false), layoutScheduled(false)
@@ -189,7 +189,7 @@ public:
                     return item;
             }
         }
-        return 0;
+        return nullptr;
     }
 
     bool isRightToLeftTopToBottom() const {
@@ -380,7 +380,7 @@ public:
             if (itemTop+rowSize()/2 >= pos && itemTop - rowSize()/2 <= pos)
                 return item;
         }
-        return 0;
+        return nullptr;
     }
 
     int snapIndex() {
@@ -511,9 +511,9 @@ void QDeclarativeGridViewPrivate::clear()
     visibleItems.clear();
     visibleIndex = 0;
     releaseItem(currentItem);
-    currentItem = 0;
+    currentItem = nullptr;
     createHighlight();
-    trackedItem = 0;
+    trackedItem = nullptr;
     itemCount = 0;
 }
 
@@ -522,7 +522,7 @@ FxGridItem *QDeclarativeGridViewPrivate::createItem(int modelIndex)
     Q_Q(QDeclarativeGridView);
     // create object
     requestedIndex = modelIndex;
-    FxGridItem *listItem = 0;
+    FxGridItem *listItem = nullptr;
     if (QDeclarativeItem *item = model->item(modelIndex, false)) {
         listItem = new FxGridItem(item, q);
         listItem->index = modelIndex;
@@ -549,7 +549,7 @@ void QDeclarativeGridViewPrivate::releaseItem(FxGridItem *item)
     if (trackedItem == item) {
         QObject::disconnect(trackedItem->item, SIGNAL(yChanged()), q, SLOT(trackedPositionChanged()));
         QObject::disconnect(trackedItem->item, SIGNAL(xChanged()), q, SLOT(trackedPositionChanged()));
-        trackedItem = 0;
+        trackedItem = nullptr;
     }
     if (model->release(item->item) == 0) {
         // item was not destroyed, and we no longer reference it.
@@ -561,7 +561,7 @@ void QDeclarativeGridViewPrivate::releaseItem(FxGridItem *item)
 QDeclarativeItem *QDeclarativeGridViewPrivate::createComponentItem(QDeclarativeComponent *component)
 {
     Q_Q(QDeclarativeGridView);
-    QDeclarativeItem *item = 0;
+    QDeclarativeItem *item = nullptr;
     QDeclarativeContext *creationContext = component->creationContext();
     QDeclarativeContext *context = new QDeclarativeContext(
                 creationContext ? creationContext : qmlContext(q));
@@ -632,7 +632,7 @@ void QDeclarativeGridViewPrivate::refill(qreal from, qreal to, bool doBuffer)
 
     int colNum = colPos / colSize();
 
-    FxGridItem *item = 0;
+    FxGridItem *item = nullptr;
 
     // Item creation and release is staggered in order to avoid
     // creating/releasing multiple items in one frame
@@ -825,7 +825,7 @@ void QDeclarativeGridViewPrivate::updateTrackedItem()
     if (trackedItem && item != trackedItem) {
         QObject::disconnect(trackedItem->item, SIGNAL(yChanged()), q, SLOT(trackedPositionChanged()));
         QObject::disconnect(trackedItem->item, SIGNAL(xChanged()), q, SLOT(trackedPositionChanged()));
-        trackedItem = 0;
+        trackedItem = nullptr;
     }
 
     if (!trackedItem && item) {
@@ -843,21 +843,21 @@ void QDeclarativeGridViewPrivate::createHighlight()
     bool changed = false;
     if (highlight) {
         if (trackedItem == highlight)
-            trackedItem = 0;
+            trackedItem = nullptr;
         if (highlight->item->scene())
             highlight->item->scene()->removeItem(highlight->item);
         highlight->item->deleteLater();
         delete highlight;
-        highlight = 0;
+        highlight = nullptr;
         delete highlightXAnimator;
         delete highlightYAnimator;
-        highlightXAnimator = 0;
-        highlightYAnimator = 0;
+        highlightXAnimator = nullptr;
+        highlightYAnimator = nullptr;
         changed = true;
     }
 
     if (currentItem) {
-        QDeclarativeItem *item = 0;
+        QDeclarativeItem *item = nullptr;
         if (highlightComponent) {
             item = createComponentItem(highlightComponent);
         } else {
@@ -911,7 +911,7 @@ void QDeclarativeGridViewPrivate::updateCurrent(int modelIndex)
         if (currentItem) {
             currentItem->attached->setIsCurrentItem(false);
             releaseItem(currentItem);
-            currentItem = 0;
+            currentItem = nullptr;
             currentIndex = modelIndex;
             emit q->currentIndexChanged();
             updateHighlight();
@@ -1442,7 +1442,7 @@ void QDeclarativeGridView::setModel(const QVariant &model)
     d->clear();
     d->modelVariant = model;
     QObject *object = qvariant_cast<QObject*>(model);
-    QDeclarativeVisualModel *vim = 0;
+    QDeclarativeVisualModel *vim = nullptr;
     if (object && (vim = qobject_cast<QDeclarativeVisualModel *>(object))) {
         if (d->ownModel) {
             delete d->model;
@@ -1511,7 +1511,7 @@ QDeclarativeComponent *QDeclarativeGridView::delegate() const
             return dataModel->delegate();
     }
 
-    return 0;
+    return nullptr;
 }
 
 void QDeclarativeGridView::setDelegate(QDeclarativeComponent *delegate)
@@ -1532,7 +1532,7 @@ void QDeclarativeGridView::setDelegate(QDeclarativeComponent *delegate)
                 d->releaseItem(d->visibleItems.at(i));
             d->visibleItems.clear();
             d->releaseItem(d->currentItem);
-            d->currentItem = 0;
+            d->currentItem = nullptr;
             refill();
             d->moveReason = QDeclarativeGridViewPrivate::SetIndex;
             d->updateCurrent(d->currentIndex);
@@ -1593,7 +1593,7 @@ QDeclarativeItem *QDeclarativeGridView::currentItem()
 {
     Q_D(QDeclarativeGridView);
     if (!d->currentItem)
-        return 0;
+        return nullptr;
     return d->currentItem->item;
 }
 
@@ -1611,7 +1611,7 @@ QDeclarativeItem *QDeclarativeGridView::highlightItem()
 {
     Q_D(QDeclarativeGridView);
     if (!d->highlight)
-        return 0;
+        return nullptr;
     return d->highlight->item;
 }
 
@@ -2056,7 +2056,7 @@ void QDeclarativeGridView::setFooter(QDeclarativeComponent *footer)
                 scene()->removeItem(d->footer->item);
             d->footer->item->deleteLater();
             delete d->footer;
-            d->footer = 0;
+            d->footer = nullptr;
         }
         d->footerComponent = footer;
         if (isComponentComplete()) {
@@ -2092,7 +2092,7 @@ void QDeclarativeGridView::setHeader(QDeclarativeComponent *header)
                 scene()->removeItem(d->header->item);
             d->header->item->deleteLater();
             delete d->header;
-            d->header = 0;
+            d->header = nullptr;
         }
         d->headerComponent = header;
         if (isComponentComplete()) {
@@ -2955,7 +2955,7 @@ void QDeclarativeGridView::itemsRemoved(int modelIndex, int count)
     } else if (currentRemoved) {
         // current item has been removed.
         d->releaseItem(d->currentItem);
-        d->currentItem = 0;
+        d->currentItem = nullptr;
         d->currentIndex = -1;
         if (d->itemCount)
             d->updateCurrent(std::min(modelIndex, d->itemCount-1));

@@ -80,7 +80,7 @@ public:
         AutoVerifyPeer
     };
 
-    QSslSocket(QObject *parent = 0);
+    QSslSocket(QObject *parent = nullptr);
     ~QSslSocket();
 
     // Autostarting the SSL client handshake.

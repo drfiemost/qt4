@@ -442,9 +442,9 @@ QList<QVariant> WidgetDataBase::defaultPropertyValues(const QString &name)
     WidgetFactory *factory = qobject_cast<WidgetFactory *>(m_core->widgetFactory());
     Q_ASSERT(factory);
     // Create non-widgets, widgets in order
-    QObject* object = factory->createObject(name, 0);
+    QObject* object = factory->createObject(name, nullptr);
     if (!object)
-        object = factory->createWidget(name, 0);
+        object = factory->createWidget(name, nullptr);
     if (!object) {
         qDebug() << "** WARNING Factory failed to create " << name;
         return QList<QVariant>();
@@ -676,9 +676,9 @@ QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size,
     const QString geometryPropertyName = QLatin1String("geometry");
     const QString minimumSizePropertyName = QLatin1String("minimumSize");
     const QString maximumSizePropertyName = QLatin1String("maximumSize");
-    DomProperty *geomProperty = 0;
-    DomProperty *minimumSizeProperty = 0;
-    DomProperty *maximumSizeProperty = 0;
+    DomProperty *geomProperty = nullptr;
+    DomProperty *minimumSizeProperty = nullptr;
+    DomProperty *maximumSizeProperty = nullptr;
 
     PropertyList properties = domWidget->elementProperty();
     const PropertyList::const_iterator cend = properties.constEnd();
@@ -790,10 +790,10 @@ QDESIGNER_SHARED_EXPORT QDesignerWidgetDataBaseItemInterface *
     if (className.isEmpty() || baseClassName.isEmpty()) {
         qWarning("** WARNING %s called with an empty class names: '%s' extends '%s'.",
                  Q_FUNC_INFO, className.toUtf8().constData(), baseClassName.toUtf8().constData());
-        return 0;
+        return nullptr;
     }
     // Check whether item already exists.
-    QDesignerWidgetDataBaseItemInterface *derivedItem = 0;
+    QDesignerWidgetDataBaseItemInterface *derivedItem = nullptr;
     const int existingIndex = db->indexOfClassName(className);
     if ( existingIndex != -1)
         derivedItem =  db->item(existingIndex);
@@ -822,7 +822,7 @@ QDESIGNER_SHARED_EXPORT QDesignerWidgetDataBaseItemInterface *
     if (baseIndex == -1) {
         if (debugWidgetDataBase)
             qDebug() << "appendDerived failed due to missing base class";
-        return 0;
+        return nullptr;
     }
     const QDesignerWidgetDataBaseItemInterface *baseItem = db->item(baseIndex);
     derivedItem = WidgetDataBaseItem::clone(baseItem);

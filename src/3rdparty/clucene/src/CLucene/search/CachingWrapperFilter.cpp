@@ -34,7 +34,7 @@ AbstractCachingFilter::BitSetHolder::~BitSetHolder(){
 BitSet* AbstractCachingFilter::bits(IndexReader* reader){
 	SCOPED_LOCK_MUTEX(cache.THIS_LOCK)
 	BitSetHolder* cached = cache.get(reader);
-	if ( cached != NULL )
+	if ( cached != nullptr )
 		return cached->bits;
 	BitSet* bs = doBits(reader);
 	BitSetHolder* bsh = _CLNEW BitSetHolder(bs, doShouldDeleteBitSet(bs));
@@ -80,7 +80,7 @@ CachingWrapperFilter::~CachingWrapperFilter(){
 	if ( deleteFilter ){
 		_CLDELETE(filter);
 	}else
-		filter=NULL;
+		filter=nullptr;
 }
 
 CL_NS_END

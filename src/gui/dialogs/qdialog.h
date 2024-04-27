@@ -61,7 +61,7 @@ class Q_GUI_EXPORT QDialog : public QWidget
     Q_PROPERTY(bool modal READ isModal WRITE setModal)
 
 public:
-    explicit QDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit QDialog(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
     ~QDialog();
 
     enum DialogCode { Rejected, Accepted };
@@ -100,7 +100,7 @@ public Q_SLOTS:
     void showExtension(bool);
 
 protected:
-    QDialog(QDialogPrivate &, QWidget *parent, Qt::WindowFlags f = 0);
+    QDialog(QDialogPrivate &, QWidget *parent, Qt::WindowFlags f = nullptr);
 
     void keyPressEvent(QKeyEvent *);
     void closeEvent(QCloseEvent *);

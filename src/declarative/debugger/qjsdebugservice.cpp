@@ -62,7 +62,7 @@ QByteArray JSAgentCoverageData::toByteArray() const
 
 QJSDebugService::QJSDebugService(QObject *parent)
     : QDeclarativeDebugService(QLatin1String("JSDebugger"), parent)
-    , m_agent(0), m_deferredSend(true)
+    , m_agent(nullptr), m_deferredSend(true)
 {
     m_timer.start();
 }
@@ -115,7 +115,7 @@ void QJSDebugService::statusChanged(Status status)
 
     } else if (status != Enabled && m_agent) {
         delete m_agent;
-        m_agent = 0;
+        m_agent = nullptr;
     }
 }
 

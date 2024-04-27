@@ -118,7 +118,7 @@ void QDesignerWidgetDataBaseInterface::append(QDesignerWidgetDataBaseItemInterfa
 */
 QDesignerFormEditorInterface *QDesignerWidgetDataBaseInterface::core() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

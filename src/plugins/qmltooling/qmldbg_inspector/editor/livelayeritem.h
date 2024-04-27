@@ -52,7 +52,7 @@ public:
     LiveLayerItem(QGraphicsScene *scene);
     ~LiveLayerItem();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                QWidget *widget = 0);
+                QWidget *widget = nullptr);
     QRectF boundingRect() const;
     int type() const;
 

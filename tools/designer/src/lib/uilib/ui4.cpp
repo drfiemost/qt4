@@ -80,18 +80,18 @@ void DomUI::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_widget = 0;
-    m_layoutDefault = 0;
-    m_layoutFunction = 0;
-    m_customWidgets = 0;
-    m_tabStops = 0;
-    m_images = 0;
-    m_includes = 0;
-    m_resources = 0;
-    m_connections = 0;
-    m_designerdata = 0;
-    m_slots = 0;
-    m_buttonGroups = 0;
+    m_widget = nullptr;
+    m_layoutDefault = nullptr;
+    m_layoutFunction = nullptr;
+    m_customWidgets = nullptr;
+    m_tabStops = nullptr;
+    m_images = nullptr;
+    m_includes = nullptr;
+    m_resources = nullptr;
+    m_connections = nullptr;
+    m_designerdata = nullptr;
+    m_slots = nullptr;
+    m_buttonGroups = nullptr;
 }
 
 DomUI::DomUI()
@@ -104,18 +104,18 @@ DomUI::DomUI()
     m_attr_stdsetdef = 0;
     m_has_attr_stdSetDef = false;
     m_attr_stdSetDef = 0;
-    m_widget = 0;
-    m_layoutDefault = 0;
-    m_layoutFunction = 0;
-    m_customWidgets = 0;
-    m_tabStops = 0;
-    m_images = 0;
-    m_includes = 0;
-    m_resources = 0;
-    m_connections = 0;
-    m_designerdata = 0;
-    m_slots = 0;
-    m_buttonGroups = 0;
+    m_widget = nullptr;
+    m_layoutDefault = nullptr;
+    m_layoutFunction = nullptr;
+    m_customWidgets = nullptr;
+    m_tabStops = nullptr;
+    m_images = nullptr;
+    m_includes = nullptr;
+    m_resources = nullptr;
+    m_connections = nullptr;
+    m_designerdata = nullptr;
+    m_slots = nullptr;
+    m_buttonGroups = nullptr;
 }
 
 DomUI::~DomUI()
@@ -514,7 +514,7 @@ void DomUI::setElementClass(const QString& a)
 DomWidget* DomUI::takeElementWidget() 
 {
     DomWidget* a = m_widget;
-    m_widget = 0;
+    m_widget = nullptr;
     m_children ^= Widget;
     return a;
 }
@@ -529,7 +529,7 @@ void DomUI::setElementWidget(DomWidget* a)
 DomLayoutDefault* DomUI::takeElementLayoutDefault() 
 {
     DomLayoutDefault* a = m_layoutDefault;
-    m_layoutDefault = 0;
+    m_layoutDefault = nullptr;
     m_children ^= LayoutDefault;
     return a;
 }
@@ -544,7 +544,7 @@ void DomUI::setElementLayoutDefault(DomLayoutDefault* a)
 DomLayoutFunction* DomUI::takeElementLayoutFunction() 
 {
     DomLayoutFunction* a = m_layoutFunction;
-    m_layoutFunction = 0;
+    m_layoutFunction = nullptr;
     m_children ^= LayoutFunction;
     return a;
 }
@@ -565,7 +565,7 @@ void DomUI::setElementPixmapFunction(const QString& a)
 DomCustomWidgets* DomUI::takeElementCustomWidgets() 
 {
     DomCustomWidgets* a = m_customWidgets;
-    m_customWidgets = 0;
+    m_customWidgets = nullptr;
     m_children ^= CustomWidgets;
     return a;
 }
@@ -580,7 +580,7 @@ void DomUI::setElementCustomWidgets(DomCustomWidgets* a)
 DomTabStops* DomUI::takeElementTabStops() 
 {
     DomTabStops* a = m_tabStops;
-    m_tabStops = 0;
+    m_tabStops = nullptr;
     m_children ^= TabStops;
     return a;
 }
@@ -595,7 +595,7 @@ void DomUI::setElementTabStops(DomTabStops* a)
 DomImages* DomUI::takeElementImages() 
 {
     DomImages* a = m_images;
-    m_images = 0;
+    m_images = nullptr;
     m_children ^= Images;
     return a;
 }
@@ -610,7 +610,7 @@ void DomUI::setElementImages(DomImages* a)
 DomIncludes* DomUI::takeElementIncludes() 
 {
     DomIncludes* a = m_includes;
-    m_includes = 0;
+    m_includes = nullptr;
     m_children ^= Includes;
     return a;
 }
@@ -625,7 +625,7 @@ void DomUI::setElementIncludes(DomIncludes* a)
 DomResources* DomUI::takeElementResources() 
 {
     DomResources* a = m_resources;
-    m_resources = 0;
+    m_resources = nullptr;
     m_children ^= Resources;
     return a;
 }
@@ -640,7 +640,7 @@ void DomUI::setElementResources(DomResources* a)
 DomConnections* DomUI::takeElementConnections() 
 {
     DomConnections* a = m_connections;
-    m_connections = 0;
+    m_connections = nullptr;
     m_children ^= Connections;
     return a;
 }
@@ -655,7 +655,7 @@ void DomUI::setElementConnections(DomConnections* a)
 DomDesignerData* DomUI::takeElementDesignerdata() 
 {
     DomDesignerData* a = m_designerdata;
-    m_designerdata = 0;
+    m_designerdata = nullptr;
     m_children ^= Designerdata;
     return a;
 }
@@ -670,7 +670,7 @@ void DomUI::setElementDesignerdata(DomDesignerData* a)
 DomSlots* DomUI::takeElementSlots() 
 {
     DomSlots* a = m_slots;
-    m_slots = 0;
+    m_slots = nullptr;
     m_children ^= Slots;
     return a;
 }
@@ -685,7 +685,7 @@ void DomUI::setElementSlots(DomSlots* a)
 DomButtonGroups* DomUI::takeElementButtonGroups() 
 {
     DomButtonGroups* a = m_buttonGroups;
-    m_buttonGroups = 0;
+    m_buttonGroups = nullptr;
     m_children ^= ButtonGroups;
     return a;
 }
@@ -720,21 +720,21 @@ void DomUI::clearElementClass()
 void DomUI::clearElementWidget()
 {
     delete m_widget;
-    m_widget = 0;
+    m_widget = nullptr;
     m_children &= ~Widget;
 }
 
 void DomUI::clearElementLayoutDefault()
 {
     delete m_layoutDefault;
-    m_layoutDefault = 0;
+    m_layoutDefault = nullptr;
     m_children &= ~LayoutDefault;
 }
 
 void DomUI::clearElementLayoutFunction()
 {
     delete m_layoutFunction;
-    m_layoutFunction = 0;
+    m_layoutFunction = nullptr;
     m_children &= ~LayoutFunction;
 }
 
@@ -746,63 +746,63 @@ void DomUI::clearElementPixmapFunction()
 void DomUI::clearElementCustomWidgets()
 {
     delete m_customWidgets;
-    m_customWidgets = 0;
+    m_customWidgets = nullptr;
     m_children &= ~CustomWidgets;
 }
 
 void DomUI::clearElementTabStops()
 {
     delete m_tabStops;
-    m_tabStops = 0;
+    m_tabStops = nullptr;
     m_children &= ~TabStops;
 }
 
 void DomUI::clearElementImages()
 {
     delete m_images;
-    m_images = 0;
+    m_images = nullptr;
     m_children &= ~Images;
 }
 
 void DomUI::clearElementIncludes()
 {
     delete m_includes;
-    m_includes = 0;
+    m_includes = nullptr;
     m_children &= ~Includes;
 }
 
 void DomUI::clearElementResources()
 {
     delete m_resources;
-    m_resources = 0;
+    m_resources = nullptr;
     m_children &= ~Resources;
 }
 
 void DomUI::clearElementConnections()
 {
     delete m_connections;
-    m_connections = 0;
+    m_connections = nullptr;
     m_children &= ~Connections;
 }
 
 void DomUI::clearElementDesignerdata()
 {
     delete m_designerdata;
-    m_designerdata = 0;
+    m_designerdata = nullptr;
     m_children &= ~Designerdata;
 }
 
 void DomUI::clearElementSlots()
 {
     delete m_slots;
-    m_slots = 0;
+    m_slots = nullptr;
     m_children &= ~Slots;
 }
 
 void DomUI::clearElementButtonGroups()
 {
     delete m_buttonGroups;
-    m_buttonGroups = 0;
+    m_buttonGroups = nullptr;
     m_children &= ~ButtonGroups;
 }
 
@@ -1960,14 +1960,14 @@ void DomImage::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_data = 0;
+    m_data = nullptr;
 }
 
 DomImage::DomImage()
 {
     m_children = 0;
     m_has_attr_name = false;
-    m_data = 0;
+    m_data = nullptr;
 }
 
 DomImage::~DomImage()
@@ -2059,7 +2059,7 @@ void DomImage::write(QXmlStreamWriter &writer, const QString &tagName) const
 DomImageData* DomImage::takeElementData() 
 {
     DomImageData* a = m_data;
-    m_data = 0;
+    m_data = nullptr;
     m_children ^= Data;
     return a;
 }
@@ -2074,7 +2074,7 @@ void DomImage::setElementData(DomImageData* a)
 void DomImage::clearElementData()
 {
     delete m_data;
-    m_data = 0;
+    m_data = nullptr;
     m_children &= ~Data;
 }
 
@@ -2375,27 +2375,27 @@ void DomCustomWidget::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_header = 0;
-    m_sizeHint = 0;
+    m_header = nullptr;
+    m_sizeHint = nullptr;
     m_container = 0;
-    m_sizePolicy = 0;
-    m_script = 0;
-    m_properties = 0;
-    m_slots = 0;
-    m_propertyspecifications = 0;
+    m_sizePolicy = nullptr;
+    m_script = nullptr;
+    m_properties = nullptr;
+    m_slots = nullptr;
+    m_propertyspecifications = nullptr;
 }
 
 DomCustomWidget::DomCustomWidget()
 {
     m_children = 0;
-    m_header = 0;
-    m_sizeHint = 0;
+    m_header = nullptr;
+    m_sizeHint = nullptr;
     m_container = 0;
-    m_sizePolicy = 0;
-    m_script = 0;
-    m_properties = 0;
-    m_slots = 0;
-    m_propertyspecifications = 0;
+    m_sizePolicy = nullptr;
+    m_script = nullptr;
+    m_properties = nullptr;
+    m_slots = nullptr;
+    m_propertyspecifications = nullptr;
 }
 
 DomCustomWidget::~DomCustomWidget()
@@ -2646,7 +2646,7 @@ void DomCustomWidget::setElementExtends(const QString& a)
 DomHeader* DomCustomWidget::takeElementHeader() 
 {
     DomHeader* a = m_header;
-    m_header = 0;
+    m_header = nullptr;
     m_children ^= Header;
     return a;
 }
@@ -2661,7 +2661,7 @@ void DomCustomWidget::setElementHeader(DomHeader* a)
 DomSize* DomCustomWidget::takeElementSizeHint() 
 {
     DomSize* a = m_sizeHint;
-    m_sizeHint = 0;
+    m_sizeHint = nullptr;
     m_children ^= SizeHint;
     return a;
 }
@@ -2688,7 +2688,7 @@ void DomCustomWidget::setElementContainer(int a)
 DomSizePolicyData* DomCustomWidget::takeElementSizePolicy() 
 {
     DomSizePolicyData* a = m_sizePolicy;
-    m_sizePolicy = 0;
+    m_sizePolicy = nullptr;
     m_children ^= SizePolicy;
     return a;
 }
@@ -2709,7 +2709,7 @@ void DomCustomWidget::setElementPixmap(const QString& a)
 DomScript* DomCustomWidget::takeElementScript() 
 {
     DomScript* a = m_script;
-    m_script = 0;
+    m_script = nullptr;
     m_children ^= Script;
     return a;
 }
@@ -2724,7 +2724,7 @@ void DomCustomWidget::setElementScript(DomScript* a)
 DomProperties* DomCustomWidget::takeElementProperties() 
 {
     DomProperties* a = m_properties;
-    m_properties = 0;
+    m_properties = nullptr;
     m_children ^= Properties;
     return a;
 }
@@ -2739,7 +2739,7 @@ void DomCustomWidget::setElementProperties(DomProperties* a)
 DomSlots* DomCustomWidget::takeElementSlots() 
 {
     DomSlots* a = m_slots;
-    m_slots = 0;
+    m_slots = nullptr;
     m_children ^= Slots;
     return a;
 }
@@ -2754,7 +2754,7 @@ void DomCustomWidget::setElementSlots(DomSlots* a)
 DomPropertySpecifications* DomCustomWidget::takeElementPropertyspecifications() 
 {
     DomPropertySpecifications* a = m_propertyspecifications;
-    m_propertyspecifications = 0;
+    m_propertyspecifications = nullptr;
     m_children ^= Propertyspecifications;
     return a;
 }
@@ -2779,14 +2779,14 @@ void DomCustomWidget::clearElementExtends()
 void DomCustomWidget::clearElementHeader()
 {
     delete m_header;
-    m_header = 0;
+    m_header = nullptr;
     m_children &= ~Header;
 }
 
 void DomCustomWidget::clearElementSizeHint()
 {
     delete m_sizeHint;
-    m_sizeHint = 0;
+    m_sizeHint = nullptr;
     m_children &= ~SizeHint;
 }
 
@@ -2803,7 +2803,7 @@ void DomCustomWidget::clearElementContainer()
 void DomCustomWidget::clearElementSizePolicy()
 {
     delete m_sizePolicy;
-    m_sizePolicy = 0;
+    m_sizePolicy = nullptr;
     m_children &= ~SizePolicy;
 }
 
@@ -2815,28 +2815,28 @@ void DomCustomWidget::clearElementPixmap()
 void DomCustomWidget::clearElementScript()
 {
     delete m_script;
-    m_script = 0;
+    m_script = nullptr;
     m_children &= ~Script;
 }
 
 void DomCustomWidget::clearElementProperties()
 {
     delete m_properties;
-    m_properties = 0;
+    m_properties = nullptr;
     m_children &= ~Properties;
 }
 
 void DomCustomWidget::clearElementSlots()
 {
     delete m_slots;
-    m_slots = 0;
+    m_slots = nullptr;
     m_children &= ~Slots;
 }
 
 void DomCustomWidget::clearElementPropertyspecifications()
 {
     delete m_propertyspecifications;
-    m_propertyspecifications = 0;
+    m_propertyspecifications = nullptr;
     m_children &= ~Propertyspecifications;
 }
 
@@ -3678,9 +3678,9 @@ void DomLayoutItem::clear(bool clear_all)
 
     m_kind = Unknown;
 
-    m_widget = 0;
-    m_layout = 0;
-    m_spacer = 0;
+    m_widget = nullptr;
+    m_layout = nullptr;
+    m_spacer = nullptr;
 }
 
 DomLayoutItem::DomLayoutItem()
@@ -3696,9 +3696,9 @@ DomLayoutItem::DomLayoutItem()
     m_has_attr_colSpan = false;
     m_attr_colSpan = 0;
     m_has_attr_alignment = false;
-    m_widget = 0;
-    m_layout = 0;
-    m_spacer = 0;
+    m_widget = nullptr;
+    m_layout = nullptr;
+    m_spacer = nullptr;
 }
 
 DomLayoutItem::~DomLayoutItem()
@@ -3842,21 +3842,21 @@ void DomLayoutItem::write(QXmlStreamWriter &writer, const QString &tagName) cons
     switch (kind()) {
         case Widget: {
             DomWidget* v = elementWidget();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("widget"));
             }
             break;
         }
         case Layout: {
             DomLayout* v = elementLayout();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("layout"));
             }
             break;
         }
         case Spacer: {
             DomSpacer* v = elementSpacer();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("spacer"));
             }
             break;
@@ -3873,7 +3873,7 @@ void DomLayoutItem::write(QXmlStreamWriter &writer, const QString &tagName) cons
 DomWidget* DomLayoutItem::takeElementWidget() 
 {
     DomWidget* a = m_widget;
-    m_widget = 0;
+    m_widget = nullptr;
     return a;
 }
 
@@ -3887,7 +3887,7 @@ void DomLayoutItem::setElementWidget(DomWidget* a)
 DomLayout* DomLayoutItem::takeElementLayout() 
 {
     DomLayout* a = m_layout;
-    m_layout = 0;
+    m_layout = nullptr;
     return a;
 }
 
@@ -3901,7 +3901,7 @@ void DomLayoutItem::setElementLayout(DomLayout* a)
 DomSpacer* DomLayoutItem::takeElementSpacer() 
 {
     DomSpacer* a = m_spacer;
-    m_spacer = 0;
+    m_spacer = nullptr;
     return a;
 }
 
@@ -5003,7 +5003,7 @@ void DomGradientStop::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_color = 0;
+    m_color = nullptr;
 }
 
 DomGradientStop::DomGradientStop()
@@ -5011,7 +5011,7 @@ DomGradientStop::DomGradientStop()
     m_children = 0;
     m_has_attr_position = false;
     m_attr_position = 0.0;
-    m_color = 0;
+    m_color = nullptr;
 }
 
 DomGradientStop::~DomGradientStop()
@@ -5103,7 +5103,7 @@ void DomGradientStop::write(QXmlStreamWriter &writer, const QString &tagName) co
 DomColor* DomGradientStop::takeElementColor() 
 {
     DomColor* a = m_color;
-    m_color = 0;
+    m_color = nullptr;
     m_children ^= Color;
     return a;
 }
@@ -5118,7 +5118,7 @@ void DomGradientStop::setElementColor(DomColor* a)
 void DomGradientStop::clearElementColor()
 {
     delete m_color;
-    m_color = 0;
+    m_color = nullptr;
     m_children &= ~Color;
 }
 
@@ -5399,9 +5399,9 @@ void DomBrush::clear(bool clear_all)
 
     m_kind = Unknown;
 
-    m_color = 0;
-    m_texture = 0;
-    m_gradient = 0;
+    m_color = nullptr;
+    m_texture = nullptr;
+    m_gradient = nullptr;
 }
 
 DomBrush::DomBrush()
@@ -5409,9 +5409,9 @@ DomBrush::DomBrush()
     m_kind = Unknown;
 
     m_has_attr_brushStyle = false;
-    m_color = 0;
-    m_texture = 0;
-    m_gradient = 0;
+    m_color = nullptr;
+    m_texture = nullptr;
+    m_gradient = nullptr;
 }
 
 DomBrush::~DomBrush()
@@ -5519,21 +5519,21 @@ void DomBrush::write(QXmlStreamWriter &writer, const QString &tagName) const
     switch (kind()) {
         case Color: {
             DomColor* v = elementColor();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("color"));
             }
             break;
         }
         case Texture: {
             DomProperty* v = elementTexture();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("texture"));
             }
             break;
         }
         case Gradient: {
             DomGradient* v = elementGradient();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("gradient"));
             }
             break;
@@ -5550,7 +5550,7 @@ void DomBrush::write(QXmlStreamWriter &writer, const QString &tagName) const
 DomColor* DomBrush::takeElementColor() 
 {
     DomColor* a = m_color;
-    m_color = 0;
+    m_color = nullptr;
     return a;
 }
 
@@ -5564,7 +5564,7 @@ void DomBrush::setElementColor(DomColor* a)
 DomProperty* DomBrush::takeElementTexture() 
 {
     DomProperty* a = m_texture;
-    m_texture = 0;
+    m_texture = nullptr;
     return a;
 }
 
@@ -5578,7 +5578,7 @@ void DomBrush::setElementTexture(DomProperty* a)
 DomGradient* DomBrush::takeElementGradient() 
 {
     DomGradient* a = m_gradient;
-    m_gradient = 0;
+    m_gradient = nullptr;
     return a;
 }
 
@@ -5599,14 +5599,14 @@ void DomColorRole::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_brush = 0;
+    m_brush = nullptr;
 }
 
 DomColorRole::DomColorRole()
 {
     m_children = 0;
     m_has_attr_role = false;
-    m_brush = 0;
+    m_brush = nullptr;
 }
 
 DomColorRole::~DomColorRole()
@@ -5698,7 +5698,7 @@ void DomColorRole::write(QXmlStreamWriter &writer, const QString &tagName) const
 DomBrush* DomColorRole::takeElementBrush() 
 {
     DomBrush* a = m_brush;
-    m_brush = 0;
+    m_brush = nullptr;
     m_children ^= Brush;
     return a;
 }
@@ -5713,7 +5713,7 @@ void DomColorRole::setElementBrush(DomBrush* a)
 void DomColorRole::clearElementBrush()
 {
     delete m_brush;
-    m_brush = 0;
+    m_brush = nullptr;
     m_children &= ~Brush;
 }
 
@@ -5849,17 +5849,17 @@ void DomPalette::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_active = 0;
-    m_inactive = 0;
-    m_disabled = 0;
+    m_active = nullptr;
+    m_inactive = nullptr;
+    m_disabled = nullptr;
 }
 
 DomPalette::DomPalette()
 {
     m_children = 0;
-    m_active = 0;
-    m_inactive = 0;
-    m_disabled = 0;
+    m_active = nullptr;
+    m_inactive = nullptr;
+    m_disabled = nullptr;
 }
 
 DomPalette::~DomPalette()
@@ -5970,7 +5970,7 @@ void DomPalette::write(QXmlStreamWriter &writer, const QString &tagName) const
 DomColorGroup* DomPalette::takeElementActive() 
 {
     DomColorGroup* a = m_active;
-    m_active = 0;
+    m_active = nullptr;
     m_children ^= Active;
     return a;
 }
@@ -5985,7 +5985,7 @@ void DomPalette::setElementActive(DomColorGroup* a)
 DomColorGroup* DomPalette::takeElementInactive() 
 {
     DomColorGroup* a = m_inactive;
-    m_inactive = 0;
+    m_inactive = nullptr;
     m_children ^= Inactive;
     return a;
 }
@@ -6000,7 +6000,7 @@ void DomPalette::setElementInactive(DomColorGroup* a)
 DomColorGroup* DomPalette::takeElementDisabled() 
 {
     DomColorGroup* a = m_disabled;
-    m_disabled = 0;
+    m_disabled = nullptr;
     m_children ^= Disabled;
     return a;
 }
@@ -6015,21 +6015,21 @@ void DomPalette::setElementDisabled(DomColorGroup* a)
 void DomPalette::clearElementActive()
 {
     delete m_active;
-    m_active = 0;
+    m_active = nullptr;
     m_children &= ~Active;
 }
 
 void DomPalette::clearElementInactive()
 {
     delete m_inactive;
-    m_inactive = 0;
+    m_inactive = nullptr;
     m_children &= ~Inactive;
 }
 
 void DomPalette::clearElementDisabled()
 {
     delete m_disabled;
-    m_disabled = 0;
+    m_disabled = nullptr;
     m_children &= ~Disabled;
 }
 
@@ -7761,14 +7761,14 @@ void DomResourceIcon::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_normalOff = 0;
-    m_normalOn = 0;
-    m_disabledOff = 0;
-    m_disabledOn = 0;
-    m_activeOff = 0;
-    m_activeOn = 0;
-    m_selectedOff = 0;
-    m_selectedOn = 0;
+    m_normalOff = nullptr;
+    m_normalOn = nullptr;
+    m_disabledOff = nullptr;
+    m_disabledOn = nullptr;
+    m_activeOff = nullptr;
+    m_activeOn = nullptr;
+    m_selectedOff = nullptr;
+    m_selectedOn = nullptr;
 }
 
 DomResourceIcon::DomResourceIcon()
@@ -7777,14 +7777,14 @@ DomResourceIcon::DomResourceIcon()
     m_has_attr_theme = false;
     m_has_attr_resource = false;
     m_text = QLatin1String("");
-    m_normalOff = 0;
-    m_normalOn = 0;
-    m_disabledOff = 0;
-    m_disabledOn = 0;
-    m_activeOff = 0;
-    m_activeOn = 0;
-    m_selectedOff = 0;
-    m_selectedOn = 0;
+    m_normalOff = nullptr;
+    m_normalOn = nullptr;
+    m_disabledOff = nullptr;
+    m_disabledOn = nullptr;
+    m_activeOff = nullptr;
+    m_activeOn = nullptr;
+    m_selectedOff = nullptr;
+    m_selectedOn = nullptr;
 }
 
 DomResourceIcon::~DomResourceIcon()
@@ -8004,7 +8004,7 @@ void DomResourceIcon::write(QXmlStreamWriter &writer, const QString &tagName) co
 DomResourcePixmap* DomResourceIcon::takeElementNormalOff() 
 {
     DomResourcePixmap* a = m_normalOff;
-    m_normalOff = 0;
+    m_normalOff = nullptr;
     m_children ^= NormalOff;
     return a;
 }
@@ -8019,7 +8019,7 @@ void DomResourceIcon::setElementNormalOff(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementNormalOn() 
 {
     DomResourcePixmap* a = m_normalOn;
-    m_normalOn = 0;
+    m_normalOn = nullptr;
     m_children ^= NormalOn;
     return a;
 }
@@ -8034,7 +8034,7 @@ void DomResourceIcon::setElementNormalOn(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementDisabledOff() 
 {
     DomResourcePixmap* a = m_disabledOff;
-    m_disabledOff = 0;
+    m_disabledOff = nullptr;
     m_children ^= DisabledOff;
     return a;
 }
@@ -8049,7 +8049,7 @@ void DomResourceIcon::setElementDisabledOff(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementDisabledOn() 
 {
     DomResourcePixmap* a = m_disabledOn;
-    m_disabledOn = 0;
+    m_disabledOn = nullptr;
     m_children ^= DisabledOn;
     return a;
 }
@@ -8064,7 +8064,7 @@ void DomResourceIcon::setElementDisabledOn(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementActiveOff() 
 {
     DomResourcePixmap* a = m_activeOff;
-    m_activeOff = 0;
+    m_activeOff = nullptr;
     m_children ^= ActiveOff;
     return a;
 }
@@ -8079,7 +8079,7 @@ void DomResourceIcon::setElementActiveOff(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementActiveOn() 
 {
     DomResourcePixmap* a = m_activeOn;
-    m_activeOn = 0;
+    m_activeOn = nullptr;
     m_children ^= ActiveOn;
     return a;
 }
@@ -8094,7 +8094,7 @@ void DomResourceIcon::setElementActiveOn(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementSelectedOff() 
 {
     DomResourcePixmap* a = m_selectedOff;
-    m_selectedOff = 0;
+    m_selectedOff = nullptr;
     m_children ^= SelectedOff;
     return a;
 }
@@ -8109,7 +8109,7 @@ void DomResourceIcon::setElementSelectedOff(DomResourcePixmap* a)
 DomResourcePixmap* DomResourceIcon::takeElementSelectedOn() 
 {
     DomResourcePixmap* a = m_selectedOn;
-    m_selectedOn = 0;
+    m_selectedOn = nullptr;
     m_children ^= SelectedOn;
     return a;
 }
@@ -8124,56 +8124,56 @@ void DomResourceIcon::setElementSelectedOn(DomResourcePixmap* a)
 void DomResourceIcon::clearElementNormalOff()
 {
     delete m_normalOff;
-    m_normalOff = 0;
+    m_normalOff = nullptr;
     m_children &= ~NormalOff;
 }
 
 void DomResourceIcon::clearElementNormalOn()
 {
     delete m_normalOn;
-    m_normalOn = 0;
+    m_normalOn = nullptr;
     m_children &= ~NormalOn;
 }
 
 void DomResourceIcon::clearElementDisabledOff()
 {
     delete m_disabledOff;
-    m_disabledOff = 0;
+    m_disabledOff = nullptr;
     m_children &= ~DisabledOff;
 }
 
 void DomResourceIcon::clearElementDisabledOn()
 {
     delete m_disabledOn;
-    m_disabledOn = 0;
+    m_disabledOn = nullptr;
     m_children &= ~DisabledOn;
 }
 
 void DomResourceIcon::clearElementActiveOff()
 {
     delete m_activeOff;
-    m_activeOff = 0;
+    m_activeOff = nullptr;
     m_children &= ~ActiveOff;
 }
 
 void DomResourceIcon::clearElementActiveOn()
 {
     delete m_activeOn;
-    m_activeOn = 0;
+    m_activeOn = nullptr;
     m_children &= ~ActiveOn;
 }
 
 void DomResourceIcon::clearElementSelectedOff()
 {
     delete m_selectedOff;
-    m_selectedOff = 0;
+    m_selectedOff = nullptr;
     m_children &= ~SelectedOff;
 }
 
 void DomResourceIcon::clearElementSelectedOn()
 {
     delete m_selectedOn;
-    m_selectedOn = 0;
+    m_selectedOn = nullptr;
     m_children &= ~SelectedOn;
 }
 
@@ -8796,13 +8796,13 @@ void DomUrl::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_string = 0;
+    m_string = nullptr;
 }
 
 DomUrl::DomUrl()
 {
     m_children = 0;
-    m_string = 0;
+    m_string = nullptr;
 }
 
 DomUrl::~DomUrl()
@@ -8879,7 +8879,7 @@ void DomUrl::write(QXmlStreamWriter &writer, const QString &tagName) const
 DomString* DomUrl::takeElementString() 
 {
     DomString* a = m_string;
-    m_string = 0;
+    m_string = nullptr;
     m_children ^= String;
     return a;
 }
@@ -8894,7 +8894,7 @@ void DomUrl::setElementString(DomString* a)
 void DomUrl::clearElementString()
 {
     delete m_string;
-    m_string = 0;
+    m_string = nullptr;
     m_children &= ~String;
 }
 
@@ -8931,34 +8931,34 @@ void DomProperty::clear(bool clear_all)
 
     m_kind = Unknown;
 
-    m_color = 0;
+    m_color = nullptr;
     m_cursor = 0;
-    m_font = 0;
-    m_iconSet = 0;
-    m_pixmap = 0;
-    m_palette = 0;
-    m_point = 0;
-    m_rect = 0;
-    m_locale = 0;
-    m_sizePolicy = 0;
-    m_size = 0;
-    m_string = 0;
-    m_stringList = 0;
+    m_font = nullptr;
+    m_iconSet = nullptr;
+    m_pixmap = nullptr;
+    m_palette = nullptr;
+    m_point = nullptr;
+    m_rect = nullptr;
+    m_locale = nullptr;
+    m_sizePolicy = nullptr;
+    m_size = nullptr;
+    m_string = nullptr;
+    m_stringList = nullptr;
     m_number = 0;
     m_float = 0.0;
     m_double = 0;
-    m_date = 0;
-    m_time = 0;
-    m_dateTime = 0;
-    m_pointF = 0;
-    m_rectF = 0;
-    m_sizeF = 0;
+    m_date = nullptr;
+    m_time = nullptr;
+    m_dateTime = nullptr;
+    m_pointF = nullptr;
+    m_rectF = nullptr;
+    m_sizeF = nullptr;
     m_longLong = 0;
-    m_char = 0;
-    m_url = 0;
+    m_char = nullptr;
+    m_url = nullptr;
     m_UInt = 0;
     m_uLongLong = 0;
-    m_brush = 0;
+    m_brush = nullptr;
 }
 
 DomProperty::DomProperty()
@@ -8968,34 +8968,34 @@ DomProperty::DomProperty()
     m_has_attr_name = false;
     m_has_attr_stdset = false;
     m_attr_stdset = 0;
-    m_color = 0;
+    m_color = nullptr;
     m_cursor = 0;
-    m_font = 0;
-    m_iconSet = 0;
-    m_pixmap = 0;
-    m_palette = 0;
-    m_point = 0;
-    m_rect = 0;
-    m_locale = 0;
-    m_sizePolicy = 0;
-    m_size = 0;
-    m_string = 0;
-    m_stringList = 0;
+    m_font = nullptr;
+    m_iconSet = nullptr;
+    m_pixmap = nullptr;
+    m_palette = nullptr;
+    m_point = nullptr;
+    m_rect = nullptr;
+    m_locale = nullptr;
+    m_sizePolicy = nullptr;
+    m_size = nullptr;
+    m_string = nullptr;
+    m_stringList = nullptr;
     m_number = 0;
     m_float = 0.0;
     m_double = 0;
-    m_date = 0;
-    m_time = 0;
-    m_dateTime = 0;
-    m_pointF = 0;
-    m_rectF = 0;
-    m_sizeF = 0;
+    m_date = nullptr;
+    m_time = nullptr;
+    m_dateTime = nullptr;
+    m_pointF = nullptr;
+    m_rectF = nullptr;
+    m_sizeF = nullptr;
     m_longLong = 0;
-    m_char = 0;
-    m_url = 0;
+    m_char = nullptr;
+    m_url = nullptr;
     m_UInt = 0;
     m_uLongLong = 0;
-    m_brush = 0;
+    m_brush = nullptr;
 }
 
 DomProperty::~DomProperty()
@@ -9446,7 +9446,7 @@ void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
         }
         case Color: {
             DomColor* v = elementColor();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("color"));
             }
             break;
@@ -9469,42 +9469,42 @@ void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
         }
         case Font: {
             DomFont* v = elementFont();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("font"));
             }
             break;
         }
         case IconSet: {
             DomResourceIcon* v = elementIconSet();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("iconset"));
             }
             break;
         }
         case Pixmap: {
             DomResourcePixmap* v = elementPixmap();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("pixmap"));
             }
             break;
         }
         case Palette: {
             DomPalette* v = elementPalette();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("palette"));
             }
             break;
         }
         case Point: {
             DomPoint* v = elementPoint();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("point"));
             }
             break;
         }
         case Rect: {
             DomRect* v = elementRect();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("rect"));
             }
             break;
@@ -9515,35 +9515,35 @@ void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
         }
         case Locale: {
             DomLocale* v = elementLocale();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("locale"));
             }
             break;
         }
         case SizePolicy: {
             DomSizePolicy* v = elementSizePolicy();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("sizepolicy"));
             }
             break;
         }
         case Size: {
             DomSize* v = elementSize();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("size"));
             }
             break;
         }
         case String: {
             DomString* v = elementString();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("string"));
             }
             break;
         }
         case StringList: {
             DomStringList* v = elementStringList();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("stringlist"));
             }
             break;
@@ -9562,42 +9562,42 @@ void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
         }
         case Date: {
             DomDate* v = elementDate();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("date"));
             }
             break;
         }
         case Time: {
             DomTime* v = elementTime();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("time"));
             }
             break;
         }
         case DateTime: {
             DomDateTime* v = elementDateTime();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("datetime"));
             }
             break;
         }
         case PointF: {
             DomPointF* v = elementPointF();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("pointf"));
             }
             break;
         }
         case RectF: {
             DomRectF* v = elementRectF();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("rectf"));
             }
             break;
         }
         case SizeF: {
             DomSizeF* v = elementSizeF();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("sizef"));
             }
             break;
@@ -9608,14 +9608,14 @@ void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
         }
         case Char: {
             DomChar* v = elementChar();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("char"));
             }
             break;
         }
         case Url: {
             DomUrl* v = elementUrl();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("url"));
             }
             break;
@@ -9630,7 +9630,7 @@ void DomProperty::write(QXmlStreamWriter &writer, const QString &tagName) const
         }
         case Brush: {
             DomBrush* v = elementBrush();
-            if (v != 0) {
+            if (v != nullptr) {
                 v->write(writer, QLatin1String("brush"));
             }
             break;
@@ -9654,7 +9654,7 @@ void DomProperty::setElementBool(const QString& a)
 DomColor* DomProperty::takeElementColor() 
 {
     DomColor* a = m_color;
-    m_color = 0;
+    m_color = nullptr;
     return a;
 }
 
@@ -9696,7 +9696,7 @@ void DomProperty::setElementEnum(const QString& a)
 DomFont* DomProperty::takeElementFont() 
 {
     DomFont* a = m_font;
-    m_font = 0;
+    m_font = nullptr;
     return a;
 }
 
@@ -9710,7 +9710,7 @@ void DomProperty::setElementFont(DomFont* a)
 DomResourceIcon* DomProperty::takeElementIconSet() 
 {
     DomResourceIcon* a = m_iconSet;
-    m_iconSet = 0;
+    m_iconSet = nullptr;
     return a;
 }
 
@@ -9724,7 +9724,7 @@ void DomProperty::setElementIconSet(DomResourceIcon* a)
 DomResourcePixmap* DomProperty::takeElementPixmap() 
 {
     DomResourcePixmap* a = m_pixmap;
-    m_pixmap = 0;
+    m_pixmap = nullptr;
     return a;
 }
 
@@ -9738,7 +9738,7 @@ void DomProperty::setElementPixmap(DomResourcePixmap* a)
 DomPalette* DomProperty::takeElementPalette() 
 {
     DomPalette* a = m_palette;
-    m_palette = 0;
+    m_palette = nullptr;
     return a;
 }
 
@@ -9752,7 +9752,7 @@ void DomProperty::setElementPalette(DomPalette* a)
 DomPoint* DomProperty::takeElementPoint() 
 {
     DomPoint* a = m_point;
-    m_point = 0;
+    m_point = nullptr;
     return a;
 }
 
@@ -9766,7 +9766,7 @@ void DomProperty::setElementPoint(DomPoint* a)
 DomRect* DomProperty::takeElementRect() 
 {
     DomRect* a = m_rect;
-    m_rect = 0;
+    m_rect = nullptr;
     return a;
 }
 
@@ -9787,7 +9787,7 @@ void DomProperty::setElementSet(const QString& a)
 DomLocale* DomProperty::takeElementLocale() 
 {
     DomLocale* a = m_locale;
-    m_locale = 0;
+    m_locale = nullptr;
     return a;
 }
 
@@ -9801,7 +9801,7 @@ void DomProperty::setElementLocale(DomLocale* a)
 DomSizePolicy* DomProperty::takeElementSizePolicy() 
 {
     DomSizePolicy* a = m_sizePolicy;
-    m_sizePolicy = 0;
+    m_sizePolicy = nullptr;
     return a;
 }
 
@@ -9815,7 +9815,7 @@ void DomProperty::setElementSizePolicy(DomSizePolicy* a)
 DomSize* DomProperty::takeElementSize() 
 {
     DomSize* a = m_size;
-    m_size = 0;
+    m_size = nullptr;
     return a;
 }
 
@@ -9829,7 +9829,7 @@ void DomProperty::setElementSize(DomSize* a)
 DomString* DomProperty::takeElementString() 
 {
     DomString* a = m_string;
-    m_string = 0;
+    m_string = nullptr;
     return a;
 }
 
@@ -9843,7 +9843,7 @@ void DomProperty::setElementString(DomString* a)
 DomStringList* DomProperty::takeElementStringList() 
 {
     DomStringList* a = m_stringList;
-    m_stringList = 0;
+    m_stringList = nullptr;
     return a;
 }
 
@@ -9878,7 +9878,7 @@ void DomProperty::setElementDouble(double a)
 DomDate* DomProperty::takeElementDate() 
 {
     DomDate* a = m_date;
-    m_date = 0;
+    m_date = nullptr;
     return a;
 }
 
@@ -9892,7 +9892,7 @@ void DomProperty::setElementDate(DomDate* a)
 DomTime* DomProperty::takeElementTime() 
 {
     DomTime* a = m_time;
-    m_time = 0;
+    m_time = nullptr;
     return a;
 }
 
@@ -9906,7 +9906,7 @@ void DomProperty::setElementTime(DomTime* a)
 DomDateTime* DomProperty::takeElementDateTime() 
 {
     DomDateTime* a = m_dateTime;
-    m_dateTime = 0;
+    m_dateTime = nullptr;
     return a;
 }
 
@@ -9920,7 +9920,7 @@ void DomProperty::setElementDateTime(DomDateTime* a)
 DomPointF* DomProperty::takeElementPointF() 
 {
     DomPointF* a = m_pointF;
-    m_pointF = 0;
+    m_pointF = nullptr;
     return a;
 }
 
@@ -9934,7 +9934,7 @@ void DomProperty::setElementPointF(DomPointF* a)
 DomRectF* DomProperty::takeElementRectF() 
 {
     DomRectF* a = m_rectF;
-    m_rectF = 0;
+    m_rectF = nullptr;
     return a;
 }
 
@@ -9948,7 +9948,7 @@ void DomProperty::setElementRectF(DomRectF* a)
 DomSizeF* DomProperty::takeElementSizeF() 
 {
     DomSizeF* a = m_sizeF;
-    m_sizeF = 0;
+    m_sizeF = nullptr;
     return a;
 }
 
@@ -9969,7 +9969,7 @@ void DomProperty::setElementLongLong(qlonglong a)
 DomChar* DomProperty::takeElementChar() 
 {
     DomChar* a = m_char;
-    m_char = 0;
+    m_char = nullptr;
     return a;
 }
 
@@ -9983,7 +9983,7 @@ void DomProperty::setElementChar(DomChar* a)
 DomUrl* DomProperty::takeElementUrl() 
 {
     DomUrl* a = m_url;
-    m_url = 0;
+    m_url = nullptr;
     return a;
 }
 
@@ -10011,7 +10011,7 @@ void DomProperty::setElementULongLong(qulonglong a)
 DomBrush* DomProperty::takeElementBrush() 
 {
     DomBrush* a = m_brush;
-    m_brush = 0;
+    m_brush = nullptr;
     return a;
 }
 
@@ -10126,13 +10126,13 @@ void DomConnection::clear(bool clear_all)
     }
 
     m_children = 0;
-    m_hints = 0;
+    m_hints = nullptr;
 }
 
 DomConnection::DomConnection()
 {
     m_children = 0;
-    m_hints = 0;
+    m_hints = nullptr;
 }
 
 DomConnection::~DomConnection()
@@ -10281,7 +10281,7 @@ void DomConnection::setElementSlot(const QString& a)
 DomConnectionHints* DomConnection::takeElementHints() 
 {
     DomConnectionHints* a = m_hints;
-    m_hints = 0;
+    m_hints = nullptr;
     m_children ^= Hints;
     return a;
 }
@@ -10316,7 +10316,7 @@ void DomConnection::clearElementSlot()
 void DomConnection::clearElementHints()
 {
     delete m_hints;
-    m_hints = 0;
+    m_hints = nullptr;
     m_children &= ~Hints;
 }
 

@@ -653,7 +653,7 @@ private:
 
         // The order of this array must match the ErrorCode enum.
         static const char* errorMessages[NumberOfErrorCodes] = {
-            0, // NoError
+            nullptr, // NoError
             "regular expression too large",
             "numbers out of order in {} quantifier",
             "nothing to repeat",

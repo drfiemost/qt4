@@ -38,13 +38,13 @@ namespace WTF {
 #endif
     void derefIfNotNull(T* ptr)
     {
-        if (UNLIKELY(ptr != 0))
+        if (UNLIKELY(ptr != nullptr))
             ptr->deref();
     }
 
     template<typename T> class PassRefPtr {
     public:
-        PassRefPtr() : m_ptr(0) {}
+        PassRefPtr() : m_ptr(nullptr) {}
         PassRefPtr(T* ptr) : m_ptr(ptr) { if (ptr) ptr->ref(); }
         // It somewhat breaks the type system to allow transfer of ownership out of
         // a const PassRefPtr. However, it makes it much easier to work with PassRefPtr
@@ -61,7 +61,7 @@ namespace WTF {
         T* get() const { return m_ptr; }
 
         void clear() { if (T* ptr = m_ptr) ptr->deref(); m_ptr = 0; }
-        T* releaseRef() const { T* tmp = m_ptr; m_ptr = 0; return tmp; }
+        T* releaseRef() const { T* tmp = m_ptr; m_ptr = nullptr; return tmp; }
 
         T& operator*() const { return *m_ptr; }
         T* operator->() const { return m_ptr; }
@@ -70,7 +70,7 @@ namespace WTF {
 
         // This conversion operator allows implicit conversion to bool but not to other integer types.
         typedef T* (PassRefPtr::*UnspecifiedBoolType);
-        operator UnspecifiedBoolType() const { return m_ptr ? &PassRefPtr::m_ptr : 0; }
+        operator UnspecifiedBoolType() const { return m_ptr ? &PassRefPtr::m_ptr : nullptr; }
 
         PassRefPtr& operator=(T*);
         PassRefPtr& operator=(const PassRefPtr&);
@@ -131,7 +131,7 @@ namespace WTF {
         T* get() const { return m_ptr; }
 
         void clear() { derefIfNotNull(m_ptr); m_ptr = 0; }
-        T* releaseRef() const { T* tmp = m_ptr; m_ptr = 0; return tmp; }
+        T* releaseRef() const { T* tmp = m_ptr; m_ptr = nullptr; return tmp; }
 
         T& operator*() const { return *m_ptr; }
         T* operator->() const { return m_ptr; }

@@ -93,7 +93,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeFlickable : public QDeclarativeItem
     Q_ENUMS(BoundsBehavior)
 
 public:
-    QDeclarativeFlickable(QDeclarativeItem *parent=0);
+    QDeclarativeFlickable(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeFlickable();
 
     QDeclarativeListProperty<QObject> flickableData();

@@ -230,7 +230,7 @@ bool QDeclarativeXmlQueryThreadObject::event(QEvent *e)
 
 
 QDeclarativeXmlQueryEngine::QDeclarativeXmlQueryEngine(QDeclarativeEngine *eng)
-: QThread(eng), m_threadObject(0), m_queryIds(XMLLISTMODEL_CLEAR_ID + 1), m_engine(eng), m_eventLoopQuitHack(0)
+: QThread(eng), m_threadObject(nullptr), m_queryIds(XMLLISTMODEL_CLEAR_ID + 1), m_engine(eng), m_eventLoopQuitHack(nullptr)
 {
     qRegisterMetaType<QDeclarativeXmlQueryResult>("QDeclarativeXmlQueryResult");
 
@@ -303,7 +303,7 @@ void QDeclarativeXmlQueryEngine::run()
     exec();
 
     delete m_threadObject;
-    m_threadObject = 0;
+    m_threadObject = nullptr;
 }
 
 void QDeclarativeXmlQueryEngine::processJobs()
@@ -524,7 +524,7 @@ class QDeclarativeXmlListModelPrivate : public QObjectPrivate
 public:
     QDeclarativeXmlListModelPrivate()
         : isComponentComplete(true), size(-1), highestRole(Qt::UserRole)
-        , reply(0), status(QDeclarativeXmlListModel::Null), progress(0.0)
+        , reply(nullptr), status(QDeclarativeXmlListModel::Null), progress(0.0)
         , queryId(-1), roleObjects(), redirectCount(0) {}
 
 
@@ -540,9 +540,9 @@ public:
     void deleteReply() {
         Q_Q(QDeclarativeXmlListModel);
         if (reply) {
-            QObject::disconnect(reply, 0, q, 0);
+            QObject::disconnect(reply, nullptr, q, nullptr);
             reply->deleteLater();
-            reply = 0;
+            reply = nullptr;
         }
     }
 

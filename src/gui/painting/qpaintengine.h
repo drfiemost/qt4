@@ -147,7 +147,7 @@ public:
         PolylineMode
     };
 
-    explicit QPaintEngine(PaintEngineFeatures features=0);
+    explicit QPaintEngine(PaintEngineFeatures features=nullptr);
     virtual ~QPaintEngine();
 
     bool isActive() const { return active; }
@@ -233,7 +233,7 @@ public:
     inline bool isExtended() const { return extended; }
 
 protected:
-    QPaintEngine(QPaintEnginePrivate &data, PaintEngineFeatures devcaps=0);
+    QPaintEngine(QPaintEnginePrivate &data, PaintEngineFeatures devcaps=nullptr);
 
     QPaintEngineState *state;
     PaintEngineFeatures gccaps;

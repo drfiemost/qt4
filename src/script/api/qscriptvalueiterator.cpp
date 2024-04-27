@@ -137,7 +137,7 @@ public:
   first property).
 */
 QScriptValueIterator::QScriptValueIterator(const QScriptValue &object)
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
     if (object.isObject()) {
         d_ptr.reset(new QScriptValueIteratorPrivate());
@@ -323,7 +323,7 @@ QScriptValue::PropertyFlags QScriptValueIterator::flags() const
 {
     Q_D(const QScriptValueIterator);
     if (!d || !d->initialized || !d->engine())
-        return 0;
+        return nullptr;
     QScript::APIShim shim(d->engine());
     return d->object()->propertyFlags(*d->current);
 }

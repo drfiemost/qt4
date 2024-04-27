@@ -115,7 +115,7 @@ static QTextLine currentTextLine(const QTextCursor &cursor)
 }
 
 QTextControlPrivate::QTextControlPrivate()
-    : doc(0), cursorOn(false), cursorIsFocusIndicator(false),
+    : doc(nullptr), cursorOn(false), cursorIsFocusIndicator(false),
       interactionFlags(Qt::TextEditorInteraction),
       dragEnabled(true),
 #ifndef QT_NO_DRAGANDDROP
@@ -817,12 +817,12 @@ void QTextControl::setDocument(QTextDocument *document)
 
     d->doc->disconnect(this);
     d->doc->documentLayout()->disconnect(this);
-    d->doc->documentLayout()->setPaintDevice(0);
+    d->doc->documentLayout()->setPaintDevice(nullptr);
 
     if (d->doc->parent() == this)
         delete d->doc;
 
-    d->doc = 0;
+    d->doc = nullptr;
     d->setContent(Qt::RichText, QString(), document);
 }
 
@@ -2114,7 +2114,7 @@ QMenu *QTextControl::createStandardContextMenu(const QPointF &pos, QWidget *pare
         d->linkToCopy = anchorAt(pos);
 
     if (d->linkToCopy.isEmpty() && !showTextSelectionActions)
-        return 0;
+        return nullptr;
 
     QMenu *menu = new QMenu(parent);
     QAction *a;
@@ -2452,7 +2452,7 @@ void QTextControl::print(QPrinter *printer) const
     Q_D(const QTextControl);
     if (!printer || !printer->isValid())
         return;
-    QTextDocument *tempDoc = 0;
+    QTextDocument *tempDoc = nullptr;
     const QTextDocument *doc = d->doc;
     if (printer->printRange() == QPrinter::Selection) {
         if (!d->cursor.hasSelection())

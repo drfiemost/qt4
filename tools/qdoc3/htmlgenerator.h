@@ -122,26 +122,26 @@ class HtmlGenerator : public PageGenerator
     const Node *findNodeForTarget(const QString &target, 
                                   const Node *relative,
                                   CodeMarker *marker, 
-                                  const Atom *atom = 0);
+                                  const Atom *atom = nullptr);
     void generateBreadCrumbs(const QString& title,
                              const Node *node,
                              CodeMarker *marker);
     void generateHeader(const QString& title, 
-                        const Node *node = 0,
-                        CodeMarker *marker = 0);
+                        const Node *node = nullptr,
+                        CodeMarker *marker = nullptr);
     void generateTitle(const QString& title, 
                        const Text &subTitle, 
                        SubTitleSize subTitleSize,
                        const Node *relative, 
                        CodeMarker *marker);
-    void generateFooter(const Node *node = 0);
+    void generateFooter(const Node *node = nullptr);
     void generateBrief(const Node *node, 
                        CodeMarker *marker,
-                       const Node *relative = 0);
+                       const Node *relative = nullptr);
     void generateIncludes(const InnerNode *inner, CodeMarker *marker);
     void generateTableOfContents(const Node *node, 
                                  CodeMarker *marker, 
-                                 QList<Section>* sections = 0);
+                                 QList<Section>* sections = nullptr);
     QString generateListOfAllMemberFile(const InnerNode *inner, 
                                         CodeMarker *marker);
     QString generateAllQmlMembersFile(const QmlClassNode* qml_cn, 
@@ -200,12 +200,12 @@ class HtmlGenerator : public PageGenerator
                             CodeMarker* marker, 
                             const Node* relative,
                             bool alignNames = false,
-                            const Node* self = 0);
+                            const Node* self = nullptr);
 
     void generateFullName(const Node *apparentNode, 
                           const Node *relative, 
                           CodeMarker *marker,
-			  const Node *actualNode = 0);
+			  const Node *actualNode = nullptr);
     void generateDetailedMember(const Node *node, 
                                 const InnerNode *relative, 
                                 CodeMarker *marker);

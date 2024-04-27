@@ -27,7 +27,7 @@ CL_NS_DEF(search)
       count    = 0;
 	  	doc      = 0;
 
-      _next     = NULL;
+      _next     = nullptr;
   }
 	
   PhrasePositions::~PhrasePositions(){
@@ -40,7 +40,7 @@ CL_NS_DEF(search)
     _CLDELETE(_next);
 
     //Check if tp is valid
-    if ( tp != NULL ){
+    if ( tp != nullptr ){
         //Close TermPositions tp
 		tp->close();
         _CLDELETE(tp);

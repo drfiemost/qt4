@@ -49,7 +49,7 @@
 namespace QmlJSDebugger {
 
 QDeclarativeInspectorPlugin::QDeclarativeInspectorPlugin() :
-    m_inspector(0)
+    m_inspector(nullptr)
 {
 }
 

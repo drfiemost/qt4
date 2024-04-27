@@ -186,7 +186,7 @@ void QGridLayoutRowData::distributeMultiCells(const QGridLayoutRowInfo &rowInfo)
             qreal extra = compare(box, totalBox, j);
             if (extra > 0.0) {
                 calculateGeometries(start, end, box.q_sizes(j), dummy.data(), newSizes.data(),
-                                    0, totalBox, rowInfo);
+                                    nullptr, totalBox, rowInfo);
 
                 for (int k = 0; k < span; ++k)
                     extras[k].q_sizes(j) = newSizes[k];
@@ -989,7 +989,7 @@ Qt::Alignment QGridLayoutEngine::alignment(QGraphicsLayoutItem *layoutItem) cons
 {
     if (QGridLayoutItem *item = findLayoutItem(layoutItem))
         return item->alignment();
-    return 0;
+    return nullptr;
 }
 
 Qt::Alignment QGridLayoutEngine::effectiveAlignment(const QGridLayoutItem *layoutItem) const
@@ -1046,7 +1046,7 @@ void QGridLayoutEngine::removeItem(QGridLayoutItem *item)
     for (int i = item->firstRow(); i <= item->lastRow(); ++i) {
         for (int j = item->firstColumn(); j <= item->lastColumn(); ++j) {
             if (itemAt(i, j) == item)
-                setItemAt(i, j, 0);
+                setItemAt(i, j, nullptr);
         }
     }
 
@@ -1060,7 +1060,7 @@ QGridLayoutItem *QGridLayoutEngine::findLayoutItem(QGraphicsLayoutItem *layoutIt
         if (item->layoutItem() == layoutItem)
             return item;
     }
-    return 0;
+    return nullptr;
 }
 
 QGridLayoutItem *QGridLayoutEngine::itemAt(int row, int column, Qt::Orientation orientation) const
@@ -1068,7 +1068,7 @@ QGridLayoutItem *QGridLayoutEngine::itemAt(int row, int column, Qt::Orientation 
     if (orientation == Qt::Horizontal)
         qSwap(row, column);
     if (uint(row) >= uint(rowCount()) || uint(column) >= uint(columnCount()))
-        return 0;
+        return nullptr;
     return q_grid.at((row * internalGridColumnCount()) + column);
 }
 
@@ -1156,7 +1156,7 @@ QSizeF QGridLayoutEngine::sizeHint(const QLayoutStyleInfo &styleInfo, Qt::SizeHi
             //We have items whose height depends on their width
             if (constraint.width() >= 0) {
                 if (q_cachedDataForStyleInfo != styleInfo)
-                    ensureColumnAndRowData(&q_columnData, &sizehint_totalBoxes[Hor], styleInfo, NULL, NULL, Qt::Horizontal);
+                    ensureColumnAndRowData(&q_columnData, &sizehint_totalBoxes[Hor], styleInfo, nullptr, nullptr, Qt::Horizontal);
                 else
                     sizehint_totalBoxes[Hor] = q_totalBoxes[Hor];
                 QVector<qreal> sizehint_xx;
@@ -1168,14 +1168,14 @@ QSizeF QGridLayoutEngine::sizeHint(const QLayoutStyleInfo &styleInfo, Qt::SizeHi
                 //Calculate column widths and positions, and put results in q_xx.data() and q_widths.data() so that we can use this information as
                 //constraints to find the row heights
                 q_columnData.calculateGeometries(0, columnCount(), width, sizehint_xx.data(), sizehint_widths.data(),
-                        0, sizehint_totalBoxes[Hor], q_infos[Hor]);
+                        nullptr, sizehint_totalBoxes[Hor], q_infos[Hor]);
                 ensureColumnAndRowData(&q_rowData, &sizehint_totalBoxes[Ver], styleInfo, sizehint_xx.data(), sizehint_widths.data(), Qt::Vertical);
                 sizeHintCalculated = true;
             }
         } else {
             if (constraint.height() >= 0) {
                 //We have items whose width depends on their height
-                ensureColumnAndRowData(&q_rowData, &sizehint_totalBoxes[Ver], styleInfo, NULL, NULL, Qt::Vertical);
+                ensureColumnAndRowData(&q_rowData, &sizehint_totalBoxes[Ver], styleInfo, nullptr, nullptr, Qt::Vertical);
                 QVector<qreal> sizehint_yy;
                 QVector<qreal> sizehint_heights;
 
@@ -1185,7 +1185,7 @@ QSizeF QGridLayoutEngine::sizeHint(const QLayoutStyleInfo &styleInfo, Qt::SizeHi
                 //Calculate row heights and positions, and put results in q_yy.data() and q_heights.data() so that we can use this information as
                 //constraints to find the column widths
                 q_rowData.calculateGeometries(0, rowCount(), height, sizehint_yy.data(), sizehint_heights.data(),
-                        0, sizehint_totalBoxes[Ver], q_infos[Ver]);
+                        nullptr, sizehint_totalBoxes[Ver], q_infos[Ver]);
                 ensureColumnAndRowData(&q_columnData, &sizehint_totalBoxes[Hor], styleInfo, sizehint_yy.data(), sizehint_heights.data(), Qt::Horizontal);
                 sizeHintCalculated = true;
             }
@@ -1195,8 +1195,8 @@ QSizeF QGridLayoutEngine::sizeHint(const QLayoutStyleInfo &styleInfo, Qt::SizeHi
     if (!sizeHintCalculated) {
         //No items with height for width, so it doesn't matter which order we do these in
         if (q_cachedDataForStyleInfo != styleInfo) {
-            ensureColumnAndRowData(&q_columnData, &sizehint_totalBoxes[Hor], styleInfo, NULL, NULL, Qt::Horizontal);
-            ensureColumnAndRowData(&q_rowData, &sizehint_totalBoxes[Ver], styleInfo, NULL, NULL, Qt::Vertical);
+            ensureColumnAndRowData(&q_columnData, &sizehint_totalBoxes[Hor], styleInfo, nullptr, nullptr, Qt::Horizontal);
+            ensureColumnAndRowData(&q_rowData, &sizehint_totalBoxes[Ver], styleInfo, nullptr, nullptr, Qt::Vertical);
         } else {
             sizehint_totalBoxes[Hor] = q_totalBoxes[Hor];
             sizehint_totalBoxes[Ver] = q_totalBoxes[Ver];
@@ -1223,7 +1223,7 @@ QSizePolicy::ControlTypes QGridLayoutEngine::controlTypes(LayoutSide side) const
     Qt::Orientation orientation = (side == Top || side == Bottom) ? Qt::Vertical : Qt::Horizontal;
     int row = (side == Top || side == Left) ? effectiveFirstRow(orientation)
                                             : effectiveLastRow(orientation);
-    QSizePolicy::ControlTypes result = 0;
+    QSizePolicy::ControlTypes result = nullptr;
 
     for (int column = columnCount(orientation) - 1; column >= 0; --column) {
         if (QGridLayoutItem *item = itemAt(row, column, orientation))
@@ -1725,18 +1725,18 @@ void QGridLayoutEngine::ensureGeometries(const QLayoutStyleInfo &styleInfo,
 
     if (constraintOrientation() != Qt::Horizontal) {
         //We might have items whose width depends on their height
-        ensureColumnAndRowData(&q_columnData, &q_totalBoxes[Hor], styleInfo, NULL, NULL, Qt::Horizontal);
+        ensureColumnAndRowData(&q_columnData, &q_totalBoxes[Hor], styleInfo, nullptr, nullptr, Qt::Horizontal);
         //Calculate column widths and positions, and put results in q_xx.data() and q_widths.data() so that we can use this information as
         //constraints to find the row heights
         q_columnData.calculateGeometries(0, columnCount(), size.width(), q_xx.data(), q_widths.data(),
-                0, q_totalBoxes[Hor], q_infos[Hor] );
+                nullptr, q_totalBoxes[Hor], q_infos[Hor] );
         ensureColumnAndRowData(&q_rowData, &q_totalBoxes[Ver], styleInfo, q_xx.data(), q_widths.data(), Qt::Vertical);
         //Calculate row heights and positions, and put results in q_yy.data() and q_heights.data()
         q_rowData.calculateGeometries(0, rowCount(), size.height(), q_yy.data(), q_heights.data(),
                 q_descents.data(), q_totalBoxes[Ver], q_infos[Ver]);
     } else {
         //We have items whose height depends on their width
-        ensureColumnAndRowData(&q_rowData, &q_totalBoxes[Ver], styleInfo, NULL, NULL, Qt::Vertical);
+        ensureColumnAndRowData(&q_rowData, &q_totalBoxes[Ver], styleInfo, nullptr, nullptr, Qt::Vertical);
         //Calculate row heights and positions, and put results in q_yy.data() and q_heights.data() so that we can use this information as
         //constraints to find the column widths
         q_rowData.calculateGeometries(0, rowCount(), size.height(), q_yy.data(), q_heights.data(),
@@ -1744,7 +1744,7 @@ void QGridLayoutEngine::ensureGeometries(const QLayoutStyleInfo &styleInfo,
         ensureColumnAndRowData(&q_columnData, &q_totalBoxes[Hor], styleInfo, q_yy.data(), q_heights.data(), Qt::Horizontal);
         //Calculate row heights and positions, and put results in q_yy.data() and q_heights.data()
         q_columnData.calculateGeometries(0, columnCount(), size.width(), q_xx.data(), q_widths.data(),
-                0, q_totalBoxes[Hor], q_infos[Hor]);
+                nullptr, q_totalBoxes[Hor], q_infos[Hor]);
     }
 }
 

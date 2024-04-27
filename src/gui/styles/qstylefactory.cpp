@@ -117,7 +117,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader,
 */
 QStyle *QStyleFactory::create(const QString& key)
 {
-    QStyle *ret = 0;
+    QStyle *ret = nullptr;
     QString style = key.toLower();
 #ifndef QT_NO_STYLE_WINDOWS
     if (style == QLatin1String("windows"))

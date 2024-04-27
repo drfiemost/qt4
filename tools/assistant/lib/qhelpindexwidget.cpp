@@ -174,7 +174,7 @@ void QHelpIndexProvider::run()
         QHelpDBReader reader(dbFileName,
             QHelpGlobal::uniquifyConnectionName(dbFileName +
             QLatin1String("FromIndexProvider"),
-            QThread::currentThread()), 0);
+            QThread::currentThread()), nullptr);
         if (!reader.init())
             continue;
         QStringList lst = reader.indicesForFilter(atts);
@@ -388,7 +388,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 */
 
 QHelpIndexWidget::QHelpIndexWidget()
-    : QListView(0)
+    : QListView(nullptr)
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setUniformItemSizes(true);

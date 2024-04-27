@@ -90,7 +90,7 @@ class QDeclarativeParticle
 public:
     QDeclarativeParticle(int time) : lifeSpan(1000), fadeOutAge(800)
         , opacity(0), birthTime(time), x_velocity(0), y_velocity(0)
-        , state(FadeIn), data(0)
+        , state(FadeIn), data(nullptr)
     {
     }
 
@@ -410,7 +410,7 @@ template<class T, void (T::*method)(int)>
 class TickAnimationProxy : public QAbstractAnimation
 {
 public:
-    TickAnimationProxy(T *p, QObject *parent = 0) : QAbstractAnimation(parent), m_p(p) {}
+    TickAnimationProxy(T *p, QObject *parent = nullptr) : QAbstractAnimation(parent), m_p(p) {}
     virtual int duration() const { return -1; }
 protected:
     virtual void updateCurrentTime(int msec) { (m_p->*method)(msec); }
@@ -429,7 +429,7 @@ public:
         , lifeSpanDev(1000), fadeInDur(200), fadeOutDur(300)
         , angle(0), angleDev(0), velocity(0), velocityDev(0), emissionCarry(0.)
         , addParticleTime(0), addParticleCount(0), lastAdvTime(0)
-        , motion(0), clock(this)
+        , motion(nullptr), clock(this)
     {
     }
 

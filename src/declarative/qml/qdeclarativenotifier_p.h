@@ -125,7 +125,7 @@ private:
 };
 
 QDeclarativeNotifier::QDeclarativeNotifier()
-: endpoints(0)
+: endpoints(nullptr)
 {
 }
 
@@ -136,13 +136,13 @@ QDeclarativeNotifier::~QDeclarativeNotifier()
         QDeclarativeNotifierEndpoint::Notifier *n = endpoint->asNotifier();
         endpoint = n->next;
 
-        n->next = 0;
-        n->prev = 0;
-        n->notifier = 0;
-        if (n->disconnected) *n->disconnected = 0;
-        n->disconnected = 0;
+        n->next = nullptr;
+        n->prev = nullptr;
+        n->notifier = nullptr;
+        if (n->disconnected) *n->disconnected = nullptr;
+        n->disconnected = nullptr;
     }
-    endpoints = 0;
+    endpoints = nullptr;
 }
 
 void QDeclarativeNotifier::notify()
@@ -151,7 +151,7 @@ void QDeclarativeNotifier::notify()
 }
 
 QDeclarativeNotifierEndpoint::QDeclarativeNotifierEndpoint()
-    : target(0), targetMethod(0), type(InvalidType), refCount(0)
+    : target(nullptr), targetMethod(0), type(InvalidType), refCount(0)
 {
 }
 
@@ -220,18 +220,18 @@ void QDeclarativeNotifierEndpoint::disconnect()
             QVarLengthArray<char> signalSignature;
             QObjectPrivate::signalSignature(signal, &signalSignature);
             priv->disconnectNotify(signalSignature.constData());
-            s->source = 0;
+            s->source = nullptr;
         }
     } else if (type == NotifierType) {
         Notifier *n = asNotifier();
 
         if (n->next) n->next->asNotifier()->prev = n->prev;
         if (n->prev) *n->prev = n->next;
-        if (n->disconnected) *n->disconnected = 0;
-        n->next = 0;
-        n->prev = 0;
-        n->disconnected = 0;
-        n->notifier = 0;
+        if (n->disconnected) *n->disconnected = nullptr;
+        n->next = nullptr;
+        n->prev = nullptr;
+        n->disconnected = nullptr;
+        n->notifier = nullptr;
     }
     refCount = 0;
 }
@@ -256,10 +256,10 @@ QDeclarativeNotifierEndpoint::Notifier *QDeclarativeNotifierEndpoint::toNotifier
 
     type = NotifierType;
     Notifier *n = asNotifier();
-    n->next = 0;
-    n->prev = 0;
-    n->disconnected = 0;
-    n->notifier = 0;
+    n->next = nullptr;
+    n->prev = nullptr;
+    n->disconnected = nullptr;
+    n->notifier = nullptr;
     return n;
 }
 

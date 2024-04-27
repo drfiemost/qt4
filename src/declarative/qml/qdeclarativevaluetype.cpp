@@ -59,19 +59,19 @@ int qmlRegisterValueTypeEnums(const char *uri, int versionMajor, int versionMino
     QDeclarativePrivate::RegisterType type = {
         0,
 
-        qRegisterMetaType<T *>(pointerName.constData()), 0, 0, 0,
+        qRegisterMetaType<T *>(pointerName.constData()), 0, 0, nullptr,
 
         QString(),
 
         uri, versionMajor, versionMinor, qmlName, &T::staticMetaObject,
 
-        0, 0,
+        nullptr, nullptr,
 
         0, 0, 0,
 
-        0, 0,
+        nullptr, nullptr,
 
-        0,
+        nullptr,
         0
     };
 
@@ -115,7 +115,7 @@ void QDeclarativeValueTypeFactory::registerValueTypesCompat()
 
 QDeclarativeValueType *QDeclarativeValueTypeFactory::valueType(int t)
 {
-    QDeclarativeValueType *rv = 0;
+    QDeclarativeValueType *rv = nullptr;
 
     switch (t) {
     case QVariant::Point:
@@ -177,14 +177,14 @@ QDeclarativePointFValueType::QDeclarativePointFValueType(QObject *parent)
 
 void QDeclarativePointFValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &point, 0 };
+    void *a[] = { &point, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativePointFValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &point, 0, &status, &flags };
+    void *a[] = { &point, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -225,14 +225,14 @@ QDeclarativePointValueType::QDeclarativePointValueType(QObject *parent)
 
 void QDeclarativePointValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &point, 0 };
+    void *a[] = { &point, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativePointValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &point, 0, &status, &flags };
+    void *a[] = { &point, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -273,14 +273,14 @@ QDeclarativeSizeFValueType::QDeclarativeSizeFValueType(QObject *parent)
 
 void QDeclarativeSizeFValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &size, 0 };
+    void *a[] = { &size, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeSizeFValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &size, 0, &status, &flags };
+    void *a[] = { &size, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -321,14 +321,14 @@ QDeclarativeSizeValueType::QDeclarativeSizeValueType(QObject *parent)
 
 void QDeclarativeSizeValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &size, 0 };
+    void *a[] = { &size, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeSizeValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &size, 0, &status, &flags };
+    void *a[] = { &size, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -369,14 +369,14 @@ QDeclarativeRectFValueType::QDeclarativeRectFValueType(QObject *parent)
 
 void QDeclarativeRectFValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &rect, 0 };
+    void *a[] = { &rect, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeRectFValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &rect, 0, &status, &flags };
+    void *a[] = { &rect, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -437,14 +437,14 @@ QDeclarativeRectValueType::QDeclarativeRectValueType(QObject *parent)
 
 void QDeclarativeRectValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &rect, 0 };
+    void *a[] = { &rect, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeRectValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &rect, 0, &status, &flags };
+    void *a[] = { &rect, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -505,14 +505,14 @@ QDeclarativeVector2DValueType::QDeclarativeVector2DValueType(QObject *parent)
 
 void QDeclarativeVector2DValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &vector, 0 };
+    void *a[] = { &vector, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeVector2DValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &vector, 0, &status, &flags };
+    void *a[] = { &vector, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -553,14 +553,14 @@ QDeclarativeVector3DValueType::QDeclarativeVector3DValueType(QObject *parent)
 
 void QDeclarativeVector3DValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &vector, 0 };
+    void *a[] = { &vector, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeVector3DValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &vector, 0, &status, &flags };
+    void *a[] = { &vector, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -611,14 +611,14 @@ QDeclarativeVector4DValueType::QDeclarativeVector4DValueType(QObject *parent)
 
 void QDeclarativeVector4DValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &vector, 0 };
+    void *a[] = { &vector, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeVector4DValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &vector, 0, &status, &flags };
+    void *a[] = { &vector, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -679,14 +679,14 @@ QDeclarativeQuaternionValueType::QDeclarativeQuaternionValueType(QObject *parent
 
 void QDeclarativeQuaternionValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &quaternion, 0 };
+    void *a[] = { &quaternion, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeQuaternionValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &quaternion, 0, &status, &flags };
+    void *a[] = { &quaternion, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -747,14 +747,14 @@ QDeclarativeMatrix4x4ValueType::QDeclarativeMatrix4x4ValueType(QObject *parent)
 
 void QDeclarativeMatrix4x4ValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &matrix, 0 };
+    void *a[] = { &matrix, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeMatrix4x4ValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &matrix, 0, &status, &flags };
+    void *a[] = { &matrix, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -775,14 +775,14 @@ QDeclarativeEasingValueType::QDeclarativeEasingValueType(QObject *parent)
 
 void QDeclarativeEasingValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &easing, 0 };
+    void *a[] = { &easing, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
 }
 
 void QDeclarativeEasingValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &easing, 0, &status, &flags };
+    void *a[] = { &easing, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 
@@ -843,7 +843,7 @@ QDeclarativeFontValueType::QDeclarativeFontValueType(QObject *parent)
 
 void QDeclarativeFontValueType::read(QObject *obj, int idx)
 {
-    void *a[] = { &font, 0 };
+    void *a[] = { &font, nullptr };
     QMetaObject::metacall(obj, QMetaObject::ReadProperty, idx, a);
     pixelSizeSet = false;
     pointSizeSet = false;
@@ -852,7 +852,7 @@ void QDeclarativeFontValueType::read(QObject *obj, int idx)
 void QDeclarativeFontValueType::write(QObject *obj, int idx, QDeclarativePropertyPrivate::WriteFlags flags)
 {
     int status = -1;
-    void *a[] = { &font, 0, &status, &flags };
+    void *a[] = { &font, nullptr, &status, &flags };
     QMetaObject::metacall(obj, QMetaObject::WriteProperty, idx, a);
 }
 

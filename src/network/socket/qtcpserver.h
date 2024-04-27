@@ -61,7 +61,7 @@ class Q_NETWORK_EXPORT QTcpServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit QTcpServer(QObject *parent = 0);
+    explicit QTcpServer(QObject *parent = nullptr);
     virtual ~QTcpServer();
 
     bool listen(const QHostAddress &address = QHostAddress::Any, quint16 port = 0);
@@ -78,7 +78,7 @@ public:
     qintptr socketDescriptor() const;
     bool setSocketDescriptor(qintptr socketDescriptor);
 
-    bool waitForNewConnection(int msec = 0, bool *timedOut = 0);
+    bool waitForNewConnection(int msec = 0, bool *timedOut = nullptr);
     virtual bool hasPendingConnections() const;
     virtual QTcpSocket *nextPendingConnection();
 

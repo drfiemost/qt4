@@ -339,7 +339,7 @@ static bool fillStructuresUsingDateArgs(ExecState *exec, const ArgList& args, in
     return ok;
 }
 
-const ClassInfo DatePrototype::info = {"Date", &DateInstance::info, 0, ExecState::dateTable};
+const ClassInfo DatePrototype::info = {"Date", &DateInstance::info, nullptr, ExecState::dateTable};
 
 /* Source for DatePrototype.lut.h
 @begin dateTable

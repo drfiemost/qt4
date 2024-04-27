@@ -391,7 +391,7 @@ void QSystemTrayIcon::showMessage(const QString& title, const QString& msg,
 }
 
 //////////////////////////////////////////////////////////////////////
-static QBalloonTip *theSolitaryBalloonTip = 0;
+static QBalloonTip *theSolitaryBalloonTip = nullptr;
 
 void QBalloonTip::showBalloon(QSystemTrayIcon::MessageIcon icon, const QString& title,
                               const QString& message, QSystemTrayIcon *trayIcon,
@@ -413,7 +413,7 @@ void QBalloonTip::hideBalloon()
         return;
     theSolitaryBalloonTip->hide();
     delete theSolitaryBalloonTip;
-    theSolitaryBalloonTip = 0;
+    theSolitaryBalloonTip = nullptr;
 }
 
 bool QBalloonTip::isBalloonVisible()
@@ -423,7 +423,7 @@ bool QBalloonTip::isBalloonVisible()
 
 QBalloonTip::QBalloonTip(QSystemTrayIcon::MessageIcon icon, const QString& title,
                          const QString& message, QSystemTrayIcon *ti)
-    : QWidget(0, Qt::ToolTip), trayIcon(ti), timerId(-1)
+    : QWidget(nullptr, Qt::ToolTip), trayIcon(ti), timerId(-1)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     QObject::connect(ti, SIGNAL(destroyed()), this, SLOT(close()));
@@ -512,7 +512,7 @@ QBalloonTip::QBalloonTip(QSystemTrayIcon::MessageIcon icon, const QString& title
 
 QBalloonTip::~QBalloonTip()
 {
-    theSolitaryBalloonTip = 0;
+    theSolitaryBalloonTip = nullptr;
 }
 
 void QBalloonTip::paintEvent(QPaintEvent *)

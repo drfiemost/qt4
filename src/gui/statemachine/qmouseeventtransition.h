@@ -59,9 +59,9 @@ class Q_GUI_EXPORT QMouseEventTransition : public QEventTransition
     Q_PROPERTY(Qt::MouseButton button READ button WRITE setButton)
     Q_PROPERTY(Qt::KeyboardModifiers modifierMask READ modifierMask WRITE setModifierMask)
 public:
-    QMouseEventTransition(QState *sourceState = 0);
+    QMouseEventTransition(QState *sourceState = nullptr);
     QMouseEventTransition(QObject *object, QEvent::Type type,
-                          Qt::MouseButton button, QState *sourceState = 0);
+                          Qt::MouseButton button, QState *sourceState = nullptr);
     ~QMouseEventTransition();
 
     Qt::MouseButton button() const;

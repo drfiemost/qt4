@@ -40,7 +40,7 @@ namespace JSC {
 
 ASSERT_CLASS_FITS_IN_CELL(JSCallbackFunction);
 
-const ClassInfo JSCallbackFunction::info = { "CallbackFunction", &InternalFunction::info, 0, 0 };
+const ClassInfo JSCallbackFunction::info = { "CallbackFunction", &InternalFunction::info, nullptr, nullptr };
 
 JSCallbackFunction::JSCallbackFunction(ExecState* exec, JSObjectCallAsFunctionCallback callback, const Identifier& name)
     : InternalFunction(&exec->globalData(), exec->lexicalGlobalObject()->callbackFunctionStructure(), name)
@@ -59,7 +59,7 @@ JSValue JSCallbackFunction::call(ExecState* exec, JSObject* functionObject, JSVa
     for (int i = 0; i < argumentCount; i++)
         arguments[i] = toRef(exec, args.at(i));
 
-    JSValueRef exception = 0;
+    JSValueRef exception = nullptr;
     JSValueRef result;
     {
         APICallbackShim callbackShim(exec);

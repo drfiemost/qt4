@@ -116,9 +116,9 @@ QPaintBufferSignalProxy *QPaintBufferSignalProxy::instance()
  ************************************************************************/
 
 QPaintBufferPrivate::QPaintBufferPrivate()
-    : ref(1), engine(0), penWidthAdjustment(0)
+    : ref(1), engine(nullptr), penWidthAdjustment(0)
     , calculateBoundingRect(true)
-    , cache(0)
+    , cache(nullptr)
 {
 }
 
@@ -291,7 +291,7 @@ int QPaintBuffer::processCommands(QPainter *painter, int begin, int end) const
         return 0;
 
     QPaintEngineEx *xengine = painter->paintEngine()->isExtended()
-                              ? (QPaintEngineEx *) painter->paintEngine() : 0;
+                              ? (QPaintEngineEx *) painter->paintEngine() : nullptr;
     if (xengine) {
         QPaintEngineExReplayer player;
         player.processCommands(*this, painter, begin, end);
@@ -606,7 +606,7 @@ bool QPaintBufferEngine::begin(QPaintDevice *)
 bool QPaintBufferEngine::end()
 {
     painter()->restore();
-    m_created_state = 0;
+    m_created_state = nullptr;
     return true;
 }
 
@@ -619,7 +619,7 @@ QPainterState *QPaintBufferEngine::createState(QPainterState *orig) const
     Q_ASSERT(!m_begin_detected);
     Q_ASSERT(!m_save_detected);
 
-    if (orig == 0) {
+    if (orig == nullptr) {
         m_begin_detected = true;
         return new QPainterState();
     } else {
@@ -1348,7 +1348,7 @@ public:
     QFakeDevice() { dpi_x = qt_defaultDpiX(); dpi_y = qt_defaultDpiY(); }
     void setDpiX(int dpi) { dpi_x = dpi; }
     void setDpiY(int dpi) { dpi_y = dpi; }
-    QPaintEngine *paintEngine() const { return 0; }
+    QPaintEngine *paintEngine() const { return nullptr; }
     int metric(PaintDeviceMetric m) const
     {
         switch(m) {
@@ -1828,8 +1828,8 @@ void QPainterReplayer::process(const QPaintBufferCommand &cmd)
 
         QFontMetrics fm(font);
         QPointF pt(pos.x(), pos.y() - fm.ascent());
-        qt_format_text(font, QRectF(pt, size), flags, /*opt*/0,
-                       text, /*brect=*/0, /*tabstops=*/0, /*...*/0, /*tabarraylen=*/0, painter);
+        qt_format_text(font, QRectF(pt, size), flags, /*opt*/nullptr,
+                       text, /*brect=*/nullptr, /*tabstops=*/0, /*...*/nullptr, /*tabarraylen=*/0, painter);
         break; }
     case QPaintBufferPrivate::Cmd_SystemStateChanged: {
         QRegion systemClip(d->variants.at(cmd.offset).value<QRegion>());
@@ -2085,7 +2085,7 @@ void *QPaintBufferResource::value(const QPaintBufferPrivate *key)
     Cache::iterator it = m_cache.find(key);
     if (it != m_cache.end())
         return it.value();
-    return 0;
+    return nullptr;
 }
 
 void QPaintBufferResource::remove(const QPaintBufferPrivate *key)

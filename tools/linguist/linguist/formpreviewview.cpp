@@ -456,7 +456,7 @@ static void highlightTargets(const QList<TranslatableEntry> &targets, bool on)
 }
 
 FormPreviewView::FormPreviewView(QWidget *parent, MultiDataModel *dataModel)
-  : QMainWindow(parent), m_form(0), m_dataModel(dataModel)
+  : QMainWindow(parent), m_form(nullptr), m_dataModel(dataModel)
 {
     m_mdiSubWindow = new QMdiSubWindow;
     m_mdiSubWindow->setWindowFlags(m_mdiSubWindow->windowFlags() & ~Qt::WindowSystemMenuHint);
@@ -478,7 +478,7 @@ void FormPreviewView::setSourceContext(int model, MessageItem *messageItem)
     QString fileName = QDir::cleanPath(dir.absoluteFilePath(messageItem->fileName()));
     if (m_lastFormName != fileName) {
         delete m_form;
-        m_form = 0;
+        m_form = nullptr;
         m_lastFormName.clear();
         m_highlights.clear();
         destroyTargets(&m_targets);

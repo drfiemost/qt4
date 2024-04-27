@@ -39,7 +39,7 @@ RAMDirectory::RAMLock::RAMLock(const QString& name, RAMDirectory* dir)
 
 RAMDirectory::RAMLock::~RAMLock()
 {
-    directory = NULL;
+    directory = nullptr;
 }
 
 QString RAMDirectory::RAMLock::toString() const
@@ -74,7 +74,7 @@ RAMIndexOutput::~RAMIndexOutput()
 {
     if (deleteFile)
         _CLDELETE(file);
-    file = NULL;
+    file = nullptr;
 }
 
 RAMIndexOutput::RAMIndexOutput(RAMFile* f)
@@ -116,7 +116,7 @@ void RAMIndexOutput::reset()
 
 void RAMIndexOutput::flushBuffer(const uint8_t* src, const int32_t len)
 {
-    uint8_t* b = NULL;
+    uint8_t* b = nullptr;
     int32_t bufferPos = 0;
     while (bufferPos != len) {
         uint32_t bufferNumber = pointer/CL_NS(store)::BufferedIndexOutput::BUFFER_SIZE;
@@ -339,7 +339,7 @@ IndexInput* RAMDirectory::openInput(const QString& name)
 {
     SCOPED_LOCK_MUTEX(files_mutex);
     RAMFile* file = files.get(name);
-    if (file == NULL) {
+    if (file == nullptr) {
         _CLTHROWA(CL_ERR_IO, // DSR:PROPOSED: Better error checking.
             "[RAMDirectory::open] The requested file does not exist.");
     }
@@ -389,7 +389,7 @@ void RAMDirectory::renameFile(const QString& from, const QString& to)
 
 void RAMDirectory::touchFile(const QString& name)
 {
-    RAMFile* file = NULL;
+    RAMFile* file = nullptr;
     {
         SCOPED_LOCK_MUTEX(files_mutex);
         file = files.get(name);

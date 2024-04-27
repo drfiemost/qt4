@@ -57,7 +57,7 @@ QDeclarativeListReference QDeclarativeListReferencePrivate::init(const QDeclarat
 
     if (!prop.object) return rv;
 
-    QDeclarativeEnginePrivate *p = engine?QDeclarativeEnginePrivate::get(engine):0;
+    QDeclarativeEnginePrivate *p = engine?QDeclarativeEnginePrivate::get(engine):nullptr;
 
     int listType = p?p->listType(propType):QDeclarativeMetaType::listType(propType);
     if (listType == -1) return rv;
@@ -117,7 +117,7 @@ that it does not request an out of range element using the count() method before
 Constructs an invalid instance.
 */
 QDeclarativeListReference::QDeclarativeListReference()
-: d(0)
+: d(nullptr)
 {
 }
 
@@ -131,7 +131,7 @@ Passing \a engine is required to access some QML created list properties.  If in
 is available, pass it.
 */
 QDeclarativeListReference::QDeclarativeListReference(QObject *object, const char *property, QDeclarativeEngine *engine)
-: d(0)
+: d(nullptr)
 {
     if (!object || !property) return;
 
@@ -141,7 +141,7 @@ QDeclarativeListReference::QDeclarativeListReference(QObject *object, const char
 
     if (!data || !(data->flags & QDeclarativePropertyCache::Data::IsQList)) return;
 
-    QDeclarativeEnginePrivate *p = engine?QDeclarativeEnginePrivate::get(engine):0;
+    QDeclarativeEnginePrivate *p = engine?QDeclarativeEnginePrivate::get(engine):nullptr;
 
     int listType = p?p->listType(data->propType):QDeclarativeMetaType::listType(data->propType);
     if (listType == -1) return;
@@ -151,7 +151,7 @@ QDeclarativeListReference::QDeclarativeListReference(QObject *object, const char
     d->elementType = p?p->rawMetaObjectForType(listType):QDeclarativeMetaType::qmlType(listType)->baseMetaObject();
     d->propertyType = data->propType;
 
-    void *args[] = { &d->property, 0 };
+    void *args[] = { &d->property, nullptr };
     QMetaObject::metacall(object, QMetaObject::ReadProperty, data->coreIndex, args);
 }
 
@@ -191,7 +191,7 @@ Returns the list property's object.  Returns 0 if the reference is invalid.
 QObject *QDeclarativeListReference::object() const
 {
     if (isValid()) return d->object;
-    else return 0;
+    else return nullptr;
 }
 
 /*!
@@ -204,7 +204,7 @@ to a list.
 const QMetaObject *QDeclarativeListReference::listElementType() const
 {
     if (isValid()) return d->elementType;
-    else return 0;
+    else return nullptr;
 }
 
 /*!
@@ -275,7 +275,7 @@ Returns the list element at \a index, or 0 if the operation failed.
 */
 QObject *QDeclarativeListReference::at(int index) const
 {
-    if (!canAt()) return 0;
+    if (!canAt()) return nullptr;
 
     return d->property.at(&d->property, index);
 }

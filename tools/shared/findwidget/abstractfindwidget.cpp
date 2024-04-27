@@ -160,7 +160,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
         layOut->addWidget(m_checkCase);
         connect(m_checkCase, SIGNAL(toggled(bool)), SLOT(findCurrentText()));
     } else {
-        m_checkCase = 0;
+        m_checkCase = nullptr;
     }
 
     if (!(flags & NoWholeWords)) {
@@ -168,7 +168,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
         layOut->addWidget(m_checkWholeWords);
         connect(m_checkWholeWords, SIGNAL(toggled(bool)), SLOT(findCurrentText()));
     } else {
-        m_checkWholeWords = 0;
+        m_checkWholeWords = nullptr;
     }
 
     m_labelWrapped = new QLabel(this);

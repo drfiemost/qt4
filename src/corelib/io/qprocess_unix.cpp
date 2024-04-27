@@ -205,7 +205,7 @@ QProcessManager::QProcessManager()
     // use the old handler as template, i.e., preserve the signal mask
     // otherwise the original signal handler might be interrupted although it
     // was marked to never be interrupted
-    ::sigaction(SIGCHLD, NULL, &action);
+    ::sigaction(SIGCHLD, nullptr, &action);
     action.sa_sigaction = qt_sa_sigchld_sigaction;
     // set the SA_SIGINFO flag such that we can use the three argument handler
     // function
@@ -231,9 +231,9 @@ QProcessManager::~QProcessManager()
     children.clear();
 
     struct sigaction currentAction;
-    ::sigaction(SIGCHLD, 0, &currentAction);
+    ::sigaction(SIGCHLD, nullptr, &currentAction);
     if (currentAction.sa_sigaction == qt_sa_sigchld_sigaction) {
-        ::sigaction(SIGCHLD, &qt_sa_old_sigchld_handler, 0);
+        ::sigaction(SIGCHLD, &qt_sa_old_sigchld_handler, nullptr);
     }
 }
 
@@ -251,7 +251,7 @@ void QProcessManager::run()
         // block forever, or until activity is detected on the dead child
         // pipe. the only other peers are the SIGCHLD signal handler, and the
         // QProcessManager destructor.
-        int nselect = select(qt_qprocess_deadChild_pipe[0] + 1, &readset, 0, 0, 0);
+        int nselect = select(qt_qprocess_deadChild_pipe[0] + 1, &readset, nullptr, nullptr, nullptr);
         if (nselect < 0) {
             if (errno == EINTR)
                 continue;
@@ -503,7 +503,7 @@ static char **_q_dupEnvironment(const QProcessEnvironmentPrivate::Hash &environm
 {
     *envc = 0;
     if (environment.isEmpty())
-        return 0;
+        return nullptr;
 
     // if LD_LIBRARY_PATH exists in the current environment, but
     // not in the environment list passed by the programmer, then
@@ -518,8 +518,8 @@ static char **_q_dupEnvironment(const QProcessEnvironmentPrivate::Hash &environm
                                 !environment.contains(QProcessEnvironmentPrivate::Key(QByteArray(libraryPath)));
 
     char **envp = new char *[environment.count() + 2];
-    envp[environment.count()] = 0;
-    envp[environment.count() + 1] = 0;
+    envp[environment.count()] = nullptr;
+    envp[environment.count() + 1] = nullptr;
 
     QProcessEnvironmentPrivate::Hash::ConstIterator it = environment.constBegin();
     const QProcessEnvironmentPrivate::Hash::ConstIterator end = environment.constEnd();
@@ -579,7 +579,7 @@ void QProcessPrivate::startProcess()
     // Create argument list with right number of elements, and set the final
     // one to 0.
     char **argv = new char *[arguments.count() + 2];
-    argv[arguments.count() + 1] = 0;
+    argv[arguments.count() + 1] = nullptr;
 
     // Encode the program name.
     QByteArray encodedProgramName = QFile::encodeName(program);
@@ -622,14 +622,14 @@ void QProcessPrivate::startProcess()
 
     // Duplicate the environment.
     int envc = 0;
-    char **envp = 0;
+    char **envp = nullptr;
     if (environment.d.constData()) {
         QProcessEnvironmentPrivate::MutexLocker locker(environment.d);
         envp = _q_dupEnvironment(environment.d.constData()->hash, &envc);
     }
 
     // Encode the working directory if it's non-empty, otherwise just pass 0.
-    const char *workingDirPtr = 0;
+    const char *workingDirPtr = nullptr;
     QByteArray encodedWorkingDirectory;
     if (!workingDirectory.isEmpty()) {
         encodedWorkingDirectory = QFile::encodeName(workingDirectory);
@@ -638,7 +638,7 @@ void QProcessPrivate::startProcess()
 
     // If the program does not specify a path, generate a list of possible
     // locations for the binary using the PATH environment variable.
-    char **path = 0;
+    char **path = nullptr;
     int pathc = 0;
     if (!program.contains(QLatin1Char('/'))) {
         const QString pathEnv = QString::fromLocal8Bit(::getenv("PATH"));
@@ -647,7 +647,7 @@ void QProcessPrivate::startProcess()
             if (!pathEntries.isEmpty()) {
                 pathc = pathEntries.size();
                 path = new char *[pathc + 1];
-                path[pathc] = 0;
+                path[pathc] = nullptr;
 
                 for (int k = 0; k < pathEntries.size(); ++k) {
                     QByteArray tmp = QFile::encodeName(pathEntries.at(k));
@@ -813,7 +813,7 @@ bool QProcessPrivate::processStarted()
     if (startupSocketNotifier) {
         startupSocketNotifier->setEnabled(false);
         startupSocketNotifier->deleteLater();
-        startupSocketNotifier = 0;
+        startupSocketNotifier = nullptr;
     }
     qt_safe_close(childStartedPipe[0]);
     childStartedPipe[0] = -1;
@@ -911,12 +911,12 @@ void QProcessPrivate::killProcess()
 static int select_msecs(int nfds, fd_set *fdread, fd_set *fdwrite, int timeout)
 {
     if (timeout < 0)
-        return qt_safe_select(nfds, fdread, fdwrite, 0, 0);
+        return qt_safe_select(nfds, fdread, fdwrite, nullptr, nullptr);
 
     struct timespec tv;
     tv.tv_sec = timeout / 1000;
     tv.tv_nsec = (timeout % 1000) * 1000 * 1000;
-    return qt_safe_select(nfds, fdread, fdwrite, 0, &tv);
+    return qt_safe_select(nfds, fdread, fdwrite, nullptr, &tv);
 }
 
 /*
@@ -944,7 +944,7 @@ bool QProcessPrivate::waitForStarted(int msecs)
     fd_set fds;
     FD_ZERO(&fds);
     FD_SET(childStartedPipe[0], &fds);
-    if (select_msecs(childStartedPipe[0] + 1, &fds, 0, msecs) == 0) {
+    if (select_msecs(childStartedPipe[0] + 1, &fds, nullptr, msecs) == 0) {
         processError = QProcess::Timedout;
         q->setErrorString(QProcess::tr("Process operation timed out"));
 #if defined (QPROCESS_DEBUG)
@@ -1168,7 +1168,7 @@ bool QProcessPrivate::waitForWrite(int msecs)
     fd_set fdwrite;
     FD_ZERO(&fdwrite);
     FD_SET(stdinChannel.pipe[1], &fdwrite);
-    return select_msecs(stdinChannel.pipe[1] + 1, 0, &fdwrite, msecs < 0 ? 0 : msecs) == 1;
+    return select_msecs(stdinChannel.pipe[1] + 1, nullptr, &fdwrite, msecs < 0 ? 0 : msecs) == 1;
 }
 
 void QProcessPrivate::findExitCode()
@@ -1230,7 +1230,7 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
         struct sigaction noaction;
         memset(&noaction, 0, sizeof(noaction));
         noaction.sa_handler = SIG_IGN;
-        ::sigaction(SIGPIPE, &noaction, 0);
+        ::sigaction(SIGPIPE, &noaction, nullptr);
 
         ::setsid();
 
@@ -1252,7 +1252,7 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
                 argv[i + 1] = ::strdup(arguments.at(i).toLocal8Bit().constData());
 #endif
             }
-            argv[arguments.size() + 1] = 0;
+            argv[arguments.size() + 1] = nullptr;
 
             if (!program.contains(QLatin1Char('/'))) {
                 const QString path = QString::fromLocal8Bit(::getenv("PATH"));
@@ -1275,7 +1275,7 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
             struct sigaction noaction;
             memset(&noaction, 0, sizeof(noaction));
             noaction.sa_handler = SIG_IGN;
-            ::sigaction(SIGPIPE, &noaction, 0);
+            ::sigaction(SIGPIPE, &noaction, nullptr);
 
             // '\1' means execv failed
             char c = '\1';
@@ -1286,7 +1286,7 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
             struct sigaction noaction;
             memset(&noaction, 0, sizeof(noaction));
             noaction.sa_handler = SIG_IGN;
-            ::sigaction(SIGPIPE, &noaction, 0);
+            ::sigaction(SIGPIPE, &noaction, nullptr);
 
             // '\2' means internal error
             char c = '\2';

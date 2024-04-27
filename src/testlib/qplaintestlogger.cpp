@@ -118,7 +118,7 @@ namespace QTest {
         QAbstractTestLogger::outputString(str);
     }
 
-    static void printMessage(const char *type, const char *msg, const char *file = 0, int line = 0)
+    static void printMessage(const char *type, const char *msg, const char *file = nullptr, int line = 0)
     {
         QTEST_ASSERT(type);
         QTEST_ASSERT(msg);

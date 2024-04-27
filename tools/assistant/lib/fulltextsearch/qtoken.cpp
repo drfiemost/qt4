@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneTokenPrivate::QCLuceneTokenPrivate()
     : QSharedData()
 {
-    token = 0;
+    token = nullptr;
     deleteCLuceneToken = true;
 }
 
@@ -46,8 +46,8 @@ QCLuceneTokenPrivate::~QCLuceneTokenPrivate()
 
 QCLuceneToken::QCLuceneToken()
     : d(new QCLuceneTokenPrivate())
-    , tokenText(0)
-    , tokenType(0)
+    , tokenText(nullptr)
+    , tokenType(nullptr)
 {
     d->token = new lucene::analysis::Token();
 }

@@ -12,7 +12,7 @@ CL_NS_DEF(util)
 
 mutexGuard::mutexGuard(const mutexGuard& clone){
 	//no autoclone
-	mrMutex = NULL;
+	mrMutex = nullptr;
 }
 mutexGuard::mutexGuard( _LUCENE_THREADMUTEX& rMutex ) :
 	mrMutex(&rMutex)
@@ -94,7 +94,7 @@ mutexGuard::~mutexGuard()
 	  	#if defined(__hpux) && defined(_DECTHREADS_)
 			_CLPTHREAD_CHECK(pthread_mutex_init(&mtx, pthread_mutexattr_default), "mutex_pthread(clone) constructor failed")
 		#else
-			_CLPTHREAD_CHECK(pthread_mutex_init(&mtx, 0), "mutex_pthread(clone) constructor failed")
+			_CLPTHREAD_CHECK(pthread_mutex_init(&mtx, nullptr), "mutex_pthread(clone) constructor failed")
 		#endif
 		lockCount=0;
 		lockOwner=0;
@@ -113,7 +113,7 @@ mutexGuard::~mutexGuard()
 	  	#if defined(__hpux) && defined(_DECTHREADS_)
 			_CLPTHREAD_CHECK(pthread_mutex_init(&mtx, pthread_mutexattr_default), "mutex_pthread(clone) constructor failed")
 		#else
-			_CLPTHREAD_CHECK(pthread_mutex_init(&mtx, 0), "mutex_pthread(clone) constructor failed")
+			_CLPTHREAD_CHECK(pthread_mutex_init(&mtx, nullptr), "mutex_pthread(clone) constructor failed")
 		#endif
 		lockCount=0;
 		lockOwner=0;

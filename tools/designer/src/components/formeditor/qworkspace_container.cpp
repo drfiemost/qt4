@@ -62,7 +62,7 @@ int QWorkspaceContainer::count() const
 QWidget *QWorkspaceContainer::widget(int index) const
 {
     if (index < 0)
-        return 0;
+        return nullptr;
     return m_workspace->windowList(QWorkspace::CreationOrder).at(index);
 }
 

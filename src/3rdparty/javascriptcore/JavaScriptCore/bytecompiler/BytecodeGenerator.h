@@ -140,7 +140,7 @@ namespace JSC {
         }
 
         // Returns the place to write the final output of an operation.
-        RegisterID* finalDestination(RegisterID* originalDst, RegisterID* tempDst = 0)
+        RegisterID* finalDestination(RegisterID* originalDst, RegisterID* tempDst = nullptr)
         {
             if (originalDst && originalDst != ignoredResult())
                 return originalDst;
@@ -154,16 +154,16 @@ namespace JSC {
         {
             if (dst && dst != ignoredResult() && m_codeBlock->needsFullScopeChain())
                 return dst->isTemporary() ? dst : newTemporary();
-            return 0;
+            return nullptr;
         }
 
         // Moves src to dst if dst is not null and is different from src, otherwise just returns src.
         RegisterID* moveToDestinationIfNeeded(RegisterID* dst, RegisterID* src)
         {
-            return dst == ignoredResult() ? 0 : (dst && dst != src) ? emitMove(dst, src) : src;
+            return dst == ignoredResult() ? nullptr : (dst && dst != src) ? emitMove(dst, src) : src;
         }
 
-        PassRefPtr<LabelScope> newLabelScope(LabelScope::Type, const Identifier* = 0);
+        PassRefPtr<LabelScope> newLabelScope(LabelScope::Type, const Identifier* = nullptr);
         PassRefPtr<Label> newLabel();
 
         // The emitNode functions are just syntactic sugar for calling
@@ -189,7 +189,7 @@ namespace JSC {
 
         RegisterID* emitNode(Node* n)
         {
-            return emitNode(0, n);
+            return emitNode(nullptr, n);
         }
 
         void emitNodeInConditionContext(ExpressionNode* n, Label* trueTarget, Label* falseTarget, bool fallThroughMeansTrue)

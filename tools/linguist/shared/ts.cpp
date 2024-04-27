@@ -150,7 +150,7 @@ static QString byteValue(QString value)
         base = 16;
         value.remove(0, 1);
     }
-    int n = value.toUInt(0, base);
+    int n = value.toUInt(nullptr, base);
     return (n != 0) ? QString(QChar(n)) : QString();
 }
 

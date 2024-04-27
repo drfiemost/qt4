@@ -85,7 +85,7 @@ public:
         DeleteWhenStopped
     };
 
-    QAbstractAnimation(QObject *parent = 0);
+    QAbstractAnimation(QObject *parent = nullptr);
     virtual ~QAbstractAnimation();
 
     State state() const;
@@ -120,7 +120,7 @@ public Q_SLOTS:
     void setCurrentTime(int msecs);
 
 protected:
-    QAbstractAnimation(QAbstractAnimationPrivate &dd, QObject *parent = 0);
+    QAbstractAnimation(QAbstractAnimationPrivate &dd, QObject *parent = nullptr);
     bool event(QEvent *event);
 
     virtual void updateCurrentTime(int currentTime) = 0;

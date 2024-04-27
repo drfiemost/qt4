@@ -39,7 +39,7 @@ namespace WTF {
 
     template <typename T> class RefPtr : public FastAllocBase {
     public:
-        RefPtr() : m_ptr(0) { }
+        RefPtr() : m_ptr(nullptr) { }
         RefPtr(T* ptr) : m_ptr(ptr) { if (ptr) ptr->ref(); }
         RefPtr(const RefPtr& o) : m_ptr(o.m_ptr) { if (T* ptr = m_ptr) ptr->ref(); }
         // see comment in PassRefPtr.h for why this takes const reference
@@ -66,9 +66,9 @@ namespace WTF {
 #if COMPILER(WINSCW)
         void clear() { if (T* ptr = m_ptr) derefIfNotNull<T>(ptr); m_ptr = 0; }
 #else
-        void clear() { if (T* ptr = m_ptr) ptr->deref(); m_ptr = 0; }
+        void clear() { if (T* ptr = m_ptr) ptr->deref(); m_ptr = nullptr; }
 #endif
-        PassRefPtr<T> release() { PassRefPtr<T> tmp = adoptRef(m_ptr); m_ptr = 0; return tmp; }
+        PassRefPtr<T> release() { PassRefPtr<T> tmp = adoptRef(m_ptr); m_ptr = nullptr; return tmp; }
 
         T& operator*() const { return *m_ptr; }
         ALWAYS_INLINE T* operator->() const { return m_ptr; }
@@ -77,7 +77,7 @@ namespace WTF {
     
         // This conversion operator allows implicit conversion to bool but not to other integer types.
         typedef T* (RefPtr::*UnspecifiedBoolType);
-        operator UnspecifiedBoolType() const { return m_ptr ? &RefPtr::m_ptr : 0; }
+        operator UnspecifiedBoolType() const { return m_ptr ? &RefPtr::m_ptr : nullptr; }
         
         RefPtr& operator=(const RefPtr&);
         RefPtr& operator=(T*);

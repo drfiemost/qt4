@@ -92,7 +92,7 @@ QRasterWindowSurface::QRasterWindowSurface(QWidget *window, bool setDefaultSurfa
     : QWindowSurface(window, setDefaultSurface), d_ptr(new QRasterWindowSurfacePrivate)
 {
 #ifdef Q_WS_X11
-    d_ptr->gc = XCreateGC(X11->display, window->handle(), 0, 0);
+    d_ptr->gc = XCreateGC(X11->display, window->handle(), 0, nullptr);
 #ifndef QT_NO_XRENDER
     d_ptr->translucentBackground = X11->use_xrender
         && window->x11Info().depth() == 32;
@@ -101,7 +101,7 @@ QRasterWindowSurface::QRasterWindowSurface(QWidget *window, bool setDefaultSurfa
     d_ptr->needsSync = false;
 #endif
 #endif
-    d_ptr->image = 0;
+    d_ptr->image = nullptr;
     d_ptr->inSetGeometry = false;
 
 #ifdef QT_MAC_USE_COCOA
@@ -221,7 +221,7 @@ void QRasterWindowSurface::flush(QWidget *widget, const QRegion &rgn, const QPoi
 
     if (widget->window() != window()) {
         XFreeGC(X11->display, d_ptr->gc);
-        d_ptr->gc = XCreateGC(X11->display, widget->handle(), 0, 0);
+        d_ptr->gc = XCreateGC(X11->display, widget->handle(), 0, nullptr);
     }
 
     QRegion wrgn(rgn);
@@ -336,7 +336,7 @@ void QRasterWindowSurface::setGeometry(const QRect &rect)
     QWindowSurface::setGeometry(rect);
     Q_D(QRasterWindowSurface);
     d->inSetGeometry = true;
-    if (d->image == 0 || d->image->width() < rect.width() || d->image->height() < rect.height()) {
+    if (d->image == nullptr || d->image->width() < rect.width() || d->image->height() < rect.height()) {
 #if (defined(Q_WS_X11) && !defined(QT_NO_XRENDER)) || (defined(Q_WS_WIN))
 #ifndef Q_WS_WIN
         if (d_ptr->translucentBackground)
@@ -422,7 +422,7 @@ void QRasterWindowSurface::prepareBuffer(QImage::Format format, QWidget *widget)
 
     if (width == 0 || height == 0) {
         delete d->image;
-        d->image = 0;
+        d->image = nullptr;
         return;
     }
 

@@ -75,7 +75,7 @@ void AbstractFunctionFactory::verifyArity(const FunctionSignature::Ptr &s,
        arity > s->maximumArguments())
     {
         context->error(QtXmlPatterns::tr("%1 takes at most %n argument(s). "
-                                         "%2 is therefore invalid.", 0, s->maximumArguments())
+                                         "%2 is therefore invalid.", nullptr, s->maximumArguments())
                           .arg(formatFunction(context->namePool(), s))
                           .arg(arity),
                        ReportContext::XPST0017,
@@ -86,7 +86,7 @@ void AbstractFunctionFactory::verifyArity(const FunctionSignature::Ptr &s,
     if(arity < s->minimumArguments())
     {
         context->error(QtXmlPatterns::tr("%1 requires at least %n argument(s). "
-                                         "%2 is therefore invalid.", 0, s->minimumArguments())
+                                         "%2 is therefore invalid.", nullptr, s->minimumArguments())
                           .arg(formatFunction(context->namePool(), s))
                           .arg(arity),
                        ReportContext::XPST0017,

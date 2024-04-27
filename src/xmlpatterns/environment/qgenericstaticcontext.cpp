@@ -71,7 +71,7 @@ GenericStaticContext::GenericStaticContext(const NamePool::Ptr &np,
                                                                                                       ? GenericNamespaceResolver::defaultXQueryBindings()
                                                                                                       : GenericNamespaceResolver::defaultXSLTBindings())
                                                                                 , m_namePool(np)
-                                                                                , m_uriResolver(0)
+                                                                                , m_uriResolver(nullptr)
                                                                                 , m_queryLanguage(lang)
                                                                                 , m_rangeSlot(-1)
                                                                                 , m_compatModeEnabled(false)

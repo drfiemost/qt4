@@ -87,7 +87,7 @@ void QHelpSearchIndexReaderClucene::run()
 
     mutex.unlock();
 
-    QHelpEngineCore engine(collectionFile, 0);
+    QHelpEngineCore engine(collectionFile, nullptr);
     if (!engine.setupData())
         return;
 
@@ -298,7 +298,7 @@ bool QHelpSearchIndexReaderClucene::addFuzzyQuery(const QHelpSearchQuery &query,
         if (!term.isEmpty()) {
             QCLuceneQuery *lQuery =
                     QCLuceneQueryParser::parse(term + fuzzy, fieldName, analyzer);
-            if (lQuery != 0) {
+            if (lQuery != nullptr) {
                 booleanQuery.add(lQuery, true, false, false);
                 queryIsValid = true;
             }

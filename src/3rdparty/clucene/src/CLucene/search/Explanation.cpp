@@ -94,7 +94,7 @@ void Explanation::getDetails(Explanation** ret) {
     for ( uint32_t i=0;i<size;i++ ){
         ret[i] = details[i]->clone();
     }
-    ret[size] = NULL;
+    ret[size] = nullptr;
 }
 
 /** Adds a sub-node to this explanation node. */

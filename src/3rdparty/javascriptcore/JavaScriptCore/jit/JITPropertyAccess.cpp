@@ -1262,11 +1262,11 @@ void JIT::emit_op_method_check(Instruction* currentInstruction)
     BEGIN_UNINTERRUPTED_SEQUENCE(sequenceMethodCheck);
 
     Jump structureCheck = branchPtrWithPatch(NotEqual, Address(regT0, OBJECT_OFFSETOF(JSCell, m_structure)), info.structureToCompare, ImmPtr(reinterpret_cast<void*>(patchGetByIdDefaultStructure)));
-    DataLabelPtr protoStructureToCompare, protoObj = moveWithPatch(ImmPtr(0), regT1);
+    DataLabelPtr protoStructureToCompare, protoObj = moveWithPatch(ImmPtr(nullptr), regT1);
     Jump protoStructureCheck = branchPtrWithPatch(NotEqual, Address(regT1, OBJECT_OFFSETOF(JSCell, m_structure)), protoStructureToCompare, ImmPtr(reinterpret_cast<void*>(patchGetByIdDefaultStructure)));
 
     // This will be relinked to load the function without doing a load.
-    DataLabelPtr putFunction = moveWithPatch(ImmPtr(0), regT0);
+    DataLabelPtr putFunction = moveWithPatch(ImmPtr(nullptr), regT0);
 
     END_UNINTERRUPTED_SEQUENCE(sequenceMethodCheck);
 
@@ -1797,7 +1797,7 @@ void JIT::privateCompileGetByIdChainList(StructureStubInfo* stubInfo, Polymorphi
 
     Structure* currStructure = structure;
     RefPtr<Structure>* chainEntries = chain->head();
-    JSObject* protoObject = 0;
+    JSObject* protoObject = nullptr;
     for (unsigned i = 0; i < count; ++i) {
         protoObject = asObject(currStructure->prototypeForLookup(callFrame));
         currStructure = chainEntries[i].get();
@@ -1850,7 +1850,7 @@ void JIT::privateCompileGetByIdChain(StructureStubInfo* stubInfo, Structure* str
 
     Structure* currStructure = structure;
     RefPtr<Structure>* chainEntries = chain->head();
-    JSObject* protoObject = 0;
+    JSObject* protoObject = nullptr;
     for (unsigned i = 0; i < count; ++i) {
         protoObject = asObject(currStructure->prototypeForLookup(callFrame));
         currStructure = chainEntries[i].get();

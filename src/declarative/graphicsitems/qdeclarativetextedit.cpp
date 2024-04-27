@@ -876,7 +876,7 @@ void QDeclarativeTextEdit::setCursorDelegate(QDeclarativeComponent* c)
             d->control->setCursorWidth(-1);
             dirtyCache(cursorRectangle());
             delete d->cursor;
-            d->cursor = 0;
+            d->cursor = nullptr;
         }
     }
     d->cursorComponent = c;

@@ -64,7 +64,7 @@ ListWidgetEditor::ListWidgetEditor(QDesignerFormWindowInterface *form,
     connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
-    m_itemsEditor = new ItemListEditor(form, 0);
+    m_itemsEditor = new ItemListEditor(form, nullptr);
     m_itemsEditor->layout()->setMargin(0);
     m_itemsEditor->setNewItemText(tr("New Item"));
 
@@ -87,13 +87,13 @@ static AbstractItemEditor::PropertyDefinition listBoxPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
     { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, 0, "font" },
+    { Qt::FontRole, QVariant::Font, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Brush, 0, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, 0, "foreground" },
+    { Qt::BackgroundRole, QVariant::Brush, nullptr, "background" },
+    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
     { ItemFlagsShadowRole, 0, QtVariantPropertyManager::flagTypeId, "flags" },
     { Qt::CheckStateRole, 0, QtVariantPropertyManager::enumTypeId, "checkState" },
-    { 0, 0, 0, 0 }
+    { 0, 0, nullptr, nullptr }
 };
 
 ListContents ListWidgetEditor::fillContentsFromListWidget(QListWidget *listWidget)
@@ -112,7 +112,7 @@ ListContents ListWidgetEditor::fillContentsFromListWidget(QListWidget *listWidge
 static AbstractItemEditor::PropertyDefinition comboBoxPropList[] = {
     { Qt::DisplayPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "text" },
     { Qt::DecorationPropertyRole, 0, DesignerPropertyManager::designerIconTypeId, "icon" },
-    { 0, 0, 0, 0 }
+    { 0, 0, nullptr, nullptr }
 };
 
 ListContents ListWidgetEditor::fillContentsFromComboBox(QComboBox *comboBox)

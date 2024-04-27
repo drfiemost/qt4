@@ -70,7 +70,7 @@ class QT_FORMEDITOR_EXPORT FormWindowManager
 {
     Q_OBJECT
 public:
-    explicit FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    explicit FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
     virtual ~FormWindowManager();
 
     virtual QDesignerFormEditorInterface *core() const;
@@ -102,7 +102,7 @@ public:
     int formWindowCount() const;
     QDesignerFormWindowInterface *formWindow(int index) const;
 
-    QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0);
+    QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = nullptr, Qt::WindowFlags flags = nullptr);
 
     QPixmap createPreviewPixmap(QString *errorMessage);
 

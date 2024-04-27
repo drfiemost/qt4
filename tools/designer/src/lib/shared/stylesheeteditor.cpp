@@ -137,7 +137,7 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
         "background-image",
         "border-image",
         "image",
-        0
+        nullptr
     };
 
     const char * const colorProperties[] = {
@@ -152,7 +152,7 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
         "gridline-color",
         "selection-color",
         "selection-background-color",
-        0
+        nullptr
     };
 
     QMenu *resourceActionMenu = new QMenu(this);

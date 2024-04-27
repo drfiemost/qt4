@@ -200,8 +200,8 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
     bool result = reader.parse(in);
     if (!result)
         cd.appendError(LU::tr("Parse error in UI file"));
-    reader.setContentHandler(0);
-    reader.setErrorHandler(0);
+    reader.setContentHandler(nullptr);
+    reader.setErrorHandler(nullptr);
     return result;
 }
 

@@ -1430,7 +1430,7 @@ DEFINE_STUB_FUNCTION(EncodedJSValue, op_get_by_id_self_fail)
 
 static PolymorphicAccessStructureList* getPolymorphicAccessStructureListSlot(StructureStubInfo* stubInfo, int& listIndex)
 {
-    PolymorphicAccessStructureList* prototypeStructureList = 0;
+    PolymorphicAccessStructureList* prototypeStructureList = nullptr;
     listIndex = 1;
 
     switch (stubInfo->accessType) {
@@ -1700,7 +1700,7 @@ DEFINE_STUB_FUNCTION(VoidPtrPair, op_call_arityCheck)
             // moved the call frame forward.
             stackFrame.callFrame = oldCallFrame;
             throwStackOverflowError(oldCallFrame, stackFrame.globalData, stackFrame.args[1].returnAddress(), STUB_RETURN_ADDRESS);
-            RETURN_POINTER_PAIR(0, 0);
+            RETURN_POINTER_PAIR(nullptr, nullptr);
         }
 
         Register* argv = r - RegisterFile::CallFrameHeaderSize - omittedArgCount;
@@ -1722,7 +1722,7 @@ DEFINE_STUB_FUNCTION(void*, vm_lazyLinkCall)
     ExecutableBase* executable = callee->executable();
     JITCode& jitCode = executable->generatedJITCode();
     
-    CodeBlock* codeBlock = 0;
+    CodeBlock* codeBlock = nullptr;
     if (!executable->isHostFunction())
         codeBlock = &static_cast<FunctionExecutable*>(executable)->bytecode(stackFrame.callFrame, callee->scope().node());
     CallLinkInfo* callLinkInfo = &stackFrame.callFrame->callerFrame()->codeBlock()->getCallLinkInfo(stackFrame.args[1].returnAddress());
@@ -1762,7 +1762,7 @@ DEFINE_STUB_FUNCTION(EncodedJSValue, op_call_NotJSFunction)
         CallFrame* previousCallFrame = stackFrame.callFrame;
         CallFrame* callFrame = CallFrame::create(previousCallFrame->registers() + registerOffset);
 
-        callFrame->init(0, static_cast<Instruction*>((STUB_RETURN_ADDRESS).value()), previousCallFrame->scopeChain(), previousCallFrame, 0, argCount, asObject(funcVal));
+        callFrame->init(nullptr, static_cast<Instruction*>((STUB_RETURN_ADDRESS).value()), previousCallFrame->scopeChain(), previousCallFrame, 0, argCount, asObject(funcVal));
         stackFrame.callFrame = callFrame;
 
         Register* argv = stackFrame.callFrame->registers() - RegisterFile::CallFrameHeaderSize - argCount;

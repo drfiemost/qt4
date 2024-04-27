@@ -162,8 +162,8 @@ class QJSDebuggerAgent : public QObject, public QScriptEngineAgent
     Q_OBJECT
 
 public:
-    QJSDebuggerAgent(QScriptEngine *engine, QObject *parent = 0);
-    QJSDebuggerAgent(QDeclarativeEngine *engine, QObject *parent = 0);
+    QJSDebuggerAgent(QScriptEngine *engine, QObject *parent = nullptr);
+    QJSDebuggerAgent(QDeclarativeEngine *engine, QObject *parent = nullptr);
     ~QJSDebuggerAgent();
 
     bool isInitialized() const;

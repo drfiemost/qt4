@@ -55,7 +55,7 @@ namespace WTF {
     public:
         static PassRefPtr<CrossThreadRefCounted<T> > create(T* data)
         {
-            return adoptRef(new CrossThreadRefCounted<T>(data, 0));
+            return adoptRef(new CrossThreadRefCounted<T>(data, nullptr));
         }
 
         // Used to make an instance that can be used on another thread.
@@ -161,7 +161,7 @@ namespace WTF {
     {
         if (m_threadSafeRefCounter && m_threadSafeRefCounter->derefBase()) {
             delete m_threadSafeRefCounter;
-            m_threadSafeRefCounter = 0;
+            m_threadSafeRefCounter = nullptr;
         }
     }
 } // namespace WTF

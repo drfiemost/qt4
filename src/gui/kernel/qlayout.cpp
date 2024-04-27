@@ -122,7 +122,7 @@ QLayout::QLayout(QWidget *parent)
     management will work.
 */
 QLayout::QLayout()
-    : QObject(*new QLayoutPrivate, 0)
+    : QObject(*new QLayoutPrivate, nullptr)
 {
 }
 
@@ -141,14 +141,14 @@ QLayout::QLayout(QLayoutPrivate &dd, QLayout *lay, QWidget *w)
                      " already has a layout",
                      qPrintable(QObject::objectName()), w->metaObject()->className(),
                      w->objectName().toLocal8Bit().data());
-            setParent(0);
+            setParent(nullptr);
         } else {
             d->topLevel = true;
             w->d_func()->layout = this;
             QT_TRY {
                 invalidate();
             } QT_CATCH(...) {
-                w->d_func()->layout = 0;
+                w->d_func()->layout = nullptr;
                 QT_RETHROW;
             }
         }
@@ -158,7 +158,7 @@ QLayout::QLayout(QLayoutPrivate &dd, QLayout *lay, QWidget *w)
 QLayoutPrivate::QLayoutPrivate()
     : QObjectPrivate(), insideSpacing(-1), userLeftMargin(-1), userTopMargin(-1), userRightMargin(-1),
       userBottomMargin(-1), topLevel(false), enabled(true), activated(true), autoNewChild(false),
-      constraint(QLayout::SetDefaultConstraint), menubar(0)
+      constraint(QLayout::SetDefaultConstraint), menubar(nullptr)
 {
 }
 
@@ -173,7 +173,7 @@ void QLayoutPrivate::getMargin(int *result, int userMargin, QStyle::PixelMetric 
     } else if (!topLevel) {
         *result = 0;
     } else if (QWidget *pw = q->parentWidget()) {
-        *result = pw->style()->pixelMetric(pm, 0, pw);
+        *result = pw->style()->pixelMetric(pm, nullptr, pw);
     } else {
         *result = 0;
     }
@@ -181,8 +181,8 @@ void QLayoutPrivate::getMargin(int *result, int userMargin, QStyle::PixelMetric 
 
 // Static item factory functions that allow for hooking things in Designer
 
-QLayoutPrivate::QWidgetItemFactoryMethod QLayoutPrivate::widgetItemFactoryMethod = 0;
-QLayoutPrivate::QSpacerItemFactoryMethod QLayoutPrivate::spacerItemFactoryMethod = 0;
+QLayoutPrivate::QWidgetItemFactoryMethod QLayoutPrivate::widgetItemFactoryMethod = nullptr;
+QLayoutPrivate::QSpacerItemFactoryMethod QLayoutPrivate::spacerItemFactoryMethod = nullptr;
 
 QWidgetItem *QLayoutPrivate::createWidgetItem(const QLayout *layout, QWidget *widget)
 {
@@ -483,11 +483,11 @@ QWidget *QLayout::parentWidget() const
             QLayout *parentLayout = qobject_cast<QLayout*>(parent());
             if (!parentLayout) {
                 qWarning("QLayout::parentWidget: A layout can only have another layout as a parent.");
-                return 0;
+                return nullptr;
             }
             return parentLayout->parentWidget();
         } else {
-            return 0;
+            return nullptr;
         }
     } else {
         Q_ASSERT(parent() && parent()->isWidgetType());
@@ -604,7 +604,7 @@ void QLayout::widgetEvent(QEvent *e)
                 QWidget *w = (QWidget *)c->child();
 #ifndef QT_NO_MENUBAR
                 if (w == d->menubar)
-                    d->menubar = 0;
+                    d->menubar = nullptr;
 #endif
                 removeWidgetRecursively(this, w);
             }
@@ -759,7 +759,7 @@ QLayout::~QLayout()
     */
     if (d->topLevel && parent() && parent()->isWidgetType() &&
          ((QWidget*)parent())->layout() == this)
-        ((QWidget*)parent())->d_func()->layout = 0;
+        ((QWidget*)parent())->d_func()->layout = nullptr;
 }
 
 
@@ -912,7 +912,7 @@ void QLayout::addChildWidget(QWidget *w)
                 qWarning("QLayout::addChildWidget: %s \"%s\" in wrong parent; moved to correct parent",
                          w->metaObject()->className(), w->objectName().toLocal8Bit().data());
 #endif
-        pw = 0;
+        pw = nullptr;
     }
     bool needShow = mw && mw->isVisible() && !(w->isHidden() && w->testAttribute(Qt::WA_WState_ExplicitShowHide));
     if (!pw && mw)
@@ -1052,7 +1052,7 @@ bool QLayout::activate()
     if (d->activated)
         return false;
     QWidget *mw = static_cast<QWidget*>(parent());
-    if (mw == 0) {
+    if (mw == nullptr) {
         qWarning("QLayout::activate: %s \"%s\" does not have a main widget",
                  QObject::metaObject()->className(), QObject::objectName().toLocal8Bit().data());
         return false;
@@ -1257,7 +1257,7 @@ QRect QLayout::alignmentRect(const QRect &r) const
       returned by QLayoutItems that have an alignment.
     */
     QLayout *that = const_cast<QLayout *>(this);
-    that->setAlignment(0);
+    that->setAlignment(nullptr);
     QSize ms = that->maximumSize();
     that->setAlignment(a);
 

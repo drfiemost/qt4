@@ -56,7 +56,7 @@ class QDesignerLayoutDecorationFactory: public QExtensionFactory
     Q_OBJECT
     Q_INTERFACES(QAbstractExtensionFactory)
 public:
-    explicit QDesignerLayoutDecorationFactory(QExtensionManager *parent = 0);
+    explicit QDesignerLayoutDecorationFactory(QExtensionManager *parent = nullptr);
 
 protected:
     virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;

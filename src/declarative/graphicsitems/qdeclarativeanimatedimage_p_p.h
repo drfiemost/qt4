@@ -68,7 +68,7 @@ class QDeclarativeAnimatedImagePrivate : public QDeclarativeImagePrivate
 
 public:
     QDeclarativeAnimatedImagePrivate()
-      : playing(true), paused(false), preset_currentframe(0), _movie(0), reply(0), redirectCount(0)
+      : playing(true), paused(false), preset_currentframe(0), _movie(nullptr), reply(nullptr), redirectCount(0)
     {
     }
 

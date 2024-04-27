@@ -91,8 +91,8 @@ public:
         WidgetWidth
     };
 
-    explicit QPlainTextEdit(QWidget *parent = 0);
-    explicit QPlainTextEdit(const QString &text, QWidget *parent = 0);
+    explicit QPlainTextEdit(QWidget *parent = nullptr);
+    explicit QPlainTextEdit(const QString &text, QWidget *parent = nullptr);
     virtual ~QPlainTextEdit();
 
     void setDocument(QTextDocument *document);
@@ -142,7 +142,7 @@ public:
     void setCenterOnScroll(bool enabled);
     bool centerOnScroll() const;
 
-    bool find(const QString &exp, QTextDocument::FindFlags options = 0);
+    bool find(const QString &exp, QTextDocument::FindFlags options = nullptr);
 
     inline QString toPlainText() const
     { return document()->toPlainText(); }

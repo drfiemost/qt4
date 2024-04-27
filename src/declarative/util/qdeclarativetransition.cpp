@@ -101,7 +101,7 @@ class ParallelAnimationWrapper : public QParallelAnimationGroup
 {
     Q_OBJECT
 public:
-    ParallelAnimationWrapper(QObject *parent = 0) : QParallelAnimationGroup(parent) {}
+    ParallelAnimationWrapper(QObject *parent = nullptr) : QParallelAnimationGroup(parent) {}
     QDeclarativeTransitionPrivate *trans;
 protected:
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
@@ -113,7 +113,7 @@ class QDeclarativeTransitionPrivate : public QObjectPrivate
 public:
     QDeclarativeTransitionPrivate()
     : fromState(QLatin1String("*")), toState(QLatin1String("*")),
-      reversed(false), reversible(false), endState(0)
+      reversed(false), reversible(false), endState(nullptr)
     {
         group.trans = this;
     }

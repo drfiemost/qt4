@@ -146,7 +146,7 @@ static FT_Face ft_face(const QFontEngine *engine)
         return ft->non_locked_face();
     }
 #endif
-    return 0;
+    return nullptr;
 }
 #endif
 

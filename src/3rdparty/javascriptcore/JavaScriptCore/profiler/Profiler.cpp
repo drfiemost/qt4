@@ -48,8 +48,8 @@ static unsigned ProfilesUID = 0;
 
 static CallIdentifier createCallIdentifierFromFunctionImp(ExecState*, JSFunction*);
 
-Profiler* Profiler::s_sharedProfiler = 0;
-Profiler* Profiler::s_sharedEnabledProfilerReference = 0;
+Profiler* Profiler::s_sharedProfiler = nullptr;
+Profiler* Profiler::s_sharedEnabledProfilerReference = nullptr;
 
 Profiler* Profiler::profiler()
 {
@@ -64,7 +64,7 @@ void Profiler::startProfiling(ExecState* exec, const UString& title)
 
     // Check if we currently have a Profile for this global ExecState and title.
     // If so return early and don't create a new Profile.
-    ExecState* globalExec = exec ? exec->lexicalGlobalObject()->globalExec() : 0;
+    ExecState* globalExec = exec ? exec->lexicalGlobalObject()->globalExec() : nullptr;
 
     for (size_t i = 0; i < m_currentProfiles.size(); ++i) {
         ProfileGenerator* profileGenerator = m_currentProfiles[i].get();
@@ -79,7 +79,7 @@ void Profiler::startProfiling(ExecState* exec, const UString& title)
 
 PassRefPtr<Profile> Profiler::stopProfiling(ExecState* exec, const UString& title)
 {
-    ExecState* globalExec = exec ? exec->lexicalGlobalObject()->globalExec() : 0;
+    ExecState* globalExec = exec ? exec->lexicalGlobalObject()->globalExec() : nullptr;
     for (ptrdiff_t i = m_currentProfiles.size() - 1; i >= 0; --i) {
         ProfileGenerator* profileGenerator = m_currentProfiles[i].get();
         if (profileGenerator->originatingGlobalExec() == globalExec && (title.isNull() || profileGenerator->title() == title)) {
@@ -88,13 +88,13 @@ PassRefPtr<Profile> Profiler::stopProfiling(ExecState* exec, const UString& titl
 
             m_currentProfiles.remove(i);
             if (!m_currentProfiles.size())
-                s_sharedEnabledProfilerReference = 0;
+                s_sharedEnabledProfilerReference = nullptr;
             
             return returnProfile;
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 static inline void dispatchFunctionToProfiles(const Vector<RefPtr<ProfileGenerator> >& profiles, ProfileGenerator::ProfileFunction function, const CallIdentifier& callIdentifier, unsigned currentProfileTargetGroup)

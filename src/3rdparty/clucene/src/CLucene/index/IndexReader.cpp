@@ -31,9 +31,9 @@ IndexReader::IndexReader(Directory* dir)
     , hasChanges(false)
     , closeDirectory(false)
     , directoryOwner(false)
-    , segmentInfos(NULL)
+    , segmentInfos(nullptr)
     , directory(_CL_POINTER(dir))
-    , writeLock(NULL)
+    , writeLock(nullptr)
 {
 }
 
@@ -44,13 +44,13 @@ IndexReader::IndexReader(Directory* dir, SegmentInfos* infos, bool close)
     , directoryOwner(true)
     , segmentInfos(infos)
     , directory(_CL_POINTER(dir))
-    , writeLock(NULL)
+    , writeLock(nullptr)
 {
 }
 
 IndexReader::~IndexReader()
 {
-    if (writeLock != NULL) {
+    if (writeLock != nullptr) {
         writeLock->release();
         _CLDELETE(writeLock);
     }
@@ -93,7 +93,7 @@ IndexReader* IndexReader::open(Directory* directory, bool closeDirectory)
     LuceneLock* lock = directory->makeLock(QLatin1String("commit.lock"));
     IndexReader::LockWith with(lock, directory);
 
-    IndexReader* ret = NULL;
+    IndexReader* ret = nullptr;
     try {
         //Create an IndexReader reading the index
         ret = with.runAndReturn();
@@ -153,7 +153,7 @@ IndexReader* IndexReader::LockWith::doBody()
         return _CLNEW SegmentReader(infos, infos->info(0));
     } else {
         //Instantiate an array of pointers to SegmentReaders of size nSegs (The number of segments in the index)
-        IndexReader** readers = NULL;
+        IndexReader** readers = nullptr;
 
         if (nSegs > 0){
             uint32_t infosize = infos->size();
@@ -163,7 +163,7 @@ IndexReader* IndexReader::LockWith::doBody()
                 //the readers array
                 readers[i] = _CLNEW SegmentReader(infos->info(i));
             }
-            readers[infosize] = NULL;
+            readers[infosize] = nullptr;
         }
 
         //return an instance of SegmentsReader which is a reader that manages all Segments
@@ -278,7 +278,7 @@ void IndexReader::aquireWriteLock()
             "undelete, or setNorm operations");
     }
 
-    if (writeLock == NULL) {
+    if (writeLock == nullptr) {
         LuceneLock* writeLock = directory->makeLock(QLatin1String("write.lock"));
         if (!writeLock->obtain(IndexWriter::WRITE_LOCK_TIMEOUT)) // obtain write lock
             _CLTHROWA(CL_ERR_IO,"Index locked for write"); // + writeLock
@@ -405,7 +405,7 @@ void IndexReader::commit()
                 _CLDELETE(commitLock);
 
             }
-            if (writeLock != NULL) {
+            if (writeLock != nullptr) {
                 writeLock->release();  // release write lock
                 _CLDELETE(writeLock);
             }
@@ -441,7 +441,7 @@ int32_t IndexReader::deleteDocuments(Term* term)
     TermDocs* docs = termDocs(term);
 
     //Check if documents have been found
-    if ( docs == NULL ){
+    if ( docs == nullptr ){
         return 0;
     }
 
@@ -479,7 +479,7 @@ TCHAR** IndexReader::getFieldNames()
         ret[j]=*itr;
         ++j;++itr;
     }
-    ret[j]=NULL;
+    ret[j]=nullptr;
     return ret;
 }
 
@@ -496,7 +496,7 @@ TCHAR** IndexReader::getFieldNames(bool indexed)
         ret[j]=*itr;
         ++j;++itr;
     }
-    ret[j]=NULL;
+    ret[j]=nullptr;
     return ret;
 }
 
@@ -565,7 +565,7 @@ bool IndexReader::hasNorms(const TCHAR* field)
 {
     // backward compatible implementation.
     // SegmentReader has an efficient implementation.
-    return norms(field) != NULL;
+    return norms(field) != nullptr;
 }
 
 void IndexReader::unlock(const QString& path)

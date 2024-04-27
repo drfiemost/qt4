@@ -70,7 +70,7 @@ bool QCLuceneStandardTokenizer::readApostrophe(const QString &string,
     lucene::analysis::standard::StandardTokenizer *stdTokenizer = 
         static_cast<lucene::analysis::standard::StandardTokenizer*> (d->tokenStream);
 
-    if (stdTokenizer == 0)
+    if (stdTokenizer == nullptr)
         return false;
 
     TCHAR* value = QStringToTChar(string);
@@ -86,7 +86,7 @@ bool QCLuceneStandardTokenizer::readAt(const QString &string, QCLuceneToken &tok
     lucene::analysis::standard::StandardTokenizer *stdTokenizer = 
         static_cast<lucene::analysis::standard::StandardTokenizer*> (d->tokenStream);
 
-    if (stdTokenizer == 0)
+    if (stdTokenizer == nullptr)
         return false;
 
     TCHAR* value = QStringToTChar(string);
@@ -103,7 +103,7 @@ bool QCLuceneStandardTokenizer::readCompany(const QString &string,
     lucene::analysis::standard::StandardTokenizer *stdTokenizer = 
         static_cast<lucene::analysis::standard::StandardTokenizer*> (d->tokenStream);
 
-    if (stdTokenizer == 0)
+    if (stdTokenizer == nullptr)
         return false;
 
     TCHAR* value = QStringToTChar(string);

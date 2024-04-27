@@ -50,7 +50,7 @@ class QDeclarativeGraphicsWidgetPrivate : public QObjectPrivate {
     Q_DECLARE_PUBLIC(QDeclarativeGraphicsWidget)
 public :
     QDeclarativeGraphicsWidgetPrivate() :
-        _anchors(0), _anchorLines(0)
+        _anchors(nullptr), _anchorLines(nullptr)
     {}
     QDeclarativeItemPrivate::AnchorLines *anchorLines() const;
     QDeclarativeAnchors *_anchors;
@@ -64,8 +64,8 @@ QDeclarativeGraphicsWidget::QDeclarativeGraphicsWidget(QObject *parent) :
 QDeclarativeGraphicsWidget::~QDeclarativeGraphicsWidget()
 {
     Q_D(QDeclarativeGraphicsWidget);
-    delete d->_anchorLines; d->_anchorLines = 0;
-    delete d->_anchors; d->_anchors = 0;
+    delete d->_anchorLines; d->_anchorLines = nullptr;
+    delete d->_anchors; d->_anchors = nullptr;
 }
 
 QDeclarativeAnchors *QDeclarativeGraphicsWidget::anchors()

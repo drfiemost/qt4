@@ -56,7 +56,7 @@ class QT_FORMEDITOR_EXPORT FormEditor: public QDesignerFormEditorInterface
 {
     Q_OBJECT
 public:
-    FormEditor(QObject *parent = 0);
+    FormEditor(QObject *parent = nullptr);
     virtual ~FormEditor();
 public slots:
     void slotQrcFileChangedExternally(const QString &path);

@@ -688,7 +688,7 @@ static bool write_jpeg_image(const QImage &image,
     // do_write_jpeg_image (by making them non-local).
     struct jpeg_compress_struct cinfo;
     JSAMPROW row_pointer[1];
-    row_pointer[0] = 0;
+    row_pointer[0] = nullptr;
 
     const bool success = do_write_jpeg_image(cinfo, row_pointer,
                                              image, device,
@@ -707,7 +707,7 @@ public:
     };
 
     QJpegHandlerPrivate(QJpegHandler *qq)
-        : quality(75), iod_src(0), state(Ready), q(qq)
+        : quality(75), iod_src(nullptr), state(Ready), q(qq)
     {}
 
     ~QJpegHandlerPrivate()
@@ -716,7 +716,7 @@ public:
         {
             jpeg_destroy_decompress(&info);
             delete iod_src;
-            iod_src = 0;
+            iod_src = nullptr;
         }
     }
 

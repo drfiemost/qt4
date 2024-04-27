@@ -28,9 +28,9 @@ TermVectorsReader::TermVectorsReader(CL_NS(store)::Directory* d,
 
       _size = tvx->length() / 8;
 	}else{
-	  tvx = NULL;
-	  tvd = NULL;
-	  tvf = NULL;
+	  tvx = nullptr;
+	  tvd = nullptr;
+	  tvf = nullptr;
 	  _size = 0;
 	}
 
@@ -49,8 +49,8 @@ TermVectorsReader::TermVectorsReader(const TermVectorsReader& copy)
     fieldInfos = copy.fieldInfos;
 }
 TermVectorsReader* TermVectorsReader::clone() const{
-	if (tvx == NULL || tvd == NULL || tvf == NULL)
-		return NULL;
+	if (tvx == nullptr || tvd == nullptr || tvf == nullptr)
+		return nullptr;
 	return _CLNEW TermVectorsReader(*this);
 }
 
@@ -64,7 +64,7 @@ void TermVectorsReader::close(){
 	CLuceneError keep(0,"",false);
 	bool thrown = false;
 
-	if (tvx != NULL){
+	if (tvx != nullptr){
 		try{
 			tvx->close();
 		}catch(CLuceneError& err){
@@ -76,7 +76,7 @@ void TermVectorsReader::close(){
 		}
 		_CLDELETE(tvx);//delete even  if error thrown
 	}
-    if (tvd != NULL){
+    if (tvd != nullptr){
 		try{
 			tvd->close();
 		}catch(CLuceneError& err){
@@ -88,7 +88,7 @@ void TermVectorsReader::close(){
 		}
 		_CLDELETE(tvd);
 	}
-    if (tvf != NULL){
+    if (tvf != nullptr){
 		try{
 			tvf->close();
 		}catch(CLuceneError& err){
@@ -108,8 +108,8 @@ void TermVectorsReader::close(){
 TermFreqVector* TermVectorsReader::get(const int32_t docNum, const TCHAR* field){
 	// Check if no term vectors are available for this segment at all
     int32_t fieldNumber = fieldInfos->fieldNumber(field);
-    TermFreqVector* result = NULL;
-    if (tvx != NULL) {
+    TermFreqVector* result = nullptr;
+    if (tvx != nullptr) {
 		//We need to account for the FORMAT_SIZE at when seeking in the tvx
 		//We don't need to do this in other seeks because we already have the
 		// file pointer
@@ -149,7 +149,7 @@ TermFreqVector* TermVectorsReader::get(const int32_t docNum, const TCHAR* field)
 
 bool TermVectorsReader::get(int32_t docNum, Array<TermFreqVector*>& result){
     // Check if no term vectors are available for this segment at all
-    if (tvx != NULL) {
+    if (tvx != nullptr) {
         //We need to offset by
 		tvx->seek((docNum * 8L) + TermVectorsWriter::FORMAT_SIZE);
         int64_t position = tvx->readLong();
@@ -171,7 +171,7 @@ bool TermVectorsReader::get(int32_t docNum, Array<TermFreqVector*>& result){
 				    fields[i] = fieldInfos->fieldName(number);
 				}
 			}
-			fields[fieldCount]=NULL;
+			fields[fieldCount]=nullptr;
 		  
 		    // Compute position in the tvf file
 		    position = 0;
@@ -229,7 +229,7 @@ SegmentTermVector* TermVectorsReader::readTermVector(const TCHAR* field,
     int32_t numTerms = tvf->readVInt();
     // If no terms - return a constant empty termvector. However, this should never occur!
     if (numTerms == 0) 
-		return _CLNEW SegmentTermVector(field, NULL, NULL);
+		return _CLNEW SegmentTermVector(field, nullptr, nullptr);
 
 	bool storePositions;
     bool storeOffsets;
@@ -249,8 +249,8 @@ SegmentTermVector* TermVectorsReader::readTermVector(const TCHAR* field,
     Array<int32_t>* termFreqs = _CLNEW Array<int32_t>(numTerms);
 
     //  we may not need these, but declare them
-    Array< Array<int32_t> >* positions = NULL;
-	Array< Array<TermVectorOffsetInfo> >* offsets = NULL;
+    Array< Array<int32_t> >* positions = nullptr;
+	Array< Array<TermVectorOffsetInfo> >* offsets = nullptr;
 	if(storePositions){
 		Array<int32_t>* tmp = _CL_NEWARRAY(Array<int32_t>,numTerms);
 		positions = _CLNEW Array< Array<int32_t> >(tmp, numTerms);
@@ -315,9 +315,9 @@ SegmentTermVector* TermVectorsReader::readTermVector(const TCHAR* field,
 		}
     }
     free(buffer);
-	terms[numTerms]=NULL; //null terminate terms array
+	terms[numTerms]=nullptr; //null terminate terms array
 
-	SegmentTermVector* tv = NULL;
+	SegmentTermVector* tv = nullptr;
 	if (storePositions || storeOffsets){
 	  return _CLNEW SegmentTermPositionVector(field, terms, termFreqs, positions, offsets);
 	}else {

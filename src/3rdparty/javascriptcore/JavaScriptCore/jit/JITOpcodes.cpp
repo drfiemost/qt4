@@ -2253,7 +2253,7 @@ void JIT::emit_op_jsr(Instruction* currentInstruction)
 {
     int retAddrDst = currentInstruction[1].u.operand;
     int target = currentInstruction[2].u.operand;
-    DataLabelPtr storeLocation = storePtrWithPatch(ImmPtr(0), Address(callFrameRegister, sizeof(Register) * retAddrDst));
+    DataLabelPtr storeLocation = storePtrWithPatch(ImmPtr(nullptr), Address(callFrameRegister, sizeof(Register) * retAddrDst));
     addJump(jump(), target);
     m_jsrSites.append(JSRInfo(storeLocation, label()));
     killLastResultRegister();
@@ -2724,7 +2724,7 @@ void JIT::emit_op_create_arguments(Instruction*)
     
 void JIT::emit_op_init_arguments(Instruction*)
 {
-    storePtr(ImmPtr(0), Address(callFrameRegister, sizeof(Register) * RegisterFile::ArgumentsRegister));
+    storePtr(ImmPtr(nullptr), Address(callFrameRegister, sizeof(Register) * RegisterFile::ArgumentsRegister));
 }
 
 void JIT::emit_op_convert_this(Instruction* currentInstruction)

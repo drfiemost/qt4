@@ -36,7 +36,7 @@ CL_NS_DEF(search)
   
       slop   = 0;
 
-	  field = NULL;
+	  field = nullptr;
   }
   PhraseQuery::PhraseQuery(const PhraseQuery& clone):
 	Query(clone), terms(false)
@@ -206,7 +206,7 @@ CL_NS_DEF(search)
 	  for ( int32_t i=0;i<size;i++ ){
           ret[i] = terms[i];
      }
-     ret[size] = NULL;
+     ret[size] = nullptr;
      return ret;
   }
 
@@ -216,17 +216,17 @@ CL_NS_DEF(search)
   //Post - The query string has been returned
 
       if ( terms.size()== 0 )
-		  return NULL;
+		  return nullptr;
 
       StringBuffer buffer;
-      if ( f==NULL || _tcscmp(field,f)!=0) {
+      if ( f==nullptr || _tcscmp(field,f)!=0) {
           buffer.append(field);
           buffer.append( _T(":"));
       }
 
       buffer.append( _T("\"") );
 
-      Term *T = NULL;
+      Term *T = nullptr;
 
 	  //iterate through all terms
       for (uint32_t i = 0; i < terms.size(); i++) {
@@ -308,14 +308,14 @@ CL_NS_DEF(search)
 
 	  //optimize zero-term case
       if (tpsLength == 0)			  
-          return NULL;
+          return nullptr;
     
     TermPositions** tps = _CL_NEWARRAY(TermPositions*,tpsLength+1);
 
 	//Check if tps has been allocated properly
     CND_CONDITION(tps != NULL,"Could not allocate memory for tps");
 
-    TermPositions* p = NULL;
+    TermPositions* p = nullptr;
 
 	//Iterate through all terms
 	int32_t size = _this->terms.size();
@@ -324,21 +324,21 @@ CL_NS_DEF(search)
         p = reader->termPositions(_this->terms[i]);
       
 		//Check if p is valid
-		if (p == NULL) {
+		if (p == nullptr) {
 			//Delete previous retrieved termPositions
 			while (--i >= 0){
 				_CLVDELETE(tps[i]);  //todo: not a clucene object... should be
 			}
             _CLDELETE_ARRAY(tps); 
-            return NULL;
+            return nullptr;
         }
 
         //Store p at i in tps
         tps[i] = p;
     }
-	tps[tpsLength] = NULL;
+	tps[tpsLength] = nullptr;
 
-    Scorer* ret = NULL;
+    Scorer* ret = nullptr;
 
     Array<int32_t> positions;
 	_this->getPositions(positions);
@@ -435,7 +435,7 @@ CL_NS_DEF(search)
    Explanation* fieldNormExpl = _CLNEW Explanation();
    uint8_t* fieldNorms = reader->norms(_this->field);
    qreal fieldNorm =
-     fieldNorms!=NULL ? Similarity::decodeNorm(fieldNorms[doc]) : 0.0f;
+     fieldNorms!=nullptr ? Similarity::decodeNorm(fieldNorms[doc]) : 0.0f;
    fieldNormExpl->setValue(fieldNorm);
 
    

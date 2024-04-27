@@ -53,7 +53,7 @@ class QDesignerServer: public QObject
 {
     Q_OBJECT
 public:
-    explicit QDesignerServer(QObject *parent = 0);
+    explicit QDesignerServer(QObject *parent = nullptr);
     virtual ~QDesignerServer();
 
     quint16 serverPort() const;
@@ -74,7 +74,7 @@ class QDesignerClient: public QObject
 {
     Q_OBJECT
 public:
-    explicit QDesignerClient(quint16 port, QObject *parent = 0);
+    explicit QDesignerClient(quint16 port, QObject *parent = nullptr);
     virtual ~QDesignerClient();
 
 private slots:

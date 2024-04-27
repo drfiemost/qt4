@@ -79,7 +79,7 @@ public:
 
 QHelpGeneratorPrivate::QHelpGeneratorPrivate()
 {
-    query = 0;
+    query = nullptr;
     namespaceId = -1;
     virtualFolderId = -1;
 }
@@ -277,7 +277,7 @@ void QHelpGenerator::cleanupDB()
     if (d->query) {
         d->query->clear();
         delete d->query;
-        d->query = 0;
+        d->query = nullptr;
     }
     QSqlDatabase::removeDatabase(QLatin1String("builder"));
 }

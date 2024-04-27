@@ -58,7 +58,7 @@ class BookmarkManagerWidget : public QWidget
     Q_OBJECT
 public:
     explicit BookmarkManagerWidget(BookmarkModel *bookmarkModel,
-        QWidget *parent = 0);
+        QWidget *parent = nullptr);
     ~BookmarkManagerWidget();
 
 protected:

@@ -439,7 +439,7 @@ QScriptValue QScriptContext::activationObject() const
 {
     JSC::CallFrame *frame = const_cast<JSC::ExecState*>(QScriptEnginePrivate::frameForContext(this));
     QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::JSObject *result = 0;
+    JSC::JSObject *result = nullptr;
 
     uint flags = QScriptEnginePrivate::contextFlags(frame);
     if ((flags & QScriptEnginePrivate::NativeContext) && !(flags & QScriptEnginePrivate::HasScopeContext)) {
@@ -478,7 +478,7 @@ QScriptValue QScriptContext::activationObject() const
     }
 
     if (result && result->inherits(&QScript::QScriptActivationObject::info)
-        && (static_cast<QScript::QScriptActivationObject*>(result)->delegate() != 0)) {
+        && (static_cast<QScript::QScriptActivationObject*>(result)->delegate() != nullptr)) {
         // Return the object that property access is being delegated to
         result = static_cast<QScript::QScriptActivationObject*>(result)->delegate();
     }
@@ -528,7 +528,7 @@ void QScriptContext::setActivationObject(const QScriptValue &activation)
 
     // else replace the first activation object in the scope chain
     JSC::ScopeChainNode *node = frame->scopeChain();
-    while (node != 0) {
+    while (node != nullptr) {
         if (node->object && node->object->isVariableObject()) {
             if (!object->isVariableObject()) {
                 if (node->object->inherits(&QScript::QScriptActivationObject::info)) {
@@ -584,7 +584,7 @@ void QScriptContext::setThisObject(const QScriptValue &thisObject)
     }
     JSC::JSValue jscThisObject = QScript::scriptEngineFromExec(frame)->scriptValueToJSCValue(thisObject);
     JSC::CodeBlock *cb = frame->codeBlock();
-    if (cb != 0) {
+    if (cb != nullptr) {
         frame[cb->thisRegister()] = jscThisObject;
     } else {
         JSC::Register* thisRegister = QScriptEnginePrivate::thisRegisterForFrame(frame);
@@ -705,7 +705,7 @@ QScriptValueList QScriptContext::scopeChain() const
         if (!object)
             continue;
         if (object->inherits(&QScript::QScriptActivationObject::info)
-            && (static_cast<QScript::QScriptActivationObject*>(object)->delegate() != 0)) {
+            && (static_cast<QScript::QScriptActivationObject*>(object)->delegate() != nullptr)) {
             // Return the object that property access is being delegated to
             object = static_cast<QScript::QScriptActivationObject*>(object)->delegate();
         }
@@ -774,7 +774,7 @@ QScriptValue QScriptContext::popScope()
     QScriptValue result = engine->scriptValueFromJSCValue(scope->object);
     if (!scope->next) {
         // We cannot have a null scope chain, so just zap the object pointer.
-        scope->object = 0;
+        scope->object = nullptr;
     } else {
         frame->setScopeChain(scope->pop());
     }

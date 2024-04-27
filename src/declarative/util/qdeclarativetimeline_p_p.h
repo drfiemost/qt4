@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTimeLine : public QAbstractAnimation
 {
 Q_OBJECT
 public:
-    QDeclarativeTimeLine(QObject *parent = 0);
+    QDeclarativeTimeLine(QObject *parent = nullptr);
     ~QDeclarativeTimeLine();
 
     enum SyncMode { LocalSync, GlobalSync };
@@ -153,7 +153,7 @@ public:
     typedef void (*Callback)(void *);
 
     QDeclarativeTimeLineCallback();
-    QDeclarativeTimeLineCallback(QDeclarativeTimeLineObject *b, Callback, void * = 0);
+    QDeclarativeTimeLineCallback(QDeclarativeTimeLineObject *b, Callback, void * = nullptr);
     QDeclarativeTimeLineCallback(const QDeclarativeTimeLineCallback &o);
 
     QDeclarativeTimeLineCallback &operator=(const QDeclarativeTimeLineCallback &o);
@@ -171,7 +171,7 @@ class QDeclarativeTimeLineValueProxy : public QDeclarativeTimeLineValue
 {
 public:
     QDeclarativeTimeLineValueProxy(T *cls, void (T::*func)(qreal), qreal v = 0.)
-    : QDeclarativeTimeLineValue(v), _class(cls), _setFunctionReal(func), _setFunctionInt(0)
+    : QDeclarativeTimeLineValue(v), _class(cls), _setFunctionReal(func), _setFunctionInt(nullptr)
     {
         Q_ASSERT(_class);
     }

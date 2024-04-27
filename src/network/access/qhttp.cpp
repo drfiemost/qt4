@@ -97,10 +97,10 @@ public:
     Q_DECLARE_PUBLIC(QHttp)
 
     inline QHttpPrivate()
-        : socket(0), reconnectAttempts(2),
+        : socket(nullptr), reconnectAttempts(2),
           deleteSocket(0), state(QHttp::Unconnected),
           error(QHttp::NoError), port(0), mode(QHttp::ConnectionModeHttp),
-          toDevice(0), postDevice(0), bytesDone(0), chunkedSize(-1),
+          toDevice(nullptr), postDevice(nullptr), bytesDone(0), chunkedSize(-1),
           repost(false), pendingPost(false)
     {
     }
@@ -244,7 +244,7 @@ private:
 void QHttpNormalRequest::start(QHttp *http)
 {
     if (!http->d_func()->socket)
-        http->d_func()->setSock(0);
+        http->d_func()->setSock(nullptr);
     http->d_func()->header = header;
 
     if (is_ba) {
@@ -252,7 +252,7 @@ void QHttpNormalRequest::start(QHttp *http)
         if (http->d_func()->buffer.size() >= 0)
             http->d_func()->header.setContentLength(http->d_func()->buffer.size());
 
-        http->d_func()->postDevice = 0;
+        http->d_func()->postDevice = nullptr;
     } else {
         http->d_func()->buffer = QByteArray();
 
@@ -261,14 +261,14 @@ void QHttpNormalRequest::start(QHttp *http)
             if (http->d_func()->postDevice->size() >= 0)
                 http->d_func()->header.setContentLength(http->d_func()->postDevice->size());
         } else {
-            http->d_func()->postDevice = 0;
+            http->d_func()->postDevice = nullptr;
         }
     }
 
     if (to && (to->isOpen() || to->open(QIODevice::WriteOnly)))
         http->d_func()->toDevice = to;
     else
-        http->d_func()->toDevice = 0;
+        http->d_func()->toDevice = nullptr;
 
     http->d_func()->reconnectAttempts = 2;
     http->d_func()->_q_slotSendRequest();
@@ -287,7 +287,7 @@ QHttpRequestHeader QHttpNormalRequest::requestHeader()
 QIODevice *QHttpNormalRequest::sourceDevice()
 {
     if (is_ba)
-        return 0;
+        return nullptr;
     return data.dev;
 }
 
@@ -348,9 +348,9 @@ public:
     void start(QHttp *);
 
     QIODevice *sourceDevice()
-    { return 0; }
+    { return nullptr; }
     QIODevice *destinationDevice()
-    { return 0; }
+    { return nullptr; }
 
 private:
     QString hostName;
@@ -392,9 +392,9 @@ public:
     void start(QHttp *);
 
     QIODevice *sourceDevice()
-    { return 0; }
+    { return nullptr; }
     QIODevice *destinationDevice()
-    { return 0; }
+    { return nullptr; }
 
 private:
     QString user;
@@ -437,9 +437,9 @@ public:
     }
 
     inline QIODevice *sourceDevice()
-    { return 0; }
+    { return nullptr; }
     inline QIODevice *destinationDevice()
-    { return 0; }
+    { return nullptr; }
 private:
     QNetworkProxy proxy;
 };
@@ -461,9 +461,9 @@ public:
     void start(QHttp *);
 
     QIODevice *sourceDevice()
-    { return 0; }
+    { return nullptr; }
     QIODevice *destinationDevice()
-    { return 0; }
+    { return nullptr; }
 
 private:
     QTcpSocket *socket;
@@ -489,9 +489,9 @@ public:
     void start(QHttp *);
 
     QIODevice *sourceDevice()
-    { return 0; }
+    { return nullptr; }
     QIODevice *destinationDevice()
-    { return 0; }
+    { return nullptr; }
 };
 
 void QHttpCloseRequest::start(QHttp *http)
@@ -1867,7 +1867,7 @@ qint64 QHttp::bytesAvailable() const
 qint64 QHttp::read(char *data, qint64 maxlen)
 {
     Q_D(QHttp);
-    if (data == 0 && maxlen != 0) {
+    if (data == nullptr && maxlen != 0) {
         qWarning("QHttp::read: Null pointer error");
         return -1;
     }
@@ -1964,7 +1964,7 @@ QIODevice *QHttp::currentSourceDevice() const
 {
     Q_D(const QHttp);
     if (d->pending.isEmpty())
-        return 0;
+        return nullptr;
     return d->pending.first()->sourceDevice();
 }
 
@@ -1982,7 +1982,7 @@ QIODevice *QHttp::currentDestinationDevice() const
 {
     Q_D(const QHttp);
     if (d->pending.isEmpty())
-        return 0;
+        return nullptr;
     return d->pending.first()->destinationDevice();
 }
 
@@ -2200,7 +2200,7 @@ int QHttp::get(const QString &path, QIODevice *to)
     Q_D(QHttp);
     QHttpRequestHeader header(QLatin1String("GET"), path);
     header.setValue(QLatin1String("Connection"), QLatin1String("Keep-Alive"));
-    return d->addRequest(new QHttpPGHRequest(header, (QIODevice *) 0, to));
+    return d->addRequest(new QHttpPGHRequest(header, (QIODevice *) nullptr, to));
 }
 
 /*!
@@ -2277,7 +2277,7 @@ int QHttp::head(const QString &path)
     Q_D(QHttp);
     QHttpRequestHeader header(QLatin1String("HEAD"), path);
     header.setValue(QLatin1String("Connection"), QLatin1String("Keep-Alive"));
-    return d->addRequest(new QHttpPGHRequest(header, (QIODevice*)0, 0));
+    return d->addRequest(new QHttpPGHRequest(header, (QIODevice*)nullptr, nullptr));
 }
 
 /*!
@@ -2581,7 +2581,7 @@ void QHttpPrivate::_q_slotClosed()
         finishedWithError(QLatin1String(QT_TRANSLATE_NOOP("QHttp", "Server closed connection unexpectedly")), QHttp::UnexpectedClose);
     }
 
-    postDevice = 0;
+    postDevice = nullptr;
     if (state != QHttp::Closing)
         setState(QHttp::Closing);
     QMetaObject::invokeMethod(q, "_q_slotDoFinished", Qt::QueuedConnection);
@@ -2628,7 +2628,7 @@ void QHttpPrivate::_q_slotConnected()
 void QHttpPrivate::_q_slotError(QAbstractSocket::SocketError err)
 {
     Q_Q(QHttp);
-    postDevice = 0;
+    postDevice = nullptr;
 
     if (state == QHttp::Connecting || state == QHttp::Reading || state == QHttp::Sending) {
         switch (err) {
@@ -2709,7 +2709,7 @@ void QHttpPrivate::postMoreData()
             return;
         }
         if (postDevice->atEnd()) {
-            postDevice = 0;
+            postDevice = nullptr;
         }
 
         socket->write(arr, n);
@@ -2860,7 +2860,7 @@ void QHttpPrivate::_q_slotReadyRead()
         everythingRead = true;
     } else {
         qint64 n = socket->bytesAvailable();
-        QByteArray *arr = 0;
+        QByteArray *arr = nullptr;
         if (chunkedSize != -1) {
             // transfer-encoding is chunked
             for (;;) {
@@ -2958,7 +2958,7 @@ void QHttpPrivate::_q_slotReadyRead()
                 qint64 bytesWritten;
                 bytesWritten = toDevice->write(*arr, n);
                 delete arr;
-                arr = 0;
+                arr = nullptr;
                 // if writing to the device does not succeed, quit with error
                 if (bytesWritten == -1 || bytesWritten < n) {
                     finishedWithError(QLatin1String(QT_TRANSLATE_NOOP("QHttp", "Error writing response to device")), QHttp::UnknownError);
@@ -2976,7 +2976,7 @@ void QHttpPrivate::_q_slotReadyRead()
                 char *ptr = rba.reserve(arr->size());
                 memcpy(ptr, arr->data(), arr->size());
                 delete arr;
-                arr = 0;
+                arr = nullptr;
 #if defined(QHTTP_DEBUG)
                 qDebug("QHttp::_q_slotReadyRead(): read %lld bytes (%lld bytes done)", n, bytesDone + q->bytesAvailable());
 #endif
@@ -3073,7 +3073,7 @@ void QHttpPrivate::closeConn()
     if (state == QHttp::Closing || state == QHttp::Unconnected)
         return;
 
-    postDevice = 0;
+    postDevice = nullptr;
     setState(QHttp::Closing);
 
     // Already closed ?
@@ -3096,7 +3096,7 @@ void QHttpPrivate::setSock(QTcpSocket *sock)
         delete socket;
 
     // use the new QTcpSocket socket, or create one if socket is 0.
-    deleteSocket = (sock == 0);
+    deleteSocket = (sock == nullptr);
     socket = sock;
     if (!socket) {
 #ifndef QT_NO_OPENSSL

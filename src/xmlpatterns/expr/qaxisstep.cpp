@@ -208,7 +208,7 @@ QXmlNodeModelIndex::Axis AxisStep::axis() const
 
 QString AxisStep::axisName(const QXmlNodeModelIndex::Axis axis)
 {
-    const char *result = 0;
+    const char *result = nullptr;
 
     switch(axis)
     {

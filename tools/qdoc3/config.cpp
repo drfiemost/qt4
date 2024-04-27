@@ -802,7 +802,7 @@ void Config::load(Location location, const QString& fileName)
                         }
                         if (!var.isEmpty()) {
                             char *val = getenv(var.toLatin1().data());
-                            if (val == 0) {
+                            if (val == nullptr) {
                                 location.fatal(tr("Environment variable '%1' undefined").arg(var));
                             }
                             else {

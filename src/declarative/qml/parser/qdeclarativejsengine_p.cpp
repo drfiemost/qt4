@@ -97,7 +97,7 @@ NodePool::~NodePool()
 Code *NodePool::createCompiledCode(AST::Node *, CompilationUnit &)
 {
     Q_ASSERT(0);
-    return 0;
+    return nullptr;
 }
 
 static int toDigit(char c)
@@ -172,7 +172,7 @@ double integerFromString(const QString &str, int radix)
 
 
 Engine::Engine()
-    : _lexer(0), _nodePool(0)
+    : _lexer(nullptr), _nodePool(nullptr)
 { }
 
 Engine::~Engine()

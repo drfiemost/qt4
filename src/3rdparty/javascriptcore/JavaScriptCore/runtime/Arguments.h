@@ -155,12 +155,12 @@ namespace JSC {
         d->firstParameterIndex = firstParameterIndex;
         d->numArguments = numArguments;
 
-        d->activation = 0;
+        d->activation = nullptr;
         d->registers = callFrame->registers();
 
         Register* extraArguments;
         if (d->numArguments <= d->numParameters)
-            extraArguments = 0;
+            extraArguments = nullptr;
         else {
             unsigned numExtraArguments = d->numArguments - d->numParameters;
             if (numExtraArguments > sizeof(d->extraArgumentsFixedBuffer) / sizeof(Register))
@@ -189,7 +189,7 @@ namespace JSC {
 
         d->numParameters = 0;
         d->numArguments = numArguments;
-        d->activation = 0;
+        d->activation = nullptr;
 
         Register* extraArguments;
         if (numArguments > sizeof(d->extraArgumentsFixedBuffer) / sizeof(Register))
@@ -250,7 +250,7 @@ namespace JSC {
     ALWAYS_INLINE Arguments* Register::arguments() const
     {
         if (jsValue() == JSValue())
-            return 0;
+            return nullptr;
         return asArguments(jsValue());
     }
     

@@ -93,7 +93,7 @@ struct ObjectData : public QScriptDeclarativeClass::Object {
  */
 QDeclarativeObjectScriptClass::QDeclarativeObjectScriptClass(QDeclarativeEngine *bindEngine)
 : QScriptDeclarativeClass(QDeclarativeEnginePrivate::getScriptEngine(bindEngine)),
-  methods(bindEngine), lastData(0), engine(bindEngine)
+  methods(bindEngine), lastData(nullptr), engine(bindEngine)
 {
     QScriptEngine *scriptEngine = QDeclarativeEnginePrivate::getScriptEngine(engine);
 
@@ -152,7 +152,7 @@ QScriptClass::QueryFlags
 QDeclarativeObjectScriptClass::queryProperty(Object *object, const Identifier &name,
                                     QScriptClass::QueryFlags flags)
 {
-    return queryProperty(toQObject(object), name, flags, 0);
+    return queryProperty(toQObject(object), name, flags, nullptr);
 }
 
 QScriptClass::QueryFlags
@@ -161,15 +161,15 @@ QDeclarativeObjectScriptClass::queryProperty(QObject *obj, const Identifier &nam
                                              QueryHints hints)
 {
     Q_UNUSED(flags);
-    lastData = 0;
-    lastTNData = 0;
+    lastData = nullptr;
+    lastTNData = nullptr;
 
     if (name == m_destroyId.identifier ||
         name == m_toStringId.identifier)
         return QScriptClass::HandlesReadAccess;
 
     if (!obj)
-        return 0;
+        return nullptr;
 
     QDeclarativeEnginePrivate *enginePrivate = QDeclarativeEnginePrivate::get(engine);
     lastData = QDeclarativePropertyCache::property(engine, obj, name, local);
@@ -177,7 +177,7 @@ QDeclarativeObjectScriptClass::queryProperty(QObject *obj, const Identifier &nam
 
         QDeclarativeData *ddata = QDeclarativeData::get(obj);
         if (ddata && ddata->propertyCache && !ddata->propertyCache->isAllowedInRevision(lastData)) 
-            return 0;
+            return nullptr;
     }
 
     if (lastData)
@@ -209,7 +209,7 @@ QDeclarativeObjectScriptClass::queryProperty(QObject *obj, const Identifier &nam
         return QScriptClass::HandlesWriteAccess;
     }
 
-    return 0;
+    return nullptr;
 }
 
 QDeclarativeObjectScriptClass::Value
@@ -271,48 +271,48 @@ QDeclarativeObjectScriptClass::property(QObject *obj, const Identifier &name)
         if (lastData->flags & QDeclarativePropertyCache::Data::IsQList) {
             return Value(scriptEngine, enginePriv->listClass->newList(obj, lastData->coreIndex, lastData->propType));
         } else if (lastData->flags & QDeclarativePropertyCache::Data::IsQObjectDerived) {
-            QObject *rv = 0;
-            void *args[] = { &rv, 0 };
+            QObject *rv = nullptr;
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, newQObject(rv, lastData->propType));
         } else if (lastData->flags & QDeclarativePropertyCache::Data::IsQScriptValue) {
             QScriptValue rv = scriptEngine->nullValue();
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::QReal) {
             qreal rv = 0;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::Int || lastData->flags & QDeclarativePropertyCache::Data::IsEnumType) {
             int rv = 0;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::Bool) {
             bool rv = false;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::QString) {
             QString rv;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::UInt) {
             uint rv = 0;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::Float) {
             float rv = 0;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else if (lastData->propType == QMetaType::Double) {
             double rv = 0;
-            void *args[] = { &rv, 0 };
+            void *args[] = { &rv, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, lastData->coreIndex, args);
             return Value(scriptEngine, rv);
         } else {
@@ -373,7 +373,7 @@ void QDeclarativeObjectScriptClass::setProperty(QObject *obj,
         }
     }
 
-    QDeclarativeBinding *newBinding = 0;
+    QDeclarativeBinding *newBinding = nullptr;
     if (value.isFunction() && !value.isRegExp()) {
         QScriptContextInfo ctxtInfo(context);
         QDeclarativePropertyCache::ValueTypeData valueTypeData;
@@ -391,13 +391,13 @@ void QDeclarativeObjectScriptClass::setProperty(QObject *obj,
         delBinding->destroy();
 
     if (value.isNull() && lastData->flags & QDeclarativePropertyCache::Data::IsQObjectDerived) {
-        QObject *o = 0;
+        QObject *o = nullptr;
         int status = -1;
         int flags = 0;
-        void *argv[] = { &o, 0, &status, &flags };
+        void *argv[] = { &o, nullptr, &status, &flags };
         QMetaObject::metacall(obj, QMetaObject::WriteProperty, lastData->coreIndex, argv);
     } else if (value.isUndefined() && lastData->flags & QDeclarativePropertyCache::Data::IsResettable) {
-        void *a[] = { 0 };
+        void *a[] = { nullptr };
         QMetaObject::metacall(obj, QMetaObject::ResetProperty, lastData->coreIndex, a);
     } else if (value.isUndefined() && lastData->propType == qMetaTypeId<QVariant>()) {
         QDeclarativePropertyPrivate::write(obj, *lastData, QVariant(), evalContext);
@@ -413,7 +413,7 @@ void QDeclarativeObjectScriptClass::setProperty(QObject *obj,
             int rawValue = qRoundDouble(value.toNumber());
             int status = -1;
             int flags = 0;
-            void *a[] = { (void *)&rawValue, 0, &status, &flags };
+            void *a[] = { (void *)&rawValue, nullptr, &status, &flags };
             QMetaObject::metacall(obj, QMetaObject::WriteProperty,
                                   lastData->coreIndex, a);
             return;
@@ -421,7 +421,7 @@ void QDeclarativeObjectScriptClass::setProperty(QObject *obj,
             qreal rawValue = qreal(value.toNumber());
             int status = -1;
             int flags = 0;
-            void *a[] = { (void *)&rawValue, 0, &status, &flags };
+            void *a[] = { (void *)&rawValue, nullptr, &status, &flags };
             QMetaObject::metacall(obj, QMetaObject::WriteProperty,
                                   lastData->coreIndex, a);
             return;
@@ -429,7 +429,7 @@ void QDeclarativeObjectScriptClass::setProperty(QObject *obj,
             const QString &rawValue = value.toString();
             int status = -1;
             int flags = 0;
-            void *a[] = { (void *)&rawValue, 0, &status, &flags };
+            void *a[] = { (void *)&rawValue, nullptr, &status, &flags };
             QMetaObject::metacall(obj, QMetaObject::WriteProperty,
                                   lastData->coreIndex, a);
             return;
@@ -442,7 +442,7 @@ void QDeclarativeObjectScriptClass::setProperty(QObject *obj,
             v = enginePriv->scriptValueToVariant(value, lastData->propType);
 
         if (!QDeclarativePropertyPrivate::write(obj, *lastData, v, evalContext)) {
-            const char *valueType = 0;
+            const char *valueType = nullptr;
             if (v.userType() == QVariant::Invalid) valueType = "null";
             else valueType = QMetaType::typeName(v.userType());
 
@@ -529,7 +529,7 @@ QStringList QDeclarativeObjectScriptClass::propertyNames(Object *object)
 
     QDeclarativeEnginePrivate *enginePrivate = QDeclarativeEnginePrivate::get(engine);
 
-    QDeclarativePropertyCache *cache = 0;
+    QDeclarativePropertyCache *cache = nullptr;
     QDeclarativeData *ddata = QDeclarativeData::get(obj);
     if (ddata)
         cache = ddata->propertyCache;
@@ -653,7 +653,7 @@ QDeclarativeObjectMethodScriptClass::queryProperty(Object *, const Identifier &n
     if (name == m_connectId.identifier || name == m_disconnectId.identifier)
         return QScriptClass::HandlesReadAccess;
     else
-        return 0;
+        return nullptr;
 
 }
 
@@ -755,7 +755,7 @@ void MetaCallArgument::initAsType(int callType, QDeclarativeEngine *e)
                callType == QMetaType::Float) {
         type = callType;
     } else if (callType == QMetaType::QObjectStar) {
-        qobjectPtr = 0;
+        qobjectPtr = nullptr;
         type = callType;
     } else if (callType == QMetaType::QString) {
         qstringPtr = new (&allocData) QString();
@@ -768,7 +768,7 @@ void MetaCallArgument::initAsType(int callType, QDeclarativeEngine *e)
         qlistPtr = new (&allocData) QList<QObject *>();
     } else {
         type = -1;
-        qvariantPtr = new (&allocData) QVariant(callType, (void *)0);
+        qvariantPtr = new (&allocData) QVariant(callType, (void *)nullptr);
     }
 }
 
@@ -837,12 +837,12 @@ void MetaCallArgument::fromScriptValue(int callType, QDeclarativeEngine *engine,
             if (obj) {
                 const QMetaObject *objMo = obj->metaObject();
                 while (objMo && objMo != mo) objMo = objMo->superClass();
-                if (!objMo) obj = 0;
+                if (!objMo) obj = nullptr;
             }
 
             *qvariantPtr = QVariant(callType, &obj);
         } else {
-            *qvariantPtr = QVariant(callType, (void *)0);
+            *qvariantPtr = QVariant(callType, (void *)nullptr);
         }
     }
 }
@@ -950,7 +950,7 @@ QDeclarativeObjectMethodScriptClass::callPrecise(QObject *object, const QDeclara
 
     } else {
 
-        return callMethod(object, data.coreIndex, data.propType, 0, 0, ctxt);
+        return callMethod(object, data.coreIndex, data.propType, 0, nullptr, ctxt);
 
     }
 }
@@ -989,7 +989,7 @@ QDeclarativeObjectMethodScriptClass::callMethod(QObject *object, int index,
 
     } else {
 
-        void *args[] = { 0 };
+        void *args[] = { nullptr };
         QMetaObject::metacall(object, QMetaObject::InvokeMetaMethod, index, args);
         return Value();
 
@@ -1014,7 +1014,7 @@ QDeclarativeObjectMethodScriptClass::callOverloaded(MethodData *method, QScriptC
 {
     int argumentCount = ctxt->argumentCount();
 
-    QDeclarativePropertyCache::Data *best = 0;
+    QDeclarativePropertyCache::Data *best = nullptr;
     int bestParameterScore = INT_MAX;
     int bestMatchScore = INT_MAX;
 
@@ -1063,7 +1063,7 @@ QDeclarativeObjectMethodScriptClass::callOverloaded(MethodData *method, QScriptC
         if (bestParameterScore == 0 && bestMatchScore == 0)
             break; // We can't get better than that
 
-    } while((attempt = relatedMethod(method->object, attempt, dummy)) != 0);
+    } while((attempt = relatedMethod(method->object, attempt, dummy)) != nullptr);
 
     if (best) {
         return callPrecise(method->object, *best, ctxt);
@@ -1214,7 +1214,7 @@ QDeclarativeObjectMethodScriptClass::relatedMethod(QObject *object, QDeclarative
 {
     QDeclarativePropertyCache *cache = QDeclarativeData::get(object)->propertyCache;
     if (current->relatedIndex == -1)
-        return 0;
+        return nullptr;
 
     if (cache) {
         return cache->method(current->relatedIndex);

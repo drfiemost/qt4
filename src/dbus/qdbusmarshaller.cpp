@@ -184,7 +184,7 @@ inline bool QDBusMarshaller::append(const QDBusVariant &arg)
     }
 
     QByteArray tmpSignature;
-    const char *signature = 0;
+    const char *signature = nullptr;
     if (id == QDBusMetaTypeId::argument()) {
         // take the signature from the QDBusArgument object we're marshalling
         tmpSignature =
@@ -229,7 +229,7 @@ inline void QDBusMarshaller::append(const QStringList &arg)
 
 inline QDBusMarshaller *QDBusMarshaller::beginStructure()
 {
-    return beginCommon(DBUS_TYPE_STRUCT, 0);
+    return beginCommon(DBUS_TYPE_STRUCT, nullptr);
 }
 
 inline QDBusMarshaller *QDBusMarshaller::beginArray(int id)
@@ -287,7 +287,7 @@ inline QDBusMarshaller *QDBusMarshaller::beginMap(int kid, int vid)
 
 inline QDBusMarshaller *QDBusMarshaller::beginMapEntry()
 {
-    return beginCommon(DBUS_TYPE_DICT_ENTRY, 0);
+    return beginCommon(DBUS_TYPE_DICT_ENTRY, nullptr);
 }
 
 void QDBusMarshaller::open(QDBusMarshaller &sub, int code, const char *signature)
@@ -553,7 +553,7 @@ bool QDBusMarshaller::appendCrossMarshalling(QDBusDemarshaller *demarshaller)
 
     QDBusMarshaller mrecursed(capabilities);  // create on the stack makes it autoclose
     QByteArray subSignature;
-    const char *sig = 0;
+    const char *sig = nullptr;
     if (code == DBUS_TYPE_VARIANT || code == DBUS_TYPE_ARRAY) {
         subSignature = drecursed->currentSignature().toLatin1();
         if (!subSignature.isEmpty())

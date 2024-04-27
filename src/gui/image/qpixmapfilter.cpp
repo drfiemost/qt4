@@ -210,7 +210,7 @@ QRectF QPixmapFilter::boundingRectFor(const QRectF &rect) const
 class QPixmapConvolutionFilterPrivate : public QPixmapFilterPrivate
 {
 public:
-    QPixmapConvolutionFilterPrivate(): convolutionKernel(0), kernelWidth(0), kernelHeight(0), convoluteAlpha(false) {}
+    QPixmapConvolutionFilterPrivate(): convolutionKernel(nullptr), kernelWidth(0), kernelHeight(0), convoluteAlpha(false) {}
     ~QPixmapConvolutionFilterPrivate() {
         delete[] convolutionKernel;
     }
@@ -426,7 +426,7 @@ void QPixmapConvolutionFilter::draw(QPainter *painter, const QPointF &p, const Q
         return;
 
     QPixmapFilter *filter = painter->paintEngine() && painter->paintEngine()->isExtended() ?
-        static_cast<QPaintEngineEx *>(painter->paintEngine())->pixmapFilter(type(), this) : 0;
+        static_cast<QPaintEngineEx *>(painter->paintEngine())->pixmapFilter(type(), this) : nullptr;
     QPixmapConvolutionFilter *convolutionFilter = static_cast<QPixmapConvolutionFilter*>(filter);
     if (convolutionFilter) {
         convolutionFilter->setConvolutionKernel(d->convolutionKernel, d->kernelWidth, d->kernelHeight);
@@ -437,7 +437,7 @@ void QPixmapConvolutionFilter::draw(QPainter *painter, const QPointF &p, const Q
 
     // falling back to raster implementation
 
-    QImage *target = 0;
+    QImage *target = nullptr;
     if (painter->paintEngine()->paintDevice()->devType() == QInternal::Image) {
         target = static_cast<QImage *>(painter->paintEngine()->paintDevice());
 
@@ -445,18 +445,18 @@ void QPixmapConvolutionFilter::draw(QPainter *painter, const QPointF &p, const Q
 
         if (mat.type() > QTransform::TxTranslate) {
             // Disabled because of transformation...
-            target = 0;
+            target = nullptr;
         } else {
             QRasterPaintEngine *pe = static_cast<QRasterPaintEngine *>(painter->paintEngine());
             if (pe->clipType() == QRasterPaintEngine::ComplexClip)
                 // disabled because of complex clipping...
-                target = 0;
+                target = nullptr;
             else {
                 QRectF clip = pe->clipBoundingRect();
                 QRectF rect = boundingRectFor(srcRect.isEmpty() ? src.rect() : srcRect);
                 QTransform x = painter->deviceTransform();
                 if (!clip.contains(rect.translated(x.dx() + p.x(), x.dy() + p.y()))) {
-                    target = 0;
+                    target = nullptr;
                 }
 
             }
@@ -934,7 +934,7 @@ void QPixmapBlurFilter::draw(QPainter *painter, const QPointF &p, const QPixmap 
         scaledRadius /= scale;
 
     QPixmapFilter *filter = painter->paintEngine() && painter->paintEngine()->isExtended() ?
-        static_cast<QPaintEngineEx *>(painter->paintEngine())->pixmapFilter(type(), this) : 0;
+        static_cast<QPaintEngineEx *>(painter->paintEngine())->pixmapFilter(type(), this) : nullptr;
     QPixmapBlurFilter *blurFilter = static_cast<QPixmapBlurFilter*>(filter);
     if (blurFilter) {
         blurFilter->setRadius(scaledRadius);
@@ -1104,7 +1104,7 @@ void QPixmapColorizeFilter::draw(QPainter *painter, const QPointF &dest, const Q
         return;
 
     QPixmapFilter *filter = painter->paintEngine() && painter->paintEngine()->isExtended() ?
-        static_cast<QPaintEngineEx *>(painter->paintEngine())->pixmapFilter(type(), this) : 0;
+        static_cast<QPaintEngineEx *>(painter->paintEngine())->pixmapFilter(type(), this) : nullptr;
     QPixmapColorizeFilter *colorizeFilter = static_cast<QPixmapColorizeFilter*>(filter);
     if (colorizeFilter) {
         colorizeFilter->setColor(d->color);
@@ -1338,7 +1338,7 @@ void QPixmapDropShadowFilter::draw(QPainter *p,
         return;
 
     QPixmapFilter *filter = p->paintEngine() && p->paintEngine()->isExtended() ?
-        static_cast<QPaintEngineEx *>(p->paintEngine())->pixmapFilter(type(), this) : 0;
+        static_cast<QPaintEngineEx *>(p->paintEngine())->pixmapFilter(type(), this) : nullptr;
     QPixmapDropShadowFilter *dropShadowFilter = static_cast<QPixmapDropShadowFilter*>(filter);
     if (dropShadowFilter) {
         dropShadowFilter->setColor(d->color);

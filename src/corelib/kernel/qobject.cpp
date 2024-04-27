@@ -85,7 +85,7 @@ static int *queuedConnectionTypes(const QList<QByteArray> &typeNames)
                      "(Make sure '%s' is registered using qRegisterMetaType().)",
                      typeName.constData(), typeName.constData());
             delete [] types;
-            return 0;
+            return nullptr;
         }
     }
     types[typeNames.count()] = 0;
@@ -143,22 +143,22 @@ private:
 };
 
 
-void (*QAbstractDeclarativeData::destroyed)(QAbstractDeclarativeData *, QObject *) = 0;
-void (*QAbstractDeclarativeData::parentChanged)(QAbstractDeclarativeData *, QObject *, QObject *) = 0;
-void (*QAbstractDeclarativeData::objectNameChanged)(QAbstractDeclarativeData *, QObject *) = 0;
+void (*QAbstractDeclarativeData::destroyed)(QAbstractDeclarativeData *, QObject *) = nullptr;
+void (*QAbstractDeclarativeData::parentChanged)(QAbstractDeclarativeData *, QObject *, QObject *) = nullptr;
+void (*QAbstractDeclarativeData::objectNameChanged)(QAbstractDeclarativeData *, QObject *) = nullptr;
 
 QObjectData::~QObjectData() {}
 
 QObjectPrivate::QObjectPrivate(int version)
-    : threadData(nullptr), connectionLists(0), senders(0), currentSender(0), currentChildBeingDeleted(0)
+    : threadData(nullptr), connectionLists(nullptr), senders(nullptr), currentSender(nullptr), currentChildBeingDeleted(nullptr)
 {
     if (version != QObjectPrivateVersion)
         qFatal("Cannot mix incompatible Qt library (version 0x%x) with this library (version 0x%x)",
                 version, QObjectPrivateVersion);
 
     // QObjectData initialization
-    q_ptr = 0;
-    parent = 0;                                 // no parent yet. It is set by setParent()
+    q_ptr = nullptr;
+    parent = nullptr;                                 // no parent yet. It is set by setParent()
     isWidget = false;                           // assume not a widget object
     pendTimer = false;                          // no timers yet
     blockSig = false;                           // not blocking signals
@@ -167,10 +167,10 @@ QObjectPrivate::QObjectPrivate(int version)
     sendChildEvents = true;                     // if we should send ChildInsert and ChildRemove events to parent
     receiveChildEvents = true;
     postedEvents = 0;
-    extraData = 0;
+    extraData = nullptr;
     connectedSignals[0] = connectedSignals[1] = 0;
     inThreadChangeEvent = false;
-    metaObject = 0;
+    metaObject = nullptr;
     hasGuards = false;
     deleteLaterCalled = false;
 }
@@ -336,7 +336,7 @@ void QObjectPrivate::cleanConnectionLists()
             // Set to the last entry in the connection list that was *not*
             // deleted.  This is needed to update the list's last pointer
             // at the end of the cleanup.
-            QObjectPrivate::Connection *last = 0;
+            QObjectPrivate::Connection *last = nullptr;
 
             QObjectPrivate::Connection **prev = &connectionList.first;
             QObjectPrivate::Connection *c = *prev;
@@ -373,7 +373,7 @@ void QMetaObject::addGuard(QObject **ptr)
         return;
     GuardHash *hash = guardHash();
     if (!hash) {
-        *ptr = 0;
+        *ptr = nullptr;
         return;
     }
     QMutexLocker locker(guardHashLock());
@@ -416,7 +416,7 @@ void QMetaObject::changeGuard(QObject **ptr, QObject *o)
 {
     GuardHash *hash = guardHash();
     if (!hash) {
-        *ptr = 0;
+        *ptr = nullptr;
         return;
     }
     QMutexLocker locker(guardHashLock());
@@ -446,8 +446,8 @@ void QMetaObject::changeGuard(QObject **ptr, QObject *o)
  */
 void QObjectPrivate::clearGuards(QObject *object)
 {
-    GuardHash *hash = 0;
-    QMutex *mutex = 0;
+    GuardHash *hash = nullptr;
+    QMutex *mutex = nullptr;
     QT_TRY {
         hash = guardHash();
         mutex = guardHashLock();
@@ -462,7 +462,7 @@ void QObjectPrivate::clearGuards(QObject *object)
         GuardHash::iterator it = hash->find(object);
         const GuardHash::iterator end = hash->end();
         while (it.key() == object && it != end) {
-            *it.value() = 0;
+            *it.value() = nullptr;
             it = hash->erase(it);
         }
     }
@@ -674,13 +674,13 @@ void QMetaCallEvent::placeMetaCall(QObject *object)
 void *qt_find_obj_child(QObject *parent, const char *type, const QString &name)
 {
     QObjectList list = parent->children();
-    if (list.size() == 0) return 0;
+    if (list.size() == 0) return nullptr;
     for (int i = 0; i < list.size(); ++i) {
         QObject *obj = list.at(i);
         if (name == obj->objectName() && obj->inherits(type))
             return obj;
     }
-    return 0;
+    return nullptr;
 }
 
 
@@ -741,7 +741,7 @@ QObject::QObject(QObjectPrivate &dd, QObject *parent)
     d->threadData.storeRelaxed(threadData);
     if (parent) {
         QT_TRY {
-            if (!check_parent_thread(parent, parent ? parent->d_func()->threadData.loadRelaxed() : 0, threadData))
+            if (!check_parent_thread(parent, parent ? parent->d_func()->threadData.loadRelaxed() : nullptr, threadData))
                 parent = nullptr;
             if (d->isWidget) {
                 if (parent) {
@@ -818,9 +818,9 @@ QObject::~QObject()
         QAbstractDeclarativeData::destroyed(d->declarativeData, this);
 
     // set ref to zero to indicate that this object has been deleted
-    if (d->currentSender != 0)
+    if (d->currentSender != nullptr)
         d->currentSender->ref = 0;
-    d->currentSender = 0;
+    d->currentSender = nullptr;
 
     if (d->connectionLists || d->senders) {
         QMutex *signalSlotMutex = signalSlotLock(this);
@@ -861,7 +861,7 @@ QObject::~QObject()
             } else {
                 d->connectionLists->orphaned = true;
             }
-            d->connectionLists = 0;
+            d->connectionLists = nullptr;
         }
 
         // disconnect all senders
@@ -876,7 +876,7 @@ QObject::~QObject()
                 m->unlock();
                 continue;
             }
-            node->receiver = 0;
+            node->receiver = nullptr;
             QObjectConnectionListVector *senderLists = sender->d_func()->connectionLists;
             if (senderLists)
                 senderLists->dirty = true;
@@ -893,7 +893,7 @@ QObject::~QObject()
     qt_removeObject(this);
 
     if (d->parent)        // remove it from parent object
-        d->setParent_helper(0);
+        d->setParent_helper(nullptr);
 }
 
 QObjectPrivate::Connection::~Connection()
@@ -1298,7 +1298,7 @@ void QObject::moveToThread(QThread *targetThread)
         return;
     }
 
-    if (d->parent != 0) {
+    if (d->parent != nullptr) {
         qWarning("QObject::moveToThread: Cannot move objects with a parent");
         return;
     }
@@ -1310,7 +1310,7 @@ void QObject::moveToThread(QThread *targetThread)
     QThreadData *currentData = QThreadData::current();
     QThreadData *targetData = targetThread ? QThreadData::get2(targetThread) : nullptr;
     QThreadData *thisThreadData = d->threadData.loadAcquire();
-    if (thisThreadData->thread.loadAcquire() == 0 && currentData == targetData) {
+    if (thisThreadData->thread.loadAcquire() == nullptr && currentData == targetData) {
         // one exception to the rule: we allow moving objects with no thread affinity to the current thread
         currentData = thisThreadData;
     } else if (thisThreadData != currentData) {
@@ -1374,7 +1374,7 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
         if (pe.receiver == q) {
             // move this post event to the targetList
             targetData->postEventList.addEvent(pe);
-            const_cast<QPostEvent &>(pe).event = 0;
+            const_cast<QPostEvent &>(pe).event = nullptr;
             ++eventsMoved;
         }
     }
@@ -1386,7 +1386,7 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
     // the current emitting thread shouldn't restore currentSender after calling moveToThread()
     if (currentSender)
         currentSender->ref = 0;
-    currentSender = 0;
+    currentSender = nullptr;
 
     // set new thread data
     targetData->ref();
@@ -1655,7 +1655,7 @@ void qt_qFindChildren_helper(const QObject *parent, const QString &name, const Q
 QObject *qt_qFindChild_helper(const QObject *parent, const QString &name, const QMetaObject &mo)
 {
     if (!parent)
-        return 0;
+        return nullptr;
     const QObjectList &children = parent->children();
     QObject *obj;
     int i;
@@ -1669,7 +1669,7 @@ QObject *qt_qFindChild_helper(const QObject *parent, const QString &name, const 
         if (obj)
             return obj;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1733,7 +1733,7 @@ void QObjectPrivate::setParent_helper(QObject *o)
         // object hierarchies are constrained to a single thread
         if (threadData.loadRelaxed() != parent->d_func()->threadData.loadRelaxed()) {
             qWarning("QObject::setParent: Cannot set parent, new parent is in a different thread");
-            parent = 0;
+            parent = nullptr;
             return;
         }
         parent->d_func()->children.append(q);
@@ -1801,7 +1801,7 @@ void QObject::installEventFilter(QObject *obj)
     }
 
     // clean up unused items in the list
-    d->eventFilters.removeAll((QObject*)0);
+    d->eventFilters.removeAll((QObject*)nullptr);
     d->eventFilters.removeAll(obj);
     d->eventFilters.prepend(obj);
 }
@@ -1824,7 +1824,7 @@ void QObject::removeEventFilter(QObject *obj)
     Q_D(QObject);
     for (int i = 0; i < d->eventFilters.count(); ++i) {
         if (d->eventFilters.at(i) == obj)
-            d->eventFilters[i] = 0;
+            d->eventFilters[i] = nullptr;
     }
 }
 
@@ -1957,7 +1957,7 @@ static const char * extract_location(const char *member)
         if (*location != '\0')
             return location;
     }
-    return 0;
+    return nullptr;
 }
 
 static bool check_signal_macro(const QObject *sender, const char *signal,
@@ -1996,7 +1996,7 @@ static void err_method_notfound(const QObject *object,
         case QSIGNAL_CODE: type = "signal"; break;
     }
     const char *loc = extract_location(method);
-    if (strchr(method,')') == 0)                // common typing mistake
+    if (strchr(method,')') == nullptr)                // common typing mistake
         qWarning("Object::%s: Parentheses expected, %s %s::%s%s%s",
                  func, type, object->metaObject()->className(), method+1,
                  loc ? " in ": "", loc ? loc : "");
@@ -2048,14 +2048,14 @@ QObject *QObject::sender() const
 
     QMutexLocker locker(signalSlotLock(this));
     if (!d->currentSender)
-        return 0;
+        return nullptr;
 
     for (QObjectPrivate::Connection *c = d->senders; c; c = c->next) {
         if (c->sender == d->currentSender->sender)
             return d->currentSender->sender;
     }
 
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -2190,7 +2190,7 @@ void QMetaObjectPrivate::memberIndexes(const QObject *obj,
         return;
     const QMetaObject *m = obj->metaObject();
     // Check that member is member of obj class
-    while (m != 0 && m != member.mobj)
+    while (m != nullptr && m != member.mobj)
         m = m->d.superdata;
     if (!m)
         return;
@@ -2309,7 +2309,7 @@ bool QObject::connect(const QObject *sender, const char *signal,
 #endif
     }
 
-    if (sender == 0 || receiver == 0 || signal == 0 || method == 0) {
+    if (sender == nullptr || receiver == nullptr || signal == nullptr || method == nullptr) {
         qWarning("QObject::connect: Cannot connect %s::%s to %s::%s",
                  sender ? sender->metaObject()->className() : "(null)",
                  (signal && *signal) ? signal+1 : "(null)",
@@ -2404,7 +2404,7 @@ bool QObject::connect(const QObject *sender, const char *signal,
         return false;
     }
 
-    int *types = 0;
+    int *types = nullptr;
     if ((type == Qt::QueuedConnection)
             && !(types = queuedConnectionTypes(smeta->method(signal_absolute_index).parameterTypes())))
         return false;
@@ -2453,8 +2453,8 @@ bool QObject::connect(const QObject *sender, const QMetaMethod &signal,
 #endif
     }
 
-    if (sender == 0
-            || receiver == 0
+    if (sender == nullptr
+            || receiver == nullptr
             || signal.methodType() != QMetaMethod::Signal
             || method.methodType() == QMetaMethod::Constructor) {
         qWarning("QObject::connect: Cannot connect %s::%s to %s::%s",
@@ -2509,7 +2509,7 @@ bool QObject::connect(const QObject *sender, const QMetaMethod &signal,
         return false;
     }
 
-    int *types = 0;
+    int *types = nullptr;
     if ((type == Qt::QueuedConnection)
             && !(types = queuedConnectionTypes(signal.parameterTypes())))
         return false;
@@ -2518,7 +2518,7 @@ bool QObject::connect(const QObject *sender, const QMetaMethod &signal,
     if (warnCompat)
         check_and_warn_compat(smeta, signal, rmeta, method);
 #endif
-    if (!QMetaObjectPrivate::connect(sender, signal_index, receiver, method_index, 0, type, types))
+    if (!QMetaObjectPrivate::connect(sender, signal_index, receiver, method_index, nullptr, type, types))
         return false;
 
     const_cast<QObject*>(sender)->connectNotify(signalSignature.constData());
@@ -2604,7 +2604,7 @@ bool QObject::connect(const QObject *sender, const QMetaMethod &signal,
 bool QObject::disconnect(const QObject *sender, const char *signal,
                          const QObject *receiver, const char *method)
 {
-    if (sender == 0 || (receiver == 0 && method != 0)) {
+    if (sender == nullptr || (receiver == nullptr && method != nullptr)) {
         qWarning("Object::disconnect: Unexpected null parameter");
         return false;
     }
@@ -2699,7 +2699,7 @@ bool QObject::disconnect(const QObject *sender, const char *signal,
         err_info_about_objects("disconnect", sender, receiver);
     }
     if (res)
-        const_cast<QObject*>(sender)->disconnectNotify(signal ? (signal - 1) : 0);
+        const_cast<QObject*>(sender)->disconnectNotify(signal ? (signal - 1) : nullptr);
     return res;
 }
 
@@ -2735,7 +2735,7 @@ bool QObject::disconnect(const QObject *sender, const char *signal,
 bool QObject::disconnect(const QObject *sender, const QMetaMethod &signal,
                          const QObject *receiver, const QMetaMethod &method)
 {
-    if (sender == 0 || (receiver == 0 && method.mobj != 0)) {
+    if (sender == nullptr || (receiver == nullptr && method.mobj != nullptr)) {
         qWarning("Object::disconnect: Unexpected null parameter");
         return false;
     }
@@ -2767,8 +2767,8 @@ bool QObject::disconnect(const QObject *sender, const QMetaMethod &signal,
                                         : method.methodType() == QMetaMethod::Signal ? QSIGNAL_CODE : 0  + '0'));
             methodSignature.append(method.signature());
         }
-        const void *cbdata[] = { sender, signal.mobj ? signalSignature.constData() : 0,
-                                 receiver, method.mobj ? methodSignature.constData() : 0 };
+        const void *cbdata[] = { sender, signal.mobj ? signalSignature.constData() : nullptr,
+                                 receiver, method.mobj ? methodSignature.constData() : nullptr };
         if (QInternal::activateCallbacks(QInternal::DisconnectCallback, (void **) cbdata))
             return true;
     }
@@ -2797,7 +2797,7 @@ bool QObject::disconnect(const QObject *sender, const QMetaMethod &signal,
     if (!QMetaObjectPrivate::disconnect(sender, signal_index, receiver, method_index))
         return false;
 
-    const_cast<QObject*>(sender)->disconnectNotify(method.mobj ? signalSignature.constData() : 0);
+    const_cast<QObject*>(sender)->disconnectNotify(method.mobj ? signalSignature.constData() : nullptr);
     return true;
 }
 
@@ -2906,7 +2906,7 @@ bool QMetaObject::connect(const QObject *sender, int signal_index,
     signal_index = methodIndexToSignalIndex(sender->metaObject(), signal_index);
     return QMetaObjectPrivate::connect(sender, signal_index,
                                        receiver, method_index,
-                                       0, //FIXME, we could speed this connection up by computing the relative index
+                                       nullptr, //FIXME, we could speed this connection up by computing the relative index
                                        type, types);
 }
 
@@ -2925,7 +2925,7 @@ bool QMetaObjectPrivate::connect(const QObject *sender, int signal_index,
     int method_offset = rmeta ? rmeta->methodOffset() : 0;
     QObjectPrivate::StaticMetaCallFunction callFunction =
         (rmeta && QMetaObjectPrivate::get(rmeta)->revision >= 6 && rmeta->d.extradata)
-        ? reinterpret_cast<const QMetaObjectExtraData *>(rmeta->d.extradata)->static_metacall : 0;
+        ? reinterpret_cast<const QMetaObjectExtraData *>(rmeta->d.extradata)->static_metacall : nullptr;
 
     QOrderedMutexLocker locker(signalSlotLock(sender),
                                signalSlotLock(receiver));
@@ -2954,7 +2954,7 @@ bool QMetaObjectPrivate::connect(const QObject *sender, int signal_index,
     c->method_offset = method_offset;
     c->connectionType = type;
     c->argumentTypes.storeRelaxed(types);
-    c->nextConnectionList = 0;
+    c->nextConnectionList = nullptr;
     c->callFunction = callFunction;
 
     QObjectPrivate::get(s)->addConnection(signal_index, c.data());
@@ -3013,10 +3013,10 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
         QObject *r = c->receiver;
 
         if (r
-            && (receiver == 0 || (r == receiver
+            && (receiver == nullptr || (r == receiver
                            && (method_index < 0 || c->method() == method_index)))) {
             bool needToUnlock = false;
-            QMutex *receiverMutex = 0;
+            QMutex *receiverMutex = nullptr;
             if (!receiver) {
                 receiverMutex = signalSlotLock(r);
                 // need to relock this receiver and sender in the correct order
@@ -3031,7 +3031,7 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
             if (needToUnlock)
                 receiverMutex->unlock();
 
-            c->receiver = 0;
+            c->receiver = nullptr;
 
             success = true;
 
@@ -3056,7 +3056,7 @@ bool QMetaObjectPrivate::disconnect(const QObject *sender, int signal_index,
     QObject *s = const_cast<QObject *>(sender);
 
     QMutex *senderMutex = signalSlotLock(sender);
-    QMutex *receiverMutex = receiver ? signalSlotLock(receiver) : 0;
+    QMutex *receiverMutex = receiver ? signalSlotLock(receiver) : nullptr;
     QOrderedMutexLocker locker(senderMutex, receiverMutex);
 
     QObjectConnectionListVector *connectionLists = QObjectPrivate::get(s)->connectionLists;
@@ -3171,7 +3171,7 @@ static void queued_activate(QObject *sender, int signal, QObjectPrivate::Connect
         argumentTypes = queuedConnectionTypes(m.parameterTypes());
         if (!argumentTypes) // cannot queue arguments
             argumentTypes = &DIRECT_CONNECTION_ONLY;
-        if (!c->argumentTypes.testAndSetOrdered(0, argumentTypes)) {
+        if (!c->argumentTypes.testAndSetOrdered(nullptr, argumentTypes)) {
             if (argumentTypes != &DIRECT_CONNECTION_ONLY)
                 delete [] argumentTypes;
             argumentTypes = c->argumentTypes.loadRelaxed();
@@ -3187,7 +3187,7 @@ static void queued_activate(QObject *sender, int signal, QObjectPrivate::Connect
     void **args = (void **) malloc(nargs*sizeof(void *));
     Q_CHECK_PTR(args);
     types[0] = 0; // return type
-    args[0] = 0; // return value
+    args[0] = nullptr; // return value
     for (int n = 1; n < nargs; ++n)
         args[n] = QMetaType::construct((types[n] = argumentTypes[n-1]), argv[n]);
     QCoreApplication::postEvent(c->receiver, new QMetaCallEvent(c->method_offset,
@@ -3227,8 +3227,8 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
 
     int signal_absolute_index = methodOffset + local_signal_index;
 
-    void *empty_argv[] = { 0 };
-    if (qt_signal_spy_callback_set.signal_begin_callback != 0) {
+    void *empty_argv[] = { nullptr };
+    if (qt_signal_spy_callback_set.signal_begin_callback != nullptr) {
         qt_signal_spy_callback_set.signal_begin_callback(sender, signal_absolute_index,
                                                          argv ? argv : empty_argv);
     }
@@ -3262,7 +3262,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
     ConnectionListsRef connectionLists = sender->d_func()->connectionLists;
     if (!connectionLists.connectionLists) {
         locker.unlock();
-        if (qt_signal_spy_callback_set.signal_end_callback != 0)
+        if (qt_signal_spy_callback_set.signal_end_callback != nullptr)
             qt_signal_spy_callback_set.signal_end_callback(sender, signal_absolute_index);
         return;
     }
@@ -3309,7 +3309,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                 QCoreApplication::postEvent(receiver, new QMetaCallEvent(c->method_offset, c->method_relative,
                                                                          c->callFunction,
                                                                          sender, signal_absolute_index,
-                                                                         0, 0,
+                                                                         0, nullptr,
                                                                          argv ? argv : empty_argv,
                                                                          &semaphore));
                 semaphore.acquire();
@@ -3328,19 +3328,19 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
             if (callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
                 //we compare the vtable to make sure we are not in the destructor of the object.
                 locker.unlock();
-                if (qt_signal_spy_callback_set.slot_begin_callback != 0)
+                if (qt_signal_spy_callback_set.slot_begin_callback != nullptr)
                     qt_signal_spy_callback_set.slot_begin_callback(receiver, c->method(), argv ? argv : empty_argv);
 
                 callFunction(receiver, QMetaObject::InvokeMetaMethod, method_relative, argv ? argv : empty_argv);
 
-                if (qt_signal_spy_callback_set.slot_end_callback != 0)
+                if (qt_signal_spy_callback_set.slot_end_callback != nullptr)
                     qt_signal_spy_callback_set.slot_end_callback(receiver, c->method());
                 locker.relock();
             } else {
                 const int method = method_relative + c->method_offset;
                 locker.unlock();
 
-                if (qt_signal_spy_callback_set.slot_begin_callback != 0) {
+                if (qt_signal_spy_callback_set.slot_begin_callback != nullptr) {
                     qt_signal_spy_callback_set.slot_begin_callback(receiver,
                                                                 method,
                                                                 argv ? argv : empty_argv);
@@ -3349,7 +3349,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                 metacall(receiver, QMetaObject::InvokeMetaMethod, method, argv ? argv : empty_argv);
 
 
-                if (qt_signal_spy_callback_set.slot_end_callback != 0)
+                if (qt_signal_spy_callback_set.slot_end_callback != nullptr)
                     qt_signal_spy_callback_set.slot_end_callback(receiver, method);
 
                 locker.relock();
@@ -3357,7 +3357,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
 
             if (connectionLists->orphaned)
                 break;
-        } while (c != last && (c = c->nextConnectionList) != 0);
+        } while (c != last && (c = c->nextConnectionList) != nullptr);
 
         if (connectionLists->orphaned)
             break;
@@ -3366,7 +3366,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
         ((list = &connectionLists->allsignals), true));
     }
 
-    if (qt_signal_spy_callback_set.signal_end_callback != 0)
+    if (qt_signal_spy_callback_set.signal_end_callback != nullptr)
         qt_signal_spy_callback_set.signal_end_callback(sender, signal_absolute_index);
 
 }
@@ -3704,10 +3704,10 @@ QObjectUserData* QObject::userData(uint id) const
 {
     Q_D(const QObject);
     if (!d->extraData)
-        return 0;
+        return nullptr;
     if ((int)id < d->extraData->userData.size())
         return d->extraData->userData.at(id);
-    return 0;
+    return nullptr;
 }
 
 #endif // QT_NO_USERDATA

@@ -202,7 +202,7 @@ QScriptContextInfoPrivate::QScriptContextInfoPrivate(const QScriptContext *conte
         // ### the slot can be overloaded -- need to get the particular overload from the context
         functionMetaIndex = static_cast<QScript::QtFunction*>(callee)->initialIndex();
         const QMetaObject *meta = static_cast<QScript::QtFunction*>(callee)->metaObject();
-        if (meta != 0) {
+        if (meta != nullptr) {
             QMetaMethod method = meta->method(functionMetaIndex);
             QList<QByteArray> formals = method.parameterNames();
             for (int i = 0; i < formals.count(); ++i)
@@ -231,7 +231,7 @@ QScriptContextInfoPrivate::~QScriptContextInfoPrivate()
   previously created QScriptContextInfo.
 */
 QScriptContextInfo::QScriptContextInfo(const QScriptContext *context)
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
     if (context) {
         d_ptr = new QScriptContextInfoPrivate(context);
@@ -253,7 +253,7 @@ QScriptContextInfo::QScriptContextInfo(const QScriptContextInfo &other)
   \sa isNull()
 */
 QScriptContextInfo::QScriptContextInfo()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -442,7 +442,7 @@ int QScriptContextInfo::functionMetaIndex() const
 bool QScriptContextInfo::isNull() const
 {
     Q_D(const QScriptContextInfo);
-    return (d == 0);
+    return (d == nullptr);
 }
 
 /*!

@@ -54,7 +54,7 @@ CL_NS_DEF(search)
     BitSet* bts = _CLNEW BitSet(reader->maxDoc());
 
     TermEnum* enumerator = reader->terms(start);
-    if (enumerator->term(false) == NULL){
+    if (enumerator->term(false) == nullptr){
       _CLDELETE(enumerator);
       return bts;
     }

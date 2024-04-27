@@ -104,7 +104,7 @@ Q_GUI_EXPORT GC qt_x11_get_pen_gc(QPainter *p)
         && p->paintEngine()->type() == QPaintEngine::X11) {
         return static_cast<QX11PaintEngine *>(p->paintEngine())->d_func()->gc;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -119,7 +119,7 @@ Q_GUI_EXPORT GC qt_x11_get_brush_gc(QPainter *p)
         && p->paintEngine()->type() == QPaintEngine::X11) {
         return static_cast<QX11PaintEngine *>(p->paintEngine())->d_func()->gc_brush;
     }
-    return 0;
+    return nullptr;
 }
 #define X11 qt_x11Data
 
@@ -257,7 +257,7 @@ static QPixmap qt_patternForAlpha(uchar alpha, int screen)
 class QXRenderTessellator : public QTessellator
 {
 public:
-    QXRenderTessellator() : traps(0), allocated(0), size(0) {}
+    QXRenderTessellator() : traps(nullptr), allocated(0), size(0) {}
     ~QXRenderTessellator() { free(traps); }
     XTrapezoid *traps;
     int allocated;
@@ -271,7 +271,7 @@ public:
     void done() {
         if (allocated > 64) {
             free(traps);
-            traps = 0;
+            traps = nullptr;
             allocated = 0;
         }
     }
@@ -375,11 +375,11 @@ static void qt_render_bitmap(Display *dpy, int scrn, Picture src, Picture dst,
 
 void QX11PaintEnginePrivate::init()
 {
-    dpy = 0;
+    dpy = nullptr;
     scrn = 0;
     hd = 0;
     picture = 0;
-    xinfo = 0;
+    xinfo = nullptr;
 #ifndef QT_NO_XRENDER
     current_brush = 0;
     composition_mode = PictOpOver;
@@ -406,7 +406,7 @@ void QX11PaintEnginePrivate::resetAdaptedOrigin()
 void QX11PaintEnginePrivate::clipPolygon_dev(const QPolygonF &poly, QPolygonF *clipped_poly)
 {
     int clipped_count = 0;
-    qt_float_point *clipped_points = 0;
+    qt_float_point *clipped_points = nullptr;
     polygonClipper.clipPolygon((qt_float_point *) poly.data(), poly.size(),
                                &clipped_points, &clipped_count);
     clipped_poly->resize(clipped_count);
@@ -417,7 +417,7 @@ void QX11PaintEnginePrivate::clipPolygon_dev(const QPolygonF &poly, QPolygonF *c
 void QX11PaintEnginePrivate::systemStateChanged()
 {
     Q_Q(QX11PaintEngine);
-    QPainter *painter = q->state ? static_cast<QPainterState *>(q->state)->painter : 0;
+    QPainter *painter = q->state ? static_cast<QPainterState *>(q->state)->painter : nullptr;
     if (painter && painter->hasClipping()) {
         if (q->testDirty(QPaintEngine::DirtyTransform))
             q->updateMatrix(q->state->transform());
@@ -482,7 +482,7 @@ bool QX11PaintEngine::begin(QPaintDevice *pdev)
 {
     Q_D(QX11PaintEngine);
     d->xinfo = qt_x11Info(pdev);
-    QWidget *w = d->pdev->devType() == QInternal::Widget ? static_cast<QWidget *>(d->pdev) : 0;
+    QWidget *w = d->pdev->devType() == QInternal::Widget ? static_cast<QWidget *>(d->pdev) : nullptr;
     const bool isAlienWidget = w && !w->internalWinId() && w->testAttribute(Qt::WA_WState_Created);
 #ifndef QT_NO_XRENDER
     if (w) {
@@ -507,8 +507,8 @@ bool QX11PaintEngine::begin(QPaintDevice *pdev)
     d->scrn = d->xinfo->screen(); // get screen variable
 
     d->crgn = QRegion();
-    d->gc = XCreateGC(d->dpy, d->hd, 0, 0);
-    d->gc_brush = XCreateGC(d->dpy, d->hd, 0, 0);
+    d->gc = XCreateGC(d->dpy, d->hd, 0, nullptr);
+    d->gc_brush = XCreateGC(d->dpy, d->hd, 0, nullptr);
     d->has_alpha_brush = false;
     d->has_alpha_pen = false;
     d->has_clipping = false;
@@ -586,12 +586,12 @@ bool QX11PaintEngine::end()
 
     if (d->gc_brush && d->pdev->painters < 2) {
         XFreeGC(d->dpy, d->gc_brush);
-        d->gc_brush = 0;
+        d->gc_brush = nullptr;
     }
 
     if (d->gc && d->pdev->painters < 2) {
         XFreeGC(d->dpy, d->gc);
-        d->gc = 0;
+        d->gc = nullptr;
     }
 
     // Restore system clip for alien widgets painting outside the paint event.
@@ -1314,9 +1314,9 @@ void QX11PaintEngine::updatePen(const QPen &pen)
     if (!d->has_clipping) { // if clipping is set the paintevent clip region is merged with the clip region
         QRegion sysClip = systemClip();
         if (!sysClip.isEmpty())
-            x11SetClipRegion(d->dpy, d->gc, 0, d->picture, sysClip);
+            x11SetClipRegion(d->dpy, d->gc, nullptr, d->picture, sysClip);
         else
-            x11ClearClipRegion(d->dpy, d->gc, 0, d->picture);
+            x11ClearClipRegion(d->dpy, d->gc, nullptr, d->picture);
     }
 }
 
@@ -1445,9 +1445,9 @@ void QX11PaintEngine::updateBrush(const QBrush &brush, const QPointF &origin)
     if (!d->has_clipping) {
         QRegion sysClip = systemClip();
         if (!sysClip.isEmpty())
-            x11SetClipRegion(d->dpy, d->gc_brush, 0, d->picture, sysClip);
+            x11SetClipRegion(d->dpy, d->gc_brush, nullptr, d->picture, sysClip);
         else
-            x11ClearClipRegion(d->dpy, d->gc_brush, 0, d->picture);
+            x11ClearClipRegion(d->dpy, d->gc_brush, nullptr, d->picture);
     }
 }
 
@@ -1566,7 +1566,7 @@ void QX11PaintEnginePrivate::fillPolygon_dev(const QPointF *polygonPoints, int p
     Q_Q(QX11PaintEngine);
 
     int clippedCount = 0;
-    qt_float_point *clippedPoints = 0;
+    qt_float_point *clippedPoints = nullptr;
 
 #ifndef QT_NO_XRENDER
     //can change if we switch to pen if gcMode != BrushGC
@@ -1692,7 +1692,7 @@ void QX11PaintEnginePrivate::strokePolygon_translated(const QPointF *polygonPoin
 void QX11PaintEnginePrivate::strokePolygon_dev(const QPointF *polygonPoints, int pointCount, bool close)
 {
     int clippedCount = 0;
-    qt_float_point *clippedPoints = 0;
+    qt_float_point *clippedPoints = nullptr;
     polygonClipper.clipPolygon((qt_float_point *) polygonPoints, pointCount,
                                &clippedPoints, &clippedCount, close);
 
@@ -1886,7 +1886,7 @@ Q_GUI_EXPORT void qt_x11_drawImage(const QRect &rect, const QPoint &pos, const Q
                           0, (char *) image.scanLine(rect.y())+rect.x()*sizeof(uint), w, h, 32, image.bytesPerLine());
     }
     XPutImage(dpy, hd, gc, xi, 0, 0, pos.x(), pos.y(), w, h);
-    xi->data = 0; // QImage owns these bits
+    xi->data = nullptr; // QImage owns these bits
     XDestroyImage(xi);
 }
 
@@ -1957,7 +1957,7 @@ void QX11PaintEngine::drawPixmap(const QRectF &r, const QPixmap &px, const QRect
 
     if (static_cast<QX11PixmapData*>(pixmap.data.data())->x11_mask) { // pixmap has a mask
         QBitmap comb(sw, sh);
-        GC cgc = XCreateGC(d->dpy, comb.handle(), 0, 0);
+        GC cgc = XCreateGC(d->dpy, comb.handle(), 0, nullptr);
         XSetForeground(d->dpy, cgc, 0);
         XFillRectangle(d->dpy, comb.handle(), cgc, 0, 0, sw, sh);
         XSetBackground(d->dpy, cgc, 0);
@@ -1967,7 +1967,7 @@ void QX11PaintEngine::drawPixmap(const QRectF &r, const QPixmap &px, const QRect
             XRectangle *rects = (XRectangle *)qt_getClipRects(d->crgn, num);
             XSetClipRectangles(d->dpy, cgc, -x, -y, rects, num, Unsorted);
         } else if (d->has_clipping) {
-            XSetClipRectangles(d->dpy, cgc, 0, 0, 0, 0, Unsorted);
+            XSetClipRectangles(d->dpy, cgc, 0, 0, nullptr, 0, Unsorted);
         }
         XSetFillStyle(d->dpy, cgc, FillOpaqueStippled);
         XSetTSOrigin(d->dpy, cgc, -sx, -sy);
@@ -1984,7 +1984,7 @@ void QX11PaintEngine::drawPixmap(const QRectF &r, const QPixmap &px, const QRect
     if (mono_src) {
         if (!d->crgn.isEmpty()) {
             Pixmap comb = XCreatePixmap(d->dpy, d->hd, sw, sh, 1);
-            GC cgc = XCreateGC(d->dpy, comb, 0, 0);
+            GC cgc = XCreateGC(d->dpy, comb, 0, nullptr);
             XSetForeground(d->dpy, cgc, 0);
             XFillRectangle(d->dpy, comb, cgc, 0, 0, sw, sh);
             int num;
@@ -2021,7 +2021,7 @@ void QX11PaintEngine::drawPixmap(const QRectF &r, const QPixmap &px, const QRect
         Pixmap src_mask = static_cast<QX11PixmapData*>(pixmap.data.data())->x11_mask;
         Pixmap dst_mask = static_cast<QX11PixmapData*>(px->data.data())->x11_mask;
         if (dst_mask) {
-            GC cgc = XCreateGC(d->dpy, dst_mask, 0, 0);
+            GC cgc = XCreateGC(d->dpy, dst_mask, 0, nullptr);
             if (src_mask) { // copy src mask into dst mask
                 XCopyArea(d->dpy, src_mask, dst_mask, cgc, sx, sy, sw, sh, x, y);
             } else { // no src mask, but make sure the area copied is opaque in dest
@@ -2403,7 +2403,7 @@ void QX11PaintEngine::drawFreetype(const QPointF &p, const QTextItemInt &ti)
         GlyphSet glyphSet = set->id;
         const QColor &pen = d->cpen.color();
         ::Picture src = X11->getSolidFill(d->scrn, pen);
-        XRenderPictFormat *maskFormat = 0;
+        XRenderPictFormat *maskFormat = nullptr;
         if (ft->xglyph_format != PictStandardA1)
             maskFormat = XRenderFindStandardFormat(X11->display, ft->xglyph_format);
 

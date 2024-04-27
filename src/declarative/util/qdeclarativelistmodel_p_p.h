@@ -177,7 +177,7 @@ public:
     NestedListModel(QDeclarativeListModel *base);
     ~NestedListModel();
 
-    QHash<int,QVariant> data(int index, const QList<int> &roles, bool *hasNested = 0) const;
+    QHash<int,QVariant> data(int index, const QList<int> &roles, bool *hasNested = nullptr) const;
     QVariant data(int index, int role) const;
 
     QList<int> roles() const;
@@ -192,7 +192,7 @@ public:
     void setProperty(int index, const QString& property, const QVariant& value, QList<int> *roles);
     void move(int from, int to, int count);
 
-    QVariant valueForNode(ModelNode *, bool *hasNested = 0) const;
+    QVariant valueForNode(ModelNode *, bool *hasNested = nullptr) const;
     void checkRoles() const;
 
     ModelNode *_root;

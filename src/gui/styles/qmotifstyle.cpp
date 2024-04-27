@@ -120,7 +120,7 @@ static const int motifCheckMarkSpace    = 16;
 QMotifStyle::QMotifStyle(bool useHighlightCols)
     : QCommonStyle(*new QMotifStylePrivate)
 {
-    focus = 0;
+    focus = nullptr;
     highlightCols = useHighlightCols;
 }
 
@@ -131,7 +131,7 @@ QMotifStyle::QMotifStyle(bool useHighlightCols)
 QMotifStyle::QMotifStyle(QMotifStylePrivate &dd, bool useHighlightColors)
     : QCommonStyle(dd)
 {
-    focus = 0;
+    focus = nullptr;
     highlightCols = useHighlightColors;
 }
 
@@ -660,13 +660,13 @@ void QMotifStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QP
 
         const QColor *cols[5];
         if (opt->state & State_Enabled) {
-            cols[0] = 0;
+            cols[0] = nullptr;
             cols[1] = &opt->palette.button().color();
             cols[2] = &opt->palette.mid().color();
             cols[3] = &opt->palette.light().color();
             cols[4] = &opt->palette.dark().color();
         } else {
-            cols[0] = 0;
+            cols[0] = nullptr;
             cols[1] = &opt->palette.mid().color();
             cols[2] = &opt->palette.mid().color();
             cols[3] = &opt->palette.mid().color();
@@ -1342,7 +1342,7 @@ void QMotifStyle::drawControl(ControlElement element, const QStyleOption *opt, Q
         break; }
 }
 
-static int get_combo_extra_width(int h, int w, int *return_awh=0)
+static int get_combo_extra_width(int h, int w, int *return_awh=nullptr)
 {
     int awh,
         tmp;
@@ -2408,7 +2408,7 @@ QMotifStyle::standardPixmap(StandardPixmap standardPixmap, const QStyleOption *o
             xpm_data = question_xpm;
             break;
         default:
-            xpm_data = 0;
+            xpm_data = nullptr;
             break;
         }
         QPixmap pm;
@@ -2465,7 +2465,7 @@ bool QMotifStyle::event(QEvent *e)
         if (QWidget *focusWidget = QApplication::focusWidget()) {
 #ifndef QT_NO_GRAPHICSVIEW
             if (QGraphicsView *graphicsView = qobject_cast<QGraphicsView *>(focusWidget)) {
-                QGraphicsItem *focusItem = graphicsView->scene() ? graphicsView->scene()->focusItem() : 0;
+                QGraphicsItem *focusItem = graphicsView->scene() ? graphicsView->scene()->focusItem() : nullptr;
                 if (focusItem && focusItem->type() == QGraphicsProxyWidget::Type) {
                     QGraphicsProxyWidget *proxy = static_cast<QGraphicsProxyWidget *>(focusItem);
                     if (proxy->widget())
@@ -2478,11 +2478,11 @@ bool QMotifStyle::event(QEvent *e)
             focus->setWidget(focusWidget);
         } else {
             if(focus)
-                focus->setWidget(0);
+                focus->setWidget(nullptr);
         }
     } else if(e->type() == QEvent::FocusOut) {
         if(focus)
-            focus->setWidget(0);
+            focus->setWidget(nullptr);
     }
     return  QCommonStyle::event(e);
 }

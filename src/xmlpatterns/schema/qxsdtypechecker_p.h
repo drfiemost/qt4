@@ -135,7 +135,7 @@ namespace QPatternist
              *
              * @note The @p boundType only differs from @p type if the type is derived from an based union value.
              */
-            bool isValidString(const QString &normalizedString, const AnySimpleType::Ptr &type, QString &errorMsg, AnySimpleType::Ptr *boundType = 0) const;
+            bool isValidString(const QString &normalizedString, const AnySimpleType::Ptr &type, QString &errorMsg, AnySimpleType::Ptr *boundType = nullptr) const;
 
             /**
              * Returns whether the given @p value and @p otherValue are of @p type and are equal.

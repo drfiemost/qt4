@@ -65,9 +65,9 @@ QImageIOPlugin::Capabilities QTgaPlugin::capabilities(QIODevice *device, const Q
     if (format == "tga")
         return Capabilities(CanRead);
     if (!format.isEmpty())
-        return 0;
+        return nullptr;
     if (!device->isOpen())
-        return 0;
+        return nullptr;
 
     Capabilities cap;
     if (device->isReadable() && QTgaHandler::canRead(device))

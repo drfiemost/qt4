@@ -44,7 +44,7 @@ CL_NS_DEF(search)
 		
 		
 		//Initialize e to NULL
-		e          = NULL;
+		e          = nullptr;
 		eWidth     = 0;
 		eHeight    = 0;
 		
@@ -108,7 +108,7 @@ CL_NS_DEF(search)
   //       if the distance of the current term in the enumeration is bigger than the FUZZY_THRESHOLD
   //       then true is returned 
 	  
-	  if (term == NULL){
+	  if (term == nullptr){
 		  return false;  //Note that endEnum is not set to true!
 	  }
 
@@ -173,7 +173,7 @@ CL_NS_DEF(search)
           return n;
 
 	//Check if the array must be reallocated because it is too small or does not exist
-    if (e == NULL || eWidth <= n || eHeight <= m) {
+    if (e == nullptr || eWidth <= n || eHeight <= m) {
         //Delete e if possible
         _CLDELETE_ARRAY(e);
         //resize e

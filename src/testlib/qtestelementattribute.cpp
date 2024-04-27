@@ -107,7 +107,7 @@ QT_BEGIN_NAMESPACE
 */
 
 QTestElementAttribute::QTestElementAttribute()
-    :attributeValue(0),
+    :attributeValue(nullptr),
     attributeIndex(QTest::AI_Undefined)
 {
 }
@@ -147,7 +147,7 @@ const char *QTestElementAttribute::name() const
     if(attributeIndex != QTest::AI_Undefined)
         return AttributeNames[attributeIndex];
 
-    return 0;
+    return nullptr;
 }
 
 QTest::AttributeIndex QTestElementAttribute::index() const
@@ -170,7 +170,7 @@ bool QTestElementAttribute::setPair(QTest::AttributeIndex index, const char *val
     attributeIndex = index;
     attributeValue = qstrdup(value);
 
-    return (attributeValue!=0) ? true:false;
+    return (attributeValue!=nullptr) ? true:false;
 }
 
 QT_END_NAMESPACE

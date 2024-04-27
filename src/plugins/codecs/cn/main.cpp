@@ -115,7 +115,7 @@ QTextCodec *CNTextCodecs::createForMib(int mib)
     if (mib == QFontGb2312Codec::_mibEnum())
         return new QFontGb2312Codec;
 #endif
-    return 0;
+    return nullptr;
 }
 
 
@@ -133,7 +133,7 @@ QTextCodec *CNTextCodecs::createForName(const QByteArray &name)
     if (name == QFontGb2312Codec::_name() || QFontGb2312Codec::_aliases().contains(name))
         return new QFontGb2312Codec;
 #endif
-    return 0;
+    return nullptr;
 }
 
 

@@ -129,7 +129,7 @@ QWindowSurface::QWindowSurface(QWidget *window, bool setDefaultSurface)
 QWindowSurface::~QWindowSurface()
 {
     if (d_ptr->window)
-        d_ptr->window->d_func()->extra->topextra->windowSurface = 0;
+        d_ptr->window->d_func()->extra->topextra->windowSurface = nullptr;
     delete d_ptr;
 }
 
@@ -220,11 +220,11 @@ bool QWindowSurface::scroll(const QRegion &area, int dx, int dy)
 QImage* QWindowSurface::buffer(const QWidget *widget)
 {
     if (widget->window() != window())
-        return 0;
+        return nullptr;
 
     QPaintDevice *pdev = paintDevice();
     if (!pdev || pdev->devType() != QInternal::Image)
-        return 0;
+        return nullptr;
 
     const QPoint off = offset(widget);
     QImage *img = static_cast<QImage*>(pdev);
@@ -233,7 +233,7 @@ QImage* QWindowSurface::buffer(const QWidget *widget)
     rect &= QRect(QPoint(), img->size());
 
     if (rect.isEmpty())
-        return 0;
+        return nullptr;
 
     img = new QImage(img->scanLine(rect.y()) + rect.x() * img->depth() / 8,
                      rect.width(), rect.height(),

@@ -501,7 +501,7 @@ void QDBusMetaObjectGenerator::write(QDBusMetaObject *obj)
 
     // put the metaobject together
     obj->d.data = uint_data;
-    obj->d.extradata = 0;
+    obj->d.extradata = nullptr;
     obj->d.stringdata = string_data;
     obj->d.superdata = &QDBusAbstractInterface::staticMetaObject;
 }
@@ -540,7 +540,7 @@ QDBusMetaObject *QDBusMetaObject::createMetaObject(const QString &interface, con
     error = QDBusError();
     QDBusIntrospection::Interfaces parsed = QDBusIntrospection::parseInterfaces(xml);
 
-    QDBusMetaObject *we = 0;
+    QDBusMetaObject *we = nullptr;
     QDBusIntrospection::Interfaces::ConstIterator it = parsed.constBegin();
     QDBusIntrospection::Interfaces::ConstIterator end = parsed.constEnd();
     for ( ; it != end; ++it) {
@@ -574,7 +574,7 @@ QDBusMetaObject *QDBusMetaObject::createMetaObject(const QString &interface, con
     if (parsed.isEmpty()) {
         // object didn't return introspection
         we = new QDBusMetaObject;
-        QDBusMetaObjectGenerator generator(interface, 0);
+        QDBusMetaObjectGenerator generator(interface, nullptr);
         generator.write(we);
         we->cached = false;
         return we;
@@ -604,7 +604,7 @@ QDBusMetaObject *QDBusMetaObject::createMetaObject(const QString &interface, con
     error = QDBusError(QDBusError::UnknownInterface,
         QString::fromLatin1("Interface '%1' was not found")
                        .arg(interface));
-    return 0;
+    return nullptr;
 }
 
 QDBusMetaObject::QDBusMetaObject()
@@ -623,7 +623,7 @@ const char *QDBusMetaObject::dbusNameForMethod(int id) const
         int handle = priv(d.data)->methodDBusData + id*intsPerMethod;
         return d.stringdata + d.data[handle];
     }
-    return 0;
+    return nullptr;
 }
 
 const char *QDBusMetaObject::inputSignatureForMethod(int id) const
@@ -633,7 +633,7 @@ const char *QDBusMetaObject::inputSignatureForMethod(int id) const
         int handle = priv(d.data)->methodDBusData + id*intsPerMethod;
         return d.stringdata + d.data[handle + 1];
     }
-    return 0;
+    return nullptr;
 }
 
 const char *QDBusMetaObject::outputSignatureForMethod(int id) const
@@ -643,7 +643,7 @@ const char *QDBusMetaObject::outputSignatureForMethod(int id) const
         int handle = priv(d.data)->methodDBusData + id*intsPerMethod;
         return d.stringdata + d.data[handle + 2];
     }
-    return 0;
+    return nullptr;
 }
 
 const int *QDBusMetaObject::inputTypesForMethod(int id) const
@@ -653,7 +653,7 @@ const int *QDBusMetaObject::inputTypesForMethod(int id) const
         int handle = priv(d.data)->methodDBusData + id*intsPerMethod;
         return reinterpret_cast<const int*>(d.data + d.data[handle + 3]);
     }
-    return 0;
+    return nullptr;
 }
 
 const int *QDBusMetaObject::outputTypesForMethod(int id) const
@@ -663,7 +663,7 @@ const int *QDBusMetaObject::outputTypesForMethod(int id) const
         int handle = priv(d.data)->methodDBusData + id*intsPerMethod;
         return reinterpret_cast<const int*>(d.data + d.data[handle + 4]);
     }
-    return 0;
+    return nullptr;
 }
 
 int QDBusMetaObject::propertyMetaType(int id) const

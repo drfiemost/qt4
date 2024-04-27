@@ -117,17 +117,17 @@ public:
         pts[7] = bottom;
     }
     inline QRectVectorPath(const QRect &r)
-        : QVectorPath(pts, 4, 0, QVectorPath::RectangleHint | QVectorPath::ImplicitClose)
+        : QVectorPath(pts, 4, nullptr, QVectorPath::RectangleHint | QVectorPath::ImplicitClose)
     {
         set(r);
     }
     inline QRectVectorPath(const QRectF &r)
-        : QVectorPath(pts, 4, 0, QVectorPath::RectangleHint | QVectorPath::ImplicitClose)
+        : QVectorPath(pts, 4, nullptr, QVectorPath::RectangleHint | QVectorPath::ImplicitClose)
     {
         set(r);
     }
     inline QRectVectorPath()
-        : QVectorPath(pts, 4, 0, QVectorPath::RectangleHint | QVectorPath::ImplicitClose)
+        : QVectorPath(pts, 4, nullptr, QVectorPath::RectangleHint | QVectorPath::ImplicitClose)
     { }
 
     qreal pts[8];
@@ -219,7 +219,7 @@ public:
     // will be destroyed when the engine is destroyed.  The "prototype"
     // allows the engine to pick different filters based on the parameters
     // that will be requested, and not just the "type".
-    virtual QPixmapFilter *pixmapFilter(int /*type*/, const QPixmapFilter * /*prototype*/) { return 0; }
+    virtual QPixmapFilter *pixmapFilter(int /*type*/, const QPixmapFilter * /*prototype*/) { return nullptr; }
 
     // These flags are needed in the implementation of paint buffers.
     enum Flags

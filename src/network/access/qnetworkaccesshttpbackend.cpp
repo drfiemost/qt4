@@ -69,7 +69,7 @@ class QNetworkProxy;
 static inline bool isSeparator(char c)
 {
     static const char separators[] = "()<>@,;:\\\"/[]?={}";
-    return isLWS(c) || strchr(separators, c) != 0;
+    return isLWS(c) || strchr(separators, c) != nullptr;
 }
 
 // ### merge with nextField in cookiejar.cpp
@@ -179,7 +179,7 @@ QNetworkAccessHttpBackendFactory::create(QNetworkAccessManager::Operation op,
 
     default:
         // no, we can't handle this request
-        return 0;
+        return nullptr;
     }
 
     QUrl url = request.url();
@@ -187,7 +187,7 @@ QNetworkAccessHttpBackendFactory::create(QNetworkAccessManager::Operation op,
     if (scheme == QLatin1String("http") || scheme == QLatin1String("https"))
         return new QNetworkAccessHttpBackend;
 
-    return 0;
+    return nullptr;
 }
 
 QNetworkAccessHttpBackend::QNetworkAccessHttpBackend()
@@ -199,7 +199,7 @@ QNetworkAccessHttpBackend::QNetworkAccessHttpBackend()
     , loadingFromCache(false)
     , usingZerocopyDownloadBuffer(false)
 #ifndef QT_NO_OPENSSL
-    , pendingSslConfiguration(0), pendingIgnoreAllSslErrors(false)
+    , pendingSslConfiguration(nullptr), pendingIgnoreAllSslErrors(false)
 #endif
     , resumeOffset(0)
 {
@@ -361,7 +361,7 @@ static QHttpNetworkRequest::Priority convert(const QNetworkRequest::Priority& pr
 
 void QNetworkAccessHttpBackend::postRequest()
 {
-    QThread *thread = 0;
+    QThread *thread = nullptr;
     if (isSynchronous()) {
         // A synchronous HTTP request uses its own thread
         thread = new QThread();

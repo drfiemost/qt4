@@ -69,12 +69,12 @@ class QDialogPrivate : public QWidgetPrivate
 public:
 
     QDialogPrivate()
-        : mainDef(0), orientation(Qt::Horizontal),extension(0), doShowExtension(false),
+        : mainDef(nullptr), orientation(Qt::Horizontal),extension(nullptr), doShowExtension(false),
 #ifndef QT_NO_SIZEGRIP
-          resizer(0),
+          resizer(nullptr),
           sizeGripEnabled(false),
 #endif
-          rescode(0), resetModalityTo(-1), wasModalitySet(true), eventLoop(0)
+          rescode(0), resetModalityTo(-1), wasModalitySet(true), eventLoop(nullptr)
         {}
 
     QPointer<QPushButton> mainDef;

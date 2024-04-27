@@ -73,7 +73,7 @@ class QMenuBarPrivate : public QWidgetPrivate
 {
     Q_DECLARE_PUBLIC(QMenuBar)
 public:
-    QMenuBarPrivate() : itemsDirty(0), currentAction(0), mouseDown(0),
+    QMenuBarPrivate() : itemsDirty(0), currentAction(nullptr), mouseDown(0),
                          closePopupMode(0), defaultPopDown(1), popupState(0), keyboardState(0), altPressed(0)
 #ifndef Q_WS_X11
                          , nativeMenuBar(-1)
@@ -83,7 +83,7 @@ public:
                          , mac_menubar(0)
 #endif
 #ifdef Q_WS_X11
-                         , platformMenuBar(0)
+                         , platformMenuBar(nullptr)
 #endif
 
         { }

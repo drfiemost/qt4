@@ -999,14 +999,14 @@ public:
     float toFloat(const QString &s, bool *ok = nullptr) const;
     double toDouble(const QString &s, bool *ok = nullptr) const;
 
-    short toShort(const QStringRef &s, bool *ok = 0) const;
-    ushort toUShort(const QStringRef &s, bool *ok = 0) const;
-    int toInt(const QStringRef &s, bool *ok = 0) const;
-    uint toUInt(const QStringRef &s, bool *ok = 0) const;
-    qlonglong toLongLong(const QStringRef &s, bool *ok = 0) const;
-    qulonglong toULongLong(const QStringRef &s, bool *ok = 0) const;
-    float toFloat(const QStringRef &s, bool *ok = 0) const;
-    double toDouble(const QStringRef &s, bool *ok = 0) const;
+    short toShort(const QStringRef &s, bool *ok = nullptr) const;
+    ushort toUShort(const QStringRef &s, bool *ok = nullptr) const;
+    int toInt(const QStringRef &s, bool *ok = nullptr) const;
+    uint toUInt(const QStringRef &s, bool *ok = nullptr) const;
+    qlonglong toLongLong(const QStringRef &s, bool *ok = nullptr) const;
+    qulonglong toULongLong(const QStringRef &s, bool *ok = nullptr) const;
+    float toFloat(const QStringRef &s, bool *ok = nullptr) const;
+    double toDouble(const QStringRef &s, bool *ok = nullptr) const;
 
     QString toString(qlonglong i) const;
     QString toString(qulonglong i) const;

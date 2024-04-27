@@ -1298,7 +1298,7 @@ QDate QDate::fromString(const QString &string, const QString &format)
 #ifndef QT_BOOTSTRAPPED
     QDateTimeParser dt(QVariant::Date, QDateTimeParser::FromString);
     if (dt.parseFormat(format))
-        dt.fromString(string, &date, 0);
+        dt.fromString(string, &date, nullptr);
 #else
     Q_UNUSED(string);
     Q_UNUSED(format);
@@ -1867,7 +1867,7 @@ QTime QTime::fromString(const QString& string, Qt::DateFormat format)
     case Qt::ISODate:
     case Qt::TextDate:
     default:
-        return fromIsoTimeString(string, format, 0);
+        return fromIsoTimeString(string, format, nullptr);
     }
 }
 
@@ -1928,7 +1928,7 @@ QTime QTime::fromString(const QString &string, const QString &format)
 #ifndef QT_BOOTSTRAPPED
     QDateTimeParser dt(QVariant::Time, QDateTimeParser::FromString);
     if (dt.parseFormat(format))
-        dt.fromString(string, 0, &time);
+        dt.fromString(string, nullptr, &time);
 #else
     Q_UNUSED(string);
     Q_UNUSED(format);
@@ -2389,7 +2389,7 @@ QString QDateTime::timeZoneAbbreviation() const
         QDate dt = adjustDate(d->date);
         QTime tm = d->time;
         QString abbrev;
-        qt_mktime(&dt, &tm, 0, &abbrev, 0);
+        qt_mktime(&dt, &tm, nullptr, &abbrev, nullptr);
         return abbrev;
         }
     }
@@ -4383,7 +4383,7 @@ bool QDateTimeParser::parseFormat(const QString &newFormat)
     QDTPDEBUGN("parseFormat: %s", newFormat.toLatin1().constData());
 
     QVector<SectionNode> newSectionNodes;
-    Sections newDisplay = 0;
+    Sections newDisplay = nullptr;
     QStringList newSeparators;
     int i, index = 0;
     int add = 0;
@@ -4926,7 +4926,7 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
             }
             pos += separators.at(index).size();
             sectionNodes[index].pos = pos;
-            int *current = 0;
+            int *current = nullptr;
             const SectionNode sn = sectionNodes.at(index);
             int used;
 
@@ -5483,7 +5483,7 @@ int QDateTimeParser::maxChange(int index) const
 
 QDateTimeParser::FieldInfo QDateTimeParser::fieldInfo(int index) const
 {
-    FieldInfo ret = 0;
+    FieldInfo ret = nullptr;
     const SectionNode &sn = sectionNode(index);
     const Section s = sn.type;
     switch (s) {

@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 namespace CPP {
 
 ExtractImages::ExtractImages(const Option &opt)
-    : m_output(0), m_option(opt)
+    : m_output(nullptr), m_option(opt)
 {
 }
 
@@ -67,7 +67,7 @@ void ExtractImages::acceptUI(DomUI *node)
     if (!m_option.extractImages)
         return;
 
-    if (node->elementImages() == 0)
+    if (node->elementImages() == nullptr)
         return;
 
     QString className = node->elementClass() + m_option.postfix;
@@ -102,7 +102,7 @@ void ExtractImages::acceptUI(DomUI *node)
 
         f.close();
         delete m_output;
-        m_output = 0;
+        m_output = nullptr;
     }
 }
 

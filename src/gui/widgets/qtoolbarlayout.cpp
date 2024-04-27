@@ -65,13 +65,13 @@ extern QMainWindowLayout *qt_mainwindow_layout(const QMainWindow *window);
 */
 
 QToolBarItem::QToolBarItem(QWidget *widget)
-    : QWidgetItem(widget), action(0), customWidget(false)
+    : QWidgetItem(widget), action(nullptr), customWidget(false)
 {
 }
 
 bool QToolBarItem::isEmpty() const
 {
-    return action == 0 || !action->isVisible();
+    return action == nullptr || !action->isVisible();
 }
 
 /******************************************************************************
@@ -80,7 +80,7 @@ bool QToolBarItem::isEmpty() const
 
 QToolBarLayout::QToolBarLayout(QWidget *parent)
     : QLayout(parent), expanded(false), animating(false), dirty(true),
-        expanding(false), empty(true), expandFlag(false), popupMenu(0)
+        expanding(false), empty(true), expandFlag(false), popupMenu(nullptr)
 {
     QToolBar *tb = qobject_cast<QToolBar*>(parent);
     if (!tb)
@@ -127,15 +127,15 @@ bool QToolBarLayout::hasExpandFlag() const
 
 void QToolBarLayout::setUsePopupMenu(bool set)
 {
-    if (!dirty && ((popupMenu == 0) == set))
+    if (!dirty && ((popupMenu == nullptr) == set))
         invalidate();
     if (!set) {
         QObject::connect(extension, SIGNAL(clicked(bool)),
                         this, SLOT(setExpanded(bool)), Qt::UniqueConnection);
         extension->setPopupMode(QToolButton::DelayedPopup);
-        extension->setMenu(0);
+        extension->setMenu(nullptr);
         delete popupMenu;
-        popupMenu = 0;
+        popupMenu = nullptr;
     } else {
         QObject::disconnect(extension, SIGNAL(clicked(bool)),
                             this, SLOT(setExpanded(bool)));
@@ -164,21 +164,21 @@ void QToolBarLayout::addItem(QLayoutItem*)
 QLayoutItem *QToolBarLayout::itemAt(int index) const
 {
     if (index < 0 || index >= items.count())
-        return 0;
+        return nullptr;
     return items.at(index);
 }
 
 QLayoutItem *QToolBarLayout::takeAt(int index)
 {
     if (index < 0 || index >= items.count())
-        return 0;
+        return nullptr;
     QToolBarItem *item = items.takeAt(index);
 
     if (popupMenu)
         popupMenu->removeAction(item->action);
 
     QWidgetAction *widgetAction = qobject_cast<QWidgetAction*>(item->action);
-    if (widgetAction != 0 && item->customWidget) {
+    if (widgetAction != nullptr && item->customWidget) {
         widgetAction->releaseWidget(item->widget());
     } else {
         // destroy the QToolButton/QToolBarSeparator
@@ -235,9 +235,9 @@ Qt::Orientations QToolBarLayout::expandingDirections() const
         updateGeomArray();
     QToolBar *tb = qobject_cast<QToolBar*>(parentWidget());
     if (!tb)
-        return Qt::Orientations(0);
+        return Qt::Orientations(nullptr);
     Qt::Orientation o = tb->orientation();
-    return expanding ? Qt::Orientations(o) : Qt::Orientations(0);
+    return expanding ? Qt::Orientations(o) : Qt::Orientations(nullptr);
 }
 
 bool QToolBarLayout::movable() const
@@ -246,7 +246,7 @@ bool QToolBarLayout::movable() const
     if (!tb)
         return false;
     QMainWindow *win = qobject_cast<QMainWindow*>(tb->parentWidget());
-    return tb->isMovable() && win != 0;
+    return tb->isMovable() && win != nullptr;
 }
 
 void QToolBarLayout::updateGeomArray() const
@@ -352,7 +352,7 @@ void QToolBarLayout::updateGeomArray() const
 static bool defaultWidgetAction(QToolBarItem *item)
 {
     QWidgetAction *a = qobject_cast<QWidgetAction*>(item->action);
-    return a != 0 && a->defaultWidget() == item->widget();
+    return a != nullptr && a->defaultWidget() == item->widget();
 }
 
 void QToolBarLayout::setGeometry(const QRect &rect)
@@ -552,7 +552,7 @@ bool QToolBarLayout::layoutActions(const QSize &size)
     // widgets into the menu. If only custom widget actions are chopped off, the popup menu
     // is empty. So we show the little extension button to show something is chopped off,
     // but we make it disabled.
-    extension->setEnabled(popupMenu == 0 || !extensionMenuContainsOnlyWidgetActions);
+    extension->setEnabled(popupMenu == nullptr || !extensionMenuContainsOnlyWidgetActions);
 
     // we have to do the show/hide here, because it triggers more calls to setGeometry :(
     for (int i = 0; i < showWidgets.count(); ++i)
@@ -599,7 +599,7 @@ QSize QToolBarLayout::expandedSize(const QSize &size) const
         ++rows;      // we want to expand to at least two rows
     int space = total_w/rows + spacing + extensionExtent;
     space = std::max(space, min_w - 2*margin - handleExtent);
-    if (win != 0)
+    if (win != nullptr)
         space = std::min(space, pick(o, win->size()) - 2*margin - handleExtent);
 
     int w = 0;
@@ -635,7 +635,7 @@ QSize QToolBarLayout::expandedSize(const QSize &size) const
 
     w += 2*margin + handleExtent + spacing + extensionExtent;
     w = std::max(w, min_w);
-    if (win != 0)
+    if (win != nullptr)
         w = std::min(w, pick(o, win->size()));
     h += 2*margin - spacing; //there is no spacing before the first row
 
@@ -694,14 +694,14 @@ QToolBarItem *QToolBarLayout::createItem(QAction *action)
 {
     bool customWidget = false;
     bool standardButtonWidget = false;
-    QWidget *widget = 0;
+    QWidget *widget = nullptr;
     QToolBar *tb = qobject_cast<QToolBar*>(parentWidget());
     if (!tb)
-        return (QToolBarItem *)0;
+        return (QToolBarItem *)nullptr;
 
     if (QWidgetAction *widgetAction = qobject_cast<QWidgetAction *>(action)) {
         widget = widgetAction->requestWidget(tb);
-        if (widget != 0) {
+        if (widget != nullptr) {
             widget->setAttribute(Qt::WA_LayoutUsesWidgetRect);
             customWidget = true;
         }

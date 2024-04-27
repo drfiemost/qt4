@@ -50,7 +50,7 @@
 QT_BEGIN_NAMESPACE
 
 HelpWindow::HelpWindow(QWidget *parent)
-    : QWidget(parent, 0)
+    : QWidget(parent, nullptr)
 {
     setAutoFillBackground(true);
     QVBoxLayout *layout = new QVBoxLayout(this);

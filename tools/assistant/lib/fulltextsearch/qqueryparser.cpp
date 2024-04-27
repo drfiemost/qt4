@@ -27,7 +27,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneQueryParserPrivate::QCLuceneQueryParserPrivate()
     : QSharedData()
 {
-    queryParser = 0;
+    queryParser = nullptr;
     deleteCLuceneQueryParser = true;
 }
 
@@ -68,7 +68,7 @@ QCLuceneQuery* QCLuceneQueryParser::parse(const QString &query)
 {
     TCHAR *string = QStringToTChar(query);
 
-    QCLuceneQuery *retValue = 0;
+    QCLuceneQuery *retValue = nullptr;
     lucene::search::Query* q = d->queryParser->parse(string);
     if (q) {
         retValue = new QCLuceneQuery();
@@ -81,7 +81,7 @@ QCLuceneQuery* QCLuceneQueryParser::parse(const QString &query)
 
 QCLuceneQuery* QCLuceneQueryParser::parse(QCLuceneReader &reader)
 {
-    QCLuceneQuery *retValue = 0;
+    QCLuceneQuery *retValue = nullptr;
     lucene::search::Query* q = d->queryParser->parse(reader.d->reader);
     if (q) {
         retValue = new QCLuceneQuery();
@@ -130,7 +130,7 @@ QCLuceneQuery* QCLuceneMultiFieldQueryParser::parse(const QString &query,
         QCLuceneQuery *q = QCLuceneQueryParser::parse(query, field, analyzer);
         if (!q) {
             delete retValue;
-            retValue = 0; break;
+            retValue = nullptr; break;
         } else {
             retValue->add(q, true, false, false);
         }
@@ -167,7 +167,7 @@ QCLuceneQuery* QCLuceneMultiFieldQueryParser::parse(const QString &query,
             ++i;
         } else {
             delete retValue;
-            retValue = 0; break;
+            retValue = nullptr; break;
         }
     }
     return retValue;

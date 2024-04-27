@@ -377,7 +377,7 @@ class QEasingCurvePrivate
 public:
     QEasingCurvePrivate()
         : type(QEasingCurve::Linear),
-          config(0),
+          config(nullptr),
           func(&easeNone)
     { }
     ~QEasingCurvePrivate() { delete config; }
@@ -554,13 +554,13 @@ static QEasingCurve::EasingFunction curveToFunc(QEasingCurve::Type curve)
     case QEasingCurve::CosineCurve:
         return &easeCosineCurve;
     default:
-        return 0;
+        return nullptr;
     };
 }
 
 static QEasingCurveFunction *curveToFunctionObject(QEasingCurve::Type type)
 {
-    QEasingCurveFunction *curveFunc = 0;
+    QEasingCurveFunction *curveFunc = nullptr;
     switch(type) {
     case QEasingCurve::InElastic:
         curveFunc = new ElasticEase(ElasticEase::In);
@@ -643,7 +643,7 @@ QEasingCurve &QEasingCurve::operator=(const QEasingCurve &other)
     // ### non-atomic, requires malloc on shallow copy
     if (d_ptr->config) {
         delete d_ptr->config;
-        d_ptr->config = 0;
+        d_ptr->config = nullptr;
     }
 
     *d_ptr = *other.d_ptr;
@@ -777,7 +777,7 @@ void QEasingCurvePrivate::setType_helper(QEasingCurve::Type newType)
         period = config->_p;
         overshoot = config->_o;
         delete config;
-        config = 0;
+        config = nullptr;
     }
 
     if (isConfigFunction(newType) || (amp != -1.0) || (period != -1.0) || (overshoot != -1.0)) {
@@ -788,7 +788,7 @@ void QEasingCurvePrivate::setType_helper(QEasingCurve::Type newType)
             config->_p = period;
         if (overshoot != -1.0)
             config->_o = overshoot;
-        func = 0;
+        func = nullptr;
     } else if (newType != QEasingCurve::Custom) {
         func = curveToFunc(newType);
     }
@@ -839,7 +839,7 @@ void QEasingCurve::setCustomType(EasingFunction func)
 */
 QEasingCurve::EasingFunction QEasingCurve::customType() const
 {
-    return d_ptr->type == Custom ? d_ptr->func : 0;
+    return d_ptr->type == Custom ? d_ptr->func : nullptr;
 }
 
 /*!

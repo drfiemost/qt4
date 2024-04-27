@@ -74,7 +74,7 @@ class QDeclarativePathViewPrivate : public QDeclarativeItemPrivate, public QDecl
 
 public:
     QDeclarativePathViewPrivate()
-      : path(0), currentIndex(0), currentItemOffset(0.0), startPc(0), lastDist(0)
+      : path(nullptr), currentIndex(0), currentItemOffset(0.0), startPc(0), lastDist(0)
         , lastElapsed(0), offset(0.0), offsetAdj(0.0), mappedRange(1.0)
         , stealMouse(false), ownModel(false), interactive(true), haveHighlightRange(true)
         , autoHighlight(true), highlightUp(false), layoutScheduled(false)
@@ -82,7 +82,7 @@ public:
         , dragMargin(0), deceleration(100)
         , moveOffset(this, &QDeclarativePathViewPrivate::setAdjustedOffset)
         , firstIndex(-1), pathItems(-1), requestedIndex(-1)
-        , moveReason(Other), moveDirection(Shortest), attType(0), highlightComponent(0), highlightItem(0)
+        , moveReason(Other), moveDirection(Shortest), attType(nullptr), highlightComponent(nullptr), highlightItem(nullptr)
         , moveHighlight(this, &QDeclarativePathViewPrivate::setHighlightPosition)
         , highlightPosition(0)
         , highlightRangeStart(0), highlightRangeEnd(0)
@@ -136,7 +136,7 @@ public:
     void regenerate();
     void updateItem(QDeclarativeItem *, qreal);
     void snapToCurrent();
-    QPointF pointNear(const QPointF &point, qreal *nearPercent=0) const;
+    QPointF pointNear(const QPointF &point, qreal *nearPercent=nullptr) const;
 
     QDeclarativePath *path;
     int currentIndex;

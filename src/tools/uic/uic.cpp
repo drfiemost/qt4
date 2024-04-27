@@ -94,7 +94,7 @@ bool Uic::printDependencies()
             return false;
     }
 
-    DomUI *ui = 0;
+    DomUI *ui = nullptr;
     {
         QXmlStreamReader reader;
         reader.setDevice(&f);
@@ -159,7 +159,7 @@ static double versionFromUiAttribute(QXmlStreamReader &reader)
 
 DomUI *Uic::parseUiFile(QXmlStreamReader &reader)
 {
-    DomUI *ui = 0;
+    DomUI *ui = nullptr;
 
     const QString uiElement = QLatin1String("ui");
     while (!reader.atEnd()) {
@@ -170,7 +170,7 @@ DomUI *Uic::parseUiFile(QXmlStreamReader &reader)
                 if (version < 4.0) {
                     const QString msg = QString::fromLatin1("uic: File generated with too old version of Qt Designer (%1)").arg(version);
                     fprintf(stderr, "%s\n", qPrintable(msg));
-                    return 0;
+                    return nullptr;
                 }
 
                 ui = new DomUI();
@@ -182,7 +182,7 @@ DomUI *Uic::parseUiFile(QXmlStreamReader &reader)
     }
     if (reader.hasError()) {
         delete ui;
-        ui = 0;
+        ui = nullptr;
         fprintf(stderr, "%s\n", qPrintable(QString::fromLatin1("uic: Error in line %1, column %2 : %3")
                                     .arg(reader.lineNumber()).arg(reader.columnNumber())
                                     .arg(reader.errorString())));
@@ -198,7 +198,7 @@ bool Uic::write(QIODevice *in)
         opt.headerProtection = false;
     }
 
-    DomUI *ui = 0;
+    DomUI *ui = nullptr;
     {
         QXmlStreamReader reader;
         reader.setDevice(in);
@@ -271,7 +271,7 @@ bool Uic::write(DomUI *ui)
     if (pixFunction == QLatin1String("QPixmap::fromMimeSource"))
         pixFunction = QLatin1String("qPixmapFromMimeSource");
 
-    externalPix = ui->elementImages() == 0;
+    externalPix = ui->elementImages() == nullptr;
 
     info.acceptUI(ui);
     cWidgetsInfo.acceptUI(ui);

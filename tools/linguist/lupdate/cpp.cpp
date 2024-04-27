@@ -205,7 +205,7 @@ private:
 class CppParser {
 
 public:
-    CppParser(ParseResults *results = 0);
+    CppParser(ParseResults *results = nullptr);
     void setInput(const QString &in);
     void setInput(QTextStream &ts, const QString &fileName);
     void setTranslator(Translator *_tor) { tor = _tor; }
@@ -347,7 +347,7 @@ private:
 
 CppParser::CppParser(ParseResults *_results)
 {
-    tor = 0;
+    tor = nullptr;
     if (_results) {
         results = _results;
         directInclude = true;
@@ -377,7 +377,7 @@ void CppParser::setInput(const QString &in)
 {
     yyInStr = in;
     yyFileName = QString();
-    yySourceCodec = 0;
+    yySourceCodec = nullptr;
     yyForceUtf8 = true;
 }
 
@@ -1122,7 +1122,7 @@ bool CppParser::qualifyOneCallbackOwn(const Namespace *ns, void *context) const
             NamespaceList &nslIn = *const_cast<NamespaceList *>(&nsl);
             nslIn.removeLast();
             NamespaceList nslOut;
-            if (!fullyQualify(data->namespaces, data->nsCount, nslIn, false, &nslOut, 0)) {
+            if (!fullyQualify(data->namespaces, data->nsCount, nslIn, false, &nslOut, nullptr)) {
                 const_cast<Namespace *>(ns)->aliases.remove(data->segment);
                 return false;
             }
@@ -1235,7 +1235,7 @@ bool CppParser::findNamespaceCallback(const Namespace *ns, void *context) const
 
 const Namespace *CppParser::findNamespace(const NamespaceList &namespaces, int nsCount) const
 {
-    const Namespace *ns = 0;
+    const Namespace *ns = nullptr;
     if (nsCount == -1)
         nsCount = namespaces.count();
     visitNamespace(namespaces, nsCount, &CppParser::findNamespaceCallback, &ns);
@@ -1556,7 +1556,7 @@ QString CppParser::transcode(const QString &str, bool utf8)
                     hex += c;
                     i++;
                 }
-                out += hex.toUInt(0, 16);
+                out += hex.toUInt(nullptr, 16);
             } else if (c >= '0' && c < '8') {
                 QByteArray oct;
                 int n = 0;
@@ -1566,7 +1566,7 @@ QString CppParser::transcode(const QString &str, bool utf8)
                     n++;
                     oct += c;
                 }
-                out += oct.toUInt(0, 8);
+                out += oct.toUInt(nullptr, 8);
             } else {
                 const char *p = strchr(tab, c);
                 out += !p ? c : backTab[p - tab];
@@ -1726,7 +1726,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 if (!quali.isEmpty()) {
                     // Forward-declared class definitions can be namespaced.
                     NamespaceList nsl;
-                    if (!fullyQualify(namespaces, quali, true, &nsl, 0)) {
+                    if (!fullyQualify(namespaces, quali, true, &nsl, nullptr)) {
                         yyMsg() << "Ignoring definition of undeclared qualified class\n";
                         break;
                     }
@@ -1804,7 +1804,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     yyTok = getToken();
                 }
                 NamespaceList nsl;
-                if (fullyQualify(namespaces, fullName, false, &nsl, 0))
+                if (fullyQualify(namespaces, fullName, false, &nsl, nullptr))
                     modifyNamespace(&namespaces)->usings << HashStringList(nsl);
             } else {
                 QList<HashString> fullName;
@@ -2213,7 +2213,7 @@ const ParseResults *CppParser::recordResults(bool isHeader)
             CppFiles::setTranslator(yyFileName, tor);
         } else {
             delete tor;
-            tor = 0;
+            tor = nullptr;
         }
     }
     if (isHeader) {
@@ -2233,7 +2233,7 @@ const ParseResults *CppParser::recordResults(bool isHeader)
         return pr;
     } else {
         delete results;
-        return 0;
+        return nullptr;
     }
 }
 

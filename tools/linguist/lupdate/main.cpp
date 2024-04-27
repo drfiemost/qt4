@@ -270,7 +270,7 @@ static QStringList getSources(const char *var, const char *vvar, const QStringLi
     QStringList vPaths = visitor.absolutePathValues(QLatin1String(vvar), projectDir);
     vPaths += baseVPaths;
     vPaths.removeDuplicates();
-    return visitor.absoluteFileValues(QLatin1String(var), projectDir, vPaths, 0);
+    return visitor.absoluteFileValues(QLatin1String(var), projectDir, vPaths, nullptr);
 }
 
 static QStringList getSources(const ProFileEvaluator &visitor, const QString &projectDir)
@@ -292,7 +292,7 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     QStringList vPathsInc = baseVPaths;
     vPathsInc += visitor.absolutePathValues(QLatin1String("INCLUDEPATH"), projectDir);
     vPathsInc.removeDuplicates();
-    sourceFiles += visitor.absoluteFileValues(QLatin1String("HEADERS"), projectDir, vPathsInc, 0);
+    sourceFiles += visitor.absoluteFileValues(QLatin1String("HEADERS"), projectDir, vPathsInc, nullptr);
 
     sourceFiles.removeDuplicates();
     sourceFiles.sort();
@@ -772,7 +772,7 @@ int main(int argc, char **argv)
         ProFileOption option;
         option.initProperties(app.applicationDirPath() + QLatin1String("/qmake"));
         option.setCommandLineArguments(QStringList() << QLatin1String("CONFIG+=lupdate_run"));
-        ProFileParser parser(0, &parseHandler);
+        ProFileParser parser(nullptr, &parseHandler);
 
         if (!tsFileNames.isEmpty()) {
             Translator fetchedTor;
@@ -783,7 +783,7 @@ int main(int argc, char **argv)
                           sourceLanguage, targetLanguage, options, &fail);
         } else {
             processProjects(true, false, proFiles, &option, &parser, options, QByteArray(),
-                            targetLanguage, sourceLanguage, 0, &fail);
+                            targetLanguage, sourceLanguage, nullptr, &fail);
         }
     }
     return fail ? 1 : 0;

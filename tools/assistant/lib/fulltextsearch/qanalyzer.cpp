@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneAnalyzerPrivate::QCLuceneAnalyzerPrivate()
     : QSharedData()
 {
-    analyzer = 0;
+    analyzer = nullptr;
     deleteCLuceneAnalyzer = true;
 }
 
@@ -93,7 +93,7 @@ QCLuceneStandardAnalyzer::QCLuceneStandardAnalyzer(const QStringList &stopWords)
         tArray[i] = STRDUP_TtoT(stopWord);
         delete [] stopWord;
     }
-    tArray[stopWords.count()] = 0;
+    tArray[stopWords.count()] = nullptr;
 
     d->analyzer = new lucene::analysis::standard::StandardAnalyzer(tArray);
 
@@ -149,7 +149,7 @@ QCLuceneStopAnalyzer::QCLuceneStopAnalyzer(const QStringList &stopWords)
         tArray[i] = STRDUP_TtoT(stopWord);
         delete [] stopWord;
     }
-    tArray[stopWords.count()] = 0;
+    tArray[stopWords.count()] = nullptr;
 
     d->analyzer = new lucene::analysis::StopAnalyzer(tArray);
 
@@ -164,7 +164,7 @@ QStringList QCLuceneStopAnalyzer::englishStopWords() const
     QStringList stopWordList;
 
     const TCHAR** stopWords = lucene::analysis::StopAnalyzer::ENGLISH_STOP_WORDS;
-    for (qint32 i = 0; stopWords[i] != 0; ++i)
+    for (qint32 i = 0; stopWords[i] != nullptr; ++i)
         stopWordList.append(TCharToQString(stopWords[i]));
 
     return stopWordList;
@@ -205,7 +205,7 @@ void QCLucenePerFieldAnalyzerWrapper::addAnalyzer(const QString &fieldName,
     lucene::analysis::PerFieldAnalyzerWrapper *analyzerWrapper = 
         static_cast<lucene::analysis::PerFieldAnalyzerWrapper*> (d->analyzer);
 
-    if (analyzerWrapper == 0)
+    if (analyzerWrapper == nullptr)
         return;
 
     analyzers.append(analyzer);

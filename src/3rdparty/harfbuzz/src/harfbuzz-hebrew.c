@@ -64,7 +64,7 @@ HB_Bool HB_HebrewShape(HB_ShaperItem *shaper_item)
             return FALSE;
 
         HB_HeuristicSetGlyphAttributes(shaper_item);
-        HB_OpenTypeShape(shaper_item, /*properties*/0);
+        HB_OpenTypeShape(shaper_item, /*properties*/nullptr);
         return HB_OpenTypePosition(shaper_item, availableGlyphs, /*doLogClusters*/TRUE);
     }
 #endif

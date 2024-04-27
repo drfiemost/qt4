@@ -86,7 +86,7 @@ class CppCodeMarker : public CodeMarker
     virtual const Node* resolveTarget(const QString& target, 
                                       const Tree* tree, 
                                       const Node* relative,
-                                      const Node* self = 0);
+                                      const Node* self = nullptr);
 
 private:
     QString addMarkUp(const QString& protectedCode, 

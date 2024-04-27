@@ -74,7 +74,7 @@ public:
 
 */
 QThreadPoolThread::QThreadPoolThread(QThreadPoolPrivate *manager)
-    :manager(manager), runnable(0)
+    :manager(manager), runnable(nullptr)
 { }
 
 /* \internal
@@ -85,7 +85,7 @@ void QThreadPoolThread::run()
     QMutexLocker locker(&manager->mutex);
     for(;;) {
         QRunnable *r = runnable;
-        runnable = 0;
+        runnable = nullptr;
 
         do {
             if (r) {
@@ -118,7 +118,7 @@ void QThreadPoolThread::run()
                 break;
 
             r = !manager->queue.isEmpty() ? manager->queue.takeFirst().first : 0;
-        } while (r != 0);
+        } while (r != nullptr);
 
         // if too many threads are active, expire this thread
         bool expired = manager->tooManyThreadsActive();
@@ -314,7 +314,7 @@ bool QThreadPoolPrivate::waitForDone(int msecs)
 */
 void QThreadPoolPrivate::stealRunnable(QRunnable *runnable)
 {
-    if (runnable == 0)
+    if (runnable == nullptr)
         return;
     bool found = false;
     {

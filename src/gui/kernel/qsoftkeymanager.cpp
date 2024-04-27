@@ -49,7 +49,7 @@
 #ifndef QT_NO_SOFTKEYMANAGER
 QT_BEGIN_NAMESPACE
 
-QScopedPointer<QSoftKeyManager> QSoftKeyManagerPrivate::self(0);
+QScopedPointer<QSoftKeyManager> QSoftKeyManagerPrivate::self(nullptr);
 
 QString QSoftKeyManager::standardSoftKeyText(StandardSoftKey standardKey)
 {
@@ -86,7 +86,7 @@ QSoftKeyManager *QSoftKeyManager::instance()
 }
 
 QSoftKeyManager::QSoftKeyManager() :
-    QObject(*(new QSoftKeyManagerPrivate), 0)
+    QObject(*(new QSoftKeyManagerPrivate), nullptr)
 {
 }
 
@@ -192,7 +192,7 @@ static bool isChildOf(const QWidget *c, const QWidget *p)
 QWidget *QSoftKeyManager::softkeySource(QWidget *previousSource, bool& recursiveMerging)
 {
     Q_D(QSoftKeyManager);
-    QWidget *source = NULL;
+    QWidget *source = nullptr;
     if (!previousSource) {
         // Initial source is primarily focuswidget and secondarily activeWindow
         QWidget *focus = QApplication::focusWidget();
@@ -228,7 +228,7 @@ QWidget *QSoftKeyManager::softkeySource(QWidget *previousSource, bool& recursive
         // 4. Implicit and explicit merging always stops at window boundary
         bool merging = (implicitMerging || explicitMerging || recursiveMerging) && !previousSource->isWindow();
 
-        source = merging ? previousSource->parentWidget() : NULL;
+        source = merging ? previousSource->parentWidget() : nullptr;
     }
     return source;
 }
@@ -239,7 +239,7 @@ bool QSoftKeyManager::handleUpdateSoftKeys()
     int level = 0;
     d->requestedSoftKeyActions.clear();
     bool recursiveMerging = false;
-    QWidget *source = softkeySource(NULL, recursiveMerging);
+    QWidget *source = softkeySource(nullptr, recursiveMerging);
     d->initialSoftKeySource = source;
     while (source) {
         if (appendSoftkeys(*source, level))

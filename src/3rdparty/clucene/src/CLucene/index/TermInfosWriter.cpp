@@ -88,7 +88,7 @@ void TermInfosWriter::initialise(Directory* directory, const QString& segment,
     output->writeInt(skipInterval); // write skipInterval
 
     //Set other to NULL by Default
-    other = NULL;
+    other = nullptr;
 }
 
 TermInfosWriter::~TermInfosWriter()

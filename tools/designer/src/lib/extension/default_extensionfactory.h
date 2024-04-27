@@ -60,7 +60,7 @@ class QDESIGNER_EXTENSION_EXPORT QExtensionFactory : public QObject, public QAbs
     Q_OBJECT
     Q_INTERFACES(QAbstractExtensionFactory)
 public:
-    QExtensionFactory(QExtensionManager *parent = 0);
+    QExtensionFactory(QExtensionManager *parent = nullptr);
 
     virtual QObject *extension(QObject *object, const QString &iid) const;
     QExtensionManager *extensionManager() const;

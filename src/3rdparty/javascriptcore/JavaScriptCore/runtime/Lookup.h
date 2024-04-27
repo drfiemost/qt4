@@ -59,7 +59,7 @@ namespace JSC {
             m_attributes = attributes;
             m_u.store.value1 = v1;
             m_u.store.value2 = v2;
-            m_next = 0;
+            m_next = nullptr;
         }
 
         void setKey(UString::Rep* key) { m_key = key; }
@@ -147,7 +147,7 @@ namespace JSC {
             const HashEntry* entry = &table[identifier.ustring().rep()->existingHash() & compactHashSizeMask];
 
             if (!entry->key())
-                return 0;
+                return nullptr;
 
             do {
                 if (entry->key() == identifier.ustring().rep())
@@ -155,7 +155,7 @@ namespace JSC {
                 entry = entry->next();
             } while (entry);
 
-            return 0;
+            return nullptr;
         }
 
         // Convert the hash table keys to identifiers.

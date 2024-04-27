@@ -80,9 +80,9 @@ public:
 
 QScriptDebuggerCodeWidgetPrivate::QScriptDebuggerCodeWidgetPrivate()
 {
-    scriptsModel = 0;
-    breakpointsModel = 0;
-    toolTipProvider = 0;
+    scriptsModel = nullptr;
+    breakpointsModel = nullptr;
+    toolTipProvider = nullptr;
 }
 
 QScriptDebuggerCodeWidgetPrivate::~QScriptDebuggerCodeWidgetPrivate()
@@ -200,7 +200,7 @@ void QScriptDebuggerCodeWidgetPrivate::_q_onToolTipRequest(
 }
 
 QScriptDebuggerCodeWidget::QScriptDebuggerCodeWidget(QWidget *parent)
-    : QScriptDebuggerCodeWidgetInterface(*new QScriptDebuggerCodeWidgetPrivate, parent, 0)
+    : QScriptDebuggerCodeWidgetInterface(*new QScriptDebuggerCodeWidgetPrivate, parent, nullptr)
 {
     Q_D(QScriptDebuggerCodeWidget);
     QVBoxLayout *vbox = new QVBoxLayout(this);

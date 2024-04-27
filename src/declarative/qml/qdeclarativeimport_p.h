@@ -86,7 +86,7 @@ public:
                      QDeclarativeType** type_return, QUrl* url_return,
                      int *version_major, int *version_minor,
                      QDeclarativeImportedNamespace** ns_return,
-                     QString *errorString = 0) const;
+                     QString *errorString = nullptr) const;
     bool resolveType(QDeclarativeImportedNamespace*, 
                      const QByteArray& type,
                      QDeclarativeType** type_return, QUrl* url_return,

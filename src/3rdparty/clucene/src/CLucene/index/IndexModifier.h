@@ -145,7 +145,7 @@ public:
     // @see IndexWriter#addDocument(Document*, Analyzer*)
     // @throws IllegalStateException if the index is closed
     void addDocument(CL_NS(document)::Document* doc, CL_NS(analysis)::Analyzer*
-        docAnalyzer = NULL);
+        docAnalyzer = nullptr);
 
 
     /**
@@ -281,7 +281,7 @@ public:
     * while using the TermDocs. If the IndexReader that the modifier manages
     * is closed, the TermDocs object will fail.
     */
-    TermDocs* termDocs(Term* term = NULL);
+    TermDocs* termDocs(Term* term = nullptr);
 
     /**
     * Returns an enumeration of all terms after a given term.
@@ -294,7 +294,7 @@ public:
     * while using the TermDocs. If the IndexReader that the modifier manages
     * is closed, the Document will be invalid
     */
-    TermEnum* terms(Term* term = NULL);
+    TermEnum* terms(Term* term = nullptr);
 
     /**
     * Returns the stored fields of the n-th Document in this index. 

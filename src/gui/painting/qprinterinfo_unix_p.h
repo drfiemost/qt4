@@ -97,7 +97,7 @@ void qt_parsePrinterDesc(QString printerDesc, QList<QPrinterDescription> *printe
 int qt_parsePrintcap(QList<QPrinterDescription> *printers, const QString& fileName);
 QString qt_getDefaultFromHomePrinters();
 void qt_parseEtcLpPrinters(QList<QPrinterDescription> *printers);
-char *qt_parsePrintersConf(QList<QPrinterDescription> *printers, bool *found = 0);
+char *qt_parsePrintersConf(QList<QPrinterDescription> *printers, bool *found = nullptr);
 
 #ifndef QT_NO_NIS
 #if defined(Q_C_CALLBACKS)

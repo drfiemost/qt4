@@ -76,7 +76,7 @@ JSGlobalContextRef JSGlobalContextCreate(JSClassRef globalObjectClass)
     }
 #endif // OS(DARWIN)
 
-    return JSGlobalContextCreateInGroup(0, globalObjectClass);
+    return JSGlobalContextCreateInGroup(nullptr, globalObjectClass);
 }
 
 JSGlobalContextRef JSGlobalContextCreateInGroup(JSContextGroupRef group, JSClassRef globalObjectClass)

@@ -195,8 +195,8 @@ QToolButton::QToolButton(QWidget * parent)
 void QToolButtonPrivate::init()
 {
     Q_Q(QToolButton);
-    delay = q->style()->styleHint(QStyle::SH_ToolButton_PopupDelay, 0, q);
-    defaultAction = 0;
+    delay = q->style()->styleHint(QStyle::SH_ToolButton_PopupDelay, nullptr, q);
+    defaultAction = nullptr;
 #ifndef QT_NO_TOOLBAR
     if (qobject_cast<QToolBar*>(parent))
         autoRaise = true;
@@ -487,10 +487,10 @@ void QToolButton::actionEvent(QActionEvent *event)
         break;
     case QEvent::ActionRemoved:
         if (d->defaultAction == action)
-            d->defaultAction = 0;
+            d->defaultAction = nullptr;
 #ifndef QT_NO_MENU
         if (action == d->menuAction)
-            d->menuAction = 0;
+            d->menuAction = nullptr;
 #endif
         action->disconnect(this);
         break;
@@ -593,7 +593,7 @@ void QToolButton::changeEvent(QEvent *e)
                || e->type() == QEvent::MacSizeChange
 #endif
                ) {
-        d->delay = style()->styleHint(QStyle::SH_ToolButton_PopupDelay, 0, this);
+        d->delay = style()->styleHint(QStyle::SH_ToolButton_PopupDelay, nullptr, this);
         d->setLayoutItemMargins(QStyle::SE_ToolButtonLayoutItem);
     }
 #endif
@@ -665,7 +665,7 @@ void QToolButton::setMenu(QMenu* menu)
         d->menuAction = menu->menuAction();
         addAction(d->menuAction);
     } else {
-        d->menuAction = 0;
+        d->menuAction = nullptr;
     }
 
     // changing the menu set may change the size hint, so reset it
@@ -684,7 +684,7 @@ QMenu* QToolButton::menu() const
     Q_D(const QToolButton);
     if (d->menuAction)
         return d->menuAction->menu();
-    return 0;
+    return nullptr;
 }
 
 /*!

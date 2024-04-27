@@ -149,7 +149,7 @@ static qreal adjustedPosition(QGraphicsObject *item, QDeclarativeAnchorLine::Anc
 }
 
 QDeclarativeAnchors::QDeclarativeAnchors(QObject *parent)
-  : QObject(*new QDeclarativeAnchorsPrivate(0), parent)
+  : QObject(*new QDeclarativeAnchorsPrivate(nullptr), parent)
 {
     qFatal("QDeclarativeAnchors::QDeclarativeAnchors(QObject*) called");
 }
@@ -233,35 +233,35 @@ void QDeclarativeAnchorsPrivate::clearItem(QGraphicsObject *item)
     if (!item)
         return;
     if (fill == item)
-        fill = 0;
+        fill = nullptr;
     if (centerIn == item)
-        centerIn = 0;
+        centerIn = nullptr;
     if (left.item == item) {
-        left.item = 0;
+        left.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::LeftAnchor;
     }
     if (right.item == item) {
-        right.item = 0;
+        right.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::RightAnchor;
     }
     if (top.item == item) {
-        top.item = 0;
+        top.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::TopAnchor;
     }
     if (bottom.item == item) {
-        bottom.item = 0;
+        bottom.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::BottomAnchor;
     }
     if (vCenter.item == item) {
-        vCenter.item = 0;
+        vCenter.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::VCenterAnchor;
     }
     if (hCenter.item == item) {
-        hCenter.item = 0;
+        hCenter.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::HCenterAnchor;
     }
     if (baseline.item == item) {
-        baseline.item = 0;
+        baseline.item = nullptr;
         usedAnchors &= ~QDeclarativeAnchors::BaselineAnchor;
     }
 }
@@ -444,7 +444,7 @@ void QDeclarativeAnchors::setFill(QGraphicsObject *f)
 
 void QDeclarativeAnchors::resetFill()
 {
-    setFill(0);
+    setFill(nullptr);
 }
 
 QGraphicsObject *QDeclarativeAnchors::centerIn() const
@@ -479,7 +479,7 @@ void QDeclarativeAnchors::setCenterIn(QGraphicsObject* c)
 
 void QDeclarativeAnchors::resetCenterIn()
 {
-    setCenterIn(0);
+    setCenterIn(nullptr);
 }
 
 bool QDeclarativeAnchorsPrivate::calcStretch(const QDeclarativeAnchorLine &edge1,

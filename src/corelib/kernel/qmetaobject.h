@@ -55,7 +55,7 @@ template <typename T> class QList;
 class Q_CORE_EXPORT QMetaMethod
 {
 public:
-    inline QMetaMethod() : mobj(0),handle(0) {}
+    inline QMetaMethod() : mobj(nullptr),handle(0) {}
 
     const char *signature() const;
     const char *typeName() const;
@@ -146,7 +146,7 @@ Q_DECLARE_TYPEINFO(QMetaMethod, Q_MOVABLE_TYPE);
 class Q_CORE_EXPORT QMetaEnum
 {
 public:
-    inline QMetaEnum() : mobj(0),handle(0) {}
+    inline QMetaEnum() : mobj(nullptr),handle(0) {}
 
     const char *name() const;
     bool isFlag() const;
@@ -164,7 +164,7 @@ public:
 
     inline const QMetaObject *enclosingMetaObject() const { return mobj; }
 
-    inline bool isValid() const { return name() != 0; }
+    inline bool isValid() const { return name() != nullptr; }
 private:
     const QMetaObject *mobj;
     uint handle;
@@ -186,11 +186,11 @@ public:
     bool isReadable() const;
     bool isWritable() const;
     bool isResettable() const;
-    bool isDesignable(const QObject *obj = 0) const;
-    bool isScriptable(const QObject *obj = 0) const;
-    bool isStored(const QObject *obj = 0) const;
-    bool isEditable(const QObject *obj = 0) const;
-    bool isUser(const QObject *obj = 0) const;
+    bool isDesignable(const QObject *obj = nullptr) const;
+    bool isScriptable(const QObject *obj = nullptr) const;
+    bool isStored(const QObject *obj = nullptr) const;
+    bool isEditable(const QObject *obj = nullptr) const;
+    bool isUser(const QObject *obj = nullptr) const;
     bool isConstant() const;
     bool isFinal() const;
 
@@ -223,7 +223,7 @@ private:
 class Q_CORE_EXPORT QMetaClassInfo
 {
 public:
-    inline QMetaClassInfo() : mobj(0),handle(0) {}
+    inline QMetaClassInfo() : mobj(nullptr),handle(0) {}
     const char *name() const;
     const char *value() const;
     inline const QMetaObject *enclosingMetaObject() const { return mobj; }

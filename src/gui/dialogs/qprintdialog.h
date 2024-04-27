@@ -63,7 +63,7 @@ class Q_GUI_EXPORT QUnixPrintWidget : public QWidget
     Q_OBJECT
 
 public:
-    QUnixPrintWidget(QPrinter *printer, QWidget *parent = 0);
+    QUnixPrintWidget(QPrinter *printer, QWidget *parent = nullptr);
     ~QUnixPrintWidget();
     void updatePrinter();
 
@@ -85,8 +85,8 @@ class Q_GUI_EXPORT QPrintDialog : public QAbstractPrintDialog
     Q_PROPERTY(PrintDialogOptions options READ options WRITE setOptions)
 
 public:
-    explicit QPrintDialog(QPrinter *printer, QWidget *parent = 0);
-    explicit QPrintDialog(QWidget *parent = 0);
+    explicit QPrintDialog(QPrinter *printer, QWidget *parent = nullptr);
+    explicit QPrintDialog(QWidget *parent = nullptr);
     ~QPrintDialog();
 
     int exec();

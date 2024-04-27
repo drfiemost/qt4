@@ -130,7 +130,7 @@ public:
 
     struct ScriptEngine : public QDeclarativeScriptEngine
     {
-        ScriptEngine(QDeclarativeWorkerScriptEnginePrivate *parent) : QDeclarativeScriptEngine(0), p(parent), accessManager(0) {}
+        ScriptEngine(QDeclarativeWorkerScriptEnginePrivate *parent) : QDeclarativeScriptEngine(nullptr), p(parent), accessManager(nullptr) {}
         ~ScriptEngine() { delete accessManager; }
         QDeclarativeWorkerScriptEnginePrivate *p;
         QNetworkAccessManager *accessManager;
@@ -192,7 +192,7 @@ private:
 };
 
 QDeclarativeWorkerScriptEnginePrivate::QDeclarativeWorkerScriptEnginePrivate(QDeclarativeEngine *engine)
-: workerEngine(0), qmlengine(engine), m_nextId(0)
+: workerEngine(nullptr), qmlengine(engine), m_nextId(0)
 {
 }
 
@@ -425,7 +425,7 @@ QScriptValue QDeclarativeWorkerScriptEnginePrivate::variantToScriptValue(const Q
 #endif
     } else if (value.userType() == qMetaTypeId<QDeclarativeListModelWorkerAgent::VariantRef>()) {
         QDeclarativeListModelWorkerAgent::VariantRef vr = qvariant_cast<QDeclarativeListModelWorkerAgent::VariantRef>(value);
-        if (vr.a->scriptEngine() == 0)
+        if (vr.a->scriptEngine() == nullptr)
             vr.a->setScriptEngine(engine);
         else if (vr.a->scriptEngine() != engine)
             return engine->nullValue();
@@ -533,7 +533,7 @@ QDeclarativeWorkerScriptEngine::~QDeclarativeWorkerScriptEngine()
 }
 
 QDeclarativeWorkerScriptEnginePrivate::WorkerScript::WorkerScript()
-: id(-1), initialized(false), owner(0)
+: id(-1), initialized(false), owner(nullptr)
 {
 }
 
@@ -577,7 +577,7 @@ void QDeclarativeWorkerScriptEngine::run()
 
     exec();
 
-    delete d->workerEngine; d->workerEngine = 0;
+    delete d->workerEngine; d->workerEngine = nullptr;
 }
 
 
@@ -624,7 +624,7 @@ void QDeclarativeWorkerScriptEngine::run()
         {declarative/threading/threadedlistmodel}{Threaded ListModel example}
 */
 QDeclarativeWorkerScript::QDeclarativeWorkerScript(QObject *parent)
-: QObject(parent), m_engine(0), m_scriptId(-1), m_componentComplete(true)
+: QObject(parent), m_engine(nullptr), m_scriptId(-1), m_componentComplete(true)
 {
 }
 
@@ -699,7 +699,7 @@ QDeclarativeWorkerScriptEngine *QDeclarativeWorkerScript::engine()
         QDeclarativeEngine *engine = qmlEngine(this);
         if (!engine) {
             qWarning("QDeclarativeWorkerScript: engine() called without qmlEngine() set");
-            return 0;
+            return nullptr;
         }
 
         m_engine = QDeclarativeEnginePrivate::get(engine)->getWorkerScriptEngine();
@@ -710,7 +710,7 @@ QDeclarativeWorkerScriptEngine *QDeclarativeWorkerScript::engine()
 
         return m_engine;
     }
-    return 0;
+    return nullptr;
 }
 
 void QDeclarativeWorkerScript::componentComplete()

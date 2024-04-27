@@ -504,7 +504,7 @@ void QAnimationDriver::stop()
    The default animation driver just spins the timer...
  */
 QDefaultAnimationDriver::QDefaultAnimationDriver(QUnifiedTimer *timer)
-    : QAnimationDriver(0), m_unified_timer(timer)
+    : QAnimationDriver(nullptr), m_unified_timer(timer)
 {
 }
 
@@ -614,7 +614,7 @@ void QAbstractAnimationPrivate::setState(QAbstractAnimation::State newState)
     \sa QVariantAnimation, QAnimationGroup
 */
 QAbstractAnimation::QAbstractAnimation(QObject *parent)
-    : QObject(*new QAbstractAnimationPrivate, 0)
+    : QObject(*new QAbstractAnimationPrivate, nullptr)
 {
     // Allow auto-add on reparent
     setParent(parent);
@@ -624,7 +624,7 @@ QAbstractAnimation::QAbstractAnimation(QObject *parent)
     \internal
 */
 QAbstractAnimation::QAbstractAnimation(QAbstractAnimationPrivate &dd, QObject *parent)
-    : QObject(dd, 0)
+    : QObject(dd, nullptr)
 {
     // Allow auto-add on reparent
    setParent(parent);

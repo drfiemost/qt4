@@ -46,7 +46,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QAbstractEventDispatcher::EventFilter oldEventFilter = 0;
+QAbstractEventDispatcher::EventFilter oldEventFilter = nullptr;
 qint64 QBenchmarkEvent::eventCounter = 0;
 
 QBenchmarkEvent::~QBenchmarkEvent()

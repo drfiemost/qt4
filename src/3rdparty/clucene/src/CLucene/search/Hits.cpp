@@ -24,9 +24,9 @@ CL_NS_DEF(search)
 	//Pre  - true
 	//Post - The instance has been created
 
-		next  = NULL;
-		prev  = NULL;
-		doc   = NULL;
+		next  = nullptr;
+		prev  = nullptr;
+		doc   = nullptr;
 		score = s;
 		id    = i;
 	}
@@ -50,8 +50,8 @@ CL_NS_DEF(search)
 	//Post - The instance has been created
 
 		_length  = 0;
-		first   = NULL;
-		last    = NULL;
+		first   = nullptr;
+		last    = nullptr;
 		numDocs = 0;
 		maxDocs = 200;
 
@@ -77,10 +77,10 @@ CL_NS_DEF(search)
 			remove(last);				  // flush last
 
 			_CLDELETE( oldLast->doc );
-			oldLast->doc = NULL;
+			oldLast->doc = nullptr;
 		}
 
-		if (hitDoc->doc == NULL){
+		if (hitDoc->doc == nullptr){
 			hitDoc->doc = _CLNEW Document;
 			searcher->doc(hitDoc->id, hitDoc->doc);	  // cache miss: read document
 		}
@@ -105,8 +105,8 @@ CL_NS_DEF(search)
 		}
 
 		size_t n = _min * 2;				  // double # retrieved
-		TopDocs* topDocs = NULL;
-		if ( sort==NULL )
+		TopDocs* topDocs = nullptr;
+		if ( sort==nullptr )
 			topDocs = (TopDocs*)((Searchable*)searcher)->_search(query, filter, n);
 		else
 			topDocs = (TopDocs*)((Searchable*)searcher)->_search(query, filter, n, sort);
@@ -116,7 +116,7 @@ CL_NS_DEF(search)
 
 		qreal scoreNorm = 1.0f;
 		//Check that scoreDocs is a valid pointer before using it
-		if (scoreDocs != NULL){
+		if (scoreDocs != nullptr){
 			if (_length > 0 && scoreDocs[0].score > 1.0f){
 				scoreNorm = 1.0f / scoreDocs[0].score;
 			}
@@ -143,28 +143,28 @@ CL_NS_DEF(search)
 	}
 
 	void Hits::addToFront(HitDoc* hitDoc) {  // insert at front of cache
-		if (first == NULL)
+		if (first == nullptr)
 			last = hitDoc;
 		else
 			first->prev = hitDoc;
 
 		hitDoc->next = first;
 		first = hitDoc;
-		hitDoc->prev = NULL;
+		hitDoc->prev = nullptr;
 
 		numDocs++;
 	}
 
 	void Hits::remove(const HitDoc* hitDoc) {	  // remove from cache
-		if (hitDoc->doc == NULL)			  // it's not in the list
+		if (hitDoc->doc == nullptr)			  // it's not in the list
 			return;					  // abort
 
-		if (hitDoc->next == NULL)
+		if (hitDoc->next == nullptr)
 			last = hitDoc->prev;
 		else
 			hitDoc->next->prev = hitDoc->prev;
 
-		if (hitDoc->prev == NULL)
+		if (hitDoc->prev == nullptr)
 			first = hitDoc->next;
 		else
 			hitDoc->prev->next = hitDoc->next;

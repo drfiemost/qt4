@@ -99,7 +99,7 @@ class DragAndDropView : public QDeclarativeView
 {
     Q_OBJECT
 public:
-    DragAndDropView(QDeclarativeViewer *parent = 0)
+    DragAndDropView(QDeclarativeViewer *parent = nullptr)
     : QDeclarativeView(parent)
     {
         setAcceptDrops(true);
@@ -148,7 +148,7 @@ class Runtime : public QObject
 public:
     static Runtime* instance()
     {
-        static Runtime *instance = 0;
+        static Runtime *instance = nullptr;
         if (!instance)
             instance = new Runtime;
         return instance;
@@ -170,7 +170,7 @@ Q_SIGNALS:
     void orientationChanged();
 
 private:
-    Runtime(QObject *parent=0) : QObject(parent), activeWindow(false)
+    Runtime(QObject *parent=nullptr) : QObject(parent), activeWindow(false)
     {
         connect(DeviceOrientation::instance(), SIGNAL(orientationChanged()),
                 this, SIGNAL(orientationChanged()));
@@ -187,7 +187,7 @@ static struct { const char *name, *args; } ffmpegprofiles[] = {
     {"Medium Quality", "-qmax 6"},
     {"Low Quality", "-qmax 16"},
     {"Custom ffmpeg arguments", ""},
-    {0,0}
+    {nullptr,nullptr}
 };
 
 class RecordingDialog : public QDialog, public Ui::RecordingOptions {
@@ -433,12 +433,12 @@ private:
     QList<QNetworkAccessManager*> namList;
 };
 
-PersistentCookieJar *NetworkAccessManagerFactory::cookieJar = 0;
+PersistentCookieJar *NetworkAccessManagerFactory::cookieJar = nullptr;
 
 static void cleanup_cookieJar()
 {
     delete NetworkAccessManagerFactory::cookieJar;
-    NetworkAccessManagerFactory::cookieJar = 0;
+    NetworkAccessManagerFactory::cookieJar = nullptr;
 }
 
 QNetworkAccessManager *NetworkAccessManagerFactory::create(QObject *parent)
@@ -447,10 +447,10 @@ QNetworkAccessManager *NetworkAccessManagerFactory::create(QObject *parent)
     QNetworkAccessManager *manager = new QNetworkAccessManager(parent);
     if (!cookieJar) {
         qAddPostRoutine(cleanup_cookieJar);
-        cookieJar = new PersistentCookieJar(0);
+        cookieJar = new PersistentCookieJar(nullptr);
     }
     manager->setCookieJar(cookieJar);
-    cookieJar->setParent(0);
+    cookieJar->setParent(nullptr);
     manager->setProxyFactory(new SystemProxyFactory);
     if (cacheSize > 0) {
         QNetworkDiskCache *cache = new QNetworkDiskCache;
@@ -458,7 +458,7 @@ QNetworkAccessManager *NetworkAccessManagerFactory::create(QObject *parent)
         cache->setMaximumCacheSize(cacheSize);
         manager->setCache(cache);
     } else {
-        manager->setCache(0);
+        manager->setCache(nullptr);
     }
     connect(manager, SIGNAL(destroyed(QObject*)), this, SLOT(managerDestroyed(QObject*)));
     namList.append(manager);
@@ -498,21 +498,21 @@ static bool senseImageMagick()
 QDeclarativeViewer::QDeclarativeViewer(QWidget *parent, Qt::WindowFlags flags)
     : QMainWindow(parent, flags)
       , loggerWindow(new LoggerWidget(this))
-      , frame_stream(0)
+      , frame_stream(nullptr)
       , convertAvailable(senseImageMagick())
-      , rotateAction(0)
-      , orientation(0)
-      , showWarningsWindow(0)
-      , m_scriptOptions(0)
-      , tester(0)
+      , rotateAction(nullptr)
+      , orientation(nullptr)
+      , showWarningsWindow(nullptr)
+      , m_scriptOptions(nullptr)
+      , tester(nullptr)
       , useQmlFileBrowser(true)
-      , translator(0)
+      , translator(nullptr)
 {
     QDeclarativeViewer::registerTypes();
     setWindowTitle(tr("Qt QML Viewer"));
 
     devicemode = false;
-    canvas = 0;
+    canvas = nullptr;
     record_autotime = 0;
     record_rate = 50;
     record_args += QLatin1String("-sameq");
@@ -553,7 +553,7 @@ QDeclarativeViewer::QDeclarativeViewer(QWidget *parent, Qt::WindowFlags flags)
         createMenu();
         changeOrientation(orientation->actions().value(0));
     } else {
-        setMenuBar(0);
+        setMenuBar(nullptr);
     }
 
     setCentralWidget(canvas);
@@ -576,7 +576,7 @@ QDeclarativeViewer::QDeclarativeViewer(QWidget *parent, Qt::WindowFlags flags)
 QDeclarativeViewer::~QDeclarativeViewer()
 {
     delete loggerWindow;
-    canvas->engine()->setNetworkAccessManagerFactory(0);
+    canvas->engine()->setNetworkAccessManagerFactory(nullptr);
     delete namFactory;
 }
 
@@ -1117,7 +1117,7 @@ void QDeclarativeViewer::setRecording(bool on)
 
         } else {
             // Store frames, save to GIF/PNG
-            frame_stream = 0;
+            frame_stream = nullptr;
         }
     } else {
         canvas->setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
@@ -1213,13 +1213,13 @@ void QDeclarativeViewer::ffmpegFinished(int code)
 void QDeclarativeViewer::appAboutToQuit()
 {
     // avoid QGLContext errors about invalid contexts on exit
-    canvas->setViewport(0);
+    canvas->setViewport(nullptr);
 
     // avoid crashes if messages are received after app has closed
     delete loggerWindow;
-    loggerWindow = 0;
+    loggerWindow = nullptr;
     delete tester;
-    tester = 0;
+    tester = nullptr;
     close();
 }
 

@@ -1596,7 +1596,7 @@ void QCleanlooksStyle::drawControl(ControlElement element, const QStyleOption *o
         if (const QStyleOptionDockWidget *dwOpt = qstyleoption_cast<const QStyleOptionDockWidget *>(option)) {
             const QStyleOptionDockWidgetV2 *v2
                 = qstyleoption_cast<const QStyleOptionDockWidgetV2*>(dwOpt);
-            bool verticalTitleBar = v2 == 0 ? false : v2->verticalTitleBar;
+            bool verticalTitleBar = v2 == nullptr ? false : v2->verticalTitleBar;
 
             QRect rect = dwOpt->rect;
             QRect titleRect = subElementRect(SE_DockWidgetTitleBarText, option, widget);
@@ -4379,7 +4379,7 @@ QRect QCleanlooksStyle::subElementRect(SubElement sr, const QStyleOption *opt, c
     case SE_DockWidgetTitleBarText: {
         const QStyleOptionDockWidgetV2 *v2
             = qstyleoption_cast<const QStyleOptionDockWidgetV2*>(opt);
-        bool verticalTitleBar = v2 == 0 ? false : v2->verticalTitleBar;
+        bool verticalTitleBar = v2 == nullptr ? false : v2->verticalTitleBar;
         if (verticalTitleBar) {
             r.adjust(0, 0, 0, -4);
         } else {

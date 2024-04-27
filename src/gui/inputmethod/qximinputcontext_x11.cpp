@@ -117,7 +117,7 @@ extern "C" {
         QXIMInputContext *qic = reinterpret_cast<QXIMInputContext *>(client_data);
         // qDebug("xim_destroy_callback");
         qic->close_xim();
-        XRegisterIMInstantiateCallback(X11->display, 0, 0, 0,
+        XRegisterIMInstantiateCallback(X11->display, nullptr, nullptr, nullptr,
                                        (XIMProc) xim_create_callback, reinterpret_cast<char *>(qic));
     }
 #endif // USE_X11R6_XIM
@@ -180,9 +180,9 @@ extern "C" {
 	}
 
 	if (text) {
-	    char *str = 0;
+	    char *str = nullptr;
 	    if (text->encoding_is_wchar) {
-		int l = wcstombs(NULL, text->string.wide_char, text->length);
+		int l = wcstombs(nullptr, text->string.wide_char, text->length);
 		if (l != -1) {
 		    str = new char[l + 1];
 		    wcstombs(str, text->string.wide_char, l);
@@ -295,13 +295,13 @@ QXIMInputContext::ICData *QXIMInputContext::icData() const
 {
     if (QWidget *w = focusWidget())
         return ximData.value(w->effectiveWinId());
-    return 0;
+    return nullptr;
 }
 /* The cache here is needed, as X11 leaks a few kb for every
    XFreeFontSet call, so we avoid creating and deletion of fontsets as
    much as possible
 */
-static XFontSet fontsetCache[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+static XFontSet fontsetCache[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 static int fontsetRefCount = 0;
 
 static const char * const fontsetnames[] = {
@@ -330,18 +330,18 @@ static XFontSet getFontSet(const QFont &f)
         Display* dpy = X11->display;
         int missCount;
         char** missList;
-        fontsetCache[i] = XCreateFontSet(dpy, fontsetnames[i], &missList, &missCount, 0);
+        fontsetCache[i] = XCreateFontSet(dpy, fontsetnames[i], &missList, &missCount, nullptr);
         if(missCount > 0)
             XFreeStringList(missList);
         if (!fontsetCache[i]) {
-            fontsetCache[i] = XCreateFontSet(dpy, "-*-fixed-*-*-*-*-16-*", &missList, &missCount, 0);
+            fontsetCache[i] = XCreateFontSet(dpy, "-*-fixed-*-*-*-*-16-*", &missList, &missCount, nullptr);
             if(missCount > 0)
                 XFreeStringList(missList);
             if (!fontsetCache[i])
                 fontsetCache[i] = (XFontSet)-1;
         }
     }
-    return (fontsetCache[i] == (XFontSet)-1) ? 0 : fontsetCache[i];
+    return (fontsetCache[i] == (XFontSet)-1) ? nullptr : fontsetCache[i];
 }
 
 extern bool qt_use_rtl_extensions; // from qapplication_x11.cpp
@@ -354,7 +354,7 @@ QXIMInputContext::QXIMInputContext()
     if (!qt_xim_preferred_style) // no configured input style, use the default
         qt_xim_preferred_style = xim_default_style;
 
-    xim = 0;
+    xim = nullptr;
     QByteArray ximServerName(qt_ximServer);
     if (qt_ximServer)
         ximServerName.prepend("@im=");
@@ -367,10 +367,10 @@ QXIMInputContext::QXIMInputContext()
 #endif
             ;
 #ifdef USE_X11R6_XIM
-    else if (XSetLocaleModifiers (ximServerName.constData()) == 0)
+    else if (XSetLocaleModifiers (ximServerName.constData()) == nullptr)
         qWarning("Qt: Cannot set locale modifiers: %s", ximServerName.constData());
     else
-        XRegisterIMInstantiateCallback(X11->display, 0, 0, 0,
+        XRegisterIMInstantiateCallback(X11->display, nullptr, nullptr, nullptr,
                                        (XIMProc) xim_create_callback, reinterpret_cast<char *>(this));
 #else // !USE_X11R6_XIM
     else if (XSetLocaleModifiers ("") == 0)
@@ -388,12 +388,12 @@ QXIMInputContext::QXIMInputContext()
         int format = 0;
         ulong nitems = 0;
         ulong bytesAfter = 0;
-        uchar *data = 0;
+        uchar *data = nullptr;
         if (XGetWindowProperty(X11->display, RootWindow(X11->display, 0), ATOM(_XKB_RULES_NAMES), 0, 1024,
                                false, XA_STRING, &type, &format, &nitems, &bytesAfter, &data) == Success
             && type == XA_STRING && format == 8 && nitems > 2) {
 
-            char *names[5] = { 0, 0, 0, 0, 0 };
+            char *names[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
             char *p = reinterpret_cast<char *>(data), *end = p + nitems;
             int i = 0;
             do {
@@ -429,19 +429,19 @@ void QXIMInputContext::create_xim()
 {
     ++fontsetRefCount;
 #ifndef QT_NO_XIM
-    xim = XOpenIM(X11->display, 0, 0, 0);
+    xim = XOpenIM(X11->display, nullptr, nullptr, nullptr);
     if (xim) {
 
 #ifdef USE_X11R6_XIM
         XIMCallback destroy;
         destroy.callback = (XIMProc) xim_destroy_callback;
         destroy.client_data = XPointer(this);
-        if (XSetIMValues(xim, XNDestroyCallback, &destroy, (char *) 0) != 0)
+        if (XSetIMValues(xim, XNDestroyCallback, &destroy, (char *) nullptr) != nullptr)
             qWarning("Xlib doesn't support destroy callback");
 #endif // USE_X11R6_XIM
 
-        XIMStyles *styles = 0;
-        XGetIMValues(xim, XNQueryInputStyle, &styles, (char *) 0, (char *) 0);
+        XIMStyles *styles = nullptr;
+        XGetIMValues(xim, XNQueryInputStyle, &styles, (char *) nullptr, (char *) nullptr);
         if (styles) {
             int i;
             for (i = 0; !xim_style && i < styles->count_styles; i++) {
@@ -474,7 +474,7 @@ void QXIMInputContext::create_xim()
         if (xim_style) {
 
 #ifdef USE_X11R6_XIM
-            XUnregisterIMInstantiateCallback(X11->display, 0, 0, 0,
+            XUnregisterIMInstantiateCallback(X11->display, nullptr, nullptr, nullptr,
                                              (XIMProc) xim_create_callback, reinterpret_cast<char *>(this));
 #endif // USE_X11R6_XIM
 
@@ -525,13 +525,13 @@ void QXIMInputContext::close_xim()
 	for ( int i = 0; i < 8; i++ ) {
 	    if ( fontsetCache[i] && fontsetCache[i] != (XFontSet)-1 ) {
 		XFreeFontSet(dpy, fontsetCache[i]);
-		fontsetCache[i] = 0;
+		fontsetCache[i] = nullptr;
 	    }
 	}
     }
 
-    setFocusWidget(0);
-    xim = 0;
+    setFocusWidget(nullptr);
+    xim = nullptr;
 }
 
 
@@ -740,7 +740,7 @@ QXIMInputContext::ICData *QXIMInputContext::createICData(QWidget *w)
     data->widget = w;
     data->preeditEmpty = true;
 
-    XVaNestedList preedit_attr = 0;
+    XVaNestedList preedit_attr = nullptr;
     XIMCallback startcallback, drawcallback, donecallback;
 
     QFont font = w->font();
@@ -756,7 +756,7 @@ QXIMInputContext::ICData *QXIMInputContext::createICData(QWidget *w)
         preedit_attr = XVaCreateNestedList(0,
                                            XNArea, &rect,
                                            XNFontSet, data->fontset,
-                                           (char *) 0);
+                                           (char *) nullptr);
     } else if (xim_style & XIMPreeditPosition) {
         XPoint spot;
         spot.x = 1;
@@ -765,7 +765,7 @@ QXIMInputContext::ICData *QXIMInputContext::createICData(QWidget *w)
         preedit_attr = XVaCreateNestedList(0,
                                            XNSpotLocation, &spot,
                                            XNFontSet, data->fontset,
-                                           (char *) 0);
+                                           (char *) nullptr);
     } else if (xim_style & XIMPreeditCallbacks) {
         startcallback.client_data = (XPointer) this;
         startcallback.callback = (XIMProc) xic_start_callback;
@@ -778,7 +778,7 @@ QXIMInputContext::ICData *QXIMInputContext::createICData(QWidget *w)
                                            XNPreeditStartCallback, &startcallback,
                                            XNPreeditDrawCallback, &drawcallback,
                                            XNPreeditDoneCallback, &donecallback,
-                                           (char *) 0);
+                                           (char *) nullptr);
     }
 
     if (preedit_attr) {
@@ -786,18 +786,18 @@ QXIMInputContext::ICData *QXIMInputContext::createICData(QWidget *w)
                              XNInputStyle, xim_style,
                              XNClientWindow, w->effectiveWinId(),
                              XNPreeditAttributes, preedit_attr,
-                             (char *) 0);
+                             (char *) nullptr);
         XFree(preedit_attr);
     } else {
         data->ic = XCreateIC(xim,
                              XNInputStyle, xim_style,
                              XNClientWindow, w->effectiveWinId(),
-                             (char *) 0);
+                             (char *) nullptr);
     }
 
     if (data->ic) {
         // when resetting the input context, preserve the input state
-        (void) XSetICValues(data->ic, XNResetState, XIMPreserveState, (char *) 0);
+        (void) XSetICValues(data->ic, XNResetState, XIMPreserveState, (char *) nullptr);
     } else {
         qWarning("Failed to create XIC");
     }
@@ -835,7 +835,7 @@ void QXIMInputContext::update()
 
     XFontSet fontset = getFontSet(qvariant_cast<QFont>(w->inputMethodQuery(Qt::ImFont)));
     if (data->fontset == fontset)
-        fontset = 0;
+        fontset = nullptr;
     else
         data->fontset = fontset;
 
@@ -845,14 +845,14 @@ void QXIMInputContext::update()
                                            XNSpotLocation, &spot,
                                            XNArea, &area,
                                            XNFontSet, fontset,
-                                           (char *) 0);
+                                           (char *) nullptr);
     else
         preedit_attr = XVaCreateNestedList(0,
                                            XNSpotLocation, &spot,
                                            XNArea, &area,
-                                           (char *) 0);
+                                           (char *) nullptr);
 
-    XSetICValues(data->ic, XNPreeditAttributes, preedit_attr, (char *) 0);
+    XSetICValues(data->ic, XNPreeditAttributes, preedit_attr, (char *) nullptr);
     XFree(preedit_attr);
 }
 

@@ -86,7 +86,7 @@ ASSERT_CLASS_FITS_IN_CELL(JSArray);
 // as long as it is 1/8 full. If more sparse than that, we use a map.
 static const unsigned minDensityMultiplier = 8;
 
-const ClassInfo JSArray::info = {"Array", 0, 0, 0};
+const ClassInfo JSArray::info = {"Array", nullptr, nullptr, nullptr};
 
 static inline size_t storageSize(unsigned vectorLength)
 {
@@ -150,8 +150,8 @@ JSArray::JSArray(NonNullPassRefPtr<Structure> structure, unsigned initialLength)
     m_storage->m_length = initialLength;
     m_vectorLength = initialCapacity;
     m_storage->m_numValuesInVector = 0;
-    m_storage->m_sparseValueMap = 0;
-    m_storage->lazyCreationData = 0;
+    m_storage->m_sparseValueMap = nullptr;
+    m_storage->lazyCreationData = nullptr;
     m_storage->reportedMapCapacity = 0;
 
     JSValue* vector = m_storage->m_vector;
@@ -172,8 +172,8 @@ JSArray::JSArray(NonNullPassRefPtr<Structure> structure, const ArgList& list)
     m_storage->m_length = initialCapacity;
     m_vectorLength = initialCapacity;
     m_storage->m_numValuesInVector = initialCapacity;
-    m_storage->m_sparseValueMap = 0;
-    m_storage->lazyCreationData = 0;
+    m_storage->m_sparseValueMap = nullptr;
+    m_storage->lazyCreationData = nullptr;
     m_storage->reportedMapCapacity = 0;
 
     size_t i = 0;
@@ -548,7 +548,7 @@ void JSArray::setLength(unsigned newLength)
             }
             if (map->isEmpty()) {
                 delete map;
-                storage->m_sparseValueMap = 0;
+                storage->m_sparseValueMap = nullptr;
             }
         }
     }
@@ -587,7 +587,7 @@ JSValue JSArray::pop()
                 map->remove(it);
                 if (map->isEmpty()) {
                     delete map;
-                    m_storage->m_sparseValueMap = 0;
+                    m_storage->m_sparseValueMap = nullptr;
                 }
             }
         }
@@ -901,7 +901,7 @@ void JSArray::sort(ExecState* exec, JSValue compareFunction, CallType callType, 
         }
 
         delete map;
-        m_storage->m_sparseValueMap = 0;
+        m_storage->m_sparseValueMap = nullptr;
     }
 
     ASSERT(tree.abstractor().m_nodes.size() >= numDefined);
@@ -1007,7 +1007,7 @@ unsigned JSArray::compactForSorting()
             storage->m_vector[numDefined++] = it->second;
 
         delete map;
-        storage->m_sparseValueMap = 0;
+        storage->m_sparseValueMap = nullptr;
     }
 
     for (unsigned i = numDefined; i < newUsedVectorLength; ++i)

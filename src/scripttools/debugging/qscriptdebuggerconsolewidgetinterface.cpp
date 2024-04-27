@@ -46,8 +46,8 @@ QT_BEGIN_NAMESPACE
 
 QScriptDebuggerConsoleWidgetInterfacePrivate::QScriptDebuggerConsoleWidgetInterfacePrivate()
 {
-    historian = 0;
-    completionProvider = 0;
+    historian = nullptr;
+    completionProvider = nullptr;
 }
 
 QScriptDebuggerConsoleWidgetInterfacePrivate::~QScriptDebuggerConsoleWidgetInterfacePrivate()

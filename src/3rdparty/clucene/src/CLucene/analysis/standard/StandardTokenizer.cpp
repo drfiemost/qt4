@@ -139,7 +139,7 @@ CL_NS_DEF2(analysis,standard)
         tokenStart = rdPos;
         /* ReadNumber returns NULL if it fails to extract a valid number; in
         ** that case, we just continue. */
-        if (ReadNumber(NULL, ch,t))
+        if (ReadNumber(nullptr, ch,t))
           return true;
 	  } else if ( _CJK ){
       	if ( ReadCJK(ch,t) )
@@ -159,7 +159,7 @@ CL_NS_DEF2(analysis,standard)
     StringBuffer str(t->_termText,t->bufferLength(),true); //use stringbuffer to read data onto the termText
     TokenTypes tokenType;
     bool decExhausted;
-    if (previousNumber != NULL) {
+    if (previousNumber != nullptr) {
       str.prepend(previousNumber);
       tokenType = CL_NS2(analysis,standard)::HOST;
       decExhausted = false;
@@ -346,7 +346,7 @@ CL_NS_DEF2(analysis,standard)
         SHAVE_RIGHTMOST(str);
       }
       /* If there are no dots remaining, this is a generic ALPHANUM. */
-      if (_tcschr(strBuf, '.') == NULL) {
+      if (_tcschr(strBuf, '.') == nullptr) {
         forcedType = CL_NS2(analysis,standard)::ALPHANUM;
       }
 
@@ -371,7 +371,7 @@ CL_NS_DEF2(analysis,standard)
         /* If it's not an acronym, we don't want the trailing dot. */
         SHAVE_RIGHTMOST(str);
         /* If there are no dots remaining, this is a generic ALPHANUM. */
-        if (_tcschr(strBuf, '.') == NULL) {
+        if (_tcschr(strBuf, '.') == nullptr) {
           forcedType = CL_NS2(analysis,standard)::ALPHANUM;
         }
       }

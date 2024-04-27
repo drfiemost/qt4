@@ -68,7 +68,7 @@ class QSslCertificatePrivate
 {
 public:
     QSslCertificatePrivate()
-        : null(true), x509(0)
+        : null(true), x509(nullptr)
     {
         QSslSocketPrivate::ensureInitialized();
     }

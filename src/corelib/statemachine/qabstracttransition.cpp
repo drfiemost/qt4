@@ -121,7 +121,7 @@ QStateMachine *QAbstractTransitionPrivate::machine() const
 {
     QState *source = sourceState();
     if (!source)
-        return 0;
+        return nullptr;
     return source->machine();
 }
 
@@ -190,7 +190,7 @@ QAbstractState *QAbstractTransition::targetState() const
 {
     Q_D(const QAbstractTransition);
     if (d->targetStates.isEmpty())
-        return 0;
+        return nullptr;
     return d->targetStates.first().data();
 }
 

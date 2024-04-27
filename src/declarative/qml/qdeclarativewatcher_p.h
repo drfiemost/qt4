@@ -71,7 +71,7 @@ class QDeclarativeWatcher : public QObject
 {
     Q_OBJECT
 public:
-    QDeclarativeWatcher(QObject * = 0);
+    QDeclarativeWatcher(QObject * = nullptr);
 
     bool addWatch(int id, quint32 objectId);
     bool addWatch(int id, quint32 objectId, const QByteArray &property);

@@ -53,7 +53,7 @@ namespace JSC {
                 evalExecutable = EvalExecutable::create(exec, makeSource(evalSource));
                 exceptionValue = evalExecutable->compile(exec, scopeChain);
                 if (exceptionValue)
-                    return 0;
+                    return nullptr;
 
                 if (evalSource.size() < maxCacheableSourceLength && (*scopeChain->begin())->isVariableObject() && m_cacheMap.size() < maxCacheEntries)
                     m_cacheMap.set(evalSource.rep(), evalExecutable);

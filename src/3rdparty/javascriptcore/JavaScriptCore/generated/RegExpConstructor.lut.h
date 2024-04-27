@@ -26,9 +26,9 @@ static const struct HashTableValue regExpConstructorTableValues[22] = {
    { "$7", DontDelete|ReadOnly, (intptr_t)regExpConstructorDollar7, (intptr_t)0 },
    { "$8", DontDelete|ReadOnly, (intptr_t)regExpConstructorDollar8, (intptr_t)0 },
    { "$9", DontDelete|ReadOnly, (intptr_t)regExpConstructorDollar9, (intptr_t)0 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable regExpConstructorTable =
-    { 65, 63, regExpConstructorTableValues, 0 };
+    { 65, 63, regExpConstructorTableValues, nullptr };
 } // namespace

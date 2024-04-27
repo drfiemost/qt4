@@ -74,7 +74,7 @@ QT_BEGIN_NAMESPACE
  */
 TextEditFindWidget::TextEditFindWidget(FindFlags flags, QWidget *parent)
     : AbstractFindWidget(flags, parent)
-    , m_textEdit(0)
+    , m_textEdit(nullptr)
 {
 }
 

@@ -123,7 +123,7 @@ public:
     uint toUnicode(glyph_t g) const;
 
 private:
-    QBitmap bitmapForGlyphs(const QGlyphLayout &glyphs, const glyph_metrics_t &metrics, QTextItem::RenderFlags flags = 0);
+    QBitmap bitmapForGlyphs(const QGlyphLayout &glyphs, const glyph_metrics_t &metrics, QTextItem::RenderFlags flags = nullptr);
 
     XFontStruct *_fs;
     QByteArray _name;

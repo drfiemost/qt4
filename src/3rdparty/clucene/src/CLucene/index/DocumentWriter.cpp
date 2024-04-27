@@ -43,7 +43,7 @@ DocumentWriter::Posting::Posting(Term* t, const int32_t position,
     positions.values[0] = position;
     positions.length = 1;
 
-    if ( offset != NULL ){
+    if ( offset != nullptr ){
         this->offsets.values =(TermVectorOffsetInfo*)malloc(sizeof(TermVectorOffsetInfo));
         this->offsets.values[0] = *offset;
         this->offsets.length = 1;
@@ -57,7 +57,7 @@ DocumentWriter::Posting::~Posting()
     //Post - The instance has been destroyed
 
     free(positions.values);
-    if ( this->offsets.values != NULL )
+    if ( this->offsets.values != nullptr )
         free(this->offsets.values);
     _CLDECDELETE(term);
 }
@@ -67,12 +67,12 @@ DocumentWriter::DocumentWriter(Directory* d, Analyzer* a,
     : analyzer(a)
     , directory(d)
     , maxFieldLength(mfl)
-    , fieldInfos(NULL)
-    , fieldLengths(NULL)
+    , fieldInfos(nullptr)
+    , fieldLengths(nullptr)
     , similarity(sim)
     , termIndexInterval(IndexWriter::DEFAULT_TERM_INDEX_INTERVAL)
-    , fieldPositions(NULL)
-    , fieldBoosts(NULL)
+    , fieldPositions(nullptr)
+    , fieldBoosts(nullptr)
     , termBuffer(_CLNEW Term)
 {
     //Pre  - d contains a valid reference to a Directory
@@ -83,8 +83,8 @@ DocumentWriter::DocumentWriter(Directory* d, Analyzer* a,
     CND_PRECONDITION(((mfl > 0) || (mfl == IndexWriter::FIELD_TRUNC_POLICY__WARN)),
         "mfl is 0 or smaller than IndexWriter::FIELD_TRUNC_POLICY__WARN")
 
-    fieldInfos     = NULL;
-    fieldLengths   = NULL;
+    fieldInfos     = nullptr;
+    fieldLengths   = nullptr;
 }
 
 DocumentWriter::DocumentWriter(CL_NS(store)::Directory* d,
@@ -92,12 +92,12 @@ DocumentWriter::DocumentWriter(CL_NS(store)::Directory* d,
     : analyzer(a)
     , directory(d)
     , maxFieldLength(writer->getMaxFieldLength())
-    , fieldInfos(NULL)
-    , fieldLengths(NULL)
+    , fieldInfos(nullptr)
+    , fieldLengths(nullptr)
     , similarity(writer->getSimilarity())
     , termIndexInterval(writer->getTermIndexInterval())
-    , fieldPositions(NULL)
-    , fieldBoosts(NULL)
+    , fieldPositions(nullptr)
+    , fieldBoosts(nullptr)
     , termBuffer(_CLNEW Term)
 {
     //Pre  - d contains a valid reference to a Directory
@@ -109,8 +109,8 @@ DocumentWriter::DocumentWriter(CL_NS(store)::Directory* d,
         || (maxFieldLength == IndexWriter::FIELD_TRUNC_POLICY__WARN)),
         "mfl is 0 or smaller than IndexWriter::FIELD_TRUNC_POLICY__WARN")
 
-    fieldInfos     = NULL;
-    fieldLengths   = NULL;
+    fieldInfos     = nullptr;
+    fieldLengths   = nullptr;
 
 }
 
@@ -181,7 +181,7 @@ void DocumentWriter::addDocument(const QString& segment, Document* doc)
     invertDocument(doc);
 
 	// sort postingTable into an array
-	Posting** postings = NULL;
+	Posting** postings = nullptr;
 	int32_t postingsLength = 0;
 	sortPostingTable(postings, postingsLength);
 
@@ -247,10 +247,10 @@ void DocumentWriter::invertDocument(const Document* doc)
                     //field value will not be added. With CLucene, an untokenized
                     //field with a reader will still be added (if it isn't stored,
                     //because if it's stored, then the reader has already been read.
-                    const TCHAR* charBuf = NULL;
+                    const TCHAR* charBuf = nullptr;
                     int64_t dataLen = 0;
 
-                    if (field->stringValue() == NULL && !field->isStored() ) {
+                    if (field->stringValue() == nullptr && !field->isStored() ) {
                         CL_NS(util)::Reader* r = field->readerValue();
                         // this call tries to read the entire stream
                         // this may invalidate the string for the further calls
@@ -272,15 +272,15 @@ void DocumentWriter::invertDocument(const Document* doc)
                         tio.setEndOffset(offset + dataLen);
                         addPosition(fieldName, charBuf, position++, &tio );
                     }else
-                        addPosition(fieldName, charBuf, position++, NULL);
+                        addPosition(fieldName, charBuf, position++, nullptr);
                     offset += dataLen;
                     length++;
                 } else { // field must be tokenized
                     CL_NS(util)::Reader* reader; // find or make Reader
                     bool delReader = false;
-                    if (field->readerValue() != NULL) {
+                    if (field->readerValue() != nullptr) {
                         reader = field->readerValue();
-                    } else if (field->stringValue() != NULL) {
+                    } else if (field->stringValue() != nullptr) {
                         reader = _CLNEW CL_NS(util)::StringReader(
                             field->stringValue(),_tcslen(field->stringValue()),
                             false);
@@ -306,7 +306,7 @@ void DocumentWriter::invertDocument(const Document* doc)
                                     tio.setEndOffset(offset + t.endOffset());
                                     addPosition(fieldName, t.termText(), position++, &tio);
                                 } else
-                                    addPosition(fieldName, t.termText(), position++, NULL);
+                                    addPosition(fieldName, t.termText(), position++, nullptr);
 
                                 lastTokenEndOffset = t.endOffset();
                                 length++;
@@ -373,7 +373,7 @@ void DocumentWriter::addPosition(const TCHAR* field, const TCHAR* text,
 	termBuffer->set(field,text,false);
 
 	Posting* ti = postingTable.get(termBuffer);
-	if (ti != NULL) {				  // word seen before
+	if (ti != nullptr) {				  // word seen before
 		int32_t freq = ti->freq;
 		if (ti->positions.length == freq) {
             // positions array is full, realloc its size
@@ -382,7 +382,7 @@ void DocumentWriter::addPosition(const TCHAR* field, const TCHAR* text,
 		}
 		ti->positions.values[freq] = position;		  // add new position
 		
-		if (offset != NULL) {
+		if (offset != nullptr) {
 			if (ti->offsets.length == freq){
 				ti->offsets.length = freq*2;
                 ti->offsets.values = (TermVectorOffsetInfo*)realloc(ti->offsets.values, ti->offsets.length * sizeof(TermVectorOffsetInfo));
@@ -468,10 +468,10 @@ void DocumentWriter::writePostings(Posting** postings,
             }                                                       \
         }
 
-    IndexOutput* freq = NULL;
-    IndexOutput* prox = NULL;
-    TermInfosWriter* tis = NULL;
-    TermVectorsWriter* termVectorWriter = NULL;
+    IndexOutput* freq = nullptr;
+    IndexOutput* prox = nullptr;
+    TermInfosWriter* tis = nullptr;
+    TermVectorsWriter* termVectorWriter = nullptr;
     try {
         //open files for inverse index storage
         QString buf = Misc::segmentname(segment, QLatin1String(".frq"));
@@ -483,7 +483,7 @@ void DocumentWriter::writePostings(Posting** postings,
         tis = _CLNEW TermInfosWriter(directory, segment, fieldInfos,
             termIndexInterval);
         TermInfo* ti = _CLNEW TermInfo();
-        const TCHAR* currentField = NULL;
+        const TCHAR* currentField = nullptr;
         for (int32_t i = 0; i < postingsLength; i++) {
             Posting* posting = postings[i];
 
@@ -508,33 +508,33 @@ void DocumentWriter::writePostings(Posting** postings,
 
             // check to see if we switched to a new field
             const TCHAR* termField = posting->term->field();
-            if ( currentField == NULL || _tcscmp(currentField,termField) != 0 ) {
+            if ( currentField == nullptr || _tcscmp(currentField,termField) != 0 ) {
                 //todo, can we do an intern'd check?
                 // changing field - see if there is something to save
                 currentField = termField;
                 FieldInfo* fi = fieldInfos->fieldInfo(currentField);
 
                 if (fi->storeTermVector) {
-                    if (termVectorWriter == NULL) {
+                    if (termVectorWriter == nullptr) {
                         termVectorWriter = _CLNEW TermVectorsWriter(directory,
                             segment, fieldInfos);
                         termVectorWriter->openDocument();
                     }
                     termVectorWriter->openField(currentField);
-                } else if (termVectorWriter != NULL) {
+                } else if (termVectorWriter != nullptr) {
                     termVectorWriter->closeField();
                 }
             }
-            if (termVectorWriter != NULL && termVectorWriter->isFieldOpen()) {
+            if (termVectorWriter != nullptr && termVectorWriter->isFieldOpen()) {
                 termVectorWriter->addTerm(posting->term->text(), postingFreq,
                     &posting->positions, &posting->offsets);
             }
         }
-        if (termVectorWriter != NULL)
+        if (termVectorWriter != nullptr)
             termVectorWriter->closeDocument();
         _CLDELETE(ti);
     } _CLFINALLY ( 
-        const char* err = NULL;
+        const char* err = nullptr;
         int32_t ierr = 0;
 
         // make an effort to close all streams we can but remember and re-throw
@@ -543,7 +543,7 @@ void DocumentWriter::writePostings(Posting** postings,
         __DOCLOSE(prox);
         __DOCLOSE(tis);
         __DOCLOSE(termVectorWriter);
-        if (err != NULL)
+        if (err != nullptr)
             _CLTHROWA(ierr,err);
     );
 }

@@ -319,11 +319,11 @@ class ArrayLiteral: public ExpressionNode
 {
 public:
     ArrayLiteral(Elision *e):
-        elements (0), elision (e)
+        elements (nullptr), elision (e)
         { kind = Kind_ArrayLiteral; }
 
     ArrayLiteral(ElementList *elts):
-        elements (elts), elision (0)
+        elements (elts), elision (nullptr)
         { kind = Kind_ArrayLiteral; }
 
     ArrayLiteral(ElementList *elts, Elision *e):
@@ -343,7 +343,7 @@ class ObjectLiteral: public ExpressionNode
 {
 public:
     ObjectLiteral():
-        properties (0) { kind = Kind_ObjectLiteral; }
+        properties (nullptr) { kind = Kind_ObjectLiteral; }
 
     ObjectLiteral(PropertyNameAndValueList *plist):
         properties (plist) { kind = Kind_ObjectLiteral; }
@@ -376,7 +376,7 @@ public:
     inline ElementList *finish ()
     {
         ElementList *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -408,7 +408,7 @@ public:
     inline Elision *finish ()
     {
         Elision *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -438,7 +438,7 @@ public:
     inline PropertyNameAndValueList *finish ()
     {
         PropertyNameAndValueList *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -595,7 +595,7 @@ public:
     inline ArgumentList *finish ()
     {
         ArgumentList *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -844,7 +844,7 @@ public:
     inline StatementList *finish ()
     {
         StatementList *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -907,10 +907,10 @@ public:
     inline VariableDeclarationList *finish (bool readOnly)
     {
         VariableDeclarationList *front = next;
-        next = 0;
+        next = nullptr;
         if (readOnly) {
             VariableDeclarationList *vdl;
-            for (vdl = front; vdl != 0; vdl = vdl->next)
+            for (vdl = front; vdl != nullptr; vdl = vdl->next)
                 vdl->declaration->readOnly = true;
         }
         return front;
@@ -947,7 +947,7 @@ public:
 class IfStatement: public Statement
 {
 public:
-    IfStatement(ExpressionNode *e, Statement *t, Statement *f = 0):
+    IfStatement(ExpressionNode *e, Statement *t, Statement *f = nullptr):
         expression (e), ok (t), ko (f)
         { kind = Kind_IfStatement; }
 
@@ -1066,7 +1066,7 @@ public:
 class ContinueStatement: public Statement
 {
 public:
-    ContinueStatement(QScriptNameIdImpl *l = 0):
+    ContinueStatement(QScriptNameIdImpl *l = nullptr):
         label (l) { kind = Kind_ContinueStatement; }
 
     virtual ~ContinueStatement() {}
@@ -1080,7 +1080,7 @@ public:
 class BreakStatement: public Statement
 {
 public:
-    BreakStatement(QScriptNameIdImpl *l = 0):
+    BreakStatement(QScriptNameIdImpl *l = nullptr):
         label (l) { kind = Kind_BreakStatement; }
 
     virtual ~BreakStatement() {}
@@ -1140,7 +1140,7 @@ public:
 class CaseBlock: public Node
 {
 public:
-    CaseBlock(CaseClauses *c, DefaultClause *d = 0, CaseClauses *r = 0):
+    CaseBlock(CaseClauses *c, DefaultClause *d = nullptr, CaseClauses *r = nullptr):
         clauses (c), defaultClause (d), moreClauses (r)
         { kind = Kind_CaseBlock; }
 
@@ -1176,7 +1176,7 @@ public:
     inline CaseClauses *finish ()
     {
         CaseClauses *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -1254,11 +1254,11 @@ public:
         { kind = Kind_TryStatement; }
 
     TryStatement(Statement *stmt, Finally *f):
-        statement (stmt), catchExpression (0), finallyExpression (f)
+        statement (stmt), catchExpression (nullptr), finallyExpression (f)
         { kind = Kind_TryStatement; }
 
     TryStatement(Statement *stmt, Catch *c):
-        statement (stmt), catchExpression (c), finallyExpression (0)
+        statement (stmt), catchExpression (c), finallyExpression (nullptr)
         { kind = Kind_TryStatement; }
 
     virtual ~TryStatement() {}
@@ -1353,7 +1353,7 @@ public:
     inline FormalParameterList *finish ()
     {
         FormalParameterList *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 
@@ -1414,7 +1414,7 @@ public:
     inline SourceElements *finish ()
     {
         SourceElements *front = next;
-        next = 0;
+        next = nullptr;
         return front;
     }
 

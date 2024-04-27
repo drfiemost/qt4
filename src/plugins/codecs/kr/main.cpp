@@ -105,7 +105,7 @@ QTextCodec *KRTextCodecs::createForMib(int mib)
 #endif
     if (mib == QCP949Codec::_mibEnum())
         return new QCP949Codec;
-    return 0;
+    return nullptr;
 }
 
 
@@ -119,7 +119,7 @@ QTextCodec *KRTextCodecs::createForName(const QByteArray &name)
 #endif
     if (name == QCP949Codec::_name() || QCP949Codec::_aliases().contains(name))
         return new QCP949Codec;
-    return 0;
+    return nullptr;
 }
 
 

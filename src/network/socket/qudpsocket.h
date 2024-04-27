@@ -67,7 +67,7 @@ public:
     };
     Q_DECLARE_FLAGS(BindMode, BindFlag)
 
-    explicit QUdpSocket(QObject *parent = 0);
+    explicit QUdpSocket(QObject *parent = nullptr);
     virtual ~QUdpSocket();
 
     bool bind(const QHostAddress &address, quint16 port);
@@ -90,7 +90,7 @@ public:
 
     bool hasPendingDatagrams() const;
     qint64 pendingDatagramSize() const;
-    qint64 readDatagram(char *data, qint64 maxlen, QHostAddress *host = 0, quint16 *port = 0);
+    qint64 readDatagram(char *data, qint64 maxlen, QHostAddress *host = nullptr, quint16 *port = nullptr);
     qint64 writeDatagram(const char *data, qint64 len, const QHostAddress &host, quint16 port);
     inline qint64 writeDatagram(const QByteArray &datagram, const QHostAddress &host, quint16 port)
         { return writeDatagram(datagram.constData(), datagram.size(), host, port); }

@@ -79,7 +79,7 @@ class QPrintPropertiesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    QPrintPropertiesDialog(QAbstractPrintDialog *parent = 0);
+    QPrintPropertiesDialog(QAbstractPrintDialog *parent = nullptr);
     ~QPrintPropertiesDialog();
 
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
@@ -195,7 +195,7 @@ public:
           ptr(p),
           description(desc),
           selected(-1),
-          selDescription(0),
+          selDescription(nullptr),
           parentItem(pi) {}
 
     ~QOptionTreeItem() {
@@ -217,7 +217,7 @@ class QPPDOptionsModel : public QAbstractItemModel
 {
     friend class QPPDOptionsEditor;
 public:
-    QPPDOptionsModel(QCUPSSupport *cups, QObject *parent = 0);
+    QPPDOptionsModel(QCUPSSupport *cups, QObject *parent = nullptr);
     ~QPPDOptionsModel();
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -241,7 +241,7 @@ class QPPDOptionsEditor : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    QPPDOptionsEditor(QObject* parent = 0) : QStyledItemDelegate(parent) {}
+    QPPDOptionsEditor(QObject* parent = nullptr) : QStyledItemDelegate(parent) {}
     ~QPPDOptionsEditor() {}
 
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
@@ -260,7 +260,7 @@ private slots:
 QPrintPropertiesDialog::QPrintPropertiesDialog(QAbstractPrintDialog *parent)
     : QDialog(parent)
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
-    , m_cups(0), m_cupsOptionsModel(0)
+    , m_cups(nullptr), m_cupsOptionsModel(nullptr)
 #endif
 {
     QVBoxLayout *lay = new QVBoxLayout(this);
@@ -310,10 +310,10 @@ void QPrintPropertiesDialog::selectPrinter()
 {
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
     widget.pageSetup->selectPrinter(m_cups);
-    widget.treeView->setModel(0);
+    widget.treeView->setModel(nullptr);
     if (m_cups && QCUPSSupport::isAvailable()) {
 
-        if (m_cupsOptionsModel == 0) {
+        if (m_cupsOptionsModel == nullptr) {
             m_cupsOptionsModel = new QPPDOptionsModel(m_cups);
 
             widget.treeView->setItemDelegate(new QPPDOptionsEditor(this));
@@ -337,13 +337,13 @@ void QPrintPropertiesDialog::selectPrinter()
 #endif
     {
         widget.cupsPropertiesPage->setEnabled(false);
-        widget.pageSetup->selectPrinter(0);
+        widget.pageSetup->selectPrinter(nullptr);
     }
 }
 
 void QPrintPropertiesDialog::selectPdfPsPrinter(const QPrinter *p)
 {
-    widget.treeView->setModel(0);
+    widget.treeView->setModel(nullptr);
     widget.pageSetup->selectPdfPsPrinter(p);
     widget.tabs->setTabEnabled(1, false); // disable the advanced tab
 }
@@ -373,7 +373,7 @@ void QPrintPropertiesDialog::addItemToOptions(QOptionTreeItem *parent, QList<con
 #endif
 
 QPrintDialogPrivate::QPrintDialogPrivate()
-    : top(0), bottom(0), buttons(0), collapseButton(0)
+    : top(nullptr), bottom(nullptr), buttons(nullptr), collapseButton(nullptr)
 {
 }
 
@@ -385,7 +385,7 @@ void QPrintDialogPrivate::init()
 {
     Q_Q(QPrintDialog);
 
-    top = new QUnixPrintWidget(0, q);
+    top = new QUnixPrintWidget(nullptr, q);
     bottom = new QWidget(q);
     options.setupUi(bottom);
     options.color->setIconSize(QSize(32, 32));
@@ -633,7 +633,7 @@ QPrintDialog::QPrintDialog(QPrinter *printer, QWidget *parent)
     Constructs a print dialog with the given \a parent.
 */
 QPrintDialog::QPrintDialog(QWidget *parent)
-    : QAbstractPrintDialog(*(new QPrintDialogPrivate), 0, parent)
+    : QAbstractPrintDialog(*(new QPrintDialogPrivate), nullptr, parent)
 {
     Q_D(QPrintDialog);
     d->init();
@@ -670,12 +670,12 @@ void QPrintDialog::accept()
 /*! \internal
 */
 QUnixPrintWidgetPrivate::QUnixPrintWidgetPrivate(QUnixPrintWidget *p)
-    : parent(p), propertiesDialog(0), printer(0), optionsPane(0), filePrintersAdded(false)
+    : parent(p), propertiesDialog(nullptr), printer(nullptr), optionsPane(nullptr), filePrintersAdded(false)
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
-    , cups(0), cupsPrinterCount(0), cupsPrinters(0), cupsPPD(0)
+    , cups(nullptr), cupsPrinterCount(0), cupsPrinters(nullptr), cupsPPD(nullptr)
 #endif
 {
-    q = 0;
+    q = nullptr;
     if (parent)
         q = qobject_cast<QAbstractPrintDialog*> (parent->parent());
 
@@ -733,7 +733,7 @@ QUnixPrintWidgetPrivate::QUnixPrintWidgetPrivate(QUnixPrintWidget *p)
 
 void QUnixPrintWidgetPrivate::updateWidget()
 {
-    const bool printToFile = q == 0 || q->isOptionEnabled(QPrintDialog::PrintToFile);
+    const bool printToFile = q == nullptr || q->isOptionEnabled(QPrintDialog::PrintToFile);
     if (printToFile && !filePrintersAdded) {
         if (widget.printers->count())
             widget.printers->insertSeparator(widget.printers->count());
@@ -802,7 +802,7 @@ void QUnixPrintWidgetPrivate::_q_printerChanged(int index)
                 propertiesDialog->selectPdfPsPrinter(printer);
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
             if (optionsPane)
-                optionsPane->selectPrinter(0);
+                optionsPane->selectPrinter(nullptr);
 #endif
             return;
         }
@@ -831,7 +831,7 @@ void QUnixPrintWidgetPrivate::_q_printerChanged(int index)
             optionsPane->selectPrinter(cups);
     } else {
         if (optionsPane)
-            optionsPane->selectPrinter(0);
+            optionsPane->selectPrinter(nullptr);
 #endif
         if (lprPrinters.count() > 0) {
             QString type = lprPrinters.at(index).name + QLatin1Char('@') + lprPrinters.at(index).host;
@@ -858,7 +858,7 @@ void QUnixPrintWidgetPrivate::_q_btnBrowseClicked()
     QString filename = widget.filename->text();
 #ifndef QT_NO_FILEDIALOG
     filename = QFileDialog::getSaveFileName(parent, QPrintDialog::tr("Print To File ..."), filename,
-                                            QString(), 0, QFileDialog::DontConfirmOverwrite);
+                                            QString(), nullptr, QFileDialog::DontConfirmOverwrite);
 #else
     filename.clear();
 #endif
@@ -875,7 +875,7 @@ void QUnixPrintWidgetPrivate::_q_btnBrowseClicked()
 
 void QUnixPrintWidgetPrivate::applyPrinterProperties(QPrinter *p)
 {
-    if (p == 0)
+    if (p == nullptr)
         return;
     printer = p;
     if (p->outputFileName().isEmpty()) {
@@ -1072,7 +1072,7 @@ void QUnixPrintWidget::updatePrinter()
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
 
 QPPDOptionsModel::QPPDOptionsModel(QCUPSSupport *c, QObject *parent)
-    : QAbstractItemModel(parent), rootItem(0), cups(c), ppd(c->currentPPD())
+    : QAbstractItemModel(parent), rootItem(nullptr), cups(c), ppd(c->currentPPD())
 {
     parseItems();
 }
@@ -1178,7 +1178,7 @@ void QPPDOptionsModel::parseItems()
     emit layoutAboutToBeChanged();
     ppd = cups->currentPPD();
     delete rootItem;
-    rootItem = new QOptionTreeItem(QOptionTreeItem::Root, 0, ppd, "Root Item", 0);
+    rootItem = new QOptionTreeItem(QOptionTreeItem::Root, 0, ppd, "Root Item", nullptr);
     parseGroups(rootItem);
     emit layoutChanged();
 }
@@ -1262,7 +1262,7 @@ QWidget* QPPDOptionsEditor::createEditor(QWidget* parent, const QStyleOptionView
     if (index.column() == 1 && reinterpret_cast<QOptionTreeItem*>(index.internalPointer())->type == QOptionTreeItem::Option)
         return new QComboBox(parent);
     else
-        return 0;
+        return nullptr;
 }
 
 void QPPDOptionsEditor::setEditorData(QWidget* editor, const QModelIndex& index) const

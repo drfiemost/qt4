@@ -70,7 +70,7 @@ class QNetworkManagerEngine : public QBearerEngineImpl
     Q_OBJECT
 
 public:
-    QNetworkManagerEngine(QObject *parent = 0);
+    QNetworkManagerEngine(QObject *parent = nullptr);
     ~QNetworkManagerEngine();
 
     bool networkManagerAvailable() const;
@@ -107,7 +107,7 @@ private Q_SLOTS:
     void deviceAdded(const QDBusObjectPath &path);
     void deviceRemoved(const QDBusObjectPath &path);
 
-    void newConnection(const QDBusObjectPath &path, QNetworkManagerSettings *settings = 0);
+    void newConnection(const QDBusObjectPath &path, QNetworkManagerSettings *settings = nullptr);
     void removeConnection(const QString &path);
     void updateConnection(const QNmSettingsMap &settings);
     void activationFinished(QDBusPendingCallWatcher *watcher);

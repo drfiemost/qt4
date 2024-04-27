@@ -436,7 +436,7 @@ HB_Bool HB_GreekShape(HB_ShaperItem *shaper_item)
 
 #ifndef NO_OPENTYPE
     if (HB_SelectScript(shaper_item, greek_features)) {
-        HB_OpenTypeShape(shaper_item, /*properties*/0);
+        HB_OpenTypeShape(shaper_item, /*properties*/nullptr);
         return HB_OpenTypePosition(shaper_item, availableGlyphs, /*doLogClusters*/TRUE);
     }
 #endif

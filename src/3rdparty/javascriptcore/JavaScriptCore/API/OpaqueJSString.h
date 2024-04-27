@@ -57,7 +57,7 @@ private:
     friend class WTF::ThreadSafeShared<OpaqueJSString>;
 
     OpaqueJSString()
-        : m_characters(0)
+        : m_characters(nullptr)
         , m_length(0)
     {
     }

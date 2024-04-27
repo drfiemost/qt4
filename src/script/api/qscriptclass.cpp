@@ -237,7 +237,7 @@ QScriptClass::QueryFlags QScriptClass::queryProperty(
     Q_UNUSED(name);
     Q_UNUSED(flags);
     Q_UNUSED(id);
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -277,7 +277,7 @@ QScriptValue::PropertyFlags QScriptClass::propertyFlags(
     Q_UNUSED(object);
     Q_UNUSED(name);
     Q_UNUSED(id);
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -321,7 +321,7 @@ void QScriptClass::setProperty(QScriptValue &object, const QScriptString &name,
 QScriptClassPropertyIterator *QScriptClass::newIterator(const QScriptValue &object)
 {
     Q_UNUSED(object);
-    return 0;
+    return nullptr;
 }
 
 /*!

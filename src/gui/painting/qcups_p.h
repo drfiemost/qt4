@@ -101,7 +101,7 @@ public:
                   int num_options, cups_option_t * options);
 
 private:
-    void collectMarkedOptions(QStringList& list, const ppd_group_t* group = 0) const;
+    void collectMarkedOptions(QStringList& list, const ppd_group_t* group = nullptr) const;
     void collectMarkedOptionsHelper(QStringList& list, const ppd_group_t* group) const;
 
     int prnCount;

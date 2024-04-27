@@ -73,8 +73,8 @@ class QGraphicsWidgetPrivate : public QGraphicsItemPrivate
     Q_DECLARE_PUBLIC(QGraphicsWidget)
 public:
     QGraphicsWidgetPrivate()
-        : margins(0),
-          layout(0),
+        : margins(nullptr),
+          layout(nullptr),
           inheritedPaletteResolveMask(0),
           inheritedFontResolveMask(0),
           inSetGeometry(0),
@@ -83,12 +83,12 @@ public:
           autoFillBackground(0),
           refCountInvokeRelayout(0),
           focusPolicy(Qt::NoFocus),
-          focusNext(0),
-          focusPrev(0),
-          windowFlags(0),
-          windowData(0),
+          focusNext(nullptr),
+          focusPrev(nullptr),
+          windowFlags(nullptr),
+          windowData(nullptr),
           setWindowFrameMargins(false),
-          windowFrameMargins(0)
+          windowFrameMargins(nullptr)
     { }
     virtual ~QGraphicsWidgetPrivate();
 
@@ -100,7 +100,7 @@ public:
     mutable qreal *margins;
     void ensureMargins() const;
 
-    void fixFocusChainBeforeReparenting(QGraphicsWidget *newParent, QGraphicsScene *oldScene, QGraphicsScene *newScene = 0);
+    void fixFocusChainBeforeReparenting(QGraphicsWidget *newParent, QGraphicsScene *oldScene, QGraphicsScene *newScene = nullptr);
     void setLayout_helper(QGraphicsLayout *l);
 
     // Layouts

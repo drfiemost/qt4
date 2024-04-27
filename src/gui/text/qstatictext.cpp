@@ -393,7 +393,7 @@ QSizeF QStaticText::size() const
 }
 
 QStaticTextPrivate::QStaticTextPrivate()
-        : textWidth(-1.0), items(0), itemCount(0), glyphPool(0), positionPool(0), charPool(0),
+        : textWidth(-1.0), items(nullptr), itemCount(0), glyphPool(nullptr), positionPool(nullptr), charPool(nullptr),
           needsRelayout(true), useBackendOptimizations(false), textFormat(Qt::AutoText),
           untransformedCoordinates(false)
 {
@@ -401,7 +401,7 @@ QStaticTextPrivate::QStaticTextPrivate()
 
 QStaticTextPrivate::QStaticTextPrivate(const QStaticTextPrivate &other)
     : text(other.text), font(other.font), textWidth(other.textWidth), matrix(other.matrix),
-      items(0), itemCount(0), glyphPool(0), positionPool(0), charPool(0), textOption(other.textOption),
+      items(nullptr), itemCount(0), glyphPool(nullptr), positionPool(nullptr), charPool(nullptr), textOption(other.textOption),
       needsRelayout(true), useBackendOptimizations(other.useBackendOptimizations),
       textFormat(other.textFormat), untransformedCoordinates(other.untransformedCoordinates)
 {
@@ -716,7 +716,7 @@ void QStaticTextPrivate::init()
 
 QStaticTextItem::~QStaticTextItem()
 {
-    if (m_userData != 0 && !m_userData->ref.deref())
+    if (m_userData != nullptr && !m_userData->ref.deref())
         delete m_userData;
     if (!m_fontEngine->ref.deref())
         delete m_fontEngine;
@@ -724,11 +724,11 @@ QStaticTextItem::~QStaticTextItem()
 
 void QStaticTextItem::setFontEngine(QFontEngine *fe)
 {
-    if (m_fontEngine != 0 && !m_fontEngine->ref.deref())
+    if (m_fontEngine != nullptr && !m_fontEngine->ref.deref())
         delete m_fontEngine;
 
     m_fontEngine = fe;
-    if (m_fontEngine != 0)
+    if (m_fontEngine != nullptr)
         m_fontEngine->ref.ref();
 }
 

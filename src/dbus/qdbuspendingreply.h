@@ -96,7 +96,7 @@ namespace QDBusPendingReplyTypes {
         enum { Total = Next::Total + 1 };
         static inline void fillMetaTypes(int *p)
         {
-            *p = metaTypeFor<T1>(0);
+            *p = metaTypeFor<T1>(nullptr);
             Next::fillMetaTypes(++p);
         }
     };
@@ -171,7 +171,7 @@ public:
         Q_ASSERT_X(Index < count() && Index >= 0, "QDBusPendingReply::argumentAt",
                    "Index out of bounds");
         typedef typename Select<Index>::Type ResultType;
-        return qdbus_cast<ResultType>(argumentAt(Index), 0);
+        return qdbus_cast<ResultType>(argumentAt(Index), nullptr);
     }
 
     inline typename Select<0>::Type value() const

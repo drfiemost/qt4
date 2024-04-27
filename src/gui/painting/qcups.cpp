@@ -69,21 +69,21 @@ typedef int (*CupsPrintFile)(const char * name, const char * filename, const cha
 
 static bool cupsLoaded = false;
 static int qt_cups_num_printers = 0;
-static CupsGetDests _cupsGetDests = 0;
-static CupsFreeDests _cupsFreeDests = 0;
-static CupsGetPPD _cupsGetPPD = 0;
-static PPDOpenFile _ppdOpenFile = 0;
-static PPDMarkDefaults _ppdMarkDefaults = 0;
-static PPDClose _ppdClose = 0;
-static CupsMarkOptions _cupsMarkOptions = 0;
-static PPDMarkOption _ppdMarkOption = 0;
-static CupsFreeOptions _cupsFreeOptions = 0;
-static CupsSetDests _cupsSetDests = 0;
-static CupsLangGet _cupsLangGet = 0;
-static CupsLangEncoding _cupsLangEncoding = 0;
-static CupsAddOption _cupsAddOption = 0;
-static CupsTempFd _cupsTempFd = 0;
-static CupsPrintFile _cupsPrintFile = 0;
+static CupsGetDests _cupsGetDests = nullptr;
+static CupsFreeDests _cupsFreeDests = nullptr;
+static CupsGetPPD _cupsGetPPD = nullptr;
+static PPDOpenFile _ppdOpenFile = nullptr;
+static PPDMarkDefaults _ppdMarkDefaults = nullptr;
+static PPDClose _ppdClose = nullptr;
+static CupsMarkOptions _cupsMarkOptions = nullptr;
+static PPDMarkOption _ppdMarkOption = nullptr;
+static CupsFreeOptions _cupsFreeOptions = nullptr;
+static CupsSetDests _cupsSetDests = nullptr;
+static CupsLangGet _cupsLangGet = nullptr;
+static CupsLangEncoding _cupsLangEncoding = nullptr;
+static CupsAddOption _cupsAddOption = nullptr;
+static CupsTempFd _cupsTempFd = nullptr;
+static CupsPrintFile _cupsPrintFile = nullptr;
 
 static void resolveCups()
 {
@@ -121,10 +121,10 @@ static void resolveCups()
 QCUPSSupport::QCUPSSupport()
     :
     prnCount(0),
-    printers(0),
-    page_sizes(0),
+    printers(nullptr),
+    page_sizes(nullptr),
     currPrinterIndex(0),
-    currPPD(0)
+    currPPD(nullptr)
 {
     if (!cupsLoaded)
         resolveCups();
@@ -145,7 +145,7 @@ QCUPSSupport::QCUPSSupport()
     }
 
 #ifndef QT_NO_TEXTCODEC
-    cups_lang_t *cupsLang = _cupsLangGet(0);
+    cups_lang_t *cupsLang = _cupsLangGet(nullptr);
     codec = QTextCodec::codecForName(_cupsLangEncoding(cupsLang));
     if (!codec)
         codec = QTextCodec::codecForLocale();
@@ -179,19 +179,19 @@ const ppd_file_t* QCUPSSupport::setCurrentPrinter(int index)
 {
     Q_ASSERT(index >= 0 && index <= prnCount);
     if (index == prnCount)
-        return 0;
+        return nullptr;
 
     currPrinterIndex = index;
 
     if (currPPD)
         _ppdClose(currPPD);
-    currPPD = 0;
-    page_sizes = 0;
+    currPPD = nullptr;
+    page_sizes = nullptr;
 
     const char *ppdFile = _cupsGetPPD(printers[index].name);
 
     if (!ppdFile)
-      return 0;
+      return nullptr;
 
     currPPD = _ppdOpenFile(ppdFile);
     unlink(ppdFile);
@@ -244,7 +244,7 @@ const ppd_option_t* QCUPSSupport::ppdOption(const char *key) const
             }
         }
     }
-    return 0;
+    return nullptr;
 }
 
 const cups_option_t* QCUPSSupport::printerOption(const QString &key) const
@@ -253,7 +253,7 @@ const cups_option_t* QCUPSSupport::printerOption(const QString &key) const
         if (QLatin1String(printers[currPrinterIndex].options[i].name) == key)
             return &printers[currPrinterIndex].options[i];
     }
-    return 0;
+    return nullptr;
 }
 
 const ppd_option_t* QCUPSSupport::pageSizes() const
@@ -272,7 +272,7 @@ void QCUPSSupport::saveOptions(QList<const ppd_option_t*> options, QList<const c
     cups_option_t* oldOptions = printers[currPrinterIndex].options;
 
     int newOptionCount = 0;
-    cups_option_t* newOptions = 0;
+    cups_option_t* newOptions = nullptr;
 
     // copying old options that are not on the new list
     for (int i = 0; i < oldOptionCount; ++i) {
@@ -346,7 +346,7 @@ bool QCUPSSupport::printerHasPPD(const char *printerName)
     const char *ppdFile = _cupsGetPPD(printerName);
     if (ppdFile)
         unlink(ppdFile);
-    return (ppdFile != 0);
+    return (ppdFile != nullptr);
 }
 
 QString QCUPSSupport::unicodeString(const char *s)
@@ -360,7 +360,7 @@ QString QCUPSSupport::unicodeString(const char *s)
 
 void QCUPSSupport::collectMarkedOptions(QStringList& list, const ppd_group_t* group) const
 {
-    if (group == 0) {
+    if (group == nullptr) {
         if (!currPPD)
             return;
         for (int i = 0; i < currPPD->num_groups; ++i) {

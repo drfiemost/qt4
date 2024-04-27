@@ -125,7 +125,7 @@ class CodeMarker
     virtual Atom::Type atomType() const = 0;
     virtual QString plainName(const Node *node) = 0;
     virtual QString plainFullName(const Node *node, 
-                                  const Node *relative = 0) = 0;
+                                  const Node *relative = nullptr) = 0;
     virtual QString markedUpCode(const QString& code, 
                                  const Node *relative,
                                  const Location &location) = 0;
@@ -137,7 +137,7 @@ class CodeMarker
 #endif
     virtual QString markedUpName(const Node *node) = 0;
     virtual QString markedUpFullName(const Node *node,
-                                     const Node *relative = 0) = 0;
+                                     const Node *relative = nullptr) = 0;
     virtual QString markedUpEnumValue(const QString &enumValue, 
                                       const Node *relative) = 0;
     virtual QString markedUpIncludes(const QStringList& includes) = 0;
@@ -154,7 +154,7 @@ class CodeMarker
     virtual const Node* resolveTarget(const QString& target, 
                                       const Tree* tree,
 		                      const Node* relative,
-                                      const Node* self = 0);
+                                      const Node* self = nullptr);
     virtual QStringList macRefsForNode(Node* node);
 
     static void initialize(const Config& config);

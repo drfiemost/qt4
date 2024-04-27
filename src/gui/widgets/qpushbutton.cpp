@@ -305,7 +305,7 @@ QDialog *QPushButtonPrivate::dialogParent() const
         if (const QDialog *dialog = qobject_cast<const QDialog *>(p))
             return const_cast<QDialog *>(dialog);
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -360,7 +360,7 @@ bool QPushButton::autoDefault() const
 {
     Q_D(const QPushButton);
     if(d->autoDefault == QPushButtonPrivate::Auto)
-        return ( d->dialogParent() != 0 );
+        return ( d->dialogParent() != nullptr );
     return d->autoDefault;
 }
 
@@ -496,7 +496,7 @@ void QPushButton::focusOutEvent(QFocusEvent *e)
     if (e->reason() != Qt::PopupFocusReason && autoDefault() && d->defaultButton) {
         QDialog *dlg = qobject_cast<QDialog*>(window());
         if (dlg)
-            dlg->d_func()->setDefault(0);
+            dlg->d_func()->setDefault(nullptr);
         else
             d->defaultButton = false;
     }

@@ -102,7 +102,7 @@ QList<QNetworkConfigurationPrivate *> QConnmanEngine::getConfigurations()
 {
     QMutexLocker locker(&mutex);
     QList<QNetworkConfigurationPrivate *> fetchedConfigurations;
-    QNetworkConfigurationPrivate* cpPriv = 0;
+    QNetworkConfigurationPrivate* cpPriv = nullptr;
 
     for (int i = 0; i < foundConfigurations.count(); ++i) {
         QNetworkConfigurationPrivate *config = new QNetworkConfigurationPrivate;
@@ -154,12 +154,12 @@ void QConnmanEngine::connectToId(const QString &id)
 
             serv.connect();
         } else {
-            QOfonoManagerInterface ofonoManager(0);
+            QOfonoManagerInterface ofonoManager(nullptr);
             QString modemPath = ofonoManager.currentModem().path();
-            QOfonoDataConnectionManagerInterface dc(modemPath,0);
+            QOfonoDataConnectionManagerInterface dc(modemPath,nullptr);
             foreach(const QDBusObjectPath dcPath,dc.getPrimaryContexts()) {
                 if(dcPath.path().contains(servicePath.section("_",-1))) {
-                    QOfonoPrimaryDataContextInterface primaryContext(dcPath.path(),0);
+                    QOfonoPrimaryDataContextInterface primaryContext(dcPath.path(),nullptr);
                     primaryContext.setActive(true);
                 }
             }
@@ -178,12 +178,12 @@ void QConnmanEngine::disconnectFromId(const QString &id)
         if(serv.getType() != "cellular") {
             serv.disconnect();
         } else {
-            QOfonoManagerInterface ofonoManager(0);
+            QOfonoManagerInterface ofonoManager(nullptr);
             QString modemPath = ofonoManager.currentModem().path();
-            QOfonoDataConnectionManagerInterface dc(modemPath,0);
+            QOfonoDataConnectionManagerInterface dc(modemPath,nullptr);
             foreach(const QDBusObjectPath dcPath,dc.getPrimaryContexts()) {
                 if(dcPath.path().contains(servicePath.section("_",-1))) {
-                    QOfonoPrimaryDataContextInterface primaryContext(dcPath.path(),0);
+                    QOfonoPrimaryDataContextInterface primaryContext(dcPath.path(),nullptr);
                     primaryContext.setActive(false);
                 }
             }

@@ -122,7 +122,7 @@ public:
 
     Q_DECLARE_FLAGS(WizardOptions, WizardOption)
 
-    explicit QWizard(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit QWizard(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     ~QWizard();
 
     int addPage(QWizardPage *page);
@@ -245,8 +245,8 @@ Q_SIGNALS:
 protected:
     void setField(const QString &name, const QVariant &value);
     QVariant field(const QString &name) const;
-    void registerField(const QString &name, QWidget *widget, const char *property = 0,
-                       const char *changedSignal = 0);
+    void registerField(const QString &name, QWidget *widget, const char *property = nullptr,
+                       const char *changedSignal = nullptr);
     QWizard *wizard() const;
 
 private:

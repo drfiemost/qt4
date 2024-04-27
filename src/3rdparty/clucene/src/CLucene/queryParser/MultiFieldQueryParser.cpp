@@ -23,7 +23,7 @@ CL_NS_DEF(queryParser)
 
 MultiFieldQueryParser::MultiFieldQueryParser(const TCHAR** fields,
     CL_NS(analysis)::Analyzer* analyzer, BoostMap* boosts)
-    : QueryParser(NULL, analyzer)
+    : QueryParser(nullptr, analyzer)
 {
 	this->fields = fields;
     this->boosts = boosts;
@@ -39,7 +39,7 @@ Query* MultiFieldQueryParser::parse(const TCHAR* query, const TCHAR** fields,
 {
     BooleanQuery* bQuery = _CLNEW BooleanQuery();
     int32_t i = 0;
-    while (fields[i] != NULL){
+    while (fields[i] != nullptr){
         Query* q = QueryParser::parse(query, fields[i], analyzer);
         if (q && (q->getQueryName() != _T("BooleanQuery")
           || ((BooleanQuery*)q)->getClauseCount() > 0)) {
@@ -58,7 +58,7 @@ Query* MultiFieldQueryParser::parse(const TCHAR* query, const TCHAR** fields,
 {
     BooleanQuery* bQuery = _CLNEW BooleanQuery();
     int32_t i = 0;
-    while ( fields[i] != NULL ) {
+    while ( fields[i] != nullptr ) {
         Query* q = QueryParser::parse(query, fields[i], analyzer);
         if (q && (q->getQueryName() != _T("BooleanQuery")
           || ((BooleanQuery*)q)->getClauseCount() > 0)) {
@@ -84,13 +84,13 @@ Query* MultiFieldQueryParser::parse(const TCHAR* query, const TCHAR** fields,
 
 
 Query* MultiFieldQueryParser::GetFieldQuery(const TCHAR* field, TCHAR* queryText, int32_t slop){
-	if (field == NULL) {
+	if (field == nullptr) {
 		CL_NS_STD(vector)<BooleanClause*> clauses;
-		for (int i = 0; fields[i]!=NULL; ++i) {
+		for (int i = 0; fields[i]!=nullptr; ++i) {
 			Query* q = QueryParser::GetFieldQuery(fields[i], queryText);
-			if (q != NULL) {
+			if (q != nullptr) {
                 //If the user passes a map of boosts
-                 if (boosts != NULL) {
+                 if (boosts != nullptr) {
                      //Get the boost from the map and apply them
                      BoostMap::const_iterator itr = boosts->find(fields[i]);
                      if (itr != boosts->end()) {
@@ -109,7 +109,7 @@ Query* MultiFieldQueryParser::GetFieldQuery(const TCHAR* field, TCHAR* queryText
 			}
 		}
 		if (clauses.size() == 0)  // happens for stopwords
-			return NULL;
+			return nullptr;
 		Query* q = QueryParser::GetBooleanQuery(clauses);
         return q;
 	}else{
@@ -127,9 +127,9 @@ Query* MultiFieldQueryParser::GetFieldQuery(const TCHAR* field, TCHAR* queryText
 
 
 CL_NS(search)::Query* MultiFieldQueryParser::GetFuzzyQuery(const TCHAR* field, TCHAR* termStr){
-	if (field == NULL) {
+	if (field == nullptr) {
 		CL_NS_STD(vector)<BooleanClause*> clauses;
-		for (int i = 0; fields[i]!=NULL; ++i) {
+		for (int i = 0; fields[i]!=nullptr; ++i) {
 			Query* q = QueryParser::GetFuzzyQuery(fields[i], termStr); //todo: , minSimilarity
 			if ( q ){
 				q = QueryAddedCallback(fields[i], q);
@@ -148,9 +148,9 @@ CL_NS(search)::Query* MultiFieldQueryParser::GetFuzzyQuery(const TCHAR* field, T
 }
 
 Query* MultiFieldQueryParser::GetPrefixQuery(const TCHAR* field, TCHAR* termStr){
-	if (field == NULL) {
+	if (field == nullptr) {
 		CL_NS_STD(vector)<BooleanClause*> clauses;
-		for (int i = 0; fields[i]!=NULL; ++i) {
+		for (int i = 0; fields[i]!=nullptr; ++i) {
 			Query* q = QueryParser::GetPrefixQuery(fields[i], termStr);
 			if ( q ){
 				q = QueryAddedCallback(fields[i],q);
@@ -169,9 +169,9 @@ Query* MultiFieldQueryParser::GetPrefixQuery(const TCHAR* field, TCHAR* termStr)
 }
 
 Query* MultiFieldQueryParser::GetWildcardQuery(const TCHAR* field, TCHAR* termStr){
-	if (field == NULL) {
+	if (field == nullptr) {
 		CL_NS_STD(vector)<BooleanClause*> clauses;
-		for (int i = 0; fields[i]!=NULL; ++i) {
+		for (int i = 0; fields[i]!=nullptr; ++i) {
 			Query* q = QueryParser::GetWildcardQuery(fields[i], termStr);
 			if ( q ){
 				q = QueryAddedCallback(fields[i],q);
@@ -191,9 +191,9 @@ Query* MultiFieldQueryParser::GetWildcardQuery(const TCHAR* field, TCHAR* termSt
 
 
 Query* MultiFieldQueryParser::GetRangeQuery(const TCHAR* field, TCHAR* part1, TCHAR* part2, bool inclusive){
-	if (field == NULL) {
+	if (field == nullptr) {
 		CL_NS_STD(vector)<BooleanClause*> clauses;
-		for (int i = 0; fields[i]!=NULL; ++i) {
+		for (int i = 0; fields[i]!=nullptr; ++i) {
 			Query* q = QueryParser::GetRangeQuery(fields[i], part1, part2, inclusive);
 			if ( q ){
 				q = QueryAddedCallback(fields[i],q);

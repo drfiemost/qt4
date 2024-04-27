@@ -100,9 +100,9 @@ public:
     MetaEnum() {}
     void addKey(IntType value, const QString &name);
 
-    QString valueToKey(IntType value, bool *ok = 0) const;
+    QString valueToKey(IntType value, bool *ok = nullptr) const;
     // Ignorant of scopes.
-    IntType keyToValue(QString key, bool *ok = 0) const;
+    IntType keyToValue(QString key, bool *ok = nullptr) const;
 
     const QString &name() const      { return m_name; }
     const QString &scope() const     { return m_scope; }
@@ -177,13 +177,13 @@ public:
     DesignerMetaEnum() {}
 
     enum SerializationMode { FullyQualified, NameOnly };
-    QString toString(int value, SerializationMode sm, bool *ok = 0) const;
+    QString toString(int value, SerializationMode sm, bool *ok = nullptr) const;
 
     QString messageToStringFailed(int value) const;
     QString messageParseFailed(const QString &s) const;
 
     // parse a string (ignorant of scopes)
-    int parseEnum(const QString &s, bool *ok = 0) const { return keyToValue(s, ok); }
+    int parseEnum(const QString &s, bool *ok = nullptr) const { return keyToValue(s, ok); }
 };
 
 // -------------- DesignerMetaFlags: Meta type for flags.
@@ -202,7 +202,7 @@ public:
 
     QString messageParseFailed(const QString &s) const;
     // parse a string (ignorant of scopes)
-    int parseFlags(const QString &s, bool *ok = 0) const;
+    int parseFlags(const QString &s, bool *ok = nullptr) const;
 };
 
 // -------------- EnumValue: Returned by the property sheet for enumerations
@@ -302,7 +302,7 @@ class QDESIGNER_SHARED_EXPORT DesignerPixmapCache : public QObject
 {
     Q_OBJECT
 public:
-    DesignerPixmapCache(QObject *parent = 0);
+    DesignerPixmapCache(QObject *parent = nullptr);
     QPixmap pixmap(const PropertySheetPixmapValue &value) const;
     void clear();
 signals:
@@ -316,7 +316,7 @@ class QDESIGNER_SHARED_EXPORT DesignerIconCache : public QObject
 {
     Q_OBJECT
 public:
-    explicit DesignerIconCache(DesignerPixmapCache *pixmapCache, QObject *parent = 0);
+    explicit DesignerIconCache(DesignerPixmapCache *pixmapCache, QObject *parent = nullptr);
     QIcon icon(const PropertySheetIconValue &value) const;
     void clear();
 signals:
@@ -448,7 +448,7 @@ private:
 
 namespace Utils {
 
-inline int valueOf(const QVariant &value, bool *ok = 0)
+inline int valueOf(const QVariant &value, bool *ok = nullptr)
 {
     if (value.canConvert<PropertySheetEnumValue>()) {
         if (ok)
@@ -466,7 +466,7 @@ inline int valueOf(const QVariant &value, bool *ok = 0)
 inline bool isObjectAncestorOf(QObject *ancestor, QObject *child)
 {
     QObject *obj = child;
-    while (obj != 0) {
+    while (obj != nullptr) {
         if (obj == ancestor)
             return true;
         obj = obj->parent();

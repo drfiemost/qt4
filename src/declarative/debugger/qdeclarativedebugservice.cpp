@@ -49,7 +49,7 @@
 QT_BEGIN_NAMESPACE
 
 QDeclarativeDebugServicePrivate::QDeclarativeDebugServicePrivate()
-: server(0)
+: server(nullptr)
 {
 }
 
@@ -66,7 +66,7 @@ QDeclarativeDebugService::QDeclarativeDebugService(const QString &name, QObject 
 
     if (d->server->serviceNames().contains(name)) {
         qWarning() << "QDeclarativeDebugService: Conflicting plugin name" << name;
-        d->server = 0;
+        d->server = nullptr;
     } else {
         d->server->addService(this);
     }
@@ -157,17 +157,17 @@ QObject *QDeclarativeDebugService::objectForId(int id)
 
     QHash<int, QObject *>::Iterator iter = hash->ids.find(id);
     if (iter == hash->ids.end())
-        return 0;
+        return nullptr;
 
 
     QHash<QObject *, ObjectReference>::Iterator objIter = 
         hash->objects.find(*iter);
     Q_ASSERT(objIter != hash->objects.end());
 
-    if (objIter->object == 0) {
+    if (objIter->object == nullptr) {
         hash->ids.erase(iter);
         hash->objects.erase(objIter);
-        return 0;
+        return nullptr;
     } else {
         return *iter;
     }
@@ -175,12 +175,12 @@ QObject *QDeclarativeDebugService::objectForId(int id)
 
 bool QDeclarativeDebugService::isDebuggingEnabled()
 {
-    return QDeclarativeDebugServer::instance() != 0;
+    return QDeclarativeDebugServer::instance() != nullptr;
 }
 
 bool QDeclarativeDebugService::hasDebuggingClient()
 {
-    return QDeclarativeDebugServer::instance() != 0
+    return QDeclarativeDebugServer::instance() != nullptr
             && QDeclarativeDebugServer::instance()->hasDebuggingClient();
 }
 

@@ -155,8 +155,8 @@ namespace QDeclarativePrivate
     class AttachedPropertySelector
     {
     public:
-        static inline QDeclarativeAttachedPropertiesFunc func() { return 0; }
-        static inline const QMetaObject *metaObject() { return 0; }
+        static inline QDeclarativeAttachedPropertiesFunc func() { return nullptr; }
+        static inline const QMetaObject *metaObject() { return nullptr; }
     };
     template<typename T>
     class AttachedPropertySelector<T, 1>

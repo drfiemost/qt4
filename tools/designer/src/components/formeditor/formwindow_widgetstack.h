@@ -59,7 +59,7 @@ class QT_FORMEDITOR_EXPORT FormWindowWidgetStack: public QObject
 {
     Q_OBJECT
 public:
-    FormWindowWidgetStack(QObject *parent = 0);
+    FormWindowWidgetStack(QObject *parent = nullptr);
     virtual ~FormWindowWidgetStack();
 
     QLayout *layout() const;
@@ -70,7 +70,7 @@ public:
     int currentIndex() const;
     int indexOf(QDesignerFormWindowToolInterface *tool) const;
 
-    void setMainContainer(QWidget *w = 0);
+    void setMainContainer(QWidget *w = nullptr);
 
     // Return the widget containing the form which can be used to apply embedded design settings to.
     // These settings should not affect the other editing tools.

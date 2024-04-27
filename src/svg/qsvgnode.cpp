@@ -195,7 +195,7 @@ QSvgStyleProperty * QSvgNode::styleProperty(QSvgStyleProperty::Type type) const
         node = node->parent();
     }
 
-    return 0;
+    return nullptr;
 }
 
 QSvgFillStyleProperty * QSvgNode::styleProperty(const QString &id) const
@@ -204,7 +204,7 @@ QSvgFillStyleProperty * QSvgNode::styleProperty(const QString &id) const
     if (rid.startsWith(QLatin1Char('#')))
         rid.remove(0, 1);
     QSvgTinyDocument *doc = document();
-    return doc ? doc->namedStyle(rid) : 0;
+    return doc ? doc->namedStyle(rid) : nullptr;
 }
 
 QRectF QSvgNode::bounds(QPainter *, QSvgExtraStates &) const
@@ -243,7 +243,7 @@ QRectF QSvgNode::transformedBounds() const
 
 QSvgTinyDocument * QSvgNode::document() const
 {
-    QSvgTinyDocument *doc = 0;
+    QSvgTinyDocument *doc = nullptr;
     QSvgNode *node = const_cast<QSvgNode*>(this);
     while (node && node->type() != QSvgNode::DOC) {
         node = node->parent();

@@ -128,7 +128,7 @@ QNetworkCookie::QNetworkCookie(const QNetworkCookie &other)
 QNetworkCookie::~QNetworkCookie()
 {
     // QSharedDataPointer auto deletes
-    d = 0;
+    d = nullptr;
 }
 
 /*!

@@ -132,7 +132,7 @@ void QFontEngineMultiXLFD::loadEngine(int at)
 
 #ifndef QT_NO_FREETYPE
 
-static QStringList *qt_fontpath = 0;
+static QStringList *qt_fontpath = nullptr;
 
 static QStringList fontPath()
 {
@@ -206,7 +206,7 @@ static QStringList fontPath()
 
 static QFontEngine::FaceId fontFile(const QByteArray &_xname, QFreetypeFace **freetype, int *synth)
 {
-    *freetype = 0;
+    *freetype = nullptr;
     *synth = 0;
 
     QByteArray xname = _xname.toLower();
@@ -302,7 +302,7 @@ extern int qt_xlfd_encoding_id(const char *encoding);
 
 static inline XCharStruct *charStruct(XFontStruct *xfs, uint ch)
 {
-    XCharStruct *xcs = 0;
+    XCharStruct *xcs = nullptr;
     unsigned char r = ch>>8;
     unsigned char c = ch&0xff;
     if (xfs->per_char &&
@@ -315,13 +315,13 @@ static inline XCharStruct *charStruct(XFontStruct *xfs, uint ch)
                                 xfs->min_char_or_byte2 + 1)) +
               (c - xfs->min_char_or_byte2);
         if (xcs->width == 0 && xcs->ascent == 0 &&  xcs->descent == 0)
-            xcs = 0;
+            xcs = nullptr;
     }
     return xcs;
 }
 
 QFontEngineXLFD::QFontEngineXLFD(XFontStruct *fs, const QByteArray &name, int mib)
-    : _fs(fs), _name(name), _codec(0), _cmap(mib)
+    : _fs(fs), _name(name), _codec(nullptr), _cmap(mib)
 {
     if (_cmap) _codec = QTextCodec::codecForMib(_cmap);
 
@@ -333,14 +333,14 @@ QFontEngineXLFD::QFontEngineXLFD(XFontStruct *fs, const QByteArray &name, int mi
     lbearing = SHRT_MIN;
     rbearing = SHRT_MIN;
     face_id.index = -1;
-    freetype = 0;
+    freetype = nullptr;
     synth = 0;
 }
 
 QFontEngineXLFD::~QFontEngineXLFD()
 {
     XFreeFont(QX11Info::display(), _fs);
-    _fs = 0;
+    _fs = nullptr;
 #ifndef QT_NO_FREETYPE
     if (freetype)
         freetype->release(face_id);
@@ -449,7 +449,7 @@ void QFontEngineXLFD::recalcAdvances(QGlyphLayout *glyphs, QFontEngine::ShaperFl
         while (i != 0) {
             unsigned int gl = glyphs->glyphs[--i];
             xcs = (gl >= _fs->min_char_or_byte2 && gl <= _fs->max_char_or_byte2) ?
-                  base + gl : 0;
+                  base + gl : nullptr;
             if (!xcs || (!xcs->width && !xcs->ascent && !xcs->descent)) {
                 glyphs->glyphs[i] = 0;
             } else {
@@ -616,9 +616,9 @@ bool QFontEngineXLFD::canRender(const QChar *string, int len)
 {
     QVarLengthGlyphLayoutArray glyphs(len);
     int nglyphs = len;
-    if (stringToCMap(string, len, &glyphs, &nglyphs, 0) == false) {
+    if (stringToCMap(string, len, &glyphs, &nglyphs, nullptr) == false) {
         glyphs.resize(nglyphs);
-        stringToCMap(string, len, &glyphs, &nglyphs, 0);
+        stringToCMap(string, len, &glyphs, &nglyphs, nullptr);
     }
 
     bool allExist = true;
@@ -651,12 +651,12 @@ QBitmap QFontEngineXLFD::bitmapForGlyphs(const QGlyphLayout &glyphs, const glyph
     item.ascent = -metrics.y;
     item.descent = metrics.height - item.ascent;
     item.width = metrics.width;
-    item.chars = 0;
+    item.chars = nullptr;
     item.num_chars = 0;
-    item.logClusters = 0;
+    item.logClusters = nullptr;
     item.glyphs = glyphs;
     item.fontEngine = this;
-    item.f = 0;
+    item.f = nullptr;
 
     p.drawTextItem(QPointF(-metrics.x.toReal(), item.ascent.toReal()), item);
     p.end();
@@ -734,7 +734,7 @@ void QFontEngineXLFD::getUnscaledGlyph(glyph_t glyph, QPainterPath *path, glyph_
     FT_Set_Char_Size(face, face->units_per_EM << 6, face->units_per_EM << 6, 0, 0);
     freetype->xsize = face->units_per_EM << 6;
     freetype->ysize = face->units_per_EM << 6;
-    FT_Set_Transform(face, 0, 0);
+    FT_Set_Transform(face, nullptr, nullptr);
     glyph = glyphIndexToFreetypeGlyphIndex(glyph);
     FT_Load_Glyph(face, glyph, FT_LOAD_NO_BITMAP);
 
@@ -757,7 +757,7 @@ void QFontEngineXLFD::getUnscaledGlyph(glyph_t glyph, QPainterPath *path, glyph_
     else
         QFreetypeFace::addGlyphToPath(face, face->glyph, p, path, face->units_per_EM << 6, face->units_per_EM << 6);
 
-    FT_Set_Transform(face, &freetype->matrix, 0);
+    FT_Set_Transform(face, &freetype->matrix, nullptr);
     freetype->unlock();
 #endif // QT_NO_FREETYPE
 }
@@ -825,7 +825,7 @@ QImage QFontEngineXLFD::alphaMapForGlyph(glyph_t glyph)
 
 FT_Face QFontEngineXLFD::non_locked_face() const
 {
-    return freetype ? freetype->face : 0;
+    return freetype ? freetype->face : nullptr;
 }
 
 uint QFontEngineXLFD::toUnicode(glyph_t g) const
@@ -874,7 +874,7 @@ static QFontEngine *engineForPattern(FcPattern *match, const QFontDef &request, 
 }
 
 QFontEngineMultiFT::QFontEngineMultiFT(QFontEngine *fe, FcPattern *matchedPattern, FcPattern *p, int s, const QFontDef &req)
-    : QFontEngineMulti(2), request(req), pattern(p), fontSet(0), screen(s)
+    : QFontEngineMulti(2), request(req), pattern(p), fontSet(nullptr), screen(s)
 {
     firstEnginePattern = FcPatternDuplicate(matchedPattern);
     engines[0] = fe;
@@ -925,7 +925,7 @@ void QFontEngineMultiFT::loadEngine(int at)
                 firstFontIndex = 0;
 
             FcPatternDestroy(firstEnginePattern);
-            firstEnginePattern = 0;
+            firstEnginePattern = nullptr;
         }
 
         engines.resize(fontSet->nfont + 1 - firstFontIndex);
@@ -933,7 +933,7 @@ void QFontEngineMultiFT::loadEngine(int at)
     Q_ASSERT(at < engines.size());
     Q_ASSERT(engines.at(at) == 0);
 
-    FcPattern *match = FcFontRenderPrepare(NULL, pattern, fontSet->fonts[at + firstFontIndex - 1]);
+    FcPattern *match = FcFontRenderPrepare(nullptr, pattern, fontSet->fonts[at + firstFontIndex - 1]);
     QFontDef fontDef = qt_FcPatternToQFontDef(match, this->request);
 
     // note: we use -1 for the script to make sure that we keep real
@@ -961,7 +961,7 @@ Q_GUI_EXPORT void qt_x11ft_convert_pattern(FcPattern *pattern, QByteArray *file_
     FcPatternGetString(pattern, FC_FILE, 0, &fileName);
     *file_name = (const char *)fileName;
     if (!FcPatternGetInteger(pattern, FC_INDEX, 0, index))
-        index = 0;
+        index = nullptr;
     FcBool b;
     if (FcPatternGetBool(pattern, FC_ANTIALIAS, 0, &b) == FcResultMatch)
         *antialias = b;
@@ -1173,7 +1173,7 @@ bool QFontEngineX11FT::uploadGlyphToServer(QGlyphSet *set, uint glyphid, Glyph *
     ::Glyph xglyph = glyphid;
     XRenderAddGlyphs (X11->display, set->id, &xglyph, info, 1, (const char *)g->data, glyphDataSize);
     delete [] g->data;
-    g->data = 0;
+    g->data = nullptr;
     g->format = Format_None;
     g->uploadedToServer = true;
     return true;
@@ -1189,7 +1189,7 @@ QFontEngine *QFontEngineX11FT::cloneWithSize(qreal pixelSize) const
     QFontEngineX11FT *fe = new QFontEngineX11FT(fontDef);
     if (!fe->initFromFontEngine(this)) {
         delete fe;
-        return 0;
+        return nullptr;
     } else {
 #ifndef QT_NO_XRENDER
         fe->xglyph_format = xglyph_format;

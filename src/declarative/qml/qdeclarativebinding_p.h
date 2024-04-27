@@ -180,11 +180,11 @@ public:
     enum EvaluateFlag { RequiresThisObject = 0x01 };
     Q_DECLARE_FLAGS(EvaluateFlags, EvaluateFlag)
 
-    QDeclarativeBinding(const QString &, QObject *, QDeclarativeContext *, QObject *parent=0);
-    QDeclarativeBinding(const QString &, QObject *, QDeclarativeContextData *, QObject *parent=0);
+    QDeclarativeBinding(const QString &, QObject *, QDeclarativeContext *, QObject *parent=nullptr);
+    QDeclarativeBinding(const QString &, QObject *, QDeclarativeContextData *, QObject *parent=nullptr);
     QDeclarativeBinding(void *, QDeclarativeRefCount *, QObject *, QDeclarativeContextData *, 
                         const QString &, int, QObject *parent);
-    QDeclarativeBinding(const QScriptValue &, QObject *, QDeclarativeContextData *, QObject *parent=0);
+    QDeclarativeBinding(const QScriptValue &, QObject *, QDeclarativeContextData *, QObject *parent=nullptr);
 
     void setTarget(const QDeclarativeProperty &);
     QDeclarativeProperty property() const;
@@ -202,7 +202,7 @@ public:
 
     typedef int Identifier;
     static Identifier Invalid;
-    static QDeclarativeBinding *createBinding(Identifier, QObject *, QDeclarativeContext *, const QString &, int, QObject *parent=0);
+    static QDeclarativeBinding *createBinding(Identifier, QObject *, QDeclarativeContext *, const QString &, int, QObject *parent=nullptr);
 
 public Q_SLOTS:
     void update() { update(QDeclarativePropertyPrivate::DontRemoveBinding); }

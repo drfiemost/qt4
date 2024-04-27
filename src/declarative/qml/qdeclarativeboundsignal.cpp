@@ -60,7 +60,7 @@ class QDeclarativeBoundSignalParameters : public QObject
 {
 Q_OBJECT
 public:
-    QDeclarativeBoundSignalParameters(const QMetaMethod &, QObject * = 0);
+    QDeclarativeBoundSignalParameters(const QMetaMethod &, QObject * = nullptr);
     ~QDeclarativeBoundSignalParameters();
 
     void setValues(void **);
@@ -97,7 +97,7 @@ QDeclarativeAbstractBoundSignal::~QDeclarativeAbstractBoundSignal()
 
 QDeclarativeBoundSignal::QDeclarativeBoundSignal(QObject *scope, const QMetaMethod &signal, 
                                QObject *parent)
-: m_expression(0), m_signal(signal), m_paramsValid(false), m_isEvaluating(false), m_params(0),
+: m_expression(nullptr), m_signal(signal), m_paramsValid(false), m_isEvaluating(false), m_params(nullptr),
   m_scope(scope, this)
 {
     init(parent);
@@ -106,7 +106,7 @@ QDeclarativeBoundSignal::QDeclarativeBoundSignal(QObject *scope, const QMetaMeth
 QDeclarativeBoundSignal::QDeclarativeBoundSignal(QDeclarativeContext *ctxt, const QString &val, 
                                QObject *scope, const QMetaMethod &signal,
                                QObject *parent)
-: m_expression(0), m_signal(signal), m_paramsValid(false), m_isEvaluating(false), m_params(0),
+: m_expression(nullptr), m_signal(signal), m_paramsValid(false), m_isEvaluating(false), m_params(nullptr),
   m_scope(scope, this)
 {
     init(parent);
@@ -131,7 +131,7 @@ QDeclarativeBoundSignal::~QDeclarativeBoundSignal()
 {
     unregisterScopeObject();
     delete m_expression;
-    m_expression = 0;
+    m_expression = nullptr;
 }
 
 void QDeclarativeBoundSignal::disconnect()
@@ -220,7 +220,7 @@ void QDeclarativeBoundSignal::unregisterScopeObject()
 
 QDeclarativeBoundSignalParameters::QDeclarativeBoundSignalParameters(const QMetaMethod &method, 
                                                                      QObject *parent)
-: QObject(parent), types(0), values(0)
+: QObject(parent), types(nullptr), values(nullptr)
 {
     MetaObject *mo = new MetaObject(this);
 
@@ -303,7 +303,7 @@ void QDeclarativeBoundSignalParameters::setValues(void **v)
 
 void QDeclarativeBoundSignalParameters::clearValues()
 {
-    values = 0;
+    values = nullptr;
 }
 
 int QDeclarativeBoundSignalParameters::metaCall(QMetaObject::Call c, int id, void **a)

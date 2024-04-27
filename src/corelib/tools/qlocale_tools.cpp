@@ -1478,7 +1478,7 @@ Q_CORE_EXPORT double qstrtod(const char *s00, const char **se, bool *ok)
     Long L;
     ULong y, z;
     Bigint *bb1, *bd0;
-    Bigint *bb = NULL, *bd = NULL, *bs = NULL, *delta = NULL;/* pacify gcc */
+    Bigint *bb = nullptr, *bd = nullptr, *bs = nullptr, *delta = nullptr;/* pacify gcc */
 
     /*
       #ifndef KR_headers
@@ -2250,7 +2250,7 @@ static char *_qdtoa( NEEDS_VOLATILE double d, int mode, int ndigits, int *decpt,
     ULong x;
 #endif
     Bigint *b, *b1, *delta, *mhi, *S;
-    Bigint *mlo = NULL; /* pacify gcc */
+    Bigint *mlo = nullptr; /* pacify gcc */
     double d2;
     double ds, eps;
     char *s, *s0;

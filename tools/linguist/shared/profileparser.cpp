@@ -164,7 +164,7 @@ ProFile *ProFileParser::parsedProFile(const QString &fileName, bool cache, const
             pro = new ProFile(fileName);
             if (!(!contents ? read(pro) : read(pro, *contents))) {
                 delete pro;
-                pro = 0;
+                pro = nullptr;
             } else {
                 pro->ref();
             }
@@ -184,7 +184,7 @@ ProFile *ProFileParser::parsedProFile(const QString &fileName, bool cache, const
         pro = new ProFile(fileName);
         if (!(!contents ? read(pro) : read(pro, *contents))) {
             delete pro;
-            pro = 0;
+            pro = nullptr;
         }
     }
     return pro;
@@ -962,7 +962,7 @@ void ProFileParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int a
                     if (*uc == TokFuncTerminator) {
                         // for(literal) (only "ever" would be legal if qmake was sane)
                         putTok(tokPtr, TokForLoop);
-                        putHashStr(tokPtr, (ushort *)0, (uint)0);
+                        putHashStr(tokPtr, (ushort *)nullptr, (uint)0);
                         putBlockLen(tokPtr, 1 + 3 + nlen + 1);
                         putTok(tokPtr, TokHashLiteral);
                         putHashStr(tokPtr, uce + 2, nlen);
@@ -984,7 +984,7 @@ void ProFileParser::finalizeCall(ushort *&tokPtr, ushort *uc, ushort *ptr, int a
                 } else if (argc == 1) {
                     // for(non-literal) (this wouldn't be here if qmake was sane)
                     putTok(tokPtr, TokForLoop);
-                    putHashStr(tokPtr, (ushort *)0, (uint)0);
+                    putHashStr(tokPtr, (ushort *)nullptr, (uint)0);
                     uc = uce;
                     goto doFor;
                 }

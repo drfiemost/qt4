@@ -198,7 +198,7 @@ bool QWindowsStyle::eventFilter(QObject *o, QEvent *e)
             for (int pos=0 ; pos < l.size() ;) {
                 QWidget *w = l.at(pos);
                 if (w->isWindow() || !w->isVisible() ||
-                    w->style()->styleHint(SH_UnderlineShortcut, 0, w)) {
+                    w->style()->styleHint(SH_UnderlineShortcut, nullptr, w)) {
                     l.removeAt(pos);
                     continue;
                 }
@@ -305,7 +305,7 @@ void QWindowsStyle::polish(QApplication *app)
     QCommonStyle::polish(app);
     QWindowsStylePrivate *d = const_cast<QWindowsStylePrivate*>(d_func());
     // We only need the overhead when shortcuts are sometimes hidden
-    if (!proxy()->styleHint(SH_UnderlineShortcut, 0) && app)
+    if (!proxy()->styleHint(SH_UnderlineShortcut, nullptr) && app)
         app->installEventFilter(this);
 
     d->activeCaptionColor = app->palette().highlight().color();
@@ -1271,17 +1271,17 @@ void QWindowsStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
                 x -= 2;
             if (opt->rect.height() > 4) {
                 qDrawShadePanel(p, x, 2, 3, opt->rect.height() - 4,
-                                opt->palette, false, 1, 0);
+                                opt->palette, false, 1, nullptr);
                 qDrawShadePanel(p, x + 3, 2, 3, opt->rect.height() - 4,
-                                opt->palette, false, 1, 0);
+                                opt->palette, false, 1, nullptr);
             }
         } else {
             if (opt->rect.width() > 4) {
                 int y = opt->rect.height() / 2 - 4;
                 qDrawShadePanel(p, 2, y, opt->rect.width() - 4, 3,
-                                opt->palette, false, 1, 0);
+                                opt->palette, false, 1, nullptr);
                 qDrawShadePanel(p, 2, y + 3, opt->rect.width() - 4, 3,
-                                opt->palette, false, 1, 0);
+                                opt->palette, false, 1, nullptr);
             }
         }
         p->restore();
@@ -1332,7 +1332,7 @@ void QWindowsStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
                 }
             } else {
                 qDrawWinButton(p, opt->rect, opt->palette,
-                               opt->state & (State_Sunken | State_On), panel ? &fill : 0);
+                               opt->state & (State_Sunken | State_On), panel ? &fill : nullptr);
             }
         } else {
             p->fillRect(opt->rect, fill);
@@ -1686,7 +1686,7 @@ void QWindowsStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
 
         if (opt->state & (State_Raised | State_On | State_Sunken)) {
             qDrawWinButton(p, opt->rect, opt->palette, opt->state & (State_Sunken | State_On),
-                           panel ? &fill : 0);
+                           panel ? &fill : nullptr);
         } else {
             if (panel)
                 p->fillRect(opt->rect, fill);
@@ -1733,7 +1733,7 @@ case PE_FrameDockWidget:
 #endif // QT_NO_DOCKWIDGET
 
     case PE_FrameStatusBarItem:
-        qDrawShadePanel(p, opt->rect, opt->palette, true, 1, 0);
+        qDrawShadePanel(p, opt->rect, opt->palette, true, 1, nullptr);
         break;
 
 #ifndef QT_NO_PROGRESSBAR
@@ -1773,7 +1773,7 @@ case PE_FrameDockWidget:
 #endif // QT_NO_PROGRESSBAR
 
     case PE_FrameTabWidget: {
-        qDrawWinButton(p, opt->rect, opt->palette, false, 0);
+        qDrawWinButton(p, opt->rect, opt->palette, false, nullptr);
         break;
     }
     default:
@@ -2473,7 +2473,7 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
 
             const QStyleOptionDockWidgetV2 *v2
                 = qstyleoption_cast<const QStyleOptionDockWidgetV2*>(opt);
-            bool verticalTitleBar = v2 == 0 ? false : v2->verticalTitleBar;
+            bool verticalTitleBar = v2 == nullptr ? false : v2->verticalTitleBar;
 
             QRect rect = dwOpt->rect;
             QRect r = rect;
@@ -2567,7 +2567,7 @@ QRect QWindowsStyle::subElementRect(SubElement sr, const QStyleOption *opt, cons
         r = QCommonStyle::subElementRect(sr, opt, w);
         const QStyleOptionDockWidgetV2 *v2
             = qstyleoption_cast<const QStyleOptionDockWidgetV2*>(opt);
-        bool verticalTitleBar = v2 == 0 ? false : v2->verticalTitleBar;
+        bool verticalTitleBar = v2 == nullptr ? false : v2->verticalTitleBar;
         int m = proxy()->pixelMetric(PM_DockWidgetTitleMargin, opt, w);
         if (verticalTitleBar) {
             r.adjust(0, 0, 0, -m);

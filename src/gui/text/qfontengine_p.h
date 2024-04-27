@@ -232,7 +232,7 @@ public:
     virtual qreal minLeftBearing() const { return qreal(); }
     virtual qreal minRightBearing() const { return qreal(); }
 
-    virtual void getGlyphBearings(glyph_t glyph, qreal *leftBearing = 0, qreal *rightBearing = 0);
+    virtual void getGlyphBearings(glyph_t glyph, qreal *leftBearing = nullptr, qreal *rightBearing = nullptr);
 
     virtual const char *name() const = 0;
 
@@ -242,7 +242,7 @@ public:
 
     virtual int glyphCount() const;
 
-    virtual QFontEngine *cloneWithSize(qreal /*pixelSize*/) const { return 0; }
+    virtual QFontEngine *cloneWithSize(qreal /*pixelSize*/) const { return nullptr; }
 
     HB_Font harfbuzzFont() const;
     HB_Face harfbuzzFace() const;
@@ -410,7 +410,7 @@ public:
     virtual void recalcAdvances(QGlyphLayout *, ShaperFlags) const;
     virtual void doKerning(QGlyphLayout *, ShaperFlags) const;
     virtual void addOutlineToPath(qreal, qreal, const QGlyphLayout &, QPainterPath *, QTextItem::RenderFlags flags);
-    virtual void getGlyphBearings(glyph_t glyph, qreal *leftBearing = 0, qreal *rightBearing = 0);
+    virtual void getGlyphBearings(glyph_t glyph, qreal *leftBearing = nullptr, qreal *rightBearing = nullptr);
 
     virtual QFixed ascent() const;
     virtual QFixed descent() const;

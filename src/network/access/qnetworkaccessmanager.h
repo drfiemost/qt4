@@ -96,7 +96,7 @@ public:
     };
 #endif
 
-    explicit QNetworkAccessManager(QObject *parent = 0);
+    explicit QNetworkAccessManager(QObject *parent = nullptr);
     ~QNetworkAccessManager();
 
 #ifndef QT_NO_NETWORKPROXY
@@ -121,7 +121,7 @@ public:
     QNetworkReply *put(const QNetworkRequest &request, const QByteArray &data);
     QNetworkReply *put(const QNetworkRequest &request, QHttpMultiPart *multiPart);
     QNetworkReply *deleteResource(const QNetworkRequest &request);
-    QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, QIODevice *data = 0);
+    QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, QIODevice *data = nullptr);
 
 #if !defined(QT_NO_BEARERMANAGEMENT) && !defined(QT_MOBILITY_BEARER)
     void setConfiguration(const QNetworkConfiguration &config);
@@ -154,7 +154,7 @@ Q_SIGNALS:
 
 protected:
     virtual QNetworkReply *createRequest(Operation op, const QNetworkRequest &request,
-                                         QIODevice *outgoingData = 0);
+                                         QIODevice *outgoingData = nullptr);
 
 private:
     friend class QNetworkReplyImplPrivate;

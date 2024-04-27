@@ -73,7 +73,7 @@ public:
 
 BrushManagerProxyPrivate::BrushManagerProxyPrivate(BrushManagerProxy *bp, QDesignerFormEditorInterface *core) :
     q_ptr(bp),
-    m_Manager(0),
+    m_Manager(nullptr),
     m_BrushFolder(QLatin1String("brushes")),
     m_Core(core)
 {

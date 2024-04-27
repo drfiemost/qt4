@@ -121,7 +121,7 @@ namespace QTest
     template <typename T>
     inline char *toString(const T &)
     {
-        return 0;
+        return nullptr;
     }
 
 
@@ -129,7 +129,7 @@ namespace QTest
     Q_TESTLIB_EXPORT char *toString(const char *);
     Q_TESTLIB_EXPORT char *toString(const void *);
 
-    Q_TESTLIB_EXPORT int qExec(QObject *testObject, int argc = 0, char **argv = 0);
+    Q_TESTLIB_EXPORT int qExec(QObject *testObject, int argc = 0, char **argv = nullptr);
     Q_TESTLIB_EXPORT int qExec(QObject *testObject, const QStringList &arguments);
 
     Q_TESTLIB_EXPORT bool qVerify(bool statement, const char *statementStr, const char *description,

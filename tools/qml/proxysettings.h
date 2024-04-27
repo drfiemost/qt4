@@ -55,7 +55,7 @@ class ProxySettings : public QDialog, public Ui::ProxySettings
 Q_OBJECT
 
 public:
-    ProxySettings(QWidget * parent = 0);
+    ProxySettings(QWidget * parent = nullptr);
 
     ~ProxySettings();
 

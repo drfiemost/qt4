@@ -122,7 +122,7 @@ public:
         ScrollPerPixel
     };
 
-    explicit QAbstractItemView(QWidget *parent = 0);
+    explicit QAbstractItemView(QWidget *parent = nullptr);
     ~QAbstractItemView();
 
     virtual void setModel(QAbstractItemModel *model);
@@ -262,7 +262,7 @@ Q_SIGNALS:
     void viewportEntered();
 
 protected:
-    QAbstractItemView(QAbstractItemViewPrivate &, QWidget *parent = 0);
+    QAbstractItemView(QAbstractItemViewPrivate &, QWidget *parent = nullptr);
 
     void setHorizontalStepsPerItem(int steps);
     int horizontalStepsPerItem() const;
@@ -287,7 +287,7 @@ protected:
     virtual bool edit(const QModelIndex &index, EditTrigger trigger, QEvent *event);
 
     virtual QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
-                                                                 const QEvent *event = 0) const;
+                                                                 const QEvent *event = nullptr) const;
 
 #ifndef QT_NO_DRAGANDDROP
     virtual void startDrag(Qt::DropActions supportedActions);

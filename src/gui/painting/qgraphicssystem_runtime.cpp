@@ -313,7 +313,7 @@ QWindowSurface::WindowSurfaceFeatures QRuntimeWindowSurface::features() const
 
 QRuntimeGraphicsSystem::QRuntimeGraphicsSystem()
     : m_windowSurfaceDestroyPolicy(DestroyImmediately),
-      m_graphicsSystem(0)
+      m_graphicsSystem(nullptr)
 {
     QApplicationPrivate::runtime_graphics_system = true;
 

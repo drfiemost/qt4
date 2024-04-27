@@ -95,8 +95,8 @@ namespace JSC {
 
         // Children members
         const Vector<RefPtr<ProfileNode> >& children() const { return m_children; }
-        ProfileNode* firstChild() const { return m_children.size() ? m_children.first().get() : 0; }
-        ProfileNode* lastChild() const { return m_children.size() ? m_children.last().get() : 0; }
+        ProfileNode* firstChild() const { return m_children.size() ? m_children.first().get() : nullptr; }
+        ProfileNode* lastChild() const { return m_children.size() ? m_children.last().get() : nullptr; }
         ProfileNode* findChild(ProfileNode*) const;
         void removeChild(ProfileNode*);
         void addChild(PassRefPtr<ProfileNode> prpChild);

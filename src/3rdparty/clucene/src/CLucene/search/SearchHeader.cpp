@@ -23,7 +23,7 @@ CL_NS(document)::Document* Searchable::doc(const int32_t i){
 Query* Query::mergeBooleanQueries(Query** queries) {
     CL_NS(util)::CLVector<BooleanClause*> allClauses;
     int32_t i = 0;
-    while ( queries[i] != NULL ){
+    while ( queries[i] != nullptr ){
 		BooleanQuery* bq = (BooleanQuery*)queries[i];
 		
 		int32_t size = bq->getClauseCount();
@@ -97,7 +97,7 @@ Weight* Query::weight(Searcher* searcher){
 }
 
 TopFieldDocs::TopFieldDocs (int32_t totalHits, FieldDoc** fieldDocs, int32_t scoreDocsLen, SortField** fields):
- TopDocs (totalHits, NULL, scoreDocsLen)
+ TopDocs (totalHits, nullptr, scoreDocsLen)
 {
 	this->fields = fields;
 	this->fieldDocs = fieldDocs;
@@ -111,8 +111,8 @@ TopFieldDocs::~TopFieldDocs(){
 			_CLDELETE(fieldDocs[i]);
 		_CLDELETE_ARRAY(fieldDocs);
 	}
-	if ( fields != NULL ){
-       for ( int i=0;fields[i]!=NULL;i++ )
+	if ( fields != nullptr ){
+       for ( int i=0;fields[i]!=nullptr;i++ )
            _CLDELETE(fields[i]);
        _CLDELETE_ARRAY(fields);
     }

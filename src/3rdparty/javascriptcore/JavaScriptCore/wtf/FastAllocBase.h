@@ -138,7 +138,7 @@ namespace WTF {
         void* p = fastMalloc(sizeof(T));
 
         if (!p)
-            return 0;
+            return nullptr;
 
         fastMallocMatchValidateMalloc(p, Internal::AllocTypeFastNew);
         return ::new(p) T(arg1);

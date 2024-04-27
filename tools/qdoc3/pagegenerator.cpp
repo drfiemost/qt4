@@ -56,7 +56,7 @@ QT_BEGIN_NAMESPACE
   Nothing to do in the constructor.
  */
 PageGenerator::PageGenerator()
-    : outputCodec(0)
+    : outputCodec(nullptr)
 {
     // nothing.
 }
@@ -345,7 +345,7 @@ PageGenerator::generateInnerNode(const InnerNode* node)
      */
     CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
 
-    if (node->parent() != 0) {
+    if (node->parent() != nullptr) {
 	beginSubPage(node->location(), fileName(node));
 	if (node->type() == Node::Namespace || node->type() == Node::Class) {
 	    generateClassLikeNode(node, marker);

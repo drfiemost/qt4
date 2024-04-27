@@ -579,7 +579,7 @@ compileBranch(int options, int* brackets, unsigned char** codePtr,
     unsigned char* tempcode;
     bool didGroupSetFirstByte = false;
     const UChar* ptr = *ptrPtr;
-    unsigned char* previous = NULL;
+    unsigned char* previous = nullptr;
     unsigned char classbits[32];
     
     bool class_utf8;
@@ -655,11 +655,11 @@ compileBranch(int options, int* brackets, unsigned char** codePtr,
                     *code++ = OP_BOL;
                 } else
                     *code++ = OP_CIRC;
-                previous = NULL;
+                previous = nullptr;
                 break;
 
             case '$':
-                previous = NULL;
+                previous = nullptr;
                 if (options & MatchAcrossMultipleLinesOption)
                   *code++ = OP_EOL;
                 else
@@ -1280,7 +1280,7 @@ compileBranch(int options, int* brackets, unsigned char** codePtr,
                 else if (*previous >= OP_BRA) {
                     int ketoffset = 0;
                     int len = code - previous;
-                    unsigned char* bralink = NULL;
+                    unsigned char* bralink = nullptr;
                     
                     /* If the maximum repeat count is unlimited, find the end of the bracket
                      by scanning through from the start, and compute the offset back to it
@@ -1397,7 +1397,7 @@ compileBranch(int options, int* brackets, unsigned char** codePtr,
                             int offset = code - bralink + 1;
                             unsigned char* bra = code - offset;
                             int oldlinkoffset = getLinkValueAllowZero(bra + 1);
-                            bralink = (!oldlinkoffset) ? 0 : bralink - oldlinkoffset;
+                            bralink = (!oldlinkoffset) ? nullptr : bralink - oldlinkoffset;
                             *code++ = OP_KET;
                             putLinkValueAndAdvance(code, offset);
                             putLinkValue(bra + 1, offset);
@@ -1434,7 +1434,7 @@ compileBranch(int options, int* brackets, unsigned char** codePtr,
                  it isn't already set and we have just passed a varying length item. */
                 
             END_REPEAT:
-                previous = NULL;
+                previous = nullptr;
                 cd.reqVaryOpt |= reqvary;
                 break;
                 
@@ -1619,7 +1619,7 @@ compileBranch(int options, int* brackets, unsigned char** codePtr,
                      value */
                     
                     else {
-                        previous = (-c > ESC_b && -c <= ESC_w) ? code : NULL;
+                        previous = (-c > ESC_b && -c <= ESC_w) ? code : nullptr;
                         *code++ = -c;
                     }
                     continue;
@@ -2556,7 +2556,7 @@ Returns:        pointer to compiled data block, or NULL on error,
 static inline JSRegExp* returnError(ErrorCode errorcode, const char** errorPtr)
 {
     *errorPtr = errorText(errorcode);
-    return 0;
+    return nullptr;
 }
 
 JSRegExp* jsRegExpCompile(const UChar* pattern, int patternLength,
@@ -2566,8 +2566,8 @@ JSRegExp* jsRegExpCompile(const UChar* pattern, int patternLength,
     /* We can't pass back an error message if errorPtr is NULL; I guess the best we
      can do is just return NULL, but we can set a code value if there is a code pointer. */
     if (!errorPtr)
-        return 0;
-    *errorPtr = NULL;
+        return nullptr;
+    *errorPtr = nullptr;
     
     CompileData cd;
     

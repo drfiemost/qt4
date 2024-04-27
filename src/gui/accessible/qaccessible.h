@@ -438,7 +438,7 @@ public:
     virtual QVariant invokeMethodEx(Method method, int child, const QVariantList &params) = 0;
     virtual QVariant virtual_hook(const QVariant &data);
     virtual QAccessible2Interface *interface_cast(QAccessible2::InterfaceType)
-    { return 0; }
+    { return nullptr; }
 };
 
 

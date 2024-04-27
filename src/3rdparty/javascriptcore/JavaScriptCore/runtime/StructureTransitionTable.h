@@ -89,11 +89,11 @@ namespace JSC {
             Structure* getSlotTransition(unsigned count)
             {
                 if (!m_anonymousSlotTable)
-                    return 0;
+                    return nullptr;
 
                 AnonymousSlotMap::iterator find = m_anonymousSlotTable->find(count);
                 if (find == m_anonymousSlotTable->end())
-                    return 0;
+                    return nullptr;
                 return find->second;
             }
         private:
@@ -101,7 +101,7 @@ namespace JSC {
         };
     public:
         StructureTransitionTable() {
-            m_transitions.m_singleTransition.set(0);
+            m_transitions.m_singleTransition.set(nullptr);
             m_transitions.m_singleTransition.setFlag(usingSingleSlot);
         }
 
@@ -120,7 +120,7 @@ namespace JSC {
         {
             if (usingSingleTransitionSlot()) {
                 ASSERT(contains(key, specificValue));
-                setSingleTransition(0);
+                setSingleTransition(nullptr);
                 return;
             }
             TransitionTable::iterator find = table()->find(key);
@@ -143,21 +143,21 @@ namespace JSC {
             if (!specificValue) {
                 TransitionTable::iterator find = table()->find(key);
                 if (find == table()->end())
-                    table()->add(key, Transition(structure, (Structure*)0));
+                    table()->add(key, Transition(structure, (Structure*)nullptr));
                 else
                     find->second.first = structure;
             } else {
                 // If we're adding a transition to a specific value, then there cannot be
                 // an existing transition
                 ASSERT(!table()->contains(key));
-                table()->add(key, Transition((Structure*)0, structure));
+                table()->add(key, Transition((Structure*)nullptr, structure));
             }
         }
 
         Structure* getAnonymousSlotTransition(unsigned count)
         {
             if (usingSingleTransitionSlot())
-                return 0;
+                return nullptr;
             return table()->getSlotTransition(count);
         }
 

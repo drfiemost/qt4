@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeSpringAnimation : public QDeclarativeNumberA
     Q_PROPERTY(qreal mass READ mass WRITE setMass NOTIFY massChanged)
 
 public:
-    QDeclarativeSpringAnimation(QObject *parent=0);
+    QDeclarativeSpringAnimation(QObject *parent=nullptr);
     ~QDeclarativeSpringAnimation();
 
     qreal velocity() const;

@@ -102,7 +102,7 @@ public:
     QSvgTinyDocument *document() const;
 
     inline bool ok() const {
-        return document() != 0 && !xml->hasError();
+        return document() != nullptr && !xml->hasError();
     }
 
     inline QString errorString() const { return xml->errorString(); }

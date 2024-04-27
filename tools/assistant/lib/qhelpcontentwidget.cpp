@@ -138,7 +138,7 @@ void QHelpContentItem::appendChild(QHelpContentItem *item)
 QHelpContentItem *QHelpContentItem::child(int row) const
 {
     if (row >= childCount())
-        return 0;
+        return nullptr;
     return d->childItems.value(row);
 }
 
@@ -235,7 +235,7 @@ QHelpContentItem *QHelpContentProvider::rootItem()
 {
     QMutexLocker locker(&m_mutex);
     if (m_rootItems.isEmpty())
-        return 0;
+        return nullptr;
     return m_rootItems.dequeue();
 }
 
@@ -251,10 +251,10 @@ void QHelpContentProvider::run()
     QString title;
     QString link;
     int depth = 0;
-    QHelpContentItem *item = 0;
+    QHelpContentItem *item = nullptr;
 
     m_mutex.lock();
-    QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), 0);
+    QHelpContentItem * const rootItem = new QHelpContentItem(QString(), QString(), nullptr);
     QStringList atts = m_filterAttributes;
     const QStringList fileNames = m_helpEngine->orderedFileNameList;
     m_mutex.unlock();
@@ -271,7 +271,7 @@ void QHelpContentProvider::run()
         QHelpDBReader reader(dbFileName,
             QHelpGlobal::uniquifyConnectionName(dbFileName +
             QLatin1String("FromQHelpContentProvider"),
-            QThread::currentThread()), 0);
+            QThread::currentThread()), nullptr);
         if (!reader.init())
             continue;
         foreach (const QByteArray& ba, reader.contentsForFilter(atts)) {
@@ -353,7 +353,7 @@ QHelpContentModel::QHelpContentModel(QHelpEnginePrivate *helpEngine)
     : QAbstractItemModel(helpEngine)
 {
     d = new QHelpContentModelPrivate();
-    d->rootItem = 0;
+    d->rootItem = nullptr;
     d->qhelpContentProvider = new QHelpContentProvider(helpEngine);
 
     connect(d->qhelpContentProvider, SIGNAL(finishedSuccessFully()),
@@ -377,7 +377,7 @@ void QHelpContentModel::invalidateContents(bool onShutDown)
     d->qhelpContentProvider->stopCollecting();
     if (d->rootItem) {
         delete d->rootItem;
-        d->rootItem = 0;
+        d->rootItem = nullptr;
     }
     if (!onShutDown)
         reset();
@@ -403,7 +403,7 @@ void QHelpContentModel::insertContents()
         count = d->rootItem->childCount() - 1;
         beginRemoveRows(QModelIndex(), 0, count > 0 ? count : 0);
         delete d->rootItem;
-        d->rootItem = 0;
+        d->rootItem = nullptr;
         endRemoveRows();
     }
 
@@ -527,7 +527,7 @@ QVariant QHelpContentModel::data(const QModelIndex &index, int role) const
 */
 
 QHelpContentWidget::QHelpContentWidget()
-    : QTreeView(0)
+    : QTreeView(nullptr)
 {
     header()->hide();
     setUniformRowHeights(true);

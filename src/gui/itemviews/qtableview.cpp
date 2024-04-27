@@ -143,14 +143,14 @@ QSpanCollection::Span *QSpanCollection::spanAt(int x, int y) const
 {
     Index::const_iterator it_y = index.lowerBound(-y);
     if (it_y == index.end())
-        return 0;
+        return nullptr;
     SubIndex::const_iterator it_x = (*it_y).lowerBound(-x);
     if (it_x == (*it_y).end())
-        return 0;
+        return nullptr;
     Span *span = *it_x;
     if (span->right() >= x && span->bottom() >= y)
         return span;
-    return 0;
+    return nullptr;
 }
 
 

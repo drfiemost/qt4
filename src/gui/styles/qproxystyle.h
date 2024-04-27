@@ -57,15 +57,15 @@ class Q_GUI_EXPORT QProxyStyle : public QCommonStyle
     Q_OBJECT
 
 public:
-    QProxyStyle(QStyle *baseStyle = 0);
+    QProxyStyle(QStyle *baseStyle = nullptr);
     ~QProxyStyle();
 
     QStyle *baseStyle() const;
     void setBaseStyle(QStyle *style);
 
-    void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget = 0) const;
-    void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget = 0) const;
-    void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget = 0) const;
+    void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget = nullptr) const;
+    void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget = nullptr) const;
+    void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget = nullptr) const;
     void drawItemText(QPainter *painter, const QRect &rect, int flags, const QPalette &pal, bool enabled,
                       const QString &text, QPalette::ColorRole textRole = QPalette::NoRole) const;
     virtual void drawItemPixmap(QPainter *painter, const QRect &rect, int alignment, const QPixmap &pixmap) const;
@@ -77,11 +77,11 @@ public:
     QRect itemTextRect(const QFontMetrics &fm, const QRect &r, int flags, bool enabled, const QString &text) const;
     QRect itemPixmapRect(const QRect &r, int flags, const QPixmap &pixmap) const;
 
-    SubControl hitTestComplexControl(ComplexControl control, const QStyleOptionComplex *option, const QPoint &pos, const QWidget *widget = 0) const;
-    int styleHint(StyleHint hint, const QStyleOption *option = 0, const QWidget *widget = 0, QStyleHintReturn *returnData = 0) const;
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0, const QWidget *widget = 0) const;
+    SubControl hitTestComplexControl(ComplexControl control, const QStyleOptionComplex *option, const QPoint &pos, const QWidget *widget = nullptr) const;
+    int styleHint(StyleHint hint, const QStyleOption *option = nullptr, const QWidget *widget = nullptr, QStyleHintReturn *returnData = nullptr) const;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
 
-    QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt, const QWidget *widget = 0) const;
+    QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt, const QWidget *widget = nullptr) const;
     QPixmap generatedIconPixmap(QIcon::Mode iconMode, const QPixmap &pixmap, const QStyleOption *opt) const;
     QPalette standardPalette() const;
 
@@ -98,7 +98,7 @@ protected:
 protected Q_SLOTS:
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option, const QWidget *widget) const;
     int layoutSpacingImplementation(QSizePolicy::ControlType control1, QSizePolicy::ControlType control2,
-                                    Qt::Orientation orientation, const QStyleOption *option = 0, const QWidget *widget = 0) const;
+                                    Qt::Orientation orientation, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
 private:
     Q_DISABLE_COPY(QProxyStyle)
     Q_DECLARE_PRIVATE(QProxyStyle)

@@ -69,15 +69,15 @@ class Text
     void stripFirstAtom();
     void stripLastAtom();
 
-    bool isEmpty() const { return first == 0; }
+    bool isEmpty() const { return first == nullptr; }
     QString toString() const;
     const Atom *firstAtom() const { return first; }
     const Atom *lastAtom() const { return last; }
-    Text subText(Atom::Type left, Atom::Type right, const Atom *from = 0, bool inclusive = false) const;
+    Text subText(Atom::Type left, Atom::Type right, const Atom *from = nullptr, bool inclusive = false) const;
     void dump() const;
     void clear();
 
-    static Text subText(const Atom *begin, const Atom *end = 0);
+    static Text subText(const Atom *begin, const Atom *end = nullptr);
     static Text sectionHeading(const Atom *sectionBegin);
     static const Atom *sectionHeadingAtom(const Atom *sectionLeft);
     static int compare(const Text &text1, const Text &text2);

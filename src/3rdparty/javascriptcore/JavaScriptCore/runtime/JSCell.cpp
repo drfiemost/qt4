@@ -96,12 +96,12 @@ UString JSCell::getString(ExecState* exec) const
 
 JSObject* JSCell::getObject()
 {
-    return isObject() ? asObject(this) : 0;
+    return isObject() ? asObject(this) : nullptr;
 }
 
 const JSObject* JSCell::getObject() const
 {
-    return isObject() ? static_cast<const JSObject*>(this) : 0;
+    return isObject() ? static_cast<const JSObject*>(this) : nullptr;
 }
 
 CallType JSCell::getCallData(CallData&)
@@ -175,7 +175,7 @@ JSString* JSCell::toThisJSString(ExecState* exec)
 
 const ClassInfo* JSCell::classInfo() const
 {
-    return 0;
+    return nullptr;
 }
 
 JSValue JSCell::getJSNumber()
@@ -221,7 +221,7 @@ UString JSCell::toString(ExecState*) const
 JSObject* JSCell::toObject(ExecState*) const
 {
     ASSERT_NOT_REACHED();
-    return 0;
+    return nullptr;
 }
 
 } // namespace JSC

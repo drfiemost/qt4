@@ -72,7 +72,7 @@ public:
     Q_DECLARE_FLAGS(WriteFlags, WriteFlag)
 
     QDeclarativePropertyPrivate()
-        : context(0), engine(0), object(0), isNameCached(false) {}
+        : context(nullptr), engine(nullptr), object(nullptr), isNameCached(false) {}
 
     QDeclarativeContextData *context;
     QDeclarativeEngine *engine;
@@ -100,7 +100,7 @@ public:
     static bool writeEnumProperty(const QMetaProperty &prop, int idx, QObject *object, 
                                   const QVariant &value, int flags);
     static bool write(QObject *, const QDeclarativePropertyCache::Data &, const QVariant &, 
-                      QDeclarativeContextData *, WriteFlags flags = 0);
+                      QDeclarativeContextData *, WriteFlags flags = nullptr);
     static void findAliasTarget(QObject *, int, QObject **, int *);
     static QDeclarativeAbstractBinding *setBinding(QObject *, int coreIndex, int valueTypeIndex /* -1 */,
                                                    QDeclarativeAbstractBinding *,
@@ -136,7 +136,7 @@ public:
     static QMetaMethod findSignalByName(const QMetaObject *mo, const QByteArray &);
     static bool connect(QObject *sender, int signal_index,
                         const QObject *receiver, int method_index,
-                        int type = 0, int *types = 0);
+                        int type = 0, int *types = nullptr);
     static const QMetaObject *metaObjectForProperty(const QMetaObject *, int);
 };
 

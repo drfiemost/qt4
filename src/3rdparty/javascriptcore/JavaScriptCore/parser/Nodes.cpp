@@ -106,7 +106,7 @@ ScopeNode::ScopeNode(JSGlobalData* globalData, const SourceCode& source, SourceE
 
 StatementNode* ScopeNode::singleStatement() const
 {
-    return m_data->m_statements ? m_data->m_statements->singleStatement() : 0;
+    return m_data->m_statements ? m_data->m_statements->singleStatement() : nullptr;
 }
 
 // ------------------------------ ProgramNode -----------------------------

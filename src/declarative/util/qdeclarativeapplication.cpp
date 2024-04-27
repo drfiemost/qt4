@@ -49,7 +49,7 @@ class QDeclarativeApplicationPrivate : public QObjectPrivate
 {
     Q_DECLARE_PUBLIC(QDeclarativeApplication)
 public:
-    QDeclarativeApplicationPrivate() : active(QApplication::activeWindow() != 0),
+    QDeclarativeApplicationPrivate() : active(QApplication::activeWindow() != nullptr),
     layoutDirection(QApplication::layoutDirection()) {}
     bool active;
     Qt::LayoutDirection layoutDirection;

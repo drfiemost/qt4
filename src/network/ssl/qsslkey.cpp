@@ -86,12 +86,12 @@ void QSslKeyPrivate::clear(bool deep)
     if (rsa) {
         if (deep)
             q_RSA_free(rsa);
-        rsa = 0;
+        rsa = nullptr;
     }
     if (dsa) {
         if (deep)
             q_DSA_free(dsa);
-        dsa = 0;
+        dsa = nullptr;
     }
 }
 
@@ -127,14 +127,14 @@ void QSslKeyPrivate::decodePem(const QByteArray &pem, const QByteArray &passPhra
 
     if (algorithm == QSsl::Rsa) {
         RSA *result = (type == QSsl::PublicKey)
-            ? q_PEM_read_bio_RSA_PUBKEY(bio, &rsa, 0, phrase)
-            : q_PEM_read_bio_RSAPrivateKey(bio, &rsa, 0, phrase);
+            ? q_PEM_read_bio_RSA_PUBKEY(bio, &rsa, nullptr, phrase)
+            : q_PEM_read_bio_RSAPrivateKey(bio, &rsa, nullptr, phrase);
         if (rsa && rsa == result)
             isNull = false;
     } else {
         DSA *result = (type == QSsl::PublicKey)
-            ? q_PEM_read_bio_DSA_PUBKEY(bio, &dsa, 0, phrase)
-            : q_PEM_read_bio_DSAPrivateKey(bio, &dsa, 0, phrase);
+            ? q_PEM_read_bio_DSA_PUBKEY(bio, &dsa, nullptr, phrase)
+            : q_PEM_read_bio_DSAPrivateKey(bio, &dsa, nullptr, phrase);
         if (dsa && dsa == result)
             isNull = false;
     }
@@ -328,8 +328,8 @@ int QSslKey::length() const
     if (d->algorithm == QSsl::Rsa) {
         return q_RSA_bits(d->rsa);
     }else{
-        const BIGNUM *p = NULL;
-        q_DSA_get0_pqg(d->dsa, &p, NULL, NULL);
+        const BIGNUM *p = nullptr;
+        q_DSA_get0_pqg(d->dsa, &p, nullptr, nullptr);
 	return q_BN_num_bits(p);
     }
 #endif
@@ -389,8 +389,8 @@ QByteArray QSslKey::toPem(const QByteArray &passPhrase) const
             if (!q_PEM_write_bio_RSAPrivateKey(
                     bio, d->rsa,
                     // ### the cipher should be selectable in the API:
-                    passPhrase.isEmpty() ? (const EVP_CIPHER *)0 : q_EVP_des_ede3_cbc(),
-                    (uchar *)passPhrase.data(), passPhrase.size(), 0, 0)) {
+                    passPhrase.isEmpty() ? (const EVP_CIPHER *)nullptr : q_EVP_des_ede3_cbc(),
+                    (uchar *)passPhrase.data(), passPhrase.size(), nullptr, nullptr)) {
                 fail = true;
             }
         }
@@ -402,8 +402,8 @@ QByteArray QSslKey::toPem(const QByteArray &passPhrase) const
             if (!q_PEM_write_bio_DSAPrivateKey(
                     bio, d->dsa,
                     // ### the cipher should be selectable in the API:
-                    passPhrase.isEmpty() ? (const EVP_CIPHER *)0 : q_EVP_des_ede3_cbc(),
-                    (uchar *)passPhrase.data(), passPhrase.size(), 0, 0)) {
+                    passPhrase.isEmpty() ? (const EVP_CIPHER *)nullptr : q_EVP_des_ede3_cbc(),
+                    (uchar *)passPhrase.data(), passPhrase.size(), nullptr, nullptr)) {
                 fail = true;
             }
         }

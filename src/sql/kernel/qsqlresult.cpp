@@ -979,7 +979,7 @@ void QSqlResult::detachFromResultSet()
 {
     if (driver()->hasFeature(QSqlDriver::FinishQuery) 
             || driver()->hasFeature(QSqlDriver::SimpleLocking))
-        virtual_hook(DetachFromResultSet, 0);
+        virtual_hook(DetachFromResultSet, nullptr);
 }
 
 /*! \internal

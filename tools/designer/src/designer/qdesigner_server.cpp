@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 QDesignerServer::QDesignerServer(QObject *parent)
     : QObject(parent)
 {
-    m_socket = 0;
+    m_socket = nullptr;
     m_server = new QTcpServer(this);
     m_server->listen(QHostAddress::LocalHost, 0);
     if (m_server->isListening())
@@ -108,13 +108,13 @@ void QDesignerServer::readFromClient()
 
 void QDesignerServer::socketClosed()
 {
-    m_socket = 0;
+    m_socket = nullptr;
 }
 
 void QDesignerServer::handleNewConnection()
 {
     // no need for more than one connection
-    if (m_socket == 0) {
+    if (m_socket == nullptr) {
         m_socket = m_server->nextPendingConnection();
         connect(m_socket, SIGNAL(readyRead()),
                 this, SLOT(readFromClient()));

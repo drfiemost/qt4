@@ -126,7 +126,7 @@ public:
 
     QTextHtmlImporter(QTextDocument *_doc, const QString &html,
                       ImportMode mode,
-                      const QTextDocument *resourceProvider = 0);
+                      const QTextDocument *resourceProvider = nullptr);
 
     void import();
 
@@ -162,7 +162,7 @@ private:
 #endif
     struct TableCellIterator
     {
-        inline TableCellIterator(QTextTable *t = 0) : table(t), row(0), column(0) {}
+        inline TableCellIterator(QTextTable *t = nullptr) : table(t), row(0), column(0) {}
 
         inline TableCellIterator &operator++() {
             if (atEnd())
@@ -181,7 +181,7 @@ private:
             return *this;
         }
 
-        inline bool atEnd() const { return table == 0 || row >= table->rows(); }
+        inline bool atEnd() const { return table == nullptr || row >= table->rows(); }
 
         QTextTableCell cell() const { return table->cellAt(row, column); }
 

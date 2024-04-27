@@ -71,10 +71,10 @@ public:
 
     bool play(QPainter *p);
 
-    bool load(QIODevice *dev, const char *format = 0);
-    bool load(const QString &fileName, const char *format = 0);
-    bool save(QIODevice *dev, const char *format = 0);
-    bool save(const QString &fileName, const char *format = 0);
+    bool load(QIODevice *dev, const char *format = nullptr);
+    bool load(const QString &fileName, const char *format = nullptr);
+    bool save(QIODevice *dev, const char *format = nullptr);
+    bool save(const QString &fileName, const char *format = nullptr);
 
     QRect boundingRect() const;
     void setBoundingRect(const QRect &r);

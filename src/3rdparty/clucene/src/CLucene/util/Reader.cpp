@@ -10,15 +10,15 @@
 CL_NS_DEF(util)
 
 StringReader::StringReader ( const TCHAR* value ):
-  Reader(NULL,true){
+  Reader(nullptr,true){
 	  reader = new jstreams::StringReader<TCHAR>(value);
 }
 StringReader::StringReader ( const TCHAR* value, const int32_t length ):
-  Reader(NULL,true){
+  Reader(nullptr,true){
 	  reader = new jstreams::StringReader<TCHAR>(value,length);
 }
 StringReader::StringReader ( const TCHAR* value, const int32_t length, bool copyData ):
-  Reader(NULL,true){
+  Reader(nullptr,true){
 	  reader = new jstreams::StringReader<TCHAR>(value,length, copyData);
 }
 StringReader::~StringReader(){
@@ -27,7 +27,7 @@ StringReader::~StringReader(){
 
 FileReader::FileReader ( const char* path, const char* enc,
 						 const int32_t cachelen, const int32_t /*cachebuff*/ ):
-	Reader(NULL, true)
+	Reader(nullptr, true)
 {
 	this->input = new jstreams::FileInputStream(path, cachelen);
 	this->reader = new SimpleInputStreamReader(this->input,enc); //(this is a jstream object)
@@ -70,7 +70,7 @@ SimpleInputStreamReader::SimpleInputStreamReader(jstreams::StreamBase<char> *i, 
     charsLeft = 0;
 }
 SimpleInputStreamReader::~SimpleInputStreamReader(){
-	input = NULL;
+	input = nullptr;
 }
 int32_t SimpleInputStreamReader::decode(TCHAR* start, int32_t space){
 	// decode from charbuf
@@ -140,7 +140,7 @@ int32_t SimpleInputStreamReader::decode(TCHAR* start, int32_t space){
 		} else if ( outbuf < outbufend ) { //input sequence was completely converted
 			charbuf.readPos = charbuf.start;
 			charbuf.avail = 0;
-			if (input == NULL) {
+			if (input == nullptr) {
 				finishedDecoding = true;
 			}
 		}
@@ -161,12 +161,12 @@ int32_t SimpleInputStreamReader::fillBuffer(TCHAR* start, int32_t space) {
         if (numRead < -1) {
             error = input->getError();
             status = jstreams::Error;
-            input = 0;
+            input = nullptr;
             return numRead;
         }
         if (numRead < 1) {
             // signal end of input buffer
-            input = 0;
+            input = nullptr;
             if (charbuf.avail) {
                 error = "stream ends on incomplete character";
                 status = jstreams::Error;

@@ -57,7 +57,7 @@ QT_BEGIN_NAMESPACE
 QBenchmarkGlobalData *QBenchmarkGlobalData::current;
 
 QBenchmarkGlobalData::QBenchmarkGlobalData()
-    : measurer(0)
+    : measurer(nullptr)
     , walltimeMinimum(-1)
     , iterationCount(-1)
     , medianIterationCount(-1)
@@ -71,7 +71,7 @@ QBenchmarkGlobalData::QBenchmarkGlobalData()
 QBenchmarkGlobalData::~QBenchmarkGlobalData()
 {
     delete measurer;
-    QBenchmarkGlobalData::current = 0;
+    QBenchmarkGlobalData::current = nullptr;
 }
 
 void QBenchmarkGlobalData::setMode(Mode mode)
@@ -85,7 +85,7 @@ void QBenchmarkGlobalData::setMode(Mode mode)
 
 QBenchmarkMeasurerBase * QBenchmarkGlobalData::createMeasurer()
 {
-    QBenchmarkMeasurerBase *measurer = 0;
+    QBenchmarkMeasurerBase *measurer = nullptr;
     if (0) {
 #ifdef QTESTLIB_USE_VALGRIND
     } else if (mode_ == CallgrindChildProcess || mode_ == CallgrindParentProcess) {
@@ -124,7 +124,7 @@ QBenchmarkTestMethodData::QBenchmarkTestMethodData()
 
 QBenchmarkTestMethodData::~QBenchmarkTestMethodData()
 {
-    QBenchmarkTestMethodData::current = 0;
+    QBenchmarkTestMethodData::current = nullptr;
 }
 
 void QBenchmarkTestMethodData::beginDataRun()

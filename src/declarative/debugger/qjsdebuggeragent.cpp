@@ -251,7 +251,7 @@ QJSDebuggerAgent::QJSDebuggerAgent(QDeclarativeEngine *engine, QObject *parent)
 */
 QJSDebuggerAgent::~QJSDebuggerAgent()
 {
-    engine()->setAgent(0);
+    engine()->setAgent(nullptr);
     delete d;
 }
 

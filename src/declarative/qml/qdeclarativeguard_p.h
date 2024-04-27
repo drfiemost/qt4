@@ -109,18 +109,18 @@ protected:
 };
 
 QDeclarativeGuardImpl::QDeclarativeGuardImpl()
-: o(0), next(0), prev(0)
+: o(nullptr), next(nullptr), prev(nullptr)
 {
 }
 
 QDeclarativeGuardImpl::QDeclarativeGuardImpl(QObject *g)
-: o(g), next(0), prev(0)
+: o(g), next(nullptr), prev(nullptr)
 {
     if (o) addGuard();
 }
 
 QDeclarativeGuardImpl::QDeclarativeGuardImpl(const QDeclarativeGuardImpl &g)
-: o(g.o), next(0), prev(0)
+: o(g.o), next(nullptr), prev(nullptr)
 {
     if (o) addGuard();
 }
@@ -128,7 +128,7 @@ QDeclarativeGuardImpl::QDeclarativeGuardImpl(const QDeclarativeGuardImpl &g)
 QDeclarativeGuardImpl::~QDeclarativeGuardImpl()
 {
     if (prev) remGuard();
-    o = 0;
+    o = nullptr;
 }
 
 void QDeclarativeGuardImpl::addGuard()
@@ -151,8 +151,8 @@ void QDeclarativeGuardImpl::remGuard()
 
     if (next) next->prev = prev;
     *prev = next;
-    next = 0;
-    prev = 0;
+    next = nullptr;
+    prev = nullptr;
 }
 
 template<class T>

@@ -85,7 +85,7 @@ public:
     inline bool operator==(const QSharedDataPointer<T> &other) const { return d == other.d; }
     inline bool operator!=(const QSharedDataPointer<T> &other) const { return d != other.d; }
 
-    inline QSharedDataPointer() { d = 0; }
+    inline QSharedDataPointer() { d = nullptr; }
     inline ~QSharedDataPointer() { if (d && !d->ref.deref()) delete d; }
 
     explicit QSharedDataPointer(T *data);

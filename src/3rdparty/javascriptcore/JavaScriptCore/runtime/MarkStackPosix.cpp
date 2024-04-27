@@ -40,7 +40,7 @@ void MarkStack::initializePagesize()
 
 void* MarkStack::allocateStack(size_t size)
 {
-    return mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    return mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 }
 void MarkStack::releaseStack(void* addr, size_t size)
 {

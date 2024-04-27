@@ -29,8 +29,8 @@ IndexModifier::IndexModifier(const QString& dirName, Analyzer* analyzer, bool cr
 }
 
 void IndexModifier::init(Directory* directory, Analyzer* analyzer, bool create) {
-	indexWriter = NULL;
-	indexReader = NULL;
+	indexWriter = nullptr;
+	indexReader = nullptr;
 	this->analyzer = analyzer;
 	open = false;
 
@@ -55,8 +55,8 @@ void IndexModifier::assureOpen() const{
 }
 
 void IndexModifier::createIndexWriter() {
-	if (indexWriter == NULL) {
-		if (indexReader != NULL) {
+	if (indexWriter == nullptr) {
+		if (indexReader != nullptr) {
 			indexReader->close();
 			_CLDELETE(indexReader);
 		}
@@ -69,8 +69,8 @@ void IndexModifier::createIndexWriter() {
 }
 
 void IndexModifier::createIndexReader() {
-	if (indexReader == NULL) {
-		if (indexWriter != NULL) {
+	if (indexReader == nullptr) {
+		if (indexWriter != nullptr) {
 			indexWriter->close();
 			_CLDELETE(indexWriter);
 		}
@@ -81,7 +81,7 @@ void IndexModifier::createIndexReader() {
 void IndexModifier::flush() {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
-	if (indexWriter != NULL) {
+	if (indexWriter != nullptr) {
 		indexWriter->close();
 		_CLDELETE(indexWriter);
 		createIndexWriter();
@@ -96,7 +96,7 @@ void IndexModifier::addDocument(Document* doc, Analyzer* docAnalyzer) {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK) 
 	assureOpen();
 	createIndexWriter();
-	if (docAnalyzer != NULL)
+	if (docAnalyzer != nullptr)
 		indexWriter->addDocument(doc, docAnalyzer);
 	else
 		indexWriter->addDocument(doc);
@@ -119,7 +119,7 @@ void IndexModifier::deleteDocument(int32_t docNum) {
 int32_t IndexModifier::docCount() {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
-	if (indexWriter != NULL)
+	if (indexWriter != nullptr)
 		return indexWriter->docCount();
 	else
 		return indexReader->numDocs();
@@ -135,7 +135,7 @@ void IndexModifier::optimize() {
 void IndexModifier::setUseCompoundFile(bool useCompoundFile) {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
-	if (indexWriter != NULL) 
+	if (indexWriter != nullptr) 
 		indexWriter->setUseCompoundFile(useCompoundFile);
 	this->useCompoundFile = useCompoundFile;
 }
@@ -150,7 +150,7 @@ bool IndexModifier::getUseCompoundFile() {
 void IndexModifier::setMaxFieldLength(int32_t maxFieldLength) {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
-	if (indexWriter != NULL)
+	if (indexWriter != nullptr)
 		indexWriter->setMaxFieldLength(maxFieldLength);
 	this->maxFieldLength = maxFieldLength;
 }
@@ -165,7 +165,7 @@ int32_t IndexModifier::getMaxFieldLength() {
 void IndexModifier::setMaxBufferedDocs(int32_t maxBufferedDocs) {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
-	if (indexWriter != NULL)
+	if (indexWriter != nullptr)
 		indexWriter->setMaxBufferedDocs(maxBufferedDocs);
 	this->maxBufferedDocs = maxBufferedDocs;
 }
@@ -179,7 +179,7 @@ int32_t IndexModifier::getMaxBufferedDocs() {
 void IndexModifier::setMergeFactor(int32_t mergeFactor) {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
-	if (indexWriter != NULL)
+	if (indexWriter != nullptr)
 		indexWriter->setMergeFactor(mergeFactor);
 	this->mergeFactor = mergeFactor;
 }
@@ -193,7 +193,7 @@ int32_t IndexModifier::getMergeFactor() {
 
 void IndexModifier::close() {
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
-	if (indexWriter != NULL) {
+	if (indexWriter != nullptr) {
 		indexWriter->close();
 		_CLDELETE(indexWriter);
 	} else {
@@ -228,7 +228,7 @@ TermEnum* IndexModifier::terms(Term* term){
 	SCOPED_LOCK_MUTEX(directory->THIS_LOCK)
 	assureOpen();
 	createIndexReader();
-	if ( term != NULL )
+	if ( term != nullptr )
 		return indexReader->terms(term);
 	else
 		return indexReader->terms();

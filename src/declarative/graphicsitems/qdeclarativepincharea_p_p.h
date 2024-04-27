@@ -69,7 +69,7 @@ public:
     QDeclarativePinchAreaPrivate()
       : absorb(true), stealMouse(false), inPinch(false)
       , pinchRejected(false), pinchActivated(false), touchEventsActive(false)
-      , pinch(0), pinchStartDist(0), pinchStartScale(1.0)
+      , pinch(nullptr), pinchStartDist(0), pinchStartScale(1.0)
       , pinchLastScale(1.0), pinchStartRotation(0.0), pinchStartAngle(0.0)
       , pinchLastAngle(0.0), pinchRotation(0.0)
     {

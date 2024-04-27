@@ -181,106 +181,106 @@ static struct {
     int no;
     QString *alias;
 } cmds[] = {
-    { "a", CMD_A, 0 },
-    { "abstract", CMD_ABSTRACT, 0 },
-    { "annotatedlist", CMD_ANNOTATEDLIST, 0 },
-    { "badcode", CMD_BADCODE, 0 },
-    { "basename", CMD_BASENAME, 0 }, // ### don't document for now
-    { "bold", CMD_BOLD, 0 },
-    { "brief", CMD_BRIEF, 0 },
-    { "c", CMD_C, 0 },
-    { "caption", CMD_CAPTION, 0 },
-    { "chapter", CMD_CHAPTER, 0 },
-    { "code", CMD_CODE, 0 },
-    { "codeline", CMD_CODELINE, 0},
-    { "div", CMD_DIV, 0 },
-    { "dots", CMD_DOTS, 0 },
-    { "else", CMD_ELSE, 0 },
-    { "endabstract", CMD_ENDABSTRACT, 0 },
-    { "endchapter", CMD_ENDCHAPTER, 0 },
-    { "endcode", CMD_ENDCODE, 0 },
-    { "enddiv", CMD_ENDDIV, 0 },
-    { "endfootnote", CMD_ENDFOOTNOTE, 0 },
-    { "endif", CMD_ENDIF, 0 },
-    { "endlegalese", CMD_ENDLEGALESE, 0 },
-    { "endlink", CMD_ENDLINK, 0 },
-    { "endlist", CMD_ENDLIST, 0 },
-    { "endomit", CMD_ENDOMIT, 0 },
-    { "endpart", CMD_ENDPART, 0 },
-    { "endquotation", CMD_ENDQUOTATION, 0 },
-    { "endraw", CMD_ENDRAW, 0 },
-    { "endsection1", CMD_ENDSECTION1, 0 },  // ### don't document for now
-    { "endsection2", CMD_ENDSECTION2, 0 },  // ### don't document for now
-    { "endsection3", CMD_ENDSECTION3, 0 },  // ### don't document for now
-    { "endsection4", CMD_ENDSECTION4, 0 },  // ### don't document for now
-    { "endsidebar", CMD_ENDSIDEBAR, 0 },
-    { "endtable", CMD_ENDTABLE, 0 },
-    { "expire", CMD_EXPIRE, 0 },
-    { "footnote", CMD_FOOTNOTE, 0 },
-    { "generatelist", CMD_GENERATELIST, 0 },
-    { "granularity", CMD_GRANULARITY, 0 }, // ### don't document for now
-    { "header", CMD_HEADER, 0 },
-    { "i", CMD_I, 0 },
-    { "if", CMD_IF, 0 },
-    { "image", CMD_IMAGE, 0 },
-    { "include", CMD_INCLUDE, 0 },
-    { "inlineimage", CMD_INLINEIMAGE, 0 },
-    { "index", CMD_INDEX, 0 }, // ### don't document for now
-    { "keyword", CMD_KEYWORD, 0 },
-    { "l", CMD_L, 0 },
-    { "legalese", CMD_LEGALESE, 0 },
-    { "link", CMD_LINK, 0 },
-    { "list", CMD_LIST, 0 },
-    { "meta", CMD_META, 0 },
-    { "newcode", CMD_NEWCODE, 0 },
-    { "o", CMD_O, 0 },
-    { "oldcode", CMD_OLDCODE, 0 },
-    { "omit", CMD_OMIT, 0 },
-    { "omitvalue", CMD_OMITVALUE, 0 },
-    { "overload", CMD_OVERLOAD, 0 },
-    { "part", CMD_PART, 0 },
-    { "printline", CMD_PRINTLINE, 0 },
-    { "printto", CMD_PRINTTO, 0 },
-    { "printuntil", CMD_PRINTUNTIL, 0 },
-    { "quotation", CMD_QUOTATION, 0 },
-    { "quotefile", CMD_QUOTEFILE, 0 },
-    { "quotefromfile", CMD_QUOTEFROMFILE, 0 },
-    { "quotefunction", CMD_QUOTEFUNCTION, 0 }, // ### don't document for now
-    { "raw", CMD_RAW, 0 },
-    { "row", CMD_ROW, 0 },
-    { "sa", CMD_SA, 0 },
-    { "section1", CMD_SECTION1, 0 },
-    { "section2", CMD_SECTION2, 0 },
-    { "section3", CMD_SECTION3, 0 },
-    { "section4", CMD_SECTION4, 0 },
-    { "sidebar", CMD_SIDEBAR, 0 }, // ### don't document for now
-    { "sincelist", CMD_SINCELIST, 0 },
-    { "skipline", CMD_SKIPLINE, 0 },
-    { "skipto", CMD_SKIPTO, 0 },
-    { "skipuntil", CMD_SKIPUNTIL, 0 },
-    { "snippet", CMD_SNIPPET, 0 },
-    { "span", CMD_SPAN, 0 },
-    { "sub", CMD_SUB, 0 },
-    { "sup", CMD_SUP, 0 },
-    { "table", CMD_TABLE, 0 },
-    { "tableofcontents", CMD_TABLEOFCONTENTS, 0 },
-    { "target", CMD_TARGET, 0 },
-    { "tt", CMD_TT, 0 },
-    { "underline", CMD_UNDERLINE, 0 },
-    { "unicode", CMD_UNICODE, 0 },
-    { "value", CMD_VALUE, 0 },
-    { "warning", CMD_WARNING, 0 },
-    { "qml", CMD_QML, 0 },
-    { "endqml", CMD_ENDQML, 0 },
-    { "cpp", CMD_CPP, 0 },
-    { "endcpp", CMD_ENDCPP, 0 },
-    { "qmltext", CMD_QMLTEXT, 0 },
-    { "endqmltext", CMD_ENDQMLTEXT, 0 },
-    { "cpptext", CMD_CPPTEXT, 0 },
-    { "endcpptext", CMD_ENDCPPTEXT, 0 },
-    { "js", CMD_JS, 0 },
-    { "endjs", CMD_ENDJS, 0 },
-    { 0, 0, 0 }
+    { "a", CMD_A, nullptr },
+    { "abstract", CMD_ABSTRACT, nullptr },
+    { "annotatedlist", CMD_ANNOTATEDLIST, nullptr },
+    { "badcode", CMD_BADCODE, nullptr },
+    { "basename", CMD_BASENAME, nullptr }, // ### don't document for now
+    { "bold", CMD_BOLD, nullptr },
+    { "brief", CMD_BRIEF, nullptr },
+    { "c", CMD_C, nullptr },
+    { "caption", CMD_CAPTION, nullptr },
+    { "chapter", CMD_CHAPTER, nullptr },
+    { "code", CMD_CODE, nullptr },
+    { "codeline", CMD_CODELINE, nullptr},
+    { "div", CMD_DIV, nullptr },
+    { "dots", CMD_DOTS, nullptr },
+    { "else", CMD_ELSE, nullptr },
+    { "endabstract", CMD_ENDABSTRACT, nullptr },
+    { "endchapter", CMD_ENDCHAPTER, nullptr },
+    { "endcode", CMD_ENDCODE, nullptr },
+    { "enddiv", CMD_ENDDIV, nullptr },
+    { "endfootnote", CMD_ENDFOOTNOTE, nullptr },
+    { "endif", CMD_ENDIF, nullptr },
+    { "endlegalese", CMD_ENDLEGALESE, nullptr },
+    { "endlink", CMD_ENDLINK, nullptr },
+    { "endlist", CMD_ENDLIST, nullptr },
+    { "endomit", CMD_ENDOMIT, nullptr },
+    { "endpart", CMD_ENDPART, nullptr },
+    { "endquotation", CMD_ENDQUOTATION, nullptr },
+    { "endraw", CMD_ENDRAW, nullptr },
+    { "endsection1", CMD_ENDSECTION1, nullptr },  // ### don't document for now
+    { "endsection2", CMD_ENDSECTION2, nullptr },  // ### don't document for now
+    { "endsection3", CMD_ENDSECTION3, nullptr },  // ### don't document for now
+    { "endsection4", CMD_ENDSECTION4, nullptr },  // ### don't document for now
+    { "endsidebar", CMD_ENDSIDEBAR, nullptr },
+    { "endtable", CMD_ENDTABLE, nullptr },
+    { "expire", CMD_EXPIRE, nullptr },
+    { "footnote", CMD_FOOTNOTE, nullptr },
+    { "generatelist", CMD_GENERATELIST, nullptr },
+    { "granularity", CMD_GRANULARITY, nullptr }, // ### don't document for now
+    { "header", CMD_HEADER, nullptr },
+    { "i", CMD_I, nullptr },
+    { "if", CMD_IF, nullptr },
+    { "image", CMD_IMAGE, nullptr },
+    { "include", CMD_INCLUDE, nullptr },
+    { "inlineimage", CMD_INLINEIMAGE, nullptr },
+    { "index", CMD_INDEX, nullptr }, // ### don't document for now
+    { "keyword", CMD_KEYWORD, nullptr },
+    { "l", CMD_L, nullptr },
+    { "legalese", CMD_LEGALESE, nullptr },
+    { "link", CMD_LINK, nullptr },
+    { "list", CMD_LIST, nullptr },
+    { "meta", CMD_META, nullptr },
+    { "newcode", CMD_NEWCODE, nullptr },
+    { "o", CMD_O, nullptr },
+    { "oldcode", CMD_OLDCODE, nullptr },
+    { "omit", CMD_OMIT, nullptr },
+    { "omitvalue", CMD_OMITVALUE, nullptr },
+    { "overload", CMD_OVERLOAD, nullptr },
+    { "part", CMD_PART, nullptr },
+    { "printline", CMD_PRINTLINE, nullptr },
+    { "printto", CMD_PRINTTO, nullptr },
+    { "printuntil", CMD_PRINTUNTIL, nullptr },
+    { "quotation", CMD_QUOTATION, nullptr },
+    { "quotefile", CMD_QUOTEFILE, nullptr },
+    { "quotefromfile", CMD_QUOTEFROMFILE, nullptr },
+    { "quotefunction", CMD_QUOTEFUNCTION, nullptr }, // ### don't document for now
+    { "raw", CMD_RAW, nullptr },
+    { "row", CMD_ROW, nullptr },
+    { "sa", CMD_SA, nullptr },
+    { "section1", CMD_SECTION1, nullptr },
+    { "section2", CMD_SECTION2, nullptr },
+    { "section3", CMD_SECTION3, nullptr },
+    { "section4", CMD_SECTION4, nullptr },
+    { "sidebar", CMD_SIDEBAR, nullptr }, // ### don't document for now
+    { "sincelist", CMD_SINCELIST, nullptr },
+    { "skipline", CMD_SKIPLINE, nullptr },
+    { "skipto", CMD_SKIPTO, nullptr },
+    { "skipuntil", CMD_SKIPUNTIL, nullptr },
+    { "snippet", CMD_SNIPPET, nullptr },
+    { "span", CMD_SPAN, nullptr },
+    { "sub", CMD_SUB, nullptr },
+    { "sup", CMD_SUP, nullptr },
+    { "table", CMD_TABLE, nullptr },
+    { "tableofcontents", CMD_TABLEOFCONTENTS, nullptr },
+    { "target", CMD_TARGET, nullptr },
+    { "tt", CMD_TT, nullptr },
+    { "underline", CMD_UNDERLINE, nullptr },
+    { "unicode", CMD_UNICODE, nullptr },
+    { "value", CMD_VALUE, nullptr },
+    { "warning", CMD_WARNING, nullptr },
+    { "qml", CMD_QML, nullptr },
+    { "endqml", CMD_ENDQML, nullptr },
+    { "cpp", CMD_CPP, nullptr },
+    { "endcpp", CMD_ENDCPP, nullptr },
+    { "qmltext", CMD_QMLTEXT, nullptr },
+    { "endqmltext", CMD_ENDQMLTEXT, nullptr },
+    { "cpptext", CMD_CPPTEXT, nullptr },
+    { "endcpptext", CMD_ENDCPPTEXT, nullptr },
+    { "js", CMD_JS, nullptr },
+    { "endjs", CMD_ENDJS, nullptr },
+    { nullptr, 0, nullptr }
 };
 
 typedef QHash<QString, int> QHash_QString_int;
@@ -361,7 +361,7 @@ DocPrivate::DocPrivate(const Location& start,
       src(source),
       hasLegalese(false),
       hasSectioningUnits(false),
-      extra(0)
+      extra(nullptr)
 {
     // nothing.
 }
@@ -378,7 +378,7 @@ void DocPrivate::addAlso(const Text& also)
 
 void DocPrivate::constructExtra()
 {
-    if (extra == 0)
+    if (extra == nullptr)
         extra = new DocPrivateExtra;
 }
 
@@ -547,8 +547,8 @@ void DocParser::parse(const QString& source,
     openedCommands.push(CMD_OMIT);
     quoter.reset();
 
-    CodeMarker *marker = 0;
-    Atom *currentLinkAtom = 0;
+    CodeMarker *marker = nullptr;
+    Atom *currentLinkAtom = nullptr;
     QString p1, p2;
     QStack<bool> preprocessorSkipping;
     int numPreprocessorSkipping = 0;
@@ -619,7 +619,7 @@ void DocParser::parse(const QString& source,
                         enterPara();
                         p1 = untabifyEtc(getArgument(true));
                         marker = CodeMarker::markerForCode(p1);
-                        append(Atom::C, marker->markedUpCode(p1, 0, location()));
+                        append(Atom::C, marker->markedUpCode(p1, nullptr, location()));
                         break;
                     case CMD_CAPTION:
                         leavePara();
@@ -630,7 +630,7 @@ void DocParser::parse(const QString& source,
                         break;
                     case CMD_CODE:
                         leavePara();
-                        append(Atom::Code, getCode(CMD_CODE, 0));
+                        append(Atom::Code, getCode(CMD_CODE, nullptr));
                         break;
                     case CMD_QML:
                         leavePara();
@@ -1391,7 +1391,7 @@ void DocParser::parse(const QString& source,
                                           priv->text.lastAtom()).toString();
                             currentLinkAtom->appendString(suffix);
                         }
-                        currentLinkAtom = 0;
+                        currentLinkAtom = nullptr;
                     }
                     pendingFormats.erase(f);
                 }
@@ -1556,7 +1556,7 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet,
 {
     QSet<QString> commandSet = metaCommandSet;
     int i = 0;
-    while (cmds[i].english != 0) {
+    while (cmds[i].english != nullptr) {
         commandSet.insert(*cmds[i].alias);
         i++;
     }
@@ -1617,17 +1617,17 @@ void DocParser::insertBaseName(const QString &baseName)
     }
     else {
         Atom *atom = priv->text.firstAtom();
-        Atom *sectionLeft = 0;
+        Atom *sectionLeft = nullptr;
 
         int delta = currentSection - priv->extra->section;
 
-        while (atom != 0) {
+        while (atom != nullptr) {
             if (atom->type() == Atom::SectionLeft &&
                  atom->string().toInt() == delta)
                 sectionLeft = atom;
             atom = atom->next();
         }
-        if (sectionLeft != 0)
+        if (sectionLeft != nullptr)
             (void) new Atom(sectionLeft, Atom::BaseName, baseName);
     }
 }
@@ -2446,7 +2446,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker)
     code = unindent(minIndent, code);
     if (!marker)
         marker = CodeMarker::markerForCode(code);
-    return marker->markedUpCode(code, 0, location());
+    return marker->markedUpCode(code, nullptr, location());
 }
 
 /*!
@@ -2696,7 +2696,7 @@ Doc::Doc(const Location& start_loc,
 }
 
 Doc::Doc(const Doc& doc)
-    : priv(0)
+    : priv(nullptr)
 {
     operator=(doc);
 }
@@ -2781,29 +2781,29 @@ void Doc::setBody(const Text &text)
 const Location &Doc::location() const
 {
     static const Location dummy;
-    return priv == 0 ? dummy : priv->start_loc;
+    return priv == nullptr ? dummy : priv->start_loc;
 }
 
 const QString &Doc::source() const
 {
     static QString null;
-    return priv == 0 ? null : priv->src;
+    return priv == nullptr ? null : priv->src;
 }
 
 bool Doc::isEmpty() const
 {
-    return priv == 0 || priv->src.isEmpty();
+    return priv == nullptr || priv->src.isEmpty();
 }
 
 const Text& Doc::body() const
 {
     static const Text dummy;
-    return priv == 0 ? dummy : priv->text;
+    return priv == nullptr ? dummy : priv->text;
 }
 
 Text Doc::briefText(bool inclusive) const
 {
-    return body().subText(Atom::BriefLeft, Atom::BriefRight, 0, inclusive);
+    return body().subText(Atom::BriefLeft, Atom::BriefRight, nullptr, inclusive);
 }
 
 Text Doc::trimmedBriefText(const QString &className) const
@@ -2899,7 +2899,7 @@ Text Doc::trimmedBriefText(const QString &className) const
 
 Text Doc::legaleseText() const
 {
-    if (priv == 0 || !priv->hasLegalese)
+    if (priv == nullptr || !priv->hasLegalese)
         return Text();
     else
         return body().subText(Atom::LegaleseLeft, Atom::LegaleseRight);
@@ -2908,7 +2908,7 @@ Text Doc::legaleseText() const
 const QString& Doc::baseName() const
 {
     static QString null;
-    if (priv == 0 || priv->extra == 0) {
+    if (priv == nullptr || priv->extra == nullptr) {
         return null;
     }
     else {
@@ -2918,7 +2918,7 @@ const QString& Doc::baseName() const
 
 Doc::Sections Doc::granularity() const
 {
-    if (priv == 0 || priv->extra == 0) {
+    if (priv == nullptr || priv->extra == nullptr) {
         return DocPrivateExtra().granularity;
     }
     else {
@@ -2928,32 +2928,32 @@ Doc::Sections Doc::granularity() const
 
 const QSet<QString> &Doc::parameterNames() const
 {
-    return priv == 0 ? *null_Set_QString() : priv->params;
+    return priv == nullptr ? *null_Set_QString() : priv->params;
 }
 
 const QStringList &Doc::enumItemNames() const
 {
-    return priv == 0 ? *null_QStringList() : priv->enumItemList;
+    return priv == nullptr ? *null_QStringList() : priv->enumItemList;
 }
 
 const QStringList &Doc::omitEnumItemNames() const
 {
-    return priv == 0 ? *null_QStringList() : priv->omitEnumItemList;
+    return priv == nullptr ? *null_QStringList() : priv->omitEnumItemList;
 }
 
 const QSet<QString> &Doc::metaCommandsUsed() const
 {
-    return priv == 0 ? *null_Set_QString() : priv->metacommandsUsed;
+    return priv == nullptr ? *null_Set_QString() : priv->metacommandsUsed;
 }
 
 QStringList Doc::metaCommandArgs(const QString& metacommand) const
 {
-    return priv == 0 ? QStringList() : priv->metaCommandMap.value(metacommand);
+    return priv == nullptr ? QStringList() : priv->metaCommandMap.value(metacommand);
 }
 
 const QList<Text> &Doc::alsoList() const
 {
-    return priv == 0 ? *null_QList_Text() : priv->alsoList;
+    return priv == nullptr ? *null_QList_Text() : priv->alsoList;
 }
 
 bool Doc::hasTableOfContents() const
@@ -3106,7 +3106,7 @@ void Doc::terminate()
     int i = 0;
     while (cmds[i].english) {
         delete cmds[i].alias;
-        cmds[i].alias = 0;
+        cmds[i].alias = nullptr;
         ++i;
     }
 }
@@ -3184,7 +3184,7 @@ CodeMarker *Doc::quoteFromFile(const Location &location,
     CodeMarker *marker = CodeMarker::markerForFileName(fileName);
     quoter.quoteFromFile(userFriendlyFilePath,
                          code,
-                         marker->markedUpCode(code, 0, location));
+                         marker->markedUpCode(code, nullptr, location));
     return marker;
 }
 

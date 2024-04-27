@@ -468,7 +468,7 @@ public:
     Constructs a QX11EmbedWidget object with the given \a parent.
 */
 QX11EmbedWidget::QX11EmbedWidget(QWidget *parent)
-    : QWidget(*new QX11EmbedWidgetPrivate, parent, 0)
+    : QWidget(*new QX11EmbedWidgetPrivate, parent, nullptr)
 {
     XSetErrorHandler(x11ErrorHandler);
 
@@ -564,7 +564,7 @@ void QX11EmbedWidget::embedInto(WId id)
     default:
         break;
     }
-    QTLWExtra* x = d->extra ? d->extra->topextra : 0;
+    QTLWExtra* x = d->extra ? d->extra->topextra : nullptr;
     if (x)
         x->frameStrut.setCoords(0, 0, 0, 0);
     d->data.fstrut_dirty = false;
@@ -606,7 +606,7 @@ QWidget *QX11EmbedWidgetPrivate::getFocusWidget(FocusWidgets fw)
 */
 QX11EmbedWidget *QX11EmbedWidgetPrivate::xEmbedWidget(QObject *o) const
 {
-    QX11EmbedWidget *xec = 0;
+    QX11EmbedWidget *xec = nullptr;
 
     // Check the widget itself, then its parents, and find the first
     // QX11EmbedWidget.
@@ -614,7 +614,7 @@ QX11EmbedWidget *QX11EmbedWidgetPrivate::xEmbedWidget(QObject *o) const
         if ((xec = qobject_cast<QX11EmbedWidget *>(o)))
             return xec;
     } while ((o = o->parent()));
-    return 0;
+    return nullptr;
 }
 
 /*! \internal
@@ -663,7 +663,7 @@ void QX11EmbedWidgetPrivate::clearFocus()
     if (!q->window()->hasFocus())
         q->window()->setFocus(Qt::OtherFocusReason);
 
-    currentFocus = 0;
+    currentFocus = nullptr;
 }
 
 /*! \internal
@@ -825,7 +825,7 @@ bool QX11EmbedWidget::x11Event(XEvent *event)
             int actual_format_return;
             unsigned long nitems_return;
             unsigned long bytes_after_return;
-            unsigned char *prop_return = 0;
+            unsigned char *prop_return = nullptr;
             if (XGetWindowProperty(x11Info().display(), internalWinId(), ATOM(_XEMBED_INFO), 0, 2,
                                    false, ATOM(_XEMBED_INFO), &actual_type_return,
                                    &actual_format_return, &nitems_return,
@@ -872,7 +872,7 @@ bool QX11EmbedWidget::x11Event(XEvent *event)
                 // when receive XEMBED_FOCUS_IN.
                 if (isActiveWindow()) {
                     if (!qApp->activePopupWidget())
-                        QApplication::setActiveWindow(0);
+                        QApplication::setActiveWindow(nullptr);
                 } else {
                     QEvent ev(QEvent::WindowDeactivate);
                     QApplication::sendEvent(this, &ev);
@@ -1017,7 +1017,7 @@ public:
     {
         lastError = QX11EmbedContainer::Unknown;
         client = 0;
-        focusProxy = 0;
+        focusProxy = nullptr;
         clientIsXEmbed = false;
         xgrab = false;
     }
@@ -1050,13 +1050,13 @@ public:
     static QX11EmbedContainer *activeContainer;
 };
 
-QX11EmbedContainer *QX11EmbedContainerPrivate::activeContainer = 0;
+QX11EmbedContainer *QX11EmbedContainerPrivate::activeContainer = nullptr;
 
 /*!
     Creates a QX11EmbedContainer object with the given \a parent.
 */
 QX11EmbedContainer::QX11EmbedContainer(QWidget *parent)
-    : QWidget(*new QX11EmbedContainerPrivate, parent, 0)
+    : QWidget(*new QX11EmbedContainerPrivate, parent, nullptr)
 {
     Q_D(QX11EmbedContainer);
     XSetErrorHandler(x11ErrorHandler);
@@ -1194,7 +1194,7 @@ void QX11EmbedContainer::embedClient(WId id)
     WId thisId = internalWinId();
     Window rootReturn;
     Window parentReturn;
-    Window *childrenReturn = 0;
+    Window *childrenReturn = nullptr;
     unsigned int nchildrenReturn;
     do {
         if (XQueryTree(x11Info().display(), thisId, &rootReturn,
@@ -1204,7 +1204,7 @@ void QX11EmbedContainer::embedClient(WId id)
         }
         if (childrenReturn) {
             XFree(childrenReturn);
-            childrenReturn = 0;
+            childrenReturn = nullptr;
         }
 
         thisId = parentReturn;
@@ -1363,7 +1363,7 @@ bool QX11EmbedContainer::eventFilter(QObject *o, QEvent *event)
 	// focus.
 	if (o == this && d->client) {
             if (!d->isEmbedded()) {
-                d->activeContainer = 0;
+                d->activeContainer = nullptr;
                 if (isActiveWindow())
                     d->moveInputToProxy();
             }
@@ -1659,7 +1659,7 @@ void QX11EmbedContainerPrivate::acceptClient(WId window)
     int actual_format_return;
     unsigned long nitems_return = 0;
     unsigned long bytes_after_return;
-    unsigned char *prop_return = 0;
+    unsigned char *prop_return = nullptr;
     unsigned int clientversion = 0;
 
     // Add this client to our saveset, so if we crash, the client window

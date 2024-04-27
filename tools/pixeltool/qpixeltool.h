@@ -51,7 +51,7 @@ class QPixelTool : public QWidget
 {
     Q_OBJECT
 public:
-    QPixelTool(QWidget *parent = 0);
+    QPixelTool(QWidget *parent = nullptr);
     ~QPixelTool();
 
     void timerEvent(QTimerEvent *event);

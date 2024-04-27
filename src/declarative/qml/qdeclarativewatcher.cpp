@@ -63,12 +63,12 @@ public:
                   QObject *object,
                   int debugId,
                   const QMetaProperty &prop,
-                  QDeclarativeWatcher *parent = 0);
+                  QDeclarativeWatcher *parent = nullptr);
 
     QDeclarativeWatchProxy(int id,
                   QDeclarativeExpression *exp,
                   int debugId,
-                  QDeclarativeWatcher *parent = 0);
+                  QDeclarativeWatcher *parent = nullptr);
 
 public slots:
     void notifyValueChanged();
@@ -88,7 +88,7 @@ QDeclarativeWatchProxy::QDeclarativeWatchProxy(int id,
                              QDeclarativeExpression *exp,
                              int debugId,
                              QDeclarativeWatcher *parent)
-: QObject(parent), m_id(id), m_watch(parent), m_object(0), m_debugId(debugId), m_expr(exp)
+: QObject(parent), m_id(id), m_watch(parent), m_object(nullptr), m_debugId(debugId), m_expr(exp)
 {
     QObject::connect(m_expr, SIGNAL(valueChanged()), this, SLOT(notifyValueChanged()));
 }
@@ -98,7 +98,7 @@ QDeclarativeWatchProxy::QDeclarativeWatchProxy(int id,
                              int debugId,
                              const QMetaProperty &prop,
                              QDeclarativeWatcher *parent)
-: QObject(parent), m_id(id), m_watch(parent), m_object(object), m_debugId(debugId), m_property(prop), m_expr(0)
+: QObject(parent), m_id(id), m_watch(parent), m_object(object), m_debugId(debugId), m_property(prop), m_expr(nullptr)
 {
     static int refreshIdx = -1;
     if(refreshIdx == -1)

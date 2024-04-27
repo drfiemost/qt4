@@ -83,7 +83,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeText : public QDeclarativeImplici
     Q_PROPERTY(LineHeightMode lineHeightMode READ lineHeightMode WRITE setLineHeightMode NOTIFY lineHeightModeChanged REVISION 1)
 
 public:
-    QDeclarativeText(QDeclarativeItem *parent=0);
+    QDeclarativeText(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeText();
 
     enum HAlignment { AlignLeft = Qt::AlignLeft,

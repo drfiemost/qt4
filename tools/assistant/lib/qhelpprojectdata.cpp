@@ -195,7 +195,7 @@ void QHelpProjectDataPrivate::readFilterSection()
 void QHelpProjectDataPrivate::readTOC()
 {
     QStack<QHelpDataContentItem*> contentStack;
-    QHelpDataContentItem *itm = 0;
+    QHelpDataContentItem *itm = nullptr;
     while (!atEnd()) {
         readNext();
         if (isStartElement()) {
@@ -203,7 +203,7 @@ void QHelpProjectDataPrivate::readTOC()
                 QString title = attributes().value(QLatin1String("title")).toString();
                 QString ref = attributes().value(QLatin1String("ref")).toString();
                 if (contentStack.isEmpty()) {
-                    itm = new QHelpDataContentItem(0, title, ref);
+                    itm = new QHelpDataContentItem(nullptr, title, ref);
                     filterSectionList.last().addContent(itm);
                 } else {
                     itm = new QHelpDataContentItem(contentStack.top(), title, ref);

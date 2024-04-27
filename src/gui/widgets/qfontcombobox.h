@@ -64,7 +64,7 @@ class Q_GUI_EXPORT QFontComboBox : public QComboBox
     Q_ENUMS(FontSelection)
 
 public:
-    explicit QFontComboBox(QWidget *parent = 0);
+    explicit QFontComboBox(QWidget *parent = nullptr);
     ~QFontComboBox();
 
     void setWritingSystem(QFontDatabase::WritingSystem);

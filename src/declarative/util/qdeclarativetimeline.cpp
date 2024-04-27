@@ -58,7 +58,7 @@ struct Update {
     Update(QDeclarativeTimeLineValue *_g, qreal _v)
         : g(_g), v(_v) {}
     Update(const QDeclarativeTimeLineCallback &_e)
-        : g(0), v(0), e(_e) {}
+        : g(nullptr), v(0), e(_e) {}
 
     QDeclarativeTimeLineValue *g;
     qreal v;
@@ -134,7 +134,7 @@ struct QDeclarativeTimeLinePrivate
 };
 
 QDeclarativeTimeLinePrivate::QDeclarativeTimeLinePrivate(QDeclarativeTimeLine *parent)
-: length(0), syncPoint(0), q(parent), clockRunning(false), prevTime(0), order(0), syncMode(QDeclarativeTimeLine::LocalSync), syncAdj(0), updateQueue(0)
+: length(0), syncPoint(0), q(parent), clockRunning(false), prevTime(0), order(0), syncMode(QDeclarativeTimeLine::LocalSync), syncAdj(0), updateQueue(nullptr)
 {
 }
 
@@ -327,9 +327,9 @@ QDeclarativeTimeLine::~QDeclarativeTimeLine()
     for (QDeclarativeTimeLinePrivate::Ops::Iterator iter = d->ops.begin();
             iter != d->ops.end();
             ++iter)
-        iter.key()->_t = 0;
+        iter.key()->_t = nullptr;
 
-    delete d; d = 0;
+    delete d; d = nullptr;
 }
 
 /*!
@@ -512,7 +512,7 @@ void QDeclarativeTimeLine::reset(QDeclarativeTimeLineValue &timeLineValue)
         return;
     }
     remove(&timeLineValue);
-    timeLineValue._t = 0;
+    timeLineValue._t = nullptr;
 }
 
 int QDeclarativeTimeLine::duration() const
@@ -664,7 +664,7 @@ void QDeclarativeTimeLine::complete()
 void QDeclarativeTimeLine::clear()
 {
     for (QDeclarativeTimeLinePrivate::Ops::ConstIterator iter = d->ops.begin(); iter != d->ops.end(); ++iter)
-        iter.key()->_t = 0;
+        iter.key()->_t = nullptr;
     d->ops.clear();
     d->length = 0;
     d->syncPoint = 0;
@@ -793,7 +793,7 @@ int QDeclarativeTimeLinePrivate::advance(int t)
 
             if (tl.ops.isEmpty()) {
                 iter = ops.erase(iter);
-                v->_t = 0;
+                v->_t = nullptr;
             } else {
                 if (tl.ops.first().type == Op::Pause && pauseTime != 0) {
                     int opPauseTime = tl.ops.first().length - tl.consumedOpLength;
@@ -819,7 +819,7 @@ int QDeclarativeTimeLinePrivate::advance(int t)
                 v.e.d0(v.e.d1);
             }
         }
-        updateQueue = 0;
+        updateQueue = nullptr;
     } while(t);
 
     return pauseTime;
@@ -906,7 +906,7 @@ void QDeclarativeTimeLine::remove(QDeclarativeTimeLineObject *v)
 
 
 QDeclarativeTimeLineObject::QDeclarativeTimeLineObject()
-: _t(0)
+: _t(nullptr)
 {
 }
 
@@ -914,12 +914,12 @@ QDeclarativeTimeLineObject::~QDeclarativeTimeLineObject()
 {
     if (_t) {
         _t->remove(this);
-        _t = 0;
+        _t = nullptr;
     }
 }
 
 QDeclarativeTimeLineCallback::QDeclarativeTimeLineCallback()
-: d0(0), d1(0), d2(0)
+: d0(nullptr), d1(nullptr), d2(nullptr)
 {
 }
 

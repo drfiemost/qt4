@@ -39,11 +39,11 @@ TermInfosReader::TermInfosReader(Directory* dir, const QString& seg,
     //Initialize the name of the segment
     segment    =  seg;
     //There are no indexTerms yet
-    indexTerms    = NULL;
+    indexTerms    = nullptr;
     //So there are no indexInfos
-    indexInfos    = NULL;
+    indexInfos    = nullptr;
     //So there are no indexPointers
-    indexPointers = NULL; 	
+    indexPointers = nullptr; 	
     //Create a filname fo a Term Info File
     QString tisFile = Misc::segmentname(segment, QLatin1String(".tis"));
     QString tiiFile = Misc::segmentname(segment, QLatin1String(".tii"));
@@ -100,7 +100,7 @@ void TermInfosReader::close()
     //Delete the arrays
     _CLDELETE_ARRAY(indexPointers);
 
-    if (origEnum != NULL) {
+    if (origEnum != nullptr) {
         origEnum->close();
 
         //Get a pointer to IndexInput used by the enumeration but 
@@ -114,7 +114,7 @@ void TermInfosReader::close()
         _CLDELETE(is);	
     }
 
-    if (indexEnum != NULL){
+    if (indexEnum != nullptr){
         indexEnum->close();
 
         //Get a pointer to IndexInput used by the enumeration but 
@@ -146,12 +146,12 @@ Term* TermInfosReader::get(const int32_t position)
 
     //Check if the size is 0 because then there are no terms
     if (_size == 0) 
-        return NULL;
+        return nullptr;
 
     SegmentTermEnum* enumerator = getEnum();
 
-    if (enumerator != NULL //an enumeration exists
-        && enumerator->term(false) != NULL // term is at or past current
+    if (enumerator != nullptr //an enumeration exists
+        && enumerator->term(false) != nullptr // term is at or past current
         && position >= enumerator->position
         && position < (enumerator->position + enumerator->indexInterval)) {
         return scanEnum(position);			  // can avoid seek
@@ -170,7 +170,7 @@ Term* TermInfosReader::get(const int32_t position)
 SegmentTermEnum* TermInfosReader::getEnum()
 {
     SegmentTermEnum* termEnum = enumerators.get();
-    if (termEnum == NULL) {
+    if (termEnum == nullptr) {
         termEnum = terms();
         enumerators.set(termEnum);
     }
@@ -185,7 +185,7 @@ TermInfo* TermInfosReader::get(const Term* term)
 
     //If the size of the enumeration is 0 then no Terms have been read
     if (_size == 0)
-        return NULL;
+        return nullptr;
 
     ensureIndexIsRead();
 
@@ -194,10 +194,10 @@ TermInfo* TermInfosReader::get(const Term* term)
 
     // optimize sequential access: first try scanning cached enumerator w/o seeking
     // if the current term of the enumeration enumerator is not at the end
-    if (enumerator->term(false) != NULL
+    if (enumerator->term(false) != nullptr
         // AND there exists a previous current called prev and term is
         // positioned after this prev
-        && ((enumerator->prev != NULL && term->compareTo(enumerator->prev) > 0)
+        && ((enumerator->prev != nullptr && term->compareTo(enumerator->prev) > 0)
         // OR term is positioned at the same position as the current of
         // enumerator or at a higher position
         || term->compareTo(enumerator->term(false)) >= 0)) {
@@ -257,8 +257,8 @@ SegmentTermEnum* TermInfosReader::terms(const Term* term)
     //       enumerator != NULL
     //Post - An enumeration of terms starting at or after the named term has been returned
 
-    SegmentTermEnum* enumerator = NULL;
-    if (term != NULL) {
+    SegmentTermEnum* enumerator = nullptr;
+    if (term != nullptr) {
         //Seek enumerator to term; delete the new TermInfo that's returned.
         TermInfo* ti = get(term);
         _CLDELETE(ti);
@@ -289,7 +289,7 @@ void TermInfosReader::ensureIndexIsRead()
 
     SCOPED_LOCK_MUTEX(THIS_LOCK)
 
-    if ( indexTerms != NULL )
+    if ( indexTerms != nullptr )
         return;
 
     try {
@@ -407,13 +407,13 @@ TermInfo* TermInfosReader::scanEnum(const Term* term)
     enumerator->scanTo(term);
 
     //Check if the at the position the Term term can be found
-    if (enumerator->term(false) != NULL && term->equals(enumerator->term(false))) {
+    if (enumerator->term(false) != nullptr && term->equals(enumerator->term(false))) {
         //Return the TermInfo instance about term
         return enumerator->getTermInfo();
     }
 
     //term was not found so no TermInfo can be returned
-    return NULL;
+    return nullptr;
 }
 
 Term* TermInfosReader::scanEnum(const int32_t position)
@@ -432,7 +432,7 @@ Term* TermInfosReader::scanEnum(const int32_t position)
         //Move the current of enumerator to the next
         if (!enumerator->next()) {
             //If there is no next it means that the requested position was to big
-            return NULL;
+            return nullptr;
         }
     }
 

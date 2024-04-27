@@ -78,7 +78,7 @@ JSObject* EvalExecutable::compile(ExecState* exec, ScopeChainNode* scopeChainNod
     generator->generate();
     
     evalNode->destroyData();
-    return 0;
+    return nullptr;
 }
 
 JSObject* ProgramExecutable::checkSyntax(ExecState* exec)
@@ -88,7 +88,7 @@ JSObject* ProgramExecutable::checkSyntax(ExecState* exec)
     RefPtr<ProgramNode> programNode = exec->globalData().parser->parse<ProgramNode>(&exec->globalData(), exec->lexicalGlobalObject()->debugger(), exec, m_source, &errLine, &errMsg);
     if (!programNode)
         return Error::create(exec, SyntaxError, errMsg, errLine, m_source.provider()->asID(), m_source.provider()->url());
-    return 0;
+    return nullptr;
 }
 
 JSObject* ProgramExecutable::compile(ExecState* exec, ScopeChainNode* scopeChainNode)
@@ -109,13 +109,13 @@ JSObject* ProgramExecutable::compile(ExecState* exec, ScopeChainNode* scopeChain
     generator->generate();
 
     programNode->destroyData();
-    return 0;
+    return nullptr;
 }
 
 void FunctionExecutable::compile(ExecState*, ScopeChainNode* scopeChainNode)
 {
     JSGlobalData* globalData = scopeChainNode->globalData;
-    RefPtr<FunctionBodyNode> body = globalData->parser->parse<FunctionBodyNode>(globalData, 0, 0, m_source);
+    RefPtr<FunctionBodyNode> body = globalData->parser->parse<FunctionBodyNode>(globalData, nullptr, nullptr, m_source);
     if (m_forceUsesArguments)
         body->setUsesArguments();
     body->finishParsing(m_parameters, m_name);
@@ -180,7 +180,7 @@ void FunctionExecutable::markAggregate(MarkStack& markStack)
 
 ExceptionInfo* FunctionExecutable::reparseExceptionInfo(JSGlobalData* globalData, ScopeChainNode* scopeChainNode, CodeBlock* codeBlock)
 {
-    RefPtr<FunctionBodyNode> newFunctionBody = globalData->parser->parse<FunctionBodyNode>(globalData, 0, 0, m_source);
+    RefPtr<FunctionBodyNode> newFunctionBody = globalData->parser->parse<FunctionBodyNode>(globalData, nullptr, nullptr, m_source);
     if (m_forceUsesArguments)
         newFunctionBody->setUsesArguments();
     newFunctionBody->finishParsing(m_parameters, m_name);
@@ -202,14 +202,14 @@ ExceptionInfo* FunctionExecutable::reparseExceptionInfo(JSGlobalData* globalData
     ASSERT(newJITCode.size() == generatedJITCode().size());
 #endif
 
-    globalData->functionCodeBlockBeingReparsed = 0;
+    globalData->functionCodeBlockBeingReparsed = nullptr;
 
     return newCodeBlock->extractExceptionInfo();
 }
 
 ExceptionInfo* EvalExecutable::reparseExceptionInfo(JSGlobalData* globalData, ScopeChainNode* scopeChainNode, CodeBlock* codeBlock)
 {
-    RefPtr<EvalNode> newEvalBody = globalData->parser->parse<EvalNode>(globalData, 0, 0, m_source);
+    RefPtr<EvalNode> newEvalBody = globalData->parser->parse<EvalNode>(globalData, nullptr, nullptr, m_source);
 
     ScopeChain scopeChain(scopeChainNode);
     JSGlobalObject* globalObject = scopeChain.globalObject();
@@ -233,7 +233,7 @@ ExceptionInfo* EvalExecutable::reparseExceptionInfo(JSGlobalData* globalData, Sc
 void FunctionExecutable::recompile(ExecState*)
 {
     delete m_codeBlock;
-    m_codeBlock = 0;
+    m_codeBlock = nullptr;
     m_numParameters = NUM_PARAMETERS_NOT_COMPILED;
 #if ENABLE(JIT)
     m_jitCode = JITCode();
@@ -244,19 +244,19 @@ PassRefPtr<FunctionExecutable> FunctionExecutable::fromGlobalCode(const Identifi
 {
     RefPtr<ProgramNode> program = exec->globalData().parser->parse<ProgramNode>(&exec->globalData(), debugger, exec, source, errLine, errMsg);
     if (!program)
-        return 0;
+        return nullptr;
 
     StatementNode* exprStatement = program->singleStatement();
     ASSERT(exprStatement);
     ASSERT(exprStatement->isExprStatement());
     if (!exprStatement || !exprStatement->isExprStatement())
-        return 0;
+        return nullptr;
 
     ExpressionNode* funcExpr = static_cast<ExprStatementNode*>(exprStatement)->expr();
     ASSERT(funcExpr);
     ASSERT(funcExpr->isFuncExprNode());
     if (!funcExpr || !funcExpr->isFuncExprNode())
-        return 0;
+        return nullptr;
 
     FunctionBodyNode* body = static_cast<FuncExprNode*>(funcExpr)->body();
     ASSERT(body);

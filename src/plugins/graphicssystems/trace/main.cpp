@@ -61,7 +61,7 @@ QGraphicsSystem* QTraceGraphicsSystemPlugin::create(const QString& system)
     if (system.toLower() == QLatin1String("trace"))
         return new QTraceGraphicsSystem;
 
-    return 0;
+    return nullptr;
 }
 
 Q_EXPORT_PLUGIN2(trace, QTraceGraphicsSystemPlugin)

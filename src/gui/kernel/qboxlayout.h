@@ -64,7 +64,7 @@ public:
     enum Direction { LeftToRight, RightToLeft, TopToBottom, BottomToTop,
                      Down = TopToBottom, Up = BottomToTop };
 
-    explicit QBoxLayout(Direction, QWidget *parent = 0);
+    explicit QBoxLayout(Direction, QWidget *parent = nullptr);
 
     ~QBoxLayout();
 
@@ -74,7 +74,7 @@ public:
     void addSpacing(int size);
     void addStretch(int stretch = 0);
     void addSpacerItem(QSpacerItem *spacerItem);
-    void addWidget(QWidget *, int stretch = 0, Qt::Alignment alignment = 0);
+    void addWidget(QWidget *, int stretch = 0, Qt::Alignment alignment = nullptr);
     void addLayout(QLayout *layout, int stretch = 0);
     void addStrut(int);
     void addItem(QLayoutItem *);
@@ -82,7 +82,7 @@ public:
     void insertSpacing(int index, int size);
     void insertStretch(int index, int stretch = 0);
     void insertSpacerItem(int index, QSpacerItem *spacerItem);
-    void insertWidget(int index, QWidget *widget, int stretch = 0, Qt::Alignment alignment = 0);
+    void insertWidget(int index, QWidget *widget, int stretch = 0, Qt::Alignment alignment = nullptr);
     void insertLayout(int index, QLayout *layout, int stretch = 0);
 
     int spacing() const;

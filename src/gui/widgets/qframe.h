@@ -64,7 +64,7 @@ class Q_GUI_EXPORT QFrame : public QWidget
     Q_PROPERTY(QRect frameRect READ frameRect WRITE setFrameRect DESIGNABLE false)
 
 public:
-    explicit QFrame(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit QFrame(QWidget* parent = nullptr, Qt::WindowFlags f = nullptr);
     ~QFrame();
 
     int frameStyle() const;
@@ -115,7 +115,7 @@ protected:
     void drawFrame(QPainter *);
 
 protected:
-    QFrame(QFramePrivate &dd, QWidget* parent = 0, Qt::WindowFlags f = 0);
+    QFrame(QFramePrivate &dd, QWidget* parent = nullptr, Qt::WindowFlags f = nullptr);
 
 private:
     Q_DISABLE_COPY(QFrame)

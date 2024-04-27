@@ -257,7 +257,7 @@ int QAccessibleApplication::childAt(int x, int y) const
 QAccessible::Relation QAccessibleApplication::relationTo(int child, const
         QAccessibleInterface *other, int otherChild) const
 {
-    QObject *o = other ? other->object() : 0;
+    QObject *o = other ? other->object() : nullptr;
     if (!o)
         return Unrelated;
 
@@ -291,8 +291,8 @@ int QAccessibleApplication::navigate(RelationFlag relation, int entry,
     if (!target)
         return -1;
 
-    *target = 0;
-    QObject *targetObject = 0;
+    *target = nullptr;
+    QObject *targetObject = nullptr;
 
     switch (relation) {
     case Self:
@@ -353,7 +353,7 @@ int QAccessibleApplication::userActionCount(int) const
 bool QAccessibleApplication::doAction(int action, int child, const QVariantList &param)
 {
     if (action == 0 || action == 1) {
-        QWidget *w = 0;
+        QWidget *w = nullptr;
         w = QApplication::activeWindow();
         if (!w)
             w = topLevelWidgets().at(0);

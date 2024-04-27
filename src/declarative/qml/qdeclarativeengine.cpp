@@ -177,7 +177,7 @@ QT_BEGIN_NAMESPACE
 struct StaticQtMetaObject : public QObject
 {
     static const QMetaObject *get()
-        { return &static_cast<StaticQtMetaObject*> (0)->staticQtMetaObject; }
+        { return &static_cast<StaticQtMetaObject*> (nullptr)->staticQtMetaObject; }
 };
 
 static bool qt_QmlQtModule_registered = false;
@@ -348,11 +348,11 @@ the same object as is returned from the Qt.include() call.
 
 
 QDeclarativeEnginePrivate::QDeclarativeEnginePrivate(QDeclarativeEngine *e)
-: captureProperties(false), rootContext(0), isDebugging(false),
-  outputWarningsToStdErr(true), contextClass(0), sharedContext(0), sharedScope(0),
-  objectClass(0), valueTypeClass(0), globalClass(0), cleanup(0), erroredBindings(0),
-  inProgressCreations(0), scriptEngine(this), workerScriptEngine(0), componentAttached(0),
-  inBeginCreate(false), networkAccessManager(0), networkAccessManagerFactory(0),
+: captureProperties(false), rootContext(nullptr), isDebugging(false),
+  outputWarningsToStdErr(true), contextClass(nullptr), sharedContext(nullptr), sharedScope(nullptr),
+  objectClass(nullptr), valueTypeClass(nullptr), globalClass(nullptr), cleanup(nullptr), erroredBindings(nullptr),
+  inProgressCreations(0), scriptEngine(this), workerScriptEngine(nullptr), componentAttached(nullptr),
+  inBeginCreate(false), networkAccessManager(nullptr), networkAccessManagerFactory(nullptr),
   typeLoader(e), importDatabase(e), uniqueId(1)
 {
     if (!qt_QmlQtModule_registered) {
@@ -382,12 +382,12 @@ QUrl QDeclarativeScriptEngine::resolvedUrl(QScriptContext *context, const QUrl& 
 }
 
 QDeclarativeScriptEngine::QDeclarativeScriptEngine(QDeclarativeEnginePrivate *priv)
-: p(priv), sqlQueryClass(0), namedNodeMapClass(0), nodeListClass(0)
+: p(priv), sqlQueryClass(nullptr), namedNodeMapClass(nullptr), nodeListClass(nullptr)
 {
     // Note that all documentation for stuff put on the global object goes in
     // doc/src/declarative/globalobject.qdoc
 
-    bool mainthread = priv != 0;
+    bool mainthread = priv != nullptr;
 
     QScriptValue qtObject =
         newQMetaObject(StaticQtMetaObject::get());
@@ -492,25 +492,25 @@ QDeclarativeEnginePrivate::~QDeclarativeEnginePrivate()
         QDeclarativeCleanup *c = cleanup;
         cleanup = c->next;
         if (cleanup) cleanup->prev = &cleanup;
-        c->next = 0;
-        c->prev = 0;
+        c->next = nullptr;
+        c->prev = nullptr;
         c->clear();
     }
 
     delete rootContext;
-    rootContext = 0;
+    rootContext = nullptr;
     delete contextClass;
-    contextClass = 0;
+    contextClass = nullptr;
     delete objectClass;
-    objectClass = 0;
+    objectClass = nullptr;
     delete valueTypeClass;
-    valueTypeClass = 0;
+    valueTypeClass = nullptr;
     delete typeNameClass;
-    typeNameClass = 0;
+    typeNameClass = nullptr;
     delete listClass;
-    listClass = 0;
+    listClass = nullptr;
     delete globalClass;
-    globalClass = 0;
+    globalClass = nullptr;
 
     for(QHash<int, QDeclarativeCompiledData*>::ConstIterator iter = m_compositeTypes.constBegin(); iter != m_compositeTypes.constEnd(); ++iter)
         (*iter)->release();
@@ -531,7 +531,7 @@ void QDeclarativeEnginePrivate::clear(SimpleList<QDeclarativeParserStatus> &pss)
     for (int ii = 0; ii < pss.count; ++ii) {
         QDeclarativeParserStatus *ps = pss.at(ii);
         if(ps)
-            ps->d = 0;
+            ps->d = nullptr;
     }
     pss.clear();
 }
@@ -543,7 +543,7 @@ void QDeclarativePrivate::qdeclarativeelement_destructor(QObject *o)
         QDeclarativeData *d = static_cast<QDeclarativeData*>(p->declarativeData);
         if (d->ownContext && d->context) {
             d->context->destroy();
-            d->context = 0;
+            d->context = nullptr;
         }
 
         // Disconnect the notifiers now - during object destruction this would be too late, since
@@ -917,7 +917,7 @@ void QDeclarativeEngine::setOutputWarningsToStandardError(bool enabled)
 QDeclarativeContext *QDeclarativeEngine::contextForObject(const QObject *object)
 {
     if(!object)
-        return 0;
+        return nullptr;
 
     QObjectPrivate *priv = QObjectPrivate::get(const_cast<QObject *>(object));
 
@@ -925,11 +925,11 @@ QDeclarativeContext *QDeclarativeEngine::contextForObject(const QObject *object)
         static_cast<QDeclarativeData *>(priv->declarativeData);
 
     if (!data)
-        return 0;
+        return nullptr;
     else if (data->outerContext)
         return data->outerContext->asQDeclarativeContext();
     else
-        return 0;
+        return nullptr;
 }
 
 /*!
@@ -1041,7 +1041,7 @@ Q_AUTOTEST_EXPORT void qmlExecuteDeferred(QObject *object)
         QDeclarativeComponentPrivate::beginDeferred(ep, object, &state);
 
         data->deferredComponent->release();
-        data->deferredComponent = 0;
+        data->deferredComponent = nullptr;
 
         QDeclarativeComponentPrivate::complete(ep, &state);
         QDeclarativeDebugTrace::endRange(QDeclarativeDebugTrace::Creating);
@@ -1056,14 +1056,14 @@ QDeclarativeContext *qmlContext(const QObject *obj)
 QDeclarativeEngine *qmlEngine(const QObject *obj)
 {
     QDeclarativeContext *context = QDeclarativeEngine::contextForObject(obj);
-    return context?context->engine():0;
+    return context?context->engine():nullptr;
 }
 
 QObject *qmlAttachedPropertiesObjectById(int id, const QObject *object, bool create)
 {
     QDeclarativeData *data = QDeclarativeData::get(object);
     if (!data)
-        return 0; // Attached properties are only on objects created by QML
+        return nullptr; // Attached properties are only on objects created by QML
 
     QObject *rv = data->hasExtendedData()?data->attachedProperties()->value(id):0;
     if (rv || !create)
@@ -1071,7 +1071,7 @@ QObject *qmlAttachedPropertiesObjectById(int id, const QObject *object, bool cre
 
     QDeclarativeAttachedPropertiesFunc pf = QDeclarativeMetaType::attachedPropertiesFuncById(id);
     if (!pf)
-        return 0;
+        return nullptr;
 
     rv = pf(const_cast<QObject *>(object));
 
@@ -1088,7 +1088,7 @@ QObject *qmlAttachedPropertiesObject(int *idCache, const QObject *object,
         *idCache = QDeclarativeMetaType::attachedPropertiesFuncId(attachedMetaObject);
 
     if (*idCache == -1 || !object)
-        return 0;
+        return nullptr;
 
     return qmlAttachedPropertiesObjectById(*idCache, object, create);
 }
@@ -1173,8 +1173,8 @@ void QDeclarativeData::destroyed(QObject *object)
     QDeclarativeAbstractBinding *binding = bindings;
     while (binding) {
         QDeclarativeAbstractBinding *next = binding->m_nextBinding;
-        binding->m_prevBinding = 0;
-        binding->m_nextBinding = 0;
+        binding->m_prevBinding = nullptr;
+        binding->m_nextBinding = nullptr;
         binding->destroy(QDeclarativeAbstractBinding::KeepBindingConnected);
         binding = next;
     }
@@ -1190,7 +1190,7 @@ void QDeclarativeData::destroyed(QObject *object)
 
     while (guards) {
         QDeclarativeGuard<QObject> *guard = static_cast<QDeclarativeGuard<QObject> *>(guards);
-        *guard = (QObject *)0;
+        *guard = (QObject *)nullptr;
         guard->objectDestroyed(object);
     }
 
@@ -1206,7 +1206,7 @@ void QDeclarativeData::destroyed(QObject *object)
 
 void QDeclarativeData::parentChanged(QObject *, QObject *parent)
 {
-    if (!parent && scriptValue) { delete scriptValue; scriptValue = 0; }
+    if (!parent && scriptValue) { delete scriptValue; scriptValue = nullptr; }
 }
 
 void QDeclarativeData::objectNameChanged(QObject *)
@@ -1469,7 +1469,7 @@ QScriptValue QDeclarativeEnginePrivate::isQtObject(QScriptContext *ctxt, QScript
     if (ctxt->argumentCount() == 0)
         return QScriptValue(engine, false);
 
-    return QScriptValue(engine, 0 != ctxt->argument(0).toQObject());
+    return QScriptValue(engine, nullptr != ctxt->argument(0).toQObject());
 }
 
 /*!
@@ -2437,7 +2437,7 @@ QDeclarativePropertyCache *QDeclarativeEnginePrivate::createCache(QDeclarativeTy
         if (hasCopied) raw->release();
 
         error.setDescription(QLatin1String("Type ") + QString::fromUtf8(type->qmlTypeName()) + QLatin1String(" ") + QString::number(type->majorVersion()) + QLatin1String(".") + QString::number(minorVersion) + QLatin1String(" contains an illegal property \"") + overloadName + QLatin1String("\".  This is an error in the type's implementation."));
-        return 0;
+        return nullptr;
     }
 
     if (!hasCopied) raw->addref();
@@ -2515,7 +2515,7 @@ const QMetaObject *QDeclarativeEnginePrivate::rawMetaObjectForType(int t) const
         return (*iter)->root;
     } else {
         QDeclarativeType *type = QDeclarativeMetaType::qmlType(t);
-        return type?type->baseMetaObject():0;
+        return type?type->baseMetaObject():nullptr;
     }
 }
 
@@ -2526,7 +2526,7 @@ const QMetaObject *QDeclarativeEnginePrivate::metaObjectForType(int t) const
         return (*iter)->root;
     } else {
         QDeclarativeType *type = QDeclarativeMetaType::qmlType(t);
-        return type?type->metaObject():0;
+        return type?type->metaObject():nullptr;
     }
 }
 

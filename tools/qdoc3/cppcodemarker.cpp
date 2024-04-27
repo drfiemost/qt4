@@ -850,7 +850,7 @@ const Node *CppCodeMarker::resolveTarget(const QString& target,
                                    self)))
             return node;
     }
-    return 0;
+    return nullptr;
 }
 
 static const char * const typeTable[] = {
@@ -859,7 +859,7 @@ static const char * const typeTable[] = {
     "qlonglong", "qulonglong",
     "qint", "qint8", "qint16", "qint32", "qint64",
     "quint", "quint8", "quint16", "quint32", "quint64",
-    "qreal", "cond", 0
+    "qreal", "cond", nullptr
 };
 
 static const char * const keywordTable[] = {
@@ -875,7 +875,7 @@ static const char * const keywordTable[] = {
     "using", "virtual", "volatile", "wchar_t", "while", "xor",
     "xor_eq", "synchronized",
     // Qt specific
-    "signals", "slots", "emit", 0
+    "signals", "slots", "emit", nullptr
 };
 
 /*
@@ -903,12 +903,12 @@ QString CppCodeMarker::addMarkUp(const QString &in,
     QMap<QString, int> types;
     QMap<QString, int> keywords;
     int j = 0;
-    while (typeTable[j] != 0) {
+    while (typeTable[j] != nullptr) {
 	types.insert(QString(typeTable[j]), 0);
 	j++;
     }
     j = 0;
-    while (keywordTable[j] != 0) {
+    while (keywordTable[j] != nullptr) {
 	keywords.insert(QString(keywordTable[j]), 0);
 	j++;
     }

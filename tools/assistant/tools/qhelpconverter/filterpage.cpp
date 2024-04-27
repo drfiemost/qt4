@@ -78,7 +78,7 @@ bool FilterPage::validatePage()
     QSet<QString> atts;
     QString str;
     CustomFilter customFilter;
-    QTreeWidgetItem *item = 0;
+    QTreeWidgetItem *item = nullptr;
     for (int i=0; i<m_ui.customFilterWidget->topLevelItemCount(); ++i) {
         item = m_ui.customFilterWidget->topLevelItem(i);
         str = item->text(0);

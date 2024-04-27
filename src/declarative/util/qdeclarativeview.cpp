@@ -77,7 +77,7 @@ DEFINE_BOOL_CONFIG_OPTION(frameRateDebug, QML_SHOW_FRAMERATE)
 class QDeclarativeScene : public QGraphicsScene
 {
 public:
-    QDeclarativeScene(QObject *parent = 0);
+    QDeclarativeScene(QObject *parent = nullptr);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *);
@@ -132,7 +132,7 @@ class QDeclarativeViewPrivate : public QGraphicsViewPrivate, public QDeclarative
     Q_DECLARE_PUBLIC(QDeclarativeView)
 public:
     QDeclarativeViewPrivate()
-        : root(0), declarativeItemRoot(0), graphicsWidgetRoot(0), component(0),
+        : root(nullptr), declarativeItemRoot(nullptr), graphicsWidgetRoot(nullptr), component(nullptr),
           resizeMode(QDeclarativeView::SizeViewToRootObject), initialSize(0,0) {}
     ~QDeclarativeViewPrivate() { delete root; delete engine; }
     void execute();
@@ -163,11 +163,11 @@ void QDeclarativeViewPrivate::execute()
     Q_Q(QDeclarativeView);
     if (root) {
         delete root;
-        root = 0;
+        root = nullptr;
     }
     if (component) {
         delete component;
-        component = 0;
+        component = nullptr;
     }
     if (!source.isEmpty()) {
         component = new QDeclarativeComponent(engine, source, q);

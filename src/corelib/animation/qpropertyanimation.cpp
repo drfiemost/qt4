@@ -268,7 +268,7 @@ void QPropertyAnimation::updateState(QAbstractAnimation::State newState,
 
     QVariantAnimation::updateState(newState, oldState);
 
-    QPropertyAnimation *animToStop = 0;
+    QPropertyAnimation *animToStop = nullptr;
     {
 #ifndef QT_NO_THREAD
         QMutexLocker locker(QMutexPool::globalInstanceGet(&staticMetaObject));

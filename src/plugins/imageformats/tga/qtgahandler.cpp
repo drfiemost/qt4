@@ -50,7 +50,7 @@ QT_BEGIN_NAMESPACE
 
 QTgaHandler::QTgaHandler()
     : QImageIOHandler()
-    , tga(0)
+    , tga(nullptr)
 {
 }
 

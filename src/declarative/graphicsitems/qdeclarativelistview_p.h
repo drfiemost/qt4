@@ -58,7 +58,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeViewSection : public QObject
     Q_PROPERTY(QDeclarativeComponent *delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
     Q_ENUMS(SectionCriteria)
 public:
-    QDeclarativeViewSection(QObject *parent=0) : QObject(parent), m_criteria(FullString), m_delegate(0) {}
+    QDeclarativeViewSection(QObject *parent=nullptr) : QObject(parent), m_criteria(FullString), m_delegate(nullptr) {}
 
     QString property() const { return m_property; }
     void setProperty(const QString &);
@@ -130,7 +130,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeListView : public QDeclarativeFlickable
     Q_CLASSINFO("DefaultProperty", "data")
 
 public:
-    QDeclarativeListView(QDeclarativeItem *parent=0);
+    QDeclarativeListView(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeListView();
 
     QVariant model() const;
@@ -278,7 +278,7 @@ class QDeclarativeListViewAttached : public QObject
     Q_OBJECT
 public:
     QDeclarativeListViewAttached(QObject *parent)
-        : QObject(parent), m_view(0), m_isCurrent(false), m_delayRemove(false) {}
+        : QObject(parent), m_view(nullptr), m_isCurrent(false), m_delayRemove(false) {}
     ~QDeclarativeListViewAttached() {}
 
     Q_PROPERTY(QDeclarativeListView *view READ view NOTIFY viewChanged)

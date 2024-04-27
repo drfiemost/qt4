@@ -96,7 +96,7 @@ public:
     inline void fill(float value);
 
     double determinant() const;
-    QMatrix4x4 inverted(bool *invertible = 0) const;
+    QMatrix4x4 inverted(bool *invertible = nullptr) const;
     QMatrix4x4 transposed() const;
     QMatrix3x3 normalMatrix() const;
 

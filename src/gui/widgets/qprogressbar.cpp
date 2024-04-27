@@ -239,7 +239,7 @@ bool QProgressBarPrivate::repaintRequired() const
 */
 
 QProgressBar::QProgressBar(QWidget *parent)
-    : QWidget(*(new QProgressBarPrivate), parent, 0)
+    : QWidget(*(new QProgressBarPrivate), parent, nullptr)
 {
     d_func()->init();
 }

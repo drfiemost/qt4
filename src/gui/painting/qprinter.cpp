@@ -675,10 +675,10 @@ void QPrinter::init(PrinterMode mode)
     d->createDefaultEngines();
 
 #ifndef QT_NO_PRINTPREVIEWWIDGET
-    d->previewEngine = 0;
+    d->previewEngine = nullptr;
 #endif
-    d->realPrintEngine = 0;
-    d->realPaintEngine = 0;
+    d->realPrintEngine = nullptr;
+    d->realPaintEngine = nullptr;
 
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
     if (QCUPSSupport::cupsVersion() >= 10200 && QCUPSSupport().currentPPD()) {
@@ -765,7 +765,7 @@ void QPrinter::setOutputFormat(OutputFormat format)
 
     QPrintEngine *oldPrintEngine = d->printEngine;
     const bool def_engine = d->use_default_engine;
-    d->printEngine = 0;
+    d->printEngine = nullptr;
 
     d->createDefaultEngines();
 

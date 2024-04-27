@@ -128,7 +128,7 @@ bool QmlDocVisitor::visit(QDeclarativeJS::AST::UiObjectDefinition *definition)
     QString type = definition->qualifiedTypeNameId->name->asString();
 
     if (current->type() == Node::Namespace) {
-        QmlClassNode *component = new QmlClassNode(current, name, 0);
+        QmlClassNode *component = new QmlClassNode(current, name, nullptr);
         component->setTitle(QLatin1String("QML ") + name + QLatin1String(" Component"));
 
         QmlClassNode::addInheritedBy(type, component);

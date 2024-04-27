@@ -74,7 +74,7 @@ public:
     Value property(Object *, const Identifier &) override;
     void setProperty(Object *, const Identifier &name, const QScriptValue &) override;
 
-    QVariant toVariant(Object *, bool *ok = 0) override;
+    QVariant toVariant(Object *, bool *ok = nullptr) override;
     QVariant toVariant(const QScriptValue &);
 private:
     QDeclarativeEngine *engine;

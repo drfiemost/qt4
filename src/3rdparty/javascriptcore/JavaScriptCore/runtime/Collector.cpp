@@ -129,7 +129,7 @@ public:
 #endif
 
 Heap::Heap(JSGlobalData* globalData)
-    : m_markListSet(0)
+    : m_markListSet(nullptr)
 #if ENABLE(JSC_MULTIPLE_THREADS)
     , m_registeredThreads(0)
     , m_currentThreadRegistrar(0)
@@ -165,7 +165,7 @@ void Heap::destroy()
     RefPtr<JSGlobalData> protect(m_globalData);
 
     delete m_markListSet;
-    m_markListSet = 0;
+    m_markListSet = nullptr;
 
     freeBlocks();
 
@@ -182,7 +182,7 @@ void Heap::destroy()
         t = next;
     }
 #endif
-    m_globalData = 0;
+    m_globalData = nullptr;
 }
 
 NEVER_INLINE CollectorBlock* Heap::allocateBlock()
@@ -217,7 +217,7 @@ NEVER_INLINE CollectorBlock* Heap::allocateBlock()
     if (BLOCK_SIZE > pagesize)
         extra = BLOCK_SIZE - pagesize;
 
-    void* mmapResult = mmap(NULL, BLOCK_SIZE + extra, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    void* mmapResult = mmap(nullptr, BLOCK_SIZE + extra, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
     uintptr_t address = reinterpret_cast<uintptr_t>(mmapResult);
 
     size_t adjust = 0;
@@ -617,11 +617,11 @@ static inline void* currentThreadStackBase()
 #elif OS(UNIX)
     AtomicallyInitializedStatic(Mutex&, mutex = *new Mutex);
     MutexLocker locker(mutex);
-    static void* stackBase = 0;
+    static void* stackBase = nullptr;
     static size_t stackSize = 0;
     static pthread_t stackThread;
     pthread_t thread = pthread_self();
-    if (stackBase == 0 || thread != stackThread) {
+    if (stackBase == nullptr || thread != stackThread) {
         pthread_attr_t sattr;
         pthread_attr_init(&sattr);
 #if HAVE(PTHREAD_NP_H) || OS(NETBSD)
@@ -1237,7 +1237,7 @@ void Heap::reset()
 
     m_heap.nextCell = 0;
     m_heap.nextBlock = 0;
-    m_heap.nextNumber = 0;
+    m_heap.nextNumber = nullptr;
     m_heap.extraCost = 0;
 #if ENABLE(JSC_ZOMBIES)
     sweep();
@@ -1263,7 +1263,7 @@ void Heap::collectAllGarbage()
 
     m_heap.nextCell = 0;
     m_heap.nextBlock = 0;
-    m_heap.nextNumber = 0;
+    m_heap.nextNumber = nullptr;
     m_heap.extraCost = 0;
     sweep();
     resizeBlocks();

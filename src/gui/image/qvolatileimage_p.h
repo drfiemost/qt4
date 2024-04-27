@@ -66,7 +66,7 @@ public:
     QVolatileImage();
     QVolatileImage(int w, int h, QImage::Format format);
     explicit QVolatileImage(const QImage &sourceImage);
-    explicit QVolatileImage(void *nativeImage, void *nativeMask = 0);
+    explicit QVolatileImage(void *nativeImage, void *nativeMask = nullptr);
     QVolatileImage(const QVolatileImage &other);
     ~QVolatileImage();
     QVolatileImage &operator=(const QVolatileImage &rhs);

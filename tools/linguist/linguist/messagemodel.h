@@ -178,7 +178,7 @@ class DataModel : public QObject
 {
     Q_OBJECT
 public:
-    DataModel(QObject *parent = 0);
+    DataModel(QObject *parent = nullptr);
 
     enum FindLocation { NoLocation = 0, SourceText = 0x1, Translations = 0x2, Comments = 0x4 };
 
@@ -396,7 +396,7 @@ class MultiDataModel : public QObject
     Q_OBJECT
 
 public:
-    MultiDataModel(QObject *parent = 0);
+    MultiDataModel(QObject *parent = nullptr);
     ~MultiDataModel();
 
     bool isWellMergeable(const DataModel *dm) const;

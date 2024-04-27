@@ -149,7 +149,7 @@ public:
     bool isValid() const;
 
     QLayoutItem *plug(const QList<int> &path);
-    QLayoutItem *unplug(const QList<int> &path, QMainWindowLayoutState *savedState = 0);
+    QLayoutItem *unplug(const QList<int> &path, QMainWindowLayoutState *savedState = nullptr);
 
     void saveState(QDataStream &stream) const;
     bool checkFormat(QDataStream &stream, bool pre43);

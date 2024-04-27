@@ -282,7 +282,7 @@ const QMetaObject *QtFunction::metaObject() const
 {
     QObject *qobj = qobject();
     if (!qobj)
-        return 0;
+        return nullptr;
     return qobj->metaObject();
 }
 
@@ -502,7 +502,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
     QVector<int> conversionFailed;
     int index;
     int nameLength = 0;
-    const char *initialMethodSignature = 0;
+    const char *initialMethodSignature = nullptr;
     exec->clearException();
     QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(exec);
     for (index = initialIndex; index >= 0; --index) {
@@ -575,7 +575,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
             args.resize(mtd.count());
 
         QScriptMetaType retType = mtd.returnType();
-        args[0] = QVariant(retType.typeId(), (void *)0); // the result
+        args[0] = QVariant(retType.typeId(), (void *)nullptr); // the result
 
         // try to convert arguments
         bool converted = true;
@@ -590,7 +590,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
             int tid = -1;
             QVariant v;
             if (argType.isUnresolved()) {
-                v = QVariant(QMetaType::QObjectStar, (void *)0);
+                v = QVariant(QMetaType::QObjectStar, (void *)nullptr);
                 converted = QScriptEnginePrivate::convertToNativeQObject(
                     exec, actual, argType.name(), reinterpret_cast<void* *>(v.data()));
             } else if (argType.isVariant()) {
@@ -602,7 +602,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                 }
             } else {
                 tid = argType.typeId();
-                v = QVariant(tid, (void *)0);
+                v = QVariant(tid, (void *)nullptr);
                 converted = QScriptEnginePrivate::convertValue(exec, actual, tid, v.data());
                 if (exec->hadException())
                     return exec->exception();
@@ -640,7 +640,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                     if (m.isValid()) {
                         if (actual.isNumber()) {
                             int ival = QScriptEnginePrivate::toInt32(exec, actual);
-                            if (m.valueToKey(ival) != 0) {
+                            if (m.valueToKey(ival) != nullptr) {
                                 v.setValue(ival);
                                 converted = true;
                                 matchDistance += 10;
@@ -916,10 +916,10 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                 }
             }
 
-            QScriptable *scriptable = 0;
+            QScriptable *scriptable = nullptr;
             if (thisQObject)
                 scriptable = scriptableFromQObject(thisQObject);
-            QScriptEngine *oldEngine = 0;
+            QScriptEngine *oldEngine = nullptr;
             if (scriptable) {
                 oldEngine = QScriptablePrivate::get(scriptable)->engine;
                 QScriptablePrivate::get(scriptable)->engine = QScriptEnginePrivate::get(engine);
@@ -973,7 +973,7 @@ JSC::JSValue QtFunction::execute(JSC::ExecState *exec, JSC::JSValue thisValue,
     QScriptEnginePrivate *engine = scriptEngineFromExec(exec);
 
     const QMetaObject *meta = qobj->metaObject();
-    QObject *thisQObject = 0;
+    QObject *thisQObject = nullptr;
     thisValue = engine->toUsableValue(thisValue);
     if (thisValue.inherits(&QScriptObject::info)) {
         delegate = static_cast<QScriptObject*>(JSC::asObject(thisValue))->delegate();
@@ -992,7 +992,7 @@ JSC::JSValue QtFunction::execute(JSC::ExecState *exec, JSC::JSValue thisValue,
                         meta, data->initialIndex, data->maybeOverloaded);
 }
 
-const JSC::ClassInfo QtFunction::info = { "QtFunction", &InternalFunction::info, 0, 0 };
+const JSC::ClassInfo QtFunction::info = { "QtFunction", &InternalFunction::info, nullptr, nullptr };
 
 JSC::JSValue JSC_HOST_CALL QtFunction::call(JSC::ExecState *exec, JSC::JSObject *callee,
                                             JSC::JSValue thisValue, const JSC::ArgList &args)
@@ -1010,7 +1010,7 @@ JSC::JSValue JSC_HOST_CALL QtFunction::call(JSC::ExecState *exec, JSC::JSObject 
     return result;
 }
 
-const JSC::ClassInfo QtPropertyFunction::info = { "QtPropertyFunction", &InternalFunction::info, 0, 0 };
+const JSC::ClassInfo QtPropertyFunction::info = { "QtPropertyFunction", &InternalFunction::info, nullptr, nullptr };
 
 QtPropertyFunction::QtPropertyFunction(const QMetaObject *meta, int index,
                                        JSC::JSGlobalData *data,
@@ -1067,7 +1067,7 @@ JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec,
         // get
         if (prop.isValid()) {
             QScriptable *scriptable = scriptableFromQObject(qobject);
-            QScriptEngine *oldEngine = 0;
+            QScriptEngine *oldEngine = nullptr;
             if (scriptable) {
                 engine->pushContext(exec, thisValue, args, this);
                 oldEngine = QScriptablePrivate::get(scriptable)->engine;
@@ -1097,7 +1097,7 @@ JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec,
         }
 
         QScriptable *scriptable = scriptableFromQObject(qobject);
-        QScriptEngine *oldEngine = 0;
+        QScriptEngine *oldEngine = nullptr;
         if (scriptable) {
             engine->pushContext(exec, thisValue, args, this);
             oldEngine = QScriptablePrivate::get(scriptable)->engine;
@@ -1737,7 +1737,7 @@ QObjectPrototype::QObjectPrototype(JSC::ExecState* exec, WTF::PassRefPtr<JSC::St
     this->structure()->setHasGetterSetterProperties(true);
 }
 
-const JSC::ClassInfo QMetaObjectWrapperObject::info = { "QMetaObject", 0, 0, 0 };
+const JSC::ClassInfo QMetaObjectWrapperObject::info = { "QMetaObject", nullptr, nullptr, nullptr };
 
 QMetaObjectWrapperObject::QMetaObjectWrapperObject(
     JSC::ExecState *exec, const QMetaObject *metaObject, JSC::JSValue ctor,
@@ -1925,7 +1925,7 @@ JSC::JSObject* QMetaObjectWrapperObject::construct(JSC::ExecState *exec, JSC::JS
     eng_p->popContext();
     eng_p->currentFrame = previousFrame;
     if (!result || !result.isObject())
-        return 0;
+        return nullptr;
     return JSC::asObject(result);
 }
 
@@ -1952,7 +1952,7 @@ JSC::JSValue QMetaObjectWrapperObject::execute(JSC::ExecState *exec,
     } else {
         const QMetaObject *meta = data->value;
         if (meta->constructorCount() > 0) {
-            JSC::JSValue result = callQtMethod(exec, QMetaMethod::Constructor, /*thisQObject=*/0,
+            JSC::JSValue result = callQtMethod(exec, QMetaMethod::Constructor, /*thisQObject=*/nullptr,
                                                args, meta, meta->constructorCount()-1, /*maybeOverloaded=*/true);
             if (!exec->hadException()) {
                 Q_ASSERT(result && result.inherits(&QScriptObject::info));
@@ -1974,7 +1974,7 @@ JSC::JSValue QMetaObjectWrapperObject::execute(JSC::ExecState *exec,
 struct StaticQtMetaObject : public QObject
 {
     static const QMetaObject *get()
-        { return &static_cast<StaticQtMetaObject*> (0)->staticQtMetaObject; }
+        { return &static_cast<StaticQtMetaObject*> (nullptr)->staticQtMetaObject; }
 };
 
 static JSC::JSValue JSC_HOST_CALL qmetaobjectProtoFuncClassName(
@@ -2018,7 +2018,7 @@ static const char qt_meta_stringdata_QObjectConnectionManager[] = {
 
 const QMetaObject QObjectConnectionManager::staticMetaObject = {
     { &QObject::staticMetaObject, qt_meta_stringdata_QObjectConnectionManager,
-      qt_meta_data_QObjectConnectionManager, 0 }
+      qt_meta_data_QObjectConnectionManager, nullptr }
 };
 
 const QMetaObject *QObjectConnectionManager::metaObject() const
@@ -2028,7 +2028,7 @@ const QMetaObject *QObjectConnectionManager::metaObject() const
 
 void *QObjectConnectionManager::qt_metacast(const char *_clname)
 {
-    if (!_clname) return 0;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_QObjectConnectionManager))
         return static_cast<void*>(const_cast<QObjectConnectionManager*>(this));
     return QObject::qt_metacast(_clname);
@@ -2217,7 +2217,7 @@ bool QObjectConnectionManager::removeSignalHandler(
 }
 
 QObjectData::QObjectData(QScriptEnginePrivate *eng)
-    : engine(eng), connectionManager(0)
+    : engine(eng), connectionManager(nullptr)
 {
 }
 
@@ -2225,7 +2225,7 @@ QObjectData::~QObjectData()
 {
     if (connectionManager) {
         delete connectionManager;
-        connectionManager = 0;
+        connectionManager = nullptr;
     }
 }
 
@@ -2277,7 +2277,7 @@ QScriptObject *QObjectData::findWrapper(QScriptEngine::ValueOwnership ownership,
         if ((info.ownership == ownership) && (info.options == options))
             return info.object;
     }
-    return 0;
+    return nullptr;
 }
 
 void QObjectData::registerWrapper(QScriptObject *wrapper,

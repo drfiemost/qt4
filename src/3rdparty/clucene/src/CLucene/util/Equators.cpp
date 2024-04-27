@@ -135,7 +135,7 @@ const TCHAR* Compare::TChar::getValue() const
 
 Compare::TChar::TChar()
 {
-    s = NULL;
+    s = nullptr;
 }
 
 Compare::TChar::TChar(const TCHAR* str)

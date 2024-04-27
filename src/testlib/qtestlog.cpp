@@ -63,7 +63,7 @@ namespace QTest {
     struct IgnoreResultList
     {
         inline IgnoreResultList(QtMsgType tp, const char *message)
-            : type(tp), next(0)
+            : type(tp), next(nullptr)
         { msg = qstrdup(message); }
         inline ~IgnoreResultList()
         { delete [] msg; }
@@ -82,21 +82,21 @@ namespace QTest {
         IgnoreResultList *next;
     };
 
-    static IgnoreResultList *ignoreResultList = 0;
+    static IgnoreResultList *ignoreResultList = nullptr;
 
     static QTestLog::LogMode logMode = QTestLog::Plain;
     static QTestLog::FlushMode flushMode = QTestLog::NoFlush;
     static int verbosity = 0;
     static int maxWarnings = 2002;
 
-    static QAbstractTestLogger *testLogger = 0;
-    static const char *outFile = 0;
+    static QAbstractTestLogger *testLogger = nullptr;
+    static const char *outFile = nullptr;
 
     static QtMsgHandler oldMessageHandler;
 
     static bool handleIgnoredMessage(QtMsgType type, const char *msg)
     {
-        IgnoreResultList *last = 0;
+        IgnoreResultList *last = nullptr;
         IgnoreResultList *list = ignoreResultList;
         while (list) {
             if (list->type == type && strcmp(msg, list->msg) == 0) {
@@ -106,7 +106,7 @@ namespace QTest {
                 else if (list->next)
                     ignoreResultList = list->next;
                 else
-                    ignoreResultList = 0;
+                    ignoreResultList = nullptr;
 
                 delete list;
                 return true;
@@ -326,7 +326,7 @@ void QTestLog::stopLogging()
     QTEST_ASSERT(QTest::testLogger);
     QTest::testLogger->stopLogging();
     delete QTest::testLogger;
-    QTest::testLogger = 0;
+    QTest::testLogger = nullptr;
 }
 
 void QTestLog::warn(const char *msg)

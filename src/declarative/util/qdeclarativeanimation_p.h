@@ -77,7 +77,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeAbstractAnimation : public QObjec
     Q_CLASSINFO("DefaultMethod", "start()")
 
 public:
-    QDeclarativeAbstractAnimation(QObject *parent=0);
+    QDeclarativeAbstractAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeAbstractAnimation();
 
     enum Loops { Infinite = -2 };
@@ -150,7 +150,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePauseAnimation : public QDeclarativeAbstract
     Q_PROPERTY(int duration READ duration WRITE setDuration NOTIFY durationChanged)
 
 public:
-    QDeclarativePauseAnimation(QObject *parent=0);
+    QDeclarativePauseAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativePauseAnimation();
 
     int duration() const;
@@ -173,7 +173,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeScriptAction : public QDeclarativ
     Q_PROPERTY(QString scriptName READ stateChangeScriptName WRITE setStateChangeScriptName)
 
 public:
-    QDeclarativeScriptAction(QObject *parent=0);
+    QDeclarativeScriptAction(QObject *parent=nullptr);
     virtual ~QDeclarativeScriptAction();
 
     QDeclarativeScriptString script() const;
@@ -203,7 +203,7 @@ class QDeclarativePropertyAction : public QDeclarativeAbstractAnimation
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
 
 public:
-    QDeclarativePropertyAction(QObject *parent=0);
+    QDeclarativePropertyAction(QObject *parent=nullptr);
     virtual ~QDeclarativePropertyAction();
 
     QObject *target() const;
@@ -252,7 +252,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePropertyAnimation : public QDeclarativeAbstr
     Q_PROPERTY(QDeclarativeListProperty<QObject> exclude READ exclude)
 
 public:
-    QDeclarativePropertyAnimation(QObject *parent=0);
+    QDeclarativePropertyAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativePropertyAnimation();
 
     virtual int duration() const;
@@ -304,7 +304,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeColorAnimation : public QDeclarativeProperty
     Q_PROPERTY(QColor to READ to WRITE setTo)
 
 public:
-    QDeclarativeColorAnimation(QObject *parent=0);
+    QDeclarativeColorAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeColorAnimation();
 
     QColor from() const;
@@ -323,7 +323,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeNumberAnimation : public QDeclarativePropert
     Q_PROPERTY(qreal to READ to WRITE setTo)
 
 public:
-    QDeclarativeNumberAnimation(QObject *parent=0);
+    QDeclarativeNumberAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeNumberAnimation();
 
     qreal from() const;
@@ -348,7 +348,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVector3dAnimation : public QDeclarativePrope
     Q_PROPERTY(QVector3D to READ to WRITE setTo)
 
 public:
-    QDeclarativeVector3dAnimation(QObject *parent=0);
+    QDeclarativeVector3dAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeVector3dAnimation();
 
     QVector3D from() const;
@@ -370,7 +370,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeRotationAnimation : public QDeclarativePrope
     Q_PROPERTY(RotationDirection direction READ direction WRITE setDirection NOTIFY directionChanged)
 
 public:
-    QDeclarativeRotationAnimation(QObject *parent=0);
+    QDeclarativeRotationAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeRotationAnimation();
 
     qreal from() const;
@@ -413,7 +413,7 @@ class QDeclarativeSequentialAnimation : public QDeclarativeAnimationGroup
     Q_DECLARE_PRIVATE(QDeclarativeAnimationGroup)
 
 public:
-    QDeclarativeSequentialAnimation(QObject *parent=0);
+    QDeclarativeSequentialAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeSequentialAnimation();
 
 protected:
@@ -429,7 +429,7 @@ class QDeclarativeParallelAnimation : public QDeclarativeAnimationGroup
     Q_DECLARE_PRIVATE(QDeclarativeAnimationGroup)
 
 public:
-    QDeclarativeParallelAnimation(QObject *parent=0);
+    QDeclarativeParallelAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeParallelAnimation();
 
 protected:
@@ -450,7 +450,7 @@ class QDeclarativeParentAnimation : public QDeclarativeAnimationGroup
     Q_PROPERTY(QDeclarativeItem *via READ via WRITE setVia NOTIFY viaChanged)
 
 public:
-    QDeclarativeParentAnimation(QObject *parent=0);
+    QDeclarativeParentAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeParentAnimation();
 
     QDeclarativeItem *target() const;
@@ -484,7 +484,7 @@ class QDeclarativeAnchorAnimation : public QDeclarativeAbstractAnimation
     Q_PROPERTY(QEasingCurve easing READ easing WRITE setEasing NOTIFY easingChanged)
 
 public:
-    QDeclarativeAnchorAnimation(QObject *parent=0);
+    QDeclarativeAnchorAnimation(QObject *parent=nullptr);
     virtual ~QDeclarativeAnchorAnimation();
 
     QDeclarativeListProperty<QDeclarativeItem> targets();

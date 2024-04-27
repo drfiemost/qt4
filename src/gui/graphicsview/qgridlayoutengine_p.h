@@ -177,7 +177,7 @@ public:
             t = &q_minimumAscent;
             break;
         default:
-            t = 0;
+            t = nullptr;
             break;
         }
         return *t;
@@ -202,7 +202,7 @@ public:
             t = &q_minimumAscent;
             break;
         default:
-            t = 0;
+            t = nullptr;
             break;
         }
         return *t;
@@ -255,7 +255,7 @@ class QGridLayoutItem
 {
 public:
     QGridLayoutItem(QGridLayoutEngine *engine, QGraphicsLayoutItem *layoutItem, int row, int column,
-                    int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = 0,
+                    int rowSpan = 1, int columnSpan = 1, Qt::Alignment alignment = nullptr,
                     int itemAtIndex = -1);
 
     inline int firstRow() const { return q_firstRows[Ver]; }

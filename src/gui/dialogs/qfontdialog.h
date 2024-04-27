@@ -71,8 +71,8 @@ public:
 
     Q_DECLARE_FLAGS(FontDialogOptions, FontDialogOption)
 
-    explicit QFontDialog(QWidget *parent = 0);
-    explicit QFontDialog(const QFont &initial, QWidget *parent = 0);
+    explicit QFontDialog(QWidget *parent = nullptr);
+    explicit QFontDialog(const QFont &initial, QWidget *parent = nullptr);
     ~QFontDialog();
 
     void setCurrentFont(const QFont &font);
@@ -95,8 +95,8 @@ public:
     static QFont getFont(bool *ok, const QFont &initial, QWidget *parent, const QString &title,
                          FontDialogOptions options);
     static QFont getFont(bool *ok, const QFont &initial, QWidget *parent, const QString &title);
-    static QFont getFont(bool *ok, const QFont &initial, QWidget *parent = 0);
-    static QFont getFont(bool *ok, QWidget *parent = 0);
+    static QFont getFont(bool *ok, const QFont &initial, QWidget *parent = nullptr);
+    static QFont getFont(bool *ok, QWidget *parent = nullptr);
 
 Q_SIGNALS:
     void currentFontChanged(const QFont &font);

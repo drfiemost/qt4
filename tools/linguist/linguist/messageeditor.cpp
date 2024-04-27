@@ -93,8 +93,8 @@ MessageEditor::MessageEditor(MultiDataModel *dataModel, QMainWindow *parent)
       m_redoAvail(false),
       m_cutAvail(false),
       m_copyAvail(false),
-      m_selectionHolder(0),
-      m_focusWidget(0)
+      m_selectionHolder(nullptr),
+      m_focusWidget(nullptr)
 {
     setObjectName(QLatin1String("scroll area"));
 
@@ -355,7 +355,7 @@ void MessageEditor::selectionChanged(QTextEdit *te)
             clearSelection(m_selectionHolder);
             disconnect(this, SLOT(editorDestroyed()));
         }
-        m_selectionHolder = (te->textCursor().hasSelection() ? te : 0);
+        m_selectionHolder = (te->textCursor().hasSelection() ? te : nullptr);
         if (FormatTextEdit *fte = qobject_cast<FormatTextEdit*>(m_selectionHolder))
             connect(fte, SIGNAL(editorDestroyed()), SLOT(editorDestroyed()));
         updateCanCutCopy();
@@ -375,7 +375,7 @@ void MessageEditor::resetSelection()
     if (m_selectionHolder) {
         clearSelection(m_selectionHolder);
         disconnect(this, SLOT(editorDestroyed()));
-        m_selectionHolder = 0;
+        m_selectionHolder = nullptr;
         updateCanCutCopy();
     }
 }
@@ -403,7 +403,7 @@ void MessageEditor::activeModelAndNumerus(int *model, int *numerus) const
 QTextEdit *MessageEditor::activeTranslation() const
 {
     if (m_currentNumerus < 0)
-        return 0;
+        return nullptr;
     const QList<FormatTextEdit *> &editors =
             m_editors[m_currentModel].transTexts[m_currentNumerus]->getEditors();
     foreach (QTextEdit *te, editors)
@@ -419,7 +419,7 @@ QTextEdit *MessageEditor::activeOr1stTranslation() const
             if (m_editors[i].container->isVisible()
                 && !m_editors[i].transTexts.first()->getEditors().first()->isReadOnly())
                 return m_editors[i].transTexts.first()->getEditors().first();
-        return 0;
+        return nullptr;
     }
     return activeTranslation();
 }
@@ -427,7 +427,7 @@ QTextEdit *MessageEditor::activeOr1stTranslation() const
 QTextEdit *MessageEditor::activeTransComment() const
 {
     if (m_currentModel < 0 || m_currentNumerus >= 0)
-        return 0;
+        return nullptr;
     return m_editors[m_currentModel].transCommentText->getEditor();
 }
 
@@ -478,7 +478,7 @@ MessageEditorData *MessageEditor::modelForWidget(const QObject *o)
         if (m_editors[j].transCommentText->getEditor() == o)
             return &m_editors[j];
     }
-    return 0;
+    return nullptr;
 }
 
 static bool applyFont(MessageEditorData *med)
@@ -855,7 +855,7 @@ void MessageEditor::setEditorFocus(int model)
             resetSelection();
             m_currentNumerus = -1;
             m_currentModel = -1;
-            m_focusWidget = 0;
+            m_focusWidget = nullptr;
             emit activeModelChanged(activeModel());
             updateBeginFromSource();
             updateUndoRedo();

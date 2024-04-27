@@ -74,7 +74,7 @@ class QDeclarativeBasePositionerPrivate : public QDeclarativeImplicitSizeItemPri
 public:
     QDeclarativeBasePositionerPrivate()
         : spacing(0), type(QDeclarativeBasePositioner::None)
-        , moveTransition(0), addTransition(0), queuedPositioning(false)
+        , moveTransition(nullptr), addTransition(nullptr), queuedPositioning(false)
         , doingPositioning(false), anchorConflict(false), layoutDirection(Qt::LeftToRight)
     {
     }

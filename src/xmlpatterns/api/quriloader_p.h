@@ -71,7 +71,7 @@ namespace QPatternist
 
         virtual QNetworkReply *createRequest(Operation op,
                                              const QNetworkRequest & req,
-                                             QIODevice *outgoingData = 0);
+                                             QIODevice *outgoingData = nullptr);
 
     private:
         const QString               m_variableNS;

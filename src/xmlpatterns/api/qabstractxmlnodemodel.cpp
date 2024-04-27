@@ -282,7 +282,7 @@ using namespace QPatternist;
 /*!
   Default constructor.
  */
-QAbstractXmlNodeModel::QAbstractXmlNodeModel() : d_ptr(0)
+QAbstractXmlNodeModel::QAbstractXmlNodeModel() : d_ptr(nullptr)
 {
 }
 
@@ -1180,7 +1180,7 @@ QXmlItem::QXmlItem(const QVariant &atomicValue)
     }
     else
     {
-        m_atomicValue = 0;
+        m_atomicValue = nullptr;
     }
 }
 

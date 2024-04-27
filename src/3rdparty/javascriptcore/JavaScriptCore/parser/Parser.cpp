@@ -37,7 +37,7 @@ namespace JSC {
 
 void Parser::parse(JSGlobalData* globalData, int* errLine, UString* errMsg)
 {
-    m_sourceElements = 0;
+    m_sourceElements = nullptr;
 
     int defaultErrLine;
     UString defaultErrMsg;
@@ -48,7 +48,7 @@ void Parser::parse(JSGlobalData* globalData, int* errLine, UString* errMsg)
         errMsg = &defaultErrMsg;
 
     *errLine = -1;
-    *errMsg = 0;
+    *errMsg = nullptr;
 
     Lexer& lexer = *globalData->lexer;
     lexer.setCode(*m_source, m_arena);
@@ -61,7 +61,7 @@ void Parser::parse(JSGlobalData* globalData, int* errLine, UString* errMsg)
     if (parseError || lexError) {
         *errLine = lineNumber;
         *errMsg = "Parse error";
-        m_sourceElements = 0;
+        m_sourceElements = nullptr;
     }
 }
 

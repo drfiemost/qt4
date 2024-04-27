@@ -378,9 +378,9 @@ public:
     inline void drawPixmap(int x, int y, int w, int h, const QPixmap &pm);
 
     void drawPixmapFragments(const PixmapFragment *fragments, int fragmentCount,
-                             const QPixmap &pixmap, PixmapFragmentHints hints = 0);
+                             const QPixmap &pixmap, PixmapFragmentHints hints = nullptr);
     void drawPixmapFragments(const QRectF *targetRects, const QRectF *sourceRects, int fragmentCount,
-                             const QPixmap &pixmap, PixmapFragmentHints hints = 0);
+                             const QPixmap &pixmap, PixmapFragmentHints hints = nullptr);
 
     void drawImage(const QRectF &targetRect, const QImage &image, const QRectF &sourceRect,
                    Qt::ImageConversionFlags flags = Qt::AutoColor);
@@ -414,9 +414,9 @@ public:
 
     void drawText(const QPointF &p, const QString &str, int tf, int justificationPadding);
 
-    void drawText(const QRectF &r, int flags, const QString &text, QRectF *br=0);
-    void drawText(const QRect &r, int flags, const QString &text, QRect *br=0);
-    inline void drawText(int x, int y, int w, int h, int flags, const QString &text, QRect *br=0);
+    void drawText(const QRectF &r, int flags, const QString &text, QRectF *br=nullptr);
+    void drawText(const QRect &r, int flags, const QString &text, QRect *br=nullptr);
+    inline void drawText(int x, int y, int w, int h, int flags, const QString &text, QRect *br=nullptr);
 
     void drawText(const QRectF &r, const QString &text, const QTextOption &o = QTextOption());
 
@@ -459,7 +459,7 @@ public:
 
     static void setRedirected(const QPaintDevice *device, QPaintDevice *replacement,
                               const QPoint& offset = QPoint());
-    static QPaintDevice *redirected(const QPaintDevice *device, QPoint *offset = 0);
+    static QPaintDevice *redirected(const QPaintDevice *device, QPoint *offset = nullptr);
     static void restoreRedirected(const QPaintDevice *device);
 
     void beginNativePainting();

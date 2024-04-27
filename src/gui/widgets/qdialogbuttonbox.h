@@ -115,10 +115,10 @@ public:
         GnomeLayout
     };
 
-    QDialogButtonBox(QWidget *parent = 0);
-    QDialogButtonBox(Qt::Orientation orientation, QWidget *parent = 0);
+    QDialogButtonBox(QWidget *parent = nullptr);
+    QDialogButtonBox(Qt::Orientation orientation, QWidget *parent = nullptr);
     QDialogButtonBox(StandardButtons buttons, Qt::Orientation orientation = Qt::Horizontal,
-                     QWidget *parent = 0);
+                     QWidget *parent = nullptr);
     ~QDialogButtonBox();
 
     void setOrientation(Qt::Orientation orientation);

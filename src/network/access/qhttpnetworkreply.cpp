@@ -271,10 +271,10 @@ QHttpNetworkReplyPrivate::QHttpNetworkReplyPrivate(const QUrl &newUrl)
       connectionCloseEnabled(true),
       forceConnectionCloseEnabled(false),
       lastChunkRead(false),
-      currentChunkSize(0), currentChunkRead(0), readBufferMaxSize(0), connection(0), initInflate(false),
+      currentChunkSize(0), currentChunkRead(0), readBufferMaxSize(0), connection(nullptr), initInflate(false),
       autoDecompress(false), responseData(), requestIsPrepared(false)
       ,pipeliningUsed(false), downstreamLimited(false)
-      ,userProvidedDownloadBuffer(0)
+      ,userProvidedDownloadBuffer(nullptr)
 {
 }
 
@@ -305,8 +305,8 @@ void QHttpNetworkReplyPrivate::clearHttpLayerInformation()
 // TODO: Isn't everything HTTP layer related? We don't need to set connection and connectionChannel to 0 at all
 void QHttpNetworkReplyPrivate::clear()
 {
-    connection = 0;
-    connectionChannel = 0;
+    connection = nullptr;
+    connectionChannel = nullptr;
     autoDecompress = false;
     clearHttpLayerInformation();
 }

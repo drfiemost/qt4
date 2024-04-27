@@ -58,7 +58,7 @@ class QGraphicsItem;
 class Q_GUI_EXPORT QGraphicsLayoutItem
 {
 public:
-    QGraphicsLayoutItem(QGraphicsLayoutItem *parent = 0, bool isLayout = false);
+    QGraphicsLayoutItem(QGraphicsLayoutItem *parent = nullptr, bool isLayout = false);
     virtual ~QGraphicsLayoutItem();
 
     void setSizePolicy(const QSizePolicy &policy);

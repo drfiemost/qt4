@@ -102,7 +102,7 @@ TCHAR* WildcardFilter::toString()
 	//Instantiate a stringbuffer buffer to store the readable version temporarily
     CL_NS(util)::StringBuffer buffer;
     //check if field equal to the field of prefix
-    if( term->field() != NULL ) {
+    if( term->field() != nullptr ) {
 	  //Append the field of prefix to the buffer
       buffer.append(term->field());
 	  //Append a colon
@@ -123,7 +123,7 @@ BitSet* WildcardFilter::bits( IndexReader* reader )
 	BitSet* bts = _CLNEW BitSet( reader->maxDoc() );
 	
 	WildcardTermEnum termEnum (reader, term);
-    if (termEnum.term(false) == NULL)
+    if (termEnum.term(false) == nullptr)
       return bts;
 
 	TermDocs* termDocs = reader->termDocs();

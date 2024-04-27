@@ -40,7 +40,7 @@ uint64_t Misc::currentTimeMillis()
     return (((uint64_t) tstruct.time) * 1000) + tstruct.millitm;
 #else
     struct timeval tstruct;
-    if (gettimeofday(&tstruct, NULL) < 0) {
+    if (gettimeofday(&tstruct, nullptr) < 0) {
         _CLTHROWA(CL_ERR_Runtime,"Error in gettimeofday call.");
     }
 
@@ -83,22 +83,22 @@ char* Misc::ajoin(const char* a, const char* b, const char* c, const char* d,
 
     char* buf = _CL_NEWARRAY(char, totalLen);
     buf[0] = 0;
-    if (a != NULL)
+    if (a != nullptr)
         strcat(buf, a);
 
-    if (b != NULL)
+    if (b != nullptr)
         strcat(buf, b);
 
-    if (c != NULL)
+    if (c != nullptr)
         strcat(buf, c);
 
-    if (d != NULL)
+    if (d != nullptr)
         strcat(buf, d);
 
-    if (e != NULL)
+    if (e != nullptr)
         strcat(buf, e);
 
-    if (f != NULL)
+    if (f != nullptr)
         strcat(buf, f);
 
     return buf;
@@ -218,22 +218,22 @@ TCHAR* Misc::join (const TCHAR* a, const TCHAR* b, const TCHAR* c,
 
     TCHAR* buf = _CL_NEWARRAY(TCHAR, totalLen);
     buf[0] = 0;
-    if (a != NULL)
+    if (a != nullptr)
         _tcscat(buf, a);
 
-    if (b != NULL)
+    if (b != nullptr)
         _tcscat(buf, b);
 
-    if (c != NULL)
+    if (c != nullptr)
         _tcscat(buf, c);
     
-    if (d != NULL)
+    if (d != nullptr)
         _tcscat(buf, d);
 
-    if (e != NULL)
+    if (e != nullptr)
         _tcscat(buf, e);
 
-    if (f != NULL)
+    if (f != nullptr)
         _tcscat(buf, f);
 
     return buf;

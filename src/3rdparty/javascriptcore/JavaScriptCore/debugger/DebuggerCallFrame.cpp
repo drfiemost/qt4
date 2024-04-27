@@ -39,22 +39,22 @@ namespace JSC {
 const UString* DebuggerCallFrame::functionName() const
 {
     if (!m_callFrame->codeBlock())
-        return 0;
+        return nullptr;
 
     JSFunction* function = asFunction(m_callFrame->callee());
     if (!function)
-        return 0;
+        return nullptr;
     return &function->name(m_callFrame);
 }
     
 UString DebuggerCallFrame::calculatedFunctionName() const
 {
     if (!m_callFrame->codeBlock())
-        return 0;
+        return nullptr;
     
     JSFunction* function = asFunction(m_callFrame->callee());
     if (!function)
-        return 0;
+        return nullptr;
     return function->calculatedDisplayName(m_callFrame);
 }
 
@@ -69,7 +69,7 @@ DebuggerCallFrame::Type DebuggerCallFrame::type() const
 JSObject* DebuggerCallFrame::thisObject() const
 {
     if (!m_callFrame->codeBlock())
-        return 0;
+        return nullptr;
 
     return asObject(m_callFrame->thisValue());
 }

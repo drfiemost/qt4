@@ -113,12 +113,12 @@ namespace qdesigner_internal {
 FormWindowManager::FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent) :
     QDesignerFormWindowManager(parent),
     m_core(core),
-    m_activeFormWindow(0),
+    m_activeFormWindow(nullptr),
     m_previewManager(new PreviewManager(PreviewManager::SingleFormNonModalPreview, this)),
     m_createLayoutContext(LayoutContainer),
-    m_morphLayoutContainer(0),
-    m_actionGroupPreviewInStyle(0),
-    m_actionShowFormWindowSettingsDialog(0)
+    m_morphLayoutContainer(nullptr),
+    m_actionGroupPreviewInStyle(nullptr),
+    m_actionShowFormWindowSettingsDialog(nullptr)
 {
     setupActions();
     qApp->installEventFilter(this);
@@ -156,7 +156,7 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
 
     // If we don't have an active form, we only listen for WindowActivate to speed up integrations
     const QEvent::Type eventType = e->type();
-    if (m_activeFormWindow == 0 && eventType != QEvent::WindowActivate)
+    if (m_activeFormWindow == nullptr && eventType != QEvent::WindowActivate)
         return false;
 
     switch (eventType) { // Uninteresting events
@@ -208,7 +208,7 @@ bool FormWindowManager::eventFilter(QObject *o, QEvent *e)
     }
 
     FormWindow *fw = FormWindow::findFormWindow(widget);
-    if (fw == 0) {
+    if (fw == nullptr) {
         return false;
     }
 
@@ -289,7 +289,7 @@ void FormWindowManager::removeFormWindow(QDesignerFormWindowInterface *w)
     emit formWindowRemoved(formWindow);
 
     if (formWindow == m_activeFormWindow)
-        setActiveFormWindow(0);
+        setActiveFormWindow(nullptr);
 
         if (m_formWindows.size() == 0
                 && m_core->widgetBox()) {
@@ -310,7 +310,7 @@ void FormWindowManager::setActiveFormWindow(QDesignerFormWindowInterface *w)
 
     m_activeFormWindow = formWindow;
 
-    QtResourceSet *resourceSet = 0;
+    QtResourceSet *resourceSet = nullptr;
     if (formWindow)
         resourceSet = formWindow->resourceSet();
     m_core->resourceModel()->setCurrentResourceSet(resourceSet);
@@ -329,7 +329,7 @@ void FormWindowManager::setActiveFormWindow(QDesignerFormWindowInterface *w)
         m_activeFormWindow->emitSelectionChanged();
         m_activeFormWindow->commandHistory()->setActive();
         // Trigger setActiveSubWindow on mdi area unless we are in toplevel mode
-        QMdiSubWindow *mdiSubWindow = 0;
+        QMdiSubWindow *mdiSubWindow = nullptr;
         if (QWidget *formwindow = m_activeFormWindow->parentWidget()) {
             mdiSubWindow = qobject_cast<QMdiSubWindow *>(formwindow->parentWidget());
         }
@@ -697,7 +697,7 @@ QWidgetList FormWindowManager::layoutsToBeBroken(QWidget *w) const
 
     QWidget *parent = w->parentWidget();
     if (m_activeFormWindow->isMainContainer(w))
-        parent = 0;
+        parent = nullptr;
 
     QWidget *widget = core()->widgetFactory()->containerOfWidget(w);
 
@@ -820,7 +820,7 @@ static inline bool hasManagedLayoutItems(const QDesignerFormEditorInterface *cor
 void FormWindowManager::slotUpdateActions()
 {
     m_createLayoutContext = LayoutSelection;
-    m_morphLayoutContainer = 0;
+    m_morphLayoutContainer = nullptr;
     bool canMorphIntoVBoxLayout = false;
     bool canMorphIntoHBoxLayout = false;
     bool canMorphIntoGridLayout = false;
@@ -836,7 +836,7 @@ void FormWindowManager::slotUpdateActions()
     bool canChangeZOrder = true;
 
     do {
-        if (m_activeFormWindow == 0 || m_activeFormWindow->currentTool() != 0)
+        if (m_activeFormWindow == nullptr || m_activeFormWindow->currentTool() != 0)
             break;
 
         breakAvailable = hasLayoutsToBeBroken();
@@ -872,7 +872,7 @@ void FormWindowManager::slotUpdateActions()
         // Manipulate layout of a single widget
         m_createLayoutContext = LayoutSelection;
         QWidget *widget = core()->widgetFactory()->containerOfWidget(simplifiedSelection.first());
-        if (widget == 0) // We are looking at a page-based container with 0 pages
+        if (widget == nullptr) // We are looking at a page-based container with 0 pages
             break;
 
         const QDesignerWidgetDataBaseInterface *db = m_core->widgetDataBase();
@@ -888,7 +888,7 @@ void FormWindowManager::slotUpdateActions()
 
         layoutContainer = (item->isContainer() || m_activeFormWindow->isMainContainer(widget));
 
-        layoutAvailable = layoutContainer && m_activeFormWindow->hasInsertedChildren(widget) && managedLayout == 0;
+        layoutAvailable = layoutContainer && m_activeFormWindow->hasInsertedChildren(widget) && managedLayout == nullptr;
         simplifyAvailable = SimplifyLayoutCommand::canSimplify(m_core, widget);
         if (layoutAvailable) {
             m_createLayoutContext = LayoutContainer;
@@ -920,7 +920,7 @@ void FormWindowManager::slotUpdateActions()
 
     m_actionPaste->setEnabled(pasteAvailable);
 
-    m_actionSelectAll->setEnabled(m_activeFormWindow != 0);
+    m_actionSelectAll->setEnabled(m_activeFormWindow != nullptr);
 
     m_actionAdjustSize->setEnabled(unlaidoutWidgetCount > 0);
 
@@ -933,7 +933,7 @@ void FormWindowManager::slotUpdateActions()
 
     m_actionBreakLayout->setEnabled(breakAvailable);
     actionSimplifyLayout()->setEnabled(simplifyAvailable);
-    m_actionShowFormWindowSettingsDialog->setEnabled(m_activeFormWindow != 0);
+    m_actionShowFormWindowSettingsDialog->setEnabled(m_activeFormWindow != nullptr);
 }
 
 QDesignerFormWindowInterface *FormWindowManager::createFormWindow(QWidget *parentWidget, Qt::WindowFlags flags)
@@ -967,7 +967,7 @@ QAction *FormWindowManager::actionRedo() const
 
 QActionGroup *FormWindowManager::actionGroupPreviewInStyle() const
 {
-    if (m_actionGroupPreviewInStyle == 0) {
+    if (m_actionGroupPreviewInStyle == nullptr) {
         // Wish we could make the 'this' pointer mutable ;-)
         QObject *parent = const_cast<FormWindowManager*>(this);
         m_actionGroupPreviewInStyle = new PreviewActionGroup(m_core, parent);
@@ -1006,12 +1006,12 @@ void FormWindowManager::slotActionShowFormWindowSettingsDialog()
     if (!fw)
         return;
 
-    QDialog *settingsDialog = 0;
+    QDialog *settingsDialog = nullptr;
     const bool wasDirty = fw->isDirty();
 
     // Ask the language extension for a dialog. If not, create our own
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension*>(m_core->extensionManager(), m_core))
-        settingsDialog = lang->createFormWindowSettingsDialog(fw, /*parent=*/ 0);
+        settingsDialog = lang->createFormWindowSettingsDialog(fw, /*parent=*/ nullptr);
 
     if (!settingsDialog)
         settingsDialog = new FormWindowSettings(fw);

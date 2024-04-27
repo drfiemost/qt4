@@ -73,7 +73,7 @@ class QWidget;
 class QNativeImage
 {
 public:
-    QNativeImage(int width, int height, QImage::Format format, bool isTextBuffer = false, QWidget *widget = 0);
+    QNativeImage(int width, int height, QImage::Format format, bool isTextBuffer = false, QWidget *widget = nullptr);
     ~QNativeImage();
 
     inline int width() const;

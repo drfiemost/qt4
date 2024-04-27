@@ -263,7 +263,7 @@ void QLineEdit::initStyleOption(QStyleOptionFrame *option) const
     \sa setText(), setMaxLength()
 */
 QLineEdit::QLineEdit(QWidget* parent)
-    : QWidget(*new QLineEditPrivate, parent,0)
+    : QWidget(*new QLineEditPrivate, parent,nullptr)
 {
     Q_D(QLineEdit);
     d->init(QString());
@@ -281,7 +281,7 @@ QLineEdit::QLineEdit(QWidget* parent)
     \sa text(), setMaxLength()
 */
 QLineEdit::QLineEdit(const QString& contents, QWidget* parent)
-    : QWidget(*new QLineEditPrivate, parent, 0)
+    : QWidget(*new QLineEditPrivate, parent, nullptr)
 {
     Q_D(QLineEdit);
     d->init(contents);
@@ -556,15 +556,15 @@ void QLineEdit::setCompleter(QCompleter *c)
     if (c == d->control->completer())
         return;
     if (d->control->completer()) {
-        disconnect(d->control->completer(), 0, this, 0);
-        d->control->completer()->setWidget(0);
+        disconnect(d->control->completer(), nullptr, this, nullptr);
+        d->control->completer()->setWidget(nullptr);
         if (d->control->completer()->parent() == this)
             delete d->control->completer();
     }
     d->control->setCompleter(c);
     if (!c)
         return;
-    if (c->widget() == 0)
+    if (c->widget() == nullptr)
         c->setWidget(this);
     if (hasFocus()) {
         QObject::connect(d->control->completer(), SIGNAL(activated(QString)),
@@ -1731,7 +1731,7 @@ void QLineEdit::focusOutEvent(QFocusEvent *e)
 #endif
 #ifndef QT_NO_COMPLETER
     if (d->control->completer()) {
-        QObject::disconnect(d->control->completer(), 0, this, 0);
+        QObject::disconnect(d->control->completer(), nullptr, this, nullptr);
     }
 #endif
     update();
@@ -1973,7 +1973,7 @@ QMenu *QLineEdit::createStandardContextMenu()
     Q_D(QLineEdit);
     QMenu *popup = new QMenu(this);
     popup->setObjectName(QLatin1String("qt_edit_menu"));
-    QAction *action = 0;
+    QAction *action = nullptr;
 
     if (!isReadOnly()) {
         action = popup->addAction(QLineEdit::tr("&Undo") + ACCEL_KEY(QKeySequence::Undo));

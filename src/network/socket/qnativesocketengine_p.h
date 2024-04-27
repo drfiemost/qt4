@@ -104,7 +104,7 @@ class Q_AUTOTEST_EXPORT QNativeSocketEngine : public QAbstractSocketEngine
 {
     Q_OBJECT
 public:
-    QNativeSocketEngine(QObject *parent = 0);
+    QNativeSocketEngine(QObject *parent = nullptr);
     ~QNativeSocketEngine();
 
     bool initialize(QAbstractSocket::SocketType type, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::IPv4Protocol);
@@ -135,8 +135,8 @@ public:
     qint64 read(char *data, qint64 maxlen);
     qint64 write(const char *data, qint64 len);
 
-    qint64 readDatagram(char *data, qint64 maxlen, QHostAddress *addr = 0,
-                            quint16 *port = 0);
+    qint64 readDatagram(char *data, qint64 maxlen, QHostAddress *addr = nullptr,
+                            quint16 *port = nullptr);
     qint64 writeDatagram(const char *data, qint64 len, const QHostAddress &addr,
                              quint16 port);
     bool hasPendingDatagrams() const;
@@ -153,11 +153,11 @@ public:
     int option(SocketOption option) const;
     bool setOption(SocketOption option, int value);
 
-    bool waitForRead(int msecs = 30000, bool *timedOut = 0);
-    bool waitForWrite(int msecs = 30000, bool *timedOut = 0);
+    bool waitForRead(int msecs = 30000, bool *timedOut = nullptr);
+    bool waitForWrite(int msecs = 30000, bool *timedOut = nullptr);
     bool waitForReadOrWrite(bool *readyToRead, bool *readyToWrite,
 			    bool checkRead, bool checkWrite,
-			    int msecs = 30000, bool *timedOut = 0);
+			    int msecs = 30000, bool *timedOut = nullptr);
 
     bool isReadNotificationEnabled() const;
     void setReadNotificationEnabled(bool enable);

@@ -1821,7 +1821,7 @@ QTabletEvent::QTabletEvent(Type type, const QPoint &pos, const QPoint &globalPos
       mTangential(tangentialPressure),
       mRot(rotation),
       mUnique(uniqueID),
-      mExtra(0)
+      mExtra(nullptr)
 {
 }
 
@@ -2203,7 +2203,7 @@ const char* QDropEvent::format(int n) const
             fmts.append(formats.at(i).toLatin1());
     }
     if (n < 0 || n >= fmts.size())
-        return 0;
+        return nullptr;
     return fmts.at(n).constData();
 }
 
@@ -2234,7 +2234,7 @@ bool QDropEvent::provides(const char *mimeType) const
 QWidget* QDropEvent::source() const
 {
     QDragManager *manager = QDragManager::self();
-    return manager ? manager->source() : 0;
+    return manager ? manager->source() : nullptr;
 }
 
 
@@ -3491,7 +3491,7 @@ QWindowStateChangeEvent::QWindowStateChangeEvent(Qt::WindowStates s, bool isOver
  */
 bool QWindowStateChangeEvent::isOverride() const
 {
-    return (d != 0);
+    return (d != nullptr);
 }
 
 /*! \internal
@@ -3662,7 +3662,7 @@ QTouchEvent::QTouchEvent(QEvent::Type eventType,
                          Qt::TouchPointStates touchPointStates,
                          const QList<QTouchEvent::TouchPoint> &touchPoints)
     : QInputEvent(eventType, modifiers),
-      _widget(0),
+      _widget(nullptr),
       _deviceType(deviceType),
       _touchPointStates(touchPointStates),
       _touchPoints(touchPoints)
@@ -4203,7 +4203,7 @@ QGesture *QGestureEvent::gesture(Qt::GestureType type) const
     for(int i = 0; i < d->gestures.size(); ++i)
         if (d->gestures.at(i)->gestureType() == type)
             return d->gestures.at(i);
-    return 0;
+    return nullptr;
 }
 
 /*!

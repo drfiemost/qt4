@@ -141,7 +141,7 @@ static QImageIOHandler *createWriteHandlerHelper(QIODevice *device,
 {
     QByteArray form = format.toLower();
     QByteArray suffix;
-    QImageIOHandler *handler = 0;
+    QImageIOHandler *handler = nullptr;
 
 #ifndef QT_NO_LIBRARY
     // check if any plugins can write the image
@@ -236,7 +236,7 @@ static QImageIOHandler *createWriteHandlerHelper(QIODevice *device,
 #endif // QT_NO_LIBRARY
 
     if (!handler)
-        return 0;
+        return nullptr;
 
     handler->setDevice(device);
     if (!testFormat.isEmpty())
@@ -274,9 +274,9 @@ public:
 */
 QImageWriterPrivate::QImageWriterPrivate(QImageWriter *qq)
 {
-    device = 0;
+    device = nullptr;
     deleteDevice = false;
-    handler = 0;
+    handler = nullptr;
     quality = -1;
     compression = 0;
     gamma = 0.0;
@@ -380,7 +380,7 @@ void QImageWriter::setDevice(QIODevice *device)
     d->device = device;
     d->deleteDevice = false;
     delete d->handler;
-    d->handler = 0;
+    d->handler = nullptr;
 }
 
 /*!
@@ -565,7 +565,7 @@ void QImageWriter::setText(const QString &key, const QString &text)
 */
 bool QImageWriter::canWrite() const
 {
-    if (d->device && !d->handler && (d->handler = createWriteHandlerHelper(d->device, d->format)) == 0) {
+    if (d->device && !d->handler && (d->handler = createWriteHandlerHelper(d->device, d->format)) == nullptr) {
         d->imageWriterError = QImageWriter::UnsupportedFormatError;
         d->errorString = QT_TRANSLATE_NOOP(QImageWriter,
                                            QLatin1String("Unsupported image format"));
@@ -651,7 +651,7 @@ QString QImageWriter::errorString() const
 */
 bool QImageWriter::supportsOption(QImageIOHandler::ImageOption option) const
 {
-    if (!d->handler && (d->handler = createWriteHandlerHelper(d->device, d->format)) == 0) {
+    if (!d->handler && (d->handler = createWriteHandlerHelper(d->device, d->format)) == nullptr) {
         d->imageWriterError = QImageWriter::UnsupportedFormatError;
         d->errorString = QT_TRANSLATE_NOOP(QImageWriter,
                                            QLatin1String("Unsupported image format"));
@@ -720,7 +720,7 @@ QList<QByteArray> QImageWriter::supportedImageFormats()
     QStringList keys = l->keys();
     for (int i = 0; i < keys.count(); ++i) {
         QImageIOPlugin *plugin = qobject_cast<QImageIOPlugin *>(l->instance(keys.at(i)));
-        if (plugin && (plugin->capabilities(0, keys.at(i).toLatin1()) & QImageIOPlugin::CanWrite) != 0)
+        if (plugin && (plugin->capabilities(nullptr, keys.at(i).toLatin1()) & QImageIOPlugin::CanWrite) != 0)
             formats << keys.at(i).toLatin1();
     }
 #endif // QT_NO_LIBRARY

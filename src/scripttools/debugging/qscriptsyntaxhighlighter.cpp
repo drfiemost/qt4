@@ -122,7 +122,7 @@ static const char *const keywords[MAX_KEYWORD] = {
     "volatile",
     "while",
     "with",    // end of array
-    0
+    nullptr
 };
 
 struct KeywordHelper

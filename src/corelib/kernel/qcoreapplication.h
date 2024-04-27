@@ -149,7 +149,7 @@ public:
     // ### Qt 5: merge
     static QString translate(const char * context,
                              const char * key,
-                             const char * disambiguation = 0,
+                             const char * disambiguation = nullptr,
                              Encoding encoding = DefaultCodec);
     static QString translate(const char * context,
                              const char * key,

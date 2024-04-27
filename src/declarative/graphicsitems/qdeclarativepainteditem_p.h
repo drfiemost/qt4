@@ -62,7 +62,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePaintedItem : public QDeclarativeItem
 
 
 public:
-    QDeclarativePaintedItem(QDeclarativeItem *parent=0);
+    QDeclarativePaintedItem(QDeclarativeItem *parent=nullptr);
     ~QDeclarativePaintedItem();
 
     QSize contentsSize() const;

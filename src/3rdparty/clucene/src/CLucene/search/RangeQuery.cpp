@@ -28,30 +28,30 @@ CL_NS_DEF(search)
 	//       if LowerTerm and UpperTerm are valid pointer then the fieldnames must be the same
 	//Post - The instance has been created
 
-		if (lowerTerm == NULL && upperTerm == NULL)
+		if (lowerTerm == nullptr && upperTerm == nullptr)
         {
             _CLTHROWA(CL_ERR_IllegalArgument,"At least one term must be non-null");
         }
-        if (lowerTerm != NULL && upperTerm != NULL && lowerTerm->field() != upperTerm->field())
+        if (lowerTerm != nullptr && upperTerm != nullptr && lowerTerm->field() != upperTerm->field())
         {
             _CLTHROWA(CL_ERR_IllegalArgument,"Both terms must be for the same field");
         }
 
 		// if we have a lowerTerm, start there. otherwise, start at beginning
-        if (lowerTerm != NULL) {
+        if (lowerTerm != nullptr) {
             this->lowerTerm = _CL_POINTER(lowerTerm);
         }
         else {
             this->lowerTerm = _CLNEW Term(upperTerm, LUCENE_BLANK_STRING);
         }
-        this->upperTerm = (upperTerm != NULL ? _CL_POINTER(upperTerm) : NULL);
+        this->upperTerm = (upperTerm != nullptr ? _CL_POINTER(upperTerm) : nullptr);
         this->inclusive = Inclusive;
     }
 	RangeQuery::RangeQuery(const RangeQuery& clone):
 		Query(clone){
 		this->inclusive = clone.inclusive;
-		this->upperTerm = (clone.upperTerm != NULL ? _CL_POINTER(clone.upperTerm) : NULL );
-		this->lowerTerm = (clone.lowerTerm != NULL ? _CL_POINTER(clone.lowerTerm) : NULL );
+		this->upperTerm = (clone.upperTerm != nullptr ? _CL_POINTER(clone.upperTerm) : nullptr );
+		this->lowerTerm = (clone.lowerTerm != nullptr ? _CL_POINTER(clone.lowerTerm) : nullptr );
 	}
 	Query* RangeQuery::clone() const{
 	  return _CLNEW RangeQuery(*this);
@@ -69,8 +69,8 @@ CL_NS_DEF(search)
 	/** Returns a hash code value for this object.*/
     size_t RangeQuery::hashCode() const {
 			return Similarity::floatToByte(getBoost()) ^
-	            (lowerTerm != NULL ? lowerTerm->hashCode() : 0) ^
-	            (upperTerm != NULL ? upperTerm->hashCode() : 0) ^
+	            (lowerTerm != nullptr ? lowerTerm->hashCode() : 0) ^
+	            (upperTerm != nullptr ? upperTerm->hashCode() : 0) ^
 	            (this->inclusive ? 1 : 0);
     }
 
@@ -110,7 +110,7 @@ CL_NS_DEF(search)
 
         BooleanQuery* query = _CLNEW BooleanQuery;
         TermEnum* enumerator = reader->terms(lowerTerm);
-		Term* lastTerm = NULL;
+		Term* lastTerm = nullptr;
         try {
             bool checkLower = false;
             if (!inclusive) // make adjustments to set to exclusive
@@ -119,10 +119,10 @@ CL_NS_DEF(search)
             const TCHAR* testField = getField();
             do {
                 lastTerm = enumerator->term();
-                if (lastTerm != NULL && lastTerm->field() == testField ) {
+                if (lastTerm != nullptr && lastTerm->field() == testField ) {
                     if (!checkLower || _tcscmp(lastTerm->text(),lowerTerm->text()) > 0) {
                         checkLower = false;
-                        if (upperTerm != NULL) {
+                        if (upperTerm != nullptr) {
                             int compare = _tcscmp(upperTerm->text(),lastTerm->text());
                             /* if beyond the upper term, or is exclusive and
                              * this is equal to the upper term, break out */
@@ -157,15 +157,15 @@ CL_NS_DEF(search)
     TCHAR* RangeQuery::toString(const TCHAR* field) const
     {
         StringBuffer buffer;
-        if ( field==NULL || _tcscmp(getField(),field)!=0 )
+        if ( field==nullptr || _tcscmp(getField(),field)!=0 )
         {
             buffer.append( getField() );
             buffer.append( _T(":"));
         }
         buffer.append(inclusive ? _T("[") : _T("{"));
-        buffer.append(lowerTerm != NULL ? lowerTerm->text() : _T("NULL"));
+        buffer.append(lowerTerm != nullptr ? lowerTerm->text() : _T("NULL"));
         buffer.append(_T(" TO "));
-        buffer.append(upperTerm != NULL ? upperTerm->text() : _T("NULL"));
+        buffer.append(upperTerm != nullptr ? upperTerm->text() : _T("NULL"));
         buffer.append(inclusive ? _T("]") : _T("}"));
         if (getBoost() != 1.0f)
         {
@@ -178,7 +178,7 @@ CL_NS_DEF(search)
 
     const TCHAR* RangeQuery::getField() const	
 	{
-		return (lowerTerm != NULL ? lowerTerm->field() : upperTerm->field());
+		return (lowerTerm != nullptr ? lowerTerm->field() : upperTerm->field());
 	}
 
 	/** Returns the lower term of this range query */

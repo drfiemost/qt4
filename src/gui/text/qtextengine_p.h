@@ -310,8 +310,8 @@ class QTextItemInt : public QTextItem
 {
 public:
     inline QTextItemInt()
-        : justified(false), underlineStyle(QTextCharFormat::NoUnderline), num_chars(0), chars(0),
-          logClusters(0), f(0), fontEngine(0)
+        : justified(false), underlineStyle(QTextCharFormat::NoUnderline), num_chars(0), chars(nullptr),
+          logClusters(nullptr), f(nullptr), fontEngine(nullptr)
     {}
     QTextItemInt(const QScriptItem &si, QFont *font, const QTextCharFormat &format = QTextCharFormat());
     QTextItemInt(const QGlyphLayout &g, QFont *font, const QChar *chars, int numChars, QFontEngine *fe,
@@ -490,7 +490,7 @@ public:
         return end - si->position;
     }
 
-    QFontEngine *fontEngine(const QScriptItem &si, QFixed *ascent = 0, QFixed *descent = 0, QFixed *leading = 0) const;
+    QFontEngine *fontEngine(const QScriptItem &si, QFixed *ascent = nullptr, QFixed *descent = nullptr, QFixed *leading = nullptr) const;
     QFont font(const QScriptItem &si) const;
     inline QFont font() const { return fnt; }
 
@@ -563,8 +563,8 @@ public:
         mutable int prevPosition;
         mutable int prevLength;
         inline void reset() {
-            prevFontEngine = 0;
-            prevScaledFontEngine = 0;
+            prevFontEngine = nullptr;
+            prevScaledFontEngine = nullptr;
             prevScript = -1;
             prevPosition = -1;
             prevLength = -1;
@@ -655,7 +655,7 @@ public:
 struct QTextLineItemIterator
 {
     QTextLineItemIterator(QTextEngine *eng, int lineNum, const QPointF &pos = QPointF(),
-                          const QTextLayout::FormatRange *_selection = 0);
+                          const QTextLayout::FormatRange *_selection = nullptr);
 
     inline bool atEnd() const { return logicalItem >= nItems - 1; }
     inline bool atBeginning() const { return logicalItem <= 0; }

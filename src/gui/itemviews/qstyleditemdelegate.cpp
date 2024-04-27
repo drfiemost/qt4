@@ -82,7 +82,7 @@ class QStyledItemDelegatePrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QStyledItemDelegate)
 
 public:
-    QStyledItemDelegatePrivate() : factory(0) { }
+    QStyledItemDelegatePrivate() : factory(nullptr) { }
 
     static const QWidget *widget(const QStyleOptionViewItem &option)
     {
@@ -459,7 +459,7 @@ QWidget *QStyledItemDelegate::createEditor(QWidget *parent,
 {
     Q_D(const QStyledItemDelegate);
     if (!index.isValid())
-        return 0;
+        return nullptr;
     QVariant::Type t = static_cast<QVariant::Type>(index.data(Qt::EditRole).userType());
     return d->editorFactory()->createEditor(t, parent);
 }
@@ -500,7 +500,7 @@ void QStyledItemDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
         n = d->editorFactory()->valuePropertyName(static_cast<QVariant::Type>(v.userType()));
     if (!n.isEmpty()) {
         if (!v.isValid())
-            v = QVariant(editor->property(n).userType(), (const void *)0);
+            v = QVariant(editor->property(n).userType(), (const void *)nullptr);
         editor->setProperty(n, v);
     }
 #endif
@@ -557,7 +557,7 @@ void QStyledItemDelegate::updateEditorGeometry(QWidget *editor,
     //or it is in a QTableView 
 #if !defined(QT_NO_TABLEVIEW) && !defined(QT_NO_LINEEDIT)
     if (qobject_cast<QExpandingLineEdit*>(editor) && !qobject_cast<const QTableView*>(widget))
-        opt.showDecorationSelected = editor->style()->styleHint(QStyle::SH_ItemView_ShowDecorationSelected, 0, editor);
+        opt.showDecorationSelected = editor->style()->styleHint(QStyle::SH_ItemView_ShowDecorationSelected, nullptr, editor);
     else
 #endif
         opt.showDecorationSelected = true;
@@ -682,7 +682,7 @@ bool QStyledItemDelegate::eventFilter(QObject *object, QEvent *event)
 #ifndef QT_NO_DRAGANDDROP
             // The window may lose focus during an drag operation.
             // i.e when dragging involves the taskbar on Windows.
-            if (QDragManager::self() && QDragManager::self()->object != 0)
+            if (QDragManager::self() && QDragManager::self()->object != nullptr)
                 return false;
 #endif
 

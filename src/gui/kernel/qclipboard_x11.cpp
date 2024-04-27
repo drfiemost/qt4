@@ -92,8 +92,8 @@ QT_BEGIN_NAMESPACE
 
 static int clipboard_timeout = 5000; // 5s timeout on clipboard operations
 
-static QWidget * owner = 0;
-static QWidget *requestor = 0;
+static QWidget * owner = nullptr;
+static QWidget *requestor = nullptr;
 static bool timer_event_clear = false;
 static int timer_id = 0;
 
@@ -110,15 +110,15 @@ static int capture_event_type = -1;
 static XEvent captured_event;
 
 class QClipboardWatcher; // forward decl
-static QClipboardWatcher *selection_watcher = 0;
-static QClipboardWatcher *clipboard_watcher = 0;
+static QClipboardWatcher *selection_watcher = nullptr;
+static QClipboardWatcher *clipboard_watcher = nullptr;
 
 static void cleanup()
 {
     delete owner;
     delete requestor;
-    owner = 0;
-    requestor = 0;
+    owner = nullptr;
+    requestor = nullptr;
 }
 
 static
@@ -126,10 +126,10 @@ void setupOwner()
 {
     if (owner)
         return;
-    owner = new QWidget(0);
+    owner = new QWidget(nullptr);
     owner->setObjectName(QLatin1String("internal clipboard owner"));
     owner->createWinId();
-    requestor = new QWidget(0);
+    requestor = new QWidget(nullptr);
     requestor->createWinId();
     requestor->setObjectName(QLatin1String("internal clipboard requestor"));
     // We don't need this internal widgets to appear in QApplication::topLevelWidgets()
@@ -194,11 +194,11 @@ public:
     {
         timestamp = CurrentTime;
         if (selectionData == clipboardData) {
-            mimeDataRef() = 0;
+            mimeDataRef() = nullptr;
         } else {
             QMimeData *&src = mimeDataRef();
             delete src;
-            src = 0;
+            src = nullptr;
         }
     }
 
@@ -208,8 +208,8 @@ public:
     QClipboard::Mode mode;
 };
 
-QMimeData *QClipboardData::selectionData = 0;
-QMimeData *QClipboardData::clipboardData = 0;
+QMimeData *QClipboardData::selectionData = nullptr;
+QMimeData *QClipboardData::clipboardData = nullptr;
 
 QClipboardData::QClipboardData(QClipboard::Mode clipboardMode)
 {
@@ -221,18 +221,18 @@ QClipboardData::~QClipboardData()
 { clear(); }
 
 
-static QClipboardData *internalCbData = 0;
-static QClipboardData *internalSelData = 0;
+static QClipboardData *internalCbData = nullptr;
+static QClipboardData *internalSelData = nullptr;
 
 static void cleanupClipboardData()
 {
     delete internalCbData;
-    internalCbData = 0;
+    internalCbData = nullptr;
 }
 
 static QClipboardData *clipboardData()
 {
-    if (internalCbData == 0) {
+    if (internalCbData == nullptr) {
         internalCbData = new QClipboardData(QClipboard::Clipboard);
         qAddPostRoutine(cleanupClipboardData);
     }
@@ -242,12 +242,12 @@ static QClipboardData *clipboardData()
 static void cleanupSelectionData()
 {
     delete internalSelData;
-    internalSelData = 0;
+    internalSelData = nullptr;
 }
 
 static QClipboardData *selectionData()
 {
-    if (internalSelData == 0) {
+    if (internalSelData == nullptr) {
         internalSelData = new QClipboardData(QClipboard::Selection);
         qAddPostRoutine(cleanupSelectionData);
     }
@@ -271,8 +271,8 @@ public:
 };
 
 typedef QMap<Window,QClipboardINCRTransaction*> TransactionMap;
-static TransactionMap *transactions = 0;
-static QApplication::EventFilter prev_event_filter = 0;
+static TransactionMap *transactions = nullptr;
+static QApplication::EventFilter prev_event_filter = nullptr;
 static int incr_timer_id = 0;
 
 static bool qt_x11_incr_event_filter(void *message, long *result)
@@ -328,7 +328,7 @@ QClipboardINCRTransaction::~QClipboardINCRTransaction(void)
     if (transactions->isEmpty()) {
         VDEBUG("QClipboard: no more INCR transactions");
         delete transactions;
-        transactions = 0;
+        transactions = nullptr;
 
         (void)qApp->setEventFilter(prev_event_filter);
 
@@ -472,7 +472,7 @@ QClipboard::QClipboard(QObject *parent)
 
 void QClipboard::clear(Mode mode)
 {
-    setMimeData(0, mode);
+    setMimeData(nullptr, mode);
 }
 
 
@@ -582,7 +582,7 @@ bool QX11Data::clipboardWaitForEvent(Window win, int type, XEvent *event, int ti
             XEvent e;
             // Pass the event through the event dispatcher filter so that applications
             // which install an event filter on the dispatcher get to handle it first.
-            if (XCheckIfEvent(X11->display, &e, checkForClipboardEvents, 0) &&
+            if (XCheckIfEvent(X11->display, &e, checkForClipboardEvents, nullptr) &&
                 !QAbstractEventDispatcher::instance()->filterEvent(&e))
                 qApp->x11ProcessEvent(&e);
 
@@ -594,7 +594,7 @@ bool QX11Data::clipboardWaitForEvent(Window win, int type, XEvent *event, int ti
             struct timeval usleep_tv;
             usleep_tv.tv_sec = 0;
             usleep_tv.tv_usec = 50000;
-            select(0, 0, 0, 0, &usleep_tv);
+            select(0, nullptr, nullptr, nullptr, &usleep_tv);
         } while (started.msecsTo(now) < timeout);
     }
     return false;
@@ -696,7 +696,7 @@ bool QX11Data::clipboardReadProperty(Window win, Atom property, bool deletePrope
             textprop.nitems = buffer_offset;
             textprop.value = (unsigned char *) buffer->data();
 
-            char **list_ret = 0;
+            char **list_ret = nullptr;
             int count;
             if (XmbTextPropertyToTextList(display, &textprop, &list_ret,
                          &count) == Success && count && list_ret) {
@@ -748,7 +748,7 @@ QByteArray QX11Data::clipboardReadIncrementalProperty(Window win, Atom property,
         if (event.xproperty.atom != property ||
              event.xproperty.state != PropertyNewValue)
             continue;
-        if (X11->clipboardReadProperty(win, property, true, &tmp_buf, &length, 0, 0)) {
+        if (X11->clipboardReadProperty(win, property, true, &tmp_buf, &length, nullptr, nullptr)) {
             if (length == 0) {                // no more data, we're done
                 if (nullterm) {
                     buf.resize(offset+1);
@@ -777,7 +777,7 @@ QByteArray QX11Data::clipboardReadIncrementalProperty(Window win, Atom property,
     // timed out ... create a new requestor window, otherwise the requestor
     // could consider next request to be still part of this timed out request
     delete requestor;
-    requestor = new QWidget(0);
+    requestor = new QWidget(nullptr);
     requestor->setObjectName(QLatin1String("internal clipboard requestor"));
     // We don't need this internal widget to appear in QApplication::topLevelWidgets()
     if (QWidgetPrivate::allWidgets)
@@ -1065,7 +1065,7 @@ bool QClipboard::event(QEvent *e)
             Atom xa_multiple = ATOM(MULTIPLE);
             Atom xa_timestamp = ATOM(TIMESTAMP);
 
-            struct AtomPair { Atom target; Atom property; } *multi = 0;
+            struct AtomPair { Atom target; Atom property; } *multi = nullptr;
             Atom multi_type = XNone;
             int multi_format = 0;
             int nmulti = 0;
@@ -1076,7 +1076,7 @@ bool QClipboard::event(QEvent *e)
                 QByteArray multi_data;
                 if (req->property == XNone
                     || !X11->clipboardReadProperty(req->requestor, req->property, false, &multi_data,
-                                                   0, &multi_type, &multi_format)
+                                                   nullptr, &multi_type, &multi_format)
                     || multi_format != 32) {
                     // MULTIPLE property not formatted correctly
                     XSendEvent(dpy, req->requestor, False, NoEventMask, &event);
@@ -1184,9 +1184,9 @@ QClipboardWatcher::QClipboardWatcher(QClipboard::Mode mode)
 QClipboardWatcher::~QClipboardWatcher()
 {
     if(selection_watcher == this)
-        selection_watcher = 0;
+        selection_watcher = nullptr;
     if(clipboard_watcher == this)
-        clipboard_watcher = 0;
+        clipboard_watcher = nullptr;
 }
 
 bool QClipboardWatcher::empty() const
@@ -1298,7 +1298,7 @@ QByteArray QClipboardWatcher::getDataInFormat(Atom fmtatom) const
     Atom   type;
     XSelectInput(dpy, win, PropertyChangeMask);
 
-    if (X11->clipboardReadProperty(win, ATOM(_QT_SELECTION), true, &buf, 0, &type, 0)) {
+    if (X11->clipboardReadProperty(win, ATOM(_QT_SELECTION), true, &buf, nullptr, &type, nullptr)) {
         if (type == ATOM(INCR)) {
             int nbytes = buf.size() >= 4 ? *((int*)buf.data()) : 0;
             buf = X11->clipboardReadIncrementalProperty(win, ATOM(_QT_SELECTION), nbytes, false);
@@ -1315,7 +1315,7 @@ QByteArray QClipboardWatcher::getDataInFormat(Atom fmtatom) const
 
 const QMimeData* QClipboard::mimeData(Mode mode) const
 {
-    QClipboardData *d = 0;
+    QClipboardData *d = nullptr;
     switch (mode) {
     case Selection:
         d = selectionData();
@@ -1325,7 +1325,7 @@ const QMimeData* QClipboard::mimeData(Mode mode) const
         break;
     default:
         qWarning("QClipboard::mimeData: unsupported mode '%d'", mode);
-        return 0;
+        return nullptr;
     }
 
     if (! d->source() && ! timer_event_clear) {

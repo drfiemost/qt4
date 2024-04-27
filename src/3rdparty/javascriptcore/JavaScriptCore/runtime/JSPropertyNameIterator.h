@@ -84,7 +84,7 @@ namespace JSC {
 
 inline JSPropertyNameIterator::JSPropertyNameIterator(ExecState* exec, PropertyNameArrayData* propertyNameArrayData, size_t numCacheableSlots)
     : JSCell(exec->globalData().propertyNameIteratorStructure.get())
-    , m_cachedStructure(0)
+    , m_cachedStructure(nullptr)
     , m_numCacheableSlots(numCacheableSlots)
     , m_jsStringsSize(propertyNameArrayData->propertyNameVector().size())
     , m_jsStrings(new JSValue[m_jsStringsSize])

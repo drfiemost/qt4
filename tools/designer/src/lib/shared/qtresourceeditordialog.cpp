@@ -73,7 +73,7 @@ static const char *QrcDialogC = "QrcDialog";
 
 static QString msgOverwrite(const QString &fname)
 {
-    return QApplication::translate("QtResourceEditorDialog", "%1 already exists.\nDo you want to replace it?", 0, QApplication::UnicodeUTF8).arg(fname);
+    return QApplication::translate("QtResourceEditorDialog", "%1 already exists.\nDo you want to replace it?", nullptr, QApplication::UnicodeUTF8).arg(fname);
 }
 
 static QString msgTagMismatch(const QString &got, const QString &expected)
@@ -289,7 +289,7 @@ class QtQrcManager : public QObject
 {
     Q_OBJECT
 public:
-    QtQrcManager(QObject *parent = 0);
+    QtQrcManager(QObject *parent = nullptr);
     ~QtQrcManager();
 
     QList<QtQrcFile *> qrcFiles() const;
@@ -300,7 +300,7 @@ public:
     QtQrcFile *qrcFileOf(QtResourceFile *resourceFile) const;
     QtResourcePrefix *resourcePrefixOf(QtResourceFile *resourceFile) const;
 
-    QtQrcFile *importQrcFile(const QtQrcFileData &qrcFileData, QtQrcFile *beforeQrcFile = 0);
+    QtQrcFile *importQrcFile(const QtQrcFileData &qrcFileData, QtQrcFile *beforeQrcFile = nullptr);
     void exportQrcFile(QtQrcFile *qrcFile, QtQrcFileData *qrcFileData) const;
 
     QList<QtResourceFile *> resourceFilesOf(const QString &resourceFullPath) const;
@@ -319,20 +319,20 @@ public:
 
 public slots:
 
-    QtQrcFile *insertQrcFile(const QString &path, QtQrcFile *beforeQrcFile = 0, bool newFile = false);
+    QtQrcFile *insertQrcFile(const QString &path, QtQrcFile *beforeQrcFile = nullptr, bool newFile = false);
     void moveQrcFile(QtQrcFile *qrcFile, QtQrcFile *beforeQrcFile);
     void setInitialState(QtQrcFile *qrcFile, const QtQrcFileData &initialState);
     void removeQrcFile(QtQrcFile *qrcFile);
 
     QtResourcePrefix *insertResourcePrefix(QtQrcFile *qrcFile, const QString &prefix,
-                    const QString &language, QtResourcePrefix *beforeResourcePrefix = 0);
+                    const QString &language, QtResourcePrefix *beforeResourcePrefix = nullptr);
     void moveResourcePrefix(QtResourcePrefix *resourcePrefix, QtResourcePrefix *beforeResourcePrefix); // the same qrc file???
     void changeResourcePrefix(QtResourcePrefix *resourcePrefix, const QString &newPrefix);
     void changeResourceLanguage(QtResourcePrefix *resourcePrefix, const QString &newLanguage);
     void removeResourcePrefix(QtResourcePrefix *resourcePrefix);
 
     QtResourceFile *insertResourceFile(QtResourcePrefix *resourcePrefix, const QString &path,
-                    const QString &alias, QtResourceFile *beforeResourceFile = 0);
+                    const QString &alias, QtResourceFile *beforeResourceFile = nullptr);
     void moveResourceFile(QtResourceFile *resourceFile, QtResourceFile *beforeResourceFile); // the same prefix???
     void changeResourceAlias(QtResourceFile *resourceFile, const QString &newAlias);
     void removeResourceFile(QtResourceFile *resourceFile);
@@ -404,15 +404,15 @@ QtQrcFile *QtQrcManager::importQrcFile(const QtQrcFileData &qrcFileData, QtQrcFi
 {
     QtQrcFile *qrcFile = insertQrcFile(qrcFileData.qrcPath, beforeQrcFile);
     if (!qrcFile)
-        return 0;
+        return nullptr;
     QListIterator<QtResourcePrefixData> itPrefix(qrcFileData.resourceList);
     while (itPrefix.hasNext()) {
         const QtResourcePrefixData &prefixData = itPrefix.next();
-        QtResourcePrefix *resourcePrefix = insertResourcePrefix(qrcFile, prefixData.prefix, prefixData.language, 0);
+        QtResourcePrefix *resourcePrefix = insertResourcePrefix(qrcFile, prefixData.prefix, prefixData.language, nullptr);
         QListIterator<QtResourceFileData> itFile(prefixData.resourceFileList);
         while (itFile.hasNext()) {
             const QtResourceFileData &fileData = itFile.next();
-            insertResourceFile(resourcePrefix, fileData.path, fileData.alias, 0);
+            insertResourceFile(resourcePrefix, fileData.path, fileData.alias, nullptr);
         }
     }
     setInitialState(qrcFile, qrcFileData);
@@ -482,64 +482,64 @@ bool QtQrcManager::exists(QtQrcFile *qrcFile) const
 QtQrcFile *QtQrcManager::prevQrcFile(QtQrcFile *qrcFile) const
 {
     if (!qrcFile)
-        return 0;
+        return nullptr;
     const int idx = m_qrcFiles.indexOf(qrcFile);
     if (idx <= 0)
-        return 0;
+        return nullptr;
     return m_qrcFiles.at(idx - 1);
 }
 
 QtQrcFile *QtQrcManager::nextQrcFile(QtQrcFile *qrcFile) const
 {
     if (!qrcFile)
-        return 0;
+        return nullptr;
     const int idx = m_qrcFiles.indexOf(qrcFile);
     if (idx < 0 || idx == m_qrcFiles.size() - 1)
-        return 0;
+        return nullptr;
     return m_qrcFiles.at(idx + 1);
 }
 
 QtResourcePrefix *QtQrcManager::prevResourcePrefix(QtResourcePrefix *resourcePrefix) const
 {
     if (!resourcePrefix)
-        return 0;
+        return nullptr;
     QList<QtResourcePrefix *> prefixes = qrcFileOf(resourcePrefix)->resourcePrefixList();
     const int idx = prefixes.indexOf(resourcePrefix);
     if (idx <= 0)
-        return 0;
+        return nullptr;
     return prefixes.at(idx - 1);
 }
 
 QtResourcePrefix *QtQrcManager::nextResourcePrefix(QtResourcePrefix *resourcePrefix) const
 {
     if (!resourcePrefix)
-        return 0;
+        return nullptr;
     QList<QtResourcePrefix *> prefixes = qrcFileOf(resourcePrefix)->resourcePrefixList();
     const int idx = prefixes.indexOf(resourcePrefix);
     if (idx < 0 || idx == prefixes.size() - 1)
-        return 0;
+        return nullptr;
     return prefixes.at(idx + 1);
 }
 
 QtResourceFile *QtQrcManager::prevResourceFile(QtResourceFile *resourceFile) const
 {
     if (!resourceFile)
-        return 0;
+        return nullptr;
     QList<QtResourceFile *> files = resourcePrefixOf(resourceFile)->resourceFiles();
     const int idx = files.indexOf(resourceFile);
     if (idx <= 0)
-        return 0;
+        return nullptr;
     return files.at(idx - 1);
 }
 
 QtResourceFile *QtQrcManager::nextResourceFile(QtResourceFile *resourceFile) const
 {
     if (!resourceFile)
-        return 0;
+        return nullptr;
     QList<QtResourceFile *> files = resourcePrefixOf(resourceFile)->resourceFiles();
     const int idx = files.indexOf(resourceFile);
     if (idx < 0 || idx == files.size() - 1)
-        return 0;
+        return nullptr;
     return files.at(idx + 1);
 }
 
@@ -554,7 +554,7 @@ void QtQrcManager::clear()
 QtQrcFile *QtQrcManager::insertQrcFile(const QString &path, QtQrcFile *beforeQrcFile, bool newFile)
 {
     if (m_pathToQrc.contains(path))
-        return 0;
+        return nullptr;
 
     int idx = m_qrcFiles.indexOf(beforeQrcFile);
     if (idx < 0)
@@ -589,7 +589,7 @@ void QtQrcManager::moveQrcFile(QtQrcFile *qrcFile, QtQrcFile *beforeQrcFile)
     if (idx == beforeIdx - 1) // the same position, nothing changes
         return;
 
-    QtQrcFile *oldBefore = 0;
+    QtQrcFile *oldBefore = nullptr;
     if (idx < m_qrcFiles.size() - 1)
         oldBefore = m_qrcFiles.at(idx + 1);
 
@@ -630,7 +630,7 @@ QtResourcePrefix *QtQrcManager::insertResourcePrefix(QtQrcFile *qrcFile, const Q
         const QString &language, QtResourcePrefix *beforeResourcePrefix)
 {
     if (!qrcFile)
-        return 0;
+        return nullptr;
 
     int idx = qrcFile->m_resourcePrefixes.indexOf(beforeResourcePrefix);
     if (idx < 0)
@@ -668,7 +668,7 @@ void QtQrcManager::moveResourcePrefix(QtResourcePrefix *resourcePrefix, QtResour
     if (idx == beforeIdx - 1) // the same position, nothing changes
         return;
 
-    QtResourcePrefix *oldBefore = 0;
+    QtResourcePrefix *oldBefore = nullptr;
     if (idx < qrcFile->m_resourcePrefixes.size() - 1)
         oldBefore = qrcFile->m_resourcePrefixes.at(idx + 1);
 
@@ -733,7 +733,7 @@ QtResourceFile *QtQrcManager::insertResourceFile(QtResourcePrefix *resourcePrefi
         const QString &alias, QtResourceFile *beforeResourceFile)
 {
     if (!resourcePrefix)
-        return 0;
+        return nullptr;
 
     int idx = resourcePrefix->m_resourceFiles.indexOf(beforeResourceFile);
     if (idx < 0)
@@ -781,7 +781,7 @@ void QtQrcManager::moveResourceFile(QtResourceFile *resourceFile, QtResourceFile
     if (idx == beforeIdx - 1) // the same position, nothing changes
         return;
 
-    QtResourceFile *oldBefore = 0;
+    QtResourceFile *oldBefore = nullptr;
     if (idx < resourcePrefix->m_resourceFiles.size() - 1)
         oldBefore = resourcePrefix->m_resourceFiles.at(idx + 1);
 
@@ -941,30 +941,30 @@ public:
 };
 
 QtResourceEditorDialogPrivate::QtResourceEditorDialogPrivate() :
-    q_ptr(0),
-    m_core(0),
-    m_resourceModel(0),
-    m_dlgGui(0),
-    m_qrcManager(0),
+    q_ptr(nullptr),
+    m_core(nullptr),
+    m_resourceModel(nullptr),
+    m_dlgGui(nullptr),
+    m_qrcManager(nullptr),
     m_ignoreCurrentChanged(false),
     m_firstQrcFileDialog(true),
-    m_currentQrcFile(0),
-    m_newQrcFileAction(0),
-    m_importQrcFileAction(0),
-    m_removeQrcFileAction(0),
-    m_moveUpQrcFileAction(0),
-    m_moveDownQrcFileAction(0),
-    m_newPrefixAction(0),
-    m_addResourceFileAction(0),
-    m_changePrefixAction(0),
-    m_changeLanguageAction(0),
-    m_changeAliasAction(0),
-    m_clonePrefixAction(0),
-    m_moveUpAction(0),
-    m_moveDownAction(0),
-    m_removeAction(0),
-    m_treeModel(0),
-    m_treeSelection(0)
+    m_currentQrcFile(nullptr),
+    m_newQrcFileAction(nullptr),
+    m_importQrcFileAction(nullptr),
+    m_removeQrcFileAction(nullptr),
+    m_moveUpQrcFileAction(nullptr),
+    m_moveDownQrcFileAction(nullptr),
+    m_newPrefixAction(nullptr),
+    m_addResourceFileAction(nullptr),
+    m_changePrefixAction(nullptr),
+    m_changeLanguageAction(nullptr),
+    m_changeAliasAction(nullptr),
+    m_clonePrefixAction(nullptr),
+    m_moveUpAction(nullptr),
+    m_moveDownAction(nullptr),
+    m_removeAction(nullptr),
+    m_treeModel(nullptr),
+    m_treeSelection(nullptr)
 {
 }
 
@@ -1035,7 +1035,7 @@ void QtResourceEditorDialogPrivate::slotQrcFileRemoved(QtQrcFile *qrcFile)
 {
     QListWidgetItem *item = m_qrcFileToItem.value(qrcFile);
     if (item == m_ui.qrcFileList->currentItem())
-        m_ui.qrcFileList->setCurrentItem(0); // this should trigger list view signal currentItemChanged(0), and slot should set m_currentQrcFile to 0
+        m_ui.qrcFileList->setCurrentItem(nullptr); // this should trigger list view signal currentItemChanged(0), and slot should set m_currentQrcFile to 0
     m_ignoreCurrentChanged = true;
     delete item;
     m_ignoreCurrentChanged = false;
@@ -1046,7 +1046,7 @@ void QtResourceEditorDialogPrivate::slotQrcFileRemoved(QtQrcFile *qrcFile)
 QStandardItem *QtResourceEditorDialogPrivate::insertResourcePrefix(QtResourcePrefix *resourcePrefix)
 {
     if (m_qrcManager->qrcFileOf(resourcePrefix) != m_currentQrcFile)
-        return 0;
+        return nullptr;
 
     QtResourcePrefix *prevResourcePrefix = m_qrcManager->prevResourcePrefix(resourcePrefix);
     QStandardItem *prevItem = m_resourcePrefixToPrefixItem.value(prevResourcePrefix);
@@ -1108,7 +1108,7 @@ void QtResourceEditorDialogPrivate::slotResourcePrefixChanged(QtResourcePrefix *
     m_ignoreCurrentChanged = true;
     QString prefix = resourcePrefix->prefix();
     if (prefix.isEmpty())
-        prefix = QApplication::translate("QtResourceEditorDialog", "<no prefix>", 0, QApplication::UnicodeUTF8);
+        prefix = QApplication::translate("QtResourceEditorDialog", "<no prefix>", nullptr, QApplication::UnicodeUTF8);
     item->setText(prefix);
     item->setToolTip(prefix);
     m_ignoreCurrentChanged = false;
@@ -1274,7 +1274,7 @@ void QtResourceEditorDialogPrivate::slotCurrentQrcFileChanged(QListWidgetItem *i
 
     m_currentQrcFile = newCurrentQrcFile;
     slotCurrentTreeViewItemChanged(QModelIndex());
-    QStandardItem *firstPrefix = 0; // select first prefix
+    QStandardItem *firstPrefix = nullptr; // select first prefix
     if (m_currentQrcFile) {
         QList<QtResourcePrefix *> newPrefixList = m_currentQrcFile->resourcePrefixList();
         QListIterator<QtResourcePrefix *> itPrefix(newPrefixList);
@@ -1395,7 +1395,7 @@ QString QtResourceEditorDialogPrivate::getSaveFileNameWithExtension(QWidget *par
 
     QString saveFile;
     while (true) {
-        saveFile = m_dlgGui->getSaveFileName(parent, title, dir, filter, 0, QFileDialog::DontConfirmOverwrite);
+        saveFile = m_dlgGui->getSaveFileName(parent, title, dir, filter, nullptr, QFileDialog::DontConfirmOverwrite);
         if (saveFile.isEmpty())
             return saveFile;
 
@@ -1428,9 +1428,9 @@ QString QtResourceEditorDialogPrivate::qrcStartDirectory() const
 void QtResourceEditorDialogPrivate::slotNewQrcFile()
 {
     const QString qrcPath = getSaveFileNameWithExtension(q_ptr,
-                QApplication::translate("QtResourceEditorDialog", "New Resource File", 0, QApplication::UnicodeUTF8),
+                QApplication::translate("QtResourceEditorDialog", "New Resource File", nullptr, QApplication::UnicodeUTF8),
                 m_firstQrcFileDialog ? qrcStartDirectory() : QString(),
-                QApplication::translate("QtResourceEditorDialog", "Resource files (*.qrc)", 0, QApplication::UnicodeUTF8),
+                QApplication::translate("QtResourceEditorDialog", "Resource files (*.qrc)", nullptr, QApplication::UnicodeUTF8),
                 QLatin1String("qrc"));
     if (qrcPath.isEmpty())
         return;
@@ -1453,9 +1453,9 @@ void QtResourceEditorDialogPrivate::slotNewQrcFile()
 void QtResourceEditorDialogPrivate::slotImportQrcFile()
 {
     const QString qrcPath = m_dlgGui->getOpenFileName(q_ptr,
-                QApplication::translate("QtResourceEditorDialog", "Import Resource File", 0, QApplication::UnicodeUTF8),
+                QApplication::translate("QtResourceEditorDialog", "Import Resource File", nullptr, QApplication::UnicodeUTF8),
                 m_firstQrcFileDialog ? qrcStartDirectory() : QString(),
-                QApplication::translate("QtResourceEditorDialog", "Resource files (*.qrc)", 0, QApplication::UnicodeUTF8));
+                QApplication::translate("QtResourceEditorDialog", "Resource files (*.qrc)", nullptr, QApplication::UnicodeUTF8));
     if (qrcPath.isEmpty())
         return;
     m_firstQrcFileDialog = false;
@@ -1522,7 +1522,7 @@ QtResourceFile *QtResourceEditorDialogPrivate::getCurrentResourceFile() const
     QStandardItem *currentItem = m_treeModel->itemFromIndex(m_treeSelection->currentIndex());
 
 
-    QtResourceFile *currentResourceFile = 0;
+    QtResourceFile *currentResourceFile = nullptr;
     if (currentItem) {
         currentResourceFile = m_pathItemToResourceFile.value(currentItem);
         if (!currentResourceFile)
@@ -1535,7 +1535,7 @@ QtResourcePrefix *QtResourceEditorDialogPrivate::getCurrentResourcePrefix() cons
 {
     QStandardItem *currentItem = m_treeModel->itemFromIndex(m_treeSelection->currentIndex());
 
-    QtResourcePrefix *currentResourcePrefix = 0;
+    QtResourcePrefix *currentResourcePrefix = nullptr;
     if (currentItem) {
         currentResourcePrefix = m_prefixItemToResourcePrefix.value(currentItem);
         if (!currentResourcePrefix) {
@@ -1565,7 +1565,7 @@ void QtResourceEditorDialogPrivate::slotNewPrefix()
     QtResourcePrefix *currentResourcePrefix = getCurrentResourcePrefix();
     QtResourcePrefix *nextResourcePrefix = m_qrcManager->nextResourcePrefix(currentResourcePrefix);
     QtResourcePrefix *newResourcePrefix = m_qrcManager->insertResourcePrefix(m_currentQrcFile,
-                QApplication::translate("QtResourceEditorDialog", "newPrefix", 0, QApplication::UnicodeUTF8),
+                QApplication::translate("QtResourceEditorDialog", "newPrefix", nullptr, QApplication::UnicodeUTF8),
                 QString(), nextResourcePrefix);
     if (!newResourcePrefix)
         return;
@@ -1614,7 +1614,7 @@ void QtResourceEditorDialogPrivate::slotAddFiles()
     }
 
     const QStringList resourcePaths = m_dlgGui->getOpenImageFileNames(q_ptr,
-                QApplication::translate("QtResourceEditorDialog", "Add Files", 0, QApplication::UnicodeUTF8),
+                QApplication::translate("QtResourceEditorDialog", "Add Files", nullptr, QApplication::UnicodeUTF8),
                 initialPath);
     if (resourcePaths.isEmpty())
         return;
@@ -1635,17 +1635,17 @@ void QtResourceEditorDialogPrivate::slotAddFiles()
         QString relativePath = dir.relativeFilePath(resourcePath);
         if (relativePath.startsWith(QLatin1String(".."))) {
             QMessageBox msgBox(QMessageBox::Warning,
-                    QApplication::translate("QtResourceEditorDialog", "Incorrect Path", 0, QApplication::UnicodeUTF8),
+                    QApplication::translate("QtResourceEditorDialog", "Incorrect Path", nullptr, QApplication::UnicodeUTF8),
                     outOfPathWarning(relativePath), QMessageBox::Cancel);
             msgBox.setInformativeText(outOfPathWarningInfo());
             QPushButton *copyButton = msgBox.addButton(QApplication::translate("QtResourceEditorDialog",
-                        "Copy", 0, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
+                        "Copy", nullptr, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
             QPushButton *copyAsButton = msgBox.addButton(QApplication::translate("QtResourceEditorDialog",
-                        "Copy As...", 0, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
+                        "Copy As...", nullptr, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
             QPushButton *keepButton = msgBox.addButton(QApplication::translate("QtResourceEditorDialog",
-                        "Keep", 0, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
+                        "Keep", nullptr, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
             QPushButton *skipButton = msgBox.addButton(QApplication::translate("QtResourceEditorDialog",
-                        "Skip", 0, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
+                        "Skip", nullptr, QApplication::UnicodeUTF8), QMessageBox::ActionRole);
             msgBox.setEscapeButton(QMessageBox::Cancel);
             msgBox.setDefaultButton(copyButton);
             msgBox.exec();
@@ -1657,7 +1657,7 @@ void QtResourceEditorDialogPrivate::slotAddFiles()
                 QDir dd(destDir);
                 destPath = dd.absoluteFilePath(resInfo.fileName());
                 if (dd.exists(resInfo.fileName())) {
-                    if (warning(QApplication::translate("QtResourceEditorDialog", "Copy", 0, QApplication::UnicodeUTF8),
+                    if (warning(QApplication::translate("QtResourceEditorDialog", "Copy", nullptr, QApplication::UnicodeUTF8),
                                 msgOverwrite(resInfo.fileName()),
                                 QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Yes)
                         continue;
@@ -1731,9 +1731,9 @@ void QtResourceEditorDialogPrivate::slotClonePrefix()
         return;
 
     bool ok;
-    QString suffix = QInputDialog::getText(q_ptr, QApplication::translate("QtResourceEditorDialog", "Clone Prefix", 0, QApplication::UnicodeUTF8),
+    QString suffix = QInputDialog::getText(q_ptr, QApplication::translate("QtResourceEditorDialog", "Clone Prefix", nullptr, QApplication::UnicodeUTF8),
             QApplication::translate("QtResourceEditorDialog", "Enter the suffix which you want to add to the names of the cloned files.\n"
-                "This could for example be a language extension like \"_de\".", 0, QApplication::UnicodeUTF8),
+                "This could for example be a language extension like \"_de\".", nullptr, QApplication::UnicodeUTF8),
             QLineEdit::Normal, QString(), &ok);
     if (!ok)
         return;
@@ -1772,7 +1772,7 @@ void QtResourceEditorDialogPrivate::slotRemove()
     if (!resourcePrefix)
         resourcePrefix = m_languageItemToResourcePrefix.value(item);
 
-    QStandardItem *newCurrentItem = 0;
+    QStandardItem *newCurrentItem = nullptr;
 
     if (resourceFile) {
         QtResourceFile *nextFile = m_qrcManager->nextResourceFile(resourceFile);
@@ -1845,14 +1845,14 @@ QString QtResourceEditorDialogPrivate::browseForNewLocation(const QString &resou
     const QString initialPath = rootDir.absoluteFilePath(fi.fileName());
     while (1) {
         QString newPath = m_dlgGui->getSaveFileName(q_ptr,
-                    QApplication::translate("QtResourceEditorDialog", "Copy As", 0, QApplication::UnicodeUTF8),
+                    QApplication::translate("QtResourceEditorDialog", "Copy As", nullptr, QApplication::UnicodeUTF8),
                     initialPath);
         QString relativePath = rootDir.relativeFilePath(newPath);
         if (relativePath.startsWith(QLatin1String(".."))) {
-            if (warning(QApplication::translate("QtResourceEditorDialog", "Copy As", 0, QApplication::UnicodeUTF8),
+            if (warning(QApplication::translate("QtResourceEditorDialog", "Copy As", nullptr, QApplication::UnicodeUTF8),
                         QApplication::translate("QtResourceEditorDialog", "<p>The selected file:</p>"
                                         "<p>%1</p><p>is outside of the current resource file's directory:</p><p>%2</p>"
-                                        "<p>Please select another path within this directory.<p>", 0,
+                                        "<p>Please select another path within this directory.<p>", nullptr,
                                         QApplication::UnicodeUTF8).arg(relativePath).arg(rootDir.absolutePath()),
                         QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok) != QMessageBox::Ok)
                 return QString();
@@ -1869,16 +1869,16 @@ QString QtResourceEditorDialogPrivate::copyResourceFile(const QString &resourceF
     QFileInfo fi(destPath);
     if (fi.exists()) {
         while (fi.exists() && !QFile::remove(destPath)) {
-            if (warning(QApplication::translate("QtResourceEditorDialog", "Copy", 0, QApplication::UnicodeUTF8),
-                        QApplication::translate("QtResourceEditorDialog", "Could not overwrite %1.", 0, QApplication::UnicodeUTF8).arg(fi.fileName()),
+            if (warning(QApplication::translate("QtResourceEditorDialog", "Copy", nullptr, QApplication::UnicodeUTF8),
+                        QApplication::translate("QtResourceEditorDialog", "Could not overwrite %1.", nullptr, QApplication::UnicodeUTF8).arg(fi.fileName()),
                         QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Retry)
                 return QString();
         }
     }
     while (!QFile::copy(resourceFile, destPath)) {
-        if (warning(QApplication::translate("QtResourceEditorDialog", "Copy", 0, QApplication::UnicodeUTF8),
+        if (warning(QApplication::translate("QtResourceEditorDialog", "Copy", nullptr, QApplication::UnicodeUTF8),
                     QApplication::translate("QtResourceEditorDialog", "Could not copy\n%1\nto\n%2",
-                        0, QApplication::UnicodeUTF8).arg(resourceFile).arg(destPath),
+                        nullptr, QApplication::UnicodeUTF8).arg(resourceFile).arg(destPath),
                     QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Retry)
             return QString();
     }
@@ -1924,8 +1924,8 @@ bool QtResourceEditorDialogPrivate::saveQrcFile(const QtQrcFileData &qrcFileData
     QFile file(qrcFileData.qrcPath);
     while (!file.open(QIODevice::WriteOnly)) {
         QMessageBox msgBox(QMessageBox::Warning,
-                QApplication::translate("QtResourceEditorDialog", "Save Resource File", 0, QApplication::UnicodeUTF8),
-                QApplication::translate("QtResourceEditorDialog", "Could not write %1: %2", 0, QApplication::UnicodeUTF8).arg(qrcFileData.qrcPath).arg(file.errorString()),
+                QApplication::translate("QtResourceEditorDialog", "Save Resource File", nullptr, QApplication::UnicodeUTF8),
+                QApplication::translate("QtResourceEditorDialog", "Could not write %1: %2", nullptr, QApplication::UnicodeUTF8).arg(qrcFileData.qrcPath).arg(file.errorString()),
                 QMessageBox::Cancel|QMessageBox::Ignore|QMessageBox::Retry);
         msgBox.setEscapeButton(QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Ignore);

@@ -75,7 +75,7 @@ template<typename T>
 class ControlElement : public T
 {
 public:
-    ControlElement(QMdiSubWindow *child) : T(child, 0)
+    ControlElement(QMdiSubWindow *child) : T(child, nullptr)
     {
         Q_ASSERT(child);
         mdiChild = child;
@@ -85,7 +85,7 @@ public:
     {
         if (classname && strcmp(classname, "ControlElement") == 0)
             return this;
-        return 0;
+        return nullptr;
     }
 
     QPointer<QMdiSubWindow> mdiChild;
@@ -99,7 +99,7 @@ public:
 
 #ifndef QT_NO_MENUBAR
     void showButtonsInMenuBar(QMenuBar *menuBar);
-    void removeButtonsFromMenuBar(QMenuBar *menuBar = 0);
+    void removeButtonsFromMenuBar(QMenuBar *menuBar = nullptr);
     QMenuBar *menuBar() const { return m_menuBar; }
 #endif
     void updateWindowIcon(const QIcon &windowIcon);
@@ -327,7 +327,7 @@ public:
     inline bool autoRaise() const
     {
         Q_Q(const QMdiSubWindow);
-        return q->style()->styleHint(QStyle::SH_TitleBar_AutoRaise, 0, q);
+        return q->style()->styleHint(QStyle::SH_TitleBar_AutoRaise, nullptr, q);
     }
 
     inline bool isResizeOperation() const

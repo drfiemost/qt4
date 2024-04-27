@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeScriptStringPrivate : public QSharedData
 {
 public:
-    QDeclarativeScriptStringPrivate() : context(0), scope(0) {}
+    QDeclarativeScriptStringPrivate() : context(nullptr), scope(nullptr) {}
 
     QDeclarativeContext *context;
     QObject *scope;

@@ -278,7 +278,7 @@ void QDeclarativeBorderImage::setSource(const QUrl &url)
 
     if (d->sciReply) {
         d->sciReply->deleteLater();
-        d->sciReply = 0;
+        d->sciReply = nullptr;
     }
 
     d->url = url;
@@ -559,12 +559,12 @@ void QDeclarativeBorderImage::sciRequestFinished()
     if (d->sciReply->error() != QNetworkReply::NoError) {
         d->status = Error;
         d->sciReply->deleteLater();
-        d->sciReply = 0;
+        d->sciReply = nullptr;
         emit statusChanged(d->status);
     } else {
         QDeclarativeGridScaledImage sci(d->sciReply);
         d->sciReply->deleteLater();
-        d->sciReply = 0;
+        d->sciReply = nullptr;
         setGridScaledImage(sci);
     }
 }

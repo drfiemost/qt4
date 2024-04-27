@@ -74,7 +74,7 @@ QVariant QTextBuilder::toNativeValue(const QVariant &value) const
 DomProperty *QTextBuilder::saveText(const QVariant &value) const
 {
     Q_UNUSED(value)
-    return 0;
+    return nullptr;
 }
 
 #ifdef QFORMINTERNAL_NAMESPACE

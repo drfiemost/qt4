@@ -47,7 +47,7 @@ public:
     void collect(const int32_t doc, const qreal score)
     {
         if (score > 0.0f    // ignore zeroed buckets
-            && (bits == NULL || bits->get(doc))) {	  // skip docs not in bits
+            && (bits == nullptr || bits->get(doc))) {	  // skip docs not in bits
                 ++totalHits[0];
                 if (hq->size() < nDocs || (minScore==-1.0f || score >= minScore)) {
                     ScoreDoc sd = {doc, score};
@@ -80,7 +80,7 @@ public:
       void collect(const int32_t doc, const qreal score)
       {
           if (score > 0.0f &&			  // ignore zeroed buckets
-              (bits==NULL || bits->get(doc))) {	  // skip docs not in bits
+              (bits==nullptr || bits->get(doc))) {	  // skip docs not in bits
                   ++totalHits[0];
                   // TODO: see jlucene way... with fields def???
                   FieldDoc* fd = _CLNEW FieldDoc(doc, score);
@@ -214,11 +214,11 @@ TopDocs* IndexSearcher::_search(Query* query, Filter* filter, const int32_t nDoc
 
     Weight* weight = query->weight(this);
     Scorer* scorer = weight->scorer(reader);
-    if (scorer == NULL){
-        return _CLNEW TopDocs(0, NULL, 0);
+    if (scorer == nullptr){
+        return _CLNEW TopDocs(0, nullptr, 0);
     }
 
-    BitSet* bits = filter != NULL ? filter->bits(reader) : NULL;
+    BitSet* bits = filter != nullptr ? filter->bits(reader) : nullptr;
     HitQueue* hq = _CLNEW HitQueue(nDocs);
 
     //Check hq has been allocated properly
@@ -241,7 +241,7 @@ TopDocs* IndexSearcher::_search(Query* query, Filter* filter, const int32_t nDoc
     int32_t totalHitsInt = totalHits[0];
 
     _CLDELETE(hq);
-    if ( bits != NULL && filter->shouldDeleteBitSet(bits) )
+    if ( bits != nullptr && filter->shouldDeleteBitSet(bits) )
         _CLDELETE(bits);
     _CLDELETE_ARRAY(totalHits);
     Query* wq = weight->getQuery();
@@ -261,11 +261,11 @@ TopFieldDocs* IndexSearcher::_search(Query* query, Filter* filter,
 
     Weight* weight = query->weight(this);
     Scorer* scorer = weight->scorer(reader);
-    if (scorer == NULL) {
-        return _CLNEW TopFieldDocs(0, NULL, 0, NULL );
+    if (scorer == nullptr) {
+        return _CLNEW TopFieldDocs(0, nullptr, 0, nullptr );
     }
 
-    BitSet* bits = filter != NULL ? filter->bits(reader) : NULL;
+    BitSet* bits = filter != nullptr ? filter->bits(reader) : nullptr;
     FieldSortedHitQueue hq(reader, sort->getSort(), nDocs);
     int32_t* totalHits = _CL_NEWARRAY(int32_t,1);
     totalHits[0]=0;
@@ -286,9 +286,9 @@ TopFieldDocs* IndexSearcher::_search(Query* query, Filter* filter,
     _CLDELETE(weight);
 
     SortField** hqFields = hq.getFields();
-    hq.setFields(NULL); //move ownership of memory over to TopFieldDocs
+    hq.setFields(nullptr); //move ownership of memory over to TopFieldDocs
     int32_t totalHits0 = totalHits[0];
-    if ( bits != NULL && filter->shouldDeleteBitSet(bits) )
+    if ( bits != nullptr && filter->shouldDeleteBitSet(bits) )
         _CLDELETE(bits);
     _CLDELETE_ARRAY(totalHits);
     return _CLNEW TopFieldDocs(totalHits0, fieldDocs, hqLen, hqFields );
@@ -307,18 +307,18 @@ void IndexSearcher::_search(Query* query, Filter* filter, HitCollector* results)
     CND_PRECONDITION(reader != NULL, "reader is NULL");
     CND_PRECONDITION(query != NULL, "query is NULL");
 
-    BitSet* bits = NULL;
-    SimpleFilteredCollector* fc = NULL; 
+    BitSet* bits = nullptr;
+    SimpleFilteredCollector* fc = nullptr; 
 
-    if (filter != NULL){
+    if (filter != nullptr){
         bits = filter->bits(reader);
         fc = _CLNEW SimpleFilteredCollector(bits, results);
     }
 
     Weight* weight = query->weight(this);
     Scorer* scorer = weight->scorer(reader);
-    if (scorer != NULL) {
-        if (fc == NULL){
+    if (scorer != nullptr) {
+        if (fc == nullptr){
             scorer->score(results);
         }else{
             scorer->score((HitCollector*)fc);
@@ -328,7 +328,7 @@ void IndexSearcher::_search(Query* query, Filter* filter, HitCollector* results)
 
     _CLDELETE(fc);
     _CLDELETE(weight);
-    if ( bits != NULL && filter->shouldDeleteBitSet(bits) )
+    if ( bits != nullptr && filter->shouldDeleteBitSet(bits) )
         _CLDELETE(bits);
 }
 

@@ -65,7 +65,7 @@ template <class ExtensionInterface, class Object, class Extension>
 class ExtensionFactory: public QExtensionFactory
 {
 public:
-    explicit ExtensionFactory(const QString &iid, QExtensionManager *parent = 0);
+    explicit ExtensionFactory(const QString &iid, QExtensionManager *parent = nullptr);
 
     // Convenience for registering the extension. Do not use for derived classes.
     static void registerExtension(QExtensionManager *mgr, const QString &iid);
@@ -98,11 +98,11 @@ template <class ExtensionInterface, class Object, class Extension>
 QObject *ExtensionFactory<ExtensionInterface, Object, Extension>::createExtension(QObject *qObject, const QString &iid, QObject *parent) const
 {
     if (iid != m_iid)
-        return 0;
+        return nullptr;
 
     Object *object = checkObject(qObject);
     if (!object)
-        return 0;
+        return nullptr;
 
     return new Extension(object, parent);
 }

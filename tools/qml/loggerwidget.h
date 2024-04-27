@@ -55,7 +55,7 @@ class QAction;
 class LoggerWidget : public QMainWindow {
     Q_OBJECT
 public:
-    LoggerWidget(QWidget *parent=0);
+    LoggerWidget(QWidget *parent=nullptr);
 
     enum Visibility { ShowWarnings, HideWarnings, AutoShowWarnings };
 

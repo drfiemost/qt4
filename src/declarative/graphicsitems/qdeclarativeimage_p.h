@@ -61,7 +61,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeImage : public QDeclarativeImageBase
     Q_PROPERTY(qreal paintedHeight READ paintedHeight NOTIFY paintedGeometryChanged)
 
 public:
-    QDeclarativeImage(QDeclarativeItem *parent=0);
+    QDeclarativeImage(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeImage();
 
     enum FillMode { Stretch, PreserveAspectFit, PreserveAspectCrop, Tile, TileVertically, TileHorizontally };

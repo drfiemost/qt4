@@ -590,7 +590,7 @@ void QHostInfoLookupManager::work()
                 if (currentLookups.at(i)->toBeLookedUp == scheduled->toBeLookedUp) {
                     iterator.remove();
                     postponedLookups.append(scheduled);
-                    scheduled = 0;
+                    scheduled = nullptr;
                     break;
                 }
             }

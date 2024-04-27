@@ -64,9 +64,9 @@ QImageIOPlugin::Capabilities QTiffPlugin::capabilities(QIODevice *device, const 
     if (format == "tiff" || format == "tif")
         return Capabilities(CanRead | CanWrite);
     if (!format.isEmpty())
-        return 0;
+        return nullptr;
     if (!device->isOpen())
-        return 0;
+        return nullptr;
 
     Capabilities cap;
     if (device->isReadable() && QTiffHandler::canRead(device))

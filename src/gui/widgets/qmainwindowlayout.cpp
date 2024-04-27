@@ -279,7 +279,7 @@ void QMainWindowLayoutState::deleteCentralWidgetItem()
 {
 #ifndef QT_NO_DOCKWIDGET
     delete dockAreaLayout.centralWidgetItem;
-    dockAreaLayout.centralWidgetItem = 0;
+    dockAreaLayout.centralWidgetItem = nullptr;
 #else
     delete centralWidgetItem;
     centralWidgetItem = 0;
@@ -301,7 +301,7 @@ QLayoutItem *QMainWindowLayoutState::itemAt(int index, int *x) const
         return centralWidgetItem;
 #endif
 
-    return 0;
+    return nullptr;
 }
 
 QLayoutItem *QMainWindowLayoutState::takeAt(int index, int *x)
@@ -322,7 +322,7 @@ QLayoutItem *QMainWindowLayoutState::takeAt(int index, int *x)
     }
 #endif
 
-    return 0;
+    return nullptr;
 }
 
 QList<int> QMainWindowLayoutState::indexOf(QWidget *widget) const
@@ -355,7 +355,7 @@ QList<int> QMainWindowLayoutState::indexOf(QWidget *widget) const
 bool QMainWindowLayoutState::contains(QWidget *widget) const
 {
 #ifndef QT_NO_DOCKWIDGET
-    if (dockAreaLayout.centralWidgetItem != 0 && dockAreaLayout.centralWidgetItem->widget() == widget)
+    if (dockAreaLayout.centralWidgetItem != nullptr && dockAreaLayout.centralWidgetItem->widget() == widget)
         return true;
     if (!dockAreaLayout.indexOf(widget).isEmpty())
         return true;
@@ -373,11 +373,11 @@ bool QMainWindowLayoutState::contains(QWidget *widget) const
 
 void QMainWindowLayoutState::setCentralWidget(QWidget *widget)
 {
-    QLayoutItem *item = 0;
+    QLayoutItem *item = nullptr;
     //make sure we remove the widget
     deleteCentralWidgetItem();
 
-    if (widget != 0)
+    if (widget != nullptr)
         item = new QWidgetItemV2(widget);
 
 #ifndef QT_NO_DOCKWIDGET
@@ -389,7 +389,7 @@ void QMainWindowLayoutState::setCentralWidget(QWidget *widget)
 
 QWidget *QMainWindowLayoutState::centralWidget() const
 {
-    QLayoutItem *item = 0;
+    QLayoutItem *item = nullptr;
 
 #ifndef QT_NO_DOCKWIDGET
     item = dockAreaLayout.centralWidgetItem;
@@ -397,9 +397,9 @@ QWidget *QMainWindowLayoutState::centralWidget() const
     item = centralWidgetItem;
 #endif
 
-    if (item != 0)
+    if (item != nullptr)
         return item->widget();
-    return 0;
+    return nullptr;
 }
 
 QList<int> QMainWindowLayoutState::gapIndex(QWidget *widget,
@@ -522,7 +522,7 @@ QLayoutItem *QMainWindowLayoutState::item(const QList<int> &path)
         return dockAreaLayout.item(path.mid(1)).widgetItem;
 #endif //QT_NO_DOCKWIDGET
 
-    return 0;
+    return nullptr;
 }
 
 QRect QMainWindowLayoutState::itemRect(const QList<int> &path) const
@@ -573,7 +573,7 @@ QLayoutItem *QMainWindowLayoutState::plug(const QList<int> &path)
         return dockAreaLayout.plug(path.mid(1));
 #endif //QT_NO_DOCKWIDGET
 
-    return 0;
+    return nullptr;
 }
 
 QLayoutItem *QMainWindowLayoutState::unplug(const QList<int> &path, QMainWindowLayoutState *other)
@@ -584,7 +584,7 @@ QLayoutItem *QMainWindowLayoutState::unplug(const QList<int> &path, QMainWindowL
     Q_UNUSED(other);
 #else
     if (i == 0)
-        return toolBarAreaLayout.unplug(path.mid(1), other ? &other->toolBarAreaLayout : 0);
+        return toolBarAreaLayout.unplug(path.mid(1), other ? &other->toolBarAreaLayout : nullptr);
 #endif
 
 #ifndef QT_NO_DOCKWIDGET
@@ -592,7 +592,7 @@ QLayoutItem *QMainWindowLayoutState::unplug(const QList<int> &path, QMainWindowL
         return dockAreaLayout.unplug(path.mid(1));
 #endif //QT_NO_DOCKWIDGET
 
-    return 0;
+    return nullptr;
 }
 
 void QMainWindowLayoutState::saveState(QDataStream &stream) const
@@ -710,7 +710,7 @@ bool QMainWindowLayoutState::restoreState(QDataStream &_stream,
                                 continue;
                             }
                             QDockAreaLayoutInfo *info = dockAreaLayout.info(oldPath);
-                            if (info == 0) {
+                            if (info == nullptr) {
                                 continue;
                             }
                             info->item_list.append(QDockAreaLayoutItem(new QDockWidgetItem(w)));
@@ -736,7 +736,7 @@ bool QMainWindowLayoutState::restoreState(QDataStream &_stream,
                             if (oldPath.isEmpty()) {
                                 continue;
                             }
-                            toolBarAreaLayout.docks[oldPath.at(0)].insertToolBar(0, w);
+                            toolBarAreaLayout.docks[oldPath.at(0)].insertToolBar(nullptr, w);
                         }
                     }
                 }
@@ -1301,7 +1301,7 @@ bool QMainWindowTabBar::event(QEvent *e)
 
 QTabBar *QMainWindowLayout::getTabBar()
 {
-    QTabBar *result = 0;
+    QTabBar *result = nullptr;
     if (!unusedTabBars.isEmpty()) {
         result = unusedTabBars.takeLast();
     } else {
@@ -1319,7 +1319,7 @@ QTabBar *QMainWindowLayout::getTabBar()
 // Allocates a new separator widget if needed
 QWidget *QMainWindowLayout::getSeparatorWidget()
 {
-    QWidget *result = 0;
+    QWidget *result = nullptr;
     if (!unusedSeparatorWidgets.isEmpty()) {
         result = unusedSeparatorWidgets.takeLast();
     } else {
@@ -1335,10 +1335,10 @@ QWidget *QMainWindowLayout::getSeparatorWidget()
 void QMainWindowLayout::tabChanged()
 {
     QTabBar *tb = qobject_cast<QTabBar*>(sender());
-    if (tb == 0)
+    if (tb == nullptr)
         return;
     QDockAreaLayoutInfo *info = layoutState.dockAreaLayout.info(tb);
-    if (info == 0)
+    if (info == nullptr)
         return;
     info->apply(false);
 
@@ -1381,7 +1381,7 @@ bool QMainWindowLayout::endSeparatorMove(const QPoint&)
 void QMainWindowLayout::raise(QDockWidget *widget)
 {
     QDockAreaLayoutInfo *info = layoutState.dockAreaLayout.info(widget);
-    if (info == 0)
+    if (info == nullptr)
         return;
 #ifndef QT_NO_TABBAR
     if (!info->tabbed)
@@ -1413,7 +1413,7 @@ QLayoutItem *QMainWindowLayout::itemAt(int index) const
     if (statusbar && x++ == index)
         return statusbar;
 
-    return 0;
+    return nullptr;
 }
 
 QLayoutItem *QMainWindowLayout::takeAt(int index)
@@ -1425,7 +1425,7 @@ QLayoutItem *QMainWindowLayout::takeAt(int index)
         if (QWidget *w = ret->widget()) {
             widgetAnimator.abort(w);
             if (w == pluggingWidget)
-                pluggingWidget = 0;
+                pluggingWidget = nullptr;
         }
 
         if (savedState.isValid() ) {
@@ -1450,11 +1450,11 @@ QLayoutItem *QMainWindowLayout::takeAt(int index)
 
     if (statusbar && x++ == index) {
         QLayoutItem *ret = statusbar;
-        statusbar = 0;
+        statusbar = nullptr;
         return ret;
     }
 
-    return 0;
+    return nullptr;
 }
 
 void QMainWindowLayout::setGeometry(const QRect &_r)
@@ -1528,7 +1528,7 @@ static void fixToolBarOrientation(QLayoutItem *item, int dockPos)
 {
 #ifndef QT_NO_TOOLBAR
     QToolBar *toolBar = qobject_cast<QToolBar*>(item->widget());
-    if (toolBar == 0)
+    if (toolBar == nullptr)
         return;
 
     QRect oldGeo = toolBar->geometry();
@@ -1599,7 +1599,7 @@ bool QMainWindowLayout::plug(QLayoutItem *widgetItem)
         if (layout->nativeWindowDeco()) {
             globalRect.adjust(0, layout->titleHeight(), 0, 0);
         } else {
-            int fw = widget->style()->pixelMetric(QStyle::PM_DockWidgetFrameWidth, 0, widget);
+            int fw = widget->style()->pixelMetric(QStyle::PM_DockWidgetFrameWidth, nullptr, widget);
             globalRect.adjust(-fw, -fw, fw, fw);
         }
     }
@@ -1638,7 +1638,7 @@ void QMainWindowLayout::animationFinished(QWidget *widget)
 
         savedState.clear();
         currentGapPos.clear();
-        pluggingWidget = 0;
+        pluggingWidget = nullptr;
         //applying the state will make sure that the currentGap is updated correctly
         //and all the geometries (especially the one from the central widget) is correct
         layoutState.apply(false);
@@ -1679,16 +1679,16 @@ void QMainWindowLayout::restore(bool keepSavedState)
     if (!keepSavedState)
         savedState.clear();
     currentGapPos.clear();
-    pluggingWidget = 0;
+    pluggingWidget = nullptr;
     updateGapIndicator();
 }
 
 QMainWindowLayout::QMainWindowLayout(QMainWindow *mainwindow, QLayout *parentLayout)
-    : QLayout(parentLayout ? static_cast<QWidget *>(0) : mainwindow)
+    : QLayout(parentLayout ? static_cast<QWidget *>(nullptr) : mainwindow)
     , layoutState(mainwindow)
     , savedState(mainwindow)
     , dockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks)
-    , statusbar(0)
+    , statusbar(nullptr)
 #ifndef QT_NO_DOCKWIDGET
 #ifndef QT_NO_TABBAR
     , _documentMode(false)
@@ -1699,7 +1699,7 @@ QMainWindowLayout::QMainWindowLayout(QMainWindow *mainwindow, QLayout *parentLay
 #endif
 #endif // QT_NO_DOCKWIDGET
     , widgetAnimator(this)
-    , pluggingWidget(0)
+    , pluggingWidget(nullptr)
 #ifndef QT_NO_RUBBERBAND
     , gapIndicator(new QRubberBand(QRubberBand::Rectangle, mainwindow))
 #endif //QT_NO_RUBBERBAND
@@ -1713,7 +1713,7 @@ QMainWindowLayout::QMainWindowLayout(QMainWindow *mainwindow, QLayout *parentLay
 
 #ifndef QT_NO_DOCKWIDGET
 #ifndef QT_NO_TABBAR
-    sep = mainwindow->style()->pixelMetric(QStyle::PM_DockWidgetSeparatorExtent, 0, mainwindow);
+    sep = mainwindow->style()->pixelMetric(QStyle::PM_DockWidgetSeparatorExtent, nullptr, mainwindow);
 #endif
 
 #ifndef QT_NO_TABWIDGET
@@ -1727,7 +1727,7 @@ QMainWindowLayout::QMainWindowLayout(QMainWindow *mainwindow, QLayout *parentLay
     gapIndicator->setObjectName(QLatin1String("qt_rubberband"));
     gapIndicator->hide();
 #endif
-    pluggingWidget = 0;
+    pluggingWidget = nullptr;
 
     setObjectName(mainwindow->objectName() + QLatin1String("_layout"));
 }
@@ -1767,7 +1767,7 @@ void QMainWindowLayout::setStatusBar(QStatusBar *sb)
     if (sb)
         addChildWidget(sb);
     delete statusbar;
-    statusbar = sb ? new QWidgetItemV2(sb) : 0;
+    statusbar = sb ? new QWidgetItemV2(sb) : nullptr;
     invalidate();
 }
 #endif // QT_NO_STATUSBAR
@@ -1779,7 +1779,7 @@ QWidget *QMainWindowLayout::centralWidget() const
 
 void QMainWindowLayout::setCentralWidget(QWidget *widget)
 {
-    if (widget != 0)
+    if (widget != nullptr)
         addChildWidget(widget);
     layoutState.setCentralWidget(widget);
     if (savedState.isValid()) {
@@ -1797,7 +1797,7 @@ QLayoutItem *QMainWindowLayout::unplug(QWidget *widget)
 {
     QList<int> path = layoutState.indexOf(widget);
     if (path.isEmpty())
-        return 0;
+        return nullptr;
 
     QLayoutItem *item = layoutState.item(path);
     if (widget->isWindow())
@@ -1840,7 +1840,7 @@ void QMainWindowLayout::updateGapIndicator()
 QList<int> QMainWindowLayout::hover(QLayoutItem *widgetItem, const QPoint &mousePos)
 {
     if (!parentWidget()->isVisible() || parentWidget()->isMinimized()
-        || pluggingWidget != 0 || widgetItem == 0)
+        || pluggingWidget != nullptr || widgetItem == nullptr)
         return QList<int>();
 
     QWidget *widget = widgetItem->widget();

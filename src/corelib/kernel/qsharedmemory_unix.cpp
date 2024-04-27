@@ -70,7 +70,7 @@
 QT_BEGIN_NAMESPACE
 
 QSharedMemoryPrivate::QSharedMemoryPrivate()
-    : QObjectPrivate(), memory(0), size(0), error(QSharedMemory::NoError),
+    : QObjectPrivate(), memory(nullptr), size(0), error(QSharedMemory::NoError),
 #ifndef QT_NO_SYSTEMSEMAPHORE
       systemSemaphore(QString()), lockedByMe(false),
 #endif
@@ -300,9 +300,9 @@ bool QSharedMemoryPrivate::attach(QSharedMemory::AccessMode mode)
     }
 
     // grab the memory
-    memory = shmat(id, 0, (mode == QSharedMemory::ReadOnly ? SHM_RDONLY : 0));
+    memory = shmat(id, nullptr, (mode == QSharedMemory::ReadOnly ? SHM_RDONLY : 0));
     if ((void*) - 1 == memory) {
-        memory = 0;
+        memory = nullptr;
         setErrorString(QLatin1String("QSharedMemory::attach (shmat)"));
         return false;
     }
@@ -377,7 +377,7 @@ bool QSharedMemoryPrivate::detach()
         }
         return false;
     }
-    memory = 0;
+    memory = nullptr;
     size = 0;
 
     // Get the number of current attachments

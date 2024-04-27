@@ -63,7 +63,7 @@ class QDeclarativeGestureAreaPrivate : public QDeclarativeItemPrivate
 {
     Q_DECLARE_PUBLIC(QDeclarativeGestureArea)
 public:
-    QDeclarativeGestureAreaPrivate() : componentcomplete(false), gesture(0) {}
+    QDeclarativeGestureAreaPrivate() : componentcomplete(false), gesture(nullptr) {}
 
     typedef QMap<Qt::GestureType,QDeclarativeExpression*> Bindings;
     Bindings bindings;

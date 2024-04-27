@@ -135,7 +135,7 @@ QWidget *QItemEditorFactory::createEditor(QVariant::Type type, QWidget *parent) 
     QItemEditorCreatorBase *creator = creatorMap.value(type, 0);
     if (!creator) {
         const QItemEditorFactory *dfactory = defaultFactory();
-        return dfactory == this ? 0 : dfactory->createEditor(type, parent);
+        return dfactory == this ? nullptr : dfactory->createEditor(type, parent);
     }
     return creator->createWidget(parent);
 }
@@ -245,8 +245,8 @@ QWidget *QDefaultItemEditorFactory::createEditor(QVariant::Type type, QWidget *p
     default: {
         // the default editor is a lineedit
         QExpandingLineEdit *le = new QExpandingLineEdit(parent);
-        le->setFrame(le->style()->styleHint(QStyle::SH_ItemView_DrawDelegateFrame, 0, le));
-        if (!le->style()->styleHint(QStyle::SH_ItemView_ShowDecorationSelected, 0, le))
+        le->setFrame(le->style()->styleHint(QStyle::SH_ItemView_DrawDelegateFrame, nullptr, le));
+        if (!le->style()->styleHint(QStyle::SH_ItemView_ShowDecorationSelected, nullptr, le))
             le->setWidgetOwnsGeometry(true);
         return le; }
 #else
@@ -254,7 +254,7 @@ QWidget *QDefaultItemEditorFactory::createEditor(QVariant::Type type, QWidget *p
         break;
 #endif
     }
-    return 0;
+    return nullptr;
 }
 
 QByteArray QDefaultItemEditorFactory::valuePropertyName(QVariant::Type type) const
@@ -285,11 +285,11 @@ QByteArray QDefaultItemEditorFactory::valuePropertyName(QVariant::Type type) con
     }
 }
 
-static QItemEditorFactory *q_default_factory = 0;
+static QItemEditorFactory *q_default_factory = nullptr;
 struct QDefaultFactoryCleaner
 {
     inline QDefaultFactoryCleaner() {}
-    ~QDefaultFactoryCleaner() { delete q_default_factory; q_default_factory = 0; }
+    ~QDefaultFactoryCleaner() { delete q_default_factory; q_default_factory = nullptr; }
 };
 
 /*!
@@ -514,9 +514,9 @@ void QExpandingLineEdit::changeEvent(QEvent *e)
 void QExpandingLineEdit::updateMinimumWidth()
 {
     int left, right;
-    getTextMargins(&left, 0, &right, 0);
+    getTextMargins(&left, nullptr, &right, nullptr);
     int width = left + right + 4 /*horizontalMargin in qlineedit.cpp*/;
-    getContentsMargins(&left, 0, &right, 0);
+    getContentsMargins(&left, nullptr, &right, nullptr);
     width += left + right;
 
     QStyleOptionFrame opt;

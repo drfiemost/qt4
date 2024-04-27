@@ -175,11 +175,11 @@ namespace JSC {
     inline RegisterFile::RegisterFile(size_t capacity, size_t maxGlobals)
         : m_numGlobals(0)
         , m_maxGlobals(maxGlobals)
-        , m_start(0)
-        , m_end(0)
-        , m_max(0)
-        , m_buffer(0)
-        , m_globalObject(0)
+        , m_start(nullptr)
+        , m_end(nullptr)
+        , m_max(nullptr)
+        , m_buffer(nullptr)
+        , m_globalObject(nullptr)
     {
         // Verify that our values will play nice with mmap and VirtualAlloc.
         ASSERT(isPageAligned(maxGlobals));
@@ -203,7 +203,7 @@ namespace JSC {
         m_commitEnd = reinterpret_cast<Register*>(reinterpret_cast<char*>(m_buffer) + committedSize);
 
     #elif HAVE(MMAP)
-        m_buffer = reinterpret_cast<Register*>(mmap(0, bufferLength, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, VM_TAG_FOR_REGISTERFILE_MEMORY, 0));
+        m_buffer = reinterpret_cast<Register*>(mmap(nullptr, bufferLength, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, VM_TAG_FOR_REGISTERFILE_MEMORY, 0));
         if (m_buffer == MAP_FAILED) {
 #if OS(WINCE)
             fprintf(stderr, "Could not allocate register file: %d\n", GetLastError());

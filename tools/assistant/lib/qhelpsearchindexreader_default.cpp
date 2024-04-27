@@ -530,7 +530,7 @@ void QHelpSearchIndexReaderDefault::run()
     if (queryTerm.isEmpty())
         return;
 
-    QHelpEngineCore engine(collectionFile, 0);
+    QHelpEngineCore engine(collectionFile, nullptr);
     if (!engine.setupData())
         return;
 

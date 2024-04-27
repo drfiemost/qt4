@@ -146,7 +146,7 @@ public:
 
 QScriptEngineDebuggerBackendPrivate::QScriptEngineDebuggerBackendPrivate()
 {
-    frontend = 0;
+    frontend = nullptr;
 }
 
 QScriptEngineDebuggerBackendPrivate::~QScriptEngineDebuggerBackendPrivate()
@@ -247,7 +247,7 @@ void QScriptEngineDebuggerBackend::resume()
 
 QScriptEngineDebuggerFrontendPrivate::QScriptEngineDebuggerFrontendPrivate()
 {
-    backend = 0;
+    backend = nullptr;
 }
 
 QScriptEngineDebuggerFrontendPrivate::~QScriptEngineDebuggerFrontendPrivate()

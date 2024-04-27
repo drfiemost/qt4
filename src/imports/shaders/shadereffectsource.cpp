@@ -68,14 +68,14 @@
 
 ShaderEffectSource::ShaderEffectSource(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
-    , m_sourceItem(0)
+    , m_sourceItem(nullptr)
     , m_wrapMode(ClampToEdge)
     , m_sourceRect(0, 0, 0, 0)
     , m_textureSize(0, 0)
     , m_format(RGBA)
     , m_size(0, 0)
-    , m_fbo(0)
-    , m_multisampledFbo(0)
+    , m_fbo(nullptr)
+    , m_multisampledFbo(nullptr)
     , m_refs(0)
     , m_dirtyTexture(true)
     , m_dirtySceneGraph(true)
@@ -123,7 +123,7 @@ void ShaderEffectSource::setSourceItem(QDeclarativeItem *item)
     if (m_sourceItem) {
 
         // Must have some item as parent
-        if (m_sourceItem->parentItem() == 0)
+        if (m_sourceItem->parentItem() == nullptr)
             m_sourceItem->setParentItem(this);
 
         if (m_refs)
@@ -341,7 +341,7 @@ void ShaderEffectSource::updateBackbuffer()
         } else {
             if (!m_fbo->isValid() || m_fbo->size() != size || m_fbo->format().internalTextureFormat() != GLenum(m_format)) {
                 delete m_fbo;
-                m_fbo = 0;
+                m_fbo = nullptr;
                 m_fbo =  new ShaderEffectBuffer(size, format);
             }
         }
@@ -388,9 +388,9 @@ void ShaderEffectSource::updateSizeAndTexture()
             size.setHeight(1);
         if (m_fbo && (m_fbo->size() != size || !m_fbo->isValid())) {
             delete m_fbo;
-            m_fbo = 0;
+            m_fbo = nullptr;
             delete m_multisampledFbo;
-            m_fbo = m_multisampledFbo = 0;
+            m_fbo = m_multisampledFbo = nullptr;
         }
         if (m_size.width() != size.width()) {
             m_size.setWidth(size.width());
@@ -442,10 +442,10 @@ void ShaderEffectSource::detachSourceItem()
         effect->removeRenderTarget(this);
 
     delete m_fbo;
-    m_fbo = 0;
+    m_fbo = nullptr;
 
     delete m_multisampledFbo;
-    m_multisampledFbo = 0;
+    m_multisampledFbo = nullptr;
 
     m_dirtyTexture = true;
 }

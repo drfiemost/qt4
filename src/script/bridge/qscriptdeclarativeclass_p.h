@@ -110,7 +110,7 @@ public:
         QString toString() const;
     private:
         friend class QScriptDeclarativeClass;
-        PersistentIdentifier(QScriptEnginePrivate *e) : identifier(0), engine(e), d(0) {}
+        PersistentIdentifier(QScriptEnginePrivate *e) : identifier(nullptr), engine(e), d(nullptr) {}
         QScriptEnginePrivate *engine;
         void *d;
     };
@@ -142,8 +142,8 @@ public:
     virtual QStringList propertyNames(Object *);
 
     virtual bool isQObject() const;
-    virtual QObject *toQObject(Object *, bool *ok = 0);
-    virtual QVariant toVariant(Object *, bool *ok = 0);
+    virtual QObject *toQObject(Object *, bool *ok = nullptr);
+    virtual QVariant toVariant(Object *, bool *ok = nullptr);
 
     QScriptContext *context() const;
 protected:

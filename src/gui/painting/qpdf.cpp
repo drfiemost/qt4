@@ -369,8 +369,8 @@ QByteArray QPdf::generateDashes(const QPen &pen)
 
 
 static const char* pattern_for_brush[] = {
-    0, // NoBrush
-    0, // SolidPattern
+    nullptr, // NoBrush
+    nullptr, // SolidPattern
     "0 J\n"
     "6 w\n"
     "[] 0 d\n"
@@ -750,7 +750,7 @@ static void cubicToHook(qfixed c1x, qfixed c1y,
 }
 
 QPdf::Stroker::Stroker()
-    : stream(0),
+    : stream(nullptr),
     first(true),
     dashStroker(&basicStroker)
 {
@@ -765,7 +765,7 @@ QPdf::Stroker::Stroker()
 void QPdf::Stroker::setPen(const QPen &pen)
 {
     if (pen.style() == Qt::NoPen) {
-        stroker = 0;
+        stroker = nullptr;
         return;
     }
     qreal w = pen.widthF();
@@ -899,7 +899,7 @@ static const char * const psToStr[QPrinter::NPaperSize+1] =
     "A4", "B5", "Letter", "Legal", "Executive",
     "A0", "A1", "A2", "A3", "A5", "A6", "A7", "A8", "A9", "B0", "B1",
     "B10", "B2", "B3", "B4", "B6", "B7", "B8", "B9", "C5E", "Comm10E",
-    "DLE", "Folio", "Ledger", "Tabloid", 0
+    "DLE", "Folio", "Ledger", "Tabloid", nullptr
 };
 
 QPdf::PaperSize QPdf::paperSize(QPrinter::PaperSize paperSize)
@@ -1595,7 +1595,7 @@ QVariant QPdfBaseEngine::property(PrintEnginePropertyKey key) const
 QPdfBaseEnginePrivate::QPdfBaseEnginePrivate(QPrinter::PrinterMode m)
     : clipEnabled(false), allClipped(false), hasPen(true), hasBrush(false), simplePen(false),
       useAlphaEngine(false),
-      outDevice(0), fd(-1),
+      outDevice(nullptr), fd(-1),
       duplex(QPrinter::DuplexNone), collate(false), fullPage(false), embedFonts(true), copies(1),
       pageOrder(QPrinter::FirstPageFirst), orientation(QPrinter::Portrait),
       paperSize(QPrinter::A4), colorMode(QPrinter::Color), paperSource(QPrinter::Auto),
@@ -1610,8 +1610,8 @@ QPdfBaseEnginePrivate::QPdfBaseEnginePrivate(QPrinter::PrinterMode m)
 
     postscript = false;
     currentObject = 1;
-    currentPage = 0;
-    stroker.stream = 0;
+    currentPage = nullptr;
+    stroker.stream = nullptr;
 }
 
 bool QPdfBaseEngine::begin(QPaintDevice *pdev)
@@ -1635,7 +1635,7 @@ bool QPdfBaseEngine::end()
     qDeleteAll(d->fonts);
     d->fonts.clear();
     delete d->currentPage;
-    d->currentPage = 0;
+    d->currentPage = nullptr;
 
     d->closePrintDevice();
     return true;
@@ -1710,9 +1710,9 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
                 // try to replace this process with "true" - this prevents
                 // global destructors from being called (that could possibly
                 // do wrong things to the parent process)
-                (void)execlp("true", "true", (char *)0);
-                (void)execl("/bin/true", "true", (char *)0);
-                (void)execl("/usr/bin/true", "true", (char *)0);
+                (void)execlp("true", "true", (char *)nullptr);
+                (void)execl("/bin/true", "true", (char *)nullptr);
+                (void)execl("/usr/bin/true", "true", (char *)nullptr);
                 ::_exit(0);
             }
             qt_safe_dup2(fds[0], 0, 0);
@@ -1725,7 +1725,7 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
                 else
                     pr.prepend(QLatin1String("-P"));
                 (void)execlp(printProgram.toLocal8Bit().data(), printProgram.toLocal8Bit().data(),
-                             pr.toLocal8Bit().data(), (char *)0);
+                             pr.toLocal8Bit().data(), (char *)nullptr);
             } else {
                 // if no print program has been specified, be smart
                 // about the option string too.
@@ -1764,13 +1764,13 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
                     lpargs[++i] = media.data();
                 }
 
-                lpargs[++i] = 0;
+                lpargs[++i] = nullptr;
                 char **lprargs = new char *[lprhack.size()+2];
                 char lpr[] = "lpr";
                 lprargs[0] = lpr;
                 for (int i = 0; i < lprhack.size(); ++i)
                     lprargs[i+1] = (char *)lprhack[i].constData();
-                lprargs[lprhack.size() + 1] = 0;
+                lprargs[lprhack.size() + 1] = nullptr;
                 (void)execvp("lp", lpargs);
                 (void)execvp("lpr", lprargs);
                 (void)execv("/bin/lp", lpargs);
@@ -1792,7 +1792,7 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
         // parent process
         QT_CLOSE(fds[0]);
         fd = fds[1];
-        (void)qt_safe_waitpid(pid, 0, 0);
+        (void)qt_safe_waitpid(pid, nullptr, 0);
 
         if (fd < 0)
             return false;
@@ -1818,7 +1818,7 @@ void QPdfBaseEnginePrivate::closePrintDevice()
 #endif
     fd = -1;
     delete outDevice;
-    outDevice = 0;
+    outDevice = nullptr;
 
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
     if (!cupsTempFile.isEmpty()) {
@@ -1891,7 +1891,7 @@ void QPdfBaseEnginePrivate::closePrintDevice()
         }
 
         // Print the file.
-        cups_option_t* optPtr = cupsOptStruct.size() ? &cupsOptStruct.first() : 0;
+        cups_option_t* optPtr = cupsOptStruct.size() ? &cupsOptStruct.first() : nullptr;
         cups.printFile(prnName.constData(), tempFile.toLocal8Bit().constData(),
                 title.toLocal8Bit().constData(), cupsOptStruct.size(), optPtr);
 

@@ -52,7 +52,7 @@ SubcomponentMaskLayerItem::SubcomponentMaskLayerItem(QDeclarativeViewInspector *
                                                      QGraphicsItem *parentItem) :
     QGraphicsPolygonItem(parentItem),
     m_inspector(inspector),
-    m_currentItem(0),
+    m_currentItem(nullptr),
     m_borderRect(new QGraphicsRectItem(this))
 {
     m_borderRect->setRect(0,0,0,0);
@@ -109,7 +109,7 @@ void SubcomponentMaskLayerItem::setCurrentItem(QGraphicsItem *item)
     itemRect = item->mapRectToScene(itemRect);
 
     // if updating the same item as before, resize the rectangle only bigger, not smaller.
-    if (prevItem == item && prevItem != 0) {
+    if (prevItem == item && prevItem != nullptr) {
         m_itemPolyRect = resizeRect(itemRect, m_itemPolyRect);
     } else {
         m_itemPolyRect = itemRect;

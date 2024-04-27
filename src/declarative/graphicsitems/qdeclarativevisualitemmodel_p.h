@@ -93,7 +93,7 @@ Q_SIGNALS:
     void destroyingItem(QDeclarativeItem *item);
 
 protected:
-    QDeclarativeVisualModel(QObjectPrivate &dd, QObject *parent = 0)
+    QDeclarativeVisualModel(QObjectPrivate &dd, QObject *parent = nullptr)
         : QObject(dd, parent) {}
 
 private:
@@ -111,7 +111,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualItemModel : public QDeclarativeVisualM
     Q_CLASSINFO("DefaultProperty", "children")
 
 public:
-    QDeclarativeVisualItemModel(QObject *parent=0);
+    QDeclarativeVisualItemModel(QObject *parent=nullptr);
     virtual ~QDeclarativeVisualItemModel() {}
 
     virtual int count() const;
@@ -150,7 +150,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualDataModel : public QDeclarativeVisualM
     Q_CLASSINFO("DefaultProperty", "delegate")
 public:
     QDeclarativeVisualDataModel();
-    QDeclarativeVisualDataModel(QDeclarativeContext *, QObject *parent=0);
+    QDeclarativeVisualDataModel(QDeclarativeContext *, QObject *parent=nullptr);
     virtual ~QDeclarativeVisualDataModel();
 
     QVariant model() const;
@@ -169,7 +169,7 @@ public:
     void setPart(const QString &);
 
     int count() const;
-    bool isValid() const { return delegate() != 0; }
+    bool isValid() const { return delegate() != nullptr; }
     QDeclarativeItem *item(int index, bool complete=true);
     QDeclarativeItem *item(int index, const QByteArray &, bool complete=true);
     ReleaseFlags release(QDeclarativeItem *item);

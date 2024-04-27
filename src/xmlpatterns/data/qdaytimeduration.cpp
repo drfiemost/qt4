@@ -95,7 +95,7 @@ DayTimeDuration::Ptr DayTimeDuration::fromLexical(const QString &lexical)
     MSecondProperty msec = 0;
     bool isPos;
 
-    const DayTimeDuration::Ptr err(create(captureTable, lexical, &isPos, 0, 0, &days,
+    const DayTimeDuration::Ptr err(create(captureTable, lexical, &isPos, nullptr, nullptr, &days,
                                           &hours, &minutes, &sec, &msec));
     return err ? err : DayTimeDuration::Ptr(new DayTimeDuration(isPos, days, hours, minutes,
                                                                 sec, msec));

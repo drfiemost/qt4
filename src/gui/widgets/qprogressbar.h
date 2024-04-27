@@ -72,7 +72,7 @@ class Q_GUI_EXPORT QProgressBar : public QWidget
 public:
     enum Direction { TopToBottom, BottomToTop };
 
-    explicit QProgressBar(QWidget *parent = 0);
+    explicit QProgressBar(QWidget *parent = nullptr);
     ~QProgressBar();
 
     int minimum() const;

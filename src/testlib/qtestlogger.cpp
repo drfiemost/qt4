@@ -55,8 +55,8 @@
 QT_BEGIN_NAMESPACE
 
 QTestLogger::QTestLogger(int fm)
-    :listOfTestcases(0), currentLogElement(0), errorLogElement(0),
-    logFormatter(0), format( (TestLoggerFormat)fm ), filelogger(new QTestFileLogger),
+    :listOfTestcases(nullptr), currentLogElement(nullptr), errorLogElement(nullptr),
+    logFormatter(nullptr), format( (TestLoggerFormat)fm ), filelogger(new QTestFileLogger),
     testCounter(0), passCounter(0),
     failureCounter(0), errorCounter(0),
     warningCounter(0), skipCounter(0),
@@ -185,7 +185,7 @@ void QTestLogger::leaveTestFunction()
 void QTestLogger::addIncident(IncidentTypes type, const char *description,
                      const char *file, int line)
 {
-    const char *typeBuf = 0;
+    const char *typeBuf = nullptr;
     char buf[100];
 
     switch (type) {
@@ -310,7 +310,7 @@ void QTestLogger::addTag(QTestElement* element)
 void QTestLogger::addMessage(MessageTypes type, const char *message, const char *file, int line)
 {
     QTestElement *errorElement = new QTestElement(QTest::LET_Error);
-    const char *typeBuf = 0;
+    const char *typeBuf = nullptr;
 
     switch (type) {
     case QAbstractTestLogger::Warn:

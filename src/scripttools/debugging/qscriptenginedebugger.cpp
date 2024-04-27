@@ -265,7 +265,7 @@ class WidgetClosedNotifier : public QObject
 {
     Q_OBJECT
 public:
-    WidgetClosedNotifier(QWidget *w, QObject *parent = 0)
+    WidgetClosedNotifier(QWidget *w, QObject *parent = nullptr)
         : QObject(parent), widget(w)
     {
         w->installEventFilter(this);
@@ -294,10 +294,10 @@ QtScriptDebuggerResourceInitializer QScriptEngineDebuggerPrivate::resourceInitia
 
 QScriptEngineDebuggerPrivate::QScriptEngineDebuggerPrivate()
 {
-    debugger = 0;
-    frontend = 0;
+    debugger = nullptr;
+    frontend = nullptr;
 #ifndef QT_NO_MAINWINDOW
-    standardWindow = 0;
+    standardWindow = nullptr;
 #endif
     autoShow = true;
 }
@@ -313,7 +313,7 @@ QScriptEngineDebuggerPrivate::~QScriptEngineDebuggerPrivate()
         settings.setValue(QLatin1String("Qt/scripttools/debugging/mainWindowGeometry"), geometry);
         QByteArray state = standardWindow->saveState();
         settings.setValue(QLatin1String("Qt/scripttools/debugging/mainWindowState"), state);
-        if (standardWindow->parent() == 0)
+        if (standardWindow->parent() == nullptr)
             delete standardWindow;
     }
 #endif
@@ -401,7 +401,7 @@ void QScriptEngineDebugger::detach()
     if (d->frontend)
         d->frontend->detach();
     if (d->debugger)
-        d->debugger->setFrontend(0);
+        d->debugger->setFrontend(nullptr);
 }
 
 /*!
@@ -514,7 +514,7 @@ QMainWindow *QScriptEngineDebugger::standardWindow() const
     if (d->standardWindow)
         return d->standardWindow;
     if (!QApplication::instance())
-        return 0;
+        return nullptr;
     QScriptEngineDebugger *that = const_cast<QScriptEngineDebugger*>(this);
 
     QMainWindow *win = new QMainWindow();

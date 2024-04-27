@@ -61,7 +61,7 @@ WriteIconInitialization::WriteIconInitialization(Uic *uic)
 
 void WriteIconInitialization::acceptUI(DomUI *node)
 {
-    if (node->elementImages() == 0)
+    if (node->elementImages() == nullptr)
         return;
 
     QString className = node->elementClass() + option.postfix;

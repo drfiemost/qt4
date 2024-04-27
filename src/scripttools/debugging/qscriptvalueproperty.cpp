@@ -70,7 +70,7 @@ QScriptValuePropertyPrivate::~QScriptValuePropertyPrivate()
   Constructs an invalid QScriptValueProperty.
 */
 QScriptValueProperty::QScriptValueProperty()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -144,7 +144,7 @@ QScriptValue::PropertyFlags QScriptValueProperty::flags() const
 {
     Q_D(const QScriptValueProperty);
     if (!d)
-        return 0;
+        return nullptr;
     return d->flags;
 }
 
@@ -155,7 +155,7 @@ QScriptValue::PropertyFlags QScriptValueProperty::flags() const
 bool QScriptValueProperty::isValid() const
 {
     Q_D(const QScriptValueProperty);
-    return (d != 0);
+    return (d != nullptr);
 }
 
 QT_END_NAMESPACE

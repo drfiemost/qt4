@@ -31,7 +31,7 @@ void HashTable::createTable(JSGlobalData* globalData) const
     int linkIndex = compactHashSizeMask + 1;
     HashEntry* entries = new HashEntry[compactSize];
     for (int i = 0; i < compactSize; ++i)
-        entries[i].setKey(0);
+        entries[i].setKey(nullptr);
     for (int i = 0; values[i].key; ++i) {
         UString::Rep* identifier = Identifier::add(globalData, values[i].key).releaseRef();
         int hashIndex = identifier->existingHash() & compactHashSizeMask;
@@ -60,7 +60,7 @@ void HashTable::deleteTable() const
                 key->deref();
         }
         delete [] table;
-        table = 0;
+        table = nullptr;
     }
 }
 

@@ -73,8 +73,8 @@ public:
     MemoryPool() {
         m_blockIndex = maxBlockCount;
         m_currentIndex = 0;
-        m_storage = 0;
-        m_currentBlock = 0;
+        m_storage = nullptr;
+        m_currentBlock = nullptr;
         m_currentBlockSize = 0;
     }
 
@@ -87,7 +87,7 @@ public:
 
     char *allocate(int bytes) {
         bytes += (8 - bytes) & 7; // ensure multiple of 8 bytes (maintain alignment)
-        if (m_currentBlock == 0 || m_currentBlockSize < m_currentIndex + bytes) {
+        if (m_currentBlock == nullptr || m_currentBlockSize < m_currentIndex + bytes) {
             ++m_blockIndex;
             m_currentBlockSize = defaultBlockSize << m_blockIndex;
 

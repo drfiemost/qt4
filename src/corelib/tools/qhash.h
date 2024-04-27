@@ -334,7 +334,7 @@ public:
         typedef T *pointer;
         typedef T &reference;
 
-        inline iterator() : i(0) { }
+        inline iterator() : i(nullptr) { }
         explicit inline iterator(void *node) : i(reinterpret_cast<QHashData::Node *>(node)) { }
 
         inline const Key &key() const { return concrete(i)->key; }
@@ -393,7 +393,7 @@ public:
         typedef const T *pointer;
         typedef const T &reference;
 
-        inline const_iterator() : i(0) { }
+        inline const_iterator() : i(nullptr) { }
         explicit inline const_iterator(void *node)
             : i(reinterpret_cast<QHashData::Node *>(node)) { }
 #ifdef QT_STRICT_ITERATORS

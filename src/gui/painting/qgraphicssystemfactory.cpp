@@ -58,7 +58,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader,
 
 QGraphicsSystem *QGraphicsSystemFactory::create(const QString& key)
 {
-    QGraphicsSystem *ret = 0;
+    QGraphicsSystem *ret = nullptr;
     QString system = key.toLower();
 
 #if defined (QT_GRAPHICSSYSTEM_OPENGL)
@@ -84,7 +84,7 @@ QGraphicsSystem *QGraphicsSystemFactory::create(const QString& key)
     else if (system == QLatin1String("runtime"))
         return new QRuntimeGraphicsSystem;
     else if (system.isEmpty() || system == QLatin1String("native"))
-        return 0;
+        return nullptr;
 
 #ifndef QT_NO_LIBRARY
     if (!ret) {

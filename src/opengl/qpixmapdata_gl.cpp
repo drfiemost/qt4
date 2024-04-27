@@ -97,8 +97,8 @@ static inline QSize maybeRoundToNextPowerOfTwo(const QSize &sz)
 
 QGLFramebufferObject *QGLFramebufferObjectPool::acquire(const QSize &requestSize, const QGLFramebufferObjectFormat &requestFormat, bool strictSize)
 {
-    QGLFramebufferObject *chosen = 0;
-    QGLFramebufferObject *candidate = 0;
+    QGLFramebufferObject *chosen = nullptr;
+    QGLFramebufferObject *candidate = nullptr;
     for (int i = 0; !chosen && i < m_fbos.size(); ++i) {
         QGLFramebufferObject *fbo = m_fbos.at(i);
 
@@ -150,7 +150,7 @@ QGLFramebufferObject *QGLFramebufferObjectPool::acquire(const QSize &requestSize
 
     if (!chosen->isValid()) {
         delete chosen;
-        chosen = 0;
+        chosen = nullptr;
     }
 
     return chosen;
@@ -224,7 +224,7 @@ void QGLPixmapGLPaintDevice::endPaint()
     QGLPaintDevice::endPaint();
 
     qgl_fbo_pool()->release(data->m_renderFbo);
-    data->m_renderFbo = 0;
+    data->m_renderFbo = nullptr;
 }
 
 QGLContext* QGLPixmapGLPaintDevice::context() const
@@ -252,9 +252,9 @@ static int qt_gl_pixmap_serial = 0;
 
 QGLPixmapData::QGLPixmapData(PixelType type)
     : QPixmapData(type, OpenGLClass)
-    , m_renderFbo(0)
-    , m_engine(0)
-    , m_ctx(0)
+    , m_renderFbo(nullptr)
+    , m_engine(nullptr)
+    , m_ctx(nullptr)
     , m_dirty(false)
     , m_hasFillColor(false)
     , m_hasAlpha(false)
@@ -343,7 +343,7 @@ void QGLPixmapData::ensureCreated() const
     if (!m_texture.id) {
         glGenTextures(1, &m_texture.id);
         glBindTexture(target, m_texture.id);
-        glTexImage2D(target, 0, internal_format, w, h, 0, external_format, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(target, 0, internal_format, w, h, 0, external_format, GL_UNSIGNED_BYTE, nullptr);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     }
@@ -717,7 +717,7 @@ bool QGLPixmapData::useFramebufferObjects() const
 QPaintEngine* QGLPixmapData::paintEngine() const
 {
     if (!isValid())
-        return 0;
+        return nullptr;
 
     if (m_renderFbo)
         return m_engine;

@@ -148,7 +148,7 @@ QtGradientStop *QtGradientStopsWidgetPrivate::stopAt(const QPoint &viewportPos) 
         if ((m_handleSize * m_handleSize / 4) > (x * x + y * y))
             return stop;
     }
-    return 0;
+    return nullptr;
 }
 
 QList<QtGradientStop *> QtGradientStopsWidgetPrivate::stopsAt(const QPoint &viewportPos) const
@@ -364,17 +364,17 @@ QtGradientStopsWidget::QtGradientStopsWidget(QWidget *parent)
 {
     d_ptr->q_ptr = this;
     d_ptr->m_backgroundCheckered = true;
-    d_ptr->m_model = 0;
+    d_ptr->m_model = nullptr;
     d_ptr->m_handleSize = 25.0;
     d_ptr->m_scaleFactor = 1000;
     d_ptr->m_moving = false;
     d_ptr->m_zoom = 1;
     d_ptr->m_rubber = new QRubberBand(QRubberBand::Rectangle, this);
 #ifndef QT_NO_DRAGANDDROP
-    d_ptr->m_dragStop = 0;
-    d_ptr->m_changedStop = 0;
-    d_ptr->m_clonedStop = 0;
-    d_ptr->m_dragModel = 0;
+    d_ptr->m_dragStop = nullptr;
+    d_ptr->m_changedStop = nullptr;
+    d_ptr->m_clonedStop = nullptr;
+    d_ptr->m_dragModel = nullptr;
 #endif
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -725,7 +725,7 @@ void QtGradientStopsWidget::keyPressEvent(QKeyEvent *e)
         PositionStopMap stops = d_ptr->m_model->stops();
         if (stops.isEmpty())
             return;
-        QtGradientStop *newCurrent = 0;
+        QtGradientStop *newCurrent = nullptr;
         QtGradientStop *current = d_ptr->m_model->currentStop();
         if (!current || e->key() == Qt::Key_Home || e->key() == Qt::Key_End) {
             if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Home)
@@ -1075,7 +1075,7 @@ void QtGradientStopsWidgetPrivate::clearDrag()
     removeClonedStop();
     restoreChangedStop();
     delete m_dragModel;
-    m_dragModel = 0;
+    m_dragModel = nullptr;
 }
 
 void QtGradientStopsWidgetPrivate::removeClonedStop()
@@ -1083,7 +1083,7 @@ void QtGradientStopsWidgetPrivate::removeClonedStop()
     if (!m_clonedStop)
         return;
     m_dragModel->removeStop(m_clonedStop);
-    m_clonedStop = 0;
+    m_clonedStop = nullptr;
 }
 
 void QtGradientStopsWidgetPrivate::restoreChangedStop()
@@ -1091,8 +1091,8 @@ void QtGradientStopsWidgetPrivate::restoreChangedStop()
     if (!m_changedStop)
         return;
     m_dragModel->changeStop(m_changedStop, m_model->at(m_changedStop->position())->color());
-    m_changedStop = 0;
-    m_dragStop = 0;
+    m_changedStop = nullptr;
+    m_dragStop = nullptr;
 }
 
 void QtGradientStopsWidgetPrivate::changeStop(qreal pos)

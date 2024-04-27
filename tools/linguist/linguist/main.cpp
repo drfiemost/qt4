@@ -150,7 +150,7 @@ int main(int argc, char **argv)
     QWidget tmp;
     tmp.restoreGeometry(config.value(settingPath("Geometry/WindowGeometry")).toByteArray());
 
-    QSplashScreen *splash = 0;
+    QSplashScreen *splash = nullptr;
     int screenId = QApplication::desktop()->screenNumber(tmp.geometry().center());
     splash = new QSplashScreen(QApplication::desktop()->screen(screenId),
         QPixmap(QLatin1String(":/images/splash.png")));

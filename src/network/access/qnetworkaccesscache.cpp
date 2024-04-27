@@ -74,7 +74,7 @@ struct QNetworkAccessCache::Node
     int useCount;
 
     Node()
-        : older(0), newer(0), object(0), useCount(0)
+        : older(nullptr), newer(nullptr), object(nullptr), useCount(0)
     { }
 };
 
@@ -104,7 +104,7 @@ void QNetworkAccessCache::CacheableObject::setShareable(bool enable)
 }
 
 QNetworkAccessCache::QNetworkAccessCache()
-    : oldest(0), newest(0)
+    : oldest(nullptr), newest(nullptr)
 {
 }
 
@@ -131,7 +131,7 @@ void QNetworkAccessCache::clear()
 
     timer.stop();
 
-    oldest = newest = 0;
+    oldest = newest = nullptr;
 }
 
 /*!
@@ -187,7 +187,7 @@ bool QNetworkAccessCache::unlinkEntry(const QByteArray &key)
     if (node->newer)
         node->newer->older = node->older;
 
-    node->newer = node->older = 0;
+    node->newer = node->older = nullptr;
     return wasOldest;
 }
 
@@ -236,9 +236,9 @@ void QNetworkAccessCache::timerEvent(QTimerEvent *)
 
     // fixup the list
     if (oldest)
-        oldest->older = 0;
+        oldest->older = nullptr;
     else
-        newest = 0;
+        newest = nullptr;
 
     updateTimer();
 }
@@ -300,7 +300,7 @@ QNetworkAccessCache::CacheableObject *QNetworkAccessCache::requestEntryNow(const
 {
     NodeHash::Iterator it = hash.find(key);
     if (it == hash.end())
-        return 0;
+        return nullptr;
     if (it->useCount > 0) {
         if (it->object->shareable) {
             ++it->useCount;
@@ -308,7 +308,7 @@ QNetworkAccessCache::CacheableObject *QNetworkAccessCache::requestEntryNow(const
         }
 
         // object in use and not shareable
-        return 0;
+        return nullptr;
     }
 
     // entry not in use, let the caller have it

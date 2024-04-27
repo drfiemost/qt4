@@ -50,10 +50,10 @@ QT_BEGIN_NAMESPACE
 typedef void (*_qt_pixmap_cleanup_hook)(int);
 typedef void (*_qt_pixmap_cleanup_hook_64)(qint64);
 typedef void (*_qt_image_cleanup_hook)(int);
-Q_GUI_EXPORT _qt_pixmap_cleanup_hook qt_pixmap_cleanup_hook = 0;
-Q_GUI_EXPORT _qt_pixmap_cleanup_hook_64 qt_pixmap_cleanup_hook_64 = 0;
-Q_GUI_EXPORT _qt_image_cleanup_hook qt_image_cleanup_hook = 0;
-Q_GUI_EXPORT _qt_image_cleanup_hook_64 qt_image_cleanup_hook_64 = 0;
+Q_GUI_EXPORT _qt_pixmap_cleanup_hook qt_pixmap_cleanup_hook = nullptr;
+Q_GUI_EXPORT _qt_pixmap_cleanup_hook_64 qt_pixmap_cleanup_hook_64 = nullptr;
+Q_GUI_EXPORT _qt_image_cleanup_hook qt_image_cleanup_hook = nullptr;
+Q_GUI_EXPORT _qt_image_cleanup_hook_64 qt_image_cleanup_hook_64 = nullptr;
 
 Q_GLOBAL_STATIC(QImagePixmapCleanupHooks, qt_image_and_pixmap_cleanup_hooks)
 

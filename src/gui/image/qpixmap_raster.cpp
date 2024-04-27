@@ -221,7 +221,7 @@ void QRasterPixmapData::fill(const QColor &color)
         }
         pixel = PREMUL(color.rgba());
         const QPixelLayout *layout = &qPixelLayouts[image.format()];
-        layout->convertFromARGB32PM(&pixel, &pixel, 1, layout, 0);
+        layout->convertFromARGB32PM(&pixel, &pixel, 1, layout, nullptr);
     } else {
         pixel = 0;
         // ### what about 8 bits

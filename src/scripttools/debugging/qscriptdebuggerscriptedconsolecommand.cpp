@@ -155,7 +155,7 @@ class QScriptDebuggerScriptedConsoleCommandJobPrivate
     : public QScriptDebuggerConsoleCommandJobPrivate
 {
 public:
-    QScriptDebuggerScriptedConsoleCommandJobPrivate() : command(0), commandCount(0) {}
+    QScriptDebuggerScriptedConsoleCommandJobPrivate() : command(nullptr), commandCount(0) {}
     ~QScriptDebuggerScriptedConsoleCommandJobPrivate() {}
 
     QScriptDebuggerScriptedConsoleCommandPrivate *command;
@@ -207,10 +207,10 @@ void QScriptDebuggerScriptedConsoleCommandJob::start()
     global->setConsole(d->console);
     d->commandCount = 0;
     QScriptValue ret = d->command->execFunction.call(QScriptValue(), args);
-    global->setScheduler(0);
-    global->setResponseHandler(0);
-    global->setMessageHandler(0);
-    global->setConsole(0);
+    global->setScheduler(nullptr);
+    global->setResponseHandler(nullptr);
+    global->setMessageHandler(nullptr);
+    global->setConsole(nullptr);
     if (ret.isError()) {
         qWarning("*** internal error: %s", qPrintable(ret.toString()));
     }
@@ -238,10 +238,10 @@ void QScriptDebuggerScriptedConsoleCommandJob::handleResponse(
     global->setConsole(d->console);
     d->commandCount = 0;
     QScriptValue ret = d->command->responseFunction.call(QScriptValue(), args);
-    global->setScheduler(0);
-    global->setResponseHandler(0);
-    global->setMessageHandler(0);
-    global->setConsole(0);
+    global->setScheduler(nullptr);
+    global->setResponseHandler(nullptr);
+    global->setMessageHandler(nullptr);
+    global->setConsole(nullptr);
     if (ret.isError()) {
         qWarning("*** internal error: %s", qPrintable(ret.toString()));
     }
@@ -359,17 +359,17 @@ QScriptDebuggerScriptedConsoleCommand *QScriptDebuggerScriptedConsoleCommand::pa
 
     cppGlobal->setMessageHandler(messageHandler);
     QScriptValue ret = engine->evaluate(program, fileName);
-    cppGlobal->setMessageHandler(0);
+    cppGlobal->setMessageHandler(nullptr);
     if (engine->hasUncaughtException()) {
         messageHandler->message(QtCriticalMsg, ret.toString(), fileName,
                                 engine->uncaughtExceptionLineNumber());
-        return 0;
+        return nullptr;
     }
 
     QScriptValue name = global.property(QLatin1String("name"));
     if (!name.isString()) {
         messageHandler->message(QtCriticalMsg, QLatin1String("command definition lacks a name"), fileName);
-        return 0;
+        return nullptr;
     }
     QString nameStr = name.toString();
 
@@ -377,7 +377,7 @@ QScriptDebuggerScriptedConsoleCommand *QScriptDebuggerScriptedConsoleCommand::pa
     if (!group.isString()) {
         messageHandler->message(QtCriticalMsg, QString::fromLatin1("definition of command \"%0\" lacks a group name")
                                 .arg(nameStr), fileName);
-        return 0;
+        return nullptr;
     }
     QString groupStr = group.toString();
 
@@ -385,7 +385,7 @@ QScriptDebuggerScriptedConsoleCommand *QScriptDebuggerScriptedConsoleCommand::pa
     if (!shortDesc.isString()) {
         messageHandler->message(QtCriticalMsg, QString::fromLatin1("definition of command \"%0\" lacks shortDescription")
                                 .arg(nameStr), fileName);
-        return 0;
+        return nullptr;
     }
     QString shortDescStr = shortDesc.toString();
 
@@ -393,7 +393,7 @@ QScriptDebuggerScriptedConsoleCommand *QScriptDebuggerScriptedConsoleCommand::pa
     if (!longDesc.isString()) {
         messageHandler->message(QtCriticalMsg, QString::fromLatin1("definition of command \"%0\" lacks longDescription")
                                 .arg(nameStr), fileName);
-        return 0;
+        return nullptr;
     }
     QString longDescStr = longDesc.toString();
 
@@ -413,7 +413,7 @@ QScriptDebuggerScriptedConsoleCommand *QScriptDebuggerScriptedConsoleCommand::pa
     if (!execFunction.isFunction()) {
         messageHandler->message(QtCriticalMsg, QString::fromLatin1("definition of command \"%0\" lacks execute() function")
                                 .arg(nameStr), fileName);
-        return 0;
+        return nullptr;
     }
 
     QScriptValue responseFunction = global.property(QLatin1String("handleResponse"));

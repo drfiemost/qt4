@@ -868,7 +868,7 @@ QString QApplicationArgumentParser::typeToName(const QApplicationArgument &argum
             if(QApplicationArgumentParserPrivate::isBuiltinVariant(type))
                 return QString::fromLatin1(QVariant::typeToName(QVariant::Type(type)));
             else
-                return QLatin1String(QVariant(type, static_cast<void *>(0)).typeName());
+                return QLatin1String(QVariant(type, nullptr).typeName());
         }
     }
 }

@@ -75,7 +75,7 @@ CL_NS_DEF(util)
 	if( bufferOwner ){
 		_CLDELETE_CARRAY(buffer);
 	}else
-		buffer = NULL;
+		buffer = nullptr;
   }
   void StringBuffer::clear(){
   //Func - Clears the Stringbuffer and resets it to it default empty state

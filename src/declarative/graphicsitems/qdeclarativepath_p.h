@@ -57,7 +57,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathElement : public QObject
 {
     Q_OBJECT
 public:
-    QDeclarativePathElement(QObject *parent=0) : QObject(parent) {}
+    QDeclarativePathElement(QObject *parent=nullptr) : QObject(parent) {}
 Q_SIGNALS:
     void changed();
 };
@@ -69,7 +69,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathAttribute : public QDeclarativePathEleme
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(qreal value READ value WRITE setValue NOTIFY valueChanged)
 public:
-    QDeclarativePathAttribute(QObject *parent=0) : QDeclarativePathElement(parent), _value(0) {}
+    QDeclarativePathAttribute(QObject *parent=nullptr) : QDeclarativePathElement(parent), _value(0) {}
 
 
     QString name() const;
@@ -94,7 +94,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeCurve : public QDeclarativePathElement
     Q_PROPERTY(qreal x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(qreal y READ y WRITE setY NOTIFY yChanged)
 public:
-    QDeclarativeCurve(QObject *parent=0) : QDeclarativePathElement(parent), _x(0), _y(0) {}
+    QDeclarativeCurve(QObject *parent=nullptr) : QDeclarativePathElement(parent), _x(0), _y(0) {}
 
     qreal x() const;
     void setX(qreal x);
@@ -117,7 +117,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathLine : public QDeclarativeCurve
 {
     Q_OBJECT
 public:
-    QDeclarativePathLine(QObject *parent=0) : QDeclarativeCurve(parent) {}
+    QDeclarativePathLine(QObject *parent=nullptr) : QDeclarativeCurve(parent) {}
 
     void addToPath(QPainterPath &path);
 };
@@ -129,7 +129,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathQuad : public QDeclarativeCurve
     Q_PROPERTY(qreal controlX READ controlX WRITE setControlX NOTIFY controlXChanged)
     Q_PROPERTY(qreal controlY READ controlY WRITE setControlY NOTIFY controlYChanged)
 public:
-    QDeclarativePathQuad(QObject *parent=0) : QDeclarativeCurve(parent), _controlX(0), _controlY(0) {}
+    QDeclarativePathQuad(QObject *parent=nullptr) : QDeclarativeCurve(parent), _controlX(0), _controlY(0) {}
 
     qreal controlX() const;
     void setControlX(qreal x);
@@ -157,7 +157,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathCubic : public QDeclarativeCurve
     Q_PROPERTY(qreal control2X READ control2X WRITE setControl2X NOTIFY control2XChanged)
     Q_PROPERTY(qreal control2Y READ control2Y WRITE setControl2Y NOTIFY control2YChanged)
 public:
-    QDeclarativePathCubic(QObject *parent=0) : QDeclarativeCurve(parent), _control1X(0), _control1Y(0), _control2X(0), _control2Y(0) {}
+    QDeclarativePathCubic(QObject *parent=nullptr) : QDeclarativeCurve(parent), _control1X(0), _control1Y(0), _control2X(0), _control2Y(0) {}
 
     qreal control1X() const;
     void setControl1X(qreal x);
@@ -191,7 +191,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathPercent : public QDeclarativePathElement
     Q_OBJECT
     Q_PROPERTY(qreal value READ value WRITE setValue NOTIFY valueChanged)
 public:
-    QDeclarativePathPercent(QObject *parent=0) : QDeclarativePathElement(parent) {}
+    QDeclarativePathPercent(QObject *parent=nullptr) : QDeclarativePathElement(parent) {}
 
     qreal value() const;
     void setValue(qreal value);
@@ -216,7 +216,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePath : public QObject, public QDeclarativePa
     Q_CLASSINFO("DefaultProperty", "pathElements")
     Q_INTERFACES(QDeclarativeParserStatus)
 public:
-    QDeclarativePath(QObject *parent=0);
+    QDeclarativePath(QObject *parent=nullptr);
     ~QDeclarativePath();
 
     QDeclarativeListProperty<QDeclarativePathElement> pathElements();

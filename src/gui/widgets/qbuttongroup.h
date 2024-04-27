@@ -61,7 +61,7 @@ class Q_GUI_EXPORT QButtonGroup : public QObject
 
     Q_PROPERTY(bool exclusive READ exclusive WRITE setExclusive)
 public:
-    explicit QButtonGroup(QObject *parent = 0);
+    explicit QButtonGroup(QObject *parent = nullptr);
     ~QButtonGroup();
 
     void setExclusive(bool);

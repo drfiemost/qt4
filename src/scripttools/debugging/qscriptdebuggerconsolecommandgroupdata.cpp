@@ -74,7 +74,7 @@ QScriptDebuggerConsoleCommandGroupDataPrivate::~QScriptDebuggerConsoleCommandGro
 }
 
 QScriptDebuggerConsoleCommandGroupData::QScriptDebuggerConsoleCommandGroupData()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -121,7 +121,7 @@ QString QScriptDebuggerConsoleCommandGroupData::longDescription() const
 bool QScriptDebuggerConsoleCommandGroupData::isValid() const
 {
     Q_D(const QScriptDebuggerConsoleCommandGroupData);
-    return (d != 0);
+    return (d != nullptr);
 }
 
 QT_END_NAMESPACE

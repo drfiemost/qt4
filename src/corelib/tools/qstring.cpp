@@ -1879,7 +1879,7 @@ void QString::replace_helper(uint *indices, int nIndices, int blen, const QChar 
 {
     // Copy after if it lies inside our own d->data() area (which we could
     // possibly invalidate via a realloc or modify by replacement).
-    QChar *afterBuffer = 0;
+    QChar *afterBuffer = nullptr;
     if (pointsIntoRange(after, d->data(), d->size)) // Use copy in place of vulnerable original:
         after = afterBuffer = textCopy(after, alen);
 
@@ -1964,7 +1964,7 @@ QString &QString::replace(const QChar *before, int blen,
         return *this;
 
     QStringMatcher matcher(before, blen, cs);
-    QChar *beforeBuffer = 0, *afterBuffer = 0;
+    QChar *beforeBuffer = nullptr, *afterBuffer = nullptr;
 
     int index = 0;
     while (1) {
@@ -9082,7 +9082,7 @@ QVector<uint> QStringRef::toUcs4() const
 */
 QStringRef QStringRef::trimmed() const
 {
-    if (m_size == 0 || m_string == 0)
+    if (m_size == 0 || m_string == nullptr)
         return *this;
     const QChar *s = m_string->constData() + m_position;
     int start = 0;

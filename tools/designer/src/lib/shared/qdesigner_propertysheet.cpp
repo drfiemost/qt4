@@ -77,7 +77,7 @@ static const QDesignerMetaObjectInterface *propertyIntroducedBy(const QDesignerM
     if (meta->superClass())
         return propertyIntroducedBy(meta->superClass(), index);
 
-    return 0;
+    return nullptr;
 }
 
 // Layout fake properties (prefixed by 'layout' to distinguish them from other 'margins'
@@ -121,7 +121,7 @@ static QDesignerFormEditorInterface *formEditorForObject(QObject *o) {
         o = o->parent();
     } while(o);
     Q_ASSERT(o);
-    return 0;
+    return nullptr;
 }
 
 static bool hasLayoutAttributes(QDesignerFormEditorInterface *core, QObject *object)
@@ -194,7 +194,7 @@ public:
 
     PropertyType propertyType(int index) const;
     QString transformLayoutPropertyName(int index) const;
-    QLayout* layout(QDesignerPropertySheetExtension **layoutPropertySheet = 0) const;
+    QLayout* layout(QDesignerPropertySheetExtension **layoutPropertySheet = nullptr) const;
     static ObjectType objectType(const QObject *o);
 
     bool isReloadableProperty(int index) const;
@@ -386,11 +386,11 @@ QDesignerPropertySheetPrivate::QDesignerPropertySheetPrivate(QDesignerPropertySh
     m_objectType(QDesignerPropertySheet::objectTypeFromObject(object)),
     m_canHaveLayoutAttributes(hasLayoutAttributes(m_core, object)),
     m_object(object),
-    m_lastLayout(0),
-    m_lastLayoutPropertySheet(0),
+    m_lastLayout(nullptr),
+    m_lastLayoutPropertySheet(nullptr),
     m_LastLayoutByDesigner(false),
-    m_pixmapCache(0),
-    m_iconCache(0)
+    m_pixmapCache(nullptr),
+    m_iconCache(nullptr)
 {
 }
 
@@ -414,23 +414,23 @@ QLayout* QDesignerPropertySheetPrivate::layout(QDesignerPropertySheetExtension *
     // only if it is managed by designer and not one created on a custom widget.
     // (attempt to cache the value as this requires some hoops).
     if (layoutPropertySheet)
-        *layoutPropertySheet = 0;
+        *layoutPropertySheet = nullptr;
 
     if (!m_object->isWidgetType() || !m_canHaveLayoutAttributes)
-        return 0;
+        return nullptr;
 
     QWidget *widget = qobject_cast<QWidget*>(m_object);
     QLayout *widgetLayout = qdesigner_internal::LayoutInfo::internalLayout(widget);
     if (!widgetLayout) {
-        m_lastLayout = 0;
-        m_lastLayoutPropertySheet = 0;
-        return 0;
+        m_lastLayout = nullptr;
+        m_lastLayoutPropertySheet = nullptr;
+        return nullptr;
     }
     // Smart logic to avoid retrieving the meta DB from the widget every time.
     if (widgetLayout != m_lastLayout) {
         m_lastLayout = widgetLayout;
         m_LastLayoutByDesigner = false;
-        m_lastLayoutPropertySheet = 0;
+        m_lastLayoutPropertySheet = nullptr;
         // Is this a layout managed by designer or some layout on a custom widget?
         if (qdesigner_internal::LayoutInfo::managedLayout(m_core ,widgetLayout)) {
             m_LastLayoutByDesigner = true;
@@ -438,7 +438,7 @@ QLayout* QDesignerPropertySheetPrivate::layout(QDesignerPropertySheetExtension *
         }
     }
     if (!m_LastLayoutByDesigner)
-        return 0;
+        return nullptr;
 
     if (layoutPropertySheet)
         *layoutPropertySheet = m_lastLayoutPropertySheet;
@@ -1621,10 +1621,10 @@ QObject *QDesignerAbstractPropertySheetFactory::extension(QObject *object, const
 {
     typedef PropertySheetFactoryPrivate::ExtensionMap ExtensionMap;
     if (!object)
-        return 0;
+        return nullptr;
 
     if (iid != m_impl->m_propertySheetId && iid != m_impl->m_dynamicPropertySheetId)
-        return 0;
+        return nullptr;
 
     ExtensionMap::iterator it = m_impl->m_extensions.find(object);
     if (it == m_impl->m_extensions.end()) {
@@ -1640,7 +1640,7 @@ QObject *QDesignerAbstractPropertySheetFactory::extension(QObject *object, const
     }
 
     if (it == m_impl->m_extensions.end())
-        return 0;
+        return nullptr;
 
     return it.value();
 }

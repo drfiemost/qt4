@@ -83,7 +83,7 @@ protected:
 
     struct Data : public JSVariableObjectData {
         Data(bool canGrow_)
-            : JSVariableObjectData(&symbolTable, /*registers=*/0),
+            : JSVariableObjectData(&symbolTable, /*registers=*/nullptr),
             canGrow(canGrow_), registerArraySize(0)
         { }
         bool canGrow;

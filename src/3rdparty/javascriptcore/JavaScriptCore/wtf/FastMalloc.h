@@ -43,7 +43,7 @@ namespace WTF {
         TryMallocReturnValue(const TryMallocReturnValue& source)
             : m_data(source.m_data)
         {
-            source.m_data = 0;
+            source.m_data = nullptr;
         }
         ~TryMallocReturnValue() { ASSERT(!m_data); }
         template <typename T> bool getValue(T& data) WARN_UNUSED_RETURN;
@@ -63,7 +63,7 @@ namespace WTF {
         res.data = m_data;
         data = res.target;
         bool returnValue = !!m_data;
-        m_data = 0;
+        m_data = nullptr;
         return returnValue;
     }
 

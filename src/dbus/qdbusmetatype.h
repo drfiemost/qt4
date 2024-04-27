@@ -77,7 +77,7 @@ void qDBusDemarshallHelper(const QDBusArgument &arg, T *t)
 template<typename T>
 int qDBusRegisterMetaType(
 #ifndef qdoc
-    T * /* dummy */ = 0
+    T * /* dummy */ = nullptr
 #endif
 )
 {

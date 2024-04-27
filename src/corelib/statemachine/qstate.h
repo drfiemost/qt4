@@ -70,8 +70,8 @@ public:
         ParallelStates
     };
 
-    QState(QState *parent = 0);
-    QState(ChildMode childMode, QState *parent = 0);
+    QState(QState *parent = nullptr);
+    QState(ChildMode childMode, QState *parent = nullptr);
     ~QState();
 
     QAbstractState *errorState() const;

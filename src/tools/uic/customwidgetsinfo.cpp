@@ -107,11 +107,11 @@ QString CustomWidgetsInfo::realClassName(const QString &className) const
 DomScript *CustomWidgetsInfo::customWidgetScript(const QString &name) const
 {
     if (m_customWidgets.empty())
-        return 0;
+        return nullptr;
 
     const NameCustomWidgetMap::const_iterator it = m_customWidgets.constFind(name);
     if (it == m_customWidgets.constEnd())
-        return 0;
+        return nullptr;
 
     return it.value()->elementScript();
 }

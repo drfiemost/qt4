@@ -747,7 +747,7 @@ Q_OUTOFLINE_TEMPLATE QList<T>::QList(const QList<T> &l)
         node_copy(reinterpret_cast<Node *>(p.begin()),
                 reinterpret_cast<Node *>(p.end()),
                 reinterpret_cast<Node *>(l.p.begin()));
-        tryCatch.d_ = 0;
+        tryCatch.d_ = nullptr;
     }
 }
 

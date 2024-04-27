@@ -66,7 +66,7 @@ TranslationSettingsDialog::TranslationSettingsDialog(QWidget *parent)
 void TranslationSettingsDialog::setDataModel(DataModel *dataModel)
 {
     m_dataModel = dataModel;
-    m_phraseBook = 0;
+    m_phraseBook = nullptr;
     QString fn = QFileInfo(dataModel->srcFileName()).baseName();
     setWindowTitle(tr("Settings for '%1' - Qt Linguist").arg(fn));
 }
@@ -74,7 +74,7 @@ void TranslationSettingsDialog::setDataModel(DataModel *dataModel)
 void TranslationSettingsDialog::setPhraseBook(PhraseBook *phraseBook)
 {
     m_phraseBook = phraseBook;
-    m_dataModel = 0;
+    m_dataModel = nullptr;
     QString fn = QFileInfo(phraseBook->fileName()).baseName();
     setWindowTitle(tr("Settings for '%1' - Qt Linguist").arg(fn));
 }

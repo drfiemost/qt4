@@ -84,7 +84,7 @@ QWidget *BuddyEditorTool::editor() const
 {
     if (!m_editor) {
         Q_ASSERT(formWindow() != 0);
-        m_editor = new BuddyEditor(formWindow(), 0);
+        m_editor = new BuddyEditor(formWindow(), nullptr);
         connect(formWindow(), SIGNAL(mainContainerChanged(QWidget*)), m_editor, SLOT(setBackground(QWidget*)));
         connect(formWindow(), SIGNAL(changed()),
                     m_editor, SLOT(updateBackground()));

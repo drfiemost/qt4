@@ -58,11 +58,11 @@ QT_BEGIN_NAMESPACE
 
 QHelpEnginePrivate::QHelpEnginePrivate()
     : QHelpEngineCorePrivate()
-    , contentModel(0)
-    , contentWidget(0)
-    , indexModel(0)
-    , indexWidget(0)
-    , searchEngine(0)
+    , contentModel(nullptr)
+    , contentWidget(nullptr)
+    , indexModel(nullptr)
+    , indexWidget(nullptr)
+    , searchEngine(nullptr)
 {
 }
 

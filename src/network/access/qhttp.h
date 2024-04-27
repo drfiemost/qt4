@@ -179,9 +179,9 @@ public:
         ConnectionModeHttps
     };
 
-    explicit QHttp(QObject *parent = 0);
-    QHttp(const QString &hostname, quint16 port = 80, QObject *parent = 0);
-    QHttp(const QString &hostname, ConnectionMode mode, quint16 port = 0, QObject *parent = 0);
+    explicit QHttp(QObject *parent = nullptr);
+    QHttp(const QString &hostname, quint16 port = 80, QObject *parent = nullptr);
+    QHttp(const QString &hostname, ConnectionMode mode, quint16 port = 0, QObject *parent = nullptr);
     virtual ~QHttp();
 
     enum State {
@@ -219,12 +219,12 @@ public:
     int setProxy(const QNetworkProxy &proxy);
 #endif
 
-    int get(const QString &path, QIODevice *to=0);
-    int post(const QString &path, QIODevice *data, QIODevice *to=0 );
-    int post(const QString &path, const QByteArray &data, QIODevice *to=0);
+    int get(const QString &path, QIODevice *to=nullptr);
+    int post(const QString &path, QIODevice *data, QIODevice *to=nullptr );
+    int post(const QString &path, const QByteArray &data, QIODevice *to=nullptr);
     int head(const QString &path);
-    int request(const QHttpRequestHeader &header, QIODevice *device=0, QIODevice *to=0);
-    int request(const QHttpRequestHeader &header, const QByteArray &data, QIODevice *to=0);
+    int request(const QHttpRequestHeader &header, QIODevice *device=nullptr, QIODevice *to=nullptr);
+    int request(const QHttpRequestHeader &header, const QByteArray &data, QIODevice *to=nullptr);
 
     int closeConnection();
     int close();

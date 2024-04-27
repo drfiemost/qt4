@@ -269,7 +269,7 @@ public:
     *  flag set.  If the flag was not set, the method returns null.
     * @throws IOException
     */
-    TermFreqVector* getTermFreqVector(int32_t docNumber, const TCHAR* field = NULL);
+    TermFreqVector* getTermFreqVector(int32_t docNumber, const TCHAR* field = nullptr);
 
     /** Return an array of term frequency vectors for the specified document.
     *  The array contains a vector for each vectorized field in the document.

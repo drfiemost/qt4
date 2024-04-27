@@ -188,7 +188,7 @@ public Q_SLOTS:
                                         this, SLOT(aboutToClose()));
                     QObject::disconnect(dev, SIGNAL(bytesWritten(qint64)),
                                         this, SLOT(bytesWritten(qint64)));
-                    dev = 0;
+                    dev = nullptr;
                     emit invalidPacket();
                     return;
                 }
@@ -452,7 +452,7 @@ QIODevice * QPacketProtocol::device()
   Constructs an empty write-only packet.
   */
 QPacket::QPacket()
-: QDataStream(), buf(0)
+: QDataStream(), buf(nullptr)
 {
     buf = new QBuffer(&b);
     buf->open(QIODevice::WriteOnly);
@@ -467,7 +467,7 @@ QPacket::~QPacket()
 {
     if(buf) {
         delete buf;
-        buf = 0;
+        buf = nullptr;
     }
 }
 
@@ -476,7 +476,7 @@ QPacket::~QPacket()
   two packets are otherwise independent.
  */
 QPacket::QPacket(const QPacket & other)
-: QDataStream(), b(other.b), buf(0)
+: QDataStream(), b(other.b), buf(nullptr)
 {
     buf = new QBuffer(&b);
     buf->open(other.buf->openMode());
@@ -487,7 +487,7 @@ QPacket::QPacket(const QPacket & other)
   \internal
   */
 QPacket::QPacket(const QByteArray & ba)
-: QDataStream(), b(ba), buf(0)
+: QDataStream(), b(ba), buf(nullptr)
 {
     buf = new QBuffer(&b);
     buf->open(QIODevice::ReadOnly);

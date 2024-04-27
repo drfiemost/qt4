@@ -211,7 +211,7 @@ public:
 
     struct Binding : public QDeclarativeAbstractBinding, public QDeclarativeDelayedError {
         Binding() : enabled(false), updating(0), property(0),
-                    scope(0), target(0), parent(0) {}
+                    scope(nullptr), target(nullptr), parent(nullptr) {}
 
         // Inherited from QDeclarativeAbstractBinding
         virtual void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags flags);
@@ -271,18 +271,18 @@ public:
 };
 
 QDeclarativeCompiledBindingsPrivate::QDeclarativeCompiledBindingsPrivate()
-    : subscriptions(0), identifiers(0), programData(0), dataRef(0), m_bindings(0), m_signalTable(0),
+    : subscriptions(nullptr), identifiers(nullptr), programData(nullptr), dataRef(nullptr), m_bindings(nullptr), m_signalTable(nullptr),
       m_bindingsDisconnected(false)
 {
 }
 
 QDeclarativeCompiledBindingsPrivate::~QDeclarativeCompiledBindingsPrivate()
 {
-    delete [] subscriptions; subscriptions = 0;
-    delete [] identifiers; identifiers = 0;
+    delete [] subscriptions; subscriptions = nullptr;
+    delete [] identifiers; identifiers = nullptr;
     if (dataRef) { 
         dataRef->release(); 
-        dataRef = 0; 
+        dataRef = nullptr; 
     }
 }
 
@@ -610,7 +610,7 @@ struct Program {
 struct QDeclarativeBindingCompilerPrivate
 {
     struct Result {
-        Result() : unknownType(false), metaObject(0), type(-1), reg(-1) {}
+        Result() : unknownType(false), metaObject(nullptr), type(-1), reg(-1) {}
         bool operator==(const Result &o) const { 
             return unknownType == o.unknownType &&
                    metaObject == o.metaObject && 
@@ -666,7 +666,7 @@ struct QDeclarativeBindingCompilerPrivate
     bool tryMethod(QDeclarativeJS::AST::Node *);
     bool parseMethod(QDeclarativeJS::AST::Node *, Result &);
 
-    bool buildName(QStringList &, QDeclarativeJS::AST::Node *, QList<QDeclarativeJS::AST::ExpressionNode *> *nodes = 0);
+    bool buildName(QStringList &, QDeclarativeJS::AST::Node *, QList<QDeclarativeJS::AST::ExpressionNode *> *nodes = nullptr);
     bool fetch(Result &type, const QMetaObject *, int reg, int idx, const QStringList &, QDeclarativeJS::AST::ExpressionNode *);
 
     quint32 registers;
@@ -776,7 +776,7 @@ void QDeclarativeCompiledBindingsPrivate::disconnectOne(
 }
 
 // Conversion functions - these MUST match the QtScript expression path
-inline static qreal toReal(Register *reg, int type, bool *ok = 0)
+inline static qreal toReal(Register *reg, int type, bool *ok = nullptr)
 {
     if (ok) *ok = true;
 
@@ -790,7 +790,7 @@ inline static qreal toReal(Register *reg, int type, bool *ok = 0)
     }
 }
 
-inline static QString toString(Register *reg, int type, bool *ok = 0)
+inline static QString toString(Register *reg, int type, bool *ok = nullptr)
 {
     if (ok) *ok = true;
 
@@ -808,7 +808,7 @@ inline static QString toString(Register *reg, int type, bool *ok = 0)
     }
 }
 
-inline static bool toBool(Register *reg, int type, bool *ok = 0)
+inline static bool toBool(Register *reg, int type, bool *ok = nullptr)
 {
     if (ok) *ok = true;
 
@@ -822,7 +822,7 @@ inline static bool toBool(Register *reg, int type, bool *ok = 0)
     }
 }
 
-inline static QUrl toUrl(Register *reg, int type, QDeclarativeContextData *context, bool *ok = 0)
+inline static QUrl toUrl(Register *reg, int type, QDeclarativeContextData *context, bool *ok = nullptr)
 {
     if (ok) *ok = true;
 
@@ -861,7 +861,7 @@ static QObject *variantToQObject(const QVariant &value, bool *ok)
         return qvariant_cast<QObject*>(value);
     } else {
         if (ok) *ok = false;
-        return 0;
+        return nullptr;
     }
 }
 
@@ -884,12 +884,12 @@ bool QDeclarativeCompiledBindingsPrivate::findproperty(QObject *obj, Register *o
             subscribe(obj, property->notifyIndex, subIdx);
 
         if (property->flags & QDeclarativePropertyCache::Data::IsQObjectDerived) {
-            void *args[] = { output->typeDataPtr(), 0 };
+            void *args[] = { output->typeDataPtr(), nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, property->coreIndex, args);
             output->settype(QMetaType::QObjectStar);
         } else if (property->propType == qMetaTypeId<QVariant>()) {
             QVariant v;
-            void *args[] = { &v, 0 };
+            void *args[] = { &v, nullptr };
             QMetaObject::metacall(obj, QMetaObject::ReadProperty, property->coreIndex, args);
 
             if (isTerminal) {
@@ -908,20 +908,20 @@ bool QDeclarativeCompiledBindingsPrivate::findproperty(QObject *obj, Register *o
             if (!isTerminal) {
                 output->setUndefined();
             } else if (property->propType == QMetaType::QReal) {
-                void *args[] = { output->typeDataPtr(), 0 };
+                void *args[] = { output->typeDataPtr(), nullptr };
                 QMetaObject::metacall(obj, QMetaObject::ReadProperty, property->coreIndex, args);
                 output->settype(QMetaType::QReal);
             } else if (property->propType == QMetaType::Int) {
-                void *args[] = { output->typeDataPtr(), 0 };
+                void *args[] = { output->typeDataPtr(), nullptr };
                 QMetaObject::metacall(obj, QMetaObject::ReadProperty, property->coreIndex, args);
                 output->settype(QMetaType::Int);
             } else if (property->propType == QMetaType::Bool) {
-                void *args[] = { output->typeDataPtr(), 0 };
+                void *args[] = { output->typeDataPtr(), nullptr };
                 QMetaObject::metacall(obj, QMetaObject::ReadProperty, property->coreIndex, args);
                 output->settype(QMetaType::Bool);
             } else if (property->propType == QMetaType::QString) {
                 new (output->typeDataPtr()) QString();
-                void *args[] = { output->typeDataPtr(), 0 };
+                void *args[] = { output->typeDataPtr(), nullptr };
                 QMetaObject::metacall(obj, QMetaObject::ReadProperty, property->coreIndex, args);
                 output->settype(QMetaType::QString);
             } else {
@@ -1236,7 +1236,7 @@ void QDeclarativeCompiledBindingsPrivate::run(int instrIndex,
 
     QML_BEGIN_INSTR(Subscribe)
     {
-        QObject *o = 0;
+        QObject *o = nullptr;
         const Register &object = registers[instr->subscribe.reg];
         if (!object.isUndefined()) o = object.getQObject();
         subscribe(o, instr->subscribe.index, instr->subscribe.offset);
@@ -1258,7 +1258,7 @@ void QDeclarativeCompiledBindingsPrivate::run(int instrIndex,
             output.setUndefined();
         } else {
             int subIdx = instr->fetchAndSubscribe.subscription;
-            QDeclarativeCompiledBindingsPrivate::Subscription *sub = 0;
+            QDeclarativeCompiledBindingsPrivate::Subscription *sub = nullptr;
             if (subIdx != -1) {
                 sub = (subscriptions + subIdx);
                 sub->target = q;
@@ -1519,7 +1519,7 @@ void QDeclarativeCompiledBindingsPrivate::run(int instrIndex,
         if (!object) {
             output.setUndefined();
         } else {
-            void *argv[] = { output.typeDataPtr(), 0 };
+            void *argv[] = { output.typeDataPtr(), nullptr };
             QMetaObject::metacall(object, QMetaObject::ReadProperty, instr->fetch.index, argv);
         }
     }
@@ -1535,7 +1535,7 @@ void QDeclarativeCompiledBindingsPrivate::run(int instrIndex,
         }
 
         int status = -1;
-        void *argv[] = { data.typeDataPtr(), 0, &status, &storeFlags };
+        void *argv[] = { data.typeDataPtr(), nullptr, &status, &storeFlags };
         QMetaObject::metacall(output, QMetaObject::WriteProperty, 
                               instr->store.index, argv);
     }
@@ -1935,7 +1935,7 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
         return false;
     type.reg = reg;
 
-    QDeclarativeParser::Object *absType = 0;
+    QDeclarativeParser::Object *absType = nullptr;
 
     QStringList subscribeName;
 
@@ -1949,7 +1949,7 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
             name.at(2).isUpper())
             return false;
 
-        QDeclarativeType *attachType = 0;
+        QDeclarativeType *attachType = nullptr;
         if (name.at(0).isUpper()) {
             // Could be an attached property
             if (ii == nameParts.count() - 1)
@@ -1957,8 +1957,8 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
             if (nameParts.at(ii + 1).at(0).isUpper())
                 return false;
 
-            QDeclarativeImportedNamespace *ns = 0;
-            if (!imports.resolveType(name.toUtf8(), &attachType, 0, 0, 0, &ns))
+            QDeclarativeImportedNamespace *ns = nullptr;
+            if (!imports.resolveType(name.toUtf8(), &attachType, nullptr, nullptr, nullptr, &ns))
                 return false;
             if (ns || !attachType || !attachType->attachedPropertiesType())
                 return false;
@@ -1986,7 +1986,7 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
                 subscribeName << contextName();
                 subscribeName << QLatin1String("$$$ATTACH_") + name;
 
-                absType = 0;
+                absType = nullptr;
                 type.metaObject = attachType->attachedPropertiesType();
 
                 continue;
@@ -2098,14 +2098,14 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
                 attach.attached.id = attachType->attachedPropertiesId();
                 bytecode << attach;
 
-                absType = 0;
+                absType = nullptr;
                 type.metaObject = attachType->attachedPropertiesType();
 
                 subscribeName << QLatin1String("$$$ATTACH_") + name;
                 continue;
             }
 
-            const QMetaObject *mo = 0;
+            const QMetaObject *mo = nullptr;
             if (absType)
                 mo = absType->metaObject();
             else if (type.metaObject)
@@ -2120,7 +2120,7 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
             subscribeName << name;
 
             if (absType || (wasAttachedObject && idx != -1) || (mo && mo->property(idx).isFinal())) {
-                absType = 0; 
+                absType = nullptr; 
                 if (!fetch(type, mo, reg, idx, subscribeName, nameNodes.at(ii)))
                     return false;
             } else {
@@ -2142,7 +2142,7 @@ bool QDeclarativeBindingCompilerPrivate::parseName(AST::Node *node, Result &type
                     prop.find.subscribeIndex = -1;
 
                 type.unknownType = true;
-                type.metaObject = 0;
+                type.metaObject = nullptr;
                 type.type = -1;
                 type.reg = reg;
                 bytecode << prop;
@@ -2265,7 +2265,7 @@ bool QDeclarativeBindingCompilerPrivate::numberArith(Result &type, const Result 
     arith.binaryop.src2 = (rhsTmp == -1)?rhs.reg:rhsTmp;
     bytecode << arith;
 
-    type.metaObject = 0;
+    type.metaObject = nullptr;
     type.type = nativeReal?QMetaType::QReal:QMetaType::Int;
     type.subscriptionSet.unite(lhs.subscriptionSet);
     type.subscriptionSet.unite(rhs.subscriptionSet);
@@ -2365,7 +2365,7 @@ bool QDeclarativeBindingCompilerPrivate::parseLogic(QDeclarativeJS::AST::Node *n
     if (type.reg == -1)
         return false;
 
-    type.metaObject = 0;
+    type.metaObject = nullptr;
     type.type = QVariant::Bool;
 
     if (lhs.type == QMetaType::QReal && rhs.type == QMetaType::QReal) {
@@ -2486,7 +2486,7 @@ bool QDeclarativeBindingCompilerPrivate::tryConstant(QDeclarativeJS::AST::Node *
 
 bool QDeclarativeBindingCompilerPrivate::parseConstant(QDeclarativeJS::AST::Node *node, Result &type)
 {
-    type.metaObject = 0;
+    type.metaObject = nullptr;
     type.type = -1;
     type.reg = acquireReg();
     if (type.reg == -1)
@@ -2555,7 +2555,7 @@ bool QDeclarativeBindingCompilerPrivate::parseMethod(QDeclarativeJS::AST::Node *
     args = args->next;
     if (!args) return false;
     AST::ExpressionNode *arg1 = args->expression;
-    if (args->next != 0) return false;
+    if (args->next != nullptr) return false;
     if (!arg0 || !arg1) return false;
 
     Result r0;
@@ -2620,7 +2620,7 @@ bool QDeclarativeBindingCompilerPrivate::fetch(Result &rv, const QMetaObject *mo
                                                QDeclarativeJS::AST::ExpressionNode *node)
 {
     QMetaProperty prop = mo->property(idx);
-    rv.metaObject = 0;
+    rv.metaObject = nullptr;
     rv.type = 0;
 
     //XXX binding optimizer doesn't handle properties with a revision
@@ -2686,7 +2686,7 @@ bool QDeclarativeBindingCompilerPrivate::fetch(Result &rv, const QMetaObject *mo
         rv.type != QMetaType::Bool &&
         rv.type != qMetaTypeId<QDeclarativeAnchorLine>() &&
         rv.type != QMetaType::QString) {
-        rv.metaObject = 0;
+        rv.metaObject = nullptr;
         rv.type = 0;
         return false; // Unsupported type (string not supported yet);
     }
@@ -2841,7 +2841,7 @@ QDeclarativeBindingCompiler::QDeclarativeBindingCompiler()
 
 QDeclarativeBindingCompiler::~QDeclarativeBindingCompiler()
 {
-    delete d; d = 0;
+    delete d; d = nullptr;
 }
 
 /* 

@@ -74,16 +74,16 @@ QGLEngineSharedShaders *QGLEngineSharedShaders::shadersForContext(const QGLConte
 }
 
 const char* QGLEngineSharedShaders::qShaderSnippets[] = {
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0
+    nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,
+    nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,
+    nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,
+    nullptr,nullptr,nullptr,nullptr,nullptr
 };
 
 QGLEngineSharedShaders::QGLEngineSharedShaders(const QGLContext* context)
     : ctxGuard(context)
-    , blitShaderProg(0)
-    , simpleShaderProg(0)
+    , blitShaderProg(nullptr)
+    , simpleShaderProg(nullptr)
 {
 
 /*
@@ -181,19 +181,19 @@ QGLEngineSharedShaders::QGLEngineSharedShaders(const QGLContext* context)
     fragSource.append(qShaderSnippets[MainFragmentShader]);
     fragSource.append(qShaderSnippets[ShockingPinkSrcFragmentShader]);
 
-    simpleShaderProg = new QGLShaderProgram(context, 0);
+    simpleShaderProg = new QGLShaderProgram(context, nullptr);
 
     CachedShader simpleShaderCache(fragSource, vertexSource);
 
     bool inCache = simpleShaderCache.load(simpleShaderProg, context);
 
     if (!inCache) {
-        vertexShader = new QGLShader(QGLShader::Vertex, context, 0);
+        vertexShader = new QGLShader(QGLShader::Vertex, context, nullptr);
         shaders.append(vertexShader);
         if (!vertexShader->compileSourceCode(vertexSource))
             qWarning("Vertex shader for simpleShaderProg (MainVertexShader & PositionOnlyVertexShader) failed to compile");
 
-        fragShader = new QGLShader(QGLShader::Fragment, context, 0);
+        fragShader = new QGLShader(QGLShader::Fragment, context, nullptr);
         shaders.append(fragShader);
         if (!fragShader->compileSourceCode(fragSource))
             qWarning("Fragment shader for simpleShaderProg (MainFragmentShader & ShockingPinkSrcFragmentShader) failed to compile");
@@ -226,19 +226,19 @@ QGLEngineSharedShaders::QGLEngineSharedShaders(const QGLContext* context)
     fragSource.append(qShaderSnippets[MainFragmentShader]);
     fragSource.append(qShaderSnippets[ImageSrcFragmentShader]);
 
-    blitShaderProg = new QGLShaderProgram(context, 0);
+    blitShaderProg = new QGLShaderProgram(context, nullptr);
 
     CachedShader blitShaderCache(fragSource, vertexSource);
 
     inCache = blitShaderCache.load(blitShaderProg, context);
 
     if (!inCache) {
-        vertexShader = new QGLShader(QGLShader::Vertex, context, 0);
+        vertexShader = new QGLShader(QGLShader::Vertex, context, nullptr);
         shaders.append(vertexShader);
         if (!vertexShader->compileSourceCode(vertexSource))
             qWarning("Vertex shader for blitShaderProg (MainWithTexCoordsVertexShader & UntransformedPositionVertexShader) failed to compile");
 
-        fragShader = new QGLShader(QGLShader::Fragment, context, 0);
+        fragShader = new QGLShader(QGLShader::Fragment, context, nullptr);
         shaders.append(fragShader);
         if (!fragShader->compileSourceCode(fragSource))
             qWarning("Fragment shader for blitShaderProg (MainFragmentShader & ImageSrcFragmentShader) failed to compile");
@@ -277,12 +277,12 @@ QGLEngineSharedShaders::~QGLEngineSharedShaders()
 
     if (blitShaderProg) {
         delete blitShaderProg;
-        blitShaderProg = 0;
+        blitShaderProg = nullptr;
     }
 
     if (simpleShaderProg) {
         delete simpleShaderProg;
-        simpleShaderProg = 0;
+        simpleShaderProg = nullptr;
     }
 }
 
@@ -327,14 +327,14 @@ QGLEngineShaderProg *QGLEngineSharedShaders::findProgramInCache(const QGLEngineS
         vertexSource.append(qShaderSnippets[prog.mainVertexShader]);
         vertexSource.append(qShaderSnippets[prog.positionVertexShader]);
 
-        QScopedPointer<QGLShaderProgram> shaderProgram(new QGLShaderProgram(ctxGuard.context(), 0));
+        QScopedPointer<QGLShaderProgram> shaderProgram(new QGLShaderProgram(ctxGuard.context(), nullptr));
 
         CachedShader shaderCache(fragSource, vertexSource);
         bool inCache = shaderCache.load(shaderProgram.data(), ctxGuard.context());
 
         if (!inCache) {
 
-            QScopedPointer<QGLShader> fragShader(new QGLShader(QGLShader::Fragment, ctxGuard.context(), 0));
+            QScopedPointer<QGLShader> fragShader(new QGLShader(QGLShader::Fragment, ctxGuard.context(), nullptr));
             QByteArray description;
 #if defined(QT_DEBUG)
             // Name the shader for easier debugging
@@ -357,7 +357,7 @@ QGLEngineShaderProg *QGLEngineSharedShaders::findProgramInCache(const QGLEngineS
                 break;
             }
 
-            QScopedPointer<QGLShader> vertexShader(new QGLShader(QGLShader::Vertex, ctxGuard.context(), 0));
+            QScopedPointer<QGLShader> vertexShader(new QGLShader(QGLShader::Vertex, ctxGuard.context(), nullptr));
 #if defined(QT_DEBUG)
             // Name the shader for easier debugging
             description.clear();
@@ -461,8 +461,8 @@ QGLEngineShaderManager::QGLEngineShaderManager(QGLContext* context)
       opacityMode(NoOpacity),
       maskType(NoMask),
       compositionMode(QPainter::CompositionMode_SourceOver),
-      customSrcStage(0),
-      currentShaderProg(0)
+      customSrcStage(nullptr),
+      currentShaderProg(nullptr)
 {
     sharedShaders = QGLEngineSharedShaders::shadersForContext(context);
 }
@@ -578,7 +578,7 @@ void QGLEngineShaderManager::removeCustomStage()
 {
     if (customSrcStage)
         customSrcStage->setInactive();
-    customSrcStage = 0;
+    customSrcStage = nullptr;
     shaderProgNeedsChanging = true;
 }
 
@@ -629,7 +629,7 @@ bool QGLEngineShaderManager::useCorrectShaderProg()
     if (!shaderProgNeedsChanging)
         return false;
 
-    bool useCustomSrc = customSrcStage != 0;
+    bool useCustomSrc = customSrcStage != nullptr;
     if (useCustomSrc && srcPixelType != QGLEngineShaderManager::ImageSrc && srcPixelType != Qt::TexturePattern) {
         useCustomSrc = false;
         qWarning("QGLEngineShaderManager - Ignoring custom shader stage for non image src");

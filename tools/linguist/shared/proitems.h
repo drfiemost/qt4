@@ -90,8 +90,8 @@ public:
     QString toQString() const;
     QString &toQString(QString &tmp) const;
     ProString &operator+=(const ProString &other);
-    ProString &append(const ProString &other, bool *pending = 0);
-    ProString &append(const ProStringList &other, bool *pending = 0, bool skipEmpty1st = false);
+    ProString &append(const ProString &other, bool *pending = nullptr);
+    ProString &append(const ProStringList &other, bool *pending = nullptr, bool skipEmpty1st = false);
     bool operator==(const ProString &other) const;
     bool operator==(const QString &other) const;
     bool operator==(const QLatin1String &other) const;

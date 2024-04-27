@@ -82,7 +82,7 @@ public:
 
     void sync(QWidget *exposedWidget, const QRegion &exposedRegion);
     void sync();
-    void flush(QWidget *widget = 0, QWindowSurface *surface = 0);
+    void flush(QWidget *widget = nullptr, QWindowSurface *surface = nullptr);
 
     inline QPoint topLevelOffset() const { return tlwOffset; }
 
@@ -131,8 +131,8 @@ private:
                     BeginPaintInfo *returnInfo, bool toCleanIsInTopLevelCoordinates = true);
     void endPaint(const QRegion &cleaned, QWindowSurface *windowSurface, BeginPaintInfo *beginPaintInfo);
 
-    QRegion dirtyRegion(QWidget *widget = 0) const;
-    QRegion staticContents(QWidget *widget = 0, const QRect &withinClipRect = QRect()) const;
+    QRegion dirtyRegion(QWidget *widget = nullptr) const;
+    QRegion staticContents(QWidget *widget = nullptr, const QRect &withinClipRect = QRect()) const;
 
     void markDirtyOnScreen(const QRegion &dirtyOnScreen, QWidget *widget, const QPoint &topLevelOffset);
 

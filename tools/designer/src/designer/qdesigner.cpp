@@ -75,7 +75,7 @@ static void designerMessageHandler(QtMsgType type, const char *msg)
     // Only Designer warnings are displayed as box
     QDesigner *designerApp = qDesigner;
     if (type != QtWarningMsg || !designerApp || qstrncmp(designerWarningPrefix, msg, qstrlen(designerWarningPrefix))) {
-        qInstallMsgHandler(0);
+        qInstallMsgHandler(nullptr);
         qt_message_output(type, msg);
         qInstallMsgHandler (designerMessageHandler);
         return;
@@ -85,9 +85,9 @@ static void designerMessageHandler(QtMsgType type, const char *msg)
 
 QDesigner::QDesigner(int &argc, char **argv)
     : QApplication(argc, argv),
-      m_server(0),
-      m_client(0),
-      m_workbench(0), m_suppressNewFormShow(false)
+      m_server(nullptr),
+      m_client(nullptr),
+      m_workbench(nullptr), m_suppressNewFormShow(false)
 {
     setOrganizationName(QLatin1String("Trolltech"));
     setApplicationName(QLatin1String(designerApplicationName));
@@ -118,7 +118,7 @@ void QDesigner::showErrorMessage(const char *message)
     if (m_mainWindow) {
         showErrorMessageBox(qMessage);
     } else {
-        qInstallMsgHandler(0);
+        qInstallMsgHandler(nullptr);
         qt_message_output(QtWarningMsg, message); // just in case we crash
         qInstallMsgHandler (designerMessageHandler);
         m_initializationErrors += qMessage;
@@ -234,7 +234,7 @@ void QDesigner::initialize()
     installTranslator(qtTranslator);
 
     if (QLibraryInfo::licensedProducts() == QLatin1String("Console")) {
-        QMessageBox::information(0, tr("Qt Designer"),
+        QMessageBox::information(nullptr, tr("Qt Designer"),
                 tr("This application cannot be used for the Console edition of Qt"));
         QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
         return;

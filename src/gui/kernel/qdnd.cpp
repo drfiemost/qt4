@@ -126,7 +126,7 @@ QString KeyboardModifiersToString(Qt::KeyboardModifiers moderfies)
 
 
 // the universe's only drag manager
-QDragManager *QDragManager::instance = 0;
+QDragManager *QDragManager::instance = nullptr;
 
 
 QDragManager::QDragManager()
@@ -137,13 +137,13 @@ QDragManager::QDragManager()
 #ifdef Q_WS_QWS
     currentActionForOverrideCursor = Qt::IgnoreAction;
 #endif
-    object = 0;
+    object = nullptr;
     beingCancelled = false;
     restoreCursor = false;
     willDrop = false;
-    eventLoop = 0;
+    eventLoop = nullptr;
     dropData = new QDropData();
-    currentDropTarget = 0;
+    currentDropTarget = nullptr;
 #ifdef Q_WS_X11
     xdndMimeTransferedPixmapIndex = 0;
 #endif
@@ -156,7 +156,7 @@ QDragManager::~QDragManager()
     if (restoreCursor)
         QApplication::restoreOverrideCursor();
 #endif
-    instance = 0;
+    instance = nullptr;
     delete dropData;
 }
 

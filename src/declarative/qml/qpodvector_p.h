@@ -63,7 +63,7 @@ class QPODVector
 {
 public:
     QPODVector()
-    : m_count(0), m_capacity(0), m_data(0) {}
+    : m_count(0), m_capacity(0), m_data(nullptr) {}
     ~QPODVector() { if (m_data) ::free(m_data); } 
 
     const T &at(int idx) const {
@@ -156,7 +156,7 @@ public:
         other.m_data = m_data;
         m_count = 0;
         m_capacity = 0;
-        m_data = 0;
+        m_data = nullptr;
     }
 
     QPODVector<T,Increment> &operator<<(const T &v) { append(v); return *this; }

@@ -58,7 +58,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeExtensionPlugin : public QObject, public 
     Q_OBJECT
     Q_INTERFACES(QDeclarativeExtensionInterface)
 public:
-    explicit QDeclarativeExtensionPlugin(QObject *parent = 0);
+    explicit QDeclarativeExtensionPlugin(QObject *parent = nullptr);
     ~QDeclarativeExtensionPlugin();
 
     virtual void registerTypes(const char *uri) = 0;

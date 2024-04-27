@@ -186,7 +186,7 @@ QDeclarativePropertyCache::Data QDeclarativePropertyCache::create(const QMetaObj
                         cmo = cmo->superClass();
                 }
             } else {
-                cmo = 0;
+                cmo = nullptr;
             }
         }
     }
@@ -356,7 +356,7 @@ QDeclarativePropertyCache::Data *
 QDeclarativePropertyCache::property(int index) const
 {
     if (index < 0 || index >= indexCache.count())
-        return 0;
+        return nullptr;
 
     return indexCache.at(index);
 }
@@ -365,7 +365,7 @@ QDeclarativePropertyCache::Data *
 QDeclarativePropertyCache::method(int index) const
 {
     if (index < 0 || index >= methodIndexCache.count())
-        return 0;
+        return nullptr;
 
     return methodIndexCache.at(index);
 }
@@ -411,11 +411,11 @@ QStringList QDeclarativePropertyCache::propertyNames() const
 QDeclarativePropertyCache::Data *QDeclarativePropertyCache::property(QDeclarativeEngine *engine, QObject *obj, 
                                                    const QScriptDeclarativeClass::Identifier &name, Data &local)
 {
-    QDeclarativePropertyCache::Data *rv = 0;
+    QDeclarativePropertyCache::Data *rv = nullptr;
 
     QDeclarativeEnginePrivate *enginePrivate = QDeclarativeEnginePrivate::get(engine);
 
-    QDeclarativePropertyCache *cache = 0;
+    QDeclarativePropertyCache *cache = nullptr;
     QDeclarativeData *ddata = QDeclarativeData::get(obj);
     if (ddata && ddata->propertyCache && ddata->propertyCache->qmlEngine() == engine)
         cache = ddata->propertyCache;
@@ -438,7 +438,7 @@ QDeclarativePropertyCache::Data *QDeclarativePropertyCache::property(QDeclarativ
 QDeclarativePropertyCache::Data *QDeclarativePropertyCache::property(QDeclarativeEngine *engine, QObject *obj, 
                                                    const QString &name, Data &local)
 {
-    QDeclarativePropertyCache::Data *rv = 0;
+    QDeclarativePropertyCache::Data *rv = nullptr;
 
     if (!engine) {
         local = QDeclarativePropertyCache::create(obj->metaObject(), name);
@@ -447,7 +447,7 @@ QDeclarativePropertyCache::Data *QDeclarativePropertyCache::property(QDeclarativ
     } else {
         QDeclarativeEnginePrivate *enginePrivate = QDeclarativeEnginePrivate::get(engine);
 
-        QDeclarativePropertyCache *cache = 0;
+        QDeclarativePropertyCache *cache = nullptr;
         QDeclarativeData *ddata = QDeclarativeData::get(obj);
         if (ddata && ddata->propertyCache && ddata->propertyCache->qmlEngine() == engine)
             cache = ddata->propertyCache;

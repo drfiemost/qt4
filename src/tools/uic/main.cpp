@@ -50,7 +50,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char *error = 0;
+static const char *error = nullptr;
 
 void showHelp(const char *appName)
 {
@@ -75,7 +75,7 @@ int runUic(int argc, char *argv[])
 {
     Driver driver;
 
-    const char *fileName = 0;
+    const char *fileName = nullptr;
 
     int arg = 1;
     while (arg < argc) {
@@ -148,7 +148,7 @@ int runUic(int argc, char *argv[])
         return !driver.printDependencies(inputFile);
     }
 
-    QTextStream *out = 0;
+    QTextStream *out = nullptr;
     QFile f;
     if (driver.option().outputFile.size()) {
         f.setFileName(driver.option().outputFile);

@@ -71,7 +71,7 @@ private:
 
 QTraceWindowSurface::QTraceWindowSurface(QWidget *widget)
     : QRasterWindowSurface(widget)
-    , buffer(0)
+    , buffer(nullptr)
     , winId(0)
 {
 }

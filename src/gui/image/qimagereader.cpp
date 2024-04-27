@@ -238,10 +238,10 @@ static QImageIOHandler *createReadHandlerHelper(QIODevice *device,
                                                 bool ignoresFormatAndExtension)
 {
     if (!autoDetectImageFormat && format.isEmpty())
-        return 0;
+        return nullptr;
 
     QByteArray form = format.toLower();
-    QImageIOHandler *handler = 0;
+    QImageIOHandler *handler = nullptr;
 
 #ifndef QT_NO_LIBRARY
     // check if we have plugins that support the image format
@@ -511,7 +511,7 @@ static QImageIOHandler *createReadHandlerHelper(QIODevice *device,
         qDebug() << "QImageReader::createReadHandler: no handlers found. giving up.";
 #endif
         // no handler: give up.
-        return 0;
+        return nullptr;
     }
 
     handler->setDevice(device);
@@ -556,9 +556,9 @@ public:
 QImageReaderPrivate::QImageReaderPrivate(QImageReader *qq)
     : autoDetectImageFormat(true), ignoresFormatAndExtension(false)
 {
-    device = 0;
+    device = nullptr;
     deleteDevice = false;
-    handler = 0;
+    handler = nullptr;
     quality = -1;
     imageReaderError = QImageReader::UnknownError;
 
@@ -617,7 +617,7 @@ bool QImageReaderPrivate::initHandler()
     }
 
     // assign a handler
-    if (!handler && (handler = createReadHandlerHelper(device, format, autoDetectImageFormat, ignoresFormatAndExtension)) == 0) {
+    if (!handler && (handler = createReadHandlerHelper(device, format, autoDetectImageFormat, ignoresFormatAndExtension)) == nullptr) {
         imageReaderError = QImageReader::UnsupportedFormatError;
         errorString = QLatin1String(QT_TRANSLATE_NOOP(QImageReader, "Unsupported image format"));
         return false;
@@ -838,7 +838,7 @@ void QImageReader::setDevice(QIODevice *device)
     d->device = device;
     d->deleteDevice = false;
     delete d->handler;
-    d->handler = 0;
+    d->handler = nullptr;
     d->text.clear();
 }
 
@@ -1506,7 +1506,7 @@ QList<QByteArray> QImageReader::supportedImageFormats()
 
     for (int i = 0; i < keys.count(); ++i) {
         QImageIOPlugin *plugin = qobject_cast<QImageIOPlugin *>(l->instance(keys.at(i)));
-        if (plugin && plugin->capabilities(0, keys.at(i).toLatin1()) & QImageIOPlugin::CanRead)
+        if (plugin && plugin->capabilities(nullptr, keys.at(i).toLatin1()) & QImageIOPlugin::CanRead)
             formats << keys.at(i).toLatin1();
     }
 #endif // QT_NO_LIBRARY

@@ -370,7 +370,7 @@ QScriptDebuggerConsoleCommandJob *QScriptDebuggerConsolePrivate::createJob(
         name = command.left(i);
     }
     if (name.isEmpty())
-        return 0;
+        return nullptr;
     QScriptDebuggerConsoleCommand *cmd = commandManager->findCommand(name);
     if (!cmd) {
         // try to auto-complete
@@ -387,7 +387,7 @@ QScriptDebuggerConsoleCommandJob *QScriptDebuggerConsolePrivate::createJob(
                 }
                 msg.append(QLatin1Char('.'));
                 messageHandler->message(QtWarningMsg, msg);
-                return 0;
+                return nullptr;
             }
             cmd = commandManager->findCommand(completions.at(0));
             Q_ASSERT(cmd != 0);
@@ -397,7 +397,7 @@ QScriptDebuggerConsoleCommandJob *QScriptDebuggerConsolePrivate::createJob(
                 QtWarningMsg,
                 QString::fromLatin1("Undefined command \"%0\". Try \"help\".")
                 .arg(name));
-            return 0;
+            return nullptr;
         }
     }
     QStringList args;
@@ -471,7 +471,7 @@ QScriptDebuggerConsoleCommandJob *QScriptDebuggerConsole::consumeInput(
     QString cmd;
     if (d->input.isEmpty() && input.isEmpty()) {
         if (d->commandHistory.isEmpty())
-            return 0;
+            return nullptr;
         cmd = d->commandHistory.first();
     } else {
         cmd = input;
@@ -489,7 +489,7 @@ QScriptDebuggerConsoleCommandJob *QScriptDebuggerConsole::consumeInput(
     d->input += QLatin1Char('\n');
     QScriptSyntaxCheckResult check = QScriptEngine::checkSyntax(d->input);
     if (check.state() == QScriptSyntaxCheckResult::Intermediate)
-        return 0;
+        return nullptr;
     d->input.chop(1); // remove the last \n
     cmd = QString();
     cmd.append(d->commandPrefix);

@@ -118,7 +118,7 @@ static inline const char *paperSize2String(QPrinter::PaperSize size)
         if (size == named_sizes_map[i].size)
             return named_sizes_map[i].name;
     }
-    return 0;
+    return nullptr;
 }
 #endif
 
@@ -320,7 +320,7 @@ char *qt_parsePrintersConf(QList<QPrinterDescription> *printers, bool *found)
     if (!pc.open(QIODevice::ReadOnly)) {
         if (found)
             *found = false;
-        return 0;
+        return nullptr;
     }
     if (found)
         *found = true;
@@ -331,7 +331,7 @@ char *qt_parsePrintersConf(QList<QPrinterDescription> *printers, bool *found)
     QString printerDesc;
     int lineLength = 0;
 
-    char *defaultPrinter = 0;
+    char *defaultPrinter = nullptr;
 
     while (!pc.atEnd() &&
             (lineLength=pc.readLine(line, 1024)) > 0) {
@@ -484,18 +484,18 @@ char *qt_parseNsswitchPrintersEntry(QList<QPrinterDescription> *printers, char *
     while (line[k] != '\0' && isspace((uchar) line[k])) \
         k++
 
-    char *defaultPrinter = 0;
+    char *defaultPrinter = nullptr;
     bool stop = false;
     int lastStatus = NotFound;
 
     int k = 8;
     skipSpaces();
     if (line[k] != ':')
-        return 0;
+        return nullptr;
     k++;
 
     char *cp = strchr(line, '#');
-    if (cp != 0)
+    if (cp != nullptr)
         *cp = '\0';
 
     while (line[k] != '\0') {
@@ -561,9 +561,9 @@ char *qt_parseNsswitchConf(QList<QPrinterDescription> *printers)
 {
     QFile nc(QLatin1String("/etc/nsswitch.conf"));
     if (!nc.open(QIODevice::ReadOnly))
-        return 0;
+        return nullptr;
 
-    char *defaultPrinter = 0;
+    char *defaultPrinter = nullptr;
 
     char *line = new char[1025];
     line[1024] = '\0';
@@ -774,7 +774,7 @@ int qt_getLprPrinters(QList<QPrinterDescription>& printers)
         }
     }
 
-    char *def = 0;
+    char *def = nullptr;
     f.setFile(QLatin1String("/etc/nsswitch.conf"));
     if (f.isFile()) {
         def = qt_parseNsswitchConf(&printers);

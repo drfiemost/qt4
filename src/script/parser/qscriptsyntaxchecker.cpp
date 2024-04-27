@@ -34,7 +34,7 @@ namespace QScript {
 SyntaxChecker::SyntaxChecker():
     tos(0),
     stack_size(0),
-    state_stack(0)
+    state_stack(nullptr)
 {
 }
 
@@ -53,7 +53,7 @@ bool SyntaxChecker::automatic(QScript::Lexer *lexer, int token) const
 SyntaxChecker::Result SyntaxChecker::checkSyntax(const QString &code)
 {
   const int INITIAL_STATE = 0;
-  QScript::Lexer lexer (/*engine=*/ 0);
+  QScript::Lexer lexer (/*engine=*/ nullptr);
   lexer.setCode(code, /*lineNo*/ 1);
 
   int yytoken = -1;

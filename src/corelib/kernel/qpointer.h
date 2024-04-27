@@ -54,7 +54,7 @@ class QPointer
 {
     QObject *o;
 public:
-    inline QPointer() : o(0) {}
+    inline QPointer() : o(nullptr) {}
     inline QPointer(T *p) : o(p)
         { QMetaObject::addGuard(&o); }
     inline QPointer(const QPointer<T> &p) : o(p.o)

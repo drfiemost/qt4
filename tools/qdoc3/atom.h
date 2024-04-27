@@ -136,13 +136,13 @@ class Atom
     };
 
     Atom(Type type, const QString& string = "")
-	: nxt(0), typ(type) 
+	: nxt(nullptr), typ(type) 
     {
         strs << string; 
     }
 
     Atom(Type type, const QString& p1, const QString& p2)
-	: nxt(0), typ(type) 
+	: nxt(nullptr), typ(type) 
     { 
         strs << p1; 
         if (!p2.isEmpty()) 

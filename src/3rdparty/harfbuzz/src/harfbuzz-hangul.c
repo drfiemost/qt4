@@ -193,7 +193,7 @@ static HB_Bool hangul_shape_syllable(HB_ShaperItem *item, HB_Bool openType)
             logClusters[i] = i;
         item->log_clusters = logClusters;
 
-        HB_OpenTypeShape(item, /*properties*/0);
+        HB_OpenTypeShape(item, /*properties*/nullptr);
 
         positioned = HB_OpenTypePosition(item, availableGlyphs, /*doLogClusters*/FALSE);
 

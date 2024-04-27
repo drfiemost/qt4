@@ -57,7 +57,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeDebugConnection : public QTcpSock
     Q_OBJECT
     Q_DISABLE_COPY(QDeclarativeDebugConnection)
 public:
-    QDeclarativeDebugConnection(QObject * = 0);
+    QDeclarativeDebugConnection(QObject * = nullptr);
     ~QDeclarativeDebugConnection();
 
     bool isConnected() const;

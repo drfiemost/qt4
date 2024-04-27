@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeView:
 {
     Q_OBJECT
 public:
-    QScriptDebuggerCodeView(QWidget *parent = 0);
+    QScriptDebuggerCodeView(QWidget *parent = nullptr);
     ~QScriptDebuggerCodeView();
 
     QString text() const;

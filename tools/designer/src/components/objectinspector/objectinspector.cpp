@@ -129,7 +129,7 @@ namespace qdesigner_internal {
 // Delegate with object name validator for the object name column
 class ObjectInspectorDelegate : public QItemDelegate {
 public:
-    explicit ObjectInspectorDelegate(QObject *parent = 0);
+    explicit ObjectInspectorDelegate(QObject *parent = nullptr);
 
     virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
@@ -156,7 +156,7 @@ QWidget *ObjectInspectorDelegate::createEditor(QWidget *parent, const QStyleOpti
 
 class ObjectInspectorTreeView : public QTreeView {
 public:
-    ObjectInspectorTreeView(QWidget *parent = 0) :  QTreeView(parent) {}
+    ObjectInspectorTreeView(QWidget *parent = nullptr) :  QTreeView(parent) {}
 
 protected:
     virtual void mouseMoveEvent (QMouseEvent * event);
@@ -278,17 +278,17 @@ void ObjectInspector::ObjectInspectorPrivate::clearSelection()
 QWidget *ObjectInspector::ObjectInspectorPrivate::managedWidgetAt(const QPoint &global_mouse_pos)
 {
     if (!m_formWindow)
-        return 0;
+        return nullptr;
 
     const  QPoint pos = m_treeView->viewport()->mapFromGlobal(global_mouse_pos);
     QObject *o = m_model->objectAt(m_treeView->indexAt(pos));
 
     if (!o || !o->isWidgetType())
-        return 0;
+        return nullptr;
 
     QWidget *rc = qobject_cast<QWidget *>(o);
     if (!m_formWindow->isManaged(rc))
-        return 0;
+        return nullptr;
     return rc;
 }
 
@@ -304,7 +304,7 @@ void ObjectInspector::ObjectInspectorPrivate::showContainersCurrentPage(QWidget 
     QWidget *w = widget->parentWidget();
     bool macroStarted = false;
     // Find a multipage container (tab widgets, etc.) in the hierarchy and set the right page.
-    while (w != 0) {
+    while (w != nullptr) {
         if (fw->isManaged(w) && !qobject_cast<QMainWindow *>(w)) { // Rule out unmanaged internal scroll areas, for example, on QToolBoxes.
             if (QDesignerContainerExtension *c = qt_extension<QDesignerContainerExtension*>(m_core->extensionManager(), w)) {
                 const int count = c->count();
@@ -335,7 +335,7 @@ void ObjectInspector::ObjectInspectorPrivate::restoreDropHighlighting()
         if (m_formWindow) {
             m_formWindow->highlightWidget(m_formFakeDropTarget, QPoint(5, 5), FormWindow::Restore);
         }
-        m_formFakeDropTarget = 0;
+        m_formFakeDropTarget = nullptr;
     }
 }
 
@@ -352,7 +352,7 @@ void ObjectInspector::ObjectInspectorPrivate::handleDragEnterMoveEvent(const QWi
         return;
     }
 
-    QWidget *dropTarget = 0;
+    QWidget *dropTarget = nullptr;
     QPoint fakeDropTargetOffset = QPoint(0, 0);
     if (QWidget *managedWidget = managedWidgetAt(objectInspectorWidget->mapToGlobal(event->pos()))) {
         fakeDropTargetOffset = dropPointOffset(m_formWindow, managedWidget);
@@ -443,8 +443,8 @@ void ObjectInspector::ObjectInspectorPrivate::selectIndexRange(const QModelIndex
 
 void ObjectInspector::ObjectInspectorPrivate::clear()
 {
-    m_formFakeDropTarget = 0;
-    m_formWindow = 0;
+    m_formFakeDropTarget = nullptr;
+    m_formWindow = nullptr;
 }
 
 // Form window cursor is in state 'main container only'
@@ -481,7 +481,7 @@ void ObjectInspector::ObjectInspectorPrivate::setFormWindowBlocked(QDesignerForm
     const int yoffset = m_treeView->verticalScrollBar()->value();
 
     if (formWindowChanged)
-        m_formFakeDropTarget = 0;
+        m_formFakeDropTarget = nullptr;
 
     switch (m_model->update(m_formWindow)) {
     case ObjectInspectorModel::NoForm:
@@ -709,12 +709,12 @@ static inline QMenu *createTaskMenu(QObject *object, QDesignerFormWindowInterfac
     // 3) Mananaged widgets
     if (qdesigner_internal::FormWindowBase *fwb = qobject_cast<qdesigner_internal::FormWindowBase*>(fw))
         return fwb->initializePopupMenu(w);
-    return 0;
+    return nullptr;
 }
 
 void ObjectInspector::ObjectInspectorPrivate::slotPopupContextMenu(QWidget * /*parent*/, const QPoint &pos)
 {
-    if (m_formWindow == 0 || m_formWindow->currentTool() != 0)
+    if (m_formWindow == nullptr || m_formWindow->currentTool() != 0)
         return;
 
     const QModelIndex index =  m_treeView->indexAt (pos);
@@ -808,7 +808,7 @@ void ObjectInspector::mainContainerChanged()
 {
     // Invalidate references to objects kept in items
     if (sender() == m_impl->formWindow())
-        setFormWindow(0);
+        setFormWindow(nullptr);
 }
 
 void  ObjectInspector::dragEnterEvent (QDragEnterEvent * event)

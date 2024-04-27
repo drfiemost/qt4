@@ -779,7 +779,7 @@ QNetworkManagerSettingsConnection *QNetworkManagerEngine::connectionFromId(const
             return connection;
     }
 
-    return 0;
+    return nullptr;
 }
 
 QNetworkSession::State QNetworkManagerEngine::sessionStateForId(const QString &id)

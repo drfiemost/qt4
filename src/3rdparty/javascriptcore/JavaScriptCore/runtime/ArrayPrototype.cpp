@@ -86,7 +86,7 @@ static inline bool isNumericCompareFunction(ExecState* exec, CallType callType, 
 
 // ------------------------------ ArrayPrototype ----------------------------
 
-const ClassInfo ArrayPrototype::info = {"Array", &JSArray::info, 0, ExecState::arrayTable};
+const ClassInfo ArrayPrototype::info = {"Array", &JSArray::info, nullptr, ExecState::arrayTable};
 
 /* Source for ArrayPrototype.lut.h
 @begin arrayTable 16
@@ -890,7 +890,7 @@ JSValue JSC_HOST_CALL arrayProtoFuncReduce(ExecState* exec, JSObject*, JSValue t
     unsigned length = thisObj->get(exec, exec->propertyNames().length).toUInt32(exec);
     if (!length && args.size() == 1)
         return throwError(exec, TypeError);
-    JSArray* array = 0;
+    JSArray* array = nullptr;
     if (isJSArray(&exec->globalData(), thisObj))
         array = asArray(thisObj);
 
@@ -960,7 +960,7 @@ JSValue JSC_HOST_CALL arrayProtoFuncReduceRight(ExecState* exec, JSObject*, JSVa
     unsigned length = thisObj->get(exec, exec->propertyNames().length).toUInt32(exec);
     if (!length && args.size() == 1)
         return throwError(exec, TypeError);
-    JSArray* array = 0;
+    JSArray* array = nullptr;
     if (isJSArray(&exec->globalData(), thisObj))
         array = asArray(thisObj);
     

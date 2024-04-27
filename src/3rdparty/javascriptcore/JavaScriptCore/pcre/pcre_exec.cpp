@@ -474,7 +474,7 @@ static int match(const UChar* subjectPtr, const unsigned char* instructionPtr, i
     stack.currentFrame->args.subjectPtr = subjectPtr;
     stack.currentFrame->args.instructionPtr = instructionPtr;
     stack.currentFrame->args.offsetTop = offsetTop;
-    stack.currentFrame->args.bracketChain = 0;
+    stack.currentFrame->args.bracketChain = nullptr;
     startNewGroup(stack.currentFrame);
     
     /* This is where control jumps back to to effect "recursion" */

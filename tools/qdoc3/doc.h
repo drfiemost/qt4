@@ -80,7 +80,7 @@ class Doc
         Section4 = 4
     };
 
-    Doc() : priv(0) {}
+    Doc() : priv(nullptr) {}
     Doc(const Location &start_loc,
         const Location &end_loc, 
         const QString &source, 

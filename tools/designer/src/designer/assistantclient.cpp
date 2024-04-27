@@ -56,7 +56,7 @@ QT_BEGIN_NAMESPACE
 enum { debugAssistantClient = 0 };
 
 AssistantClient::AssistantClient() :
-    m_process(0)
+    m_process(nullptr)
 {
 }
 

@@ -141,7 +141,7 @@ public:
 
     inline operator bool() const
     {
-        return (0 != m_ptr);
+        return (nullptr != m_ptr);
     }
 
 private:
@@ -397,7 +397,7 @@ public:
     void render(QPaintDevice *target, const QPoint &targetOffset, const QRegion &sourceRegion,
                 QWidget::RenderFlags renderFlags, bool readyToRender);
     void drawWidget(QPaintDevice *pdev, const QRegion &rgn, const QPoint &offset, int flags,
-                    QPainter *sharedPainter = 0, QWidgetBackingStore *backingStore = 0);
+                    QPainter *sharedPainter = nullptr, QWidgetBackingStore *backingStore = nullptr);
 
 
     void paintSiblingsRecursive(QPaintDevice *pdev, const QObjectList& children, int index,
@@ -420,7 +420,7 @@ public:
     QRect clipRect() const;
     QRegion clipRegion() const;
     void subtractOpaqueChildren(QRegion &rgn, const QRect &clipRect) const;
-    void subtractOpaqueSiblings(QRegion &source, bool *hasDirtySiblingsAbove = 0,
+    void subtractOpaqueSiblings(QRegion &source, bool *hasDirtySiblingsAbove = nullptr,
                                 bool alsoNonOpaque = false) const;
     void clipToEffectiveMask(QRegion &region) const;
     void updateIsOpaque();
@@ -475,7 +475,7 @@ public:
 
     void setEnabled_helper(bool);
     void registerDropSite(bool);
-    static void adjustFlags(Qt::WindowFlags &flags, QWidget *w = 0);
+    static void adjustFlags(Qt::WindowFlags &flags, QWidget *w = nullptr);
 
     void updateFrameStrut();
     QRect frameStrut() const;
@@ -510,7 +510,7 @@ public:
 
     void getLayoutItemMargins(int *left, int *top, int *right, int *bottom) const;
     void setLayoutItemMargins(int left, int top, int right, int bottom);
-    void setLayoutItemMargins(QStyle::SubElement element, const QStyleOption *opt = 0);
+    void setLayoutItemMargins(QStyle::SubElement element, const QStyleOption *opt = nullptr);
 
     // aboutToDestroy() is called just before the contents of
     // QWidget::destroy() is executed. It's used to signal QWidget
@@ -541,7 +541,7 @@ public:
         QGraphicsProxyWidget *ancestorProxy = widget->d_func()->nearestGraphicsProxyWidget(widget);
         //It's embedded if it has an ancestor
         if (ancestorProxy) {
-            if (!bypassGraphicsProxyWidget(widget) && ancestorProxy->scene() != 0) {
+            if (!bypassGraphicsProxyWidget(widget) && ancestorProxy->scene() != nullptr) {
                 // One view, let be smart and return the viewport rect then the popup is aligned
                 if (ancestorProxy->scene()->views().size() == 1) {
                     QGraphicsView *view = ancestorProxy->scene()->views().at(0);
@@ -570,7 +570,7 @@ public:
     }
 
     inline void restoreRedirected()
-    { redirectDev = 0; }
+    { redirectDev = nullptr; }
 
     inline void enforceNativeChildren()
     {
@@ -857,7 +857,7 @@ struct QWidgetPaintContext
 {
     inline QWidgetPaintContext(QPaintDevice *d, const QRegion &r, const QPoint &o, int f,
                                QPainter *p, QWidgetBackingStore *b)
-        : pdev(d), rgn(r), offset(o), flags(f), sharedPainter(p), backingStore(b), painter(0) {}
+        : pdev(d), rgn(r), offset(o), flags(f), sharedPainter(p), backingStore(b), painter(nullptr) {}
 
     QPaintDevice *pdev;
     QRegion rgn;
@@ -873,14 +873,14 @@ class QWidgetEffectSourcePrivate : public QGraphicsEffectSourcePrivate
 {
 public:
     QWidgetEffectSourcePrivate(QWidget *widget)
-        : QGraphicsEffectSourcePrivate(), m_widget(widget), context(0), updateDueToGraphicsEffect(false)
+        : QGraphicsEffectSourcePrivate(), m_widget(widget), context(nullptr), updateDueToGraphicsEffect(false)
     {}
 
     inline void detach()
-    { m_widget->d_func()->graphicsEffect = 0; }
+    { m_widget->d_func()->graphicsEffect = nullptr; }
 
     inline const QGraphicsItem *graphicsItem() const
-    { return 0; }
+    { return nullptr; }
 
     inline const QWidget *widget() const
     { return m_widget; }
@@ -906,7 +906,7 @@ public:
     }
 
     inline const QStyleOption *styleOption() const
-    { return 0; }
+    { return nullptr; }
 
     inline QRect deviceRect() const
     { return m_widget->window()->rect(); }
@@ -936,14 +936,14 @@ inline QTLWExtra *QWidgetPrivate::topData() const
 
 inline QTLWExtra *QWidgetPrivate::maybeTopData() const
 {
-    return extra ? extra->topextra : 0;
+    return extra ? extra->topextra : nullptr;
 }
 
 inline QPainter *QWidgetPrivate::sharedPainter() const
 {
     Q_Q(const QWidget);
     QTLWExtra *x = q->window()->d_func()->maybeTopData();
-    return x ? x->sharedPainter : 0;
+    return x ? x->sharedPainter : nullptr;
 }
 
 inline void QWidgetPrivate::setSharedPainter(QPainter *painter)
@@ -964,7 +964,7 @@ inline QWidgetBackingStore *QWidgetPrivate::maybeBackingStore() const
 {
     Q_Q(const QWidget);
     QTLWExtra *x = q->window()->d_func()->maybeTopData();
-    return x ? x->backingStore.data() : 0;
+    return x ? x->backingStore.data() : nullptr;
 }
 
 QT_END_NAMESPACE

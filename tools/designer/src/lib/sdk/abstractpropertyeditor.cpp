@@ -121,7 +121,7 @@ QDesignerPropertyEditorInterface::~QDesignerPropertyEditorInterface()
 */
 QDesignerFormEditorInterface *QDesignerPropertyEditorInterface::core() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

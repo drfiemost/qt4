@@ -238,7 +238,7 @@ QImage QTgaFile::readImage()
     unsigned char yCorner = desc & 0x20; // 0 = lower, 1 = upper
 
     QImage im(imageWidth, imageHeight, QImage::Format_ARGB32);
-    TgaReader *reader = 0;
+    TgaReader *reader = nullptr;
     if (bitsPerPixel == 16)
         reader = new Tga16Reader();
     else if (bitsPerPixel == 24)

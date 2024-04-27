@@ -427,7 +427,7 @@ static GLuint generateBlurTexture(const QSize &size, GLenum format = GL_RGBA)
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, format, size.width(), size.height(), 0, format,
-                 GL_UNSIGNED_BYTE, 0);
+                 GL_UNSIGNED_BYTE, nullptr);
     return texture;
 }
 
@@ -451,7 +451,7 @@ bool QGLPixmapBlurFilter::processGL(QPainter *painter, const QPointF &pos, const
     QGLContext *ctx = const_cast<QGLContext *>(QGLContext::currentContext());
 
     QGLBlurTextureCache *blurTextureCache = QGLBlurTextureCache::cacheForContext(ctx);
-    QGLBlurTextureInfo *info = 0;
+    QGLBlurTextureInfo *info = nullptr;
     int padding = nextMultiple(qCeil(actualRadius), qAnimatedBlurLevelIncrement);
     QRect targetRect = src.rect().adjusted(-padding, -padding, padding, padding);
 

@@ -65,7 +65,7 @@ class QGraphicsProxyWidgetPrivate : public QGraphicsWidgetPrivate
     Q_DECLARE_PUBLIC(QGraphicsProxyWidget)
 public:
     QGraphicsProxyWidgetPrivate()
-        : dragDropWidget(0),
+        : dragDropWidget(nullptr),
           posChangeMode(NoMode),
           sizeChangeMode(NoMode),
           visibleChangeMode(NoMode),

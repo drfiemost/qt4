@@ -16,14 +16,14 @@ CL_NS_USE(document)
 RangeFilter::RangeFilter( const TCHAR* fieldName, const TCHAR* lowerTerm, const TCHAR* upperTerm, bool includeLower, bool includeUpper )
 {
 	this->field = STRDUP_TtoT(fieldName);
-	if ( lowerTerm != NULL )
+	if ( lowerTerm != nullptr )
 		this->lowerValue = STRDUP_TtoT(lowerTerm);
 	else
-		this->lowerValue = NULL;
-	if ( upperTerm != NULL )
+		this->lowerValue = nullptr;
+	if ( upperTerm != nullptr )
 		this->upperValue = STRDUP_TtoT(upperTerm);
 	else
-		this->upperValue = NULL;
+		this->upperValue = nullptr;
 	this->includeLower = includeLower;
 	this->includeUpper = includeUpper;
 }
@@ -34,7 +34,7 @@ RangeFilter::RangeFilter( const TCHAR* fieldName, const TCHAR* lowerTerm, const 
  * less than or equal to <code>upperTerm</code>.
  */
 RangeFilter* RangeFilter::Less( TCHAR* fieldName, TCHAR* upperTerm ) {
-	return new RangeFilter( fieldName, NULL, upperTerm, false, true );
+	return new RangeFilter( fieldName, nullptr, upperTerm, false, true );
 }
 
 
@@ -43,7 +43,7 @@ RangeFilter* RangeFilter::Less( TCHAR* fieldName, TCHAR* upperTerm ) {
 * more than or equal to <code>lowerTerm</code>.
 */
 RangeFilter* RangeFilter::More( TCHAR* fieldName, TCHAR* lowerTerm ) {
-	return new RangeFilter( fieldName, lowerTerm, NULL, true, false );
+	return new RangeFilter( fieldName, lowerTerm, nullptr, true, false );
 }
 
 
@@ -86,13 +86,13 @@ search results, and false for those that should not. */
 BitSet* RangeFilter::bits( IndexReader* reader )
 {
 	BitSet* bts = _CLNEW BitSet( reader->maxDoc() );
-	Term* term = NULL;
+	Term* term = nullptr;
 	
 	Term* t = _CLNEW Term( field, (lowerValue ? lowerValue : _T("")), false );
 	TermEnum* enumerator = reader->terms( t );	// get enumeration of all terms after lowerValue
 	_CLDECDELETE( t );
 	
-	if( enumerator->term(false) == NULL ) {
+	if( enumerator->term(false) == nullptr ) {
 		_CLDELETE( enumerator );
 		return bts;
 	}
@@ -109,13 +109,13 @@ BitSet* RangeFilter::bits( IndexReader* reader )
 		{
 			term = enumerator->term();
 			
-			if( term == NULL || _tcscmp(term->field(), field) )
+			if( term == nullptr || _tcscmp(term->field(), field) )
 				break;
 			
-			if( !checkLower || lowerValue == NULL || _tcscmp(term->text(), lowerValue) > 0 )
+			if( !checkLower || lowerValue == nullptr || _tcscmp(term->text(), lowerValue) > 0 )
 			{
 				checkLower = false;
-				if( upperValue != NULL )
+				if( upperValue != nullptr )
 				{
 					int compare = _tcscmp( upperValue, term->text() );
 					

@@ -60,7 +60,7 @@ class Q_GUI_EXPORT QStackedWidget : public QFrame
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentChanged)
     Q_PROPERTY(int count READ count)
 public:
-    explicit QStackedWidget(QWidget *parent=0);
+    explicit QStackedWidget(QWidget *parent=nullptr);
     ~QStackedWidget();
 
     int addWidget(QWidget *w);

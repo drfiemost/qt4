@@ -306,7 +306,7 @@ struct QVectorPathCmd
         : vectorPath(d->floats.constData() + cmd.offset,
                      cmd.size,
                      cmd.offset2 & 0x80000000
-                     ? 0
+                     ? nullptr
                      : (const QPainterPath::ElementType *) (d->ints.constData() + cmd.offset2 + 1),
                      *(d->ints.constData() + (cmd.offset2 & 0x7fffffff))) {}
 
@@ -441,7 +441,7 @@ class Q_GUI_EXPORT QPaintBufferResource : public QObject
 public:
     typedef void (*FreeFunc)(void *);
 
-    QPaintBufferResource(FreeFunc f, QObject *parent = 0);
+    QPaintBufferResource(FreeFunc f, QObject *parent = nullptr);
     ~QPaintBufferResource();
     // Set resource 'value' for 'key'.
     void insert(const QPaintBufferPrivate *key, void *value);

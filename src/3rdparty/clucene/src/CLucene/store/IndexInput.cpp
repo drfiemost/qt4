@@ -123,7 +123,7 @@ CL_NS_DEF(store)
 
 
 BufferedIndexInput::BufferedIndexInput(int32_t _bufferSize):
-		buffer(NULL),
+		buffer(nullptr),
 		bufferSize(_bufferSize),
 		bufferStart(0),
 		bufferLength(0),
@@ -133,7 +133,7 @@ BufferedIndexInput::BufferedIndexInput(int32_t _bufferSize):
 
   BufferedIndexInput::BufferedIndexInput(const BufferedIndexInput& other):
   	IndexInput(other),
-    buffer(NULL),
+    buffer(nullptr),
 	bufferSize(other.bufferSize),
     bufferStart(other.bufferStart),
     bufferLength(other.bufferLength),
@@ -142,7 +142,7 @@ BufferedIndexInput::BufferedIndexInput(int32_t _bufferSize):
     /* DSR: Does the fact that sometime clone.buffer is not NULL even when
     ** clone.bufferLength is zero indicate memory corruption/leakage?
     **   if ( clone.buffer != NULL) { */
-    if (other.bufferLength != 0 && other.buffer != NULL) {
+    if (other.bufferLength != 0 && other.buffer != nullptr) {
       buffer = _CL_NEWARRAY(uint8_t,bufferLength);
 	  memcpy(buffer,other.buffer,bufferLength * sizeof(uint8_t));
     }
@@ -200,7 +200,7 @@ BufferedIndexInput::BufferedIndexInput(int32_t _bufferSize):
     if (bufferLength == 0)
       _CLTHROWA(CL_ERR_IO, "IndexInput read past EOF");
 
-    if (buffer == NULL){
+    if (buffer == nullptr){
       buffer = _CL_NEWARRAY(uint8_t,bufferSize);		  // allocate buffer lazily
     }
     readInternal(buffer, bufferLength);

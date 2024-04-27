@@ -245,7 +245,7 @@ void QDeclarativeComponentPrivate::typeDataReady(QDeclarativeTypeData *)
     Q_ASSERT(typeData);
 
     fromTypeData(typeData);
-    typeData = 0;
+    typeData = nullptr;
 
     emit q->statusChanged(q->status());
 }
@@ -279,12 +279,12 @@ void QDeclarativeComponentPrivate::clear()
     if (typeData) {
         typeData->unregisterCallback(this);
         typeData->release();
-        typeData = 0;
+        typeData = nullptr;
     }
         
     if (cc) { 
         cc->release();
-        cc = 0;
+        cc = nullptr;
     }
 }
 
@@ -795,7 +795,7 @@ QObject *QDeclarativeComponent::create(QDeclarativeContext *context)
 QObject *QDeclarativeComponent::beginCreate(QDeclarativeContext *context)
 {
     Q_D(QDeclarativeComponent);
-    QObject *rv = d->beginCreate(context?QDeclarativeContextData::get(context):0, QBitField());
+    QObject *rv = d->beginCreate(context?QDeclarativeContextData::get(context):nullptr, QBitField());
     if (rv) {
         QDeclarativeData *ddata = QDeclarativeData::get(rv);
         Q_ASSERT(ddata);
@@ -810,30 +810,30 @@ QDeclarativeComponentPrivate::beginCreate(QDeclarativeContextData *context, cons
     Q_Q(QDeclarativeComponent);
     if (!context) {
         qWarning("QDeclarativeComponent: Cannot create a component in a null context");
-        return 0;
+        return nullptr;
     }
 
     if (!context->isValid()) {
         qWarning("QDeclarativeComponent: Cannot create a component in an invalid context");
-        return 0;
+        return nullptr;
     }
 
     if (context->engine != engine) {
         qWarning("QDeclarativeComponent: Must create component in context from the same QDeclarativeEngine");
-        return 0;
+        return nullptr;
     }
 
     if (state.completePending) {
         qWarning("QDeclarativeComponent: Cannot create new component instance before completing the previous");
-        return 0;
+        return nullptr;
     }
 
     if (!q->isReady()) {
         qWarning("QDeclarativeComponent: Component is not ready");
-        return 0;
+        return nullptr;
     }
 
-    return begin(context, creationContext, cc, start, count, &state, 0, bindings);
+    return begin(context, creationContext, cc, start, count, &state, nullptr, bindings);
 }
 
 QObject * QDeclarativeComponentPrivate::begin(QDeclarativeContextData *parentContext, 
@@ -885,7 +885,7 @@ QObject * QDeclarativeComponentPrivate::begin(QDeclarativeContextData *parentCon
         if (state->componentAttached)
             state->componentAttached->prev = &state->componentAttached;
 
-        enginePriv->componentAttached = 0;
+        enginePriv->componentAttached = nullptr;
         enginePriv->bindValues.clear();
         enginePriv->parserStatus.clear();
         enginePriv->finalizedParserStatus.clear();
@@ -924,7 +924,7 @@ void QDeclarativeComponentPrivate::beginDeferred(QDeclarativeEnginePrivate *engi
         if (state->componentAttached)
             state->componentAttached->prev = &state->componentAttached;
 
-        enginePriv->componentAttached = 0;
+        enginePriv->componentAttached = nullptr;
         enginePriv->bindValues.clear();
         enginePriv->parserStatus.clear();
         enginePriv->finalizedParserStatus.clear();
@@ -943,7 +943,7 @@ void QDeclarativeComponentPrivate::complete(QDeclarativeEnginePrivate *enginePri
                 for (int jj = 0; jj < bv.count; ++jj) {
                     if(bv.at(jj)) {
                         // XXX akennedy
-                        bv.at(jj)->m_mePtr = 0;
+                        bv.at(jj)->m_mePtr = nullptr;
                         bv.at(jj)->setEnabled(true, QDeclarativePropertyPrivate::BypassInterceptor | 
                                                     QDeclarativePropertyPrivate::DontRemoveBinding);
                     }
@@ -958,7 +958,7 @@ void QDeclarativeComponentPrivate::complete(QDeclarativeEnginePrivate *enginePri
                 for (int jj = ps.count - 1; jj >= 0; --jj) {
                     QDeclarativeParserStatus *status = ps.at(jj);
                     if (status && status->d) {
-                        status->d = 0;
+                        status->d = nullptr;
                         status->componentComplete();
                     }
                 }
@@ -969,7 +969,7 @@ void QDeclarativeComponentPrivate::complete(QDeclarativeEnginePrivate *enginePri
                 QPair<QDeclarativeGuard<QObject>, int> status = state->finalizedParserStatus.at(ii);
                 QObject *obj = status.first;
                 if (obj) {
-                    void *args[] = { 0 };
+                    void *args[] = { nullptr };
                     QMetaObject::metacall(obj, QMetaObject::InvokeMetaMethod,
                                           status.second, args);
                 }
@@ -982,7 +982,7 @@ void QDeclarativeComponentPrivate::complete(QDeclarativeEnginePrivate *enginePri
                     QPair<QDeclarativeGuard<QObject>, int> status = enginePriv->finalizedParserStatus.at(ii);
                     QObject *obj = status.first;
                     if (obj) {
-                        void *args[] = { 0 };
+                        void *args[] = { nullptr };
                         QMetaObject::metacall(obj, QMetaObject::InvokeMetaMethod,
                                               status.second, args);
                     }
@@ -1047,7 +1047,7 @@ void QDeclarativeComponentPrivate::completeCreate()
 }
 
 QDeclarativeComponentAttached::QDeclarativeComponentAttached(QObject *parent)
-: QObject(parent), prev(0), next(0)
+: QObject(parent), prev(nullptr), next(nullptr)
 {
 }
 
@@ -1055,8 +1055,8 @@ QDeclarativeComponentAttached::~QDeclarativeComponentAttached()
 {
     if (prev) *prev = next;
     if (next) next->prev = prev;
-    prev = 0;
-    next = 0;
+    prev = nullptr;
+    next = nullptr;
 }
 
 /*!

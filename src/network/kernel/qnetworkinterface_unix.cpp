@@ -97,7 +97,7 @@ static QHostAddress addressFromSockaddr(sockaddr *sa)
 
 static QNetworkInterface::InterfaceFlags convertFlags(uint rawFlags)
 {
-    QNetworkInterface::InterfaceFlags flags = 0;
+    QNetworkInterface::InterfaceFlags flags = nullptr;
     flags |= (rawFlags & IFF_UP) ? QNetworkInterface::IsUp : QNetworkInterface::InterfaceFlag(0);
     flags |= (rawFlags & IFF_RUNNING) ? QNetworkInterface::IsRunning : QNetworkInterface::InterfaceFlag(0);
     flags |= (rawFlags & IFF_BROADCAST) ? QNetworkInterface::CanBroadcast : QNetworkInterface::InterfaceFlag(0);
@@ -414,7 +414,7 @@ static QList<QNetworkInterfacePrivate *> interfaceListing()
     for (ifaddrs *ptr = interfaceListing; ptr; ptr = ptr->ifa_next) {
         // Get the interface index
         int ifindex = if_nametoindex(ptr->ifa_name);
-        QNetworkInterfacePrivate *iface = 0;
+        QNetworkInterfacePrivate *iface = nullptr;
         QList<QNetworkInterfacePrivate *>::Iterator if_it = interfaces.begin();
         for ( ; if_it != interfaces.end(); ++if_it)
             if ((*if_it)->index == ifindex) {

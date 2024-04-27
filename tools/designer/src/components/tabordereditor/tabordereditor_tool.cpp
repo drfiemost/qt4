@@ -87,7 +87,7 @@ QWidget *TabOrderEditorTool::editor() const
 {
     if (!m_editor) {
         Q_ASSERT(formWindow() != 0);
-        m_editor = new TabOrderEditor(formWindow(), 0);
+        m_editor = new TabOrderEditor(formWindow(), nullptr);
         connect(formWindow(), SIGNAL(mainContainerChanged(QWidget*)), m_editor, SLOT(setBackground(QWidget*)));
     }
 

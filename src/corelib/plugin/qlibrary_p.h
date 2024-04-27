@@ -99,7 +99,7 @@ public:
     QString errorString;
     QLibrary::LoadHints loadHints;
 
-    bool isPlugin(QSettings *settings = 0);
+    bool isPlugin(QSettings *settings = nullptr);
 
 
 private:

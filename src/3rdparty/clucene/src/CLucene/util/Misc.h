@@ -24,8 +24,8 @@ public:
 
     static size_t ahashCode(const char* str);
     static size_t ahashCode(const char* str, size_t len);
-    static char* ajoin(const char* a, const char* b, const char* c = NULL,
-        const char* d = NULL, const char* e = NULL, const char* f = NULL);
+    static char* ajoin(const char* a, const char* b, const char* c = nullptr,
+        const char* d = nullptr, const char* e = nullptr, const char* f = nullptr);
     static char* segmentname(const char* segment, const char* ext, int32_t x = -1);
     static void segmentname(char* buffer, int32_t bufferLen, const char* segment,
         const char* ext, int32_t x = -1);
@@ -50,8 +50,8 @@ public:
     // @return The first position where the two strings differ.
     static int32_t stringDifference(const TCHAR* s1, int32_t s1Len,
         const TCHAR* s2, int32_t s2Len);
-    static TCHAR* join (const TCHAR* a, const TCHAR* b, const TCHAR* c = NULL,
-        const TCHAR* d = NULL, const TCHAR* e = NULL, const TCHAR* f = NULL );
+    static TCHAR* join (const TCHAR* a, const TCHAR* b, const TCHAR* c = nullptr,
+        const TCHAR* d = nullptr, const TCHAR* e = nullptr, const TCHAR* f = nullptr );
 
 #ifdef _UCS2
     static size_t whashCode(const wchar_t* str);

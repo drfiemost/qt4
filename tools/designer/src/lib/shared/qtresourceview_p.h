@@ -68,7 +68,7 @@ class QDESIGNER_SHARED_EXPORT QtResourceView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QtResourceView(QDesignerFormEditorInterface *core, QWidget *parent = 0);
+    explicit QtResourceView(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
     ~QtResourceView();
 
     void setDragEnabled(bool dragEnabled);
@@ -90,8 +90,8 @@ public:
     enum ResourceType { ResourceImage, ResourceStyleSheet, ResourceOther };
     static QString encodeMimeData(ResourceType resourceType, const QString &path);
 
-    static bool decodeMimeData(const QMimeData *md, ResourceType *t = 0, QString *file = 0);
-    static bool decodeMimeData(const QString &text, ResourceType *t = 0, QString *file = 0);
+    static bool decodeMimeData(const QMimeData *md, ResourceType *t = nullptr, QString *file = nullptr);
+    static bool decodeMimeData(const QString &text, ResourceType *t = nullptr, QString *file = nullptr);
 
 signals:
     void resourceSelected(const QString &resource);
@@ -120,7 +120,7 @@ class QDESIGNER_SHARED_EXPORT  QtResourceViewDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit QtResourceViewDialog(QDesignerFormEditorInterface *core, QWidget *parent = 0);
+    explicit QtResourceViewDialog(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
     virtual ~QtResourceViewDialog();
 
     QString selectedResource() const;

@@ -81,12 +81,12 @@ signals:
 
 private:
     QHelpSearchEnginePrivate(QHelpEngineCore *helpEngine)
-        : queryWidget(0)
-        , resultWidget(0)
+        : queryWidget(nullptr)
+        , resultWidget(nullptr)
         , helpEngine(helpEngine)
     {
-        indexReader = 0;
-        indexWriter = 0;
+        indexReader = nullptr;
+        indexWriter = nullptr;
     }
 
     ~QHelpSearchEnginePrivate()

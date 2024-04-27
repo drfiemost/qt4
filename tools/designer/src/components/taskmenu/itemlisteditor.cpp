@@ -112,14 +112,14 @@ static const char * const itemFlagNames[] = {
     QT_TRANSLATE_NOOP("AbstractItemEditor", "UserCheckable"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Enabled"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Tristate"),
-    0
+    nullptr
 };
 
 static const char * const checkStateNames[] = {
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Unchecked"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "PartiallyChecked"),
     QT_TRANSLATE_NOOP("AbstractItemEditor", "Checked"),
-    0
+    nullptr
 };
 
 static QStringList c2qStringList(const char * const in[])
@@ -229,7 +229,7 @@ void AbstractItemEditor::resetProperty(QtProperty *property)
     if (role == ItemFlagsShadowRole)
         prop->setValue(QVariant::fromValue((int)QListWidgetItem().flags()));
     else
-        prop->setValue(QVariant(prop->valueType(), (void *)0));
+        prop->setValue(QVariant(prop->valueType(), (void *)nullptr));
     prop->setModified(false);
 
     setItemData(role, QVariant());
@@ -261,7 +261,7 @@ void AbstractItemEditor::updateBrowser()
             if (role == ItemFlagsShadowRole)
                 val = QVariant::fromValue((int)QListWidgetItem().flags());
             else
-                val = QVariant((int)prop->value().userType(), (void *)0);
+                val = QVariant((int)prop->value().userType(), (void *)nullptr);
             prop->setModified(false);
         } else {
             prop->setModified(true);

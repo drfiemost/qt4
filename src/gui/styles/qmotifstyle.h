@@ -73,37 +73,37 @@ public:
     void unpolish(QApplication*);
 
     void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p,
-                        const QWidget *w = 0) const;
+                        const QWidget *w = nullptr) const;
 
     void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
-                      const QWidget *w = 0) const;
+                      const QWidget *w = nullptr) const;
 
     void drawComplexControl(ComplexControl cc, const QStyleOptionComplex *opt, QPainter *p,
-                            const QWidget *w = 0) const;
+                            const QWidget *w = nullptr) const;
 
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt,
-                         SubControl sc, const QWidget *widget = 0) const;
+                         SubControl sc, const QWidget *widget = nullptr) const;
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
-                     const QWidget *widget = 0) const;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
+                     const QWidget *widget = nullptr) const;
 
     QSize sizeFromContents(ContentsType ct, const QStyleOption *opt,
-                           const QSize &contentsSize, const QWidget *widget = 0) const;
+                           const QSize &contentsSize, const QWidget *widget = nullptr) const;
 
-    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = 0) const;
+    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = nullptr) const;
 
     QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                           const QWidget *widget = 0) const;
+                           const QWidget *widget = nullptr) const;
 
-    int styleHint(StyleHint hint, const QStyleOption *opt = 0, const QWidget *widget = 0,
-                  QStyleHintReturn *returnData = 0) const;
+    int styleHint(StyleHint hint, const QStyleOption *opt = nullptr, const QWidget *widget = nullptr,
+                  QStyleHintReturn *returnData = nullptr) const;
 
     bool event(QEvent *);
     QPalette standardPalette() const;
 
 protected Q_SLOTS:
-    QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = 0,
-                                     const QWidget *widget = 0) const;
+    QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = nullptr,
+                                     const QWidget *widget = nullptr) const;
 
 protected:
     QPointer<QFocusFrame> focus;

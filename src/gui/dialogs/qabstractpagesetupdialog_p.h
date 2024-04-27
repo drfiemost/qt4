@@ -71,7 +71,7 @@ class QAbstractPageSetupDialogPrivate : public QDialogPrivate
     Q_DECLARE_PUBLIC(QAbstractPageSetupDialog)
 
 public:
-    QAbstractPageSetupDialogPrivate() : printer(0) {}
+    QAbstractPageSetupDialogPrivate() : printer(nullptr) {}
 
     void setPrinter(QPrinter *newPrinter);
 

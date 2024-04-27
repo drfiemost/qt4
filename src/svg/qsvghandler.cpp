@@ -464,7 +464,7 @@ public:
              n->type() == QSvgNode::SWITCH)) {
             return (QSvgStructureNode*)n;
         }
-        return 0;
+        return nullptr;
     }
 
     inline QSvgStructureNode *svgStructure(NodePtr node) const
@@ -526,7 +526,7 @@ public:
     {
         QSvgNode *n = svgNode(node);
         NodePtr newNode;
-        newNode.ptr = 0;
+        newNode.ptr = nullptr;
         newNode.id = 0;
         if (n) {
             QSvgNode *svgParent = n->parent();
@@ -539,7 +539,7 @@ public:
     NodePtr previousSiblingNode(NodePtr node) const override
     {
         NodePtr newNode;
-        newNode.ptr = 0;
+        newNode.ptr = nullptr;
         newNode.id = 0;
 
         QSvgNode *n = svgNode(node);
@@ -658,7 +658,7 @@ static qreal toDouble(const QChar *&str)
     return val;
 
 }
-static qreal toDouble(const QString &str, bool *ok = NULL)
+static qreal toDouble(const QString &str, bool *ok = nullptr)
 {
     const QChar *c = str.constData();
     qreal res = toDouble(c);
@@ -668,7 +668,7 @@ static qreal toDouble(const QString &str, bool *ok = NULL)
     return res;
 }
 
-static qreal toDouble(const QStringRef &str, bool *ok = NULL)
+static qreal toDouble(const QStringRef &str, bool *ok = nullptr)
 {
     const QChar *c = str.constData();
     qreal res = toDouble(c);
@@ -905,7 +905,7 @@ static bool constructColor(const QStringRef &colorStr, const QStringRef &opacity
 }
 
 static qreal parseLength(const QString &str, QSvgHandler::LengthType &type,
-                         QSvgHandler *handler, bool *ok = NULL)
+                         QSvgHandler *handler, bool *ok = nullptr)
 {
     QString numStr = str.trimmed();
 
@@ -939,7 +939,7 @@ static qreal parseLength(const QString &str, QSvgHandler::LengthType &type,
     return len;
 }
 
-static inline qreal convertToNumber(const QString &str, QSvgHandler *handler, bool *ok = NULL)
+static inline qreal convertToNumber(const QString &str, QSvgHandler *handler, bool *ok = nullptr)
 {
     QSvgHandler::LengthType type;
     qreal num = parseLength(str, type, handler, ok);
@@ -1011,7 +1011,7 @@ static void parseColor(QSvgNode *,
 
 static QSvgStyleProperty *styleFromUrl(QSvgNode *node, const QString &url)
 {
-    return node ? node->styleProperty(idFromUrl(url)) : 0;
+    return node ? node->styleProperty(idFromUrl(url)) : nullptr;
 }
 
 static void parseBrush(QSvgNode *node,
@@ -1348,7 +1348,7 @@ static void parseFont(QSvgNode *node,
         return;
 
     QSvgTinyDocument *doc = node->document();
-    QSvgFontStyle *fontStyle = 0;
+    QSvgFontStyle *fontStyle = nullptr;
     if (!attributes.fontFamily.isEmpty()) {
         QSvgFont *svgFont = doc->svgFont(attributes.fontFamily.toString());
         if (svgFont)
@@ -2546,7 +2546,7 @@ static QSvgNode * createAnimationNode(QSvgNode *parent,
                                       QSvgHandler *)
 {
     Q_UNUSED(parent); Q_UNUSED(attributes);
-    return 0;
+    return nullptr;
 }
 
 static bool parseAudioNode(QSvgNode *parent,
@@ -2777,11 +2777,11 @@ static QSvgNode *createImageNode(QSvgNode *parent,
     filename = filename.trimmed();
     if (filename.isEmpty()) {
         qWarning() << "QSvgHandler: Image filename is empty";
-        return 0;
+        return nullptr;
     }
     if (nwidth <= 0 || nheight <= 0) {
         qWarning() << "QSvgHandler: Width or height for" << filename << "image was not greater than 0";
-        return 0;
+        return nullptr;
     }
 
     QImage image;
@@ -2810,7 +2810,7 @@ static QSvgNode *createImageNode(QSvgNode *parent,
 
     if (image.isNull()) {
         qDebug() << "Could not create image from " << filename;
-        return 0;
+        return nullptr;
     }
 
     if (image.format() == QImage::Format_ARGB32)
@@ -3147,7 +3147,7 @@ static QSvgStyleProperty *createSolidColorNode(QSvgNode *parent,
 
     QColor color;
     if (!constructColor(solidColorStr, solidOpacityStr, color, handler))
-        return 0;
+        return nullptr;
     QSvgSolidColorStyle *style = new QSvgSolidColorStyle(color);
     return style;
 }
@@ -3387,7 +3387,7 @@ static QSvgNode *createUseNode(QSvgNode *parent,
     QString linkId = attributes.value(QLatin1String("xlink:href")).toString().remove(0, 1);
     QString xStr = attributes.value(QLatin1String("x")).toString();
     QString yStr = attributes.value(QLatin1String("y")).toString();
-    QSvgStructureNode *group = 0;
+    QSvgStructureNode *group = nullptr;
 
     if (linkId.isEmpty())
         linkId = attributes.value(QLatin1String("href")).toString().remove(0, 1);
@@ -3427,7 +3427,7 @@ static QSvgNode *createUseNode(QSvgNode *parent,
     }
 
     qWarning("<use> element %s in wrong context!", qPrintable(linkId));
-    return 0;
+    return nullptr;
 }
 
 static QSvgNode *createVideoNode(QSvgNode *parent,
@@ -3435,7 +3435,7 @@ static QSvgNode *createVideoNode(QSvgNode *parent,
                                  QSvgHandler *)
 {
     Q_UNUSED(parent); Q_UNUSED(attributes);
-    return 0;
+    return nullptr;
 }
 
 typedef QSvgNode *(*FactoryMethod)(QSvgNode *, const QXmlStreamAttributes &, QSvgHandler *);
@@ -3443,7 +3443,7 @@ typedef QSvgNode *(*FactoryMethod)(QSvgNode *, const QXmlStreamAttributes &, QSv
 static FactoryMethod findGroupFactory(const QString &name)
 {
     if (name.isEmpty())
-        return 0;
+        return nullptr;
 
     QStringRef ref(&name, 1, name.length() - 1);
     switch (name.at(0).unicode()) {
@@ -3460,13 +3460,13 @@ static FactoryMethod findGroupFactory(const QString &name)
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 static FactoryMethod findGraphicsFactory(const QString &name)
 {
     if (name.isEmpty())
-        return 0;
+        return nullptr;
 
     QStringRef ref(&name, 1, name.length() - 1);
     switch (name.at(0).unicode()) {
@@ -3507,7 +3507,7 @@ static FactoryMethod findGraphicsFactory(const QString &name)
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 typedef bool (*ParseMethod)(QSvgNode *, const QXmlStreamAttributes &, QSvgHandler *);
@@ -3515,7 +3515,7 @@ typedef bool (*ParseMethod)(QSvgNode *, const QXmlStreamAttributes &, QSvgHandle
 static ParseMethod findUtilFactory(const QString &name)
 {
     if (name.isEmpty())
-        return 0;
+        return nullptr;
 
     QStringRef ref(&name, 1, name.length() - 1);
     switch (name.at(0).unicode()) {
@@ -3557,7 +3557,7 @@ static ParseMethod findUtilFactory(const QString &name)
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 typedef QSvgStyleProperty *(*StyleFactoryMethod)(QSvgNode *,
@@ -3567,7 +3567,7 @@ typedef QSvgStyleProperty *(*StyleFactoryMethod)(QSvgNode *,
 static StyleFactoryMethod findStyleFactoryMethod(const QString &name)
 {
     if (name.isEmpty())
-        return 0;
+        return nullptr;
 
     QStringRef ref(&name, 1, name.length() - 1);
     switch (name.at(0).unicode()) {
@@ -3586,7 +3586,7 @@ static StyleFactoryMethod findStyleFactoryMethod(const QString &name)
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 typedef bool (*StyleParseMethod)(QSvgStyleProperty *,
@@ -3596,7 +3596,7 @@ typedef bool (*StyleParseMethod)(QSvgStyleProperty *,
 static StyleParseMethod findStyleUtilFactoryMethod(const QString &name)
 {
     if (name.isEmpty())
-        return 0;
+        return nullptr;
 
     QStringRef ref(&name, 1, name.length() - 1);
     switch (name.at(0).unicode()) {
@@ -3618,7 +3618,7 @@ static StyleParseMethod findStyleUtilFactoryMethod(const QString &name)
     default:
         break;
     }
-    return 0;
+    return nullptr;
 }
 
 QSvgHandler::QSvgHandler(QIODevice *device) : xml(new QXmlStreamReader(device))
@@ -3641,8 +3641,8 @@ QSvgHandler::QSvgHandler(QXmlStreamReader *const reader) : xml(reader)
 
 void QSvgHandler::init()
 {
-    m_doc = 0;
-    m_style = 0;
+    m_doc = nullptr;
+    m_style = nullptr;
     m_animEnd = 0;
     m_defaultCoords = LT_PX;
     m_defaultPen = QPen(Qt::black, 1, Qt::SolidLine, Qt::FlatCap, Qt::SvgMiterJoin);
@@ -3677,7 +3677,7 @@ void QSvgHandler::parse()
                 --remainingUnfinishedElements;
             } else {
                 delete m_doc;
-                m_doc = 0;
+                m_doc = nullptr;
                 return;
             }
             break;
@@ -3702,7 +3702,7 @@ void QSvgHandler::parse()
 bool QSvgHandler::startElement(const QString &localName,
                                const QXmlStreamAttributes &attributes)
 {
-    QSvgNode *node = 0;
+    QSvgNode *node = nullptr;
 
     pushColorCopy();
 
@@ -3748,7 +3748,7 @@ bool QSvgHandler::startElement(const QString &localName,
             default:
                 qWarning("Could not add child element to parent element because the types are incorrect.");
                 delete node;
-                node = 0;
+                node = nullptr;
                 break;
             }
         }
@@ -3863,7 +3863,7 @@ bool QSvgHandler::endElement(const QStringRef &localName)
     if (node == Graphics)
         m_nodes.pop();
     else if (m_style && !m_skipNodes.isEmpty() && m_skipNodes.top() != Style)
-        m_style = 0;
+        m_style = nullptr;
 
     return true;
 }
@@ -4077,7 +4077,7 @@ int QSvgHandler::animationDuration() const
 QSvgHandler::~QSvgHandler()
 {
     delete m_selector;
-    m_selector = 0;
+    m_selector = nullptr;
 
     if(m_ownsReader)
         delete xml;

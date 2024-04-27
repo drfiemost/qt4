@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 static const int PressAndHoldDelay = 800;
 
 QDeclarativeDrag::QDeclarativeDrag(QObject *parent)
-: QObject(parent), _target(0), _axis(XandYAxis), _xmin(-FLT_MAX), _xmax(FLT_MAX), _ymin(-FLT_MAX), _ymax(FLT_MAX),
+: QObject(parent), _target(nullptr), _axis(XandYAxis), _xmin(-FLT_MAX), _xmax(FLT_MAX), _ymin(-FLT_MAX), _ymax(FLT_MAX),
 _active(false), _filterChildren(false)
 {
 }
@@ -78,7 +78,7 @@ void QDeclarativeDrag::resetTarget()
 {
     if (!_target)
         return;
-    _target = 0;
+    _target = nullptr;
     emit targetChanged();
 }
 

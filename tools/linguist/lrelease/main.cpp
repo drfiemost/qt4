@@ -69,7 +69,7 @@ static void initBinaryDir(
         );
 
 struct LR {
-    static inline QString tr(const char *sourceText, const char *comment = 0)
+    static inline QString tr(const char *sourceText, const char *comment = nullptr)
     {
         return QCoreApplication::translate("LRelease", sourceText, comment);
     }
@@ -318,7 +318,7 @@ int main(int argc, char **argv)
 #else
             option.initProperties(app.applicationDirPath() + QLatin1String("/qmake"));
 #endif
-            ProFileParser parser(0, &parseHandler);
+            ProFileParser parser(nullptr, &parseHandler);
             ProFileEvaluator visitor(&option, &parser, &evalHandler);
 
             ProFile *pro;

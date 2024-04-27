@@ -88,7 +88,7 @@ void IndexWriter::_IndexWriter(const bool create)
     CND_CONDITION(ramDirectory != NULL, "ramDirectory is NULL");
 
     //Initialize the writeLock to
-    writeLock  = NULL;
+    writeLock  = nullptr;
 
     //initialise the settings...
     maxFieldLength = DEFAULT_MAX_FIELD_LENGTH;
@@ -125,7 +125,7 @@ void IndexWriter::_IndexWriter(const bool create)
     //Condition check to see if lock has been allocated properly
     CND_CONDITION(lock != NULL, "No memory could be allocated for LuceneLock lock");
 
-    LockWith2 with(lock, commitLockTimeout, this, NULL, create);
+    LockWith2 with(lock, commitLockTimeout, this, nullptr, create);
     {
         SCOPED_LOCK_MUTEX(directory->THIS_LOCK) // in- & inter-process sync
         with.run();
@@ -161,7 +161,7 @@ void IndexWriter::close()
         //Flush the Ram Segments
         flushRamSegments();
         //Close the ram directory
-        if (ramDirectory != NULL) {
+        if (ramDirectory != nullptr) {
             ramDirectory->close();
             _CLDECDELETE(ramDirectory);
         }
@@ -172,7 +172,7 @@ void IndexWriter::close()
         _CLDECDELETE(directory);
 
         // release write lock
-        if (writeLock != NULL) {
+        if (writeLock != nullptr) {
             writeLock->release();
             _CLDELETE(writeLock);
         }
@@ -186,14 +186,14 @@ void IndexWriter::_finalize()
     //Pre  - true
     //Post - All the releases have been released
 
-    if(writeLock != NULL) {
+    if(writeLock != nullptr) {
         //release write lock
         writeLock->release();
         _CLDELETE( writeLock );
     }
 
     //Delete the ramDirectory
-    if (ramDirectory != NULL) {
+    if (ramDirectory != nullptr) {
         ramDirectory->close();
         _CLDECDELETE(ramDirectory);
     }
@@ -228,7 +228,7 @@ void IndexWriter::addDocument(Document* doc, Analyzer* analyzer)
     //Post - The document has been added to the index of this IndexWriter
     CND_PRECONDITION(ramDirectory != NULL, "ramDirectory is NULL");
 
-    if (analyzer == NULL)
+    if (analyzer == nullptr)
         analyzer = this->analyzer;
 
     ramDirectory->transStart();
@@ -546,7 +546,7 @@ void IndexWriter::addIndexes(Directory** dirs)
     int32_t start = segmentInfos.size();
 
     //Iterate through the directories
-    for (int32_t i = 0; dirs[i] != NULL; ++i) {
+    for (int32_t i = 0; dirs[i] != nullptr; ++i) {
         // DSR: Changed SegmentInfos constructor arg (see bug discussion below).
         SegmentInfos sis(false);
         sis.read(dirs[i]);
@@ -580,7 +580,7 @@ void IndexWriter::addIndexes(IndexReader** readers)
     SegmentMerger merger(this, mergedName);
 
     CLVector<SegmentReader*> segmentsToDelete;
-    SegmentReader* sReader = NULL;
+    SegmentReader* sReader = nullptr;
     if (segmentInfos.size() == 1) { // add existing index, if any
         sReader = _CLNEW SegmentReader(segmentInfos.info(0));
         merger.add(sReader);
@@ -588,7 +588,7 @@ void IndexWriter::addIndexes(IndexReader** readers)
     }
 
     int32_t readersLength = 0;
-    while (readers[readersLength] != NULL)
+    while (readers[readersLength] != nullptr)
         merger.add(readers[readersLength++]);
 
     int32_t docCount = merger.merge();                // merge 'em
@@ -597,7 +597,7 @@ void IndexWriter::addIndexes(IndexReader** readers)
     segmentInfos.clearto(0);
     segmentInfos.add(_CLNEW SegmentInfo(mergedName, docCount, directory));
 
-    if (sReader != NULL) {
+    if (sReader != nullptr) {
         sReader->close();
         _CLDELETE(sReader);
     }
@@ -654,7 +654,7 @@ void IndexWriter::LockWith2::doBody()
     if (create) {
         writer->segmentInfos.write(writer->getDirectory());
         // delete now-unused segments
-        if (segmentsToDelete != NULL)
+        if (segmentsToDelete != nullptr)
             writer->deleteSegments(segmentsToDelete);
     } else {
         writer->segmentInfos.read(writer->getDirectory());

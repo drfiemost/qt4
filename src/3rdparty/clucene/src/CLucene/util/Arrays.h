@@ -60,7 +60,7 @@ CL_NS_DEF(util)
 
 				_type* src = a;
 				_type* dest = _CL_NEWARRAY(_type,alen);
-				_type* t = NULL; // t is used for swapping src and dest
+				_type* t = nullptr; // t is used for swapping src and dest
 
 				// The difference of the fromIndex of the src and dest array.
 				int32_t srcDestDiff = -fromIndex;

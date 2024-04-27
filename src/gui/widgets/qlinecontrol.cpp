@@ -153,7 +153,7 @@ void QLineControl::copy(QClipboard::Mode mode) const
 {
     QString t = selectedText();
     if (!t.isEmpty() && m_echoMode == QLineEdit::Normal) {
-        disconnect(QApplication::clipboard(), SIGNAL(selectionChanged()), this, 0);
+        disconnect(QApplication::clipboard(), SIGNAL(selectionChanged()), this, nullptr);
         QApplication::clipboard()->setText(t, mode);
         connect(QApplication::clipboard(), SIGNAL(selectionChanged()),
                    this, SLOT(_q_clipboardChanged()));
@@ -854,7 +854,7 @@ void QLineControl::parseInputMask(const QString &maskFields)
     if (maskFields.isEmpty() || delimiter == 0) {
         if (m_maskData) {
             delete [] m_maskData;
-            m_maskData = 0;
+            m_maskData = nullptr;
             m_maxLength = 32767;
             internalSetText(QString());
         }

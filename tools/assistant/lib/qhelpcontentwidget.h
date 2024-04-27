@@ -76,7 +76,7 @@ public:
 
 private:
     QHelpContentItem(const QString &name, const QString &link,
-        QHelpDBReader *reader, QHelpContentItem *parent = 0);
+        QHelpDBReader *reader, QHelpContentItem *parent = nullptr);
     void appendChild(QHelpContentItem *child);
 
     QHelpContentItemPrivate *d;

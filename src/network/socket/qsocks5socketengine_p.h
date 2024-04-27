@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QSocks5SocketEngine : public QAbstractSocketEngine
 {
     Q_OBJECT
 public:
-    QSocks5SocketEngine(QObject *parent = 0);
+    QSocks5SocketEngine(QObject *parent = nullptr);
     ~QSocks5SocketEngine();
 
     bool initialize(QAbstractSocket::SocketType type, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::IPv4Protocol);
@@ -101,8 +101,8 @@ public:
     bool setMulticastInterface(const QNetworkInterface &iface);
 #endif // QT_NO_NETWORKINTERFACE
 
-    qint64 readDatagram(char *data, qint64 maxlen, QHostAddress *addr = 0,
-        quint16 *port = 0);
+    qint64 readDatagram(char *data, qint64 maxlen, QHostAddress *addr = nullptr,
+        quint16 *port = nullptr);
     qint64 writeDatagram(const char *data, qint64 len, const QHostAddress &addr,
         quint16 port);
     bool hasPendingDatagrams() const;
@@ -114,11 +114,11 @@ public:
     int option(SocketOption option) const;
     bool setOption(SocketOption option, int value);
 
-    bool waitForRead(int msecs = 30000, bool *timedOut = 0);
-    bool waitForWrite(int msecs = 30000, bool *timedOut = 0);
+    bool waitForRead(int msecs = 30000, bool *timedOut = nullptr);
+    bool waitForWrite(int msecs = 30000, bool *timedOut = nullptr);
     bool waitForReadOrWrite(bool *readyToRead, bool *readyToWrite,
                             bool checkRead, bool checkWrite,
-                            int msecs = 30000, bool *timedOut = 0);
+                            int msecs = 30000, bool *timedOut = nullptr);
 
     bool isReadNotificationEnabled() const;
     void setReadNotificationEnabled(bool enable);

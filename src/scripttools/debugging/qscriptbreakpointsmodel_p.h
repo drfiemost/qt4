@@ -70,7 +70,7 @@ class Q_AUTOTEST_EXPORT QScriptBreakpointsModel
 public:
     QScriptBreakpointsModel(QScriptDebuggerJobSchedulerInterface *jobScheduler,
                             QScriptDebuggerCommandSchedulerInterface *commandScheduler,
-                            QObject *parent = 0);
+                            QObject *parent = nullptr);
     ~QScriptBreakpointsModel();
 
     void setBreakpoint(const QScriptBreakpointData &data);

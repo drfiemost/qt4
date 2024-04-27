@@ -61,7 +61,7 @@ called by QDeclarativeEngine just before it deletes the QScriptEngine.
 Create a QDeclarativeCleanup for \a engine
 */
 QDeclarativeCleanup::QDeclarativeCleanup(QDeclarativeEngine *engine)
-: prev(0), next(0)
+: prev(nullptr), next(nullptr)
 {
     if (!engine)
         return;
@@ -81,7 +81,7 @@ QDeclarativeCleanup::~QDeclarativeCleanup()
 {
     if (prev) *prev = next;
     if (next) next->prev = prev;
-    prev = 0; 
-    next = 0;
+    prev = nullptr; 
+    next = nullptr;
 }
 QT_END_NAMESPACE

@@ -79,7 +79,7 @@ public:
         FilePermissions = Qt::UserRole + 3
     };
 
-    explicit QFileSystemModel(QObject *parent = 0);
+    explicit QFileSystemModel(QObject *parent = nullptr);
     ~QFileSystemModel();
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -146,7 +146,7 @@ public:
     bool remove(const QModelIndex &index) const;
 
 protected:
-    QFileSystemModel(QFileSystemModelPrivate &, QObject *parent = 0);
+    QFileSystemModel(QFileSystemModelPrivate &, QObject *parent = nullptr);
     void timerEvent(QTimerEvent *event);
     bool event(QEvent *event);
 

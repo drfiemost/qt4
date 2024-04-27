@@ -96,7 +96,7 @@ public:
           minimumSectionSize(-1),
           lastSectionSize(0),
           sectionIndicatorOffset(0),
-          sectionIndicator(0),
+          sectionIndicator(nullptr),
           globalResizeMode(QHeaderView::Interactive)
     {}
 

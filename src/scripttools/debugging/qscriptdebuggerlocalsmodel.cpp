@@ -71,7 +71,7 @@ struct QScriptDebuggerLocalsModelNode
     };
 
     QScriptDebuggerLocalsModelNode()
-        : parent(0), populationState(NotPopulated), snapshotId(-1), changed(false) {}
+        : parent(nullptr), populationState(NotPopulated), snapshotId(-1), changed(false) {}
 
     QScriptDebuggerLocalsModelNode(
         const QScriptDebuggerValueProperty &prop,
@@ -91,7 +91,7 @@ struct QScriptDebuggerLocalsModelNode
             if (child->property.name() == name)
                 return child;
         }
-        return 0;
+        return nullptr;
     }
 
     QScriptDebuggerValueProperty property;
@@ -238,7 +238,7 @@ void QScriptDebuggerLocalsModelPrivate::addChildren(const QModelIndex &parentInd
 
 void QScriptDebuggerLocalsModelPrivate::deleteObjectSnapshots(const QList<qint64> &snapshotIds)
 {
-    QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler, 0);
+    QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler, nullptr);
     for (int i = 0; i < snapshotIds.size(); ++i)
         frontend.scheduleDeleteScriptObjectSnapshot(snapshotIds.at(i));
 }
@@ -270,7 +270,7 @@ public:
     QScriptDebuggerLocalsModelPrivate *model() const
     {
         if (!m_index.isValid())
-            return 0;
+            return nullptr;
         QAbstractItemModel *m = const_cast<QAbstractItemModel*>(m_index.model());
         QScriptDebuggerLocalsModel *lm = qobject_cast<QScriptDebuggerLocalsModel*>(m);
         return QScriptDebuggerLocalsModelPrivate::get(lm);
@@ -361,7 +361,7 @@ public:
     QScriptDebuggerLocalsModelPrivate *model() const
     {
         if (!m_index.isValid())
-            return 0;
+            return nullptr;
         QAbstractItemModel *m = const_cast<QAbstractItemModel*>(m_index.model());
         QScriptDebuggerLocalsModel *lm = qobject_cast<QScriptDebuggerLocalsModel*>(m);
         return QScriptDebuggerLocalsModelPrivate::get(lm);
@@ -464,7 +464,7 @@ QModelIndex QScriptDebuggerLocalsModelPrivate::addTopLevelObject(const QString &
         return indexFromNode(node);
     QScriptDebuggerValueProperty prop(name, object,
                                       QString::fromLatin1(""), // ### string representation of object
-                                      /*flags=*/0);
+                                      /*flags=*/nullptr);
     int rowIndex = invisibleRootNode->children.size();
     q->beginInsertRows(QModelIndex(), rowIndex, rowIndex);
     node = new QScriptDebuggerLocalsModelNode(prop, invisibleRootNode);
@@ -650,7 +650,7 @@ public:
     QScriptDebuggerLocalsModelPrivate *model() const
     {
         if (!m_index.isValid())
-            return 0;
+            return nullptr;
         QAbstractItemModel *m = const_cast<QAbstractItemModel*>(m_index.model());
         QScriptDebuggerLocalsModel *lm = qobject_cast<QScriptDebuggerLocalsModel*>(m);
         return QScriptDebuggerLocalsModelPrivate::get(lm);
@@ -909,7 +909,7 @@ Qt::ItemFlags QScriptDebuggerLocalsModel::flags(const QModelIndex &index) const
 {
     Q_D(const QScriptDebuggerLocalsModel);
     if (!index.isValid())
-        return 0;
+        return nullptr;
     Qt::ItemFlags ret = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
     if ((index.column() == 1) && index.parent().isValid()) {
         QScriptDebuggerLocalsModelNode *node = d->nodeFromIndex(index);

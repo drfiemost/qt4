@@ -53,7 +53,7 @@ LiveRubberBandSelectionManipulator::LiveRubberBandSelectionManipulator(QGraphics
                                                                        QDeclarativeViewInspector *editorView)
     : m_selectionRectangleElement(layerItem),
       m_editorView(editorView),
-      m_beginFormEditorItem(0),
+      m_beginFormEditorItem(nullptr),
       m_isActive(false)
 {
     m_selectionRectangleElement.hide();
@@ -72,7 +72,7 @@ QGraphicsItem *LiveRubberBandSelectionManipulator::topFormEditorItem(const QList
                                                                      &itemList)
 {
     if (itemList.isEmpty())
-        return 0;
+        return nullptr;
 
     return itemList.first();
 }

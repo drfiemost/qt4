@@ -7,9 +7,9 @@ namespace JSC {
 static const struct HashTableValue jsonTableValues[3] = {
    { "parse", DontEnum|Function, (intptr_t)JSONProtoFuncParse, (intptr_t)1 },
    { "stringify", DontEnum|Function, (intptr_t)JSONProtoFuncStringify, (intptr_t)1 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable jsonTable =
-    { 4, 3, jsonTableValues, 0 };
+    { 4, 3, jsonTableValues, nullptr };
 } // namespace

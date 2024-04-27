@@ -173,7 +173,7 @@ public:
     // id guards
     struct ContextGuard : public QDeclarativeGuard<QObject>
     {
-        ContextGuard() : context(0) {}
+        ContextGuard() : context(nullptr) {}
         inline ContextGuard &operator=(QObject *obj)
         { QDeclarativeGuard<QObject>::operator=(obj); return *this; }
         virtual void objectDestroyed(QObject *) { 
@@ -236,12 +236,12 @@ private:
 };
 
 QDeclarativeGuardedContextData::QDeclarativeGuardedContextData()
-: m_contextData(0), m_next(0), m_prev(0)
+: m_contextData(nullptr), m_next(nullptr), m_prev(nullptr)
 {
 }
 
 QDeclarativeGuardedContextData::QDeclarativeGuardedContextData(QDeclarativeContextData *data)
-: m_contextData(0), m_next(0), m_prev(0)
+: m_contextData(nullptr), m_next(nullptr), m_prev(nullptr)
 {
     setContextData(data);
 }
@@ -274,9 +274,9 @@ void QDeclarativeGuardedContextData::clear()
     if (m_prev) {
         *m_prev = m_next;
         if (m_next) m_next->m_prev = m_prev;
-        m_contextData = 0;
-        m_next = 0;
-        m_prev = 0;
+        m_contextData = nullptr;
+        m_next = nullptr;
+        m_prev = nullptr;
     }
 }
 

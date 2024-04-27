@@ -119,8 +119,8 @@ public:
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
-    QDeclarativeCustomParser() : compiler(0), object(0), m_flags(NoFlag) {}
-    QDeclarativeCustomParser(Flags f) : compiler(0), object(0), m_flags(f) {}
+    QDeclarativeCustomParser() : compiler(nullptr), object(nullptr), m_flags(NoFlag) {}
+    QDeclarativeCustomParser(Flags f) : compiler(nullptr), object(nullptr), m_flags(f) {}
     virtual ~QDeclarativeCustomParser() {}
 
     void clearErrors();

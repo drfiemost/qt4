@@ -18,7 +18,7 @@ CharTokenizer::CharTokenizer(Reader* in) :
 	offset(0),
 	bufferIndex(0),
 	dataLen(0),
-	ioBuffer(NULL)
+	ioBuffer(nullptr)
 {
 	buffer[0]=0;
 }
@@ -102,7 +102,7 @@ StopFilter::StopFilter(TokenStream* in, bool deleteTokenStream, const TCHAR** st
 
 void StopFilter::fillStopTable(CLSetList<const TCHAR*>* stopTable,
 								  const TCHAR** stopWords) {
-	for (int32_t i = 0; stopWords[i]!=NULL; i++)
+	for (int32_t i = 0; stopWords[i]!=nullptr; i++)
 		stopTable->insert(stopWords[i]);
 }
 
@@ -138,7 +138,7 @@ const TCHAR* StopAnalyzer::ENGLISH_STOP_WORDS[]  =
 	_T("for"), _T("if"), _T("in"), _T("into"), _T("is"), _T("it"),
 	_T("no"), _T("not"), _T("of"), _T("on"), _T("or"), _T("s"), _T("such"),
 	_T("t"), _T("that"), _T("the"), _T("their"), _T("then"), _T("there"), _T("these"),
-	_T("they"), _T("this"), _T("to"), _T("was"), _T("will"), _T("with"), NULL
+	_T("they"), _T("this"), _T("to"), _T("was"), _T("will"), _T("with"), nullptr
 };
 
 PerFieldAnalyzerWrapper::PerFieldAnalyzerWrapper(Analyzer* defaultAnalyzer):
@@ -156,8 +156,8 @@ void PerFieldAnalyzerWrapper::addAnalyzer(const TCHAR* fieldName, Analyzer* anal
 }
 
 TokenStream* PerFieldAnalyzerWrapper::tokenStream(const TCHAR* fieldName, Reader* reader) {
-    Analyzer* analyzer = (fieldName==NULL?defaultAnalyzer:analyzerMap.get(fieldName));
-    if (analyzer == NULL) {
+    Analyzer* analyzer = (fieldName==nullptr?defaultAnalyzer:analyzerMap.get(fieldName));
+    if (analyzer == nullptr) {
       analyzer = defaultAnalyzer;
     }
     
@@ -343,7 +343,7 @@ bool KeywordTokenizer::next(Token* token){
     if (!done) {
       done = true;
 	  int32_t rd;
-	  const TCHAR* buffer=0;
+	  const TCHAR* buffer=nullptr;
       while (true) {
         rd = input->read(buffer, bufferSize);
         if (rd == -1) 

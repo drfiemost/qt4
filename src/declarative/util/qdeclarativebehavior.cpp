@@ -58,7 +58,7 @@ class QDeclarativeBehaviorPrivate : public QObjectPrivate
 {
     Q_DECLARE_PUBLIC(QDeclarativeBehavior)
 public:
-    QDeclarativeBehaviorPrivate() : animation(0), enabled(true), finalized(false)
+    QDeclarativeBehaviorPrivate() : animation(nullptr), enabled(true), finalized(false)
       , blockRunningChanged(false) {}
 
     QDeclarativeProperty property;

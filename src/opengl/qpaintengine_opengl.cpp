@@ -240,8 +240,8 @@ class QGLOffscreen : public QObject
 public:
     QGLOffscreen()
         : QObject(),
-          offscreen(0),
-          ctx(0),
+          offscreen(nullptr),
+          ctx(nullptr),
           mask_dim(0),
           activated(false),
           bound(false)
@@ -278,8 +278,8 @@ public Q_SLOTS:
     void cleanupGLContextRefs(const QGLContext *context) {
         if (context == ctx) {
             delete offscreen;
-            ctx = 0;
-            offscreen = 0;
+            ctx = nullptr;
+            offscreen = nullptr;
             mask_dim = 0;
         }
     }
@@ -351,7 +351,7 @@ void QGLOffscreen::initialize()
         if (!offscreen->isValid()) {
             qWarning("QGLOffscreen: Invalid offscreen fbo (size %dx%d)", mask_dim, mask_dim);
             delete offscreen;
-            offscreen = 0;
+            offscreen = nullptr;
             mask_dim = 0;
             last_failed_size = device->size();
         }
@@ -669,8 +669,8 @@ public:
         , txop(QTransform::TxNone)
         , inverseScale(1)
         , moveToCount(0)
-        , last_created_state(0)
-        , shader_ctx(0)
+        , last_created_state(nullptr)
+        , shader_ctx(nullptr)
         , grad_palette(0)
         , tess_points(0)
         , drawable_texture(0)
@@ -717,7 +717,7 @@ public:
 
     void cleanupGLContextRefs(const QGLContext *context) {
         if (context == shader_ctx)
-            shader_ctx = 0;
+            shader_ctx = nullptr;
     }
 
     inline void updateFastPen() {
@@ -1010,7 +1010,7 @@ class QGLGradientCache : public QObject
     typedef QMultiHash<quint64, CacheInfo> QGLGradientColorTableHash;
 
 public:
-    QGLGradientCache() : QObject(), buffer_ctx(0)
+    QGLGradientCache() : QObject(), buffer_ctx(nullptr)
     {
         connect(QGLSignalProxy::instance(),
                 SIGNAL(aboutToDestroyContext(const QGLContext*)),
@@ -1097,7 +1097,7 @@ public Q_SLOTS:
     void cleanupGLContextRefs(const QGLContext *context) {
         if (context == buffer_ctx) {
             cleanCache();
-            buffer_ctx = 0;
+            buffer_ctx = nullptr;
         }
     }
 };
@@ -1791,7 +1791,7 @@ static void drawTrapezoid(const QGLTrapezoid &trap, const qreal offscreenHeight,
 class QOpenGLTrapezoidToArrayTessellator : public QOpenGLTessellator
 {
 public:
-    QOpenGLTrapezoidToArrayTessellator() : vertices(0), allocated(0), size(0) {}
+    QOpenGLTrapezoidToArrayTessellator() : vertices(nullptr), allocated(0), size(0) {}
     ~QOpenGLTrapezoidToArrayTessellator() { free(vertices); }
     GLfloat *vertices;
     int allocated;
@@ -4433,13 +4433,13 @@ void QOpenGLPaintEngine::drawImage(const QRectF &r, const QImage &image, const Q
         const QImage sub = qSubImage(image, sr, &subsr);
 
         if (sub.width() <= sz && sub.height() <= sz) {
-            drawImage(r, sub, subsr, 0);
+            drawImage(r, sub, subsr, nullptr);
         } else {
             const QImage scaled = sub.scaled(sz, sz, Qt::KeepAspectRatio);
             const qreal sx = scaled.width() / qreal(sub.width());
             const qreal sy = scaled.height() / qreal(sub.height());
 
-            drawImage(r, scaled, scaleRect(subsr, sx, sy), 0);
+            drawImage(r, scaled, scaleRect(subsr, sx, sy), nullptr);
         }
         return;
     }
@@ -4533,7 +4533,7 @@ struct QGLGlyphCoord {
 };
 
 struct QGLFontTexture {
-    QGLFontTexture() : data(0) { }
+    QGLFontTexture() : data(nullptr) { }
     ~QGLFontTexture() { free(data); }
     int x_offset; // glyph offset within the
     int y_offset;
@@ -4558,7 +4558,7 @@ class QGLGlyphCache : public QObject
 {
     Q_OBJECT
 public:
-    QGLGlyphCache() : QObject(0) { current_cache = 0; }
+    QGLGlyphCache() : QObject(nullptr) { current_cache = nullptr; }
     ~QGLGlyphCache();
     QGLGlyphCoord *lookup(QFontEngine *, glyph_t);
     void cacheGlyphs(QGLContext *, QFontEngine *, glyph_t *glyphs, int numGlyphs);
@@ -4587,7 +4587,7 @@ void QGLGlyphCache::fontEngineDestroyed(QObject *o)
 //     qDebug() << "fontEngineDestroyed()";
     QFontEngine *fe = static_cast<QFontEngine *>(o); // safe, since only the type is used
     QList<const QGLContext *> keys = qt_context_cache.keys();
-    const QGLContext *ctx = 0;
+    const QGLContext *ctx = nullptr;
 
     for (int i=0; i < keys.size(); ++i) {
         QGLFontGlyphHash *font_cache = qt_context_cache.value(keys.at(i));
@@ -4716,8 +4716,8 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
                                 glyph_t *glyphs, int numGlyphs)
 {
     QGLContextHash::const_iterator dev_it = qt_context_cache.constFind(context);
-    QGLFontGlyphHash *font_cache = 0;
-    const QGLContext *context_key = 0;
+    QGLFontGlyphHash *font_cache = nullptr;
+    const QGLContext *context_key = nullptr;
 
     if (dev_it == qt_context_cache.constEnd()) {
         // check for shared contexts
@@ -4752,7 +4752,7 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
     Q_ASSERT(font_cache != 0);
 
     QGLFontGlyphHash::const_iterator cache_it = font_cache->constFind(fontEngine);
-    QGLGlyphHash *cache = 0;
+    QGLGlyphHash *cache = nullptr;
     if (cache_it == font_cache->constEnd()) {
         cache = new QGLGlyphHash;
         font_cache->insert(fontEngine, cache);
@@ -4901,7 +4901,7 @@ QGLGlyphCoord *QGLGlyphCache::lookup(QFontEngine *, glyph_t g)
     // ### careful here
     QGLGlyphHash::const_iterator it = current_cache->constFind(g);
     if (it == current_cache->constEnd())
-        return 0;
+        return nullptr;
     else
         return it.value();
 }
@@ -5557,7 +5557,7 @@ void QOpenGLPaintEngine::setState(QPainterState *s)
 
     // are we in a save() ?
     if (s == d->last_created_state) {
-        d->last_created_state = 0;
+        d->last_created_state = nullptr;
         return;
     }
 
@@ -5624,7 +5624,7 @@ void QOpenGLPaintEnginePrivate::ensureDrawableTexture()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
             drawable_texture_size.width(),
             drawable_texture_size.height(), 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+            GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

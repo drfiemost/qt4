@@ -59,7 +59,7 @@ ProfileNode::ProfileNode(const CallIdentifier& callIdentifier, ProfileNode* head
     : m_callIdentifier(callIdentifier)
     , m_head(headNode)
     , m_parent(parentNode)
-    , m_nextSibling(0)
+    , m_nextSibling(nullptr)
     , m_startTime(0.0)
     , m_actualTotalTime(0.0)
     , m_visibleTotalTime(0.0)
@@ -75,7 +75,7 @@ ProfileNode::ProfileNode(ProfileNode* headNode, ProfileNode* nodeToCopy)
     : m_callIdentifier(nodeToCopy->callIdentifier())
     , m_head(headNode)
     , m_parent(nodeToCopy->parent())
-    , m_nextSibling(0)
+    , m_nextSibling(nullptr)
     , m_startTime(0.0)
     , m_actualTotalTime(nodeToCopy->actualTotalTime())
     , m_visibleTotalTime(nodeToCopy->totalTime())
@@ -120,14 +120,14 @@ void ProfileNode::addChild(PassRefPtr<ProfileNode> prpChild)
 ProfileNode* ProfileNode::findChild(ProfileNode* node) const
 {
     if (!node)
-        return 0;
+        return nullptr;
 
     for (size_t i = 0; i < m_children.size(); ++i) {
         if (*node == m_children[i].get())
             return m_children[i].get();
     }
 
-    return 0;
+    return nullptr;
 }
 
 void ProfileNode::removeChild(ProfileNode* node)
@@ -194,13 +194,13 @@ ProfileNode* ProfileNode::traverseNextNodePreOrder(bool processChildren) const
 
     ProfileNode* nextParent = m_parent;
     if (!nextParent)
-        return 0;
+        return nullptr;
 
     ProfileNode* next;
     for (next = m_parent->nextSibling(); !next; next = nextParent->nextSibling()) {
         nextParent = nextParent->parent();
         if (!nextParent)
-            return 0;
+            return nullptr;
     }
 
     return next;
@@ -210,8 +210,8 @@ void ProfileNode::setTreeVisible(ProfileNode* node, bool visible)
 {
     ProfileNode* nodeParent = node->parent();
     ProfileNode* nodeSibling = node->nextSibling();
-    node->setParent(0);
-    node->setNextSibling(0);
+    node->setParent(nullptr);
+    node->setNextSibling(nullptr);
 
     for (ProfileNode* currentNode = node; currentNode; currentNode = currentNode->traverseNextNodePreOrder())
         currentNode->setVisible(visible);
@@ -282,7 +282,7 @@ void ProfileNode::resetChildrensSiblings()
 {
     unsigned size = m_children.size();
     for (unsigned i = 0; i < size; ++i)
-        m_children[i]->setNextSibling(i + 1 == size ? 0 : m_children[i + 1].get());
+        m_children[i]->setNextSibling(i + 1 == size ? nullptr : m_children[i + 1].get());
 }
 
 #ifndef NDEBUG

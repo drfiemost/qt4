@@ -63,7 +63,7 @@ namespace {
 class PromptLabel : public QLabel
 {
 public:
-    PromptLabel(QWidget *parent = 0)
+    PromptLabel(QWidget *parent = nullptr)
         : QLabel(parent)
     {
         setFrameShape(QFrame::NoFrame);
@@ -85,7 +85,7 @@ public:
 class InputEdit : public QLineEdit
 {
 public:
-    InputEdit(QWidget *parent = 0)
+    InputEdit(QWidget *parent = nullptr)
         : QLineEdit(parent)
     {
         setFrame(false);
@@ -97,7 +97,7 @@ class CommandLine : public QWidget
 {
     Q_OBJECT
 public:
-    CommandLine(QWidget *parent = 0)
+    CommandLine(QWidget *parent = nullptr)
         : QWidget(parent)
     {
         promptLabel = new PromptLabel();
@@ -168,7 +168,7 @@ private:
 class QScriptDebuggerConsoleWidgetOutputEdit : public QPlainTextEdit
 {
 public:
-    QScriptDebuggerConsoleWidgetOutputEdit(QWidget *parent = 0)
+    QScriptDebuggerConsoleWidgetOutputEdit(QWidget *parent = nullptr)
         : QPlainTextEdit(parent)
     {
         setFrameShape(QFrame::NoFrame);
@@ -265,7 +265,7 @@ static QString longestCommonPrefix(const QStringList &lst)
 
 void QScriptDebuggerConsoleWidgetPrivate::_q_onCompletionTaskFinished()
 {
-    QScriptCompletionTaskInterface *task = 0;
+    QScriptCompletionTaskInterface *task = nullptr;
     task = qobject_cast<QScriptCompletionTaskInterface*>(q_func()->sender());
     if (task->resultCount() == 1) {
         QString completion = task->resultAt(0);
@@ -317,7 +317,7 @@ void QScriptDebuggerConsoleWidgetPrivate::_q_onCompletionTaskFinished()
 }
 
 QScriptDebuggerConsoleWidget::QScriptDebuggerConsoleWidget(QWidget *parent)
-    : QScriptDebuggerConsoleWidgetInterface(*new QScriptDebuggerConsoleWidgetPrivate, parent, 0)
+    : QScriptDebuggerConsoleWidgetInterface(*new QScriptDebuggerConsoleWidgetPrivate, parent, nullptr)
 {
     Q_D(QScriptDebuggerConsoleWidget);
     d->commandLine = new CommandLine();
@@ -417,7 +417,7 @@ void QScriptDebuggerConsoleWidget::keyPressEvent(QKeyEvent *event)
             d->commandLine->setInput(cmd);
         }
     } else if (event->key() == Qt::Key_Tab) {
-        QScriptCompletionTaskInterface *task = 0;
+        QScriptCompletionTaskInterface *task = nullptr;
         task = d->completionProvider->createCompletionTask(
             d->commandLine->input(), d->commandLine->cursorPosition(),
             /*frameIndex=*/-1, // current frame

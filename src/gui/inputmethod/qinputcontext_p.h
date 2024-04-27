@@ -80,7 +80,7 @@ class QInputContextPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QInputContext)
 public:
     QInputContextPrivate()
-	: focusWidget(0)
+	: focusWidget(nullptr)
     {}
 
     QWidget *focusWidget;

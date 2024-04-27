@@ -212,7 +212,7 @@ class TCMalloc_PageMap3 {
 
   Node* NewNode() {
     Node* result = reinterpret_cast<Node*>((*allocator_)(sizeof(Node)));
-    if (result != NULL) {
+    if (result != nullptr) {
       memset(result, 0, sizeof(*result));
     }
     return result;
@@ -248,16 +248,16 @@ class TCMalloc_PageMap3 {
       const Number i2 = (key >> LEAF_BITS) & (INTERIOR_LENGTH-1);
 
       // Make 2nd level node if necessary
-      if (root_->ptrs[i1] == NULL) {
+      if (root_->ptrs[i1] == nullptr) {
         Node* n = NewNode();
-        if (n == NULL) return false;
+        if (n == nullptr) return false;
         root_->ptrs[i1] = n;
       }
 
       // Make leaf node if necessary
-      if (root_->ptrs[i1]->ptrs[i2] == NULL) {
+      if (root_->ptrs[i1]->ptrs[i2] == nullptr) {
         Leaf* leaf = reinterpret_cast<Leaf*>((*allocator_)(sizeof(Leaf)));
-        if (leaf == NULL) return false;
+        if (leaf == nullptr) return false;
         memset(leaf, 0, sizeof(*leaf));
         root_->ptrs[i1]->ptrs[i2] = reinterpret_cast<Node*>(leaf);
       }

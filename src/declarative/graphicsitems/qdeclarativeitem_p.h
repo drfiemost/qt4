@@ -104,8 +104,8 @@ protected:
     //void itemVisibilityChanged(QDeclarativeItem *item)
 
 private:
-    void calcHeight(QDeclarativeItem *changed = 0);
-    void calcWidth(QDeclarativeItem *changed = 0);
+    void calcHeight(QDeclarativeItem *changed = nullptr);
+    void calcWidth(QDeclarativeItem *changed = nullptr);
 
     QDeclarativeItem *m_item;
     qreal m_x;
@@ -120,16 +120,16 @@ class Q_DECLARATIVE_EXPORT QDeclarativeItemPrivate : public QGraphicsItemPrivate
 
 public:
     QDeclarativeItemPrivate()
-    : _anchors(0), _contents(0),
+    : _anchors(nullptr), _contents(nullptr),
       baselineOffset(0),
-      _anchorLines(0),
-      _stateGroup(0), origin(QDeclarativeItem::Center),
+      _anchorLines(nullptr),
+      _stateGroup(nullptr), origin(QDeclarativeItem::Center),
       widthValid(false), heightValid(false),
       componentComplete(true), keepMouse(false),
       smooth(false), transformOriginDirty(true), doneEventPreHandler(false),
       inheritedLayoutMirror(false), effectiveLayoutMirror(false), isMirrorImplicit(true),
-      inheritMirrorFromParent(false), inheritMirrorFromItem(false), hadFocus(false), hadActiveFocus(false), keyHandler(0),
-      mWidth(0), mHeight(0), mImplicitWidth(0), mImplicitHeight(0), attachedLayoutDirection(0)
+      inheritMirrorFromParent(false), inheritMirrorFromItem(false), hadFocus(false), hadActiveFocus(false), keyHandler(nullptr),
+      mWidth(0), mHeight(0), mImplicitWidth(0), mImplicitHeight(0), attachedLayoutDirection(nullptr)
     {
         QGraphicsItemPrivate::acceptedMouseButtons = 0;
         isDeclarativeItem = 1;
@@ -356,7 +356,7 @@ public:
 class QDeclarativeItemKeyFilter
 {
 public:
-    QDeclarativeItemKeyFilter(QDeclarativeItem * = 0);
+    QDeclarativeItemKeyFilter(QDeclarativeItem * = nullptr);
     virtual ~QDeclarativeItemKeyFilter();
 
     virtual void keyPressed(QKeyEvent *event, bool post);
@@ -375,7 +375,7 @@ class QDeclarativeKeyNavigationAttachedPrivate : public QObjectPrivate
 {
 public:
     QDeclarativeKeyNavigationAttachedPrivate()
-        : QObjectPrivate(), left(0), right(0), up(0), down(0), tab(0), backtab(0) {}
+        : QObjectPrivate(), left(nullptr), right(nullptr), up(nullptr), down(nullptr), tab(nullptr), backtab(nullptr) {}
 
     QDeclarativeItem *left;
     QDeclarativeItem *right;
@@ -401,7 +401,7 @@ class QDeclarativeKeyNavigationAttached : public QObject, public QDeclarativeIte
     Q_ENUMS(Priority)
 
 public:
-    QDeclarativeKeyNavigationAttached(QObject * = 0);
+    QDeclarativeKeyNavigationAttached(QObject * = nullptr);
 
     QDeclarativeItem *left() const;
     void setLeft(QDeclarativeItem *);
@@ -444,7 +444,7 @@ class QDeclarativeLayoutMirroringAttached : public QObject
     Q_PROPERTY(bool childrenInherit READ childrenInherit WRITE setChildrenInherit NOTIFY childrenInheritChanged)
 
 public:
-    explicit QDeclarativeLayoutMirroringAttached(QObject *parent = 0);
+    explicit QDeclarativeLayoutMirroringAttached(QObject *parent = nullptr);
 
     bool enabled() const;
     void setEnabled(bool);
@@ -467,7 +467,7 @@ class QDeclarativeKeysAttachedPrivate : public QObjectPrivate
 public:
     QDeclarativeKeysAttachedPrivate()
         : QObjectPrivate(), inPress(false), inRelease(false)
-        , inIM(false), enabled(true), imeItem(0), item(0)
+        , inIM(false), enabled(true), imeItem(nullptr), item(nullptr)
     {}
 
     bool isConnected(const char *signalName);
@@ -504,7 +504,7 @@ class QDeclarativeKeysAttached : public QObject, public QDeclarativeItemKeyFilte
     Q_ENUMS(Priority)
 
 public:
-    QDeclarativeKeysAttached(QObject *parent=0);
+    QDeclarativeKeysAttached(QObject *parent=nullptr);
     ~QDeclarativeKeysAttached();
 
     bool enabled() const { Q_D(const QDeclarativeKeysAttached); return d->enabled; }

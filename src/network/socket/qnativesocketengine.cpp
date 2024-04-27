@@ -160,9 +160,9 @@ QT_BEGIN_NAMESPACE
 */
 QNativeSocketEnginePrivate::QNativeSocketEnginePrivate() :
     socketDescriptor(-1),
-    readNotifier(0),
-    writeNotifier(0),
-    exceptNotifier(0)
+    readNotifier(nullptr),
+    writeNotifier(nullptr),
+    exceptNotifier(nullptr)
 {
 }
 
@@ -849,15 +849,15 @@ void QNativeSocketEngine::close()
     d->peerAddress.clear();
     if (d->readNotifier) {
         qDeleteInEventHandler(d->readNotifier);
-        d->readNotifier = 0;
+        d->readNotifier = nullptr;
     }
     if (d->writeNotifier) {
         qDeleteInEventHandler(d->writeNotifier);
-        d->writeNotifier = 0;
+        d->writeNotifier = nullptr;
     }
     if (d->exceptNotifier) {
         qDeleteInEventHandler(d->exceptNotifier);
-        d->exceptNotifier = 0;
+        d->exceptNotifier = nullptr;
     }
 }
 

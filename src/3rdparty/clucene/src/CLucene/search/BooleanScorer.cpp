@@ -15,14 +15,14 @@ CL_NS_DEF(search)
 
   BooleanScorer::BooleanScorer(Similarity* similarity):
     Scorer(similarity),
-    scorers(NULL),
+    scorers(nullptr),
     maxCoord (1),
     nextMask (1),
 	end(0),
-	current(NULL),
+	current(nullptr),
     requiredMask (0),
     prohibitedMask (0),
-	coordFactors (NULL)
+	coordFactors (nullptr)
   {
     bucketTable = _CLNEW BucketTable(this);
   }
@@ -41,7 +41,7 @@ CL_NS_DEF(search)
   bool BooleanScorer::next() {
 	bool more;
 	do {
-		while (bucketTable->first != NULL) {         // more queued
+		while (bucketTable->first != nullptr) {         // more queued
 			current = bucketTable->first;
 			bucketTable->first = current->next;         // pop the queue
 
@@ -55,7 +55,7 @@ CL_NS_DEF(search)
 	// refill the queue
 	more = false;
 	end += BooleanScorer::BucketTable_SIZE;
-	for (SubScorer* sub = scorers; sub != NULL; sub = sub->next) {
+	for (SubScorer* sub = scorers; sub != nullptr; sub = sub->next) {
 		Scorer* scorer = sub->scorer;
 			int32_t doc;
 			while (!sub->done && (doc=scorer->doc()) < end) {
@@ -66,13 +66,13 @@ CL_NS_DEF(search)
 			more = true;
 		}
 	}
-	} while (bucketTable->first != NULL || more);
+	} while (bucketTable->first != nullptr || more);
 
 	return false;
   }
 
 	qreal BooleanScorer::score(){
-		if (coordFactors == NULL)
+		if (coordFactors == nullptr)
 			computeCoordFactors();
 		return current->score * coordFactors[current->coord];
 	}
@@ -88,7 +88,7 @@ CL_NS_DEF(search)
 	TCHAR* BooleanScorer::toString() {
 		CL_NS(util)::StringBuffer buffer;
 		buffer.append(_T("boolean("));
-		for (SubScorer* sub = scorers; sub != NULL; sub = sub->next) {
+		for (SubScorer* sub = scorers; sub != nullptr; sub = sub->next) {
 			buffer.append(sub->scorer->toString());
 			buffer.append(_T(" "));
 		}
@@ -166,7 +166,7 @@ CL_NS_DEF(search)
 
 	for (SubScorer * ptr = next; ptr; ){
 		SubScorer* next = ptr->next;
-		ptr->next = NULL;
+		ptr->next = nullptr;
 		_CLDELETE(ptr);
 		ptr = next;
 	}
@@ -179,7 +179,7 @@ CL_NS_DEF(search)
       score(0.0),
       bits(0),
       coord(0),
-      next(NULL)
+      next(nullptr)
   {	
   }
   BooleanScorer::Bucket::~Bucket(){
@@ -190,7 +190,7 @@ CL_NS_DEF(search)
 
   BooleanScorer::BucketTable::BucketTable(BooleanScorer* scr):
     scorer(scr),
-    first(NULL)
+    first(nullptr)
   {
 	buckets = _CL_NEWARRAY(Bucket,BucketTable_SIZE);
   }
@@ -201,7 +201,7 @@ CL_NS_DEF(search)
 
   void BooleanScorer::BucketTable::clear(){
     //delete first;
-    first = NULL;
+    first = nullptr;
   }
   int32_t BooleanScorer::BucketTable::size() const { return BooleanScorer::BucketTable_SIZE; }
 

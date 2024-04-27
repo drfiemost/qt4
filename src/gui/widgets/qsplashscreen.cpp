@@ -120,7 +120,7 @@ public:
     perhaps Qt::WindowStaysOnTopHint.
 */
 QSplashScreen::QSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f)
-    : QWidget(*(new QSplashScreenPrivate()), 0, Qt::SplashScreen | Qt::FramelessWindowHint | f)
+    : QWidget(*(new QSplashScreenPrivate()), nullptr, Qt::SplashScreen | Qt::FramelessWindowHint | f)
 {
     setPixmap(pixmap);  // Does an implicit repaint
 }

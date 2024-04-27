@@ -70,7 +70,7 @@ static UString integerPartNoExp(double d)
     int decimalPoint;
     int sign;
     char result[80];
-    WTF::dtoa(result, d, 0, &decimalPoint, &sign, NULL);
+    WTF::dtoa(result, d, 0, &decimalPoint, &sign, nullptr);
     bool resultIsInfOrNan = (decimalPoint == 9999);
     size_t length = strlen(result);
 
@@ -354,7 +354,7 @@ JSValue JSC_HOST_CALL numberProtoFuncToExponential(ExecState* exec, JSObject*, J
     int decimalPoint;
     int sign;
     char result[80];
-    WTF::dtoa(result, x, 0, &decimalPoint, &sign, NULL);
+    WTF::dtoa(result, x, 0, &decimalPoint, &sign, nullptr);
     size_t resultLength = strlen(result);
     decimalPoint += decimalAdjust;
 

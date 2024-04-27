@@ -54,7 +54,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeFocusPanel : public QDeclarativeItem
     Q_OBJECT
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
 public:
-    QDeclarativeFocusPanel(QDeclarativeItem *parent=0);
+    QDeclarativeFocusPanel(QDeclarativeItem *parent=nullptr);
     virtual ~QDeclarativeFocusPanel();
 
 Q_SIGNALS:

@@ -16,7 +16,7 @@ FieldDoc::FieldDoc (int32_t doc, qreal score)
 {
 	this->scoreDoc.doc = doc;
 	this->scoreDoc.score = score;
-	fields=NULL;
+	fields=nullptr;
 }
 
 FieldDoc::FieldDoc (int32_t doc, qreal score, CL_NS(util)::Comparable** fields)
@@ -27,8 +27,8 @@ FieldDoc::FieldDoc (int32_t doc, qreal score, CL_NS(util)::Comparable** fields)
 }
 
 FieldDoc::~FieldDoc(){
-    if ( fields != NULL ){
-       for ( int i=0;fields[i]!=NULL;i++ )
+    if ( fields != nullptr ){
+       for ( int i=0;fields[i]!=nullptr;i++ )
            _CLDELETE(fields[i]);
        _CLDELETE_ARRAY(fields);
     }
@@ -70,8 +70,8 @@ bool FieldDocSortedHitQueue::lessThan (FieldDoc* docA, FieldDoc* docB) {
 				case SortField::STRING:
 					s1 = __REINTERPRET_CAST(Compare::TChar*, docA->fields[i])->getValue();
 					s2 = __REINTERPRET_CAST(Compare::TChar*, docB->fields[i])->getValue();
-					if (s2 == NULL) c = -1;      // could be NULL if there are
-					else if (s1 == NULL) c = 1;  // no terms in the given field
+					if (s2 == nullptr) c = -1;      // could be NULL if there are
+					else if (s1 == nullptr) c = 1;  // no terms in the given field
 					else c = _tcscmp(s2,s1); //else if (fields[i].getLocale() == NULL) {
 
 					/*todo: collators not impl
@@ -118,8 +118,8 @@ bool FieldDocSortedHitQueue::lessThan (FieldDoc* docA, FieldDoc* docB) {
 					// NULL values need to be sorted first, because of how FieldCache.getStringIndex()
 					// works - in that routine, any documents without a value in the given field are
 					// put first.
-					if (s1 == NULL) c = -1;      // could be NULL if there are
-					else if (s2 == NULL) c = 1;  // no terms in the given field
+					if (s1 == nullptr) c = -1;      // could be NULL if there are
+					else if (s2 == nullptr) c = 1;  // no terms in the given field
 					else c = _tcscmp(s1,s2); //else if (fields[i].getLocale() == NULL) {
 					
 					/* todo: collators not implemented } else {
@@ -151,17 +151,17 @@ bool FieldDocSortedHitQueue::lessThan (FieldDoc* docA, FieldDoc* docB) {
 
 void FieldDocSortedHitQueue::setFields (SortField** fields) {
 	SCOPED_LOCK_MUTEX(THIS_LOCK)
-	if (this->fields == NULL) {
+	if (this->fields == nullptr) {
 		this->fields = fields;
 		_countsize();
 		//this->collators = hasCollators (fields);
-	}else if ( fields == NULL )
-		this->fields = NULL;
+	}else if ( fields == nullptr )
+		this->fields = nullptr;
 }
 
 FieldDocSortedHitQueue::~FieldDocSortedHitQueue(){
-    if ( fields != NULL ){
-       for ( int i=0;fields[i]!=NULL;i++ )
+    if ( fields != nullptr ){
+       for ( int i=0;fields[i]!=nullptr;i++ )
            _CLDELETE(fields[i]);
        _CLDELETE_ARRAY(fields);
     }

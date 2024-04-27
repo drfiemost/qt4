@@ -89,7 +89,7 @@ Lexer::Lexer(Engine *eng, bool tokenizeComments)
       stackToken(-1),
       state(Start),
       pos(0),
-      code(0), length(0),
+      code(nullptr), length(0),
       yycolumn(0),
       startpos(0),
       startlineno(0), startcolumn(0),
@@ -107,7 +107,7 @@ Lexer::Lexer(Engine *eng, bool tokenizeComments)
     // allocate space for read buffers
     buffer8 = new char[size8];
     buffer16 = new QChar[size16];
-    pattern = 0;
+    pattern = nullptr;
     flags = 0;
 
 }
@@ -827,7 +827,7 @@ int Lexer::lex()
 
     double dval = 0;
     if (state == Number) {
-        dval = qstrtod(buffer8, 0, 0);
+        dval = qstrtod(buffer8, nullptr, nullptr);
     } else if (state == Hex) { // scan hex numbers
         dval = integerFromString(buffer8, pos8, 16);
         state = Number;
@@ -873,7 +873,7 @@ int Lexer::lex()
             if (driver)
                 qsyylval.ustr = driver->intern(buffer16, pos16);
             else
-                qsyylval.ustr = 0;
+                qsyylval.ustr = nullptr;
             return QDeclarativeJSGrammar::T_IDENTIFIER;
         }
         if (token == QDeclarativeJSGrammar::T_CONTINUE || token == QDeclarativeJSGrammar::T_BREAK
@@ -891,7 +891,7 @@ int Lexer::lex()
         if (driver)
             qsyylval.ustr = driver->intern(buffer16, pos16);
         else
-            qsyylval.ustr = 0;
+            qsyylval.ustr = nullptr;
         return multiLineString?QDeclarativeJSGrammar::T_MULTILINE_STRING_LITERAL:QDeclarativeJSGrammar::T_STRING_LITERAL;
     case Number:
         qsyylval.dval = dval;
@@ -1147,7 +1147,7 @@ void Lexer::recordStartPos()
 bool Lexer::scanRegExp(RegExpBodyPrefix prefix)
 {
     pos16 = 0;
-    pattern = 0;
+    pattern = nullptr;
 
     if (prefix == EqualPrefix)
         record16(QLatin1Char('='));

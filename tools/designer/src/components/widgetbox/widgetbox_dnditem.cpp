@@ -142,7 +142,7 @@ static QSize geometryProp(const DomWidget *dw)
         if (prop->attributeName() !=  geometry)
             continue;
         DomRect *dr = prop->elementRect();
-        if (dr == 0)
+        if (dr == nullptr)
             continue;
         return QSize(dr->elementWidth(), dr->elementHeight());
     }
@@ -164,7 +164,7 @@ static QSize domWidgetSize(const DomWidget *dw)
     foreach (const DomLayout *dl, dw->elementLayout()) {
         foreach (DomLayoutItem *item, dl->elementItem()) {
             const DomWidget *child = item->elementWidget();
-            if (child == 0)
+            if (child == nullptr)
                 continue;
             size = geometryProp(child);
             if (size.isValid())
@@ -181,8 +181,8 @@ static QWidget *decorationFromDomWidget(DomUI *dom_ui, QDesignerFormEditorInterf
     // We have the builder create the articial QWidget fake top level as a tooltip
     // because the size algorithm works better at weird DPI settings
     // if the actual widget is created as a child of a container
-    QWidget *fakeTopLevel = builder.createUI(dom_ui, static_cast<QWidget*>(0));
-    fakeTopLevel->setParent(0, Qt::ToolTip); // Container
+    QWidget *fakeTopLevel = builder.createUI(dom_ui, static_cast<QWidget*>(nullptr));
+    fakeTopLevel->setParent(nullptr, Qt::ToolTip); // Container
     // Actual widget
     const DomWidget *domW = dom_ui->elementWidget()->elementWidget().front();
     QWidget *w = fakeTopLevel->findChildren<QWidget*>().front();
@@ -218,7 +218,7 @@ WidgetBoxDnDItem::WidgetBoxDnDItem(QDesignerFormEditorInterface *core,
     QWidget *decoration = decorationFromDomWidget(dom_ui, core);
     decoration->move(global_mouse_pos - QPoint(5, 5));
 
-    init(dom_ui, 0, decoration, global_mouse_pos);
+    init(dom_ui, nullptr, decoration, global_mouse_pos);
 }
 }
 

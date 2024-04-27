@@ -189,7 +189,7 @@ bool QFSFileEnginePrivate::nativeOpen(QIODevice::OpenMode openMode)
             }
         }
 
-        fh = 0;
+        fh = nullptr;
     } else {
         QByteArray fopenMode = openModeToFopenMode(openMode, fileEntry, metaData);
 
@@ -501,14 +501,14 @@ QAbstractFileEngine::FileFlags QFSFileEngine::fileFlags(FileFlags type) const
     if (type & Refresh)
         d->metaData.clear();
 
-    QAbstractFileEngine::FileFlags ret = 0;
+    QAbstractFileEngine::FileFlags ret = nullptr;
 
     if (type & FlagsMask)
         ret |= LocalDiskFlag;
 
     bool exists;
     {
-        QFileSystemMetaData::MetaDataFlags queryFlags = 0;
+        QFileSystemMetaData::MetaDataFlags queryFlags = nullptr;
 
         queryFlags |= QFileSystemMetaData::MetaDataFlags(uint(type))
                 & QFileSystemMetaData::Permissions;
@@ -622,7 +622,7 @@ bool QFSFileEngine::setPermissions(uint perms)
 {
     Q_D(QFSFileEngine);
     QSystemError error;
-    if (!QFileSystemEngine::setPermissions(d->fileEntry, QFile::Permissions(perms), error, 0)) {
+    if (!QFileSystemEngine::setPermissions(d->fileEntry, QFile::Permissions(perms), error, nullptr)) {
         setError(QFile::PermissionsError, error.toString());
         return false;
     }
@@ -660,13 +660,13 @@ uchar *QFSFileEnginePrivate::map(qint64 offset, qint64 size, QFile::MemoryMapFla
     Q_UNUSED(flags);
     if (openMode == QIODevice::NotOpen) {
         q->setError(QFile::PermissionsError, qt_error_string(int(EACCES)));
-        return 0;
+        return nullptr;
     }
 
     if (offset < 0 || offset != qint64(QT_OFF_T(offset))
             || size < 0 || quint64(size) > quint64(size_t(-1))) {
         q->setError(QFile::UnspecifiedError, qt_error_string(int(EINVAL)));
-        return 0;
+        return nullptr;
     }
 
     // If we know the mapping will extend beyond EOF, fail early to avoid
@@ -684,7 +684,7 @@ uchar *QFSFileEnginePrivate::map(qint64 offset, qint64 size, QFile::MemoryMapFla
 
     if (quint64(size + extra) > quint64((size_t)-1)) {
         q->setError(QFile::UnspecifiedError, qt_error_string(int(EINVAL)));
-        return 0;
+        return nullptr;
     }
 
     size_t realSize = (size_t)size + extra;
@@ -730,7 +730,7 @@ uchar *QFSFileEnginePrivate::map(qint64 offset, qint64 size, QFile::MemoryMapFla
     q->setError(reportedError, QSystemError(nativeMapError, QSystemError::NativeError).toString());
     return 0;
 #else
-    void *mapAddress = QT_MMAP((void*)0, realSize,
+    void *mapAddress = QT_MMAP((void*)nullptr, realSize,
                    access, MAP_SHARED, nativeHandle(), realOffset);
 
     if (MAP_FAILED != mapAddress) {
@@ -753,7 +753,7 @@ uchar *QFSFileEnginePrivate::map(qint64 offset, qint64 size, QFile::MemoryMapFla
         q->setError(QFile::UnspecifiedError, qt_error_string(int(errno)));
         break;
     }
-    return 0;
+    return nullptr;
 #endif
 }
 

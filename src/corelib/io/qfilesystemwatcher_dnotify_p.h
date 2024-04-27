@@ -98,7 +98,7 @@ private:
         bool isMonitored;
 
         struct File {
-            File() : ownerId(0u), groupId(0u), permissions(0u) { }
+            File() : ownerId(0u), groupId(0u), permissions(nullptr) { }
             File(const File &o) : path(o.path),
                                   ownerId(o.ownerId),
                                   groupId(o.groupId),

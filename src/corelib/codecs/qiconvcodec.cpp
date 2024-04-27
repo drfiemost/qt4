@@ -85,7 +85,7 @@ QT_BEGIN_NAMESPACE
 extern bool qt_locale_initialized;
 
 QIconvCodec::QIconvCodec()
-    : utf16Codec(0)
+    : utf16Codec(nullptr)
 {
     utf16Codec = QTextCodec::codecForMib(1015);
     Q_ASSERT_X(utf16Codec != 0,
@@ -166,8 +166,8 @@ QString QIconvCodec::convertToUnicode(const char* chars, int len, ConverterState
 
     int invalidCount = 0;
     int remainingCount = 0;
-    char *remainingBuffer = 0;
-    IconvState *temporaryState = 0;
+    char *remainingBuffer = nullptr;
+    IconvState *temporaryState = nullptr;
     IconvState **pstate;
 
     if (convState) {
@@ -197,7 +197,7 @@ QString QIconvCodec::convertToUnicode(const char* chars, int len, ConverterState
 
     if (!*pstate) {
         // first time, create the state
-        iconv_t cd = QIconvCodec::createIconv_t(UTF16, 0);
+        iconv_t cd = QIconvCodec::createIconv_t(UTF16, nullptr);
         if (cd == reinterpret_cast<iconv_t>(-1)) {
             static int reported = 0;
             if (!reported++) {
@@ -272,7 +272,7 @@ QString QIconvCodec::convertToUnicode(const char* chars, int len, ConverterState
 
             if (!convState) {
                 // reset state
-                iconv(state->cd, 0, &inBytesLeft, 0, &outBytesLeft);
+                iconv(state->cd, nullptr, &inBytesLeft, nullptr, &outBytesLeft);
             }
 
             delete temporaryState;
@@ -291,7 +291,7 @@ QString QIconvCodec::convertToUnicode(const char* chars, int len, ConverterState
         s = utf16Codec->toUnicode(ba.constData(), ba.size() - outBytesLeft);
 
         // reset state
-        iconv(state->cd, 0, &inBytesLeft, 0, &outBytesLeft);
+        iconv(state->cd, nullptr, &inBytesLeft, nullptr, &outBytesLeft);
     }
 
     delete temporaryState;
@@ -338,11 +338,11 @@ QByteArray QIconvCodec::convertFromUnicode(const QChar *uc, int len, ConverterSt
     char **inBytesPtr = &inBytes;
 #endif
 
-    IconvState *temporaryState = 0;
+    IconvState *temporaryState = nullptr;
     QThreadStorage<QIconvCodec::IconvState *> *ts = fromUnicodeState();
     IconvState *&state = (qt_locale_initialized && ts) ? ts->localData() : temporaryState;
     if (!state) {
-        iconv_t cd = QIconvCodec::createIconv_t(0, UTF16);
+        iconv_t cd = QIconvCodec::createIconv_t(nullptr, UTF16);
         if (cd != reinterpret_cast<iconv_t>(-1)) {
             if (!setByteOrder(cd)) {
                 perror("QIconvCodec::convertFromUnicode: using Latin-1 for conversion, iconv failed for BOM");
@@ -422,7 +422,7 @@ QByteArray QIconvCodec::convertFromUnicode(const QChar *uc, int len, ConverterSt
                     perror("QIconvCodec::convertFromUnicode: using Latin-1 for conversion, iconv failed");
 
                     // reset to initial state
-                    iconv(state->cd, 0, &inBytesLeft, 0, &outBytesLeft);
+                    iconv(state->cd, nullptr, &inBytesLeft, nullptr, &outBytesLeft);
 
                     delete temporaryState;
                     return QString(uc, len).toLatin1();
@@ -432,7 +432,7 @@ QByteArray QIconvCodec::convertFromUnicode(const QChar *uc, int len, ConverterSt
     }
 
     // reset to initial state
-    iconv(state->cd, 0, &inBytesLeft, 0, &outBytesLeft);
+    iconv(state->cd, nullptr, &inBytesLeft, nullptr, &outBytesLeft);
     setByteOrder(state->cd);
 
     ba.resize(ba.size() - outBytesLeft);
@@ -489,7 +489,7 @@ iconv_t QIconvCodec::createIconv_t(const char *to, const char *from)
         // First part is getting that locale name.  First try setlocale() which
         // definitely knows it, but since we cannot fully trust it, get ready
         // to fall back to environment variables.
-        char * ctype = qstrdup(setlocale(LC_CTYPE, 0));
+        char * ctype = qstrdup(setlocale(LC_CTYPE, nullptr));
 
         // Get the first nonempty value from $LC_ALL, $LC_CTYPE, and $LANG
         // environment variables.
@@ -511,14 +511,14 @@ iconv_t QIconvCodec::createIconv_t(const char *to, const char *from)
         // 5. check for "@euro"
 
         // 1. CODESET from ctype if it contains a .CODESET part (e.g. en_US.ISO8859-15)
-        codeset = ctype ? strchr(ctype, '.') : 0;
+        codeset = ctype ? strchr(ctype, '.') : nullptr;
         if (codeset && *codeset == '.') {
             ++codeset;
             cd = iconv_open(to ? to : codeset, from ? from : codeset);
         }
 
         // 2. CODESET from lang if it contains a .CODESET part
-        codeset = lang ? strchr(lang, '.') : 0;
+        codeset = lang ? strchr(lang, '.') : nullptr;
         if (cd == (iconv_t) -1 && codeset && *codeset == '.') {
             ++codeset;
             cd = iconv_open(to ? to : codeset, from ? from : codeset);

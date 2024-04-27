@@ -115,7 +115,7 @@ public:
     struct ParenthesesDisjunctionContext
     {
         ParenthesesDisjunctionContext(int* output, ByteTerm& term)
-            : next(0)
+            : next(nullptr)
         {
             unsigned firstSubpatternId = term.atom.subpatternId;
             unsigned numNestedSubpatterns = term.atom.parenthesesDisjunction->m_numSubpatterns;
@@ -786,7 +786,7 @@ public:
         backTrack->prevEnd = output[(subpatternId << 1) + 1];
 
         backTrack->matchAmount = 0;
-        backTrack->lastContext = 0;
+        backTrack->lastContext = nullptr;
 
         switch (term.atom.quantityType) {
         case QuantifierFixedCount: {
@@ -866,7 +866,7 @@ public:
         case QuantifierFixedCount: {
             ASSERT(backTrack->matchAmount == term.atom.quantityCount);
 
-            ParenthesesDisjunctionContext* context = 0;
+            ParenthesesDisjunctionContext* context = nullptr;
 
             if (!parenthesesDoBacktrack(term, backTrack))
                 return false;
@@ -1266,7 +1266,7 @@ public:
     ByteCompiler(RegexPattern& pattern)
         : m_pattern(pattern)
     {
-        m_bodyDisjunction = 0;
+        m_bodyDisjunction = nullptr;
         m_currentAlternativeIndex = 0;
     }
 
@@ -1611,7 +1611,7 @@ BytecodePattern* byteCompileRegex(const UString& patternString, unsigned& numSub
     RegexPattern pattern(ignoreCase, multiline);
 
     if ((error = compileRegex(patternString, pattern)))
-        return 0;
+        return nullptr;
 
     numSubpatterns = pattern.m_numSubpatterns;
 

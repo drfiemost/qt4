@@ -23,9 +23,9 @@ static const struct HashTableValue mathTableValues[19] = {
    { "sin", DontEnum|Function, (intptr_t)mathProtoFuncSin, (intptr_t)1 },
    { "sqrt", DontEnum|Function, (intptr_t)mathProtoFuncSqrt, (intptr_t)1 },
    { "tan", DontEnum|Function, (intptr_t)mathProtoFuncTan, (intptr_t)1 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable mathTable =
-    { 67, 63, mathTableValues, 0 };
+    { 67, 63, mathTableValues, nullptr };
 } // namespace

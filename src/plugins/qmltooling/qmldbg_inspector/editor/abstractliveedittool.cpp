@@ -88,9 +88,9 @@ QList<QGraphicsItem*> AbstractLiveEditTool::items() const
 bool AbstractLiveEditTool::topItemIsMovable(const QList<QGraphicsItem*> & itemList)
 {
     QGraphicsItem *firstSelectableItem = topMovableGraphicsItem(itemList);
-    if (firstSelectableItem == 0)
+    if (firstSelectableItem == nullptr)
         return false;
-    if (toQDeclarativeItem(firstSelectableItem) != 0)
+    if (toQDeclarativeItem(firstSelectableItem) != nullptr)
         return true;
 
     return false;
@@ -129,7 +129,7 @@ QGraphicsItem *AbstractLiveEditTool::topMovableGraphicsItem(const QList<QGraphic
         if (item->flags().testFlag(QGraphicsItem::ItemIsMovable))
             return item;
     }
-    return 0;
+    return nullptr;
 }
 
 QDeclarativeItem *AbstractLiveEditTool::topMovableDeclarativeItem(const QList<QGraphicsItem*>
@@ -141,7 +141,7 @@ QDeclarativeItem *AbstractLiveEditTool::topMovableDeclarativeItem(const QList<QG
             return declarativeItem;
     }
 
-    return 0;
+    return nullptr;
 }
 
 QList<QGraphicsObject*> AbstractLiveEditTool::toGraphicsObjectList(const QList<QGraphicsItem*>

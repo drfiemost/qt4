@@ -92,7 +92,7 @@ QScriptDebuggerScriptsModelPrivate::Node *QScriptDebuggerScriptsModelPrivate::fi
         if (n->scriptId == scriptId)
             return n;
     }
-    return 0;
+    return nullptr;
 }
 
 QScriptDebuggerScriptsModel::QScriptDebuggerScriptsModel(QObject *parent)

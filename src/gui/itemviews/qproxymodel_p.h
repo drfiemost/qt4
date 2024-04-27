@@ -64,7 +64,7 @@ QT_BEGIN_NAMESPACE
 class QEmptyModel : public QAbstractItemModel
 {
 public:
-    explicit QEmptyModel(QObject *parent = 0) : QAbstractItemModel(parent) {}
+    explicit QEmptyModel(QObject *parent = nullptr) : QAbstractItemModel(parent) {}
     QModelIndex index(int, int, const QModelIndex &) const { return QModelIndex(); }
     QModelIndex parent(const QModelIndex &) const { return QModelIndex(); }
     int rowCount(const QModelIndex &) const { return 0; }
@@ -88,7 +88,7 @@ public:
     void _q_sourceColumnsAboutToBeRemoved(const QModelIndex &parent, int first, int last);
     void _q_sourceColumnsRemoved(const QModelIndex &parent, int first, int last);
 
-    QProxyModelPrivate() : QAbstractItemModelPrivate(), model(0) {}
+    QProxyModelPrivate() : QAbstractItemModelPrivate(), model(nullptr) {}
     QAbstractItemModel *model;
     QEmptyModel empty;
 };

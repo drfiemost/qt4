@@ -63,9 +63,9 @@ struct FreeListEntry {
     FreeListEntry(void* pointer, size_t size)
         : pointer(pointer)
         , size(size)
-        , nextEntry(0)
-        , less(0)
-        , greater(0)
+        , nextEntry(nullptr)
+        , less(nullptr)
+        , greater(nullptr)
         , balanceFactor(0)
     {
     }
@@ -98,7 +98,7 @@ struct AVLTreeAbstractorForFreeList {
     int get_balance_factor(handle h) { return h->balanceFactor; }
     void set_balance_factor(handle h, int bf) { h->balanceFactor = bf; }
 
-    static handle null() { return 0; }
+    static handle null() { return nullptr; }
 
     int compare_key_key(key va, key vb) { return va - vb; }
     int compare_key_node(key k, handle h) { return compare_key_key(k, h->size); }
@@ -191,7 +191,7 @@ class FixedVMPoolAllocator
             FreeListEntry* next;
             do {
                 next = entry->nextEntry;
-                entry->nextEntry = 0;
+                entry->nextEntry = nullptr;
                 freeListEntries.append(entry);
             } while ((entry = next));
         }
@@ -211,7 +211,7 @@ class FixedVMPoolAllocator
         // Keep processing so long as entries remain in either of the vectors.
         while (freeListEntries.size() || m_commonSizedAllocations.size()) {
             // We're going to try to find a FreeListEntry node that we can coalesce onto.
-            FreeListEntry* coalescionEntry = 0;
+            FreeListEntry* coalescionEntry = nullptr;
 
             // Is the lowest addressed chunk of free memory of common-size, or is it in the free list?
             if (m_commonSizedAllocations.size() && (!freeListEntries.size() || (m_commonSizedAllocations.last() < freeListEntries.last()->pointer))) {
@@ -355,7 +355,7 @@ public:
             if (FreeListEntry* next = entry->nextEntry) {
                 // We're going to leave 'entry' in the tree; remove 'next' from its chain.
                 entry->nextEntry = next->nextEntry;
-                next->nextEntry = 0;
+                next->nextEntry = nullptr;
                 entry = next;
             } else
                 m_freeList.remove(entry->size);
@@ -436,7 +436,7 @@ void ExecutableAllocator::intializePageSize()
     ExecutableAllocator::pageSize = getpagesize();
 }
 
-static FixedVMPoolAllocator* allocator = 0;
+static FixedVMPoolAllocator* allocator = nullptr;
 static SpinLock spinlock = SPINLOCK_INITIALIZER;
 
 ExecutablePool::Allocation ExecutablePool::systemAlloc(size_t size)

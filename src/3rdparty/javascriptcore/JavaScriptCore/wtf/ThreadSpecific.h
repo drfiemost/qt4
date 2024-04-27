@@ -175,7 +175,7 @@ template<typename T>
 inline T* ThreadSpecific<T>::get()
 {
     Data* data = static_cast<Data*>(m_key.localData());
-    return data ? data->value : 0;
+    return data ? data->value : nullptr;
 }
 
 template<typename T>

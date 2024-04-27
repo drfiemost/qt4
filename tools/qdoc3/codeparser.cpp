@@ -156,7 +156,7 @@ CodeParser *CodeParser::parserForLanguage(const QString& language)
 	    return *p;
 	++p;
     }
-    return 0;
+    return nullptr;
 }
 
 CodeParser *CodeParser::parserForHeaderFile(const QString &filePath)
@@ -174,7 +174,7 @@ CodeParser *CodeParser::parserForHeaderFile(const QString &filePath)
         }
 	++p;
     }
-    return 0;
+    return nullptr;
 }
 
 CodeParser *CodeParser::parserForSourceFile(const QString &filePath)
@@ -192,7 +192,7 @@ CodeParser *CodeParser::parserForSourceFile(const QString &filePath)
         }
 	++p;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!

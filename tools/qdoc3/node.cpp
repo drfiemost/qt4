@@ -101,7 +101,7 @@ Node::Node(Type type, InnerNode *parent, const QString& name)
       pageTyp(NoPageType),
       sta(Commendable),
       par(parent),
-      rel(0),
+      rel(nullptr),
       nam(name)
 {
     if (par)
@@ -332,7 +332,7 @@ const QmlClassNode* Node::qmlClassNode() const
         if (n && n->subType() == Node::QmlClass)
             return static_cast<const QmlClassNode*>(n);
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -347,7 +347,7 @@ const ClassNode* Node::declarativeCppNode() const
     const QmlClassNode* qcn = qmlClassNode();
     if (qcn)
         return qcn->classNode();
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -404,7 +404,7 @@ Node *InnerNode::findNode(const QString& name, Type type)
             return node;
         }
         else {
-            return 0;
+            return nullptr;
         }
     }
 }
@@ -438,7 +438,7 @@ FunctionNode *InnerNode::findFunctionNode(const FunctionNode *clone)
 	    }
 	}
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -581,7 +581,7 @@ void InnerNode::removeFromRelated()
     while (!related.isEmpty()) {
         Node *p = static_cast<Node *>(related.takeFirst());
 
-        if (p != 0 && p->relates() == this) p->clearRelated();
+        if (p != nullptr && p->relates() == this) p->clearRelated();
     }
 }
 
@@ -644,7 +644,7 @@ const EnumNode *InnerNode::findEnumNodeForValue(const QString &enumValue) const
         if (enume->hasItem(enumValue))
             return enume;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -999,7 +999,7 @@ const PropertyNode *ClassNode::findPropertyNode(const QString &name) const
     if (n)
         return static_cast<const PropertyNode*>(n);
 
-    const PropertyNode *pn = 0;
+    const PropertyNode *pn = nullptr;
 
     const QList<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
@@ -1125,7 +1125,7 @@ ExampleNode::ExampleNode(InnerNode* parent, const QString& name)
   has a \a parent class and an enum type \a name.
  */
 EnumNode::EnumNode(InnerNode *parent, const QString& name)
-    : LeafNode(Enum, parent, name), ft(0)
+    : LeafNode(Enum, parent, name), ft(nullptr)
 {
 }
 
@@ -1169,7 +1169,7 @@ QString EnumNode::itemValue(const QString &name) const
 /*!
  */
 TypedefNode::TypedefNode(InnerNode *parent, const QString& name)
-    : LeafNode(Typedef, parent, name), ae(0)
+    : LeafNode(Typedef, parent, name), ae(nullptr)
 {
 }
 
@@ -1256,8 +1256,8 @@ FunctionNode::FunctionNode(InnerNode *parent, const QString& name)
       sta(false),
       ove(false),
       att(false),
-      rf(0),
-      ap(0)
+      rf(nullptr),
+      ap(nullptr)
 {
     // nothing.
 }
@@ -1275,8 +1275,8 @@ FunctionNode::FunctionNode(Type type, InnerNode *parent, const QString& name, bo
       sta(false),
       ove(false),
       att(attached),
-      rf(0),
-      ap(0)
+      rf(nullptr),
+      ap(nullptr)
 {
     // nothing.
 }
@@ -1487,7 +1487,7 @@ PropertyNode::PropertyNode(InnerNode *parent, const QString& name)
       cst(false),
       fnl(false),
       rev(-1),
-      overrides(0)
+      overrides(nullptr)
 {
     // nothing.
 }
@@ -1799,7 +1799,7 @@ const PropertyNode *QmlPropertyNode::correspondingProperty(const Tree *tree) con
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 #endif

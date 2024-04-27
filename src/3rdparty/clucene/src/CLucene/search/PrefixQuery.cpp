@@ -80,7 +80,7 @@ CL_NS_DEF(search)
    Query* PrefixQuery::rewrite(IndexReader* reader){
     BooleanQuery* query = _CLNEW BooleanQuery();
     TermEnum* enumerator = reader->terms(prefix);
-	Term* lastTerm = NULL;
+	Term* lastTerm = nullptr;
     try {
       const TCHAR* prefixText = prefix->text();
       const TCHAR* prefixField = prefix->field();
@@ -89,7 +89,7 @@ CL_NS_DEF(search)
 	  int32_t prefixLen = prefix->textLength();
       do {
         lastTerm = enumerator->term();
-		if (lastTerm != NULL && lastTerm->field() == prefixField ){
+		if (lastTerm != nullptr && lastTerm->field() == prefixField ){
 		  
 		  //now see if term->text() starts with prefixText
 		  int32_t termLen = lastTerm->textLength();
@@ -101,11 +101,11 @@ CL_NS_DEF(search)
           //check for prefix match in reverse, since most change will be at the end
           for ( i=prefixLen-1;i!=-1;--i ){
               if ( tmp[i] != prefixText[i] ){
-                  tmp=NULL;//signals inequality
+                  tmp=nullptr;//signals inequality
                   break;
               }
           }
-          if ( tmp == NULL )
+          if ( tmp == nullptr )
               break;
 
           TermQuery* tq = _CLNEW TermQuery(lastTerm);	  // found a match
@@ -126,7 +126,7 @@ CL_NS_DEF(search)
 	//if we only added one clause and the clause is not prohibited then
 	//we can just return the query
 	if (query->getClauseCount() == 1) {                    // optimize 1-clause queries
-		BooleanClause* c=0;
+		BooleanClause* c=nullptr;
 		query->getClauses(&c);
 
 		if (!c->prohibited) {			  // just return clause
@@ -153,7 +153,7 @@ CL_NS_DEF(search)
     //Instantiate a stringbuffer buffer to store the readable version temporarily
     CL_NS(util)::StringBuffer buffer;
     //check if field equal to the field of prefix
-    if( field==NULL || _tcscmp(prefix->field(),field) != 0 ) {
+    if( field==nullptr || _tcscmp(prefix->field(),field) != 0 ) {
         //Append the field of prefix to the buffer
         buffer.append(prefix->field());
         //Append a colon
@@ -205,7 +205,7 @@ TCHAR* PrefixFilter::toString()
 	//Instantiate a stringbuffer buffer to store the readable version temporarily
     CL_NS(util)::StringBuffer buffer;
     //check if field equal to the field of prefix
-    if( prefix->field() != NULL ) {
+    if( prefix->field() != nullptr ) {
 	  //Append the field of prefix to the buffer
       buffer.append(prefix->field());
 	  //Append a colon
@@ -231,12 +231,12 @@ BitSet* PrefixFilter::bits( IndexReader* reader )
     const TCHAR* tmp;
     size_t i;
     int32_t prefixLen = prefix->textLength();
-	Term* lastTerm = NULL;
+	Term* lastTerm = nullptr;
     
 	try{
 		do{
             lastTerm = enumerator->term(false);
-    		if (lastTerm != NULL && lastTerm->field() == prefixField ){
+    		if (lastTerm != nullptr && lastTerm->field() == prefixField ){
     		    //now see if term->text() starts with prefixText
                 int32_t termLen = lastTerm->textLength();
                 if ( prefixLen>termLen )
@@ -247,11 +247,11 @@ BitSet* PrefixFilter::bits( IndexReader* reader )
                 //check for prefix match in reverse, since most change will be at the end
                 for ( i=prefixLen-1;i!=-1;--i ){
                     if ( tmp[i] != prefixText[i] ){
-                        tmp=NULL;//signals inequality
+                        tmp=nullptr;//signals inequality
                         break;
                     }
                 }
-                if ( tmp == NULL )
+                if ( tmp == nullptr )
                     break;
 
     			docs->seek(enumerator);

@@ -146,7 +146,7 @@ public:
     inline ResultReporter(ThreadEngine<void> *) { }
     inline void reserveSpace(int) { };
     inline void reportResults(int) { };
-    inline void * getPointer() { return 0; }
+    inline void * getPointer() { return nullptr; }
 };
 
 #ifndef QT_NO_STL

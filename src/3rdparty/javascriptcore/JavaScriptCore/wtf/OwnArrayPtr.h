@@ -29,7 +29,7 @@ namespace WTF {
 
     template <typename T> class OwnArrayPtr : public Noncopyable {
     public:
-        explicit OwnArrayPtr(T* ptr = 0) : m_ptr(ptr) { }
+        explicit OwnArrayPtr(T* ptr = nullptr) : m_ptr(ptr) { }
         ~OwnArrayPtr() { safeDelete(); }
 
         T* get() const { return m_ptr; }
@@ -50,7 +50,7 @@ namespace WTF {
         operator bool() const { return m_ptr; }
 #else
         typedef T* OwnArrayPtr::*UnspecifiedBoolType;
-        operator UnspecifiedBoolType() const { return m_ptr ? &OwnArrayPtr::m_ptr : 0; }
+        operator UnspecifiedBoolType() const { return m_ptr ? &OwnArrayPtr::m_ptr : nullptr; }
 #endif
 
         void swap(OwnArrayPtr& o) { std::swap(m_ptr, o.m_ptr); }

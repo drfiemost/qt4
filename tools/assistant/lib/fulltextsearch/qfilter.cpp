@@ -25,7 +25,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneFilterPrivate::QCLuceneFilterPrivate()
     : QSharedData()
 {
-    filter = 0;
+    filter = nullptr;
     deleteCLuceneFilter = true;
 }
 

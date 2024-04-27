@@ -170,7 +170,7 @@ inline PropertyNameForFunctionCall::PropertyNameForFunctionCall(const Identifier
 }
 
 inline PropertyNameForFunctionCall::PropertyNameForFunctionCall(unsigned number)
-    : m_identifier(0)
+    : m_identifier(nullptr)
     , m_number(number)
 {
 }
@@ -600,7 +600,7 @@ bool Stringifier::Holder::appendNextProperty(Stringifier& stringifier, StringBui
 
 // ------------------------------ JSONObject --------------------------------
 
-const ClassInfo JSONObject::info = { "JSON", 0, 0, ExecState::jsonTable };
+const ClassInfo JSONObject::info = { "JSON", nullptr, nullptr, ExecState::jsonTable };
 
 /* Source for JSONObject.lut.h
 @begin jsonTable

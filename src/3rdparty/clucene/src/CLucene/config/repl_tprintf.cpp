@@ -15,8 +15,8 @@ CL_NS_USE(util)
 //currently special number formatting is not supported. it is very minimalistic
 void lucene_vfnwprintf(StringBuffer* buffer, size_t count, const wchar_t * format, va_list& valist){
 	const wchar_t *iter = format;
-	StringBuffer* tmp = NULL;
-	if ( buffer == NULL )
+	StringBuffer* tmp = nullptr;
+	if ( buffer == nullptr )
 		tmp = _CLNEW StringBuffer;
 	else
 		tmp = buffer;
@@ -92,7 +92,7 @@ void lucene_vfnwprintf(StringBuffer* buffer, size_t count, const wchar_t * forma
 	}
 
 	
-	if ( buffer == NULL ){
+	if ( buffer == nullptr ){
 		//we are supposed to be writing to the console
 #ifdef _UCS2
 		TCHAR* pointer = tmp->getBuffer();
@@ -133,7 +133,7 @@ int lucene_snwprintf(wchar_t* strbuf, size_t count, const wchar_t * format, ...)
 void lucene_wprintf(const wchar_t * format, ...){
 	va_list ap;
     va_start(ap, format);
-	lucene_vfnwprintf(NULL,LUCENE_INT32_MAX_SHOULDBE,format,ap);
+	lucene_vfnwprintf(nullptr,LUCENE_INT32_MAX_SHOULDBE,format,ap);
     va_end(ap);
 }
 

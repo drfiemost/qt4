@@ -186,7 +186,7 @@ public:
 	TermEnum* terms(const Term* term) const;
 	
 	//Returns the document frequency of the current term in the set
-	int32_t docFreq(const Term* t=NULL) const;
+	int32_t docFreq(const Term* t=nullptr) const;
 	TermDocs* termDocs() const;
 	TermPositions* termPositions() const;
 	

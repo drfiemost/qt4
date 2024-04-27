@@ -61,7 +61,7 @@ using namespace qdesigner_internal;
 
 
 QDesignerFormWindowManager::QDesignerFormWindowManager(QObject *parent)
-    : QDesignerFormWindowManagerInterface(parent), m_unused(0)
+    : QDesignerFormWindowManagerInterface(parent), m_unused(nullptr)
 {
 }
 
@@ -77,7 +77,7 @@ QDesignerFormWindowManager::~QDesignerFormWindowManager()
   */
 QAction *QDesignerFormWindowManager::actionDefaultPreview() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -90,7 +90,7 @@ QAction *QDesignerFormWindowManager::actionDefaultPreview() const
   */
 QActionGroup *QDesignerFormWindowManager::actionGroupPreviewInStyle() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -134,7 +134,7 @@ QActionGroup *QDesignerFormWindowManager::actionGroupPreviewInStyle() const
 
 QAction *QDesignerFormWindowManager::actionShowFormWindowSettingsDialog() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

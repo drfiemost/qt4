@@ -54,7 +54,7 @@
 QT_BEGIN_NAMESPACE
 
 QTestBasicStreamer::QTestBasicStreamer()
-    :testLogger(0)
+    :testLogger(nullptr)
 {
 }
 

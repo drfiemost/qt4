@@ -170,8 +170,8 @@ int runMoc(int _argc, char **_argv)
 
     QByteArray filename;
     QByteArray output;
-    FILE *in = 0;
-    FILE *out = 0;
+    FILE *in = nullptr;
+    FILE *out = nullptr;
     bool ignoreConflictingOptions = false;
 
     QVector<QByteArray> argv;
@@ -325,7 +325,7 @@ int runMoc(int _argc, char **_argv)
             if (more && opt != "help")
                 error();
             else
-                error(0); // 0 means usage only
+                error(nullptr); // 0 means usage only
             break;
         case '-':
             if (more && arg == "--ignore-option-clashes") {

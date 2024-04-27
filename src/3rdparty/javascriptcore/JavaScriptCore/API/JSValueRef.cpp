@@ -277,7 +277,7 @@ JSObjectRef JSValueToObject(JSContextRef ctx, JSValueRef value, JSValueRef* exce
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        objectRef = 0;
+        objectRef = nullptr;
     }
     return objectRef;
 }    

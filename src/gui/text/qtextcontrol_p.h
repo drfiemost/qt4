@@ -92,9 +92,9 @@ class Q_GUI_EXPORT QTextControl : public QObject
     Q_PROPERTY(bool openExternalLinks READ openExternalLinks WRITE setOpenExternalLinks)
     Q_PROPERTY(bool ignoreUnusedNavigationEvents READ ignoreUnusedNavigationEvents WRITE setIgnoreUnusedNavigationEvents)
 public:
-    explicit QTextControl(QObject *parent = 0);
-    explicit QTextControl(const QString &text, QObject *parent = 0);
-    explicit QTextControl(QTextDocument *doc, QObject *parent = 0);
+    explicit QTextControl(QObject *parent = nullptr);
+    explicit QTextControl(const QString &text, QObject *parent = nullptr);
+    explicit QTextControl(QTextDocument *doc, QObject *parent = nullptr);
     virtual ~QTextControl();
 
     void setDocument(QTextDocument *document);
@@ -111,7 +111,7 @@ public:
     void setCurrentCharFormat(const QTextCharFormat &format);
     QTextCharFormat currentCharFormat() const;
 
-    bool find(const QString &exp, QTextDocument::FindFlags options = 0);
+    bool find(const QString &exp, QTextDocument::FindFlags options = nullptr);
 
     inline QString toPlainText() const
     { return document()->toPlainText(); }
@@ -234,11 +234,11 @@ public:
     QPalette palette() const;
     void setPalette(const QPalette &pal);
 
-    virtual void processEvent(QEvent *e, const QMatrix &matrix, QWidget *contextWidget = 0);
-    void processEvent(QEvent *e, const QPointF &coordinateOffset = QPointF(), QWidget *contextWidget = 0);
+    virtual void processEvent(QEvent *e, const QMatrix &matrix, QWidget *contextWidget = nullptr);
+    void processEvent(QEvent *e, const QPointF &coordinateOffset = QPointF(), QWidget *contextWidget = nullptr);
 
     // control methods
-    void drawContents(QPainter *painter, const QRectF &rect = QRectF(), QWidget *widget = 0);
+    void drawContents(QPainter *painter, const QRectF &rect = QRectF(), QWidget *widget = nullptr);
 
     void setFocus(bool focus, Qt::FocusReason = Qt::OtherFocusReason);
 

@@ -85,12 +85,12 @@ QScriptDebuggerValuePrivate::~QScriptDebuggerValuePrivate()
 }
 
 QScriptDebuggerValue::QScriptDebuggerValue()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
 QScriptDebuggerValue::QScriptDebuggerValue(const QScriptValue &value)
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
     if (value.isValid()) {
         d_ptr.reset(new QScriptDebuggerValuePrivate);

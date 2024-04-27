@@ -70,7 +70,7 @@ class Q_CORE_EXPORT QAbstractTransition : public QObject
     Q_PROPERTY(QAbstractState* targetState READ targetState WRITE setTargetState)
     Q_PROPERTY(QList<QAbstractState*> targetStates READ targetStates WRITE setTargetStates)
 public:
-    QAbstractTransition(QState *sourceState = 0);
+    QAbstractTransition(QState *sourceState = nullptr);
     virtual ~QAbstractTransition();
 
     QState *sourceState() const;

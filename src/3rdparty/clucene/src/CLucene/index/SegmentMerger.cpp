@@ -30,11 +30,11 @@ SegmentMerger::SegmentMerger(IndexWriter* writer, const QString& name)
 
     CND_PRECONDITION(!name.isEmpty(), "name is NULL");
 
-    freqOutput       = NULL;
-    proxOutput       = NULL;
-    termInfosWriter  = NULL;
-    queue            = NULL;
-    fieldInfos       = NULL;
+    freqOutput       = nullptr;
+    proxOutput       = nullptr;
+    termInfosWriter  = nullptr;
+    queue            = nullptr;
+    fieldInfos       = nullptr;
     useCompoundFile  = writer->getUseCompoundFile();
     skipBuffer       = _CLNEW CL_NS(store)::RAMIndexOutput();
 
@@ -60,27 +60,27 @@ SegmentMerger::~SegmentMerger()
     //Delete field Infos
     _CLDELETE(fieldInfos);     
     //Close and destroy the IndexOutput to the Frequency File
-    if (freqOutput != NULL) { 
+    if (freqOutput != nullptr) { 
         freqOutput->close(); 
         _CLDELETE(freqOutput); 
     }
     //Close and destroy the IndexOutput to the Prox File
-    if (proxOutput != NULL) {
+    if (proxOutput != nullptr) {
         proxOutput->close(); 
         _CLDELETE(proxOutput); 
     }
     //Close and destroy the termInfosWriter
-    if (termInfosWriter != NULL) {
+    if (termInfosWriter != nullptr) {
         termInfosWriter->close(); 
         _CLDELETE(termInfosWriter); 
     }
     //Close and destroy the queue
-    if (queue != NULL) {
+    if (queue != nullptr) {
         queue->close(); 
         _CLDELETE(queue);
     }
     //close and destory the skipBuffer
-    if (skipBuffer != NULL) {
+    if (skipBuffer != nullptr) {
         skipBuffer->close();
         _CLDELETE(skipBuffer);
     }
@@ -206,7 +206,7 @@ int32_t SegmentMerger::mergeFields()
     //Condition check to see if fieldInfos points to a valid instance
     CND_CONDITION(fieldInfos != NULL, "Memory allocation for fieldInfos failed");
 
-    IndexReader* reader = NULL;
+    IndexReader* reader = nullptr;
 
     int32_t docCount = 0;
 
@@ -264,7 +264,7 @@ int32_t SegmentMerger::mergeFields()
     CND_CONDITION(fieldsWriter != NULL, "Memory allocation for fieldsWriter failed");
 
     try {  
-        IndexReader* reader = NULL;
+        IndexReader* reader = nullptr;
         int32_t maxDoc          = 0;
         //Iterate through all readers
         for (uint32_t i = 0; i < readers.size(); i++) {
@@ -368,25 +368,25 @@ void SegmentMerger::mergeTerms()
         mergeTermInfos();	      
     } _CLFINALLY (
         //Close and destroy the IndexOutput to the Frequency File
-        if (freqOutput != NULL) {
+        if (freqOutput != nullptr) {
             freqOutput->close(); _CLDELETE(freqOutput);
         }
 
         //Close and destroy the IndexOutput to the Prox File
-        if (proxOutput != NULL)
+        if (proxOutput != nullptr)
         {
             proxOutput->close();
             _CLDELETE(proxOutput);
         }
 
         //Close and destroy the termInfosWriter
-        if (termInfosWriter != NULL) {
+        if (termInfosWriter != nullptr) {
             termInfosWriter->close();
             _CLDELETE(termInfosWriter);
         }
         
         //Close and destroy the queue
-        if (queue != NULL) {
+        if (queue != nullptr) {
             queue->close();
             _CLDELETE(queue);
         }
@@ -405,8 +405,8 @@ void SegmentMerger::mergeTermInfos()
     //base is the id of the first document in a segment
     int32_t base = 0;
 
-    IndexReader* reader = NULL;
-    SegmentMergeInfo* smi = NULL;
+    IndexReader* reader = nullptr;
+    SegmentMergeInfo* smi = nullptr;
 
     //iterate through all the readers
     for (uint32_t i = 0; i < readers.size(); i++) {
@@ -447,7 +447,7 @@ void SegmentMerger::mergeTermInfos()
     //Condition check to see if match points to a valid instance
     CND_CONDITION(match != NULL, "Memory allocation for match failed")	;
 
-    SegmentMergeInfo* top = NULL;
+    SegmentMergeInfo* top = nullptr;
 
     //As long as there are SegmentMergeInfo instances stored in the queue
     while (queue->size() > 0) {
@@ -468,13 +468,13 @@ void SegmentMerger::mergeTermInfos()
 
         //For each SegmentMergInfo still in the queue 
         //Check if term matches the term of the SegmentMergeInfo instances in the queue
-        while (top != NULL && term->equals(top->term)) {
+        while (top != nullptr && term->equals(top->term)) {
             //A match has been found so add the matching SegmentMergeInfo to the match array
             match[matchSize++] = queue->pop();
             //Get the next SegmentMergeInfo
             top = queue->top();
         }
-        match[matchSize]=NULL;
+        match[matchSize]=nullptr;
 
         //add new TermInfo
         mergeTermInfo(match); //matchSize  
@@ -558,11 +558,11 @@ int32_t SegmentMerger::appendPostings(SegmentMergeInfo** smis)
     int32_t df = 0;       //Document Counter
 
     resetSkip();
-    SegmentMergeInfo* smi = NULL;
+    SegmentMergeInfo* smi = nullptr;
 
     //Iterate through all SegmentMergeInfo instances in smis
     int32_t i = 0;
-    while ((smi=smis[i]) != NULL) {
+    while ((smi=smis[i]) != nullptr) {
         //Get the i-th SegmentMergeInfo 
 
         //Condition check to see if smi points to a valid instance
@@ -579,7 +579,7 @@ int32_t SegmentMerger::appendPostings(SegmentMergeInfo** smis)
         while (postings->next()) {
             int32_t doc = postings->doc();
             //Check if there are deletions
-            if (docMap != NULL)
+            if (docMap != nullptr)
                 doc = docMap[doc]; // map around deletions
             doc += base;                              // convert to merged space
 
@@ -677,7 +677,7 @@ void SegmentMerger::mergeNorms()
             //Condition check to see if output points to a valid instance
             CND_CONDITION(output != NULL, "No Outputstream retrieved");
 
-            uint8_t* input = NULL;
+            uint8_t* input = nullptr;
             try {
                 for (uint32_t j = 0; j < readers.size(); ++j) {
                     // get the next index reader + condition check
@@ -710,7 +710,7 @@ void SegmentMerger::mergeNorms()
                     }
                 }
             } _CLFINALLY (
-                if (output != NULL) {
+                if (output != nullptr) {
                     output->close();
                     _CLDELETE(output);
                 }

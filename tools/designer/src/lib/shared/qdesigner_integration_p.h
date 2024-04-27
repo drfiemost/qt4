@@ -76,7 +76,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerIntegration: public QDesignerIntegrationI
 {
     Q_OBJECT
 public:
-    explicit QDesignerIntegration(QDesignerFormEditorInterface *core, QObject *parent = 0);
+    explicit QDesignerIntegration(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
     virtual ~QDesignerIntegration();
 
     static void requestHelp(const QDesignerFormEditorInterface *core, const QString &manual, const QString &document);
@@ -91,7 +91,7 @@ public:
     void emitNavigateToSlot(const QString &slotSignature);
 
     // Create a resource browser specific to integration. Language integration takes precedence
-    virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parent = 0);
+    virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parent = nullptr);
 
     enum ResourceFileWatcherBehaviour {
         NoWatcher,

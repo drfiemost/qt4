@@ -128,7 +128,7 @@ void InstallDialog::init()
 void InstallDialog::updateInstallButton()
 {
     TRACE_OBJ
-    QListWidgetItem *item = 0;
+    QListWidgetItem *item = nullptr;
     for (int i=0; i<m_ui.listWidget->count(); ++i) {
         item = m_ui.listWidget->item(i);
         if (item->checkState() == Qt::Checked
@@ -144,7 +144,7 @@ void InstallDialog::updateDocItemList()
 {
     TRACE_OBJ
     QStringList registeredDocs = m_helpEngine->registeredDocumentations();
-    QListWidgetItem *item = 0;
+    QListWidgetItem *item = nullptr;
     for (int i=0; i<m_ui.listWidget->count(); ++i) {
         item = m_ui.listWidget->item(i);
         QString ns = item->data(QCH_NAMESPACE).toString();
@@ -171,7 +171,7 @@ void InstallDialog::cancelDownload()
 void InstallDialog::install()
 {
     TRACE_OBJ
-    QListWidgetItem *item = 0;
+    QListWidgetItem *item = nullptr;
     for (int i=0; i<m_ui.listWidget->count(); ++i) {
         item = m_ui.listWidget->item(i);
         if (item->checkState() == Qt::Checked)
@@ -216,7 +216,7 @@ void InstallDialog::downloadNextFile()
             tr("Unable to save the file %1: %2.")
             .arg(saveFileName).arg(m_file->errorString()));
         delete m_file;
-        m_file = 0;
+        m_file = nullptr;
         downloadNextFile();
         return;
     }
@@ -265,7 +265,7 @@ void InstallDialog::httpRequestFinished(int requestId, bool error)
         if (m_buffer)
             m_buffer->close();
         delete m_buffer;
-        m_buffer = 0;
+        m_buffer = nullptr;
         m_ui.statusLabel->setText(tr("Done."));
         m_ui.cancelButton->setEnabled(false);        
         m_ui.closeButton->setEnabled(true);
@@ -300,7 +300,7 @@ void InstallDialog::httpRequestFinished(int requestId, bool error)
             m_file->remove();
         }
         delete m_file;
-        m_file = 0;
+        m_file = nullptr;
         downloadNextFile();
     }
 }

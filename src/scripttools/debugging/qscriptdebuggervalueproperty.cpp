@@ -79,7 +79,7 @@ QScriptDebuggerValuePropertyPrivate::~QScriptDebuggerValuePropertyPrivate()
   Constructs an invalid QScriptDebuggerValueProperty.
 */
 QScriptDebuggerValueProperty::QScriptDebuggerValueProperty()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -163,7 +163,7 @@ QScriptValue::PropertyFlags QScriptDebuggerValueProperty::flags() const
 {
     Q_D(const QScriptDebuggerValueProperty);
     if (!d)
-        return 0;
+        return nullptr;
     return d->flags;
 }
 
@@ -174,7 +174,7 @@ QScriptValue::PropertyFlags QScriptDebuggerValueProperty::flags() const
 bool QScriptDebuggerValueProperty::isValid() const
 {
     Q_D(const QScriptDebuggerValueProperty);
-    return (d != 0);
+    return (d != nullptr);
 }
 
 /*!

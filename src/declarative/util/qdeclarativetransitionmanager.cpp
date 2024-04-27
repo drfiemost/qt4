@@ -56,7 +56,7 @@ class QDeclarativeTransitionManagerPrivate
 {
 public:
     QDeclarativeTransitionManagerPrivate()
-        : state(0) {}
+        : state(nullptr) {}
 
     void applyBindings();
     typedef QList<QDeclarativeSimpleAction> SimpleActionList;
@@ -78,7 +78,7 @@ void QDeclarativeTransitionManager::setState(QDeclarativeState *s)
 
 QDeclarativeTransitionManager::~QDeclarativeTransitionManager()
 {
-    delete d; d = 0;
+    delete d; d = nullptr;
 }
 
 void QDeclarativeTransitionManager::complete() 
@@ -124,7 +124,7 @@ void QDeclarativeTransitionManager::transition(const QList<QDeclarativeAction> &
         if (action.toBinding)
             d->bindingsList << action;
         if (action.fromBinding)
-            QDeclarativePropertyPrivate::setBinding(action.property, 0); // Disable current binding
+            QDeclarativePropertyPrivate::setBinding(action.property, nullptr); // Disable current binding
         if (action.event && action.event->changesBindings()) {  //### assume isReversable()?
             d->bindingsList << action;
             action.event->clearBindings();
@@ -182,7 +182,7 @@ void QDeclarativeTransitionManager::transition(const QList<QDeclarativeAction> &
             }
 
             if (action.toBinding)
-                QDeclarativePropertyPrivate::setBinding(action.property, 0); // Make sure this is disabled during the transition
+                QDeclarativePropertyPrivate::setBinding(action.property, nullptr); // Make sure this is disabled during the transition
 
             QDeclarativePropertyPrivate::write(action.property, action.fromValue, QDeclarativePropertyPrivate::BypassInterceptor | QDeclarativePropertyPrivate::DontRemoveBinding);
         }
@@ -254,13 +254,13 @@ void QDeclarativeTransitionManager::cancel()
     if (d->transition) {
         // ### this could potentially trigger a complete in rare circumstances
         d->transition->stop();
-        d->transition = 0;
+        d->transition = nullptr;
     }
 
     for(int i = 0; i < d->bindingsList.count(); ++i) {
         QDeclarativeAction action = d->bindingsList[i];
         if (!action.toBinding.isNull() && action.deletableToBinding) {
-            QDeclarativePropertyPrivate::setBinding(action.property, 0);
+            QDeclarativePropertyPrivate::setBinding(action.property, nullptr);
             action.toBinding.data()->destroy();
             action.toBinding.clear();
             action.deletableToBinding = false;

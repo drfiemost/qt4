@@ -92,7 +92,7 @@ public:
     {
         size = QSize();
         viewBox = QRectF();
-        outputDevice = 0;
+        outputDevice = nullptr;
         resolution = 72;
 
         attributes.document_title = QLatin1String("Qt Svg Document");
@@ -1150,7 +1150,7 @@ void QSvgPaintEngine::drawTextItem(const QPointF &pt, const QTextItem &textItem)
         return;
 
     const QTextItemInt &ti = static_cast<const QTextItemInt &>(textItem);
-    if (ti.chars == 0)
+    if (ti.chars == nullptr)
         QPaintEngine::drawTextItem(pt, ti); // Draw as path
     QString s = QString::fromRawData(ti.chars, ti.num_chars);
 

@@ -74,7 +74,7 @@ class QSvgTinyDocument;
 template <class T> class QSvgRefCounter
 {
 public:
-    QSvgRefCounter() { t = 0; }
+    QSvgRefCounter() { t = nullptr; }
     QSvgRefCounter(T *_t)
     {
         t = _t;
@@ -431,7 +431,7 @@ public:
     void setStroke(QBrush brush)
     {
         m_stroke.setBrush(brush);
-        m_style = 0;
+        m_style = nullptr;
         m_strokeSet = 1;
     }
 
@@ -767,17 +767,17 @@ class QSvgStyle
 {
 public:
     QSvgStyle()
-        : quality(0),
-          fill(0),
-          viewportFill(0),
-          font(0),
-          stroke(0),
-          solidColor(0),
-          gradient(0),
-          transform(0),
-          animateColor(0),
-          opacity(0),
-          compop(0)
+        : quality(nullptr),
+          fill(nullptr),
+          viewportFill(nullptr),
+          font(nullptr),
+          stroke(nullptr),
+          solidColor(nullptr),
+          gradient(nullptr),
+          transform(nullptr),
+          animateColor(nullptr),
+          opacity(nullptr),
+          compop(nullptr)
     {}
     ~QSvgStyle();
 

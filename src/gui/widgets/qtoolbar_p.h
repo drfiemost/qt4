@@ -74,7 +74,7 @@ public:
         : explicitIconSize(false), explicitToolButtonStyle(false), movable(true), floatable(true),
           allowedAreas(Qt::AllToolBarAreas), orientation(Qt::Horizontal),
           toolButtonStyle(Qt::ToolButtonIconOnly),
-          layout(0), state(0)
+          layout(nullptr), state(nullptr)
 #ifdef Q_WS_MAC
         , macWindowDragging(false)
 #endif

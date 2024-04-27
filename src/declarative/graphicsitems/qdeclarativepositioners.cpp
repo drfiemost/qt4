@@ -196,14 +196,14 @@ QVariant QDeclarativeBasePositioner::itemChange(GraphicsItemChange change,
     Q_D(QDeclarativeBasePositioner);
     if (change == ItemChildAddedChange){
         QGraphicsItem* item = value.value<QGraphicsItem*>();
-        QGraphicsObject* child = 0;
+        QGraphicsObject* child = nullptr;
         if(item)
             child = item->toGraphicsObject();
         if (child)
             prePositioning();
     } else if (change == ItemChildRemovedChange) {
         QGraphicsItem* item = value.value<QGraphicsItem*>();
-        QGraphicsObject* child = 0;
+        QGraphicsObject* child = nullptr;
         if(item)
             child = item->toGraphicsObject();
         if (child) {
@@ -241,7 +241,7 @@ void QDeclarativeBasePositioner::prePositioning()
         if (!child)
             continue;
         QGraphicsItemPrivate *childPrivate = static_cast<QGraphicsItemPrivate*>(QGraphicsItemPrivate::get(child));
-        PositionedItem *item = 0;
+        PositionedItem *item = nullptr;
         PositionedItem posItem(child);
         int wIdx = oldItems.find(posItem);
         if (wIdx < 0) {

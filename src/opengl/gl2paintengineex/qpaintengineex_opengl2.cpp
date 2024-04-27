@@ -120,8 +120,8 @@ QGL2PaintEngineExPrivate::~QGL2PaintEngineExPrivate()
     while (pathCaches.size()) {
         QVectorPath::CacheEntry *e = *(pathCaches.constBegin());
         e->cleanup(e->engine, e->data);
-        e->data = 0;
-        e->engine = 0;
+        e->data = nullptr;
+        e->engine = nullptr;
     }
 
     if (elementIndicesVBOId != 0) {
@@ -790,7 +790,7 @@ void QGL2PaintEngineExPrivate::fill(const QVectorPath& path)
 #else
                 cache->vertices = (float *) malloc(floatSizeInBytes);
                 memcpy(cache->vertices, vertexCoordinateArray.data(), floatSizeInBytes);
-                cache->indices = 0;
+                cache->indices = nullptr;
 #endif
             }
 
@@ -1229,7 +1229,7 @@ void QGL2PaintEngineEx::stroke(const QVectorPath &path, const QPen &pen)
         return;
 
     QOpenGL2PaintEngineState *s = state();
-    if (pen.isCosmetic() && !qt_scaleForTransform(s->transform(), 0)) {
+    if (pen.isCosmetic() && !qt_scaleForTransform(s->transform(), nullptr)) {
         // QTriangulatingStroker class is not meant to support cosmetically sheared strokes.
         QPaintEngineEx::stroke(path, pen);
         return;
@@ -1302,7 +1302,7 @@ void QGL2PaintEngineExPrivate::stroke(const QVectorPath &path, const QPen &pen)
         QRectF bounds = path.controlPointRect().adjusted(-extra, -extra, extra, extra);
 
         fillStencilWithVertexArray(stroker.vertices(), stroker.vertexCount() / 2,
-                                      0, 0, bounds, QGL2PaintEngineExPrivate::TriStripStrokeFillMode);
+                                      nullptr, 0, bounds, QGL2PaintEngineExPrivate::TriStripStrokeFillMode);
 
         glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 
@@ -1603,7 +1603,7 @@ void QGL2PaintEngineExPrivate::drawCachedGlyphs(QFontEngineGlyphCache::Type glyp
 
     QGLTextureGlyphCache *cache =
             (QGLTextureGlyphCache *) staticTextItem->fontEngine()->glyphCache(cacheKey, glyphType, QTransform());
-    if (!cache || cache->cacheType() != glyphType || cache->context() == 0) {
+    if (!cache || cache->cacheType() != glyphType || cache->context() == nullptr) {
         cache = new QGLTextureGlyphCache(ctx, glyphType, QTransform());
         staticTextItem->fontEngine()->setGlyphCache(cacheKey, cache);
         cache->insert(ctx, cache);
@@ -1612,7 +1612,7 @@ void QGL2PaintEngineExPrivate::drawCachedGlyphs(QFontEngineGlyphCache::Type glyp
 
     if (staticTextItem->userDataNeedsUpdate) {
         recreateVertexArrays = true;
-    } else if (staticTextItem->userData() == 0) {
+    } else if (staticTextItem->userData() == nullptr) {
         recreateVertexArrays = true;
     } else if (staticTextItem->userData()->type != QStaticTextUserData::OpenGLUserData) {
         recreateVertexArrays = true;
@@ -1655,9 +1655,9 @@ void QGL2PaintEngineExPrivate::drawCachedGlyphs(QFontEngineGlyphCache::Type glyp
     QGL2PEXVertexArray *textureCoordinates = &textureCoordinateArray;
 
     if (staticTextItem->useBackendOptimizations) {
-        QOpenGLStaticTextUserData *userData = 0;
+        QOpenGLStaticTextUserData *userData = nullptr;
 
-        if (staticTextItem->userData() == 0
+        if (staticTextItem->userData() == nullptr
             || staticTextItem->userData()->type != QStaticTextUserData::OpenGLUserData) {
 
             userData = new QOpenGLStaticTextUserData();
@@ -2200,13 +2200,13 @@ bool QGL2PaintEngineEx::end()
     // them here, after swapBuffers, where they can be safely deleted.
     ctx->d_func()->boundPixmaps.clear();
 #endif
-    d->ctx->d_ptr->active_engine = 0;
+    d->ctx->d_ptr->active_engine = nullptr;
 
     ctx->makeCurrent();
     d->resetGLState();
 
     delete d->shaderManager;
-    d->shaderManager = 0;
+    d->shaderManager = nullptr;
     d->currentBrush = QBrush();
 
 #ifdef QT_OPENGL_CACHE_AS_VBOS

@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeConnections : public QObject, public QDeclar
     Q_PROPERTY(bool ignoreUnknownSignals READ ignoreUnknownSignals WRITE setIgnoreUnknownSignals)
 
 public:
-    QDeclarativeConnections(QObject *parent=0);
+    QDeclarativeConnections(QObject *parent=nullptr);
     ~QDeclarativeConnections();
 
     QObject *target() const;

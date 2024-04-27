@@ -57,7 +57,7 @@ template <class _type,typename _valueDeletor> class PriorityQueue:LUCENE_BASE {
 		PriorityQueue(){
 			this->_size = 0;
 			this->dk = false;
-			this->heap = NULL;
+			this->heap = nullptr;
             this->maxSize = 0;
 		}
 

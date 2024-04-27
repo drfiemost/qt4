@@ -110,7 +110,7 @@ public:
   The default constructor is the only constructor.
  */
 Tree::Tree()
-    : roo(0, "")
+    : roo(nullptr, "")
 {
     priv = new TreePrivate;
 }
@@ -149,7 +149,7 @@ const Node* Tree::findNode(const QStringList &path,
         int i;
 
         for (i = 0; i < path.size(); ++i) {
-            if (node == 0 || !node->isInnerNode())
+            if (node == nullptr || !node->isInnerNode())
                 break;
 
             const Node *next =
@@ -181,7 +181,7 @@ const Node* Tree::findNode(const QStringList &path,
         current = current->parent();
     } while (current);
 
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -209,9 +209,9 @@ const Node *Tree::findNode(const QStringList &path,
                            int findFlags) const
 {
     const Node *node = findNode(path, relative, findFlags);
-    if (node != 0 && node->type() == type)
+    if (node != nullptr && node->type() == type)
         return node;
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -240,7 +240,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
         int i;
 
         for (i = 0; i < path.size(); ++i) {
-            if (node == 0 || !node->isInnerNode())
+            if (node == nullptr || !node->isInnerNode())
                 break;
 
             const Node *next;
@@ -271,7 +271,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
             const FunctionNode *func = static_cast<const FunctionNode*>(node);
             while (func->access() == Node::Private) {
                 const FunctionNode *from = func->reimplementedFrom();
-                if (from != 0) {
+                if (from != nullptr) {
                     if (from->access() != Node::Private)
                         return from;
                     else
@@ -285,7 +285,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
         relative = relative->parent();
     } while (relative);
 
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -310,8 +310,8 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &parentPath,
                                            int findFlags) const
 {
     const Node *parent = findNode(parentPath, relative, findFlags);
-    if (parent == 0 || !parent->isInnerNode()) {
-        return 0;
+    if (parent == nullptr || !parent->isInnerNode()) {
+        return nullptr;
     }
     else {
         return ((InnerNode *)parent)->findFunctionNode(clone);
@@ -348,7 +348,7 @@ const FakeNode *Tree::findFakeNodeByTitle(const QString &title) const
             return i.value();
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -356,7 +356,7 @@ const FakeNode *Tree::findFakeNodeByTitle(const QString &title) const
 const Node*
 Tree::findUnambiguousTarget(const QString &target, Atom *&atom) const
 {
-    Target bestTarget = {0, 0, INT_MAX};
+    Target bestTarget = {nullptr, nullptr, INT_MAX};
     int numBestTargets = 0;
 
     for (int pass = 0; pass < NumSuffixes; ++pass) {
@@ -381,7 +381,7 @@ Tree::findUnambiguousTarget(const QString &target, Atom *&atom) const
             }
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -400,7 +400,7 @@ Atom *Tree::findTarget(const QString &target, const Node *node) const
             } while (i != priv->targetHash.constEnd() && i.key() == key);
         }
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -562,7 +562,7 @@ void Tree::resolveInheritance(int pass, ClassNode *classe)
 	    if ((*c)->type() == Node::Function) {
 		FunctionNode *func = (FunctionNode *) *c;
 		FunctionNode *from = findVirtualFunctionInBaseClasses(classe, func);
-		if (from != 0) {
+		if (from != nullptr) {
 		    if (func->virtualness() == FunctionNode::NonVirtual)
 			func->setVirtualness(FunctionNode::ImpureVirtual);
 		    func->setReimplementedFrom(from);
@@ -675,14 +675,14 @@ FunctionNode *Tree::findVirtualFunctionInBaseClasses(ClassNode *classe,
     QList<RelatedClass>::ConstIterator r = classe->baseClasses().begin();
     while (r != classe->baseClasses().end()) {
         FunctionNode *func;
-        if (((func = findVirtualFunctionInBaseClasses((*r).node, clone)) != 0 ||
-              (func = (*r).node->findFunctionNode(clone)) != 0)) {
+        if (((func = findVirtualFunctionInBaseClasses((*r).node, clone)) != nullptr ||
+              (func = (*r).node->findFunctionNode(clone)) != nullptr)) {
             if (func->virtualness() != FunctionNode::NonVirtual)
                 return func;
         }
          ++r;
     }
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1481,7 +1481,7 @@ bool Tree::generateIndexSection(QXmlStreamWriter &writer,
             QString leftType = parameter.leftType();
             const Node *leftNode =
                 const_cast<Tree*>(this)->findNode(parameter.leftType().split("::"),
-                Node::Typedef, 0, SearchBaseClasses|NonFunction);
+                Node::Typedef, nullptr, SearchBaseClasses|NonFunction);
             if (!leftNode) {
                 leftNode = const_cast<Tree *>(this)->findNode(
                     parameter.leftType().split("::"), Node::Typedef,
@@ -1886,7 +1886,7 @@ void Tree::generateTagFileMembers(QXmlStreamWriter &writer,
                 foreach (const Parameter &parameter, functionNode->parameters()) {
                     QString leftType = parameter.leftType();
                     const Node *leftNode = const_cast<Tree *>(this)->findNode(parameter.leftType().split("::"),
-                        Node::Typedef, 0, SearchBaseClasses|NonFunction);
+                        Node::Typedef, nullptr, SearchBaseClasses|NonFunction);
                     if (!leftNode) {
                         leftNode = const_cast<Tree *>(this)->findNode(
                             parameter.leftType().split("::"), Node::Typedef,

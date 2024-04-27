@@ -146,7 +146,7 @@ static HB_Bool tibetan_shape_syllable(HB_Bool openType, HB_ShaperItem *item, HB_
 
 #ifndef NO_OPENTYPE
     if (openType) {
-        HB_OpenTypeShape(item, /*properties*/0);
+        HB_OpenTypeShape(item, /*properties*/nullptr);
         if (!HB_OpenTypePosition(item, availableGlyphs, /*doLogClusters*/FALSE))
             return FALSE;
     } else {

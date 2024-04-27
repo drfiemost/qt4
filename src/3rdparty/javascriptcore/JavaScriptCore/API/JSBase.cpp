@@ -56,7 +56,7 @@ JSValueRef JSEvaluateScript(JSContextRef ctx, JSStringRef script, JSObjectRef th
     if (completion.complType() == Throw) {
         if (exception)
             *exception = toRef(exec, completion.value());
-        return 0;
+        return nullptr;
     }
 
     if (completion.value())

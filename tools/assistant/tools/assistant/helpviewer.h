@@ -69,7 +69,7 @@ public:
     };
     Q_DECLARE_FLAGS(FindFlags, FindFlag)
 
-    HelpViewer(qreal zoom, QWidget *parent = 0);
+    HelpViewer(qreal zoom, QWidget *parent = nullptr);
     ~HelpViewer();
 
     QFont viewerFont() const;
@@ -102,7 +102,7 @@ public:
     static bool canOpenPage(const QString &url);
     static QString mimeFromUrl(const QUrl &url);
     static bool launchWithExternalApp(const QUrl &url);
-    static QString fixupVirtualFolderForUrl(const HelpEngineWrapper *engine, const QUrl &url, bool *fixed = 0);
+    static QString fixupVirtualFolderForUrl(const HelpEngineWrapper *engine, const QUrl &url, bool *fixed = nullptr);
 
 public slots:
     void copy();

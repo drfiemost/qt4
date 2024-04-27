@@ -235,7 +235,7 @@ FT_Face QFont::freetypeFace() const
         return xlfd->non_locked_face();
     }
 #endif
-    return 0;
+    return nullptr;
 }
 
 QString QFont::rawName() const
@@ -257,7 +257,7 @@ void QFont::setRawName(const QString &name)
     // from qfontdatabase_x11.cpp
     extern bool qt_fillFontDef(const QByteArray &xlfd, QFontDef *fd, int dpi, QtFontDesc *desc);
 
-    if (!qt_fillFontDef(qt_fixXLFD(name.toLatin1()), &d->request, d->dpi, 0)) {
+    if (!qt_fillFontDef(qt_fixXLFD(name.toLatin1()), &d->request, d->dpi, nullptr)) {
         qWarning("QFont::setRawName: Invalid XLFD: \"%s\"", name.toLatin1().constData());
 
         setFamily(name);
@@ -326,7 +326,7 @@ static const char * const tryFonts[] = {
     "8x13",
     "9x15",
     "fixed",
-    0
+    nullptr
 };
 
 // Returns true if the font exists, false otherwise

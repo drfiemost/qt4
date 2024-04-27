@@ -66,7 +66,7 @@ CompoundFileReader::CompoundFileReader(Directory* dir, const QString& name)
 
         // read the directory and init files
         int32_t count = stream->readVInt();
-        FileEntry* entry = NULL;
+        FileEntry* entry = nullptr;
         TCHAR tid[CL_MAX_PATH];
         for (int32_t i = 0; i < count; i++) {
             int64_t offset = stream->readLong();
@@ -74,7 +74,7 @@ CompoundFileReader::CompoundFileReader(Directory* dir, const QString& name)
             QString aid(QString::fromWCharArray(tid, read));
 
             // set length of the previous entry
-            if (entry != NULL)
+            if (entry != nullptr)
                 entry->length = offset - entry->offset;
 
             entry = _CLNEW FileEntry(offset);
@@ -82,11 +82,11 @@ CompoundFileReader::CompoundFileReader(Directory* dir, const QString& name)
         }
 
         // set the length of the final entry
-        if (entry != NULL)
+        if (entry != nullptr)
             entry->length = stream->length() - entry->offset;
         success = true;
     } _CLFINALLY (
-        if (!success && (stream != NULL)) {
+        if (!success && (stream != nullptr)) {
             try {
                 stream->close();
                 _CLDELETE(stream);
@@ -117,7 +117,7 @@ void CompoundFileReader::close()
 {
     SCOPED_LOCK_MUTEX(THIS_LOCK)
 
-    if (stream != NULL) {
+    if (stream != nullptr) {
         entries.clear();
         stream->close();
         _CLDELETE(stream);
@@ -128,11 +128,11 @@ IndexInput* CompoundFileReader::openInput(const QString& id)
 {
     SCOPED_LOCK_MUTEX(THIS_LOCK)
 
-    if (stream == NULL)
+    if (stream == nullptr)
         _CLTHROWA(CL_ERR_IO, "Stream closed");
 
     const FileEntry* entry = entries.get(id);
-    if (entry == NULL) {
+    if (entry == nullptr) {
         char buf[CL_MAX_PATH + 30];
         strcpy(buf,"No sub-file with id ");
         strncat(buf, id.toLocal8Bit().constData(), CL_MAX_PATH);
@@ -188,7 +188,7 @@ void CompoundFileReader::renameFile(const QString& from, const QString& to)
 int64_t CompoundFileReader::fileLength(const QString& name) const
 {
     FileEntry* e = entries.get(name);
-    if (e == NULL) {
+    if (e == nullptr) {
         char buf[CL_MAX_PATH + 30];
         strcpy(buf,"File ");
         strncat(buf, name.toLocal8Bit().constData(), CL_MAX_PATH);
@@ -220,7 +220,7 @@ CompoundFileWriter::CompoundFileWriter(Directory* dir, const QString& name)
     : ids(false)
     , entries(true)
 {
-    if (dir == NULL)
+    if (dir == nullptr)
         _CLTHROWA(CL_ERR_NullPointer, "directory cannot be null");
 
     if (name.isEmpty())
@@ -276,7 +276,7 @@ void CompoundFileWriter::close()
     merged = true;
 
     // open the compound stream
-    IndexOutput* os = NULL;
+    IndexOutput* os = nullptr;
     try {
         os = directory->createOutput(fileName);
 
@@ -323,7 +323,7 @@ void CompoundFileWriter::close()
 
 
     } _CLFINALLY (
-        if (os != NULL) {
+        if (os != nullptr) {
             try {
                 os->close();
                 _CLDELETE(os);
@@ -335,7 +335,7 @@ void CompoundFileWriter::close()
 void CompoundFileWriter::copyFile(WriterFileEntry* source, IndexOutput* os,
     uint8_t* buffer, int32_t bufferLength)
 {
-    IndexInput* is = NULL;
+    IndexInput* is = nullptr;
     try {
         int64_t startPtr = os->getFilePointer();
 
@@ -370,7 +370,7 @@ void CompoundFileWriter::copyFile(WriterFileEntry* source, IndexOutput* os,
             _CLTHROWT(CL_ERR_IO,buf);
         }
     } _CLFINALLY (
-        if (is != NULL) {
+        if (is != nullptr) {
             is->close();
             _CLDELETE(is);
         }

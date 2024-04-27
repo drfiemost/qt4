@@ -51,9 +51,9 @@ static const struct HashTableValue dateTableValues[47] = {
    { "setYear", DontEnum|Function, (intptr_t)dateProtoFuncSetYear, (intptr_t)1 },
    { "getYear", DontEnum|Function, (intptr_t)dateProtoFuncGetYear, (intptr_t)0 },
    { "toJSON", DontEnum|Function, (intptr_t)dateProtoFuncToJSON, (intptr_t)0 },
-   { 0, 0, 0, 0 }
+   { nullptr, 0, 0, 0 }
 };
 
 extern JSC_CONST_HASHTABLE HashTable dateTable =
-    { 134, 127, dateTableValues, 0 };
+    { 134, 127, dateTableValues, nullptr };
 } // namespace

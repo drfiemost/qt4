@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeBorderImage : public QDeclarativeImageBase
     Q_PROPERTY(TileMode verticalTileMode READ verticalTileMode WRITE setVerticalTileMode NOTIFY verticalTileModeChanged)
 
 public:
-    QDeclarativeBorderImage(QDeclarativeItem *parent=0);
+    QDeclarativeBorderImage(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeBorderImage();
 
     QDeclarativeScaleGrid *border();

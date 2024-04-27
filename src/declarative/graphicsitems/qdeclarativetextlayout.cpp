@@ -68,7 +68,7 @@ class DrawTextItemRecorder: public QPaintEngine
 {
     public:
         DrawTextItemRecorder(bool untransformedCoordinates, bool useBackendOptimizations)
-            : m_inertText(0), m_dirtyPen(false), m_useBackendOptimizations(useBackendOptimizations),
+            : m_inertText(nullptr), m_dirtyPen(false), m_useBackendOptimizations(useBackendOptimizations),
               m_untransformedCoordinates(untransformedCoordinates), m_currentColor(Qt::black)
             {
             }
@@ -263,12 +263,12 @@ for QDeclarativeTextLayout's current use (QDeclarativeText is already tied to th
 */
 
 QDeclarativeTextLayout::QDeclarativeTextLayout()
-: d(0)
+: d(nullptr)
 {
 }
 
 QDeclarativeTextLayout::QDeclarativeTextLayout(const QString &text)
-: QTextLayout(text), d(0)
+: QTextLayout(text), d(nullptr)
 {
 }
 

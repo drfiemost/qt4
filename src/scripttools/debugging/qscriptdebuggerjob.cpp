@@ -73,14 +73,14 @@ QScriptDebuggerJob::QScriptDebuggerJob()
     : d_ptr(new QScriptDebuggerJobPrivate)
 {
     d_ptr->q_ptr = this;
-    d_ptr->jobScheduler = 0;
+    d_ptr->jobScheduler = nullptr;
 }
 
 QScriptDebuggerJob::QScriptDebuggerJob(QScriptDebuggerJobPrivate &dd)
     : d_ptr(&dd)
 {
     d_ptr->q_ptr = this;
-    d_ptr->jobScheduler = 0;
+    d_ptr->jobScheduler = nullptr;
 }
 
 QScriptDebuggerJob::~QScriptDebuggerJob()

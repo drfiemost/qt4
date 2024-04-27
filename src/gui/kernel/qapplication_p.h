@@ -305,7 +305,7 @@ public:
     static void leaveModal_sys(QWidget*);
     static bool isBlockedByModal(QWidget *widget);
     static bool modalState();
-    static bool tryModalHelper(QWidget *widget, QWidget **rettop = 0);
+    static bool tryModalHelper(QWidget *widget, QWidget **rettop = nullptr);
 #ifdef Q_WS_MAC
     static QWidget *tryModalHelper_sys(QWidget *top);
 	bool canQuit();
@@ -315,7 +315,7 @@ public:
 
     void construct(
 #ifdef Q_WS_X11
-                   Display *dpy = 0, Qt::HANDLE visual = 0, Qt::HANDLE cmap = 0
+                   Display *dpy = nullptr, Qt::HANDLE visual = 0, Qt::HANDLE cmap = 0
 #endif
                    );
     void initialize();

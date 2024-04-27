@@ -117,7 +117,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeColumn : public QDeclarativeBasePositioner
 {
     Q_OBJECT
 public:
-    QDeclarativeColumn(QDeclarativeItem *parent=0);
+    QDeclarativeColumn(QDeclarativeItem *parent=nullptr);
 protected:
     virtual void doPositioning(QSizeF *contentSize);
     virtual void reportConflictingAnchors();
@@ -130,7 +130,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeRow: public QDeclarativeBasePositioner
     Q_OBJECT
     Q_PROPERTY(Qt::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged REVISION 1)
 public:
-    QDeclarativeRow(QDeclarativeItem *parent=0);
+    QDeclarativeRow(QDeclarativeItem *parent=nullptr);
 
     Qt::LayoutDirection layoutDirection() const;
     void setLayoutDirection (Qt::LayoutDirection);
@@ -154,7 +154,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeGrid : public QDeclarativeBasePositioner
     Q_PROPERTY(Flow flow READ flow WRITE setFlow NOTIFY flowChanged)
     Q_PROPERTY(Qt::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged REVISION 1)
 public:
-    QDeclarativeGrid(QDeclarativeItem *parent=0);
+    QDeclarativeGrid(QDeclarativeItem *parent=nullptr);
 
     int rows() const {return m_rows;}
     void setRows(const int rows);
@@ -195,7 +195,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeFlow: public QDeclarativeBasePositioner
     Q_PROPERTY(Flow flow READ flow WRITE setFlow NOTIFY flowChanged)
     Q_PROPERTY(Qt::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged REVISION 1)
 public:
-    QDeclarativeFlow(QDeclarativeItem *parent=0);
+    QDeclarativeFlow(QDeclarativeItem *parent=nullptr);
 
     Q_ENUMS(Flow)
     enum Flow { LeftToRight, TopToBottom };

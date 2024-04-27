@@ -482,7 +482,7 @@ static ReturnOrderBy *locateReturnClause(const Expression::Ptr &expr)
     else if(id == Expression::IDReturnOrderBy)
         return expr->as<ReturnOrderBy>();
     else
-        return 0;
+        return nullptr;
 }
 
 static inline bool isPredicate(const Expression::ID id)
@@ -1972,7 +1972,7 @@ static const char *const yytname[] =
   "SchemaAttributeTest", "ElementTest", "OptionalQuestionMark",
   "SchemaElementTest", "EmptyParanteses", "AttributeName", "ElementName",
   "TypeName", "FunctionName", "NCName", "LexicalName", "PragmaName",
-  "URILiteral", "StringLiteral", "QName", 0
+  "URILiteral", "StringLiteral", "QName", nullptr
 };
 #endif
 
@@ -3256,7 +3256,7 @@ yysyntax_error (char *yyresult, int yystate, int yychar)
   else
     {
       int yytype = YYTRANSLATE (yychar);
-      YYSIZE_T yysize0 = yytnamerr (0, yytname[yytype]);
+      YYSIZE_T yysize0 = yytnamerr (nullptr, yytname[yytype]);
       YYSIZE_T yysize = yysize0;
       YYSIZE_T yysize1;
       int yysize_overflow = 0;
@@ -3307,7 +3307,7 @@ yysyntax_error (char *yyresult, int yystate, int yychar)
 		break;
 	      }
 	    yyarg[yycount++] = yytname[yyx];
-	    yysize1 = yysize + yytnamerr (0, yytname[yyx]);
+	    yysize1 = yysize + yytnamerr (nullptr, yytname[yyx]);
 	    yysize_overflow |= (yysize1 < yysize);
 	    yysize = yysize1;
 	    yyfmt = yystpcpy (yyfmt, yyprefix);
@@ -7818,7 +7818,7 @@ yyerrlab:
       yyerror (&yylloc, parseInfo, YY_("syntax error"));
 #else
       {
-	YYSIZE_T yysize = yysyntax_error (0, yystate, yychar);
+	YYSIZE_T yysize = yysyntax_error (nullptr, yystate, yychar);
 	if (yymsg_alloc < yysize && yymsg_alloc < YYSTACK_ALLOC_MAXIMUM)
 	  {
 	    YYSIZE_T yyalloc = 2 * yysize;

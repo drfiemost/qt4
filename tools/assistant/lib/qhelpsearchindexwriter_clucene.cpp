@@ -552,7 +552,7 @@ private:
 
 
 QHelpSearchIndexWriter::QHelpSearchIndexWriter()
-    : QThread(0)
+    : QThread(nullptr)
     , m_cancel(false)
 {
     // nothing todo
@@ -626,7 +626,7 @@ void QHelpSearchIndexWriter::run()
 
         mutexLocker.unlock();
 
-        QHelpEngineCore engine(collectionFile, 0);
+        QHelpEngineCore engine(collectionFile, nullptr);
         if (!engine.setupData())
             return;
 
@@ -660,7 +660,7 @@ void QHelpSearchIndexWriter::run()
 
         emit indexingStarted();
 
-        QCLuceneIndexWriter *writer = 0;
+        QCLuceneIndexWriter *writer = nullptr;
         QCLuceneStandardAnalyzer analyzer;
         const QStringList registeredDocs = engine.registeredDocumentations();
 

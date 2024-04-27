@@ -221,7 +221,7 @@ BytecodeGenerator::BytecodeGenerator(ProgramNode* programNode, const Debugger* d
     , m_lastOpcodeID(op_end)
     , m_emitNodeDepth(0)
     , m_regeneratingForExceptionInfo(false)
-    , m_codeBlockBeingRegeneratedFrom(0)
+    , m_codeBlockBeingRegeneratedFrom(nullptr)
 {
     if (m_shouldEmitDebugHooks)
         m_codeBlock->setNeedsFullScopeChain(true);
@@ -305,7 +305,7 @@ BytecodeGenerator::BytecodeGenerator(FunctionBodyNode* functionBody, const Debug
     , m_lastOpcodeID(op_end)
     , m_emitNodeDepth(0)
     , m_regeneratingForExceptionInfo(false)
-    , m_codeBlockBeingRegeneratedFrom(0)
+    , m_codeBlockBeingRegeneratedFrom(nullptr)
 {
     if (m_shouldEmitDebugHooks)
         m_codeBlock->setNeedsFullScopeChain(true);
@@ -388,7 +388,7 @@ BytecodeGenerator::BytecodeGenerator(EvalNode* evalNode, const Debugger* debugge
     , m_lastOpcodeID(op_end)
     , m_emitNodeDepth(0)
     , m_regeneratingForExceptionInfo(false)
-    , m_codeBlockBeingRegeneratedFrom(0)
+    , m_codeBlockBeingRegeneratedFrom(nullptr)
 {
     if (m_shouldEmitDebugHooks || m_baseScopeDepth)
         m_codeBlock->setNeedsFullScopeChain(true);
@@ -415,7 +415,7 @@ BytecodeGenerator::BytecodeGenerator(EvalNode* evalNode, const Debugger* debugge
 RegisterID* BytecodeGenerator::addParameter(const Identifier& ident)
 {
     // Parameters overwrite var declarations, but not function declarations.
-    RegisterID* result = 0;
+    RegisterID* result = nullptr;
     UString::Rep* rep = ident.ustring().rep();
     if (!m_functions.contains(rep)) {
         symbolTable().set(rep, m_nextParameterIndex);
@@ -437,11 +437,11 @@ RegisterID* BytecodeGenerator::registerFor(const Identifier& ident)
         return &m_thisRegister;
 
     if (!shouldOptimizeLocals())
-        return 0;
+        return nullptr;
 
     SymbolTableEntry entry = symbolTable().get(ident.ustring().rep());
     if (entry.isNull())
-        return 0;
+        return nullptr;
 
     if (ident == propertyNames().arguments)
         createArgumentsIfNecessary();
@@ -479,11 +479,11 @@ RegisterID* BytecodeGenerator::uncheckedRegisterForArguments()
 RegisterID* BytecodeGenerator::constRegisterFor(const Identifier& ident)
 {
     if (m_codeType == EvalCode)
-        return 0;
+        return nullptr;
 
     SymbolTableEntry entry = symbolTable().get(ident.ustring().rep());
     if (entry.isNull())
-        return 0;
+        return nullptr;
 
     return &registerFor(entry.getIndex());
 }
@@ -976,7 +976,7 @@ RegisterID* BytecodeGenerator::emitLoad(RegisterID* dst, double number)
 
 RegisterID* BytecodeGenerator::emitLoad(RegisterID* dst, const Identifier& identifier)
 {
-    JSString*& stringInMap = m_stringMap.add(identifier.ustring().rep(), 0).first->second;
+    JSString*& stringInMap = m_stringMap.add(identifier.ustring().rep(), nullptr).first->second;
     if (!stringInMap)
         stringInMap = jsOwnedString(globalData(), identifier.ustring());
     return emitLoad(dst, JSValue(stringInMap));
@@ -1058,7 +1058,7 @@ RegisterID* BytecodeGenerator::emitResolve(RegisterID* dst, const Identifier& pr
 {
     size_t depth = 0;
     int index = 0;
-    JSObject* globalObject = 0;
+    JSObject* globalObject = nullptr;
     if (!findScopedProperty(property, index, depth, false, globalObject) && !globalObject) {
         // We can't optimise at all :-(
         emitOpcode(op_resolve);
@@ -1147,7 +1147,7 @@ RegisterID* BytecodeGenerator::emitResolveBase(RegisterID* dst, const Identifier
 {
     size_t depth = 0;
     int index = 0;
-    JSObject* globalObject = 0;
+    JSObject* globalObject = nullptr;
     findScopedProperty(property, index, depth, false, globalObject);
     if (!globalObject) {
         // We can't optimise at all :-(
@@ -1165,7 +1165,7 @@ RegisterID* BytecodeGenerator::emitResolveWithBase(RegisterID* baseDst, Register
 {
     size_t depth = 0;
     int index = 0;
-    JSObject* globalObject = 0;
+    JSObject* globalObject = nullptr;
     if (!findScopedProperty(property, index, depth, false, globalObject) || !globalObject) {
         // We can't optimise at all :-(
         emitOpcode(op_resolve_with_base);
@@ -1544,7 +1544,7 @@ RegisterID* BytecodeGenerator::emitConstruct(RegisterID* dst, RegisterID* func, 
     // Generate code for arguments.
     Vector<RefPtr<RegisterID>, 16> argv;
     argv.append(newTemporary()); // reserve space for "this"
-    for (ArgumentListNode* n = argumentsNode ? argumentsNode->m_listNode : 0; n; n = n->m_next) {
+    for (ArgumentListNode* n = argumentsNode ? argumentsNode->m_listNode : nullptr; n; n = n->m_next) {
         argv.append(newTemporary());
         // op_construct requires the arguments to be a sequential range of registers
         ASSERT(argv[argv.size() - 1]->index() == argv[argv.size() - 2]->index() + 1);
@@ -1680,7 +1680,7 @@ LabelScope* BytecodeGenerator::breakTarget(const Identifier& name)
     }
 
     if (!m_labelScopes.size())
-        return 0;
+        return nullptr;
 
     // We special-case the following, which is a syntax error in Firefox:
     // label:
@@ -1693,7 +1693,7 @@ LabelScope* BytecodeGenerator::breakTarget(const Identifier& name)
                 return scope;
             }
         }
-        return 0;
+        return nullptr;
     }
 
     for (int i = m_labelScopes.size() - 1; i >= 0; --i) {
@@ -1703,7 +1703,7 @@ LabelScope* BytecodeGenerator::breakTarget(const Identifier& name)
             return scope;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 LabelScope* BytecodeGenerator::continueTarget(const Identifier& name)
@@ -1713,7 +1713,7 @@ LabelScope* BytecodeGenerator::continueTarget(const Identifier& name)
         m_labelScopes.removeLast();
 
     if (!m_labelScopes.size())
-        return 0;
+        return nullptr;
 
     if (name.isEmpty()) {
         for (int i = m_labelScopes.size() - 1; i >= 0; --i) {
@@ -1723,12 +1723,12 @@ LabelScope* BytecodeGenerator::continueTarget(const Identifier& name)
                 return scope;
             }
         }
-        return 0;
+        return nullptr;
     }
 
     // Continue to the loop nested nearest to the label scope that matches
     // 'name'.
-    LabelScope* result = 0;
+    LabelScope* result = nullptr;
     for (int i = m_labelScopes.size() - 1; i >= 0; --i) {
         LabelScope* scope = &m_labelScopes[i];
         if (scope->type() == LabelScope::Loop) {
@@ -1738,7 +1738,7 @@ LabelScope* BytecodeGenerator::continueTarget(const Identifier& name)
         if (scope->name() && *scope->name() == name)
             return result; // may be 0
     }
-    return 0;
+    return nullptr;
 }
 
 PassRefPtr<Label> BytecodeGenerator::emitComplexJumpScopes(Label* target, ControlFlowContext* topScope, ControlFlowContext* bottomScope)

@@ -13,7 +13,7 @@
 CL_NS_DEF(index)
 
 SegmentMergeInfo::SegmentMergeInfo(const int32_t b, TermEnum* te, IndexReader* r):
-    reader(r),termEnum(te),base(b), docMap(NULL) {
+    reader(r),termEnum(te),base(b), docMap(nullptr) {
 //Func - Constructor
 //Pre  - b >= 0
 //       te contains a valid reference to a SegmentTermEnum instance
@@ -22,7 +22,7 @@ SegmentMergeInfo::SegmentMergeInfo(const int32_t b, TermEnum* te, IndexReader* r
 
     CND_PRECONDITION(b >= 0, "b is a negative number");
 
-    postings=NULL;
+    postings=nullptr;
 	term   = te->term();
 }
 
@@ -35,7 +35,7 @@ SegmentMergeInfo::~SegmentMergeInfo(){
 }
 
 int32_t* SegmentMergeInfo::getDocMap(){
-	if ( docMap == NULL ){
+	if ( docMap == nullptr ){
       	// build array which maps document numbers around deletions 
 		if (reader->hasDeletions()) {
 			//Get the total number of documents managed by the reader including the deleted ones
@@ -59,7 +59,7 @@ int32_t* SegmentMergeInfo::getDocMap(){
 }
 
 TermPositions* SegmentMergeInfo::getPositions() {
-    if (postings == NULL) {
+    if (postings == nullptr) {
     	postings = reader->termPositions();
     }
     return postings;
@@ -77,7 +77,7 @@ bool SegmentMergeInfo::next() {
 		return true;
 	} else {
 		_CLDECDELETE(term); //TODO: test HighFreqTerms errors with this
-		term = NULL;
+		term = nullptr;
 		return false;
 	}
 }
@@ -88,12 +88,12 @@ void SegmentMergeInfo::close() {
 //Post - The resources have been closed
 
     //First make sure posting has been closed
-    if ( postings != NULL ){
+    if ( postings != nullptr ){
         postings->close();
         _CLVDELETE(postings); //todo: not a clucene object... should be
     }
 
-    if ( termEnum != NULL ){
+    if ( termEnum != nullptr ){
         termEnum->close();
         _CLDELETE(termEnum);
     }

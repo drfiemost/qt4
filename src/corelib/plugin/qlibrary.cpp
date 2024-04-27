@@ -354,10 +354,10 @@ static bool qt_unix_query(const QString &library, uint *version, bool *debug, QL
     }
 
     QByteArray data;
-    const char *filedata = 0;
+    const char *filedata = nullptr;
     ulong fdlen = file.size();
     filedata = (char *) file.map(0, fdlen);
-    if (filedata == 0) {
+    if (filedata == nullptr) {
         // try reading the data into memory instead
         data = file.readAll();
         filedata = data.constData();
@@ -417,11 +417,11 @@ Q_GLOBAL_STATIC(LibraryData, libraryData)
 static LibraryMap *libraryMap()
 {
     LibraryData *data = libraryData();
-    return data ? &data->libraryMap : 0;
+    return data ? &data->libraryMap : nullptr;
 }
 
 QLibraryPrivate::QLibraryPrivate(const QString &canonicalFileName, const QString &version)
-    :pHnd(0), fileName(canonicalFileName), fullVersion(version), instance(0), qt_version(0),
+    :pHnd(nullptr), fileName(canonicalFileName), fullVersion(version), instance(nullptr), qt_version(0),
      libraryRefCount(1), libraryUnloadCount(0), pluginState(MightBeAPlugin)
 { libraryMap()->insert(canonicalFileName, this); }
 
@@ -449,7 +449,7 @@ QLibraryPrivate::~QLibraryPrivate()
 void *QLibraryPrivate::resolve(const char *symbol)
 {
     if (!pHnd)
-        return 0;
+        return nullptr;
     return resolve_sys(symbol);
 }
 
@@ -490,11 +490,11 @@ bool QLibraryPrivate::unload()
                 if (lib->loadedLibs.remove(this))
                     libraryRefCount.deref();
             }
-            pHnd = 0;
+            pHnd = nullptr;
         }
     }
 
-    return (pHnd == 0);
+    return (pHnd == nullptr);
 }
 
 void QLibraryPrivate::release()
@@ -610,7 +610,7 @@ typedef const char * (*QtPluginQueryVerificationDataFunction)();
 bool qt_get_verificationdata(QtPluginQueryVerificationDataFunction pfn, uint *qt_version, bool *debug, bool *exceptionThrown)
 {
     *exceptionThrown = false;
-    const char *szData = 0;
+    const char *szData = nullptr;
     if (!pfn)
         return false;
 #ifdef QT_USE_MS_STD_EXCEPTION
@@ -686,7 +686,7 @@ bool QLibraryPrivate::isPlugin(QSettings *settings)
     reg = settings->value(regkey).toStringList();
 #endif
     if (reg.count() == 3 && lastModified == reg.at(2)) {
-        qt_version = reg.at(0).toUInt(0, 16);
+        qt_version = reg.at(0).toUInt(nullptr, 16);
         debug = bool(reg.at(1).toInt());
         success = qt_version != 0;
     } else {
@@ -720,7 +720,7 @@ bool QLibraryPrivate::isPlugin(QSettings *settings)
 
                 : (QtPluginQueryVerificationDataFunction) resolve("qt_plugin_query_verification_data");
 #else
-                QtPluginQueryVerificationDataFunction qtPluginQueryVerificationDataFunction = NULL;
+                QtPluginQueryVerificationDataFunction qtPluginQueryVerificationDataFunction = nullptr;
                 qtPluginQueryVerificationDataFunction = (QtPluginQueryVerificationDataFunction) resolve("qt_plugin_query_verification_data");
 #endif
                 bool exceptionThrown = false;
@@ -869,7 +869,7 @@ bool QLibrary::isLoaded() const
     Constructs a library with the given \a parent.
  */
 QLibrary::QLibrary(QObject *parent)
-    :QObject(parent), d(0), did_load(false)
+    :QObject(parent), d(nullptr), did_load(false)
 {
 }
 
@@ -886,7 +886,7 @@ QLibrary::QLibrary(QObject *parent)
     Note: In Symbian the path portion of the \a fileName is ignored.
  */
 QLibrary::QLibrary(const QString& fileName, QObject *parent)
-    :QObject(parent), d(0), did_load(false)
+    :QObject(parent), d(nullptr), did_load(false)
 {
     setFileName(fileName);
 }
@@ -905,7 +905,7 @@ QLibrary::QLibrary(const QString& fileName, QObject *parent)
     Note: In Symbian the path portion of the \a fileName is ignored.
 */
 QLibrary::QLibrary(const QString& fileName, int verNum, QObject *parent)
-    :QObject(parent), d(0), did_load(false)
+    :QObject(parent), d(nullptr), did_load(false)
 {
     setFileNameAndVersion(fileName, verNum);
 }
@@ -923,7 +923,7 @@ QLibrary::QLibrary(const QString& fileName, int verNum, QObject *parent)
     Note: In Symbian the path portion of the \a fileName is ignored.
  */
 QLibrary::QLibrary(const QString& fileName, const QString &version, QObject *parent)
-    :QObject(parent), d(0), did_load(false)
+    :QObject(parent), d(nullptr), did_load(false)
 {
     setFileNameAndVersion(fileName, version);
 }
@@ -972,7 +972,7 @@ void QLibrary::setFileName(const QString &fileName)
     if (d) {
         lh = d->loadHints;
         d->release();
-        d = 0;
+        d = nullptr;
         did_load = false;
     }
     d = QLibraryPrivate::findOrCreate(fileName);
@@ -1003,7 +1003,7 @@ void QLibrary::setFileNameAndVersion(const QString &fileName, int verNum)
     if (d) {
         lh = d->loadHints;
         d->release();
-        d = 0;
+        d = nullptr;
         did_load = false;
     }
     d = QLibraryPrivate::findOrCreate(fileName, verNum >= 0 ? QString::number(verNum) : QString());
@@ -1027,7 +1027,7 @@ void QLibrary::setFileNameAndVersion(const QString &fileName, const QString &ver
     if (d) {
         lh = d->loadHints;
         d->release();
-        d = 0;
+        d = nullptr;
         did_load = false;
     }
     d = QLibraryPrivate::findOrCreate(fileName, version);
@@ -1060,7 +1060,7 @@ void QLibrary::setFileNameAndVersion(const QString &fileName, const QString &ver
 void *QLibrary::resolve(const char *symbol)
 {
     if (!isLoaded() && !load())
-        return 0;
+        return nullptr;
     return d->resolve(symbol);
 }
 
@@ -1196,7 +1196,7 @@ void QLibrary::setLoadHints(LoadHints hints)
 
 QLibrary::LoadHints QLibrary::loadHints() const
 {
-    return d ? d->loadHints : (QLibrary::LoadHints)0;
+    return d ? d->loadHints : (QLibrary::LoadHints)nullptr;
 }
 
 /* Internal, for debugging */

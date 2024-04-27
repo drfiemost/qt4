@@ -118,7 +118,7 @@ private:
 
 const QString HelpEngineWrapper::TrUnfiltered = HelpEngineWrapper::tr("Unfiltered");
 
-HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = 0;
+HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = nullptr;
 
 HelpEngineWrapper &HelpEngineWrapper::instance(const QString &collectionFile)
 {
@@ -127,7 +127,7 @@ HelpEngineWrapper &HelpEngineWrapper::instance(const QString &collectionFile)
      * Note that this Singleton cannot be static, because it has to be
      * deleted before the QApplication.
      */
-    if (helpEngineWrapper == 0)
+    if (helpEngineWrapper == nullptr)
         helpEngineWrapper = new HelpEngineWrapper(collectionFile);
     return *helpEngineWrapper;
 }
@@ -136,7 +136,7 @@ void HelpEngineWrapper::removeInstance()
 {
     TRACE_OBJ
     delete helpEngineWrapper;
-    helpEngineWrapper = 0;
+    helpEngineWrapper = nullptr;
 }
 
 HelpEngineWrapper::HelpEngineWrapper(const QString &collectionFile)

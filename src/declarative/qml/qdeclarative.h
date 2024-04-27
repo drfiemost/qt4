@@ -98,10 +98,10 @@ int qmlRegisterType()
 
         qRegisterMetaType<T *>(pointerName.constData()),
         qRegisterMetaType<QDeclarativeListProperty<T> >(listName.constData()),
-        0, 0,
+        0, nullptr,
         QString(),
 
-        0, 0, 0, 0, &T::staticMetaObject,
+        nullptr, 0, 0, nullptr, &T::staticMetaObject,
 
         QDeclarativePrivate::attachedPropertiesFunc<T>(),
         QDeclarativePrivate::attachedPropertiesMetaObject<T>(),
@@ -110,9 +110,9 @@ int qmlRegisterType()
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueSource>::cast(),
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueInterceptor>::cast(),
 
-        0, 0,
+        nullptr, nullptr,
 
-        0,
+        nullptr,
         0
     };
 
@@ -134,7 +134,7 @@ int qmlRegisterUncreatableType(const char *uri, int versionMajor, int versionMin
 
         qRegisterMetaType<T *>(pointerName.constData()),
         qRegisterMetaType<QDeclarativeListProperty<T> >(listName.constData()),
-        0, 0,
+        0, nullptr,
         reason,
 
         uri, versionMajor, versionMinor, qmlName, &T::staticMetaObject,
@@ -146,9 +146,9 @@ int qmlRegisterUncreatableType(const char *uri, int versionMajor, int versionMin
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueSource>::cast(),
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueInterceptor>::cast(),
 
-        0, 0,
+        nullptr, nullptr,
 
-        0,
+        nullptr,
         0
     };
 
@@ -180,9 +180,9 @@ int qmlRegisterType(const char *uri, int versionMajor, int versionMinor, const c
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueSource>::cast(),
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueInterceptor>::cast(),
 
-        0, 0,
+        nullptr, nullptr,
 
-        0,
+        nullptr,
         0
     };
 
@@ -214,9 +214,9 @@ int qmlRegisterType(const char *uri, int versionMajor, int versionMinor, const c
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueSource>::cast(),
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueInterceptor>::cast(),
 
-        0, 0,
+        nullptr, nullptr,
 
-        0,
+        nullptr,
         metaObjectRevision
     };
 
@@ -239,7 +239,7 @@ int qmlRegisterRevision(const char *uri, int versionMajor, int versionMinor)
         sizeof(T), QDeclarativePrivate::createInto<T>,
         QString(),
 
-        uri, versionMajor, versionMinor, 0, &T::staticMetaObject,
+        uri, versionMajor, versionMinor, nullptr, &T::staticMetaObject,
 
         QDeclarativePrivate::attachedPropertiesFunc<T>(),
         QDeclarativePrivate::attachedPropertiesMetaObject<T>(),
@@ -248,9 +248,9 @@ int qmlRegisterRevision(const char *uri, int versionMajor, int versionMinor)
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueSource>::cast(),
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueInterceptor>::cast(),
 
-        0, 0,
+        nullptr, nullptr,
 
-        0,
+        nullptr,
         metaObjectRevision
     };
 
@@ -327,7 +327,7 @@ int qmlRegisterExtendedType(const char *uri, int versionMajor, int versionMinor,
 
         QDeclarativePrivate::createParent<E>, &E::staticMetaObject,
 
-        0,
+        nullptr,
         0
     };
 
@@ -380,7 +380,7 @@ int qmlRegisterCustomType(const char *uri, int versionMajor, int versionMinor,
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueSource>::cast(),
         QDeclarativePrivate::StaticCastSelector<T,QDeclarativePropertyValueInterceptor>::cast(),
 
-        0, 0,
+        nullptr, nullptr,
 
         parser,
         0

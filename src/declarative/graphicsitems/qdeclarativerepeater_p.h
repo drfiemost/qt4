@@ -60,7 +60,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeRepeater : public QDeclarativeItem
     Q_CLASSINFO("DefaultProperty", "delegate")
 
 public:
-    QDeclarativeRepeater(QDeclarativeItem *parent=0);
+    QDeclarativeRepeater(QDeclarativeItem *parent=nullptr);
     virtual ~QDeclarativeRepeater();
 
     QVariant model() const;

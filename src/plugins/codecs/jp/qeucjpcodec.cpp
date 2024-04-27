@@ -100,7 +100,7 @@ QEucJpCodec::QEucJpCodec() : conv(QJpUnicodeConv::newConverter(QJpUnicodeConv::D
 QEucJpCodec::~QEucJpCodec()
 {
     delete (QJpUnicodeConv*)conv;
-    conv = 0;
+    conv = nullptr;
 }
 
 QByteArray QEucJpCodec::convertFromUnicode(const QChar *uc, int len, ConverterState *state) const

@@ -64,7 +64,7 @@ class Q_CORE_EXPORT QFutureWatcherBase : public QObject
     Q_DECLARE_PRIVATE(QFutureWatcherBase)
 
 public:
-    QFutureWatcherBase(QObject *parent = 0);
+    QFutureWatcherBase(QObject *parent = nullptr);
 
     int progressValue() const;
     int progressMinimum() const;
@@ -122,7 +122,7 @@ template <typename T>
 class QFutureWatcher : public QFutureWatcherBase
 {
 public:
-    QFutureWatcher(QObject *_parent = 0)
+    QFutureWatcher(QObject *_parent = nullptr)
         : QFutureWatcherBase(_parent)
     { }
     ~QFutureWatcher()
@@ -192,7 +192,7 @@ template <>
 class QFutureWatcher<void> : public QFutureWatcherBase
 {
 public:
-    QFutureWatcher(QObject *_parent = 0)
+    QFutureWatcher(QObject *_parent = nullptr)
         : QFutureWatcherBase(_parent)
     { }
     ~QFutureWatcher()

@@ -44,7 +44,7 @@ static JSValue JSC_HOST_CALL regExpProtoFuncToString(ExecState*, JSObject*, JSVa
 
 // ECMA 15.10.5
 
-const ClassInfo RegExpPrototype::info = { "RegExpPrototype", 0, 0, 0 };
+const ClassInfo RegExpPrototype::info = { "RegExpPrototype", nullptr, nullptr, nullptr };
 
 RegExpPrototype::RegExpPrototype(ExecState* exec, NonNullPassRefPtr<Structure> structure, Structure* prototypeFunctionStructure)
     : JSObject(structure)

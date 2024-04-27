@@ -92,14 +92,14 @@ namespace JSC {
     }
 
     inline ElementNode::ElementNode(JSGlobalData*, int elision, ExpressionNode* node)
-        : m_next(0)
+        : m_next(nullptr)
         , m_elision(elision)
         , m_node(node)
     {
     }
 
     inline ElementNode::ElementNode(JSGlobalData*, ElementNode* l, int elision, ExpressionNode* node)
-        : m_next(0)
+        : m_next(nullptr)
         , m_elision(elision)
         , m_node(node)
     {
@@ -108,7 +108,7 @@ namespace JSC {
 
     inline ArrayNode::ArrayNode(JSGlobalData* globalData, int elision)
         : ExpressionNode(globalData)
-        , m_element(0)
+        , m_element(nullptr)
         , m_elision(elision)
         , m_optional(true)
     {
@@ -147,21 +147,21 @@ namespace JSC {
     inline PropertyListNode::PropertyListNode(JSGlobalData* globalData, PropertyNode* node)
         : Node(globalData)
         , m_node(node)
-        , m_next(0)
+        , m_next(nullptr)
     {
     }
 
     inline PropertyListNode::PropertyListNode(JSGlobalData* globalData, PropertyNode* node, PropertyListNode* list)
         : Node(globalData)
         , m_node(node)
-        , m_next(0)
+        , m_next(nullptr)
     {
         list->m_next = this;
     }
 
     inline ObjectLiteralNode::ObjectLiteralNode(JSGlobalData* globalData)
         : ExpressionNode(globalData)
-        , m_list(0)
+        , m_list(nullptr)
     {
     }
 
@@ -188,21 +188,21 @@ namespace JSC {
 
     inline ArgumentListNode::ArgumentListNode(JSGlobalData* globalData, ExpressionNode* expr)
         : Node(globalData)
-        , m_next(0)
+        , m_next(nullptr)
         , m_expr(expr)
     {
     }
 
     inline ArgumentListNode::ArgumentListNode(JSGlobalData* globalData, ArgumentListNode* listNode, ExpressionNode* expr)
         : Node(globalData)
-        , m_next(0)
+        , m_next(nullptr)
         , m_expr(expr)
     {
         listNode->m_next = this;
     }
 
     inline ArgumentsNode::ArgumentsNode(JSGlobalData*)
-        : m_listNode(0)
+        : m_listNode(nullptr)
     {
     }
 
@@ -214,7 +214,7 @@ namespace JSC {
     inline NewExprNode::NewExprNode(JSGlobalData* globalData, ExpressionNode* expr)
         : ExpressionNode(globalData)
         , m_expr(expr)
-        , m_args(0)
+        , m_args(nullptr)
     {
     }
 
@@ -793,13 +793,13 @@ namespace JSC {
 
     inline ParameterNode::ParameterNode(JSGlobalData*, const Identifier& ident)
         : m_ident(ident)
-        , m_next(0)
+        , m_next(nullptr)
     {
     }
 
     inline ParameterNode::ParameterNode(JSGlobalData*, ParameterNode* l, const Identifier& ident)
         : m_ident(ident)
-        , m_next(0)
+        , m_next(nullptr)
     {
         l->m_next = this;
     }
@@ -826,13 +826,13 @@ namespace JSC {
 
     inline ClauseListNode::ClauseListNode(JSGlobalData*, CaseClauseNode* clause)
         : m_clause(clause)
-        , m_next(0)
+        , m_next(nullptr)
     {
     }
 
     inline ClauseListNode::ClauseListNode(JSGlobalData*, ClauseListNode* clauseList, CaseClauseNode* clause)
         : m_clause(clause)
-        , m_next(0)
+        , m_next(nullptr)
     {
         clauseList->m_next = this;
     }
@@ -854,7 +854,7 @@ namespace JSC {
     inline ConstDeclNode::ConstDeclNode(JSGlobalData* globalData, const Identifier& ident, ExpressionNode* init)
         : ExpressionNode(globalData)
         , m_ident(ident)
-        , m_next(0)
+        , m_next(nullptr)
         , m_init(init)
     {
     }
@@ -868,7 +868,7 @@ namespace JSC {
     inline ForInNode::ForInNode(JSGlobalData* globalData, ExpressionNode* l, ExpressionNode* expr, StatementNode* statement)
         : StatementNode(globalData)
         , m_ident(globalData->propertyNames->nullIdentifier)
-        , m_init(0)
+        , m_init(nullptr)
         , m_lexpr(l)
         , m_expr(expr)
         , m_statement(statement)
@@ -879,7 +879,7 @@ namespace JSC {
     inline ForInNode::ForInNode(JSGlobalData* globalData, const Identifier& ident, ExpressionNode* in, ExpressionNode* expr, StatementNode* statement, int divot, int startOffset, int endOffset)
         : StatementNode(globalData)
         , m_ident(ident)
-        , m_init(0)
+        , m_init(nullptr)
         , m_lexpr(new (globalData) ResolveNode(globalData, ident, divot - startOffset))
         , m_expr(expr)
         , m_statement(statement)

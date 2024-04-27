@@ -72,14 +72,14 @@ bool QDeclarativeDelayedError::addError(QDeclarativeEnginePrivate *e)
 }
 
 QDeclarativeQtScriptExpression::QDeclarativeQtScriptExpression()
-: dataRef(0), expressionFunctionMode(ExplicitContext), scopeObject(0), trackChange(false), 
-  guardList(0), guardListLength(0), guardObject(0), guardObjectNotifyIndex(-1), deleted(0)
+: dataRef(nullptr), expressionFunctionMode(ExplicitContext), scopeObject(nullptr), trackChange(false), 
+  guardList(nullptr), guardListLength(0), guardObject(nullptr), guardObjectNotifyIndex(-1), deleted(nullptr)
 {
 }
 
 QDeclarativeQtScriptExpression::~QDeclarativeQtScriptExpression()
 {
-    if (guardList) { delete [] guardList; guardList = 0; }
+    if (guardList) { delete [] guardList; guardList = nullptr; }
     if (dataRef) dataRef->release();
     if (deleted) *deleted = true;
 }
@@ -244,7 +244,7 @@ static int QDeclarativeExpression_notifyIdx = -1;
     null expression object and its value will always be an invalid QVariant.
  */
 QDeclarativeExpression::QDeclarativeExpression()
-: QObject(*new QDeclarativeExpressionPrivate, 0)
+: QObject(*new QDeclarativeExpressionPrivate, nullptr)
 {
     Q_D(QDeclarativeExpression);
 
@@ -258,7 +258,7 @@ QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, vo
                                                QDeclarativeRefCount *rc, QObject *me, 
                                                const QString &url, int lineNumber,
                                                QDeclarativeExpressionPrivate &dd)
-: QObject(dd, 0)
+: QObject(dd, nullptr)
 {
     Q_D(QDeclarativeExpression);
     d->init(ctxt, expr, rc, me, url, lineNumber);
@@ -294,7 +294,7 @@ QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContext *ctxt,
 */
 QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, QObject *scope,
                                                const QString &expression)
-: QObject(*new QDeclarativeExpressionPrivate, 0)
+: QObject(*new QDeclarativeExpressionPrivate, nullptr)
 {
     Q_D(QDeclarativeExpression);
     d->init(ctxt, expression, scope);
@@ -307,7 +307,7 @@ QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, QO
 /*!  \internal */
 QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, QObject *scope,
                                                const QString &expression, QDeclarativeExpressionPrivate &dd)
-: QObject(dd, 0)
+: QObject(dd, nullptr)
 {
     Q_D(QDeclarativeExpression);
     d->init(ctxt, expression, scope);
@@ -320,7 +320,7 @@ QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, QO
 /*!  \internal */
 QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, QObject *scope, const QScriptValue &func,
                        QDeclarativeExpressionPrivate &dd)
-: QObject(dd, 0)
+: QObject(dd, nullptr)
 {
     Q_D(QDeclarativeExpression);
     d->init(ctxt, func, scope);
@@ -344,7 +344,7 @@ QDeclarativeExpression::~QDeclarativeExpression()
 QDeclarativeEngine *QDeclarativeExpression::engine() const
 {
     Q_D(const QDeclarativeExpression);
-    return d->context()?d->context()->engine:0;
+    return d->context()?d->context()->engine:nullptr;
 }
 
 /*!
@@ -355,7 +355,7 @@ QDeclarativeContext *QDeclarativeExpression::context() const
 {
     Q_D(const QDeclarativeExpression);
     QDeclarativeContextData *data = d->context();
-    return data?data->asQDeclarativeContext():0;
+    return data?data->asQDeclarativeContext():nullptr;
 }
 
 /*!
@@ -429,7 +429,7 @@ void QDeclarativeQtScriptExpression::setNotifyObject(QObject *object, int notify
     if (guardList) clearGuards();
 
     if (!object || notifyIndex == -1) {
-        guardObject = 0;
+        guardObject = nullptr;
         notifyIndex = -1;
     } else {
         guardObject = object;
@@ -498,9 +498,9 @@ QScriptValue QDeclarativeQtScriptExpression::eval(QObject *secondaryScope, bool 
 
     QScriptEngine *scriptEngine = QDeclarativeEnginePrivate::getScriptEngine(engine);
 
-    QDeclarativeContextData *oldSharedContext = 0;
-    QObject *oldSharedScope = 0;
-    QObject *oldOverride = 0;
+    QDeclarativeContextData *oldSharedContext = nullptr;
+    QObject *oldSharedScope = nullptr;
+    QObject *oldOverride = nullptr;
     bool isShared = (expressionFunctionMode == SharedContext);
 
     if (isShared) {
@@ -567,7 +567,7 @@ void QDeclarativeQtScriptExpression::updateGuards(const QPODVector<QDeclarativeE
         guard.target = guardObject;
         guard.targetMethod = guardObjectNotifyIndex;
 
-        if (property.notifier != 0) {
+        if (property.notifier != nullptr) {
 
             if (!noChanges && guard.isConnected(property.notifier)) {
                 // Nothing to do
@@ -679,7 +679,7 @@ QVariant QDeclarativeExpressionPrivate::value(QObject *secondaryScope, bool *isU
 QVariant QDeclarativeExpression::evaluate(bool *valueIsUndefined)
 {
     Q_D(QDeclarativeExpression);
-    return d->value(0, valueIsUndefined);
+    return d->value(nullptr, valueIsUndefined);
 }
 
 /*!
@@ -803,7 +803,7 @@ void QDeclarativeExpressionPrivate::_q_notify()
 void QDeclarativeQtScriptExpression::clearGuards()
 {
     delete [] guardList; 
-    guardList = 0; 
+    guardList = nullptr; 
     guardListLength = 0;
 }
 
@@ -822,7 +822,7 @@ void QDeclarativeExpressionPrivate::emitValueChanged()
 }
 
 QDeclarativeAbstractExpression::QDeclarativeAbstractExpression()
-: m_context(0), m_prevExpression(0), m_nextExpression(0)
+: m_context(nullptr), m_prevExpression(nullptr), m_nextExpression(nullptr)
 {
 }
 
@@ -846,8 +846,8 @@ void QDeclarativeAbstractExpression::setContext(QDeclarativeContextData *context
         *m_prevExpression = m_nextExpression;
         if (m_nextExpression) 
             m_nextExpression->m_prevExpression = m_prevExpression;
-        m_prevExpression = 0;
-        m_nextExpression = 0;
+        m_prevExpression = nullptr;
+        m_nextExpression = nullptr;
     }
 
     m_context = context;
@@ -867,7 +867,7 @@ void QDeclarativeAbstractExpression::refresh()
 
 bool QDeclarativeAbstractExpression::isValid() const
 {
-    return m_context != 0;
+    return m_context != nullptr;
 }
 
 QT_END_NAMESPACE

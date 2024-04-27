@@ -74,14 +74,14 @@ QT_BEGIN_NAMESPACE
  *****************************************************************************/
 
 QCursorData::QCursorData(Qt::CursorShape s)
-    : cshape(s), bm(0), bmm(0), hx(0), hy(0), hcurs(0), pm(0), pmm(0)
+    : cshape(s), bm(nullptr), bmm(nullptr), hx(0), hy(0), hcurs(0), pm(0), pmm(0)
 {
     ref = 1;
 }
 
 QCursorData::~QCursorData()
 {
-    Display *dpy = X11 ? X11->display : (Display*)0;
+    Display *dpy = X11 ? X11->display : (Display*)nullptr;
 
     // Add in checking for the display too as on HP-UX
     // we seem to get a core dump as the cursor data is
@@ -340,7 +340,7 @@ void QCursorData::update()
     static const uchar *cursor_bits16[] = {
         cur_ver_bits, mcur_ver_bits, cur_hor_bits, mcur_hor_bits,
         cur_bdiag_bits, mcur_bdiag_bits, cur_fdiag_bits, mcur_fdiag_bits,
-        0, 0, cur_blank_bits, cur_blank_bits };
+        nullptr, nullptr, cur_blank_bits, cur_blank_bits };
 
     static const uchar vsplit_bits[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -441,7 +441,7 @@ void QCursorData::update()
 
     static const uchar * const cursor_bits32[] = {
         vsplit_bits, vsplitm_bits, hsplit_bits, hsplitm_bits,
-        0, 0, 0, 0, whatsthis_bits, whatsthism_bits, busy_bits, busym_bits
+        nullptr, nullptr, nullptr, nullptr, whatsthis_bits, whatsthism_bits, busy_bits, busym_bits
     };
 
     static const uchar forbidden_bits[] = {

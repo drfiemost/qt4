@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeConnectionsPrivate : public QObjectPrivate
 {
 public:
-    QDeclarativeConnectionsPrivate() : target(0), targetSet(false), ignoreUnknownSignals(false), componentcomplete(true) {}
+    QDeclarativeConnectionsPrivate() : target(nullptr), targetSet(false), ignoreUnknownSignals(false), componentcomplete(true) {}
 
     QList<QDeclarativeBoundSignal*> boundsignals;
     QObject *target;
@@ -260,7 +260,7 @@ void QDeclarativeConnections::connectSignals()
         if (prop.isValid() && (prop.type() & QDeclarativeProperty::SignalProperty)) {
             QDeclarativeBoundSignal *signal =
                 new QDeclarativeBoundSignal(target(), prop.method(), this);
-            QDeclarativeExpression *expression = new QDeclarativeExpression(qmlContext(this), 0, script);
+            QDeclarativeExpression *expression = new QDeclarativeExpression(qmlContext(this), nullptr, script);
             QDeclarativeData *ddata = QDeclarativeData::get(this);
             if (ddata && ddata->outerContext && !ddata->outerContext->url.isEmpty())
                 expression->setSourceLocation(ddata->outerContext->url.toString(), ddata->lineNumber);

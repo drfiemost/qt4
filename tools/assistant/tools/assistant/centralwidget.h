@@ -57,7 +57,7 @@ class TabBar : public QTabBar
 {
     Q_OBJECT
 public:
-    TabBar(QWidget *parent = 0);
+    TabBar(QWidget *parent = nullptr);
     ~TabBar();
 
     int addNewTab(const QString &title);
@@ -82,7 +82,7 @@ class CentralWidget : public QWidget
     Q_OBJECT
 
 public:
-    CentralWidget(QWidget *parent = 0);
+    CentralWidget(QWidget *parent = nullptr);
     ~CentralWidget();
 
     static CentralWidget *instance();

@@ -46,7 +46,7 @@ namespace JSC {
     class Parser : public Noncopyable {
     public:
         template <class ParsedNode>
-        PassRefPtr<ParsedNode> parse(JSGlobalData* globalData, Debugger*, ExecState*, const SourceCode& source, int* errLine = 0, UString* errMsg = 0);
+        PassRefPtr<ParsedNode> parse(JSGlobalData* globalData, Debugger*, ExecState*, const SourceCode& source, int* errLine = nullptr, UString* errMsg = nullptr);
 
         void didFinishParsing(SourceElements*, ParserArenaData<DeclarationStacks::VarStack>*, 
                               ParserArenaData<DeclarationStacks::FunctionStack>*, CodeFeatures features, int lastLine, int numConstants);
@@ -78,8 +78,8 @@ namespace JSC {
         if (m_sourceElements) {
             result = ParsedNode::create(globalData,
             m_sourceElements,
-            m_varDeclarations ? &m_varDeclarations->data : 0,
-            m_funcDeclarations ? &m_funcDeclarations->data : 0,
+            m_varDeclarations ? &m_varDeclarations->data : nullptr,
+            m_funcDeclarations ? &m_funcDeclarations->data : nullptr,
             source,
             m_features,
             m_numConstants);
@@ -88,10 +88,10 @@ namespace JSC {
 
         m_arena.reset();
 
-        m_source = 0;
-        m_sourceElements = 0;
-        m_varDeclarations = 0;
-        m_funcDeclarations = 0;
+        m_source = nullptr;
+        m_sourceElements = nullptr;
+        m_varDeclarations = nullptr;
+        m_funcDeclarations = nullptr;
 
         if (debugger && !ParsedNode::scopeIsFunction)
             debugger->sourceParsed(debuggerExecState, source, *errLine, *errMsg);

@@ -147,9 +147,9 @@ public:
 
     struct CapturedProperty {
         CapturedProperty(QObject *o, int c, int n)
-            : object(o), coreIndex(c), notifier(0), notifyIndex(n) {}
+            : object(o), coreIndex(c), notifier(nullptr), notifyIndex(n) {}
         CapturedProperty(QDeclarativeNotifier *n)
-            : object(0), coreIndex(-1), notifier(n), notifyIndex(-1) {}
+            : object(nullptr), coreIndex(-1), notifier(n), notifyIndex(-1) {}
 
         QObject *object;
         int coreIndex;
@@ -191,7 +191,7 @@ public:
     template<class T>
     struct SimpleList {
         SimpleList()
-            : count(0), values(0) {}
+            : count(0), values(nullptr) {}
         SimpleList(int r)
             : count(0), values(new T*[r]) {}
 
@@ -260,7 +260,7 @@ public:
     void registerCompositeType(QDeclarativeCompiledData *);
 
     bool isQObject(int);
-    QObject *toQObject(const QVariant &, bool *ok = 0) const;
+    QObject *toQObject(const QVariant &, bool *ok = nullptr) const;
     QDeclarativeMetaType::TypeCategory typeCategory(int) const;
     bool isList(int) const;
     int listType(int) const;
@@ -311,11 +311,11 @@ public:
     static QScriptValue formatTime(QScriptContext*, QScriptEngine*);
     static QScriptValue formatDateTime(QScriptContext*, QScriptEngine*);
 #endif
-    static QScriptEngine *getScriptEngine(QDeclarativeEngine *e) { if (!e) return 0; return &e->d_func()->scriptEngine; }
+    static QScriptEngine *getScriptEngine(QDeclarativeEngine *e) { if (!e) return nullptr; return &e->d_func()->scriptEngine; }
     static QDeclarativeEngine *getEngine(QScriptEngine *e) { return static_cast<QDeclarativeScriptEngine*>(e)->p->q_func(); }
     static QDeclarativeEnginePrivate *get(QDeclarativeEngine *e) { return e->d_func(); }
-    static QDeclarativeEnginePrivate *get(QDeclarativeContext *c) { return (c && c->engine()) ? QDeclarativeEnginePrivate::get(c->engine()) : 0; }
-    static QDeclarativeEnginePrivate *get(QDeclarativeContextData *c) { return (c && c->engine) ? QDeclarativeEnginePrivate::get(c->engine) : 0; }
+    static QDeclarativeEnginePrivate *get(QDeclarativeContext *c) { return (c && c->engine()) ? QDeclarativeEnginePrivate::get(c->engine()) : nullptr; }
+    static QDeclarativeEnginePrivate *get(QDeclarativeContextData *c) { return (c && c->engine) ? QDeclarativeEnginePrivate::get(c->engine) : nullptr; }
     static QDeclarativeEnginePrivate *get(QScriptEngine *e) { return static_cast<QDeclarativeScriptEngine*>(e)->p; }
     static QDeclarativeEngine *get(QDeclarativeEnginePrivate *p) { return p->q_func(); }
     QDeclarativeContextData *getContext(QScriptContext *);
@@ -340,7 +340,7 @@ The returned cache is not referenced, so if it is to be stored, call addref().
 QDeclarativePropertyCache *QDeclarativeEnginePrivate::cache(QObject *obj)
 {
     if (!obj || QObjectPrivate::get(obj)->metaObject || QObjectPrivate::get(obj)->wasDeleted)
-        return 0;
+        return nullptr;
 
     const QMetaObject *mo = obj->metaObject();
     QDeclarativePropertyCache *rv = propertyCache.value(mo);

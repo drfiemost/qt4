@@ -417,7 +417,7 @@ HB_Bool HB_BasicShape(HB_ShaperItem *shaper_item)
 
 #ifndef NO_OPENTYPE
     if (HB_SelectScript(shaper_item, basic_features)) {
-        HB_OpenTypeShape(shaper_item, /*properties*/0);
+        HB_OpenTypeShape(shaper_item, /*properties*/nullptr);
         return HB_OpenTypePosition(shaper_item, availableGlyphs, /*doLogClusters*/true);
     }
 #endif
@@ -428,21 +428,21 @@ HB_Bool HB_BasicShape(HB_ShaperItem *shaper_item)
 
 const HB_ScriptEngine HB_ScriptEngines[] = {
     // Common
-    { HB_BasicShape, 0},
+    { HB_BasicShape, nullptr},
     // Greek
-    { HB_GreekShape, 0},
+    { HB_GreekShape, nullptr},
     // Cyrillic
-    { HB_BasicShape, 0},
+    { HB_BasicShape, nullptr},
     // Armenian
-    { HB_BasicShape, 0},
+    { HB_BasicShape, nullptr},
     // Hebrew
-    { HB_HebrewShape, 0 },
+    { HB_HebrewShape, nullptr },
     // Arabic
-    { HB_ArabicShape, 0},
+    { HB_ArabicShape, nullptr},
     // Syriac
-    { HB_ArabicShape, 0},
+    { HB_ArabicShape, nullptr},
     // Thaana
-    { HB_BasicShape, 0 },
+    { HB_BasicShape, nullptr },
     // Devanagari
     { HB_IndicShape, HB_IndicAttributes },
     // Bengali
@@ -466,23 +466,23 @@ const HB_ScriptEngine HB_ScriptEngines[] = {
     // Thai
     { HB_ThaiShape, HB_ThaiAttributes },
     // Lao
-    { HB_BasicShape, 0 },
+    { HB_BasicShape, nullptr },
     // Tibetan
     { HB_TibetanShape, HB_TibetanAttributes },
     // Myanmar
     { HB_MyanmarShape, HB_MyanmarAttributes },
     // Georgian
-    { HB_BasicShape, 0 },
+    { HB_BasicShape, nullptr },
     // Hangul
-    { HB_HangulShape, 0 },
+    { HB_HangulShape, nullptr },
     // Ogham
-    { HB_BasicShape, 0 },
+    { HB_BasicShape, nullptr },
     // Runic
-    { HB_BasicShape, 0 },
+    { HB_BasicShape, nullptr },
     // Khmer
     { HB_KhmerShape, HB_KhmerAttributes },
     // N'Ko
-    { HB_ArabicShape, 0}
+    { HB_ArabicShape, nullptr}
 };
 
 void HB_GetTailoredCharAttributes(const HB_UChar16 *string, hb_uint32 stringLength,
@@ -643,30 +643,30 @@ static HB_Stream getTableStream(void *font, HB_GetFontTableFunc tableFunc, HB_Ta
 {
     HB_Error error;
     HB_UInt length = 0;
-    HB_Stream stream = 0;
+    HB_Stream stream = nullptr;
 
     if (!font)
-        return 0;
+        return nullptr;
 
-    error = tableFunc(font, tag, 0, &length);
+    error = tableFunc(font, tag, nullptr, &length);
     if (error)
-        return 0;
+        return nullptr;
     stream = (HB_Stream)malloc(sizeof(HB_StreamRec));
     if (!stream)
-        return 0;
+        return nullptr;
     stream->base = (HB_Byte*)malloc(length);
     if (!stream->base) {
         free(stream);
-        return 0;
+        return nullptr;
     }
     error = tableFunc(font, tag, stream->base, &length);
     if (error) {
         _hb_close_stream(stream);
-        return 0;
+        return nullptr;
     }
     stream->size = length;
     stream->pos = 0;
-    stream->cursor = NULL;
+    stream->cursor = nullptr;
     return stream;
 }
 
@@ -674,19 +674,19 @@ HB_Face HB_AllocFace(void *font, HB_GetFontTableFunc tableFunc)
 {
     HB_Face face = (HB_Face )malloc(sizeof(HB_FaceRec));
     if (!face)
-        return 0;
+        return nullptr;
 
     face->isSymbolFont = false;
-    face->gdef = 0;
-    face->gpos = 0;
-    face->gsub = 0;
+    face->gdef = nullptr;
+    face->gpos = nullptr;
+    face->gsub = nullptr;
     face->current_script = HB_ScriptCount;
     face->current_flags = HB_ShaperFlag_Default;
     face->has_opentype_kerning = false;
-    face->tmpAttributes = 0;
-    face->tmpLogClusters = 0;
+    face->tmpAttributes = nullptr;
+    face->tmpLogClusters = nullptr;
     face->glyphs_substituted = false;
-    face->buffer = 0;
+    face->buffer = nullptr;
     face->font_for_init = font;
     face->get_font_table_func = tableFunc;
 
@@ -709,8 +709,8 @@ HB_Face HB_LoadFace(HB_Face face)
 
     HB_GetFontTableFunc tableFunc = face->get_font_table_func;
 
-    face->get_font_table_func = 0;
-    face->font_for_init = 0;
+    face->get_font_table_func = nullptr;
+    face->font_for_init = nullptr;
 
     HB_Error error = HB_Err_Ok;
     HB_Stream stream;
@@ -720,14 +720,14 @@ HB_Face HB_LoadFace(HB_Face face)
     error = HB_Err_Not_Covered;
     if (!gdefStream || (error = HB_Load_GDEF_Table(gdefStream, &face->gdef))) {
         //DEBUG("error loading gdef table: %d", error);
-        face->gdef = 0;
+        face->gdef = nullptr;
     }
 
     //DEBUG() << "trying to load gsub table";
     stream = getTableStream(font, tableFunc, TTAG_GSUB);
     error = HB_Err_Not_Covered;
     if (!stream || (error = HB_Load_GSUB_Table(stream, &face->gsub, face->gdef, gdefStream))) {
-        face->gsub = 0;
+        face->gsub = nullptr;
         if (error != HB_Err_Not_Covered) {
             //DEBUG("error loading gsub table: %d", error);
         } else {
@@ -739,7 +739,7 @@ HB_Face HB_LoadFace(HB_Face face)
     stream = getTableStream(font, tableFunc, TTAG_GPOS);
     error = HB_Err_Not_Covered;
     if (!stream || (error = HB_Load_GPOS_Table(stream, &face->gpos, face->gdef, gdefStream))) {
-        face->gpos = 0;
+        face->gpos = nullptr;
         DEBUG("error loading gpos table: %d", error);
     }
     _hb_close_stream(stream);
@@ -751,7 +751,7 @@ HB_Face HB_LoadFace(HB_Face face)
 
     if (hb_buffer_new(&face->buffer) != HB_Err_Ok) {
         HB_FreeFace(face);
-        return 0;
+        return nullptr;
     }
 
     return face;

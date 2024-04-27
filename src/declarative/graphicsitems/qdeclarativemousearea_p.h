@@ -65,7 +65,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeDrag : public QObject
     //### consider drag and drop
 
 public:
-    QDeclarativeDrag(QObject *parent=0);
+    QDeclarativeDrag(QObject *parent=nullptr);
     ~QDeclarativeDrag();
 
     QGraphicsObject *target() const;
@@ -131,7 +131,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeMouseArea : public QDeclarativeItem
     Q_PROPERTY(bool preventStealing READ preventStealing WRITE setPreventStealing NOTIFY preventStealingChanged REVISION 1)
 
 public:
-    QDeclarativeMouseArea(QDeclarativeItem *parent=0);
+    QDeclarativeMouseArea(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeMouseArea();
 
     qreal mouseX() const;

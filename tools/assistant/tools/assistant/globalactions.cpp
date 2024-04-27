@@ -172,4 +172,4 @@ void GlobalActions::setupNavigationMenus(QAction *back, QAction *next,
     Q_UNUSED(parent)
 }
 
-GlobalActions *GlobalActions::m_instance = 0;
+GlobalActions *GlobalActions::m_instance = nullptr;

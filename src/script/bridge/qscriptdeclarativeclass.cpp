@@ -148,7 +148,7 @@ QScriptValue QScriptDeclarativeClass::Value::toScriptValue(QScriptEngine *engine
 }
 
 QScriptDeclarativeClass::PersistentIdentifier::PersistentIdentifier()
-    : identifier(0), engine(0)
+    : identifier(nullptr), engine(nullptr)
 {
     new (&d) JSC::Identifier();
 }
@@ -229,7 +229,7 @@ QScriptDeclarativeClass *QScriptDeclarativeClass::scriptClass(const QScriptValue
 {
     QScriptValuePrivate *d = QScriptValuePrivate::get(v);
     if (!d || !d->isJSC())
-        return 0;
+        return nullptr;
     return QScriptEnginePrivate::declarativeClass(d->jscValue);
 }
 
@@ -237,7 +237,7 @@ QScriptDeclarativeClass::Object *QScriptDeclarativeClass::object(const QScriptVa
 {
     QScriptValuePrivate *d = QScriptValuePrivate::get(v);
     if (!d || !d->isJSC())
-        return 0;
+        return nullptr;
     return QScriptEnginePrivate::declarativeObject(d->jscValue);
 }
 
@@ -372,7 +372,7 @@ QScriptValue QScriptDeclarativeClass::scopeChainValue(QScriptContext *context, i
             if (!object) return QScriptValue();
 
             if (object->inherits(&QScript::QScriptActivationObject::info)
-                    && (static_cast<QScript::QScriptActivationObject*>(object)->delegate() != 0)) {
+                    && (static_cast<QScript::QScriptActivationObject*>(object)->delegate() != nullptr)) {
                 // Return the object that property access is being delegated to
                 object = static_cast<QScript::QScriptActivationObject*>(object)->delegate();
             }
@@ -405,14 +405,14 @@ QScriptValue QScriptDeclarativeClass::scopeChainValue(QScriptContext *context, i
 QScriptContext * QScriptDeclarativeClass::pushCleanContext(QScriptEngine *engine)
 {
     if (!engine)
-        return 0;
+        return nullptr;
 
     QScriptEnginePrivate *d = QScriptEnginePrivate::get(engine);
     QScript::APIShim shim(d);
 
     JSC::CallFrame* newFrame = d->pushContext(d->currentFrame, 
                                               d->currentFrame->globalData().dynamicGlobalObject,
-                                              JSC::ArgList(), /*callee = */0, false, true);
+                                              JSC::ArgList(), /*callee = */nullptr, false, true);
 
     if (engine->agent())
         engine->agent()->contextPush();
@@ -495,7 +495,7 @@ QScriptDeclarativeClass::queryProperty(Object *object, const Identifier &name,
     Q_UNUSED(object);
     Q_UNUSED(name);
     Q_UNUSED(flags);
-    return 0;
+    return nullptr;
 }
 
 QScriptDeclarativeClass::Value
@@ -519,7 +519,7 @@ QScriptDeclarativeClass::propertyFlags(Object *object, const Identifier &name)
 {
     Q_UNUSED(object);
     Q_UNUSED(name);
-    return 0;
+    return nullptr;
 }
 
 QScriptDeclarativeClass::Value QScriptDeclarativeClass::call(Object *object, 
@@ -549,7 +549,7 @@ bool QScriptDeclarativeClass::isQObject() const
 QObject *QScriptDeclarativeClass::toQObject(Object *, bool *ok)
 {
     if (ok) *ok = false;
-    return 0;
+    return nullptr;
 }
 
 QVariant QScriptDeclarativeClass::toVariant(Object *, bool *ok)

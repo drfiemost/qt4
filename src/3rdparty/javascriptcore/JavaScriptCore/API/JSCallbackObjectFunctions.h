@@ -60,7 +60,7 @@ JSCallbackObject<Base>::JSCallbackObject(ExecState* exec, NonNullPassRefPtr<Stru
 template <class Base>
 JSCallbackObject<Base>::JSCallbackObject(JSClassRef jsClass)
     : Base()
-    , m_callbackObjectData(new JSCallbackObjectData(0, jsClass))
+    , m_callbackObjectData(new JSCallbackObjectData(nullptr, jsClass))
 {
     ASSERT(Base::isGlobalObject());
     init(static_cast<JSGlobalObject*>(this)->globalExec());
@@ -126,7 +126,7 @@ bool JSCallbackObject<Base>::getOwnPropertySlot(ExecState* exec, const Identifie
         } else if (JSObjectGetPropertyCallback getProperty = jsClass->getProperty) {
             if (!propertyNameRef)
                 propertyNameRef = OpaqueJSString::create(propertyName.ustring());
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             JSValueRef value;
             {
                 APICallbackShim callbackShim(exec);
@@ -198,7 +198,7 @@ void JSCallbackObject<Base>::put(ExecState* exec, const Identifier& propertyName
         if (JSObjectSetPropertyCallback setProperty = jsClass->setProperty) {
             if (!propertyNameRef)
                 propertyNameRef = OpaqueJSString::create(propertyName.ustring());
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             bool result;
             {
                 APICallbackShim callbackShim(exec);
@@ -217,7 +217,7 @@ void JSCallbackObject<Base>::put(ExecState* exec, const Identifier& propertyName
                 if (JSObjectSetPropertyCallback setProperty = entry->setProperty) {
                     if (!propertyNameRef)
                         propertyNameRef = OpaqueJSString::create(propertyName.ustring());
-                    JSValueRef exception = 0;
+                    JSValueRef exception = nullptr;
                     bool result;
                     {
                         APICallbackShim callbackShim(exec);
@@ -256,7 +256,7 @@ bool JSCallbackObject<Base>::deleteProperty(ExecState* exec, const Identifier& p
         if (JSObjectDeletePropertyCallback deleteProperty = jsClass->deleteProperty) {
             if (!propertyNameRef)
                 propertyNameRef = OpaqueJSString::create(propertyName.ustring());
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             bool result;
             {
                 APICallbackShim callbackShim(exec);
@@ -318,7 +318,7 @@ JSObject* JSCallbackObject<Base>::construct(ExecState* exec, JSObject* construct
             Vector<JSValueRef, 16> arguments(argumentCount);
             for (int i = 0; i < argumentCount; i++)
                 arguments[i] = toRef(exec, args.at(i));
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             JSObject* result;
             {
                 APICallbackShim callbackShim(exec);
@@ -331,7 +331,7 @@ JSObject* JSCallbackObject<Base>::construct(ExecState* exec, JSObject* construct
     }
     
     ASSERT_NOT_REACHED(); // getConstructData should prevent us from reaching here
-    return 0;
+    return nullptr;
 }
 
 template <class Base>
@@ -343,7 +343,7 @@ bool JSCallbackObject<Base>::hasInstance(ExecState* exec, JSValue value, JSValue
     for (JSClassRef jsClass = classRef(); jsClass; jsClass = jsClass->parentClass) {
         if (JSObjectHasInstanceCallback hasInstance = jsClass->hasInstance) {
             JSValueRef valueRef = toRef(exec, value);
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             bool result;
             {
                 APICallbackShim callbackShim(exec);
@@ -382,7 +382,7 @@ JSValue JSCallbackObject<Base>::call(ExecState* exec, JSObject* functionObject, 
             Vector<JSValueRef, 16> arguments(argumentCount);
             for (int i = 0; i < argumentCount; i++)
                 arguments[i] = toRef(exec, args.at(i));
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             JSValue result;
             {
                 APICallbackShim callbackShim(exec);
@@ -449,7 +449,7 @@ double JSCallbackObject<Base>::toNumber(ExecState* exec) const
     
     for (JSClassRef jsClass = classRef(); jsClass; jsClass = jsClass->parentClass)
         if (JSObjectConvertToTypeCallback convertToType = jsClass->convertToType) {
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             JSValueRef value;
             {
                 APICallbackShim callbackShim(exec);
@@ -476,7 +476,7 @@ UString JSCallbackObject<Base>::toString(ExecState* exec) const
     
     for (JSClassRef jsClass = classRef(); jsClass; jsClass = jsClass->parentClass)
         if (JSObjectConvertToTypeCallback convertToType = jsClass->convertToType) {
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             JSValueRef value;
             {
                 APICallbackShim callbackShim(exec);
@@ -529,7 +529,7 @@ JSValue JSCallbackObject<Base>::staticValueGetter(ExecState* exec, const Identif
                 if (JSObjectGetPropertyCallback getProperty = entry->getProperty) {
                     if (!propertyNameRef)
                         propertyNameRef = OpaqueJSString::create(propertyName.ustring());
-                    JSValueRef exception = 0;
+                    JSValueRef exception = nullptr;
                     JSValueRef value;
                     {
                         APICallbackShim callbackShim(exec);
@@ -583,7 +583,7 @@ JSValue JSCallbackObject<Base>::callbackGetter(ExecState* exec, const Identifier
         if (JSObjectGetPropertyCallback getProperty = jsClass->getProperty) {
             if (!propertyNameRef)
                 propertyNameRef = OpaqueJSString::create(propertyName.ustring());
-            JSValueRef exception = 0;
+            JSValueRef exception = nullptr;
             JSValueRef value;
             {
                 APICallbackShim callbackShim(exec);

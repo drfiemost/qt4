@@ -55,7 +55,7 @@ namespace {
 class QScriptErrorLogWidgetOutputEdit : public QTextEdit
 {
 public:
-    QScriptErrorLogWidgetOutputEdit(QWidget *parent = 0)
+    QScriptErrorLogWidgetOutputEdit(QWidget *parent = nullptr)
         : QTextEdit(parent)
     {
         setReadOnly(true);
@@ -92,7 +92,7 @@ QScriptErrorLogWidgetPrivate::~QScriptErrorLogWidgetPrivate()
 }
 
 QScriptErrorLogWidget::QScriptErrorLogWidget(QWidget *parent)
-    : QScriptErrorLogWidgetInterface(*new QScriptErrorLogWidgetPrivate, parent, 0)
+    : QScriptErrorLogWidgetInterface(*new QScriptErrorLogWidgetPrivate, parent, nullptr)
 {
     Q_D(QScriptErrorLogWidget);
     d->outputEdit = new QScriptErrorLogWidgetOutputEdit();

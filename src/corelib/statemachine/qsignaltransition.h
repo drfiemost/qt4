@@ -58,9 +58,9 @@ class Q_CORE_EXPORT QSignalTransition : public QAbstractTransition
     Q_PROPERTY(QObject* senderObject READ senderObject WRITE setSenderObject)
     Q_PROPERTY(QByteArray signal READ signal WRITE setSignal)
 public:
-    QSignalTransition(QState *sourceState = 0);
+    QSignalTransition(QState *sourceState = nullptr);
     QSignalTransition(QObject *sender, const char *signal,
-                      QState *sourceState = 0);
+                      QState *sourceState = nullptr);
     ~QSignalTransition();
 
     QObject *senderObject() const;

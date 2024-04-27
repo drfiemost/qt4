@@ -306,7 +306,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                 area.name = tok[0];
                 QString k = tok[1];
                 if ( k.left(2).toLower() == QLatin1String("0x")) {
-                    area.keyCode = k.mid(2).toInt(0,16);
+                    area.keyCode = k.mid(2).toInt(nullptr,16);
                 } else {
                     area.keyCode = k.toInt();
                 }
@@ -378,11 +378,11 @@ DeviceSkin::DeviceSkin(const DeviceSkinParameters &parameters,  QWidget *p ) :
     m_parameters(parameters),
     buttonRegions(parameters.buttonAreas.size(), QRegion()),
     parent(p),
-    m_view(0),
-    m_secondaryView(0),
+    m_view(nullptr),
+    m_secondaryView(nullptr),
     buttonPressed(false),
     buttonIndex(0),
-    cursorw(0),
+    cursorw(nullptr),
     joydown(0),
     t_skinkey(new QTimer(this)),
     t_parentmove(new QTimer(this)),
@@ -467,7 +467,7 @@ void DeviceSkin::loadImages()
     parent->setFixedSize( skinImageUp.size() );
 
     delete cursorw;
-    cursorw = 0;
+    cursorw = nullptr;
     if (hasCursorImage) {
 	cursorw = new qvfb_internal::CursorWindow(m_parameters.skinCursor, m_parameters.cursorHot, this);
 	if ( m_view )
@@ -742,7 +742,7 @@ bool CursorWindow::handleMouseEvent(QEvent *ev)
 		    else if ( skin->parentWidget()->geometry().contains(gp) )
 			mouseRecipient = skin;
 		    else
-			mouseRecipient = 0;
+			mouseRecipient = nullptr;
 		}
 		if ( mouseRecipient ) {
 		    setPos(gp);
@@ -754,7 +754,7 @@ bool CursorWindow::handleMouseEvent(QEvent *ev)
 		    setPos(gp);
 		}
 		if ( e->type() == QEvent::MouseButtonRelease )
-		    mouseRecipient = 0;
+		    mouseRecipient = nullptr;
 		handledEvent = true;
 	    }
 	}
@@ -772,16 +772,16 @@ void CursorWindow::setView(QWidget* v)
     m_view = v;
     m_view->installEventFilter(this);
     m_view->installEventFilter(this);
-    mouseRecipient = 0;
+    mouseRecipient = nullptr;
 }
 
 CursorWindow::CursorWindow(const QImage &img, QPoint hot, QWidget* sk)
-	:QWidget(0),
-	m_view(0), skin(sk),
+	:QWidget(nullptr),
+	m_view(nullptr), skin(sk),
 	hotspot(hot)
 {
     setWindowFlags( Qt::FramelessWindowHint );
-    mouseRecipient = 0;
+    mouseRecipient = nullptr;
     setMouseTracking(true);
 #ifndef QT_NO_CURSOR
     setCursor(Qt::BlankCursor);

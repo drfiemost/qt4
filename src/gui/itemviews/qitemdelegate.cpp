@@ -84,7 +84,7 @@ class QItemDelegatePrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QItemDelegate)
 
 public:
-    QItemDelegatePrivate() : f(0), clipPainting(true) {}
+    QItemDelegatePrivate() : f(nullptr), clipPainting(true) {}
 
     inline const QItemEditorFactory *editorFactory() const
         { return f ? f : QItemEditorFactory::defaultFactory(); }
@@ -516,10 +516,10 @@ QWidget *QItemDelegate::createEditor(QWidget *parent,
 {
     Q_D(const QItemDelegate);
     if (!index.isValid())
-        return 0;
+        return nullptr;
     QVariant::Type t = static_cast<QVariant::Type>(index.data(Qt::EditRole).userType());
     const QItemEditorFactory *factory = d->f;
-    if (factory == 0)
+    if (factory == nullptr)
         factory = QItemEditorFactory::defaultFactory();
     return factory->createEditor(t, parent);
 }
@@ -561,7 +561,7 @@ void QItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
         n = d->editorFactory()->valuePropertyName(static_cast<QVariant::Type>(v.userType()));
     if (!n.isEmpty()) {
         if (!v.isValid())
-            v = QVariant(editor->property(n).userType(), (const void *)0);
+            v = QVariant(editor->property(n).userType(), (const void *)nullptr);
         editor->setProperty(n, v);
     }
 #endif
@@ -614,7 +614,7 @@ void QItemDelegate::updateEditorGeometry(QWidget *editor,
     QPixmap pixmap = decoration(option, index.data(Qt::DecorationRole));
     QString text = QItemDelegatePrivate::replaceNewLine(index.data(Qt::DisplayRole).toString());
     QRect pixmapRect = QRect(QPoint(0, 0), option.decorationSize).intersected(pixmap.rect());
-    QRect textRect = textRectangle(0, option.rect, option.font, text);
+    QRect textRect = textRectangle(nullptr, option.rect, option.font, text);
     QRect checkRect = check(option, textRect, index.data(Qt::CheckStateRole));
     QStyleOptionViewItem opt = option;
     opt.showDecorationSelected = true; // let the editor take up all available space
@@ -682,7 +682,7 @@ void QItemDelegate::drawDisplay(QPainter *painter, const QStyleOptionViewItem &o
 
     const QWidget *widget = d->widget(option);
     QStyle *style = widget ? widget->style() : QApplication::style();
-    const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1;
+    const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1;
     QRect textRect = rect.adjusted(textMargin, 0, -textMargin, 0); // remove width padding
     const bool wrapText = opt.features & QStyleOptionViewItem::WrapText;
     d->textOption.setWrapMode(wrapText ? QTextOption::WordWrap : QTextOption::ManualWrap);
@@ -867,9 +867,9 @@ void QItemDelegate::doLayout(const QStyleOptionViewItem &option,
     const bool hasCheck = checkRect->isValid();
     const bool hasPixmap = pixmapRect->isValid();
     const bool hasText = textRect->isValid();
-    const int textMargin = hasText ? style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1 : 0;
-    const int pixmapMargin = hasPixmap ? style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1 : 0;
-    const int checkMargin = hasCheck ? style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1 : 0;
+    const int textMargin = hasText ? style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1 : 0;
+    const int pixmapMargin = hasPixmap ? style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1 : 0;
+    const int checkMargin = hasCheck ? style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1 : 0;
     int x = option.rect.left();
     int y = option.rect.top();
     int w, h;
@@ -1091,7 +1091,7 @@ QRect QItemDelegate::rect(const QStyleOptionViewItem &option,
             QString text = QItemDelegatePrivate::valueToText(value, option);
             value = index.data(Qt::FontRole);
             QFont fnt = qvariant_cast<QFont>(value).resolve(option.font);
-            return textRectangle(0, d->textLayoutBounds(option), fnt, text); }
+            return textRectangle(nullptr, d->textLayoutBounds(option), fnt, text); }
         }
     }
     return QRect();
@@ -1227,7 +1227,7 @@ bool QItemDelegate::eventFilter(QObject *object, QEvent *event)
 #ifndef QT_NO_DRAGANDDROP
             // The window may lose focus during an drag operation.
             // i.e when dragging involves the taskbar on Windows.
-            if (QDragManager::self() && QDragManager::self()->object != 0)
+            if (QDragManager::self() && QDragManager::self()->object != nullptr)
                 return false;
 #endif
 

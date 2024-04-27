@@ -55,7 +55,7 @@ class MultiDataModel;
 class CheckableListModel : public QStandardItemModel
 {
 public:
-    CheckableListModel(QObject *parent = 0);
+    CheckableListModel(QObject *parent = nullptr);
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 };
 
@@ -63,7 +63,7 @@ class BatchTranslationDialog : public QDialog
 {
     Q_OBJECT
 public:
-    BatchTranslationDialog(MultiDataModel *model, QWidget *w = 0);
+    BatchTranslationDialog(MultiDataModel *model, QWidget *w = nullptr);
     void setPhraseBooks(const QList<PhraseBook *> &phrasebooks, int modelIndex);
 
 signals:

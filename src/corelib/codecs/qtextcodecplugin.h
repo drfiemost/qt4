@@ -71,7 +71,7 @@ class Q_CORE_EXPORT QTextCodecPlugin : public QObject, public QTextCodecFactoryI
     Q_OBJECT
     Q_INTERFACES(QTextCodecFactoryInterface:QFactoryInterface)
 public:
-    explicit QTextCodecPlugin(QObject *parent = 0);
+    explicit QTextCodecPlugin(QObject *parent = nullptr);
     ~QTextCodecPlugin();
 
     virtual QList<QByteArray> names() const = 0;

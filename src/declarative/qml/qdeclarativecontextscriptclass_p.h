@@ -67,7 +67,7 @@ public:
     QDeclarativeContextScriptClass(QDeclarativeEngine *);
     ~QDeclarativeContextScriptClass();
 
-    QScriptValue newContext(QDeclarativeContextData *, QObject * = 0);
+    QScriptValue newContext(QDeclarativeContextData *, QObject * = nullptr);
     QScriptValue newUrlContext(QDeclarativeContextData *, QObject *, const QString &);
     QScriptValue newUrlContext(const QString &);
     QScriptValue newSharedContext();

@@ -69,7 +69,7 @@ class Q_GUI_EXPORT QTextInlineObject
 {
 public:
     QTextInlineObject(int i, QTextEngine *e) : itm(i), eng(e) {}
-    inline QTextInlineObject() : itm(0), eng(0) {}
+    inline QTextInlineObject() : itm(0), eng(nullptr) {}
     inline bool isValid() const { return eng; }
 
     QRectF rect() const;
@@ -107,7 +107,7 @@ public:
     // does itemization
     QTextLayout();
     QTextLayout(const QString& text);
-    QTextLayout(const QString& text, const QFont &font, QPaintDevice *paintdevice = 0);
+    QTextLayout(const QString& text, const QFont &font, QPaintDevice *paintdevice = nullptr);
     QTextLayout(const QTextBlock &b);
     ~QTextLayout();
 
@@ -196,7 +196,7 @@ private:
 class Q_GUI_EXPORT QTextLine
 {
 public:
-    inline QTextLine() : i(0), eng(0) {}
+    inline QTextLine() : i(0), eng(nullptr) {}
     inline bool isValid() const { return eng; }
 
     QRectF rect() const;
@@ -241,7 +241,7 @@ public:
 
     int lineNumber() const { return i; }
 
-    void draw(QPainter *p, const QPointF &point, const QTextLayout::FormatRange *selection = 0) const;
+    void draw(QPainter *p, const QPointF &point, const QTextLayout::FormatRange *selection = nullptr) const;
 
 private:
     QTextLine(int line, QTextEngine *e) : i(line), eng(e) {}

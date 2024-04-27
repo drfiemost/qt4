@@ -171,7 +171,7 @@ public:
     QRectF boundingRect(const QString &string) const;
     QRectF boundingRect(QChar) const;
     QRectF boundingRect(const QRectF &r, int flags, const QString& string, int tabstops=0, int *tabarray=nullptr) const;
-    QSizeF size(int flags, const QString& str, int tabstops=0, int *tabarray=0) const;
+    QSizeF size(int flags, const QString& str, int tabstops=0, int *tabarray=nullptr) const;
 
     QRectF tightBoundingRect(const QString &text) const;
 

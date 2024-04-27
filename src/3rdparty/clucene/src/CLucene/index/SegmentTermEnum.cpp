@@ -30,9 +30,9 @@ CL_NS_DEF(index)
 		isIndex      = isi;
 		termInfo     = _CLNEW TermInfo();
 		indexPointer = 0;
-		buffer       = NULL;
+		buffer       = nullptr;
 		bufferLength = 0;
-		prev         = NULL;
+		prev         = nullptr;
 		formatM1SkipInterval = 0;
 
 		//Set isClone to false as the instance is not clone of another instance
@@ -89,17 +89,17 @@ CL_NS_DEF(index)
 		//Copy the postion from the clone
 		position     = clone.position;
 
-        if ( clone._term != NULL ){
+        if ( clone._term != nullptr ){
 			_term         = _CLNEW Term;
 			_term->set(clone._term,clone._term->text());
 		}else
-			_term = NULL;
+			_term = nullptr;
 		isIndex      = clone.isIndex;
 		termInfo     = _CLNEW TermInfo(clone.termInfo);
 		indexPointer = clone.indexPointer;
-		buffer       = clone.buffer==NULL?NULL:(TCHAR*)malloc(sizeof(TCHAR) * (clone.bufferLength+1));
+		buffer       = clone.buffer==nullptr?nullptr:(TCHAR*)malloc(sizeof(TCHAR) * (clone.bufferLength+1));
 		bufferLength = clone.bufferLength;
-		prev         = clone.prev==NULL?NULL:_CLNEW Term(clone.prev->field(),clone.prev->text(),false);
+		prev         = clone.prev==nullptr?nullptr:_CLNEW Term(clone.prev->field(),clone.prev->text(),false);
 		size         = clone.size;
 
       format       = clone.format;
@@ -110,7 +110,7 @@ CL_NS_DEF(index)
 		isClone      = true;
 
 		//Copy the contents of buffer of clone to the buffer of this instance
-		if ( clone.buffer != NULL )
+		if ( clone.buffer != nullptr )
 			memcpy(buffer,clone.buffer,bufferLength * sizeof(TCHAR));
 	}
 
@@ -156,8 +156,8 @@ CL_NS_DEF(index)
 		}
 
 		//delete the previous enumerated term
-		Term* tmp=NULL;
-		if ( prev != NULL ){
+		Term* tmp=nullptr;
+		if ( prev != nullptr ){
 			int32_t usage = prev->__cl_refcount;
 			if ( usage > 1 ){
 				_CLDECDELETE(prev); //todo: tune other places try and delete its term 
@@ -257,7 +257,7 @@ CL_NS_DEF(index)
 		position = p;
 
 		//finalize the current term
-		if ( _term == NULL || _term->__cl_refcount > 1 ){
+		if ( _term == nullptr || _term->__cl_refcount > 1 ){
 			_CLDECDELETE(_term);
 			//Get a pointer from t and increase the reference counter of t
 			_term = _CLNEW Term; //cannot use reference, because TermInfosReader uses non ref-counted array
@@ -347,7 +347,7 @@ CL_NS_DEF(index)
 		//Return a new Term	
 		int32_t field = input->readVInt();
 		const TCHAR* fieldname = fieldInfos->fieldName(field);
-		if ( reuse == NULL )
+		if ( reuse == nullptr )
 			reuse = _CLNEW Term;
 
 		reuse->set(fieldname, buffer, false);
@@ -372,10 +372,10 @@ CL_NS_DEF(index)
 		else
 			bufferLength = length+1;
 
-		bool copy = buffer==NULL;
+		bool copy = buffer==nullptr;
 
 		//Instantiate the new buffer + 1 is needed for terminator '\0'
-		if ( buffer == NULL )
+		if ( buffer == nullptr )
 			buffer = (TCHAR*)malloc(sizeof(TCHAR) * (bufferLength+1));
 		else
 			buffer = (TCHAR*)realloc(buffer, sizeof(TCHAR) * (bufferLength+1));

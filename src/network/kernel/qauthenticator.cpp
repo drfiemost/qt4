@@ -132,7 +132,7 @@ static QByteArray qNtlmPhase3(QAuthenticatorPrivate *ctx, const QByteArray& phas
   Constructs an empty authentication object
 */
 QAuthenticator::QAuthenticator()
-    : d(0)
+    : d(nullptr)
 {
 }
 
@@ -149,7 +149,7 @@ QAuthenticator::~QAuthenticator()
     Constructs a copy of \a other.
 */
 QAuthenticator::QAuthenticator(const QAuthenticator &other)
-    : d(0)
+    : d(nullptr)
 {
     if (other.d)
         *this = other;
@@ -178,7 +178,7 @@ QAuthenticator &QAuthenticator::operator=(const QAuthenticator &other)
         d->options = other.d->options;
     } else if (d->phase == QAuthenticatorPrivate::Start) {
         delete d;
-        d = 0;
+        d = nullptr;
     }
     return *this;
 }
@@ -429,7 +429,7 @@ void QAuthenticatorPrivate::parseHttpResponse(const QList<QPair<QByteArray, QByt
 QByteArray QAuthenticatorPrivate::calculateResponse(const QByteArray &requestMethod, const QByteArray &path)
 {
     QByteArray response;
-    const char *methodString = 0;
+    const char *methodString = nullptr;
     switch(method) {
     case QAuthenticatorPrivate::None:
         methodString = "";

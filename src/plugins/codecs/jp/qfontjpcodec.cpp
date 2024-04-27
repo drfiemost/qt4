@@ -97,7 +97,7 @@ QFontJis0208Codec::QFontJis0208Codec()
 QFontJis0208Codec::~QFontJis0208Codec()
 {
     delete convJP;
-    convJP = 0;
+    convJP = nullptr;
 }
 
 

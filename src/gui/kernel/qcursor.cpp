@@ -308,7 +308,7 @@ QDataStream &operator>>(QDataStream &s, QCursor &c)
 */
 
 QCursor::QCursor(const QPixmap &pixmap, int hotX, int hotY)
-    : d(0)
+    : d(nullptr)
 {
     QImage img = pixmap.toImage().convertToFormat(QImage::Format_Indexed8, Qt::ThresholdDither|Qt::AvoidDither);
     QBitmap bm = QBitmap::fromImage(img, Qt::ThresholdDither|Qt::AvoidDither);
@@ -367,7 +367,7 @@ QCursor::QCursor(const QPixmap &pixmap, int hotX, int hotY)
 */
 
 QCursor::QCursor(const QBitmap &bitmap, const QBitmap &mask, int hotX, int hotY)
-    : d(0)
+    : d(nullptr)
 {
     d = QCursorData::setBitmap(bitmap, mask, hotX, hotY);
 }
@@ -385,7 +385,7 @@ void QCursorData::cleanup()
         // In case someone has a static QCursor defined with this shape
         if (!qt_cursorTable[shape]->ref.deref())
             delete qt_cursorTable[shape];
-        qt_cursorTable[shape] = 0;
+        qt_cursorTable[shape] = nullptr;
     }
     QCursorData::initialized = false;
 }
@@ -411,7 +411,7 @@ QCursor::QCursor()
 {
     if (!QCursorData::initialized) {
         if (QApplication::startingUp()) {
-            d = 0;
+            d = nullptr;
             return;
         }
         QCursorData::initialize();
@@ -429,7 +429,7 @@ QCursor::QCursor()
     \sa setShape()
 */
 QCursor::QCursor(Qt::CursorShape shape)
-    : d(0)
+    : d(nullptr)
 {
     if (!QCursorData::initialized)
         QCursorData::initialize();
@@ -461,7 +461,7 @@ void QCursor::setShape(Qt::CursorShape shape)
 {
     if (!QCursorData::initialized)
         QCursorData::initialize();
-    QCursorData *c = uint(shape) <= Qt::LastCursor ? qt_cursorTable[shape] : 0;
+    QCursorData *c = uint(shape) <= Qt::LastCursor ? qt_cursorTable[shape] : nullptr;
     if (!c)
         c = qt_cursorTable[0];
     c->ref.ref();

@@ -77,7 +77,7 @@ QBearerEngine *QGenericEnginePlugin::create(const QString &key) const
     if (key == QLatin1String("generic"))
         return new QGenericEngine;
     else
-        return 0;
+        return nullptr;
 }
 
 Q_EXPORT_STATIC_PLUGIN(QGenericEnginePlugin)

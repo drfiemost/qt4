@@ -205,7 +205,7 @@ QT_BEGIN_NAMESPACE
     \sa isValid()
 */
 QNetworkConfiguration::QNetworkConfiguration()
-    : d(0)
+    : d(nullptr)
 {
 }
 

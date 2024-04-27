@@ -75,7 +75,7 @@ class QDESIGNER_SHARED_EXPORT ZoomMenu : public QObject {
     Q_DISABLE_COPY(ZoomMenu)
 
 public:
-    ZoomMenu(QObject *parent = 0);
+    ZoomMenu(QObject *parent = nullptr);
     void addActions(QMenu *m);
 
     int zoom() const;
@@ -107,7 +107,7 @@ class QDESIGNER_SHARED_EXPORT ZoomView : public QGraphicsView
     Q_OBJECT
     Q_DISABLE_COPY(ZoomView)
 public:
-    ZoomView(QWidget *parent = 0);
+    ZoomView(QWidget *parent = nullptr);
 
     /*  Zoom in percent (for easily implementing menus) and qreal zoomFactor
      * in sync */
@@ -154,7 +154,7 @@ private:
 class  QDESIGNER_SHARED_EXPORT ZoomProxyWidget : public QGraphicsProxyWidget {
     Q_DISABLE_COPY(ZoomProxyWidget)
 public:
-    explicit ZoomProxyWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+    explicit ZoomProxyWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr);
 
 protected:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -177,8 +177,8 @@ class QDESIGNER_SHARED_EXPORT ZoomWidget : public ZoomView
     Q_DISABLE_COPY(ZoomWidget)
 
 public:
-    ZoomWidget(QWidget *parent = 0);
-    void setWidget(QWidget *w, Qt::WindowFlags wFlags = 0);
+    ZoomWidget(QWidget *parent = nullptr);
+    void setWidget(QWidget *w, Qt::WindowFlags wFlags = nullptr);
 
     const QGraphicsProxyWidget *proxy() const { return m_proxy; }
     QGraphicsProxyWidget *proxy() { return m_proxy; }
@@ -210,8 +210,8 @@ protected:
 
 private:
     // Factory function for QGraphicsProxyWidgets which can be overwritten. Default creates a ZoomProxyWidget
-    virtual QGraphicsProxyWidget *createProxyWidget(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0) const;
-    QSize widgetSizeToViewSize(const QSize &s, bool *ptrToValid = 0) const;
+    virtual QGraphicsProxyWidget *createProxyWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr) const;
+    QSize widgetSizeToViewSize(const QSize &s, bool *ptrToValid = nullptr) const;
 
     void resizeToWidgetSize();
     QSize viewPortMargin() const;

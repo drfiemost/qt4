@@ -771,7 +771,7 @@ void WriteInitialization::acceptWidget(DomWidget *node)
         }
 
         const DomProperty *plabel = attributes.value(QLatin1String("label"));
-        DomString *plabelString = plabel ? plabel->elementString() : 0;
+        DomString *plabelString = plabel ? plabel->elementString() : nullptr;
 
         m_output << m_indent << parentWidget << "->addItem(" << varName << icon << ", " << noTrCall(plabelString, pageDefaultString) << ");\n";
 
@@ -792,7 +792,7 @@ void WriteInitialization::acceptWidget(DomWidget *node)
         }
 
         const DomProperty *ptitle = attributes.value(QLatin1String("title"));
-        DomString *ptitleString = ptitle ? ptitle->elementString() : 0;
+        DomString *ptitleString = ptitle ? ptitle->elementString() : nullptr;
 
         m_output << m_indent << parentWidget << "->addTab(" << varName << icon << ", " << "QString());\n";
 
@@ -813,7 +813,7 @@ void WriteInitialization::acceptWidget(DomWidget *node)
 #endif // QT_NO_WHATSTHIS
     } else if (m_uic->customWidgetsInfo()->extends(parentClass, QLatin1String("Q3Wizard"))) {
         const DomProperty *ptitle = attributes.value(QLatin1String("title"));
-        DomString *ptitleString = ptitle ? ptitle->elementString() : 0;
+        DomString *ptitleString = ptitle ? ptitle->elementString() : nullptr;
 
         m_output << m_indent << parentWidget << "->addPage(" << varName << ", " << noTrCall(ptitleString, pageDefaultString) << ");\n";
 
@@ -906,7 +906,7 @@ void WriteInitialization::addButtonGroup(const DomWidget *buttonNode, const QStr
     const DomButtonGroup *group = m_driver->findButtonGroup(attributeName);
     // Legacy feature: Create missing groups on the fly as the UIC button group feature
     // was present before the actual Designer support (4.5)
-    const bool createGroupOnTheFly = group == 0;
+    const bool createGroupOnTheFly = group == nullptr;
     if (createGroupOnTheFly) {
         DomButtonGroup *newGroup = new DomButtonGroup;
         newGroup->setAttributeName(attributeName);
@@ -1541,7 +1541,7 @@ void WriteInitialization::writeProperties(const QString &varName,
         }
 
         if (propertyValue.size()) {
-            const char* defineC = 0;
+            const char* defineC = nullptr;
             if (propertyName == QLatin1String("toolTip"))
                 defineC = toolTipDefineC;
             else if (propertyName == QLatin1String("whatsThis"))
@@ -2030,11 +2030,11 @@ void WriteInitialization::initializeQ3ListView(DomWidget *w)
                    << varName << "->header()->count() - 1, " << pixCall(pixmap) << ", " << txt << ");\n";
         }
 
-        if (clickable != 0) {
+        if (clickable != nullptr) {
             m_output << m_indent << varName << "->header()->setClickEnabled(" << clickable->elementBool() << ", " << varName << "->header()->count() - 1);\n";
         }
 
-        if (resizable != 0) {
+        if (resizable != nullptr) {
             m_output << m_indent << varName << "->header()->setResizeEnabled(" << resizable->elementBool() << ", " << varName << "->header()->count() - 1);\n";
         }
     }
@@ -2236,7 +2236,7 @@ void WriteInitialization::initializeComboBox(DomWidget *w)
         const DomProperty *text = properties.value(QLatin1String("text"));
         const DomProperty *pixmap = properties.value(QLatin1String("icon"));
         bool needsTr = needsTranslation(text->elementString());
-        if (pixmap != 0 || (i > 0 && translatable != needsTr)) {
+        if (pixmap != nullptr || (i > 0 && translatable != needsTr)) {
             makeStringListCall = false;
             break;
         }
@@ -2800,7 +2800,7 @@ DomWidget *WriteInitialization::findWidget(QLatin1String widgetClass)
             return widget;
     }
 
-    return 0;
+    return nullptr;
 }
 
 void WriteInitialization::acceptImage(DomImage *image)
@@ -2884,7 +2884,7 @@ static void generateMultiDirectiveEnd(QTextStream &outputStream, const QSet<QStr
 
 WriteInitialization::Item::Item(const QString &itemClassName, const QString &indent, QTextStream &setupUiStream, QTextStream &retranslateUiStream, Driver *driver)
     :
-    m_parent(0),
+    m_parent(nullptr),
     m_itemClassName(itemClassName),
     m_indent(indent),
     m_setupUiStream(setupUiStream),

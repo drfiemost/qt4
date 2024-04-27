@@ -53,7 +53,7 @@ class HelpWindow : public QWidget
     Q_OBJECT
 
 public:
-    HelpWindow(QWidget *parent = 0);
+    HelpWindow(QWidget *parent = nullptr);
     void setHelp(const QString &topic);
 
 private:

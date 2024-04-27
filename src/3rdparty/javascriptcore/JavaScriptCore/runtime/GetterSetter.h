@@ -37,8 +37,8 @@ namespace JSC {
     public:
         GetterSetter(ExecState* exec)
             : JSCell(exec->globalData().getterSetterStructure.get())
-            , m_getter(0)
-            , m_setter(0)
+            , m_getter(nullptr)
+            , m_setter(nullptr)
         {
         }
 

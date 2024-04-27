@@ -337,7 +337,7 @@ void QInputContext::widgetDestroyed(QWidget *widget)
 {
     Q_D(QInputContext);
     if (widget == d->focusWidget)
-        setFocusWidget(0);
+        setFocusWidget(nullptr);
 }
 
 /*!

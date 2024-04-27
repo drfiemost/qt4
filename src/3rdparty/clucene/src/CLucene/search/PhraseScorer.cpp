@@ -40,17 +40,17 @@ CL_NS_DEF(search)
 		this->value = weight->getValue();
 
 		//reset internal pointers
-		first   = NULL;
-		last    = NULL;
+		first   = nullptr;
+		last    = nullptr;
 
 		//use pq to build a sorted list of PhrasePositions
 		int32_t i = 0;
-		while(tps[i] != NULL){
+		while(tps[i] != nullptr){
 			PhrasePositions *pp = _CLNEW PhrasePositions(tps[i], positions[i]);
 			CND_CONDITION(pp != NULL,"Could not allocate memory for pp");
 
 			//Store PhrasePos into the PhrasePos pq
-			if (last != NULL) {			  // add next to end of list
+			if (last != nullptr) {			  // add next to end of list
 				last->_next = pp;
 			} else
 				first = pp;
@@ -113,7 +113,7 @@ CL_NS_DEF(search)
 	}
 
 	bool PhraseScorer::skipTo(int32_t target) {
-		for (PhrasePositions* pp = first; more && pp != NULL; pp = pp->_next) {
+		for (PhrasePositions* pp = first; more && pp != nullptr; pp = pp->_next) {
 			more = pp->skipTo(target);
 		}
 		if (more)
@@ -122,7 +122,7 @@ CL_NS_DEF(search)
 	}
 
 	void PhraseScorer::init() {
-		for (PhrasePositions* pp = first; more && pp != NULL; pp = pp->_next) 
+		for (PhrasePositions* pp = first; more && pp != nullptr; pp = pp->_next) 
 			more = pp->next();
 		if(more)
 			sort();
@@ -130,7 +130,7 @@ CL_NS_DEF(search)
 	  
 	void PhraseScorer::sort() {
 		pq->clear();
-		for (PhrasePositions* pp = first; pp != NULL; pp = pp->_next)
+		for (PhrasePositions* pp = first; pp != nullptr; pp = pp->_next)
 			pq->put(pp);
 		pqToList();
 	}
@@ -149,9 +149,9 @@ CL_NS_DEF(search)
 
 		CND_PRECONDITION(pq != NULL,"pq is NULL");
 		
-		last = first = NULL;
+		last = first = nullptr;
 
-		PhrasePositions* PhrasePos = NULL;
+		PhrasePositions* PhrasePos = nullptr;
 
 		//As long pq is not empty
 		while (pq->top() != NULL){
@@ -159,7 +159,7 @@ CL_NS_DEF(search)
 			PhrasePos = pq->pop();
 
 			// add next to end of list
-			if (last != NULL) {
+			if (last != nullptr) {
 				last->_next = PhrasePos;
 			} else {
 				first = PhrasePos;
@@ -168,7 +168,7 @@ CL_NS_DEF(search)
 			//Let last point to the new last PhrasePositions instance just added
 			last = PhrasePos;
 			//Reset the next of last to NULL
-			last->_next = NULL;
+			last->_next = nullptr;
 		}
 
 		//Check to see that pq is empty now
@@ -190,7 +190,7 @@ CL_NS_DEF(search)
 			last->_next = first;
 			last = first;
 			first = first->_next;
-			last->_next = NULL;
+			last->_next = nullptr;
 		}
 	}
 

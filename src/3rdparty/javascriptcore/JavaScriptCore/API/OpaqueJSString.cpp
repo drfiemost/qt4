@@ -36,7 +36,7 @@ PassRefPtr<OpaqueJSString> OpaqueJSString::create(const UString& ustring)
 {
     if (!ustring.isNull())
         return adoptRef(new OpaqueJSString(ustring.data(), ustring.size()));
-    return 0;
+    return nullptr;
 }
 
 UString OpaqueJSString::ustring() const
@@ -49,7 +49,7 @@ UString OpaqueJSString::ustring() const
 Identifier OpaqueJSString::identifier(JSGlobalData* globalData) const
 {
     if (!m_characters)
-        return Identifier(globalData, static_cast<const char*>(0));
+        return Identifier(globalData, static_cast<const char*>(nullptr));
 
     return Identifier(globalData, m_characters, m_length);
 }

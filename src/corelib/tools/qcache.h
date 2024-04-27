@@ -75,14 +75,14 @@ class QCache
     inline T *relink(const Key &key) {
         typename QHash<Key, Node>::iterator i = hash.find(key);
         if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd())
-            return 0;
+            return nullptr;
 
         Node &n = *i;
         if (f != &n) {
             if (n.p) n.p->n = n.n;
             if (n.n) n.n->p = n.p;
             if (l == &n) l = n.p;
-            n.p = 0;
+            n.p = nullptr;
             n.n = f;
             f->p = &n;
             f = &n;

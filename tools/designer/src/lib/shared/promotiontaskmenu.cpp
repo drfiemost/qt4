@@ -81,7 +81,7 @@ PromotionTaskMenu::PromotionTaskMenu(QWidget *widget,Mode mode, QObject *parent)
     QObject(parent),
     m_mode(mode),
     m_widget(widget),
-    m_promotionMapper(0),
+    m_promotionMapper(nullptr),
     m_globalEditAction(new QAction(tr("Promoted widgets..."), this)),
     m_EditPromoteToAction(new QAction(tr("Promote to ..."), this)),
     m_EditSignalsSlotsAction(new QAction(tr("Change signals/slots..."), this)),
@@ -270,7 +270,7 @@ void PromotionTaskMenu::slotEditPromoteTo()
     Q_ASSERT(QDesignerPromotionDialog::baseClassNames(core->promotion()).contains(base_class_name));
     // Show over promotable widget
     QString promoteToClassName;
-    QDialog *promotionEditor = 0;
+    QDialog *promotionEditor = nullptr;
     if (QDesignerLanguageExtension *lang = languageExtension(core))
         promotionEditor = lang->createPromotionDialog(core, base_class_name, &promoteToClassName, fw);
     if (!promotionEditor)
@@ -340,7 +340,7 @@ QDesignerFormWindowInterface *PromotionTaskMenu::formWindow() const
 void PromotionTaskMenu::editPromotedWidgets(QDesignerFormEditorInterface *core, QWidget* parent) {
     QDesignerLanguageExtension *lang = languageExtension(core);
     // Show over non-promotable widget
-    QDialog *promotionEditor =  0;
+    QDialog *promotionEditor =  nullptr;
     if (lang)
         lang->createPromotionDialog(core, parent);
     if (!promotionEditor)

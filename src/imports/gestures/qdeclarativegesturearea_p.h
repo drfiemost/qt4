@@ -67,7 +67,7 @@ class QDeclarativeGestureArea : public QDeclarativeItem
     Q_PROPERTY(QGesture *gesture READ gesture)
 
 public:
-    QDeclarativeGestureArea(QDeclarativeItem *parent=0);
+    QDeclarativeGestureArea(QDeclarativeItem *parent=nullptr);
     ~QDeclarativeGestureArea();
 
     QGesture *gesture() const;

@@ -330,7 +330,7 @@ Generator *Generator::generatorForFormat(const QString& format)
             return *g;
         ++g;
     }
-    return 0;
+    return nullptr;
 }
 
 void Generator::startText(const Node * /* relative */,
@@ -365,7 +365,7 @@ bool Generator::generateText(const Text& text,
                              CodeMarker *marker)
 {
     bool result = false;
-    if (text.firstAtom() != 0) {
+    if (text.firstAtom() != nullptr) {
         int numAtoms = 0;
         startText(relative, marker);
         generateAtomList(text.firstAtom(),
@@ -392,7 +392,7 @@ bool Generator::generateQmlText(const Text& text,
     const Atom* atom = text.firstAtom();
     bool result = false;
 
-    if (atom != 0) {
+    if (atom != nullptr) {
         startText(relative, marker);
         while (atom) {
             if (atom->type() != Atom::QmlText)
@@ -436,7 +436,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
     else {
         if (node->type() == Node::Function) {
             const FunctionNode *func = static_cast<const FunctionNode *>(node);
-            if (func->reimplementedFrom() != 0)
+            if (func->reimplementedFrom() != nullptr)
                 generateReimplementedFrom(func, marker);
         }
 
@@ -539,7 +539,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
               be implemented at some point.
             */
             if (func->status() > Node::Obsolete && func->returnType() == "bool"
-                    && func->reimplementedFrom() == 0 && !func->isOverload()) {
+                    && func->reimplementedFrom() == nullptr && !func->isOverload()) {
                 QString body = func->doc().body().toString();
                 if (!body.contains("return", Qt::CaseInsensitive))
                     node->doc().location().warning(tr("Undocumented return value"));
@@ -836,7 +836,7 @@ void Generator::unknownAtom(const Atom *atom)
 
 bool Generator::matchAhead(const Atom *atom, Atom::Type expectedAtomType)
 {
-    return atom->next() != 0 && atom->next()->type() == expectedAtomType;
+    return atom->next() != nullptr && atom->next()->type() == expectedAtomType;
 }
 
 void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
@@ -845,7 +845,7 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
         const FunctionNode *func = static_cast<const FunctionNode *>(node);
         if (func->overloadNumber() == 1) {
             QString alternateName;
-            const FunctionNode *alternateFunc = 0;
+            const FunctionNode *alternateFunc = nullptr;
 
             if (func->name().startsWith("set") && func->name().size() >= 4) {
                 alternateName = func->name()[3].toLower();
@@ -1147,7 +1147,7 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
 void Generator::generateReimplementedFrom(const FunctionNode *func,
                                           CodeMarker *marker)
 {
-    if (func->reimplementedFrom() != 0) {
+    if (func->reimplementedFrom() != nullptr) {
         const FunctionNode *from = func->reimplementedFrom();
         if (from->access() != Node::Private &&
             from->parent()->access() != Node::Private) {
@@ -1177,7 +1177,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                     generate && rightFormat,
                                     numAtoms);
             if (!atom)
-                return 0;
+                return nullptr;
 
             if (atom->type() == Atom::FormatElse) {
                 ++numAtoms;
@@ -1187,7 +1187,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                                         generate && !rightFormat,
                                         numAtoms);
                 if (!atom)
-                    return 0;
+                    return nullptr;
             }
 
             if (atom->type() == Atom::FormatEndif) {
@@ -1218,7 +1218,7 @@ const Atom *Generator::generateAtomList(const Atom *atom,
                 atom = atom->next();
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void Generator::appendFullName(Text& text,
@@ -1227,7 +1227,7 @@ void Generator::appendFullName(Text& text,
                                CodeMarker *marker,
                                const Node *actualNode)
 {
-    if (actualNode == 0)
+    if (actualNode == nullptr)
         actualNode = apparentNode;
     text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
@@ -1240,7 +1240,7 @@ void Generator::appendFullName(Text& text,
                                const QString& fullName,
                                const Node *actualNode)
 {
-    if (actualNode == 0)
+    if (actualNode == nullptr)
         actualNode = apparentNode;
     text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
@@ -1325,7 +1325,7 @@ int Generator::skipAtoms(const Atom *atom, Atom::Type type) const
 {
     int skipAhead = 0;
     atom = atom->next();
-    while (atom != 0 && atom->type() != type) {
+    while (atom != nullptr && atom->type() != type) {
         skipAhead++;
         atom = atom->next();
     }

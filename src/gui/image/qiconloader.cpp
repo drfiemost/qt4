@@ -444,7 +444,7 @@ QIconLoaderEngineEntry *QIconLoaderEngine::entryForSize(const QSize &size)
 
     // Find the minimum distance icon
     int minimalSize = INT_MAX;
-    QIconLoaderEngineEntry *closestMatch = 0;
+    QIconLoaderEngineEntry *closestMatch = nullptr;
     for (int i = 0; i < m_entries.count(); ++i) {
         QIconLoaderEngineEntry *entry = m_entries.at(i);
         int distance = directorySizeDistance(entry->dir, iconsize);

@@ -428,7 +428,7 @@ static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, int offset, int
                                 *p++ = tmp >> 4;
                             }
                             if ((((c & 3) + 1) & 2) == 2)
-                                d->getChar(0);        // align on word boundary
+                                d->getChar(nullptr);        // align on word boundary
                             x += c;
                     }
                 } else {                        // encoded mode
@@ -508,7 +508,7 @@ static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, int offset, int
                             if (d->read((char *)p, b) != b)
                                 return false;
                             if ((b & 1) == 1)
-                                d->getChar(0);        // align on word boundary
+                                d->getChar(nullptr);        // align on word boundary
                             x += b;
                             p += b;
                     }

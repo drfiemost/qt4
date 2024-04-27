@@ -32,7 +32,7 @@ using namespace WTF;
 
 namespace JSC {
 
-const ClassInfo DateInstance::info = {"Date", 0, 0, 0};
+const ClassInfo DateInstance::info = {"Date", nullptr, nullptr, nullptr};
 
 DateInstance::DateInstance(ExecState* exec, NonNullPassRefPtr<Structure> structure)
     : JSWrapperObject(structure)
@@ -50,7 +50,7 @@ const GregorianDateTime* DateInstance::calculateGregorianDateTime(ExecState* exe
 {
     double milli = internalNumber();
     if (isnan(milli))
-        return 0;
+        return nullptr;
 
     if (!m_data)
         m_data = exec->globalData().dateInstanceCache.add(milli);
@@ -66,7 +66,7 @@ const GregorianDateTime* DateInstance::calculateGregorianDateTimeUTC(ExecState* 
 {
     double milli = internalNumber();
     if (isnan(milli))
-        return 0;
+        return nullptr;
 
     if (!m_data)
         m_data = exec->globalData().dateInstanceCache.add(milli);

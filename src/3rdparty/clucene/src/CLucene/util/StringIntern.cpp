@@ -38,8 +38,8 @@ CL_NS_DEF(util)
     }
 
 	const TCHAR* CLStringIntern::intern(const TCHAR* str CL_FILELINEPARAM){
-		if ( str == NULL )
-			return NULL;
+		if ( str == nullptr )
+			return nullptr;
 		if ( str[0] == 0 )
 			return LUCENE_BLANK_STRING;
 
@@ -61,7 +61,7 @@ CL_NS_DEF(util)
 	}
 
 	bool CLStringIntern::unintern(const TCHAR* str){
-		if ( str == NULL )
+		if ( str == nullptr )
 			return false;
 		if ( str[0] == 0 )
 			return false;
@@ -80,8 +80,8 @@ CL_NS_DEF(util)
 	}
 	
 	const char* CLStringIntern::internA(const char* str CL_FILELINEPARAM){
-		if ( str == NULL )
-			return NULL;
+		if ( str == nullptr )
+			return nullptr;
 		if ( str[0] == 0 )
 			return _LUCENE_BLANK_ASTRING;
 
@@ -99,7 +99,7 @@ CL_NS_DEF(util)
 	}
 	
 	bool CLStringIntern::uninternA(const char* str){
-		if ( str == NULL )
+		if ( str == nullptr )
 			return false;
 		if ( str[0] == 0 )
 			return false;

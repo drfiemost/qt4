@@ -30,7 +30,7 @@ CL_NS_DEF(index)
       skipInterval=0;
       numSkips=0;
       skipCount=0;
-      skipStream=NULL;
+      skipStream=nullptr;
       skipDoc=0;
       freqPointer=0;
       proxPointer=0;
@@ -50,7 +50,7 @@ CL_NS_DEF(index)
   }
 
   TermPositions* SegmentTermDocs::__asTermPositions(){
-	  return NULL;
+	  return nullptr;
   }
 
   void SegmentTermDocs::seek(Term* term) {
@@ -60,7 +60,7 @@ CL_NS_DEF(index)
   }
 
   void SegmentTermDocs::seek(TermEnum* termEnum){
-    TermInfo* ti=NULL;
+    TermInfo* ti=nullptr;
     
     // use comparison of fieldinfos to verify that termEnum belongs to the same segment as this SegmentTermDocs
 	if ( termEnum->getObjectName() == SegmentTermEnum::getClassName() ){
@@ -76,7 +76,7 @@ CL_NS_DEF(index)
   }
   void SegmentTermDocs::seek(const TermInfo* ti) {
      count = 0;
-    if (ti == NULL) {
+    if (ti == nullptr) {
       df = 0;
     } else {
       df = ti->docFreq;
@@ -95,11 +95,11 @@ CL_NS_DEF(index)
   void SegmentTermDocs::close() {
 
       //Check if freqStream still exists
-	  if (freqStream != NULL){
+	  if (freqStream != nullptr){
 		freqStream->close(); //todo: items like these can probably be delete, because deleting the object also closes it...do everywhere
 		_CLDELETE( freqStream );
 	  }
-     if (skipStream != NULL){
+     if (skipStream != nullptr){
 		skipStream->close();
 		_CLDELETE( skipStream );
      }
@@ -127,7 +127,7 @@ bool SegmentTermDocs::next()
             _freq = freqStream->readVInt(); // else read _freq
         count++;
 
-        if (deletedDocs == NULL || (_doc >= 0 && !deletedDocs->get(_doc)))
+        if (deletedDocs == nullptr || (_doc >= 0 && !deletedDocs->get(_doc)))
             break;
         skippingDoc();
     }
@@ -149,7 +149,7 @@ int32_t SegmentTermDocs::read(int32_t* docs, int32_t* freqs, int32_t length)
             _freq = freqStream->readVInt(); // else read _freq
         count++;
 
-        if (deletedDocs == NULL || (_doc >= 0 && !deletedDocs->get(_doc))) {
+        if (deletedDocs == nullptr || (_doc >= 0 && !deletedDocs->get(_doc))) {
             docs[i] = _doc;
             freqs[i] = _freq;
             i++;
@@ -160,7 +160,7 @@ int32_t SegmentTermDocs::read(int32_t* docs, int32_t* freqs, int32_t length)
 
   bool SegmentTermDocs::skipTo(const int32_t target){
     if (df >= skipInterval) {                      // optimized case
-      if (skipStream == NULL)
+      if (skipStream == nullptr)
          skipStream = freqStream->clone(); // lazily clone
 
       if (!haveSkipped) {                          // lazily seek skip stream

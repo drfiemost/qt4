@@ -96,7 +96,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTextEdit : public QDeclarativeImplicitSizePa
     Q_PROPERTY(bool inputMethodComposing READ isInputMethodComposing NOTIFY inputMethodComposingChanged REVISION 1)
 
 public:
-    QDeclarativeTextEdit(QDeclarativeItem *parent=0);
+    QDeclarativeTextEdit(QDeclarativeItem *parent=nullptr);
 
     enum HAlignment {
         AlignLeft = Qt::AlignLeft,

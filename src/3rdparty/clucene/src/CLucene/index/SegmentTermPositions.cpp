@@ -44,7 +44,7 @@ TermPositions* SegmentTermPositions::__asTermPositions(){
 
 void SegmentTermPositions::seek(const TermInfo* ti) {
     SegmentTermDocs::seek(ti);
-    if (ti != NULL)
+    if (ti != nullptr)
         proxStream->seek(ti->proxPointer);
     proxCount = 0;
 }

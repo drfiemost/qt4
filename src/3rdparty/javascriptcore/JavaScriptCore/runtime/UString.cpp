@@ -79,7 +79,7 @@ CString::CString(const CString& b)
         m_data = new char[m_length + 1];
         memcpy(m_data, b.m_data, m_length + 1);
     } else
-        m_data = 0;
+        m_data = nullptr;
 }
 
 CString::~CString()
@@ -135,7 +135,7 @@ CString& CString::operator=(const CString& str)
         m_data = new char[m_length + 1];
         memcpy(m_data, str.m_data, m_length + 1);
     } else
-        m_data = 0;
+        m_data = nullptr;
 
     return *this;
 }
@@ -155,7 +155,7 @@ UString* UString::nullUString;
 
 void initializeUString()
 {
-    UStringImpl::s_null = new UStringImpl(0, 0, UStringImpl::ConstructStaticString);
+    UStringImpl::s_null = new UStringImpl(nullptr, 0, UStringImpl::ConstructStaticString);
     UStringImpl::s_empty = new UStringImpl(&sharedEmptyChar, 0, UStringImpl::ConstructStaticString);
     UString::nullUString = new UString;
 }
@@ -436,7 +436,7 @@ bool UString::getCString(CStringBuffer& buffer) const
 
 char* UString::ascii() const
 {
-    static char* asciiBuffer = 0;
+    static char* asciiBuffer = nullptr;
 
     int length = size();
     int neededSize = length + 1;
@@ -469,7 +469,7 @@ UString& UString::operator=(const char* c)
     }
 
     int l = static_cast<int>(strlen(c));
-    UChar* d = 0;
+    UChar* d = nullptr;
     m_rep = Rep::tryCreateUninitialized(l, d);
     if (m_rep) {
         for (int i = 0; i < l; i++)
@@ -782,7 +782,7 @@ UString UString::substr(int pos, int len) const
 
 bool operator==(const UString& s1, const char *s2)
 {
-    if (s2 == 0)
+    if (s2 == nullptr)
         return s1.isEmpty();
 
     const UChar* u = s1.data();

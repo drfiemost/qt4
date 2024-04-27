@@ -81,7 +81,7 @@ AnyURI::Ptr AnyURI::fromLexical(const QString &value)
     /* The error code doesn't matter, because we never raise error. */
     const QUrl retval(toQUrl<ReportContext::FORG0001>(value,
                                                       DynamicContext::Ptr(),
-                                                      0,
+                                                      nullptr,
                                                       &isValid,
                                                       false));
     if(isValid)
@@ -96,7 +96,7 @@ bool AnyURI::isValid(const QString &candidate)
     /* The error code doesn't matter, because we never raise error. */
     toQUrl<ReportContext::FORG0001>(candidate,
                                     ReportContext::Ptr(),
-                                    0,
+                                    nullptr,
                                     &isOk,
                                     false);
     return isOk;

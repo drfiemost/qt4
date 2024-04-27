@@ -61,7 +61,7 @@ public:
     ~QPlastiqueStyle();
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
-                       QPainter *painter, const QWidget *widget = 0) const;
+                       QPainter *painter, const QWidget *widget = nullptr) const;
     void drawControl(ControlElement element, const QStyleOption *option,
                      QPainter *painter, const QWidget *widget) const;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
@@ -73,15 +73,15 @@ public:
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt,
                          SubControl sc, const QWidget *widget) const;
 
-    int styleHint(StyleHint hint, const QStyleOption *option = 0, const QWidget *widget = 0,
-                  QStyleHintReturn *returnData = 0) const;
+    int styleHint(StyleHint hint, const QStyleOption *option = nullptr, const QWidget *widget = nullptr,
+                  QStyleHintReturn *returnData = nullptr) const;
     SubControl hitTestComplexControl(ComplexControl control, const QStyleOptionComplex *option,
-                                     const QPoint &pos, const QWidget *widget = 0) const;
+                                     const QPoint &pos, const QWidget *widget = nullptr) const;
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0, const QWidget *widget = 0) const;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
 
     QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                           const QWidget *widget = 0) const;
+                           const QWidget *widget = nullptr) const;
     
     void polish(QWidget *widget);
     void polish(QApplication *app);
@@ -92,13 +92,13 @@ public:
     QPalette standardPalette() const;
 
 protected Q_SLOTS:
-    QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = 0,
-                                     const QWidget *widget = 0) const;
+    QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = nullptr,
+                                     const QWidget *widget = nullptr) const;
     int layoutSpacingImplementation(QSizePolicy::ControlType control1,
                                     QSizePolicy::ControlType control2, 
                                     Qt::Orientation orientation,
-                                    const QStyleOption *option = 0, 
-                                    const QWidget *widget = 0) const;
+                                    const QStyleOption *option = nullptr, 
+                                    const QWidget *widget = nullptr) const;
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event);

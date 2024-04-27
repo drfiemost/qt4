@@ -103,15 +103,15 @@ private:
         , simpleSearch(true)
         , searchCompleter(new CompleterModel(this), this)
     {
-        searchButton = 0;
-        advancedSearchWidget = 0;
-        showHideAdvancedSearchButton = 0;
-        defaultQuery = 0;
-        exactQuery = 0;
-        similarQuery = 0;
-        withoutQuery = 0;
-        allQuery = 0;
-        atLeastQuery = 0;
+        searchButton = nullptr;
+        advancedSearchWidget = nullptr;
+        showHideAdvancedSearchButton = nullptr;
+        defaultQuery = nullptr;
+        exactQuery = nullptr;
+        similarQuery = nullptr;
+        withoutQuery = nullptr;
+        allQuery = nullptr;
+        atLeastQuery = nullptr;
     }
 
     ~QHelpSearchQueryWidgetPrivate()
@@ -244,7 +244,7 @@ private:
             default:
                 Q_ASSERT(0);
         }
-        return 0;
+        return nullptr;
     }
 
     void enableOrDisableToolButtons()

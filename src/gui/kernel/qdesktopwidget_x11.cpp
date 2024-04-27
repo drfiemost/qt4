@@ -70,7 +70,7 @@ public:
 };
 
 QSingleDesktopWidget::QSingleDesktopWidget()
-    : QWidget(0, Qt::Desktop)
+    : QWidget(nullptr, Qt::Desktop)
 {
 }
 
@@ -79,7 +79,7 @@ QSingleDesktopWidget::~QSingleDesktopWidget()
     const QObjectList &childList = children();
     for (int i = childList.size(); i > 0 ;) {
         --i;
-        childList.at(i)->setParent(0);
+        childList.at(i)->setParent(nullptr);
     }
 }
 
@@ -103,7 +103,7 @@ public:
 
 QDesktopWidgetPrivate::QDesktopWidgetPrivate()
     : use_xinerama(false), defaultScreen(0), screenCount(1),
-      screens(0), rects(0), workareas(0)
+      screens(nullptr), rects(nullptr), workareas(nullptr)
 {
 }
 
@@ -113,7 +113,7 @@ QDesktopWidgetPrivate::~QDesktopWidgetPrivate()
         for (int i = 0; i < screenCount; ++i) {
             if (i == defaultScreen) continue;
             delete screens[i];
-            screens[i] = 0;
+            screens[i] = nullptr;
         }
 
         free (screens);
@@ -217,7 +217,7 @@ void QDesktopWidgetPrivate::init()
 // the QDesktopWidget itself will be created on the default screen
 // as qt_x11_create_desktop_on_screen defaults to -1
 QDesktopWidget::QDesktopWidget()
-    : QWidget(*new QDesktopWidgetPrivate, 0, Qt::Desktop)
+    : QWidget(*new QDesktopWidgetPrivate, nullptr, Qt::Desktop)
 {
     Q_D(QDesktopWidget);
     d->init();
@@ -290,7 +290,7 @@ const QRect QDesktopWidget::availableGeometry(int screen) const
 
         Atom ret;
         int format, e;
-        unsigned char *data = 0;
+        unsigned char *data = nullptr;
         unsigned long nitems, after;
 
         e = XGetWindowProperty(X11->display,

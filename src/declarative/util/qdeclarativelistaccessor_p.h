@@ -57,7 +57,7 @@ public:
     ~QDeclarativeListAccessor();
 
     QVariant list() const;
-    void setList(const QVariant &, QDeclarativeEngine * = 0);
+    void setList(const QVariant &, QDeclarativeEngine * = nullptr);
 
     bool isValid() const;
 

@@ -126,7 +126,7 @@ QT_BEGIN_NAMESPACE
 
 QStatePrivate::QStatePrivate()
     : QAbstractStatePrivate(StandardState),
-      errorState(0), initialState(0), childMode(QState::ExclusiveStates),
+      errorState(nullptr), initialState(nullptr), childMode(QState::ExclusiveStates),
       childStatesListNeedsRefresh(true), transitionsListNeedsRefresh(true)
 {
 }
@@ -273,11 +273,11 @@ QAbstractState *QState::errorState() const
 void QState::setErrorState(QAbstractState *state)
 {
     Q_D(QState);
-    if (state != 0 && qobject_cast<QStateMachine*>(state)) {
+    if (state != nullptr && qobject_cast<QStateMachine*>(state)) {
         qWarning("QStateMachine::setErrorState: root state cannot be error state");
         return;
     }
-    if (state != 0 && (!state->machine() || ((state->machine() != machine()) && !qobject_cast<QStateMachine*>(this)))) {
+    if (state != nullptr && (!state->machine() || ((state->machine() != machine()) && !qobject_cast<QStateMachine*>(this)))) {
         qWarning("QState::setErrorState: error state cannot belong "
                  "to a different state machine");
         return;
@@ -313,7 +313,7 @@ void QState::addTransition(QAbstractTransition *transition)
             return ;
         }
     }
-    if (machine() != 0 && machine()->configuration().contains(this))
+    if (machine() != nullptr && machine()->configuration().contains(this))
         QStateMachinePrivate::get(machine())->registerTransitions(this);
 }
 
@@ -327,15 +327,15 @@ QSignalTransition *QState::addTransition(QObject *sender, const char *signal,
 {
     if (!sender) {
         qWarning("QState::addTransition: sender cannot be null");
-        return 0;
+        return nullptr;
     }
     if (!signal) {
         qWarning("QState::addTransition: signal cannot be null");
-        return 0;
+        return nullptr;
     }
     if (!target) {
         qWarning("QState::addTransition: cannot add transition to null state");
-        return 0;
+        return nullptr;
     }
     int offset = (*signal == '0'+QSIGNAL_CODE) ? 1 : 0;
     const QMetaObject *meta = sender->metaObject();
@@ -343,7 +343,7 @@ QSignalTransition *QState::addTransition(QObject *sender, const char *signal,
         if (meta->indexOfSignal(QMetaObject::normalizedSignature(signal+offset)) == -1) {
             qWarning("QState::addTransition: no such signal %s::%s",
                      meta->className(), signal+offset);
-            return 0;
+            return nullptr;
         }
     }
     QSignalTransition *trans = new QSignalTransition(sender, signal);
@@ -376,7 +376,7 @@ QAbstractTransition *QState::addTransition(QAbstractState *target)
 {
     if (!target) {
         qWarning("QState::addTransition: cannot add transition to null state");
-        return 0;
+        return nullptr;
     }
     UnconditionalTransition *trans = new UnconditionalTransition(target);
     addTransition(trans);
@@ -407,7 +407,7 @@ void QState::removeTransition(QAbstractTransition *transition)
     QStateMachinePrivate *mach = QStateMachinePrivate::get(d->machine());
     if (mach)
         mach->unregisterTransition(transition);
-    transition->setParent(0);
+    transition->setParent(nullptr);
 }
 
 /*!

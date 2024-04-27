@@ -83,7 +83,7 @@ QT_BEGIN_NAMESPACE
 QLocale q_getKeyboardLocale(const QByteArray &layoutName, const QByteArray &variantName)
 {
     int i = 0;
-    while (xkbLayoutData[i].layout != 0) {
+    while (xkbLayoutData[i].layout != nullptr) {
         if (layoutName == xkbLayoutData[i].layout && variantName == xkbLayoutData[i].variant)
             return QLocale(xkbLayoutData[i].language, xkbLayoutData[i].country);
         ++i;
@@ -291,7 +291,7 @@ QList<int> QKeyMapperPrivate::possibleKeysXKB(QKeyEvent *event)
     QList<int> result;
 
     // translate sym -> code
-    Qt::KeyboardModifiers baseModifiers = 0;
+    Qt::KeyboardModifiers baseModifiers = nullptr;
     int baseCode = -1;
     QByteArray chars;
     int count = 0;
@@ -333,7 +333,7 @@ QList<int> QKeyMapperPrivate::possibleKeysXKB(QKeyEvent *event)
             continue;
 
         // translate sym -> code
-        Qt::KeyboardModifiers modifiers = 0;
+        Qt::KeyboardModifiers modifiers = nullptr;
         int code = -1;
         chars.clear();
         count = 0;
@@ -386,7 +386,7 @@ QList<int> QKeyMapperPrivate::possibleKeysCore(QKeyEvent *event)
     QList<int> result;
 
     // translate sym -> code
-    Qt::KeyboardModifiers baseModifiers = 0;
+    Qt::KeyboardModifiers baseModifiers = nullptr;
     int baseCode = -1;
     QByteArray chars;
     int count = 0;
@@ -428,7 +428,7 @@ QList<int> QKeyMapperPrivate::possibleKeysCore(QKeyEvent *event)
             continue;
 
         // translate sym -> code
-        Qt::KeyboardModifiers modifiers = 0;
+        Qt::KeyboardModifiers modifiers = nullptr;
         int code = -1;
         chars.clear();
         count = 0;
@@ -483,7 +483,7 @@ void QKeyMapperPrivate::clearMappings()
         int format = 0;
         ulong nitems = 0;
         ulong bytesAfter = 0;
-        uchar *data = 0;
+        uchar *data = nullptr;
         if (XGetWindowProperty(X11->display, RootWindow(X11->display, 0), ATOM(_XKB_RULES_NAMES), 0, 1024,
                                false, XA_STRING, &type, &format, &nitems, &bytesAfter, &data) == Success
             && type == XA_STRING && format == 8 && nitems > 2) {
@@ -494,7 +494,7 @@ void QKeyMapperPrivate::clearMappings()
               index 3 == variant name
               index 4 == options
             */
-            char *names[5] = { 0, 0, 0, 0, 0 };
+            char *names[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
             char *p = reinterpret_cast<char *>(data), *end = p + nitems;
             int i = 0;
             do {
@@ -1424,7 +1424,7 @@ static QString translateKeySym(KeySym keysym, uint xmodifiers,
         case 11: // APL
         case 14: // Korean, no mapping
             mib = -1; // manual conversion
-            mapper = 0;
+            mapper = nullptr;
 #if !defined(QT_NO_XIM)
             converted = keysymToUnicode(byte3, keysym & 0xff);
 #endif
@@ -1433,7 +1433,7 @@ static QString translateKeySym(KeySym keysym, uint xmodifiers,
             // currency symbols
             if (keysym >= 0x20a0 && keysym <= 0x20ac) {
                 mib = -1; // manual conversion
-                mapper = 0;
+                mapper = nullptr;
                 converted = (uint)keysym;
             }
             break;
@@ -1449,7 +1449,7 @@ static QString translateKeySym(KeySym keysym, uint xmodifiers,
         }
     } else if (keysym >= 0x1000000 && keysym <= 0x100ffff) {
         converted = (ushort) (keysym - 0x1000000);
-        mapper = 0;
+        mapper = nullptr;
     }
     if (count < (int)chars.size()-1)
         chars[count] = '\0';
@@ -1460,7 +1460,7 @@ static QString translateKeySym(KeySym keysym, uint xmodifiers,
     } else if (!chars.isEmpty()) {
         // convert chars (8bit) to text (unicode).
         if (mapper)
-            text = mapper->toUnicode(chars.data(), count, 0);
+            text = mapper->toUnicode(chars.data(), count, nullptr);
         if (text.isEmpty()) {
             // no mapper, or codec couldn't convert to unicode (this
             // can happen when running in the C locale or with no LANG
@@ -1554,7 +1554,7 @@ bool QKeyMapperPrivate::translateKeyEventInternal(QWidget *keyWidget,
     QByteArray chars;
     chars.resize(513);
 
-    count = XLookupString(&xkeyevent, chars.data(), chars.size(), &keysym, 0);
+    count = XLookupString(&xkeyevent, chars.data(), chars.size(), &keysym, nullptr);
     if (count && !keycode) {
         extern int qt_ximComposingKeycode; // from qapplication_x11.cpp
         keycode = qt_ximComposingKeycode;

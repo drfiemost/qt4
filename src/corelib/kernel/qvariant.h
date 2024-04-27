@@ -483,7 +483,7 @@ inline bool operator!=(const QVariant &v1, const QVariantComparisonHelper &v2)
 #ifndef QT_MOC
 template<typename T> inline T qvariant_cast(const QVariant &v)
 {
-    const int vid = qMetaTypeId<T>(static_cast<T *>(0));
+    const int vid = qMetaTypeId<T>(static_cast<T *>(nullptr));
     if (vid == v.userType())
         return *reinterpret_cast<const T *>(v.constData());
     if (vid < int(QMetaType::User)) {

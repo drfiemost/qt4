@@ -101,7 +101,7 @@ QJisCodec::QJisCodec() : conv(QJpUnicodeConv::newConverter(QJpUnicodeConv::Defau
 QJisCodec::~QJisCodec()
 {
     delete (QJpUnicodeConv*)conv;
-    conv = 0;
+    conv = nullptr;
 }
 
 QByteArray QJisCodec::convertFromUnicode(const QChar *uc, int len, ConverterState *cs) const

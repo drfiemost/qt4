@@ -60,7 +60,7 @@ class QDESIGNER_SDK_EXPORT QDesignerFormWindowToolInterface: public QObject
 {
     Q_OBJECT
 public:
-    QDesignerFormWindowToolInterface(QObject *parent = 0);
+    QDesignerFormWindowToolInterface(QObject *parent = nullptr);
     virtual ~QDesignerFormWindowToolInterface();
 
     virtual QDesignerFormEditorInterface *core() const = 0;

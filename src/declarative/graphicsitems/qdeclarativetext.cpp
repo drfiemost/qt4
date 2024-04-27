@@ -93,7 +93,7 @@ QDeclarativeTextPrivate::QDeclarativeTextPrivate()
   lineHeightMode(QDeclarativeText::ProportionalHeight), lineCount(1), truncated(false), maximumLineCount(INT_MAX),
   maximumLineCountValid(false), imageCacheDirty(true), updateOnComponentComplete(true), richText(false), singleline(false),
   cacheAllTextAsImage(true), internalWidthUpdate(false), requireImplicitWidth(false),  hAlignImplicit(true),
-  rightToLeftText(false), layoutTextElided(false), naturalWidth(0), doc(0)
+  rightToLeftText(false), layoutTextElided(false), naturalWidth(0), doc(nullptr)
 {
     cacheAllTextAsImage = enableImageCache();
     QGraphicsItemPrivate::acceptedMouseButtons = Qt::LeftButton;

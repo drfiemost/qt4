@@ -566,7 +566,7 @@ class Q_GUI_EXPORT QActionEvent : public QEvent
 {
     QAction *act, *bef;
 public:
-    QActionEvent(int type, QAction *action, QAction *before = 0);
+    QActionEvent(int type, QAction *action, QAction *before = nullptr);
     ~QActionEvent();
 
     inline QAction *action() const { return act; }
@@ -728,7 +728,7 @@ public:
     QTouchEvent(QEvent::Type eventType,
                 QTouchEvent::DeviceType deviceType = TouchScreen,
                 Qt::KeyboardModifiers modifiers = Qt::NoModifier,
-                Qt::TouchPointStates touchPointStates = 0,
+                Qt::TouchPointStates touchPointStates = nullptr,
                 const QList<QTouchEvent::TouchPoint> &touchPoints = QList<QTouchEvent::TouchPoint>());
     ~QTouchEvent();
 

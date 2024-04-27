@@ -36,7 +36,7 @@ Debugger::~Debugger()
 {
     HashSet<JSGlobalObject*>::iterator end = m_globalObjects.end();
     for (HashSet<JSGlobalObject*>::iterator it = m_globalObjects.begin(); it != end; ++it)
-        (*it)->setDebugger(0);
+        (*it)->setDebugger(nullptr);
 }
 
 void Debugger::attach(JSGlobalObject* globalObject)
@@ -50,7 +50,7 @@ void Debugger::detach(JSGlobalObject* globalObject)
 {
     ASSERT(m_globalObjects.contains(globalObject));
     m_globalObjects.remove(globalObject);
-    globalObject->setDebugger(0);
+    globalObject->setDebugger(nullptr);
 }
 
 void Debugger::recompileAllJSFunctions(JSGlobalData* globalData)
@@ -94,7 +94,7 @@ void Debugger::recompileAllJSFunctions(JSGlobalData* globalData)
     // JavaScript in the inspector.
     SourceProviderMap::const_iterator end = sourceProviders.end();
     for (SourceProviderMap::const_iterator iter = sourceProviders.begin(); iter != end; ++iter)
-        sourceParsed(iter->second, SourceCode(iter->first), -1, 0);
+        sourceParsed(iter->second, SourceCode(iter->first), -1, nullptr);
 }
 
 JSValue evaluateInGlobalCallFrame(const UString& script, JSValue& exception, JSGlobalObject* globalObject)

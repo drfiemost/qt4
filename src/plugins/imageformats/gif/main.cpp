@@ -79,7 +79,7 @@ QImageIOPlugin::Capabilities QGifPlugin::capabilities(QIODevice *device, const Q
 {
     if (format == "gif" || (device && device->isReadable() && QGifHandler::canRead(device)))
         return Capabilities(CanRead);
-    return 0;
+    return nullptr;
 }
 
 QImageIOHandler *QGifPlugin::create(QIODevice *device, const QByteArray &format) const

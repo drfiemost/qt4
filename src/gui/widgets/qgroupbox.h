@@ -63,8 +63,8 @@ class Q_GUI_EXPORT QGroupBox : public QWidget
     Q_PROPERTY(bool checkable READ isCheckable WRITE setCheckable)
     Q_PROPERTY(bool checked READ isChecked WRITE setChecked DESIGNABLE isCheckable NOTIFY toggled USER true)
 public:
-    explicit QGroupBox(QWidget* parent=0);
-    explicit QGroupBox(const QString &title, QWidget* parent=0);
+    explicit QGroupBox(QWidget* parent=nullptr);
+    explicit QGroupBox(const QString &title, QWidget* parent=nullptr);
     ~QGroupBox();
 
     QString title() const;

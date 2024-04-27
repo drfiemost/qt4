@@ -53,7 +53,7 @@ QScript::Lexer::Lexer(QScriptEnginePrivate *eng)
       yylineno(0),
       size8(128), size16(128), restrKeyword(false),
       stackToken(-1), pos(0),
-      code(0), length(0),
+      code(nullptr), length(0),
       bol(true),
       current(0), next1(0), next2(0), next3(0),
       err(NoError),
@@ -64,7 +64,7 @@ QScript::Lexer::Lexer(QScriptEnginePrivate *eng)
     // allocate space for read buffers
     buffer8 = new char[size8];
     buffer16 = new QChar[size16];
-    pattern = 0;
+    pattern = nullptr;
     flags = 0;
 
 }
@@ -712,7 +712,7 @@ int QScript::Lexer::lex()
 
     double dval = 0;
     if (state == Number) {
-        dval = qstrtod(buffer8, 0, 0);
+        dval = qstrtod(buffer8, nullptr, nullptr);
     } else if (state == Hex) { // scan hex numbers
         dval = QScript::integerFromString(buffer8, pos8, 16);
         state = Number;
@@ -753,9 +753,9 @@ int QScript::Lexer::lex()
             /* TODO: close leak on parse error. same holds true for String */
             if (driver) {
                 Q_ASSERT_X(false, Q_FUNC_INFO, "not implemented");
-                qsyylval.ustr = 0; // driver->intern(buffer16, pos16);
+                qsyylval.ustr = nullptr; // driver->intern(buffer16, pos16);
             } else
-                qsyylval.ustr = 0;
+                qsyylval.ustr = nullptr;
             return QScriptGrammar::T_IDENTIFIER;
         }
         if (token == QScriptGrammar::T_CONTINUE || token == QScriptGrammar::T_BREAK
@@ -772,9 +772,9 @@ int QScript::Lexer::lex()
     case String:
         if (driver) {
             Q_ASSERT_X(false, Q_FUNC_INFO, "not implemented");
-            qsyylval.ustr = 0; // driver->intern(buffer16, pos16);
+            qsyylval.ustr = nullptr; // driver->intern(buffer16, pos16);
         } else
-            qsyylval.ustr = 0;
+            qsyylval.ustr = nullptr;
         return QScriptGrammar::T_STRING_LITERAL;
     case Number:
         qsyylval.dval = dval;
@@ -1042,9 +1042,9 @@ bool QScript::Lexer::scanRegExp(RegExpBodyPrefix prefix)
         else {
             if (driver) {
                 Q_ASSERT_X(false, Q_FUNC_INFO, "not implemented");
-                pattern = 0; // driver->intern(buffer16, pos16);
+                pattern = nullptr; // driver->intern(buffer16, pos16);
             } else
-                pattern = 0;
+                pattern = nullptr;
             pos16 = 0;
             shift(1);
             break;

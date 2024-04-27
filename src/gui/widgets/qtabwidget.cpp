@@ -209,9 +209,9 @@ public:
 };
 
 QTabWidgetPrivate::QTabWidgetPrivate()
-    : tabs(0), stack(0), dirty(true),
+    : tabs(nullptr), stack(nullptr), dirty(true),
       pos(QTabWidget::North), shape(QTabWidget::Rounded),
-      leftCornerWidget(0), rightCornerWidget(0)
+      leftCornerWidget(nullptr), rightCornerWidget(nullptr)
 {}
 
 QTabWidgetPrivate::~QTabWidgetPrivate()
@@ -243,7 +243,7 @@ void QTabWidgetPrivate::init()
     q->setFocusPolicy(Qt::TabFocus);
     q->setFocusProxy(tabs);
     q->setTabPosition(static_cast<QTabWidget::TabPosition> (q->style()->styleHint(
-                      QStyle::SH_TabWidget_DefaultTabPosition, 0, q )));
+                      QStyle::SH_TabWidget_DefaultTabPosition, nullptr, q )));
 
 }
 
@@ -274,9 +274,9 @@ void QTabWidget::initStyleOption(QStyleOptionTabWidgetFrame *option) const
     if (documentMode())
         option->lineWidth = 0;
     else
-        option->lineWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth, 0, this);
+        option->lineWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth, nullptr, this);
 
-    int exth = style()->pixelMetric(QStyle::PM_TabBarBaseHeight, 0, this);
+    int exth = style()->pixelMetric(QStyle::PM_TabBarBaseHeight, nullptr, this);
     QSize t(0, d->stack->frameWidth());
     if (d->tabs->isVisibleTo(const_cast<QTabWidget *>(this))) {
         t = d->tabs->sizeHint();
@@ -339,7 +339,7 @@ void QTabWidget::initStyleOption(QStyleOptionTabWidgetFrame *option) const
     Constructs a tabbed widget with parent \a parent.
 */
 QTabWidget::QTabWidget(QWidget *parent)
-    : QWidget(*new QTabWidgetPrivate, parent, 0)
+    : QWidget(*new QTabWidgetPrivate, parent, nullptr)
 {
     Q_D(QTabWidget);
     d->init();

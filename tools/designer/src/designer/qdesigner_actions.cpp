@@ -139,7 +139,7 @@ static QString getSaveFileNameWithExtension(QWidget *parent, const QString &titl
 
     QString saveFile;
     while (true) {
-        saveFile = QFileDialog::getSaveFileName(parent, title, dir, filter, 0, QFileDialog::DontConfirmOverwrite);
+        saveFile = QFileDialog::getSaveFileName(parent, title, dir, filter, nullptr, QFileDialog::DontConfirmOverwrite);
         if (saveFile.isEmpty())
             return saveFile;
 
@@ -175,8 +175,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_settingsActions(createActionGroup(this)),
       m_windowActions(createActionGroup(this)),
       m_toolActions(createActionGroup(this, true)),
-      m_helpActions(0),
-      m_styleActions(0),
+      m_helpActions(nullptr),
+      m_styleActions(nullptr),
       m_editWidgetsAction(new QAction(tr("Edit Widgets"), this)),
       m_newFormAction(new QAction(qdesigner_internal::createIconSet(QLatin1String("filenew.png")), tr("&New..."), this)),
       m_openFormAction(new QAction(qdesigner_internal::createIconSet(QLatin1String("fileopen.png")), tr("&Open..."), this)),
@@ -188,7 +188,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_savePreviewImageAction(new QAction(tr("Save &Image..."), this)),
       m_printPreviewAction(new QAction(tr("&Print..."), this)),
       m_quitAction(new QAction(tr("&Quit"), this)),
-      m_previewFormAction(0),
+      m_previewFormAction(nullptr),
       m_viewCodeAction(new QAction(tr("View &Code..."), this)),
       m_minimizeAction(new QAction(tr("&Minimize"), this)),
       m_bringAllToFrontSeparator(createSeparator(this)),
@@ -196,11 +196,11 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
       m_windowListSeparatorAction(createSeparator(this)),
       m_preferencesAction(new QAction(tr("Preferences..."), this)),
       m_appFontAction(new QAction(tr("Additional Fonts..."), this)),
-      m_appFontDialog(0),
+      m_appFontDialog(nullptr),
 #ifndef QT_NO_PRINTER
-      m_printer(0),
+      m_printer(nullptr),
 #endif
-      m_previewManager(0)
+      m_previewManager(nullptr)
 {
 #ifdef Q_WS_X11
     m_newFormAction->setIcon(QIcon::fromTheme("document-new", m_newFormAction->icon()));
@@ -403,7 +403,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 
     connect(m_viewCodeAction, SIGNAL(triggered()), this, SLOT(viewCode()));
     // Preview code only in Cpp
-    if (qt_extension<QDesignerLanguageExtension *>(m_core->extensionManager(), m_core) == 0)
+    if (qt_extension<QDesignerLanguageExtension *>(m_core->extensionManager(), m_core) == nullptr)
         m_formActions->addAction(m_viewCodeAction);
 
     m_formActions->addAction(createSeparator(this));
@@ -600,7 +600,7 @@ bool QDesignerActions::openForm(QWidget *parent)
     closePreview();
     const QString extension = uiExtension();
     const QStringList fileNames = QFileDialog::getOpenFileNames(parent, tr("Open Form"),
-        m_openDirectory, tr("Designer UI files (*.%1);;All Files (*)").arg(extension), 0, QFileDialog::DontUseSheet);
+        m_openDirectory, tr("Designer UI files (*.%1);;All Files (*)").arg(extension), nullptr, QFileDialog::DontUseSheet);
 
     if (fileNames.isEmpty())
         return false;
@@ -797,7 +797,7 @@ bool QDesignerActions::readInForm(const QString &fileName)
                 const QString extension = uiExtension();
                 fn = QFileDialog::getOpenFileName(core()->topLevel(),
                                                   tr("Open Form"), m_openDirectory,
-                                                  tr("Designer UI files (*.%1);;All Files (*)").arg(extension), 0, QFileDialog::DontUseSheet);
+                                                  tr("Designer UI files (*.%1);;All Files (*)").arg(extension), nullptr, QFileDialog::DontUseSheet);
 
                 if (fn.isEmpty())
                     return false;
@@ -943,7 +943,7 @@ void QDesignerActions::shutdown()
 
 void QDesignerActions::activeFormWindowChanged(QDesignerFormWindowInterface *formWindow)
 {
-    const bool enable = formWindow != 0;
+    const bool enable = formWindow != nullptr;
     m_saveFormAction->setEnabled(enable);
     m_saveFormAsAction->setEnabled(enable);
     m_saveAllFormsAction->setEnabled(enable);

@@ -118,13 +118,13 @@ class QMenuPrivate : public QWidgetPrivate
 public:
     QMenuPrivate() : itemsDirty(0), maxIconWidth(0), tabWidth(0), ncols(0),
                       collapsibleSeparators(true), activationRecursionGuard(false), hasHadMouse(0), aboutToHide(0), motions(0),
-                      currentAction(0),
+                      currentAction(nullptr),
 #ifdef QT_KEYPAD_NAVIGATION
                       selectAction(0),
                       cancelAction(0),
 #endif
-                      scroll(0), eventLoop(0), tearoff(0), tornoff(0), tearoffHighlighted(0),
-                      hasCheckableItems(0), sloppyDelayTimer(0), sloppyAction(0), doChildEffects(false)
+                      scroll(nullptr), eventLoop(nullptr), tearoff(0), tornoff(0), tearoffHighlighted(0),
+                      hasCheckableItems(0), sloppyDelayTimer(0), sloppyAction(nullptr), doChildEffects(false)
 #ifdef Q_WS_MAC
                       ,mac_menu(0)
 #endif

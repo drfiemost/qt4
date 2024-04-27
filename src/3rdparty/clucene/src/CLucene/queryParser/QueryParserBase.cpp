@@ -82,7 +82,7 @@ void QueryParserBase::AddClause(CL_NS_STD(vector)<BooleanClause*>& clauses, int3
 
   // We might have been passed a NULL query; the term might have been
   // filtered away by the analyzer.
-  if (q == NULL)
+  if (q == nullptr)
 	return;
 
   if (defaultOperator == OR_OPERATOR) {
@@ -162,7 +162,7 @@ Query* QueryParserBase::GetFieldQuery(const TCHAR* field, TCHAR* queryText){
 
 	//Check if there are any tokens retrieved
 	if (v.size() == 0){
-		return NULL;
+		return nullptr;
 	}else{
 		if (v.size() == 1){
 			Term* t = _CLNEW Term(field, v[0]);
@@ -227,7 +227,7 @@ Query* QueryParserBase::ParseRangeQuery(const TCHAR* field, TCHAR* queryText, bo
   TokenStream* source = analyzer->tokenStream(field, &reader);
 
   TCHAR* terms[2];
-  terms[0]=NULL;terms[1]=NULL;
+  terms[0]=nullptr;terms[1]=nullptr;
   Token t;
   bool tret=true;
   bool from=true;
@@ -329,7 +329,7 @@ Query* QueryParserBase::GetWildcardQuery(const TCHAR* field, TCHAR* termStr){
 
 Query* QueryParserBase::GetBooleanQuery(CL_NS_STD(vector)<CL_NS(search)::BooleanClause*>& clauses){
 	if ( clauses.size() == 0 )
-		return NULL;
+		return nullptr;
 
 	BooleanQuery* query = _CLNEW BooleanQuery();
 	//Condition check to see if query has been allocated properly

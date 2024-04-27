@@ -226,7 +226,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTypeData : public QDeclarativeDataBlob
 public:
     struct TypeReference
     {
-        TypeReference() : type(0), majorVersion(0), minorVersion(0), typeData(0) {}
+        TypeReference() : type(nullptr), majorVersion(0), minorVersion(0), typeData(nullptr) {}
 
         QDeclarativeParser::Location location;
         QDeclarativeType *type;
@@ -237,7 +237,7 @@ public:
 
     struct ScriptReference
     {
-        ScriptReference() : script(0) {}
+        ScriptReference() : script(nullptr) {}
 
         QDeclarativeParser::Location location;
         QString qualifier;

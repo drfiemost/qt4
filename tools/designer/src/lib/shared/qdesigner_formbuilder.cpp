@@ -103,10 +103,10 @@ QDesignerFormBuilder::QDesignerFormBuilder(QDesignerFormEditorInterface *core,
     m_core(core),
     m_mode(mode),
     m_deviceProfile(deviceProfile),
-    m_pixmapCache(0),
-    m_iconCache(0),
+    m_pixmapCache(nullptr),
+    m_iconCache(nullptr),
     m_ignoreCreateResources(false),
-    m_tempResourceSet(0),
+    m_tempResourceSet(nullptr),
     m_mainWidget(true)
 {
     Q_ASSERT(m_core);
@@ -160,10 +160,10 @@ QWidget *QDesignerFormBuilder::create(DomUI *ui, QWidget *parentWidget)
 
     core()->resourceModel()->setCurrentResourceSet(resourceSet);
     core()->resourceModel()->removeResourceSet(m_tempResourceSet);
-    m_tempResourceSet = 0;
+    m_tempResourceSet = nullptr;
     m_ignoreCreateResources = false;
-    m_pixmapCache = 0;
-    m_iconCache = 0;
+    m_pixmapCache = nullptr;
+    m_iconCache = nullptr;
 
     m_customWidgetsWithScript.clear();
     return widget;
@@ -171,7 +171,7 @@ QWidget *QDesignerFormBuilder::create(DomUI *ui, QWidget *parentWidget)
 
 QWidget *QDesignerFormBuilder::createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name)
 {
-    QWidget *widget = 0;
+    QWidget *widget = nullptr;
 
     if (widgetName == QLatin1String("QToolBar")) {
         widget = new QToolBar(parentWidget);
@@ -350,7 +350,7 @@ void QDesignerFormBuilder::createResources(DomResources *resources)
     if (m_ignoreCreateResources)
         return;
     QStringList paths;
-    if (resources != 0) {
+    if (resources != nullptr) {
         const QList<DomResource*> dom_include = resources->elementInclude();
         foreach (DomResource *res, dom_include) {
             QString path = QDir::cleanPath(workingDirectory().absoluteFilePath(res->attributeLocation()));
@@ -391,10 +391,10 @@ QWidget *QDesignerFormBuilder::createPreview(const QDesignerFormWindowInterface 
     QBuffer buffer(&bytes);
     buffer.open(QIODevice::ReadOnly);
 
-    QWidget *widget = builder.load(&buffer, 0);
+    QWidget *widget = builder.load(&buffer, nullptr);
     if (!widget) { // Shouldn't happen
         *errorMessage = QCoreApplication::translate("QDesignerFormBuilder", "The preview failed to build.");
-        return  0;
+        return  nullptr;
     }
     // Make sure palette is applied
     const QString styleToUse = styleName.isEmpty() ? builder.deviceProfile().style() : styleName;
@@ -410,7 +410,7 @@ QWidget *QDesignerFormBuilder::createPreview(const QDesignerFormWindowInterface 
     if (!scriptErrors->empty()) {
         *errorMessage = summarizeScriptErrors(*scriptErrors);
         delete widget;
-        return  0;
+        return  nullptr;
     }
 #endif
     // Fake application style sheet by prepending. (If this doesn't work, fake by nesting
@@ -463,7 +463,7 @@ QWidget *QDesignerFormBuilder::createPreview(const QDesignerFormWindowInterface 
             ScriptErrorDialog scriptErrorDialog(scriptErrors, dialogParent);
             scriptErrorDialog.exec();
         }
-        return 0;
+        return nullptr;
     }
     return widget;
 }

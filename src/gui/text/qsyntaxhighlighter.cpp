@@ -344,7 +344,7 @@ QSyntaxHighlighter::QSyntaxHighlighter(QTextEdit *parent)
 */
 QSyntaxHighlighter::~QSyntaxHighlighter()
 {
-    setDocument(0);
+    setDocument(nullptr);
 }
 
 /*!
@@ -642,7 +642,7 @@ QTextBlockUserData *QSyntaxHighlighter::currentBlockUserData() const
 {
     Q_D(const QSyntaxHighlighter);
     if (!d->currentBlock.isValid())
-        return 0;
+        return nullptr;
 
     return d->currentBlock.userData();
 }

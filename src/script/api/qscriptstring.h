@@ -48,7 +48,7 @@ public:
     bool operator==(const QScriptString &other) const;
     bool operator!=(const QScriptString &other) const;
 
-    quint32 toArrayIndex(bool *ok = 0) const;
+    quint32 toArrayIndex(bool *ok = nullptr) const;
 
     QString toString() const;
     operator QString() const;

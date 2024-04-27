@@ -82,7 +82,7 @@ class QT_FORMEDITOR_EXPORT FormWindow: public FormWindowBase
     Q_OBJECT
 
 public:
-    explicit FormWindow(FormEditor *core, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit FormWindow(FormEditor *core, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     virtual ~FormWindow();
 
     virtual QDesignerFormEditorInterface *core() const;
@@ -222,7 +222,7 @@ public slots:
     void paste();
     void selectAll();
 
-    void createLayout(int type, QWidget *container = 0);
+    void createLayout(int type, QWidget *container = nullptr);
     void morphLayout(QWidget *container, int newType);
     void breakLayout(QWidget *w);
 

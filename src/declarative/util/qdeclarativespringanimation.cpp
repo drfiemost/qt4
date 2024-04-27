@@ -94,7 +94,7 @@ public:
           : maxVelocity(0), velocityms(0), lastTime(0)
           , mass(1.0), spring(0.), damping(0.), epsilon(0.01)
           , modulus(0.0), useMass(false), haveModulus(false)
-          , mode(Track), clock(0)
+          , mode(Track), clock(nullptr)
     { }
 
     void tick(int time);

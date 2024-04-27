@@ -189,7 +189,7 @@ const QGradient *QDeclarativeGradient::gradient() const
 void QDeclarativeGradient::doUpdate()
 {
     delete m_gradient;
-    m_gradient = 0;
+    m_gradient = nullptr;
     emit updated();
 }
 

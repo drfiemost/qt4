@@ -74,7 +74,7 @@ XSLTTokenizer::XSLTTokenizer(QIODevice *const queryDevice,
                                                       , m_namePool(np)
                                                       /* We initialize after all name constants. */
                                                       , m_validationAlternatives(createValidationAlternatives())
-                                                      , m_parseInfo(0)
+                                                      , m_parseInfo(nullptr)
 {
     Q_ASSERT(m_namePool);
 
@@ -909,9 +909,9 @@ void XSLTTokenizer::outsideDocumentElement()
                     handleStandardAttributes(true);
                     QStack<Token> onExitTokens;
                     handleXMLBase(&m_tokenSource, &onExitTokens, false);
-                    handleXSLTVersion(&m_tokenSource, &onExitTokens, true, 0, false, true);
+                    handleXSLTVersion(&m_tokenSource, &onExitTokens, true, nullptr, false, true);
                     validateElement();
-                    queueNamespaceDeclarations(&m_tokenSource, 0, true);
+                    queueNamespaceDeclarations(&m_tokenSource, nullptr, true);
 
                     /* We're a regular stylesheet. */
 
@@ -942,7 +942,7 @@ void XSLTTokenizer::outsideDocumentElement()
                     queueToken(CURLY_LBRACE, &m_tokenSource);
                     pushState(InsideSequenceConstructor);
 
-                    handleXSLTVersion(&m_tokenSource, &onExitTokens, false, 0, true);
+                    handleXSLTVersion(&m_tokenSource, &onExitTokens, false, nullptr, true);
                     handleStandardAttributes(false);
 
                     insideSequenceConstructor(&m_tokenSource, false);
@@ -1395,7 +1395,7 @@ void XSLTTokenizer::queueVariableDeclaration(const VariableType variableType,
     const bool isRequired = hasAttribute(QLatin1String("required")) ? attributeYesNo(QLatin1String("required")) : false;
 
     TokenSource::Queue storage;
-    queueSelectOrSequenceConstructor(ReportContext::XTSE0620, true, &storage, 0, false);
+    queueSelectOrSequenceConstructor(ReportContext::XTSE0620, true, &storage, nullptr, false);
 
     /* XSL-T has some wicked rules, see
      * 9.3 Values of Variables and Parameters. */
@@ -2355,7 +2355,7 @@ void XSLTTokenizer::insideStylesheetModule()
                 if(isXSLT())
                 {
                     handleStandardAttributes(true);
-                    handleXSLTVersion(0, 0, true, 0, false);
+                    handleXSLTVersion(nullptr, nullptr, true, nullptr, false);
                     validateElement();
 
                     /* Handle the various declarations. */
@@ -2598,7 +2598,7 @@ void XSLTTokenizer::queueSorting(const bool oneSortRequired,
                     queueSelectOrSequenceConstructor(ReportContext::XTSE1015,
                                                      true,
                                                      to,
-                                                     0,
+                                                     nullptr,
                                                      false);
                     /* If neither a select attribute or a sequence constructor is supplied,
                      * we're supposed to use the context item. */

@@ -68,7 +68,7 @@ class QFile;
 class QCacheItem
 {
 public:
-    QCacheItem() : file(0)
+    QCacheItem() : file(nullptr)
     {
     }
     ~QCacheItem()
@@ -86,7 +86,7 @@ public:
         metaData = QNetworkCacheMetaData();
         data.close();
         delete file;
-        file = 0;
+        file = nullptr;
     }
     void writeHeader(QFile *device) const;
     void writeCompressedData(QFile *device) const;

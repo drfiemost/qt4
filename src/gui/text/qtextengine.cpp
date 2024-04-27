@@ -69,7 +69,7 @@ public:
         : m_string(string),
         m_analysis(analysis),
         m_items(items),
-        m_splitter(0)
+        m_splitter(nullptr)
     {
     }
     ~Itemizer()
@@ -146,7 +146,7 @@ private:
         if (!m_splitter)
             m_splitter = new QTextBoundaryFinder(QTextBoundaryFinder::Word,
                                                  m_string.constData(), m_string.length(),
-                                                 /*buffer*/0, /*buffer size*/0);
+                                                 /*buffer*/nullptr, /*buffer size*/0);
 
         m_splitter->setPosition(start);
         QScriptAnalysis itemAnalysis = m_analysis[start];
@@ -1172,7 +1172,7 @@ void QTextEngine::shapeTextWithHarfbuzz(int item) const
             shaper_item.log_clusters[i] += glyph_pos;
 
         if (kerningEnabled && !shaper_item.kerning_applied)
-            font->doKerning(&g, option.useDesignMetrics() ? QFontEngine::DesignMetrics : QFontEngine::ShaperFlags(0));
+            font->doKerning(&g, option.useDesignMetrics() ? QFontEngine::DesignMetrics : QFontEngine::ShaperFlags(nullptr));
 
         glyph_pos += shaper_item.num_glyphs;
     }
@@ -1193,13 +1193,13 @@ static void init(QTextEngine *e)
     e->forceJustification = false;
     e->visualMovement = false;
 
-    e->layoutData = 0;
+    e->layoutData = nullptr;
 
     e->minWidth = 0;
     e->maxWidth = 0;
 
-    e->underlinePositions = 0;
-    e->specialData = 0;
+    e->underlinePositions = nullptr;
+    e->specialData = nullptr;
     e->stackEngine = false;
 }
 
@@ -1230,7 +1230,7 @@ const QCharAttributes *QTextEngine::attributes() const
 
     itemize();
     if (! ensureSpace(layoutData->string.length()))
-        return NULL;
+        return nullptr;
 
     QVarLengthArray<QUnicodeTools::ScriptItem> scriptItems(layoutData->items.size());
     for (int i = 0; i < layoutData->items.size(); ++i) {
@@ -1423,7 +1423,7 @@ void QTextEngine::itemize() const
             if (it == end || format != frag->format) {
                 if (s && position >= s->preeditPosition) {
                     position += s->preeditText.length();
-                    s = 0;
+                    s = nullptr;
                 }
                 Q_ASSERT(position <= length);
                 itemizer.generate(prevPosition, position - prevPosition,
@@ -1699,8 +1699,8 @@ QTextEngine::FontEngineCache::FontEngineCache()
 //input is common (and hard to cache at a higher level)
 QFontEngine *QTextEngine::fontEngine(const QScriptItem &si, QFixed *ascent, QFixed *descent, QFixed *leading) const
 {
-    QFontEngine *engine = 0;
-    QFontEngine *scaledEngine = 0;
+    QFontEngine *engine = nullptr;
+    QFontEngine *scaledEngine = nullptr;
     int script = si.analysis.script;
 
     QFont font = fnt;
@@ -1757,7 +1757,7 @@ QFontEngine *QTextEngine::fontEngine(const QScriptItem &si, QFixed *ascent, QFix
             feCache.prevScript = script;
             feCache.prevPosition = -1;
             feCache.prevLength = -1;
-            feCache.prevScaledFontEngine = 0;
+            feCache.prevScaledFontEngine = nullptr;
         }
     }
 
@@ -1796,7 +1796,7 @@ static void set(QJustificationPoint *point, int type, const QGlyphLayout &glyph,
         QChar ch(0x640); // Kashida character
         QGlyphLayoutArray<8> glyphs;
         int nglyphs = 7;
-        fe->stringToCMap(&ch, 1, &glyphs, &nglyphs, 0);
+        fe->stringToCMap(&ch, 1, &glyphs, &nglyphs, nullptr);
         if (glyphs.glyphs[0] && glyphs.advances_x[0] != 0) {
             point->kashidaWidth = glyphs.advances_x[0];
         } else {
@@ -2020,14 +2020,14 @@ void QScriptLine::setDefaultHeight(QTextEngine *eng)
 
 QTextEngine::LayoutData::LayoutData()
 {
-    memory = 0;
+    memory = nullptr;
     allocated = 0;
     memory_on_stack = false;
     used = 0;
     hasBidi = false;
     layoutState = LayoutEmpty;
     haveCharAttributes = false;
-    logClustersPtr = 0;
+    logClustersPtr = nullptr;
     available_glyphs = 0;
 }
 
@@ -2045,8 +2045,8 @@ QTextEngine::LayoutData::LayoutData(const QString &str, void **stack_memory, int
         allocated = 0;
 
         memory_on_stack = false;
-        memory = 0;
-        logClustersPtr = 0;
+        memory = nullptr;
+        logClustersPtr = nullptr;
     } else {
         memory_on_stack = true;
         memory = stack_memory;
@@ -2067,7 +2067,7 @@ QTextEngine::LayoutData::~LayoutData()
 {
     if (!memory_on_stack)
         free(memory);
-    memory = 0;
+    memory = nullptr;
 }
 
 bool QTextEngine::LayoutData::reallocate(int totalGlyphs)
@@ -2092,7 +2092,7 @@ bool QTextEngine::LayoutData::reallocate(int totalGlyphs)
     }
 
     void **newMem = memory;
-    newMem = (void **)::realloc(memory_on_stack ? 0 : memory, newAllocated*sizeof(void *));
+    newMem = (void **)::realloc(memory_on_stack ? nullptr : memory, newAllocated*sizeof(void *));
     if (!newMem) {
         layoutState = LayoutFailed;
         return false;
@@ -2142,7 +2142,7 @@ void QTextEngine::freeMemory()
 {
     if (!stackEngine) {
         delete layoutData;
-        layoutData = 0;
+        layoutData = nullptr;
     } else {
         layoutData->used = 0;
         layoutData->hasBidi = false;
@@ -2177,7 +2177,7 @@ int QTextEngine::formatIndex(const QScriptItem *si) const
 QTextCharFormat QTextEngine::format(const QScriptItem *si) const
 {
     QTextCharFormat format;
-    const QTextFormatCollection *formats = 0;
+    const QTextFormatCollection *formats = nullptr;
     if (block.docHandle()) {
         formats = this->formats();
         format = formats->charFormat(formatIndex(si));
@@ -2357,7 +2357,7 @@ QString QTextEngine::elidedText(Qt::TextElideMode mode, const QFixed &width, int
             if (feForEllipsis->type() != QFontEngine::XLFD
                 && feForEllipsis->canRender(&ellipsisChar, 1)) {
                     int nGlyphs = 1;
-                    feForEllipsis->stringToCMap(&ellipsisChar, 1, &ellipsisGlyph, &nGlyphs, 0);
+                    feForEllipsis->stringToCMap(&ellipsisChar, 1, &ellipsisGlyph, &nGlyphs, nullptr);
                 }
         }
 
@@ -2369,7 +2369,7 @@ QString QTextEngine::elidedText(Qt::TextElideMode mode, const QFixed &width, int
 
             QGlyphLayoutArray<3> glyphs;
             int nGlyphs = 3;
-            if (!fe->stringToCMap(dotDotDot.constData(), 3, &glyphs, &nGlyphs, 0))
+            if (!fe->stringToCMap(dotDotDot.constData(), 3, &glyphs, &nGlyphs, nullptr))
                 // should never happen...
                 return layoutData->string;
             for (int i = 0; i < nGlyphs; ++i)
@@ -2681,7 +2681,7 @@ void QTextEngine::resolveAdditionalFormats() const
             ++endIt;
         }
         QTextCharFormat format;
-        const QTextFormatCollection *formats = 0;
+        const QTextFormatCollection *formats = nullptr;
         if (block.docHandle()) {
             formats = this->formats();
             format = formats->charFormat(formatIndex(si));
@@ -2966,7 +2966,7 @@ QStackTextEngine::QStackTextEngine(const QString &string, const QFont &f)
 
 QTextItemInt::QTextItemInt(const QScriptItem &si, QFont *font, const QTextCharFormat &format)
     : justified(false), underlineStyle(QTextCharFormat::NoUnderline), charFormat(format),
-      num_chars(0), chars(0), logClusters(0), f(0), fontEngine(0)
+      num_chars(0), chars(nullptr), logClusters(nullptr), f(nullptr), fontEngine(nullptr)
 {
     f = font;
     fontEngine = f->d->engineForScript(si.analysis.script);
@@ -2976,8 +2976,8 @@ QTextItemInt::QTextItemInt(const QScriptItem &si, QFont *font, const QTextCharFo
 }
 
 QTextItemInt::QTextItemInt(const QGlyphLayout &g, QFont *font, const QChar *chars_, int numChars, QFontEngine *fe, const QTextCharFormat &format)
-    : flags(0), justified(false), underlineStyle(QTextCharFormat::NoUnderline), charFormat(format),
-      num_chars(numChars), chars(chars_), logClusters(0), f(font),  glyphs(g), fontEngine(fe)
+    : flags(nullptr), justified(false), underlineStyle(QTextCharFormat::NoUnderline), charFormat(format),
+      num_chars(numChars), chars(chars_), logClusters(nullptr), f(font),  glyphs(g), fontEngine(fe)
 {
 }
 
@@ -2986,7 +2986,7 @@ void QTextItemInt::initWithScriptItem(const QScriptItem &si)
 {
     // explicitly initialize flags so that initFontAttributes can be called
     // multiple times on the same TextItem
-    flags = 0;
+    flags = nullptr;
     if (si.analysis.bidiLevel %2)
         flags |= QTextItem::RightToLeft;
     ascent = si.ascent;
@@ -3071,7 +3071,7 @@ QTextLineItemIterator::QTextLineItemIterator(QTextEngine *_eng, int _lineNum, co
                                              const QTextLayout::FormatRange *_selection)
     : eng(_eng),
       line(eng->lines[_lineNum]),
-      si(0),
+      si(nullptr),
       lineNum(_lineNum),
       lineEnd(line.from + line.length),
       firstItem(eng->findItem(line.from)),

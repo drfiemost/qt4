@@ -485,5 +485,5 @@ static struct {
     { "ie", "ogam_is434", Qt::LeftToRight, QLocale::Gaelic, QLocale::Ireland },
     // name = pk, description = Pakistan
     { "pk", "", Qt::RightToLeft, QLocale::Urdu, QLocale::Pakistan },
-    { 0, 0, Qt::LeftToRight, QLocale::C, QLocale::AnyCountry }
+    { nullptr, nullptr, Qt::LeftToRight, QLocale::C, QLocale::AnyCountry }
 };

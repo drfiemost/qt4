@@ -18,13 +18,13 @@ FieldCacheAuto::FieldCacheAuto(int32_t len, int32_t type){
 	contentLen = len;
 	ownContents = false;
 	
-	intArray=NULL;
-	floatArray=NULL;
-	stringIndex=NULL;
-	stringArray=NULL;
-	comparableArray=NULL;
-	sortComparator=NULL;
-	scoreDocComparator=NULL;
+	intArray=nullptr;
+	floatArray=nullptr;
+	stringIndex=nullptr;
+	stringArray=nullptr;
+	comparableArray=nullptr;
+	sortComparator=nullptr;
+	scoreDocComparator=nullptr;
 }
 FieldCacheAuto::~FieldCacheAuto(){
 	if ( contentType == FieldCacheAuto::INT_ARRAY ){

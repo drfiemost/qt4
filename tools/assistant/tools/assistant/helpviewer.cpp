@@ -102,8 +102,8 @@ struct ExtensionMap {
     { ".xhtml", "application/xhtml+xml" },
     { ".wml", "text/vnd.wap.wml" },
     { ".wmlc", "application/vnd.wap.wmlc" },
-    { "about:blank", 0 },
-    { 0, 0 }
+    { "about:blank", nullptr },
+    { nullptr, nullptr }
 };
 
 HelpViewer::~HelpViewer()

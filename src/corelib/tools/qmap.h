@@ -144,7 +144,7 @@ template <class Key, class T>
 inline QMapNode<Key, T> *QMapNode<Key, T>::lowerBound(const Key &akey)
 {
     QMapNode<Key, T> *n = this;
-    QMapNode<Key, T> *last = 0;
+    QMapNode<Key, T> *last = nullptr;
     while (n) {
         if (!qMapLessThanKey(n->key, akey)) {
             last = n;
@@ -160,7 +160,7 @@ template <class Key, class T>
 inline QMapNode<Key, T> *QMapNode<Key, T>::upperBound(const Key &akey)
 {
     QMapNode<Key, T> *n = this;
-    QMapNode<Key, T> *last = 0;
+    QMapNode<Key, T> *last = nullptr;
     while (n) {
         if (qMapLessThanKey(akey, n->key)) {
             last = n;
@@ -208,7 +208,7 @@ struct QMapData : public QMapDataBase
     Node *findNode(const Key &akey) const;
     void nodeRange(const Key &akey, Node **first, Node **last);
 
-    Node *createNode(const Key &k, const T &v, Node *parent = 0, bool left = false)
+    Node *createNode(const Key &k, const T &v, Node *parent = nullptr, bool left = false)
     {
         Node *n = static_cast<Node *>(QMapDataBase::createNode(sizeof(Node), Q_ALIGNOF(Node),
                                       parent, left));
@@ -249,13 +249,13 @@ QMapNode<Key, T> *QMapNode<Key, T>::copy(QMapData<Key, T> *d) const
         n->left = leftNode()->copy(d);
         n->left->setParent(n);
     } else {
-        n->left = 0;
+        n->left = nullptr;
     }
     if (right) {
         n->right = rightNode()->copy(d);
         n->right->setParent(n);
     } else {
-        n->right = 0;
+        n->right = nullptr;
     }
     return n;
 }
@@ -291,7 +291,7 @@ QMapNode<Key, T> *QMapData<Key, T>::findNode(const Key &akey) const
     Node *lb = root()->lowerBound(akey);
     if (lb && !qMapLessThanKey(akey, lb->key))
         return lb;
-    return 0;
+    return nullptr;
 }
 
 
@@ -404,7 +404,7 @@ public:
         typedef T *pointer;
         typedef T &reference;
 
-        inline iterator() : i(0) { }
+        inline iterator() : i(nullptr) { }
         inline iterator(Node *node) : i(node) { }
 
         inline const Key &key() const { return i->key; }
@@ -629,7 +629,7 @@ Q_INLINE_TEMPLATE int QMap<Key, T>::count(const Key &akey) const
 template <class Key, class T>
 Q_INLINE_TEMPLATE bool QMap<Key, T>::contains(const Key &akey) const
 {
-    return d->findNode(akey) != 0;
+    return d->findNode(akey) != nullptr;
 }
 
 template <class Key, class T>
@@ -638,7 +638,7 @@ Q_INLINE_TEMPLATE typename QMap<Key, T>::iterator QMap<Key, T>::insert(const Key
     detach();
     Node *n = d->root();
     Node *y = d->end();
-    Node *last = 0;
+    Node *last = nullptr;
     bool  left = true;
     while (n) {
         y = n;
@@ -667,7 +667,7 @@ Q_INLINE_TEMPLATE typename QMap<Key, T>::iterator QMap<Key, T>::insertMulti(cons
     Node* y = d->end();
     Node* x = static_cast<Node *>(d->root());
     bool left = true;
-    while (x != 0) {
+    while (x != nullptr) {
         left = !qMapLessThanKey(x->key, akey);
         y = x;
         x = left ? x->leftNode() : x->rightNode();

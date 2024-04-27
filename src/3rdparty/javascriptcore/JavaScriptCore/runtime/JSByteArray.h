@@ -102,7 +102,7 @@ namespace JSC {
         enum VPtrStealingHackType { VPtrStealingHack };
         JSByteArray(VPtrStealingHackType) 
             : JSObject(createStructure(jsNull()))
-            , m_classInfo(0)
+            , m_classInfo(nullptr)
         {
         }
 

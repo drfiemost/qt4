@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneSortPrivate::QCLuceneSortPrivate()
     : QSharedData()
 {
-    sort = 0;
+    sort = nullptr;
     deleteCLuceneSort = true;
 }
 

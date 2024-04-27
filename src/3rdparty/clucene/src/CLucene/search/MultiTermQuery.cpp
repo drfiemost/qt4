@@ -50,7 +50,7 @@ CL_NS_DEF(search)
 		try {
             do {
                 Term* t = enumerator->term(false);
-                if (t != NULL) {
+                if (t != nullptr) {
                     TermQuery* tq = _CLNEW TermQuery(t);	// found a match
                     tq->setBoost(getBoost() * enumerator->difference()); // set the boost
                     query->add(tq,true, false, false);		// add to q
@@ -61,7 +61,7 @@ CL_NS_DEF(search)
 		//if we only added one clause and the clause is not prohibited then
 		//we can just return the query
 		if (query->getClauseCount() == 1) {                    // optimize 1-clause queries
-			BooleanClause* c=0;
+			BooleanClause* c=nullptr;
 		    query->getClauses(&c);
 
 			if (!c->prohibited) {			  // just return clause
@@ -83,7 +83,7 @@ CL_NS_DEF(search)
     TCHAR* MultiTermQuery::toString(const TCHAR* field) const{
         StringBuffer buffer;
 
-        if ( field==NULL || _tcscmp(term->field(),field)!=0 ) {
+        if ( field==nullptr || _tcscmp(term->field(),field)!=0 ) {
             buffer.append(term->field());
             buffer.append( _T(":"));
         }

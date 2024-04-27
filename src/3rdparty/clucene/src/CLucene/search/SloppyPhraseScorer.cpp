@@ -46,12 +46,12 @@ CL_NS_DEF(search)
       int32_t end = 0;
 
 	  //declare iterator
-      PhrasePositions* pp = NULL;
+      PhrasePositions* pp = nullptr;
 
       // build pq from list
 
 	  //Sort the list of PhrasePositions using pq
-      for (pp = first; pp != NULL; pp = pp->_next) {
+      for (pp = first; pp != nullptr; pp = pp->_next) {
 		  //Read the first TermPosition of the current PhrasePositions pp
           pp->firstPosition();
 		  //Check if the position of the pp is bigger than end

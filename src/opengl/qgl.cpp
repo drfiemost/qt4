@@ -1421,7 +1421,7 @@ QGLFormat::OpenGLVersionFlags QGLFormat::openGLVersionFlags()
     static bool cachedDefault = false;
     static OpenGLVersionFlags defaultVersionFlags = OpenGL_Version_None;
     QGLContext *currentCtx = const_cast<QGLContext *>(QGLContext::currentContext());
-    QGLTemporaryContext *tmpContext = 0;
+    QGLTemporaryContext *tmpContext = nullptr;
 
     if (currentCtx && currentCtx->d_func()->version_flags_cached)
         return currentCtx->d_func()->version_flags;
@@ -1626,7 +1626,7 @@ Q_GLOBAL_STATIC(QGLContextGroupList, qt_context_groups)
  *****************************************************************************/
 
 QGLContextGroup::QGLContextGroup(const QGLContext *context)
-    : m_context(context), m_guards(0), m_refs(1)
+    : m_context(context), m_guards(nullptr), m_refs(1)
 {
     qt_context_groups()->append(this);
 }
@@ -1635,8 +1635,8 @@ QGLContextGroup::~QGLContextGroup()
 {
     // Clear any remaining QGLSharedResourceGuard objects on the group.
     QGLSharedResourceGuard *guard = m_guards;
-    while (guard != 0) {
-        guard->m_group = 0;
+    while (guard != nullptr) {
+        guard->m_group = nullptr;
         guard->m_id = 0;
         guard = guard->m_next;
     }
@@ -1648,7 +1648,7 @@ void QGLContextGroup::addGuard(QGLSharedResourceGuard *guard)
     if (m_guards)
         m_guards->m_prev = guard;
     guard->m_next = m_guards;
-    guard->m_prev = 0;
+    guard->m_prev = nullptr;
     m_guards = guard;
 }
 
@@ -1665,13 +1665,13 @@ void QGLContextGroup::removeGuard(QGLSharedResourceGuard *guard)
 const QGLContext *qt_gl_transfer_context(const QGLContext *ctx)
 {
     if (!ctx)
-        return 0;
+        return nullptr;
     QList<const QGLContext *> shares
         (QGLContextPrivate::contextGroup(ctx)->shares());
     if (shares.size() >= 2)
         return (ctx == shares.at(0)) ? shares.at(1) : shares.at(0);
     else
-        return 0;
+        return nullptr;
 }
 
 QGLContextPrivate::QGLContextPrivate(QGLContext *context)
@@ -1700,9 +1700,9 @@ void QGLContextPrivate::init(QPaintDevice *dev, const QGLFormat &format)
     valid = false;
     q->setDevice(dev);
 #if defined(Q_WS_X11)
-    pbuf = 0;
+    pbuf = nullptr;
     gpm = 0;
-    vi = 0;
+    vi = nullptr;
     screen = QX11Info::appScreen();
 #endif
 #if defined(Q_WS_WIN)
@@ -1736,10 +1736,10 @@ void QGLContextPrivate::init(QPaintDevice *dev, const QGLFormat &format)
     version_flags_cached = false;
     version_flags = QGLFormat::OpenGL_Version_None;
     extension_flags_cached = false;
-    extension_flags = 0;
+    extension_flags = nullptr;
     current_fbo = 0;
     default_fbo = 0;
-    active_engine = 0;
+    active_engine = nullptr;
     workaround_needsFullClearOnEveryFrame = false;
     workaround_brokenFBOReadBack = false;
     workaround_brokenTexSubImage = false;
@@ -1756,7 +1756,7 @@ void QGLContextPrivate::init(QPaintDevice *dev, const QGLFormat &format)
         vertexAttributeArraysEnabledState[i] = false;
 }
 
-QGLContext* QGLContext::currentCtx = 0;
+QGLContext* QGLContext::currentCtx = nullptr;
 
 /*
    Read back the contents of the currently bound framebuffer, used in
@@ -2100,7 +2100,7 @@ QGLContext::QGLContext(const QGLFormat &format)
     : d_ptr(new QGLContextPrivate(this))
 {
     Q_D(QGLContext);
-    d->init(0, format);
+    d->init(nullptr, format);
 }
 
 /*!
@@ -2343,7 +2343,7 @@ QGLTexture *QGLContextPrivate::bindTexture(const QImage &image, GLenum target, G
         if (image.paintingActive()) {
             // A QPainter is active on the image - take the safe route and replace the texture.
             q->deleteTexture(texture->id);
-            texture = 0;
+            texture = nullptr;
         } else {
             glBindTexture(target, texture->id);
             return texture;
@@ -2594,7 +2594,7 @@ QGLTexture *QGLContextPrivate::textureCacheLookup(const qint64 key, GLenum targe
     {
         return texture;
     }
-    return 0;
+    return nullptr;
 }
 
 /*! \internal */
@@ -2621,7 +2621,7 @@ QGLTexture *QGLContextPrivate::bindTexture(const QPixmap &pixmap, GLenum target,
         if (pixmap.paintingActive()) {
             // A QPainter is active on the pixmap - take the safe route and replace the texture.
             q->deleteTexture(texture->id);
-            texture = 0;
+            texture = nullptr;
         } else {
             glBindTexture(target, texture->id);
             return texture;
@@ -2670,7 +2670,7 @@ QGLTexture *QGLContextPrivate::bindTexture(const QPixmap &pixmap, GLenum target,
             // QRasterPixmapData::toImage() will deep-copy the backing QImage if there's an active QPainter on it.
             // For performance reasons, we don't want that here, so we temporarily redirect the paint engine.
             QPaintDevice* currentPaintDevice = paintEngine->paintDevice();
-            paintEngine->setPaintDevice(0);
+            paintEngine->setPaintDevice(nullptr);
             image = pixmap.toImage();
             paintEngine->setPaintDevice(currentPaintDevice);
         }
@@ -2706,7 +2706,7 @@ int QGLContextPrivate::maxTextureSize()
 
     GLint size;
     GLint next = 64;
-    glTexImage2D(proxy, 0, GL_RGBA, next, next, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(proxy, 0, GL_RGBA, next, next, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glGetTexLevelParameteriv(proxy, 0, GL_TEXTURE_WIDTH, &size);
     if (size == 0) {
         return max_texture_size;
@@ -2717,7 +2717,7 @@ int QGLContextPrivate::maxTextureSize()
 
         if (next > max_texture_size)
             break;
-        glTexImage2D(proxy, 0, GL_RGBA, next, next, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(proxy, 0, GL_RGBA, next, next, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         glGetTexLevelParameteriv(proxy, 0, GL_TEXTURE_WIDTH, &next);
     } while (next > size);
 
@@ -3423,7 +3423,7 @@ const QGLContext* QGLContext::currentContext()
     if (threadContext) {
         return threadContext->context;
     }
-    return 0;
+    return nullptr;
 #endif //Q_WS_QPA
 }
 
@@ -3891,7 +3891,7 @@ QGLWidget::~QGLWidget()
     bool doRelease = (glcx && glcx->windowCreated());
 #endif
     delete d->glcx;
-    d->glcx = 0;
+    d->glcx = nullptr;
 #if defined(Q_WS_WIN)
     delete d->olcx;
     d->olcx = 0;
@@ -5449,7 +5449,7 @@ Q_GLOBAL_STATIC(QGLDefaultExtensions, qtDefaultExtensions)
 */
 QGLExtensions::Extensions QGLExtensions::glExtensions()
 {
-    Extensions extensionFlags = 0;
+    Extensions extensionFlags = nullptr;
     QGLContext *currentCtx = const_cast<QGLContext *>(QGLContext::currentContext());
 
     if (currentCtx && currentCtx->d_func()->extension_flags_cached)
@@ -5474,12 +5474,12 @@ void QGLWidgetPrivate::initContext(QGLContext *context, const QGLWidget* shareWi
 
     glDevice.setWidget(q);
 
-    glcx = 0;
+    glcx = nullptr;
     autoSwap = true;
 
     if (context && !context->device())
         context->setDevice(q);
-    q->setContext(context, shareWidget ? shareWidget->context() : 0);
+    q->setContext(context, shareWidget ? shareWidget->context() : nullptr);
 
     if (!glcx)
         glcx = new QGLContext(QGLFormat::defaultFormat(), q);
@@ -5598,7 +5598,7 @@ void QGLContextGroupResourceBase::cleanup(const QGLContext *ctx)
 {
     void *resource = value(ctx);
 
-    if (resource != 0) {
+    if (resource != nullptr) {
         QGLShareContextScope scope(ctx);
         freeResource(resource);
 
@@ -5657,7 +5657,7 @@ void QGLSharedResourceGuard::setContext(const QGLContext *context)
         m_group = QGLContextPrivate::contextGroup(context);
         m_group->addGuard(this);
     } else {
-        m_group = 0;
+        m_group = nullptr;
     }
 }
 

@@ -66,25 +66,25 @@ class Tree
     ~Tree();
 
     Node* findNode(const QStringList &path, 
-                   Node* relative=0, 
+                   Node* relative=nullptr, 
                    int findFlags=0, 
-                   const Node* self=0);
+                   const Node* self=nullptr);
     Node* findNode(const QStringList &path, 
                    Node::Type type, 
-                   Node* relative = 0,
+                   Node* relative = nullptr,
                    int findFlags = 0);
     FunctionNode *findFunctionNode(const QStringList &path, 
-                                   Node *relative = 0,
+                                   Node *relative = nullptr,
                                    int findFlags = 0);
     FunctionNode *findFunctionNode(const QStringList &parentPath, 
                                    const FunctionNode *clone,
-                                   Node *relative = 0, 
+                                   Node *relative = nullptr, 
                                    int findFlags = 0);
     void addBaseClass(ClassNode *subclass, 
                       Node::Access access, 
                       const QStringList &basePath,
 		      const QString &dataTypeWithTemplateArgs,
-                      InnerNode *parent = 0);
+                      InnerNode *parent = nullptr);
     void addPropertyFunction(PropertyNode *property, 
                              const QString &funcName,
 			     PropertyNode::FunctionRole funcRole);
@@ -92,29 +92,29 @@ class Tree
     void addToPublicGroup(Node *node, const QString &group);
     QMultiMap<QString, Node *> groups() const;
     QMultiMap<QString, QString> publicGroups() const;
-    void resolveInheritance(NamespaceNode *rootNode = 0);
+    void resolveInheritance(NamespaceNode *rootNode = nullptr);
     void resolveProperties();
     void resolveGroups();
     void resolveTargets();
-    void fixInheritance(NamespaceNode *rootNode = 0);
+    void fixInheritance(NamespaceNode *rootNode = nullptr);
     void setVersion(const QString &version) { vers = version; }
     NamespaceNode *root() { return &roo; }
 
     QString version() const { return vers; }
     const Node* findNode(const QStringList &path, 
-                         const Node* relative = 0, 
+                         const Node* relative = nullptr, 
                          int findFlags = 0,
-                         const Node* self=0) const;
+                         const Node* self=nullptr) const;
     const Node* findNode(const QStringList &path, 
                          Node::Type type, const 
-                         Node* relative = 0,
+                         Node* relative = nullptr,
                          int findFlags = 0) const;
     const FunctionNode *findFunctionNode(const QStringList &path, 
-                                         const Node *relative = 0,
+                                         const Node *relative = nullptr,
                                          int findFlags = 0) const;
     const FunctionNode *findFunctionNode(const QStringList &parentPath, 
                                          const FunctionNode *clone,
-                                         const Node *relative = 0,
+                                         const Node *relative = nullptr,
                                          int findFlags = 0) const;
     const FakeNode *findFakeNodeByTitle(const QString &title) const;
     const Node *findUnambiguousTarget(const QString &target, Atom *&atom) const;

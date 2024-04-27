@@ -211,7 +211,7 @@ QGraphicsLinearLayout::~QGraphicsLinearLayout()
         // ~QGraphicsLayoutItem.
         removeAt(i);
         if (item) {
-            item->setParentLayoutItem(0);
+            item->setParentLayoutItem(nullptr);
             if (item->ownedByLayout())
                 delete item;
         }
@@ -280,7 +280,7 @@ void QGraphicsLinearLayout::insertItem(int index, QGraphicsLayoutItem *item)
     Q_ASSERT(item);
     d->fixIndex(&index);
     d->engine.insertRow(index, d->orientation);
-    new QGridLayoutItem(&d->engine, item, d->gridRow(index), d->gridColumn(index), 1, 1, 0, index);
+    new QGridLayoutItem(&d->engine, item, d->gridRow(index), d->gridColumn(index), 1, 1, nullptr, index);
     invalidate();
 }
 
@@ -309,7 +309,7 @@ void QGraphicsLinearLayout::removeItem(QGraphicsLayoutItem *item)
 {
     Q_D(QGraphicsLinearLayout);
     if (QGridLayoutItem *gridItem = d->engine.findLayoutItem(item)) {
-        item->setParentLayoutItem(0);
+        item->setParentLayoutItem(nullptr);
         d->removeGridItem(gridItem);
         delete gridItem;
         invalidate();
@@ -331,7 +331,7 @@ void QGraphicsLinearLayout::removeAt(int index)
     }
     if (QGridLayoutItem *gridItem = d->engine.itemAt(index)) {
         if (QGraphicsLayoutItem *layoutItem = gridItem->layoutItem())
-            layoutItem->setParentLayoutItem(0);
+            layoutItem->setParentLayoutItem(nullptr);
         d->removeGridItem(gridItem);
         delete gridItem;
         invalidate();
@@ -481,9 +481,9 @@ QGraphicsLayoutItem *QGraphicsLinearLayout::itemAt(int index) const
     Q_D(const QGraphicsLinearLayout);
     if (index < 0 || index >= d->engine.itemCount()) {
         qWarning("QGraphicsLinearLayout::itemAt: invalid index %d", index);
-        return 0;
+        return nullptr;
     }
-    QGraphicsLayoutItem *item = 0;
+    QGraphicsLayoutItem *item = nullptr;
     if (QGridLayoutItem *gridItem = d->engine.itemAt(index))
         item = gridItem->layoutItem();
     return item;

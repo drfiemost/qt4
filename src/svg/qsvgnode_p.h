@@ -111,7 +111,7 @@ public:
         InheritMode
     };
 public:
-    QSvgNode(QSvgNode *parent=0);
+    QSvgNode(QSvgNode *parent=nullptr);
     virtual ~QSvgNode();
     virtual void draw(QPainter *p, QSvgExtraStates &states) =0;
 

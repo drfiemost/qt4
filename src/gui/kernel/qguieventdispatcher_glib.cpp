@@ -163,9 +163,9 @@ static GSourceFuncs x11EventSourceFuncs = {
     x11EventSourcePrepare,
     x11EventSourceCheck,
     x11EventSourceDispatch,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 QGuiEventDispatcherGlibPrivate::QGuiEventDispatcherGlibPrivate()
@@ -176,8 +176,8 @@ QGuiEventDispatcherGlibPrivate::QGuiEventDispatcherGlibPrivate()
 
     memset(&x11EventSource->pollfd, 0, sizeof(GPollFD));
     x11EventSource->flags = QEventLoop::AllEvents;
-    x11EventSource->q = 0;
-    x11EventSource->d = 0;
+    x11EventSource->q = nullptr;
+    x11EventSource->d = nullptr;
 
     g_source_attach(&x11EventSource->source, mainContext);
 }
@@ -193,7 +193,7 @@ QGuiEventDispatcherGlib::~QGuiEventDispatcherGlib()
 
     g_source_remove_poll(&d->x11EventSource->source, &d->x11EventSource->pollfd);
     g_source_destroy(&d->x11EventSource->source);
-    d->x11EventSource = 0;
+    d->x11EventSource = nullptr;
 }
 
 bool QGuiEventDispatcherGlib::processEvents(QEventLoop::ProcessEventsFlags flags)

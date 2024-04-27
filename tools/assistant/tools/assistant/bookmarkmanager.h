@@ -129,7 +129,7 @@ class BookmarkManager::BookmarkWidget : public QWidget
 {
     Q_OBJECT
 public:
-    BookmarkWidget(QWidget *parent = 0)
+    BookmarkWidget(QWidget *parent = nullptr)
         : QWidget(parent) { ui.setupUi(this); }
     virtual ~BookmarkWidget() {}
 
@@ -146,7 +146,7 @@ class BookmarkManager::BookmarkTreeView : public QTreeView
 {
     Q_OBJECT
 public:
-    BookmarkTreeView(QWidget *parent = 0);
+    BookmarkTreeView(QWidget *parent = nullptr);
     ~BookmarkTreeView() {}
 
     void subclassKeyPressEvent(QKeyEvent *event);

@@ -106,7 +106,7 @@ QtGradientStopsModel::QtGradientStopsModel(QObject *parent)
     : QObject(parent), d_ptr(new QtGradientStopsModelPrivate)
 {
     d_ptr->q_ptr = this;
-    d_ptr->m_current = 0;
+    d_ptr->m_current = nullptr;
 }
 
 QtGradientStopsModel::~QtGradientStopsModel()
@@ -123,7 +123,7 @@ QtGradientStop *QtGradientStopsModel::at(qreal pos) const
 {
     if (d_ptr->m_posToStop.contains(pos))
         return d_ptr->m_posToStop[pos];
-    return 0;
+    return nullptr;
 }
 
 QColor QtGradientStopsModel::color(qreal pos) const
@@ -189,7 +189,7 @@ QtGradientStop *QtGradientStopsModel::addStop(qreal pos, const QColor &color)
     if (pos > 1.0)
         newPos = 1.0;
     if (d_ptr->m_posToStop.contains(newPos))
-        return 0;
+        return nullptr;
     QtGradientStop *stop = new QtGradientStop();
     stop->setPosition(newPos);
     stop->setColor(color);
@@ -207,7 +207,7 @@ void QtGradientStopsModel::removeStop(QtGradientStop *stop)
     if (!d_ptr->m_stopToPos.contains(stop))
         return;
     if (currentStop() == stop)
-        setCurrentStop(0);
+        setCurrentStop(nullptr);
     selectStop(stop, false);
 
     emit stopRemoved(stop);
@@ -310,7 +310,7 @@ QtGradientStop *QtGradientStopsModel::firstSelected() const
             return stop;
         ++itStop;
     };
-    return 0;
+    return nullptr;
 }
 
 QtGradientStop *QtGradientStopsModel::lastSelected() const
@@ -324,7 +324,7 @@ QtGradientStop *QtGradientStopsModel::lastSelected() const
         if (isSelected(stop))
             return stop;
     };
-    return 0;
+    return nullptr;
 }
 
 QtGradientStopsModel *QtGradientStopsModel::clone() const

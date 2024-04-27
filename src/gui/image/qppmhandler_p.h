@@ -70,7 +70,7 @@ public:
 
     QByteArray name() const;
 
-    static bool canRead(QIODevice *device, QByteArray *subType = 0);
+    static bool canRead(QIODevice *device, QByteArray *subType = nullptr);
 
     QVariant option(ImageOption option) const;
     void setOption(ImageOption option, const QVariant &value);

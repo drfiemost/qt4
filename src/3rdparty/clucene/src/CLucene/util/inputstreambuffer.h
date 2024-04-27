@@ -53,7 +53,7 @@ public:
 
 template <class T>
 InputStreamBuffer<T>::InputStreamBuffer() {
-    readPos = start = 0;
+    readPos = start = nullptr;
     size = avail = 0;
 }
 template <class T>
@@ -67,7 +67,7 @@ InputStreamBuffer<T>::setSize(int32_t size) {
     int32_t offset = (int32_t)(readPos - start);
 
 	// allocate memory in the buffer
-    if ( start == 0 )
+    if ( start == nullptr )
 		start = (T*)malloc(size*sizeof(T));
 	else
 		start = (T*)realloc(start, size*sizeof(T));

@@ -79,7 +79,7 @@ QStringList QMultiInputContextPlugin::keys() const
 QInputContext *QMultiInputContextPlugin::create( const QString &key )
 {
     if (key != QLatin1String("imsw-multi"))
-        return 0;
+        return nullptr;
     return new QMultiInputContext;
 }
 

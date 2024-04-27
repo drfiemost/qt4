@@ -60,7 +60,7 @@ QT_BEGIN_NAMESPACE
 
 struct QTextObjectHandler
 {
-    QTextObjectHandler() : iface(0) {}
+    QTextObjectHandler() : iface(nullptr) {}
     QTextObjectInterface *iface;
     QPointer<QObject> component;
 };
@@ -72,11 +72,11 @@ public:
     Q_DECLARE_PUBLIC(QAbstractTextDocumentLayout)
 
     inline QAbstractTextDocumentLayoutPrivate()
-        : paintDevice(0) {}
+        : paintDevice(nullptr) {}
 
     inline void setDocument(QTextDocument *doc) {
         document = doc;
-        docPrivate = 0;
+        docPrivate = nullptr;
         if (doc)
             docPrivate = doc->docHandle();
     }

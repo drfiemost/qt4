@@ -168,7 +168,7 @@ QDeclarativeCustomParserNode &QDeclarativeCustomParserNode::operator=(const QDec
 
 QDeclarativeCustomParserNode::~QDeclarativeCustomParserNode()
 {
-    delete d; d = 0;
+    delete d; d = nullptr;
 }
 
 QByteArray QDeclarativeCustomParserNode::name() const
@@ -208,7 +208,7 @@ QDeclarativeCustomParserProperty &QDeclarativeCustomParserProperty::operator=(co
 
 QDeclarativeCustomParserProperty::~QDeclarativeCustomParserProperty()
 {
-    delete d; d = 0;
+    delete d; d = nullptr;
 }
 
 QByteArray QDeclarativeCustomParserProperty::name() const

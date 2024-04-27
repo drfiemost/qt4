@@ -103,7 +103,7 @@ JSObjectRef JSObjectMakeConstructor(JSContextRef ctx, JSClassRef jsClass, JSObje
     ExecState* exec = toJS(ctx);
     APIEntryShim entryShim(exec);
 
-    JSValue jsPrototype = jsClass ? jsClass->prototype(exec) : 0;
+    JSValue jsPrototype = jsClass ? jsClass->prototype(exec) : nullptr;
     if (!jsPrototype)
         jsPrototype = exec->lexicalGlobalObject()->objectPrototype();
 
@@ -129,7 +129,7 @@ JSObjectRef JSObjectMakeFunction(JSContextRef ctx, JSStringRef name, unsigned pa
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
     return toRef(result);
 }
@@ -153,7 +153,7 @@ JSObjectRef JSObjectMakeArray(JSContextRef ctx, size_t argumentCount, const JSVa
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
 
     return toRef(result);
@@ -173,7 +173,7 @@ JSObjectRef JSObjectMakeDate(JSContextRef ctx, size_t argumentCount, const JSVal
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
 
     return toRef(result);
@@ -193,7 +193,7 @@ JSObjectRef JSObjectMakeError(JSContextRef ctx, size_t argumentCount, const JSVa
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
 
     return toRef(result);
@@ -213,7 +213,7 @@ JSObjectRef JSObjectMakeRegExp(JSContextRef ctx, size_t argumentCount, const JSV
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
     
     return toRef(result);
@@ -346,7 +346,7 @@ void* JSObjectGetPrivate(JSObjectRef object)
     else if (jsObject->inherits(&JSCallbackObject<JSObject>::info))
         return static_cast<JSCallbackObject<JSObject>*>(jsObject)->getPrivate();
     
-    return 0;
+    return nullptr;
 }
 
 bool JSObjectSetPrivate(JSObjectRef object, void* data)
@@ -388,14 +388,14 @@ JSValueRef JSObjectCallAsFunction(JSContextRef ctx, JSObjectRef object, JSObject
     CallData callData;
     CallType callType = jsObject->getCallData(callData);
     if (callType == CallTypeNone)
-        return 0;
+        return nullptr;
 
     JSValueRef result = toRef(exec, call(exec, jsObject, callType, callData, jsThisObject, argList));
     if (exec->hadException()) {
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
     return result;
 }
@@ -417,7 +417,7 @@ JSObjectRef JSObjectCallAsConstructor(JSContextRef ctx, JSObjectRef object, size
     ConstructData constructData;
     ConstructType constructType = jsObject->getConstructData(constructData);
     if (constructType == ConstructTypeNone)
-        return 0;
+        return nullptr;
 
     MarkedArgumentBuffer argList;
     for (size_t i = 0; i < argumentCount; i++)
@@ -427,7 +427,7 @@ JSObjectRef JSObjectCallAsConstructor(JSContextRef ctx, JSObjectRef object, size
         if (exception)
             *exception = toRef(exec, exec->exception());
         exec->clearException();
-        result = 0;
+        result = nullptr;
     }
     return result;
 }

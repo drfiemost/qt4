@@ -108,7 +108,7 @@ inline static void qSafeXDestroyImage(XImage *x)
 {
     if (x->data) {
         free(x->data);
-        x->data = 0;
+        x->data = nullptr;
     }
     XDestroyImage(x);
 }
@@ -119,7 +119,7 @@ QBitmap QX11PixmapData::mask_to_bitmap(int screen) const
         return QBitmap();
     QPixmap::x11SetDefaultScreen(screen);
     QBitmap bm(w, h);
-    GC gc = XCreateGC(X11->display, bm.handle(), 0, 0);
+    GC gc = XCreateGC(X11->display, bm.handle(), 0, nullptr);
     XCopyArea(X11->display, x11_mask, bm.handle(), gc, 0, 0,
               bm.data->width(), bm.data->height(), 0, 0);
     XFreeGC(X11->display, gc);
@@ -135,7 +135,7 @@ Qt::HANDLE QX11PixmapData::bitmap_to_mask(const QBitmap &bitmap, int screen)
 
     Pixmap mask = XCreatePixmap(X11->display, RootWindow(X11->display, screen),
                                 bm.data->width(), bm.data->height(), 1);
-    GC gc = XCreateGC(X11->display, mask, 0, 0);
+    GC gc = XCreateGC(X11->display, mask, 0, nullptr);
     XCopyArea(X11->display, bm.handle(), mask, gc, 0, 0,
               bm.data->width(), bm.data->height(), 0, 0);
     XFreeGC(X11->display, gc);
@@ -268,9 +268,9 @@ static uint n_bits(uint v)
     return i;
 }
 
-static uint *red_scale_table   = 0;
-static uint *green_scale_table = 0;
-static uint *blue_scale_table  = 0;
+static uint *red_scale_table   = nullptr;
+static uint *green_scale_table = nullptr;
+static uint *blue_scale_table  = nullptr;
 
 static void cleanup_scale_tables()
 {
@@ -314,9 +314,9 @@ QBasicAtomicInt qt_pixmap_serial = Q_BASIC_ATOMIC_INITIALIZER(0);
 int Q_GUI_EXPORT qt_x11_preferred_pixmap_depth = 0;
 
 QX11PixmapData::QX11PixmapData(PixelType type)
-    : QPixmapData(type, X11Class), gl_surface(0), hd(0),
+    : QPixmapData(type, X11Class), gl_surface(nullptr), hd(0),
       flags(Uninitialized), x11_mask(0), picture(0), mask_picture(0), hd2(0),
-      share_mode(QPixmap::ImplicitlyShared), pengine(0)
+      share_mode(QPixmap::ImplicitlyShared), pengine(nullptr)
 {
 }
 
@@ -371,7 +371,7 @@ void QX11PixmapData::resize(int width, int height)
         XRenderPictFormat *format = d == 1
                                     ? XRenderFindStandardFormat(X11->display, PictStandardA1)
                                     : XRenderFindVisualFormat(X11->display, (Visual *)xinfo.visual());
-        picture = XRenderCreatePicture(X11->display, hd, format, 0, 0);
+        picture = XRenderCreatePicture(X11->display, hd, format, 0, nullptr);
     }
 #endif // QT_NO_XRENDER
 }
@@ -493,10 +493,10 @@ void QX11PixmapData::fromImage(const QImage &img,
 
     Display *dpy   = X11->display;
     Visual *visual = (Visual *)xinfo.visual();
-    XImage *xi = 0;
+    XImage *xi = nullptr;
     bool    trucol = (visual->c_class >= TrueColor);
     int     nbytes = image.byteCount();
-    uchar  *newbits= 0;
+    uchar  *newbits= nullptr;
 
 #ifndef QT_NO_XRENDER
     if (alphaCheck.hasXRenderAndAlpha()) {
@@ -523,9 +523,9 @@ void QX11PixmapData::fromImage(const QImage &img,
         hd = (Qt::HANDLE)XCreatePixmap(dpy, RootWindow(dpy, xinfo.screen()),
                                        w, h, d);
         picture = XRenderCreatePicture(X11->display, hd,
-                                       XRenderFindStandardFormat(X11->display, PictStandardARGB32), 0, 0);
+                                       XRenderFindStandardFormat(X11->display, PictStandardARGB32), 0, nullptr);
 
-        xi = XCreateImage(dpy, visual, d, ZPixmap, 0, 0, w, h, 32, 0);
+        xi = XCreateImage(dpy, visual, d, ZPixmap, 0, nullptr, w, h, 32, 0);
         Q_CHECK_PTR(xi);
         newbits = (uchar *)malloc(xi->bytes_per_line*h);
         Q_CHECK_PTR(newbits);
@@ -608,7 +608,7 @@ void QX11PixmapData::fromImage(const QImage &img,
             }
         }
 
-        GC gc = XCreateGC(dpy, hd, 0, 0);
+        GC gc = XCreateGC(dpy, hd, 0, nullptr);
         XPutImage(dpy, hd, gc, xi, 0, 0, 0, 0, w, h);
         XFreeGC(dpy, gc);
 
@@ -649,7 +649,7 @@ void QX11PixmapData::fromImage(const QImage &img,
             }
         }
 
-        xi = XCreateImage(dpy, visual, dd, ZPixmap, 0, 0, w, h, 32, 0);
+        xi = XCreateImage(dpy, visual, dd, ZPixmap, 0, nullptr, w, h, 32, 0);
         Q_CHECK_PTR(xi);
         newbits = (uchar *)malloc(xi->bytes_per_line*h);
         Q_CHECK_PTR(newbits);
@@ -1101,7 +1101,7 @@ void QX11PixmapData::fromImage(const QImage &img,
     }
 
     if (!xi) {                                // X image not created
-        xi = XCreateImage(dpy, visual, dd, ZPixmap, 0, 0, w, h, 32, 0);
+        xi = XCreateImage(dpy, visual, dd, ZPixmap, 0, nullptr, w, h, 32, 0);
         if (xi->bits_per_pixel == 16) {        // convert 8 bpp ==> 16 bpp
             ushort *p2;
             int            p2inc = xi->bytes_per_line/sizeof(ushort);
@@ -1128,7 +1128,7 @@ void QX11PixmapData::fromImage(const QImage &img,
                                    RootWindow(X11->display, xinfo.screen()),
                                    w, h, dd);
 
-    GC gc = XCreateGC(dpy, hd, 0, 0);
+    GC gc = XCreateGC(dpy, hd, 0, nullptr);
     XPutImage(dpy, hd, gc, xi, 0, 0, 0, 0, w, h);
     XFreeGC(dpy, gc);
 
@@ -1140,7 +1140,7 @@ void QX11PixmapData::fromImage(const QImage &img,
         XRenderPictFormat *format = d == 1
                                     ? XRenderFindStandardFormat(X11->display, PictStandardA1)
                                     : XRenderFindVisualFormat(X11->display, (Visual *)xinfo.visual());
-        picture = XRenderCreatePicture(X11->display, hd, format, 0, 0);
+        picture = XRenderCreatePicture(X11->display, hd, format, 0, nullptr);
     }
 #endif
 
@@ -1181,7 +1181,7 @@ Qt::HANDLE QX11PixmapData::createBitmapFromImage(const QImage &image)
         }
     } else {
         bits = (char *)img.bits();
-        tmp_bits = 0;
+        tmp_bits = nullptr;
     }
     Qt::HANDLE hd = (Qt::HANDLE)XCreateBitmapFromData(X11->display,
                                            QX11Info::appRootWindow(),
@@ -1201,7 +1201,7 @@ void QX11PixmapData::bitmapFromImage(const QImage &image)
 #ifndef QT_NO_XRENDER
     if (X11->use_xrender)
         picture = XRenderCreatePicture(X11->display, hd,
-                                       XRenderFindStandardFormat(X11->display, PictStandardA1), 0, 0);
+                                       XRenderFindStandardFormat(X11->display, PictStandardA1), 0, nullptr);
 #endif // QT_NO_XRENDER
 }
 
@@ -1228,7 +1228,7 @@ void QX11PixmapData::fill(const QColor &fillColor)
         return;
     }
 
-    GC gc = XCreateGC(X11->display, hd, 0, 0);
+    GC gc = XCreateGC(X11->display, hd, 0, nullptr);
     if (depth() == 1) {
         XSetForeground(X11->display, gc, qGray(fillColor.rgb()) > 127 ? 0 : 1);
     } else if (X11->use_xrender && d >= 24) {
@@ -1255,7 +1255,7 @@ QX11PixmapData::~QX11PixmapData()
 void QX11PixmapData::release()
 {
     delete pengine;
-    pengine = 0;
+    pengine = nullptr;
 
     if (!X11) {
         // At this point, the X server will already have freed our resources,
@@ -1421,7 +1421,7 @@ void QX11PixmapData::setMask(const QBitmap &newmask)
 #ifndef QT_NO_XRENDER
             if (picture) {
                 mask_picture = XRenderCreatePicture(X11->display, x11_mask,
-                                                    XRenderFindStandardFormat(X11->display, PictStandardA1), 0, 0);
+                                                    XRenderFindStandardFormat(X11->display, PictStandardA1), 0, nullptr);
                 XRenderPictureAttributes attrs;
                 attrs.alpha_map = mask_picture;
                 XRenderChangePicture(X11->display, picture, CPAlphaMap, &attrs);
@@ -1506,7 +1506,7 @@ QImage QX11PixmapData::takeQImageFromXImage(const QXImageWrapper &xiWrapper) con
     QImage image((uchar *)xi->data, xi->width, xi->height, xi->bytes_per_line, format);
     // take ownership
     image.data_ptr()->own_data = true;
-    xi->data = 0;
+    xi->data = nullptr;
 
     // we may have to swap the byte order
     if ((QSysInfo::ByteOrder == QSysInfo::LittleEndian && xi->byte_order == MSBFirst)
@@ -1663,7 +1663,7 @@ QImage QX11PixmapData::toImage(const QXImageWrapper &xiWrapper, const QRect &rec
             bppc++;
 
         for (int y = 0; y < xi->height; ++y) {
-            uchar* asrc = x11_mask ? alpha.scanLine(y) : 0;
+            uchar* asrc = x11_mask ? alpha.scanLine(y) : nullptr;
             dst = (QRgb *)image.scanLine(y);
             src = (uchar *)xi->data + xi->bytes_per_line*y;
             for (int x = 0; x < xi->width; x++) {
@@ -2028,11 +2028,11 @@ QPixmap QX11PixmapData::transformed(const QTransform &transform,
             XRenderPictFormat *format = x11Data->d == 32
                                         ? XRenderFindStandardFormat(X11->display, PictStandardARGB32)
                                         : XRenderFindVisualFormat(X11->display, (Visual *) x11Data->xinfo.visual());
-            x11Data->picture = XRenderCreatePicture(X11->display, x11Data->hd, format, 0, 0);
+            x11Data->picture = XRenderCreatePicture(X11->display, x11Data->hd, format, 0, nullptr);
         }
 #endif // QT_NO_XRENDER
 
-        GC gc = XCreateGC(X11->display, x11Data->hd, 0, 0);
+        GC gc = XCreateGC(X11->display, x11Data->hd, 0, nullptr);
 #if defined(QT_MITSHM)
         if (use_mitshm) {
             XCopyArea(dpy, xshmpm, x11Data->hd, gc, 0, 0, w, h, 0, 0);
@@ -2162,7 +2162,7 @@ QPixmap QPixmap::grabWindow(WId window, int x, int y, int w, int h)
     data->flags &= ~QX11PixmapData::Uninitialized;
     pm.x11SetScreen(scr);
 
-    GC gc = XCreateGC(dpy, pm.handle(), 0, 0);
+    GC gc = XCreateGC(dpy, pm.handle(), 0, nullptr);
     XSetSubwindowMode(dpy, gc, IncludeInferiors);
     XCopyArea(dpy, window, pm.handle(), gc, x, y, w, h, 0, 0);
     XFreeGC(dpy, gc);
@@ -2211,7 +2211,7 @@ QPaintEngine* QX11PixmapData::paintEngine() const
             XRenderPictFormat *format = qt_renderformat_for_depth(xinfo, d);
             ::Picture picture_copy = XRenderCreatePicture(X11->display,
                                                           hd_copy, format,
-                                                          0, 0);
+                                                          0, nullptr);
 
             XRenderComposite(X11->display, PictOpSrc, picture, 0, picture_copy,
                              0, 0, 0, 0, 0, 0, w, h);
@@ -2220,7 +2220,7 @@ QPaintEngine* QX11PixmapData::paintEngine() const
         } else
 #endif
         {
-            GC gc = XCreateGC(X11->display, hd_copy, 0, 0);
+            GC gc = XCreateGC(X11->display, hd_copy, 0, nullptr);
             XCopyArea(X11->display, hd, hd_copy, gc, 0, 0, w, h, 0, 0);
             XFreeGC(X11->display, gc);
         }
@@ -2254,7 +2254,7 @@ Qt::HANDLE QX11PixmapData::x11ConvertToDefaultDepth()
         hd2 = XCreatePixmap(xinfo.display(), hd, w, h, QX11Info::appDepth());
         XRenderPictFormat *format = XRenderFindVisualFormat(xinfo.display(),
                                                             (Visual*) xinfo.visual());
-        Picture pic = XRenderCreatePicture(xinfo.display(), hd2, format, 0, 0);
+        Picture pic = XRenderCreatePicture(xinfo.display(), hd2, format, 0, nullptr);
         XRenderComposite(xinfo.display(), PictOpSrc, picture,
                          XNone, pic, 0, 0, 0, 0, 0, 0, w, h);
         XRenderFreePicture(xinfo.display(), pic);
@@ -2290,7 +2290,7 @@ void QX11PixmapData::copy(const QPixmapData *data, const QRect &rect)
         XRenderPictFormat *format = d == 32
                                     ? XRenderFindStandardFormat(X11->display, PictStandardARGB32)
                                     : XRenderFindVisualFormat(X11->display, (Visual *)xinfo.visual());
-        picture = XRenderCreatePicture(X11->display, hd, format, 0, 0);
+        picture = XRenderCreatePicture(X11->display, hd, format, 0, nullptr);
     }
 #endif // QT_NO_XRENDER
     if (x11Data->x11_mask) {
@@ -2298,7 +2298,7 @@ void QX11PixmapData::copy(const QPixmapData *data, const QRect &rect)
 #ifndef QT_NO_XRENDER
         if (X11->use_xrender) {
             mask_picture = XRenderCreatePicture(X11->display, x11_mask,
-                                                XRenderFindStandardFormat(X11->display, PictStandardA1), 0, 0);
+                                                XRenderFindStandardFormat(X11->display, PictStandardA1), 0, nullptr);
             XRenderPictureAttributes attrs;
             attrs.alpha_map = x11Data->mask_picture;
             XRenderChangePicture(X11->display, x11Data->picture, CPAlphaMap, &attrs);
@@ -2314,11 +2314,11 @@ void QX11PixmapData::copy(const QPixmapData *data, const QRect &rect)
     } else
 #endif
     {
-        GC gc = XCreateGC(X11->display, hd, 0, 0);
+        GC gc = XCreateGC(X11->display, hd, 0, nullptr);
         XCopyArea(X11->display, x11Data->hd, hd, gc,
                   rect.x(), rect.y(), w, h, 0, 0);
         if (x11Data->x11_mask) {
-            GC monogc = XCreateGC(X11->display, x11_mask, 0, 0);
+            GC monogc = XCreateGC(X11->display, x11_mask, 0, nullptr);
             XCopyArea(X11->display, x11Data->x11_mask, x11_mask, monogc,
                       rect.x(), rect.y(), w, h, 0, 0);
             XFreeGC(X11->display, monogc);
@@ -2329,7 +2329,7 @@ void QX11PixmapData::copy(const QPixmapData *data, const QRect &rect)
 
 bool QX11PixmapData::scroll(int dx, int dy, const QRect &rect)
 {
-    GC gc = XCreateGC(X11->display, hd, 0, 0);
+    GC gc = XCreateGC(X11->display, hd, 0, nullptr);
     XCopyArea(X11->display, hd, hd, gc,
               rect.left(), rect.top(), rect.width(), rect.height(),
               rect.left() + dx, rect.top() + dy);
@@ -2350,7 +2350,7 @@ void QX11PixmapData::convertToARGB32(bool preserveContents)
     Pixmap pm = XCreatePixmap(X11->display, RootWindow(X11->display, xinfo.screen()),
                               w, h, 32);
     Picture p = XRenderCreatePicture(X11->display, pm,
-                                     XRenderFindStandardFormat(X11->display, PictStandardARGB32), 0, 0);
+                                     XRenderFindStandardFormat(X11->display, PictStandardARGB32), 0, nullptr);
     if (picture) {
         if (preserveContents)
             XRenderComposite(X11->display, PictOpSrc, picture, 0, p, 0, 0, 0, 0, 0, 0, w, h);
@@ -2418,7 +2418,7 @@ QPixmap QPixmap::fromX11Pixmap(Qt::HANDLE pixmap, QPixmap::ShareMode mode)
 #ifndef QT_NO_XRENDER
     if (X11->use_xrender) {
         XRenderPictFormat *format = qt_renderformat_for_depth(data->xinfo, depth);
-        data->picture = XRenderCreatePicture(X11->display, data->hd, format, 0, 0);
+        data->picture = XRenderCreatePicture(X11->display, data->hd, format, 0, nullptr);
     }
 #endif // QT_NO_XRENDER
 

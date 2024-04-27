@@ -70,7 +70,7 @@ public:
 
 DeviceOrientation* DeviceOrientation::instance()
 {
-    static DefaultDeviceOrientation *o = 0;
+    static DefaultDeviceOrientation *o = nullptr;
     if (!o)
         o = new DefaultDeviceOrientation;
     return o;

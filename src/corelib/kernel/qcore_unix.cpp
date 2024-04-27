@@ -71,7 +71,7 @@ int qt_safe_select(int nfds, fd_set *fdread, fd_set *fdwrite, fd_set *fdexcept,
     if (!orig_timeout) {
         // no timeout -> block forever
         int ret;
-        EINTR_LOOP(ret, select(nfds, fdread, fdwrite, fdexcept, 0));
+        EINTR_LOOP(ret, select(nfds, fdread, fdwrite, fdexcept, nullptr));
         return ret;
     }
 
@@ -81,7 +81,7 @@ int qt_safe_select(int nfds, fd_set *fdread, fd_set *fdwrite, fd_set *fdexcept,
     // loop and recalculate the timeout as needed
     int ret;
     forever {
-        ret = ::pselect(nfds, fdread, fdwrite, fdexcept, &timeout, 0);
+        ret = ::pselect(nfds, fdread, fdwrite, fdexcept, &timeout, nullptr);
         if (ret != -1 || errno != EINTR)
             return ret;
 

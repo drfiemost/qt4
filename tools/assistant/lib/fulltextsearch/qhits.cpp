@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneHitsPrivate::QCLuceneHitsPrivate()
     : QSharedData()
 {
-    hits = 0;
+    hits = nullptr;
     deleteCLuceneHits = true;
 }
 

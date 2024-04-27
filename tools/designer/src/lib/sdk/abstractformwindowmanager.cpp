@@ -106,8 +106,8 @@ struct QDesignerFormWindowManagerInterfacePrivate {
 };
 
 QDesignerFormWindowManagerInterfacePrivate::QDesignerFormWindowManagerInterfacePrivate() :
-    m_simplifyLayoutAction(0),
-    m_formLayoutAction(0)
+    m_simplifyLayoutAction(nullptr),
+    m_formLayoutAction(nullptr)
 {
 }
 
@@ -145,7 +145,7 @@ QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface()
 */
 QAction *QDesignerFormWindowManagerInterface::actionCut() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -156,7 +156,7 @@ QAction *QDesignerFormWindowManagerInterface::actionCut() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionCopy() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -167,7 +167,7 @@ QAction *QDesignerFormWindowManagerInterface::actionCopy() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionPaste() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -178,7 +178,7 @@ QAction *QDesignerFormWindowManagerInterface::actionPaste() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionDelete() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -189,7 +189,7 @@ QAction *QDesignerFormWindowManagerInterface::actionDelete() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionSelectAll() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -201,7 +201,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSelectAll() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionLower() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -213,7 +213,7 @@ QAction *QDesignerFormWindowManagerInterface::actionLower() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionRaise() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -225,7 +225,7 @@ QAction *QDesignerFormWindowManagerInterface::actionRaise() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionHorizontalLayout() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -237,7 +237,7 @@ QAction *QDesignerFormWindowManagerInterface::actionHorizontalLayout() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionVerticalLayout() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -248,7 +248,7 @@ QAction *QDesignerFormWindowManagerInterface::actionVerticalLayout() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionSplitHorizontal() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -259,7 +259,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSplitHorizontal() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionSplitVertical() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -271,7 +271,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSplitVertical() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionGridLayout() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -311,7 +311,7 @@ void QDesignerFormWindowManagerInterface::setActionFormLayout(QAction *action)
 */
 QAction *QDesignerFormWindowManagerInterface::actionBreakLayout() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -322,7 +322,7 @@ QAction *QDesignerFormWindowManagerInterface::actionBreakLayout() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionAdjustSize() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -361,7 +361,7 @@ void QDesignerFormWindowManagerInterface::setActionSimplifyLayout(QAction *actio
 */
 QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::activeFormWindow() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -370,7 +370,7 @@ QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::activeFormWin
 */
 QDesignerFormEditorInterface *QDesignerFormWindowManagerInterface::core() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -423,7 +423,7 @@ int QDesignerFormWindowManagerInterface::formWindowCount() const
 QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::formWindow(int index) const
 {
     Q_UNUSED(index);
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -438,7 +438,7 @@ QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::createFormWin
 {
     Q_UNUSED(parentWidget);
     Q_UNUSED(flags);
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -449,7 +449,7 @@ QDesignerFormWindowInterface *QDesignerFormWindowManagerInterface::createFormWin
 */
 QAction *QDesignerFormWindowManagerInterface::actionUndo() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -460,7 +460,7 @@ QAction *QDesignerFormWindowManagerInterface::actionUndo() const
 */
 QAction *QDesignerFormWindowManagerInterface::actionRedo() const
 {
-    return 0;
+    return nullptr;
 }
 
 /*!

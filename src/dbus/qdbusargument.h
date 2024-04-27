@@ -157,7 +157,7 @@ QT_BEGIN_NAMESPACE
 
 template<typename T> inline T qdbus_cast(const QDBusArgument &arg
 #ifndef Q_QDOC
-, T * = 0
+, T * = nullptr
 #endif
     )
 {
@@ -168,7 +168,7 @@ template<typename T> inline T qdbus_cast(const QDBusArgument &arg
 
 template<typename T> inline T qdbus_cast(const QVariant &v
 #ifndef Q_QDOC
-, T * = 0
+, T * = nullptr
 #endif
     )
 {

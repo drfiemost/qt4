@@ -417,7 +417,7 @@ void QNetworkAccessManager::setProxy(const QNetworkProxy &proxy)
     Q_D(QNetworkAccessManager);
     delete d->proxyFactory;
     d->proxy = proxy;
-    d->proxyFactory = 0;
+    d->proxyFactory = nullptr;
 }
 
 /*!
@@ -1169,7 +1169,7 @@ void QNetworkAccessManagerPrivate::clearCache(QNetworkAccessManager *manager)
         // The thread will deleteLater() itself from its finished() signal
         manager->d_func()->httpThread->quit();
         manager->d_func()->httpThread->wait(5000);
-        manager->d_func()->httpThread = 0;
+        manager->d_func()->httpThread = nullptr;
     }
 }
 
@@ -1179,7 +1179,7 @@ QNetworkAccessManagerPrivate::~QNetworkAccessManagerPrivate()
         // The thread will deleteLater() itself from its finished() signal
         httpThread->quit();
         httpThread->wait(5000);
-        httpThread = 0;
+        httpThread = nullptr;
     }
 }
 

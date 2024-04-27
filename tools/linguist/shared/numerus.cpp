@@ -108,28 +108,28 @@ static const uchar catalanRules[] =
     { Q_EQ, 1, Q_NEWRULE,
       Q_LEAD_1000 | Q_EQ, 11 };
 
-static const char * const japaneseStyleForms[] = { "Universal Form", 0 };
-static const char * const englishStyleForms[] = { "Singular", "Plural", 0 };
-static const char * const frenchStyleForms[] = { "Singular", "Plural", 0 };
-static const char * const icelandicForms[] = { "Singular", "Plural", 0 };
-static const char * const latvianForms[] = { "Singular", "Plural", "Nullar", 0 };
-static const char * const irishStyleForms[] = { "Singular", "Dual", "Plural", 0 };
-static const char * const slovakStyleForms[] = { "Singular", "Paucal", "Plural", 0 };
-static const char * const macedonianForms[] = { "Singular", "Dual", "Plural", 0 };
-static const char * const lithuanianForms[] = { "Singular", "Paucal", "Plural", 0 };
-static const char * const russianStyleForms[] = { "Singular", "Dual", "Plural", 0 };
-static const char * const polishForms[] = { "Singular", "Paucal", "Plural", 0 };
-static const char * const romanianForms[] = { "Singular", "Paucal", "Plural", 0 };
-static const char * const slovenianForms[] = { "Singular", "Dual", "Trial", "Plural", 0 };
+static const char * const japaneseStyleForms[] = { "Universal Form", nullptr };
+static const char * const englishStyleForms[] = { "Singular", "Plural", nullptr };
+static const char * const frenchStyleForms[] = { "Singular", "Plural", nullptr };
+static const char * const icelandicForms[] = { "Singular", "Plural", nullptr };
+static const char * const latvianForms[] = { "Singular", "Plural", "Nullar", nullptr };
+static const char * const irishStyleForms[] = { "Singular", "Dual", "Plural", nullptr };
+static const char * const slovakStyleForms[] = { "Singular", "Paucal", "Plural", nullptr };
+static const char * const macedonianForms[] = { "Singular", "Dual", "Plural", nullptr };
+static const char * const lithuanianForms[] = { "Singular", "Paucal", "Plural", nullptr };
+static const char * const russianStyleForms[] = { "Singular", "Dual", "Plural", nullptr };
+static const char * const polishForms[] = { "Singular", "Paucal", "Plural", nullptr };
+static const char * const romanianForms[] = { "Singular", "Paucal", "Plural", nullptr };
+static const char * const slovenianForms[] = { "Singular", "Dual", "Trial", "Plural", nullptr };
 static const char * const malteseForms[] =
-    { "Singular", "Paucal", "Greater Paucal", "Plural", 0 };
+    { "Singular", "Paucal", "Greater Paucal", "Plural", nullptr };
 static const char * const welshForms[] =
-    { "Nullar", "Singular", "Dual", "Sexal", "Plural", 0 };
+    { "Nullar", "Singular", "Dual", "Sexal", "Plural", nullptr };
 static const char * const arabicForms[] =
-    { "Nullar", "Singular", "Dual", "Minority Plural", "Plural", "Plural (100-102, ...)", 0 };
+    { "Nullar", "Singular", "Dual", "Minority Plural", "Plural", "Plural (100-102, ...)", nullptr };
 static const char * const tagalogForms[] =
-    { "Singular", "Plural (consonant-ended)", "Plural (vowel-ended)", 0 };
-static const char * const catalanForms[] = { "Singular", "Undecal (11)", "Plural", 0 };
+    { "Singular", "Plural (consonant-ended)", "Plural (vowel-ended)", nullptr };
+static const char * const catalanForms[] = { "Singular", "Undecal (11)", "Plural", nullptr };
 
 #define EOL QLocale::C
 
@@ -322,40 +322,40 @@ struct NumerusTableEntry {
 };
 
 static const NumerusTableEntry numerusTable[] = {
-    { 0, 0, japaneseStyleForms, japaneseStyleLanguages, 0, "nplurals=1; plural=0;" },
-    { englishStyleRules, sizeof(englishStyleRules), englishStyleForms, englishStyleLanguages, 0,
+    { nullptr, 0, japaneseStyleForms, japaneseStyleLanguages, nullptr, "nplurals=1; plural=0;" },
+    { englishStyleRules, sizeof(englishStyleRules), englishStyleForms, englishStyleLanguages, nullptr,
       "nplurals=2; plural=(n != 1);" },
     { frenchStyleRules, sizeof(frenchStyleRules), frenchStyleForms, frenchStyleLanguages,
       frenchStyleCountries, "nplurals=2; plural=(n > 1);" },
-    { latvianRules, sizeof(latvianRules), latvianForms, latvianLanguage, 0,
+    { latvianRules, sizeof(latvianRules), latvianForms, latvianLanguage, nullptr,
       "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);" },
-    { icelandicRules, sizeof(icelandicRules), icelandicForms, icelandicLanguage, 0,
+    { icelandicRules, sizeof(icelandicRules), icelandicForms, icelandicLanguage, nullptr,
       "nplurals=2; plural=(n%10==1 && n%100!=11 ? 0 : 1);" },
-    { irishStyleRules, sizeof(irishStyleRules), irishStyleForms, irishStyleLanguages, 0,
+    { irishStyleRules, sizeof(irishStyleRules), irishStyleForms, irishStyleLanguages, nullptr,
       "nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);" },
-    { slovakStyleRules, sizeof(slovakStyleRules), slovakStyleForms, slovakStyleLanguages, 0,
+    { slovakStyleRules, sizeof(slovakStyleRules), slovakStyleForms, slovakStyleLanguages, nullptr,
       "nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);" },
-    { macedonianRules, sizeof(macedonianRules), macedonianForms, macedonianLanguage, 0,
+    { macedonianRules, sizeof(macedonianRules), macedonianForms, macedonianLanguage, nullptr,
       "nplurals=3; plural=(n%100==1 ? 0 : n%100==2 ? 1 : 2);" },
-    { lithuanianRules, sizeof(lithuanianRules), lithuanianForms, lithuanianLanguage, 0,
+    { lithuanianRules, sizeof(lithuanianRules), lithuanianForms, lithuanianLanguage, nullptr,
       "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);" },
-    { russianStyleRules, sizeof(russianStyleRules), russianStyleForms, russianStyleLanguages, 0,
+    { russianStyleRules, sizeof(russianStyleRules), russianStyleForms, russianStyleLanguages, nullptr,
       "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);" },
-    { polishRules, sizeof(polishRules), polishForms, polishLanguage, 0,
+    { polishRules, sizeof(polishRules), polishForms, polishLanguage, nullptr,
       "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);" },
-    { romanianRules, sizeof(romanianRules), romanianForms, romanianLanguages, 0,
+    { romanianRules, sizeof(romanianRules), romanianForms, romanianLanguages, nullptr,
       "nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);" },
-    { slovenianRules, sizeof(slovenianRules), slovenianForms, slovenianLanguage, 0,
+    { slovenianRules, sizeof(slovenianRules), slovenianForms, slovenianLanguage, nullptr,
       "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);" },
-    { malteseRules, sizeof(malteseRules), malteseForms, malteseLanguage, 0,
+    { malteseRules, sizeof(malteseRules), malteseForms, malteseLanguage, nullptr,
       "nplurals=4; plural=(n==1 ? 0 : (n==0 || (n%100>=1 && n%100<=10)) ? 1 : (n%100>=11 && n%100<=19) ? 2 : 3);" },
-    { welshRules, sizeof(welshRules), welshForms, welshLanguage, 0,
+    { welshRules, sizeof(welshRules), welshForms, welshLanguage, nullptr,
       "nplurals=5; plural=(n==0 ? 0 : n==1 ? 1 : (n>=2 && n<=5) ? 2 : n==6 ? 3 : 4);" },
-    { arabicRules, sizeof(arabicRules), arabicForms, arabicLanguage, 0,
+    { arabicRules, sizeof(arabicRules), arabicForms, arabicLanguage, nullptr,
       "nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : (n%100>=3 && n%100<=10) ? 3 : n%100>=11 ? 4 : 5);" },
-    { tagalogRules, sizeof(tagalogRules), tagalogForms, tagalogLanguage, 0,
+    { tagalogRules, sizeof(tagalogRules), tagalogForms, tagalogLanguage, nullptr,
       "nplurals=3; plural=(n==1 ? 0 : (n%10==4 || n%10==6 || n%10== 9) ? 1 : 2);" },
-    { catalanRules, sizeof(catalanRules), catalanForms, catalanLanguage, 0,
+    { catalanRules, sizeof(catalanRules), catalanForms, catalanLanguage, nullptr,
       "nplurals=3; plural=(n==1 ? 0 : (n==11 || n/1000==11 || n/1000000==11 || n/1000000000==11) ? 1 : 2);" },
 };
 

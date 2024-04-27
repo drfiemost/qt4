@@ -79,12 +79,12 @@ typedef void (*_glXDestroyPbuffer) (Display *dpy, GLXPbuffer pbuf);
 typedef GLXContext (*_glXCreateNewContext) (Display *dpy, GLXFBConfig config, int render_type, GLXContext share_list, Bool direct);
 typedef Bool (*_glXMakeContextCurrent) (Display *dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
 
-static _glXChooseFBConfig qt_glXChooseFBConfig = 0;
-static _glXCreateNewContext qt_glXCreateNewContext = 0;
-static _glXCreatePbuffer qt_glXCreatePbuffer = 0;
-static _glXDestroyPbuffer qt_glXDestroyPbuffer = 0;
-static _glXGetFBConfigAttrib qt_glXGetFBConfigAttrib = 0;
-static _glXMakeContextCurrent qt_glXMakeContextCurrent = 0;
+static _glXChooseFBConfig qt_glXChooseFBConfig = nullptr;
+static _glXCreateNewContext qt_glXCreateNewContext = nullptr;
+static _glXCreatePbuffer qt_glXCreatePbuffer = nullptr;
+static _glXDestroyPbuffer qt_glXDestroyPbuffer = nullptr;
+static _glXGetFBConfigAttrib qt_glXGetFBConfigAttrib = nullptr;
+static _glXMakeContextCurrent qt_glXMakeContextCurrent = nullptr;
 
 #define glXChooseFBConfig qt_glXChooseFBConfig
 #define glXCreateNewContext qt_glXCreateNewContext
@@ -226,7 +226,7 @@ bool QGLPixelBufferPrivate::init(const QSize &size, const QGLFormat &f, QGLWidge
         }
 
         int pb_attribs[] = {GLX_PBUFFER_WIDTH, size.width(), GLX_PBUFFER_HEIGHT, size.height(), XNone};
-        GLXContext shareContext = 0;
+        GLXContext shareContext = nullptr;
         if (shareWidget && shareWidget->d_func()->glcx)
             shareContext = (GLXContext) shareWidget->d_func()->glcx->d_func()->cx;
 
@@ -274,12 +274,12 @@ bool QGLPixelBuffer::hasOpenGLPbuffers()
 
     GLXFBConfig *configs = glXChooseFBConfig(X11->display, X11->defaultScreen, attribs, &num_configs);
     GLXPbuffer pbuf = 0;
-    GLXContext ctx = 0;
+    GLXContext ctx = nullptr;
 
     if (configs && num_configs) {
         int pb_attribs[] = {GLX_PBUFFER_WIDTH, 128, GLX_PBUFFER_HEIGHT, 128, XNone};
         pbuf = glXCreatePbuffer(X11->display, configs[0], pb_attribs);
-        ctx = glXCreateNewContext(X11->display, configs[0], GLX_RGBA_TYPE, 0, true);
+        ctx = glXCreateNewContext(X11->display, configs[0], GLX_RGBA_TYPE, nullptr, true);
         XFree(configs);
 	glXDestroyContext(X11->display, ctx);
 	glXDestroyPbuffer(X11->display, pbuf);

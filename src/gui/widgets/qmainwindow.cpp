@@ -75,7 +75,7 @@ class QMainWindowPrivate : public QWidgetPrivate
     Q_DECLARE_PUBLIC(QMainWindow)
 public:
     inline QMainWindowPrivate()
-        : layout(0), explicitIconSize(false), toolButtonStyle(Qt::ToolButtonIconOnly)
+        : layout(nullptr), explicitIconSize(false), toolButtonStyle(Qt::ToolButtonIconOnly)
 #ifdef Q_WS_MAC
             , useHIToolBar(false)
 #endif
@@ -104,7 +104,7 @@ public:
 
     static inline QMainWindowLayout *mainWindowLayout(const QMainWindow *mainWindow)
     {
-        return mainWindow ? mainWindow->d_func()->layout : static_cast<QMainWindowLayout *>(0);
+        return mainWindow ? mainWindow->d_func()->layout : static_cast<QMainWindowLayout *>(nullptr);
     }
 };
 
@@ -162,10 +162,10 @@ void QMainWindowPrivate::init()
 
     topLayout->addItem(layout, 1, 1);
 #else
-    layout = new QMainWindowLayout(q, 0);
+    layout = new QMainWindowLayout(q, nullptr);
 #endif
 
-    const int metric = q->style()->pixelMetric(QStyle::PM_ToolBarIconSize, 0, q);
+    const int metric = q->style()->pixelMetric(QStyle::PM_ToolBarIconSize, nullptr, q);
     iconSize = QSize(metric, metric);
     q->setAttribute(Qt::WA_Hover);
 }
@@ -442,7 +442,7 @@ void QMainWindow::setIconSize(const QSize &iconSize)
     Q_D(QMainWindow);
     QSize sz = iconSize;
     if (!sz.isValid()) {
-        const int metric = style()->pixelMetric(QStyle::PM_ToolBarIconSize, 0, this);
+        const int metric = style()->pixelMetric(QStyle::PM_ToolBarIconSize, nullptr, this);
         sz = QSize(metric, metric);
     }
     if (d->iconSize != sz) {
@@ -1629,7 +1629,7 @@ void QMainWindow::contextMenuEvent(QContextMenuEvent *event)
 QMenu *QMainWindow::createPopupMenu()
 {
     Q_D(QMainWindow);
-    QMenu *menu = 0;
+    QMenu *menu = nullptr;
 #ifndef QT_NO_DOCKWIDGET
     QList<QDockWidget *> dockwidgets = findChildren<QDockWidget *>();
     if (dockwidgets.size()) {

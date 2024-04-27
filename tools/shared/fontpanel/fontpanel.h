@@ -68,7 +68,7 @@ class FontPanel: public QGroupBox
 {
     Q_OBJECT
 public:
-    FontPanel(QWidget *parentWidget = 0);
+    FontPanel(QWidget *parentWidget = nullptr);
 
     QFont selectedFont() const;
     void setSelectedFont(const QFont &);

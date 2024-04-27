@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeWidget:
 {
     Q_OBJECT
 public:
-    QScriptDebuggerCodeWidget(QWidget *parent = 0);
+    QScriptDebuggerCodeWidget(QWidget *parent = nullptr);
     ~QScriptDebuggerCodeWidget();
 
     QScriptDebuggerScriptsModel *scriptsModel() const;

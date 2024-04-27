@@ -86,7 +86,7 @@ static const struct {
     { CONFIG_LANGUAGE, "Cpp" },
     { CONFIG_OUTPUTFORMATS, "HTML" },
     { CONFIG_TABSIZE, "8" },
-    { 0, 0 }
+    { nullptr, nullptr }
 };
 
 static bool slow = false;
@@ -195,7 +195,7 @@ static void processQdocconfFile(const QString &fileName)
     QStringList fileNames = config.getStringList(CONFIG_TRANSLATORS);
     QStringList::Iterator fn = fileNames.begin();
     while (fn != fileNames.end()) {
-	QTranslator *translator = new QTranslator(0);
+	QTranslator *translator = new QTranslator(nullptr);
 	if (!translator->load(*fn))
 	    config.lastLocation().error(tr("Cannot load translator '%1'")
 					 .arg(*fn));
@@ -330,7 +330,7 @@ static void processQdocconfFile(const QString &fileName)
     QSet<QString>::ConstIterator of = outputFormats.begin();
     while (of != outputFormats.end()) {
         Generator *generator = Generator::generatorForFormat(*of);
-        if (generator == 0)
+        if (generator == nullptr)
             outputFormatsLocation.fatal(tr("Unknown output format '%1'")
                                         .arg(*of));
         generator->generateTree(tree);

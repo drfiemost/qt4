@@ -64,7 +64,7 @@ public:
     Q_DECLARE_PUBLIC(QGraphicsTransform)
 
     QGraphicsTransformPrivate()
-        : QObjectPrivate(), item(0) {}
+        : QObjectPrivate(), item(nullptr) {}
 
     QGraphicsItem *item;
 

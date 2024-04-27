@@ -241,7 +241,7 @@ public:
 
 QImageIOHandlerPrivate::QImageIOHandlerPrivate(QImageIOHandler *q)
 {
-    device = 0;
+    device = nullptr;
     q_ptr = q;
 }
 

@@ -151,7 +151,7 @@ namespace JSC {
 
     inline ScopeChainIterator ScopeChainNode::end() const
     { 
-        return ScopeChainIterator(0); 
+        return ScopeChainIterator(nullptr); 
     }
 
     class NoScopeChain {};
@@ -160,12 +160,12 @@ namespace JSC {
         friend class JIT;
     public:
         ScopeChain(NoScopeChain)
-            : m_node(0)
+            : m_node(nullptr)
         {
         }
 
         ScopeChain(JSObject* o, JSGlobalData* globalData, JSGlobalObject* globalObject, JSObject* globalThis)
-            : m_node(new ScopeChainNode(0, o, globalData, globalObject, globalThis))
+            : m_node(new ScopeChainNode(nullptr, o, globalData, globalObject, globalThis))
         {
         }
 
@@ -202,7 +202,7 @@ namespace JSC {
         void push(JSObject* o) { m_node = m_node->push(o); }
 
         void pop() { m_node = m_node->pop(); }
-        void clear() { m_node->deref(); m_node = 0; }
+        void clear() { m_node->deref(); m_node = nullptr; }
         
         JSGlobalObject* globalObject() const { return m_node->globalObject; }
 

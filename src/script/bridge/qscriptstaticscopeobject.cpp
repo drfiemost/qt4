@@ -47,7 +47,7 @@ QT_BEGIN_NAMESPACE
   \sa QScriptContext::pushScope()
 */
 
-const JSC::ClassInfo QScriptStaticScopeObject::info = { "QScriptStaticScopeObject", 0, 0, 0 };
+const JSC::ClassInfo QScriptStaticScopeObject::info = { "QScriptStaticScopeObject", nullptr, nullptr, nullptr };
 
 /*!
     Creates a static scope object with a fixed set of undeletable properties.

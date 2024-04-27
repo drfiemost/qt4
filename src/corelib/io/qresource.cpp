@@ -111,7 +111,7 @@ class QResourceRoot
 public:
     mutable QAtomicInt ref;
 
-    inline QResourceRoot(): tree(0), names(0), payloads(0) {}
+    inline QResourceRoot(): tree(nullptr), names(nullptr), payloads(nullptr) {}
     inline QResourceRoot(const uchar *t, const uchar *n, const uchar *d) { setSource(t, n, d); }
     virtual ~QResourceRoot() { }
     int findNode(const QString &path, const QLocale &locale=QLocale()) const;
@@ -120,7 +120,7 @@ public:
     const uchar *data(int node, qint64 *size) const;
     QStringList children(int node) const;
     virtual QString mappingRoot() const { return QString(); }
-    bool mappingRootSubdir(const QString &path, QString *match=0) const;
+    bool mappingRootSubdir(const QString &path, QString *match=nullptr) const;
     inline bool operator==(const QResourceRoot &other) const
     { return tree == other.tree && names == other.names && payloads == other.payloads; }
     inline bool operator!=(const QResourceRoot &other) const
@@ -243,7 +243,7 @@ QResourcePrivate::clear()
 {
     absoluteFilePath.clear();
     compressed = 0;
-    data = 0;
+    data = nullptr;
     size = 0;
     children.clear();
     container = 0;
@@ -272,7 +272,7 @@ QResourcePrivate::load(const QString &file)
                     data = res->data(node, &size);
                     compressed = res->isCompressed(node);
                 } else {
-                    data = 0;
+                    data = nullptr;
                     size = 0;
                     compressed = 0;
                 }
@@ -283,7 +283,7 @@ QResourcePrivate::load(const QString &file)
             related.append(res);
         } else if(res->mappingRootSubdir(file)) {
             container = true;
-            data = 0;
+            data = nullptr;
             size = 0;
             compressed = 0;
             res->ref.ref();
@@ -761,7 +761,7 @@ const uchar *QResourceRoot::data(int node, qint64 *size) const
 {
     if(node == -1) {
         *size = 0;
-        return 0;
+        return nullptr;
     }
     int offset = findOffset(node) + 4; //jump past name
 
@@ -780,7 +780,7 @@ const uchar *QResourceRoot::data(int node, qint64 *size) const
         return ret;
     }
     *size = 0;
-    return 0;
+    return nullptr;
 }
 QStringList QResourceRoot::children(int node) const
 {
@@ -877,7 +877,7 @@ class QDynamicBufferResourceRoot: public QResourceRoot
     const uchar *buffer;
 
 public:
-    inline QDynamicBufferResourceRoot(const QString &_root) : root(_root), buffer(0) { }
+    inline QDynamicBufferResourceRoot(const QString &_root) : root(_root), buffer(nullptr) { }
     inline ~QDynamicBufferResourceRoot() { }
     inline const uchar *mappingBuffer() const { return buffer; }
     virtual QString mappingRoot() const { return root; }
@@ -943,12 +943,12 @@ class QDynamicFileResourceRoot: public QDynamicBufferResourceRoot
     unsigned int unmapLength;
 
 public:
-    inline QDynamicFileResourceRoot(const QString &_root) : QDynamicBufferResourceRoot(_root), unmapPointer(0), unmapLength(0) { }
+    inline QDynamicFileResourceRoot(const QString &_root) : QDynamicBufferResourceRoot(_root), unmapPointer(nullptr), unmapLength(0) { }
     ~QDynamicFileResourceRoot() {
 #if defined(QT_USE_MMAP)
         if (unmapPointer) {
             munmap((char*)unmapPointer, unmapLength);
-            unmapPointer = 0;
+            unmapPointer = nullptr;
             unmapLength = 0;
         } else
 #endif
@@ -961,7 +961,7 @@ public:
 
     bool registerSelf(const QString &f) {
         bool fromMM = false;
-        uchar *data = 0;
+        uchar *data = nullptr;
         unsigned int data_len = 0;
 
 #ifdef QT_USE_MMAP
@@ -985,7 +985,7 @@ public:
             if (!QT_FSTAT(fd, &st)) {
                 uchar *ptr;
                 ptr = reinterpret_cast<uchar *>(
-                    mmap(0, st.st_size,             // any address, whole file
+                    mmap(nullptr, st.st_size,             // any address, whole file
                          PROT_READ,                 // read-only memory
                          MAP_FILE | MAP_PRIVATE,    // swap-backed map from file
                          fd, 0));                   // from offset 0 of fd
@@ -1010,7 +1010,7 @@ public:
                 ok = (data_len == (uint)file.read((char*)data, data_len));
             if (!ok) {
                 delete [] data;
-                data = 0;
+                data = nullptr;
                 data_len = 0;
                 return false;
             }
@@ -1351,7 +1351,7 @@ bool QResourceFileEngine::isSequential() const
 QAbstractFileEngine::FileFlags QResourceFileEngine::fileFlags(QAbstractFileEngine::FileFlags type) const
 {
     Q_D(const QResourceFileEngine);
-    QAbstractFileEngine::FileFlags ret = 0;
+    QAbstractFileEngine::FileFlags ret = nullptr;
     if(!d->resource.isValid())
         return ret;
 
@@ -1440,7 +1440,7 @@ QAbstractFileEngine::Iterator *QResourceFileEngine::beginEntryList(QDir::Filters
 */
 QAbstractFileEngine::Iterator *QResourceFileEngine::endEntryList()
 {
-    return 0;
+    return nullptr;
 }
 
 bool QResourceFileEngine::extension(Extension extension, const ExtensionOption *option, ExtensionReturn *output)
@@ -1450,7 +1450,7 @@ bool QResourceFileEngine::extension(Extension extension, const ExtensionOption *
         const MapExtensionOption *options = (MapExtensionOption*)(option);
         MapExtensionReturn *returnValue = static_cast<MapExtensionReturn*>(output);
         returnValue->address = d->map(options->offset, options->size, options->flags);
-        return (returnValue->address != 0);
+        return (returnValue->address != nullptr);
     }
     if (extension == UnMapExtension) {
         UnMapExtensionOption *options = (UnMapExtensionOption*)option;
@@ -1470,7 +1470,7 @@ uchar *QResourceFileEnginePrivate::map(qint64 offset, qint64 size, QFile::Memory
     Q_UNUSED(flags);
     if (offset < 0 || size <= 0 || !resource.isValid() || offset + size > resource.size()) {
         q->setError(QFile::UnspecifiedError, QString());
-        return 0;
+        return nullptr;
     }
     uchar *address = const_cast<uchar *>(resource.data());
     return (address + offset);

@@ -67,14 +67,14 @@ static QString protect(const QString & str)
 }
 
 Phrase::Phrase()
-    : shrtc(-1), m_phraseBook(0)
+    : shrtc(-1), m_phraseBook(nullptr)
 {
 }
 
 Phrase::Phrase(const QString &source, const QString &target,
                const QString &definition, int sc)
     : shrtc(sc), s(source), t(target), d(definition),
-      m_phraseBook(0)
+      m_phraseBook(nullptr)
 {
 }
 
@@ -191,7 +191,7 @@ bool QphHandler::fatalError(const QXmlParseException &exception)
         QString msg = PhraseBook::tr("Parse error at line %1, column %2 (%3).")
             .arg(exception.lineNumber()).arg(exception.columnNumber())
             .arg(exception.message());
-        QMessageBox::information(0,
+        QMessageBox::information(nullptr,
             QObject::tr("Qt Linguist"), msg);
     }
     return false;
@@ -249,8 +249,8 @@ bool PhraseBook::load(const QString &fileName, bool *langGuessed)
     reader.setErrorHandler(hand);
 
     bool ok = reader.parse(in);
-    reader.setContentHandler(0);
-    reader.setErrorHandler(0);
+    reader.setContentHandler(nullptr);
+    reader.setErrorHandler(nullptr);
 
     Translator::languageAndCountry(hand->language(), &m_language, &m_country);
     *langGuessed = false;
@@ -325,7 +325,7 @@ void PhraseBook::append(Phrase *phrase)
 void PhraseBook::remove(Phrase *phrase)
 {
     m_phrases.removeOne(phrase);
-    phrase->setPhraseBook(0);
+    phrase->setPhraseBook(nullptr);
     setModified(true);
     emit listChanged();
 }

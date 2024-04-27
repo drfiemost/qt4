@@ -270,7 +270,7 @@ QPainterPath QRawFont::pathForGlyph(quint32 glyphIndex) const
 
     QFixedPoint position;
     QPainterPath path;
-    d->fontEngine->addGlyphsToPath(&glyphIndex, &position, 1, &path, 0);
+    d->fontEngine->addGlyphsToPath(&glyphIndex, &position, 1, &path, nullptr);
     return path;
 }
 
@@ -483,7 +483,7 @@ QVector<QPointF> QRawFont::advancesForGlyphIndexes(const QVector<quint32> &glyph
     QVarLengthGlyphLayoutArray glyphs(numGlyphs);
     memcpy(glyphs.glyphs, glyphIndexes.data(), numGlyphs * sizeof(quint32));
 
-    d->fontEngine->recalcAdvances(&glyphs, 0);
+    d->fontEngine->recalcAdvances(&glyphs, nullptr);
 
     QVector<QPointF> advances;
     for (int i=0; i<numGlyphs; ++i)
@@ -514,7 +514,7 @@ bool QRawFont::advancesForGlyphIndexes(const quint32 *glyphIndexes, QPointF *adv
     glyphs.advances_x = advances_x.data();
     glyphs.advances_y = advances_y.data();
 
-    d->fontEngine->recalcAdvances(&glyphs, 0);
+    d->fontEngine->recalcAdvances(&glyphs, nullptr);
 
     for (int i=0; i<numGlyphs; ++i)
         advances[i] = QPointF(glyphs.advances_x[i].toReal(), glyphs.advances_y[i].toReal());
@@ -649,16 +649,16 @@ QRawFont QRawFont::fromFont(const QFont &font, QFontDatabase::WritingSystem writ
     int script = qt_script_for_writing_system(writingSystem);
     QFontEngine *fe = font_d->engineForScript(script);
 
-    if (fe != 0 && fe->type() == QFontEngine::Multi) {
+    if (fe != nullptr && fe->type() == QFontEngine::Multi) {
         QFontEngineMulti *multiEngine = static_cast<QFontEngineMulti *>(fe);
         fe = multiEngine->engine(0);
-        if (fe == 0) {
+        if (fe == nullptr) {
             multiEngine->loadEngine(0);
             fe = multiEngine->engine(0);
         }
     }
 
-    if (fe != 0) {
+    if (fe != nullptr) {
         rawFont.d.data()->fontEngine = fe;
         rawFont.d.data()->fontEngine->ref.ref();
         rawFont.d.data()->hintingPreference = font.hintingPreference();
@@ -672,14 +672,14 @@ QRawFont QRawFont::fromFont(const QFont &font, QFontDatabase::WritingSystem writ
 */
 void QRawFont::setPixelSize(qreal pixelSize)
 {
-    if (d->fontEngine == 0)
+    if (d->fontEngine == nullptr)
         return;
 
     d.detach();
     QFontEngine *oldFontEngine = d->fontEngine;
 
     d->fontEngine = d->fontEngine->cloneWithSize(pixelSize);
-    if (d->fontEngine != 0)
+    if (d->fontEngine != nullptr)
         d->fontEngine->ref.ref();
 
     if (!oldFontEngine->ref.deref())
@@ -692,9 +692,9 @@ void QRawFont::setPixelSize(qreal pixelSize)
 void QRawFontPrivate::cleanUp()
 {
     platformCleanUp();
-    if (fontEngine != 0 && !fontEngine->ref.deref())
+    if (fontEngine != nullptr && !fontEngine->ref.deref())
         delete fontEngine;
-    fontEngine = 0;
+    fontEngine = nullptr;
 
     hintingPreference = QFont::PreferDefaultHinting;
 }

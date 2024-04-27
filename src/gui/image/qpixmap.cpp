@@ -132,14 +132,14 @@ void QPixmap::init(int w, int h, int type)
 {
     if (qt_appType == QApplication::Tty) {
         qWarning("QPixmap: Cannot create a QPixmap when no GUI is being used");
-        data = 0;
+        data = nullptr;
         return;
     }
 
     if ((w > 0 && h > 0) || type == QPixmapData::BitmapType)
         data = QPixmapData::create(w, h, (QPixmapData::PixelType) type);
     else
-        data = 0;
+        data = nullptr;
 }
 
 /*!
@@ -850,7 +850,7 @@ bool QPixmap::load(const QString &fileName, const char *format, Qt::ImageConvers
 
 bool QPixmap::loadFromData(const uchar *buf, uint len, const char *format, Qt::ImageConversionFlags flags)
 {
-    if (len == 0 || buf == 0)
+    if (len == 0 || buf == nullptr)
         return false;
 
     if (!data)
@@ -1756,7 +1756,7 @@ QPixmap QPixmap::alphaChannel() const
 */
 QPaintEngine *QPixmap::paintEngine() const
 {
-    return data ? data->paintEngine() : 0;
+    return data ? data->paintEngine() : nullptr;
 }
 
 /*!
@@ -1966,7 +1966,7 @@ QPixmapData* QPixmap::pixmapData() const
         return pm->runtimeData() ? pm->runtimeData() : pm;
     }
 
-    return 0;
+    return nullptr;
 }
 
 

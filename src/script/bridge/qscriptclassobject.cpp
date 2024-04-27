@@ -191,7 +191,7 @@ void ClassObjectDelegate::getOwnPropertyNames(QScriptObject* object, JSC::ExecSt
     QScript::SaveFrameHelper saveFrame(engine, exec);
     QScriptValue scriptObject = engine->scriptValueFromJSCValue(object);
     QScriptClassPropertyIterator *it = m_scriptClass->newIterator(scriptObject);
-    if (it != 0) {
+    if (it != nullptr) {
         while (it->hasNext()) {
             it->next();
             QString name = it->name().toString();

@@ -435,7 +435,7 @@ Q_GUI_EXPORT int qSmartSpacing(const QLayout *layout, QStyle::PixelMetric pm)
         return -1;
     } else if (parent->isWidgetType()) {
         QWidget *pw = static_cast<QWidget *>(parent);
-        return pw->style()->pixelMetric(pm, 0, pw);
+        return pw->style()->pixelMetric(pm, nullptr, pw);
     } else {
         return static_cast<QLayout *>(parent)->spacing();
     }

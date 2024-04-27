@@ -121,7 +121,7 @@ QByteArray MocParser::readLine()
 
 void MocParser::loadIntData(uint *&data)
 {
-    data = 0;                   // initialise
+    data = nullptr;                   // initialise
     QVarLengthArray<uint> array;
     QRegExp rx(QLatin1String("(\\d+|0x[0-9abcdef]+)"), Qt::CaseInsensitive);
 
@@ -142,7 +142,7 @@ void MocParser::loadIntData(uint *&data)
         while ((pos = rx.indexIn(line, pos)) != -1) {
             QString num = rx.cap(1);
             if (num.startsWith(QLatin1String("0x")))
-                array.append(num.mid(2).toUInt(0, 16));
+                array.append(num.mid(2).toUInt(nullptr, 16));
             else
                 array.append(num.toUInt());
             pos += rx.matchedLength();
@@ -154,7 +154,7 @@ void MocParser::loadIntData(uint *&data)
 
 void MocParser::loadStringData(char *&stringdata)
 {
-    stringdata = 0;
+    stringdata = nullptr;
     QVarLengthArray<char, 1024> array;
 
     while (!input->atEnd()) {
@@ -218,7 +218,7 @@ void MocParser::loadStringData(char *&stringdata)
                     case 'x':
                         if (start + 2 <= len)
                             parseError();
-                        array.append(char(line.mid(start + 1, 2).toInt(0, 16)));
+                        array.append(char(line.mid(start + 1, 2).toInt(nullptr, 16)));
                         break;
 
                     default:
@@ -231,7 +231,7 @@ void MocParser::loadStringData(char *&stringdata)
                     QRegExp octal(QLatin1String("([0-7]+)"));
                     if (octal.indexIn(QLatin1String(line), start) == -1)
                         parseError();
-                    array.append(char(octal.cap(1).toInt(0, 8)));
+                    array.append(char(octal.cap(1).toInt(nullptr, 8)));
                 }
             } else {
                 array.append(line.at(start));
@@ -268,13 +268,13 @@ void MocParser::parse(const char *fname, QIODevice *io, int lineNum)
             mo.d.superdata = &QObject::staticMetaObject;
             mo.d.stringdata = stringdata;
             mo.d.data = data;
-            mo.d.extradata = 0;
+            mo.d.extradata = nullptr;
             objects.append(mo);
         }
     }
 
-    fname = 0;
-    input = 0;
+    fname = nullptr;
+    input = nullptr;
 }
 
 MocParser::~MocParser()

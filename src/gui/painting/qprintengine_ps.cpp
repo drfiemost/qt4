@@ -671,7 +671,7 @@ QPSPrintEngine::QPSPrintEngine(QPrinter::PrinterMode m)
 static void ignoreSigPipe(bool b)
 {
 #ifndef QT_NO_LPR
-    static struct sigaction *users_sigpipe_handler = 0;
+    static struct sigaction *users_sigpipe_handler = nullptr;
     static int lockCount = 0;
 
 #ifndef QT_NO_THREAD
@@ -682,7 +682,7 @@ static void ignoreSigPipe(bool b)
         if (lockCount++ > 0)
             return;
 
-        if (users_sigpipe_handler != 0)
+        if (users_sigpipe_handler != nullptr)
             return; // already ignoring sigpipe
 
         users_sigpipe_handler = new struct sigaction;
@@ -693,21 +693,21 @@ static void ignoreSigPipe(bool b)
 
         if (sigaction(SIGPIPE, &tmp_sigpipe_handler, users_sigpipe_handler) == -1) {
             delete users_sigpipe_handler;
-            users_sigpipe_handler = 0;
+            users_sigpipe_handler = nullptr;
         }
     }
     else {
         if (--lockCount > 0)
             return;
 
-        if (users_sigpipe_handler == 0)
+        if (users_sigpipe_handler == nullptr)
             return; // not ignoring sigpipe
 
-        if (sigaction(SIGPIPE, users_sigpipe_handler, 0) == -1)
+        if (sigaction(SIGPIPE, users_sigpipe_handler, nullptr) == -1)
             qWarning("QPSPrintEngine: Could not restore SIGPIPE handler");
 
         delete users_sigpipe_handler;
-        users_sigpipe_handler = 0;
+        users_sigpipe_handler = nullptr;
     }
 #else
     Q_UNUSED(b);
@@ -793,7 +793,7 @@ bool QPSPrintEngine::end()
 
     setActive(false);
     d->printerState = QPrinter::Idle;
-    d->pdev = 0;
+    d->pdev = nullptr;
 
     return true;
 }

@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
 class QStylePainter : public QPainter
 {
 public:
-    inline QStylePainter() : QPainter(), widget(0), wstyle(0) {}
+    inline QStylePainter() : QPainter(), widget(nullptr), wstyle(nullptr) {}
     inline explicit QStylePainter(QWidget *w) { begin(w, w); }
     inline QStylePainter(QPaintDevice *pd, QWidget *w) { begin(pd, w); }
     inline bool begin(QWidget *w) { return begin(w, w); }

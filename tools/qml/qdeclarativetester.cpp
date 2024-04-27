@@ -58,7 +58,7 @@ extern Q_GUI_EXPORT bool qt_applefontsmoothing_enabled;
 QDeclarativeTester::QDeclarativeTester(const QString &script, QDeclarativeViewer::ScriptOptions opts,
                      QDeclarativeView *parent)
 : QAbstractAnimation(parent), m_script(script), m_view(parent), filterEvents(true), options(opts),
-  testscript(0), hasCompleted(false), hasFailed(false)
+  testscript(nullptr), hasCompleted(false), hasFailed(false)
 {
     parent->viewport()->installEventFilter(this);
     parent->installEventFilter(this);

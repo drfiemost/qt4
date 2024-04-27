@@ -57,12 +57,12 @@ namespace QmlJSDebugger {
 
 AbstractViewInspector::AbstractViewInspector(QObject *parent) :
     QObject(parent),
-    m_currentTool(0),
+    m_currentTool(nullptr),
     m_showAppOnTop(false),
     m_designModeBehavior(false),
     m_animationPaused(false),
     m_slowDownFactor(1.0),
-    m_debugService(0)
+    m_debugService(nullptr)
 {
     m_debugService = QDeclarativeInspectorService::instance();
     connect(m_debugService, SIGNAL(gotMessage(QByteArray)),

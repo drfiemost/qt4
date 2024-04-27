@@ -62,7 +62,7 @@ class QDESIGNER_SDK_EXPORT QDesignerFormWindowManagerInterface: public QObject
 {
     Q_OBJECT
 public:
-    QDesignerFormWindowManagerInterface(QObject *parent = 0);
+    QDesignerFormWindowManagerInterface(QObject *parent = nullptr);
     virtual ~QDesignerFormWindowManagerInterface();
 
     virtual QAction *actionCut() const;
@@ -90,7 +90,7 @@ public:
     virtual int formWindowCount() const;
     virtual QDesignerFormWindowInterface *formWindow(int index) const;
 
-    virtual QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = 0, Qt::WindowFlags flags = 0);
+    virtual QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = nullptr, Qt::WindowFlags flags = nullptr);
 
     virtual QDesignerFormEditorInterface *core() const;
 

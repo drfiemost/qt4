@@ -68,7 +68,7 @@ public:
     virtual void itemVisibilityChanged(QDeclarativeItem *) {}
     virtual void itemOpacityChanged(QDeclarativeItem *) {}
     virtual void itemDestroyed(QDeclarativeItem *) {}
-    virtual QDeclarativeAnchorsPrivate *anchorPrivate() { return 0; }
+    virtual QDeclarativeAnchorsPrivate *anchorPrivate() { return nullptr; }
 };
 
 QT_END_NAMESPACE

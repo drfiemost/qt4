@@ -343,7 +343,7 @@ public:
 class QScriptTypeInfo
 {
 public:
-    QScriptTypeInfo() : signature(0, '\0'), marshal(0), demarshal(0)
+    QScriptTypeInfo() : signature(0, '\0'), marshal(nullptr), demarshal(nullptr)
     { }
 
     QByteArray signature;
@@ -957,11 +957,11 @@ static QScriptValue __setupPackage__(QScriptContext *ctx, QScriptEngine *eng)
 } // namespace QScript
 
 QScriptEnginePrivate::QScriptEnginePrivate()
-    : originalGlobalObjectProxy(0), currentFrame(0),
-      qobjectPrototype(0), qmetaobjectPrototype(0), variantPrototype(0),
-      activeAgent(0), agentLineNumber(-1),
-      registeredScriptValues(0), freeScriptValues(0), freeScriptValuesCount(0),
-      registeredScriptStrings(0), processEventsInterval(-1), inEval(false)
+    : originalGlobalObjectProxy(nullptr), currentFrame(nullptr),
+      qobjectPrototype(nullptr), qmetaobjectPrototype(nullptr), variantPrototype(nullptr),
+      activeAgent(nullptr), agentLineNumber(-1),
+      registeredScriptValues(nullptr), freeScriptValues(nullptr), freeScriptValuesCount(0),
+      registeredScriptStrings(nullptr), processEventsInterval(-1), inEval(false)
 {
     qMetaTypeId<QScriptValue>();
     qMetaTypeId<QList<int> >();
@@ -1042,7 +1042,7 @@ QVariant QScriptEnginePrivate::jscValueToVariant(JSC::ExecState *exec, JSC::JSVa
 {
     if (targetType == QMetaType::QVariant)
         return toVariant(exec, value);
-    QVariant v(targetType, (void *)0);
+    QVariant v(targetType, (void *)nullptr);
     if (convertValue(exec, value, targetType, v.data()))
         return v;
     if (isVariant(value)) {
@@ -1176,7 +1176,7 @@ void QScriptEnginePrivate::setGlobalObject(JSC::JSObject *object)
         return;
     QScript::GlobalObject *glob = static_cast<QScript::GlobalObject*>(originalGlobalObject());
     if (object == originalGlobalObjectProxy) {
-        glob->customGlobalObject = 0;
+        glob->customGlobalObject = nullptr;
         // Sync the internal prototype, since JSObject::prototype() is not virtual.
         glob->setPrototype(originalGlobalObjectProxy->prototype());
     } else {
@@ -1211,7 +1211,7 @@ JSC::JSValue QScriptEnginePrivate::toUsableValue(JSC::JSValue value)
 */
 JSC::JSValue QScriptEnginePrivate::thisForContext(JSC::ExecState *frame)
 {
-    if (frame->codeBlock() != 0) {
+    if (frame->codeBlock() != nullptr) {
         return frame->thisValue();
     } else if(frame == frame->lexicalGlobalObject()->globalExec()) {
         return frame->globalThisValue();
@@ -1270,7 +1270,7 @@ void QScriptEnginePrivate::mark(JSC::MarkStack& markStack)
 
     {
         QScriptValuePrivate *it;
-        for (it = registeredScriptValues; it != 0; it = it->next) {
+        for (it = registeredScriptValues; it != nullptr; it = it->next) {
             if (it->isJSC())
                 markStack.append(it->jscValue);
         }
@@ -1339,7 +1339,7 @@ void QScriptEnginePrivate::agentDeleted(QScriptEngineAgent *agent)
     ownedAgents.removeOne(agent);
     if (activeAgent == agent) {
         QScriptEngineAgentPrivate::get(agent)->detach();
-        activeAgent = 0;
+        activeAgent = nullptr;
     }
 }
 
@@ -1421,7 +1421,7 @@ JSC::JSValue QScriptEnginePrivate::newQObject(
     QScript::QObjectData *data = qobjectData(object);
     bool preferExisting = (options & QScriptEngine::PreferExistingWrapperObject) != 0;
     QScriptEngine::QObjectWrapOptions opt = options & ~QScriptEngine::PreferExistingWrapperObject;
-    QScriptObject *result = 0;
+    QScriptObject *result = nullptr;
     if (preferExisting) {
         result = data->findWrapper(ownership, opt);
         if (result)
@@ -1593,26 +1593,26 @@ void QScriptEnginePrivate::detachAllRegisteredScriptValues()
 {
     QScriptValuePrivate *it;
     QScriptValuePrivate *next;
-    for (it = registeredScriptValues; it != 0; it = next) {
+    for (it = registeredScriptValues; it != nullptr; it = next) {
         it->detachFromEngine();
         next = it->next;
-        it->prev = 0;
-        it->next = 0;
+        it->prev = nullptr;
+        it->next = nullptr;
     }
-    registeredScriptValues = 0;
+    registeredScriptValues = nullptr;
 }
 
 void QScriptEnginePrivate::detachAllRegisteredScriptStrings()
 {
     QScriptStringPrivate *it;
     QScriptStringPrivate *next;
-    for (it = registeredScriptStrings; it != 0; it = next) {
+    for (it = registeredScriptStrings; it != nullptr; it = next) {
         it->detachFromEngine();
         next = it->next;
-        it->prev = 0;
-        it->next = 0;
+        it->prev = nullptr;
+        it->next = nullptr;
     }
-    registeredScriptStrings = 0;
+    registeredScriptStrings = nullptr;
 }
 
 #ifndef QT_NO_REGEXP
@@ -1905,9 +1905,9 @@ QScriptValue::PropertyFlags QScriptEnginePrivate::propertyFlags(JSC::ExecState *
             JSC::JSValue proto = object->prototype();
             return propertyFlags(exec, proto, id, mode);
         }
-        return 0;
+        return nullptr;
     }
-    QScriptValue::PropertyFlags result = 0;
+    QScriptValue::PropertyFlags result = nullptr;
     if (attribs & JSC::ReadOnly)
         result |= QScriptValue::ReadOnly;
     if (attribs & JSC::DontEnum)
@@ -1960,7 +1960,7 @@ QScriptEngine::QScriptEngine(QScriptEnginePrivate &dd)
     \l{ECMA-262}, Section 15.1.
 */
 QScriptEngine::QScriptEngine()
-    : QObject(*new QScriptEnginePrivate, 0)
+    : QObject(*new QScriptEnginePrivate, nullptr)
 {
 }
 
@@ -2708,7 +2708,7 @@ QScriptContext *QScriptEngine::pushContext()
     QScript::APIShim shim(d);
 
     JSC::CallFrame* newFrame = d->pushContext(d->currentFrame, d->currentFrame->globalData().dynamicGlobalObject,
-                                              JSC::ArgList(), /*callee = */0);
+                                              JSC::ArgList(), /*callee = */nullptr);
 
     if (agent())
         agent()->contextPush();
@@ -2753,8 +2753,8 @@ JSC::CallFrame *QScriptEnginePrivate::pushContext(JSC::CallFrame *exec, JSC::JSV
 
     //build a frame
     JSC::CallFrame *newCallFrame = exec;
-    if (callee == 0 //called from  public QScriptEngine::pushContext
-        || exec->returnPC() == 0 || (contextFlags(exec) & NativeContext) //called from native-native call
+    if (callee == nullptr //called from  public QScriptEngine::pushContext
+        || exec->returnPC() == nullptr || (contextFlags(exec) & NativeContext) //called from native-native call
         || exec->callee() != callee) { //the interpreter did not build a frame for us.
         //We need to check if the Interpreter might have already created a frame for function called from JS.
         JSC::Interpreter *interp = exec->interpreter();
@@ -2762,7 +2762,7 @@ JSC::CallFrame *QScriptEnginePrivate::pushContext(JSC::CallFrame *exec, JSC::JSV
         int argc = args.size() + 1; //add "this"
         JSC::Register *newEnd = oldEnd + argc + JSC::RegisterFile::CallFrameHeaderSize;
         if (!interp->registerFile().grow(newEnd))
-            return 0; //### Stack overflow
+            return nullptr; //### Stack overflow
         newCallFrame = JSC::CallFrame::create(oldEnd);
         newCallFrame[0] = thisObject;
         int dst = 0;
@@ -2772,9 +2772,9 @@ JSC::CallFrame *QScriptEnginePrivate::pushContext(JSC::CallFrame *exec, JSC::JSV
         newCallFrame += argc + JSC::RegisterFile::CallFrameHeaderSize;
 
         if (!clearScopeChain) {
-            newCallFrame->init(0, /*vPC=*/0, exec->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
+            newCallFrame->init(nullptr, /*vPC=*/nullptr, exec->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
         } else {
-            newCallFrame->init(0, /*vPC=*/0, globalExec()->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
+            newCallFrame->init(nullptr, /*vPC=*/nullptr, globalExec()->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
         }
     } else {
         setContextFlags(newCallFrame, flags);
@@ -2804,7 +2804,7 @@ void QScriptEngine::popContext()
         agent()->contextPop();
     Q_D(QScriptEngine);
     QScript::APIShim shim(d);
-    if (d->currentFrame->returnPC() != 0 || d->currentFrame->codeBlock() != 0
+    if (d->currentFrame->returnPC() != nullptr || d->currentFrame->codeBlock() != nullptr
         || !currentContext()->parentContext()) {
         qWarning("QScriptEngine::popContext() doesn't match with pushContext()");
         return;
@@ -3005,7 +3005,7 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
 {
     Q_ASSERT(ptr != 0);
     JSC::JSValue result;
-    QScriptEnginePrivate *eng = exec ? QScript::scriptEngineFromExec(exec) : 0;
+    QScriptEnginePrivate *eng = exec ? QScript::scriptEngineFromExec(exec) : nullptr;
     QScriptTypeInfo *info = eng ? eng->m_typeInfos.value(type) : 0;
     if (info && info->marshal) {
         result = eng->scriptValueToJSCValue(info->marshal(eng->q_func(), ptr));
@@ -3107,7 +3107,7 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
 bool QScriptEnginePrivate::convertValue(JSC::ExecState *exec, JSC::JSValue value,
                                         int type, void *ptr)
 {
-    QScriptEnginePrivate *eng = exec ? QScript::scriptEngineFromExec(exec) : 0;
+    QScriptEnginePrivate *eng = exec ? QScript::scriptEngineFromExec(exec) : nullptr;
     if (eng) {
         QScriptTypeInfo *info = eng->m_typeInfos.value(type);
         if (info && info->demarshal) {
@@ -3243,7 +3243,7 @@ bool QScriptEnginePrivate::convertValue(JSC::ExecState *exec, JSC::JSValue value
                 else if (isQObject(proto)) {
                     QByteArray className = name.left(name.size()-1);
                     if (QObject *qobject = toQObject(exec, proto))
-                        canCast = qobject->qt_metacast(className) != 0;
+                        canCast = qobject->qt_metacast(className) != nullptr;
                 }
 #endif
                 if (canCast) {
@@ -3258,7 +3258,7 @@ bool QScriptEnginePrivate::convertValue(JSC::ExecState *exec, JSC::JSValue value
             }
         }
     } else if (value.isNull() && name.endsWith('*')) {
-        *reinterpret_cast<void* *>(ptr) = 0;
+        *reinterpret_cast<void* *>(ptr) = nullptr;
         return true;
     } else if (type == qMetaTypeId<QScriptValue>()) {
         if (!eng)
@@ -3391,7 +3391,7 @@ bool QScriptEnginePrivate::convertString(const QString &value, int type, void *p
 bool QScriptEnginePrivate::hasDemarshalFunction(int type) const
 {
     QScriptTypeInfo *info = m_typeInfos.value(type);
-    return info && (info->demarshal != 0);
+    return info && (info->demarshal != nullptr);
 }
 
 JSC::UString QScriptEnginePrivate::translationContextFromUrl(const JSC::UString &url)
@@ -3426,7 +3426,7 @@ bool QScriptEngine::convertV2(const QScriptValue &value, int type, void *ptr)
                 QScript::APIShim shim(vp->engine);
                 return QScriptEnginePrivate::convertValue(vp->engine->currentFrame, vp->jscValue, type, ptr);
             } else {
-                return QScriptEnginePrivate::convertValue(0, vp->jscValue, type, ptr);
+                return QScriptEnginePrivate::convertValue(nullptr, vp->jscValue, type, ptr);
             }
         }
         case QScriptValuePrivate::Number:
@@ -3549,7 +3549,7 @@ QScriptValue QScriptEngine::importExtension(const QString &extension)
         }
         d->extensionsBeingImported.insert(ext);
 
-        QScriptExtensionInterface *iface = 0;
+        QScriptExtensionInterface *iface = nullptr;
         QString initjsContents;
         QString initjsFileName;
 
@@ -3561,7 +3561,7 @@ QScriptValue QScriptEngine::importExtension(const QString &extension)
             if (iface->keys().contains(ext))
                 break; // use this one
             else
-                iface = 0; // keep looking
+                iface = nullptr; // keep looking
         }
 
         {
@@ -3601,7 +3601,7 @@ QScriptValue QScriptEngine::importExtension(const QString &extension)
                         if (iface->keys().contains(ext))
                             break; // use this one
                         else
-                            iface = 0; // keep looking
+                            iface = nullptr; // keep looking
                     }
                 }
 
@@ -4362,7 +4362,7 @@ QScriptSyntaxCheckResult::QScriptSyntaxCheckResult(QScriptSyntaxCheckResultPriva
   \internal
 */
 QScriptSyntaxCheckResult::QScriptSyntaxCheckResult()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 

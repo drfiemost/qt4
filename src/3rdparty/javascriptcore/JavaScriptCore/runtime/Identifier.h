@@ -144,8 +144,8 @@ namespace JSC {
 
     struct ThreadIdentifierTableData {
         ThreadIdentifierTableData()
-            : defaultIdentifierTable(0)
-            , currentIdentifierTable(0)
+            : defaultIdentifierTable(nullptr)
+            , currentIdentifierTable(nullptr)
         {
         }
 

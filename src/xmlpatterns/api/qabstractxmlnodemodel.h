@@ -109,7 +109,7 @@ namespace QPatternist
         {
             data = 0;
             additionalData = 0;
-            model = 0;
+            model = nullptr;
         }
     };
 }

@@ -322,15 +322,15 @@ public:
 };
 
 QDialogButtonBoxPrivate::QDialogButtonBoxPrivate(Qt::Orientation orient)
-    : orientation(orient), buttonLayout(0), internalRemove(false), center(false)
+    : orientation(orient), buttonLayout(nullptr), internalRemove(false), center(false)
 {
 }
 
 void QDialogButtonBoxPrivate::initLayout()
 {
     Q_Q(QDialogButtonBox);
-    layoutPolicy = QDialogButtonBox::ButtonLayout(q->style()->styleHint(QStyle::SH_DialogButtonLayout, 0, q));
-    bool createNewLayout = buttonLayout == 0
+    layoutPolicy = QDialogButtonBox::ButtonLayout(q->style()->styleHint(QStyle::SH_DialogButtonLayout, nullptr, q));
+    bool createNewLayout = buttonLayout == nullptr
         || (orientation == Qt::Horizontal && qobject_cast<QVBoxLayout *>(buttonLayout) != 0)
         || (orientation == Qt::Vertical && qobject_cast<QHBoxLayout *>(buttonLayout) != 0);
     if (createNewLayout) {
@@ -479,8 +479,8 @@ void QDialogButtonBoxPrivate::layoutButtons()
         ++currentLayout;
     }
 
-    QWidget *lastWidget = 0;
-    q->setFocusProxy(0);
+    QWidget *lastWidget = nullptr;
+    q->setFocusProxy(nullptr);
     for (int i = 0; i < buttonLayout->count(); ++i) {
         QLayoutItem *item = buttonLayout->itemAt(i);
         if (QWidget *widget = item->widget()) {
@@ -500,7 +500,7 @@ QPushButton *QDialogButtonBoxPrivate::createButton(QDialogButtonBox::StandardBut
                                                    bool doLayout)
 {
     Q_Q(QDialogButtonBox);
-    const char *buttonText = 0;
+    const char *buttonText = nullptr;
     int icon = 0;
 
     switch (sbutton) {
@@ -546,15 +546,15 @@ QPushButton *QDialogButtonBoxPrivate::createButton(QDialogButtonBox::StandardBut
     case QDialogButtonBox::RestoreDefaults:
         break;
     case QDialogButtonBox::NoButton:
-        return 0;
+        return nullptr;
         ;
     }
     buttonText = standardButtonText(sbutton);
 
     QPushButton *button = new QPushButton(QDialogButtonBox::tr(buttonText), q);
     QStyle *style = q->style();
-    if (style->styleHint(QStyle::SH_DialogButtonBox_ButtonsHaveIcons, 0, q) && icon != 0)
-        button->setIcon(style->standardIcon(QStyle::StandardPixmap(icon), 0, q));
+    if (style->styleHint(QStyle::SH_DialogButtonBox_ButtonsHaveIcons, nullptr, q) && icon != 0)
+        button->setIcon(style->standardIcon(QStyle::StandardPixmap(icon), nullptr, q));
     if (style != QApplication::style()) // Propagate style
         button->setStyle(style);
     standardButtonHash.insert(button, sbutton);
@@ -651,7 +651,7 @@ void QDialogButtonBoxPrivate::createStandardButtons(QDialogButtonBox::StandardBu
 
 const char *QDialogButtonBoxPrivate::standardButtonText(QDialogButtonBox::StandardButton sbutton) const
 {
-    const char *buttonText = 0;
+    const char *buttonText = nullptr;
     bool gnomeLayout = (layoutPolicy == QDialogButtonBox::GnomeLayout);
     switch (sbutton) {
     case QDialogButtonBox::Ok:
@@ -721,7 +721,7 @@ const char *QDialogButtonBoxPrivate::standardButtonText(QDialogButtonBox::Standa
 
 void QDialogButtonBoxPrivate::retranslateStrings()
 {
-    const char *buttonText = 0;
+    const char *buttonText = nullptr;
     QHash<QPushButton *, QDialogButtonBox::StandardButton>::iterator it =  standardButtonHash.begin();
     while (it != standardButtonHash.end()) {
         buttonText = standardButtonText(it.value());
@@ -744,7 +744,7 @@ void QDialogButtonBoxPrivate::retranslateStrings()
     \sa orientation, addButton()
 */
 QDialogButtonBox::QDialogButtonBox(QWidget *parent)
-    : QWidget(*new QDialogButtonBoxPrivate(Qt::Horizontal), parent, 0)
+    : QWidget(*new QDialogButtonBoxPrivate(Qt::Horizontal), parent, nullptr)
 {
     d_func()->initLayout();
 }
@@ -755,7 +755,7 @@ QDialogButtonBox::QDialogButtonBox(QWidget *parent)
     \sa orientation, addButton()
 */
 QDialogButtonBox::QDialogButtonBox(Qt::Orientation orientation, QWidget *parent)
-    : QWidget(*new QDialogButtonBoxPrivate(orientation), parent, 0)
+    : QWidget(*new QDialogButtonBoxPrivate(orientation), parent, nullptr)
 {
     d_func()->initLayout();
 }
@@ -768,7 +768,7 @@ QDialogButtonBox::QDialogButtonBox(Qt::Orientation orientation, QWidget *parent)
 */
 QDialogButtonBox::QDialogButtonBox(StandardButtons buttons, Qt::Orientation orientation,
                                    QWidget *parent)
-    : QWidget(*new QDialogButtonBoxPrivate(orientation), parent, 0)
+    : QWidget(*new QDialogButtonBoxPrivate(orientation), parent, nullptr)
 {
     d_func()->initLayout();
     d_func()->createStandardButtons(buttons);
@@ -1015,7 +1015,7 @@ void QDialogButtonBox::removeButton(QAbstractButton *button)
     }
 #endif
     if (!d->internalRemove)
-        button->setParent(0);
+        button->setParent(nullptr);
 }
 
 /*!
@@ -1053,7 +1053,7 @@ QPushButton *QDialogButtonBox::addButton(const QString &text, ButtonRole role)
     Q_D(QDialogButtonBox);
     if (role <= InvalidRole || role >= NRoles) {
         qWarning("QDialogButtonBox::addButton: Invalid ButtonRole, button not added");
-        return 0;
+        return nullptr;
     }
     QPushButton *button = new QPushButton(text, this);
     d->addButton(button, role);
@@ -1230,7 +1230,7 @@ bool QDialogButtonBox::event(QEvent *event)
         QList<QAbstractButton *> acceptRoleList = d->buttonLists[AcceptRole];
         QPushButton *firstAcceptButton = acceptRoleList.isEmpty() ? 0 : qobject_cast<QPushButton *>(acceptRoleList.at(0));
         bool hasDefault = false;
-        QWidget *dialog = 0;
+        QWidget *dialog = nullptr;
         QWidget *p = this;
         while (p && !p->isWindow()) {
             p = p->parentWidget();

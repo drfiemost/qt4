@@ -25,7 +25,7 @@ QT_BEGIN_NAMESPACE
 QCLuceneSearchablePrivate::QCLuceneSearchablePrivate()
     : QSharedData()
 {
-    searchable = 0;
+    searchable = nullptr;
     deleteCLuceneSearchable = true;
 }
 
@@ -167,7 +167,7 @@ qint32 QCLuceneMultiSearcher::subDoc(qint32 index) const
     lucene::search::MultiSearcher *searcher =
         static_cast<lucene::search::MultiSearcher*> (d->searchable);
 
-    if (searcher == 0)
+    if (searcher == nullptr)
         return 0;
 
     return qint32(searcher->subDoc(int32_t(index)));
@@ -178,7 +178,7 @@ qint32 QCLuceneMultiSearcher::subSearcher(qint32 index) const
     lucene::search::MultiSearcher *searcher =
         static_cast<lucene::search::MultiSearcher*> (d->searchable);
 
-    if (searcher == 0)
+    if (searcher == nullptr)
         return 0;
 
     return qint32(searcher->subSearcher(int32_t(index)));
@@ -189,7 +189,7 @@ qint32 QCLuceneMultiSearcher::searcherIndex(qint32 index) const
     lucene::search::MultiSearcher *searcher =
         static_cast<lucene::search::MultiSearcher*> (d->searchable);
 
-    if (searcher == 0)
+    if (searcher == nullptr)
         return 0;
 
     return qint32(searcher->searcherIndex(int32_t(index)));

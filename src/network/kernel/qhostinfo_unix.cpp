@@ -78,12 +78,12 @@ QT_BEGIN_NAMESPACE
 typedef struct __res_state *res_state_ptr;
 
 typedef int (*res_init_proto)(void);
-static res_init_proto local_res_init = 0;
+static res_init_proto local_res_init = nullptr;
 typedef int (*res_ninit_proto)(res_state_ptr);
-static res_ninit_proto local_res_ninit = 0;
+static res_ninit_proto local_res_ninit = nullptr;
 typedef void (*res_nclose_proto)(res_state_ptr);
-static res_nclose_proto local_res_nclose = 0;
-static res_state_ptr local_res = 0;
+static res_nclose_proto local_res_nclose = nullptr;
+static res_state_ptr local_res = nullptr;
 
 static void resolveLibrary()
 {
@@ -109,7 +109,7 @@ static void resolveLibrary()
         if (!local_res_nclose)
             local_res_nclose = res_nclose_proto(lib.resolve("__res_nclose"));
         if (!local_res_nclose)
-            local_res_ninit = 0;
+            local_res_ninit = nullptr;
     }
 #endif
 }
@@ -162,7 +162,7 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
         }
 
         char hbuf[NI_MAXHOST];
-        if (sa && getnameinfo(sa, saSize, hbuf, sizeof(hbuf), 0, 0, 0) == 0)
+        if (sa && getnameinfo(sa, saSize, hbuf, sizeof(hbuf), nullptr, 0, 0) == 0)
             results.setHostName(QString::fromLatin1(hbuf));
 #else
         in_addr_t inetaddr = qt_safe_inet_addr(hostName.toLatin1().constData());
@@ -191,7 +191,7 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
 #if !defined (QT_NO_GETADDRINFO)
     // Call getaddrinfo, and place all IPv4 addresses at the start and
     // the IPv6 addresses at the end of the address list in results.
-    addrinfo *res = 0;
+    addrinfo *res = nullptr;
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = PF_UNSPEC;
@@ -199,12 +199,12 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
     hints.ai_flags = Q_ADDRCONFIG;
 #endif
 
-    int result = getaddrinfo(aceHostname.constData(), 0, &hints, &res);
+    int result = getaddrinfo(aceHostname.constData(), nullptr, &hints, &res);
 # ifdef Q_ADDRCONFIG
     if (result == EAI_BADFLAGS) {
         // if the lookup failed with AI_ADDRCONFIG set, try again without it
         hints.ai_flags = 0;
-        result = getaddrinfo(aceHostname.constData(), 0, &hints, &res);
+        result = getaddrinfo(aceHostname.constData(), nullptr, &hints, &res);
     }
 # endif
 
@@ -233,7 +233,7 @@ QHostInfo QHostInfoAgent::fromName(const QString &hostName)
 
             node = node->ai_next;
         }
-        if (addresses.isEmpty() && node == 0) {
+        if (addresses.isEmpty() && node == nullptr) {
             // Reached the end of the list, but no addresses were found; this
             // means the list contains one or more unknown address types.
             results.setError(QHostInfo::UnknownError);

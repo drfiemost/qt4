@@ -58,7 +58,7 @@ public:
     QColormapPrivate()
         : ref(1), mode(QColormap::Direct), depth(0),
           colormap(0), defaultColormap(true),
-          visual(0), defaultVisual(true),
+          visual(nullptr), defaultVisual(true),
           r_max(0), g_max(0), b_max(0),
           r_shift(0), g_shift(0), b_shift(0)
     {}
@@ -335,7 +335,7 @@ static void init_direct(QColormapPrivate *d, bool ownColormap)
     XStoreColors(X11->display, d->colormap, colorTable.data(), colorTable.count());
 }
 
-static QColormap **cmaps = 0;
+static QColormap **cmaps = nullptr;
 
 void QColormap::initialize()
 {
@@ -358,7 +358,7 @@ void QColormap::initialize()
         d->visual = DefaultVisual(display, i);
         d->defaultVisual = true;
 
-        Visual *argbVisual = 0;
+        Visual *argbVisual = nullptr;
 
         if (X11->visual && i == DefaultScreen(display)) {
             // only use the outside colormap on the default screen
@@ -379,7 +379,7 @@ void QColormap::initialize()
                 color_count = 216;
             }
         } else if (!X11->custom_cmap) {
-            XStandardColormap *stdcmap = 0;
+            XStandardColormap *stdcmap = nullptr;
             int ncmaps = 0;
 
 #ifndef QT_NO_XRENDER
@@ -585,7 +585,7 @@ void QColormap::cleanup()
         delete cmaps[i];
 
     delete [] cmaps;
-    cmaps = 0;
+    cmaps = nullptr;
 }
 
 

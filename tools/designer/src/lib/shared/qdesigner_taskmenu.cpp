@@ -100,7 +100,7 @@ static QMenuBar *findMenuBar(const QWidget *widget)
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 static QStatusBar *findStatusBar(const QWidget *widget)
@@ -112,7 +112,7 @@ static QStatusBar *findStatusBar(const QWidget *widget)
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 static inline QAction *createSeparatorHelper(QObject *parent) {
@@ -213,7 +213,7 @@ private:
 
 QAction *LayoutAlignmentMenu::createAction(const QString &text, int data, QMenu *menu, QActionGroup *ag)
 {
-    QAction * a = new QAction(text, 0);
+    QAction * a = new QAction(text, nullptr);
     a->setCheckable(true);
     a->setData(QVariant(data));
     menu->addAction(a);
@@ -293,7 +293,7 @@ bool LayoutAlignmentMenu::setAlignment(const QDesignerFormEditorInterface *core,
 
 Qt::Alignment LayoutAlignmentMenu::alignment() const
 {
-    Qt::Alignment alignment = 0;
+    Qt::Alignment alignment = nullptr;
     if (const QAction *horizAction = m_horizGroup->checkedAction())
         if (const int horizAlign = horizAction->data().toInt())
             alignment |= static_cast<Qt::Alignment>(horizAlign);
@@ -338,7 +338,7 @@ public:
 };
 
 QDesignerTaskMenuPrivate::QDesignerTaskMenuPrivate(QWidget *widget, QObject *parent) :
-    m_q(0),
+    m_q(nullptr),
     m_widget(widget),
     m_separator(createSeparatorHelper(parent)),
     m_separator2(createSeparatorHelper(parent)),
@@ -690,7 +690,7 @@ static QString declaredInClass(const QDesignerMetaObjectInterface *metaObject, c
 
     for (;;) {
         const QDesignerMetaObjectInterface *tmpMeta = meta->superClass();
-        if (tmpMeta == 0)
+        if (tmpMeta == nullptr)
             break;
         if (tmpMeta->indexOfMethod(member) == -1)
             break;
@@ -760,7 +760,7 @@ void QDesignerTaskMenu::navigateToSlot(QDesignerFormEditorInterface *core,
     }
 
     Ui::SelectSignalDialog dialogUi;
-    QDialog selectSignalDialog(0, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
+    QDialog selectSignalDialog(nullptr, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
     dialogUi.setupUi(&selectSignalDialog);
 
     QMap<QString, QMap<QString, QStringList> >::const_iterator iter(classToSignalList.constBegin());
@@ -844,7 +844,7 @@ void QDesignerTaskMenu::applySize(QAction *a)
 
     const int mask = a->data().toInt();
     const int size = selection.size();
-    fw->commandHistory()->beginMacro(tr("Set size constraint on %n widget(s)", 0, size));
+    fw->commandHistory()->beginMacro(tr("Set size constraint on %n widget(s)", nullptr, size));
     for (int i = 0; i < size; i++)
         createSizeCommand(fw, selection.at(i), mask);
     fw->commandHistory()->endMacro();

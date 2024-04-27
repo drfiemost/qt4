@@ -201,7 +201,7 @@ Rectangle {
 
 ShaderEffectItem::ShaderEffectItem(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
-    , m_program(0)
+    , m_program(nullptr)
     , m_meshResolution(1, 1)
     , m_geometry(QSGGeometry::defaultAttributes_TexturedPoint2D(), 4)
     , m_blending(true)
@@ -660,7 +660,7 @@ void ShaderEffectItem::setActive(bool enable)
     // QGLShaderProgram is deleted when not active (to minimize GPU memory usage).
     if (!m_active && m_program) {
         delete m_program;
-        m_program = 0;
+        m_program = nullptr;
     }
 
     emit activeChanged();
@@ -700,8 +700,8 @@ void ShaderEffectItem::setSource(const QVariant &var, int index)
 
     SourceData &source = m_sources[index];
 
-    source.source = 0;
-    source.item = 0;
+    source.source = nullptr;
+    source.item = nullptr;
     if (var.isNull()) {
         return;
     } else if (!qVariantCanConvert<QObject *>(var)) {
@@ -724,7 +724,7 @@ void ShaderEffectItem::setSource(const QVariant &var, int index)
     // 'source.item' needs a canvas to get a scenegraph node.
     // The easiest way to make sure it gets a canvas is to
     // make it a part of the same item tree as 'this'.
-    if (source.item && source.item->parentItem() == 0) {
+    if (source.item && source.item->parentItem() == nullptr) {
         source.item->setParentItem(this);
         // Unlike in scenegraph, we cannot set item invisible here because qgraphicsview would optimize it away.
     }
@@ -738,11 +738,11 @@ void ShaderEffectItem::setSource(const QVariant &var, int index)
 
 void ShaderEffectItem::disconnectPropertySignals()
 {
-    disconnect(this, 0, this, SLOT(markDirty()));
+    disconnect(this, nullptr, this, SLOT(markDirty()));
     for (int i = 0; i < m_sources.size(); ++i) {
         SourceData &source = m_sources[i];
-        disconnect(this, 0, source.mapper, 0);
-        disconnect(source.mapper, 0, this, 0);
+        disconnect(this, nullptr, source.mapper, nullptr);
+        disconnect(source.mapper, nullptr, this, nullptr);
     }
 }
 
@@ -910,9 +910,9 @@ void ShaderEffectItem::lookThroughShaderCode(const QString &code)
                 if (type == "sampler2D") {
                     SourceData d;
                     d.mapper = new QSignalMapper;
-                    d.source = 0;
+                    d.source = nullptr;
                     d.name = name;
-                    d.item = 0;
+                    d.item = nullptr;
                     m_sources.append(d);
                 }
             }

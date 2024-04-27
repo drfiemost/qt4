@@ -108,7 +108,7 @@ template <typename T>
 class QScopedSharedPointer : public QCustomScopedPointer<T, QScopedPointerSharedDeleter<T> >
 {
 public:
-    explicit inline QScopedSharedPointer(T *p = 0)
+    explicit inline QScopedSharedPointer(T *p = nullptr)
         : QCustomScopedPointer<T, QScopedPointerSharedDeleter<T> >(p)
     {
     }

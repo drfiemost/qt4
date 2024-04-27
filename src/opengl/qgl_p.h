@@ -305,7 +305,7 @@ public:
 class QGLTemporaryContextPrivate;
 class QGLTemporaryContext {
 public:
-    QGLTemporaryContext(bool directRendering = true, QWidget *parent = 0);
+    QGLTemporaryContext(bool directRendering = true, QWidget *parent = nullptr);
     ~QGLTemporaryContext();
 
 private:
@@ -461,7 +461,7 @@ class Q_OPENGL_EXPORT QGLShareContextScope
 {
 public:
     QGLShareContextScope(const QGLContext *ctx)
-        : m_oldContext(0)
+        : m_oldContext(nullptr)
     {
         QGLContext *currentContext = const_cast<QGLContext *>(QGLContext::currentContext());
         if (currentContext != ctx && !QGLContext::areSharing(ctx, currentContext)) {
@@ -548,14 +548,14 @@ Q_SIGNALS:
 
 class QGLTexture {
 public:
-    QGLTexture(QGLContext *ctx = 0, GLuint tx_id = 0, GLenum tx_target = GL_TEXTURE_2D,
+    QGLTexture(QGLContext *ctx = nullptr, GLuint tx_id = 0, GLenum tx_target = GL_TEXTURE_2D,
                QGLContext::BindOptions opt = QGLContext::DefaultBindOption)
         : context(ctx),
           id(tx_id),
           target(tx_target),
           options(opt)
 #if defined(Q_WS_X11)
-        , boundPixmap(0)
+        , boundPixmap(nullptr)
 #endif
     {}
 
@@ -582,9 +582,9 @@ public:
     bool canBindCompressedTexture
         (const char *buf, int len, const char *format, bool *hasAlpha);
     QSize bindCompressedTexture
-        (const QString& fileName, const char *format = 0);
+        (const QString& fileName, const char *format = nullptr);
     QSize bindCompressedTexture
-        (const char *buf, int len, const char *format = 0);
+        (const char *buf, int len, const char *format = nullptr);
     QSize bindCompressedTextureDDS(const char *buf, int len);
     QSize bindCompressedTexturePVR(const char *buf, int len);
 };
@@ -811,12 +811,12 @@ class Q_OPENGL_EXPORT QGLSharedResourceGuard
 {
 public:
     QGLSharedResourceGuard(const QGLContext *context)
-        : m_group(0), m_id(0), m_next(0), m_prev(0)
+        : m_group(nullptr), m_id(0), m_next(nullptr), m_prev(nullptr)
     {
         setContext(context);
     }
     QGLSharedResourceGuard(const QGLContext *context, GLuint id)
-        : m_group(0), m_id(id), m_next(0), m_prev(0)
+        : m_group(nullptr), m_id(id), m_next(nullptr), m_prev(nullptr)
     {
         setContext(context);
     }
@@ -824,7 +824,7 @@ public:
 
     const QGLContext *context() const
     {
-        return m_group ? m_group->context() : 0;
+        return m_group ? m_group->context() : nullptr;
     }
 
     void setContext(const QGLContext *context);

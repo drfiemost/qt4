@@ -46,7 +46,7 @@ QT_QML_BEGIN_NAMESPACE
 using namespace QDeclarativeJS;
 
 TextWriter::TextWriter()
-        :string(0), cursor(0)
+        :string(nullptr), cursor(nullptr)
 {
 }
 
@@ -180,14 +180,14 @@ void TextWriter::write(QString *s)
 {
     string = s;
     write_helper();
-    string = 0;
+    string = nullptr;
 }
 
 void TextWriter::write(QTextCursor *textCursor)
 {
     cursor = textCursor;
     write_helper();
-    cursor = 0;
+    cursor = nullptr;
 }
 
 void TextWriter::write_helper()

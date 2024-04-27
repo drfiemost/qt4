@@ -128,7 +128,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, loader,
 */
 QInputContext *QInputContextFactory::create( const QString& key, QObject *parent )
 {
-    QInputContext *result = 0;
+    QInputContext *result = nullptr;
 #if defined(Q_WS_X11) && !defined(QT_NO_XIM)
     if (key == QLatin1String("xim")) {
         result = new QXIMInputContext;

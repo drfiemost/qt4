@@ -81,7 +81,7 @@ class Base;
 class ExceptionHolder
 {
 public:
-    ExceptionHolder(Exception *exception = 0);
+    ExceptionHolder(Exception *exception = nullptr);
     ExceptionHolder(const ExceptionHolder &other);
     void operator=(const ExceptionHolder &other);
     ~ExceptionHolder();

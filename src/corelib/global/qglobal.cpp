@@ -2952,7 +2952,7 @@ bool QInternal::callFunction(InternalFunction func, void **args)
     case QInternal::GetQObjectSender: {
         QObject *receiver = (QObject *) args[0];
         QObjectPrivate *d = QObjectPrivate::get(receiver);
-        args[1] = d->currentSender ? d->currentSender->sender : 0;
+        args[1] = d->currentSender ? d->currentSender->sender : nullptr;
         return true;
     }
     case QInternal::ResetQObjectSender: {

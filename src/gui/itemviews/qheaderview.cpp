@@ -1428,7 +1428,7 @@ int QHeaderView::minimumSectionSize() const
     Q_D(const QHeaderView);
     if (d->minimumSectionSize == -1) {
         QSize strut = QApplication::globalStrut();
-        int margin = style()->pixelMetric(QStyle::PM_HeaderMargin, 0, this);
+        int margin = style()->pixelMetric(QStyle::PM_HeaderMargin, nullptr, this);
         if (d->orientation == Qt::Horizontal)
             return std::max(strut.width(), (fontMetrics().maxWidth() + margin));
         return std::max(strut.height(), (fontMetrics().height() + margin));
@@ -2848,7 +2848,7 @@ int QHeaderViewPrivate::sectionHandleAt(int position)
         return -1;
     int log = logicalIndex(visual);
     int pos = q->sectionViewportPosition(log);
-    int grip = q->style()->pixelMetric(QStyle::PM_HeaderGripMargin, 0, q);
+    int grip = q->style()->pixelMetric(QStyle::PM_HeaderGripMargin, nullptr, q);
 
     bool atLeft = position < pos + grip;
     bool atRight = (position > pos + q->sectionSize(log) - grip);

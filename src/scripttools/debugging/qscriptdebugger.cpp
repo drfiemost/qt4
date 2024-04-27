@@ -262,8 +262,8 @@ public:
 
 QScriptDebuggerPrivate::QScriptDebuggerPrivate()
 {
-    frontend = 0;
-    activeJob = 0;
+    frontend = nullptr;
+    activeJob = nullptr;
     activeJobHibernating = false;
     nextJobId = 0;
     interactive = false;
@@ -273,38 +273,38 @@ QScriptDebuggerPrivate::QScriptDebuggerPrivate()
     QScriptStdMessageHandler tmp;
     console->loadScriptedCommands(scriptsPath, &tmp);
 
-    consoleWidget = 0;
-    stackWidget = 0;
-    stackModel = 0;
-    scriptsWidget = 0;
-    scriptsModel = 0;
-    localsWidget = 0;
-    codeWidget = 0;
-    codeFinderWidget = 0;
-    breakpointsWidget = 0;
-    breakpointsModel = 0;
-    debugOutputWidget = 0;
-    errorLogWidget = 0;
-    widgetFactory = 0;
+    consoleWidget = nullptr;
+    stackWidget = nullptr;
+    stackModel = nullptr;
+    scriptsWidget = nullptr;
+    scriptsModel = nullptr;
+    localsWidget = nullptr;
+    codeWidget = nullptr;
+    codeFinderWidget = nullptr;
+    breakpointsWidget = nullptr;
+    breakpointsModel = nullptr;
+    debugOutputWidget = nullptr;
+    errorLogWidget = nullptr;
+    widgetFactory = nullptr;
 
-    interruptAction = 0;
-    continueAction = 0;
-    stepIntoAction = 0;
-    stepOverAction = 0;
-    stepOutAction = 0;
-    runToCursorAction = 0;
-    runToNewScriptAction = 0;
+    interruptAction = nullptr;
+    continueAction = nullptr;
+    stepIntoAction = nullptr;
+    stepOverAction = nullptr;
+    stepOutAction = nullptr;
+    runToCursorAction = nullptr;
+    runToNewScriptAction = nullptr;
 
-    toggleBreakpointAction = 0;
+    toggleBreakpointAction = nullptr;
 
-    clearErrorLogAction = 0;
-    clearDebugOutputAction = 0;
-    clearConsoleAction = 0;
+    clearErrorLogAction = nullptr;
+    clearDebugOutputAction = nullptr;
+    clearConsoleAction = nullptr;
 
-    findInScriptAction = 0;
-    findNextInScriptAction = 0;
-    findPreviousInScriptAction = 0;
-    goToLineAction = 0;
+    findInScriptAction = nullptr;
+    findNextInScriptAction = nullptr;
+    findPreviousInScriptAction = nullptr;
+    goToLineAction = nullptr;
 
     updatesEnabledTimerId = -1;
 }
@@ -360,7 +360,7 @@ void QScriptDebuggerPrivate::finishJob(QScriptDebuggerJob *job)
     Q_UNUSED(job);
     Q_ASSERT(activeJob == job);
     delete activeJob;
-    activeJob = 0;
+    activeJob = nullptr;
     activeJobHibernating = false;
     maybeStartNewJob();
 }
@@ -624,7 +624,7 @@ bool QScriptDebuggerPrivate::debuggerEvent(const QScriptDebuggerEvent &event)
         // evaluate() did not finish normally (e.g. due to a breakpoint),
         // so cancel the job that's waiting for it
         delete activeJob;
-        activeJob = 0;
+        activeJob = nullptr;
         activeJobHibernating = false;
     }
 
@@ -694,7 +694,7 @@ QScriptCompletionTaskInterface *QScriptDebuggerPrivate::createCompletionTask(
 {
     return new QScriptCompletionTask(
         contents, cursorPosition, frameIndex, this, this,
-        (options & QScriptCompletionProviderInterface::ConsoleCommandCompletion) ? console : 0);
+        (options & QScriptCompletionProviderInterface::ConsoleCommandCompletion) ? console : nullptr);
 }
 
 /*!
@@ -704,7 +704,7 @@ void QScriptDebuggerPrivate::_q_onLineEntered(const QString &contents)
 {
     QScriptDebuggerConsoleCommandJob *commandJob;
     commandJob = console->consumeInput(contents, consoleWidget, this);
-    if (commandJob != 0) {
+    if (commandJob != nullptr) {
         scheduleJob(commandJob);
         consoleWidget->setLineContinuationMode(false);
     } else if (console->hasIncompleteInput()) {
@@ -825,7 +825,7 @@ void QScriptDebuggerPrivate::executeConsoleCommand(const QString &command)
     console->setIncompleteInput(QString());
     QScriptDebuggerJob *job = console->consumeInput(console->commandPrefix() + command, debugOutputWidget, this);
     console->setIncompleteInput(tmp);
-    if (job != 0) {
+    if (job != nullptr) {
         scheduleJob(job);
         // once to send the command...
         QCoreApplication::processEvents();
@@ -883,7 +883,7 @@ void QScriptDebuggerPrivate::_q_goToLine()
         return;
 #ifndef QT_NO_INPUTDIALOG
     bool ok = false;
-    int lineNumber = QInputDialog::getInteger(0, QScriptDebugger::tr("Go to Line"),
+    int lineNumber = QInputDialog::getInteger(nullptr, QScriptDebugger::tr("Go to Line"),
                                               QScriptDebugger::tr("Line:"),
                                               view->cursorLineNumber(),
                                               1, INT_MAX, 1, &ok);
@@ -1181,7 +1181,7 @@ void QScriptDebuggerPrivate::startInteraction(QScriptDebuggerEvent::Type type,
     if (interruptAction)
         interruptAction->setEnabled(false);
 
-    bool hasScript = (codeWidget != 0);
+    bool hasScript = (codeWidget != nullptr);
     if (findInScriptAction)
         findInScriptAction->setEnabled(hasScript);
     if (toggleBreakpointAction)
@@ -1326,7 +1326,7 @@ void QScriptDebugger::setFrontend(QScriptDebuggerFrontend *frontend)
 {
     Q_D(QScriptDebugger);
     if (d->frontend)
-        d->frontend->setEventHandler(0);
+        d->frontend->setEventHandler(nullptr);
     d->frontend = frontend;
     if (frontend) {
         frontend->setEventHandler(d);
@@ -1372,7 +1372,7 @@ QAction *QScriptDebugger::action(DebuggerAction action, QObject *parent)
     case GoToLineAction:
         return goToLineAction(parent);
     }
-    return 0;
+    return nullptr;
 }
 
 QWidget *QScriptDebugger::widget(DebuggerWidget widget)
@@ -1451,7 +1451,7 @@ QWidget *QScriptDebugger::widget(DebuggerWidget widget)
         return w;
     }
     }
-    return 0;
+    return nullptr;
 }
 
 QScriptDebuggerConsoleWidgetInterface *QScriptDebugger::consoleWidget() const
@@ -1464,7 +1464,7 @@ void QScriptDebugger::setConsoleWidget(QScriptDebuggerConsoleWidgetInterface *co
 {
     Q_D(QScriptDebugger);
     if (d->consoleWidget) {
-        QObject::disconnect(d->consoleWidget, 0, this, 0);
+        QObject::disconnect(d->consoleWidget, nullptr, this, nullptr);
     }
     d->consoleWidget = consoleWidget;
     if (consoleWidget) {
@@ -1487,7 +1487,7 @@ void QScriptDebugger::setStackWidget(QScriptDebuggerStackWidgetInterface *stackW
 {
     Q_D(QScriptDebugger);
     if (d->stackWidget) {
-        QObject::disconnect(d->stackWidget, 0, this, 0);
+        QObject::disconnect(d->stackWidget, nullptr, this, nullptr);
     }
     d->stackWidget = stackWidget;
     if (stackWidget) {
@@ -1512,7 +1512,7 @@ void QScriptDebugger::setScriptsWidget(QScriptDebuggerScriptsWidgetInterface *sc
 {
     Q_D(QScriptDebugger);
     if (d->scriptsWidget) {
-        QObject::disconnect(d->scriptsWidget, 0, this, 0);
+        QObject::disconnect(d->scriptsWidget, nullptr, this, nullptr);
     }
     d->scriptsWidget = scriptsWidget;
     if (scriptsWidget) {
@@ -1574,9 +1574,9 @@ void QScriptDebugger::setCodeWidget(QScriptDebuggerCodeWidgetInterface *codeWidg
         codeWidget->setToolTipProvider(d);
         codeWidget->installEventFilter(this);
     }
-    bool hasScript = (codeWidget != 0) && (codeWidget->currentView() != 0);
+    bool hasScript = (codeWidget != nullptr) && (codeWidget->currentView() != nullptr);
     if (d->findInScriptAction)
-        d->findInScriptAction->setEnabled(hasScript && (d->codeFinderWidget != 0));
+        d->findInScriptAction->setEnabled(hasScript && (d->codeFinderWidget != nullptr));
     if (d->goToLineAction)
         d->goToLineAction->setEnabled(hasScript);
     if (d->toggleBreakpointAction)
@@ -1593,7 +1593,7 @@ void QScriptDebugger::setCodeFinderWidget(QScriptDebuggerCodeFinderWidgetInterfa
 {
     Q_D(QScriptDebugger);
     if (d->codeFinderWidget) {
-        QObject::disconnect(d->codeFinderWidget, 0, this, 0);
+        QObject::disconnect(d->codeFinderWidget, nullptr, this, nullptr);
     }
     d->codeFinderWidget = codeFinderWidget;
     if (codeFinderWidget) {
@@ -1602,9 +1602,9 @@ void QScriptDebugger::setCodeFinderWidget(QScriptDebuggerCodeFinderWidgetInterfa
     }
     if (d->findInScriptAction) {
         d->findInScriptAction->setEnabled(
-            (codeFinderWidget != 0)
-            && (d->codeWidget != 0)
-            && (d->codeWidget->currentView() != 0));
+            (codeFinderWidget != nullptr)
+            && (d->codeWidget != nullptr)
+            && (d->codeWidget->currentView() != nullptr));
     }
 }
 
@@ -1796,7 +1796,7 @@ QAction *QScriptDebugger::toggleBreakpointAction(QObject *parent) const
         that->d_func()->toggleBreakpointAction = new QAction(toggleBreakpointIcon,
                                                              QScriptDebugger::tr("Toggle Breakpoint"), parent);
         d->toggleBreakpointAction->setShortcut(QScriptDebugger::tr("F9"));
-        d->toggleBreakpointAction->setEnabled((d->codeWidget != 0) && (d->codeWidget->currentView() != 0));
+        d->toggleBreakpointAction->setEnabled((d->codeWidget != nullptr) && (d->codeWidget->currentView() != nullptr));
         QObject::connect(d->toggleBreakpointAction, SIGNAL(triggered()),
                          that, SLOT(_q_toggleBreakpoint()));
     }
@@ -1852,9 +1852,9 @@ QAction *QScriptDebugger::findInScriptAction(QObject *parent) const
         that->d_func()->findInScriptAction = new QAction(findInScriptIcon, QScriptDebugger::tr("&Find in Script..."), parent);
         d->findInScriptAction->setShortcut(QScriptDebugger::tr("Ctrl+F"));
         d->findInScriptAction->setEnabled(
-            (d->codeFinderWidget != 0)
-            && (d->codeWidget != 0)
-            && (d->codeWidget->currentView() != 0));
+            (d->codeFinderWidget != nullptr)
+            && (d->codeWidget != nullptr)
+            && (d->codeWidget->currentView() != nullptr));
         QObject::connect(d->findInScriptAction, SIGNAL(triggered()),
                          that, SLOT(_q_findInScript()));
     }
@@ -1899,7 +1899,7 @@ QAction *QScriptDebugger::goToLineAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->goToLineAction = new QAction(goToLineIcon, QScriptDebugger::tr("Go to Line"), parent);
         d->goToLineAction->setShortcut(QScriptDebugger::tr("Ctrl+G"));
-        d->goToLineAction->setEnabled((d->codeWidget != 0) && (d->codeWidget->currentView() != 0));
+        d->goToLineAction->setEnabled((d->codeWidget != nullptr) && (d->codeWidget->currentView() != nullptr));
         QObject::connect(d->goToLineAction, SIGNAL(triggered()),
                          that, SLOT(_q_goToLine()));
     }

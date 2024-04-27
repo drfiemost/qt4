@@ -139,8 +139,8 @@ QT_BEGIN_NAMESPACE
 class QDeclarativeReplaceSignalHandler : public QDeclarativeActionEvent
 {
 public:
-    QDeclarativeReplaceSignalHandler() : expression(0), reverseExpression(0),
-                                rewindExpression(0), ownedExpression(0) {}
+    QDeclarativeReplaceSignalHandler() : expression(nullptr), reverseExpression(nullptr),
+                                rewindExpression(nullptr), ownedExpression(nullptr) {}
     ~QDeclarativeReplaceSignalHandler() {
         delete ownedExpression;
     }
@@ -156,14 +156,14 @@ public:
     virtual void execute(Reason) {
         ownedExpression = QDeclarativePropertyPrivate::setSignalExpression(property, expression);
         if (ownedExpression == expression)
-            ownedExpression = 0;
+            ownedExpression = nullptr;
     }
 
     virtual bool isReversable() { return true; }
     virtual void reverse(Reason) {
         ownedExpression = QDeclarativePropertyPrivate::setSignalExpression(property, reverseExpression);
         if (ownedExpression == reverseExpression)
-            ownedExpression = 0;
+            ownedExpression = nullptr;
     }
 
     virtual void saveOriginals() {
@@ -181,14 +181,14 @@ public:
         reverseExpression = rsh->reverseExpression;
         if (rsh->ownedExpression == reverseExpression) {
             ownedExpression = rsh->ownedExpression;
-            rsh->ownedExpression = 0;
+            rsh->ownedExpression = nullptr;
         }
     }
 
     virtual void rewind() {
         ownedExpression = QDeclarativePropertyPrivate::setSignalExpression(property, rewindExpression);
         if (ownedExpression == rewindExpression)
-            ownedExpression = 0;
+            ownedExpression = nullptr;
     }
     virtual void saveCurrentValues() { 
         rewindExpression = QDeclarativePropertyPrivate::signalExpression(property);
@@ -479,7 +479,7 @@ QDeclarativePropertyChanges::ActionList QDeclarativePropertyChanges::actions()
                 QDeclarativeExpression *e = d->expressions.at(ii).expression;
 
                 QDeclarativeBinding::Identifier id = d->expressions.at(ii).id;
-                QDeclarativeBinding *newBinding = id != QDeclarativeBinding::Invalid ? QDeclarativeBinding::createBinding(id, object(), qmlContext(this), e->sourceFile(), e->lineNumber()) : 0;
+                QDeclarativeBinding *newBinding = id != QDeclarativeBinding::Invalid ? QDeclarativeBinding::createBinding(id, object(), qmlContext(this), e->sourceFile(), e->lineNumber()) : nullptr;
                 if (!newBinding) {
                     newBinding = new QDeclarativeBinding(e->expression(), object(), qmlContext(this));
                     newBinding->setSourceLocation(e->sourceFile(), e->lineNumber());
@@ -578,7 +578,7 @@ void QDeclarativePropertyChanges::changeValue(const QString &name, const QVarian
             if (state() && state()->isStateActive()) {
                 QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::binding(d->property(name));
                 if (oldBinding) {
-                    QDeclarativePropertyPrivate::setBinding(d->property(name), 0);
+                    QDeclarativePropertyPrivate::setBinding(d->property(name), nullptr);
                     oldBinding->destroy();
                 }
                 d->property(name).write(value);
@@ -644,7 +644,7 @@ void QDeclarativePropertyChanges::changeExpression(const QString &name, const QS
             if (state() && state()->isStateActive()) {
                 QDeclarativeAbstractBinding *oldBinding = QDeclarativePropertyPrivate::binding(d->property(name));
                 if (oldBinding) {
-                       QDeclarativePropertyPrivate::setBinding(d->property(name), 0);
+                       QDeclarativePropertyPrivate::setBinding(d->property(name), nullptr);
                        oldBinding->destroy();
                 }
 

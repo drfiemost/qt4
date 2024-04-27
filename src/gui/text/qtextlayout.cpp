@@ -450,7 +450,7 @@ void QTextLayout::setPreeditArea(int position, const QString &text)
             return;
         if (d->specialData->addFormats.isEmpty()) {
             delete d->specialData;
-            d->specialData = 0;
+            d->specialData = nullptr;
         } else {
             d->specialData->preeditText = QString();
             d->specialData->preeditPosition = -1;
@@ -501,7 +501,7 @@ void QTextLayout::setAdditionalFormats(const QList<FormatRange> &formatList)
             return;
         if (d->specialData->preeditText.isEmpty()) {
             delete d->specialData;
-            d->specialData = 0;
+            d->specialData = nullptr;
         } else {
             d->specialData->addFormats = formatList;
             d->specialData->addFormatIndices.clear();
@@ -1578,7 +1578,7 @@ namespace {
     struct LineBreakHelper
     {
         LineBreakHelper()
-            : glyphCount(0), maxGlyphs(0), currentPosition(0), fontEngine(0), logClusters(0),
+            : glyphCount(0), maxGlyphs(0), currentPosition(0), fontEngine(nullptr), logClusters(nullptr),
               manualWrap(false), whiteSpaceOrObject(true)
         {
         }
@@ -1624,7 +1624,7 @@ namespace {
         inline void resetPreviousGlyph()
         {
             previousGlyph = 0;
-            previousFontEngine = 0;
+            previousFontEngine = nullptr;
         }
 
         inline void saveCurrentGlyph()
@@ -1640,7 +1640,7 @@ namespace {
         inline void adjustRightBearing(glyph_t glyph)
         {
             qreal rb;
-            fontEngine->getGlyphBearings(glyph, 0, &rb);
+            fontEngine->getGlyphBearings(glyph, nullptr, &rb);
             rightBearing = std::min(QFixed(), QFixed::fromReal(rb));
         }
 
@@ -1655,7 +1655,7 @@ namespace {
         {
             if (previousGlyph > 0 && previousFontEngine) {
                 qreal rb;
-                previousFontEngine->getGlyphBearings(previousGlyph, 0, &rb);
+                previousFontEngine->getGlyphBearings(previousGlyph, nullptr, &rb);
                 rightBearing = std::min(QFixed(), QFixed::fromReal(rb));
             }
         }
@@ -2386,7 +2386,7 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
                 } else { // si.isTab
                     QFont f = eng->font(si);
                     QTextItemInt gf(si, &f, format);
-                    gf.chars = 0;
+                    gf.chars = nullptr;
                     gf.num_chars = 0;
                     gf.width = iterator.itemWidth;
                     p->drawTextItem(QPointF(iterator.x.toReal(), y.toReal()), gf);

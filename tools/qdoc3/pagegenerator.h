@@ -84,7 +84,7 @@ class PageGenerator : public Generator
                   int* pos,
                   int n,
                   QStringRef* contents,
-                  QStringRef* par1 = 0,
+                  QStringRef* par1 = nullptr,
                   bool debug = false);
 
  protected:

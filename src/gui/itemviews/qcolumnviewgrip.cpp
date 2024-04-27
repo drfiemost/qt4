@@ -69,7 +69,7 @@ QT_BEGIN_NAMESPACE
     Use setModel() to set the model.
 */
 QColumnViewGrip::QColumnViewGrip(QWidget *parent)
-:  QWidget(*new QColumnViewGripPrivate, parent, 0)
+:  QWidget(*new QColumnViewGripPrivate, parent, nullptr)
 {
 #ifndef QT_NO_CURSOR
     setCursor(Qt::SplitHCursor);

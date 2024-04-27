@@ -205,10 +205,10 @@
 QT_BEGIN_NAMESPACE
 
 extern void q_normalizePercentEncoding(QByteArray *ba, const char *exclude);
-extern void q_toPercentEncoding(QByteArray *ba, const char *exclude, const char *include = 0);
+extern void q_toPercentEncoding(QByteArray *ba, const char *exclude, const char *include = nullptr);
 extern void q_fromPercentEncoding(QByteArray *ba);
 
-static QByteArray toPercentEncodingHelper(const QString &s, const char *exclude, const char *include = 0)
+static QByteArray toPercentEncodingHelper(const QString &s, const char *exclude, const char *include = nullptr)
 {
     if (s.isNull())
         return QByteArray();    // null
@@ -256,7 +256,7 @@ static const uint initial_n = 128;
 #define QURL_HASFLAG(a, b) (((a) & (b)) == (b))
 
 struct QUrlErrorInfo {
-    inline QUrlErrorInfo() : _source(0), _message(0), _expected(0), _found(0)
+    inline QUrlErrorInfo() : _source(nullptr), _message(nullptr), _expected(0), _found(0)
     { }
 
     const char *_source;
@@ -929,7 +929,7 @@ static bool QT_FASTCALL _pathRootless(const char **ptr)
 static void QT_FASTCALL _hierPart(const char **ptr, QUrlParseData *parseData)
 {
     const char *ptrBackup = *ptr;
-    const char *pathStart = 0;
+    const char *pathStart = nullptr;
     if (*((*ptr)++) == '/' && *((*ptr)++) == '/') {
         _authority(ptr, parseData);
         pathStart = *ptr;
@@ -2367,7 +2367,7 @@ static void mapToLowerCase(QString *str, int from)
 {
     int N = sizeof(NameprepCaseFolding) / sizeof(NameprepCaseFolding[0]);
 
-    ushort *d = 0;
+    ushort *d = nullptr;
     for (int i = from; i < str->size(); ++i) {
         uint uc = str->at(i).unicode();
         if (uc < 0x80) {
@@ -2397,7 +2397,7 @@ static void mapToLowerCase(QString *str, int from)
                     else
                         str->replace(--i, 2, reinterpret_cast<const QChar *>(&entry->mapping[0]), l);
                     i += l - 1;
-                    d = 0;
+                    d = nullptr;
                 } else {
                     if (!d)
                         d = reinterpret_cast<ushort *>(str->data());
@@ -3226,7 +3226,7 @@ static const char * const idn_whitelist[] = {
     "xn--wgbh1c"                // Egypt
 };
 
-static QStringList *user_idn_whitelist = 0;
+static QStringList *user_idn_whitelist = nullptr;
 
 static bool lessThan(const QChar *a, int l, const char *c)
 {
@@ -3808,14 +3808,14 @@ void QUrlPrivate::validate() const
     if (scheme == QLatin1String("mailto")) {
         if (!host.isEmpty() || port != -1 || !userName.isEmpty() || !password.isEmpty()) {
             that->isValid = false;
-            that->errorInfo.setParams(0, QT_TRANSLATE_NOOP(QUrl, "expected empty host, username,"
+            that->errorInfo.setParams(nullptr, QT_TRANSLATE_NOOP(QUrl, "expected empty host, username,"
                                                            "port and password"),
                                       0, 0);
         }
     } else if (scheme == QLatin1String("ftp") || scheme == QLatin1String("http")) {
         if (host.isEmpty() && !(path.isEmpty() && encodedPath.isEmpty())) {
             that->isValid = false;
-            that->errorInfo.setParams(0, QT_TRANSLATE_NOOP(QUrl, "the host is empty, but not the path"),
+            that->errorInfo.setParams(nullptr, QT_TRANSLATE_NOOP(QUrl, "the host is empty, but not the path"),
                                       0, 0);
         }
     }
@@ -3825,10 +3825,10 @@ void QUrlPrivate::parse(ParseOptions parseOptions) const
 {
     // Caller must lock mutex first
     QUrlPrivate *that = const_cast<QUrlPrivate *>(this);
-    that->errorInfo.setParams(0, 0, 0, 0);
+    that->errorInfo.setParams(nullptr, nullptr, 0, 0);
     if (encodedOriginal.isEmpty()) {
         that->isValid = false;
-        that->errorInfo.setParams(0, QT_TRANSLATE_NOOP(QUrl, "empty"),
+        that->errorInfo.setParams(nullptr, QT_TRANSLATE_NOOP(QUrl, "empty"),
                                   0, 0);
         QURL_SETFLAG(that->stateFlags, Validated | Parsed);
         return;
@@ -4211,7 +4211,7 @@ QString QUrlPrivate::createErrorString()
 
     \sa setUrl(), setEncodedUrl(), fromEncoded(), TolerantMode
 */
-QUrl::QUrl(const QString &url) : d(0)
+QUrl::QUrl(const QString &url) : d(nullptr)
 {
     if (!url.isEmpty())
         setUrl(url);
@@ -4225,7 +4225,7 @@ QUrl::QUrl(const QString &url) : d(0)
 
     \sa setUrl()
 */
-QUrl::QUrl(const QString &url, ParsingMode parsingMode) : d(0)
+QUrl::QUrl(const QString &url, ParsingMode parsingMode) : d(nullptr)
 {
     if (!url.isEmpty())
         setUrl(url, parsingMode);
@@ -4238,7 +4238,7 @@ QUrl::QUrl(const QString &url, ParsingMode parsingMode) : d(0)
 /*!
     Constructs an empty QUrl object.
 */
-QUrl::QUrl() : d(0)
+QUrl::QUrl() : d(nullptr)
 {
 }
 
@@ -4310,7 +4310,7 @@ void QUrl::clear()
 {
     if (d && !d->ref.deref())
         delete d;
-    d = 0;
+    d = nullptr;
 }
 
 /*!
@@ -6103,7 +6103,7 @@ void QUrl::setIdnWhitelist(const QStringList &list)
 */
 bool QUrl::operator <(const QUrl &url) const
 {
-    QOrderedMutexLocker(d ? &d->mutex : 0, url.d ? &url.d->mutex : 0);
+    QOrderedMutexLocker(d ? &d->mutex : nullptr, url.d ? &url.d->mutex : nullptr);
     if (!d) return url.d ? QByteArray() < url.d->normalized() : false;
     if (!QURL_HASFLAG(d->stateFlags, QUrlPrivate::Parsed)) d->parse();
     if (!url.d) return d->normalized() < QByteArray();

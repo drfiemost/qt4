@@ -80,7 +80,7 @@ public:
                              QEvent::Type type, int code, Qt::KeyboardModifiers modifiers,
                              const QString &text, bool autorepeat, int count,
                              quint32 nativeScanCode, quint32 nativeVirtualKey, quint32 nativeModifiers,
-                             bool *unusedExceptForCocoa = 0);
+                             bool *unusedExceptForCocoa = nullptr);
     static QList<int> possibleKeys(QKeyEvent *e);
 
 private:

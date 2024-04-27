@@ -152,7 +152,7 @@ struct GregorianDateTime : Noncopyable {
         , year(0)
         , isDST(0)
         , utcOffset(0)
-        , timeZone(0)
+        , timeZone(nullptr)
     {
     }
 
@@ -203,7 +203,7 @@ struct GregorianDateTime : Noncopyable {
             timeZone = new char[inZoneSize];
             strncpy(timeZone, rhs.timeZone, inZoneSize);
         } else
-            timeZone = 0;
+            timeZone = nullptr;
     }
 
     int second;

@@ -72,7 +72,7 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-    QtColorLine(QWidget *parent = 0);
+    QtColorLine(QWidget *parent = nullptr);
     ~QtColorLine();
 
     QColor color() const;

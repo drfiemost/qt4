@@ -56,7 +56,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeImplicitSizeItem : public QDeclarativeItem
     Q_PROPERTY(qreal implicitHeight READ implicitHeight NOTIFY implicitHeightChanged REVISION 1)
 
 public:
-    QDeclarativeImplicitSizeItem(QDeclarativeItem *parent = 0);
+    QDeclarativeImplicitSizeItem(QDeclarativeItem *parent = nullptr);
 
 protected:
     QDeclarativeImplicitSizeItem(QDeclarativeImplicitSizeItemPrivate &dd, QDeclarativeItem *parent);
@@ -78,7 +78,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeImplicitSizePaintedItem : public QDeclarativ
     Q_PROPERTY(qreal implicitHeight READ implicitHeight NOTIFY implicitHeightChanged REVISION 1)
 
 public:
-    QDeclarativeImplicitSizePaintedItem(QDeclarativeItem *parent = 0);
+    QDeclarativeImplicitSizePaintedItem(QDeclarativeItem *parent = nullptr);
 
 protected:
     QDeclarativeImplicitSizePaintedItem(QDeclarativeImplicitSizePaintedItemPrivate &dd, QDeclarativeItem *parent);

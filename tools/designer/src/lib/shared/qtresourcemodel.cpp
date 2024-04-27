@@ -62,13 +62,13 @@ class QtResourceSetPrivate
     QtResourceSet *q_ptr;
     Q_DECLARE_PUBLIC(QtResourceSet)
 public:
-    QtResourceSetPrivate(QtResourceModel *model = 0);
+    QtResourceSetPrivate(QtResourceModel *model = nullptr);
 
     QtResourceModel *m_resourceModel;
 };
 
 QtResourceSetPrivate::QtResourceSetPrivate(QtResourceModel *model) :
-   q_ptr(0),
+   q_ptr(nullptr),
    m_resourceModel(model)
 {
 }
@@ -81,7 +81,7 @@ class QtResourceModelPrivate
     Q_DISABLE_COPY(QtResourceModelPrivate)
 public:
     QtResourceModelPrivate();
-    void activate(QtResourceSet *resourceSet, const QStringList &newPaths, int *errorCount = 0, QString *errorMessages = 0);
+    void activate(QtResourceSet *resourceSet, const QStringList &newPaths, int *errorCount = nullptr, QString *errorMessages = nullptr);
     void removeOldPaths(QtResourceSet *resourceSet, const QStringList &newPaths);
 
     QMap<QString, bool>                     m_pathToModified;
@@ -119,9 +119,9 @@ private:
 };
 
 QtResourceModelPrivate::QtResourceModelPrivate() :
-    q_ptr(0),
-    m_currentResourceSet(0),
-    m_fileWatcher(0),
+    q_ptr(nullptr),
+    m_currentResourceSet(nullptr),
+    m_fileWatcher(nullptr),
     m_fileWatcherEnabled(true)
 {
 }
@@ -168,7 +168,7 @@ void QtResourceSet::setModified(const QString &path)
 const QByteArray *QtResourceModelPrivate::createResource(const QString &path, QStringList *contents, int *errorCount, QIODevice &errorDevice) const
 {
     typedef RCCResourceLibrary::ResourceDataFileMap ResourceDataFileMap;
-    const QByteArray *rc = 0;
+    const QByteArray *rc = nullptr;
     *errorCount = -1;
     contents->clear();
     do {
@@ -559,7 +559,7 @@ void QtResourceModel::removeResourceSet(QtResourceSet *resourceSet)
     if (!resourceSet)
         return;
     if (currentResourceSet() == resourceSet)
-        setCurrentResourceSet(0);
+        setCurrentResourceSet(nullptr);
 
     // remove rcc files for those paths which are not used in any other resource set
     d_ptr->removeOldPaths(resourceSet, QStringList());

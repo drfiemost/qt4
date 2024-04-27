@@ -141,7 +141,7 @@ QT_BEGIN_NAMESPACE
 // Hidden private fields for additional extension data.
 struct QGLFunctionsPrivateEx : public QGLFunctionsPrivate
 {
-    QGLFunctionsPrivateEx(const QGLContext *context = 0)
+    QGLFunctionsPrivateEx(const QGLContext *context = nullptr)
         : QGLFunctionsPrivate(context)
         , m_features(-1) {}
 
@@ -158,7 +158,7 @@ static void qt_gl_functions_free(void *data)
 
 Q_GLOBAL_STATIC_WITH_ARGS(QGLContextResource, qt_gl_functions_resource, (qt_gl_functions_free))
 #endif
-static QGLFunctionsPrivateEx *qt_gl_functions(const QGLContext *context = 0)
+static QGLFunctionsPrivateEx *qt_gl_functions(const QGLContext *context = nullptr)
 {
     if (!context)
         context = QGLContext::currentContext();
@@ -183,7 +183,7 @@ static QGLFunctionsPrivateEx *qt_gl_functions(const QGLContext *context = 0)
     \sa initializeGLFunctions()
 */
 QGLFunctions::QGLFunctions()
-    : d_ptr(0)
+    : d_ptr(nullptr)
 {
 }
 
@@ -313,7 +313,7 @@ QGLFunctions::OpenGLFeatures QGLFunctions::openGLFeatures() const
 {
     QGLFunctionsPrivateEx *d = static_cast<QGLFunctionsPrivateEx *>(d_ptr);
     if (!d)
-        return 0;
+        return nullptr;
     if (d->m_features == -1)
         d->m_features = qt_gl_resolve_features();
     return QGLFunctions::OpenGLFeatures(d->m_features);

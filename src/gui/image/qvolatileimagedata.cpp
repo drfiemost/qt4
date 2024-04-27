@@ -45,24 +45,24 @@
 QT_BEGIN_NAMESPACE
 
 QVolatileImageData::QVolatileImageData()
-    : pengine(0)
+    : pengine(nullptr)
 {
 }
 
 QVolatileImageData::QVolatileImageData(int w, int h, QImage::Format format)
-    : pengine(0)
+    : pengine(nullptr)
 {
     image = QImage(w, h, format);
 }
 
 QVolatileImageData::QVolatileImageData(const QImage &sourceImage)
-    : pengine(0)
+    : pengine(nullptr)
 {
     image = sourceImage;
 }
 
 QVolatileImageData::QVolatileImageData(void *, void *)
-    : pengine(0)
+    : pengine(nullptr)
 {
     // Not supported.
 }
@@ -74,7 +74,7 @@ QVolatileImageData::QVolatileImageData(const QVolatileImageData &other)
     // The detach is not mandatory here but we do it nonetheless in order to
     // keep the behavior consistent with other platforms.
     image.detach();
-    pengine = 0;
+    pengine = nullptr;
 }
 
 QVolatileImageData::~QVolatileImageData()
@@ -103,7 +103,7 @@ bool QVolatileImageData::ensureFormat(QImage::Format format)
 
 void *QVolatileImageData::duplicateNativeImage() const
 {
-    return 0;
+    return nullptr;
 }
 
 void QVolatileImageData::ensureImage()

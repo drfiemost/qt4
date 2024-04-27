@@ -100,7 +100,7 @@ QGLGraphicsSystem::QGLGraphicsSystem(bool useX11GL)
 #if defined(Q_WS_X11) && !defined(QT_OPENGL_ES)
     // only override the system defaults if the user hasn't already
     // picked a visual
-    if (X11->visual == 0 && X11->visual_id == -1 && X11->visual_class == -1) {
+    if (X11->visual == nullptr && X11->visual_id == -1 && X11->visual_class == -1) {
         // find a double buffered, RGBA visual that supports OpenGL
         // and set that as the default visual for windows in Qt
         int i = 0;
@@ -186,7 +186,7 @@ static void qt_cleanup_gl_share_widget();
 class QGLGlobalShareWidget
 {
 public:
-    QGLGlobalShareWidget() : widget(0), init(false) {
+    QGLGlobalShareWidget() : widget(nullptr), init(false) {
         // ### FIXME - readd the post routine if the qApp is recreated
         qAddPostRoutine(qt_cleanup_gl_share_widget);
         created = true;
@@ -211,7 +211,7 @@ public:
     void cleanup() {
         QGLWidget *w = widget;
         cleanedUp = true;
-        widget = 0;
+        widget = nullptr;
         delete w;
     }
 
@@ -224,7 +224,7 @@ public:
 
         // prevent potential recursions
         cleanedUp = true;
-        widget = 0;
+        widget = nullptr;
         delete w;
         cleanedUp = false;
     }
@@ -256,7 +256,7 @@ static void qt_cleanup_gl_share_widget()
 QGLWidget* qt_gl_share_widget()
 {
     if (QGLGlobalShareWidget::cleanedUp)
-        return 0;
+        return nullptr;
     return _qt_gl_share_widget()->shareWidget();
 }
 
@@ -278,7 +278,7 @@ const QGLContext *qt_gl_share_context()
     QGLWidget *widget = qt_gl_share_widget();
     if (widget)
         return widget->context();
-    return 0;
+    return nullptr;
 }
 
 struct QGLWindowSurfacePrivate
@@ -338,9 +338,9 @@ QGLWindowSurface::QGLWindowSurface(QWidget *window)
     : QWindowSurface(window), d_ptr(new QGLWindowSurfacePrivate)
 {
 //    Q_ASSERT(window->isTopLevel());
-    d_ptr->pb = 0;
-    d_ptr->fbo = 0;
-    d_ptr->ctx = 0;
+    d_ptr->pb = nullptr;
+    d_ptr->fbo = nullptr;
+    d_ptr->ctx = nullptr;
     d_ptr->tex_id = 0;
 #if defined (QT_OPENGL_ES_2)
     d_ptr->tried_fbo = true;
@@ -364,7 +364,7 @@ QGLWindowSurface::~QGLWindowSurface()
 #ifndef Q_WS_QPA // Don't delete the contexts. Destroying the window does that for us
     foreach(QGLContext **ctx, d_ptr->contexts) {
         delete *ctx;
-        *ctx = 0;
+        *ctx = nullptr;
     }
 #endif
     delete d_ptr->pb;
@@ -382,7 +382,7 @@ void QGLWindowSurface::deleted(QObject *object)
         if (widget == window()) {
             // Make sure that the fbo is destroyed before destroying its context.
             delete d_ptr->fbo;
-            d_ptr->fbo = 0;
+            d_ptr->fbo = nullptr;
         }
 
 #ifndef Q_WS_QPA //no need to specifically delete the QGLContext as it will be deleted by QWidget
@@ -393,7 +393,7 @@ void QGLWindowSurface::deleted(QObject *object)
             int index = d_ptr->contexts.indexOf(ctxPtrPtr);
             if (index != -1) {
                 delete *ctxPtrPtr;
-                *ctxPtrPtr = 0;
+                *ctxPtrPtr = nullptr;
                 d_ptr->contexts.removeAt(index);
             }
         }
@@ -408,7 +408,7 @@ void QGLWindowSurface::hijackWindow(QWidget *widget)
     if (widgetPrivate->extraData()->glContext)
         return;
 
-    QGLContext *ctx = NULL;
+    QGLContext *ctx = nullptr;
 
     // For translucent top-level widgets we need alpha in the format.
     if (widget->testAttribute(Qt::WA_TranslucentBackground)) {
@@ -890,7 +890,7 @@ void QGLWindowSurface::updateGeometry() {
         } else {
             qDebug() << "QGLWindowSurface: Failed to create valid FBO, falling back";
             delete d_ptr->fbo;
-            d_ptr->fbo = 0;
+            d_ptr->fbo = nullptr;
         }
     }
 
@@ -915,7 +915,7 @@ void QGLWindowSurface::updateGeometry() {
 
             glGenTextures(1, &d_ptr->pb_tex_id);
             glBindTexture(target, d_ptr->pb_tex_id);
-            glTexImage2D(target, 0, GL_RGBA, surfSize.width(), surfSize.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+            glTexImage2D(target, 0, GL_RGBA, surfSize.width(), surfSize.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
             glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -930,7 +930,7 @@ void QGLWindowSurface::updateGeometry() {
         } else {
             qDebug() << "QGLWindowSurface: Failed to create valid pixelbuffer, falling back";
             delete d_ptr->pb;
-            d_ptr->pb = 0;
+            d_ptr->pb = nullptr;
         }
     }
 #endif // !defined(QT_OPENGL_ES_2) !defined(Q_WS_QPA)
@@ -953,7 +953,7 @@ bool QGLWindowSurface::initializeOffscreenTexture(const QSize &size)
 
     glGenTextures(1, &d_ptr->tex_id);
     glBindTexture(GL_TEXTURE_2D, d_ptr->tex_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.width(), size.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.width(), size.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1068,7 +1068,7 @@ QImage *QGLWindowSurface::buffer(const QWidget *widget)
         image = d_ptr->fbo->toImage();
 
     if (image.isNull())
-        return 0;
+        return nullptr;
 
     QRect rect = widget->rect();
     rect.translate(widget->mapTo(widget->window(), QPoint()));
@@ -1080,7 +1080,7 @@ QImage *QGLWindowSurface::buffer(const QWidget *widget)
 
 QWindowSurface::WindowSurfaceFeatures QGLWindowSurface::features() const
 {
-    WindowSurfaceFeatures features = 0;
+    WindowSurfaceFeatures features = nullptr;
     if (!d_ptr->destructive_swap_buffers || d_ptr->swap_region_support)
         features |= PartialUpdates;
     if (!d_ptr->destructive_swap_buffers)

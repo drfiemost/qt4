@@ -77,7 +77,7 @@ class QDESIGNER_SDK_EXPORT QDesignerMetaDataBaseInterface: public QObject
 {
     Q_OBJECT
 public:
-    QDesignerMetaDataBaseInterface(QObject *parent = 0);
+    QDesignerMetaDataBaseInterface(QObject *parent = nullptr);
     virtual ~QDesignerMetaDataBaseInterface();
 
     virtual QDesignerMetaDataBaseItemInterface *item(QObject *object) const = 0;

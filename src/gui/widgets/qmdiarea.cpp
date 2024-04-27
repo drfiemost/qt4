@@ -249,7 +249,7 @@ static inline bool useScrollBar(const QRect &childrenRect, const QSize &maxViewp
 static inline QMdiArea *mdiAreaParent(QWidget *widget)
 {
     if (!widget)
-        return 0;
+        return nullptr;
 
     QWidget *parent = widget->parentWidget();
     while (parent) {
@@ -257,7 +257,7 @@ static inline QMdiArea *mdiAreaParent(QWidget *widget)
             return area;
         parent = parent->parentWidget();
     }
-    return 0;
+    return nullptr;
 }
 
 #ifndef QT_NO_TABWIDGET
@@ -643,7 +643,7 @@ void QMdiAreaTabBar::contextMenuEvent(QContextMenuEvent *event)
 QMdiSubWindow *QMdiAreaTabBar::subWindowFromIndex(int index) const
 {
     if (index < 0 || index >= count())
-        return 0;
+        return nullptr;
 
     QMdiArea *mdiArea = qobject_cast<QMdiArea *>(parentWidget());
     Q_ASSERT(mdiArea);
@@ -662,15 +662,15 @@ QMdiSubWindow *QMdiAreaTabBar::subWindowFromIndex(int index) const
     \internal
 */
 QMdiAreaPrivate::QMdiAreaPrivate()
-    : cascader(0),
-      regularTiler(0),
-      iconTiler(0),
-      placer(0),
+    : cascader(nullptr),
+      regularTiler(nullptr),
+      iconTiler(nullptr),
+      placer(nullptr),
 #ifndef QT_NO_RUBBERBAND
-      rubberBand(0),
+      rubberBand(nullptr),
 #endif
 #ifndef QT_NO_TABBAR
-      tabBar(0),
+      tabBar(nullptr),
 #endif
       activationOrder(QMdiArea::CreationOrder),
       viewMode(QMdiArea::SubWindowView),
@@ -1072,7 +1072,7 @@ void QMdiAreaPrivate::emitWindowActivated(QMdiSubWindow *activeWindow)
 
     Q_ASSERT(aboutToBecomeActive == activeWindow);
     active = activeWindow;
-    aboutToBecomeActive = 0;
+    aboutToBecomeActive = nullptr;
     Q_ASSERT(active->d_func()->isActive);
 
 #ifndef QT_NO_TABBAR
@@ -1095,20 +1095,20 @@ void QMdiAreaPrivate::resetActiveWindow(QMdiSubWindow *deactivatedWindow)
     if (deactivatedWindow) {
         if (deactivatedWindow != active)
             return;
-        active = 0;
+        active = nullptr;
         if ((aboutToBecomeActive || isActivated || lastWindowAboutToBeDestroyed())
             && !isExplicitlyDeactivated(deactivatedWindow) && !q->window()->isMinimized()) {
             return;
         }
-        emit q->subWindowActivated(0);
+        emit q->subWindowActivated(nullptr);
         return;
     }
 
     if (aboutToBecomeActive)
         return;
 
-    active = 0;
-    emit q->subWindowActivated(0);
+    active = nullptr;
+    emit q->subWindowActivated(nullptr);
 }
 
 /*!
@@ -1174,7 +1174,7 @@ void QMdiAreaPrivate::updateScrollBars()
     QSize hbarExtent = hbar->sizeHint();
     QSize vbarExtent = vbar->sizeHint();
 
-    if (q->style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents, 0, q)) {
+    if (q->style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents, nullptr, q)) {
         const int doubleFrameWidth = frameWidth * 2;
         if (hbarpolicy == Qt::ScrollBarAlwaysOn)
             maxSize.rheight() -= doubleFrameWidth;
@@ -1235,7 +1235,7 @@ void QMdiAreaPrivate::internalRaise(QMdiSubWindow *mdiChild) const
     if (!sanityCheck(mdiChild, "QMdiArea::internalRaise") || childWindows.size() < 2)
         return;
 
-    QMdiSubWindow *stackUnderChild = 0;
+    QMdiSubWindow *stackUnderChild = nullptr;
     if (!windowStaysOnTop(mdiChild)) {
         foreach (QObject *object, viewport->children()) {
             QMdiSubWindow *child = qobject_cast<QMdiSubWindow *>(object);
@@ -1284,8 +1284,8 @@ QRect QMdiAreaPrivate::resizeToMinimumTileSize(const QSize &minSubWindowSize, in
             minAreaHeight += hbar->height();
         if (vbar->isVisible())
             minAreaWidth += vbar->width();
-        if (q->style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents, 0, q)) {
-            const int frame = q->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, 0, q);
+        if (q->style()->styleHint(QStyle::SH_ScrollView_FrameOnlyAroundContents, nullptr, q)) {
+            const int frame = q->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, nullptr, q);
             minAreaWidth += 2 * frame;
             minAreaHeight += 2 * frame;
         }
@@ -1425,7 +1425,7 @@ void QMdiAreaPrivate::disconnectSubWindow(QObject *subWindow)
         return;
 
     Q_Q(QMdiArea);
-    QObject::disconnect(subWindow, 0, q, 0);
+    QObject::disconnect(subWindow, nullptr, q, nullptr);
     subWindow->removeEventFilter(q);
 }
 
@@ -1436,11 +1436,11 @@ QMdiSubWindow *QMdiAreaPrivate::nextVisibleSubWindow(int increaseFactor, QMdiAre
                                                      int removedIndex, int fromIndex) const
 {
     if (childWindows.isEmpty())
-        return 0;
+        return nullptr;
 
     Q_Q(const QMdiArea);
     const QList<QMdiSubWindow *> subWindows = q->subWindowList(order);
-    QMdiSubWindow *current = 0;
+    QMdiSubWindow *current = nullptr;
 
     if (removedIndex < 0) {
         if (fromIndex >= 0 && fromIndex < subWindows.size())
@@ -1480,7 +1480,7 @@ QMdiSubWindow *QMdiAreaPrivate::nextVisibleSubWindow(int increaseFactor, QMdiAre
 
     if (!subWindows.at(index)->isHidden())
         return subWindows.at(index);
-    return 0;
+    return nullptr;
 }
 
 /*!
@@ -1584,7 +1584,7 @@ void QMdiAreaPrivate::setViewMode(QMdiArea::ViewMode mode)
     { // SubWindowView
 #ifndef QT_NO_TABBAR
         delete tabBar;
-        tabBar = 0;
+        tabBar = nullptr;
 #endif // QT_NO_TABBAR
 
         viewMode = mode;
@@ -1685,7 +1685,7 @@ QMdiArea::QMdiArea(QWidget *parent)
     setFrameStyle(QFrame::NoFrame);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setViewport(0);
+    setViewport(nullptr);
     setFocusPolicy(Qt::NoFocus);
     QApplication::instance()->installEventFilter(this);
 }
@@ -1697,16 +1697,16 @@ QMdiArea::~QMdiArea()
 {
     Q_D(QMdiArea);
     delete d->cascader;
-    d->cascader = 0;
+    d->cascader = nullptr;
 
     delete d->regularTiler;
-    d->regularTiler = 0;
+    d->regularTiler = nullptr;
 
     delete d->iconTiler;
-    d->iconTiler = 0;
+    d->iconTiler = nullptr;
 
     delete d->placer;
-    d->placer = 0;
+    d->placer = nullptr;
 }
 
 /*!
@@ -1741,8 +1741,8 @@ QSize QMdiArea::sizeHint() const
 QSize QMdiArea::minimumSizeHint() const
 {
     Q_D(const QMdiArea);
-    QSize size(style()->pixelMetric(QStyle::PM_MdiSubWindowMinimizedWidth, 0, this),
-               style()->pixelMetric(QStyle::PM_TitleBarHeight, 0, this));
+    QSize size(style()->pixelMetric(QStyle::PM_MdiSubWindowMinimizedWidth, nullptr, this),
+               style()->pixelMetric(QStyle::PM_TitleBarHeight, nullptr, this));
     size = size.expandedTo(QAbstractScrollArea::minimumSizeHint());
     if (!d->scrollBarsEnabled()) {
         foreach (QMdiSubWindow *child, d->childWindows) {
@@ -1767,13 +1767,13 @@ QMdiSubWindow *QMdiArea::currentSubWindow() const
 {
     Q_D(const QMdiArea);
     if (d->childWindows.isEmpty())
-        return 0;
+        return nullptr;
 
     if (d->active)
         return d->active;
 
     if (d->isActivated && !window()->isMinimized())
-        return 0;
+        return nullptr;
 
     Q_ASSERT(d->indicesToActivatedChildren.count() > 0);
     int index = d->indicesToActivatedChildren.at(0);
@@ -1811,7 +1811,7 @@ void QMdiArea::setActiveSubWindow(QMdiSubWindow *window)
 {
     Q_D(QMdiArea);
     if (!window) {
-        d->activateWindow(0);
+        d->activateWindow(nullptr);
         return;
     }
 
@@ -1946,7 +1946,7 @@ QMdiSubWindow *QMdiArea::addSubWindow(QWidget *widget, Qt::WindowFlags windowFla
 {
     if (!widget) {
         qWarning("QMdiArea::addSubWindow: null pointer to widget");
-        return 0;
+        return nullptr;
     }
 
     Q_D(QMdiArea);
@@ -2006,7 +2006,7 @@ void QMdiArea::removeSubWindow(QWidget *widget)
         d->childWindows.removeAll(child);
         d->indicesToActivatedChildren.removeAll(index);
         d->updateActiveWindow(index, d->active == child);
-        child->setParent(0);
+        child->setParent(nullptr);
         return;
     }
 
@@ -2015,7 +2015,7 @@ void QMdiArea::removeSubWindow(QWidget *widget)
         if (!sanityCheck(child, "QMdiArea::removeSubWindow"))
             continue;
         if (child->widget() == widget) {
-            child->setWidget(0);
+            child->setWidget(nullptr);
             Q_ASSERT(!child->widget());
             found = true;
             break;

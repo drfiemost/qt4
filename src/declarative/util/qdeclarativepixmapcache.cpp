@@ -187,29 +187,29 @@ class QDeclarativePixmapData
 public:
     QDeclarativePixmapData(const QUrl &u, const QSize &s, const QString &e)
     : refCount(1), inCache(false), pixmapStatus(QDeclarativePixmap::Error), 
-      url(u), errorString(e), requestSize(s), reply(0), prevUnreferenced(0),
-      prevUnreferencedPtr(0), nextUnreferenced(0)
+      url(u), errorString(e), requestSize(s), reply(nullptr), prevUnreferenced(nullptr),
+      prevUnreferencedPtr(nullptr), nextUnreferenced(nullptr)
     {
     }
 
     QDeclarativePixmapData(const QUrl &u, const QSize &r)
     : refCount(1), inCache(false), pixmapStatus(QDeclarativePixmap::Loading), 
-      url(u), requestSize(r), reply(0), prevUnreferenced(0), prevUnreferencedPtr(0), 
-      nextUnreferenced(0)
+      url(u), requestSize(r), reply(nullptr), prevUnreferenced(nullptr), prevUnreferencedPtr(nullptr), 
+      nextUnreferenced(nullptr)
     {
     }
 
     QDeclarativePixmapData(const QUrl &u, const QPixmap &p, const QSize &s, const QSize &r)
     : refCount(1), inCache(false), privatePixmap(false), pixmapStatus(QDeclarativePixmap::Ready), 
-      url(u), pixmap(p), implicitSize(s), requestSize(r), reply(0), prevUnreferenced(0),
-      prevUnreferencedPtr(0), nextUnreferenced(0)
+      url(u), pixmap(p), implicitSize(s), requestSize(r), reply(nullptr), prevUnreferenced(nullptr),
+      prevUnreferencedPtr(nullptr), nextUnreferenced(nullptr)
     {
     }
 
     QDeclarativePixmapData(const QPixmap &p)
     : refCount(1), inCache(false), privatePixmap(true), pixmapStatus(QDeclarativePixmap::Ready),
-      pixmap(p), implicitSize(p.size()), requestSize(p.size()), reply(0), prevUnreferenced(0),
-      prevUnreferencedPtr(0), nextUnreferenced(0)
+      pixmap(p), implicitSize(p.size()), requestSize(p.size()), reply(nullptr), prevUnreferenced(nullptr),
+      prevUnreferencedPtr(nullptr), nextUnreferenced(nullptr)
     {
     }
 
@@ -315,7 +315,7 @@ static bool readImage(const QUrl& url, QIODevice *dev, QImage *image, QString *e
 }
 
 QDeclarativePixmapReader::QDeclarativePixmapReader(QDeclarativeEngine *eng)
-: QThread(eng), engine(eng), threadObject(0), accessManager(0)
+: QThread(eng), engine(eng), threadObject(nullptr), accessManager(nullptr)
 {
     eventLoopQuitHack = new QObject;
     eventLoopQuitHack->moveToThread(this);
@@ -339,7 +339,7 @@ QDeclarativePixmapReader::~QDeclarativePixmapReader()
     foreach (QDeclarativePixmapReply *reply, activeJobs) {
         if (reply->loading) {
             cancelled.append(reply);
-            reply->data = 0;
+            reply->data = nullptr;
         }
     }
     if (threadObject) threadObject->processJobs();
@@ -546,7 +546,7 @@ void QDeclarativePixmapReader::cancel(QDeclarativePixmapReply *reply)
     mutex.lock();
     if (reply->loading) {
         cancelled.append(reply);
-        reply->data = 0;
+        reply->data = nullptr;
         // XXX 
         if (threadObject) threadObject->processJobs();
     } else {
@@ -576,7 +576,7 @@ void QDeclarativePixmapReader::run()
     exec();
 
     delete threadObject;
-    threadObject = 0;
+    threadObject = nullptr;
 }
 
 class QDeclarativePixmapKey
@@ -624,7 +624,7 @@ private:
 Q_GLOBAL_STATIC(QDeclarativePixmapStore, pixmapStore)
 
 QDeclarativePixmapStore::QDeclarativePixmapStore()
-: m_unreferencedPixmaps(0), m_lastUnreferencedPixmap(0), m_unreferencedCost(0), m_timerId(-1)
+: m_unreferencedPixmaps(nullptr), m_lastUnreferencedPixmap(nullptr), m_unreferencedCost(0), m_timerId(-1)
 {
 }
 
@@ -666,9 +666,9 @@ void QDeclarativePixmapStore::referencePixmap(QDeclarativePixmapData *data)
     if (m_lastUnreferencedPixmap == data)
         m_lastUnreferencedPixmap = data->prevUnreferenced;
 
-    data->nextUnreferenced = 0;
-    data->prevUnreferencedPtr = 0;
-    data->prevUnreferenced = 0;
+    data->nextUnreferenced = nullptr;
+    data->prevUnreferencedPtr = nullptr;
+    data->prevUnreferenced = nullptr;
 
     m_unreferencedCost -= data->cost();
 }
@@ -679,10 +679,10 @@ void QDeclarativePixmapStore::shrinkCache(int remove)
         QDeclarativePixmapData *data = m_lastUnreferencedPixmap;
         Q_ASSERT(data->nextUnreferenced == 0);
 
-        *data->prevUnreferencedPtr = 0;
+        *data->prevUnreferencedPtr = nullptr;
         m_lastUnreferencedPixmap = data->prevUnreferenced;
-        data->prevUnreferencedPtr = 0;
-        data->prevUnreferenced = 0;
+        data->prevUnreferencedPtr = nullptr;
+        data->prevUnreferenced = nullptr;
 
         remove -= data->cost();
         m_unreferencedCost -= data->cost();
@@ -697,7 +697,7 @@ void QDeclarativePixmapStore::timerEvent(QTimerEvent *)
 
     shrinkCache(removalCost);
 
-    if (m_unreferencedPixmaps == 0) {
+    if (m_unreferencedPixmaps == nullptr) {
         killTimer(m_timerId);
         m_timerId = -1;
     }
@@ -712,7 +712,7 @@ void QDeclarativePixmapStore::flushCache()
 }
 
 QDeclarativePixmapReply::QDeclarativePixmapReply(QDeclarativePixmapData *d)
-: data(d), engineForReader(0), requestSize(d->requestSize), url(d->url), loading(false), redirectCount(0)
+: data(d), engineForReader(nullptr), requestSize(d->requestSize), url(d->url), loading(false), redirectCount(0)
 {
     if (finishedIndex == -1) {
         finishedIndex = QDeclarativePixmapReply::staticMetaObject.indexOfSignal("finished()");
@@ -740,7 +740,7 @@ bool QDeclarativePixmapReply::event(QEvent *event)
                 data->removeFromCache(); // We don't continue to cache error'd pixmaps
             }
 
-            data->reply = 0;
+            data->reply = nullptr;
             emit finished();
         }
 
@@ -771,8 +771,8 @@ void QDeclarativePixmapData::release()
     if (refCount == 0) {
         if (reply) {
             QDeclarativePixmapReply *cancelReply = reply;
-            reply->data = 0;
-            reply = 0;
+            reply->data = nullptr;
+            reply = nullptr;
             QDeclarativePixmapReader::readerMutex.lock();
             QDeclarativePixmapReader *reader = QDeclarativePixmapReader::existingInstance(cancelReply->engineForReader);
             if (reader)
@@ -840,7 +840,7 @@ static QDeclarativePixmapData* createPixmapDataSync(QDeclarativeEngine *engine, 
 
     QString localFile = QDeclarativeEnginePrivate::urlToLocalFileOrQrc(url);
     if (localFile.isEmpty()) 
-        return 0;
+        return nullptr;
 
     QFile f(localFile);
     QSize readSize;
@@ -867,18 +867,18 @@ struct QDeclarativePixmapNull {
 Q_GLOBAL_STATIC(QDeclarativePixmapNull, nullPixmap)
 
 QDeclarativePixmap::QDeclarativePixmap()
-: d(0)
+: d(nullptr)
 {
 }
 
 QDeclarativePixmap::QDeclarativePixmap(QDeclarativeEngine *engine, const QUrl &url)
-: d(0)
+: d(nullptr)
 {
     load(engine, url);
 }
 
 QDeclarativePixmap::QDeclarativePixmap(QDeclarativeEngine *engine, const QUrl &url, const QSize &size)
-: d(0)
+: d(nullptr)
 {
     load(engine, url, size);
 }
@@ -887,13 +887,13 @@ QDeclarativePixmap::~QDeclarativePixmap()
 {
     if (d) {
         d->release();
-        d = 0;
+        d = nullptr;
     }
 }
 
 bool QDeclarativePixmap::isNull() const
 {
-    return d == 0;
+    return d == nullptr;
 }
 
 bool QDeclarativePixmap::isReady() const
@@ -1008,7 +1008,7 @@ void QDeclarativePixmap::load(QDeclarativeEngine *engine, const QUrl &url, const
 
 void QDeclarativePixmap::load(QDeclarativeEngine *engine, const QUrl &url, const QSize &requestSize, QDeclarativePixmap::Options options)
 {
-    if (d) { d->release(); d = 0; }
+    if (d) { d->release(); d = nullptr; }
 
     QDeclarativePixmapKey key = { &url, &requestSize };
     QDeclarativePixmapStore *store = pixmapStore();
@@ -1055,7 +1055,7 @@ void QDeclarativePixmap::clear()
 {
     if (d) {
         d->release();
-        d = 0;
+        d = nullptr;
     }
 }
 
@@ -1063,9 +1063,9 @@ void QDeclarativePixmap::clear(QObject *obj)
 {
     if (d) {
         if (d->reply) 
-            QObject::disconnect(d->reply, 0, obj, 0);
+            QObject::disconnect(d->reply, nullptr, obj, nullptr);
         d->release();
-        d = 0;
+        d = nullptr;
     }
 }
 

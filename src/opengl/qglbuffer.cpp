@@ -133,7 +133,7 @@ public:
     QGLBufferPrivate(QGLBuffer::Type t)
         : ref(1),
           type(t),
-          guard(0),
+          guard(nullptr),
           usagePattern(QGLBuffer::StaticDraw),
           actualUsagePattern(QGLBuffer::StaticDraw)
     {
@@ -323,7 +323,7 @@ void QGLBuffer::destroy()
         glDeleteBuffers(1, &bufferId);
     }
     d->guard.setId(0);
-    d->guard.setContext(0);
+    d->guard.setContext(nullptr);
 }
 
 /*!
@@ -542,9 +542,9 @@ void *QGLBuffer::map(QGLBuffer::Access access)
         qWarning("QGLBuffer::map(): buffer not created");
 #endif
     if (!d->guard.id())
-        return 0;
+        return nullptr;
     if (!glMapBufferARB)
-        return 0;
+        return nullptr;
 #ifdef QT_OPENGL_ES_2
     if (access != QGLBuffer::WriteOnly)
         return 0;

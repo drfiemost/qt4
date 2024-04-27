@@ -59,7 +59,7 @@ private:
 ThreadPrivate::ThreadPrivate(ThreadFunction entryPoint, void* data) 
     : m_data(data)
     , m_entryPoint(entryPoint)
-    , m_returnValue(0)
+    , m_returnValue(nullptr)
 {
 }
 

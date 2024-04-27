@@ -70,8 +70,8 @@ public:
 
     struct WidgetItem
     {
-        WidgetItem() : widget(0), label(0), widgetLabel(0),
-                button(0), container(0), layout(0), /*line(0), */parent(0), expanded(false) { }
+        WidgetItem() : widget(nullptr), label(nullptr), widgetLabel(nullptr),
+                button(nullptr), container(nullptr), layout(nullptr), /*line(0), */parent(nullptr), expanded(false) { }
         QWidget *widget; // can be null
         QLabel *label; // main label with property name
         QLabel *widgetLabel; // label substitute showing the current value if there is no widget
@@ -90,7 +90,7 @@ private:
     int gridRow(WidgetItem *item) const;
     int gridSpan(WidgetItem *item) const;
     void setExpanded(WidgetItem *item, bool expanded);
-    QToolButton *createButton(QWidget *panret = 0) const;
+    QToolButton *createButton(QWidget *panret = nullptr) const;
 
     QMap<QtBrowserItem *, WidgetItem *> m_indexToItem;
     QMap<WidgetItem *, QtBrowserItem *> m_itemToIndex;
@@ -160,7 +160,7 @@ void QtButtonPropertyBrowserPrivate::slotEditorDestroyed()
         return;
     if (!m_widgetToItem.contains(editor))
         return;
-    m_widgetToItem[editor]->widget = 0;
+    m_widgetToItem[editor]->widget = nullptr;
     m_widgetToItem.remove(editor);
 }
 
@@ -171,8 +171,8 @@ void QtButtonPropertyBrowserPrivate::slotUpdate()
         WidgetItem *item = itItem.next();
 
         WidgetItem *parent = item->parent;
-        QWidget *w = 0;
-        QGridLayout *l = 0;
+        QWidget *w = nullptr;
+        QGridLayout *l = nullptr;
         const int oldRow = gridRow(item);
         if (parent) {
             w = parent->container;
@@ -205,7 +205,7 @@ void QtButtonPropertyBrowserPrivate::setExpanded(WidgetItem *item, bool expanded
     item->expanded = expanded;
     const int row = gridRow(item);
     WidgetItem *parent = item->parent;
-    QGridLayout *l = 0;
+    QGridLayout *l = nullptr;
     if (parent)
         l = parent->layout;
     else
@@ -252,8 +252,8 @@ void QtButtonPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBr
     WidgetItem *newItem = new WidgetItem();
     newItem->parent = parentItem;
 
-    QGridLayout *layout = 0;
-    QWidget *parentWidget = 0;
+    QGridLayout *layout = nullptr;
+    QWidget *parentWidget = nullptr;
     int row = -1;
     if (!afterItem) {
         row = 0;
@@ -276,7 +276,7 @@ void QtButtonPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBr
         if (!parentItem->container) {
             m_recreateQueue.removeAll(parentItem);
             WidgetItem *grandParent = parentItem->parent;
-            QGridLayout *l = 0;
+            QGridLayout *l = nullptr;
             const int oldRow = gridRow(parentItem);
             if (grandParent) {
                 l = grandParent->layout;
@@ -295,7 +295,7 @@ void QtButtonPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBr
             if (parentItem->label) {
                 l->removeWidget(parentItem->label);
                 delete parentItem->label;
-                parentItem->label = 0;
+                parentItem->label = nullptr;
             }
             int span = 1;
             if (!parentItem->widget && !parentItem->widgetLabel)
@@ -375,7 +375,7 @@ void QtButtonPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
             removeRow(parentItem->layout, row);
     } else {
         const WidgetItem *grandParent = parentItem->parent;
-        QGridLayout *l = 0;
+        QGridLayout *l = nullptr;
         if (grandParent) {
             l = grandParent->layout;
         } else {
@@ -389,9 +389,9 @@ void QtButtonPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
         l->removeWidget(parentItem->container);
         delete parentItem->button;
         delete parentItem->container;
-        parentItem->button = 0;
-        parentItem->container = 0;
-        parentItem->layout = 0;
+        parentItem->button = nullptr;
+        parentItem->container = nullptr;
+        parentItem->layout = nullptr;
         if (!m_recreateQueue.contains(parentItem))
             m_recreateQueue.append(parentItem);
         if (parentSpan > 1)

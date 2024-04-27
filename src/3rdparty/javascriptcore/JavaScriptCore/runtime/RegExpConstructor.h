@@ -68,7 +68,7 @@ namespace JSC {
 
         static const ClassInfo info;
 
-        void performMatch(RegExp*, const UString&, int startOffset, int& position, int& length, int** ovector = 0);
+        void performMatch(RegExp*, const UString&, int startOffset, int& position, int& length, int** ovector = nullptr);
         JSObject* arrayOfMatches(ExecState*) const;
 
         void setInput(const UString&);

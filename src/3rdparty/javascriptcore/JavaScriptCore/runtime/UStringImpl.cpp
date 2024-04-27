@@ -51,12 +51,12 @@ SharedUChar* UStringImpl::baseSharedBuffer()
 SharedUChar* UStringImpl::sharedBuffer()
 {
     if (m_length < s_minLengthToShare)
-        return 0;
+        return nullptr;
     ASSERT(!isStatic());
 
     UStringImpl* owner = bufferOwnerString();
     if (owner->bufferOwnership() == BufferInternal)
-        return 0;
+        return nullptr;
 
     return owner->baseSharedBuffer();
 }

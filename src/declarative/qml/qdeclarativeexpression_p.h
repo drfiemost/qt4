@@ -87,7 +87,7 @@ private:
 class QDeclarativeDelayedError 
 {
 public:
-    inline QDeclarativeDelayedError() : nextError(0), prevError(0) {}
+    inline QDeclarativeDelayedError() : nextError(nullptr), prevError(nullptr) {}
     inline ~QDeclarativeDelayedError() { removeError(); }
 
     QDeclarativeError error;
@@ -98,8 +98,8 @@ public:
         if (!prevError) return;
         if (nextError) nextError->prevError = prevError;
         *prevError = nextError;
-        nextError = 0;
-        prevError = 0;
+        nextError = nullptr;
+        prevError = nullptr;
     }
 
 private:
@@ -183,8 +183,8 @@ public:
     void init(QDeclarativeContextData *, const QScriptValue &, QObject *);
     void init(QDeclarativeContextData *, void *, QDeclarativeRefCount *, QObject *, const QString &, int);
 
-    QVariant value(QObject *secondaryScope = 0, bool *isUndefined = 0);
-    QScriptValue scriptValue(QObject *secondaryScope = 0, bool *isUndefined = 0);
+    QVariant value(QObject *secondaryScope = nullptr, bool *isUndefined = nullptr);
+    QScriptValue scriptValue(QObject *secondaryScope = nullptr, bool *isUndefined = nullptr);
 
     static QDeclarativeExpressionPrivate *get(QDeclarativeExpression *expr) {
         return static_cast<QDeclarativeExpressionPrivate *>(QObjectPrivate::get(expr));
@@ -220,7 +220,7 @@ QDeclarativeQtScriptExpression::DeleteWatcher::DeleteWatcher(QDeclarativeQtScrip
 QDeclarativeQtScriptExpression::DeleteWatcher::~DeleteWatcher() 
 {
     if (false == *m_wasDeleted && m_wasDeleted == m_d->deleted)
-        m_d->deleted = 0;
+        m_d->deleted = nullptr;
 }
 
 bool QDeclarativeQtScriptExpression::DeleteWatcher::wasDeleted() const 

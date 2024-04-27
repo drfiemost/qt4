@@ -210,7 +210,7 @@ const char *const QScriptGrammar::spell [] = {
   "if", "in", "instanceof", "{", "[", "<=", "(", "<", "<<", "<<=", 
   "-", "-=", "--", "new", "!", "!=", "!==", "numeric literal", "|", "|=", 
   "||", "+", "+=", "++", "?", "}", "]", "%", "%=", "return", 
-  ")", ";", 0, "*", "*=", "string literal", "switch", "this", "throw", "~", 
+  ")", ";", nullptr, "*", "*=", "string literal", "switch", "this", "throw", "~", 
   "try", "typeof", "var", "void", "while", "with", "^", "^=", "null", "true", 
   "false", "const", "debugger", "reserved word"};
 
@@ -1055,7 +1055,7 @@ QScript::Lexer::Lexer(QScript::CommentProcessor *proc)
       yylineno(0),
       size8(128), size16(128), restrKeyword(false),
       stackToken(-1), pos(0),
-      code(0), length(0),
+      code(nullptr), length(0),
       bol(true),
       current(0), next1(0), next2(0), next3(0),
       err(NoError),
@@ -1719,7 +1719,7 @@ int QScript::Lexer::lex()
 
     double dval = 0;
     if (state == Number) {
-        dval = qstrtod(buffer8, 0, 0);
+        dval = qstrtod(buffer8, nullptr, nullptr);
     } else if (state == Hex) { // scan hex numbers
         dval = QScript::integerFromString(buffer8, pos8, 16);
         state = Number;
@@ -2163,10 +2163,10 @@ QScriptParser::QScriptParser():
     tos(0),
     stack_size(0),
     sym_stack(0),
-    state_stack(0),
-    location_stack(0),
-    lexer(0),
-    translator(0)
+    state_stack(nullptr),
+    location_stack(nullptr),
+    lexer(nullptr),
+    translator(nullptr)
 {
 }
 

@@ -90,8 +90,8 @@ class Q_EXPORT_SQLDRIVER_SQLITE QSQLiteDriver : public QSqlDriver
     Q_OBJECT
     friend class QSQLiteResult;
 public:
-    explicit QSQLiteDriver(QObject *parent = 0);
-    explicit QSQLiteDriver(sqlite3 *connection, QObject *parent = 0);
+    explicit QSQLiteDriver(QObject *parent = nullptr);
+    explicit QSQLiteDriver(sqlite3 *connection, QObject *parent = nullptr);
     ~QSQLiteDriver();
     bool hasFeature(DriverFeature f) const;
     bool open(const QString & db,

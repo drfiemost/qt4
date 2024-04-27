@@ -85,7 +85,7 @@ bool FieldsReader::doc(int32_t n, Document* doc)
         int32_t fieldNumber = fieldsStream->readVInt();
         FieldInfo* fi = fieldInfos->fieldInfo(fieldNumber);
 
-        if ( fi == NULL )
+        if ( fi == nullptr )
             _CLTHROWA(CL_ERR_IO, "Field stream is invalid");
 
         uint8_t bits = fieldsStream->readByte();

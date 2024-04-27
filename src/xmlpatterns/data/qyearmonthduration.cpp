@@ -76,7 +76,7 @@ YearMonthDuration::Ptr YearMonthDuration::fromLexical(const QString &lexical)
     bool isPos;
 
     const AtomicValue::Ptr err(create(captureTable, lexical, &isPos, &years,
-                                      &months, 0, 0, 0, 0, 0));
+                                      &months, nullptr, nullptr, nullptr, nullptr, nullptr));
 
     return err ? err : YearMonthDuration::Ptr(new YearMonthDuration(isPos, years, months));
 }

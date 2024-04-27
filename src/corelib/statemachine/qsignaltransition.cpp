@@ -111,7 +111,7 @@ QT_BEGIN_NAMESPACE
 
 QSignalTransitionPrivate::QSignalTransitionPrivate()
 {
-    sender = 0;
+    sender = nullptr;
     signalIndex = -1;
 }
 

@@ -77,7 +77,7 @@ public:
         RGBA = GL_RGBA
     };
 
-    ShaderEffectSource(QDeclarativeItem *parent = 0);
+    ShaderEffectSource(QDeclarativeItem *parent = nullptr);
     virtual ~ShaderEffectSource();
 
     QDeclarativeItem *sourceItem() const { return m_sourceItem.data(); }

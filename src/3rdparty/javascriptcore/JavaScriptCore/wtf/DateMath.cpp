@@ -962,7 +962,7 @@ void msToGregorianDateTime(ExecState* exec, double ms, bool outputIsUTC, Gregori
     tm.year     =  year - 1900;
     tm.isDST    =  localTime.isDST;
     tm.utcOffset = localTime.offset / WTF::msPerSecond;
-    tm.timeZone = NULL;
+    tm.timeZone = nullptr;
 }
 
 double parseDateFromNullTerminatedCharacters(ExecState* exec, const char* dateString)

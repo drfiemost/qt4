@@ -76,7 +76,7 @@ class SpecialMenuAction: public QAction
 {
     Q_OBJECT
 public:
-    SpecialMenuAction(QObject *parent = 0);
+    SpecialMenuAction(QObject *parent = nullptr);
     virtual ~SpecialMenuAction();
 };
 
@@ -86,7 +86,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerMenuBar: public QMenuBar
 {
     Q_OBJECT
 public:
-    QDesignerMenuBar(QWidget *parent = 0);
+    QDesignerMenuBar(QWidget *parent = nullptr);
     virtual ~QDesignerMenuBar();
 
     bool eventFilter(QObject *object, QEvent *event);

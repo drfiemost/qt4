@@ -58,7 +58,7 @@ class FilterPage : public QWizardPage
     Q_OBJECT
 
 public:
-    FilterPage(QWidget *parent = 0);
+    FilterPage(QWidget *parent = nullptr);
     QStringList filterAttributes() const;
     QList<CustomFilter> customFilters() const;
 

@@ -86,7 +86,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeXmlListModel : public QListModelInterface, p
     Q_CLASSINFO("DefaultProperty", "roles")
 
 public:
-    QDeclarativeXmlListModel(QObject *parent = 0);
+    QDeclarativeXmlListModel(QObject *parent = nullptr);
     ~QDeclarativeXmlListModel();
 
     virtual QHash<int,QVariant> data(int index, const QList<int> &roles = (QList<int>())) const;
