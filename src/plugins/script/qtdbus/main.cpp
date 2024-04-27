@@ -351,8 +351,8 @@ Q_DECLARE_METATYPE(QDBusReply<QDBusConnectionInterface::RegisterServiceReply>)
 class QtDBusScriptPlugin : public QScriptExtensionPlugin
 {
 public:
-    QStringList keys() const;
-    void initialize(const QString &key, QScriptEngine *engine);
+    QStringList keys() const override;
+    void initialize(const QString &key, QScriptEngine *engine) override;
 };
 
 QStringList QtDBusScriptPlugin::keys() const

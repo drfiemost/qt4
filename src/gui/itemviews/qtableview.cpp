@@ -591,7 +591,7 @@ class QTableCornerButton : public QAbstractButton
     Q_OBJECT
 public:
     QTableCornerButton(QWidget *parent) : QAbstractButton(parent) {}
-    void paintEvent(QPaintEvent*) {
+    void paintEvent(QPaintEvent*) override {
         QStyleOptionHeader opt;
         opt.init(this);
         QStyle::State state = QStyle::State_None;

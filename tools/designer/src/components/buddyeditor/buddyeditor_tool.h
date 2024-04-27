@@ -63,18 +63,18 @@ class QT_BUDDYEDITOR_EXPORT BuddyEditorTool: public QDesignerFormWindowToolInter
     Q_OBJECT
 public:
     explicit BuddyEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = nullptr);
-    virtual ~BuddyEditorTool();
+    ~BuddyEditorTool() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
-    virtual QDesignerFormWindowInterface *formWindow() const;
+    QDesignerFormEditorInterface *core() const override;
+    QDesignerFormWindowInterface *formWindow() const override;
 
-    virtual QWidget *editor() const;
-    virtual QAction *action() const;
+    QWidget *editor() const override;
+    QAction *action() const override;
 
-    virtual void activated();
-    virtual void deactivated();
+    void activated() override;
+    void deactivated() override;
 
-    virtual bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) override;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

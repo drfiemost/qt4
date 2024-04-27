@@ -181,7 +181,7 @@ public:
 public:
     // public methods are entry points from other objects
     explicit QDBusConnectionPrivate(QObject *parent = nullptr);
-    ~QDBusConnectionPrivate();
+    ~QDBusConnectionPrivate() override;
     void deleteYourself();
 
     void setBusService(const QDBusConnection &connection);
@@ -248,8 +248,8 @@ private:
     QString getNameOwnerNoCache(const QString &service);
 
 protected:
-    void customEvent(QEvent *e);
-    void timerEvent(QTimerEvent *e);
+    void customEvent(QEvent *e) override;
+    void timerEvent(QTimerEvent *e) override;
 
 public slots:
     // public slots

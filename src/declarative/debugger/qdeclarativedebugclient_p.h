@@ -58,7 +58,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeDebugConnection : public QTcpSock
     Q_DISABLE_COPY(QDeclarativeDebugConnection)
 public:
     QDeclarativeDebugConnection(QObject * = nullptr);
-    ~QDeclarativeDebugConnection();
+    ~QDeclarativeDebugConnection() override;
 
     bool isConnected() const;
 private:
@@ -78,7 +78,7 @@ public:
     enum Status { NotConnected, Unavailable, Enabled };
 
     QDeclarativeDebugClient(const QString &, QDeclarativeDebugConnection *parent);
-    ~QDeclarativeDebugClient();
+    ~QDeclarativeDebugClient() override;
 
     QString name() const;
 

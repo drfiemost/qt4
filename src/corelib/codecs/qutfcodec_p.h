@@ -87,7 +87,7 @@ struct QUtf32
 
 class QUtf8Codec : public QTextCodec {
 public:
-    ~QUtf8Codec();
+    ~QUtf8Codec() override;
 
     QByteArray name() const override;
     int mibEnum() const override;
@@ -101,7 +101,7 @@ class QUtf16Codec : public QTextCodec {
 protected:
 public:
     QUtf16Codec() { e = DetectEndianness; }
-    ~QUtf16Codec();
+    ~QUtf16Codec() override;
 
     QByteArray name() const override;
     QList<QByteArray> aliases() const override;
@@ -133,7 +133,7 @@ public:
 class QUtf32Codec : public QTextCodec {
 public:
     QUtf32Codec() { e = DetectEndianness; }
-    ~QUtf32Codec();
+    ~QUtf32Codec() override;
 
     QByteArray name() const override;
     QList<QByteArray> aliases() const override;

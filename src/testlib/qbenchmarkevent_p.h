@@ -62,15 +62,15 @@ QT_BEGIN_NAMESPACE
 class QBenchmarkEvent : public QBenchmarkMeasurerBase
 {
 public:
-    ~QBenchmarkEvent();
-    void start();
-    qint64 checkpoint();
-    qint64 stop();
-    bool isMeasurementAccepted(qint64 measurement);
-    int adjustIterationCount(int suggestion);
-    int adjustMedianCount(int suggestion);
-    bool repeatCount() { return 1; } 
-    QTest::QBenchmarkMetric metricType();
+    ~QBenchmarkEvent() override;
+    void start() override;
+    qint64 checkpoint() override;
+    qint64 stop() override;
+    bool isMeasurementAccepted(qint64 measurement) override;
+    int adjustIterationCount(int suggestion) override;
+    int adjustMedianCount(int suggestion) override;
+    bool repeatCount() override { return 1; } 
+    QTest::QBenchmarkMetric metricType() override;
     static bool eventCountingMechanism(void *message);
     static qint64 eventCounter;
 };

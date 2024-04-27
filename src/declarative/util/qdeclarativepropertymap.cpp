@@ -56,8 +56,8 @@ public:
     QDeclarativePropertyMapMetaObject(QDeclarativePropertyMap *obj, QDeclarativePropertyMapPrivate *objPriv);
 
 protected:
-    virtual void propertyWritten(int index);
-    virtual void propertyCreated(int, QMetaPropertyBuilder &);
+    void propertyWritten(int index) override;
+    void propertyCreated(int, QMetaPropertyBuilder &) override;
 
 private:
     QDeclarativePropertyMap *map;

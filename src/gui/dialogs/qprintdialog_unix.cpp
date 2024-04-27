@@ -80,7 +80,7 @@ class QPrintPropertiesDialog : public QDialog
     Q_OBJECT
 public:
     QPrintPropertiesDialog(QAbstractPrintDialog *parent = nullptr);
-    ~QPrintPropertiesDialog();
+    ~QPrintPropertiesDialog() override;
 
 #if !defined(QT_NO_CUPS) && !defined(QT_NO_LIBRARY)
     void setCups(QCUPSSupport *cups) { m_cups = cups; }
@@ -95,7 +95,7 @@ public:
     void setupPrinter() const;
 
 protected:
-    void showEvent(QShowEvent* event);
+    void showEvent(QShowEvent* event) override;
 
 private:
     Ui::QPrintPropertiesWidget widget;
@@ -112,7 +112,7 @@ class QPrintDialogPrivate : public QAbstractPrintDialogPrivate
     Q_DECLARE_TR_FUNCTIONS(QPrintDialog)
 public:
     QPrintDialogPrivate();
-    ~QPrintDialogPrivate();
+    ~QPrintDialogPrivate() override;
 
     void init();
     /// copy printer properties to the widget
@@ -133,7 +133,7 @@ public:
     void setupPrinter();
     void updateWidgets();
 
-    virtual void setTabs(const QList<QWidget*> &tabs);
+    void setTabs(const QList<QWidget*> &tabs) override;
 
     Ui::QPrintSettingsOutput options;
     QUnixPrintWidget *top;
@@ -218,15 +218,15 @@ class QPPDOptionsModel : public QAbstractItemModel
     friend class QPPDOptionsEditor;
 public:
     QPPDOptionsModel(QCUPSSupport *cups, QObject *parent = nullptr);
-    ~QPPDOptionsModel();
+    ~QPPDOptionsModel() override;
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex& index) const;
-    Qt::ItemFlags flags(const QModelIndex& index) const;
-    QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex& index) const override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
+    QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const override;
 
     QOptionTreeItem* rootItem;
     QCUPSSupport *cups;
@@ -242,11 +242,11 @@ class QPPDOptionsEditor : public QStyledItemDelegate
     Q_OBJECT
 public:
     QPPDOptionsEditor(QObject* parent = nullptr) : QStyledItemDelegate(parent) {}
-    ~QPPDOptionsEditor() {}
+    ~QPPDOptionsEditor() override {}
 
-    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-    void setEditorData(QWidget* editor, const QModelIndex& index) const;
-    void setModelData( QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    void setEditorData(QWidget* editor, const QModelIndex& index) const override;
+    void setModelData( QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
 
 private slots:
     void cbChanged(int index);

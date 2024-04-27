@@ -94,7 +94,7 @@ namespace QPatternist
             /**
              * Returns always @c true, used to avoid dynamic casts.
              */
-            virtual bool isReference() const;
+            bool isReference() const override;
 
             /**
              * Sets the @p type of the reference.

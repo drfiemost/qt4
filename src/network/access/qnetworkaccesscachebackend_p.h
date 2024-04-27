@@ -64,14 +64,14 @@ class QNetworkAccessCacheBackend : public QNetworkAccessBackend
 
 public:
     QNetworkAccessCacheBackend();
-    ~QNetworkAccessCacheBackend();
+    ~QNetworkAccessCacheBackend() override;
 
-    void open();
-    void closeDownstreamChannel();
+    void open() override;
+    void closeDownstreamChannel() override;
     void closeUpstreamChannel();
 
     void upstreamReadyRead();
-    void downstreamReadyWrite();
+    void downstreamReadyWrite() override;
 
 private:
     bool sendCacheContents();

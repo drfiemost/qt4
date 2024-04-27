@@ -137,7 +137,7 @@ public:
 #endif
 
     QImage(const QImage &);
-    ~QImage();
+    ~QImage() override;
 
     QImage &operator=(const QImage &);
 #ifdef Q_COMPILER_RVALUE_REFS
@@ -148,7 +148,7 @@ public:
 
     bool isNull() const;
 
-    int devType() const;
+    int devType() const override;
 
     bool operator==(const QImage &) const;
     bool operator!=(const QImage &) const;
@@ -268,7 +268,7 @@ public:
     int serialNumber() const;
     qint64 cacheKey() const;
 
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
 
     // Auxiliary data
     int dotsPerMeterX() const;
@@ -292,7 +292,7 @@ public:
 #endif
 
 protected:
-    virtual int metric(PaintDeviceMetric metric) const;
+    int metric(PaintDeviceMetric metric) const override;
 
 private:
     friend class QWSOnScreenSurface;

@@ -58,7 +58,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativePropertyMap : public QObject
     Q_OBJECT
 public:
     QDeclarativePropertyMap(QObject *parent = nullptr);
-    virtual ~QDeclarativePropertyMap();
+    ~QDeclarativePropertyMap() override;
 
     QVariant value(const QString &key) const;
     void insert(const QString &key, const QVariant &value);

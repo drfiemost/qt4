@@ -97,13 +97,13 @@ public:
 
 struct ScalableEntry : public QIconLoaderEngineEntry
 {
-    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state);
+    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) override;
     QIcon svgIcon;
 };
 
 struct PixmapEntry : public QIconLoaderEngineEntry
 {
-    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state);
+    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) override;
     QPixmap basePixmap;
 };
 
@@ -113,20 +113,20 @@ class QIconLoaderEngine : public QIconEngineV2
 {
 public:
     QIconLoaderEngine(const QString& iconName = QString());
-    ~QIconLoaderEngine();
+    ~QIconLoaderEngine() override;
 
-    void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state);
-    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state);
-    QSize actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state);
-    QIconEngineV2 *clone() const;
-    bool read(QDataStream &in);
-    bool write(QDataStream &out) const;
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state) override;
+    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) override;
+    QSize actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state) override;
+    QIconEngineV2 *clone() const override;
+    bool read(QDataStream &in) override;
+    bool write(QDataStream &out) const override;
 
 private:
-    QString key() const;
+    QString key() const override;
     bool hasIcon() const;
     void ensureLoaded();
-    void virtual_hook(int id, void *data);
+    void virtual_hook(int id, void *data) override;
     QIconLoaderEngineEntry *entryForSize(const QSize &size);
     QIconLoaderEngine(const QIconLoaderEngine &other);
     QThemeIconEntries m_entries;

@@ -62,7 +62,7 @@ class Q_DBUS_EXPORT QDBusVirtualObject : public QObject
     Q_OBJECT
 public:
     explicit QDBusVirtualObject(QObject *parent = nullptr);
-    virtual ~QDBusVirtualObject();
+    ~QDBusVirtualObject() override;
 
     virtual QString introspect(const QString &path) const = 0;
     virtual bool handleMessage(const QDBusMessage &message, const QDBusConnection &connection) = 0;

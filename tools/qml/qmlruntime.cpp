@@ -105,24 +105,24 @@ public:
         setAcceptDrops(true);
     }
 
-    void dragEnterEvent(QDragEnterEvent *event)
+    void dragEnterEvent(QDragEnterEvent *event) override
     {
         const QMimeData *mimeData = event->mimeData();
         if (mimeData->hasUrls())
             event->acceptProposedAction();
     }
 
-    void dragMoveEvent(QDragMoveEvent *event)
+    void dragMoveEvent(QDragMoveEvent *event) override
     {
         event->acceptProposedAction();
     }
 
-    void dragLeaveEvent(QDragLeaveEvent *event)
+    void dragLeaveEvent(QDragLeaveEvent *event) override
     {
         event->accept();
     }
 
-    void dropEvent(QDropEvent *event)
+    void dropEvent(QDropEvent *event) override
     {
         const QMimeData *mimeData = event->mimeData();
         if (!mimeData->hasUrls())
@@ -314,15 +314,15 @@ private:
 class PersistentCookieJar : public QNetworkCookieJar {
 public:
     PersistentCookieJar(QObject *parent) : QNetworkCookieJar(parent) { load(); }
-    ~PersistentCookieJar() { save(); }
+    ~PersistentCookieJar() override { save(); }
 
-    virtual QList<QNetworkCookie> cookiesForUrl(const QUrl &url) const
+    QList<QNetworkCookie> cookiesForUrl(const QUrl &url) const override
     {
         QMutexLocker lock(&mutex);
         return QNetworkCookieJar::cookiesForUrl(url);
     }
 
-    virtual bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url)
+    bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url) override
     {
         QMutexLocker lock(&mutex);
         return QNetworkCookieJar::setCookiesFromUrl(cookieList, url);
@@ -361,7 +361,7 @@ public:
     SystemProxyFactory() : proxyDirty(true), httpProxyInUse(false) {
     }
 
-    virtual QList<QNetworkProxy> queryProxy(const QNetworkProxyQuery &query)
+    QList<QNetworkProxy> queryProxy(const QNetworkProxyQuery &query) override
     {
         if (proxyDirty)
             setupProxy();
@@ -404,9 +404,9 @@ class NetworkAccessManagerFactory : public QObject, public QDeclarativeNetworkAc
     Q_OBJECT
 public:
     NetworkAccessManagerFactory() : cacheSize(0) {}
-    ~NetworkAccessManagerFactory() {}
+    ~NetworkAccessManagerFactory() override {}
 
-    QNetworkAccessManager *create(QObject *parent);
+    QNetworkAccessManager *create(QObject *parent) override;
 
     void setCacheSize(int size) {
         if (size != cacheSize) {

@@ -66,32 +66,32 @@ class QDESIGNER_SHARED_EXPORT DialogGui : public QDesignerDialogGuiInterface
 {
 public:
     DialogGui();
-    virtual ~DialogGui();
+    ~DialogGui() override;
 
-    virtual QMessageBox::StandardButton
+    QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton);
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) override;
 
-    virtual QMessageBox::StandardButton
+    QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, const QString &informativeText,
                 QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton);
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) override;
 
-    virtual QMessageBox::StandardButton
+    QMessageBox::StandardButton
         message(QWidget *parent, Message context, QMessageBox::Icon icon,
                 const QString &title, const QString &text, const QString &informativeText, const QString &detailedText,
                 QMessageBox::StandardButtons buttons = QMessageBox::Ok,
-                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton);
+                QMessageBox::StandardButton defaultButton = QMessageBox::NoButton) override;
 
-    virtual QString getExistingDirectory(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), QFileDialog::Options options = QFileDialog::ShowDirsOnly);
-    virtual QString getOpenFileName(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr);
-    virtual QStringList getOpenFileNames(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr);
-    virtual QString getSaveFileName(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr);
+    QString getExistingDirectory(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), QFileDialog::Options options = QFileDialog::ShowDirsOnly) override;
+    QString getOpenFileName(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr) override;
+    QStringList getOpenFileNames(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr) override;
+    QString getSaveFileName(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr) override;
 
-    virtual QString getOpenImageFileName(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr);
-    virtual QStringList getOpenImageFileNames(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr);
+    QString getOpenImageFileName(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr) override;
+    QStringList getOpenImageFileNames(QWidget *parent = nullptr, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = nullptr, QFileDialog::Options options = nullptr) override;
 
 private:
     QFileIconProvider *ensureIconProvider();

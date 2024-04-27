@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeDrag : public QObject
 
 public:
     QDeclarativeDrag(QObject *parent=nullptr);
-    ~QDeclarativeDrag();
+    ~QDeclarativeDrag() override;
 
     QGraphicsObject *target() const;
     void setTarget(QGraphicsObject *);
@@ -132,7 +132,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeMouseArea : public QDeclarativeItem
 
 public:
     QDeclarativeMouseArea(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeMouseArea();
+    ~QDeclarativeMouseArea() override;
 
     qreal mouseX() const;
     qreal mouseY() const;
@@ -179,24 +179,24 @@ protected:
     void setHovered(bool);
     bool setPressed(bool);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 #ifndef QT_NO_CONTEXTMENU
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 #endif // QT_NO_CONTEXTMENU
-    bool sceneEvent(QEvent *);
+    bool sceneEvent(QEvent *) override;
     bool sendMouseEvent(QGraphicsSceneMouseEvent *event);
-    bool sceneEventFilter(QGraphicsItem *i, QEvent *e);
-    void timerEvent(QTimerEvent *event);
+    bool sceneEventFilter(QGraphicsItem *i, QEvent *e) override;
+    void timerEvent(QTimerEvent *event) override;
 
-    virtual void geometryChanged(const QRectF &newGeometry,
-                                 const QRectF &oldGeometry);
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value);
+    void geometryChanged(const QRectF &newGeometry,
+                                 const QRectF &oldGeometry) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
     void handlePress();

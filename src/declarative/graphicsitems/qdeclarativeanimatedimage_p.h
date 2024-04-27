@@ -68,7 +68,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeAnimatedImage : public QDeclarativeImage
 
 public:
     QDeclarativeAnimatedImage(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeAnimatedImage();
+    ~QDeclarativeAnimatedImage() override;
 
     bool isPlaying() const;
     void setPlaying(bool play);
@@ -82,7 +82,7 @@ public:
     int frameCount() const;
 
     // Extends QDeclarativeImage's src property*/
-    virtual void setSource(const QUrl&);
+    void setSource(const QUrl&) override;
 
 Q_SIGNALS:
     void playingChanged();
@@ -96,8 +96,8 @@ private Q_SLOTS:
     void playingStatusChanged();
 
 protected:
-    virtual void load();
-    void componentComplete();
+    void load() override;
+    void componentComplete() override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeAnimatedImage)

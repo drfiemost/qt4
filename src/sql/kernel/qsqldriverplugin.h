@@ -66,10 +66,10 @@ class Q_SQL_EXPORT QSqlDriverPlugin : public QObject, public QSqlDriverFactoryIn
     Q_INTERFACES(QSqlDriverFactoryInterface:QFactoryInterface)
 public:
     explicit QSqlDriverPlugin(QObject *parent = nullptr);
-    ~QSqlDriverPlugin();
+    ~QSqlDriverPlugin() override;
 
-    virtual QStringList keys() const = 0;
-    virtual QSqlDriver *create(const QString &key) = 0;
+    QStringList keys() const override = 0;
+    QSqlDriver *create(const QString &key) override = 0;
 
 };
 

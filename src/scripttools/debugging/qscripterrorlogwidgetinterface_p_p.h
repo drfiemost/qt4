@@ -64,7 +64,7 @@ class QScriptErrorLogWidgetInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptErrorLogWidgetInterface)
 public:
     QScriptErrorLogWidgetInterfacePrivate();
-    ~QScriptErrorLogWidgetInterfacePrivate();
+    ~QScriptErrorLogWidgetInterfacePrivate() override;
 };
 
 QT_END_NAMESPACE

@@ -64,7 +64,7 @@ class Q_GUI_EXPORT QActionGroup : public QObject
 
 public:
     explicit QActionGroup(QObject* parent);
-    ~QActionGroup();
+    ~QActionGroup() override;
 
     QAction *addAction(QAction* a);
     QAction *addAction(const QString &text);

@@ -58,7 +58,7 @@ class Q_CORE_EXPORT QMimeData : public QObject
     Q_OBJECT
 public:
     QMimeData();
-    ~QMimeData();
+    ~QMimeData() override;
 
     QList<QUrl> urls() const;
     void setUrls(const QList<QUrl> &urls);

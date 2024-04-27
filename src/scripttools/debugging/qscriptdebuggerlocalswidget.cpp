@@ -68,7 +68,7 @@ public:
     CustomProxyModel(QObject *parent = nullptr)
         : QSortFilterProxyModel(parent) {}
 
-    bool hasChildren(const QModelIndex &parent) const
+    bool hasChildren(const QModelIndex &parent) const override
     {
         if (!sourceModel())
             return false;
@@ -87,7 +87,7 @@ class QScriptDebuggerLocalsWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerLocalsWidget)
 public:
     QScriptDebuggerLocalsWidgetPrivate();
-    ~QScriptDebuggerLocalsWidgetPrivate();
+    ~QScriptDebuggerLocalsWidgetPrivate() override;
 
     void complete(QLineEdit *le);
 
@@ -197,11 +197,11 @@ class QScriptDebuggerLocalsItemDelegate
 public:
     QScriptDebuggerLocalsItemDelegate(QObject *parent = nullptr);
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private Q_SLOTS:
     void validateInput(const QString &text)

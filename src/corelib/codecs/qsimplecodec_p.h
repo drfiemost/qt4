@@ -66,7 +66,7 @@ class QSimpleTextCodec: public QTextCodec
 public:
     enum { numSimpleCodecs = 30 };
     explicit QSimpleTextCodec(int);
-    ~QSimpleTextCodec();
+    ~QSimpleTextCodec() override;
 
     QString convertToUnicode(const char *, int, ConverterState *) const override;
     QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const override;

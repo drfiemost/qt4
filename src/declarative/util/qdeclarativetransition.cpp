@@ -104,7 +104,7 @@ public:
     ParallelAnimationWrapper(QObject *parent = nullptr) : QParallelAnimationGroup(parent) {}
     QDeclarativeTransitionPrivate *trans;
 protected:
-    virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState) override;
 };
 
 class QDeclarativeTransitionPrivate : public QObjectPrivate

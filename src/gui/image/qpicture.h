@@ -60,11 +60,11 @@ class Q_GUI_EXPORT QPicture : public QPaintDevice
 public:
     explicit QPicture(int formatVersion = -1);
     QPicture(const QPicture &);
-    ~QPicture();
+    ~QPicture() override;
 
     bool isNull() const;
 
-    int devType() const;
+    int devType() const override;
     uint size() const;
     const char* data() const;
     virtual void setData(const char* data, uint size);
@@ -97,12 +97,12 @@ public:
     static QStringList inputFormatList();
     static QStringList outputFormatList();
 
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
 
 protected:
     QPicture(QPicturePrivate &data);
 
-    int metric(PaintDeviceMetric m) const;
+    int metric(PaintDeviceMetric m) const override;
 
 private:
     bool exec(QPainter *p, QDataStream &ds, int i);

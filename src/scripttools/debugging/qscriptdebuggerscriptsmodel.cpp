@@ -66,7 +66,7 @@ public:
     };
 
     QScriptDebuggerScriptsModelPrivate();
-    ~QScriptDebuggerScriptsModelPrivate();
+    ~QScriptDebuggerScriptsModelPrivate() override;
 
     Node *findScriptNode(qint64 scriptId) const;
 

@@ -63,7 +63,7 @@ class QDeclarativeListScriptClass : public QScriptDeclarativeClass
 {
 public:
     QDeclarativeListScriptClass(QDeclarativeEngine *);
-    ~QDeclarativeListScriptClass();
+    ~QDeclarativeListScriptClass() override;
 
     QScriptValue newList(QObject *, int, int);
     QScriptValue newList(const QDeclarativeListProperty<QObject> &, int);

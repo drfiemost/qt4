@@ -65,7 +65,7 @@ class QFilePrivate : public QIODevicePrivate
 
 protected:
     QFilePrivate();
-    ~QFilePrivate();
+    ~QFilePrivate() override;
 
     bool openExternalFile(int flags, int fd, QFile::FileHandleFlags handleFlags);
     bool openExternalFile(int flags, FILE *fh, QFile::FileHandleFlags handleFlags);

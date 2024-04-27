@@ -89,7 +89,7 @@ class QAnimationActionProxy : public QAbstractAnimationAction
 {
 public:
     QAnimationActionProxy(T *p) : m_p(p) {}
-    virtual void doAction() { (m_p->*method)(); }
+    void doAction() override { (m_p->*method)(); }
 
 private:
     T *m_p;
@@ -103,8 +103,8 @@ public:
     QActionAnimation(QObject *parent = nullptr) : QAbstractAnimation(parent), animAction(nullptr), policy(KeepWhenStopped) {}
     QActionAnimation(QAbstractAnimationAction *action, QObject *parent = nullptr)
         : QAbstractAnimation(parent), animAction(action), policy(KeepWhenStopped) {}
-    ~QActionAnimation() { if (policy == DeleteWhenStopped) { delete animAction; animAction = nullptr; } }
-    virtual int duration() const { return 0; }
+    ~QActionAnimation() override { if (policy == DeleteWhenStopped) { delete animAction; animAction = nullptr; } }
+    int duration() const override { return 0; }
     void setAnimAction(QAbstractAnimationAction *action, DeletionPolicy p)
     {
         if (state() == Running)
@@ -115,9 +115,9 @@ public:
         policy = p;
     }
 protected:
-    virtual void updateCurrentTime(int) {}
+    void updateCurrentTime(int) override {}
 
-    virtual void updateState(State newState, State /*oldState*/)
+    void updateState(State newState, State /*oldState*/) override
     {
         if (newState == Running) {
             if (animAction) {
@@ -148,7 +148,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeBulkValueAnimator : public QVariantAnimation
     Q_OBJECT
 public:
     QDeclarativeBulkValueAnimator(QObject *parent = nullptr) : QVariantAnimation(parent), animValue(nullptr), fromSourced(nullptr), policy(KeepWhenStopped) {}
-    ~QDeclarativeBulkValueAnimator() { if (policy == DeleteWhenStopped) { delete animValue; animValue = nullptr; } }
+    ~QDeclarativeBulkValueAnimator() override { if (policy == DeleteWhenStopped) { delete animValue; animValue = nullptr; } }
     void setAnimValue(QDeclarativeBulkValueUpdater *value, DeletionPolicy p)
     {
         if (state() == Running)
@@ -163,7 +163,7 @@ public:
         fromSourced = value;
     }
 protected:
-    virtual void updateCurrentValue(const QVariant &value)
+    void updateCurrentValue(const QVariant &value) override
     {
         if (state() == QAbstractAnimation::Stopped)
             return;
@@ -171,7 +171,7 @@ protected:
         if (animValue)
             animValue->setValue(value.toReal());
     }
-    virtual void updateState(State newState, State oldState)
+    void updateState(State newState, State oldState) override
     {   
         QVariantAnimation::updateState(newState, oldState);
         if (newState == Running) {
@@ -194,9 +194,9 @@ class QTickAnimationProxy : public QAbstractAnimation
     //Q_OBJECT //doesn't work with templating
 public:
     QTickAnimationProxy(T *p, QObject *parent = nullptr) : QAbstractAnimation(parent), m_p(p) {}
-    virtual int duration() const { return -1; }
+    int duration() const override { return -1; }
 protected:
-    virtual void updateCurrentTime(int msec) { (m_p->*method)(msec); }
+    void updateCurrentTime(int msec) override { (m_p->*method)(msec); }
 
 private:
     T *m_p;
@@ -388,8 +388,8 @@ public:
     bool fromDefined;
     bool *wasDeleted;
     QDeclarativeAnimationPropertyUpdater() : prevInterpolatorType(0), wasDeleted(nullptr) {}
-    ~QDeclarativeAnimationPropertyUpdater() { if (wasDeleted) *wasDeleted = true; }
-    void setValue(qreal v);
+    ~QDeclarativeAnimationPropertyUpdater() override { if (wasDeleted) *wasDeleted = true; }
+    void setValue(qreal v) override;
 };
 
 QT_END_NAMESPACE

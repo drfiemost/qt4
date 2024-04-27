@@ -60,7 +60,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTranslate : public QGraphicsTransform
 
 public:
     QDeclarativeTranslate(QObject *parent = nullptr);
-    ~QDeclarativeTranslate();
+    ~QDeclarativeTranslate() override;
 
     qreal x() const;
     void setX(qreal);
@@ -68,7 +68,7 @@ public:
     qreal y() const;
     void setY(qreal);
 
-    void applyTo(QMatrix4x4 *matrix) const;
+    void applyTo(QMatrix4x4 *matrix) const override;
 
 Q_SIGNALS:
     void xChanged();

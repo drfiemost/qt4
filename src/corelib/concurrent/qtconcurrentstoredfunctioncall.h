@@ -70,7 +70,7 @@ struct StoredFunctorCall0<void, FunctionPointer>: public RunFunctionTask<void>
 {
     inline StoredFunctorCall0(FunctionPointer _function)
       : function(_function) {}
-    void runFunctor() { function(); }
+    void runFunctor() override { function(); }
     FunctionPointer function;
 
 };
@@ -273,7 +273,7 @@ struct StoredFunctorCall1<void, FunctionPointer, Arg1>: public RunFunctionTask<v
 {
     inline StoredFunctorCall1(FunctionPointer _function, const Arg1 &_arg1)
       : function(_function), arg1(_arg1) {}
-    void runFunctor() { function(arg1); }
+    void runFunctor() override { function(arg1); }
     FunctionPointer function;
     Arg1 arg1;
 };
@@ -476,7 +476,7 @@ struct StoredFunctorCall2<void, FunctionPointer, Arg1, Arg2>: public RunFunction
 {
     inline StoredFunctorCall2(FunctionPointer _function, const Arg1 &_arg1, const Arg2 &_arg2)
       : function(_function), arg1(_arg1), arg2(_arg2) {}
-    void runFunctor() { function(arg1, arg2); }
+    void runFunctor() override { function(arg1, arg2); }
     FunctionPointer function;
     Arg1 arg1; Arg2 arg2;
 };
@@ -679,7 +679,7 @@ struct StoredFunctorCall3<void, FunctionPointer, Arg1, Arg2, Arg3>: public RunFu
 {
     inline StoredFunctorCall3(FunctionPointer _function, const Arg1 &_arg1, const Arg2 &_arg2, const Arg3 &_arg3)
       : function(_function), arg1(_arg1), arg2(_arg2), arg3(_arg3) {}
-    void runFunctor() { function(arg1, arg2, arg3); }
+    void runFunctor() override { function(arg1, arg2, arg3); }
     FunctionPointer function;
     Arg1 arg1; Arg2 arg2; Arg3 arg3;
 };
@@ -882,7 +882,7 @@ struct StoredFunctorCall4<void, FunctionPointer, Arg1, Arg2, Arg3, Arg4>: public
 {
     inline StoredFunctorCall4(FunctionPointer _function, const Arg1 &_arg1, const Arg2 &_arg2, const Arg3 &_arg3, const Arg4 &_arg4)
       : function(_function), arg1(_arg1), arg2(_arg2), arg3(_arg3), arg4(_arg4) {}
-    void runFunctor() { function(arg1, arg2, arg3, arg4); }
+    void runFunctor() override { function(arg1, arg2, arg3, arg4); }
     FunctionPointer function;
     Arg1 arg1; Arg2 arg2; Arg3 arg3; Arg4 arg4;
 };
@@ -1085,7 +1085,7 @@ struct StoredFunctorCall5<void, FunctionPointer, Arg1, Arg2, Arg3, Arg4, Arg5>: 
 {
     inline StoredFunctorCall5(FunctionPointer _function, const Arg1 &_arg1, const Arg2 &_arg2, const Arg3 &_arg3, const Arg4 &_arg4, const Arg5 &_arg5)
       : function(_function), arg1(_arg1), arg2(_arg2), arg3(_arg3), arg4(_arg4), arg5(_arg5) {}
-    void runFunctor() { function(arg1, arg2, arg3, arg4, arg5); }
+    void runFunctor() override { function(arg1, arg2, arg3, arg4, arg5); }
     FunctionPointer function;
     Arg1 arg1; Arg2 arg2; Arg3 arg3; Arg4 arg4; Arg5 arg5;
 };
@@ -1291,7 +1291,7 @@ class StoredFunctorCall<void, Functor> : public RunFunctionTask<void>
 {
 public:
     StoredFunctorCall(const Functor &f) : functor(f) { }
-    void runFunctor()
+    void runFunctor() override
     {
         functor();
     }

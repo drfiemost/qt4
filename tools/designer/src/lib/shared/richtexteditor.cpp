@@ -208,12 +208,12 @@ class AddLinkDialog : public QDialog
 
 public:
     AddLinkDialog(RichTextEditor *editor, QWidget *parent = nullptr);
-    ~AddLinkDialog();
+    ~AddLinkDialog() override;
 
     int showDialog();
 
 public slots:
-    void accept();
+    void accept() override;
 
 private:
     RichTextEditor *m_editor;
@@ -280,7 +280,7 @@ public:
         : QTextEdit(parent)
     {}
 
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private slots:
     void actionTriggered(QAction *action);

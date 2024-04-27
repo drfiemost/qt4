@@ -55,12 +55,12 @@ class QTestLightXmlStreamer: public QTestBasicStreamer
 {
     public:
         QTestLightXmlStreamer();
-        ~QTestLightXmlStreamer();
+        ~QTestLightXmlStreamer() override;
 
-        void formatStart(const QTestElement *element, QTestCharBuffer *formatted) const;
-        void formatEnd(const QTestElement *element, QTestCharBuffer *formatted) const;
-        void formatBeforeAttributes(const QTestElement *element, QTestCharBuffer *formatted) const;
-        void output(QTestElement *element) const;
+        void formatStart(const QTestElement *element, QTestCharBuffer *formatted) const override;
+        void formatEnd(const QTestElement *element, QTestCharBuffer *formatted) const override;
+        void formatBeforeAttributes(const QTestElement *element, QTestCharBuffer *formatted) const override;
+        void output(QTestElement *element) const override;
 };
 
 QT_END_NAMESPACE

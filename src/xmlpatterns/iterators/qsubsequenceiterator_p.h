@@ -95,10 +95,10 @@ namespace QPatternist
                             const xsInteger start,
                             const xsInteger length);
 
-        virtual Item next();
-        virtual Item current() const;
-        virtual xsInteger position() const;
-        virtual Item::Iterator::Ptr copy() const;
+        Item next() override;
+        Item current() const override;
+        xsInteger position() const override;
+        Item::Iterator::Ptr copy() const override;
 
     private:
         xsInteger m_position;

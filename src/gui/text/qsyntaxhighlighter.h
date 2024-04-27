@@ -70,7 +70,7 @@ public:
     QSyntaxHighlighter(QObject *parent);
     QSyntaxHighlighter(QTextDocument *parent);
     QSyntaxHighlighter(QTextEdit *parent);
-    virtual ~QSyntaxHighlighter();
+    ~QSyntaxHighlighter() override;
 
     void setDocument(QTextDocument *doc);
     QTextDocument *document() const;

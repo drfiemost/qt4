@@ -94,7 +94,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeFlickable : public QDeclarativeItem
 
 public:
     QDeclarativeFlickable(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeFlickable();
+    ~QDeclarativeFlickable() override;
 
     QDeclarativeListProperty<QObject> flickableData();
     QDeclarativeListProperty<QGraphicsObject> flickableChildren();
@@ -177,12 +177,12 @@ Q_SIGNALS:
     void flickEnded();
 
 protected:
-    virtual bool sceneEventFilter(QGraphicsItem *, QEvent *);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void wheelEvent(QGraphicsSceneWheelEvent *event);
-    void timerEvent(QTimerEvent *event);
+    bool sceneEventFilter(QGraphicsItem *, QEvent *) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void wheelEvent(QGraphicsSceneWheelEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
 
     QDeclarativeFlickableVisibleArea *visibleArea();
 
@@ -201,9 +201,9 @@ protected:
     qreal vWidth() const;
     qreal vHeight() const;
     virtual void viewportMoved();
-    virtual void geometryChanged(const QRectF &newGeometry,
-                                 const QRectF &oldGeometry);
-    bool sceneEvent(QEvent *event);
+    void geometryChanged(const QRectF &newGeometry,
+                                 const QRectF &oldGeometry) override;
+    bool sceneEvent(QEvent *event) override;
     bool sendMouseEvent(QGraphicsSceneMouseEvent *event);
 
     bool xflick() const;

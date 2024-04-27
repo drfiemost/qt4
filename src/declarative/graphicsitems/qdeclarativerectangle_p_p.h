@@ -70,7 +70,7 @@ public:
         QGraphicsItemPrivate::flags = QGraphicsItemPrivate::flags & ~QGraphicsItem::ItemHasNoContents;
     }
 
-    ~QDeclarativeRectanglePrivate()
+    ~QDeclarativeRectanglePrivate() override
     {
         delete pen;
     }

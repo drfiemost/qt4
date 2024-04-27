@@ -79,7 +79,7 @@ private Q_SLOTS:
 
 private:
     QHelpIndexModel(QHelpEnginePrivate *helpEngine);
-    ~QHelpIndexModel();
+    ~QHelpIndexModel() override;
 
     QHelpIndexModelPrivate *d;
     friend class QHelpEnginePrivate;

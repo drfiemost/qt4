@@ -64,7 +64,7 @@ class Q_GUI_EXPORT QClipboard : public QObject
     Q_DECLARE_PRIVATE(QClipboard)
 private:
     QClipboard(QObject *parent);
-    ~QClipboard();
+    ~QClipboard() override;
 
 public:
     enum Mode { Clipboard, Selection, FindBuffer, LastMode = FindBuffer };
@@ -99,8 +99,8 @@ private Q_SLOTS:
     void ownerDestroyed();
 
 protected:
-    void connectNotify(const char *);
-    bool event(QEvent *);
+    void connectNotify(const char *) override;
+    bool event(QEvent *) override;
 
     friend class QApplication;
     friend class QApplicationPrivate;

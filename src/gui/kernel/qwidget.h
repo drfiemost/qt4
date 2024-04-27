@@ -232,9 +232,9 @@ public:
     Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
 
     explicit QWidget(QWidget* parent = nullptr, Qt::WindowFlags f = nullptr);
-    ~QWidget();
+    ~QWidget() override;
 
-    int devType() const;
+    int devType() const override;
 
     WId winId() const;
     void createWinId(); // internal, going away
@@ -607,7 +607,7 @@ public:
     void setAttribute(Qt::WidgetAttribute, bool on = true);
     inline bool testAttribute(Qt::WidgetAttribute) const;
 
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
 
     void ensurePolished() const;
 #ifndef QT_NO_IM
@@ -639,7 +639,7 @@ Q_SIGNALS:
 
 protected:
     // Event handlers
-    bool event(QEvent *);
+    bool event(QEvent *) override;
     virtual void mousePressEvent(QMouseEvent *);
     virtual void mouseReleaseEvent(QMouseEvent *);
     virtual void mouseDoubleClickEvent(QMouseEvent *);
@@ -693,7 +693,7 @@ protected:
     // Misc. protected functions
     virtual void changeEvent(QEvent *);
 
-    int metric(PaintDeviceMetric) const;
+    int metric(PaintDeviceMetric) const override;
 
     virtual void inputMethodEvent(QInputMethodEvent *);
 public:

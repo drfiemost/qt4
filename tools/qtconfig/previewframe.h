@@ -53,10 +53,10 @@ class Workspace : public QMdiArea
 
 public:
     Workspace(PreviewFrame *parent = nullptr);
-    ~Workspace() {}
+    ~Workspace() override {}
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 private:
     PreviewFrame *previewFrame;
 };

@@ -59,7 +59,7 @@ class Q_CORE_EXPORT QFSFileEngine : public QAbstractFileEngine
 public:
     QFSFileEngine();
     explicit QFSFileEngine(const QString &file);
-    ~QFSFileEngine();
+    ~QFSFileEngine() override;
 
     bool open(QIODevice::OpenMode openMode) override;
     bool open(QIODevice::OpenMode flags, FILE *fh);

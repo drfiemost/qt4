@@ -102,7 +102,7 @@ public:
     static QDeclarativeEngineDebugService *instance();
 
 protected:
-    virtual void messageReceived(const QByteArray &);
+    void messageReceived(const QByteArray &) override;
 
 private Q_SLOTS:
     void propertyChanged(int id, int objectId, const QMetaProperty &property, const QVariant &value);

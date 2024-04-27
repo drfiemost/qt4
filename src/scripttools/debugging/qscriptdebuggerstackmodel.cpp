@@ -55,7 +55,7 @@ class QScriptDebuggerStackModelPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerStackModel)
 public:
     QScriptDebuggerStackModelPrivate();
-    ~QScriptDebuggerStackModelPrivate();
+    ~QScriptDebuggerStackModelPrivate() override;
 
     QList<QScriptContextInfo> contextInfos;
 };

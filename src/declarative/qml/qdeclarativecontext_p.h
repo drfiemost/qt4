@@ -176,7 +176,7 @@ public:
         ContextGuard() : context(nullptr) {}
         inline ContextGuard &operator=(QObject *obj)
         { QDeclarativeGuard<QObject>::operator=(obj); return *this; }
-        virtual void objectDestroyed(QObject *) { 
+        void objectDestroyed(QObject *) override { 
             if (context->contextObject && !QObjectPrivate::get(context->contextObject)->wasDeleted) bindings.notify(); 
         }
         QDeclarativeContextData *context;

@@ -72,7 +72,7 @@ class Q_CORE_EXPORT QTextCodecPlugin : public QObject, public QTextCodecFactoryI
     Q_INTERFACES(QTextCodecFactoryInterface:QFactoryInterface)
 public:
     explicit QTextCodecPlugin(QObject *parent = nullptr);
-    ~QTextCodecPlugin();
+    ~QTextCodecPlugin() override;
 
     virtual QList<QByteArray> names() const = 0;
     virtual QList<QByteArray> aliases() const = 0;
@@ -82,8 +82,8 @@ public:
     virtual QTextCodec *createForMib(int mib) = 0;
 
 private:
-    QStringList keys() const;
-    QTextCodec *create(const QString &name);
+    QStringList keys() const override;
+    QTextCodec *create(const QString &name) override;
 };
 
 #endif // QT_NO_TEXTCODECPLUGIN

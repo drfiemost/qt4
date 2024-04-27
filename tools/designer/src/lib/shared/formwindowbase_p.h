@@ -85,7 +85,7 @@ public:
     enum SaveResourcesBehaviour  { SaveAll, SaveOnlyUsedQrcFiles, DontSaveQrcFiles };
 
     explicit FormWindowBase(QDesignerFormEditorInterface *core, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    virtual ~FormWindowBase();
+    ~FormWindowBase() override;
 
     QVariantMap formData();
     void setFormData(const QVariantMap &vm);
@@ -100,14 +100,14 @@ public:
     virtual QWidget *formContainer() const = 0;
 
     // Deprecated
-    virtual QPoint grid() const;
+    QPoint grid() const override;
 
     // Deprecated
-    virtual void setGrid(const QPoint &grid);
+    void setGrid(const QPoint &grid) override;
 
-    virtual bool hasFeature(Feature f) const;
-    virtual Feature features() const;
-    virtual void setFeatures(Feature f);
+    bool hasFeature(Feature f) const override;
+    Feature features() const override;
+    void setFeatures(Feature f) override;
 
     const Grid &designerGrid() const;
     void setDesignerGrid(const  Grid& grid);
@@ -149,7 +149,7 @@ public:
     virtual QEditorFormBuilder *createFormBuilder() = 0;
 
     virtual bool blockSelectionChanged(bool blocked) = 0;
-    virtual void emitSelectionChanged() = 0;
+    void emitSelectionChanged() override = 0;
 
     DesignerPixmapCache *pixmapCache() const;
     DesignerIconCache *iconCache() const;

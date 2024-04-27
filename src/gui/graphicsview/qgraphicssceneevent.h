@@ -67,7 +67,7 @@ class Q_GUI_EXPORT QGraphicsSceneEvent : public QEvent
 {
 public:
     QGraphicsSceneEvent(Type type);
-    ~QGraphicsSceneEvent();
+    ~QGraphicsSceneEvent() override;
 
     QWidget *widget() const;
     void setWidget(QWidget *widget);
@@ -85,7 +85,7 @@ class Q_GUI_EXPORT QGraphicsSceneMouseEvent : public QGraphicsSceneEvent
 {
 public:
     QGraphicsSceneMouseEvent(Type type = None);
-    ~QGraphicsSceneMouseEvent();
+    ~QGraphicsSceneMouseEvent() override;
 
     QPointF pos() const;
     void setPos(const QPointF &pos);
@@ -133,7 +133,7 @@ class Q_GUI_EXPORT QGraphicsSceneWheelEvent : public QGraphicsSceneEvent
 {
 public:
     QGraphicsSceneWheelEvent(Type type = None);
-    ~QGraphicsSceneWheelEvent();
+    ~QGraphicsSceneWheelEvent() override;
 
     QPointF pos() const;
     void setPos(const QPointF &pos);
@@ -168,7 +168,7 @@ public:
     enum Reason { Mouse, Keyboard, Other };
 
     QGraphicsSceneContextMenuEvent(Type type = None);
-    ~QGraphicsSceneContextMenuEvent();
+    ~QGraphicsSceneContextMenuEvent() override;
 
     QPointF pos() const;
     void setPos(const QPointF &pos);
@@ -195,7 +195,7 @@ class Q_GUI_EXPORT QGraphicsSceneHoverEvent : public QGraphicsSceneEvent
 {
 public:
     QGraphicsSceneHoverEvent(Type type = None);
-    ~QGraphicsSceneHoverEvent();
+    ~QGraphicsSceneHoverEvent() override;
 
     QPointF pos() const;
     void setPos(const QPointF &pos);
@@ -228,7 +228,7 @@ class Q_GUI_EXPORT QGraphicsSceneHelpEvent : public QGraphicsSceneEvent
 {
 public:
     QGraphicsSceneHelpEvent(Type type = None);
-    ~QGraphicsSceneHelpEvent();
+    ~QGraphicsSceneHelpEvent() override;
 
     QPointF scenePos() const;
     void setScenePos(const QPointF &pos);
@@ -246,7 +246,7 @@ class Q_GUI_EXPORT QGraphicsSceneDragDropEvent : public QGraphicsSceneEvent
 {
 public:
     QGraphicsSceneDragDropEvent(Type type = None);
-    ~QGraphicsSceneDragDropEvent();
+    ~QGraphicsSceneDragDropEvent() override;
 
     QPointF pos() const;
     void setPos(const QPointF &pos);
@@ -291,7 +291,7 @@ class Q_GUI_EXPORT QGraphicsSceneResizeEvent : public QGraphicsSceneEvent
     Q_DISABLE_COPY(QGraphicsSceneResizeEvent)
 public:
     QGraphicsSceneResizeEvent();
-    ~QGraphicsSceneResizeEvent();
+    ~QGraphicsSceneResizeEvent() override;
 
     QSizeF oldSize() const;
     void setOldSize(const QSizeF &size);
@@ -307,7 +307,7 @@ class Q_GUI_EXPORT QGraphicsSceneMoveEvent : public QGraphicsSceneEvent
     Q_DISABLE_COPY(QGraphicsSceneMoveEvent)
 public:
     QGraphicsSceneMoveEvent();
-    ~QGraphicsSceneMoveEvent();
+    ~QGraphicsSceneMoveEvent() override;
 
     QPointF oldPos() const;
     void setOldPos(const QPointF &pos);

@@ -62,17 +62,17 @@ class WidgetEditorTool: public QDesignerFormWindowToolInterface
     Q_OBJECT
 public:
     explicit WidgetEditorTool(FormWindow *formWindow);
-    virtual ~WidgetEditorTool();
+    ~WidgetEditorTool() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
-    virtual QDesignerFormWindowInterface *formWindow() const;
-    virtual QWidget *editor() const;
-    virtual QAction *action() const;
+    QDesignerFormEditorInterface *core() const override;
+    QDesignerFormWindowInterface *formWindow() const override;
+    QWidget *editor() const override;
+    QAction *action() const override;
 
-    virtual void activated();
-    virtual void deactivated();
+    void activated() override;
+    void deactivated() override;
 
-    virtual bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) override;
 
     bool handleContextMenu(QWidget *widget, QWidget *managedWidget, QContextMenuEvent *e);
     bool handleMouseButtonDblClickEvent(QWidget *widget, QWidget *managedWidget, QMouseEvent *e);

@@ -137,7 +137,7 @@ public:
     Q_DECLARE_FLAGS(ShaperFlags, ShaperFlag)
 
     QFontEngine();
-    virtual ~QFontEngine();
+    ~QFontEngine() override;
 
     // all of these are in unscaled metrics if the engine supports uncsaled metrics,
     // otherwise in design metrics
@@ -359,35 +359,35 @@ class QFontEngineBox : public QFontEngine
 {
 public:
     QFontEngineBox(int size);
-    ~QFontEngineBox();
+    ~QFontEngineBox() override;
 
-    virtual bool stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs, ShaperFlags flags) const;
-    virtual void recalcAdvances(QGlyphLayout *, ShaperFlags) const;
+    bool stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs, ShaperFlags flags) const override;
+    void recalcAdvances(QGlyphLayout *, ShaperFlags) const override;
 
 #if !defined(Q_WS_X11) && !defined(Q_WS_WIN) && !defined(Q_WS_MAC)
     void draw(QPaintEngine *p, qreal x, qreal y, const QTextItemInt &si);
 #endif
-    virtual void addOutlineToPath(qreal x, qreal y, const QGlyphLayout &glyphs, QPainterPath *path, QTextItem::RenderFlags flags);
+    void addOutlineToPath(qreal x, qreal y, const QGlyphLayout &glyphs, QPainterPath *path, QTextItem::RenderFlags flags) override;
 
-    virtual glyph_metrics_t boundingBox(const QGlyphLayout &glyphs);
-    virtual glyph_metrics_t boundingBox(glyph_t glyph);
+    glyph_metrics_t boundingBox(const QGlyphLayout &glyphs) override;
+    glyph_metrics_t boundingBox(glyph_t glyph) override;
 
-    virtual QFixed ascent() const;
-    virtual QFixed descent() const;
-    virtual QFixed leading() const;
-    virtual qreal maxCharWidth() const;
-    virtual qreal minLeftBearing() const { return 0; }
-    virtual qreal minRightBearing() const { return 0; }
-    virtual QImage alphaMapForGlyph(glyph_t);
+    QFixed ascent() const override;
+    QFixed descent() const override;
+    QFixed leading() const override;
+    qreal maxCharWidth() const override;
+    qreal minLeftBearing() const override { return 0; }
+    qreal minRightBearing() const override { return 0; }
+    QImage alphaMapForGlyph(glyph_t) override;
 
 #ifdef Q_WS_X11
     int cmap() const;
 #endif
-    virtual const char *name() const;
+    const char *name() const override;
 
-    virtual bool canRender(const QChar *string, int len);
+    bool canRender(const QChar *string, int len) override;
 
-    virtual Type type() const;
+    Type type() const override;
     inline int size() const { return _size; }
 
 private:
@@ -399,37 +399,37 @@ class QFontEngineMulti : public QFontEngine
 {
 public:
     explicit QFontEngineMulti(int engineCount);
-    ~QFontEngineMulti();
+    ~QFontEngineMulti() override;
 
-    virtual bool stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs,
-                      ShaperFlags flags) const;
+    bool stringToCMap(const QChar *str, int len, QGlyphLayout *glyphs, int *nglyphs,
+                      ShaperFlags flags) const override;
 
-    virtual glyph_metrics_t boundingBox(const QGlyphLayout &glyphs);
-    virtual glyph_metrics_t boundingBox(glyph_t glyph);
+    glyph_metrics_t boundingBox(const QGlyphLayout &glyphs) override;
+    glyph_metrics_t boundingBox(glyph_t glyph) override;
 
-    virtual void recalcAdvances(QGlyphLayout *, ShaperFlags) const;
-    virtual void doKerning(QGlyphLayout *, ShaperFlags) const;
-    virtual void addOutlineToPath(qreal, qreal, const QGlyphLayout &, QPainterPath *, QTextItem::RenderFlags flags);
-    virtual void getGlyphBearings(glyph_t glyph, qreal *leftBearing = nullptr, qreal *rightBearing = nullptr);
+    void recalcAdvances(QGlyphLayout *, ShaperFlags) const override;
+    void doKerning(QGlyphLayout *, ShaperFlags) const override;
+    void addOutlineToPath(qreal, qreal, const QGlyphLayout &, QPainterPath *, QTextItem::RenderFlags flags) override;
+    void getGlyphBearings(glyph_t glyph, qreal *leftBearing = nullptr, qreal *rightBearing = nullptr) override;
 
-    virtual QFixed ascent() const;
-    virtual QFixed descent() const;
-    virtual QFixed leading() const;
-    virtual QFixed xHeight() const;
-    virtual QFixed averageCharWidth() const;
-    virtual QImage alphaMapForGlyph(glyph_t);
+    QFixed ascent() const override;
+    QFixed descent() const override;
+    QFixed leading() const override;
+    QFixed xHeight() const override;
+    QFixed averageCharWidth() const override;
+    QImage alphaMapForGlyph(glyph_t) override;
 
-    virtual QFixed lineThickness() const;
-    virtual QFixed underlinePosition() const;
-    virtual qreal maxCharWidth() const;
-    virtual qreal minLeftBearing() const;
-    virtual qreal minRightBearing() const;
+    QFixed lineThickness() const override;
+    QFixed underlinePosition() const override;
+    qreal maxCharWidth() const override;
+    qreal minLeftBearing() const override;
+    qreal minRightBearing() const override;
 
-    virtual inline Type type() const
+    inline Type type() const override
     { return QFontEngine::Multi; }
 
-    virtual bool canRender(const QChar *string, int len);
-    inline virtual const char *name() const
+    bool canRender(const QChar *string, int len) override;
+    inline const char *name() const override
     { return "Multi"; }
 
     QFontEngine *engine(int at) const
@@ -447,7 +447,7 @@ class QTestFontEngine : public QFontEngineBox
 {
 public:
     QTestFontEngine(int size) : QFontEngineBox(size) {}
-    virtual Type type() const { return TestFontEngine; }
+    Type type() const override { return TestFontEngine; }
 };
 
 QT_END_NAMESPACE

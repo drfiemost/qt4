@@ -64,7 +64,7 @@ Q_SIGNALS:
 
 public:
     QLocalServer(QObject *parent = nullptr);
-    ~QLocalServer();
+    ~QLocalServer() override;
 
     void close();
     QString errorString() const;

@@ -116,7 +116,7 @@ class QConnmanManagerInterface : public  QDBusAbstractInterface
 public:
 
     QConnmanManagerInterface( QObject *parent = nullptr);
-    ~QConnmanManagerInterface();
+    ~QConnmanManagerInterface() override;
 
      QDBusObjectPath path() const;
 
@@ -158,8 +158,8 @@ Q_SIGNALS:
     void propertyChangedContext(const QString &,const QString &,const QDBusVariant &);
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 };
 
@@ -171,7 +171,7 @@ class QConnmanProfileInterface : public QDBusAbstractInterface
 public:
 
     QConnmanProfileInterface(const QString &dbusPathName,QObject *parent = nullptr);
-    ~QConnmanProfileInterface();
+    ~QConnmanProfileInterface() override;
 
     QVariantMap getProperties();
 // properties
@@ -185,8 +185,8 @@ private:
     QConnmanProfileInterfacePrivate *d;
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 };
 
@@ -197,7 +197,7 @@ class QConnmanServiceInterface : public QDBusAbstractInterface
 public:
 
     QConnmanServiceInterface(const QString &dbusPathName,QObject *parent = nullptr);
-    ~QConnmanServiceInterface();
+    ~QConnmanServiceInterface() override;
 
     QVariantMap getProperties();
       // clearProperty
@@ -247,8 +247,8 @@ Q_SIGNALS:
     void propertyChangedContext(const QString &,const QString &,const QDBusVariant &);
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 };
 
@@ -259,7 +259,7 @@ class QConnmanTechnologyInterface : public QDBusAbstractInterface
 public:
 
     QConnmanTechnologyInterface(const QString &dbusPathName,QObject *parent = nullptr);
-    ~QConnmanTechnologyInterface();
+    ~QConnmanTechnologyInterface() override;
 
     QVariantMap getProperties();
 // properties
@@ -271,8 +271,8 @@ Q_SIGNALS:
     void propertyChanged(const QString &, const QDBusVariant &value);
     void propertyChangedContext(const QString &,const QString &,const QDBusVariant &);
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 
 };
@@ -284,15 +284,15 @@ class QConnmanAgentInterface : public QDBusAbstractInterface
 public:
 
     QConnmanAgentInterface(const QString &dbusPathName,QObject *parent = nullptr);
-    ~QConnmanAgentInterface();
+    ~QConnmanAgentInterface() override;
 
     void release();
     void reportError(QDBusObjectPath &path, const QString &error);
 //    dict requestInput(QDBusObjectPath &path, dict fields);
     void cancel();
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
 };
 
 class QConnmanCounterInterfacePrivate;
@@ -303,7 +303,7 @@ class QConnmanCounterInterface : public QDBusAbstractInterface
 public:
 
     QConnmanCounterInterface(const QString &dbusPathName, QObject *parent = nullptr);
-    ~QConnmanCounterInterface();
+    ~QConnmanCounterInterface() override;
 
 //    void release();
     QString getInterface();
@@ -320,7 +320,7 @@ class QConnmanDBusHelper: public QObject, protected QDBusContext
      Q_OBJECT
  public:
     QConnmanDBusHelper(QObject *parent = nullptr);
-    ~QConnmanDBusHelper();
+    ~QConnmanDBusHelper() override;
 
  public slots:
     void propertyChanged(const QString &, const QDBusVariant &);

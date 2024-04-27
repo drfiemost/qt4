@@ -1037,7 +1037,7 @@ void QDeclarativePropertyAction::transition(QDeclarativeStateActions &actions,
     struct QDeclarativeSetPropertyAnimationAction : public QAbstractAnimationAction
     {
         QDeclarativeStateActions actions;
-        virtual void doAction()
+        void doAction() override
         {
             for (int ii = 0; ii < actions.count(); ++ii) {
                 const QDeclarativeAction &action = actions.at(ii);
@@ -2610,13 +2610,13 @@ void QDeclarativeParentAnimation::transition(QDeclarativeStateActions &actions,
     struct QDeclarativeParentAnimationData : public QAbstractAnimationAction
     {
         QDeclarativeParentAnimationData() {}
-        ~QDeclarativeParentAnimationData() { qDeleteAll(pc); }
+        ~QDeclarativeParentAnimationData() override { qDeleteAll(pc); }
 
         QDeclarativeStateActions actions;
         //### reverse should probably apply on a per-action basis
         bool reverse;
         QList<QDeclarativeParentChange *> pc;
-        virtual void doAction()
+        void doAction() override
         {
             for (int ii = 0; ii < actions.count(); ++ii) {
                 const QDeclarativeAction &action = actions.at(ii);

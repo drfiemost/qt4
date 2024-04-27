@@ -122,33 +122,33 @@ public:
             QIODevice(), multiPart(parentMultiPart), readPointer(0), deviceSize(-1) {
     }
 
-    ~QHttpMultiPartIODevice() {
+    ~QHttpMultiPartIODevice() override {
     }
 
-    virtual bool atEnd() const {
+    bool atEnd() const override {
         return readPointer == size();
     }
 
-    virtual qint64 bytesAvailable() const {
+    qint64 bytesAvailable() const override {
         return size() - readPointer;
     }
 
-    virtual void close() {
+    void close() override {
         readPointer = 0;
         partOffsets.clear();
         deviceSize = -1;
         QIODevice::close();
     }
 
-    virtual qint64 bytesToWrite() const {
+    qint64 bytesToWrite() const override {
         return 0;
     }
 
-    virtual qint64 size() const;
-    virtual bool isSequential() const;
-    virtual bool reset();
-    virtual qint64 readData(char *data, qint64 maxSize);
-    virtual qint64 writeData(const char *data, qint64 maxSize);
+    qint64 size() const override;
+    bool isSequential() const override;
+    bool reset() override;
+    qint64 readData(char *data, qint64 maxSize) override;
+    qint64 writeData(const char *data, qint64 maxSize) override;
 
     QHttpMultiPartPrivate *multiPart;
     qint64 readPointer;
@@ -164,7 +164,7 @@ public:
 
     QHttpMultiPartPrivate();
 
-    ~QHttpMultiPartPrivate()
+    ~QHttpMultiPartPrivate() override
     {
         delete device;
     }

@@ -360,8 +360,8 @@ public:
     bool handleMouseEvent(QEvent *ev);
 
 protected:
-    bool event( QEvent *);
-    bool eventFilter( QObject*, QEvent *);
+    bool event( QEvent *) override;
+    bool eventFilter( QObject*, QEvent *) override;
 
 private:
     QWidget *mouseRecipient;

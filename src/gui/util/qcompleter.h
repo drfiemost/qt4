@@ -90,7 +90,7 @@ public:
 #ifndef QT_NO_STRINGLISTMODEL
     QCompleter(const QStringList& completions, QObject *parent = nullptr);
 #endif
-    ~QCompleter();
+    ~QCompleter() override;
 
     void setWidget(QWidget *widget);
     QWidget *widget() const;
@@ -142,8 +142,8 @@ public:
     virtual QStringList splitPath(const QString &path) const;
 
 protected:
-    bool eventFilter(QObject *o, QEvent *e);
-    bool event(QEvent *);
+    bool eventFilter(QObject *o, QEvent *e) override;
+    bool event(QEvent *) override;
 
 Q_SIGNALS:
     void activated(const QString &text);

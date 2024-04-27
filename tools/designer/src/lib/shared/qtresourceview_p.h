@@ -69,7 +69,7 @@ class QDESIGNER_SHARED_EXPORT QtResourceView : public QWidget
     Q_OBJECT
 public:
     explicit QtResourceView(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    ~QtResourceView();
+    ~QtResourceView() override;
 
     void setDragEnabled(bool dragEnabled);
     bool dragEnabled() const;
@@ -98,7 +98,7 @@ signals:
     void resourceActivated(const QString &resource);
 
 protected:
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
 private:
 
@@ -121,7 +121,7 @@ class QDESIGNER_SHARED_EXPORT  QtResourceViewDialog : public QDialog
     Q_OBJECT
 public:
     explicit QtResourceViewDialog(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    virtual ~QtResourceViewDialog();
+    ~QtResourceViewDialog() override;
 
     QString selectedResource() const;
     void selectResource(const QString &path);

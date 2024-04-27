@@ -70,17 +70,17 @@ class QDESIGNER_SHARED_EXPORT QDesignerWidget : public QWidget
     Q_OBJECT
 public:
     explicit QDesignerWidget(QDesignerFormWindowInterface* formWindow, QWidget *parent = nullptr);
-    virtual ~QDesignerWidget();
+    ~QDesignerWidget() override;
 
     QDesignerFormWindowInterface* formWindow() const;
 
     void updatePixmap();
 
-    virtual QSize minimumSizeHint() const
+    QSize minimumSizeHint() const override
     { return QWidget::minimumSizeHint().expandedTo(QSize(16, 16)); }
 
 protected:
-    virtual void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     qdesigner_internal::FormWindowBase* m_formWindow;
@@ -92,11 +92,11 @@ class QDESIGNER_SHARED_EXPORT QDesignerDialog : public QDialog
 public:
     explicit QDesignerDialog(QDesignerFormWindowInterface *fw, QWidget *parent);
 
-    virtual QSize minimumSizeHint() const
+    QSize minimumSizeHint() const override
     { return QWidget::minimumSizeHint().expandedTo(QSize(16, 16)); }
 
 protected:
-    void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     qdesigner_internal::FormWindowBase* m_formWindow;

@@ -52,7 +52,7 @@ class QTestElement: public QTestCoreElement<QTestElement>
 {
     public:
         QTestElement(int type = -1);
-        ~QTestElement();
+        ~QTestElement() override;
 
         bool addLogElement(QTestElement *element);
         QTestElement *childElements() const;

@@ -71,7 +71,7 @@ class QSvgStructureNode : public QSvgNode
 {
 public:
     QSvgStructureNode(QSvgNode *parent);
-    ~QSvgStructureNode();
+    ~QSvgStructureNode() override;
     QSvgNode *scopeNode(const QString &id) const;
     void addChild(QSvgNode *child, const QString &id);
     QRectF bounds(QPainter *p, QSvgExtraStates &states) const override;

@@ -88,7 +88,7 @@ class QHELP_EXPORT QCLuceneSearcher : public QCLuceneSearchable
 {
 public:
     QCLuceneSearcher();
-    virtual ~QCLuceneSearcher();
+    ~QCLuceneSearcher() override;
 
     QCLuceneHits search(const QCLuceneQuery &query);
     QCLuceneHits search(const QCLuceneQuery &query, const QCLuceneFilter &filter);
@@ -105,7 +105,7 @@ class QHELP_EXPORT QCLuceneIndexSearcher : public QCLuceneSearcher
 public:
     QCLuceneIndexSearcher(const QString &path);
     QCLuceneIndexSearcher(const QCLuceneIndexReader &reader);
-    ~QCLuceneIndexSearcher();
+    ~QCLuceneIndexSearcher() override;
 
     void close();
     qint32 maxDoc() const;
@@ -120,7 +120,7 @@ class QHELP_EXPORT QCLuceneMultiSearcher : public QCLuceneSearcher
 {
 public:
     QCLuceneMultiSearcher(const QList<QCLuceneSearchable> searchables);
-    ~QCLuceneMultiSearcher();
+    ~QCLuceneMultiSearcher() override;
 
     void close();
     qint32 maxDoc() const;

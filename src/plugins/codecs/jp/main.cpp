@@ -59,12 +59,12 @@ class JPTextCodecs : public QTextCodecPlugin
 public:
     JPTextCodecs() {}
 
-    QList<QByteArray> names() const;
-    QList<QByteArray> aliases() const;
-    QList<int> mibEnums() const;
+    QList<QByteArray> names() const override;
+    QList<QByteArray> aliases() const override;
+    QList<int> mibEnums() const override;
 
-    QTextCodec *createForMib(int);
-    QTextCodec *createForName(const QByteArray &);
+    QTextCodec *createForMib(int) override;
+    QTextCodec *createForName(const QByteArray &) override;
 };
 
 QList<QByteArray> JPTextCodecs::names() const

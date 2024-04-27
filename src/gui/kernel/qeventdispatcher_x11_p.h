@@ -66,15 +66,15 @@ class QEventDispatcherX11 : public QEventDispatcherUNIX
 
 public:
     explicit QEventDispatcherX11(QObject *parent = nullptr);
-    ~QEventDispatcherX11();
+    ~QEventDispatcherX11() override;
 
-    bool processEvents(QEventLoop::ProcessEventsFlags flags);
-    bool hasPendingEvents();
+    bool processEvents(QEventLoop::ProcessEventsFlags flags) override;
+    bool hasPendingEvents() override;
 
-    void flush();
+    void flush() override;
 
-    void startingUp();
-    void closingDown();
+    void startingUp() override;
+    void closingDown() override;
 
 protected:
     int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,

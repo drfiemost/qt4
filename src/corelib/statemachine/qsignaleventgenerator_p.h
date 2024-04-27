@@ -65,9 +65,9 @@ public:
     QSignalEventGenerator(QStateMachine *parent);
 
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const;
-    virtual void *qt_metacast(const char *);
-    virtual int qt_metacall(QMetaObject::Call, int, void **argv);
+    const QMetaObject *metaObject() const override;
+    void *qt_metacast(const char *) override;
+    int qt_metacall(QMetaObject::Call, int, void **argv) override;
 
 private:
     Q_DISABLE_COPY(QSignalEventGenerator)

@@ -74,7 +74,7 @@ namespace QPatternist
     public:
         typedef QExplicitlySharedDataPointer<AtomicCaster> Ptr;
         AtomicCaster();
-        virtual ~AtomicCaster();
+        ~AtomicCaster() override;
 
         /**
          * Casts @p from to an atomic value of the type this class

@@ -86,7 +86,7 @@ public:
     };
 
     QAbstractAnimation(QObject *parent = nullptr);
-    virtual ~QAbstractAnimation();
+    ~QAbstractAnimation() override;
 
     State state() const;
 
@@ -121,7 +121,7 @@ public Q_SLOTS:
 
 protected:
     QAbstractAnimation(QAbstractAnimationPrivate &dd, QObject *parent = nullptr);
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
     virtual void updateCurrentTime(int currentTime) = 0;
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);

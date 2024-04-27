@@ -65,7 +65,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeFinderWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptDebuggerCodeFinderWidgetInterface();
+    ~QScriptDebuggerCodeFinderWidgetInterface() override;
 
     virtual int findOptions() const = 0;
 

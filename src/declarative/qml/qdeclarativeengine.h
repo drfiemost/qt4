@@ -72,7 +72,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeEngine : public QObject
     Q_OBJECT
 public:
     QDeclarativeEngine(QObject *p = nullptr);
-    virtual ~QDeclarativeEngine();
+    ~QDeclarativeEngine() override;
 
     QDeclarativeContext *rootContext() const;
 

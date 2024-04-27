@@ -162,7 +162,7 @@ public:
         setShareable(true);
     }
 
-    virtual void dispose()
+    void dispose() override
     {
 #if 0  // sample code; do this right with the API
         Q_ASSERT(!isWorking());

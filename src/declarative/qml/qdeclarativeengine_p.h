@@ -114,7 +114,7 @@ class QDeclarativeScriptEngine : public QScriptEngine
 {
 public:
     QDeclarativeScriptEngine(QDeclarativeEnginePrivate *priv);
-    virtual ~QDeclarativeScriptEngine();
+    ~QDeclarativeScriptEngine() override;
 
     QUrl resolvedUrl(QScriptContext *context, const QUrl& url); // resolved against p's context, or baseUrl if no p
     static QScriptValue resolvedUrl(QScriptContext *ctxt, QScriptEngine *engine);
@@ -141,7 +141,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeEnginePrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QDeclarativeEngine)
 public:
     QDeclarativeEnginePrivate(QDeclarativeEngine *);
-    ~QDeclarativeEnginePrivate();
+    ~QDeclarativeEnginePrivate() override;
 
     void init();
 

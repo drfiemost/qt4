@@ -64,7 +64,7 @@ class QDeclarativeValueTypeScriptClass : public QScriptDeclarativeClass
 {
 public:
     QDeclarativeValueTypeScriptClass(QDeclarativeEngine *);
-    ~QDeclarativeValueTypeScriptClass();
+    ~QDeclarativeValueTypeScriptClass() override;
 
     QScriptValue newObject(QObject *object, int coreIndex, QDeclarativeValueType *);
     QScriptValue newObject(const QVariant &, QDeclarativeValueType *);

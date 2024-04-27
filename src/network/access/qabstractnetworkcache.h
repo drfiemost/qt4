@@ -110,7 +110,7 @@ class Q_NETWORK_EXPORT QAbstractNetworkCache : public QObject
     Q_OBJECT
 
 public:
-    virtual ~QAbstractNetworkCache();
+    ~QAbstractNetworkCache() override;
 
     virtual QNetworkCacheMetaData metaData(const QUrl &url) = 0;
     virtual void updateMetaData(const QNetworkCacheMetaData &metaData) = 0;

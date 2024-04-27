@@ -64,20 +64,20 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerConsoleWidget:
     Q_OBJECT
 public:
     QScriptDebuggerConsoleWidget(QWidget *parent = nullptr);
-    ~QScriptDebuggerConsoleWidget();
+    ~QScriptDebuggerConsoleWidget() override;
 
     void message(QtMsgType type, const QString &text,
                  const QString &fileName = QString(),
                  int lineNumber = -1, int columnNumber = -1,
-                 const QVariant &data = QVariant());
+                 const QVariant &data = QVariant()) override;
 
-    void setLineContinuationMode(bool enabled);
+    void setLineContinuationMode(bool enabled) override;
 
-    void clear();
+    void clear() override;
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
-    bool focusNextPrevChild(bool);
+    void keyPressEvent(QKeyEvent *event) override;
+    bool focusNextPrevChild(bool) override;
 
 protected:
     QScriptDebuggerConsoleWidget(

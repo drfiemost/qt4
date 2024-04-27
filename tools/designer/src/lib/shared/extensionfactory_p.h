@@ -71,7 +71,7 @@ public:
     static void registerExtension(QExtensionManager *mgr, const QString &iid);
 
 protected:
-    virtual QObject *createExtension(QObject *qObject, const QString &iid, QObject *parent) const;
+    QObject *createExtension(QObject *qObject, const QString &iid, QObject *parent) const override;
 
 private:
     // Can be overwritten to perform checks on the object.

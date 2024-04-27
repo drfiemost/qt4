@@ -63,7 +63,7 @@ class InstallDialog : public QDialog
 public:
     explicit InstallDialog(QHelpEngineCore *helpEngine, QWidget *parent = nullptr,
         const QString &host = QString(), int port = -1);
-    ~InstallDialog();
+    ~InstallDialog() override;
 
     QStringList installedDocumentations() const;
 

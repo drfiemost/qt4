@@ -67,7 +67,7 @@ class QScriptCompletionTaskInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptCompletionTaskInterface)
 public:
     QScriptCompletionTaskInterfacePrivate();
-    virtual ~QScriptCompletionTaskInterfacePrivate();
+    ~QScriptCompletionTaskInterfacePrivate() override;
 
     int type;
     QStringList results;

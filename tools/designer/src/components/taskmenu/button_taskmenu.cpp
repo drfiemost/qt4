@@ -213,8 +213,8 @@ public:
     CreateButtonGroupCommand(QDesignerFormWindowInterface *formWindow);
     bool init(const ButtonList &bl);
 
-    virtual void undo() { breakButtonGroup(); }
-    virtual void redo() { createButtonGroup(); }
+    void undo() override { breakButtonGroup(); }
+    void redo() override { createButtonGroup(); }
 };
 
 CreateButtonGroupCommand::CreateButtonGroupCommand(QDesignerFormWindowInterface *formWindow) :
@@ -240,8 +240,8 @@ public:
     BreakButtonGroupCommand(QDesignerFormWindowInterface *formWindow);
     bool init(QButtonGroup *group);
 
-    virtual void undo() { createButtonGroup(); }
-    virtual void redo() { breakButtonGroup(); }
+    void undo() override { createButtonGroup(); }
+    void redo() override { breakButtonGroup(); }
 };
 
 BreakButtonGroupCommand::BreakButtonGroupCommand(QDesignerFormWindowInterface *formWindow) :
@@ -266,8 +266,8 @@ public:
     AddButtonsToGroupCommand(QDesignerFormWindowInterface *formWindow);
     void init(const ButtonList &bl, QButtonGroup *group);
 
-    virtual void undo() { removeButtonsFromGroup(); }
-    virtual void redo() { addButtonsToGroup(); }
+    void undo() override { removeButtonsFromGroup(); }
+    void redo() override { addButtonsToGroup(); }
 };
 
 AddButtonsToGroupCommand::AddButtonsToGroupCommand(QDesignerFormWindowInterface *formWindow) :
@@ -288,8 +288,8 @@ public:
     RemoveButtonsFromGroupCommand(QDesignerFormWindowInterface *formWindow);
     bool init(const ButtonList &bl);
 
-    virtual void undo() {  addButtonsToGroup(); }
-    virtual void redo() {  removeButtonsFromGroup(); }
+    void undo() override {  addButtonsToGroup(); }
+    void redo() override {  removeButtonsFromGroup(); }
 };
 
 RemoveButtonsFromGroupCommand::RemoveButtonsFromGroupCommand(QDesignerFormWindowInterface *formWindow) :
@@ -392,7 +392,7 @@ public:
     ButtonTextTaskMenuInlineEditor(QAbstractButton *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const override;
 };
 
 ButtonTextTaskMenuInlineEditor::ButtonTextTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :
@@ -415,7 +415,7 @@ public:
     LinkDescriptionTaskMenuInlineEditor(QAbstractButton *button, QObject *parent);
 
 protected:
-    virtual QRect editRectangle() const;
+    QRect editRectangle() const override;
 };
 
 LinkDescriptionTaskMenuInlineEditor::LinkDescriptionTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :

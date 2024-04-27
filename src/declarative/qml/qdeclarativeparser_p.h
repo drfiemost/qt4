@@ -117,7 +117,7 @@ namespace QDeclarativeParser
     {
     public:
         Object();
-        virtual ~Object(); 
+        ~Object() override; 
 
         // Type of the object.  The integer is an index into the 
         // QDeclarativeCompiledData::types array, or -1 if the object is a property
@@ -285,7 +285,7 @@ namespace QDeclarativeParser
     {
     public:
         Value();
-        virtual ~Value();
+        ~Value() override;
 
         enum Type {
             // The type of this value assignment is not yet known
@@ -325,7 +325,7 @@ namespace QDeclarativeParser
     public:
         Property();
         Property(const QByteArray &n);
-        virtual ~Property();
+        ~Property() override;
 
         // The Object to which this property is attached
         Object *parent;

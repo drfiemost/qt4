@@ -60,10 +60,10 @@ class ListWidgetTaskMenu: public QDesignerTaskMenu
     Q_OBJECT
 public:
     explicit ListWidgetTaskMenu(QListWidget *button, QObject *parent = nullptr);
-    virtual ~ListWidgetTaskMenu();
+    ~ListWidgetTaskMenu() override;
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editItems();

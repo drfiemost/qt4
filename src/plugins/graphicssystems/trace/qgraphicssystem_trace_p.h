@@ -62,8 +62,8 @@ class QTraceGraphicsSystem : public QGraphicsSystem
 public:
     QTraceGraphicsSystem();
 
-    QPixmapData *createPixmapData(QPixmapData::PixelType type) const;
-    QWindowSurface *createWindowSurface(QWidget *widget) const;
+    QPixmapData *createPixmapData(QPixmapData::PixelType type) const override;
+    QWindowSurface *createWindowSurface(QWidget *widget) const override;
 };
 
 QT_END_NAMESPACE

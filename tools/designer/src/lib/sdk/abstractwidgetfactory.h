@@ -58,7 +58,7 @@ class QDESIGNER_SDK_EXPORT QDesignerWidgetFactoryInterface: public QObject
     Q_OBJECT
 public:
     QDesignerWidgetFactoryInterface(QObject *parent = nullptr);
-    virtual ~QDesignerWidgetFactoryInterface();
+    ~QDesignerWidgetFactoryInterface() override;
 
     virtual QDesignerFormEditorInterface *core() const = 0;
 

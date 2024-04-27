@@ -80,7 +80,7 @@ namespace QPatternist
     class PositionFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -94,7 +94,7 @@ namespace QPatternist
     class LastFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -108,7 +108,7 @@ namespace QPatternist
     class ImplicitTimezoneFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -122,7 +122,7 @@ namespace QPatternist
     class CurrentDateTimeFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -136,7 +136,7 @@ namespace QPatternist
     class CurrentDateFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -150,7 +150,7 @@ namespace QPatternist
     class CurrentTimeFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -166,8 +166,8 @@ namespace QPatternist
     class DefaultCollationFN : public FunctionCall
     {
     public:
-        virtual Expression::Ptr typeCheck(const StaticContext::Ptr &context,
-                                          const SequenceType::Ptr &reqType);
+        Expression::Ptr typeCheck(const StaticContext::Ptr &context,
+                                          const SequenceType::Ptr &reqType) override;
     };
 
     /**
@@ -183,8 +183,8 @@ namespace QPatternist
     class StaticBaseURIFN : public FunctionCall
     {
     public:
-        virtual Expression::Ptr typeCheck(const StaticContext::Ptr &context,
-                                          const SequenceType::Ptr &reqType);
+        Expression::Ptr typeCheck(const StaticContext::Ptr &context,
+                                          const SequenceType::Ptr &reqType) override;
     };
 }
 

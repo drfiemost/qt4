@@ -56,17 +56,17 @@ class QT_FORMEDITOR_EXPORT IconCache : public QDesignerIconCacheInterface
 public:
     explicit IconCache(QObject *parent);
 
-    virtual QIcon nameToIcon(const QString &path, const QString &resourcePath = QString());
-    virtual QString iconToFilePath(const QIcon &pm) const;
-    virtual QString iconToQrcPath(const QIcon &pm) const;
-    virtual QPixmap nameToPixmap(const QString &path, const QString &resourcePath = QString());
-    virtual QString pixmapToFilePath(const QPixmap &pm) const;
-    virtual QString pixmapToQrcPath(const QPixmap &pm) const;
+    QIcon nameToIcon(const QString &path, const QString &resourcePath = QString()) override;
+    QString iconToFilePath(const QIcon &pm) const override;
+    QString iconToQrcPath(const QIcon &pm) const override;
+    QPixmap nameToPixmap(const QString &path, const QString &resourcePath = QString()) override;
+    QString pixmapToFilePath(const QPixmap &pm) const override;
+    QString pixmapToQrcPath(const QPixmap &pm) const override;
 
-    virtual QList<QPixmap> pixmapList() const;
-    virtual QList<QIcon> iconList() const;
+    QList<QPixmap> pixmapList() const override;
+    QList<QIcon> iconList() const override;
 
-    virtual QString resolveQrcPath(const QString &filePath, const QString &qrcPath, const QString &workingDirectory = QString()) const;
+    QString resolveQrcPath(const QString &filePath, const QString &qrcPath, const QString &workingDirectory = QString()) const override;
 
 private:
 };

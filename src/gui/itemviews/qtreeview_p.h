@@ -93,11 +93,11 @@ public:
           animationsEnabled(false), columnResizeTimerID(0),
           autoExpandDelay(-1), hoverBranch(-1), geometryRecursionBlock(false), hasRemovedItems(false) {}
 
-    ~QTreeViewPrivate() {}
+    ~QTreeViewPrivate() override {}
     void initialize();
 
-    QItemViewPaintPairs draggablePaintPairs(const QModelIndexList &indexes, QRect *r) const;
-    void adjustViewOptionsForIndex(QStyleOptionViewItem *option, const QModelIndex &current) const;
+    QItemViewPaintPairs draggablePaintPairs(const QModelIndexList &indexes, QRect *r) const override;
+    void adjustViewOptionsForIndex(QStyleOptionViewItem *option, const QModelIndex &current) const override;
 
 #ifndef QT_NO_ANIMATION
     struct AnimatedOperation : public QVariantAnimation
@@ -109,8 +109,8 @@ public:
         AnimatedOperation() : item(0) { setEasingCurve(QEasingCurve::InOutQuad); }
         int top() const { return startValue().toInt(); }
         QRect rect() const { QRect rect = viewport->rect(); rect.moveTop(top()); return rect; }
-        void updateCurrentValue(const QVariant &) { viewport->update(rect()); }
-        void updateState(State state, State) { if (state == Stopped) before = after = QPixmap(); }
+        void updateCurrentValue(const QVariant &) override { viewport->update(rect()); }
+        void updateState(State state, State) override { if (state == Stopped) before = after = QPixmap(); }
     } animatedOperation;
     void prepareAnimatedOperation(int item, QVariantAnimation::Direction d);
     void beginAnimatedOperation();
@@ -122,11 +122,11 @@ public:
     void expand(int item, bool emitSignal);
     void collapse(int item, bool emitSignal);
 
-    void _q_columnsAboutToBeRemoved(const QModelIndex &, int, int);
-    void _q_columnsRemoved(const QModelIndex &, int, int);
+    void _q_columnsAboutToBeRemoved(const QModelIndex &, int, int) override;
+    void _q_columnsRemoved(const QModelIndex &, int, int) override;
     void _q_modelAboutToBeReset();
     void _q_sortIndicatorChanged(int column, Qt::SortOrder order);
-    void _q_modelDestroyed();
+    void _q_modelDestroyed() override;
 
     void layout(int item, bool recusiveExpanding = false, bool afterIsUninitialized = false);
 

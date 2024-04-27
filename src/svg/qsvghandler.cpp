@@ -442,7 +442,7 @@ public:
     {
         nameCaseSensitivity = Qt::CaseInsensitive;
     }
-    virtual ~QSvgStyleSelector()
+    ~QSvgStyleSelector() override
     {
     }
 

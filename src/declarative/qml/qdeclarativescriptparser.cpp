@@ -99,7 +99,7 @@ class ProcessAST: protected AST::Visitor
 
 public:
     ProcessAST(QDeclarativeScriptParser *parser);
-    virtual ~ProcessAST();
+    ~ProcessAST() override;
 
     void operator()(const QString &code, AST::Node *node);
 
@@ -119,15 +119,15 @@ protected:
     using AST::Visitor::visit;
     using AST::Visitor::endVisit;
 
-    virtual bool visit(AST::UiProgram *node);
-    virtual bool visit(AST::UiImport *node);
-    virtual bool visit(AST::UiObjectDefinition *node);
-    virtual bool visit(AST::UiPublicMember *node);
-    virtual bool visit(AST::UiObjectBinding *node);
+    bool visit(AST::UiProgram *node) override;
+    bool visit(AST::UiImport *node) override;
+    bool visit(AST::UiObjectDefinition *node) override;
+    bool visit(AST::UiPublicMember *node) override;
+    bool visit(AST::UiObjectBinding *node) override;
 
-    virtual bool visit(AST::UiScriptBinding *node);
-    virtual bool visit(AST::UiArrayBinding *node);
-    virtual bool visit(AST::UiSourceElement *node);
+    bool visit(AST::UiScriptBinding *node) override;
+    bool visit(AST::UiArrayBinding *node) override;
+    bool visit(AST::UiSourceElement *node) override;
 
     void accept(AST::Node *node);
 

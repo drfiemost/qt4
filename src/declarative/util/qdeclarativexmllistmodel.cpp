@@ -156,7 +156,7 @@ public:
     QDeclarativeXmlQueryThreadObject(QDeclarativeXmlQueryEngine *);
 
     void processJobs();
-    virtual bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     QDeclarativeXmlQueryEngine *m_queryEngine;
@@ -168,7 +168,7 @@ class QDeclarativeXmlQueryEngine : public QThread
     Q_OBJECT
 public:
     QDeclarativeXmlQueryEngine(QDeclarativeEngine *eng);
-    ~QDeclarativeXmlQueryEngine();
+    ~QDeclarativeXmlQueryEngine() override;
 
     int doQuery(QString query, QString namespaces, QByteArray data, QList<QDeclarativeXmlListModelRole *>* roleObjects, QStringList keyRoleResultsCache);
     void abort(int id);
@@ -182,7 +182,7 @@ signals:
     void error(void*, const QString&);
 
 protected:
-    void run();
+    void run() override;
 
 private:
     void processQuery(XmlQueryJob *job);

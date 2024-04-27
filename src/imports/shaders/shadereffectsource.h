@@ -78,7 +78,7 @@ public:
     };
 
     ShaderEffectSource(QDeclarativeItem *parent = nullptr);
-    virtual ~ShaderEffectSource();
+    ~ShaderEffectSource() override;
 
     QDeclarativeItem *sourceItem() const { return m_sourceItem.data(); }
     void setSourceItem(QDeclarativeItem *item);

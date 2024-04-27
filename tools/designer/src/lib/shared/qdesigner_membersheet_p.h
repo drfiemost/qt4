@@ -70,34 +70,34 @@ class QDESIGNER_SHARED_EXPORT QDesignerMemberSheet: public QObject, public QDesi
 
 public:
     explicit QDesignerMemberSheet(QObject *object, QObject *parent = nullptr);
-    virtual ~QDesignerMemberSheet();
+    ~QDesignerMemberSheet() override;
 
-    virtual int indexOf(const QString &name) const;
+    int indexOf(const QString &name) const override;
 
-    virtual int count() const;
-    virtual QString memberName(int index) const;
+    int count() const override;
+    QString memberName(int index) const override;
 
-    virtual QString memberGroup(int index) const;
-    virtual void setMemberGroup(int index, const QString &group);
+    QString memberGroup(int index) const override;
+    void setMemberGroup(int index, const QString &group) override;
 
-    virtual bool isVisible(int index) const;
-    virtual void setVisible(int index, bool b);
+    bool isVisible(int index) const override;
+    void setVisible(int index, bool b) override;
 
-    virtual bool isSignal(int index) const;
-    virtual bool isSlot(int index) const;
+    bool isSignal(int index) const override;
+    bool isSlot(int index) const override;
 
     virtual bool isQt3Signal(int index) const;
     virtual bool isQt3Slot(int index) const;
 
-    virtual bool inheritedFromWidget(int index) const;
+    bool inheritedFromWidget(int index) const override;
 
     static bool signalMatchesSlot(const QString &signal, const QString &slot);
 
-    virtual QString declaredInClass(int index) const;
+    QString declaredInClass(int index) const override;
 
-    virtual QString signature(int index) const;
-    virtual QList<QByteArray> parameterTypes(int index) const;
-    virtual QList<QByteArray> parameterNames(int index) const;
+    QString signature(int index) const override;
+    QList<QByteArray> parameterTypes(int index) const override;
+    QList<QByteArray> parameterNames(int index) const override;
 
 private:
     QDesignerMemberSheetPrivate *d;
@@ -112,7 +112,7 @@ public:
     QDesignerMemberSheetFactory(QExtensionManager *parent = nullptr);
 
 protected:
-    virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;
+    QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const override;
 };
 
 QT_END_NAMESPACE

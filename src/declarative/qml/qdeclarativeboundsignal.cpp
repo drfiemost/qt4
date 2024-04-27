@@ -61,7 +61,7 @@ class QDeclarativeBoundSignalParameters : public QObject
 Q_OBJECT
 public:
     QDeclarativeBoundSignalParameters(const QMetaMethod &, QObject * = nullptr);
-    ~QDeclarativeBoundSignalParameters();
+    ~QDeclarativeBoundSignalParameters() override;
 
     void setValues(void **);
     void clearValues();
@@ -73,7 +73,7 @@ private:
         MetaObject(QDeclarativeBoundSignalParameters *b)
             : parent(b) {}
 
-        int metaCall(QMetaObject::Call c, int id, void **a) { 
+        int metaCall(QMetaObject::Call c, int id, void **a) override { 
             return parent->metaCall(c, id, a);
         }
         QDeclarativeBoundSignalParameters *parent;

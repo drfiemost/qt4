@@ -87,7 +87,7 @@ public:
     {
         Velocity(QDeclarativeFlickablePrivate *p)
             : parent(p) {}
-        virtual void setValue(qreal v) {
+        void setValue(qreal v) override {
             if (v != value()) {
                 QDeclarativeTimeLineValue::setValue(v);
                 parent->updateVelocity();
@@ -150,7 +150,7 @@ public:
 
     qreal overShootDistance(qreal size);
 
-    void itemGeometryChanged(QDeclarativeItem *, const QRectF &, const QRectF &);
+    void itemGeometryChanged(QDeclarativeItem *, const QRectF &, const QRectF &) override;
 
 public:
     QDeclarativeItem *contentItem;

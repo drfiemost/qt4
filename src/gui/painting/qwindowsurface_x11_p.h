@@ -70,17 +70,17 @@ class QX11WindowSurface : public QWindowSurface
 {
 public:
     QX11WindowSurface(QWidget *widget);
-    ~QX11WindowSurface();
+    ~QX11WindowSurface() override;
 
-    QPaintDevice *paintDevice();
-    void flush(QWidget *widget, const QRegion &region, const QPoint &offset);
+    QPaintDevice *paintDevice() override;
+    void flush(QWidget *widget, const QRegion &region, const QPoint &offset) override;
 
-    void beginPaint(const QRegion &rgn);
-    void setGeometry(const QRect &rect);
-    bool scroll(const QRegion &area, int dx, int dy);
+    void beginPaint(const QRegion &rgn) override;
+    void setGeometry(const QRect &rect) override;
+    bool scroll(const QRegion &area, int dx, int dy) override;
     QPixmap grabWidget(const QWidget *widget,
-                       const QRect& rectangle = QRect()) const;
-    WindowSurfaceFeatures features() const;
+                       const QRect& rectangle = QRect()) const override;
+    WindowSurfaceFeatures features() const override;
 
 private:
     QX11WindowSurfacePrivate *d_ptr;

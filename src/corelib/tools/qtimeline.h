@@ -81,7 +81,7 @@ public:
     };
 
     explicit QTimeLine(int duration = 1000, QObject *parent = nullptr);
-    virtual ~QTimeLine();
+    ~QTimeLine() override;
 
     State state() const;
 
@@ -131,7 +131,7 @@ Q_SIGNALS:
     void finished();
 
 protected:
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
 private:
     Q_DISABLE_COPY(QTimeLine)

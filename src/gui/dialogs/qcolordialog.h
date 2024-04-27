@@ -73,7 +73,7 @@ public:
 
     explicit QColorDialog(QWidget *parent = nullptr);
     explicit QColorDialog(const QColor &initial, QWidget *parent = nullptr);
-    ~QColorDialog();
+    ~QColorDialog() override;
 
     void setCurrentColor(const QColor &color);
     QColor currentColor() const;
@@ -89,7 +89,7 @@ public:
 
     void open(QObject *receiver, const char *member);
 
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
     // ### Qt 5: merge overloads with title = QString()
     static QColor getColor(const QColor &initial, QWidget *parent, const QString &title,
@@ -110,8 +110,8 @@ Q_SIGNALS:
     void colorSelected(const QColor &color);
 
 protected:
-    void changeEvent(QEvent *event);
-    void done(int result);
+    void changeEvent(QEvent *event) override;
+    void done(int result) override;
 
 private:
     Q_DISABLE_COPY(QColorDialog)

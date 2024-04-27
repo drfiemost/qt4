@@ -84,7 +84,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeText : public QDeclarativeImplici
 
 public:
     QDeclarativeText(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeText();
+    ~QDeclarativeText() override;
 
     enum HAlignment { AlignLeft = Qt::AlignLeft,
                        AlignRight = Qt::AlignRight,
@@ -160,16 +160,16 @@ public:
     LineHeightMode lineHeightMode() const;
     void setLineHeightMode(LineHeightMode);
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
-    virtual void componentComplete();
+    void componentComplete() override;
 
     int resourcesLoading() const; // mainly for testing
 
     qreal paintedWidth() const;
     qreal paintedHeight() const;
 
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
 Q_SIGNALS:
     void textChanged(const QString &text);
@@ -191,10 +191,10 @@ Q_SIGNALS:
     Q_REVISION(1) void lineHeightModeChanged(LineHeightMode mode);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void geometryChanged(const QRectF &newGeometry,
-                                 const QRectF &oldGeometry);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void geometryChanged(const QRectF &newGeometry,
+                                 const QRectF &oldGeometry) override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeText)

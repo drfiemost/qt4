@@ -57,27 +57,27 @@ class QT_FORMEDITOR_EXPORT FormWindowCursor: public QObject, public QDesignerFor
     Q_OBJECT
 public:
     explicit FormWindowCursor(FormWindow *fw, QObject *parent = nullptr);
-    virtual ~FormWindowCursor();
+    ~FormWindowCursor() override;
 
-    virtual QDesignerFormWindowInterface *formWindow() const;
+    QDesignerFormWindowInterface *formWindow() const override;
 
-    virtual bool movePosition(MoveOperation op, MoveMode mode);
+    bool movePosition(MoveOperation op, MoveMode mode) override;
 
-    virtual int position() const;
-    virtual void setPosition(int pos, MoveMode mode);
+    int position() const override;
+    void setPosition(int pos, MoveMode mode) override;
 
-    virtual QWidget *current() const;
+    QWidget *current() const override;
 
-    virtual int widgetCount() const;
-    virtual QWidget *widget(int index) const;
+    int widgetCount() const override;
+    QWidget *widget(int index) const override;
 
-    virtual bool hasSelection() const;
-    virtual int selectedWidgetCount() const;
-    virtual QWidget *selectedWidget(int index) const;
+    bool hasSelection() const override;
+    int selectedWidgetCount() const override;
+    QWidget *selectedWidget(int index) const override;
 
-    virtual void setProperty(const QString &name, const QVariant &value);
-    virtual void setWidgetProperty(QWidget *widget, const QString &name, const QVariant &value);
-    virtual void resetWidgetProperty(QWidget *widget, const QString &name);
+    void setProperty(const QString &name, const QVariant &value) override;
+    void setWidgetProperty(QWidget *widget, const QString &name, const QVariant &value) override;
+    void resetWidgetProperty(QWidget *widget, const QString &name) override;
 
 public slots:
     void update();

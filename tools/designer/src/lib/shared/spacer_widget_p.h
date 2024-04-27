@@ -77,7 +77,7 @@ class QDESIGNER_SHARED_EXPORT Spacer: public QWidget
 public:
     Spacer(QWidget *parent = nullptr);
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     QSize sizeHintProperty() const;
     void setSizeHintProperty(const QSize &s);
@@ -91,11 +91,11 @@ public:
     void setOrientation(Qt::Orientation o);
     void setInteractiveMode(bool b) { m_interactive = b; };
 
-    virtual bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 protected:
-    void paintEvent(QPaintEvent *e);
-    void resizeEvent(QResizeEvent* e);
+    void paintEvent(QPaintEvent *e) override;
+    void resizeEvent(QResizeEvent* e) override;
     void updateMask();
 
 private:

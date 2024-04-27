@@ -76,59 +76,59 @@ class QT_FORMEDITOR_EXPORT QDesignerResource : public QEditorFormBuilder
 {
 public:
     explicit QDesignerResource(FormWindow *fw);
-    virtual ~QDesignerResource();
+    ~QDesignerResource() override;
 
-    virtual void save(QIODevice *dev, QWidget *widget);
+    void save(QIODevice *dev, QWidget *widget) override;
 
-    virtual bool copy(QIODevice *dev, const FormBuilderClipboard &selection);
-    virtual DomUI *copy(const FormBuilderClipboard &selection);
+    bool copy(QIODevice *dev, const FormBuilderClipboard &selection) override;
+    DomUI *copy(const FormBuilderClipboard &selection) override;
 
-    virtual FormBuilderClipboard paste(DomUI *ui, QWidget *widgetParent, QObject *actionParent = nullptr);
-    virtual FormBuilderClipboard paste(QIODevice *dev,  QWidget *widgetParent, QObject *actionParent = nullptr);
+    FormBuilderClipboard paste(DomUI *ui, QWidget *widgetParent, QObject *actionParent = nullptr) override;
+    FormBuilderClipboard paste(QIODevice *dev,  QWidget *widgetParent, QObject *actionParent = nullptr) override;
 
     bool saveRelative() const;
     void setSaveRelative(bool relative);
 
-    virtual QWidget *load(QIODevice *dev, QWidget *parentWidget = nullptr);
+    QWidget *load(QIODevice *dev, QWidget *parentWidget = nullptr) override;
 
 protected:
     using QEditorFormBuilder::create;
     using QEditorFormBuilder::createDom;
 
-    virtual void saveDom(DomUI *ui, QWidget *widget);
-    virtual QWidget *create(DomUI *ui, QWidget *parentWidget);
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parentWidget);
-    virtual QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget);
-    virtual QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget);
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
-    virtual QList<DomProperty*> computeProperties(QObject *obj);
-    virtual DomProperty *createProperty(QObject *object, const QString &propertyName, const QVariant &value);
+    void saveDom(DomUI *ui, QWidget *widget) override;
+    QWidget *create(DomUI *ui, QWidget *parentWidget) override;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
+    QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) override;
+    QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget) override;
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
+    QList<DomProperty*> computeProperties(QObject *obj) override;
+    DomProperty *createProperty(QObject *object, const QString &propertyName, const QVariant &value) override;
 
-    virtual QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name);
-    virtual QLayout *createLayout(const QString &layoutName, QObject *parent, const QString &name);
-    virtual void createCustomWidgets(DomCustomWidgets *);
-    virtual void createResources(DomResources*);
-    virtual void applyTabStops(QWidget *widget, DomTabStops *tabStops);
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) override;
+    QLayout *createLayout(const QString &layoutName, QObject *parent, const QString &name) override;
+    void createCustomWidgets(DomCustomWidgets *) override;
+    void createResources(DomResources*) override;
+    void applyTabStops(QWidget *widget, DomTabStops *tabStops) override;
 
-    virtual bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout);
-    virtual bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout) override;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
-    virtual DomWidget *createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive = true);
-    virtual DomLayout *createDom(QLayout *layout, DomLayout *ui_layout, DomWidget *ui_parentWidget);
-    virtual DomLayoutItem *createDom(QLayoutItem *item, DomLayout *ui_layout, DomWidget *ui_parentWidget);
+    DomWidget *createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive = true) override;
+    DomLayout *createDom(QLayout *layout, DomLayout *ui_layout, DomWidget *ui_parentWidget) override;
+    DomLayoutItem *createDom(QLayoutItem *item, DomLayout *ui_layout, DomWidget *ui_parentWidget) override;
 
-    virtual QAction *create(DomAction *ui_action, QObject *parent);
-    virtual QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent);
-    virtual void addMenuAction(QAction *action);
+    QAction *create(DomAction *ui_action, QObject *parent) override;
+    QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent) override;
+    void addMenuAction(QAction *action) override;
 
-    virtual DomAction *createDom(QAction *action);
-    virtual DomActionGroup *createDom(QActionGroup *actionGroup);
-    virtual DomActionRef *createActionRefDom(QAction *action);
+    DomAction *createDom(QAction *action) override;
+    DomActionGroup *createDom(QActionGroup *actionGroup) override;
+    DomActionRef *createActionRefDom(QAction *action) override;
 
-    virtual QAction *createAction(QObject *parent, const QString &name);
-    virtual QActionGroup *createActionGroup(QObject *parent, const QString &name);
+    QAction *createAction(QObject *parent, const QString &name) override;
+    QActionGroup *createActionGroup(QObject *parent, const QString &name) override;
 
-    virtual bool checkProperty(QObject *obj, const QString &prop) const;
+    bool checkProperty(QObject *obj, const QString &prop) const override;
 
     DomWidget *saveWidget(QTabWidget *widget, DomWidget *ui_parentWidget);
     DomWidget *saveWidget(QStackedWidget *widget, DomWidget *ui_parentWidget);
@@ -138,13 +138,13 @@ protected:
     DomWidget *saveWidget(QDesignerDockWidget *dockWidget, DomWidget *ui_parentWidget);
     DomWidget *saveWidget(QWizardPage *wizardPage, DomWidget *ui_parentWidget);
 
-    virtual DomCustomWidgets *saveCustomWidgets();
-    virtual DomTabStops *saveTabStops();
-    virtual DomResources *saveResources();
+    DomCustomWidgets *saveCustomWidgets() override;
+    DomTabStops *saveTabStops() override;
+    DomResources *saveResources() override;
 
-    virtual void layoutInfo(DomLayout *layout, QObject *parent, int *margin, int *spacing);
+    void layoutInfo(DomLayout *layout, QObject *parent, int *margin, int *spacing) override;
 
-    virtual void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
     void changeObjectName(QObject *o, QString name);
     DomProperty *applyProperStdSetAttribute(QObject *object, const QString &propertyName, DomProperty *property);

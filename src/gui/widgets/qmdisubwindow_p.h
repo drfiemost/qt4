@@ -81,7 +81,7 @@ public:
         mdiChild = child;
     }
 
-    void *qt_metacast(const char *classname)
+    void *qt_metacast(const char *classname) override
     {
         if (classname && strcmp(classname, "ControlElement") == 0)
             return this;
@@ -95,7 +95,7 @@ class ControlContainer : public QObject
 {
 public:
     ControlContainer(QMdiSubWindow *mdiChild);
-    ~ControlContainer();
+    ~ControlContainer() override;
 
 #ifndef QT_NO_MENUBAR
     void showButtonsInMenuBar(QMenuBar *menuBar);

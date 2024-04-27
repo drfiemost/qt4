@@ -96,7 +96,7 @@ public:
     QHttpNetworkConnection(const QString &hostName, quint16 port = 80, bool encrypt = false, QObject *parent = 0);
     QHttpNetworkConnection(quint16 channelCount, const QString &hostName, quint16 port = 80, bool encrypt = false, QObject *parent = 0);
 #endif
-    ~QHttpNetworkConnection();
+    ~QHttpNetworkConnection() override;
 
     //The hostname to which this is connected to.
     QString hostName() const;
@@ -154,7 +154,7 @@ public:
 
     QHttpNetworkConnectionPrivate(const QString &hostName, quint16 port, bool encrypt);
     QHttpNetworkConnectionPrivate(quint16 channelCount, const QString &hostName, quint16 port, bool encrypt);
-    ~QHttpNetworkConnectionPrivate();
+    ~QHttpNetworkConnectionPrivate() override;
     void init();
 
     void pauseConnection();

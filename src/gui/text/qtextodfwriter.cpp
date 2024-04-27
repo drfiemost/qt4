@@ -91,12 +91,12 @@ public:
         contentStream = device;
     }
 
-    virtual ~QXmlStreamStrategy()
+    ~QXmlStreamStrategy() override
     {
         if (contentStream)
             contentStream->close();
     }
-    virtual void addFile(const QString &, const QString &, const QByteArray &)
+    void addFile(const QString &, const QString &, const QByteArray &) override
     {
         // we ignore this...
     }
@@ -129,7 +129,7 @@ public:
         addFile(QString::fromLatin1("content.xml"), QString::fromLatin1("text/xml"));
     }
 
-    ~QZipStreamStrategy()
+    ~QZipStreamStrategy() override
     {
         manifestWriter.writeEndDocument();
         manifest.close();
@@ -139,7 +139,7 @@ public:
         zip.close();
     }
 
-    virtual void addFile(const QString &fileName, const QString &mimeType, const QByteArray &bytes)
+    void addFile(const QString &fileName, const QString &mimeType, const QByteArray &bytes) override
     {
         zip.addFile(fileName, bytes);
         addFile(fileName, mimeType);

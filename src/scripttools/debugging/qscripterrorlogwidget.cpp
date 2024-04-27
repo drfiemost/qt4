@@ -78,7 +78,7 @@ class QScriptErrorLogWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptErrorLogWidget)
 public:
     QScriptErrorLogWidgetPrivate();
-    ~QScriptErrorLogWidgetPrivate();
+    ~QScriptErrorLogWidgetPrivate() override;
 
     QScriptErrorLogWidgetOutputEdit *outputEdit;
 };

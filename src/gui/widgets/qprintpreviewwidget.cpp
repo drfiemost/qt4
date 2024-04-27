@@ -68,13 +68,13 @@ public:
         setCacheMode(DeviceCoordinateCache);
     }
 
-    inline QRectF boundingRect() const
+    inline QRectF boundingRect() const override
     { return brect; }
 
     inline int pageNumber() const
     { return pageNum; }
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
 
 private:
     int pageNum;
@@ -160,13 +160,13 @@ signals:
     void resized();
 
 protected:
-    void resizeEvent(QResizeEvent* e)
+    void resizeEvent(QResizeEvent* e) override
     {
         QGraphicsView::resizeEvent(e);
         emit resized();
     }
 
-    void showEvent(QShowEvent* e)
+    void showEvent(QShowEvent* e) override
     {
         QGraphicsView::showEvent(e);
         emit resized();

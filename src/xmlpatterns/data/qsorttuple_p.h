@@ -101,7 +101,7 @@ namespace QPatternist
          * This function is sometimes called by Literal::description().
          * This function simply returns "SortTuple".
          */
-        virtual QString stringValue() const;
+        QString stringValue() const override;
 
         /**
          * @short Always asserts.
@@ -121,9 +121,9 @@ namespace QPatternist
         /**
          * @short Always asserts.
          */
-        virtual bool hasError() const;
+        bool hasError() const override;
 
-        virtual ItemType::Ptr type() const;
+        ItemType::Ptr type() const override;
 
         inline const Item::Vector &sortKeys() const
         {

@@ -394,7 +394,7 @@ public:
         maxX = minX = maxY = minY = 0;
     }
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
     void updateSize();
 
@@ -411,9 +411,9 @@ class TickAnimationProxy : public QAbstractAnimation
 {
 public:
     TickAnimationProxy(T *p, QObject *parent = nullptr) : QAbstractAnimation(parent), m_p(p) {}
-    virtual int duration() const { return -1; }
+    int duration() const override { return -1; }
 protected:
-    virtual void updateCurrentTime(int msec) { (m_p->*method)(msec); }
+    void updateCurrentTime(int msec) override { (m_p->*method)(msec); }
 
 private:
     T *m_p;
@@ -433,7 +433,7 @@ public:
     {
     }
 
-    ~QDeclarativeParticlesPrivate()
+    ~QDeclarativeParticlesPrivate() override
     {
     }
 

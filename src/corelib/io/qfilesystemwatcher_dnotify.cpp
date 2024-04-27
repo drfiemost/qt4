@@ -96,17 +96,17 @@ class QDnotifySignalThread : public QThread
 Q_OBJECT
 public:
     QDnotifySignalThread();
-    virtual ~QDnotifySignalThread();
+    ~QDnotifySignalThread() override;
 
     void startNotify();
 
-    virtual void run();
+    void run() override;
 
 signals:
     void fdChanged(int);
 
 protected:
-    virtual bool event(QEvent *);
+    bool event(QEvent *) override;
 
 private slots:
     void readFromDnotify();

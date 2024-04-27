@@ -968,7 +968,7 @@ public:
     {
 
     }
-    ~QDeclarativeAnchorChangesPrivate() { delete anchorSet; }
+    ~QDeclarativeAnchorChangesPrivate() override { delete anchorSet; }
 
     QDeclarativeItem *target;
     QDeclarativeAnchorSet *anchorSet;

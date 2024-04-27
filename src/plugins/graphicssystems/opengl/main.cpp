@@ -48,8 +48,8 @@ QT_BEGIN_NAMESPACE
 class QGLGraphicsSystemPlugin : public QGraphicsSystemPlugin
 {
 public:
-    QStringList keys() const;
-    QGraphicsSystem *create(const QString&);
+    QStringList keys() const override;
+    QGraphicsSystem *create(const QString&) override;
 };
 
 QStringList QGLGraphicsSystemPlugin::keys() const

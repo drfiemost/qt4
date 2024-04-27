@@ -334,7 +334,7 @@ public:
 
     // Functions.
     explicit QWidgetPrivate(int version = QObjectPrivateVersion);
-    ~QWidgetPrivate();
+    ~QWidgetPrivate() override;
 
     QWExtra *extraData() const;
     QTLWExtra *topData() const;
@@ -876,26 +876,26 @@ public:
         : QGraphicsEffectSourcePrivate(), m_widget(widget), context(nullptr), updateDueToGraphicsEffect(false)
     {}
 
-    inline void detach()
+    inline void detach() override
     { m_widget->d_func()->graphicsEffect = nullptr; }
 
-    inline const QGraphicsItem *graphicsItem() const
+    inline const QGraphicsItem *graphicsItem() const override
     { return nullptr; }
 
-    inline const QWidget *widget() const
+    inline const QWidget *widget() const override
     { return m_widget; }
 
-    inline void update()
+    inline void update() override
     {
         updateDueToGraphicsEffect = true;
         m_widget->update();
         updateDueToGraphicsEffect = false;
     }
 
-    inline bool isPixmap() const
+    inline bool isPixmap() const override
     { return false; }
 
-    inline void effectBoundingRectChanged()
+    inline void effectBoundingRectChanged() override
     {
         // ### This function should take a rect parameter; then we can avoid
         // updating too much on the parent widget.
@@ -905,16 +905,16 @@ public:
             update();
     }
 
-    inline const QStyleOption *styleOption() const
+    inline const QStyleOption *styleOption() const override
     { return nullptr; }
 
-    inline QRect deviceRect() const
+    inline QRect deviceRect() const override
     { return m_widget->window()->rect(); }
 
-    QRectF boundingRect(Qt::CoordinateSystem system) const;
-    void draw(QPainter *p);
+    QRectF boundingRect(Qt::CoordinateSystem system) const override;
+    void draw(QPainter *p) override;
     QPixmap pixmap(Qt::CoordinateSystem system, QPoint *offset,
-                   QGraphicsEffect::PixmapPadMode mode) const;
+                   QGraphicsEffect::PixmapPadMode mode) const override;
 
     QWidget *m_widget;
     QWidgetPaintContext *context;

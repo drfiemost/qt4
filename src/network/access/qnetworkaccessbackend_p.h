@@ -81,7 +81,7 @@ class QNetworkAccessBackend : public QObject
     Q_OBJECT
 public:
     QNetworkAccessBackend();
-    virtual ~QNetworkAccessBackend();
+    ~QNetworkAccessBackend() override;
 
     // To avoid mistaking with QIODevice names, the functions here
     // have different names. The Connection has two streams:

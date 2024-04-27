@@ -117,7 +117,7 @@ public:
     Q_DECLARE_FLAGS(EvaluateFlags, EvaluateFlag)
 
     QDeclarativeQtScriptExpression();
-    virtual ~QDeclarativeQtScriptExpression();
+    ~QDeclarativeQtScriptExpression() override;
 
     QDeclarativeRefCount *dataRef;
 
@@ -177,7 +177,7 @@ class QDeclarativeExpressionPrivate : public QObjectPrivate, public QDeclarative
     Q_DECLARE_PUBLIC(QDeclarativeExpression)
 public:
     QDeclarativeExpressionPrivate();
-    ~QDeclarativeExpressionPrivate();
+    ~QDeclarativeExpressionPrivate() override;
 
     void init(QDeclarativeContextData *, const QString &, QObject *);
     void init(QDeclarativeContextData *, const QScriptValue &, QObject *);

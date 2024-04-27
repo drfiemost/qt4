@@ -72,13 +72,13 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerFrontend
 {
 public:
     QScriptDebuggerFrontend();
-    virtual ~QScriptDebuggerFrontend();
+    ~QScriptDebuggerFrontend() override;
 
     QScriptDebuggerEventHandlerInterface *eventHandler() const;
     void setEventHandler(QScriptDebuggerEventHandlerInterface *eventHandler);
 
     int scheduleCommand(const QScriptDebuggerCommand &command,
-                        QScriptDebuggerResponseHandlerInterface *responseHandler);
+                        QScriptDebuggerResponseHandlerInterface *responseHandler) override;
 
     int scheduledCommandCount() const;
 

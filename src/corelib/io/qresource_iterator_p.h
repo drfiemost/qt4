@@ -63,12 +63,12 @@ class QResourceFileEngineIterator : public QAbstractFileEngineIterator
 {
 public:
     QResourceFileEngineIterator(QDir::Filters filters, const QStringList &filterNames);
-    ~QResourceFileEngineIterator();
+    ~QResourceFileEngineIterator() override;
 
-    QString next();
-    bool hasNext() const;
+    QString next() override;
+    bool hasNext() const override;
 
-    QString currentFileName() const;
+    QString currentFileName() const override;
 
 private:
     mutable QStringList entries;

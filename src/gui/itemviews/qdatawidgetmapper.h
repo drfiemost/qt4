@@ -67,7 +67,7 @@ class Q_GUI_EXPORT QDataWidgetMapper: public QObject
 
 public:
     QDataWidgetMapper(QObject *parent = nullptr);
-    ~QDataWidgetMapper();
+    ~QDataWidgetMapper() override;
 
     void setModel(QAbstractItemModel *model);
     QAbstractItemModel *model() const;

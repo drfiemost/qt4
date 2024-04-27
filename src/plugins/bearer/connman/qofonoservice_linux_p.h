@@ -106,7 +106,7 @@ class QOfonoManagerInterface : public  QDBusAbstractInterface
 public:
 
     QOfonoManagerInterface( QObject *parent = nullptr);
-    ~QOfonoManagerInterface();
+    ~QOfonoManagerInterface() override;
 
      QDBusObjectPath path() const;
 
@@ -119,8 +119,8 @@ Q_SIGNALS:
     void propertyChanged(const QString &, const QDBusVariant &value);
     void propertyChangedContext(const QString &,const QString &,const QDBusVariant &);
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 
 };
@@ -131,7 +131,7 @@ class QOfonoDBusHelper: public QObject, protected QDBusContext
      Q_OBJECT
  public:
     QOfonoDBusHelper(QObject *parent = nullptr);
-    ~QOfonoDBusHelper();
+    ~QOfonoDBusHelper() override;
 
  public slots:
     void propertyChanged(const QString &, const QDBusVariant &);
@@ -146,7 +146,7 @@ class QOfonoModemInterface : public QDBusAbstractInterface
 public:
 
     QOfonoModemInterface(const QString &dbusModemPathName, QObject *parent = nullptr);
-    ~QOfonoModemInterface();
+    ~QOfonoModemInterface() override;
 
     QVariantMap getProperties();
     //properties
@@ -163,8 +163,8 @@ public:
     QString defaultInterface();
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 Q_SIGNALS:
     void propertyChanged(const QString &, const QDBusVariant &value);
@@ -179,7 +179,7 @@ class QOfonoNetworkRegistrationInterface : public QDBusAbstractInterface
 public:
 
     QOfonoNetworkRegistrationInterface(const QString &dbusModemPathName, QObject *parent = nullptr);
-    ~QOfonoNetworkRegistrationInterface();
+    ~QOfonoNetworkRegistrationInterface() override;
 
     QVariantMap getProperties();
 
@@ -194,8 +194,8 @@ public:
     QList <QDBusObjectPath> getOperators();
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 Q_SIGNALS:
     void propertyChanged(const QString &, const QDBusVariant &value);
@@ -210,7 +210,7 @@ class QOfonoNetworkOperatorInterface : public QDBusAbstractInterface
 public:
 //modem or operator paths
     QOfonoNetworkOperatorInterface(const QString &dbusPathName, QObject *parent = nullptr);
-    ~QOfonoNetworkOperatorInterface();
+    ~QOfonoNetworkOperatorInterface() override;
 
     QVariantMap getProperties();
 
@@ -222,8 +222,8 @@ public:
     QStringList getTechnologies();
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 };
 
@@ -234,7 +234,7 @@ class QOfonoSimInterface : public QDBusAbstractInterface
 public:
 
     QOfonoSimInterface(const QString &dbusModemPathName, QObject *parent = nullptr);
-    ~QOfonoSimInterface();
+    ~QOfonoSimInterface() override;
 
     QVariantMap getProperties();
 
@@ -249,8 +249,8 @@ public:
     QString cardIdentifier();
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 };
 
@@ -262,7 +262,7 @@ class QOfonoDataConnectionManagerInterface : public QDBusAbstractInterface
 public:
 
     QOfonoDataConnectionManagerInterface(const QString &dbusPathName, QObject *parent = nullptr);
-    ~QOfonoDataConnectionManagerInterface();
+    ~QOfonoDataConnectionManagerInterface() override;
 
     QVariantMap getProperties();
 
@@ -275,8 +275,8 @@ public:
     bool setPower(bool on);
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 };
 
@@ -288,7 +288,7 @@ class QOfonoPrimaryDataContextInterface : public QDBusAbstractInterface
 public:
 
     QOfonoPrimaryDataContextInterface(const QString &dbusPathName, QObject *parent = nullptr);
-    ~QOfonoPrimaryDataContextInterface();
+    ~QOfonoPrimaryDataContextInterface() override;
 
     QVariantMap getProperties();
 
@@ -305,8 +305,8 @@ public:
     bool setApn(const QString &name);
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
     bool setProp(const QString &, const QVariant &var);
 };
@@ -318,7 +318,7 @@ class QOfonoSmsInterface : public QDBusAbstractInterface
 public:
 
     QOfonoSmsInterface(const QString &dbusModemPathName, QObject *parent = nullptr);
-    ~QOfonoSmsInterface();
+    ~QOfonoSmsInterface() override;
 
     QVariantMap getProperties();
     void sendMessage(const QString &to, const QString &message);
@@ -329,8 +329,8 @@ public:
     QString bearer();
 
 protected:
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant getProperty(const QString &);
 
 Q_SIGNALS:

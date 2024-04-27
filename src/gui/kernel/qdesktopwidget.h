@@ -60,7 +60,7 @@ class Q_GUI_EXPORT QDesktopWidget : public QWidget
     Q_PROPERTY(int primaryScreen READ primaryScreen)
 public:
     QDesktopWidget();
-    ~QDesktopWidget();
+    ~QDesktopWidget() override;
 
     bool isVirtualDesktop() const;
 
@@ -89,7 +89,7 @@ Q_SIGNALS:
     void screenCountChanged(int);
 
 protected:
-    void resizeEvent(QResizeEvent *e);
+    void resizeEvent(QResizeEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QDesktopWidget)

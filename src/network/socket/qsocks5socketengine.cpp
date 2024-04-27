@@ -326,14 +326,14 @@ class QSocks5BindStore : public QObject
 {
 public:
     QSocks5BindStore();
-    ~QSocks5BindStore();
+    ~QSocks5BindStore() override;
 
     void add(qintptr socketDescriptor, QSocks5BindData *bindData);
     bool contains(qintptr socketDescriptor);
     QSocks5BindData *retrieve(qintptr socketDescriptor);
 
 protected:
-    void timerEvent(QTimerEvent * event);
+    void timerEvent(QTimerEvent * event) override;
 
     QMutex mutex;
     int sweepTimerId;

@@ -68,7 +68,7 @@ class QDESIGNER_UILIB_EXPORT QFormBuilder: public QAbstractFormBuilder
 {
 public:
     QFormBuilder();
-    virtual ~QFormBuilder();
+    ~QFormBuilder() override;
 
     QStringList pluginPaths() const;
 
@@ -79,23 +79,23 @@ public:
     QList<QDesignerCustomWidgetInterface*> customWidgets() const;
 
 protected:
-    virtual QWidget *create(DomUI *ui, QWidget *parentWidget);
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parentWidget);
-    virtual QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget);
-    virtual QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget);
-    virtual QAction *create(DomAction *ui_action, QObject *parent);
-    virtual QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent);
+    QWidget *create(DomUI *ui, QWidget *parentWidget) override;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
+    QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) override;
+    QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget) override;
+    QAction *create(DomAction *ui_action, QObject *parent) override;
+    QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent) override;
 
-    virtual QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name);
-    virtual QLayout *createLayout(const QString &layoutName, QObject *parent, const QString &name);
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) override;
+    QLayout *createLayout(const QString &layoutName, QObject *parent, const QString &name) override;
 
-    virtual void createConnections(DomConnections *connections, QWidget *widget);
+    void createConnections(DomConnections *connections, QWidget *widget) override;
 
-    virtual bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout);
-    virtual bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout) override;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
     virtual void updateCustomWidgets();
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
 
     static QWidget *widgetByName(QWidget *topLevel, const QString &name);
 

@@ -75,22 +75,22 @@ class QNetworkReplyImpl: public QNetworkReply
     Q_OBJECT
 public:
     QNetworkReplyImpl(QObject *parent = nullptr);
-    ~QNetworkReplyImpl();
-    virtual void abort();
+    ~QNetworkReplyImpl() override;
+    void abort() override;
 
     // reimplemented from QNetworkReply / QIODevice
-    virtual void close();
-    virtual qint64 bytesAvailable() const;
-    virtual void setReadBufferSize(qint64 size);
-    virtual bool canReadLine () const;
+    void close() override;
+    qint64 bytesAvailable() const override;
+    void setReadBufferSize(qint64 size) override;
+    bool canReadLine () const override;
 
-    virtual qint64 readData(char *data, qint64 maxlen);
-    virtual bool event(QEvent *);
+    qint64 readData(char *data, qint64 maxlen) override;
+    bool event(QEvent *) override;
 
 #ifndef QT_NO_OPENSSL
     Q_INVOKABLE QSslConfiguration sslConfigurationImplementation() const;
     Q_INVOKABLE void setSslConfigurationImplementation(const QSslConfiguration &configuration);
-    virtual void ignoreSslErrors();
+    void ignoreSslErrors() override;
     Q_INVOKABLE virtual void ignoreSslErrorsImplementation(const QList<QSslError> &errors);
 #endif
 
@@ -229,11 +229,11 @@ class QDisabledNetworkReply : public QNetworkReply
 public:
     QDisabledNetworkReply(QObject *parent, const QNetworkRequest &req,
                           QNetworkAccessManager::Operation op);
-    ~QDisabledNetworkReply();
+    ~QDisabledNetworkReply() override;
 
-    void abort() { }
+    void abort() override { }
 protected:
-    qint64 readData(char *, qint64) { return -1; }
+    qint64 readData(char *, qint64) override { return -1; }
 };
 #endif
 

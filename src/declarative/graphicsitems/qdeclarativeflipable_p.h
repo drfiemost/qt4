@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeFlipable : public QDeclarativeItem
     //### flipRotation
 public:
     QDeclarativeFlipable(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeFlipable();
+    ~QDeclarativeFlipable() override;
 
     QGraphicsObject *front();
     void setFront(QGraphicsObject *);

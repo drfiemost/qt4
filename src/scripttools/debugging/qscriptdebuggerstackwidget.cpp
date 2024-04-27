@@ -55,7 +55,7 @@ class QScriptDebuggerStackWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerStackWidget)
 public:
     QScriptDebuggerStackWidgetPrivate();
-    ~QScriptDebuggerStackWidgetPrivate();
+    ~QScriptDebuggerStackWidgetPrivate() override;
 
     // private slots
     void _q_onCurrentChanged(const QModelIndex &index);

@@ -209,19 +209,19 @@ class QDeclarativeTester : public QAbstractAnimation
 {
 public:
     QDeclarativeTester(const QString &script, QDeclarativeViewer::ScriptOptions options, QDeclarativeView *parent);
-    ~QDeclarativeTester();
+    ~QDeclarativeTester() override;
 
     static void registerTypes();
 
-    virtual int duration() const;
+    int duration() const override;
 
     void run();
     void save();
 
     void executefailure();
 protected:
-    virtual void updateCurrentTime(int msecs);
-    virtual bool eventFilter(QObject *, QEvent *);
+    void updateCurrentTime(int msecs) override;
+    bool eventFilter(QObject *, QEvent *) override;
 
 private:
     QString m_script;

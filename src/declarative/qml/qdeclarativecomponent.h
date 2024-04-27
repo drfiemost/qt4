@@ -73,7 +73,7 @@ public:
     QDeclarativeComponent(QDeclarativeEngine *, QObject *parent=nullptr);
     QDeclarativeComponent(QDeclarativeEngine *, const QString &fileName, QObject *parent = nullptr);
     QDeclarativeComponent(QDeclarativeEngine *, const QUrl &url, QObject *parent = nullptr);
-    virtual ~QDeclarativeComponent();
+    ~QDeclarativeComponent() override;
 
     Q_ENUMS(Status)
     enum Status { Null, Ready, Loading, Error };

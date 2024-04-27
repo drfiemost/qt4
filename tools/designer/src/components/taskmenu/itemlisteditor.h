@@ -79,7 +79,7 @@ class AbstractItemEditor: public QWidget
 
 public:
     explicit AbstractItemEditor(QDesignerFormWindowInterface *form, QWidget *parent);
-    ~AbstractItemEditor();
+    ~AbstractItemEditor() override;
 
     DesignerIconCache *iconCache() const { return m_iconCache; }
 
@@ -147,8 +147,8 @@ private slots:
     void cacheReloaded();
 
 protected:
-    virtual void setItemData(int role, const QVariant &v);
-    virtual QVariant getItemData(int role) const;
+    void setItemData(int role, const QVariant &v) override;
+    QVariant getItemData(int role) const override;
 
 private:
     void setPropertyBrowserVisible(bool v);

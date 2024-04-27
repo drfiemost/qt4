@@ -62,13 +62,13 @@ QT_BEGIN_NAMESPACE
 class Q_CORE_EXPORT QFontLaoCodec : public QTextCodec
 {
 public:
-    ~QFontLaoCodec();
+    ~QFontLaoCodec() override;
 
-    QByteArray name() const;
-    int mibEnum() const;
+    QByteArray name() const override;
+    int mibEnum() const override;
 
-    QString convertToUnicode(const char *, int, ConverterState *) const;
-    QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const;
+    QString convertToUnicode(const char *, int, ConverterState *) const override;
+    QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const override;
 };
 
 #endif // QT_NO_CODECS

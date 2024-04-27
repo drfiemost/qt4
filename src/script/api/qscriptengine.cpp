@@ -503,7 +503,7 @@ public:
     void setShouldAbort(bool shouldAbort) { m_shouldAbortEvaluation = shouldAbort; }
     bool shouldAbort() { return m_shouldAbortEvaluation; }
 
-    virtual bool didTimeOut(JSC::ExecState* exec)
+    bool didTimeOut(JSC::ExecState* exec) override
     {
         if (JSC::TimeoutChecker::didTimeOut(exec))
             return true;

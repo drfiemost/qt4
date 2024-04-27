@@ -76,8 +76,8 @@ public:
     typedef QList<QObject *> ObjectList;
     bool init(const ObjectList &list, const QString &script);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 
 private:
     typedef QPair<QPointer<QObject>, QString> ObjectScriptPair;

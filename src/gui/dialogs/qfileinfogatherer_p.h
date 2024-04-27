@@ -164,7 +164,7 @@ Q_SIGNALS:
 
 public:
     QFileInfoGatherer(QObject *parent = nullptr);
-    ~QFileInfoGatherer();
+    ~QFileInfoGatherer() override;
 
     void clear();
     void removePath(const QString &path);
@@ -180,7 +180,7 @@ public Q_SLOTS:
     QFileIconProvider *iconProvider() const;
 
 protected:
-    void run();
+    void run() override;
     void getFileInfos(const QString &path, const QStringList &files);
 
 private:

@@ -62,15 +62,15 @@ class PageGenerator : public Generator
 {
  public:
     PageGenerator();
-    ~PageGenerator();
+    ~PageGenerator() override;
 
-    virtual void generateTree(const Tree *tree);
+    void generateTree(const Tree *tree) override;
 
  protected:
     virtual QString fileBase(const Node* node) const;
     virtual QString fileExtension(const Node* node) const = 0;
     QString fileName(const Node* node) const;
-    QString outFileName();
+    QString outFileName() override;
     virtual void beginSubPage(const Location& location, const QString& fileName);
     virtual void endSubPage();
     virtual void generateInnerNode(const InnerNode *node);

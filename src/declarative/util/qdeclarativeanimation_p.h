@@ -78,7 +78,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeAbstractAnimation : public QObjec
 
 public:
     QDeclarativeAbstractAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeAbstractAnimation();
+    ~QDeclarativeAbstractAnimation() override;
 
     enum Loops { Infinite = -2 };
 
@@ -101,8 +101,8 @@ public:
     void setDefaultTarget(const QDeclarativeProperty &);
     void setDisableUserControl();
 
-    void classBegin();
-    void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 
 Q_SIGNALS:
     void started();
@@ -134,7 +134,7 @@ private Q_SLOTS:
     void timelineComplete();
     void componentFinalized();
 private:
-    virtual void setTarget(const QDeclarativeProperty &);
+    void setTarget(const QDeclarativeProperty &) override;
     void notifyRunningChanged(bool running);
     friend class QDeclarativeBehavior;
 
@@ -151,7 +151,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePauseAnimation : public QDeclarativeAbstract
 
 public:
     QDeclarativePauseAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativePauseAnimation();
+    ~QDeclarativePauseAnimation() override;
 
     int duration() const;
     void setDuration(int);
@@ -160,7 +160,7 @@ Q_SIGNALS:
     void durationChanged(int);
 
 protected:
-    virtual QAbstractAnimation *qtAnimation();
+    QAbstractAnimation *qtAnimation() override;
 };
 
 class QDeclarativeScriptActionPrivate;
@@ -174,7 +174,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeScriptAction : public QDeclarativ
 
 public:
     QDeclarativeScriptAction(QObject *parent=nullptr);
-    virtual ~QDeclarativeScriptAction();
+    ~QDeclarativeScriptAction() override;
 
     QDeclarativeScriptString script() const;
     void setScript(const QDeclarativeScriptString &);
@@ -183,10 +183,10 @@ public:
     void setStateChangeScriptName(const QString &);
 
 protected:
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 };
 
 class QDeclarativePropertyActionPrivate;
@@ -204,7 +204,7 @@ class QDeclarativePropertyAction : public QDeclarativeAbstractAnimation
 
 public:
     QDeclarativePropertyAction(QObject *parent=nullptr);
-    virtual ~QDeclarativePropertyAction();
+    ~QDeclarativePropertyAction() override;
 
     QObject *target() const;
     void setTarget(QObject *);
@@ -228,10 +228,10 @@ Q_SIGNALS:
     void propertyChanged();
 
 protected:
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 };
 
 class QDeclarativeItem;
@@ -253,7 +253,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePropertyAnimation : public QDeclarativeAbstr
 
 public:
     QDeclarativePropertyAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativePropertyAnimation();
+    ~QDeclarativePropertyAnimation() override;
 
     virtual int duration() const;
     virtual void setDuration(int);
@@ -281,10 +281,10 @@ public:
 
 protected:
     QDeclarativePropertyAnimation(QDeclarativePropertyAnimationPrivate &dd, QObject *parent);
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 
 Q_SIGNALS:
     void durationChanged(int);
@@ -305,7 +305,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeColorAnimation : public QDeclarativeProperty
 
 public:
     QDeclarativeColorAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeColorAnimation();
+    ~QDeclarativeColorAnimation() override;
 
     QColor from() const;
     void setFrom(const QColor &);
@@ -324,7 +324,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeNumberAnimation : public QDeclarativePropert
 
 public:
     QDeclarativeNumberAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeNumberAnimation();
+    ~QDeclarativeNumberAnimation() override;
 
     qreal from() const;
     void setFrom(qreal);
@@ -349,7 +349,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVector3dAnimation : public QDeclarativePrope
 
 public:
     QDeclarativeVector3dAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeVector3dAnimation();
+    ~QDeclarativeVector3dAnimation() override;
 
     QVector3D from() const;
     void setFrom(QVector3D);
@@ -371,7 +371,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeRotationAnimation : public QDeclarativePrope
 
 public:
     QDeclarativeRotationAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeRotationAnimation();
+    ~QDeclarativeRotationAnimation() override;
 
     qreal from() const;
     void setFrom(qreal);
@@ -398,7 +398,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeAnimationGroup : public QDeclarativeAbstract
 
 public:
     QDeclarativeAnimationGroup(QObject *parent);
-    virtual ~QDeclarativeAnimationGroup();
+    ~QDeclarativeAnimationGroup() override;
 
     QDeclarativeListProperty<QDeclarativeAbstractAnimation> animations();
     friend class QDeclarativeAbstractAnimation;
@@ -414,13 +414,13 @@ class QDeclarativeSequentialAnimation : public QDeclarativeAnimationGroup
 
 public:
     QDeclarativeSequentialAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeSequentialAnimation();
+    ~QDeclarativeSequentialAnimation() override;
 
 protected:
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 };
 
 class QDeclarativeParallelAnimation : public QDeclarativeAnimationGroup
@@ -430,13 +430,13 @@ class QDeclarativeParallelAnimation : public QDeclarativeAnimationGroup
 
 public:
     QDeclarativeParallelAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeParallelAnimation();
+    ~QDeclarativeParallelAnimation() override;
 
 protected:
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 };
 
 class QDeclarativeParentAnimationPrivate;
@@ -451,7 +451,7 @@ class QDeclarativeParentAnimation : public QDeclarativeAnimationGroup
 
 public:
     QDeclarativeParentAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeParentAnimation();
+    ~QDeclarativeParentAnimation() override;
 
     QDeclarativeItem *target() const;
     void setTarget(QDeclarativeItem *);
@@ -468,10 +468,10 @@ Q_SIGNALS:
     void viaChanged();
 
 protected:
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 };
 
 class QDeclarativeAnchorAnimationPrivate;
@@ -485,7 +485,7 @@ class QDeclarativeAnchorAnimation : public QDeclarativeAbstractAnimation
 
 public:
     QDeclarativeAnchorAnimation(QObject *parent=nullptr);
-    virtual ~QDeclarativeAnchorAnimation();
+    ~QDeclarativeAnchorAnimation() override;
 
     QDeclarativeListProperty<QDeclarativeItem> targets();
 
@@ -500,10 +500,10 @@ Q_SIGNALS:
     void easingChanged(const QEasingCurve&);
 
 protected:
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    virtual QAbstractAnimation *qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation *qtAnimation() override;
 };
 
 QT_END_NAMESPACE

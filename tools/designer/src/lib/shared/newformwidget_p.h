@@ -87,10 +87,10 @@ public:
     typedef QList<qdesigner_internal::DeviceProfile> DeviceProfileList;
 
     explicit NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parentWidget);
-    virtual ~NewFormWidget();
+    ~NewFormWidget() override;
 
-    virtual bool hasCurrentTemplate() const;
-    virtual QString currentTemplate(QString *errorMessage = nullptr);
+    bool hasCurrentTemplate() const override;
+    QString currentTemplate(QString *errorMessage = nullptr) override;
 
     // Convenience for implementing file dialogs with preview
     static QImage grabForm(QDesignerFormEditorInterface *core,

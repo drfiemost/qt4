@@ -68,7 +68,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeConnections : public QObject, public QDeclar
 
 public:
     QDeclarativeConnections(QObject *parent=nullptr);
-    ~QDeclarativeConnections();
+    ~QDeclarativeConnections() override;
 
     QObject *target() const;
     void setTarget(QObject *);
@@ -81,15 +81,15 @@ Q_SIGNALS:
 
 private:
     void connectSignals();
-    void classBegin();
-    void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 };
 
 class QDeclarativeConnectionsParser : public QDeclarativeCustomParser
 {
 public:
-    virtual QByteArray compile(const QList<QDeclarativeCustomParserProperty> &);
-    virtual void setCustomData(QObject *, const QByteArray &);
+    QByteArray compile(const QList<QDeclarativeCustomParserProperty> &) override;
+    void setCustomData(QObject *, const QByteArray &) override;
 };
 
 

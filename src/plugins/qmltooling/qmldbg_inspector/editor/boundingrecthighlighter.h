@@ -63,7 +63,7 @@ class BoundingRectHighlighter : public LiveLayerItem
     Q_OBJECT
 public:
     explicit BoundingRectHighlighter(QDeclarativeViewInspector *view);
-    ~BoundingRectHighlighter();
+    ~BoundingRectHighlighter() override;
     void clear();
     void highlight(QList<QGraphicsObject*> items);
     void highlight(QGraphicsObject* item);
@@ -93,7 +93,7 @@ class BoundingBox : public QObject
 public:
     explicit BoundingBox(QGraphicsObject *itemToHighlight, QGraphicsItem *parentItem,
                          QObject *parent = nullptr);
-    ~BoundingBox();
+    ~BoundingBox() override;
     QWeakPointer<QGraphicsObject> highlightedObject;
     QGraphicsPolygonItem *highlightPolygon;
     QGraphicsPolygonItem *highlightPolygonEdge;
@@ -107,7 +107,7 @@ class BoundingBoxPolygonItem : public QGraphicsPolygonItem
 {
 public:
     explicit BoundingBoxPolygonItem(QGraphicsItem *item);
-    int type() const;
+    int type() const override;
 };
 
 } // namespace QmlJSDebugger

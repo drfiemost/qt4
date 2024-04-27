@@ -112,7 +112,7 @@ public:
         }
     }
 
-    void mirrorChange() {
+    void mirrorChange() override {
         Q_Q(QDeclarativeBasePositioner);
         if (type != QDeclarativeBasePositioner::Vertical)
             q->prePositioning();
@@ -124,7 +124,7 @@ public:
             return effectiveLayoutMirror ? layoutDirection == Qt::RightToLeft : layoutDirection == Qt::LeftToRight;
     }
 
-    virtual void itemSiblingOrderChanged(QDeclarativeItem* other)
+    void itemSiblingOrderChanged(QDeclarativeItem* other) override
     {
         Q_UNUSED(other);
         //Delay is due to many children often being reordered at once
@@ -132,24 +132,24 @@ public:
         schedulePositioning();
     }
 
-    void itemGeometryChanged(QDeclarativeItem *, const QRectF &newGeometry, const QRectF &oldGeometry)
+    void itemGeometryChanged(QDeclarativeItem *, const QRectF &newGeometry, const QRectF &oldGeometry) override
     {
         Q_Q(QDeclarativeBasePositioner);
         if (newGeometry.size() != oldGeometry.size())
             q->prePositioning();
     }
 
-    virtual void itemVisibilityChanged(QDeclarativeItem *)
+    void itemVisibilityChanged(QDeclarativeItem *) override
     {
         schedulePositioning();
     }
-    virtual void itemOpacityChanged(QDeclarativeItem *)
+    void itemOpacityChanged(QDeclarativeItem *) override
     {
         Q_Q(QDeclarativeBasePositioner);
         q->prePositioning();
     }
 
-    void itemDestroyed(QDeclarativeItem *item)
+    void itemDestroyed(QDeclarativeItem *item) override
     {
         Q_Q(QDeclarativeBasePositioner);
         q->positionedItems.removeOne(QDeclarativeBasePositioner::PositionedItem(item));

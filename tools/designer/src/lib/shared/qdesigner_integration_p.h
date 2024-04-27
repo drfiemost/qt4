@@ -77,11 +77,11 @@ class QDESIGNER_SHARED_EXPORT QDesignerIntegration: public QDesignerIntegrationI
     Q_OBJECT
 public:
     explicit QDesignerIntegration(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    virtual ~QDesignerIntegration();
+    ~QDesignerIntegration() override;
 
     static void requestHelp(const QDesignerFormEditorInterface *core, const QString &manual, const QString &document);
 
-    virtual QWidget *containerWindow(QWidget *widget) const;
+    QWidget *containerWindow(QWidget *widget) const override;
 
     // Load plugins into widget database and factory.
     static void initializePlugins(QDesignerFormEditorInterface *formEditor);

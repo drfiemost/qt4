@@ -62,7 +62,7 @@ QT_BEGIN_NAMESPACE
 class QLatin1Codec : public QTextCodec
 {
 public:
-    ~QLatin1Codec();
+    ~QLatin1Codec() override;
 
     QString convertToUnicode(const char *, int, ConverterState *) const override;
     QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const override;
@@ -77,7 +77,7 @@ public:
 class QLatin15Codec: public QTextCodec
 {
 public:
-    ~QLatin15Codec();
+    ~QLatin15Codec() override;
 
     QString convertToUnicode(const char *, int, ConverterState *) const override;
     QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const override;

@@ -59,7 +59,7 @@ class PreferencesDialog: public QDialog
     Q_OBJECT
 public:
     explicit PreferencesDialog(QDesignerFormEditorInterface *core, QWidget *parentWidget = nullptr);
-    ~PreferencesDialog();
+    ~PreferencesDialog() override;
 
 
 private slots:

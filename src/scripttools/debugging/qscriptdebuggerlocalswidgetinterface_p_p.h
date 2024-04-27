@@ -66,7 +66,7 @@ class QScriptDebuggerLocalsWidgetInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerLocalsWidgetInterface)
 public:
     QScriptDebuggerLocalsWidgetInterfacePrivate();
-    ~QScriptDebuggerLocalsWidgetInterfacePrivate();
+    ~QScriptDebuggerLocalsWidgetInterfacePrivate() override;
 
     QScriptCompletionProviderInterface *completionProvider;
 };

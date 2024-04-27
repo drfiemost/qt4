@@ -71,14 +71,14 @@ class Q_AUTOTEST_EXPORT QDeclarativeObjectMethodScriptClass : public QScriptDecl
 {
 public:
     QDeclarativeObjectMethodScriptClass(QDeclarativeEngine *);
-    ~QDeclarativeObjectMethodScriptClass();
+    ~QDeclarativeObjectMethodScriptClass() override;
 
     QScriptValue newMethod(QObject *, const QDeclarativePropertyCache::Data *);
 
 protected:
-    virtual Value call(Object *, QScriptContext *);
-    virtual QScriptClass::QueryFlags queryProperty(Object *, const Identifier &, QScriptClass::QueryFlags flags);
-    virtual Value property(Object *, const Identifier &);
+    Value call(Object *, QScriptContext *) override;
+    QScriptClass::QueryFlags queryProperty(Object *, const Identifier &, QScriptClass::QueryFlags flags) override;
+    Value property(Object *, const Identifier &) override;
 
 private:
     int enumType(const QMetaObject *, const QString &);
@@ -106,7 +106,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeObjectScriptClass : public QScriptDeclarativ
 {
 public:
     QDeclarativeObjectScriptClass(QDeclarativeEngine *);
-    ~QDeclarativeObjectScriptClass();
+    ~QDeclarativeObjectScriptClass() override;
 
     QScriptValue newQObject(QObject *, int type = QMetaType::QObjectStar);
 
@@ -128,17 +128,17 @@ public:
 
     void setProperty(QObject *, const Identifier &name, const QScriptValue &,
                      QScriptContext *context, QDeclarativeContextData *evalContext = nullptr);
-    virtual QStringList propertyNames(Object *);
-    virtual bool compare(Object *, Object *);
+    QStringList propertyNames(Object *) override;
+    bool compare(Object *, Object *) override;
 
 protected:
-    virtual QScriptClass::QueryFlags queryProperty(Object *, const Identifier &, 
-                                                   QScriptClass::QueryFlags flags);
+    QScriptClass::QueryFlags queryProperty(Object *, const Identifier &, 
+                                                   QScriptClass::QueryFlags flags) override;
 
-    virtual Value property(Object *, const Identifier &);
-    virtual void setProperty(Object *, const Identifier &name, const QScriptValue &);
-    virtual bool isQObject() const;
-    virtual QObject *toQObject(Object *, bool *ok = nullptr);
+    Value property(Object *, const Identifier &) override;
+    void setProperty(Object *, const Identifier &name, const QScriptValue &) override;
+    bool isQObject() const override;
+    QObject *toQObject(Object *, bool *ok = nullptr) override;
 
 private:
     friend class QDeclarativeObjectMethodScriptClass;

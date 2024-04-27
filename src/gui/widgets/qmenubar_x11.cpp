@@ -114,8 +114,8 @@ bool QX11MenuBar::menuBarEventFilter(QObject *, QEvent *)
 
 struct QX11MenuBarFactory : public QPlatformMenuBarFactoryInterface
 {
-    QAbstractPlatformMenuBar *create() { return new QX11MenuBar; }
-    virtual QStringList keys() const { return QStringList(); }
+    QAbstractPlatformMenuBar *create() override { return new QX11MenuBar; }
+    QStringList keys() const override { return QStringList(); }
 };
 
 QPlatformMenuBarFactoryInterface *qt_guiPlatformMenuBarFactory()

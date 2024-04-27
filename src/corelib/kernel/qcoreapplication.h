@@ -92,7 +92,7 @@ public:
         );
 #endif
 
-    ~QCoreApplication();
+    ~QCoreApplication() override;
 
 #ifdef QT_DEPRECATED
     QT_DEPRECATED static int argc();

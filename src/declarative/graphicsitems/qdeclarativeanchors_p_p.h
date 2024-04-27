@@ -122,10 +122,10 @@ public:
     void updateMe();
 
     // QDeclarativeItemGeometryListener interface
-    void itemGeometryChanged(QDeclarativeItem *, const QRectF &, const QRectF &);
+    void itemGeometryChanged(QDeclarativeItem *, const QRectF &, const QRectF &) override;
     void _q_widgetDestroyed(QObject *);
     void _q_widgetGeometryChanged();
-    QDeclarativeAnchorsPrivate *anchorPrivate() { return this; }
+    QDeclarativeAnchorsPrivate *anchorPrivate() override { return this; }
 
     bool checkHValid() const;
     bool checkVValid() const;

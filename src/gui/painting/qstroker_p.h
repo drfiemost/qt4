@@ -207,7 +207,7 @@ public:
     };
 
     QStroker();
-    ~QStroker();
+    ~QStroker() override;
 
     void setStrokeWidth(qfixed width) { m_strokeWidth = width; }
     qfixed strokeWidth() const { return m_strokeWidth; }
@@ -235,7 +235,7 @@ protected:
     static Qt::PenJoinStyle joinForJoinMode(LineJoinMode mode);
     static LineJoinMode joinModeForJoin(Qt::PenJoinStyle joinStyle);
 
-    virtual void processCurrentSubpath();
+    void processCurrentSubpath() override;
 
     qfixed m_strokeWidth;
     qfixed m_miterLimit;
@@ -265,14 +265,14 @@ public:
     void setDashOffset(qreal offset) { m_dashOffset = offset; }
     qreal dashOffset() const { return m_dashOffset; }
 
-    virtual void begin(void *data);
-    virtual void end();
+    void begin(void *data) override;
+    void end() override;
 
     inline void setStrokeWidth(qreal width) { m_stroke_width = width; }
     inline void setMiterLimit(qreal limit) { m_miter_limit = limit; }
 
 protected:
-    virtual void processCurrentSubpath();
+    void processCurrentSubpath() override;
 
     QStroker *m_stroker;
     QVector<qfixed> m_dashPattern;

@@ -290,7 +290,7 @@ class QtQrcManager : public QObject
     Q_OBJECT
 public:
     QtQrcManager(QObject *parent = nullptr);
-    ~QtQrcManager();
+    ~QtQrcManager() override;
 
     QList<QtQrcFile *> qrcFiles() const;
 

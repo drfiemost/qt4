@@ -55,11 +55,11 @@ class BookmarkDialog : public QDialog
 public:
     BookmarkDialog(BookmarkModel *bookmarkModel, const QString &title,
         const QString &url, QWidget *parent = nullptr);
-    ~BookmarkDialog();
+    ~BookmarkDialog() override;
 
 private:
     bool isRootItem(const QModelIndex &index) const;
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private slots:
     void currentIndexChanged(int index);

@@ -64,19 +64,19 @@ public:
     BuddyEditor(QDesignerFormWindowInterface *form, QWidget *parent);
 
     QDesignerFormWindowInterface *formWindow() const;
-    virtual void setBackground(QWidget *background);
-    virtual void deleteSelected();
+    void setBackground(QWidget *background) override;
+    void deleteSelected() override;
 
 public slots:
-    virtual void updateBackground();
-    virtual void widgetRemoved(QWidget *w);
+    void updateBackground() override;
+    void widgetRemoved(QWidget *w) override;
     void autoBuddy();
 
 protected:
-    virtual QWidget *widgetAt(const QPoint &pos) const;
-    virtual Connection *createConnection(QWidget *source, QWidget *destination);
-    virtual void endConnection(QWidget *target, const QPoint &pos);
-    virtual void createContextMenu(QMenu &menu);
+    QWidget *widgetAt(const QPoint &pos) const override;
+    Connection *createConnection(QWidget *source, QWidget *destination) override;
+    void endConnection(QWidget *target, const QPoint &pos) override;
+    void createContextMenu(QMenu &menu) override;
 
 private:
     QWidget *findBuddy(QLabel *l, const QWidgetList &existingBuddies) const;

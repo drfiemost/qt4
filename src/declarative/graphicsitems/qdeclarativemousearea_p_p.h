@@ -72,7 +72,7 @@ public:
     {
     }
 
-    ~QDeclarativeMouseAreaPrivate();
+    ~QDeclarativeMouseAreaPrivate() override;
 
     void init()
     {

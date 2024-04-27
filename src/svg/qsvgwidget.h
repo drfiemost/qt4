@@ -60,7 +60,7 @@ class Q_SVG_EXPORT QSvgWidget : public QWidget
 public:
     QSvgWidget(QWidget *parent=nullptr);
     QSvgWidget(const QString &file, QWidget *parent=nullptr);
-    ~QSvgWidget();
+    ~QSvgWidget() override;
 
     QSvgRenderer *renderer() const;
 

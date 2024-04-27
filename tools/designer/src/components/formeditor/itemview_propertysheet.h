@@ -61,19 +61,19 @@ class ItemViewPropertySheet: public QDesignerPropertySheet
 public:
     explicit ItemViewPropertySheet(QTreeView *treeViewObject, QObject *parent = nullptr);
     explicit ItemViewPropertySheet(QTableView *tableViewObject, QObject *parent = nullptr);
-    ~ItemViewPropertySheet();
+    ~ItemViewPropertySheet() override;
 
     QHash<QString,QString> propertyNameMap() const;
 
     // QDesignerPropertySheet
-    QVariant property(int index) const;
-    void setProperty(int index, const QVariant &value);
+    QVariant property(int index) const override;
+    void setProperty(int index, const QVariant &value) override;
 
-    virtual void setChanged(int index, bool changed);
-    virtual bool isChanged(int index) const;
+    void setChanged(int index, bool changed) override;
+    bool isChanged(int index) const override;
 
-    virtual bool hasReset(int index) const;
-    virtual bool reset(int index);
+    bool hasReset(int index) const override;
+    bool reset(int index) override;
 
 private:
     void initHeaderProperties(QHeaderView *hv, const QString &prefix);

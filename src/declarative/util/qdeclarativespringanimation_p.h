@@ -68,7 +68,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeSpringAnimation : public QDeclarativeNumberA
 
 public:
     QDeclarativeSpringAnimation(QObject *parent=nullptr);
-    ~QDeclarativeSpringAnimation();
+    ~QDeclarativeSpringAnimation() override;
 
     qreal velocity() const;
     void setVelocity(qreal velocity);
@@ -88,12 +88,12 @@ public:
     qreal modulus() const;
     void setModulus(qreal modulus);
 
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
+                            TransitionDirection direction) override;
 
 protected:
-    virtual QAbstractAnimation *qtAnimation();
+    QAbstractAnimation *qtAnimation() override;
 
 Q_SIGNALS:
     void modulusChanged();

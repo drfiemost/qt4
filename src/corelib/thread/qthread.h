@@ -65,7 +65,7 @@ public:
     static void yieldCurrentThread();
 
     explicit QThread(QObject *parent = nullptr);
-    ~QThread();
+    ~QThread() override;
 
     enum Priority {
         IdlePriority,

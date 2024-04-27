@@ -177,10 +177,10 @@ class PropertyEditorToolWindow : public QDesignerToolWindow
 public:
     explicit PropertyEditorToolWindow(QDesignerWorkbench *workbench);
 
-    virtual QRect geometryHint() const;
+    QRect geometryHint() const override;
 
 protected:
-    virtual void showEvent(QShowEvent *event);
+    void showEvent(QShowEvent *event) override;
 };
 
 PropertyEditorToolWindow::PropertyEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -234,7 +234,7 @@ class ActionEditorToolWindow: public QDesignerToolWindow
 public:
     explicit ActionEditorToolWindow(QDesignerWorkbench *workbench);
 
-    virtual QRect geometryHint() const;
+    QRect geometryHint() const override;
 };
 
 ActionEditorToolWindow::ActionEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -276,7 +276,7 @@ class ObjectInspectorToolWindow: public QDesignerToolWindow
 public:
     explicit ObjectInspectorToolWindow(QDesignerWorkbench *workbench);
 
-    virtual QRect geometryHint() const;
+    QRect geometryHint() const override;
 };
 
 ObjectInspectorToolWindow::ObjectInspectorToolWindow(QDesignerWorkbench *workbench) :
@@ -311,7 +311,7 @@ class ResourceEditorToolWindow: public QDesignerToolWindow
 public:
     explicit ResourceEditorToolWindow(QDesignerWorkbench *workbench);
 
-    virtual QRect geometryHint() const;
+    QRect geometryHint() const override;
 };
 
 ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench)  :
@@ -345,7 +345,7 @@ class SignalSlotEditorToolWindow: public QDesignerToolWindow
 public:
     explicit SignalSlotEditorToolWindow(QDesignerWorkbench *workbench);
 
-    virtual QRect geometryHint() const;
+    QRect geometryHint() const override;
 };
 
 SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -386,7 +386,7 @@ class WidgetBoxToolWindow: public QDesignerToolWindow
 public:
     explicit WidgetBoxToolWindow(QDesignerWorkbench *workbench);
 
-    virtual QRect geometryHint() const;
+    QRect geometryHint() const override;
 };
 
 WidgetBoxToolWindow::WidgetBoxToolWindow(QDesignerWorkbench *workbench) :

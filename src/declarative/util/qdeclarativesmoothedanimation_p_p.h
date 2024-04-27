@@ -82,13 +82,13 @@ public:
 
     QDeclarativeProperty target;
 
-    int duration() const;
+    int duration() const override;
     void restart();
     void init();
 
 protected:
-    virtual void updateCurrentTime(int);
-    virtual void updateState(QAbstractAnimation::State, QAbstractAnimation::State);
+    void updateCurrentTime(int) override;
+    void updateState(QAbstractAnimation::State, QAbstractAnimation::State) override;
 
 private:
     qreal easeFollow(qreal);

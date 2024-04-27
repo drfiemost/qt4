@@ -99,22 +99,22 @@ class Q_CORE_EXPORT QEventDispatcherUNIX : public QAbstractEventDispatcher
 
 public:
     explicit QEventDispatcherUNIX(QObject *parent = nullptr);
-    ~QEventDispatcherUNIX();
+    ~QEventDispatcherUNIX() override;
 
-    bool processEvents(QEventLoop::ProcessEventsFlags flags);
-    bool hasPendingEvents();
+    bool processEvents(QEventLoop::ProcessEventsFlags flags) override;
+    bool hasPendingEvents() override;
 
-    void registerSocketNotifier(QSocketNotifier *notifier);
-    void unregisterSocketNotifier(QSocketNotifier *notifier);
+    void registerSocketNotifier(QSocketNotifier *notifier) override;
+    void unregisterSocketNotifier(QSocketNotifier *notifier) override;
 
-    void registerTimer(int timerId, int interval, QObject *object);
-    bool unregisterTimer(int timerId);
-    bool unregisterTimers(QObject *object);
-    QList<TimerInfo> registeredTimers(QObject *object) const;
+    void registerTimer(int timerId, int interval, QObject *object) override;
+    bool unregisterTimer(int timerId) override;
+    bool unregisterTimers(QObject *object) override;
+    QList<TimerInfo> registeredTimers(QObject *object) const override;
 
-    void wakeUp();
-    void interrupt();
-    void flush();
+    void wakeUp() override;
+    void interrupt() override;
+    void flush() override;
 
 protected:
     QEventDispatcherUNIX(QEventDispatcherUNIXPrivate &dd, QObject *parent = nullptr);
@@ -135,7 +135,7 @@ class Q_CORE_EXPORT QEventDispatcherUNIXPrivate : public QAbstractEventDispatche
 
 public:
     QEventDispatcherUNIXPrivate();
-    ~QEventDispatcherUNIXPrivate();
+    ~QEventDispatcherUNIXPrivate() override;
 
     int doSelect(QEventLoop::ProcessEventsFlags flags, timespec *timeout);
     virtual int initThreadWakeUp();

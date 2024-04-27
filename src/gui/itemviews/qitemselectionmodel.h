@@ -173,7 +173,7 @@ public:
 
     explicit QItemSelectionModel(QAbstractItemModel *model);
     explicit QItemSelectionModel(QAbstractItemModel *model, QObject *parent);
-    virtual ~QItemSelectionModel();
+    ~QItemSelectionModel() override;
 
     QModelIndex currentIndex() const;
 

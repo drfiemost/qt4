@@ -70,7 +70,7 @@ public:
 #ifndef QT_NO_UNDOGROUP
     explicit QUndoView(QUndoGroup *group, QWidget *parent = nullptr);
 #endif
-    ~QUndoView();
+    ~QUndoView() override;
 
     QUndoStack *stack() const;
 #ifndef QT_NO_UNDOGROUP

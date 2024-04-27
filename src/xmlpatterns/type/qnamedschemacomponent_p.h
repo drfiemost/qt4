@@ -92,7 +92,7 @@ namespace QPatternist
             /**
              * Destroys the named schema component.
              */
-            virtual ~NamedSchemaComponent();
+            ~NamedSchemaComponent() override;
 
             /**
              * Sets the @p name of the schema component.

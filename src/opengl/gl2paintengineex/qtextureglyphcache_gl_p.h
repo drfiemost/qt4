@@ -104,14 +104,14 @@ class Q_OPENGL_EXPORT QGLTextureGlyphCache : public QImageTextureGlyphCache, pub
 {
 public:
     QGLTextureGlyphCache(const QGLContext *context, QFontEngineGlyphCache::Type type, const QTransform &matrix);
-    ~QGLTextureGlyphCache();
+    ~QGLTextureGlyphCache() override;
 
-    virtual void createTextureData(int width, int height);
-    virtual void resizeTextureData(int width, int height);
-    virtual void fillTexture(const Coord &c, glyph_t glyph, QFixed subPixelPosition);
-    virtual int glyphPadding() const;
-    virtual int maxTextureWidth() const;
-    virtual int maxTextureHeight() const;
+    void createTextureData(int width, int height) override;
+    void resizeTextureData(int width, int height) override;
+    void fillTexture(const Coord &c, glyph_t glyph, QFixed subPixelPosition) override;
+    int glyphPadding() const override;
+    int maxTextureWidth() const override;
+    int maxTextureHeight() const override;
 
     inline GLuint texture() const {
         QGLTextureGlyphCache *that = const_cast<QGLTextureGlyphCache *>(this);
@@ -146,11 +146,11 @@ public:
 
     void clear();
 
-    void contextDeleted(const QGLContext *context) {
+    void contextDeleted(const QGLContext *context) override {
         if (ctx == context)
             ctx = nullptr;
     }
-    void freeResource(void *) { ctx = nullptr; }
+    void freeResource(void *) override { ctx = nullptr; }
 
 private:
     QGLContextGroupResource<QGLGlyphTexture> m_textureResource;

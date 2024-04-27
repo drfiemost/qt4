@@ -57,64 +57,64 @@ public:
     static QScriptEngineAgentPrivate* get(QScriptEngineAgent* p) {return p->d_func();}
 
     QScriptEngineAgentPrivate(){}
-    virtual ~QScriptEngineAgentPrivate(){}
+    ~QScriptEngineAgentPrivate() override{}
 
     void attach();
     void detach();
 
     //scripts
-    virtual void sourceParsed(JSC::ExecState*, const JSC::SourceCode&, int /*errorLine*/, const JSC::UString& /*errorMsg*/) {}
-    virtual void scriptUnload(qint64 id)
+    void sourceParsed(JSC::ExecState*, const JSC::SourceCode&, int /*errorLine*/, const JSC::UString& /*errorMsg*/) override {}
+    void scriptUnload(qint64 id) override
     {
         q_ptr->scriptUnload(id);
     }
-    virtual void scriptLoad(qint64 id, const JSC::UString &program,
-                         const JSC::UString &fileName, int baseLineNumber)
+    void scriptLoad(qint64 id, const JSC::UString &program,
+                         const JSC::UString &fileName, int baseLineNumber) override
     {
         q_ptr->scriptLoad(id,program, fileName, baseLineNumber);
     }
 
     //exceptions
-    virtual void exception(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno, bool hasHandler)
+    void exception(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno, bool hasHandler) override
     {
         Q_UNUSED(frame);
         Q_UNUSED(sourceID);
         Q_UNUSED(lineno);
         Q_UNUSED(hasHandler);
     }
-    virtual void exceptionThrow(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, bool hasHandler);
-    virtual void exceptionCatch(const JSC::DebuggerCallFrame& frame, intptr_t sourceID);
+    void exceptionThrow(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, bool hasHandler) override;
+    void exceptionCatch(const JSC::DebuggerCallFrame& frame, intptr_t sourceID) override;
 
     //statements
-    virtual void atStatement(const JSC::DebuggerCallFrame&, intptr_t sourceID, int lineno/*, int column*/);
-    virtual void callEvent(const JSC::DebuggerCallFrame&, intptr_t sourceID, int lineno)
+    void atStatement(const JSC::DebuggerCallFrame&, intptr_t sourceID, int lineno/*, int column*/) override;
+    void callEvent(const JSC::DebuggerCallFrame&, intptr_t sourceID, int lineno) override
     {
         Q_UNUSED(lineno);
         q_ptr->contextPush();
         q_ptr->functionEntry(sourceID);
     }
-    virtual void returnEvent(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno);
-    virtual void willExecuteProgram(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno)
+    void returnEvent(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno) override;
+    void willExecuteProgram(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno) override
     {
         Q_UNUSED(frame);
         Q_UNUSED(sourceID);
         Q_UNUSED(lineno);
     }
-    virtual void didExecuteProgram(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno)
+    void didExecuteProgram(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno) override
     {
         Q_UNUSED(frame);
         Q_UNUSED(sourceID);
         Q_UNUSED(lineno);
     }
-    virtual void functionExit(const JSC::JSValue& returnValue, intptr_t sourceID);
+    void functionExit(const JSC::JSValue& returnValue, intptr_t sourceID) override;
     //others
-    virtual void didReachBreakpoint(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno/*, int column*/);
+    void didReachBreakpoint(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno/*, int column*/) override;
 
-    virtual void evaluateStart(intptr_t sourceID)
+    void evaluateStart(intptr_t sourceID) override
     {
         q_ptr->functionEntry(sourceID);
     }
-    virtual void evaluateStop(const JSC::JSValue& returnValue, intptr_t sourceID);
+    void evaluateStop(const JSC::JSValue& returnValue, intptr_t sourceID) override;
 
     QScriptEnginePrivate *engine;
     QScriptEngineAgent *q_ptr;

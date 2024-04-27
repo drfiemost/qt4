@@ -274,7 +274,7 @@ class MorphWidgetCommand : public QDesignerFormWindowCommand
 public:
 
     explicit MorphWidgetCommand(QDesignerFormWindowInterface *formWindow);
-    ~MorphWidgetCommand();
+    ~MorphWidgetCommand() override;
 
     // Convenience to add a morph command sequence macro
     static bool addMorphMacro(QDesignerFormWindowInterface *formWindow, QWidget *w, const QString &newClass);
@@ -283,8 +283,8 @@ public:
 
     QString newWidgetName() const { return m_afterWidget->objectName(); }
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 
     static QStringList candidateClasses(QDesignerFormWindowInterface *fw, QWidget *w);
 

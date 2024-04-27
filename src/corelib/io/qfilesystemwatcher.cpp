@@ -114,12 +114,12 @@ class QPollingFileSystemWatcherEngine : public QFileSystemWatcherEngine
 public:
     QPollingFileSystemWatcherEngine();
 
-    void run();
+    void run() override;
 
-    QStringList addPaths(const QStringList &paths, QStringList *files, QStringList *directories);
-    QStringList removePaths(const QStringList &paths, QStringList *files, QStringList *directories);
+    QStringList addPaths(const QStringList &paths, QStringList *files, QStringList *directories) override;
+    QStringList removePaths(const QStringList &paths, QStringList *files, QStringList *directories) override;
 
-    void stop();
+    void stop() override;
 
 private Q_SLOTS:
     void timeout();

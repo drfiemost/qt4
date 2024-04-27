@@ -349,8 +349,8 @@ class QDummyWindowSurface : public QWindowSurface
 {
 public:
     QDummyWindowSurface(QWidget *window) : QWindowSurface(window) {}
-    QPaintDevice *paintDevice() { return window(); }
-    void flush(QWidget *, const QRegion &, const QPoint &) {}
+    QPaintDevice *paintDevice() override { return window(); }
+    void flush(QWidget *, const QRegion &, const QPoint &) override {}
 };
 
 QWindowSurface *QWidgetPrivate::createDefaultWindowSurface()

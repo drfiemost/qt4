@@ -100,7 +100,7 @@ class Q_DBUS_EXPORT QDBusPendingCallWatcher: public QObject, public QDBusPending
     Q_OBJECT
 public:
     explicit QDBusPendingCallWatcher(const QDBusPendingCall &call, QObject *parent = nullptr);
-    ~QDBusPendingCallWatcher();
+    ~QDBusPendingCallWatcher() override;
 
 #ifdef Q_QDOC
     // trick qdoc into thinking this method is here

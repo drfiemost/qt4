@@ -63,27 +63,27 @@ class LiveSelectionTool : public AbstractLiveEditTool
 
 public:
     LiveSelectionTool(QDeclarativeViewInspector* editorView);
-    ~LiveSelectionTool();
+    ~LiveSelectionTool() override;
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *) {}
-    void hoverMoveEvent(QMouseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *) {}
-    void wheelEvent(QWheelEvent *event);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *) override {}
+    void hoverMoveEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *) override {}
+    void wheelEvent(QWheelEvent *event) override;
 
-    void itemsAboutToRemoved(const QList<QGraphicsItem*> &) {}
+    void itemsAboutToRemoved(const QList<QGraphicsItem*> &) override {}
 //    QVariant itemChange(const QList<QGraphicsItem*> &itemList,
 //                        QGraphicsItem::GraphicsItemChange change,
 //                        const QVariant &value );
 
 //    void update();
 
-    void clear();
+    void clear() override;
 
-    void selectedItemsChanged(const QList<QGraphicsItem*> &itemList);
+    void selectedItemsChanged(const QList<QGraphicsItem*> &itemList) override;
 
     void selectUnderPoint(QMouseEvent *event);
 

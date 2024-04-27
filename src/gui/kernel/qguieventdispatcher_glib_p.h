@@ -66,12 +66,12 @@ class QGuiEventDispatcherGlib : public QEventDispatcherGlib
 
 public:
     explicit QGuiEventDispatcherGlib(QObject *parent = nullptr);
-    ~QGuiEventDispatcherGlib();
+    ~QGuiEventDispatcherGlib() override;
 
-    bool processEvents(QEventLoop::ProcessEventsFlags flags);
+    bool processEvents(QEventLoop::ProcessEventsFlags flags) override;
 
-    void startingUp();
-    void flush();
+    void startingUp() override;
+    void flush() override;
 };
 
 QT_END_NAMESPACE

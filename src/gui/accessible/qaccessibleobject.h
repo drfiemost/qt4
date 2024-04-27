@@ -59,20 +59,20 @@ class Q_GUI_EXPORT QAccessibleObject : public QAccessibleInterface
 public:
     explicit QAccessibleObject(QObject *object);
 
-    bool isValid() const;
-    QObject *object() const;
+    bool isValid() const override;
+    QObject *object() const override;
 
     // properties
-    QRect rect(int child) const;
-    void setText(Text t, int child, const QString &text);
+    QRect rect(int child) const override;
+    void setText(Text t, int child, const QString &text) override;
 
     // actions
-    int userActionCount(int child) const;
-    bool doAction(int action, int child, const QVariantList &params);
-    QString actionText(int action, Text t, int child) const;
+    int userActionCount(int child) const override;
+    bool doAction(int action, int child, const QVariantList &params) override;
+    QString actionText(int action, Text t, int child) const override;
 
 protected:
-    virtual ~QAccessibleObject();
+    ~QAccessibleObject() override;
 
 private:
     friend class QAccessibleObjectEx;
@@ -85,20 +85,20 @@ class Q_GUI_EXPORT QAccessibleObjectEx : public QAccessibleInterfaceEx
 public:
     explicit QAccessibleObjectEx(QObject *object);
 
-    bool isValid() const;
-    QObject *object() const;
+    bool isValid() const override;
+    QObject *object() const override;
 
     // properties
-    QRect rect(int child) const;
-    void setText(Text t, int child, const QString &text);
+    QRect rect(int child) const override;
+    void setText(Text t, int child, const QString &text) override;
 
     // actions
-    int userActionCount(int child) const;
-    bool doAction(int action, int child, const QVariantList &params);
-    QString actionText(int action, Text t, int child) const;
+    int userActionCount(int child) const override;
+    bool doAction(int action, int child, const QVariantList &params) override;
+    QString actionText(int action, Text t, int child) const override;
 
 protected:
-    virtual ~QAccessibleObjectEx();
+    ~QAccessibleObjectEx() override;
 
 private:
     QAccessibleObjectPrivate *d;
@@ -111,23 +111,23 @@ public:
     QAccessibleApplication();
 
     // relations
-    int childCount() const;
-    int indexOfChild(const QAccessibleInterface*) const;
-    Relation relationTo(int, const QAccessibleInterface *, int) const;
+    int childCount() const override;
+    int indexOfChild(const QAccessibleInterface*) const override;
+    Relation relationTo(int, const QAccessibleInterface *, int) const override;
 
     // navigation
-    int childAt(int x, int y) const;
-    int navigate(RelationFlag, int, QAccessibleInterface **) const;
+    int childAt(int x, int y) const override;
+    int navigate(RelationFlag, int, QAccessibleInterface **) const override;
 
     // properties and state
-    QString text(Text t, int child) const;
-    Role role(int child) const;
-    State state(int child) const;
+    QString text(Text t, int child) const override;
+    Role role(int child) const override;
+    State state(int child) const override;
 
     // actions
-    int userActionCount(int child) const;
-    bool doAction(int action, int child, const QVariantList &params);
-    QString actionText(int action, Text t, int child) const;
+    int userActionCount(int child) const override;
+    bool doAction(int action, int child, const QVariantList &params) override;
+    QString actionText(int action, Text t, int child) const override;
 };
 
 #endif // QT_NO_ACCESSIBILITY

@@ -71,7 +71,7 @@ public:
     };
 
     QtTreePropertyBrowser(QWidget *parent = nullptr);
-    ~QtTreePropertyBrowser();
+    ~QtTreePropertyBrowser() override;
 
     int indentation() const;
     void setIndentation(int i);
@@ -112,9 +112,9 @@ Q_SIGNALS:
     void expanded(QtBrowserItem *item);
 
 protected:
-    virtual void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem);
-    virtual void itemRemoved(QtBrowserItem *item);
-    virtual void itemChanged(QtBrowserItem *item);
+    void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem) override;
+    void itemRemoved(QtBrowserItem *item) override;
+    void itemChanged(QtBrowserItem *item) override;
 
 private:
 

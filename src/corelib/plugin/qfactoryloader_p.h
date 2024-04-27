@@ -72,7 +72,7 @@ public:
     QFactoryLoader(const char *iid,
                    const QString &suffix = QString(),
                    Qt::CaseSensitivity = Qt::CaseSensitive);
-    ~QFactoryLoader();
+    ~QFactoryLoader() override;
 
     QStringList keys() const;
     QObject *instance(const QString &key) const;

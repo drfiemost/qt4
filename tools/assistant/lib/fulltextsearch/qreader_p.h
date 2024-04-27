@@ -85,7 +85,7 @@ public:
     QCLuceneStringReader(const QString &value, qint32 length);
     QCLuceneStringReader(const QString &value, qint32 length, bool copyData);
 
-    ~QCLuceneStringReader();
+    ~QCLuceneStringReader() override;
 
 private:
     TCHAR *string;
@@ -96,7 +96,7 @@ class QHELP_EXPORT QCLuceneFileReader : public QCLuceneReader
 public:
     QCLuceneFileReader(const QString &path, const QString &encoding,
                        qint32 cacheLength = 13, qint32 cacheBuffer = 14);
-    ~QCLuceneFileReader();
+    ~QCLuceneFileReader() override;
 };
 
 QT_END_NAMESPACE

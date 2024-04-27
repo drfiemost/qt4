@@ -286,7 +286,7 @@ public:
         }
     }
 
-    void mirrorChange() {
+    void mirrorChange() override {
         regenerate();
     }
 
@@ -482,7 +482,7 @@ public:
         }
     }
 
-    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) {
+    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) override {
         Q_Q(QDeclarativeListView);
         QDeclarativeFlickablePrivate::itemGeometryChanged(item, newGeometry, oldGeometry);
         if (!q->isComponentComplete())
@@ -535,9 +535,9 @@ public:
     void updateFooter();
     void fixupPosition();
     void positionViewAtIndex(int index, int mode);
-    virtual void fixup(AxisData &data, qreal minExtent, qreal maxExtent);
-    virtual void flick(QDeclarativeFlickablePrivate::AxisData &data, qreal minExtent, qreal maxExtent, qreal vSize,
-                        QDeclarativeTimeLineCallback::Callback fixupCallback, qreal velocity);
+    void fixup(AxisData &data, qreal minExtent, qreal maxExtent) override;
+    void flick(QDeclarativeFlickablePrivate::AxisData &data, qreal minExtent, qreal maxExtent, qreal vSize,
+                        QDeclarativeTimeLineCallback::Callback fixupCallback, qreal velocity) override;
 
     QDeclarativeGuard<QDeclarativeVisualModel> model;
     QVariant modelVariant;

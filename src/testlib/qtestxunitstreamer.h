@@ -54,14 +54,14 @@ class QTestXunitStreamer: public QTestBasicStreamer
 {
     public:
         QTestXunitStreamer();
-        ~QTestXunitStreamer();
+        ~QTestXunitStreamer() override;
 
-        void formatStart(const QTestElement *element, QTestCharBuffer *formatted) const;
-        void formatEnd(const QTestElement *element, QTestCharBuffer *formatted) const;
-        void formatAfterAttributes(const QTestElement *element, QTestCharBuffer *formatted) const;
-        void formatAttributes(const QTestElement *element, const QTestElementAttribute *attribute, QTestCharBuffer *formatted) const;
-        void output(QTestElement *element) const;
-        void outputElements(QTestElement *element, bool isChildElement = false) const;
+        void formatStart(const QTestElement *element, QTestCharBuffer *formatted) const override;
+        void formatEnd(const QTestElement *element, QTestCharBuffer *formatted) const override;
+        void formatAfterAttributes(const QTestElement *element, QTestCharBuffer *formatted) const override;
+        void formatAttributes(const QTestElement *element, const QTestElementAttribute *attribute, QTestCharBuffer *formatted) const override;
+        void output(QTestElement *element) const override;
+        void outputElements(QTestElement *element, bool isChildElement = false) const override;
 
     private:
         void displayXunitXmlHeader() const;

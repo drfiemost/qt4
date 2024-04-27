@@ -78,11 +78,11 @@ public:
     static void displayResourceFailures(const QString &logOutput, QDesignerDialogGuiInterface *dlgGui, QWidget *parent = nullptr);
 
 public slots:
-    virtual void accept();
+    void accept() override;
 
 private:
     QtResourceEditorDialog(QDesignerFormEditorInterface *core, QDesignerDialogGuiInterface *dlgGui, QWidget *parent = nullptr);
-    ~QtResourceEditorDialog();
+    ~QtResourceEditorDialog() override;
 
     QScopedPointer<class QtResourceEditorDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceEditorDialog)

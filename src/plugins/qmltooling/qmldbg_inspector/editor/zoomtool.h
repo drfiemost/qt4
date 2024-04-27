@@ -61,24 +61,24 @@ public:
 
     explicit ZoomTool(QDeclarativeViewInspector *view);
 
-    virtual ~ZoomTool();
+    ~ZoomTool() override;
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
-    void hoverMoveEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *event);
+    void hoverMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *keyEvent);
-    void itemsAboutToRemoved(const QList<QGraphicsItem*> &) {}
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *keyEvent) override;
+    void itemsAboutToRemoved(const QList<QGraphicsItem*> &) override {}
 
-    void clear();
+    void clear() override;
 
 protected:
-    void selectedItemsChanged(const QList<QGraphicsItem*> &) {}
+    void selectedItemsChanged(const QList<QGraphicsItem*> &) override {}
 
 private slots:
     void zoomTo100();

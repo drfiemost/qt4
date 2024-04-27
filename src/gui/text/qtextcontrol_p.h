@@ -95,7 +95,7 @@ public:
     explicit QTextControl(QObject *parent = nullptr);
     explicit QTextControl(const QString &text, QObject *parent = nullptr);
     explicit QTextControl(QTextDocument *doc, QObject *parent = nullptr);
-    virtual ~QTextControl();
+    ~QTextControl() override;
 
     void setDocument(QTextDocument *document);
     QTextDocument *document() const;
@@ -253,9 +253,9 @@ public:
     bool findNextPrevAnchor(const QTextCursor& from, bool next, QTextCursor& newAnchor);
 
 protected:
-    virtual void timerEvent(QTimerEvent *e);
+    void timerEvent(QTimerEvent *e) override;
 
-    virtual bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QTextControl)
@@ -290,9 +290,9 @@ class QTextEditMimeData : public QMimeData
 public:
     inline QTextEditMimeData(const QTextDocumentFragment &aFragment) : fragment(aFragment) {}
 
-    virtual QStringList formats() const;
+    QStringList formats() const override;
 protected:
-    virtual QVariant retrieveData(const QString &mimeType, QVariant::Type type) const;
+    QVariant retrieveData(const QString &mimeType, QVariant::Type type) const override;
 private:
     void setup() const;
 

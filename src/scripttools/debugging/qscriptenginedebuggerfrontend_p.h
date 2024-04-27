@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QScriptEngineDebuggerFrontend
 {
 public:
     QScriptEngineDebuggerFrontend();
-    ~QScriptEngineDebuggerFrontend();
+    ~QScriptEngineDebuggerFrontend() override;
 
     void attachTo(QScriptEngine *engine);
     void detach();
@@ -77,7 +77,7 @@ public:
     QScriptDebuggerBackend *backend() const;
 
 protected:
-    void processCommand(int id, const QScriptDebuggerCommand &command);
+    void processCommand(int id, const QScriptDebuggerCommand &command) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptEngineDebuggerFrontend)

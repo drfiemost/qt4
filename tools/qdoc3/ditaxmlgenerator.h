@@ -254,13 +254,13 @@ class DitaXmlGenerator : public PageGenerator
 
  public:
     DitaXmlGenerator();
-    ~DitaXmlGenerator();
+    ~DitaXmlGenerator() override;
 
-    virtual void initializeGenerator(const Config& config);
-    virtual void terminateGenerator();
-    virtual QString format();
-    virtual bool canHandleFormat(const QString& format);
-    virtual void generateTree(const Tree *tree);
+    void initializeGenerator(const Config& config) override;
+    void terminateGenerator() override;
+    QString format() override;
+    bool canHandleFormat(const QString& format) override;
+    void generateTree(const Tree *tree) override;
 
     QString protectEnc(const QString& string);
     static QString protect(const QString& string, const QString& encoding = "ISO-8859-1");
@@ -268,13 +268,13 @@ class DitaXmlGenerator : public PageGenerator
     static QString sinceTitle(int i) { return sinceTitles[i]; }
 
  protected:
-    virtual void startText(const Node* relative, CodeMarker* marker);
-    virtual int generateAtom(const Atom* atom, 
+    void startText(const Node* relative, CodeMarker* marker) override;
+    int generateAtom(const Atom* atom, 
                              const Node* relative,
-                             CodeMarker* marker);
-    virtual void generateClassLikeNode(const InnerNode* inner, CodeMarker* marker);
-    virtual void generateFakeNode(const FakeNode* fake, CodeMarker* marker);
-    virtual QString fileExtension(const Node* node) const;
+                             CodeMarker* marker) override;
+    void generateClassLikeNode(const InnerNode* inner, CodeMarker* marker) override;
+    void generateFakeNode(const FakeNode* fake, CodeMarker* marker) override;
+    QString fileExtension(const Node* node) const override;
     virtual QString refForNode(const Node* node);
     virtual QString guidForNode(const Node* node);
     virtual QString linkForNode(const Node* node, const Node* relative);
@@ -375,7 +375,7 @@ class DitaXmlGenerator : public PageGenerator
     void generateDetailedQmlMember(const Node* node,
                                    const InnerNode* relative,
                                    CodeMarker* marker);
-    void generateQmlInherits(const QmlClassNode* cn, CodeMarker* marker);
+    void generateQmlInherits(const QmlClassNode* cn, CodeMarker* marker) override;
     void generateQmlInheritedBy(const QmlClassNode* cn, CodeMarker* marker);
     void generateQmlInstantiates(const QmlClassNode* qcn, CodeMarker* marker);
     void generateInstantiatedBy(const ClassNode* cn, CodeMarker* marker);
@@ -406,7 +406,7 @@ class DitaXmlGenerator : public PageGenerator
     void generateStatus(const Node* node, CodeMarker* marker);
     
     QString registerRef(const QString& ref);
-    QString fileBase(const Node *node) const;
+    QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
     void findAllClasses(const InnerNode *node);
     void findAllFunctions(const InnerNode *node);
@@ -431,9 +431,9 @@ class DitaXmlGenerator : public PageGenerator
     QString lookupGuid(QString text);
     QString lookupGuid(const QString& fileName, const QString& text);
     GuidMap* lookupGuidMap(const QString& fileName);
-    virtual void beginSubPage(const Location& location, const QString& fileName);
-    virtual void endSubPage();
-    virtual void generateInnerNode(const InnerNode* node);
+    void beginSubPage(const Location& location, const QString& fileName) override;
+    void endSubPage() override;
+    void generateInnerNode(const InnerNode* node) override;
     QXmlStreamWriter& xmlWriter();
     void writeApiDesc(const Node* node, CodeMarker* marker, const QString& title);
     void addLink(const QString& href, const QStringRef& text, DitaTag t = DT_xref);

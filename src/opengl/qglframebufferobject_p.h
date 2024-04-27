@@ -111,11 +111,11 @@ public:
 class QGLFBOGLPaintDevice : public QGLPaintDevice
 {
 public:
-    virtual QPaintEngine* paintEngine() const {return fbo->paintEngine();}
-    virtual QSize size() const {return fbo->size();}
-    virtual QGLContext* context() const;
-    virtual QGLFormat format() const {return fboFormat;}
-    virtual bool alphaRequested() const { return reqAlpha; }
+    QPaintEngine* paintEngine() const override {return fbo->paintEngine();}
+    QSize size() const override {return fbo->size();}
+    QGLContext* context() const override;
+    QGLFormat format() const override {return fboFormat;}
+    bool alphaRequested() const override { return reqAlpha; }
 
     void setFBO(QGLFramebufferObject* f,
                 QGLFramebufferObject::Attachment attachment);

@@ -64,7 +64,7 @@ class QDeclarativeViewInspectorPrivate : public QObject
     Q_OBJECT
 public:
     QDeclarativeViewInspectorPrivate(QDeclarativeViewInspector *);
-    ~QDeclarativeViewInspectorPrivate();
+    ~QDeclarativeViewInspectorPrivate() override;
 
     QDeclarativeView *view;
     QDeclarativeViewInspector *q;

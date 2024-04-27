@@ -71,7 +71,7 @@ class QGraphicsSceneIndexRectIntersector : public QGraphicsSceneIndexIntersector
 {
 public:
     bool intersect(const QGraphicsItem *item, const QRectF &exposeRect, Qt::ItemSelectionMode mode,
-                   const QTransform &deviceTransform) const
+                   const QTransform &deviceTransform) const override
     {
         QRectF brect = item->boundingRect();
         _q_adjustRect(&brect);
@@ -124,7 +124,7 @@ class QGraphicsSceneIndexPointIntersector : public QGraphicsSceneIndexIntersecto
 {
 public:
     bool intersect(const QGraphicsItem *item, const QRectF &exposeRect, Qt::ItemSelectionMode mode,
-                   const QTransform &deviceTransform) const
+                   const QTransform &deviceTransform) const override
     {
         QRectF brect = item->boundingRect();
         _q_adjustRect(&brect);
@@ -170,7 +170,7 @@ class QGraphicsSceneIndexPathIntersector : public QGraphicsSceneIndexIntersector
 {
 public:
     bool intersect(const QGraphicsItem *item, const QRectF &exposeRect, Qt::ItemSelectionMode mode,
-                   const QTransform &deviceTransform) const
+                   const QTransform &deviceTransform) const override
     {
         QRectF brect = item->boundingRect();
         _q_adjustRect(&brect);

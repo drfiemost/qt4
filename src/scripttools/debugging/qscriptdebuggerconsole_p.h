@@ -72,7 +72,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerConsole
 {
 public:
     QScriptDebuggerConsole();
-    ~QScriptDebuggerConsole();
+    ~QScriptDebuggerConsole() override;
 
     void loadScriptedCommands(const QString &scriptsPath,
                               QScriptMessageHandlerInterface *messageHandler);
@@ -90,9 +90,9 @@ public:
     void setIncompleteInput(const QString &input);
     QString commandPrefix() const;
 
-    int historyCount() const;
-    QString historyAt(int index) const;
-    void changeHistoryAt(int index, const QString &newHistory);
+    int historyCount() const override;
+    QString historyAt(int index) const override;
+    void changeHistoryAt(int index, const QString &newHistory) override;
 
     int currentFrameIndex() const;
     void setCurrentFrameIndex(int index);

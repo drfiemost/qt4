@@ -79,7 +79,7 @@ class Q_NETWORK_EXPORT QBearerEngine : public QObject
 
 public:
     explicit QBearerEngine(QObject *parent = nullptr);
-    virtual ~QBearerEngine();
+    ~QBearerEngine() override;
 
     virtual bool hasIdentifier(const QString &id) = 0;
 

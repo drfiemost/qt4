@@ -74,18 +74,18 @@ namespace QPatternist
     class DoubleMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -95,18 +95,18 @@ namespace QPatternist
     class FloatMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -116,18 +116,18 @@ namespace QPatternist
     class DecimalMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -137,18 +137,18 @@ namespace QPatternist
     class IntegerMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -158,12 +158,12 @@ namespace QPatternist
     class DateMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -173,10 +173,10 @@ namespace QPatternist
     class SchemaTimeMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -186,12 +186,12 @@ namespace QPatternist
     class DateTimeMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
     /**
      * @author Frans Englich <frans.englich@nokia.com>
@@ -200,22 +200,22 @@ namespace QPatternist
     class DayTimeDurationMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -225,20 +225,20 @@ namespace QPatternist
     class YearMonthDurationMathematicianLocator : public AtomicMathematicianLocator
     {
         using AtomicMathematicianLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *, const qint16 op,
+                                                   const SourceLocationReflection *const r) const override;
     };
 }
 

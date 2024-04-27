@@ -57,10 +57,10 @@ class QDeclarativeInspectorPlugin : public QObject, public QDeclarativeInspector
 
 public:
     QDeclarativeInspectorPlugin();
-    ~QDeclarativeInspectorPlugin();
+    ~QDeclarativeInspectorPlugin() override;
 
-    void activate();
-    void deactivate();
+    void activate() override;
+    void deactivate() override;
 
 private:
     QPointer<AbstractViewInspector> m_inspector;

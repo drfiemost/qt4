@@ -61,7 +61,7 @@ class Q_CORE_EXPORT QTranslator : public QObject
 public:
     explicit QTranslator(QObject *parent = nullptr);
 
-    ~QTranslator();
+    ~QTranslator() override;
 
     // ### Qt 5: Merge (with "int n = -1")
     virtual QString translate(const char *context, const char *sourceText,

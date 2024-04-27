@@ -75,8 +75,8 @@ private slots:
     void saveSettings();
 
 protected:
-    void showEvent(QShowEvent *event);
-    void closeEvent(QCloseEvent *event);
+    void showEvent(QShowEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
 signals:
     void opened();

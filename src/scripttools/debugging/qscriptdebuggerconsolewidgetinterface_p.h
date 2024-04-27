@@ -74,7 +74,7 @@ public:
         PartialInputMode
     };
 
-    ~QScriptDebuggerConsoleWidgetInterface();
+    ~QScriptDebuggerConsoleWidgetInterface() override;
 
     QScriptDebuggerConsoleHistorianInterface *commandHistorian() const;
     void setCommandHistorian(QScriptDebuggerConsoleHistorianInterface *historian);

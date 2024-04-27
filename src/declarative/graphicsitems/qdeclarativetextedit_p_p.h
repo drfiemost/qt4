@@ -85,9 +85,9 @@ public:
     void updateSelection();
     bool determineHorizontalAlignment();
     bool setHAlign(QDeclarativeTextEdit::HAlignment, bool forceAlign = false);
-    void mirrorChange();
-    qreal implicitWidth() const;
-    void focusChanged(bool);
+    void mirrorChange() override;
+    qreal implicitWidth() const override;
+    void focusChanged(bool) override;
 
     QString text;
     QFont font;

@@ -181,7 +181,7 @@ protected:
     QLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, LayoutHelper *helper, QObject *parent = nullptr);
 
 public:
-    virtual ~QLayoutSupport();
+    ~QLayoutSupport() override;
 
     inline QDesignerFormWindowInterface *formWindow() const   { return m_formWindow; }
 
@@ -189,19 +189,19 @@ public:
     LayoutHelper* helper() const                              { return m_helper; }
 
     // DecorationExtension
-    virtual int currentIndex() const                          { return m_currentIndex; }
+    int currentIndex() const override                          { return m_currentIndex; }
 
-    virtual InsertMode currentInsertMode() const              { return m_currentInsertMode; }
+    InsertMode currentInsertMode() const override              { return m_currentInsertMode; }
 
-    virtual QPair<int, int> currentCell() const               { return m_currentCell; }
+    QPair<int, int> currentCell() const override               { return m_currentCell; }
 
-    virtual int findItemAt(const QPoint &pos) const;
-    virtual int indexOf(QWidget *widget) const;
-    virtual int indexOf(QLayoutItem *item) const;
+    int findItemAt(const QPoint &pos) const override;
+    int indexOf(QWidget *widget) const override;
+    int indexOf(QLayoutItem *item) const override;
 
-    virtual void adjustIndicator(const QPoint &pos, int index);
+    void adjustIndicator(const QPoint &pos, int index) override;
 
-    virtual QList<QWidget*> widgets(QLayout *layout) const;
+    QList<QWidget*> widgets(QLayout *layout) const override;
 
     // Pad empty cells with dummy spacers. Called by layouting commands.
     static void createEmptyCells(QGridLayout *gridLayout);
@@ -229,7 +229,7 @@ protected:
     virtual QRect extendedGeometry(int index) const = 0;
     virtual bool supportsIndicatorOrientation(Qt::Orientation indicatorOrientation) const = 0;
 
-    QRect itemInfo(int index) const;
+    QRect itemInfo(int index) const override;
     QLayout *layout() const;
     QGridLayout *gridLayout() const;
     QWidget *widget() const              { return m_widget; }
@@ -276,8 +276,8 @@ public:
     inline QDesignerFormWindowInterface *formWindow() const    { return m_formWindow; }
 
 protected:
-    virtual bool event(QEvent *e);
-    virtual void paintEvent(QPaintEvent *e);
+    bool event(QEvent *e) override;
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

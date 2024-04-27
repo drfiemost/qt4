@@ -58,7 +58,7 @@ class QScriptDebuggerCodeFinderWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerCodeFinderWidget)
 public:
     QScriptDebuggerCodeFinderWidgetPrivate();
-    ~QScriptDebuggerCodeFinderWidgetPrivate();
+    ~QScriptDebuggerCodeFinderWidgetPrivate() override;
 
     // private slots
     void _q_updateButtons();

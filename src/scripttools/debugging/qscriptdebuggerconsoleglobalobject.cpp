@@ -57,7 +57,7 @@ class QScriptDebuggerConsoleGlobalObjectPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerConsoleGlobalObject)
 public:
     QScriptDebuggerConsoleGlobalObjectPrivate();
-    ~QScriptDebuggerConsoleGlobalObjectPrivate();
+    ~QScriptDebuggerConsoleGlobalObjectPrivate() override;
 
     QScriptDebuggerCommandSchedulerInterface *scheduler;
     QScriptDebuggerResponseHandlerInterface *responseHandler;

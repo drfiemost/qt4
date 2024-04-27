@@ -73,12 +73,12 @@ private:
         explicit CompleterModel(QObject *parent)
           : QAbstractListModel(parent) {}
 
-        int rowCount(const QModelIndex &parent = QModelIndex()) const
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override
         {
             return parent.isValid() ? 0 : termList.size();
         }
 
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
         {
             if (!index.isValid() || index.row() >= termList.count()||
                 (role != Qt::EditRole && role != Qt::DisplayRole))
@@ -114,7 +114,7 @@ private:
         atLeastQuery = nullptr;
     }
 
-    ~QHelpSearchQueryWidgetPrivate()
+    ~QHelpSearchQueryWidgetPrivate() override
     {
         // nothing todo
     }

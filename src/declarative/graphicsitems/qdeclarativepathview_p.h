@@ -84,7 +84,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathView : public QDeclarativeItem
 
 public:
     QDeclarativePathView(QDeclarativeItem *parent=nullptr);
-    virtual ~QDeclarativePathView();
+    ~QDeclarativePathView() override;
 
     QVariant model() const;
     void setModel(const QVariant &);
@@ -167,13 +167,13 @@ Q_SIGNALS:
     void flickEnded();
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override;
     bool sendMouseEvent(QGraphicsSceneMouseEvent *event);
-    bool sceneEventFilter(QGraphicsItem *, QEvent *);
-    bool event(QEvent *event);
-    void componentComplete();
+    bool sceneEventFilter(QGraphicsItem *, QEvent *) override;
+    bool event(QEvent *event) override;
+    void componentComplete() override;
 
 private Q_SLOTS:
     void refill();
@@ -204,7 +204,7 @@ class QDeclarativePathViewAttached : public QObject
 
 public:
     QDeclarativePathViewAttached(QObject *parent);
-    ~QDeclarativePathViewAttached();
+    ~QDeclarativePathViewAttached() override;
 
     QDeclarativePathView *view() { return m_view; }
 

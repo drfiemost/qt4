@@ -66,7 +66,7 @@ class QDBusAbstractInterfacePrivate;
 class Q_DBUS_EXPORT QDBusAbstractInterfaceBase: public QObject
 {
 public:
-    int qt_metacall(QMetaObject::Call, int, void**);
+    int qt_metacall(QMetaObject::Call, int, void**) override;
 protected:
     QDBusAbstractInterfaceBase(QDBusAbstractInterfacePrivate &dd, QObject *parent);
 private:
@@ -83,7 +83,7 @@ class Q_DBUS_EXPORT QDBusAbstractInterface:
     Q_OBJECT
 
 public:
-    virtual ~QDBusAbstractInterface();
+    ~QDBusAbstractInterface() override;
     bool isValid() const;
 
     QDBusConnection connection() const;
@@ -146,8 +146,8 @@ protected:
                            const QDBusConnection &connection, QObject *parent);
     QDBusAbstractInterface(QDBusAbstractInterfacePrivate &, QObject *parent);
 
-    void connectNotify(const char *signal);
-    void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
     QVariant internalPropGet(const char *propname) const;
     void internalPropSet(const char *propname, const QVariant &value);
     QDBusMessage internalConstCall(QDBus::CallMode mode,

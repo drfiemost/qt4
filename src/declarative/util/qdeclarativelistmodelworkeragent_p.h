@@ -75,7 +75,7 @@ class QDeclarativeListModelWorkerAgent : public QObject
 
 public:
     QDeclarativeListModelWorkerAgent(QDeclarativeListModel *);
-    ~QDeclarativeListModelWorkerAgent();
+    ~QDeclarativeListModelWorkerAgent() override;
 
     void setScriptEngine(QScriptEngine *eng);
     QScriptEngine *scriptEngine() const;
@@ -112,7 +112,7 @@ public:
         QDeclarativeListModelWorkerAgent *a;
     };
 protected:
-    virtual bool event(QEvent *);
+    bool event(QEvent *) override;
 
 private:
     friend class QDeclarativeWorkerScriptEnginePrivate;

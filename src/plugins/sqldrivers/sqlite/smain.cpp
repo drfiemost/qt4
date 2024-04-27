@@ -50,8 +50,8 @@ class QSQLiteDriverPlugin : public QSqlDriverPlugin
 public:
     QSQLiteDriverPlugin();
 
-    QSqlDriver* create(const QString &);
-    QStringList keys() const;
+    QSqlDriver* create(const QString &) override;
+    QStringList keys() const override;
 };
 
 QSQLiteDriverPlugin::QSQLiteDriverPlugin()

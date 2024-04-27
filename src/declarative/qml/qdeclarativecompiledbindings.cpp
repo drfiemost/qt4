@@ -207,17 +207,17 @@ class QDeclarativeCompiledBindingsPrivate : public QObjectPrivate
 
 public:
     QDeclarativeCompiledBindingsPrivate();
-    virtual ~QDeclarativeCompiledBindingsPrivate();
+    ~QDeclarativeCompiledBindingsPrivate() override;
 
     struct Binding : public QDeclarativeAbstractBinding, public QDeclarativeDelayedError {
         Binding() : enabled(false), updating(0), property(0),
                     scope(nullptr), target(nullptr), parent(nullptr) {}
 
         // Inherited from QDeclarativeAbstractBinding
-        virtual void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags flags);
-        virtual void update(QDeclarativePropertyPrivate::WriteFlags flags);
-        virtual void destroy(DestroyMode mode);
-        virtual void disconnect(DisconnectMode disconnectMode);
+        void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags flags) override;
+        void update(QDeclarativePropertyPrivate::WriteFlags flags) override;
+        void destroy(DestroyMode mode) override;
+        void disconnect(DisconnectMode disconnectMode) override;
 
         int index:30;
         bool enabled:1;

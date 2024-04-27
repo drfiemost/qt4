@@ -94,7 +94,7 @@ class Q_CORE_EXPORT ThreadEngineBase: public QRunnable
 public:
     // Public API:
     ThreadEngineBase();
-    virtual ~ThreadEngineBase();
+    ~ThreadEngineBase() override;
     void startSingleThreaded();
     void startBlocking();
     void startThread();
@@ -116,7 +116,7 @@ private:
     void startThreads();
     void threadExit();
     bool threadThrottleExit();
-    void run();
+    void run() override;
     virtual void asynchronousFinish() = 0;
 #ifndef QT_NO_EXCEPTIONS
     void handleException(const QtConcurrent::Exception &exception);
@@ -176,7 +176,7 @@ public:
         return future;
     }
 
-    void asynchronousFinish()
+    void asynchronousFinish() override
     {
         finish();
         futureInterfaceTyped()->reportFinished(result());

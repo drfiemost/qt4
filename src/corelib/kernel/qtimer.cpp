@@ -254,12 +254,12 @@ class QSingleShotTimer : public QObject
     Q_OBJECT
     int timerId;
 public:
-    ~QSingleShotTimer();
+    ~QSingleShotTimer() override;
     QSingleShotTimer(int msec, Qt::TimerType timerType, QObject *r, const char * m);
 Q_SIGNALS:
     void timeout();
 protected:
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
 };
 
 QSingleShotTimer::QSingleShotTimer(int msec, Qt::TimerType timerType, QObject *receiver, const char *member)

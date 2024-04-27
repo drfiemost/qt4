@@ -66,7 +66,7 @@ class QDeclarativeTypeNameScriptClass : public QScriptDeclarativeClass
 {
 public:
     QDeclarativeTypeNameScriptClass(QDeclarativeEngine *);
-    ~QDeclarativeTypeNameScriptClass();
+    ~QDeclarativeTypeNameScriptClass() override;
 
     enum TypeNameMode { IncludeEnums, ExcludeEnums };
     QScriptValue newObject(QObject *, QDeclarativeType *, TypeNameMode = IncludeEnums);

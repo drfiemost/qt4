@@ -67,9 +67,9 @@ namespace qdesigner_internal {
     class QDESIGNER_SHARED_EXPORT QDesignerIntrospection : public QDesignerIntrospectionInterface {
     public:
         QDesignerIntrospection();
-        virtual ~QDesignerIntrospection();
+        ~QDesignerIntrospection() override;
 
-        virtual const QDesignerMetaObjectInterface* metaObject(const QObject *object) const;
+        const QDesignerMetaObjectInterface* metaObject(const QObject *object) const override;
 
         const QDesignerMetaObjectInterface* metaObjectForQMetaObject(const QMetaObject *metaObject) const;
     private:

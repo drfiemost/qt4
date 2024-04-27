@@ -107,7 +107,7 @@ public:
     QAction(const QString &text, QObject* parent);
     QAction(const QIcon &icon, const QString &text, QObject* parent);
 
-    ~QAction();
+    ~QAction() override;
 
     void setActionGroup(QActionGroup *group);
     QActionGroup *actionGroup() const;
@@ -192,7 +192,7 @@ public:
 #endif
 
 protected:
-    bool event(QEvent *);
+    bool event(QEvent *) override;
     QAction(QActionPrivate &dd, QObject *parent);
 
 public Q_SLOTS:

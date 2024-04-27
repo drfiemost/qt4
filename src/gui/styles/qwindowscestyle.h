@@ -56,42 +56,42 @@ class Q_GUI_EXPORT QWindowsCEStyle : public QWindowsStyle
    Q_OBJECT
 public:
     QWindowsCEStyle();
-    ~QWindowsCEStyle();
+    ~QWindowsCEStyle() override;
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
-                       QPainter *painter, const QWidget *widget = nullptr) const;
+                       QPainter *painter, const QWidget *widget = nullptr) const override;
 
     void drawControl(ControlElement element, const QStyleOption *option,
-                     QPainter *painter, const QWidget *widget) const;
+                     QPainter *painter, const QWidget *widget) const override;
 
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
-                            QPainter *painter, const QWidget *widget) const;
+                            QPainter *painter, const QWidget *widget) const override;
 
-    virtual void drawItemText(QPainter *painter, const QRect &rect,
+    void drawItemText(QPainter *painter, const QRect &rect,
                               int flags, const QPalette &pal, bool enabled,
-                              const QString &text, QPalette::ColorRole textRole = QPalette::NoRole) const;
+                              const QString &text, QPalette::ColorRole textRole = QPalette::NoRole) const override;
 
     QSize sizeFromContents(ContentsType type, const QStyleOption *option,
-                           const QSize &size, const QWidget *widget) const;
+                           const QSize &size, const QWidget *widget) const override;
 
-    QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
+    QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const override;
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt,
-                         SubControl sc, const QWidget *widget) const;
+                         SubControl sc, const QWidget *widget) const override;
 
     SubControl hitTestComplexControl(ComplexControl control, const QStyleOptionComplex *option,
-                                     const QPoint &pos, const QWidget *widget = nullptr) const;
+                                     const QPoint &pos, const QWidget *widget = nullptr) const override;
 
     QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                           const QWidget *widget = nullptr) const;
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
+                           const QWidget *widget = nullptr) const override;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
     int styleHint(StyleHint hint, const QStyleOption *opt = nullptr, const QWidget *widget = nullptr,
-                  QStyleHintReturn *returnData = nullptr) const;
+                  QStyleHintReturn *returnData = nullptr) const override;
 
-    void polish(QWidget *widget);
-    void polish(QPalette &palette);
-    void polish(QApplication *app);
-    QPalette standardPalette() const;
+    void polish(QWidget *widget) override;
+    void polish(QPalette &palette) override;
+    void polish(QApplication *app) override;
+    QPalette standardPalette() const override;
 };
 
 #endif // QT_NO_STYLE_WINDOWSCE

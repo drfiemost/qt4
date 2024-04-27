@@ -72,7 +72,7 @@ public:
 
     QState(QState *parent = nullptr);
     QState(ChildMode childMode, QState *parent = nullptr);
-    ~QState();
+    ~QState() override;
 
     QAbstractState *errorState() const;
     void setErrorState(QAbstractState *state);
@@ -99,10 +99,10 @@ Q_SIGNALS:
     void propertiesAssigned();
 
 protected:
-    void onEntry(QEvent *event);
-    void onExit(QEvent *event);
+    void onEntry(QEvent *event) override;
+    void onExit(QEvent *event) override;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 protected:
     QState(QStatePrivate &dd, QState *parent);

@@ -96,7 +96,7 @@ public:
 
     QCLuceneMultiFieldQueryParser(const QStringList &fieldList, 
                                   QCLuceneAnalyzer &analyzer);
-    ~QCLuceneMultiFieldQueryParser();
+    ~QCLuceneMultiFieldQueryParser() override;
 
     static QCLuceneQuery *parse(const QString &query, const QStringList &fieldList,
                                 QCLuceneAnalyzer &analyzer);

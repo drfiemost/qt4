@@ -85,7 +85,7 @@ public:
 
     QDBusAbstractInterfacePrivate(const QString &serv, const QString &p,
                                   const QString &iface, const QDBusConnection& con, bool dynamic);
-    virtual ~QDBusAbstractInterfacePrivate() { }
+    ~QDBusAbstractInterfacePrivate() override { }
     bool canMakeCalls() const;
 
     // these functions do not check if the property is valid

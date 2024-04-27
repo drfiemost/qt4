@@ -55,7 +55,7 @@ class OpenPagesDelegate : public QStyledItemDelegate
 public:
     explicit OpenPagesDelegate(QObject *parent = nullptr);
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-        const QModelIndex &index) const;
+        const QModelIndex &index) const override;
 
     mutable QModelIndex pressedIndex;
 };
@@ -65,7 +65,7 @@ class OpenPagesWidget : public QTreeView
     Q_OBJECT
 public:
     OpenPagesWidget(OpenPagesModel *model);
-    ~OpenPagesWidget();
+    ~OpenPagesWidget() override;
 
     void selectCurrentPage();
     void allowContextMenu(bool ok);
@@ -81,7 +81,7 @@ private slots:
     void handleClicked(const QModelIndex &index);
 
 private:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
     bool m_allowContextMenu;
     OpenPagesDelegate *m_delegate;

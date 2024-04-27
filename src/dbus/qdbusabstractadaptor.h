@@ -60,7 +60,7 @@ protected:
     explicit QDBusAbstractAdaptor(QObject *parent);
 
 public:
-    ~QDBusAbstractAdaptor();
+    ~QDBusAbstractAdaptor() override;
 
 protected:
     void setAutoRelaySignals(bool enable);

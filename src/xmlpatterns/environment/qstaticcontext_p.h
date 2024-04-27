@@ -157,7 +157,7 @@ namespace QPatternist
         {
         }
 
-        virtual ~StaticContext();
+        ~StaticContext() override;
 
         virtual NamespaceResolver::Ptr namespaceBindings() const = 0;
         virtual void setNamespaceBindings(const NamespaceResolver::Ptr &) = 0;
@@ -260,7 +260,7 @@ namespace QPatternist
 
         virtual ExternalVariableLoader::Ptr externalVariableLoader() const = 0;
         virtual ResourceLoader::Ptr resourceLoader() const = 0;
-        virtual NamePool::Ptr namePool() const = 0;
+        NamePool::Ptr namePool() const override = 0;
 
         /**
          * @short Adds @p location for @p reflection.

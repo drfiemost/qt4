@@ -59,7 +59,7 @@ class QtDocInstaller : public QThread
 public:
     typedef QPair<QString, QStringList> DocInfo;
     QtDocInstaller(const QList<DocInfo> &docInfos);
-    ~QtDocInstaller();
+    ~QtDocInstaller() override;
     void installDocs();
 
 signals:
@@ -69,7 +69,7 @@ signals:
     void docsInstalled(bool newDocsInstalled);
 
 private:
-    void run();
+    void run() override;
     bool installDoc(const DocInfo &docInfo);
 
     bool m_abort;

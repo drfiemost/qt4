@@ -98,7 +98,7 @@ public:
     };
 
     QScriptEngineDebugger(QObject *parent = nullptr);
-    ~QScriptEngineDebugger();
+    ~QScriptEngineDebugger() override;
 
     void attachTo(QScriptEngine *engine);
     void detach();

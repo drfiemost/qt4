@@ -107,14 +107,14 @@ public:
 private:
     QBalloonTip(QSystemTrayIcon::MessageIcon icon, const QString& title,
                 const QString& msg, QSystemTrayIcon *trayIcon);
-    ~QBalloonTip();
+    ~QBalloonTip() override;
     void balloon(const QPoint&, int, bool);
 
 protected:
-    void paintEvent(QPaintEvent *);
-    void resizeEvent(QResizeEvent *);
-    void mousePressEvent(QMouseEvent *e);
-    void timerEvent(QTimerEvent *e);
+    void paintEvent(QPaintEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void timerEvent(QTimerEvent *e) override;
 
 private:
     QSystemTrayIcon *trayIcon;
@@ -136,7 +136,7 @@ class QSystemTrayIconSys : public QWidget
 
 public:
     QSystemTrayIconSys(QSystemTrayIcon *q);
-    ~QSystemTrayIconSys();
+    ~QSystemTrayIconSys() override;
     enum {
         SYSTEM_TRAY_REQUEST_DOCK = 0,
         SYSTEM_TRAY_BEGIN_MESSAGE = 1,
@@ -161,15 +161,15 @@ public:
     static XVisualInfo sysTrayVisual;
 
 protected:
-    void paintEvent(QPaintEvent *pe);
-    void resizeEvent(QResizeEvent *re);
-    bool x11Event(XEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *pe) override;
+    void resizeEvent(QResizeEvent *re) override;
+    bool x11Event(XEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 #ifndef QT_NO_WHEELEVENT
-    void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent *event) override;
 #endif
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     QPixmap background;

@@ -76,7 +76,7 @@ public:
 #endif
     }
 
-    QSize sizeHint() const {
+    QSize sizeHint() const override {
         QFontMetrics fm(font());
         return fm.size(0, text()) + QSize(8, 0);
     }
@@ -200,7 +200,7 @@ class QScriptDebuggerConsoleWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerConsoleWidget)
 public:
     QScriptDebuggerConsoleWidgetPrivate();
-    ~QScriptDebuggerConsoleWidgetPrivate();
+    ~QScriptDebuggerConsoleWidgetPrivate() override;
 
     // private slots
     void _q_onLineEntered(const QString &contents);

@@ -267,10 +267,10 @@ class QAuServerNull : public QAuServer
 public:
     QAuServerNull(QObject* parent);
 
-    void play(const QString&) { }
-    void play(QSound*s) { while(decLoop(s) > 0) /* nothing */ ; }
-    void stop(QSound*) { }
-    bool okay() { return false; }
+    void play(const QString&) override { }
+    void play(QSound*s) override { while(decLoop(s) > 0) /* nothing */ ; }
+    void stop(QSound*) override { }
+    bool okay() override { return false; }
 };
 
 QAuServerNull::QAuServerNull(QObject* parent)

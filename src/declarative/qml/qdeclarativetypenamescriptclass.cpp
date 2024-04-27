@@ -51,7 +51,7 @@ struct TypeNameData : public QScriptDeclarativeClass::Object {
     TypeNameData(QObject *o, QDeclarativeTypeNameCache *n, QDeclarativeTypeNameScriptClass::TypeNameMode m) : object(o), type(nullptr), typeNamespace(n), mode(m) {
         if (typeNamespace) typeNamespace->addref();
     }
-    ~TypeNameData() {
+    ~TypeNameData() override {
         if (typeNamespace) typeNamespace->release();
     }
 

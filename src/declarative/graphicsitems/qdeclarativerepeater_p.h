@@ -61,7 +61,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeRepeater : public QDeclarativeItem
 
 public:
     QDeclarativeRepeater(QDeclarativeItem *parent=nullptr);
-    virtual ~QDeclarativeRepeater();
+    ~QDeclarativeRepeater() override;
 
     QVariant model() const;
     void setModel(const QVariant &);
@@ -86,8 +86,8 @@ private:
     void regenerate();
 
 protected:
-    virtual void componentComplete();
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void componentComplete() override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private Q_SLOTS:
     void itemsInserted(int,int);

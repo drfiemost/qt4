@@ -69,7 +69,7 @@ class QGestureManager : public QObject
     Q_OBJECT
 public:
     QGestureManager(QObject *parent);
-    ~QGestureManager();
+    ~QGestureManager() override;
 
     Qt::GestureType registerGestureRecognizer(QGestureRecognizer *recognizer);
     void unregisterGestureRecognizer(Qt::GestureType type);

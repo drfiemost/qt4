@@ -89,7 +89,7 @@ private:
         indexWriter = nullptr;
     }
 
-    ~QHelpSearchEnginePrivate()
+    ~QHelpSearchEnginePrivate() override
     {
         delete indexReader;
         delete indexWriter;

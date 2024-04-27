@@ -61,7 +61,7 @@ public:
     static void play(const QString& filename);
 
     explicit QSound(const QString& filename, QObject* parent = nullptr);
-    ~QSound();
+    ~QSound() override;
 
     int loops() const;
     int loopsRemaining() const;

@@ -48,27 +48,27 @@ class GlobalObject : public JSC::JSGlobalObject
 {
 public:
     GlobalObject();
-    virtual ~GlobalObject();
-    virtual JSC::UString className() const { return "global"; }
-    virtual void markChildren(JSC::MarkStack&);
-    virtual bool getOwnPropertySlot(JSC::ExecState*,
+    ~GlobalObject() override;
+    JSC::UString className() const override { return "global"; }
+    void markChildren(JSC::MarkStack&) override;
+    bool getOwnPropertySlot(JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(JSC::ExecState*,
+                                    JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(JSC::ExecState*,
                                           const JSC::Identifier& propertyName,
-                                          JSC::PropertyDescriptor&);
-    virtual void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
-                     JSC::JSValue, JSC::PutPropertySlot&);
-    virtual void putWithAttributes(JSC::ExecState* exec, const JSC::Identifier& propertyName,
-                                   JSC::JSValue value, unsigned attributes);
-    virtual bool deleteProperty(JSC::ExecState*,
-                                const JSC::Identifier& propertyName);
-    virtual void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&,
-                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
-    virtual void defineGetter(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSObject* getterFunction, unsigned attributes = 0);
-    virtual void defineSetter(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSObject* setterFunction, unsigned attributes = 0);
-    virtual JSC::JSValue lookupGetter(JSC::ExecState*, const JSC::Identifier& propertyName);
-    virtual JSC::JSValue lookupSetter(JSC::ExecState*, const JSC::Identifier& propertyName);
+                                          JSC::PropertyDescriptor&) override;
+    void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
+                     JSC::JSValue, JSC::PutPropertySlot&) override;
+    void putWithAttributes(JSC::ExecState* exec, const JSC::Identifier& propertyName,
+                                   JSC::JSValue value, unsigned attributes) override;
+    bool deleteProperty(JSC::ExecState*,
+                                const JSC::Identifier& propertyName) override;
+    void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&,
+                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
+    void defineGetter(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSObject* getterFunction, unsigned attributes = 0) override;
+    void defineSetter(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSObject* setterFunction, unsigned attributes = 0) override;
+    JSC::JSValue lookupGetter(JSC::ExecState*, const JSC::Identifier& propertyName) override;
+    JSC::JSValue lookupSetter(JSC::ExecState*, const JSC::Identifier& propertyName) override;
 
 public:
     JSC::JSObject *customGlobalObject;
@@ -81,40 +81,40 @@ public:
                                        JSC::JSGlobalObject *object)
         : JSC::JSObject(sid), originalGlobalObject(object)
     {}
-    virtual ~OriginalGlobalObjectProxy()
+    ~OriginalGlobalObjectProxy() override
     {}
-    virtual JSC::UString className() const
+    JSC::UString className() const override
     { return originalGlobalObject->className(); }
-    virtual void markChildren(JSC::MarkStack& markStack)
+    void markChildren(JSC::MarkStack& markStack) override
     {
         markStack.append(originalGlobalObject);
         JSC::JSObject::markChildren(markStack);
     }
-    virtual bool getOwnPropertySlot(JSC::ExecState* exec,
+    bool getOwnPropertySlot(JSC::ExecState* exec,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot& slot)
+                                    JSC::PropertySlot& slot) override
     { return originalGlobalObject->JSC::JSGlobalObject::getOwnPropertySlot(exec, propertyName, slot); }
-    virtual bool getOwnPropertyDescriptor(JSC::ExecState* exec,
+    bool getOwnPropertyDescriptor(JSC::ExecState* exec,
                                           const JSC::Identifier& propertyName,
-                                          JSC::PropertyDescriptor& descriptor)
+                                          JSC::PropertyDescriptor& descriptor) override
     { return originalGlobalObject->JSC::JSGlobalObject::getOwnPropertyDescriptor(exec, propertyName, descriptor); }
-    virtual void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
-                     JSC::JSValue value, JSC::PutPropertySlot& slot)
+    void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
+                     JSC::JSValue value, JSC::PutPropertySlot& slot) override
     { originalGlobalObject->JSC::JSGlobalObject::put(exec, propertyName, value, slot); }
-    virtual void putWithAttributes(JSC::ExecState* exec, const JSC::Identifier& propertyName, JSC::JSValue value, unsigned attributes)
+    void putWithAttributes(JSC::ExecState* exec, const JSC::Identifier& propertyName, JSC::JSValue value, unsigned attributes) override
     { originalGlobalObject->JSC::JSGlobalObject::putWithAttributes(exec, propertyName, value, attributes); }
-    virtual bool deleteProperty(JSC::ExecState* exec,
-                                const JSC::Identifier& propertyName)
+    bool deleteProperty(JSC::ExecState* exec,
+                                const JSC::Identifier& propertyName) override
     { return originalGlobalObject->JSC::JSGlobalObject::deleteProperty(exec, propertyName); }
-    virtual void getOwnPropertyNames(JSC::ExecState* exec, JSC::PropertyNameArray& propertyNames, JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties)
+    void getOwnPropertyNames(JSC::ExecState* exec, JSC::PropertyNameArray& propertyNames, JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override
     { originalGlobalObject->JSC::JSGlobalObject::getOwnPropertyNames(exec, propertyNames, mode); }
-    virtual void defineGetter(JSC::ExecState* exec, const JSC::Identifier& propertyName, JSC::JSObject* getterFunction, unsigned attributes)
+    void defineGetter(JSC::ExecState* exec, const JSC::Identifier& propertyName, JSC::JSObject* getterFunction, unsigned attributes) override
     { originalGlobalObject->JSC::JSGlobalObject::defineGetter(exec, propertyName, getterFunction, attributes); }
-    virtual void defineSetter(JSC::ExecState* exec, const JSC::Identifier& propertyName, JSC::JSObject* setterFunction, unsigned attributes)
+    void defineSetter(JSC::ExecState* exec, const JSC::Identifier& propertyName, JSC::JSObject* setterFunction, unsigned attributes) override
     { originalGlobalObject->JSC::JSGlobalObject::defineSetter(exec, propertyName, setterFunction, attributes); }
-    virtual JSC::JSValue lookupGetter(JSC::ExecState* exec, const JSC::Identifier& propertyName)
+    JSC::JSValue lookupGetter(JSC::ExecState* exec, const JSC::Identifier& propertyName) override
     { return originalGlobalObject->JSC::JSGlobalObject::lookupGetter(exec, propertyName); }
-    virtual JSC::JSValue lookupSetter(JSC::ExecState* exec, const JSC::Identifier& propertyName)
+    JSC::JSValue lookupSetter(JSC::ExecState* exec, const JSC::Identifier& propertyName) override
     { return originalGlobalObject->JSC::JSGlobalObject::lookupSetter(exec, propertyName); }
 private:
     JSC::JSGlobalObject *originalGlobalObject;

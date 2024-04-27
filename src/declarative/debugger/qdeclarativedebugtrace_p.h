@@ -121,7 +121,7 @@ protected:
     virtual void endRangeImpl(RangeType);
 #else
 protected:
-    virtual void messageReceived(const QByteArray &);
+    void messageReceived(const QByteArray &) override;
 private:
     void addEventImpl(EventType);
     void startRangeImpl(RangeType);

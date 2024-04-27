@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePaintedItem : public QDeclarativeItem
 
 public:
     QDeclarativePaintedItem(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativePaintedItem();
+    ~QDeclarativePaintedItem() override;
 
     QSize contentsSize() const;
     void setContentsSize(const QSize &);
@@ -80,19 +80,19 @@ public:
     QColor fillColor() const;
     void setFillColor(const QColor&);
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
 protected:
     QDeclarativePaintedItem(QDeclarativePaintedItemPrivate &dd, QDeclarativeItem *parent);
 
     virtual void drawContents(QPainter *p, const QRect &) = 0;
-    virtual void geometryChanged(const QRectF &newGeometry,
-                                 const QRectF &oldGeometry);
-    virtual QVariant itemChange(GraphicsItemChange change,
-                                const QVariant &value);
+    void geometryChanged(const QRectF &newGeometry,
+                                 const QRectF &oldGeometry) override;
+    QVariant itemChange(GraphicsItemChange change,
+                                const QVariant &value) override;
 
     void setCacheFrozen(bool);
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
 Q_SIGNALS:
     void fillColorChanged();

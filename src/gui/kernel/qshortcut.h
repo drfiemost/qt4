@@ -67,7 +67,7 @@ public:
     QShortcut(const QKeySequence& key, QWidget *parent,
               const char *member = nullptr, const char *ambiguousMember = nullptr,
               Qt::ShortcutContext context = Qt::WindowShortcut);
-    ~QShortcut();
+    ~QShortcut() override;
 
     void setKey(const QKeySequence& key);
     QKeySequence key() const;
@@ -94,7 +94,7 @@ Q_SIGNALS:
     void activatedAmbiguously();
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 };
 
 #endif // QT_NO_SHORTCUT

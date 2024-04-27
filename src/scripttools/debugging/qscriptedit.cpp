@@ -65,28 +65,28 @@ public:
         setMouseTracking(true);
     }
 
-    QSize sizeHint() const {
+    QSize sizeHint() const override {
         return QSize(editor()->extraAreaWidth(), 0);
     }
 
 protected:
-    void paintEvent(QPaintEvent *event)
+    void paintEvent(QPaintEvent *event) override
     {
         editor()->extraAreaPaintEvent(event);
     }
-    void mousePressEvent(QMouseEvent *event)
+    void mousePressEvent(QMouseEvent *event) override
     {
         editor()->extraAreaMouseEvent(event);
     }
-    void mouseMoveEvent(QMouseEvent *event)
+    void mouseMoveEvent(QMouseEvent *event) override
     {
         editor()->extraAreaMouseEvent(event);
     }
-    void mouseReleaseEvent(QMouseEvent *event)
+    void mouseReleaseEvent(QMouseEvent *event) override
     {
         editor()->extraAreaMouseEvent(event);
     }
-    bool event(QEvent *event)
+    bool event(QEvent *event) override
     {
         if (editor()->extraAreaEvent(event))
             return true;

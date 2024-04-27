@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QScriptDebugOutputWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptDebugOutputWidgetInterface();
+    ~QScriptDebugOutputWidgetInterface() override;
 
     virtual void clear() = 0;
 

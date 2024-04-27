@@ -65,7 +65,7 @@ class QOpenGLPaintEngineState : public QPainterState
 public:
     QOpenGLPaintEngineState(QOpenGLPaintEngineState &other);
     QOpenGLPaintEngineState();
-    ~QOpenGLPaintEngineState();
+    ~QOpenGLPaintEngineState() override;
 
     QRegion clipRegion;
     bool hasClipping;
@@ -78,26 +78,26 @@ class QOpenGLPaintEngine : public QPaintEngineEx
     Q_DECLARE_PRIVATE(QOpenGLPaintEngine)
 public:
     QOpenGLPaintEngine();
-    ~QOpenGLPaintEngine();
+    ~QOpenGLPaintEngine() override;
 
-    bool begin(QPaintDevice *pdev);
-    bool end();
+    bool begin(QPaintDevice *pdev) override;
+    bool end() override;
 
     // new stuff
-    void clipEnabledChanged();
-    void penChanged();
-    void brushChanged();
-    void brushOriginChanged();
-    void opacityChanged();
-    void compositionModeChanged();
-    void renderHintsChanged();
-    void transformChanged();
+    void clipEnabledChanged() override;
+    void penChanged() override;
+    void brushChanged() override;
+    void brushOriginChanged() override;
+    void opacityChanged() override;
+    void compositionModeChanged() override;
+    void renderHintsChanged() override;
+    void transformChanged() override;
 
-    void fill(const QVectorPath &path, const QBrush &brush);
-    void clip(const QVectorPath &path, Qt::ClipOperation op);
+    void fill(const QVectorPath &path, const QBrush &brush) override;
+    void clip(const QVectorPath &path, Qt::ClipOperation op) override;
 
-    void setState(QPainterState *s);
-    QPainterState *createState(QPainterState *orig) const;
+    void setState(QPainterState *s) override;
+    QPainterState *createState(QPainterState *orig) const override;
     inline QOpenGLPaintEngineState *state() {
         return static_cast<QOpenGLPaintEngineState *>(QPaintEngineEx::state());
     }
@@ -107,7 +107,7 @@ public:
 
 
     // old stuff
-    void updateState(const QPaintEngineState &state);
+    void updateState(const QPaintEngineState &state) override;
 
     void updatePen(const QPen &pen);
     void updateBrush(const QBrush &brush, const QPointF &pt);
@@ -117,33 +117,33 @@ public:
     void updateRenderHints(QPainter::RenderHints hints);
     void updateCompositionMode(QPainter::CompositionMode composition_mode);
 
-    void drawRects(const QRectF *r, int rectCount);
-    void drawLines(const QLineF *lines, int lineCount);
-    void drawPoints(const QPointF *p, int pointCount);
-    void drawRects(const QRect *r, int rectCount);
-    void drawLines(const QLine *lines, int lineCount);
-    void drawPoints(const QPoint *p, int pointCount);
+    void drawRects(const QRectF *r, int rectCount) override;
+    void drawLines(const QLineF *lines, int lineCount) override;
+    void drawPoints(const QPointF *p, int pointCount) override;
+    void drawRects(const QRect *r, int rectCount) override;
+    void drawLines(const QLine *lines, int lineCount) override;
+    void drawPoints(const QPoint *p, int pointCount) override;
 
-    void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr);
+    void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr) override;
 
-    void drawPath(const QPainterPath &path);
-    void drawPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode);
-    void drawPolygon(const QPoint *points, int pointCount, PolygonDrawMode mode);
-    void drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, const QPointF &s);
+    void drawPath(const QPainterPath &path) override;
+    void drawPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode) override;
+    void drawPolygon(const QPoint *points, int pointCount, PolygonDrawMode mode) override;
+    void drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, const QPointF &s) override;
     void drawImage(const QRectF &r, const QImage &image, const QRectF &sr,
-                   Qt::ImageConversionFlags conversionFlags);
-    void drawTextItem(const QPointF &p, const QTextItem &ti);
-    void drawStaticTextItem(QStaticTextItem *staticTextItem);
+                   Qt::ImageConversionFlags conversionFlags) override;
+    void drawTextItem(const QPointF &p, const QTextItem &ti) override;
+    void drawStaticTextItem(QStaticTextItem *staticTextItem) override;
 
-    void drawEllipse(const QRectF &rect);
+    void drawEllipse(const QRectF &rect) override;
 
 #ifdef Q_WS_WIN
     HDC handle() const;
 #else
     Qt::HANDLE handle() const;
 #endif
-    inline Type type() const { return QPaintEngine::OpenGL; }
-    bool supportsTransformations(qreal, const QTransform &) const { return true; }
+    inline Type type() const override { return QPaintEngine::OpenGL; }
+    bool supportsTransformations(qreal, const QTransform &) const override { return true; }
 
 private:
     void drawPolyInternal(const QPolygonF &pa, bool close = true);

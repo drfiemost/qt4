@@ -57,7 +57,7 @@ class QHelpIndexProvider : public QThread
 {
 public:
     QHelpIndexProvider(QHelpEnginePrivate *helpEngine);
-    ~QHelpIndexProvider();
+    ~QHelpIndexProvider() override;
     void collectIndices(const QString &customFilterName);
     void stopCollecting();
     QStringList indices() const;
@@ -65,7 +65,7 @@ public:
     QSet<int> indexIds(QHelpDBReader *reader) const;
 
 private:
-    void run();
+    void run() override;
 
     QHelpEnginePrivate *m_helpEngine;
     QStringList m_indices;

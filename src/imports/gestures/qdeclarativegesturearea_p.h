@@ -68,16 +68,16 @@ class QDeclarativeGestureArea : public QDeclarativeItem
 
 public:
     QDeclarativeGestureArea(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeGestureArea();
+    ~QDeclarativeGestureArea() override;
 
     QGesture *gesture() const;
 
 protected:
-    bool sceneEvent(QEvent *event);
+    bool sceneEvent(QEvent *event) override;
 
 private:
     void connectSignals();
-    void componentComplete();
+    void componentComplete() override;
     friend class QDeclarativeGestureAreaParser;
 
     Q_DISABLE_COPY(QDeclarativeGestureArea)
@@ -87,8 +87,8 @@ private:
 class QDeclarativeGestureAreaParser : public QDeclarativeCustomParser
 {
 public:
-    virtual QByteArray compile(const QList<QDeclarativeCustomParserProperty> &);
-    virtual void setCustomData(QObject *, const QByteArray &);
+    QByteArray compile(const QList<QDeclarativeCustomParserProperty> &) override;
+    void setCustomData(QObject *, const QByteArray &) override;
 };
 
 

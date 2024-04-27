@@ -71,10 +71,10 @@ public:
     Q_DECLARE_FLAGS(SubWindowOptions, SubWindowOption)
 
     QMdiSubWindow(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QMdiSubWindow();
+    ~QMdiSubWindow() override;
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
     void setWidget(QWidget *widget);
     QWidget *widget() const;
@@ -111,28 +111,28 @@ public Q_SLOTS:
     void showShaded();
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
-    bool event(QEvent *event);
-    void showEvent(QShowEvent *showEvent);
-    void hideEvent(QHideEvent *hideEvent);
-    void changeEvent(QEvent *changeEvent);
-    void closeEvent(QCloseEvent *closeEvent);
-    void leaveEvent(QEvent *leaveEvent);
-    void resizeEvent(QResizeEvent *resizeEvent);
-    void timerEvent(QTimerEvent *timerEvent);
-    void moveEvent(QMoveEvent *moveEvent);
-    void paintEvent(QPaintEvent *paintEvent);
-    void mousePressEvent(QMouseEvent *mouseEvent);
-    void mouseDoubleClickEvent(QMouseEvent *mouseEvent);
-    void mouseReleaseEvent(QMouseEvent *mouseEvent);
-    void mouseMoveEvent(QMouseEvent *mouseEvent);
-    void keyPressEvent(QKeyEvent *keyEvent);
+    bool eventFilter(QObject *object, QEvent *event) override;
+    bool event(QEvent *event) override;
+    void showEvent(QShowEvent *showEvent) override;
+    void hideEvent(QHideEvent *hideEvent) override;
+    void changeEvent(QEvent *changeEvent) override;
+    void closeEvent(QCloseEvent *closeEvent) override;
+    void leaveEvent(QEvent *leaveEvent) override;
+    void resizeEvent(QResizeEvent *resizeEvent) override;
+    void timerEvent(QTimerEvent *timerEvent) override;
+    void moveEvent(QMoveEvent *moveEvent) override;
+    void paintEvent(QPaintEvent *paintEvent) override;
+    void mousePressEvent(QMouseEvent *mouseEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *mouseEvent) override;
+    void mouseReleaseEvent(QMouseEvent *mouseEvent) override;
+    void mouseMoveEvent(QMouseEvent *mouseEvent) override;
+    void keyPressEvent(QKeyEvent *keyEvent) override;
 #ifndef QT_NO_CONTEXTMENU
-    void contextMenuEvent(QContextMenuEvent *contextMenuEvent);
+    void contextMenuEvent(QContextMenuEvent *contextMenuEvent) override;
 #endif
-    void focusInEvent(QFocusEvent *focusInEvent);
-    void focusOutEvent(QFocusEvent *focusOutEvent);
-    void childEvent(QChildEvent *childEvent);
+    void focusInEvent(QFocusEvent *focusInEvent) override;
+    void focusOutEvent(QFocusEvent *focusOutEvent) override;
+    void childEvent(QChildEvent *childEvent) override;
 
 private:
     Q_DISABLE_COPY(QMdiSubWindow)

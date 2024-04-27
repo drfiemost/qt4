@@ -207,7 +207,7 @@ private slots:
 
 private:
     HelpEngineWrapper(const QString &collectionFile);
-    ~HelpEngineWrapper();
+    ~HelpEngineWrapper() override;
 
     static HelpEngineWrapper *helpEngineWrapper;
 

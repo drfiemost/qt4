@@ -71,7 +71,7 @@ public:
     explicit QDBusServiceWatcher(QObject *parent = nullptr);
     QDBusServiceWatcher(const QString &service, const QDBusConnection &connection,
                         WatchMode watchMode = WatchForOwnerChange, QObject *parent = nullptr);
-    ~QDBusServiceWatcher();
+    ~QDBusServiceWatcher() override;
 
     QStringList watchedServices() const;
     void setWatchedServices(const QStringList &services);

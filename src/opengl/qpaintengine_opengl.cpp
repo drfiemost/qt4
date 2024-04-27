@@ -528,7 +528,7 @@ public:
                 SLOT(cleanupPrograms(const QGLContext*)));
 
     }
-    ~QGLProgramCache() {
+    ~QGLProgramCache() override {
         // at this point the cache should contain 0 elements
         // Q_ASSERT(program.size() == 0);
     }
@@ -713,7 +713,7 @@ public:
     void strokeLines(const QPainterPath &path);
 
     void updateDepthClip();
-    void systemStateChanged();
+    void systemStateChanged() override;
 
     void cleanupGLContextRefs(const QGLContext *context) {
         if (context == shader_ctx)
@@ -1677,7 +1677,7 @@ class QOpenGLTessellator : public QTessellator
 {
 public:
     QOpenGLTessellator() {}
-    ~QOpenGLTessellator() { }
+    ~QOpenGLTessellator() override { }
     QGLTrapezoid toGLTrapezoid(const Trapezoid &trap);
 };
 
@@ -1713,7 +1713,7 @@ QGLTrapezoid QOpenGLTessellator::toGLTrapezoid(const Trapezoid &trap)
 class QOpenGLImmediateModeTessellator : public QOpenGLTessellator
 {
 public:
-    void addTrap(const Trapezoid &trap);
+    void addTrap(const Trapezoid &trap) override;
     void tessellate(const QPointF *points, int nPoints, bool winding) {
         trapezoids.reserve(trapezoids.size() + nPoints);
         setWinding(winding);
@@ -1792,12 +1792,12 @@ class QOpenGLTrapezoidToArrayTessellator : public QOpenGLTessellator
 {
 public:
     QOpenGLTrapezoidToArrayTessellator() : vertices(nullptr), allocated(0), size(0) {}
-    ~QOpenGLTrapezoidToArrayTessellator() { free(vertices); }
+    ~QOpenGLTrapezoidToArrayTessellator() override { free(vertices); }
     GLfloat *vertices;
     int allocated;
     int size;
     QRectF bounds;
-    void addTrap(const Trapezoid &trap);
+    void addTrap(const Trapezoid &trap) override;
     void tessellate(const QPointF *points, int nPoints, bool winding) {
         size = 0;
         setWinding(winding);
@@ -3032,8 +3032,8 @@ class QGLTrapezoidMaskGenerator : public QGLMaskGenerator
 public:
     QGLTrapezoidMaskGenerator(const QPainterPath &path, const QTransform &matrix, QGLOffscreen &offscreen, GLuint maskFragmentProgram, qreal strokeWidth = -1.0);
 
-    QRect screenRect();
-    void drawMask(const QRect &rect);
+    QRect screenRect() override;
+    void drawMask(const QRect &rect) override;
 
 private:
     QRect screen_rect;
@@ -3053,8 +3053,8 @@ public:
     QGLPathMaskGenerator(const QPainterPath &path, const QTransform &matrix, QGLOffscreen &offscreen, GLuint maskFragmentProgram);
 
 private:
-    QVector<QGLTrapezoid> generateTrapezoids();
-    QRect computeScreenRect();
+    QVector<QGLTrapezoid> generateTrapezoids() override;
+    QRect computeScreenRect() override;
 
     QPolygonF poly;
 };
@@ -3065,8 +3065,8 @@ public:
     QGLLineMaskGenerator(const QPainterPath &path, const QTransform &matrix, qreal width, QGLOffscreen &offscreen, GLuint maskFragmentProgram);
 
 private:
-    QVector<QGLTrapezoid> generateTrapezoids();
-    QRect computeScreenRect();
+    QVector<QGLTrapezoid> generateTrapezoids() override;
+    QRect computeScreenRect() override;
 
     QPainterPath transformedPath;
 };
@@ -3077,8 +3077,8 @@ public:
     QGLRectMaskGenerator(const QPainterPath &path, const QTransform &matrix, QGLOffscreen &offscreen, GLuint maskFragmentProgram);
 
 private:
-    QVector<QGLTrapezoid> generateTrapezoids();
-    QRect computeScreenRect();
+    QVector<QGLTrapezoid> generateTrapezoids() override;
+    QRect computeScreenRect() override;
 
     QPainterPath transformedPath;
 };
@@ -3088,8 +3088,8 @@ class QGLEllipseMaskGenerator : public QGLMaskGenerator
 public:
     QGLEllipseMaskGenerator(const QRectF &rect, const QTransform &matrix, QGLOffscreen &offscreen, GLuint maskFragmentProgram, int *maskVariableLocations);
 
-    QRect screenRect();
-    void drawMask(const QRect &rect);
+    QRect screenRect() override;
+    void drawMask(const QRect &rect) override;
 
 private:
     QRect screen_rect;
@@ -4559,7 +4559,7 @@ class QGLGlyphCache : public QObject
     Q_OBJECT
 public:
     QGLGlyphCache() : QObject(nullptr) { current_cache = nullptr; }
-    ~QGLGlyphCache();
+    ~QGLGlyphCache() override;
     QGLGlyphCoord *lookup(QFontEngine *, glyph_t);
     void cacheGlyphs(QGLContext *, QFontEngine *, glyph_t *glyphs, int numGlyphs);
     void cleanCache();

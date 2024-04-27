@@ -63,12 +63,12 @@ class Q_AUTOTEST_EXPORT QDeclarativeGlobalScriptClass : public QScriptClass
 public:
     QDeclarativeGlobalScriptClass(QScriptEngine *);
 
-    virtual QueryFlags queryProperty(const QScriptValue &object,
+    QueryFlags queryProperty(const QScriptValue &object,
                                      const QScriptString &name,
-                                     QueryFlags flags, uint *id);
+                                     QueryFlags flags, uint *id) override;
 
-    virtual void setProperty(QScriptValue &object, const QScriptString &name,
-                             uint id, const QScriptValue &value);
+    void setProperty(QScriptValue &object, const QScriptString &name,
+                             uint id, const QScriptValue &value) override;
 
     void explicitSetProperty(const QStringList &, const QList<QScriptValue> &);
 

@@ -70,7 +70,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(CmdLineParser *cmdLine, QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
     static void activateCurrentBrowser();
     static QString collectionFileDirectory(bool createDir = false,
@@ -123,7 +123,7 @@ private slots:
 private:
     bool initHelpDB(bool registerInternalDoc);
     void setupActions();
-    void closeEvent(QCloseEvent *e);
+    void closeEvent(QCloseEvent *e) override;
     void activateDockWidget(QWidget *w);
     void updateAboutMenuText();
     void setupFilterToolbar();

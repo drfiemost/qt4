@@ -67,7 +67,7 @@ class QScriptDebuggerConsoleCommandJobPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerConsoleCommandJob)
 public:
     QScriptDebuggerConsoleCommandJobPrivate();
-    ~QScriptDebuggerConsoleCommandJobPrivate();
+    ~QScriptDebuggerConsoleCommandJobPrivate() override;
 
     QScriptDebuggerConsole *console;
     QScriptMessageHandlerInterface *messageHandler;

@@ -100,21 +100,21 @@ public:
     QCLuceneStandardAnalyzer();
     QCLuceneStandardAnalyzer(const QStringList &stopWords);
 
-    ~QCLuceneStandardAnalyzer();
+    ~QCLuceneStandardAnalyzer() override;
 };
 
 class QHELP_EXPORT QCLuceneWhitespaceAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneWhitespaceAnalyzer();
-    ~QCLuceneWhitespaceAnalyzer();
+    ~QCLuceneWhitespaceAnalyzer() override;
 };
 
 class QHELP_EXPORT QCLuceneSimpleAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneSimpleAnalyzer();
-    ~QCLuceneSimpleAnalyzer();
+    ~QCLuceneSimpleAnalyzer() override;
 };
 
 class QHELP_EXPORT QCLuceneStopAnalyzer : public QCLuceneAnalyzer
@@ -123,7 +123,7 @@ public:
     QCLuceneStopAnalyzer();
     QCLuceneStopAnalyzer(const QStringList &stopWords);
 
-    ~QCLuceneStopAnalyzer();
+    ~QCLuceneStopAnalyzer() override;
 
     QStringList englishStopWords() const;
 };
@@ -132,14 +132,14 @@ class QHELP_EXPORT QCLuceneKeywordAnalyzer : public QCLuceneAnalyzer
 {
 public:
     QCLuceneKeywordAnalyzer();
-    ~QCLuceneKeywordAnalyzer();
+    ~QCLuceneKeywordAnalyzer() override;
 };
 
 class QHELP_EXPORT QCLucenePerFieldAnalyzerWrapper : public QCLuceneAnalyzer
 {
 public:
     QCLucenePerFieldAnalyzerWrapper(QCLuceneAnalyzer *defaultAnalyzer);
-    ~QCLucenePerFieldAnalyzerWrapper();
+    ~QCLucenePerFieldAnalyzerWrapper() override;
 
     void addAnalyzer(const QString &fieldName, QCLuceneAnalyzer *analyzer);
 

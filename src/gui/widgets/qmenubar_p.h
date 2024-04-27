@@ -87,7 +87,7 @@ public:
 #endif
 
         { }
-    ~QMenuBarPrivate()
+    ~QMenuBarPrivate() override
         {
 #ifdef Q_WS_X11
             delete platformMenuBar;

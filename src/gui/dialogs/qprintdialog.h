@@ -64,7 +64,7 @@ class Q_GUI_EXPORT QUnixPrintWidget : public QWidget
 
 public:
     QUnixPrintWidget(QPrinter *printer, QWidget *parent = nullptr);
-    ~QUnixPrintWidget();
+    ~QUnixPrintWidget() override;
     void updatePrinter();
 
 private:
@@ -87,13 +87,13 @@ class Q_GUI_EXPORT QPrintDialog : public QAbstractPrintDialog
 public:
     explicit QPrintDialog(QPrinter *printer, QWidget *parent = nullptr);
     explicit QPrintDialog(QWidget *parent = nullptr);
-    ~QPrintDialog();
+    ~QPrintDialog() override;
 
-    int exec();
+    int exec() override;
 #if defined (Q_OS_UNIX) && !defined(QTOPIA_PRINTDIALOG) && !defined(Q_WS_MAC)
-    virtual void accept();
+    void accept() override;
 #endif
-    void done(int result);
+    void done(int result) override;
 
     void setOption(PrintDialogOption option, bool on = true);
     bool testOption(PrintDialogOption option) const;
@@ -101,7 +101,7 @@ public:
     PrintDialogOptions options() const;
 
 #if defined(Q_OS_UNIX) || defined(Q_WS_MAC) || defined(Q_OS_WIN)
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 #endif
 
     using QDialog::open;

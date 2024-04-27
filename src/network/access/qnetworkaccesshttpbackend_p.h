@@ -77,31 +77,31 @@ class QNetworkAccessHttpBackend: public QNetworkAccessBackend
     Q_OBJECT
 public:
     QNetworkAccessHttpBackend();
-    virtual ~QNetworkAccessHttpBackend();
+    ~QNetworkAccessHttpBackend() override;
 
-    virtual void open();
-    virtual void closeDownstreamChannel();
+    void open() override;
+    void closeDownstreamChannel() override;
 
-    virtual void downstreamReadyWrite();
-    virtual void setDownstreamLimited(bool b);
-    virtual void setReadBufferSize(qint64 size);
-    virtual void emitReadBufferFreed(qint64 size);
+    void downstreamReadyWrite() override;
+    void setDownstreamLimited(bool b) override;
+    void setReadBufferSize(qint64 size) override;
+    void emitReadBufferFreed(qint64 size) override;
 
-    virtual void copyFinished(QIODevice *);
+    void copyFinished(QIODevice *) override;
 #ifndef QT_NO_OPENSSL
-    virtual void ignoreSslErrors();
-    virtual void ignoreSslErrors(const QList<QSslError> &errors);
+    void ignoreSslErrors() override;
+    void ignoreSslErrors(const QList<QSslError> &errors) override;
 
-    virtual void fetchSslConfiguration(QSslConfiguration &configuration) const;
-    virtual void setSslConfiguration(const QSslConfiguration &configuration);
+    void fetchSslConfiguration(QSslConfiguration &configuration) const override;
+    void setSslConfiguration(const QSslConfiguration &configuration) override;
 #endif
-    QNetworkCacheMetaData fetchCacheMetaData(const QNetworkCacheMetaData &metaData) const;
+    QNetworkCacheMetaData fetchCacheMetaData(const QNetworkCacheMetaData &metaData) const override;
 
     // we return true since HTTP needs to send PUT/POST data again after having authenticated
-    bool needsResetableUploadData() { return true; }
+    bool needsResetableUploadData() override { return true; }
 
-    bool canResume() const;
-    void setResumeOffset(quint64 offset);
+    bool canResume() const override;
+    void setResumeOffset(quint64 offset) override;
 
 signals:
     // To HTTP thread:
@@ -163,8 +163,8 @@ private:
 class QNetworkAccessHttpBackendFactory : public QNetworkAccessBackendFactory
 {
 public:
-    virtual QNetworkAccessBackend *create(QNetworkAccessManager::Operation op,
-                                          const QNetworkRequest &request) const;
+    QNetworkAccessBackend *create(QNetworkAccessManager::Operation op,
+                                          const QNetworkRequest &request) const override;
 };
 
 QT_END_NAMESPACE

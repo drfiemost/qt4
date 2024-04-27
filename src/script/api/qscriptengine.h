@@ -133,7 +133,7 @@ public:
 #ifndef QT_NO_QOBJECT
     explicit QScriptEngine(QObject *parent);
 #endif
-    virtual ~QScriptEngine();
+    ~QScriptEngine() override;
 
     QScriptValue globalObject() const;
     void setGlobalObject(const QScriptValue &object);

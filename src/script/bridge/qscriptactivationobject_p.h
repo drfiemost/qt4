@@ -47,25 +47,25 @@ namespace QScript
 class QScriptActivationObject : public JSC::JSVariableObject {
 public:
     QScriptActivationObject(JSC::ExecState *callFrame, JSC::JSObject *delegate = nullptr);
-    virtual ~QScriptActivationObject();
-    virtual bool isDynamicScope() const { return true; }
+    ~QScriptActivationObject() override;
+    bool isDynamicScope() const override { return true; }
 
-    virtual bool getOwnPropertySlot(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertyDescriptor&);
-    virtual void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&, JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
+    bool getOwnPropertySlot(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertyDescriptor&) override;
+    void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&, JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
 
-    virtual void putWithAttributes(JSC::ExecState *exec, const JSC::Identifier &propertyName, JSC::JSValue value, unsigned attributes);
-    virtual void put(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSValue value, JSC::PutPropertySlot&);
-    virtual void put(JSC::ExecState*, unsigned propertyName, JSC::JSValue value);
+    void putWithAttributes(JSC::ExecState *exec, const JSC::Identifier &propertyName, JSC::JSValue value, unsigned attributes) override;
+    void put(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSValue value, JSC::PutPropertySlot&) override;
+    void put(JSC::ExecState*, unsigned propertyName, JSC::JSValue value) override;
 
-    virtual bool deleteProperty(JSC::ExecState*, const JSC::Identifier& propertyName);
+    bool deleteProperty(JSC::ExecState*, const JSC::Identifier& propertyName) override;
 
     virtual void defineGetter(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSObject* getterFunction);
     virtual void defineSetter(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSObject* setterFunction);
-    virtual JSC::JSValue lookupGetter(JSC::ExecState*, const JSC::Identifier& propertyName);
-    virtual JSC::JSValue lookupSetter(JSC::ExecState*, const JSC::Identifier& propertyName);
+    JSC::JSValue lookupGetter(JSC::ExecState*, const JSC::Identifier& propertyName) override;
+    JSC::JSValue lookupSetter(JSC::ExecState*, const JSC::Identifier& propertyName) override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     struct QScriptActivationObjectData : public JSVariableObjectData {

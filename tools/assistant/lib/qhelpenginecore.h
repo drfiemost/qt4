@@ -66,7 +66,7 @@ class QHELP_EXPORT QHelpEngineCore : public QObject
     
 public:
     explicit QHelpEngineCore(const QString &collectionFile, QObject *parent = nullptr);
-    virtual ~QHelpEngineCore();
+    ~QHelpEngineCore() override;
 
     bool setupData();
 

@@ -94,7 +94,7 @@ class QAbstractSpinBoxPrivate : public QWidgetPrivate
     Q_DECLARE_PUBLIC(QAbstractSpinBox)
 public:
     QAbstractSpinBoxPrivate();
-    ~QAbstractSpinBoxPrivate();
+    ~QAbstractSpinBoxPrivate() override;
 
     void init();
     void reset();
@@ -156,8 +156,8 @@ class QSpinBoxValidator : public QValidator
 {
 public:
     QSpinBoxValidator(QAbstractSpinBox *qptr, QAbstractSpinBoxPrivate *dptr);
-    QValidator::State validate(QString &input, int &) const;
-    void fixup(QString &) const;
+    QValidator::State validate(QString &input, int &) const override;
+    void fixup(QString &) const override;
 private:
     QAbstractSpinBox *qptr;
     QAbstractSpinBoxPrivate *dptr;

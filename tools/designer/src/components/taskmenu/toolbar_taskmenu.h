@@ -62,8 +62,8 @@ class ToolBarTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit ToolBarTaskMenu(QToolBar *tb, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QToolBar *m_toolBar;
@@ -77,8 +77,8 @@ class StatusBarTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit StatusBarTaskMenu(QStatusBar *tb, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void removeStatusBar();

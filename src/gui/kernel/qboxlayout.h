@@ -66,7 +66,7 @@ public:
 
     explicit QBoxLayout(Direction, QWidget *parent = nullptr);
 
-    ~QBoxLayout();
+    ~QBoxLayout() override;
 
     Direction direction() const;
     void setDirection(Direction);
@@ -77,7 +77,7 @@ public:
     void addWidget(QWidget *, int stretch = 0, Qt::Alignment alignment = nullptr);
     void addLayout(QLayout *layout, int stretch = 0);
     void addStrut(int);
-    void addItem(QLayoutItem *);
+    void addItem(QLayoutItem *) override;
 
     void insertSpacing(int index, int size);
     void insertStretch(int index, int stretch = 0);
@@ -93,20 +93,20 @@ public:
     void setStretch(int index, int stretch);
     int stretch(int index) const;
 
-    QSize sizeHint() const;
-    QSize minimumSize() const;
-    QSize maximumSize() const;
+    QSize sizeHint() const override;
+    QSize minimumSize() const override;
+    QSize maximumSize() const override;
 
-    bool hasHeightForWidth() const;
-    int heightForWidth(int) const;
-    int minimumHeightForWidth(int) const;
+    bool hasHeightForWidth() const override;
+    int heightForWidth(int) const override;
+    int minimumHeightForWidth(int) const override;
 
-    Qt::Orientations expandingDirections() const;
-    void invalidate();
-    QLayoutItem *itemAt(int) const;
-    QLayoutItem *takeAt(int);
-    int count() const;
-    void setGeometry(const QRect&);
+    Qt::Orientations expandingDirections() const override;
+    void invalidate() override;
+    QLayoutItem *itemAt(int) const override;
+    QLayoutItem *takeAt(int) override;
+    int count() const override;
+    void setGeometry(const QRect&) override;
 
 protected:
     // ### Qt 5: make public
@@ -122,7 +122,7 @@ class Q_GUI_EXPORT QHBoxLayout : public QBoxLayout
 public:
     QHBoxLayout();
     explicit QHBoxLayout(QWidget *parent);
-    ~QHBoxLayout();
+    ~QHBoxLayout() override;
 
 private:
     Q_DISABLE_COPY(QHBoxLayout)
@@ -134,7 +134,7 @@ class Q_GUI_EXPORT QVBoxLayout : public QBoxLayout
 public:
     QVBoxLayout();
     explicit QVBoxLayout(QWidget *parent);
-    ~QVBoxLayout();
+    ~QVBoxLayout() override;
 
 private:
     Q_DISABLE_COPY(QVBoxLayout)

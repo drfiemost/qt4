@@ -70,12 +70,12 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeListModel : public QListModelInte
 
 public:
     QDeclarativeListModel(QObject *parent=nullptr);
-    ~QDeclarativeListModel();
+    ~QDeclarativeListModel() override;
 
-    virtual QList<int> roles() const;
-    virtual QString toString(int role) const;
-    virtual int count() const;
-    virtual QVariant data(int index, int role) const;
+    QList<int> roles() const override;
+    QString toString(int role) const override;
+    int count() const override;
+    QVariant data(int index, int role) const override;
 
     Q_INVOKABLE void clear();
     Q_INVOKABLE void remove(int index);
@@ -124,8 +124,8 @@ Q_OBJECT
 class QDeclarativeListModelParser : public QDeclarativeCustomParser
 {
 public:
-    QByteArray compile(const QList<QDeclarativeCustomParserProperty> &);
-    void setCustomData(QObject *, const QByteArray &);
+    QByteArray compile(const QList<QDeclarativeCustomParserProperty> &) override;
+    void setCustomData(QObject *, const QByteArray &) override;
 
 private:
     struct ListInstruction

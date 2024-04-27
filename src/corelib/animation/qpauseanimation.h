@@ -60,14 +60,14 @@ class Q_CORE_EXPORT QPauseAnimation : public QAbstractAnimation
 public:
     QPauseAnimation(QObject *parent = nullptr);
     QPauseAnimation(int msecs, QObject *parent = nullptr);
-    ~QPauseAnimation();
+    ~QPauseAnimation() override;
 
-    int duration() const;
+    int duration() const override;
     void setDuration(int msecs);
 
 protected:
-    bool event(QEvent *e);
-    void updateCurrentTime(int);
+    bool event(QEvent *e) override;
+    void updateCurrentTime(int) override;
 
 private:
     Q_DISABLE_COPY(QPauseAnimation)

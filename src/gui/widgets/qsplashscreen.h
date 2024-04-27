@@ -59,7 +59,7 @@ class Q_GUI_EXPORT QSplashScreen : public QWidget
 public:
     explicit QSplashScreen(const QPixmap &pixmap = QPixmap(), Qt::WindowFlags f = nullptr);
     QSplashScreen(QWidget *parent, const QPixmap &pixmap = QPixmap(), Qt::WindowFlags f = nullptr);
-    virtual ~QSplashScreen();
+    ~QSplashScreen() override;
 
     void setPixmap(const QPixmap &pixmap);
     const QPixmap pixmap() const;
@@ -75,9 +75,9 @@ Q_SIGNALS:
     void messageChanged(const QString &message);
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
     virtual void drawContents(QPainter *painter);
-    void mousePressEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *) override;
 
 private:
     Q_DISABLE_COPY(QSplashScreen)

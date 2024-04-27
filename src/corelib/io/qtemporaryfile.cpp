@@ -234,7 +234,7 @@ public:
             QFSFileEngine::setFileName(file);
     }
 
-    ~QTemporaryFileEngine();
+    ~QTemporaryFileEngine() override;
 
     bool isReallyOpen();
     void setFileName(const QString &file) override;
@@ -407,7 +407,7 @@ class QTemporaryFilePrivate : public QFilePrivate
 
 protected:
     QTemporaryFilePrivate();
-    ~QTemporaryFilePrivate();
+    ~QTemporaryFilePrivate() override;
 
     bool autoRemove;
     QString templateName;

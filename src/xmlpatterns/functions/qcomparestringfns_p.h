@@ -79,7 +79,7 @@ namespace QPatternist
     class CodepointEqualFN : public ComparesCaseAware
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -91,7 +91,7 @@ namespace QPatternist
     class CompareFN : public ComparesCaseAware
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 }
 

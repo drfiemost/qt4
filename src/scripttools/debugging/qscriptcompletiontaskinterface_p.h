@@ -72,7 +72,7 @@ public:
         ScriptIdentifierCompletion
     };
 
-    ~QScriptCompletionTaskInterface();
+    ~QScriptCompletionTaskInterface() override;
 
     virtual void start() = 0;
 

@@ -110,7 +110,7 @@ public:
           render(nullptr), timer(nullptr),
           fps(30)
     {}
-    ~QSvgRendererPrivate()
+    ~QSvgRendererPrivate() override
     {
         delete render;
     }

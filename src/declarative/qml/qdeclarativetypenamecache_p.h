@@ -66,7 +66,7 @@ class QDeclarativeTypeNameCache : public QDeclarativeRefCount, public QDeclarati
 {
 public:
     QDeclarativeTypeNameCache(QDeclarativeEngine *);
-    virtual ~QDeclarativeTypeNameCache();
+    ~QDeclarativeTypeNameCache() override;
 
     struct Data {
         inline Data();

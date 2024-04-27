@@ -64,27 +64,27 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeView:
     Q_OBJECT
 public:
     QScriptDebuggerCodeView(QWidget *parent = nullptr);
-    ~QScriptDebuggerCodeView();
+    ~QScriptDebuggerCodeView() override;
 
-    QString text() const;
-    void setText(const QString &text);
+    QString text() const override;
+    void setText(const QString &text) override;
 
-    int cursorLineNumber() const;
-    void gotoLine(int lineNumber);
+    int cursorLineNumber() const override;
+    void gotoLine(int lineNumber) override;
 
-    int find(const QString &exp, int options = 0);
+    int find(const QString &exp, int options = 0) override;
 
-    void setExecutionLineNumber(int lineNumber, bool error);
-    void setExecutableLineNumbers(const QSet<int> &lineNumbers);
+    void setExecutionLineNumber(int lineNumber, bool error) override;
+    void setExecutableLineNumbers(const QSet<int> &lineNumbers) override;
 
-    int baseLineNumber() const;
-    void setBaseLineNumber(int lineNumber);
+    int baseLineNumber() const override;
+    void setBaseLineNumber(int lineNumber) override;
 
-    void setBreakpoint(int lineNumber);
-    void deleteBreakpoint(int lineNumber);
-    void setBreakpointEnabled(int lineNumber, bool enable);
+    void setBreakpoint(int lineNumber) override;
+    void deleteBreakpoint(int lineNumber) override;
+    void setBreakpointEnabled(int lineNumber, bool enable) override;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerCodeView)

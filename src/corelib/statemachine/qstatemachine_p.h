@@ -102,7 +102,7 @@ public:
     };
 
     QStateMachinePrivate();
-    ~QStateMachinePrivate();
+    ~QStateMachinePrivate() override;
 
     static QStateMachinePrivate *get(QStateMachine *q);
 

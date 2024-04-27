@@ -66,7 +66,7 @@ class Q_GUI_EXPORT QDial: public QAbstractSlider
 public:
     explicit QDial(QWidget *parent = nullptr);
 
-    ~QDial();
+    ~QDial() override;
 
     bool wrapping() const;
 
@@ -76,23 +76,23 @@ public:
     qreal notchTarget() const;
     bool notchesVisible() const;
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
 public Q_SLOTS:
     void setNotchesVisible(bool visible);
     void setWrapping(bool on);
 
 protected:
-    bool event(QEvent *e);
-    void resizeEvent(QResizeEvent *re);
-    void paintEvent(QPaintEvent *pe);
+    bool event(QEvent *e) override;
+    void resizeEvent(QResizeEvent *re) override;
+    void paintEvent(QPaintEvent *pe) override;
 
-    void mousePressEvent(QMouseEvent *me);
-    void mouseReleaseEvent(QMouseEvent *me);
-    void mouseMoveEvent(QMouseEvent *me);
+    void mousePressEvent(QMouseEvent *me) override;
+    void mouseReleaseEvent(QMouseEvent *me) override;
+    void mouseMoveEvent(QMouseEvent *me) override;
 
-    void sliderChange(SliderChange change);
+    void sliderChange(SliderChange change) override;
     void initStyleOption(QStyleOptionSlider *option) const;
 
 private:

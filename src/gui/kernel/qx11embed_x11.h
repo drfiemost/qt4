@@ -55,7 +55,7 @@ class Q_GUI_EXPORT QX11EmbedWidget : public QWidget
     Q_OBJECT
 public:
     QX11EmbedWidget(QWidget *parent = nullptr);
-    ~QX11EmbedWidget();
+    ~QX11EmbedWidget() override;
 
     void embedInto(WId id);
     WId containerWinId() const;
@@ -73,10 +73,10 @@ Q_SIGNALS:
     void error(QX11EmbedWidget::Error error);
 
 protected:
-    bool x11Event(XEvent *);
-    bool eventFilter(QObject *, QEvent *);
-    bool event(QEvent *);
-    void resizeEvent(QResizeEvent *);
+    bool x11Event(XEvent *) override;
+    bool eventFilter(QObject *, QEvent *) override;
+    bool event(QEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
 
 private:
     Q_DECLARE_PRIVATE(QX11EmbedWidget)
@@ -89,14 +89,14 @@ class Q_GUI_EXPORT QX11EmbedContainer : public QWidget
     Q_OBJECT
 public:
     QX11EmbedContainer(QWidget *parent = nullptr);
-    ~QX11EmbedContainer();
+    ~QX11EmbedContainer() override;
 
     void embedClient(WId id);
     void discardClient();
 
     WId clientWinId() const;
 
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
 
     enum Error {
 	Unknown,
@@ -111,13 +111,13 @@ Q_SIGNALS:
     void error(QX11EmbedContainer::Error);
 
 protected:
-    bool x11Event(XEvent *);
-    bool eventFilter(QObject *, QEvent *);
-    void paintEvent(QPaintEvent *e);
-    void resizeEvent(QResizeEvent *);
-    void showEvent(QShowEvent *);
-    void hideEvent(QHideEvent *);
-    bool event(QEvent *);
+    bool x11Event(XEvent *) override;
+    bool eventFilter(QObject *, QEvent *) override;
+    void paintEvent(QPaintEvent *e) override;
+    void resizeEvent(QResizeEvent *) override;
+    void showEvent(QShowEvent *) override;
+    void hideEvent(QHideEvent *) override;
+    bool event(QEvent *) override;
 
 private:
     Q_DECLARE_PRIVATE(QX11EmbedContainer)

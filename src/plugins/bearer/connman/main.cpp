@@ -53,10 +53,10 @@ class QConnmanEnginePlugin : public QBearerEnginePlugin
 {
 public:
     QConnmanEnginePlugin();
-    ~QConnmanEnginePlugin();
+    ~QConnmanEnginePlugin() override;
 
-    QStringList keys() const;
-    QBearerEngine *create(const QString &key) const;
+    QStringList keys() const override;
+    QBearerEngine *create(const QString &key) const override;
 };
 
 QConnmanEnginePlugin::QConnmanEnginePlugin()

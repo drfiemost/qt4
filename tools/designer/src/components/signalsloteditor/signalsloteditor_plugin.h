@@ -63,13 +63,13 @@ class QT_SIGNALSLOTEDITOR_EXPORT SignalSlotEditorPlugin: public QObject, public 
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     SignalSlotEditorPlugin();
-    virtual ~SignalSlotEditorPlugin();
+    ~SignalSlotEditorPlugin() override;
 
-    virtual bool isInitialized() const;
-    virtual void initialize(QDesignerFormEditorInterface *core);
-    virtual QAction *action() const;
+    bool isInitialized() const override;
+    void initialize(QDesignerFormEditorInterface *core) override;
+    QAction *action() const override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
 public slots:
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);

@@ -161,7 +161,7 @@ public:
     }
 
 protected:
-    void paintEvent(QPaintEvent *)
+    void paintEvent(QPaintEvent *) override
     {
         QRect pageRect;
         QSizeF adjustedSize(m_size);
@@ -220,7 +220,7 @@ class QPageSetupDialogPrivate : public QAbstractPageSetupDialogPrivate
     Q_DECLARE_PUBLIC(QPageSetupDialog)
 
 public:
-    ~QPageSetupDialogPrivate();
+    ~QPageSetupDialogPrivate() override;
     void init();
 
     QPageSetupWidget *widget;

@@ -64,21 +64,21 @@ class QAlphaPaintEngine : public QPaintEngine
 {
     Q_DECLARE_PRIVATE(QAlphaPaintEngine)
 public:
-    ~QAlphaPaintEngine();
+    ~QAlphaPaintEngine() override;
 
-    virtual bool begin(QPaintDevice *pdev);
-    virtual bool end();
+    bool begin(QPaintDevice *pdev) override;
+    bool end() override;
 
-    virtual void updateState(const QPaintEngineState &state);
+    void updateState(const QPaintEngineState &state) override;
 
-    virtual void drawPath(const QPainterPath &path);
+    void drawPath(const QPainterPath &path) override;
 
-    virtual void drawPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode);
+    void drawPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode) override;
 
-    virtual void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr);
+    void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr) override;
     virtual void drawImage(const QRectF &r, const QImage &image, const QRectF &sr);
-    virtual void drawTextItem(const QPointF &p, const QTextItem &textItem);
-    virtual void drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, const QPointF &s);
+    void drawTextItem(const QPointF &p, const QTextItem &textItem) override;
+    void drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, const QPointF &s) override;
 
 protected:
     QAlphaPaintEngine(QAlphaPaintEnginePrivate &data, PaintEngineFeatures devcaps = nullptr);
@@ -93,7 +93,7 @@ class QAlphaPaintEnginePrivate : public QPaintEnginePrivate
     Q_DECLARE_PUBLIC(QAlphaPaintEngine)
 public:
     QAlphaPaintEnginePrivate();
-    ~QAlphaPaintEnginePrivate();
+    ~QAlphaPaintEnginePrivate() override;
 
     int m_pass;
     QPicture *m_pic;

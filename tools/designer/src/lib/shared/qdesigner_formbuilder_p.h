@@ -122,22 +122,22 @@ protected:
     using QFormBuilder::createDom;
     using QFormBuilder::create;
 
-    virtual QWidget *create(DomUI *ui, QWidget *parentWidget);
-    virtual DomWidget *createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive = true);
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parentWidget);
-    virtual QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget);
-    virtual void createResources(DomResources *resources);
+    QWidget *create(DomUI *ui, QWidget *parentWidget) override;
+    DomWidget *createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive = true) override;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
+    QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) override;
+    void createResources(DomResources *resources) override;
 
-    virtual QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name);
-    virtual bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
-    virtual bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout);
+    QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) override;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
+    bool addItem(DomLayoutItem *ui_item, QLayoutItem *item, QLayout *layout) override;
 
-    virtual QIcon nameToIcon(const QString &filePath, const QString &qrcPath);
-    virtual QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath);
+    QIcon nameToIcon(const QString &filePath, const QString &qrcPath) override;
+    QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath) override;
 
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
 
-    virtual void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
     QtResourceSet *internalResourceSet() const { return m_tempResourceSet; }
 
@@ -170,7 +170,7 @@ public:
                              const DeviceProfile &deviceProfile = DeviceProfile());
 
 protected:
-    virtual void createCustomWidgets(DomCustomWidgets *);
+    void createCustomWidgets(DomCustomWidgets *) override;
 };
 
 

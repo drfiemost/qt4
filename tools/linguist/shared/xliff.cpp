@@ -383,13 +383,13 @@ public:
     XLIFFHandler(Translator &translator, ConversionData &cd);
 
     bool startElement(const QString& namespaceURI, const QString &localName,
-        const QString &qName, const QXmlAttributes &atts );
+        const QString &qName, const QXmlAttributes &atts ) override;
     bool endElement(const QString& namespaceURI, const QString &localName,
-        const QString &qName );
-    bool characters(const QString &ch);
-    bool fatalError(const QXmlParseException &exception);
+        const QString &qName ) override;
+    bool characters(const QString &ch) override;
+    bool fatalError(const QXmlParseException &exception) override;
 
-    bool endDocument();
+    bool endDocument() override;
 
 private:
     enum XliffContext {

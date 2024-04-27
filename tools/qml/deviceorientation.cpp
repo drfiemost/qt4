@@ -49,16 +49,16 @@ class DefaultDeviceOrientation : public DeviceOrientation
 public:
     DefaultDeviceOrientation() : DeviceOrientation(), m_orientation(DeviceOrientation::Portrait) {}
 
-    Orientation orientation() const {
+    Orientation orientation() const override {
         return m_orientation;
     }
 
-    void pauseListening() {
+    void pauseListening() override {
     }
-    void resumeListening() {
+    void resumeListening() override {
     }
 
-    void setOrientation(Orientation o) {
+    void setOrientation(Orientation o) override {
         if (o != m_orientation) {
             m_orientation = o;
             emit orientationChanged();

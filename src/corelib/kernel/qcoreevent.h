@@ -320,7 +320,7 @@ class Q_CORE_EXPORT QTimerEvent : public QEvent
 {
 public:
     QTimerEvent( int timerId );
-    ~QTimerEvent();
+    ~QTimerEvent() override;
     int timerId() const { return id; }
 protected:
     int id;
@@ -332,7 +332,7 @@ class Q_CORE_EXPORT QChildEvent : public QEvent
 {
 public:
     QChildEvent( Type type, QObject *child );
-    ~QChildEvent();
+    ~QChildEvent() override;
     QObject *child() const { return c; }
     bool added() const { return type() == ChildAdded; }
     bool polished() const { return type() == ChildPolished; }
@@ -345,7 +345,7 @@ class Q_CORE_EXPORT QDynamicPropertyChangeEvent : public QEvent
 {
 public:
     QDynamicPropertyChangeEvent(const QByteArray &name);
-    ~QDynamicPropertyChangeEvent();
+    ~QDynamicPropertyChangeEvent() override;
 
     inline QByteArray propertyName() const { return n; }
 

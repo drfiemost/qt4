@@ -63,7 +63,7 @@ public:
     typedef QPair<int, int> TimerInfo;
 
     explicit QAbstractEventDispatcher(QObject *parent = nullptr);
-    ~QAbstractEventDispatcher();
+    ~QAbstractEventDispatcher() override;
 
     static QAbstractEventDispatcher *instance(QThread *thread = nullptr);
 

@@ -57,7 +57,7 @@ class Q_NETWORK_EXPORT QTcpSocket : public QAbstractSocket
     Q_OBJECT
 public:
     explicit QTcpSocket(QObject *parent = nullptr);
-    virtual ~QTcpSocket();
+    ~QTcpSocket() override;
 
 protected:
     QTcpSocket(QTcpSocketPrivate &dd, QObject *parent = nullptr);

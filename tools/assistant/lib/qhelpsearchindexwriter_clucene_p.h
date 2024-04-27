@@ -78,7 +78,7 @@ class QHelpSearchIndexWriter : public QThread
 
 public:
     QHelpSearchIndexWriter();
-    ~QHelpSearchIndexWriter();
+    ~QHelpSearchIndexWriter() override;
 
     void cancelIndexing();
     void updateIndex(const QString &collectionFile,
@@ -90,7 +90,7 @@ signals:
     void indexingFinished();
 
 private:
-    void run();
+    void run() override;
 
     bool addDocuments(const QList<QUrl> docFiles, const QHelpEngineCore &engine,
         const QStringList &attributes, const QString &namespaceName,

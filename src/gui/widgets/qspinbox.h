@@ -66,7 +66,7 @@ class Q_GUI_EXPORT QSpinBox : public QAbstractSpinBox
 
 public:
     explicit QSpinBox(QWidget *parent = nullptr);
-    ~QSpinBox();
+    ~QSpinBox() override;
 
     int value() const;
 
@@ -90,11 +90,11 @@ public:
     void setRange(int min, int max);
 
 protected:
-    bool event(QEvent *event);
-    virtual QValidator::State validate(QString &input, int &pos) const;
+    bool event(QEvent *event) override;
+    QValidator::State validate(QString &input, int &pos) const override;
     virtual int valueFromText(const QString &text) const;
     virtual QString textFromValue(int val) const;
-    virtual void fixup(QString &str) const;
+    void fixup(QString &str) const override;
 
 
 public Q_SLOTS:
@@ -124,7 +124,7 @@ class Q_GUI_EXPORT QDoubleSpinBox : public QAbstractSpinBox
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
 public:
     explicit QDoubleSpinBox(QWidget *parent = nullptr);
-    ~QDoubleSpinBox();
+    ~QDoubleSpinBox() override;
 
     double value() const;
 
@@ -150,10 +150,10 @@ public:
     int decimals() const;
     void setDecimals(int prec);
 
-    virtual QValidator::State validate(QString &input, int &pos) const;
+    QValidator::State validate(QString &input, int &pos) const override;
     virtual double valueFromText(const QString &text) const;
     virtual QString textFromValue(double val) const;
-    virtual void fixup(QString &str) const;
+    void fixup(QString &str) const override;
 
 public Q_SLOTS:
     void setValue(double val);

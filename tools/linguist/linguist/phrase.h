@@ -91,7 +91,7 @@ class PhraseBook : public QObject
 
 public:
     PhraseBook();
-    ~PhraseBook();
+    ~PhraseBook() override;
     bool load(const QString &fileName, bool *langGuessed);
     bool save(const QString &fileName);
     QList<Phrase *> phrases() const { return m_phrases; }

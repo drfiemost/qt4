@@ -69,7 +69,7 @@ public:
         animationFps = 24;
     }
 
-    ~QCleanlooksStylePrivate() {
+    ~QCleanlooksStylePrivate() override {
     }
 };
 

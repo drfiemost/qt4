@@ -80,7 +80,7 @@ public:
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
     explicit QNetworkConfigurationManager(QObject *parent = nullptr);
-    virtual ~QNetworkConfigurationManager();
+    ~QNetworkConfigurationManager() override;
 
     QNetworkConfigurationManager::Capabilities capabilities() const;
 

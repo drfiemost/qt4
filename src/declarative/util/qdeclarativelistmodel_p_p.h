@@ -124,10 +124,10 @@ class FlatListScriptClass : public QScriptDeclarativeClass
 public:
     FlatListScriptClass(FlatListModel *model, QScriptEngine *seng);
 
-    Value property(Object *, const Identifier &);
-    void setProperty(Object *, const Identifier &name, const QScriptValue &);
-    QScriptClass::QueryFlags queryProperty(Object *, const Identifier &, QScriptClass::QueryFlags flags);
-    bool compare(Object *, Object *);
+    Value property(Object *, const Identifier &) override;
+    void setProperty(Object *, const Identifier &name, const QScriptValue &) override;
+    QScriptClass::QueryFlags queryProperty(Object *, const Identifier &, QScriptClass::QueryFlags flags) override;
+    bool compare(Object *, Object *) override;
 
 private:
     FlatListModel *m_model;
@@ -161,7 +161,7 @@ struct FlatNodeObjectData : public QScriptDeclarativeClass::Object
         nodeData->addData(this);
     }
 
-    ~FlatNodeObjectData() {
+    ~FlatNodeObjectData() override {
         if (nodeData)
             nodeData->removeData(this);
     }
@@ -230,7 +230,7 @@ public:
     bool m_enabled;
 
 protected:
-    void propertyWritten(int index);
+    void propertyWritten(int index) override;
 
 private:
     QScriptEngine *m_seng;

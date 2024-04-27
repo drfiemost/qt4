@@ -61,7 +61,7 @@ public:
     QKeyEventTransition(QState *sourceState = nullptr);
     QKeyEventTransition(QObject *object, QEvent::Type type, int key,
                         QState *sourceState = nullptr);
-    ~QKeyEventTransition();
+    ~QKeyEventTransition() override;
 
     int key() const;
     void setKey(int key);
@@ -70,8 +70,8 @@ public:
     void setModifierMask(Qt::KeyboardModifiers modifiers);
 
 protected:
-    void onTransition(QEvent *event);
-    bool eventTest(QEvent *event);
+    void onTransition(QEvent *event) override;
+    bool eventTest(QEvent *event) override;
 
 private:
     Q_DISABLE_COPY(QKeyEventTransition)

@@ -69,7 +69,7 @@ class Q_DBUS_EXPORT QDBusConnectionInterface: public QDBusAbstractInterface
     static inline const char *staticInterfaceName();
 
     explicit QDBusConnectionInterface(const QDBusConnection &connection, QObject *parent);
-    ~QDBusConnectionInterface();
+    ~QDBusConnectionInterface() override;
 
     Q_PROPERTY(QDBusReply<QStringList> registeredServiceNames READ registeredServiceNames)
 
@@ -116,8 +116,8 @@ Q_SIGNALS:
     void NameLost(const QString &);
     void NameOwnerChanged(const QString &, const QString &, const QString &);
 protected:
-    void connectNotify(const char *);
-    void disconnectNotify(const char *);
+    void connectNotify(const char *) override;
+    void disconnectNotify(const char *) override;
 #endif
 };
 

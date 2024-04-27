@@ -80,7 +80,7 @@ namespace QPatternist
         /**
          * @returns always a default constructed value, T().
          */
-        virtual T next()
+        T next() override
         {
             return T();
         }
@@ -88,7 +88,7 @@ namespace QPatternist
         /**
          * @returns always a default constructed value, T().
          */
-        virtual T current() const
+        T current() const override
         {
             return T();
         }
@@ -96,7 +96,7 @@ namespace QPatternist
         /**
          * @returns always 0.
          */
-        virtual xsInteger position() const
+        xsInteger position() const override
         {
             return 0;
         }
@@ -104,7 +104,7 @@ namespace QPatternist
         /**
          * @returns always @c this, the reverse of <tt>()</tt> is <tt>()</tt>.
          */
-        virtual typename QAbstractXmlForwardIterator<T>::Ptr toReversed()
+        typename QAbstractXmlForwardIterator<T>::Ptr toReversed() override
         {
             return typename QAbstractXmlForwardIterator<T>::Ptr(const_cast<EmptyIterator<T> *>(this));
         }
@@ -112,7 +112,7 @@ namespace QPatternist
         /**
          * @returns always 0
          */
-        virtual xsInteger count()
+        xsInteger count() override
         {
             return 0;
         }
@@ -120,7 +120,7 @@ namespace QPatternist
         /**
          * @returns @c this
          */
-        virtual typename QAbstractXmlForwardIterator<T>::Ptr copy() const
+        typename QAbstractXmlForwardIterator<T>::Ptr copy() const override
         {
             return typename QAbstractXmlForwardIterator<T>::Ptr(const_cast<EmptyIterator *>(this));
         }

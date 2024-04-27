@@ -120,7 +120,7 @@ public:
     enum State { Waiting, Active, Inactive, Dead };
 
     QDeclarativeDebugWatch(QObject *);
-    ~QDeclarativeDebugWatch();
+    ~QDeclarativeDebugWatch() override;
 
     int queryId() const;
     int objectDebugId() const;
@@ -319,7 +319,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeDebugEnginesQuery : public QDecla
 {
 Q_OBJECT
 public:
-    virtual ~QDeclarativeDebugEnginesQuery();
+    ~QDeclarativeDebugEnginesQuery() override;
     QList<QDeclarativeDebugEngineReference> engines() const;
 private:
     friend class QDeclarativeEngineDebug;
@@ -334,7 +334,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeDebugRootContextQuery : public QD
 {
 Q_OBJECT
 public:
-    virtual ~QDeclarativeDebugRootContextQuery();
+    ~QDeclarativeDebugRootContextQuery() override;
     QDeclarativeDebugContextReference rootContext() const;
 private:
     friend class QDeclarativeEngineDebug;
@@ -349,7 +349,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeDebugObjectQuery : public QDeclar
 {
 Q_OBJECT
 public:
-    virtual ~QDeclarativeDebugObjectQuery();
+    ~QDeclarativeDebugObjectQuery() override;
     QDeclarativeDebugObjectReference object() const;
 private:
     friend class QDeclarativeEngineDebug;
@@ -365,7 +365,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeDebugExpressionQuery : public QDe
 {
 Q_OBJECT
 public:
-    virtual ~QDeclarativeDebugExpressionQuery();
+    ~QDeclarativeDebugExpressionQuery() override;
     QVariant expression() const;
     QVariant result() const;
 private:

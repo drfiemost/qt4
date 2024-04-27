@@ -90,7 +90,7 @@ public:
                          QMacCompatGLenum target = GL_TEXTURE_2D, QMacCompatGLenum internal_format = GL_RGBA8);
 #endif
 
-    virtual ~QGLFramebufferObject();
+    ~QGLFramebufferObject() override;
 
     QGLFramebufferObjectFormat format() const;
 
@@ -104,7 +104,7 @@ public:
     QImage toImage() const;
     Attachment attachment() const;
 
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
     GLuint handle() const;
 
     static bool bindDefault();
@@ -125,8 +125,8 @@ public:
                                 GLenum filter = GL_NEAREST);
 
 protected:
-    int metric(PaintDeviceMetric metric) const;
-    int devType() const { return QInternal::FramebufferObject; }
+    int metric(PaintDeviceMetric metric) const override;
+    int devType() const override { return QInternal::FramebufferObject; }
 
 private:
     Q_DISABLE_COPY(QGLFramebufferObject)

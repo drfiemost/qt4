@@ -158,7 +158,7 @@ public:
     {
         refT();
     }
-    ~QFutureInterface()
+    ~QFutureInterface() override
     {
         if (!derefT())
             resultStore().clear();

@@ -144,7 +144,7 @@ public:
 
 
     QObjectPrivate(int version = QObjectPrivateVersion);
-    virtual ~QObjectPrivate();
+    ~QObjectPrivate() override;
     void deleteChildren();
 
     void setParent_helper(QObject *);
@@ -284,7 +284,7 @@ class Q_CORE_EXPORT QMetaCallEvent : public QEvent
 public:
     QMetaCallEvent(ushort method_offset, ushort method_relative, QObjectPrivate::StaticMetaCallFunction callFunction , const QObject *sender, int signalId,
                    int nargs = 0, int *types = nullptr, void **args = nullptr, QSemaphore *semaphore = nullptr);
-    ~QMetaCallEvent();
+    ~QMetaCallEvent() override;
 
     inline int id() const { return method_offset_ + method_relative_; }
     inline const QObject *sender() const { return sender_; }

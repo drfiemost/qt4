@@ -71,27 +71,27 @@ public:
     QObjectDelegate(
         QObject *object, QScriptEngine::ValueOwnership ownership,
         const QScriptEngine::QObjectWrapOptions &options);
-    ~QObjectDelegate();
+    ~QObjectDelegate() override;
 
-    virtual Type type() const;
+    Type type() const override;
 
-    virtual bool getOwnPropertySlot(QScriptObject*, JSC::ExecState*,
+    bool getOwnPropertySlot(QScriptObject*, JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(QScriptObject*, JSC::ExecState*,
+                                    JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(QScriptObject*, JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertyDescriptor&);
+                                    JSC::PropertyDescriptor&) override;
 
-    virtual void put(QScriptObject*, JSC::ExecState* exec,
+    void put(QScriptObject*, JSC::ExecState* exec,
                      const JSC::Identifier& propertyName,
-                     JSC::JSValue, JSC::PutPropertySlot&);
-    virtual bool deleteProperty(QScriptObject*, JSC::ExecState*,
-                                const JSC::Identifier& propertyName);
-    virtual void getOwnPropertyNames(QScriptObject*, JSC::ExecState*,
+                     JSC::JSValue, JSC::PutPropertySlot&) override;
+    bool deleteProperty(QScriptObject*, JSC::ExecState*,
+                                const JSC::Identifier& propertyName) override;
+    void getOwnPropertyNames(QScriptObject*, JSC::ExecState*,
                                      JSC::PropertyNameArray&,
-                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
-    virtual void markChildren(QScriptObject*, JSC::MarkStack& markStack);
-    virtual bool compareToObject(QScriptObject*, JSC::ExecState*, JSC::JSObject*);
+                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
+    void markChildren(QScriptObject*, JSC::MarkStack& markStack) override;
+    bool compareToObject(QScriptObject*, JSC::ExecState*, JSC::JSObject*) override;
 
     inline QObject *value() const { return data->value; }
     inline void setValue(QObject* value) { data->value = value; }
@@ -116,7 +116,7 @@ class QObjectPrototypeObject : public QObject
 public:
     QObjectPrototypeObject(QObject *parent = nullptr)
         : QObject(parent) { }
-    ~QObjectPrototypeObject() { }
+    ~QObjectPrototypeObject() override { }
 };
 
 class QObjectPrototype : public QScriptObject
@@ -187,12 +187,12 @@ public:
 
     QtFunction(JSC::JSValue object, int initialIndex, bool maybeOverloaded,
                JSC::JSGlobalData*, WTF::PassRefPtr<JSC::Structure>, const JSC::Identifier&);
-    virtual ~QtFunction();
+    ~QtFunction() override;
 
-    virtual JSC::CallType getCallData(JSC::CallData&);
-    virtual void markChildren(JSC::MarkStack&);
+    JSC::CallType getCallData(JSC::CallData&) override;
+    void markChildren(JSC::MarkStack&) override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     static JSC::JSValue JSC_HOST_CALL call(JSC::ExecState*, JSC::JSObject*,
@@ -229,11 +229,11 @@ public:
     QtPropertyFunction(const QMetaObject *meta, int index,
                        JSC::JSGlobalData*, WTF::PassRefPtr<JSC::Structure>,
                        const JSC::Identifier&);
-    virtual ~QtPropertyFunction();
+    ~QtPropertyFunction() override;
 
-    virtual JSC::CallType getCallData(JSC::CallData&);
+    JSC::CallType getCallData(JSC::CallData&) override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     static JSC::JSValue JSC_HOST_CALL call(JSC::ExecState*, JSC::JSObject*,
@@ -266,26 +266,26 @@ public:
     explicit QMetaObjectWrapperObject(
         JSC::ExecState *, const QMetaObject *metaobject, JSC::JSValue ctor,
         WTF::PassRefPtr<JSC::Structure> sid);
-    ~QMetaObjectWrapperObject();
+    ~QMetaObjectWrapperObject() override;
 
-    virtual bool getOwnPropertySlot(JSC::ExecState*,
+    bool getOwnPropertySlot(JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(JSC::ExecState*,
+                                    JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(JSC::ExecState*,
                                           const JSC::Identifier& propertyName,
-                                          JSC::PropertyDescriptor&);
-    virtual void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
-                     JSC::JSValue, JSC::PutPropertySlot&);
-    virtual bool deleteProperty(JSC::ExecState*,
-                                const JSC::Identifier& propertyName);
-    virtual void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&,
-                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
-    virtual void markChildren(JSC::MarkStack& markStack);
+                                          JSC::PropertyDescriptor&) override;
+    void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
+                     JSC::JSValue, JSC::PutPropertySlot&) override;
+    bool deleteProperty(JSC::ExecState*,
+                                const JSC::Identifier& propertyName) override;
+    void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&,
+                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
+    void markChildren(JSC::MarkStack& markStack) override;
 
-    virtual JSC::CallType getCallData(JSC::CallData&);
-    virtual JSC::ConstructType getConstructData(JSC::ConstructData&);
+    JSC::CallType getCallData(JSC::CallData&) override;
+    JSC::ConstructType getConstructData(JSC::ConstructData&) override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     static JSC::JSValue JSC_HOST_CALL call(JSC::ExecState*, JSC::JSObject*,

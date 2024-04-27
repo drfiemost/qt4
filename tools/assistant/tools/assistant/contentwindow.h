@@ -58,7 +58,7 @@ class ContentWindow : public QWidget
 
 public:
     ContentWindow();
-    ~ContentWindow();
+    ~ContentWindow() override;
 
     bool syncToContent(const QUrl &url);
     void expandToDepth(int depth);
@@ -73,9 +73,9 @@ private slots:
     void itemClicked(const QModelIndex &index);
 
 private:
-    void focusInEvent(QFocusEvent *e);
-    void keyPressEvent(QKeyEvent *e);
-    bool eventFilter(QObject *o, QEvent *e);
+    void focusInEvent(QFocusEvent *e) override;
+    void keyPressEvent(QKeyEvent *e) override;
+    bool eventFilter(QObject *o, QEvent *e) override;
 
     QHelpContentWidget * const m_contentWidget;
     int m_expandDepth;

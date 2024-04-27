@@ -82,9 +82,9 @@ class QDESIGNER_SHARED_EXPORT QDesignerMenu: public QMenu
     Q_OBJECT
 public:
     QDesignerMenu(QWidget *parent = nullptr);
-    virtual ~QDesignerMenu();
+    ~QDesignerMenu() override;
 
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
     QDesignerFormWindowInterface *formWindow() const;
     QDesignerActionProviderExtension *actionProvider();
@@ -92,7 +92,7 @@ public:
     QDesignerMenu *parentMenu() const;
     QDesignerMenuBar *parentMenuBar() const;
 
-    virtual void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
     void adjustSpecialActions();
 
@@ -122,15 +122,15 @@ private slots:
     void slotAdjustSizeNow();
 
 protected:
-    virtual void actionEvent(QActionEvent *event);
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dragMoveEvent(QDragMoveEvent *event);
-    virtual void dragLeaveEvent(QDragLeaveEvent *event);
-    virtual void dropEvent(QDropEvent *event);
-    virtual void paintEvent(QPaintEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
-    virtual void showEvent(QShowEvent *event);
+    void actionEvent(QActionEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
     bool handleEvent(QWidget *widget, QEvent *event);
     bool handleMouseDoubleClickEvent(QWidget *widget, QMouseEvent *event);

@@ -96,7 +96,7 @@ class Q_GUI_EXPORT QUndoStack : public QObject
 
 public:
     explicit QUndoStack(QObject *parent = nullptr);
-    ~QUndoStack();
+    ~QUndoStack() override;
     void clear();
 
     void push(QUndoCommand *cmd);

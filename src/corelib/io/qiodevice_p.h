@@ -214,7 +214,7 @@ class Q_CORE_EXPORT QIODevicePrivate
 
 public:
     QIODevicePrivate();
-    virtual ~QIODevicePrivate();
+    ~QIODevicePrivate() override;
 
     QIODevice::OpenMode openMode;
     QString errorString;

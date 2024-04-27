@@ -81,8 +81,8 @@ public:
     QDate date() const;
     void setDate(const QDate &date);
 
-    bool eventFilter(QObject *o, QEvent *e);
-    void timerEvent(QTimerEvent *e);
+    bool eventFilter(QObject *o, QEvent *e) override;
+    void timerEvent(QTimerEvent *e) override;
 
 signals:
     void dateChanged(const QDate &date);

@@ -56,13 +56,13 @@ class ShaderEffect : public QGraphicsEffect
 
 public:
     ShaderEffect(QObject *parent = nullptr);
-    ~ShaderEffect();
+    ~ShaderEffect() override;
     void addRenderTarget(ShaderEffectSource *target);
     void removeRenderTarget(ShaderEffectSource *target);
 
 protected:
-    virtual void draw (QPainter *painter);
-    virtual void sourceChanged (ChangeFlags flags);
+    void draw (QPainter *painter) override;
+    void sourceChanged (ChangeFlags flags) override;
 
 private:
     void prepareBufferedDraw(QPainter *painter);

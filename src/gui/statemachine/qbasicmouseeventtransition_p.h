@@ -71,7 +71,7 @@ public:
     QBasicMouseEventTransition(QState *sourceState = nullptr);
     QBasicMouseEventTransition(QEvent::Type type, Qt::MouseButton button,
                                QState *sourceState = nullptr);
-    ~QBasicMouseEventTransition();
+    ~QBasicMouseEventTransition() override;
 
     QEvent::Type eventType() const;
     void setEventType(QEvent::Type type);
@@ -86,8 +86,8 @@ public:
     void setHitTestPath(const QPainterPath &path);
 
 protected:
-    bool eventTest(QEvent *event);
-    void onTransition(QEvent *);
+    bool eventTest(QEvent *event) override;
+    void onTransition(QEvent *) override;
 
 private:
     Q_DISABLE_COPY(QBasicMouseEventTransition)

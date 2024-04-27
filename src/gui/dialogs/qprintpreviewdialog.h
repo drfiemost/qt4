@@ -62,7 +62,7 @@ class Q_GUI_EXPORT QPrintPreviewDialog : public QDialog
 public:
     explicit QPrintPreviewDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     explicit QPrintPreviewDialog(QPrinter *printer, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QPrintPreviewDialog();
+    ~QPrintPreviewDialog() override;
 
     using QDialog::open;
 
@@ -70,8 +70,8 @@ public:
 
     QPrinter *printer();
 
-    void setVisible(bool visible);
-    void done(int result);
+    void setVisible(bool visible) override;
+    void done(int result) override;
 
 Q_SIGNALS:
     void paintRequested(QPrinter *printer);

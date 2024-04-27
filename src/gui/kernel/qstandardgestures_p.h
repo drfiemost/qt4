@@ -65,9 +65,9 @@ class QPanGestureRecognizer : public QGestureRecognizer
 public:
     QPanGestureRecognizer();
 
-    QGesture *create(QObject *target);
-    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
-    void reset(QGesture *state);
+    QGesture *create(QObject *target) override;
+    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event) override;
+    void reset(QGesture *state) override;
 };
 
 class QPinchGestureRecognizer : public QGestureRecognizer
@@ -75,9 +75,9 @@ class QPinchGestureRecognizer : public QGestureRecognizer
 public:
     QPinchGestureRecognizer();
 
-    QGesture *create(QObject *target);
-    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
-    void reset(QGesture *state);
+    QGesture *create(QObject *target) override;
+    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event) override;
+    void reset(QGesture *state) override;
 };
 
 class QSwipeGestureRecognizer : public QGestureRecognizer
@@ -85,9 +85,9 @@ class QSwipeGestureRecognizer : public QGestureRecognizer
 public:
     QSwipeGestureRecognizer();
 
-    QGesture *create(QObject *target);
-    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
-    void reset(QGesture *state);
+    QGesture *create(QObject *target) override;
+    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event) override;
+    void reset(QGesture *state) override;
 };
 
 class QTapGestureRecognizer : public QGestureRecognizer
@@ -95,9 +95,9 @@ class QTapGestureRecognizer : public QGestureRecognizer
 public:
     QTapGestureRecognizer();
 
-    QGesture *create(QObject *target);
-    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
-    void reset(QGesture *state);
+    QGesture *create(QObject *target) override;
+    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event) override;
+    void reset(QGesture *state) override;
 };
 
 class QTapAndHoldGestureRecognizer : public QGestureRecognizer
@@ -105,9 +105,9 @@ class QTapAndHoldGestureRecognizer : public QGestureRecognizer
 public:
     QTapAndHoldGestureRecognizer();
 
-    QGesture *create(QObject *target);
-    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event);
-    void reset(QGesture *state);
+    QGesture *create(QObject *target) override;
+    QGestureRecognizer::Result recognize(QGesture *state, QObject *watched, QEvent *event) override;
+    void reset(QGesture *state) override;
 };
 
 QT_END_NAMESPACE

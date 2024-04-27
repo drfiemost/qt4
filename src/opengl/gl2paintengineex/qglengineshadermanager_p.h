@@ -418,7 +418,7 @@ class Q_OPENGL_EXPORT QGLEngineShaderManager : public QObject
     Q_OBJECT
 public:
     QGLEngineShaderManager(QGLContext* context);
-    ~QGLEngineShaderManager();
+    ~QGLEngineShaderManager() override;
 
     enum MaskType {NoMask, PixelMask, SubPixelMaskPass1, SubPixelMaskPass2, SubPixelWithGammaMask};
     enum PixelSrcType {

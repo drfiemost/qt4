@@ -66,7 +66,7 @@ public:
 
     QHistoryState(QState *parent = nullptr);
     QHistoryState(HistoryType type, QState *parent = nullptr);
-    ~QHistoryState();
+    ~QHistoryState() override;
 
     QAbstractState *defaultState() const;
     void setDefaultState(QAbstractState *state);
@@ -75,10 +75,10 @@ public:
     void setHistoryType(HistoryType type);
 
 protected:
-    void onEntry(QEvent *event);
-    void onExit(QEvent *event);
+    void onEntry(QEvent *event) override;
+    void onExit(QEvent *event) override;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QHistoryState)

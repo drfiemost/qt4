@@ -95,22 +95,22 @@ class QGLPixmapColorizeFilter: public QGLCustomShaderStage, public QGLPixmapFilt
 public:
     QGLPixmapColorizeFilter();
 
-    void setUniforms(QGLShaderProgram *program);
+    void setUniforms(QGLShaderProgram *program) override;
 
 protected:
-    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &pixmap, const QRectF &srcRect) const;
+    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &pixmap, const QRectF &srcRect) const override;
 };
 
 class QGLPixmapConvolutionFilter: public QGLCustomShaderStage, public QGLPixmapFilter<QPixmapConvolutionFilter>
 {
 public:
     QGLPixmapConvolutionFilter();
-    ~QGLPixmapConvolutionFilter();
+    ~QGLPixmapConvolutionFilter() override;
 
-    void setUniforms(QGLShaderProgram *program);
+    void setUniforms(QGLShaderProgram *program) override;
 
 protected:
-    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const;
+    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const override;
 
 private:
     QByteArray generateConvolutionShader() const;
@@ -125,7 +125,7 @@ public:
     QGLPixmapBlurFilter();
 
 protected:
-    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const;
+    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const override;
 };
 
 class QGLPixmapDropShadowFilter : public QGLCustomShaderStage, public QGLPixmapFilter<QPixmapDropShadowFilter>
@@ -133,10 +133,10 @@ class QGLPixmapDropShadowFilter : public QGLCustomShaderStage, public QGLPixmapF
 public:
     QGLPixmapDropShadowFilter();
 
-    void setUniforms(QGLShaderProgram *program);
+    void setUniforms(QGLShaderProgram *program) override;
 
 protected:
-    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const;
+    bool processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const override;
 };
 
 extern const QGLContext *qt_gl_share_context();
@@ -330,14 +330,14 @@ public:
     static QGLBlurTextureCache *cacheForContext(const QGLContext *context);
 
     QGLBlurTextureCache(const QGLContext *);
-    ~QGLBlurTextureCache();
+    ~QGLBlurTextureCache() override;
 
     QGLBlurTextureInfo *takeBlurTextureInfo(const QPixmap &pixmap);
     bool hasBlurTextureInfo(quint64 cacheKey) const;
     void insertBlurTextureInfo(const QPixmap &pixmap, QGLBlurTextureInfo *info);
     void clearBlurTextureInfo(quint64 cacheKey);
 
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
 private:
     static void pixmapDestroyed(QPixmapData *pixmap);

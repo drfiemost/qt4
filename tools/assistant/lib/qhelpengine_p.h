@@ -77,7 +77,7 @@ class QHelpEngineCorePrivate : public QObject
 
 public:
     QHelpEngineCorePrivate();
-    virtual ~QHelpEngineCorePrivate();
+    ~QHelpEngineCorePrivate() override;
 
     virtual void init(const QString &collectionFile,
         QHelpEngineCore *helpEngineCore);
@@ -111,10 +111,10 @@ class QHelpEnginePrivate : public QHelpEngineCorePrivate
 
 public:
     QHelpEnginePrivate();
-    ~QHelpEnginePrivate();
+    ~QHelpEnginePrivate() override;
 
     void init(const QString &collectionFile,
-        QHelpEngineCore *helpEngineCore);
+        QHelpEngineCore *helpEngineCore) override;
 
     QHelpContentModel *contentModel;
     QHelpContentWidget *contentWidget;

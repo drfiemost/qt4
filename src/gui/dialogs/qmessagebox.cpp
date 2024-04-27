@@ -84,7 +84,7 @@ public:
     {
     public:
         TextEdit(QWidget *parent=nullptr) : QTextEdit(parent) { }
-        void contextMenuEvent(QContextMenuEvent * e)
+        void contextMenuEvent(QContextMenuEvent * e) override
         {
 #ifndef QT_NO_CONTEXTMENU
             QMenu *menu = createStandardContextMenu();
@@ -133,7 +133,7 @@ public:
     void setLabel(DetailButtonLabel lbl)
     { setText(label(lbl)); }
 
-    QSize sizeHint() const
+    QSize sizeHint() const override
     {
         ensurePolished();
         QStyleOptionButton opt;

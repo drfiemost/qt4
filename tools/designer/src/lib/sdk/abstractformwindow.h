@@ -72,7 +72,7 @@ public:
 
 public:
     QDesignerFormWindowInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    virtual ~QDesignerFormWindowInterface();
+    ~QDesignerFormWindowInterface() override;
 
     virtual QString fileName() const = 0;
     virtual QDir absoluteDir() const = 0;

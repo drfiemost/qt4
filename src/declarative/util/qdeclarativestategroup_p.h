@@ -62,7 +62,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeStateGroup : public QObject, public QDecl
 
 public:
     QDeclarativeStateGroup(QObject * = nullptr);
-    virtual ~QDeclarativeStateGroup();
+    ~QDeclarativeStateGroup() override;
 
     QString state() const;
     void setState(const QString &);
@@ -74,8 +74,8 @@ public:
 
     QDeclarativeState *findState(const QString &name) const;
 
-    virtual void classBegin();
-    virtual void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 Q_SIGNALS:
     void stateChanged(const QString &);
 

@@ -432,7 +432,7 @@ public:
 
     int findText(const QString &text) const;
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 };
 
 InlineEditorModel::InlineEditorModel(int rows, int cols, QObject *parent)
@@ -590,9 +590,9 @@ public:
 
     void setForm(QDesignerFormWindowInterface *form);
 
-    virtual QWidget *createEditor(QWidget *parent,
+    QWidget *createEditor(QWidget *parent,
                                     const QStyleOptionViewItem &option,
-                                    const QModelIndex &index) const;
+                                    const QModelIndex &index) const override;
 
 private slots:
     void emitCommitData();

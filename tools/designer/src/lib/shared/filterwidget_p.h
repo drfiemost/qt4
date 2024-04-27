@@ -84,8 +84,8 @@ public:
     void setRefuseFocus(bool v);
 
 protected:
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void focusInEvent(QFocusEvent *e);
+    void mousePressEvent(QMouseEvent *event) override;
+    void focusInEvent(QFocusEvent *e) override;
 
 private:
     const Qt::FocusPolicy m_defaultFocusPolicy;
@@ -100,7 +100,7 @@ class IconButton: public QToolButton
     Q_PROPERTY(float fader READ fader WRITE setFader)
 public:
     IconButton(QWidget *parent);
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
     float fader() { return m_fader; }
     void setFader(float value) { m_fader = value; update(); }
     void animateShow(bool visible);
@@ -125,7 +125,7 @@ public:
     explicit FilterWidget(QWidget *parent = nullptr, LayoutMode lm = LayoutAlignRight);
 
     QString text() const;
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *) override;
     bool refuseFocus() const; // see HintLineEdit
     void setRefuseFocus(bool v);
 

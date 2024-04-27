@@ -126,10 +126,10 @@ public:
             TabBarAnimation(Tab *t, QTabBarPrivate *_priv) : tab(t), priv(_priv)
             { setEasingCurve(QEasingCurve::InOutQuad); }
 
-            void updateCurrentValue(const QVariant &current)
+            void updateCurrentValue(const QVariant &current) override
             { priv->moveTab(priv->tabList.indexOf(*tab), current.toInt()); }
 
-            void updateState(State, State newState)
+            void updateState(State, State newState) override
             { if (newState == Stopped) priv->moveTabFinished(priv->tabList.indexOf(*tab)); }
         private:
             //these are needed for the callbacks
@@ -247,12 +247,12 @@ class CloseButton : public QAbstractButton
 public:
     CloseButton(QWidget *parent = nullptr);
 
-    QSize sizeHint() const;
-    inline QSize minimumSizeHint() const
+    QSize sizeHint() const override;
+    inline QSize minimumSizeHint() const override
         { return sizeHint(); }
-    void enterEvent(QEvent *event);
-    void leaveEvent(QEvent *event);
-    void paintEvent(QPaintEvent *event);
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 };
 
 

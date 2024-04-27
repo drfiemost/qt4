@@ -64,13 +64,13 @@ class QTextDocumentWithImageResources : public QTextDocument {
 
 public:
     QTextDocumentWithImageResources(QDeclarativeText *parent);
-    virtual ~QTextDocumentWithImageResources();
+    ~QTextDocumentWithImageResources() override;
 
     void setText(const QString &);
     int resourcesLoading() const { return outstanding; }
 
 protected:
-    QVariant loadResource(int type, const QUrl &name);
+    QVariant loadResource(int type, const QUrl &name) override;
 
 private slots:
     void requestFinished();

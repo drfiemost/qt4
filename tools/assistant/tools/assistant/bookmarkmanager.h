@@ -81,10 +81,10 @@ signals:
 
 private:
     BookmarkManager();
-    ~BookmarkManager();
+    ~BookmarkManager() override;
 
     void removeItem(const QModelIndex &index);
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
     void buildBookmarksMenu(const QModelIndex &index, QMenu *menu);
     void showBookmarkDialog(const QString &name, const QString &url);
 
@@ -131,7 +131,7 @@ class BookmarkManager::BookmarkWidget : public QWidget
 public:
     BookmarkWidget(QWidget *parent = nullptr)
         : QWidget(parent) { ui.setupUi(this); }
-    virtual ~BookmarkWidget() {}
+    ~BookmarkWidget() override {}
 
     Ui::BookmarkWidget ui;
 
@@ -139,7 +139,7 @@ signals:
     void focusInEvent();
 
 private:
-    void focusInEvent(QFocusEvent *event);
+    void focusInEvent(QFocusEvent *event) override;
 };
 
 class BookmarkManager::BookmarkTreeView : public QTreeView
@@ -147,7 +147,7 @@ class BookmarkManager::BookmarkTreeView : public QTreeView
     Q_OBJECT
 public:
     BookmarkTreeView(QWidget *parent = nullptr);
-    ~BookmarkTreeView() {}
+    ~BookmarkTreeView() override {}
 
     void subclassKeyPressEvent(QKeyEvent *event);
 

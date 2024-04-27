@@ -53,10 +53,10 @@ class QGenericEnginePlugin : public QBearerEnginePlugin
 {
 public:
     QGenericEnginePlugin();
-    ~QGenericEnginePlugin();
+    ~QGenericEnginePlugin() override;
 
-    QStringList keys() const;
-    QBearerEngine *create(const QString &key) const;
+    QStringList keys() const override;
+    QBearerEngine *create(const QString &key) const override;
 };
 
 QGenericEnginePlugin::QGenericEnginePlugin()

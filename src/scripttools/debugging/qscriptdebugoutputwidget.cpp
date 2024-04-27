@@ -83,7 +83,7 @@ class QScriptDebugOutputWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptDebugOutputWidget)
 public:
     QScriptDebugOutputWidgetPrivate();
-    ~QScriptDebugOutputWidgetPrivate();
+    ~QScriptDebugOutputWidgetPrivate() override;
 
     QScriptDebugOutputWidgetOutputEdit *outputEdit;
 };

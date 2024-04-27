@@ -104,7 +104,7 @@ class Q_GUI_EXPORT QTextTable : public QTextFrame
     Q_OBJECT
 public:
     explicit QTextTable(QTextDocument *doc);
-    ~QTextTable();
+    ~QTextTable() override;
 
     void resize(int rows, int cols);
     void insertRows(int pos, int num);

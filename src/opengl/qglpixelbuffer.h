@@ -60,7 +60,7 @@ public:
                    QGLWidget *shareWidget = nullptr);
     QGLPixelBuffer(int width, int height, const QGLFormat &format = QGLFormat::defaultFormat(),
                    QGLWidget *shareWidget = nullptr);
-    virtual ~QGLPixelBuffer();
+    ~QGLPixelBuffer() override;
 
     bool isValid() const;
     bool makeCurrent();
@@ -95,14 +95,14 @@ public:
     Qt::HANDLE handle() const;
     QImage toImage() const;
 
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
     QGLFormat format() const;
 
     static bool hasOpenGLPbuffers();
 
 protected:
-    int metric(PaintDeviceMetric metric) const;
-    int devType() const { return QInternal::Pbuffer; }
+    int metric(PaintDeviceMetric metric) const override;
+    int devType() const override { return QInternal::Pbuffer; }
 
 private:
     Q_DISABLE_COPY(QGLPixelBuffer)

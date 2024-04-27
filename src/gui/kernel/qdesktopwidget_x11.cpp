@@ -66,7 +66,7 @@ class QSingleDesktopWidget : public QWidget
 {
 public:
     QSingleDesktopWidget();
-    ~QSingleDesktopWidget();
+    ~QSingleDesktopWidget() override;
 };
 
 QSingleDesktopWidget::QSingleDesktopWidget()
@@ -88,7 +88,7 @@ class QDesktopWidgetPrivate : public QWidgetPrivate
 {
 public:
     QDesktopWidgetPrivate();
-    ~QDesktopWidgetPrivate();
+    ~QDesktopWidgetPrivate() override;
 
     void init();
 

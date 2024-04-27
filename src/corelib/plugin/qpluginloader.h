@@ -66,7 +66,7 @@ class Q_CORE_EXPORT QPluginLoader : public QObject
 public:
     explicit QPluginLoader(QObject *parent = nullptr);
     explicit QPluginLoader(const QString &fileName, QObject *parent = nullptr);
-    ~QPluginLoader();
+    ~QPluginLoader() override;
 
     QObject *instance();
 

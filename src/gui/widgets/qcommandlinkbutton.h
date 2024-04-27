@@ -62,16 +62,16 @@ public:
     explicit QCommandLinkButton(QWidget *parent=nullptr);
     explicit QCommandLinkButton(const QString &text, QWidget *parent=nullptr);
     explicit QCommandLinkButton(const QString &text, const QString &description, QWidget *parent=nullptr);
-    ~QCommandLinkButton();
+    ~QCommandLinkButton() override;
     QString description() const;
     void setDescription(const QString &description);
 
 protected:
-    QSize sizeHint() const;
-    int heightForWidth(int) const;
-    QSize minimumSizeHint() const;
-    bool event(QEvent *e);
-    void paintEvent(QPaintEvent *);
+    QSize sizeHint() const override;
+    int heightForWidth(int) const override;
+    QSize minimumSizeHint() const override;
+    bool event(QEvent *e) override;
+    void paintEvent(QPaintEvent *) override;
 
 private:
     Q_DISABLE_COPY(QCommandLinkButton)

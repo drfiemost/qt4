@@ -245,7 +245,7 @@ typedef QList<Node*> NodeList;
 class InnerNode : public Node
 {
  public:
-    virtual ~InnerNode();
+    ~InnerNode() override;
 
     Node* findNode(const QString& name);
     Node* findNode(const QString& name, Type type);
@@ -259,7 +259,7 @@ class InnerNode : public Node
     void deleteChildren();
     void removeFromRelated();
 
-    virtual bool isInnerNode() const;
+    bool isInnerNode() const override;
     const Node* findNode(const QString& name) const;
     const Node* findNode(const QString& name, Type type) const;
     const FunctionNode* findFunctionNode(const QString& name) const;
@@ -276,7 +276,7 @@ class InnerNode : public Node
     QStringList primaryKeys();
     QStringList secondaryKeys();
     const QStringList& pageKeywords() const { return pageKeywds; }
-    virtual void addPageKeywords(const QString& t) { pageKeywds << t; }
+    void addPageKeywords(const QString& t) override { pageKeywds << t; }
     virtual bool isAbstract() const { return false; }
     virtual void setAbstract(bool ) { }
 
@@ -305,9 +305,9 @@ class LeafNode : public Node
 {
  public:
     LeafNode();
-    virtual ~LeafNode() { }
+    ~LeafNode() override { }
 
-    virtual bool isInnerNode() const;
+    bool isInnerNode() const override;
 
  protected:
     LeafNode(Type type, InnerNode* parent, const QString& name);
@@ -317,7 +317,7 @@ class NamespaceNode : public InnerNode
 {
  public:
     NamespaceNode(InnerNode* parent, const QString& name);
-    virtual ~NamespaceNode() { }
+    ~NamespaceNode() override { }
 };
 
 class ClassNode;
@@ -344,7 +344,7 @@ class ClassNode : public InnerNode
 {
  public:
     ClassNode(InnerNode* parent, const QString& name);
-    virtual ~ClassNode() { }
+    ~ClassNode() override { }
 
     void addBaseClass(Access access, 
                       ClassNode* node, 
@@ -362,8 +362,8 @@ class ClassNode : public InnerNode
     void setServiceName(const QString& value) { sname = value; }
     QString qmlElement() const { return qmlelement; }
     void setQmlElement(const QString& value) { qmlelement = value; }
-    virtual bool isAbstract() const { return abstract; }
-    virtual void setAbstract(bool b) { abstract = b; }
+    bool isAbstract() const override { return abstract; }
+    void setAbstract(bool b) override { abstract = b; }
     const PropertyNode* findPropertyNode(const QString& name) const;
 
  private:
@@ -381,19 +381,19 @@ class FakeNode : public InnerNode
  public:
 
     FakeNode(InnerNode* parent, const QString& name, SubType subType);
-    virtual ~FakeNode() { }
+    ~FakeNode() override { }
 
     void setTitle(const QString &title) { tle = title; }
     void setSubTitle(const QString &subTitle) { stle = subTitle; }
     void addGroupMember(Node* node) { gr.append(node); }
 
-    SubType subType() const { return sub; }
+    SubType subType() const override { return sub; }
     virtual QString title() const;
     virtual QString fullTitle() const;
     virtual QString subTitle() const;
     virtual QString imageFileName() const { return QString(); }
     const NodeList &groupMembers() const { return gr; }
-    virtual QString nameForLists() const { return title(); }
+    QString nameForLists() const override { return title(); }
     virtual void setImageFileName(const QString& ) { }
 
  private:
@@ -407,10 +407,10 @@ class ExampleNode : public FakeNode
 {
  public:
     ExampleNode(InnerNode* parent, const QString& name);
-    virtual ~ExampleNode() { }
-    virtual QString imageFileName() const { return imageFileName_; }
-    virtual void setImageFileName(const QString& ifn) { imageFileName_ = ifn; }
-    virtual void addDependency(const QString& arg) { dependencies_.append(arg); }
+    ~ExampleNode() override { }
+    QString imageFileName() const override { return imageFileName_; }
+    void setImageFileName(const QString& ifn) override { imageFileName_ = ifn; }
+    void addDependency(const QString& arg) override { dependencies_.append(arg); }
     const QStringList& dependencies() const { return dependencies_; }
 
  public:
@@ -427,11 +427,11 @@ class QmlClassNode : public FakeNode
     QmlClassNode(InnerNode* parent, 
                  const QString& name, 
                  const ClassNode* cn);
-    virtual ~QmlClassNode();
-    virtual bool isQmlNode() const { return true; }
+    ~QmlClassNode() override;
+    bool isQmlNode() const override { return true; }
 
     const ClassNode* classNode() const { return cnode; }
-    virtual QString fileBase() const;
+    QString fileBase() const override;
     static void addInheritedBy(const QString& base, Node* sub);
     static void subclasses(const QString& base, NodeList& subs);
     static void clear();
@@ -449,8 +449,8 @@ class QmlBasicTypeNode : public FakeNode
  public:
     QmlBasicTypeNode(InnerNode* parent, 
                      const QString& name);
-    virtual ~QmlBasicTypeNode() { }
-    virtual bool isQmlNode() const { return true; }
+    ~QmlBasicTypeNode() override { }
+    bool isQmlNode() const override { return true; }
 };
 
 class QmlPropGroupNode : public FakeNode
@@ -459,8 +459,8 @@ class QmlPropGroupNode : public FakeNode
     QmlPropGroupNode(QmlClassNode* parent, 
                      const QString& name,
                      bool attached);
-    virtual ~QmlPropGroupNode() { }
-    virtual bool isQmlNode() const { return true; }
+    ~QmlPropGroupNode() override { }
+    bool isQmlNode() const override { return true; }
 
     const QString& element() const { return parent()->name(); }
     void setDefault() { isdefault = true; }
@@ -481,7 +481,7 @@ class QmlPropertyNode : public LeafNode
                     const QString& name,
                     const QString& type,
                     bool attached);
-    virtual ~QmlPropertyNode() { }
+    ~QmlPropertyNode() override { }
 
     void setDataType(const QString& dataType) { dt = dataType; }
     void setStored(bool stored) { sto = toTrool(stored); }
@@ -494,7 +494,7 @@ class QmlPropertyNode : public LeafNode
     bool isDesignable() const { return fromTrool(des,false); }
     bool isWritable(const Tree* tree) const;
     bool isAttached() const { return att; }
-    virtual bool isQmlNode() const { return true; }
+    bool isQmlNode() const override { return true; }
 
     const PropertyNode *correspondingProperty(const Tree *tree) const;
 
@@ -538,7 +538,7 @@ class EnumNode : public LeafNode
 {
  public:
     EnumNode(InnerNode* parent, const QString& name);
-    virtual ~EnumNode() { }
+    ~EnumNode() override { }
 
     void addItem(const EnumItem& item);
     void setFlagsType(TypedefNode* typedeff);
@@ -559,7 +559,7 @@ class TypedefNode : public LeafNode
 {
  public:
     TypedefNode(InnerNode* parent, const QString& name);
-    virtual ~TypedefNode() { }
+    ~TypedefNode() override { }
 
     const EnumNode* associatedEnum() const { return ae; }
 
@@ -625,7 +625,7 @@ class FunctionNode : public LeafNode
 
     FunctionNode(InnerNode* parent, const QString &name);
     FunctionNode(Type type, InnerNode* parent, const QString &name, bool attached);
-    virtual ~FunctionNode() { }
+    ~FunctionNode() override { }
 
     void setReturnType(const QString& returnType) { rt = returnType; }
     void setParentPath(const QStringList& parentPath) { pp = parentPath; }
@@ -649,8 +649,8 @@ class FunctionNode : public LeafNode
     bool isConst() const { return con; }
     bool isStatic() const { return sta; }
     bool isOverload() const { return ove; }
-    bool isReimp() const { return reimp; }
-    bool isFunction() const { return true; }
+    bool isReimp() const override { return reimp; }
+    bool isFunction() const override { return true; }
     int overloadNumber() const;
     int numOverloads() const;
     const QList<Parameter>& parameters() const { return params; }
@@ -665,10 +665,10 @@ class FunctionNode : public LeafNode
     QString signature(bool values = false) const;
     const QString& element() const { return parent()->name(); }
     bool isAttached() const { return att; }
-    virtual bool isQmlNode() const { 
+    bool isQmlNode() const override { 
         return ((type() == QmlSignal) || (type() == QmlMethod)); 
     }
-    virtual bool isInternal() const;
+    bool isInternal() const override;
 
     void debug() const;
 
@@ -705,7 +705,7 @@ class PropertyNode : public LeafNode
     enum { NumFunctionRoles = Notifier + 1 };
 
     PropertyNode(InnerNode* parent, const QString& name);
-    virtual ~PropertyNode() { }
+    ~PropertyNode() override { }
 
     void setDataType(const QString& dataType) { dt = dataType; }
     void addFunction(FunctionNode* function, FunctionRole role);
@@ -796,7 +796,7 @@ class VariableNode : public LeafNode
 {
  public:
     VariableNode(InnerNode* parent, const QString &name);
-    virtual ~VariableNode() { }
+    ~VariableNode() override { }
 
     void setLeftType(const QString &leftType) { lt = leftType; }
     void setRightType(const QString &rightType) { rt = rightType; }
@@ -823,9 +823,9 @@ class TargetNode : public LeafNode
 {
  public:
     TargetNode(InnerNode* parent, const QString& name);
-    virtual ~TargetNode() { }
+    ~TargetNode() override { }
 
-    virtual bool isInnerNode() const;
+    bool isInnerNode() const override;
 };
 
 QT_END_NAMESPACE

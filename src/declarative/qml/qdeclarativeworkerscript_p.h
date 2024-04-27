@@ -72,7 +72,7 @@ class QDeclarativeWorkerScriptEngine : public QThread
 Q_OBJECT
 public:
     QDeclarativeWorkerScriptEngine(QDeclarativeEngine *parent = nullptr);
-    virtual ~QDeclarativeWorkerScriptEngine();
+    ~QDeclarativeWorkerScriptEngine() override;
 
     int registerWorkerScript(QDeclarativeWorkerScript *);
     void removeWorkerScript(int);
@@ -80,7 +80,7 @@ public:
     void sendMessage(int, const QVariant &);
 
 protected:
-    virtual void run();
+    void run() override;
 
 private:
     QDeclarativeWorkerScriptEnginePrivate *d;
@@ -94,7 +94,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeWorkerScript : public QObject, public QDecla
     Q_INTERFACES(QDeclarativeParserStatus)
 public:
     QDeclarativeWorkerScript(QObject *parent = nullptr);
-    virtual ~QDeclarativeWorkerScript();
+    ~QDeclarativeWorkerScript() override;
 
     QUrl source() const;
     void setSource(const QUrl &);
@@ -107,9 +107,9 @@ signals:
     void message(const QScriptValue &messageObject);
 
 protected:
-    virtual void classBegin();
-    virtual void componentComplete();
-    virtual bool event(QEvent *);
+    void classBegin() override;
+    void componentComplete() override;
+    bool event(QEvent *) override;
 
 private:
     QDeclarativeWorkerScriptEngine *engine();

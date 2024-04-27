@@ -65,7 +65,7 @@ class Q_CORE_EXPORT QThreadPool : public QObject
 
 public:
     QThreadPool(QObject *parent = nullptr);
-    ~QThreadPool();
+    ~QThreadPool() override;
 
     static QThreadPool *globalInstance();
 

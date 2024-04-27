@@ -70,7 +70,7 @@ class QDeclarativeGraphicsWidget : public QObject
     //Q_PROPERTY(QDeclarativeAnchorLine baseline READ baseline CONSTANT FINAL)
 public:
     QDeclarativeGraphicsWidget(QObject *parent = nullptr);
-    ~QDeclarativeGraphicsWidget();
+    ~QDeclarativeGraphicsWidget() override;
     QDeclarativeAnchors *anchors();
     QDeclarativeAnchorLine left() const;
     QDeclarativeAnchorLine right() const;

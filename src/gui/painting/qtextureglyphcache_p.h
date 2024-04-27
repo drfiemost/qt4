@@ -80,7 +80,7 @@ public:
                                                m_w(0), m_h(0), m_cx(0), m_cy(0), m_currentRowHeight(0), m_subPixelPositionCount(0)
         { }
 
-    virtual ~QTextureGlyphCache() { }
+    ~QTextureGlyphCache() override { }
 
     struct GlyphAndSubPixelPosition
     {
@@ -169,10 +169,10 @@ class Q_GUI_EXPORT QImageTextureGlyphCache : public QTextureGlyphCache
 public:
     QImageTextureGlyphCache(QFontEngineGlyphCache::Type type, const QTransform &matrix)
         : QTextureGlyphCache(type, matrix) { }
-    virtual int glyphMargin() const;
-    virtual void createTextureData(int width, int height);
-    virtual void resizeTextureData(int width, int height);
-    virtual void fillTexture(const Coord &c, glyph_t glyph, QFixed subPixelPosition);
+    int glyphMargin() const override;
+    void createTextureData(int width, int height) override;
+    void resizeTextureData(int width, int height) override;
+    void fillTexture(const Coord &c, glyph_t glyph, QFixed subPixelPosition) override;
 
     inline const QImage &image() const { return m_image; }
 

@@ -74,7 +74,7 @@ public:
     typedef QDesignerWidgetBoxInterface::CategoryList CategoryList;
 
     explicit WidgetBoxTreeWidget(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    ~WidgetBoxTreeWidget();
+    ~WidgetBoxTreeWidget() override;
 
     int categoryCount() const;
     Category category(int cat_idx) const;
@@ -102,8 +102,8 @@ public slots:
     void filter(const QString &);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *e);
-    void resizeEvent(QResizeEvent *e);
+    void contextMenuEvent(QContextMenuEvent *e) override;
+    void resizeEvent(QResizeEvent *e) override;
 
 private slots:
     void slotSave();

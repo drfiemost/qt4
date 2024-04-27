@@ -68,22 +68,22 @@ namespace qdesigner_internal {
     public:
         explicit QDesignerPromotion(QDesignerFormEditorInterface *core);
 
-        virtual PromotedClasses promotedClasses() const;
+        PromotedClasses promotedClasses() const override;
 
-        virtual QSet<QString> referencedPromotedClassNames() const;
+        QSet<QString> referencedPromotedClassNames() const override;
 
-        virtual bool addPromotedClass(const QString &baseClass,
+        bool addPromotedClass(const QString &baseClass,
                                       const QString &className,
                                       const QString &includeFile,
-                                      QString *errorMessage);
+                                      QString *errorMessage) override;
 
-        virtual bool removePromotedClass(const QString &className, QString *errorMessage);
+        bool removePromotedClass(const QString &className, QString *errorMessage) override;
 
-        virtual bool changePromotedClassName(const QString &oldclassName, const QString &newClassName, QString *errorMessage);
+        bool changePromotedClassName(const QString &oldclassName, const QString &newClassName, QString *errorMessage) override;
 
-        virtual bool setPromotedClassIncludeFile(const QString &className, const QString &includeFile, QString *errorMessage);
+        bool setPromotedClassIncludeFile(const QString &className, const QString &includeFile, QString *errorMessage) override;
 
-        virtual QList<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const;
+        QList<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const override;
 
     private:
         bool canBePromoted(const QDesignerWidgetDataBaseItemInterface *) const;

@@ -60,17 +60,17 @@ class QT_FORMEDITOR_EXPORT QtBrushManager : public QDesignerBrushManagerInterfac
     Q_OBJECT
 public:
     QtBrushManager(QObject *parent = nullptr);
-    ~QtBrushManager();
+    ~QtBrushManager() override;
 
-    QBrush brush(const QString &name) const;
-    QMap<QString, QBrush> brushes() const;
-    QString currentBrush() const;
+    QBrush brush(const QString &name) const override;
+    QMap<QString, QBrush> brushes() const override;
+    QString currentBrush() const override;
 
-    QString addBrush(const QString &name, const QBrush &brush);
-    void removeBrush(const QString &name);
-    void setCurrentBrush(const QString &name);
+    QString addBrush(const QString &name, const QBrush &brush) override;
+    void removeBrush(const QString &name) override;
+    void setCurrentBrush(const QString &name) override;
 
-    QPixmap brushPixmap(const QBrush &brush) const;
+    QPixmap brushPixmap(const QBrush &brush) const override;
 
 private:
     QScopedPointer<QtBrushManagerPrivate> d_ptr;

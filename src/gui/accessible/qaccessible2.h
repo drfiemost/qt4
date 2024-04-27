@@ -133,7 +133,7 @@ class Q_GUI_EXPORT QAccessibleTextInterface: public QAccessible2Interface
 public:
     inline QAccessible2Interface *qAccessibleTextCastHelper() { return this; }
 
-    virtual ~QAccessibleTextInterface() {}
+    ~QAccessibleTextInterface() override {}
 
     virtual void addSelection(int startOffset, int endOffset) = 0;
     virtual QString attributes(int offset, int *startOffset, int *endOffset) = 0;
@@ -161,7 +161,7 @@ class Q_GUI_EXPORT QAccessibleEditableTextInterface: public QAccessible2Interfac
 public:
     inline QAccessible2Interface *qAccessibleEditableTextCastHelper() { return this; }
 
-    virtual ~QAccessibleEditableTextInterface() {}
+    ~QAccessibleEditableTextInterface() override {}
 
     virtual void copyText(int startOffset, int endOffset) = 0;
     virtual void deleteText(int startOffset, int endOffset) = 0;
@@ -177,13 +177,13 @@ class Q_GUI_EXPORT QAccessibleSimpleEditableTextInterface: public QAccessibleEdi
 public:
     QAccessibleSimpleEditableTextInterface(QAccessibleInterface *accessibleInterface);
 
-    void copyText(int startOffset, int endOffset);
-    void deleteText(int startOffset, int endOffset);
-    void insertText(int offset, const QString &text);
-    void cutText(int startOffset, int endOffset);
-    void pasteText(int offset);
-    void replaceText(int startOffset, int endOffset, const QString &text);
-    inline void setAttributes(int, int, const QString &) {}
+    void copyText(int startOffset, int endOffset) override;
+    void deleteText(int startOffset, int endOffset) override;
+    void insertText(int offset, const QString &text) override;
+    void cutText(int startOffset, int endOffset) override;
+    void pasteText(int offset) override;
+    void replaceText(int startOffset, int endOffset, const QString &text) override;
+    inline void setAttributes(int, int, const QString &) override {}
 
 private:
     QAccessibleInterface *iface;
@@ -194,7 +194,7 @@ class Q_GUI_EXPORT QAccessibleValueInterface: public QAccessible2Interface
 public:
     inline QAccessible2Interface *qAccessibleValueCastHelper() { return this; }
 
-    virtual ~QAccessibleValueInterface() {}
+    ~QAccessibleValueInterface() override {}
 
     virtual QVariant currentValue() = 0;
     virtual void setCurrentValue(const QVariant &value) = 0;

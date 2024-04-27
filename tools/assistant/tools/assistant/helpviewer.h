@@ -70,7 +70,7 @@ public:
     Q_DECLARE_FLAGS(FindFlags, FindFlag)
 
     HelpViewer(qreal zoom, QWidget *parent = nullptr);
-    ~HelpViewer();
+    ~HelpViewer() override;
 
     QFont viewerFont() const;
     void setViewerFont(const QFont &font);
@@ -85,7 +85,7 @@ public:
     void setTitle(const QString &title);
 
     QUrl source() const;
-    void setSource(const QUrl &url);
+    void setSource(const QUrl &url) override;
 
     QString selectedText() const;
     bool isForwardAvailable() const;
@@ -106,10 +106,10 @@ public:
 
 public slots:
     void copy();
-    void home();
+    void home() override;
 
-    void forward();
-    void backward();
+    void forward() override;
+    void backward() override;
 
 signals:
     void titleChanged();
@@ -118,10 +118,10 @@ signals:
     void loadFinished(bool finished);
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
-    void wheelEvent(QWheelEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+    void keyPressEvent(QKeyEvent *e) override;
+    void wheelEvent(QWheelEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private slots:
     void actionChanged();
@@ -129,9 +129,9 @@ private slots:
     void setLoadFinished(bool ok);
 
 private:
-    bool eventFilter(QObject *obj, QEvent *event);
-    void contextMenuEvent(QContextMenuEvent *event);
-    QVariant loadResource(int type, const QUrl &name);
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    QVariant loadResource(int type, const QUrl &name) override;
     bool handleForwardBackwardMouseButtons(QMouseEvent *e);
 
 private:

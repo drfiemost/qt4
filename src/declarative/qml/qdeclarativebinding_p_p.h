@@ -65,12 +65,12 @@ class QDeclarativeBindingPrivate : public QDeclarativeExpressionPrivate
     Q_DECLARE_PUBLIC(QDeclarativeBinding)
 public:
     QDeclarativeBindingPrivate();
-    ~QDeclarativeBindingPrivate();
+    ~QDeclarativeBindingPrivate() override;
 
-    virtual void emitValueChanged();
+    void emitValueChanged() override;
 
 protected:
-    virtual void refresh();
+    void refresh() override;
 
 private:
     bool updating:1;

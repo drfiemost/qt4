@@ -394,7 +394,7 @@ struct ElasticEase : public QEasingCurveFunction
         : QEasingCurveFunction(type, qreal(0.3), qreal(1.0))
     { }
 
-    QEasingCurveFunction *copy() const
+    QEasingCurveFunction *copy() const override
     {
         ElasticEase *rv = new ElasticEase(_t);
         rv->_p = _p;
@@ -402,7 +402,7 @@ struct ElasticEase : public QEasingCurveFunction
         return rv;
     }
 
-    qreal value(qreal t)
+    qreal value(qreal t) override
     {
         qreal p = (_p < 0) ? qreal(0.3) : _p;
         qreal a = (_a < 0) ? qreal(1.0) : _a;
@@ -427,14 +427,14 @@ struct BounceEase : public QEasingCurveFunction
         : QEasingCurveFunction(type, qreal(0.3), qreal(1.0))
     { }
 
-    QEasingCurveFunction *copy() const
+    QEasingCurveFunction *copy() const override
     {
         BounceEase *rv = new BounceEase(_t);
         rv->_a = _a;
         return rv;
     }
 
-    qreal value(qreal t)
+    qreal value(qreal t) override
     {
         qreal a = (_a < 0) ? qreal(1.0) : _a;
         switch(_t) {
@@ -458,14 +458,14 @@ struct BackEase : public QEasingCurveFunction
         : QEasingCurveFunction(type, qreal(0.3), qreal(1.0), qreal(1.70158))
     { }
 
-    QEasingCurveFunction *copy() const
+    QEasingCurveFunction *copy() const override
     {
         BackEase *rv = new BackEase(_t);
         rv->_o = _o;
         return rv;
     }
 
-    qreal value(qreal t)
+    qreal value(qreal t) override
     {
         qreal o = (_o < 0) ? qreal(1.70158) : _o;
         switch(_t) {

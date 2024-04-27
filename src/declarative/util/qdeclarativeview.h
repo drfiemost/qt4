@@ -70,7 +70,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeView : public QGraphicsView
 public:
     explicit QDeclarativeView(QWidget *parent = nullptr);
     QDeclarativeView(const QUrl &source, QWidget *parent = nullptr);
-    virtual ~QDeclarativeView();
+    ~QDeclarativeView() override;
 
     QUrl source() const;
     void setSource(const QUrl&);
@@ -89,7 +89,7 @@ public:
 
     QList<QDeclarativeError> errors() const;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
     QSize initialSize() const;
 
 Q_SIGNALS:
@@ -100,11 +100,11 @@ private Q_SLOTS:
     void continueExecute();
 
 protected:
-    virtual void resizeEvent(QResizeEvent *);
-    virtual void paintEvent(QPaintEvent *event);
-    virtual void timerEvent(QTimerEvent*);
+    void resizeEvent(QResizeEvent *) override;
+    void paintEvent(QPaintEvent *event) override;
+    void timerEvent(QTimerEvent*) override;
     virtual void setRootObject(QObject *obj);
-    virtual bool eventFilter(QObject *watched, QEvent *e);
+    bool eventFilter(QObject *watched, QEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeView)

@@ -76,9 +76,9 @@ public:
         QScriptDebuggerJobSchedulerInterface *jobScheduler,
         QScriptDebuggerConsole *console,
         QObject *parent = nullptr);
-    ~QScriptCompletionTask();
+    ~QScriptCompletionTask() override;
 
-    void start();
+    void start() override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptCompletionTask)

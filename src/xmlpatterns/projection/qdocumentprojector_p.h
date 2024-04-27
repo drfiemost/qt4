@@ -75,11 +75,11 @@ namespace QPatternist
         virtual void namespaceBinding(const QXmlName nb);
 
         virtual void characters(const QString &value);
-        virtual void comment(const QString &value);
+        void comment(const QString &value) override;
 
         virtual void startElement(const QXmlName name);
 
-        virtual void endElement();
+        void endElement() override;
 
         virtual void attribute(const QXmlName name,
                                const QString &value);
@@ -87,10 +87,10 @@ namespace QPatternist
         virtual void processingInstruction(const QXmlName name,
                                            const QString &value);
 
-        virtual void item(const Item &item);
+        void item(const Item &item) override;
 
-        virtual void startDocument();
-        virtual void endDocument();
+        void startDocument() override;
+        void endDocument() override;
 
         ProjectedExpression::Vector m_paths;
         const int                   m_pathCount;

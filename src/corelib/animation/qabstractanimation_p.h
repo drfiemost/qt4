@@ -88,7 +88,7 @@ public:
     {
     }
 
-    virtual ~QAbstractAnimationPrivate() {}
+    ~QAbstractAnimationPrivate() override {}
 
     static QAbstractAnimationPrivate *get(QAbstractAnimation *q)
     {
@@ -122,10 +122,10 @@ class QDefaultAnimationDriver : public QAnimationDriver
     Q_OBJECT
 public:
     QDefaultAnimationDriver(QUnifiedTimer *timer);
-    void timerEvent(QTimerEvent *e);
+    void timerEvent(QTimerEvent *e) override;
 
-    void started();
-    void stopped();
+    void started() override;
+    void stopped() override;
 
 private:
     QBasicTimer m_timer;
@@ -188,7 +188,7 @@ public:
     int runningAnimationCount() { return animations.count(); }
 
 protected:
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
 
 private:
     friend class QDefaultAnimationDriver;

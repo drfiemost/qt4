@@ -70,7 +70,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeTransition : public QObject
 
 public:
     QDeclarativeTransition(QObject *parent=nullptr);
-    ~QDeclarativeTransition();
+    ~QDeclarativeTransition() override;
 
     QString fromState() const;
     void setFromState(const QString &);

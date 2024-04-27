@@ -1563,7 +1563,7 @@ namespace {
         {
         }
 
-        ~QOpenGLStaticTextUserData()
+        ~QOpenGLStaticTextUserData() override
         {
         }
 

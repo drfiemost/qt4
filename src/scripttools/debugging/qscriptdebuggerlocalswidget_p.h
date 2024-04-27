@@ -64,12 +64,12 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerLocalsWidget:
     Q_OBJECT
 public:
     QScriptDebuggerLocalsWidget(QWidget *parent = nullptr);
-    ~QScriptDebuggerLocalsWidget();
+    ~QScriptDebuggerLocalsWidget() override;
 
-    QScriptDebuggerLocalsModel *localsModel() const;
-    void setLocalsModel(QScriptDebuggerLocalsModel *model);
+    QScriptDebuggerLocalsModel *localsModel() const override;
+    void setLocalsModel(QScriptDebuggerLocalsModel *model) override;
 
-    void expand(const QModelIndex &index);
+    void expand(const QModelIndex &index) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerLocalsWidget)

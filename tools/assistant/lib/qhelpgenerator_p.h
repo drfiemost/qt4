@@ -70,7 +70,7 @@ class QHELP_EXPORT QHelpGenerator : public QObject
 
 public:
     QHelpGenerator(QObject *parent = nullptr);
-    ~QHelpGenerator();
+    ~QHelpGenerator() override;
 
     bool generate(QHelpDataInterface *helpData,
         const QString &outputFileName);

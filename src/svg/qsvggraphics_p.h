@@ -188,7 +188,7 @@ public:
     };
 
     QSvgText(QSvgNode *parent, const QPointF &coord);
-    ~QSvgText();
+    ~QSvgText() override;
     void setTextArea(const QSizeF &size);
 
     void draw(QPainter *p, QSvgExtraStates &states) override;
@@ -224,7 +224,7 @@ public:
         : QSvgNode(parent), m_mode(QSvgText::Default), m_isTspan(isProperTspan)
     {
     }
-    ~QSvgTspan() { };
+    ~QSvgTspan() override { };
     Type type() const override {return TSPAN;}
     void draw(QPainter *, QSvgExtraStates &) override {Q_ASSERT(!"Tspans should be drawn through QSvgText::draw().");}
     void addText(const QString &text) {m_text += text;}

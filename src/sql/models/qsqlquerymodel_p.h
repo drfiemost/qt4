@@ -68,7 +68,7 @@ class QSqlQueryModelPrivate: public QAbstractItemModelPrivate
     Q_DECLARE_PUBLIC(QSqlQueryModel)
 public:
     QSqlQueryModelPrivate() : atEnd(false) {}
-    ~QSqlQueryModelPrivate();
+    ~QSqlQueryModelPrivate() override;
     
     void prefetch(int);
     void initColOffsets(int size);

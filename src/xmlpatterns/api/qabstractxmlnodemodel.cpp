@@ -487,7 +487,7 @@ namespace QPatternist
         {
         }
 
-        virtual QAbstractXmlForwardIterator<QXmlNodeModelIndexIteratorPointer>::Ptr copy() const
+        QAbstractXmlForwardIterator<QXmlNodeModelIndexIteratorPointer>::Ptr copy() const override
         {
             ItVector result;
 

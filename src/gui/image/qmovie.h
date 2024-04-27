@@ -86,7 +86,7 @@ public:
     QMovie(QObject *parent = nullptr);
     explicit QMovie(QIODevice *device, const QByteArray &format = QByteArray(), QObject *parent = nullptr);
     explicit QMovie(const QString &fileName, const QByteArray &format = QByteArray(), QObject *parent = nullptr);
-    ~QMovie();
+    ~QMovie() override;
 
     static QList<QByteArray> supportedFormats();
 

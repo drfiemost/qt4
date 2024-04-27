@@ -105,7 +105,7 @@ public:
     {
     }
 
-    inline ~QHttpPrivate()
+    inline ~QHttpPrivate() override
     {
         while (!pending.isEmpty())
             delete pending.takeFirst();
@@ -215,19 +215,19 @@ public:
         data.ba = d;
     }
 
-    ~QHttpNormalRequest()
+    ~QHttpNormalRequest() override
     {
         if (is_ba)
             delete data.ba;
     }
 
-    void start(QHttp *);
-    bool hasRequestHeader();
-    QHttpRequestHeader requestHeader();
+    void start(QHttp *) override;
+    bool hasRequestHeader() override;
+    QHttpRequestHeader requestHeader() override;
     inline void setRequestHeader(const QHttpRequestHeader &h) { header = h; }
 
-    QIODevice *sourceDevice();
-    QIODevice *destinationDevice();
+    QIODevice *sourceDevice() override;
+    QIODevice *destinationDevice() override;
 
 protected:
     QHttpRequestHeader header;
@@ -317,10 +317,10 @@ public:
         QHttpNormalRequest(h, d, t)
     { }
 
-    ~QHttpPGHRequest()
+    ~QHttpPGHRequest() override
     { }
 
-    void start(QHttp *);
+    void start(QHttp *) override;
 };
 
 void QHttpPGHRequest::start(QHttp *http)
@@ -345,11 +345,11 @@ public:
         : hostName(h), port(p), mode(m)
     { }
 
-    void start(QHttp *);
+    void start(QHttp *) override;
 
-    QIODevice *sourceDevice()
+    QIODevice *sourceDevice() override
     { return nullptr; }
-    QIODevice *destinationDevice()
+    QIODevice *destinationDevice() override
     { return nullptr; }
 
 private:
@@ -389,11 +389,11 @@ public:
         user(userName), pass(password)
     { }
 
-    void start(QHttp *);
+    void start(QHttp *) override;
 
-    QIODevice *sourceDevice()
+    QIODevice *sourceDevice() override
     { return nullptr; }
-    QIODevice *destinationDevice()
+    QIODevice *destinationDevice() override
     { return nullptr; }
 
 private:
@@ -424,7 +424,7 @@ public:
         this->proxy = proxy;
     }
 
-    inline void start(QHttp *http)
+    inline void start(QHttp *http) override
     {
         http->d_func()->proxy = proxy;
         QString user = proxy.user();
@@ -436,9 +436,9 @@ public:
         http->d_func()->finishedWithSuccess();
     }
 
-    inline QIODevice *sourceDevice()
+    inline QIODevice *sourceDevice() override
     { return nullptr; }
-    inline QIODevice *destinationDevice()
+    inline QIODevice *destinationDevice() override
     { return nullptr; }
 private:
     QNetworkProxy proxy;
@@ -458,11 +458,11 @@ public:
     QHttpSetSocketRequest(QTcpSocket *s) : socket(s)
     { }
 
-    void start(QHttp *);
+    void start(QHttp *) override;
 
-    QIODevice *sourceDevice()
+    QIODevice *sourceDevice() override
     { return nullptr; }
-    QIODevice *destinationDevice()
+    QIODevice *destinationDevice() override
     { return nullptr; }
 
 private:
@@ -486,11 +486,11 @@ class QHttpCloseRequest : public QHttpRequest
 public:
     QHttpCloseRequest()
     { }
-    void start(QHttp *);
+    void start(QHttp *) override;
 
-    QIODevice *sourceDevice()
+    QIODevice *sourceDevice() override
     { return nullptr; }
-    QIODevice *destinationDevice()
+    QIODevice *destinationDevice() override
     { return nullptr; }
 };
 

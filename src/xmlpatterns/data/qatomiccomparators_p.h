@@ -86,9 +86,9 @@ namespace QPatternist
          * @see <a href="http://www.w3.org/TR/xpath-functions/#string-compare">XQuery 1.0 and XPath
          * 2.0 Functions and Operators, 7.3 ValueComparison::Equality and Comparison of Strings</a>
          */
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
+                                         const Item &op2) const override;
 
         /**
          * Compares two strings, and returns @c true if they are considered equal as per
@@ -98,8 +98,8 @@ namespace QPatternist
          * @see <a href="http://www.w3.org/TR/xpath-functions/#string-compare">XQuery 1.0 and XPath
          * 2.0 Functions and Operators, 7.3 ValueComparison::Equality and Comparison of Strings</a>
          */
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -115,15 +115,15 @@ namespace QPatternist
         /**
          * Converts both string values to upper case and afterwards compare them.
          */
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
+                                         const Item &op2) const override;
 
         /**
          * Converts both string values case insensitively.
          */
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -134,8 +134,8 @@ namespace QPatternist
     class BinaryDataComparator : public AtomicComparator
     {
     public:
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -148,12 +148,12 @@ namespace QPatternist
     class BooleanComparator : public AtomicComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
+                                         const Item &op2) const override;
 
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -166,12 +166,12 @@ namespace QPatternist
     class AbstractFloatComparator : public AtomicComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
+                                         const Item &op2) const override;
 
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -185,9 +185,9 @@ namespace QPatternist
     class AbstractFloatSortComparator : public AbstractFloatComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &o1,
+        ComparisonResult compare(const Item &o1,
                                          const AtomicComparator::Operator op,
-                                         const Item &o2) const
+                                         const Item &o2) const override
         {
             Q_ASSERT_X(t_op == OperatorLessThanNaNLeast || t_op == OperatorLessThanNaNGreatest, Q_FUNC_INFO,
                        "Can only be instantiated with those two.");
@@ -220,12 +220,12 @@ namespace QPatternist
     class DecimalComparator : public AtomicComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
+                                         const Item &op2) const override;
 
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -236,12 +236,12 @@ namespace QPatternist
     class IntegerComparator : public AtomicComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
+                                         const Item &op2) const override;
 
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -252,8 +252,8 @@ namespace QPatternist
     class QNameComparator : public AtomicComparator
     {
     public:
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -264,11 +264,11 @@ namespace QPatternist
     class AbstractDateTimeComparator : public AtomicComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+                                         const Item &op2) const override;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
     };
 
     /**
@@ -279,11 +279,11 @@ namespace QPatternist
     class AbstractDurationComparator : public AtomicComparator
     {
     public:
-        virtual ComparisonResult compare(const Item &op1,
+        ComparisonResult compare(const Item &op1,
                                          const AtomicComparator::Operator op,
-                                         const Item &op2) const;
-        virtual bool equals(const Item &op1,
-                            const Item &op2) const;
+                                         const Item &op2) const override;
+        bool equals(const Item &op1,
+                            const Item &op2) const override;
 
     private:
         static inline QDateTime addDurationToDateTime(const QDateTime &dateTime,

@@ -137,7 +137,7 @@ public:
     QMessageBox(Icon icon, const QString &title, const QString &text,
                 StandardButtons buttons = NoButton, QWidget *parent = nullptr,
                 Qt::WindowFlags flags = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
-    ~QMessageBox();
+    ~QMessageBox() override;
 
     void addButton(QAbstractButton *button, ButtonRole role);
     QPushButton *addButton(const QString &text, ButtonRole role);
@@ -195,7 +195,7 @@ public:
     static void about(QWidget *parent, const QString &title, const QString &text);
     static void aboutQt(QWidget *parent, const QString &title = QString());
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     // the following functions are obsolete:
 
@@ -289,12 +289,12 @@ public Q_SLOTS:
 #endif
 
 protected:
-    bool event(QEvent *e);
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
-    void closeEvent(QCloseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void changeEvent(QEvent *event);
+    bool event(QEvent *e) override;
+    void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void changeEvent(QEvent *event) override;
 
 private:
     Q_PRIVATE_SLOT(d_func(), void _q_buttonClicked(QAbstractButton *))

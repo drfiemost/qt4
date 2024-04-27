@@ -60,7 +60,7 @@ class QDesignerUndoStack : public QObject
     Q_OBJECT
 public:
     explicit QDesignerUndoStack(QObject *parent = nullptr);
-    virtual ~QDesignerUndoStack();
+    ~QDesignerUndoStack() override;
 
     void push(QUndoCommand * cmd);
     void beginMacro(const QString &text);

@@ -81,7 +81,7 @@ public:
     {
     }
 
-    ~QDeclarativeTextInputPrivate()
+    ~QDeclarativeTextInputPrivate() override
     {
     }
 
@@ -95,11 +95,11 @@ public:
 
     void init();
     void startCreatingCursor();
-    void focusChanged(bool hasFocus);
+    void focusChanged(bool hasFocus) override;
     void updateHorizontalScroll();
     bool determineHorizontalAlignment();
     bool setHAlign(QDeclarativeTextInput::HAlignment, bool forceAlign = false);
-    void mirrorChange();
+    void mirrorChange() override;
     int calculateTextWidth();
     bool sendMouseEventToInputContext(QGraphicsSceneMouseEvent *event, QEvent::Type eventType);
     void updateInputMethodHints();

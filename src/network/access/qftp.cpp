@@ -1300,7 +1300,7 @@ public:
                            transferMode(QFtp::Passive), error(QFtp::NoError)
     { }
 
-    ~QFtpPrivate() { while (!pending.isEmpty()) delete pending.takeFirst(); }
+    ~QFtpPrivate() override { while (!pending.isEmpty()) delete pending.takeFirst(); }
 
     // private slots
     void _q_startNextCommand();

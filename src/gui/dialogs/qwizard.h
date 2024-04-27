@@ -123,7 +123,7 @@ public:
     Q_DECLARE_FLAGS(WizardOptions, WizardOption)
 
     explicit QWizard(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QWizard();
+    ~QWizard() override;
 
     int addPage(QWizardPage *page);
     void setPage(int id, QWizardPage *page);
@@ -170,8 +170,8 @@ public:
     void setDefaultProperty(const char *className, const char *property,
                             const char *changedSignal);
 
-    void setVisible(bool visible);
-    QSize sizeHint() const;
+    void setVisible(bool visible) override;
+    QSize sizeHint() const override;
 
 Q_SIGNALS:
     void currentIdChanged(int id);
@@ -186,13 +186,13 @@ public Q_SLOTS:
     void restart();
 
 protected:
-    bool event(QEvent *event);
-    void resizeEvent(QResizeEvent *event);
-    void paintEvent(QPaintEvent *event);
+    bool event(QEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 #if defined(Q_WS_WIN)
     bool winEvent(MSG * message, long * result);
 #endif
-    void done(int result);
+    void done(int result) override;
     virtual void initializePage(int id);
     virtual void cleanupPage(int id);
 
@@ -218,7 +218,7 @@ class Q_GUI_EXPORT QWizardPage : public QWidget
 
 public:
     explicit QWizardPage(QWidget *parent = nullptr);
-    ~QWizardPage();
+    ~QWizardPage() override;
 
     void setTitle(const QString &title);
     QString title() const;

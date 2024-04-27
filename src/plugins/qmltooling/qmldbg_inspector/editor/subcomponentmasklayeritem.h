@@ -53,7 +53,7 @@ class SubcomponentMaskLayerItem : public QGraphicsPolygonItem
 public:
     explicit SubcomponentMaskLayerItem(QDeclarativeViewInspector *inspector,
                                        QGraphicsItem *parentItem = nullptr);
-    int type() const;
+    int type() const override;
     void setCurrentItem(QGraphicsItem *item);
     void setBoundingBox(const QRectF &boundingBox);
     QGraphicsItem *currentItem() const;

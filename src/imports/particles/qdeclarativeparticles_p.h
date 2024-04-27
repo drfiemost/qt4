@@ -69,7 +69,7 @@ public:
     QDeclarativeParticleMotionLinear(QObject *parent=nullptr)
         : QDeclarativeParticleMotion(parent) {}
 
-    virtual void advance(QDeclarativeParticle &, int interval);
+    void advance(QDeclarativeParticle &, int interval) override;
 };
 
 class QDeclarativeParticleMotionGravity : public QDeclarativeParticleMotion
@@ -92,7 +92,7 @@ public:
     qreal acceleration() const { return _accel * 1000000; }
     void setAcceleration(qreal accel);
 
-    virtual void advance(QDeclarativeParticle &, int interval);
+    void advance(QDeclarativeParticle &, int interval) override;
 
 Q_SIGNALS:
     void xattractorChanged();
@@ -112,9 +112,9 @@ public:
     QDeclarativeParticleMotionWander()
         : QDeclarativeParticleMotion(), particles(nullptr), _xvariance(0), _yvariance(0), _pace(100) {}
 
-    virtual void advance(QDeclarativeParticle &, int interval);
-    virtual void created(QDeclarativeParticle &);
-    virtual void destroy(QDeclarativeParticle &);
+    void advance(QDeclarativeParticle &, int interval) override;
+    void created(QDeclarativeParticle &) override;
+    void destroy(QDeclarativeParticle &) override;
 
     struct Data {
         qreal x_targetV;
@@ -171,7 +171,7 @@ class QDeclarativeParticles : public QDeclarativeItem
 
 public:
     QDeclarativeParticles(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeParticles();
+    ~QDeclarativeParticles() override;
 
     QUrl source() const;
     void setSource(const QUrl &);
@@ -212,13 +212,13 @@ public:
     QDeclarativeParticleMotion *motion() const;
     void setMotion(QDeclarativeParticleMotion *);
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
 public Q_SLOTS:
     void burst(int count, int emissionRate=-1);
 
 protected:
-    virtual void componentComplete();
+    void componentComplete() override;
 
 Q_SIGNALS:
     void sourceChanged();

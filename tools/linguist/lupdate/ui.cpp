@@ -69,13 +69,13 @@ public:
     {}
 
     bool startElement(const QString &namespaceURI, const QString &localName,
-        const QString &qName, const QXmlAttributes &atts);
+        const QString &qName, const QXmlAttributes &atts) override;
     bool endElement(const QString &namespaceURI, const QString &localName,
-        const QString &qName);
-    bool characters(const QString &ch);
-    bool fatalError(const QXmlParseException &exception);
+        const QString &qName) override;
+    bool characters(const QString &ch) override;
+    bool fatalError(const QXmlParseException &exception) override;
 
-    void setDocumentLocator(QXmlLocator *locator) { m_locator = locator; }
+    void setDocumentLocator(QXmlLocator *locator) override { m_locator = locator; }
 
 private:
     void flush();

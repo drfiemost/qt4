@@ -63,22 +63,22 @@ class QT_SIGNALSLOTEDITOR_EXPORT SignalSlotEditorTool: public QDesignerFormWindo
     Q_OBJECT
 public:
     explicit SignalSlotEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent = nullptr);
-    virtual ~SignalSlotEditorTool();
+    ~SignalSlotEditorTool() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
-    virtual QDesignerFormWindowInterface *formWindow() const;
+    QDesignerFormEditorInterface *core() const override;
+    QDesignerFormWindowInterface *formWindow() const override;
 
-    virtual QWidget *editor() const;
+    QWidget *editor() const override;
 
-    QAction *action() const;
+    QAction *action() const override;
 
-    virtual void activated();
-    virtual void deactivated();
+    void activated() override;
+    void deactivated() override;
 
-    virtual bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
+    bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event) override;
 
-    virtual void saveToDom(DomUI *ui, QWidget *mainContainer);
-    virtual void loadFromDom(DomUI *ui, QWidget *mainContainer);
+    void saveToDom(DomUI *ui, QWidget *mainContainer) override;
+    void loadFromDom(DomUI *ui, QWidget *mainContainer) override;
 
 private:
     QDesignerFormWindowInterface *m_formWindow;

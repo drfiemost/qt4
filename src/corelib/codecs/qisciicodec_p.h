@@ -62,13 +62,13 @@ QT_BEGIN_NAMESPACE
 class QIsciiCodec : public QTextCodec {
 public:
     explicit QIsciiCodec(int i) : idx(i) {}
-    ~QIsciiCodec();
+    ~QIsciiCodec() override;
 
-    QByteArray name() const;
-    int mibEnum() const;
+    QByteArray name() const override;
+    int mibEnum() const override;
 
-    QString convertToUnicode(const char *, int, ConverterState *) const;
-    QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const;
+    QString convertToUnicode(const char *, int, ConverterState *) const override;
+    QByteArray convertFromUnicode(const QChar *, int, ConverterState *) const override;
 
 private:
     int idx;

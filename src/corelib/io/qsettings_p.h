@@ -193,7 +193,7 @@ public:
     QSettingsPrivate(QSettings::Format format);
     QSettingsPrivate(QSettings::Format format, QSettings::Scope scope,
                      const QString &organization, const QString &application);
-    virtual ~QSettingsPrivate();
+    ~QSettingsPrivate() override;
 
     virtual void remove(const QString &key) = 0;
     virtual void set(const QString &key, const QVariant &value) = 0;
@@ -271,19 +271,19 @@ public:
     QConfFileSettingsPrivate(QSettings::Format format, QSettings::Scope scope,
                              const QString &organization, const QString &application);
     QConfFileSettingsPrivate(const QString &fileName, QSettings::Format format);
-    ~QConfFileSettingsPrivate();
+    ~QConfFileSettingsPrivate() override;
 
-    void remove(const QString &key);
-    void set(const QString &key, const QVariant &value);
-    bool get(const QString &key, QVariant *value) const;
+    void remove(const QString &key) override;
+    void set(const QString &key, const QVariant &value) override;
+    bool get(const QString &key, QVariant *value) const override;
 
-    QStringList children(const QString &prefix, ChildSpec spec) const;
+    QStringList children(const QString &prefix, ChildSpec spec) const override;
 
-    void clear();
-    void sync();
-    void flush();
-    bool isWritable() const;
-    QString fileName() const;
+    void clear() override;
+    void sync() override;
+    void flush() override;
+    bool isWritable() const override;
+    QString fileName() const override;
 
     static bool readIniFile(const QByteArray &data, UnparsedSettingsMap *unparsedIniSections);
     static bool readIniSection(const QSettingsKey &section, const QByteArray &data,

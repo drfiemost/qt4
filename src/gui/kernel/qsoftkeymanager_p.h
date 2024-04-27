@@ -87,7 +87,7 @@ public:
     static bool isForceEnabledInSofkeys(QAction *action);
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     QSoftKeyManager();

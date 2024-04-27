@@ -83,57 +83,57 @@ class QT_FORMEDITOR_EXPORT FormWindow: public FormWindowBase
 
 public:
     explicit FormWindow(FormEditor *core, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    virtual ~FormWindow();
+    ~FormWindow() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
-    virtual QDesignerFormWindowCursorInterface *cursor() const;
+    QDesignerFormWindowCursorInterface *cursor() const override;
 
     // Overwritten: FormWindowBase
-    virtual QWidget *formContainer() const;
+    QWidget *formContainer() const override;
 
-    virtual int toolCount() const;
-    virtual int currentTool() const;
-    virtual void setCurrentTool(int index);
-    virtual QDesignerFormWindowToolInterface *tool(int index) const;
-    virtual void registerTool(QDesignerFormWindowToolInterface *tool);
+    int toolCount() const override;
+    int currentTool() const override;
+    void setCurrentTool(int index) override;
+    QDesignerFormWindowToolInterface *tool(int index) const override;
+    void registerTool(QDesignerFormWindowToolInterface *tool) override;
 
-    virtual QString author() const;
-    virtual void setAuthor(const QString &author);
+    QString author() const override;
+    void setAuthor(const QString &author) override;
 
-    virtual QString comment() const;
-    virtual void setComment(const QString &comment);
+    QString comment() const override;
+    void setComment(const QString &comment) override;
 
-    virtual void layoutDefault(int *margin, int *spacing);
-    virtual void setLayoutDefault(int margin, int spacing);
+    void layoutDefault(int *margin, int *spacing) override;
+    void setLayoutDefault(int margin, int spacing) override;
 
-    virtual void layoutFunction(QString *margin, QString *spacing);
-    virtual void setLayoutFunction(const QString &margin, const QString &spacing);
+    void layoutFunction(QString *margin, QString *spacing) override;
+    void setLayoutFunction(const QString &margin, const QString &spacing) override;
 
-    virtual QString pixmapFunction() const;
-    virtual void setPixmapFunction(const QString &pixmapFunction);
+    QString pixmapFunction() const override;
+    void setPixmapFunction(const QString &pixmapFunction) override;
 
-    virtual QString exportMacro() const;
-    virtual void setExportMacro(const QString &exportMacro);
+    QString exportMacro() const override;
+    void setExportMacro(const QString &exportMacro) override;
 
-    virtual QStringList includeHints() const;
-    virtual void setIncludeHints(const QStringList &includeHints);
+    QStringList includeHints() const override;
+    void setIncludeHints(const QStringList &includeHints) override;
 
-    virtual QString fileName() const;
-    virtual void setFileName(const QString &fileName);
+    QString fileName() const override;
+    void setFileName(const QString &fileName) override;
 
-    virtual QString contents() const;
-    virtual void setContents(const QString &contents);
-    virtual void setContents(QIODevice *dev);
+    QString contents() const override;
+    void setContents(const QString &contents) override;
+    void setContents(QIODevice *dev) override;
 
-    virtual QDir absoluteDir() const;
+    QDir absoluteDir() const override;
 
-    virtual void simplifySelection(QWidgetList *sel) const;
+    void simplifySelection(QWidgetList *sel) const override;
 
-    virtual void ensureUniqueObjectName(QObject *object);
+    void ensureUniqueObjectName(QObject *object) override;
 
-    virtual QWidget *mainContainer() const;
-    void setMainContainer(QWidget *mainContainer);
+    QWidget *mainContainer() const override;
+    void setMainContainer(QWidget *mainContainer) override;
     bool isMainContainer(const QWidget *w) const;
 
     QWidget *currentWidget() const;
@@ -141,9 +141,9 @@ public:
     bool hasInsertedChildren(QWidget *w) const;
 
     QList<QWidget *> selectedWidgets() const;
-    void clearSelection(bool changePropertyDisplay=true);
+    void clearSelection(bool changePropertyDisplay=true) override;
     bool isWidgetSelected(QWidget *w) const;
-    void selectWidget(QWidget *w, bool select=true);
+    void selectWidget(QWidget *w, bool select=true) override;
 
     void selectWidgets();
     void repaintSelection();
@@ -160,55 +160,55 @@ public:
 
     QWidget *createWidget(DomUI *ui, const QRect &rect, QWidget *target);
 
-    bool isManaged(QWidget *w) const;
+    bool isManaged(QWidget *w) const override;
 
-    void manageWidget(QWidget *w);
-    void unmanageWidget(QWidget *w);
+    void manageWidget(QWidget *w) override;
+    void unmanageWidget(QWidget *w) override;
 
-    virtual QUndoStack *commandHistory() const;
-    void beginCommand(const QString &description);
-    void endCommand();
+    QUndoStack *commandHistory() const override;
+    void beginCommand(const QString &description) override;
+    void endCommand() override;
 
-    virtual bool blockSelectionChanged(bool blocked);
-    virtual void emitSelectionChanged();
+    bool blockSelectionChanged(bool blocked) override;
+    void emitSelectionChanged() override;
 
     bool unify(QObject *w, QString &s, bool changeIt);
 
-    bool isDirty() const;
-    void setDirty(bool dirty);
+    bool isDirty() const override;
+    void setDirty(bool dirty) override;
 
     static FormWindow *findFormWindow(QWidget *w);
 
     virtual QWidget *containerAt(const QPoint &pos);
-    virtual QWidget *widgetAt(const QPoint &pos);
-    virtual void highlightWidget(QWidget *w, const QPoint &pos,
-                                    HighlightMode mode = Highlight);
+    QWidget *widgetAt(const QPoint &pos) override;
+    void highlightWidget(QWidget *w, const QPoint &pos,
+                                    HighlightMode mode = Highlight) override;
 
     void updateOrderIndicators();
 
     bool handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event);
 
-    QStringList resourceFiles() const;
-    void addResourceFile(const QString &path);
-    void removeResourceFile(const QString &path);
+    QStringList resourceFiles() const override;
+    void addResourceFile(const QString &path) override;
+    void removeResourceFile(const QString &path) override;
 
     void resizeWidget(QWidget *widget, const QRect &geometry);
 
     bool dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &global_mouse_pos);
     bool dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
-                        const QPoint &global_mouse_pos);
+                        const QPoint &global_mouse_pos) override;
 
-    virtual QWidget *findContainer(QWidget *w, bool excludeLayout) const;
+    QWidget *findContainer(QWidget *w, bool excludeLayout) const override;
     // for WidgetSelection only.
     QWidget *designerWidget(QWidget *w) const;
 
     //  Initialize and return a popup menu for a managed widget
-    QMenu *initializePopupMenu(QWidget *managedWidget);
+    QMenu *initializePopupMenu(QWidget *managedWidget) override;
 
-    virtual void paste(PasteMode pasteMode);
-    virtual QEditorFormBuilder *createFormBuilder();
+    void paste(PasteMode pasteMode) override;
+    QEditorFormBuilder *createFormBuilder() override;
 
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 signals:
     void contextMenuRequested(QMenu *menu, QWidget *widget);
@@ -230,7 +230,7 @@ public slots:
 
 protected:
     virtual QMenu *createPopupMenu(QWidget *w);
-    virtual void resizeEvent(QResizeEvent *e);
+    void resizeEvent(QResizeEvent *e) override;
 
     void insertWidget(QWidget *w, const QRect &rect, QWidget *target, bool already_in_form = false);
 
@@ -301,7 +301,7 @@ private:
     static int widgetDepth(const QWidget *w);
     static bool isChildOf(const QWidget *c, const QWidget *p);
 
-    void editWidgets();
+    void editWidgets() override;
 
     void updateWidgets();
 

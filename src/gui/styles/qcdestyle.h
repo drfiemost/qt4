@@ -57,15 +57,15 @@ class Q_GUI_EXPORT QCDEStyle : public QMotifStyle
     Q_OBJECT
 public:
     explicit QCDEStyle(bool useHighlightCols = false);
-    virtual ~QCDEStyle();
+    ~QCDEStyle() override;
 
     int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
-                    const QWidget *widget = nullptr) const;
+                    const QWidget *widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
-                     const QWidget *w = nullptr) const;
+                     const QWidget *w = nullptr) const override;
     void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p,
-                       const QWidget *w = nullptr) const;
-    QPalette standardPalette() const;
+                       const QWidget *w = nullptr) const override;
+    QPalette standardPalette() const override;
 
 protected Q_SLOTS:
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = nullptr,

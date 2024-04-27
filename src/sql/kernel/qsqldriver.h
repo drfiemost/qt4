@@ -79,7 +79,7 @@ public:
     enum IdentifierType { FieldName, TableName };
 
     explicit QSqlDriver(QObject *parent=nullptr);
-    ~QSqlDriver();
+    ~QSqlDriver() override;
     virtual bool isOpen() const;
     bool isOpenError() const;
 

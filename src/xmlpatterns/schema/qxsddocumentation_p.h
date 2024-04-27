@@ -86,7 +86,7 @@ namespace QPatternist
             /**
              * Destroys the documentation object.
              */
-            ~XsdDocumentation();
+            ~XsdDocumentation() override;
 
             /**
              * Sets the @p source of the documentation.

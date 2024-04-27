@@ -119,7 +119,7 @@ public:
     QDialogButtonBox(Qt::Orientation orientation, QWidget *parent = nullptr);
     QDialogButtonBox(StandardButtons buttons, Qt::Orientation orientation = Qt::Horizontal,
                      QWidget *parent = nullptr);
-    ~QDialogButtonBox();
+    ~QDialogButtonBox() override;
 
     void setOrientation(Qt::Orientation orientation);
     Qt::Orientation orientation() const;
@@ -148,8 +148,8 @@ Q_SIGNALS:
     void rejected();
 
 protected:
-    void changeEvent(QEvent *event);
-    bool event(QEvent *event);
+    void changeEvent(QEvent *event) override;
+    bool event(QEvent *event) override;
 
 private:
     Q_DISABLE_COPY(QDialogButtonBox)

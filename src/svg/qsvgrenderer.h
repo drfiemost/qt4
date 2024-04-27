@@ -71,7 +71,7 @@ public:
     QSvgRenderer(const QString &filename, QObject *parent=nullptr);
     QSvgRenderer(const QByteArray &contents, QObject *parent=nullptr);
     QSvgRenderer(QXmlStreamReader *contents, QObject *parent=nullptr);
-    ~QSvgRenderer();
+    ~QSvgRenderer() override;
 
     bool isValid() const;
 

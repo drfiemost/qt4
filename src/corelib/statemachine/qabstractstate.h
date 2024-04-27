@@ -59,7 +59,7 @@ class Q_CORE_EXPORT QAbstractState : public QObject
 {
     Q_OBJECT
 public:
-    ~QAbstractState();
+    ~QAbstractState() override;
 
     QState *parentState() const;
     QStateMachine *machine() const;
@@ -77,7 +77,7 @@ protected:
     virtual void onEntry(QEvent *event) = 0;
     virtual void onExit(QEvent *event) = 0;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 protected:
     QAbstractState(QAbstractStatePrivate &dd, QState *parent);

@@ -92,7 +92,7 @@ public:
             }
         }
     }
-    ~QPixmapCacheEntry();
+    ~QPixmapCacheEntry() override;
     QPixmapCache::Key key;
 };
 

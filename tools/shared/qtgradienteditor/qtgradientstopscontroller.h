@@ -55,7 +55,7 @@ class QtGradientStopsController : public QObject
     Q_OBJECT
 public:
     QtGradientStopsController(QObject *parent = nullptr);
-    ~QtGradientStopsController();
+    ~QtGradientStopsController() override;
 
     void setUi(Ui::QtGradientEditor *editor);
 

@@ -194,7 +194,7 @@ public:
 
     bool canPaste() const;
 
-    virtual void componentComplete();
+    void componentComplete() override;
 
     /* FROM EDIT */
     void setReadOnly(bool);
@@ -205,7 +205,7 @@ public:
 
     QRect cursorRectangle() const;
 
-    QVariant inputMethodQuery(Qt::InputMethodQuery property) const;
+    QVariant inputMethodQuery(Qt::InputMethodQuery property) const override;
 
     qreal paintedWidth() const;
     qreal paintedHeight() const;
@@ -215,7 +215,7 @@ public:
     Q_INVOKABLE void moveCursorSelection(int pos);
     Q_INVOKABLE Q_REVISION(1) void moveCursorSelection(int pos, SelectionMode mode);
 
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
     bool isInputMethodComposing() const;
 
@@ -273,23 +273,23 @@ private:
     void updateTotalLines();
 
 protected:
-    virtual void geometryChanged(const QRectF &newGeometry, 
-                                 const QRectF &oldGeometry);
+    void geometryChanged(const QRectF &newGeometry, 
+                                 const QRectF &oldGeometry) override;
 
-    bool event(QEvent *);
-    void keyPressEvent(QKeyEvent *);
-    void keyReleaseEvent(QKeyEvent *);
-    void focusInEvent(QFocusEvent *event);
+    bool event(QEvent *) override;
+    void keyPressEvent(QKeyEvent *) override;
+    void keyReleaseEvent(QKeyEvent *) override;
+    void focusInEvent(QFocusEvent *event) override;
 
     // mouse filter?
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
-    void inputMethodEvent(QInputMethodEvent *e);
+    void inputMethodEvent(QInputMethodEvent *e) override;
 
-    void drawContents(QPainter *, const QRect &);
+    void drawContents(QPainter *, const QRect &) override;
 private:
     Q_DISABLE_COPY(QDeclarativeTextEdit)
     Q_DECLARE_PRIVATE_D(QGraphicsItem::d_ptr.data(), QDeclarativeTextEdit)

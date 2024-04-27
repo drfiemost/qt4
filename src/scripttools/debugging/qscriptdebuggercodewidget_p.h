@@ -64,22 +64,22 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeWidget:
     Q_OBJECT
 public:
     QScriptDebuggerCodeWidget(QWidget *parent = nullptr);
-    ~QScriptDebuggerCodeWidget();
+    ~QScriptDebuggerCodeWidget() override;
 
-    QScriptDebuggerScriptsModel *scriptsModel() const;
-    void setScriptsModel(QScriptDebuggerScriptsModel *model);
+    QScriptDebuggerScriptsModel *scriptsModel() const override;
+    void setScriptsModel(QScriptDebuggerScriptsModel *model) override;
 
-    void setToolTipProvider(QScriptToolTipProviderInterface *toolTipProvider);
+    void setToolTipProvider(QScriptToolTipProviderInterface *toolTipProvider) override;
 
-    qint64 currentScriptId() const;
-    void setCurrentScript(qint64 scriptId);
+    qint64 currentScriptId() const override;
+    void setCurrentScript(qint64 scriptId) override;
 
-    void invalidateExecutionLineNumbers();
+    void invalidateExecutionLineNumbers() override;
 
-    QScriptBreakpointsModel *breakpointsModel() const;
-    void setBreakpointsModel(QScriptBreakpointsModel *model);
+    QScriptBreakpointsModel *breakpointsModel() const override;
+    void setBreakpointsModel(QScriptBreakpointsModel *model) override;
 
-    QScriptDebuggerCodeViewInterface *currentView() const;
+    QScriptDebuggerCodeViewInterface *currentView() const override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerCodeWidget)

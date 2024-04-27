@@ -90,7 +90,7 @@ public:
     {
     }
 
-    ~QSoundPrivate()
+    ~QSoundPrivate() override
     {
         delete bucket;
     }

@@ -60,100 +60,100 @@ public:
     QmlMarkupVisitor(const QString &code,
                      const QList<QDeclarativeJS::AST::SourceLocation> &pragmas,
                      QDeclarativeJS::Engine *engine);
-    virtual ~QmlMarkupVisitor();
+    ~QmlMarkupVisitor() override;
 
     QString markedUpCode();
 
-    virtual bool visit(QDeclarativeJS::AST::UiImport *);
-    virtual void endVisit(QDeclarativeJS::AST::UiImport *);
+    bool visit(QDeclarativeJS::AST::UiImport *) override;
+    void endVisit(QDeclarativeJS::AST::UiImport *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::UiPublicMember *);
-    virtual bool visit(QDeclarativeJS::AST::UiObjectDefinition *);
+    bool visit(QDeclarativeJS::AST::UiPublicMember *) override;
+    bool visit(QDeclarativeJS::AST::UiObjectDefinition *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::UiObjectInitializer *);
-    virtual void endVisit(QDeclarativeJS::AST::UiObjectInitializer *);
+    bool visit(QDeclarativeJS::AST::UiObjectInitializer *) override;
+    void endVisit(QDeclarativeJS::AST::UiObjectInitializer *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::UiObjectBinding *);
-    virtual bool visit(QDeclarativeJS::AST::UiScriptBinding *);
-    virtual bool visit(QDeclarativeJS::AST::UiArrayBinding *);
-    virtual bool visit(QDeclarativeJS::AST::UiArrayMemberList *);
-    virtual bool visit(QDeclarativeJS::AST::UiQualifiedId *);
+    bool visit(QDeclarativeJS::AST::UiObjectBinding *) override;
+    bool visit(QDeclarativeJS::AST::UiScriptBinding *) override;
+    bool visit(QDeclarativeJS::AST::UiArrayBinding *) override;
+    bool visit(QDeclarativeJS::AST::UiArrayMemberList *) override;
+    bool visit(QDeclarativeJS::AST::UiQualifiedId *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::UiSignature *);
-    virtual void endVisit(QDeclarativeJS::AST::UiSignature *);
+    bool visit(QDeclarativeJS::AST::UiSignature *) override;
+    void endVisit(QDeclarativeJS::AST::UiSignature *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::UiFormal *);
-    virtual bool visit(QDeclarativeJS::AST::ThisExpression *);
-    virtual bool visit(QDeclarativeJS::AST::IdentifierExpression *);
-    virtual bool visit(QDeclarativeJS::AST::NullExpression *);
-    virtual bool visit(QDeclarativeJS::AST::TrueLiteral *);
-    virtual bool visit(QDeclarativeJS::AST::FalseLiteral *);
-    virtual bool visit(QDeclarativeJS::AST::NumericLiteral *);
-    virtual bool visit(QDeclarativeJS::AST::StringLiteral *);
-    virtual bool visit(QDeclarativeJS::AST::RegExpLiteral *);
-    virtual bool visit(QDeclarativeJS::AST::ArrayLiteral *);
+    bool visit(QDeclarativeJS::AST::UiFormal *) override;
+    bool visit(QDeclarativeJS::AST::ThisExpression *) override;
+    bool visit(QDeclarativeJS::AST::IdentifierExpression *) override;
+    bool visit(QDeclarativeJS::AST::NullExpression *) override;
+    bool visit(QDeclarativeJS::AST::TrueLiteral *) override;
+    bool visit(QDeclarativeJS::AST::FalseLiteral *) override;
+    bool visit(QDeclarativeJS::AST::NumericLiteral *) override;
+    bool visit(QDeclarativeJS::AST::StringLiteral *) override;
+    bool visit(QDeclarativeJS::AST::RegExpLiteral *) override;
+    bool visit(QDeclarativeJS::AST::ArrayLiteral *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::ObjectLiteral *);
-    virtual void endVisit(QDeclarativeJS::AST::ObjectLiteral *);
+    bool visit(QDeclarativeJS::AST::ObjectLiteral *) override;
+    void endVisit(QDeclarativeJS::AST::ObjectLiteral *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::ElementList *);
-    virtual bool visit(QDeclarativeJS::AST::Elision *);
-    virtual bool visit(QDeclarativeJS::AST::PropertyNameAndValueList *);
-    virtual bool visit(QDeclarativeJS::AST::ArrayMemberExpression *);
-    virtual bool visit(QDeclarativeJS::AST::FieldMemberExpression *);
-    virtual bool visit(QDeclarativeJS::AST::NewMemberExpression *);
-    virtual bool visit(QDeclarativeJS::AST::NewExpression *);
-    virtual bool visit(QDeclarativeJS::AST::ArgumentList *);
-    virtual bool visit(QDeclarativeJS::AST::PostIncrementExpression *);
-    virtual bool visit(QDeclarativeJS::AST::PostDecrementExpression *);
-    virtual bool visit(QDeclarativeJS::AST::DeleteExpression *);
-    virtual bool visit(QDeclarativeJS::AST::VoidExpression *);
-    virtual bool visit(QDeclarativeJS::AST::TypeOfExpression *);
-    virtual bool visit(QDeclarativeJS::AST::PreIncrementExpression *);
-    virtual bool visit(QDeclarativeJS::AST::PreDecrementExpression *);
-    virtual bool visit(QDeclarativeJS::AST::UnaryPlusExpression *);
-    virtual bool visit(QDeclarativeJS::AST::UnaryMinusExpression *);
-    virtual bool visit(QDeclarativeJS::AST::TildeExpression *);
-    virtual bool visit(QDeclarativeJS::AST::NotExpression *);
-    virtual bool visit(QDeclarativeJS::AST::BinaryExpression *);
-    virtual bool visit(QDeclarativeJS::AST::ConditionalExpression *);
-    virtual bool visit(QDeclarativeJS::AST::Expression *);
+    bool visit(QDeclarativeJS::AST::ElementList *) override;
+    bool visit(QDeclarativeJS::AST::Elision *) override;
+    bool visit(QDeclarativeJS::AST::PropertyNameAndValueList *) override;
+    bool visit(QDeclarativeJS::AST::ArrayMemberExpression *) override;
+    bool visit(QDeclarativeJS::AST::FieldMemberExpression *) override;
+    bool visit(QDeclarativeJS::AST::NewMemberExpression *) override;
+    bool visit(QDeclarativeJS::AST::NewExpression *) override;
+    bool visit(QDeclarativeJS::AST::ArgumentList *) override;
+    bool visit(QDeclarativeJS::AST::PostIncrementExpression *) override;
+    bool visit(QDeclarativeJS::AST::PostDecrementExpression *) override;
+    bool visit(QDeclarativeJS::AST::DeleteExpression *) override;
+    bool visit(QDeclarativeJS::AST::VoidExpression *) override;
+    bool visit(QDeclarativeJS::AST::TypeOfExpression *) override;
+    bool visit(QDeclarativeJS::AST::PreIncrementExpression *) override;
+    bool visit(QDeclarativeJS::AST::PreDecrementExpression *) override;
+    bool visit(QDeclarativeJS::AST::UnaryPlusExpression *) override;
+    bool visit(QDeclarativeJS::AST::UnaryMinusExpression *) override;
+    bool visit(QDeclarativeJS::AST::TildeExpression *) override;
+    bool visit(QDeclarativeJS::AST::NotExpression *) override;
+    bool visit(QDeclarativeJS::AST::BinaryExpression *) override;
+    bool visit(QDeclarativeJS::AST::ConditionalExpression *) override;
+    bool visit(QDeclarativeJS::AST::Expression *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::Block *);
-    virtual void endVisit(QDeclarativeJS::AST::Block *);
+    bool visit(QDeclarativeJS::AST::Block *) override;
+    void endVisit(QDeclarativeJS::AST::Block *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::VariableStatement *);
-    virtual bool visit(QDeclarativeJS::AST::VariableDeclarationList *);
-    virtual bool visit(QDeclarativeJS::AST::VariableDeclaration *);
-    virtual bool visit(QDeclarativeJS::AST::EmptyStatement *);
-    virtual bool visit(QDeclarativeJS::AST::ExpressionStatement *);
-    virtual bool visit(QDeclarativeJS::AST::IfStatement *);
-    virtual bool visit(QDeclarativeJS::AST::DoWhileStatement *);
-    virtual bool visit(QDeclarativeJS::AST::WhileStatement *);
-    virtual bool visit(QDeclarativeJS::AST::ForStatement *);
-    virtual bool visit(QDeclarativeJS::AST::LocalForStatement *);
-    virtual bool visit(QDeclarativeJS::AST::ForEachStatement *);
-    virtual bool visit(QDeclarativeJS::AST::LocalForEachStatement *);
-    virtual bool visit(QDeclarativeJS::AST::ContinueStatement *);
-    virtual bool visit(QDeclarativeJS::AST::BreakStatement *);
-    virtual bool visit(QDeclarativeJS::AST::ReturnStatement *);
-    virtual bool visit(QDeclarativeJS::AST::WithStatement *);
+    bool visit(QDeclarativeJS::AST::VariableStatement *) override;
+    bool visit(QDeclarativeJS::AST::VariableDeclarationList *) override;
+    bool visit(QDeclarativeJS::AST::VariableDeclaration *) override;
+    bool visit(QDeclarativeJS::AST::EmptyStatement *) override;
+    bool visit(QDeclarativeJS::AST::ExpressionStatement *) override;
+    bool visit(QDeclarativeJS::AST::IfStatement *) override;
+    bool visit(QDeclarativeJS::AST::DoWhileStatement *) override;
+    bool visit(QDeclarativeJS::AST::WhileStatement *) override;
+    bool visit(QDeclarativeJS::AST::ForStatement *) override;
+    bool visit(QDeclarativeJS::AST::LocalForStatement *) override;
+    bool visit(QDeclarativeJS::AST::ForEachStatement *) override;
+    bool visit(QDeclarativeJS::AST::LocalForEachStatement *) override;
+    bool visit(QDeclarativeJS::AST::ContinueStatement *) override;
+    bool visit(QDeclarativeJS::AST::BreakStatement *) override;
+    bool visit(QDeclarativeJS::AST::ReturnStatement *) override;
+    bool visit(QDeclarativeJS::AST::WithStatement *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::CaseBlock *);
-    virtual void endVisit(QDeclarativeJS::AST::CaseBlock *);
+    bool visit(QDeclarativeJS::AST::CaseBlock *) override;
+    void endVisit(QDeclarativeJS::AST::CaseBlock *) override;
 
-    virtual bool visit(QDeclarativeJS::AST::SwitchStatement *);
-    virtual bool visit(QDeclarativeJS::AST::CaseClause *);
-    virtual bool visit(QDeclarativeJS::AST::DefaultClause *);
-    virtual bool visit(QDeclarativeJS::AST::LabelledStatement *);
-    virtual bool visit(QDeclarativeJS::AST::ThrowStatement *);
-    virtual bool visit(QDeclarativeJS::AST::TryStatement *);
-    virtual bool visit(QDeclarativeJS::AST::Catch *);
-    virtual bool visit(QDeclarativeJS::AST::Finally *);
-    virtual bool visit(QDeclarativeJS::AST::FunctionDeclaration *);
-    virtual bool visit(QDeclarativeJS::AST::FunctionExpression *);
-    virtual bool visit(QDeclarativeJS::AST::FormalParameterList *);
-    virtual bool visit(QDeclarativeJS::AST::DebuggerStatement *);
+    bool visit(QDeclarativeJS::AST::SwitchStatement *) override;
+    bool visit(QDeclarativeJS::AST::CaseClause *) override;
+    bool visit(QDeclarativeJS::AST::DefaultClause *) override;
+    bool visit(QDeclarativeJS::AST::LabelledStatement *) override;
+    bool visit(QDeclarativeJS::AST::ThrowStatement *) override;
+    bool visit(QDeclarativeJS::AST::TryStatement *) override;
+    bool visit(QDeclarativeJS::AST::Catch *) override;
+    bool visit(QDeclarativeJS::AST::Finally *) override;
+    bool visit(QDeclarativeJS::AST::FunctionDeclaration *) override;
+    bool visit(QDeclarativeJS::AST::FunctionExpression *) override;
+    bool visit(QDeclarativeJS::AST::FormalParameterList *) override;
+    bool visit(QDeclarativeJS::AST::DebuggerStatement *) override;
 
 protected:
     QString protect(const QString &string);

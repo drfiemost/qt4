@@ -105,7 +105,7 @@ public:
     explicit QFile(QObject *parent);
     QFile(const QString &name, QObject *parent);
 #endif
-    ~QFile();
+    ~QFile() override;
 
     FileError error() const;
     void unsetError();

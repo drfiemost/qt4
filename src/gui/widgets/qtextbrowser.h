@@ -68,14 +68,14 @@ class Q_GUI_EXPORT QTextBrowser : public QTextEdit
 
 public:
     explicit QTextBrowser(QWidget* parent = nullptr);
-    virtual ~QTextBrowser();
+    ~QTextBrowser() override;
 
     QUrl source() const;
 
     QStringList searchPaths() const;
     void setSearchPaths(const QStringList &paths);
 
-    virtual QVariant loadResource(int type, const QUrl &name);
+    QVariant loadResource(int type, const QUrl &name) override;
 
     bool isBackwardAvailable() const;
     bool isForwardAvailable() const;
@@ -108,14 +108,14 @@ Q_SIGNALS:
     void anchorClicked(const QUrl &);
 
 protected:
-    bool event(QEvent *e);
-    virtual void keyPressEvent(QKeyEvent *ev);
-    virtual void mouseMoveEvent(QMouseEvent *ev);
-    virtual void mousePressEvent(QMouseEvent *ev);
-    virtual void mouseReleaseEvent(QMouseEvent *ev);
-    virtual void focusOutEvent(QFocusEvent *ev);
-    virtual bool focusNextPrevChild(bool next);
-    virtual void paintEvent(QPaintEvent *e);
+    bool event(QEvent *e) override;
+    void keyPressEvent(QKeyEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
+    void mousePressEvent(QMouseEvent *ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    void focusOutEvent(QFocusEvent *ev) override;
+    bool focusNextPrevChild(bool next) override;
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QTextBrowser)

@@ -52,7 +52,7 @@ class ShaderEffectBuffer : public QGLFramebufferObject
 {
 public:
     ShaderEffectBuffer(const QSize &size, const QGLFramebufferObjectFormat &format);
-    ~ShaderEffectBuffer();
+    ~ShaderEffectBuffer() override;
 };
 
 QT_END_HEADER

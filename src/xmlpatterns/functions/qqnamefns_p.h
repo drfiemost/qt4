@@ -79,7 +79,7 @@ namespace QPatternist
     class QNameFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -91,7 +91,7 @@ namespace QPatternist
     class ResolveQNameFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -103,7 +103,7 @@ namespace QPatternist
     class PrefixFromQNameFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -115,7 +115,7 @@ namespace QPatternist
     class LocalNameFromQNameFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -127,7 +127,7 @@ namespace QPatternist
     class NamespaceURIFromQNameFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -139,7 +139,7 @@ namespace QPatternist
     class NamespaceURIForPrefixFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -151,7 +151,7 @@ namespace QPatternist
     class InScopePrefixesFN : public FunctionCall
     {
     public:
-        virtual Item::Iterator::Ptr evaluateSequence(const DynamicContext::Ptr &context) const;
+        Item::Iterator::Ptr evaluateSequence(const DynamicContext::Ptr &context) const override;
     };
 }
 

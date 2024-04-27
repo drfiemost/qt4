@@ -76,12 +76,12 @@ namespace QPatternist
     public:
         ConstructorFunctionsFactory(const NamePool::Ptr &np, const SchemaTypeFactory::Ptr &);
 
-        virtual FunctionSignature::Ptr retrieveFunctionSignature(const NamePool::Ptr &np, const QXmlName name);
+        FunctionSignature::Ptr retrieveFunctionSignature(const NamePool::Ptr &np, const QXmlName name) override;
 
     protected:
-         virtual Expression::Ptr retrieveExpression(const QXmlName name,
+         Expression::Ptr retrieveExpression(const QXmlName name,
                                                     const Expression::List &args,
-                                                    const FunctionSignature::Ptr &sign) const;
+                                                    const FunctionSignature::Ptr &sign) const override;
 
     private:
         const SchemaTypeFactory::Ptr m_typeFactory;

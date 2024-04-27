@@ -87,7 +87,7 @@ public:
           cookieJarCreated(false),
           authenticationManager(new QNetworkAccessAuthenticationManager)
     { }
-    ~QNetworkAccessManagerPrivate();
+    ~QNetworkAccessManagerPrivate() override;
 
     void _q_replyFinished();
     void _q_replySslErrors(const QList<QSslError> &errors);

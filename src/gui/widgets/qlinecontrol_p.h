@@ -93,7 +93,7 @@ public:
         init(txt);
     }
 
-    ~QLineControl()
+    ~QLineControl() override
     {
         delete [] m_maskData;
     }
@@ -462,7 +462,7 @@ Q_SIGNALS:
     void editFocusChange(bool);
 #endif
 protected:
-    virtual void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
 private Q_SLOTS:
     void _q_clipboardChanged();

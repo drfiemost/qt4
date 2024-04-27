@@ -82,7 +82,7 @@ namespace QPatternist
          */
         static UntypedAtomic::Ptr fromValue(const QString &value);
 
-        virtual ItemType::Ptr type() const;
+        ItemType::Ptr type() const override;
 
     protected:
 

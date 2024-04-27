@@ -57,7 +57,7 @@ class PaletteEditorAdvanced : public QDialog
     Q_OBJECT
 public:
     PaletteEditorAdvanced(QWidget *parent = nullptr);
-    ~PaletteEditorAdvanced();
+    ~PaletteEditorAdvanced() override;
 
     static QPalette getPalette(bool *ok, const QPalette &pal,
                                QPalette::ColorRole backgroundRole = QPalette::Window,

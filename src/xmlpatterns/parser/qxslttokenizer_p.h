@@ -83,7 +83,7 @@ namespace QPatternist
         inline SingleTokenContainer(const Tokenizer::Token &token,
                                     const YYLTYPE &location);
 
-        virtual Tokenizer::Token nextToken(YYLTYPE *const sourceLocator);
+        Tokenizer::Token nextToken(YYLTYPE *const sourceLocator) override;
     private:
         const Tokenizer::Token m_token;
         const YYLTYPE          m_location;
@@ -121,27 +121,27 @@ namespace QPatternist
                       const ReportContext::Ptr &context,
                       const NamePool::Ptr &np);
 
-        virtual Token nextToken(YYLTYPE *const sourceLocator);
+        Token nextToken(YYLTYPE *const sourceLocator) override;
 
         /**
          * For XSLT we don't need this mechanism, so we do nothing.
          */
-        virtual int commenceScanOnly();
+        int commenceScanOnly() override;
 
         /**
          * For XSLT we don't need this mechanism, so we do nothing.
          */
-        virtual void resumeTokenizationFrom(const int position);
+        void resumeTokenizationFrom(const int position) override;
 
-        virtual void setParserContext(const ParserContext::Ptr &parseInfo);
+        void setParserContext(const ParserContext::Ptr &parseInfo) override;
 
-        virtual QUrl documentURI() const
+        QUrl documentURI() const override
         {
             return queryURI();
         }
 
     protected:
-        virtual bool isAnyAttributeAllowed() const;
+        bool isAnyAttributeAllowed() const override;
 
     private:
         inline void validateElement() const;

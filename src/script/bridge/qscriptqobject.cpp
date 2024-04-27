@@ -123,7 +123,7 @@ class QObjectConnectionManager: public QObject
 {
 public:
     QObjectConnectionManager(QScriptEnginePrivate *engine);
-    ~QObjectConnectionManager();
+    ~QObjectConnectionManager() override;
 
     bool addSignalHandler(QObject *sender, int signalIndex,
                           JSC::JSValue receiver,
@@ -135,9 +135,9 @@ public:
                              JSC::JSValue slot);
 
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const;
-    virtual void *qt_metacast(const char *);
-    virtual int qt_metacall(QMetaObject::Call, int, void **argv);
+    const QMetaObject *metaObject() const override;
+    void *qt_metacast(const char *) override;
+    int qt_metacall(QMetaObject::Call, int, void **argv) override;
 
     void execute(int slotIndex, void **argv);
 

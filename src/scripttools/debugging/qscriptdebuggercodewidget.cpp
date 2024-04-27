@@ -58,7 +58,7 @@ class QScriptDebuggerCodeWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerCodeWidget)
 public:
     QScriptDebuggerCodeWidgetPrivate();
-    ~QScriptDebuggerCodeWidgetPrivate();
+    ~QScriptDebuggerCodeWidgetPrivate() override;
 
     qint64 scriptId(QScriptDebuggerCodeViewInterface *view) const;
 

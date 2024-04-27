@@ -71,7 +71,7 @@ public:
     QScriptBreakpointsModel(QScriptDebuggerJobSchedulerInterface *jobScheduler,
                             QScriptDebuggerCommandSchedulerInterface *commandScheduler,
                             QObject *parent = nullptr);
-    ~QScriptBreakpointsModel();
+    ~QScriptBreakpointsModel() override;
 
     void setBreakpoint(const QScriptBreakpointData &data);
     void setBreakpointData(int id, const QScriptBreakpointData &data);
@@ -88,14 +88,14 @@ public:
     int resolveBreakpoint(qint64 scriptId, int lineNumber) const;
     int resolveBreakpoint(const QString &fileName, int lineNumber) const;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex &child) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptBreakpointsModel)

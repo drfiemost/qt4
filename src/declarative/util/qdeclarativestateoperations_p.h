@@ -69,7 +69,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeParentChange : public QDeclarativ
     Q_PROPERTY(QDeclarativeScriptString rotation READ rotation WRITE setRotation)
 public:
     QDeclarativeParentChange(QObject *parent=nullptr);
-    ~QDeclarativeParentChange();
+    ~QDeclarativeParentChange() override;
 
     QDeclarativeItem *object() const;
     void setObject(QDeclarativeItem *);
@@ -103,17 +103,17 @@ public:
     void setRotation(QDeclarativeScriptString rotation);
     bool rotationIsSet() const;
 
-    virtual ActionList actions();
+    ActionList actions() override;
 
-    virtual void saveOriginals();
+    void saveOriginals() override;
     //virtual void copyOriginals(QDeclarativeActionEvent*);
-    virtual void execute(Reason reason = ActualChange);
-    virtual bool isReversable();
-    virtual void reverse(Reason reason = ActualChange);
-    virtual QString typeName() const;
-    virtual bool override(QDeclarativeActionEvent*other);
-    virtual void rewind();
-    virtual void saveCurrentValues();
+    void execute(Reason reason = ActualChange) override;
+    bool isReversable() override;
+    void reverse(Reason reason = ActualChange) override;
+    QString typeName() const override;
+    bool override(QDeclarativeActionEvent*other) override;
+    void rewind() override;
+    void saveCurrentValues() override;
 };
 
 class QDeclarativeStateChangeScriptPrivate;
@@ -127,11 +127,11 @@ class Q_AUTOTEST_EXPORT QDeclarativeStateChangeScript : public QDeclarativeState
 
 public:
     QDeclarativeStateChangeScript(QObject *parent=nullptr);
-    ~QDeclarativeStateChangeScript();
+    ~QDeclarativeStateChangeScript() override;
 
-    virtual ActionList actions();
+    ActionList actions() override;
 
-    virtual QString typeName() const;
+    QString typeName() const override;
 
     QDeclarativeScriptString script() const;
     void setScript(const QDeclarativeScriptString &);
@@ -139,7 +139,7 @@ public:
     QString name() const;
     void setName(const QString &);
 
-    virtual void execute(Reason reason = ActualChange);
+    void execute(Reason reason = ActualChange) override;
 };
 
 class QDeclarativeAnchorChanges;
@@ -169,7 +169,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeAnchorSet : public QObject
 
 public:
     QDeclarativeAnchorSet(QObject *parent=nullptr);
-    virtual ~QDeclarativeAnchorSet();
+    ~QDeclarativeAnchorSet() override;
 
     QDeclarativeScriptString left() const;
     void setLeft(const QDeclarativeScriptString &edge);
@@ -260,30 +260,30 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeAnchorChanges : public QDeclarati
 
 public:
     QDeclarativeAnchorChanges(QObject *parent=nullptr);
-    ~QDeclarativeAnchorChanges();
+    ~QDeclarativeAnchorChanges() override;
 
-    virtual ActionList actions();
+    ActionList actions() override;
 
     QDeclarativeAnchorSet *anchors();
 
     QDeclarativeItem *object() const;
     void setObject(QDeclarativeItem *);
 
-    virtual void execute(Reason reason = ActualChange);
-    virtual bool isReversable();
-    virtual void reverse(Reason reason = ActualChange);
-    virtual QString typeName() const;
-    virtual bool override(QDeclarativeActionEvent*other);
-    virtual bool changesBindings();
-    virtual void saveOriginals();
-    virtual bool needsCopy() { return true; }
-    virtual void copyOriginals(QDeclarativeActionEvent*);
-    virtual void clearBindings();
-    virtual void rewind();
-    virtual void saveCurrentValues();
+    void execute(Reason reason = ActualChange) override;
+    bool isReversable() override;
+    void reverse(Reason reason = ActualChange) override;
+    QString typeName() const override;
+    bool override(QDeclarativeActionEvent*other) override;
+    bool changesBindings() override;
+    void saveOriginals() override;
+    bool needsCopy() override { return true; }
+    void copyOriginals(QDeclarativeActionEvent*) override;
+    void clearBindings() override;
+    void rewind() override;
+    void saveCurrentValues() override;
 
     QList<QDeclarativeAction> additionalActions();
-    virtual void saveTargetValues();
+    void saveTargetValues() override;
 };
 
 QT_END_NAMESPACE

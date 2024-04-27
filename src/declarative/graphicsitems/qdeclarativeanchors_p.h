@@ -82,7 +82,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeAnchors : public QObject
 public:
     QDeclarativeAnchors(QObject *parent=nullptr);
     QDeclarativeAnchors(QGraphicsObject *item, QObject *parent=nullptr);
-    virtual ~QDeclarativeAnchors();
+    ~QDeclarativeAnchors() override;
 
     enum Anchor {
         LeftAnchor = 0x01,

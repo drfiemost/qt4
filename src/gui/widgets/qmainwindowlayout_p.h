@@ -164,13 +164,13 @@ public:
     QMainWindowLayoutState layoutState, savedState;
 
     QMainWindowLayout(QMainWindow *mainwindow, QLayout *parentLayout);
-    ~QMainWindowLayout();
+    ~QMainWindowLayout() override;
 
     QMainWindow::DockOptions dockOptions;
     void setDockOptions(QMainWindow::DockOptions opts);
     bool usesHIToolBar(QToolBar *toolbar) const;
 
-    void timerEvent(QTimerEvent *e);
+    void timerEvent(QTimerEvent *e) override;
 
     // status bar
 
@@ -268,17 +268,17 @@ public:
 
     // QLayout interface
 
-    void addItem(QLayoutItem *item);
-    void setGeometry(const QRect &r);
-    QLayoutItem *itemAt(int index) const;
-    QLayoutItem *takeAt(int index);
-    int count() const;
+    void addItem(QLayoutItem *item) override;
+    void setGeometry(const QRect &r) override;
+    QLayoutItem *itemAt(int index) const override;
+    QLayoutItem *takeAt(int index) override;
+    int count() const override;
 
-    QSize sizeHint() const;
-    QSize minimumSize() const;
+    QSize sizeHint() const override;
+    QSize minimumSize() const override;
     mutable QSize szHint;
     mutable QSize minSize;
-    void invalidate();
+    void invalidate() override;
 
     // animations
 

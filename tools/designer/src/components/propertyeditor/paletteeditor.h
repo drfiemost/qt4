@@ -58,7 +58,7 @@ class PaletteEditor: public QDialog
 {
     Q_OBJECT
 public:
-    virtual ~PaletteEditor();
+    ~PaletteEditor() override;
 
     static QPalette getPalette(QDesignerFormEditorInterface *core,
                 QWidget* parent, const QPalette &init = QPalette(),
@@ -110,13 +110,13 @@ class PaletteModel : public QAbstractTableModel
 public:
     explicit PaletteModel(QObject *parent = nullptr);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
-                int role = Qt::DisplayRole) const;
+                int role = Qt::DisplayRole) const override;
 
     QPalette getPalette() const;
     void setPalette(const QPalette &palette, const QPalette &parentPalette);
@@ -181,18 +181,18 @@ public:
     explicit ColorDelegate(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                const QModelIndex &index) const;
+                const QModelIndex &index) const override;
 
-    void setEditorData(QWidget *ed, const QModelIndex &index) const;
+    void setEditorData(QWidget *ed, const QModelIndex &index) const override;
     void setModelData(QWidget *ed, QAbstractItemModel *model,
-                const QModelIndex &index) const;
+                const QModelIndex &index) const override;
 
     void updateEditorGeometry(QWidget *ed,
-                const QStyleOptionViewItem &option, const QModelIndex &index) const;
+                const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    virtual void paint(QPainter *painter, const QStyleOptionViewItem &opt,
-                       const QModelIndex &index) const;
-    virtual QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &opt,
+                       const QModelIndex &index) const override;
+    QSize sizeHint(const QStyleOptionViewItem &opt, const QModelIndex &index) const override;
 private:
     QDesignerFormEditorInterface *m_core;
 };

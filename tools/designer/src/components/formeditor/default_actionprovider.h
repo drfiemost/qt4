@@ -62,7 +62,7 @@ protected:
     explicit ActionProviderBase(QWidget *widget);
 
 public:
-    virtual void adjustIndicator(const QPoint &pos);
+    void adjustIndicator(const QPoint &pos) override;
     virtual Qt::Orientation orientation() const = 0;
 
 protected:
@@ -79,12 +79,12 @@ class QT_FORMEDITOR_EXPORT QToolBarActionProvider: public QObject, public Action
 public:
     explicit QToolBarActionProvider(QToolBar *widget, QObject *parent = nullptr);
 
-    virtual QRect actionGeometry(QAction *action) const;
-    virtual QAction *actionAt(const QPoint &pos) const;
-    Qt::Orientation orientation() const;
+    QRect actionGeometry(QAction *action) const override;
+    QAction *actionAt(const QPoint &pos) const override;
+    Qt::Orientation orientation() const override;
 
 protected:
-    virtual QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const;
+    QRect indicatorGeometry(const QPoint &pos, Qt::LayoutDirection layoutDirection) const override;
 
 private:
     QToolBar *m_widget;
@@ -97,9 +97,9 @@ class QT_FORMEDITOR_EXPORT QMenuBarActionProvider: public QObject, public Action
 public:
     explicit QMenuBarActionProvider(QMenuBar *widget, QObject *parent = nullptr);
 
-    virtual QRect actionGeometry(QAction *action) const;
-    virtual QAction *actionAt(const QPoint &pos) const;
-    Qt::Orientation orientation() const;
+    QRect actionGeometry(QAction *action) const override;
+    QAction *actionAt(const QPoint &pos) const override;
+    Qt::Orientation orientation() const override;
 
 private:
     QMenuBar *m_widget;
@@ -112,9 +112,9 @@ class QT_FORMEDITOR_EXPORT QMenuActionProvider: public QObject, public ActionPro
 public:
     explicit QMenuActionProvider(QMenu *widget, QObject *parent = nullptr);
 
-    virtual QRect actionGeometry(QAction *action) const;
-    virtual QAction *actionAt(const QPoint &pos) const;
-    Qt::Orientation orientation() const;
+    QRect actionGeometry(QAction *action) const override;
+    QAction *actionAt(const QPoint &pos) const override;
+    Qt::Orientation orientation() const override;
 
 private:
     QMenu *m_widget;

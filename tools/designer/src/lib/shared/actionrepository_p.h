@@ -96,9 +96,9 @@ public:
     QString actionName(int row) const;
     QAction *actionAt(const QModelIndex &index) const;
 
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
-    virtual QStringList mimeTypes() const;
-    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    QStringList mimeTypes() const override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     // Find the associated menus and toolbars, ignore toolbuttons
     static QWidgetList associatedWidgets(const QAction *action);
@@ -140,15 +140,15 @@ signals:
     void activated(QAction *action);
 
 protected slots:
-    virtual void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dragMoveEvent(QDragMoveEvent *event);
-    virtual void dropEvent(QDropEvent *event);
-    virtual void focusInEvent(QFocusEvent *event);
-    virtual void contextMenuEvent(QContextMenuEvent *event);
-    virtual void startDrag(Qt::DropActions supportedActions);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void startDrag(Qt::DropActions supportedActions) override;
 
 private slots:
     void slotActivated(const QModelIndex &);
@@ -174,15 +174,15 @@ signals:
     void activated(QAction *action);
 
 protected slots:
-    virtual void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dragMoveEvent(QDragMoveEvent *event);
-    virtual void dropEvent(QDropEvent *event);
-    virtual void focusInEvent(QFocusEvent *event);
-    virtual void contextMenuEvent(QContextMenuEvent *event);
-    virtual void startDrag(Qt::DropActions supportedActions);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void startDrag(Qt::DropActions supportedActions) override;
 
 private slots:
     void slotActivated(const QModelIndex &);
@@ -251,7 +251,7 @@ public:
     ActionRepositoryMimeData(QAction *, Qt::DropAction dropAction);
 
     const ActionList &actionList() const { return m_actionList; }
-    virtual QStringList formats() const;
+    QStringList formats() const override;
 
     static QPixmap actionDragPixmap(const QAction *action);
 

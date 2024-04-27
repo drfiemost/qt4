@@ -65,7 +65,7 @@ class QScriptBreakpointsModelPrivate
     Q_DECLARE_PUBLIC(QScriptBreakpointsModel)
 public:
     QScriptBreakpointsModelPrivate();
-    ~QScriptBreakpointsModelPrivate();
+    ~QScriptBreakpointsModelPrivate() override;
 
     QScriptDebuggerJobSchedulerInterface *jobScheduler;
     QScriptDebuggerCommandSchedulerInterface *commandScheduler;
@@ -107,13 +107,13 @@ public:
           m_data(data)
     { }
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleSetBreakpoint(m_data);
     }
 
-    void handleResponse(const QScriptDebuggerResponse &, int)
+    void handleResponse(const QScriptDebuggerResponse &, int) override
     {
         finish();
     }
@@ -148,13 +148,13 @@ public:
           m_id(id), m_data(data)
     { }
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleSetBreakpointData(m_id, m_data);
     }
 
-    void handleResponse(const QScriptDebuggerResponse &, int)
+    void handleResponse(const QScriptDebuggerResponse &, int) override
     {
         finish();
     }
@@ -189,13 +189,13 @@ public:
           m_id(id)
     { }
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleDeleteBreakpoint(m_id);
     }
 
-    void handleResponse(const QScriptDebuggerResponse &, int)
+    void handleResponse(const QScriptDebuggerResponse &, int) override
     {
         finish();
     }

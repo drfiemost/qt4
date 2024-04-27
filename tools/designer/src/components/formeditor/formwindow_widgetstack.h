@@ -60,7 +60,7 @@ class QT_FORMEDITOR_EXPORT FormWindowWidgetStack: public QObject
     Q_OBJECT
 public:
     FormWindowWidgetStack(QObject *parent = nullptr);
-    virtual ~FormWindowWidgetStack();
+    ~FormWindowWidgetStack() override;
 
     QLayout *layout() const;
 

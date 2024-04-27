@@ -63,7 +63,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeLoader : public QDeclarativeImplicitSizeItem
 
 public:
     QDeclarativeLoader(QDeclarativeItem *parent=nullptr);
-    virtual ~QDeclarativeLoader();
+    ~QDeclarativeLoader() override;
 
     QUrl source() const;
     void setSource(const QUrl &);
@@ -86,10 +86,10 @@ Q_SIGNALS:
     void loaded();
 
 protected:
-    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    bool eventFilter(QObject *watched, QEvent *e);
-    void componentComplete();
+    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    bool eventFilter(QObject *watched, QEvent *e) override;
+    void componentComplete() override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeLoader)

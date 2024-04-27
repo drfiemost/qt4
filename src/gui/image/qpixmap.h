@@ -74,7 +74,7 @@ public:
     QPixmap(const char * const xpm[]);
 #endif
     QPixmap(const QPixmap &);
-    ~QPixmap();
+    ~QPixmap() override;
 
     QPixmap &operator=(const QPixmap &);
 #ifdef Q_COMPILER_RVALUE_REFS
@@ -86,7 +86,7 @@ public:
     operator QVariant() const;
 
     bool isNull() const; // ### Qt 5: make inline
-    int devType() const;
+    int devType() const override;
 
     int width() const; // ### Qt 5: make inline
     int height() const; // ### Qt 5: make inline
@@ -208,12 +208,12 @@ public:
     Qt::HANDLE handle() const;
 #endif
 
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
 
     inline bool operator!() const { return isNull(); }
 
 protected:
-    int metric(PaintDeviceMetric) const;
+    int metric(PaintDeviceMetric) const override;
 
 private:
     QExplicitlySharedDataPointer<QPixmapData> data;

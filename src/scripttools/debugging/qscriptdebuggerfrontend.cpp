@@ -66,9 +66,9 @@ class QScriptDebuggerFrontendEventReceiver : public QObject
 public:
     QScriptDebuggerFrontendEventReceiver(QScriptDebuggerFrontendPrivate *frontend,
                                          QObject *parent = nullptr);
-    ~QScriptDebuggerFrontendEventReceiver();
+    ~QScriptDebuggerFrontendEventReceiver() override;
 
-    bool event(QEvent *);
+    bool event(QEvent *) override;
 
 private:
     QScriptDebuggerFrontendPrivate *m_frontend;

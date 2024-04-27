@@ -128,7 +128,7 @@ class Q_GUI_EXPORT QImageIOPlugin : public QObject, public QImageIOHandlerFactor
     Q_INTERFACES(QImageIOHandlerFactoryInterface:QFactoryInterface)
 public:
     explicit QImageIOPlugin(QObject *parent = nullptr);
-    virtual ~QImageIOPlugin();
+    ~QImageIOPlugin() override;
 
     enum Capability {
         CanRead = 0x1,
@@ -138,8 +138,8 @@ public:
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
     virtual Capabilities capabilities(QIODevice *device, const QByteArray &format) const = 0;
-    virtual QStringList keys() const = 0;
-    virtual QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const = 0;
+    QStringList keys() const override = 0;
+    QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const override = 0;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QImageIOPlugin::Capabilities)

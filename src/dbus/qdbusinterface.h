@@ -63,11 +63,11 @@ public:
     QDBusInterface(const QString &service, const QString &path, const QString &interface = QString(),
                    const QDBusConnection &connection = QDBusConnection::sessionBus(),
                    QObject *parent = nullptr);
-    ~QDBusInterface();
+    ~QDBusInterface() override;
 
-    virtual const QMetaObject *metaObject() const;
-    virtual void *qt_metacast(const char *);
-    virtual int qt_metacall(QMetaObject::Call, int, void **);
+    const QMetaObject *metaObject() const override;
+    void *qt_metacast(const char *) override;
+    int qt_metacall(QMetaObject::Call, int, void **) override;
 
 private:
     Q_DECLARE_PRIVATE(QDBusInterface)

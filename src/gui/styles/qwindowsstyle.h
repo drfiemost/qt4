@@ -58,41 +58,41 @@ class Q_GUI_EXPORT QWindowsStyle : public QCommonStyle
     Q_OBJECT
 public:
     QWindowsStyle();
-    ~QWindowsStyle();
+    ~QWindowsStyle() override;
 
-    void polish(QApplication*);
-    void unpolish(QApplication*);
+    void polish(QApplication*) override;
+    void unpolish(QApplication*) override;
 
-    void polish(QWidget*);
-    void unpolish(QWidget*);
+    void polish(QWidget*) override;
+    void unpolish(QWidget*) override;
 
-    void polish(QPalette &);
+    void polish(QPalette &) override;
 
     void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p,
-                       const QWidget *w = nullptr) const;
+                       const QWidget *w = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
-                     const QWidget *w = nullptr) const;
-    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = nullptr) const;
+                     const QWidget *w = nullptr) const override;
+    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = nullptr) const override;
     void drawComplexControl(ComplexControl cc, const QStyleOptionComplex *opt, QPainter *p,
-                            const QWidget *w = nullptr) const;
+                            const QWidget *w = nullptr) const override;
     QSize sizeFromContents(ContentsType ct, const QStyleOption *opt,
-                           const QSize &contentsSize, const QWidget *widget = nullptr) const;
+                           const QSize &contentsSize, const QWidget *widget = nullptr) const override;
 
-    int pixelMetric(PixelMetric pm, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
+    int pixelMetric(PixelMetric pm, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
     int styleHint(StyleHint hint, const QStyleOption *opt = nullptr, const QWidget *widget = nullptr,
-                  QStyleHintReturn *returnData = nullptr) const;
+                  QStyleHintReturn *returnData = nullptr) const override;
 
     QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                           const QWidget *widget = nullptr) const;
+                           const QWidget *widget = nullptr) const override;
 
 protected Q_SLOTS:
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
                                      const QWidget *widget = nullptr) const;
 
 protected:
-    bool eventFilter(QObject *o, QEvent *e);
-    void timerEvent(QTimerEvent *event);
+    bool eventFilter(QObject *o, QEvent *e) override;
+    void timerEvent(QTimerEvent *event) override;
     QWindowsStyle(QWindowsStylePrivate &dd);
 
 private:

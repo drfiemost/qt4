@@ -113,8 +113,8 @@ public:
         m_mode(Qt::ElideRight) {
         setContentsMargins(3, 2, 3, 2);
     }
-    QSize sizeHint() const;
-    void paintEvent(QPaintEvent *e);
+    QSize sizeHint() const override;
+    void paintEvent(QPaintEvent *e) override;
     void setText(const QString &text) {
         m_text = text;
         updateGeometry();

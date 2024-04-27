@@ -77,7 +77,7 @@ namespace QPatternist
     class ContainsFN : public ComparesCaseAware
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -89,7 +89,7 @@ namespace QPatternist
     class StartsWithFN : public ComparesCaseAware
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -101,7 +101,7 @@ namespace QPatternist
     class EndsWithFN : public ComparesCaseAware
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -113,7 +113,7 @@ namespace QPatternist
     class SubstringBeforeFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -125,7 +125,7 @@ namespace QPatternist
     class SubstringAfterFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 }
 

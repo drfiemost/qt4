@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QScriptBreakpointsWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptBreakpointsWidgetInterface();
+    ~QScriptBreakpointsWidgetInterface() override;
 
     virtual QScriptBreakpointsModel *breakpointsModel() const = 0;
     virtual void setBreakpointsModel(QScriptBreakpointsModel *model) = 0;

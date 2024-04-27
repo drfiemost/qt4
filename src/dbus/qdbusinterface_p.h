@@ -71,7 +71,7 @@ public:
 
     QDBusInterfacePrivate(const QString &serv, const QString &p, const QString &iface,
                           const QDBusConnection &con);
-    ~QDBusInterfacePrivate();
+    ~QDBusInterfacePrivate() override;
 
     int metacall(QMetaObject::Call c, int id, void **argv);
 };

@@ -55,13 +55,13 @@ class Q_AUTOTEST_EXPORT QDeclarativeFocusPanel : public QDeclarativeItem
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
 public:
     QDeclarativeFocusPanel(QDeclarativeItem *parent=nullptr);
-    virtual ~QDeclarativeFocusPanel();
+    ~QDeclarativeFocusPanel() override;
 
 Q_SIGNALS:
     void activeChanged();
 
 protected:
-    bool sceneEvent(QEvent *event);
+    bool sceneEvent(QEvent *event) override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeFocusPanel)

@@ -65,7 +65,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerScriptsWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptDebuggerScriptsWidgetInterface();
+    ~QScriptDebuggerScriptsWidgetInterface() override;
 
     virtual QScriptDebuggerScriptsModel *scriptsModel() const = 0;
     virtual void setScriptsModel(QScriptDebuggerScriptsModel *model) = 0;

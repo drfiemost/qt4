@@ -68,7 +68,7 @@ class TemplateOptionsWidget : public QWidget
 public:
     explicit TemplateOptionsWidget(QDesignerFormEditorInterface *core,
                                               QWidget *parent = nullptr);
-    ~TemplateOptionsWidget();
+    ~TemplateOptionsWidget() override;
 
 
     QStringList templatePaths() const;
@@ -92,10 +92,10 @@ class TemplateOptionsPage : public QDesignerOptionsPageInterface
 public:
     explicit TemplateOptionsPage(QDesignerFormEditorInterface *core);
 
-    virtual QString name() const;
-    virtual QWidget *createPage(QWidget *parent);
-    virtual void apply();
-    virtual void finish();
+    QString name() const override;
+    QWidget *createPage(QWidget *parent) override;
+    void apply() override;
+    void finish() override;
 
 private:
     QDesignerFormEditorInterface *m_core;

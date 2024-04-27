@@ -70,7 +70,7 @@ public:
     typedef QVector<KeyValue> KeyValues;
 
     QVariantAnimation(QObject *parent = nullptr);
-    ~QVariantAnimation();
+    ~QVariantAnimation() override;
 
     QVariant startValue() const;
     void setStartValue(const QVariant &value);
@@ -86,7 +86,7 @@ public:
 
     QVariant currentValue() const;
 
-    int duration() const;
+    int duration() const override;
     void setDuration(int msecs);
 
     QEasingCurve easingCurve() const;
@@ -99,10 +99,10 @@ Q_SIGNALS:
 
 protected:
     QVariantAnimation(QVariantAnimationPrivate &dd, QObject *parent = nullptr);
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
-    void updateCurrentTime(int);
-    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+    void updateCurrentTime(int) override;
+    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState) override;
 
     virtual void updateCurrentValue(const QVariant &value) = 0;
     virtual QVariant interpolated(const QVariant &from, const QVariant &to, qreal progress) const;

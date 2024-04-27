@@ -474,7 +474,7 @@ public:
     explicit QGLWidget(const QGLFormat& format, QWidget* parent=nullptr,
                        const QGLWidget* shareWidget = nullptr, Qt::WindowFlags f=nullptr);
 
-    ~QGLWidget();
+    ~QGLWidget() override;
 
     void qglColor(const QColor& c) const;
     void qglClearColor(const QColor& c) const;
@@ -513,7 +513,7 @@ public:
                      const QFont & fnt = QFont(), int listBase = 2000);
     void renderText(double x, double y, double z, const QString & str,
                      const QFont & fnt = QFont(), int listBase = 2000);
-    QPaintEngine *paintEngine() const;
+    QPaintEngine *paintEngine() const override;
 
     GLuint bindTexture(const QImage &image, GLenum target, GLint format,
                        QGLContext::BindOptions options);
@@ -553,7 +553,7 @@ public Q_SLOTS:
     virtual void updateOverlayGL();
 
 protected:
-    bool event(QEvent *);
+    bool event(QEvent *) override;
     virtual void initializeGL();
     virtual void resizeGL(int w, int h);
     virtual void paintGL();
@@ -565,8 +565,8 @@ protected:
     void setAutoBufferSwap(bool on);
     bool autoBufferSwap() const;
 
-    void paintEvent(QPaintEvent*);
-    void resizeEvent(QResizeEvent*);
+    void paintEvent(QPaintEvent*) override;
+    void resizeEvent(QResizeEvent*) override;
 
     virtual void glInit();
     virtual void glDraw();

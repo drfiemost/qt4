@@ -65,10 +65,10 @@ public:
     explicit QPushButton(QWidget *parent=nullptr);
     explicit QPushButton(const QString &text, QWidget *parent=nullptr);
     QPushButton(const QIcon& icon, const QString &text, QWidget *parent=nullptr);
-    ~QPushButton();
+    ~QPushButton() override;
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
     bool autoDefault() const;
     void setAutoDefault(bool);
@@ -89,14 +89,14 @@ public Q_SLOTS:
 #endif
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 #ifdef Q_WS_MAC
     bool hitButton(const QPoint &pos) const;
 #endif // Q_WS_MAC
-    void paintEvent(QPaintEvent *);
-    void keyPressEvent(QKeyEvent *);
-    void focusInEvent(QFocusEvent *);
-    void focusOutEvent(QFocusEvent *);
+    void paintEvent(QPaintEvent *) override;
+    void keyPressEvent(QKeyEvent *) override;
+    void focusInEvent(QFocusEvent *) override;
+    void focusOutEvent(QFocusEvent *) override;
     void initStyleOption(QStyleOptionButton *option) const;
     QPushButton(QPushButtonPrivate &dd, QWidget* parent = nullptr);
 

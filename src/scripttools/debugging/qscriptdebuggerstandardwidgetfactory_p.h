@@ -64,17 +64,17 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerStandardWidgetFactory
 {
 public:
     QScriptDebuggerStandardWidgetFactory(QObject *parent = nullptr);
-    virtual ~QScriptDebuggerStandardWidgetFactory();
+    ~QScriptDebuggerStandardWidgetFactory() override;
 
-    QScriptDebugOutputWidgetInterface *createDebugOutputWidget();
-    QScriptDebuggerConsoleWidgetInterface *createConsoleWidget();
-    QScriptErrorLogWidgetInterface *createErrorLogWidget();
-    QScriptDebuggerCodeFinderWidgetInterface *createCodeFinderWidget();
-    QScriptDebuggerStackWidgetInterface *createStackWidget();
-    QScriptDebuggerScriptsWidgetInterface *createScriptsWidget();
-    QScriptDebuggerLocalsWidgetInterface *createLocalsWidget();
-    QScriptDebuggerCodeWidgetInterface *createCodeWidget();
-    QScriptBreakpointsWidgetInterface *createBreakpointsWidget();
+    QScriptDebugOutputWidgetInterface *createDebugOutputWidget() override;
+    QScriptDebuggerConsoleWidgetInterface *createConsoleWidget() override;
+    QScriptErrorLogWidgetInterface *createErrorLogWidget() override;
+    QScriptDebuggerCodeFinderWidgetInterface *createCodeFinderWidget() override;
+    QScriptDebuggerStackWidgetInterface *createStackWidget() override;
+    QScriptDebuggerScriptsWidgetInterface *createScriptsWidget() override;
+    QScriptDebuggerLocalsWidgetInterface *createLocalsWidget() override;
+    QScriptDebuggerCodeWidgetInterface *createCodeWidget() override;
+    QScriptBreakpointsWidgetInterface *createBreakpointsWidget() override;
 
 private:
     Q_DISABLE_COPY(QScriptDebuggerStandardWidgetFactory)

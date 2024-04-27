@@ -71,11 +71,11 @@ class Q_GUI_EXPORT QTreeView : public QAbstractItemView
 
 public:
     explicit QTreeView(QWidget *parent = nullptr);
-    ~QTreeView();
+    ~QTreeView() override;
 
-    void setModel(QAbstractItemModel *model);
-    void setRootIndex(const QModelIndex &index);
-    void setSelectionModel(QItemSelectionModel *selectionModel);
+    void setModel(QAbstractItemModel *model) override;
+    void setRootIndex(const QModelIndex &index) override;
+    void setSelectionModel(QItemSelectionModel *selectionModel) override;
 
     QHeaderView *header() const;
     void setHeader(QHeaderView *header);
@@ -130,21 +130,21 @@ public:
     void setWordWrap(bool on);
     bool wordWrap() const;
 
-    void keyboardSearch(const QString &search);
+    void keyboardSearch(const QString &search) override;
 
-    QRect visualRect(const QModelIndex &index) const;
-    void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
-    QModelIndex indexAt(const QPoint &p) const;
+    QRect visualRect(const QModelIndex &index) const override;
+    void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible) override;
+    QModelIndex indexAt(const QPoint &p) const override;
     QModelIndex indexAbove(const QModelIndex &index) const;
     QModelIndex indexBelow(const QModelIndex &index) const;
 
-    void doItemsLayout();
-    void reset();
+    void doItemsLayout() override;
+    void reset() override;
 
     void sortByColumn(int column, Qt::SortOrder order);
 
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-    void selectAll();
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) override;
+    void selectAll() override;
 
 Q_SIGNALS:
     void expanded(const QModelIndex &index);
@@ -170,20 +170,20 @@ protected Q_SLOTS:
 
 protected:
     QTreeView(QTreeViewPrivate &dd, QWidget *parent = nullptr);
-    void scrollContentsBy(int dx, int dy);
-    void rowsInserted(const QModelIndex &parent, int start, int end);
-    void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+    void scrollContentsBy(int dx, int dy) override;
+    void rowsInserted(const QModelIndex &parent, int start, int end) override;
+    void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end) override;
 
-    QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers);
-    int horizontalOffset() const;
-    int verticalOffset() const;
+    QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers) override;
+    int horizontalOffset() const override;
+    int verticalOffset() const override;
 
-    void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command);
-    QRegion visualRegionForSelection(const QItemSelection &selection) const;
-    QModelIndexList selectedIndexes() const;
+    void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command) override;
+    QRegion visualRegionForSelection(const QItemSelection &selection) const override;
+    QModelIndexList selectedIndexes() const override;
 
-    void timerEvent(QTimerEvent *event);
-    void paintEvent(QPaintEvent *event);
+    void timerEvent(QTimerEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
     void drawTree(QPainter *painter, const QRegion &region) const;
     virtual void drawRow(QPainter *painter,
@@ -193,28 +193,28 @@ protected:
                               const QRect &rect,
                               const QModelIndex &index) const;
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 #ifndef QT_NO_DRAGANDDROP
-    void dragMoveEvent(QDragMoveEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event) override;
 #endif
-    bool viewportEvent(QEvent *event);
+    bool viewportEvent(QEvent *event) override;
 
-    void updateGeometries();
+    void updateGeometries() override;
 
-    int sizeHintForColumn(int column) const;
+    int sizeHintForColumn(int column) const override;
     int indexRowSizeHint(const QModelIndex &index) const;
     int rowHeight(const QModelIndex &index) const;
 
-    void horizontalScrollbarAction(int action);
+    void horizontalScrollbarAction(int action) override;
 
-    bool isIndexHidden(const QModelIndex &index) const;
+    bool isIndexHidden(const QModelIndex &index) const override;
     void selectionChanged(const QItemSelection &selected,
-                          const QItemSelection &deselected);
-    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+                          const QItemSelection &deselected) override;
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
 private:
     friend class QAccessibleItemView;

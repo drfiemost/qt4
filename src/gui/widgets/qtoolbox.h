@@ -62,7 +62,7 @@ class Q_GUI_EXPORT QToolBox : public QFrame
 
 public:
     explicit QToolBox(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
-    ~QToolBox();
+    ~QToolBox() override;
 
     int addItem(QWidget *widget, const QString &text);
     int addItem(QWidget *widget, const QIcon &icon, const QString &text);
@@ -99,11 +99,11 @@ Q_SIGNALS:
     void currentChanged(int index);
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
     virtual void itemInserted(int index);
     virtual void itemRemoved(int index);
-    void showEvent(QShowEvent *e);
-    void changeEvent(QEvent *);
+    void showEvent(QShowEvent *e) override;
+    void changeEvent(QEvent *) override;
 
 private:
     Q_DECLARE_PRIVATE(QToolBox)

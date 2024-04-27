@@ -58,7 +58,7 @@ class TabBar : public QTabBar
     Q_OBJECT
 public:
     TabBar(QWidget *parent = nullptr);
-    ~TabBar();
+    ~TabBar() override;
 
     int addNewTab(const QString &title);
     void setCurrent(HelpViewer *viewer);
@@ -83,7 +83,7 @@ class CentralWidget : public QWidget
 
 public:
     CentralWidget(QWidget *parent = nullptr);
-    ~CentralWidget();
+    ~CentralWidget() override;
 
     static CentralWidget *instance();
 
@@ -145,8 +145,8 @@ signals:
     void addBookmark(const QString &title, const QString &url);
 
 protected:
-    void keyPressEvent(QKeyEvent *);
-    void focusInEvent(QFocusEvent *event);
+    void keyPressEvent(QKeyEvent *) override;
+    void focusInEvent(QFocusEvent *event) override;
 
 private slots:
     void highlightSearchTerms();
@@ -156,7 +156,7 @@ private slots:
 private:
     void initPrinter();
     void connectSignals(HelpViewer *page);
-    bool eventFilter(QObject *object, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *e) override;
 
 private:
 #ifndef QT_NO_PRINTER

@@ -77,26 +77,26 @@ protected:
                                           const QScriptValue &execFunction,
                                           const QScriptValue &responseFunction);
 public:
-    ~QScriptDebuggerScriptedConsoleCommand();
+    ~QScriptDebuggerScriptedConsoleCommand() override;
 
     static QScriptDebuggerScriptedConsoleCommand *parse(
         const QString &program, const QString &fileName,
         QScriptEngine *engine, QScriptMessageHandlerInterface *messageHandler);
 
-    QString name() const;
-    QString group() const;
-    QString shortDescription() const;
-    QString longDescription() const;
-    QStringList aliases() const;
-    QStringList seeAlso() const;
-    QStringList argumentTypes() const;
-    QStringList subCommands() const;
+    QString name() const override;
+    QString group() const override;
+    QString shortDescription() const override;
+    QString longDescription() const override;
+    QStringList aliases() const override;
+    QStringList seeAlso() const override;
+    QStringList argumentTypes() const override;
+    QStringList subCommands() const override;
 
     QScriptDebuggerConsoleCommandJob *createJob(
         const QStringList &arguments,
         QScriptDebuggerConsole *console,
         QScriptMessageHandlerInterface *messageHandler,
-        QScriptDebuggerCommandSchedulerInterface *commandScheduler);
+        QScriptDebuggerCommandSchedulerInterface *commandScheduler) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerScriptedConsoleCommand)

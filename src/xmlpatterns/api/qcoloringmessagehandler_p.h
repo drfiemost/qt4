@@ -70,10 +70,10 @@ namespace QPatternist
         ColoringMessageHandler(QObject *parent = nullptr);
 
     protected:
-        virtual void handleMessage(QtMsgType type,
+        void handleMessage(QtMsgType type,
                                    const QString &description,
                                    const QUrl &identifier,
-                                   const QSourceLocation &sourceLocation);
+                                   const QSourceLocation &sourceLocation) override;
 
     private:
         QString colorifyDescription(const QString &in) const;

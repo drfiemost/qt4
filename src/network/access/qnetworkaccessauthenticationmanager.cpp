@@ -97,7 +97,7 @@ public:
         }
     }
 
-    virtual void dispose() { delete this; }
+    void dispose() override { delete this; }
 };
 
 #ifndef QT_NO_NETWORKPROXY

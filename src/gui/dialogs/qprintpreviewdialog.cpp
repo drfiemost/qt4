@@ -71,7 +71,7 @@ class QPrintPreviewMainWindow : public QMainWindow
 {
 public:
     QPrintPreviewMainWindow(QWidget *parent) : QMainWindow(parent) {}
-    QMenu *createPopupMenu() { return nullptr; }
+    QMenu *createPopupMenu() override { return nullptr; }
 };
 
 class ZoomFactorValidator : public QDoubleValidator
@@ -82,7 +82,7 @@ public:
     ZoomFactorValidator(qreal bottom, qreal top, int decimals, QObject *parent)
         : QDoubleValidator(bottom, top, decimals, parent) {}
 
-    State validate(QString &input, int &pos) const
+    State validate(QString &input, int &pos) const override
     {
         bool replacePercent = false;
         if (input.endsWith(QLatin1Char('%'))) {
@@ -115,13 +115,13 @@ public:
     }
 
 protected:
-    void focusInEvent(QFocusEvent *e)
+    void focusInEvent(QFocusEvent *e) override
     {
         origText = text();
         QLineEdit::focusInEvent(e);
     }
 
-    void focusOutEvent(QFocusEvent *e)
+    void focusOutEvent(QFocusEvent *e) override
     {
         if (isModified() && !hasAcceptableInput())
             setText(origText);

@@ -84,7 +84,7 @@ class QHttpThreadDelegate : public QObject
 public:
     explicit QHttpThreadDelegate(QObject *parent = nullptr);
 
-    ~QHttpThreadDelegate();
+    ~QHttpThreadDelegate() override;
 
     // incoming
     bool ssl;
@@ -203,16 +203,16 @@ public:
     {
     }
 
-    ~QNonContiguousByteDeviceThreadForwardImpl()
+    ~QNonContiguousByteDeviceThreadForwardImpl() override
     {
     }
 
-    qint64 pos()
+    qint64 pos() override
     {
         return m_pos;
     }
 
-    const char* readPointer(qint64 maximumLength, qint64 &len)
+    const char* readPointer(qint64 maximumLength, qint64 &len) override
     {
         if (m_amount > 0) {
             len = m_amount;
@@ -232,7 +232,7 @@ public:
         return nullptr;
     }
 
-    bool advanceReadPointer(qint64 a)
+    bool advanceReadPointer(qint64 a) override
     {
         if (m_data == nullptr)
             return false;
@@ -247,7 +247,7 @@ public:
         return true;
     }
 
-    bool atEnd()
+    bool atEnd() override
     {
         if (m_amount > 0)
             return false;
@@ -255,7 +255,7 @@ public:
             return m_atEnd;
     }
 
-    bool reset()
+    bool reset() override
     {
         m_amount = 0;
         m_data = nullptr;
@@ -277,7 +277,7 @@ public:
         return b;
     }
 
-    qint64 size()
+    qint64 size() override
     {
         return m_size;
     }

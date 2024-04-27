@@ -76,7 +76,7 @@ class QDesignerActions: public QObject
     Q_OBJECT
 public:
     explicit QDesignerActions(QDesignerWorkbench *mainWindow);
-    virtual ~QDesignerActions();
+    ~QDesignerActions() override;
 
     QDesignerWorkbench *workbench() const;
     QDesignerFormEditorInterface *core() const;

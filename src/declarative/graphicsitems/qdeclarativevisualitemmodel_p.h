@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualModel : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 
 public:
-    virtual ~QDeclarativeVisualModel() {}
+    ~QDeclarativeVisualModel() override {}
 
     enum ReleaseFlag { Referenced = 0x01, Destroyed = 0x02 };
     Q_DECLARE_FLAGS(ReleaseFlags, ReleaseFlag)
@@ -112,18 +112,18 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualItemModel : public QDeclarativeVisualM
 
 public:
     QDeclarativeVisualItemModel(QObject *parent=nullptr);
-    virtual ~QDeclarativeVisualItemModel() {}
+    ~QDeclarativeVisualItemModel() override {}
 
-    virtual int count() const;
-    virtual bool isValid() const;
-    virtual QDeclarativeItem *item(int index, bool complete=true);
-    virtual ReleaseFlags release(QDeclarativeItem *item);
-    virtual bool completePending() const;
-    virtual void completeItem();
-    virtual QString stringValue(int index, const QString &role);
-    virtual void setWatchedRoles(QList<QByteArray>) {}
+    int count() const override;
+    bool isValid() const override;
+    QDeclarativeItem *item(int index, bool complete=true) override;
+    ReleaseFlags release(QDeclarativeItem *item) override;
+    bool completePending() const override;
+    void completeItem() override;
+    QString stringValue(int index, const QString &role) override;
+    void setWatchedRoles(QList<QByteArray>) override {}
 
-    virtual int indexOf(QDeclarativeItem *item, QObject *objectContext) const;
+    int indexOf(QDeclarativeItem *item, QObject *objectContext) const override;
 
     QDeclarativeListProperty<QDeclarativeItem> children();
 
@@ -151,7 +151,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualDataModel : public QDeclarativeVisualM
 public:
     QDeclarativeVisualDataModel();
     QDeclarativeVisualDataModel(QDeclarativeContext *, QObject *parent=nullptr);
-    virtual ~QDeclarativeVisualDataModel();
+    ~QDeclarativeVisualDataModel() override;
 
     QVariant model() const;
     void setModel(const QVariant &);
@@ -168,17 +168,17 @@ public:
     QString part() const;
     void setPart(const QString &);
 
-    int count() const;
-    bool isValid() const { return delegate() != nullptr; }
-    QDeclarativeItem *item(int index, bool complete=true);
+    int count() const override;
+    bool isValid() const override { return delegate() != nullptr; }
+    QDeclarativeItem *item(int index, bool complete=true) override;
     QDeclarativeItem *item(int index, const QByteArray &, bool complete=true);
-    ReleaseFlags release(QDeclarativeItem *item);
-    bool completePending() const;
-    void completeItem();
-    virtual QString stringValue(int index, const QString &role);
-    virtual void setWatchedRoles(QList<QByteArray> roles);
+    ReleaseFlags release(QDeclarativeItem *item) override;
+    bool completePending() const override;
+    void completeItem() override;
+    QString stringValue(int index, const QString &role) override;
+    void setWatchedRoles(QList<QByteArray> roles) override;
 
-    int indexOf(QDeclarativeItem *item, QObject *objectContext) const;
+    int indexOf(QDeclarativeItem *item, QObject *objectContext) const override;
 
     QObject *parts();
 
@@ -212,7 +212,7 @@ class QDeclarativeVisualItemModelAttached : public QObject
 public:
     QDeclarativeVisualItemModelAttached(QObject *parent)
         : QObject(parent), m_index(0) {}
-    ~QDeclarativeVisualItemModelAttached() {
+    ~QDeclarativeVisualItemModelAttached() override {
         attachedProperties.remove(parent());
     }
 

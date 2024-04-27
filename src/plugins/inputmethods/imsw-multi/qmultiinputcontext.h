@@ -73,28 +73,28 @@ class QMultiInputContext : public QInputContext
     Q_OBJECT
 public:
     QMultiInputContext();
-    ~QMultiInputContext();
+    ~QMultiInputContext() override;
 
-    QString identifierName();
-    QString language();
+    QString identifierName() override;
+    QString language() override;
 
 #if defined(Q_WS_X11)
-    bool x11FilterEvent( QWidget *keywidget, XEvent *event );
+    bool x11FilterEvent( QWidget *keywidget, XEvent *event ) override;
 #endif // Q_WS_X11
-    bool filterEvent( const QEvent *event );
+    bool filterEvent( const QEvent *event ) override;
 
-    void reset();
-    void update();
-    void mouseHandler( int x, QMouseEvent *event );
-    QFont font() const;
-    bool isComposing() const;
+    void reset() override;
+    void update() override;
+    void mouseHandler( int x, QMouseEvent *event ) override;
+    QFont font() const override;
+    bool isComposing() const override;
 
-    QList<QAction *> actions();
+    QList<QAction *> actions() override;
 
     QWidget *focusWidget() const;
-    void setFocusWidget(QWidget *w);
+    void setFocusWidget(QWidget *w) override;
 
-    void widgetDestroyed( QWidget *w );
+    void widgetDestroyed( QWidget *w ) override;
 
     QInputContext *slave() { return slaves.at(current); }
     const QInputContext *slave() const { return slaves.at(current); }

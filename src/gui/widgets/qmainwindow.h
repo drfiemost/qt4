@@ -93,7 +93,7 @@ public:
     Q_DECLARE_FLAGS(DockOptions, DockOption)
 
     explicit QMainWindow(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QMainWindow();
+    ~QMainWindow() override;
 
     QSize iconSize() const;
     void setIconSize(const QSize &iconSize);
@@ -194,9 +194,9 @@ Q_SIGNALS:
 
 protected:
 #ifndef QT_NO_CONTEXTMENU
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 #endif
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
 private:
     Q_DECLARE_PRIVATE(QMainWindow)

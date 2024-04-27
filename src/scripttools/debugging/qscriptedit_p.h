@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QScriptEdit : public QPlainTextEdit
     Q_OBJECT
 public:
     QScriptEdit(QWidget *parent = nullptr);
-    ~QScriptEdit();
+    ~QScriptEdit() override;
 
     int baseLineNumber() const;
     void setBaseLineNumber(int base);
@@ -91,8 +91,8 @@ signals:
     void breakpointEnableRequest(int lineNumber, bool enable);
 
 protected:
-    void paintEvent(QPaintEvent *e);
-    void resizeEvent(QResizeEvent *e);
+    void paintEvent(QPaintEvent *e) override;
+    void resizeEvent(QResizeEvent *e) override;
 
     void extraAreaPaintEvent(QPaintEvent *e);
     void extraAreaMouseEvent(QMouseEvent *e);

@@ -83,7 +83,7 @@ class Q_AUTOTEST_EXPORT QGraphicsSceneIndex : public QObject
 
 public:
     QGraphicsSceneIndex(QGraphicsScene *scene = nullptr);
-    virtual ~QGraphicsSceneIndex();
+    ~QGraphicsSceneIndex() override;
 
     QGraphicsScene *scene() const;
 
@@ -129,7 +129,7 @@ class QGraphicsSceneIndexPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QGraphicsSceneIndex)
 public:
     QGraphicsSceneIndexPrivate(QGraphicsScene *scene);
-    ~QGraphicsSceneIndexPrivate();
+    ~QGraphicsSceneIndexPrivate() override;
 
     void init();
     static bool itemCollidesWithPath(const QGraphicsItem *item, const QPainterPath &path, Qt::ItemSelectionMode mode);

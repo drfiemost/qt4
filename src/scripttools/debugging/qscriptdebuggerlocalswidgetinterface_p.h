@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerLocalsWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptDebuggerLocalsWidgetInterface();
+    ~QScriptDebuggerLocalsWidgetInterface() override;
 
     QScriptCompletionProviderInterface *completionProvider() const;
     void setCompletionProvider(QScriptCompletionProviderInterface *completionProvider);

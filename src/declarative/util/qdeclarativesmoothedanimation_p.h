@@ -68,13 +68,13 @@ public:
     enum ReversingMode { Eased, Immediate, Sync };
 
     QDeclarativeSmoothedAnimation(QObject *parent = nullptr);
-    ~QDeclarativeSmoothedAnimation();
+    ~QDeclarativeSmoothedAnimation() override;
 
     ReversingMode reversingMode() const;
     void setReversingMode(ReversingMode);
 
-    virtual int duration() const;
-    virtual void setDuration(int);
+    int duration() const override;
+    void setDuration(int) override;
 
     qreal velocity() const;
     void setVelocity(qreal);
@@ -82,10 +82,10 @@ public:
     int maximumEasingTime() const;
     void setMaximumEasingTime(int);
 
-    virtual void transition(QDeclarativeStateActions &actions,
+    void transition(QDeclarativeStateActions &actions,
                             QDeclarativeProperties &modified,
-                            TransitionDirection direction);
-    QAbstractAnimation* qtAnimation();
+                            TransitionDirection direction) override;
+    QAbstractAnimation* qtAnimation() override;
 
 Q_SIGNALS:
     void velocityChanged();

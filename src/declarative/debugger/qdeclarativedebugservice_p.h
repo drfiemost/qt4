@@ -60,7 +60,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeDebugService : public QObject
 
 public:
     explicit QDeclarativeDebugService(const QString &, QObject *parent = nullptr);
-    ~QDeclarativeDebugService();
+    ~QDeclarativeDebugService() override;
 
     QString name() const;
 

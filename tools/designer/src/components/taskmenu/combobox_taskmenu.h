@@ -61,10 +61,10 @@ class ComboBoxTaskMenu: public QDesignerTaskMenu
 public:
     explicit ComboBoxTaskMenu(QComboBox *button,
                               QObject *parent = nullptr);
-    virtual ~ComboBoxTaskMenu();
+    ~ComboBoxTaskMenu() override;
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editItems();
@@ -84,7 +84,7 @@ public:
     explicit ComboBoxTaskMenuFactory(const QString &iid, QExtensionManager *extensionManager);
 
 private:
-    virtual QComboBox *checkObject(QObject *qObject) const;
+    QComboBox *checkObject(QObject *qObject) const override;
 };
 
 }  // namespace qdesigner_internal

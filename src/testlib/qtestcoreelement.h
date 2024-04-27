@@ -54,7 +54,7 @@ class QTestCoreElement: public QTestCoreList<ElementType>
 {
     public:
         QTestCoreElement( int type = -1 );
-        virtual ~QTestCoreElement();
+        ~QTestCoreElement() override;
 
         void addAttribute(const QTest::AttributeIndex index, const char *value);
         QTestElementAttribute *attributes() const;

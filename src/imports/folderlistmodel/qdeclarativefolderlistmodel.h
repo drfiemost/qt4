@@ -81,12 +81,12 @@ class QDeclarativeFolderListModel : public QAbstractListModel, public QDeclarati
 //![abslistmodel]
 public:
     QDeclarativeFolderListModel(QObject *parent = nullptr);
-    ~QDeclarativeFolderListModel();
+    ~QDeclarativeFolderListModel() override;
 
     enum Roles { FileNameRole = Qt::UserRole+1, FilePathRole = Qt::UserRole+2 };
 
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
 //![abslistmodel]
 
 //![count]
@@ -123,8 +123,8 @@ public:
 //![isfolder]
 
 //![parserstatus]
-    virtual void classBegin();
-    virtual void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 //![parserstatus]
 
 //![notifier]

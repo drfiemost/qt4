@@ -71,7 +71,7 @@ class Q_CORE_EXPORT QCoreApplicationPrivate : public QObjectPrivate
 
 public:
     QCoreApplicationPrivate(int &aargc,  char **aargv, uint flags);
-    ~QCoreApplicationPrivate();
+    ~QCoreApplicationPrivate() override;
 
     bool sendThroughApplicationEventFilters(QObject *, QEvent *);
     bool sendThroughObjectEventFilters(QObject *, QEvent *);

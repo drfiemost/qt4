@@ -79,7 +79,7 @@ class QAuServer : public QObject {
 
 public:
     explicit QAuServer(QObject* parent);
-    ~QAuServer();
+    ~QAuServer() override;
 
     virtual void init(QSound*);
     virtual void play(const QString& filename);

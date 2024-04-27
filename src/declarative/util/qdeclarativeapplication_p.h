@@ -60,12 +60,12 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeApplication : public QObject
 
 public:
     explicit QDeclarativeApplication(QObject *parent = nullptr);
-    virtual ~QDeclarativeApplication();
+    ~QDeclarativeApplication() override;
     bool active() const;
     Qt::LayoutDirection layoutDirection() const;
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 Q_SIGNALS:
     void activeChanged();

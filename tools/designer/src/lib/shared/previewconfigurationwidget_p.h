@@ -73,7 +73,7 @@ class QDESIGNER_SHARED_EXPORT PreviewConfigurationWidget : public QGroupBox
 public:
     explicit PreviewConfigurationWidget(QDesignerFormEditorInterface *core,
                                         QWidget *parent = nullptr);
-    virtual ~PreviewConfigurationWidget();
+    ~PreviewConfigurationWidget() override;
     void saveState();
 
 private slots:

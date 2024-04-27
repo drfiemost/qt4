@@ -69,7 +69,7 @@ class Q_AUTOTEST_EXPORT QActionPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QAction)
 public:
     QActionPrivate();
-    ~QActionPrivate();
+    ~QActionPrivate() override;
 
     static QActionPrivate *get(QAction *q)
     {

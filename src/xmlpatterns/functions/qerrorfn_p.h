@@ -79,8 +79,8 @@ namespace QPatternist
     class ErrorFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
-        virtual FunctionSignature::Ptr signature() const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
+        FunctionSignature::Ptr signature() const override;
     };
 }
 

@@ -102,14 +102,14 @@ class Q_GUI_EXPORT QRasterWindowSurface : public QWindowSurface
 {
 public:
     QRasterWindowSurface(QWidget *widget, bool setDefaultSurface = true);
-    ~QRasterWindowSurface();
+    ~QRasterWindowSurface() override;
 
-    QPaintDevice *paintDevice();
-    void flush(QWidget *widget, const QRegion &region, const QPoint &offset);
-    void beginPaint(const QRegion &rgn);
-    void setGeometry(const QRect &rect);
-    bool scroll(const QRegion &area, int dx, int dy);
-    WindowSurfaceFeatures features() const;
+    QPaintDevice *paintDevice() override;
+    void flush(QWidget *widget, const QRegion &region, const QPoint &offset) override;
+    void beginPaint(const QRegion &rgn) override;
+    void setGeometry(const QRect &rect) override;
+    bool scroll(const QRegion &area, int dx, int dy) override;
+    WindowSurfaceFeatures features() const override;
 
 #ifdef QT_MAC_USE_COCOA
     CGContextRef imageContext();

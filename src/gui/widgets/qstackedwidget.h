@@ -61,7 +61,7 @@ class Q_GUI_EXPORT QStackedWidget : public QFrame
     Q_PROPERTY(int count READ count)
 public:
     explicit QStackedWidget(QWidget *parent=nullptr);
-    ~QStackedWidget();
+    ~QStackedWidget() override;
 
     int addWidget(QWidget *w);
     int insertWidget(int index, QWidget *w);
@@ -83,7 +83,7 @@ Q_SIGNALS:
     void widgetRemoved(int index);
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QStackedWidget)

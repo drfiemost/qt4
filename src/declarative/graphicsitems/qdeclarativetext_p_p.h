@@ -72,13 +72,13 @@ class Q_AUTOTEST_EXPORT QDeclarativeTextPrivate : public QDeclarativeImplicitSiz
 public:
     QDeclarativeTextPrivate();
 
-    ~QDeclarativeTextPrivate();
+    ~QDeclarativeTextPrivate() override;
 
     void updateSize();
     void updateLayout();
     bool determineHorizontalAlignment();
     bool setHAlign(QDeclarativeText::HAlignment, bool forceAlign = false);
-    void mirrorChange();
+    void mirrorChange() override;
     QTextDocument *textDocument();
 
     QString text;
@@ -121,7 +121,7 @@ public:
     QRect layedOutTextRect;
     QSize paintedSize;
     qreal naturalWidth;
-    virtual qreal implicitWidth() const;
+    qreal implicitWidth() const override;
     void ensureDoc();
     QPixmap textDocumentImage(bool drawStyle);
     QTextDocumentWithImageResources *doc;

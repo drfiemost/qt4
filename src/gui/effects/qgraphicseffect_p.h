@@ -68,7 +68,7 @@ class Q_GUI_EXPORT QGraphicsEffectSource : public QObject
 {
     Q_OBJECT
 public:
-    ~QGraphicsEffectSource();
+    ~QGraphicsEffectSource() override;
     const QGraphicsItem *graphicsItem() const;
     const QWidget *widget() const;
     const QStyleOption *styleOption() const;
@@ -115,7 +115,7 @@ public:
         SourceChanged
     };
 
-    virtual ~QGraphicsEffectSourcePrivate();
+    ~QGraphicsEffectSourcePrivate() override;
     virtual void detach() = 0;
     virtual QRectF boundingRect(Qt::CoordinateSystem system) const = 0;
     virtual QRect deviceRect() const = 0;
@@ -182,7 +182,7 @@ public:
     {
         filter = new QPixmapColorizeFilter;
     }
-    ~QGraphicsColorizeEffectPrivate() { delete filter; }
+    ~QGraphicsColorizeEffectPrivate() override { delete filter; }
 
     QPixmapColorizeFilter *filter;
     quint32 opaque : 1;
@@ -194,7 +194,7 @@ class QGraphicsBlurEffectPrivate : public QGraphicsEffectPrivate
     Q_DECLARE_PUBLIC(QGraphicsBlurEffect)
 public:
     QGraphicsBlurEffectPrivate() : filter(new QPixmapBlurFilter) {}
-    ~QGraphicsBlurEffectPrivate() { delete filter; }
+    ~QGraphicsBlurEffectPrivate() override { delete filter; }
 
     QPixmapBlurFilter *filter;
 };
@@ -204,7 +204,7 @@ class QGraphicsDropShadowEffectPrivate : public QGraphicsEffectPrivate
     Q_DECLARE_PUBLIC(QGraphicsDropShadowEffect)
 public:
     QGraphicsDropShadowEffectPrivate() : filter(new QPixmapDropShadowFilter) {}
-    ~QGraphicsDropShadowEffectPrivate() { delete filter; }
+    ~QGraphicsDropShadowEffectPrivate() override { delete filter; }
 
     QPixmapDropShadowFilter *filter;
 };
@@ -215,7 +215,7 @@ class QGraphicsOpacityEffectPrivate : public QGraphicsEffectPrivate
 public:
     QGraphicsOpacityEffectPrivate()
         : opacity(qreal(0.7)), isFullyTransparent(0), isFullyOpaque(0), hasOpacityMask(0) {}
-    ~QGraphicsOpacityEffectPrivate() {}
+    ~QGraphicsOpacityEffectPrivate() override {}
 
     qreal opacity;
     QBrush opacityMask;

@@ -83,9 +83,9 @@ class Q_GUI_EXPORT QGuiPlatformPlugin : public QObject, public QGuiPlatformPlugi
     Q_INTERFACES(QGuiPlatformPluginInterface:QFactoryInterface)
     public:
         explicit QGuiPlatformPlugin(QObject *parent = nullptr);
-        ~QGuiPlatformPlugin();
+        ~QGuiPlatformPlugin() override;
 
-        virtual QStringList keys() const {  return QStringList() << QLatin1String("default");  };
+        QStringList keys() const override {  return QStringList() << QLatin1String("default");  };
 
         virtual QString styleName();
         virtual QPalette palette();

@@ -67,10 +67,10 @@ class Q_AUTOTEST_EXPORT QScriptSyntaxHighlighter : public QSyntaxHighlighter
 {
 public:
     QScriptSyntaxHighlighter(QTextDocument *document = nullptr);
-    ~QScriptSyntaxHighlighter();
+    ~QScriptSyntaxHighlighter() override;
 
 protected:
-    void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) override;
 
 private:
     void highlightWord(int currentPos, const QString &buffer);

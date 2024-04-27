@@ -60,10 +60,10 @@ class TreeWidgetTaskMenu: public QDesignerTaskMenu
     Q_OBJECT
 public:
     explicit TreeWidgetTaskMenu(QTreeWidget *button, QObject *parent = nullptr);
-    virtual ~TreeWidgetTaskMenu();
+    ~TreeWidgetTaskMenu() override;
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editItems();

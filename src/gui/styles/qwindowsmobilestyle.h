@@ -58,43 +58,43 @@ class Q_GUI_EXPORT QWindowsMobileStyle : public QWindowsStyle
     Q_OBJECT
 public:
     QWindowsMobileStyle();
-    ~QWindowsMobileStyle();
+    ~QWindowsMobileStyle() override;
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
-                       QPainter *painter, const QWidget *widget = nullptr) const;
+                       QPainter *painter, const QWidget *widget = nullptr) const override;
 
     void drawControl(ControlElement element, const QStyleOption *option,
-                     QPainter *painter, const QWidget *widget) const;
+                     QPainter *painter, const QWidget *widget) const override;
 
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
-                            QPainter *painter, const QWidget *widget) const;
+                            QPainter *painter, const QWidget *widget) const override;
 
     QSize sizeFromContents(ContentsType type, const QStyleOption *option,
-                           const QSize &size, const QWidget *widget) const;
+                           const QSize &size, const QWidget *widget) const override;
 
-    QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
+    QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const override;
 
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt,
-                         SubControl sc, const QWidget *widget) const;
+                         SubControl sc, const QWidget *widget) const override;
 
     QPixmap generatedIconPixmap(QIcon::Mode iconMode, const QPixmap &pixmap,
-                                const QStyleOption *option) const;
+                                const QStyleOption *option) const override;
 
     QPixmap standardPixmap(StandardPixmap sp, const QStyleOption *option,
-                                const QWidget *widget) const;
+                                const QWidget *widget) const override;
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
     int styleHint(StyleHint hint, const QStyleOption *opt = nullptr, const QWidget *widget = nullptr,
-                  QStyleHintReturn *returnData = nullptr) const;
+                  QStyleHintReturn *returnData = nullptr) const override;
 
-    void polish(QApplication*);
-    void unpolish(QApplication*);
-    void polish(QWidget *widget);
-    void unpolish(QWidget *widget);
-    void polish(QPalette &);
+    void polish(QApplication*) override;
+    void unpolish(QApplication*) override;
+    void polish(QWidget *widget) override;
+    void unpolish(QWidget *widget) override;
+    void polish(QPalette &) override;
 
-    QPalette standardPalette() const;
+    QPalette standardPalette() const override;
 
     bool doubleControls() const;
 

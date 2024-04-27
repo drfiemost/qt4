@@ -74,7 +74,7 @@ struct ObjectData : public QScriptDeclarativeClass::Object {
         }
     }
 
-    virtual ~ObjectData() {
+    ~ObjectData() override {
         if (object && !object->parent()) {
             QDeclarativeData *ddata = QDeclarativeData::get(object, false);
             if (ddata && !ddata->indestructible && 0 == --ddata->objectDataRefCount) 

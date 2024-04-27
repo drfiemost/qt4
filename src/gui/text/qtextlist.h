@@ -58,7 +58,7 @@ class Q_GUI_EXPORT QTextList : public QTextBlockGroup
     Q_OBJECT
 public:
     explicit QTextList(QTextDocument *doc);
-    ~QTextList();
+    ~QTextList() override;
 
     int count() const;
 

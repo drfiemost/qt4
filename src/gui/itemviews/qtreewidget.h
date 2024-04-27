@@ -266,7 +266,7 @@ class Q_GUI_EXPORT QTreeWidget : public QTreeView
     friend class QTreeWidgetItem;
 public:
     explicit QTreeWidget(QWidget *parent = nullptr);
-    ~QTreeWidget();
+    ~QTreeWidget() override;
 
     int columnCount() const;
     void setColumnCount(int columns);
@@ -329,7 +329,7 @@ public:
     QTreeWidgetItem *itemAbove(const QTreeWidgetItem *item) const;
     QTreeWidgetItem *itemBelow(const QTreeWidgetItem *item) const;
 
-    void setSelectionModel(QItemSelectionModel *selectionModel);
+    void setSelectionModel(QItemSelectionModel *selectionModel) override;
 
 public Q_SLOTS:
     void scrollToItem(const QTreeWidgetItem *item,
@@ -351,7 +351,7 @@ Q_SIGNALS:
     void itemSelectionChanged();
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
     virtual QStringList mimeTypes() const;
     virtual QMimeData *mimeData(const QList<QTreeWidgetItem*> items) const;
     virtual bool dropMimeData(QTreeWidgetItem *parent, int index,
@@ -361,10 +361,10 @@ protected:
 
     QModelIndex indexFromItem(QTreeWidgetItem *item, int column = 0) const;
     QTreeWidgetItem *itemFromIndex(const QModelIndex &index) const;
-    void dropEvent(QDropEvent *event);
+    void dropEvent(QDropEvent *event) override;
 
 private:
-    void setModel(QAbstractItemModel *model);
+    void setModel(QAbstractItemModel *model) override;
 
     Q_DECLARE_PRIVATE(QTreeWidget)
     Q_DISABLE_COPY(QTreeWidget)

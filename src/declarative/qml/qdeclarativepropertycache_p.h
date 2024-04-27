@@ -70,7 +70,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePropertyCache : public QDeclarativeRefCount,
 public:
     QDeclarativePropertyCache(QDeclarativeEngine *);
     QDeclarativePropertyCache(QDeclarativeEngine *, const QMetaObject *);
-    virtual ~QDeclarativePropertyCache();
+    ~QDeclarativePropertyCache() override;
 
     struct Data {
         inline Data(); 

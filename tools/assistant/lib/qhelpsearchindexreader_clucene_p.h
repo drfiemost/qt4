@@ -72,10 +72,10 @@ class QHelpSearchIndexReaderClucene : public QHelpSearchIndexReader
 
 public:
     QHelpSearchIndexReaderClucene();
-    ~QHelpSearchIndexReaderClucene();
+    ~QHelpSearchIndexReaderClucene() override;
 
 private:
-    void run();
+    void run() override;
     void boostSearchHits(const QHelpEngineCore &engine, QList<QHelpSearchEngine::SearchHit> &hitList,
         const QList<QHelpSearchQuery> &queryList);
     bool buildQuery(const QList<QHelpSearchQuery> &queries,

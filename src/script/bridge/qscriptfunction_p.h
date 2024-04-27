@@ -57,16 +57,16 @@ public:
 
     FunctionWrapper(JSC::ExecState*, int length, const JSC::Identifier&,
                     QScriptEngine::FunctionSignature);
-    ~FunctionWrapper();
+    ~FunctionWrapper() override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     QScriptEngine::FunctionSignature function() const
     { return data->function; }
 
 private:
-    virtual JSC::ConstructType getConstructData(JSC::ConstructData&);
+    JSC::ConstructType getConstructData(JSC::ConstructData&) override;
 
     static JSC::JSValue JSC_HOST_CALL proxyCall(JSC::ExecState *, JSC::JSObject *,
                                                 JSC::JSValue, const JSC::ArgList &);
@@ -89,9 +89,9 @@ public:
 
     FunctionWithArgWrapper(JSC::ExecState*, int length, const JSC::Identifier&,
                            QScriptEngine::FunctionWithArgSignature, void *);
-    ~FunctionWithArgWrapper();
+    ~FunctionWithArgWrapper() override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     QScriptEngine::FunctionWithArgSignature function() const
@@ -101,7 +101,7 @@ public:
     { return data->arg; }
 
 private:
-    virtual JSC::ConstructType getConstructData(JSC::ConstructData&);
+    JSC::ConstructType getConstructData(JSC::ConstructData&) override;
 
     static JSC::JSValue JSC_HOST_CALL proxyCall(JSC::ExecState *, JSC::JSObject *,
                                                 JSC::JSValue , const JSC::ArgList &);

@@ -119,7 +119,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePathLine : public QDeclarativeCurve
 public:
     QDeclarativePathLine(QObject *parent=nullptr) : QDeclarativeCurve(parent) {}
 
-    void addToPath(QPainterPath &path);
+    void addToPath(QPainterPath &path) override;
 };
 
 class Q_AUTOTEST_EXPORT QDeclarativePathQuad : public QDeclarativeCurve
@@ -137,7 +137,7 @@ public:
     qreal controlY() const;
     void setControlY(qreal y);
 
-    void addToPath(QPainterPath &path);
+    void addToPath(QPainterPath &path) override;
 
 Q_SIGNALS:
     void controlXChanged();
@@ -171,7 +171,7 @@ public:
     qreal control2Y() const;
     void setControl2Y(qreal y);
 
-    void addToPath(QPainterPath &path);
+    void addToPath(QPainterPath &path) override;
 
 Q_SIGNALS:
     void control1XChanged();
@@ -217,7 +217,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePath : public QObject, public QDeclarativePa
     Q_INTERFACES(QDeclarativeParserStatus)
 public:
     QDeclarativePath(QObject *parent=nullptr);
-    ~QDeclarativePath();
+    ~QDeclarativePath() override;
 
     QDeclarativeListProperty<QDeclarativePathElement> pathElements();
 
@@ -240,8 +240,8 @@ Q_SIGNALS:
     void startYChanged();
 
 protected:
-    virtual void componentComplete();
-    virtual void classBegin();
+    void componentComplete() override;
+    void classBegin() override;
 
 private Q_SLOTS:
     void processPath();

@@ -69,13 +69,13 @@ class Q_OPENGL_EXPORT QGraphicsShaderEffect : public QGraphicsEffect
     Q_OBJECT
 public:
     QGraphicsShaderEffect(QObject *parent = nullptr);
-    virtual ~QGraphicsShaderEffect();
+    ~QGraphicsShaderEffect() override;
 
     QByteArray pixelShaderFragment() const;
     void setPixelShaderFragment(const QByteArray& code);
 
 protected:
-    void draw(QPainter *painter);
+    void draw(QPainter *painter) override;
     void setUniformsDirty();
     virtual void setUniforms(QGLShaderProgram *program);
 

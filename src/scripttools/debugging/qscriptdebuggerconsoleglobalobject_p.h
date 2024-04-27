@@ -77,7 +77,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerConsoleGlobalObject
     Q_OBJECT
 public:
     QScriptDebuggerConsoleGlobalObject(QObject *parent = nullptr);
-    ~QScriptDebuggerConsoleGlobalObject();
+    ~QScriptDebuggerConsoleGlobalObject() override;
 
     QScriptDebuggerCommandSchedulerInterface *scheduler() const;
     void setScheduler(QScriptDebuggerCommandSchedulerInterface *scheduler);

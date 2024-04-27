@@ -55,8 +55,8 @@ QT_BEGIN_NAMESPACE
 class QSvgIconPlugin : public QIconEnginePluginV2
 {
 public:
-    QStringList keys() const;
-    QIconEngineV2 *create(const QString &filename = QString());
+    QStringList keys() const override;
+    QIconEngineV2 *create(const QString &filename = QString()) override;
 };
 
 QStringList QSvgIconPlugin::keys() const

@@ -99,7 +99,7 @@ class QHELP_EXPORT QCLucenePrefixQuery : public QCLuceneQuery
 {
 public:
     QCLucenePrefixQuery(const QCLuceneTerm &prefix);
-    ~QCLucenePrefixQuery();
+    ~QCLucenePrefixQuery() override;
 
     static QString getClassName();
 	    
@@ -114,7 +114,7 @@ class QHELP_EXPORT QCLuceneRangeQuery : public QCLuceneQuery
 public:
     QCLuceneRangeQuery(const QCLuceneTerm &lowerTerm, 
         const QCLuceneTerm &upperTerm, bool inclusive);
-    ~QCLuceneRangeQuery();
+    ~QCLuceneRangeQuery() override;
 
     static QString getClassName();
 	    
@@ -133,7 +133,7 @@ class QHELP_EXPORT QCLuceneTermQuery : public QCLuceneQuery
 {
 public:
     QCLuceneTermQuery(const QCLuceneTerm &term);
-    ~QCLuceneTermQuery();
+    ~QCLuceneTermQuery() override;
 
     static QString getClassName();
 	    
@@ -147,7 +147,7 @@ class QHELP_EXPORT QCLuceneBooleanQuery : public QCLuceneQuery
 {
 public:
     QCLuceneBooleanQuery();
-    ~QCLuceneBooleanQuery();
+    ~QCLuceneBooleanQuery() override;
 
     static QString getClassName();
 
@@ -166,7 +166,7 @@ class QHELP_EXPORT QCLucenePhraseQuery : public QCLuceneQuery
 {
 public:
     QCLucenePhraseQuery();
-    ~QCLucenePhraseQuery();
+    ~QCLucenePhraseQuery() override;
 
     static QString getClassName();
 

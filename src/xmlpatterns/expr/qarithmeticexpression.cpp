@@ -100,7 +100,7 @@ public:
     {
     }
 
-    virtual const SourceLocationReflection *actualReflection() const
+    const SourceLocationReflection *actualReflection() const override
     {
         return m_reflection;
     }

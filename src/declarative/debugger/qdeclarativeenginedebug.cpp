@@ -55,8 +55,8 @@ public:
     QDeclarativeEngineDebugClient(QDeclarativeDebugConnection *client, QDeclarativeEngineDebugPrivate *p);
 
 protected:
-    virtual void statusChanged(Status status);
-    virtual void messageReceived(const QByteArray &);
+    void statusChanged(Status status) override;
+    void messageReceived(const QByteArray &) override;
 
 private:
     QDeclarativeEngineDebugPrivate *priv;
@@ -68,7 +68,7 @@ class QDeclarativeEngineDebugPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QDeclarativeEngineDebug)
 public:
     QDeclarativeEngineDebugPrivate(QDeclarativeDebugConnection *);
-    ~QDeclarativeEngineDebugPrivate();
+    ~QDeclarativeEngineDebugPrivate() override;
 
     void statusChanged(QDeclarativeEngineDebug::Status status);
     void message(const QByteArray &);

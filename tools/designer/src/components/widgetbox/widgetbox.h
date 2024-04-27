@@ -59,34 +59,34 @@ class QT_WIDGETBOX_EXPORT WidgetBox : public QDesignerWidgetBox
     Q_OBJECT
 public:
     explicit WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    virtual ~WidgetBox();
+    ~WidgetBox() override;
 
     QDesignerFormEditorInterface *core() const;
 
-    virtual int categoryCount() const;
-    virtual Category category(int cat_idx) const;
-    virtual void addCategory(const Category &cat);
-    virtual void removeCategory(int cat_idx);
+    int categoryCount() const override;
+    Category category(int cat_idx) const override;
+    void addCategory(const Category &cat) override;
+    void removeCategory(int cat_idx) override;
 
-    virtual int widgetCount(int cat_idx) const;
-    virtual Widget widget(int cat_idx, int wgt_idx) const;
-    virtual void addWidget(int cat_idx, const Widget &wgt);
-    virtual void removeWidget(int cat_idx, int wgt_idx);
+    int widgetCount(int cat_idx) const override;
+    Widget widget(int cat_idx, int wgt_idx) const override;
+    void addWidget(int cat_idx, const Widget &wgt) override;
+    void removeWidget(int cat_idx, int wgt_idx) override;
 
-    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos);
+    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos) override;
 
-    virtual void setFileName(const QString &file_name);
-    virtual QString fileName() const;
-    virtual bool load();
-    virtual bool save();
+    void setFileName(const QString &file_name) override;
+    QString fileName() const override;
+    bool load() override;
+    bool save() override;
 
-    virtual bool loadContents(const QString &contents);
-    virtual QIcon iconForWidget(const QString &className, const QString &category = QString()) const;
+    bool loadContents(const QString &contents) override;
+    QIcon iconForWidget(const QString &className, const QString &category = QString()) const override;
 
 protected:
-    virtual void dragEnterEvent (QDragEnterEvent * event);
-    virtual void dragMoveEvent(QDragMoveEvent * event);
-    virtual void dropEvent (QDropEvent * event);
+    void dragEnterEvent (QDragEnterEvent * event) override;
+    void dragMoveEvent(QDragMoveEvent * event) override;
+    void dropEvent (QDropEvent * event) override;
 
 private slots:
     void handleMousePress(const QString &name, const QString &xml, const QPoint &global_mouse_pos);

@@ -82,7 +82,7 @@ public:
 
 protected:
     QDeclarativeImplicitSizePaintedItem(QDeclarativeImplicitSizePaintedItemPrivate &dd, QDeclarativeItem *parent);
-    virtual void drawContents(QPainter *, const QRect &) {};
+    void drawContents(QPainter *, const QRect &) override {};
 
 Q_SIGNALS:
     Q_REVISION(1) void implicitWidthChanged();

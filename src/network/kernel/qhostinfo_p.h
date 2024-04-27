@@ -155,7 +155,7 @@ class QHostInfoRunnable : public QRunnable
 {
 public:
     QHostInfoRunnable (QString hn, int i);
-    void run();
+    void run() override;
 
     QString toBeLookedUp;
     int id;
@@ -168,7 +168,7 @@ class QAbstractHostInfoLookupManager : public QObject
     Q_OBJECT
 
 public:
-    ~QAbstractHostInfoLookupManager() {}
+    ~QAbstractHostInfoLookupManager() override {}
     virtual void clear() = 0;
 
     QHostInfoCache cache;
@@ -184,9 +184,9 @@ class QHostInfoLookupManager : public QAbstractHostInfoLookupManager
     Q_OBJECT
 public:
     QHostInfoLookupManager();
-    ~QHostInfoLookupManager();
+    ~QHostInfoLookupManager() override;
 
-    void clear();
+    void clear() override;
     void work();
 
     // called from QHostInfo

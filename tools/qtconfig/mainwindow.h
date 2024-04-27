@@ -56,9 +56,9 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
-    ~MainWindow();
+    ~MainWindow() override;
 
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *) override;
 
 public slots:
     virtual void buildPalette();

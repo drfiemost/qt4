@@ -96,8 +96,8 @@ class ButtonGroupTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit ButtonGroupTaskMenu(QButtonGroup *buttonGroup, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QButtonGroup *m_buttonGroup;
@@ -112,10 +112,10 @@ class ButtonTaskMenu: public QDesignerTaskMenu
     Q_DISABLE_COPY(ButtonTaskMenu)
 public:
     explicit ButtonTaskMenu(QAbstractButton *button, QObject *parent = nullptr);
-    virtual ~ButtonTaskMenu();
+    ~ButtonTaskMenu() override;
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
     QAbstractButton *button() const;
 

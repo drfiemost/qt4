@@ -74,7 +74,7 @@ namespace QPatternist
         /**
          * Returns always @c true.
          */
-        virtual bool compatModeEnabled() const;
+        bool compatModeEnabled() const override;
     };
 }
 

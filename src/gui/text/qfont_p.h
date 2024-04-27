@@ -220,7 +220,7 @@ public:
     static void cleanup();
 
     QFontCache();
-    ~QFontCache();
+    ~QFontCache() override;
 
     void clear();
 #if defined(Q_WS_QWS) && !defined(QT_NO_QWS_QPF2)
@@ -277,7 +277,7 @@ public:
     private:
     void increaseCost(uint cost);
     void decreaseCost(uint cost);
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
     static const uint min_cost;
     uint total_cost, max_cost;

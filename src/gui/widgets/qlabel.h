@@ -70,7 +70,7 @@ class Q_GUI_EXPORT QLabel : public QFrame
 public:
     explicit QLabel(QWidget *parent=nullptr, Qt::WindowFlags f=nullptr);
     explicit QLabel(const QString &text, QWidget *parent=nullptr, Qt::WindowFlags f=nullptr);
-    ~QLabel();
+    ~QLabel() override;
 
     QString text() const;
     const QPixmap *pixmap() const;
@@ -98,13 +98,13 @@ public:
 
     bool hasScaledContents() const;
     void setScaledContents(bool);
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 #ifndef QT_NO_SHORTCUT
     void setBuddy(QWidget *);
     QWidget *buddy() const;
 #endif
-    int heightForWidth(int) const;
+    int heightForWidth(int) const override;
 
     bool openExternalLinks() const;
     void setOpenExternalLinks(bool open);
@@ -135,17 +135,17 @@ Q_SIGNALS:
     void linkHovered(const QString& link);
 
 protected:
-    bool event(QEvent *e);
-    void keyPressEvent(QKeyEvent *ev);
-    void paintEvent(QPaintEvent *);
-    void changeEvent(QEvent *);
-    void mousePressEvent(QMouseEvent *ev);
-    void mouseMoveEvent(QMouseEvent *ev);
-    void mouseReleaseEvent(QMouseEvent *ev);
-    void contextMenuEvent(QContextMenuEvent *ev);
-    void focusInEvent(QFocusEvent *ev);
-    void focusOutEvent(QFocusEvent *ev);
-    bool focusNextPrevChild(bool next);
+    bool event(QEvent *e) override;
+    void keyPressEvent(QKeyEvent *ev) override;
+    void paintEvent(QPaintEvent *) override;
+    void changeEvent(QEvent *) override;
+    void mousePressEvent(QMouseEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    void contextMenuEvent(QContextMenuEvent *ev) override;
+    void focusInEvent(QFocusEvent *ev) override;
+    void focusOutEvent(QFocusEvent *ev) override;
+    bool focusNextPrevChild(bool next) override;
 
 private:
     Q_DISABLE_COPY(QLabel)

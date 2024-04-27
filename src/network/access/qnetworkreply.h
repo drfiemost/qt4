@@ -101,7 +101,7 @@ public:
         ProtocolFailure = 399
     };
 
-    ~QNetworkReply();
+    ~QNetworkReply() override;
     virtual void abort() = 0;
 
     // reimplemented from QIODevice

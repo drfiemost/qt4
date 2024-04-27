@@ -61,15 +61,15 @@ class QDeclarativeViewInspector : public AbstractViewInspector
 
 public:
     explicit QDeclarativeViewInspector(QDeclarativeView *view, QObject *parent = nullptr);
-    ~QDeclarativeViewInspector();
+    ~QDeclarativeViewInspector() override;
 
     // AbstractViewInspector
-    void changeCurrentObjects(const QList<QObject*> &objects);
-    void reloadView();
-    void reparentQmlObject(QObject *object, QObject *newParent);
-    void changeTool(InspectorProtocol::Tool tool);
-    QWidget *viewWidget() const { return declarativeView(); }
-    QDeclarativeEngine *declarativeEngine() const;
+    void changeCurrentObjects(const QList<QObject*> &objects) override;
+    void reloadView() override;
+    void reparentQmlObject(QObject *object, QObject *newParent) override;
+    void changeTool(InspectorProtocol::Tool tool) override;
+    QWidget *viewWidget() const override { return declarativeView(); }
+    QDeclarativeEngine *declarativeEngine() const override;
 
     void setSelectedItems(QList<QGraphicsItem *> items);
     QList<QGraphicsItem *> selectedItems() const;
@@ -79,10 +79,10 @@ public:
     QRectF adjustToScreenBoundaries(const QRectF &boundingRectInSceneSpace);
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
-    bool leaveEvent(QEvent *);
-    bool mouseMoveEvent(QMouseEvent *event);
+    bool leaveEvent(QEvent *) override;
+    bool mouseMoveEvent(QMouseEvent *event) override;
 
     AbstractLiveEditTool *currentTool() const;
 

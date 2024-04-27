@@ -57,11 +57,11 @@ class PreviewWidget : public QWidget
 
 public:
     PreviewWidget(QWidget *parent = nullptr);
-    ~PreviewWidget();
+    ~PreviewWidget() override;
 
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) override;
 private:
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *) override;
     Ui::PreviewWidget *ui;
 };
 

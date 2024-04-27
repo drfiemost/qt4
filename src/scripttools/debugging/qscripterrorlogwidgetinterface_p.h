@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QScriptErrorLogWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptErrorLogWidgetInterface();
+    ~QScriptErrorLogWidgetInterface() override;
 
     virtual void clear() = 0;
 

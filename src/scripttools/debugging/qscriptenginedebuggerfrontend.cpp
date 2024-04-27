@@ -72,7 +72,7 @@ class QScriptDebuggerCommandEvent : public QEvent
 public:
     QScriptDebuggerCommandEvent(int id, const QScriptDebuggerCommand &command)
         : QEvent(QEvent::Type(QEvent::User+3)), m_id(id), m_command(command) {}
-    ~QScriptDebuggerCommandEvent() {}
+    ~QScriptDebuggerCommandEvent() override {}
     int id() const
         { return m_id; }
     const QScriptDebuggerCommand &command() const
@@ -87,7 +87,7 @@ class QScriptDebuggerCommandFinishedEvent : public QEvent
 public:
     QScriptDebuggerCommandFinishedEvent(int id, const QScriptDebuggerResponse &response)
         : QEvent(QEvent::Type(QEvent::User+4)), m_id(id), m_response(response) {}
-    ~QScriptDebuggerCommandFinishedEvent() {}
+    ~QScriptDebuggerCommandFinishedEvent() override {}
     int id() const
         { return m_id; }
     const QScriptDebuggerResponse &response() const
@@ -102,13 +102,13 @@ class QScriptEngineDebuggerBackend : public QScriptDebuggerBackend
 {
 public:
     QScriptEngineDebuggerBackend(QScriptEngineDebuggerFrontendPrivate *frontend);
-    ~QScriptEngineDebuggerBackend();
+    ~QScriptEngineDebuggerBackend() override;
 
     void processCommand(int id, const QScriptDebuggerCommand &command);
-    void resume();
+    void resume() override;
 
 protected:
-    void event(const QScriptDebuggerEvent &event);
+    void event(const QScriptDebuggerEvent &event) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptEngineDebuggerBackend)
@@ -121,9 +121,9 @@ class QScriptEngineDebuggerBackendPrivate
     Q_DECLARE_PUBLIC(QScriptEngineDebuggerBackend)
 public:
     QScriptEngineDebuggerBackendPrivate();
-    ~QScriptEngineDebuggerBackendPrivate();
+    ~QScriptEngineDebuggerBackendPrivate() override;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
     QScriptEngineDebuggerFrontendPrivate *frontend;
     QList<QEventLoop*> eventLoopPool;
@@ -136,10 +136,10 @@ class QScriptEngineDebuggerFrontendPrivate
     Q_DECLARE_PUBLIC(QScriptEngineDebuggerFrontend)
 public:
     QScriptEngineDebuggerFrontendPrivate();
-    ~QScriptEngineDebuggerFrontendPrivate();
+    ~QScriptEngineDebuggerFrontendPrivate() override;
 
     void postCommandFinished(int id, const QScriptDebuggerResponse &response);
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
     QScriptEngineDebuggerBackend *backend;
 };

@@ -126,7 +126,7 @@ public:
     QGraphicsScene(QObject *parent = nullptr);
     QGraphicsScene(const QRectF &sceneRect, QObject *parent = nullptr);
     QGraphicsScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = nullptr);
-    virtual ~QGraphicsScene();
+    ~QGraphicsScene() override;
 
     QRectF sceneRect() const;
     inline qreal width() const { return sceneRect().width(); }
@@ -257,8 +257,8 @@ public Q_SLOTS:
     void clear();
 
 protected:
-    bool event(QEvent *event);
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool event(QEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
     virtual void dragMoveEvent(QGraphicsSceneDragDropEvent *event);

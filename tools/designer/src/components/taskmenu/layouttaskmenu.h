@@ -63,8 +63,8 @@ class LayoutWidgetTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit LayoutWidgetTaskMenu(QLayoutWidget *w, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QLayoutWidget *m_widget;
@@ -80,8 +80,8 @@ class SpacerTaskMenu : public QObject, public QDesignerTaskMenuExtension
 public:
     explicit SpacerTaskMenu(Spacer *bar, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 };
 

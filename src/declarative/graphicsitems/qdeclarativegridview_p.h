@@ -92,7 +92,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeGridView : public QDeclarativeFlickable
 
 public:
     QDeclarativeGridView(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeGridView();
+    ~QDeclarativeGridView() override;
 
     QVariant model() const;
     int modelCount() const;
@@ -159,8 +159,8 @@ public:
     QDeclarativeComponent *header() const;
     void setHeader(QDeclarativeComponent *);
 
-    virtual void setContentX(qreal pos);
-    virtual void setContentY(qreal pos);
+    void setContentX(qreal pos) override;
+    void setContentY(qreal pos) override;
 
     enum PositionMode { Beginning, Center, End, Visible, Contain };
 
@@ -199,14 +199,14 @@ Q_SIGNALS:
     void footerChanged();
 
 protected:
-    virtual bool event(QEvent *event);
-    virtual void viewportMoved();
-    virtual qreal minYExtent() const;
-    virtual qreal maxYExtent() const;
-    virtual qreal minXExtent() const;
-    virtual qreal maxXExtent() const;
-    virtual void keyPressEvent(QKeyEvent *);
-    virtual void componentComplete();
+    bool event(QEvent *event) override;
+    void viewportMoved() override;
+    qreal minYExtent() const override;
+    qreal maxYExtent() const override;
+    qreal minXExtent() const override;
+    qreal maxXExtent() const override;
+    void keyPressEvent(QKeyEvent *) override;
+    void componentComplete() override;
 
 private Q_SLOTS:
     void trackedPositionChanged();
@@ -229,7 +229,7 @@ class QDeclarativeGridViewAttached : public QObject
 public:
     QDeclarativeGridViewAttached(QObject *parent)
         : QObject(parent), m_view(nullptr), m_isCurrent(false), m_delayRemove(false) {}
-    ~QDeclarativeGridViewAttached() {}
+    ~QDeclarativeGridViewAttached() override {}
 
     Q_PROPERTY(QDeclarativeGridView *view READ view NOTIFY viewChanged)
     QDeclarativeGridView *view() { return m_view; }

@@ -129,7 +129,7 @@ public:
                       ,mac_menu(0)
 #endif
     { }
-    ~QMenuPrivate()
+    ~QMenuPrivate() override
     {
         delete scroll;
 #ifdef Q_WS_MAC

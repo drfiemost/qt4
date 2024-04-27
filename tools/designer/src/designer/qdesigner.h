@@ -62,7 +62,7 @@ class QDesigner: public QApplication
     Q_OBJECT
 public:
     QDesigner(int &argc, char **argv);
-    virtual ~QDesigner();
+    ~QDesigner() override;
 
     QDesignerWorkbench *workbench() const;
     QDesignerServer *server() const;
@@ -70,7 +70,7 @@ public:
     void setMainWindow(MainWindowBase *tw);
 
 protected:
-    bool event(QEvent *ev);
+    bool event(QEvent *ev) override;
 
 signals:
     void initialized();

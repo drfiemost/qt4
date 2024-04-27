@@ -129,7 +129,7 @@ class QTcpServerPrivate : public QObjectPrivate, public QAbstractSocketEngineRec
     Q_DECLARE_PUBLIC(QTcpServer)
 public:
     QTcpServerPrivate();
-    ~QTcpServerPrivate();
+    ~QTcpServerPrivate() override;
 
     QList<QTcpSocket *> pendingConnections;
 
@@ -150,12 +150,12 @@ public:
 #endif
 
     // from QAbstractSocketEngineReceiver
-    void readNotification();
-    inline void writeNotification() {}
-    inline void exceptionNotification() {}
-    inline void connectionNotification() {}
+    void readNotification() override;
+    inline void writeNotification() override {}
+    inline void exceptionNotification() override {}
+    inline void connectionNotification() override {}
 #ifndef QT_NO_NETWORKPROXY
-    inline void proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *) {}
+    inline void proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *) override {}
 #endif
 
 };

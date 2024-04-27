@@ -67,35 +67,35 @@ class DeclarativeObjectDelegate : public QScriptObjectDelegate
 {
 public:
     DeclarativeObjectDelegate(QScriptDeclarativeClass *c, QScriptDeclarativeClass::Object *o);
-    ~DeclarativeObjectDelegate();
+    ~DeclarativeObjectDelegate() override;
 
-    virtual Type type() const;
+    Type type() const override;
 
     QScriptDeclarativeClass *scriptClass() const { return m_class; }
     QScriptDeclarativeClass::Object *object() const { return m_object; }
 
-    virtual bool getOwnPropertySlot(QScriptObject*, JSC::ExecState*,
+    bool getOwnPropertySlot(QScriptObject*, JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot&);
-    virtual void put(QScriptObject*, JSC::ExecState* exec,
+                                    JSC::PropertySlot&) override;
+    void put(QScriptObject*, JSC::ExecState* exec,
                      const JSC::Identifier& propertyName,
-                     JSC::JSValue, JSC::PutPropertySlot&);
-    virtual bool deleteProperty(QScriptObject*, JSC::ExecState*,
-                                const JSC::Identifier& propertyName);
-    virtual void getOwnPropertyNames(QScriptObject*, JSC::ExecState*,
+                     JSC::JSValue, JSC::PutPropertySlot&) override;
+    bool deleteProperty(QScriptObject*, JSC::ExecState*,
+                                const JSC::Identifier& propertyName) override;
+    void getOwnPropertyNames(QScriptObject*, JSC::ExecState*,
                                      JSC::PropertyNameArray&, 
-                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
+                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
 
-    virtual JSC::CallType getCallData(QScriptObject*, JSC::CallData&);
+    JSC::CallType getCallData(QScriptObject*, JSC::CallData&) override;
     static JSC::JSValue JSC_HOST_CALL call(JSC::ExecState*, JSC::JSObject*,
                                            JSC::JSValue, const JSC::ArgList&);
 
-    virtual JSC::ConstructType getConstructData(QScriptObject*, JSC::ConstructData&);
+    JSC::ConstructType getConstructData(QScriptObject*, JSC::ConstructData&) override;
 
-    virtual bool hasInstance(QScriptObject*, JSC::ExecState*,
-                             JSC::JSValue value, JSC::JSValue proto);
+    bool hasInstance(QScriptObject*, JSC::ExecState*,
+                             JSC::JSValue value, JSC::JSValue proto) override;
 
-    bool compareToObject(QScriptObject *, JSC::ExecState *, JSC::JSObject *);
+    bool compareToObject(QScriptObject *, JSC::ExecState *, JSC::JSObject *) override;
 
 private:
     QScriptDeclarativeClass *m_class;

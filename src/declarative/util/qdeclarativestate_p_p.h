@@ -210,7 +210,7 @@ public:
             setObject(static_cast<QDeclarativeStateOperation *>(obj));
         }
         QList<OperationGuard> *list;
-        void objectDestroyed(QDeclarativeStateOperation *) {
+        void objectDestroyed(QDeclarativeStateOperation *) override {
             // we assume priv will always be destroyed after objectDestroyed calls
             list->removeOne(*this);
         }

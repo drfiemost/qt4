@@ -67,7 +67,7 @@ public:
     enum Type { WorkerData = QEvent::User };
 
     WorkerDataEvent(int workerId, const QVariant &data);
-    virtual ~WorkerDataEvent();
+    ~WorkerDataEvent() override;
 
     int workerId() const;
     QVariant data() const;
@@ -131,11 +131,11 @@ public:
     struct ScriptEngine : public QDeclarativeScriptEngine
     {
         ScriptEngine(QDeclarativeWorkerScriptEnginePrivate *parent) : QDeclarativeScriptEngine(nullptr), p(parent), accessManager(nullptr) {}
-        ~ScriptEngine() { delete accessManager; }
+        ~ScriptEngine() override { delete accessManager; }
         QDeclarativeWorkerScriptEnginePrivate *p;
         QNetworkAccessManager *accessManager;
 
-        virtual QNetworkAccessManager *networkAccessManager() {
+        QNetworkAccessManager *networkAccessManager() override {
             if (!accessManager) {
                 if (p->qmlengine && p->qmlengine->networkAccessManagerFactory()) {
                     accessManager = p->qmlengine->networkAccessManagerFactory()->create(this);
@@ -183,7 +183,7 @@ signals:
     void stopThread();
 
 protected:
-    virtual bool event(QEvent *);
+    bool event(QEvent *) override;
 
 private:
     void processMessage(int, const QVariant &);

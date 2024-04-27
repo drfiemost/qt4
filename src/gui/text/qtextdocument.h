@@ -127,7 +127,7 @@ class Q_GUI_EXPORT QTextDocument : public QObject
 public:
     explicit QTextDocument(QObject *parent = nullptr);
     explicit QTextDocument(const QString &text, QObject *parent = nullptr);
-    ~QTextDocument();
+    ~QTextDocument() override;
 
     QTextDocument *clone(QObject *parent = nullptr) const;
 

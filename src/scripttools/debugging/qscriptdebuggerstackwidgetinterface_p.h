@@ -65,7 +65,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerStackWidgetInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptDebuggerStackWidgetInterface();
+    ~QScriptDebuggerStackWidgetInterface() override;
 
     virtual QAbstractItemModel *stackModel() const = 0;
     virtual void setStackModel(QAbstractItemModel *model) = 0;

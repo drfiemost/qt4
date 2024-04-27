@@ -72,9 +72,9 @@ namespace QPatternist
     {
     public:
         GenericNamespaceResolver(const Bindings &list);
-        virtual void addBinding(const QXmlName nb);
+        void addBinding(const QXmlName nb) override;
 
-        virtual QXmlName::NamespaceCode lookupNamespaceURI(const QXmlName::PrefixCode prefix) const;
+        QXmlName::NamespaceCode lookupNamespaceURI(const QXmlName::PrefixCode prefix) const override;
 
         /**
          * Returns a GenericNamespaceResolver containing the following bindings:
@@ -96,7 +96,7 @@ namespace QPatternist
          */
         static NamespaceResolver::Ptr defaultXSLTBindings();
 
-        virtual Bindings bindings() const;
+        Bindings bindings() const override;
 
     private:
         /**

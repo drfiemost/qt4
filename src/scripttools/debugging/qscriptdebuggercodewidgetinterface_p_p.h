@@ -64,7 +64,7 @@ class QScriptDebuggerCodeWidgetInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerCodeWidgetInterface)
 public:
     QScriptDebuggerCodeWidgetInterfacePrivate();
-    ~QScriptDebuggerCodeWidgetInterfacePrivate();
+    ~QScriptDebuggerCodeWidgetInterfacePrivate() override;
 };
 
 QT_END_NAMESPACE

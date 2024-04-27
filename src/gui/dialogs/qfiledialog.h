@@ -103,7 +103,7 @@ public:
                          const QString &caption = QString(),
                          const QString &directory = QString(),
                          const QString &filter = QString());
-    ~QFileDialog();
+    ~QFileDialog() override;
 
     void setDirectory(const QString &directory);
     inline void setDirectory(const QDir &directory);
@@ -183,7 +183,7 @@ public:
     using QDialog::open;
 
     void open(QObject *receiver, const char *member);
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
 Q_SIGNALS:
     void fileSelected(const QString &file);
@@ -221,9 +221,9 @@ public:
 
 protected:
     QFileDialog(const QFileDialogArgs &args);
-    void done(int result);
-    void accept();
-    void changeEvent(QEvent *e);
+    void done(int result) override;
+    void accept() override;
+    void changeEvent(QEvent *e) override;
 
 private:
     Q_DECLARE_PRIVATE(QFileDialog)

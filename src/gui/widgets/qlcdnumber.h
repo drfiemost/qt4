@@ -68,7 +68,7 @@ class Q_GUI_EXPORT QLCDNumber : public QFrame // LCD number widget
 public:
     explicit QLCDNumber(QWidget* parent = nullptr);
     explicit QLCDNumber(uint numDigits, QWidget* parent = nullptr);
-    ~QLCDNumber();
+    ~QLCDNumber() override;
 
     enum Mode {
         Hex, Dec, Oct, Bin
@@ -97,7 +97,7 @@ public:
     double value() const;
     int intValue() const;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 public Q_SLOTS:
     void display(const QString &str);
@@ -113,8 +113,8 @@ Q_SIGNALS:
     void overflow();
 
 protected:
-    bool event(QEvent *e);
-    void paintEvent(QPaintEvent *);
+    bool event(QEvent *e) override;
+    void paintEvent(QPaintEvent *) override;
 
 private:
     Q_DISABLE_COPY(QLCDNumber)

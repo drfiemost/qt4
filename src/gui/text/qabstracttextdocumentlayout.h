@@ -65,7 +65,7 @@ class Q_GUI_EXPORT QAbstractTextDocumentLayout : public QObject
 
 public:
     explicit QAbstractTextDocumentLayout(QTextDocument *doc);
-    ~QAbstractTextDocumentLayout();
+    ~QAbstractTextDocumentLayout() override;
 
     struct Selection
     {

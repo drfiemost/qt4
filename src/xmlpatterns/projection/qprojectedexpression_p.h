@@ -112,8 +112,8 @@ namespace QPatternist
             Q_ASSERT(m_test);
         }
 
-        virtual Action actionForElement(const QXmlName name,
-                                        ProjectedExpression::Ptr &next) const
+        Action actionForElement(const QXmlName name,
+                                        ProjectedExpression::Ptr &next) const override
         {
             Q_UNUSED(name);
             Q_UNUSED(next);
@@ -137,8 +137,8 @@ namespace QPatternist
             Q_ASSERT(m_right);
         }
 
-        virtual Action actionForElement(const QXmlName name,
-                                        ProjectedExpression::Ptr &next) const
+        Action actionForElement(const QXmlName name,
+                                        ProjectedExpression::Ptr &next) const override
         {
             ProjectedExpression::Ptr &candidateNext = next;
             const Action a = m_left->actionForElement(name, candidateNext);

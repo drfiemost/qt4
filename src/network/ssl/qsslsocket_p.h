@@ -96,7 +96,7 @@ class QSslSocketPrivate : public QTcpSocketPrivate
     Q_DECLARE_PUBLIC(QSslSocket)
 public:
     QSslSocketPrivate();
-    virtual ~QSslSocketPrivate();
+    ~QSslSocketPrivate() override;
 
     void init();
     bool initialized;
@@ -160,8 +160,8 @@ public:
     void _q_flushWriteBuffer();
     void _q_flushReadBuffer();
 
-    virtual qint64 peek(char *data, qint64 maxSize);
-    virtual QByteArray peek(qint64 maxSize);
+    qint64 peek(char *data, qint64 maxSize) override;
+    QByteArray peek(qint64 maxSize) override;
 
     // Platform specific functions
     virtual void startClientEncryption() = 0;

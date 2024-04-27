@@ -106,7 +106,7 @@ protected:
     void accept(AST::Node *node)
     { AST::Node::acceptChild(node, this); }
 
-    virtual void endVisit(AST::CallExpression *node)
+    void endVisit(AST::CallExpression *node) override
     {
         m_bSource.clear();
         if (AST::IdentifierExpression *idExpr = AST::cast<AST::IdentifierExpression *>(node->base)) {

@@ -84,7 +84,7 @@ class Q_AUTOTEST_EXPORT QStatePrivate : public QAbstractStatePrivate
     Q_DECLARE_PUBLIC(QState)
 public:
     QStatePrivate();
-    ~QStatePrivate();
+    ~QStatePrivate() override;
 
     static QStatePrivate *get(QState *q) { return q ? q->d_func() : nullptr; }
     static const QStatePrivate *get(const QState *q) { return q? q->d_func() : nullptr; }

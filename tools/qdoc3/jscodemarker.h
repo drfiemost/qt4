@@ -54,16 +54,16 @@ class JsCodeMarker : public QmlCodeMarker
 {
 public:
     JsCodeMarker();
-    ~JsCodeMarker();
+    ~JsCodeMarker() override;
 
-    virtual bool recognizeCode(const QString &code);
-    virtual bool recognizeExtension(const QString &ext);
-    virtual bool recognizeLanguage(const QString &language);
-    virtual Atom::Type atomType() const;
+    bool recognizeCode(const QString &code) override;
+    bool recognizeExtension(const QString &ext) override;
+    bool recognizeLanguage(const QString &language) override;
+    Atom::Type atomType() const override;
 
-    virtual QString markedUpCode(const QString &code, 
+    QString markedUpCode(const QString &code, 
                                  const Node *relative, 
-                                 const Location &location);
+                                 const Location &location) override;
 
 private:
     QString addMarkUp(const QString &code, const Node *relative,

@@ -164,9 +164,9 @@ class QProcessManager : public QThread
     Q_OBJECT
 public:
     QProcessManager();
-    ~QProcessManager();
+    ~QProcessManager() override;
 
-    void run();
+    void run() override;
     void catchDeadChildren();
     void add(pid_t pid, QProcess *process);
     void remove(QProcess *process);

@@ -68,7 +68,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeContext : public QObject
 public:
     QDeclarativeContext(QDeclarativeEngine *parent, QObject *objParent=nullptr);
     QDeclarativeContext(QDeclarativeContext *parent, QObject *objParent=nullptr);
-    virtual ~QDeclarativeContext();
+    ~QDeclarativeContext() override;
 
     bool isValid() const;
 

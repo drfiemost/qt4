@@ -78,7 +78,7 @@ public:
 
     explicit QHelpCollectionHandler(const QString &collectionFile,
         QObject *parent = nullptr);
-    ~QHelpCollectionHandler();
+    ~QHelpCollectionHandler() override;
 
     QString collectionFile() const;
 

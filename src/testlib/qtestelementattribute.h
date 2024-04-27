@@ -89,7 +89,7 @@ class QTestElementAttribute: public QTestCoreList<QTestElementAttribute>
 {
     public:
         QTestElementAttribute();
-        ~QTestElementAttribute();
+        ~QTestElementAttribute() override;
 
         const char *value() const;
         const char *name() const;

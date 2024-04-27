@@ -168,7 +168,7 @@ class QDESIGNER_SHARED_EXPORT ConnectionEdit : public QWidget, public CETypes
     Q_OBJECT
 public:
     ConnectionEdit(QWidget *parent, QDesignerFormWindowInterface *form);
-    virtual ~ConnectionEdit();
+    ~ConnectionEdit() override;
 
     inline const QPointer<QWidget> &background() const { return m_bg_widget; }
 
@@ -186,7 +186,7 @@ public:
 
     void clear();
 
-    void showEvent(QShowEvent * /*e*/)
+    void showEvent(QShowEvent * /*e*/) override
     {
         updateBackground();
     }
@@ -213,14 +213,14 @@ public slots:
     void enableUpdateBackground(bool enable);
 
 protected:
-    virtual void paintEvent(QPaintEvent *e);
-    virtual void mouseMoveEvent(QMouseEvent *e);
-    virtual void mousePressEvent(QMouseEvent *e);
-    virtual void mouseReleaseEvent(QMouseEvent *e);
-    virtual void keyPressEvent(QKeyEvent *e);
-    virtual void mouseDoubleClickEvent(QMouseEvent *e);
-    virtual void resizeEvent(QResizeEvent *e);
-    virtual void contextMenuEvent(QContextMenuEvent * event);
+    void paintEvent(QPaintEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void keyPressEvent(QKeyEvent *e) override;
+    void mouseDoubleClickEvent(QMouseEvent *e) override;
+    void resizeEvent(QResizeEvent *e) override;
+    void contextMenuEvent(QContextMenuEvent * event) override;
 
     virtual Connection *createConnection(QWidget *source, QWidget *target);
     virtual void modifyConnection(Connection *con);
@@ -289,7 +289,7 @@ public:
    explicit  CECommand(ConnectionEdit *edit)
         : m_edit(edit) {}
 
-    virtual bool mergeWith(const QUndoCommand *) { return false; }
+    bool mergeWith(const QUndoCommand *) override { return false; }
 
     ConnectionEdit *edit() const { return m_edit; }
 
@@ -301,8 +301,8 @@ class QDESIGNER_SHARED_EXPORT AddConnectionCommand : public CECommand
 {
 public:
     AddConnectionCommand(ConnectionEdit *edit, Connection *con);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     Connection *m_con;
 };
@@ -311,8 +311,8 @@ class QDESIGNER_SHARED_EXPORT DeleteConnectionsCommand : public CECommand
 {
 public:
     DeleteConnectionsCommand(ConnectionEdit *edit, const ConnectionList &con_list);
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     ConnectionList m_con_list;
 };

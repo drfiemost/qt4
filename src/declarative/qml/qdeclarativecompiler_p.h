@@ -80,7 +80,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeCompiledData : public QDeclarativeRefCount, 
 {
 public:
     QDeclarativeCompiledData(QDeclarativeEngine *engine);
-    virtual ~QDeclarativeCompiledData();
+    ~QDeclarativeCompiledData() override;
 
     QString name;
     QUrl url;
@@ -128,7 +128,7 @@ public:
     void dumpInstructions();
 
 protected:
-    virtual void clear(); // From QDeclarativeCleanup
+    void clear() override; // From QDeclarativeCleanup
 
 private:
     void dump(QDeclarativeInstruction *, int idx = -1);

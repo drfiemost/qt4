@@ -209,27 +209,27 @@ class ExpressionNode: public Node
 {
 public:
     ExpressionNode() { kind = Kind_ExpressionNode; }
-    virtual ~ExpressionNode() {}
+    ~ExpressionNode() override {}
 
-    virtual ExpressionNode *expressionCast();
+    ExpressionNode *expressionCast() override;
 };
 
 class Statement: public Node
 {
 public:
     Statement() { kind = Kind_Statement; }
-    virtual ~Statement() {}
+    ~Statement() override {}
 
-    virtual Statement *statementCast();
+    Statement *statementCast() override;
 };
 
 class ThisExpression: public ExpressionNode
 {
 public:
     ThisExpression() { kind = Kind_ThisExpression; }
-    virtual ~ThisExpression() {}
+    ~ThisExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 class IdentifierExpression: public ExpressionNode
@@ -238,9 +238,9 @@ public:
     IdentifierExpression(QScriptNameIdImpl *n):
         name (n) { kind = Kind_IdentifierExpression; }
 
-    virtual ~IdentifierExpression() {}
+    ~IdentifierExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *name;
@@ -250,27 +250,27 @@ class NullExpression: public ExpressionNode
 {
 public:
     NullExpression() { kind = Kind_NullExpression; }
-    virtual ~NullExpression() {}
+    ~NullExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 class TrueLiteral: public ExpressionNode
 {
 public:
     TrueLiteral() { kind = Kind_TrueLiteral; }
-    virtual ~TrueLiteral() {}
+    ~TrueLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 class FalseLiteral: public ExpressionNode
 {
 public:
     FalseLiteral() { kind = Kind_FalseLiteral; }
-    virtual ~FalseLiteral() {}
+    ~FalseLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 class NumericLiteral: public ExpressionNode
@@ -278,9 +278,9 @@ class NumericLiteral: public ExpressionNode
 public:
     NumericLiteral(double v):
         value (v) { kind = Kind_NumericLiteral; }
-    virtual ~NumericLiteral() {}
+    ~NumericLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes:
     double value;
@@ -292,9 +292,9 @@ public:
     StringLiteral(QScriptNameIdImpl *v):
         value (v) { kind = Kind_StringLiteral; }
 
-    virtual ~StringLiteral() {}
+    ~StringLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes:
     QScriptNameIdImpl *value;
@@ -306,9 +306,9 @@ public:
     RegExpLiteral(QScriptNameIdImpl *p, int f):
         pattern (p), flags (f) { kind = Kind_RegExpLiteral; }
 
-    virtual ~RegExpLiteral() {}
+    ~RegExpLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes:
     QScriptNameIdImpl *pattern;
@@ -330,9 +330,9 @@ public:
         elements (elts), elision (e)
         { kind = Kind_ArrayLiteral; }
 
-    virtual ~ArrayLiteral() {}
+    ~ArrayLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ElementList *elements;
@@ -348,9 +348,9 @@ public:
     ObjectLiteral(PropertyNameAndValueList *plist):
         properties (plist) { kind = Kind_ObjectLiteral; }
 
-    virtual ~ObjectLiteral() {}
+    ~ObjectLiteral() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     PropertyNameAndValueList *properties;
@@ -371,7 +371,7 @@ public:
         previous->next = this;
     }
 
-    virtual ~ElementList() {}
+    ~ElementList() override {}
 
     inline ElementList *finish ()
     {
@@ -380,7 +380,7 @@ public:
         return front;
     }
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     Elision *elision;
@@ -401,9 +401,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~Elision() {}
+    ~Elision() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline Elision *finish ()
     {
@@ -431,9 +431,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~PropertyNameAndValueList() {}
+    ~PropertyNameAndValueList() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline PropertyNameAndValueList *finish ()
     {
@@ -452,7 +452,7 @@ class PropertyName: public Node
 {
 public:
     PropertyName() { kind = Kind_PropertyName; }
-    virtual ~PropertyName() {}
+    ~PropertyName() override {}
 };
 
 class IdentifierPropertyName: public PropertyName
@@ -461,9 +461,9 @@ public:
     IdentifierPropertyName(QScriptNameIdImpl *n):
         id (n) { kind = Kind_IdentifierPropertyName; }
 
-    virtual ~IdentifierPropertyName() {}
+    ~IdentifierPropertyName() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *id;
@@ -474,9 +474,9 @@ class StringLiteralPropertyName: public PropertyName
 public:
     StringLiteralPropertyName(QScriptNameIdImpl *n):
         id (n) { kind = Kind_StringLiteralPropertyName; }
-    virtual ~StringLiteralPropertyName() {}
+    ~StringLiteralPropertyName() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *id;
@@ -487,9 +487,9 @@ class NumericLiteralPropertyName: public PropertyName
 public:
     NumericLiteralPropertyName(double n):
         id (n) { kind = Kind_NumericLiteralPropertyName; }
-    virtual ~NumericLiteralPropertyName() {}
+    ~NumericLiteralPropertyName() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     double id;
@@ -502,9 +502,9 @@ public:
         base (b), expression (e)
         { kind = Kind_ArrayMemberExpression; }
 
-    virtual ~ArrayMemberExpression() {}
+    ~ArrayMemberExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *base;
@@ -518,9 +518,9 @@ public:
         base (b), name (n)
         { kind = Kind_FieldMemberExpression; }
 
-    virtual ~FieldMemberExpression() {}
+    ~FieldMemberExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *base;
@@ -534,9 +534,9 @@ public:
         base (b), arguments (a)
         { kind = Kind_NewMemberExpression; }
 
-    virtual ~NewMemberExpression() {}
+    ~NewMemberExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *base;
@@ -549,9 +549,9 @@ public:
     NewExpression(ExpressionNode *e):
         expression (e) { kind = Kind_NewExpression; }
 
-    virtual ~NewExpression() {}
+    ~NewExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -564,9 +564,9 @@ public:
         base (b), arguments (a)
         { kind = Kind_CallExpression; }
 
-    virtual ~CallExpression() {}
+    ~CallExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *base;
@@ -588,9 +588,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~ArgumentList() {}
+    ~ArgumentList() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline ArgumentList *finish ()
     {
@@ -610,9 +610,9 @@ public:
     PostIncrementExpression(ExpressionNode *b):
         base (b) { kind = Kind_PostIncrementExpression; }
 
-    virtual ~PostIncrementExpression() {}
+    ~PostIncrementExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *base;
@@ -624,9 +624,9 @@ public:
     PostDecrementExpression(ExpressionNode *b):
         base (b) { kind = Kind_PostDecrementExpression; }
 
-    virtual ~PostDecrementExpression() {}
+    ~PostDecrementExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *base;
@@ -637,9 +637,9 @@ class DeleteExpression: public ExpressionNode
 public:
     DeleteExpression(ExpressionNode *e):
         expression (e) { kind = Kind_DeleteExpression; }
-    virtual ~DeleteExpression() {}
+    ~DeleteExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -651,9 +651,9 @@ public:
     VoidExpression(ExpressionNode *e):
         expression (e) { kind = Kind_VoidExpression; }
 
-    virtual ~VoidExpression() {}
+    ~VoidExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -665,9 +665,9 @@ public:
     TypeOfExpression(ExpressionNode *e):
         expression (e) { kind = Kind_TypeOfExpression; }
 
-    virtual ~TypeOfExpression() {}
+    ~TypeOfExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -679,9 +679,9 @@ public:
     PreIncrementExpression(ExpressionNode *e):
         expression (e) { kind = Kind_PreIncrementExpression; }
 
-    virtual ~PreIncrementExpression() {}
+    ~PreIncrementExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -693,9 +693,9 @@ public:
     PreDecrementExpression(ExpressionNode *e):
         expression (e) { kind = Kind_PreDecrementExpression; }
 
-    virtual ~PreDecrementExpression() {}
+    ~PreDecrementExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -707,9 +707,9 @@ public:
     UnaryPlusExpression(ExpressionNode *e):
         expression (e) { kind = Kind_UnaryPlusExpression; }
 
-    virtual ~UnaryPlusExpression() {}
+    ~UnaryPlusExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -721,9 +721,9 @@ public:
     UnaryMinusExpression(ExpressionNode *e):
         expression (e) { kind = Kind_UnaryMinusExpression; }
 
-    virtual ~UnaryMinusExpression() {}
+    ~UnaryMinusExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -735,9 +735,9 @@ public:
     TildeExpression(ExpressionNode *e):
         expression (e) { kind = Kind_TildeExpression; }
 
-    virtual ~TildeExpression() {}
+    ~TildeExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -749,9 +749,9 @@ public:
     NotExpression(ExpressionNode *e):
         expression (e) { kind = Kind_NotExpression; }
 
-    virtual ~NotExpression() {}
+    ~NotExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -764,11 +764,11 @@ public:
         left (l), op (o), right (r)
         { kind = Kind_BinaryExpression; }
 
-    virtual ~BinaryExpression() {}
+    ~BinaryExpression() override {}
 
-    virtual BinaryExpression *binaryExpressionCast();
+    BinaryExpression *binaryExpressionCast() override;
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *left;
@@ -783,9 +783,9 @@ public:
         expression (e), ok (t), ko (f)
         { kind = Kind_ConditionalExpression; }
 
-    virtual ~ConditionalExpression() {}
+    ~ConditionalExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -799,9 +799,9 @@ public:
     Expression(ExpressionNode *l, ExpressionNode *r):
         left (l), right (r) { kind = Kind_Expression; }
 
-    virtual ~Expression() {}
+    ~Expression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *left;
@@ -814,9 +814,9 @@ public:
     Block(StatementList *slist):
         statements (slist) { kind = Kind_Block; }
 
-    virtual ~Block() {}
+    ~Block() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     StatementList *statements;
@@ -837,9 +837,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~StatementList() {}
+    ~StatementList() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline StatementList *finish ()
     {
@@ -860,9 +860,9 @@ public:
         declarations (vlist)
         { kind = Kind_VariableStatement; }
 
-    virtual ~VariableStatement() {}
+    ~VariableStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     VariableDeclarationList *declarations;
@@ -875,9 +875,9 @@ public:
         name (n), expression (e), readOnly(false)
         { kind = Kind_VariableDeclaration; }
 
-    virtual ~VariableDeclaration() {}
+    ~VariableDeclaration() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *name;
@@ -900,9 +900,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~VariableDeclarationList() {}
+    ~VariableDeclarationList() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline VariableDeclarationList *finish (bool readOnly)
     {
@@ -925,9 +925,9 @@ class EmptyStatement: public Statement
 {
 public:
     EmptyStatement() { kind = Kind_EmptyStatement; }
-    virtual ~EmptyStatement() {}
+    ~EmptyStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 class ExpressionStatement: public Statement
@@ -936,9 +936,9 @@ public:
     ExpressionStatement(ExpressionNode *e):
         expression (e) { kind = Kind_ExpressionStatement; }
 
-    virtual ~ExpressionStatement() {}
+    ~ExpressionStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -951,9 +951,9 @@ public:
         expression (e), ok (t), ko (f)
         { kind = Kind_IfStatement; }
 
-    virtual ~IfStatement() {}
+    ~IfStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -968,9 +968,9 @@ public:
         statement (stmt), expression (e)
         { kind = Kind_DoWhileStatement; }
 
-    virtual ~DoWhileStatement() {}
+    ~DoWhileStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     Statement *statement;
@@ -984,9 +984,9 @@ public:
         expression (e), statement (stmt)
         { kind = Kind_WhileStatement; }
 
-    virtual ~WhileStatement() {}
+    ~WhileStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -1000,9 +1000,9 @@ public:
         initialiser (i), condition (c), expression (e), statement (stmt)
         { kind = Kind_ForStatement; }
 
-    virtual ~ForStatement() {}
+    ~ForStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *initialiser;
@@ -1018,9 +1018,9 @@ public:
         declarations (vlist), condition (c), expression (e), statement (stmt)
         { kind = Kind_LocalForStatement; }
 
-    virtual ~LocalForStatement() {}
+    ~LocalForStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     VariableDeclarationList *declarations;
@@ -1036,9 +1036,9 @@ public:
         initialiser (i), expression (e), statement (stmt)
         { kind = Kind_ForEachStatement; }
 
-    virtual ~ForEachStatement() {}
+    ~ForEachStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *initialiser;
@@ -1053,9 +1053,9 @@ public:
         declaration (v), expression (e), statement (stmt)
         { kind = Kind_LocalForEachStatement; }
 
-    virtual ~LocalForEachStatement() {}
+    ~LocalForEachStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     VariableDeclaration *declaration;
@@ -1069,9 +1069,9 @@ public:
     ContinueStatement(QScriptNameIdImpl *l = nullptr):
         label (l) { kind = Kind_ContinueStatement; }
 
-    virtual ~ContinueStatement() {}
+    ~ContinueStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *label;
@@ -1083,9 +1083,9 @@ public:
     BreakStatement(QScriptNameIdImpl *l = nullptr):
         label (l) { kind = Kind_BreakStatement; }
 
-    virtual ~BreakStatement() {}
+    ~BreakStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *label;
@@ -1097,9 +1097,9 @@ public:
     ReturnStatement(ExpressionNode *e):
         expression (e) { kind = Kind_ReturnStatement; }
 
-    virtual ~ReturnStatement() {}
+    ~ReturnStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -1112,9 +1112,9 @@ public:
         expression (e), statement (stmt)
         { kind = Kind_WithStatement; }
 
-    virtual ~WithStatement() {}
+    ~WithStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -1128,9 +1128,9 @@ public:
         expression (e), block (b)
         { kind = Kind_SwitchStatement; }
 
-    virtual ~SwitchStatement() {}
+    ~SwitchStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -1144,9 +1144,9 @@ public:
         clauses (c), defaultClause (d), moreClauses (r)
         { kind = Kind_CaseBlock; }
 
-    virtual ~CaseBlock() {}
+    ~CaseBlock() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     CaseClauses *clauses;
@@ -1169,9 +1169,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~CaseClauses() {}
+    ~CaseClauses() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline CaseClauses *finish ()
     {
@@ -1192,9 +1192,9 @@ public:
         expression (e), statements (slist)
         { kind = Kind_CaseClause; }
 
-    virtual ~CaseClause() {}
+    ~CaseClause() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -1208,9 +1208,9 @@ public:
         statements (slist)
         { kind = Kind_DefaultClause; }
 
-    virtual ~DefaultClause() {}
+    ~DefaultClause() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     StatementList *statements;
@@ -1223,9 +1223,9 @@ public:
         label (l), statement (stmt)
         { kind = Kind_LabelledStatement; }
 
-    virtual ~LabelledStatement() {}
+    ~LabelledStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *label;
@@ -1238,9 +1238,9 @@ public:
     ThrowStatement(ExpressionNode *e):
         expression (e) { kind = Kind_ThrowStatement; }
 
-    virtual ~ThrowStatement() {}
+    ~ThrowStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     ExpressionNode *expression;
@@ -1261,9 +1261,9 @@ public:
         statement (stmt), catchExpression (c), finallyExpression (nullptr)
         { kind = Kind_TryStatement; }
 
-    virtual ~TryStatement() {}
+    ~TryStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     Statement *statement;
@@ -1278,9 +1278,9 @@ public:
         name (n), statement (stmt)
         { kind = Kind_Catch; }
 
-    virtual ~Catch() {}
+    ~Catch() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *name;
@@ -1294,9 +1294,9 @@ public:
         statement (stmt)
         { kind = Kind_Finally; }
 
-    virtual ~Finally() {}
+    ~Finally() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     Statement *statement;
@@ -1309,9 +1309,9 @@ public:
         name (n), formals (f), body (b)
         { kind = Kind_FunctionExpression; }
 
-    virtual ~FunctionExpression() {}
+    ~FunctionExpression() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     QScriptNameIdImpl *name;
@@ -1326,9 +1326,9 @@ public:
         FunctionExpression(n, f, b)
         { kind = Kind_FunctionDeclaration; }
 
-    virtual ~FunctionDeclaration() {}
+    ~FunctionDeclaration() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 class FormalParameterList: public Node
@@ -1346,9 +1346,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~FormalParameterList() {}
+    ~FormalParameterList() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline FormalParameterList *finish ()
     {
@@ -1369,9 +1369,9 @@ public:
         elements (elts)
         { kind = Kind_FunctionBody; }
 
-    virtual ~FunctionBody() {}
+    ~FunctionBody() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     SourceElements *elements;
@@ -1384,9 +1384,9 @@ public:
         elements (elts)
         { kind = Kind_Program; }
 
-    virtual ~Program() {}
+    ~Program() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     SourceElements *elements;
@@ -1407,9 +1407,9 @@ public:
         previous->next = this;
     }
 
-    virtual ~SourceElements() {}
+    ~SourceElements() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
     inline SourceElements *finish ()
     {
@@ -1429,7 +1429,7 @@ public:
     inline SourceElement()
         { kind = Kind_SourceElement; }
 
-    virtual ~SourceElement() {}
+    ~SourceElement() override {}
 };
 
 class FunctionSourceElement: public SourceElement
@@ -1439,9 +1439,9 @@ public:
         declaration (f)
         { kind = Kind_FunctionSourceElement; }
 
-    virtual ~FunctionSourceElement() {}
+    ~FunctionSourceElement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     FunctionDeclaration *declaration;
@@ -1454,9 +1454,9 @@ public:
         statement (stmt)
         { kind = Kind_StatementSourceElement; }
 
-    virtual ~StatementSourceElement() {}
+    ~StatementSourceElement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 
 // attributes
     Statement *statement;
@@ -1468,9 +1468,9 @@ public:
     DebuggerStatement()
         { kind = Kind_DebuggerStatement; }
 
-    virtual ~DebuggerStatement() {}
+    ~DebuggerStatement() override {}
 
-    virtual void accept0(Visitor *visitor);
+    void accept0(Visitor *visitor) override;
 };
 
 } } // namespace AST

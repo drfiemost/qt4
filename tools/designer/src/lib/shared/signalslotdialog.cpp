@@ -134,8 +134,8 @@ namespace {
     class SignatureDelegate : public QItemDelegate {
     public:
         SignatureDelegate(QObject * parent = nullptr);
-        virtual QWidget * createEditor (QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-        virtual void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+        QWidget * createEditor (QWidget * parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const override;
+        void setModelData (QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
     private:
         const QRegExp m_signatureRegexp;
@@ -187,8 +187,8 @@ namespace {
                   const QStringList &oldFakeSlots, const QStringList &oldFakeSignals,
                   const QStringList &newFakeSlots, const QStringList &newFakeSignals);
 
-        virtual void undo() { fakeMethodsToMetaDataBase(core(), m_object, m_oldFakeSlots, m_oldFakeSignals); }
-        virtual void redo() { fakeMethodsToMetaDataBase(core(), m_object, m_newFakeSlots, m_newFakeSignals); }
+        void undo() override { fakeMethodsToMetaDataBase(core(), m_object, m_oldFakeSlots, m_oldFakeSignals); }
+        void redo() override { fakeMethodsToMetaDataBase(core(), m_object, m_newFakeSlots, m_newFakeSignals); }
 
     private:
         QObject *m_object;

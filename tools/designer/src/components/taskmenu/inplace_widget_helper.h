@@ -68,9 +68,9 @@ namespace qdesigner_internal {
         Q_OBJECT
     public:
         InPlaceWidgetHelper(QWidget *editorWidget, QWidget *parentWidget, QDesignerFormWindowInterface *fw);
-        virtual ~InPlaceWidgetHelper();
+        ~InPlaceWidgetHelper() override;
 
-        virtual bool eventFilter(QObject *object, QEvent *event);
+        bool eventFilter(QObject *object, QEvent *event) override;
 
         // returns a recommended alignment for the editor widget determined from the parent.
         Qt::Alignment alignment() const;

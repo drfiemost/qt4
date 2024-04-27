@@ -62,10 +62,10 @@ class ShaderEffectItem : public QDeclarativeItem
 
 public:
     ShaderEffectItem(QDeclarativeItem* parent = nullptr);
-    ~ShaderEffectItem();
+    ~ShaderEffectItem() override;
 
-    virtual void componentComplete();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void componentComplete() override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
     QString fragmentShader() const { return m_fragment_code; }
     void setFragmentShader(const QString &code);
@@ -89,7 +89,7 @@ Q_SIGNALS:
     void meshResolutionChanged();
 
 protected:
-    virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
+    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
 
 private Q_SLOTS:
     void changeSource(int index);

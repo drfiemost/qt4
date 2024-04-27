@@ -1423,7 +1423,7 @@ class QStyleSheetStyleSelector : public StyleSelector
 public:
     QStyleSheetStyleSelector() { }
 
-    QStringList nodeNames(NodePtr node) const
+    QStringList nodeNames(NodePtr node) const override
     {
         if (isNullNode(node))
             return QStringList();
@@ -1439,7 +1439,7 @@ public:
         } while (metaObject != nullptr);
         return result;
     }
-    QString attribute(NodePtr node, const QString& name) const
+    QString attribute(NodePtr node, const QString& name) const override
     {
         if (isNullNode(node))
             return QString();
@@ -1474,7 +1474,7 @@ public:
         cache[name] = valueStr;
         return valueStr;
     }
-    bool nodeNameEquals(NodePtr node, const QString& nodeName) const
+    bool nodeNameEquals(NodePtr node, const QString& nodeName) const override
     {
         if (isNullNode(node))
             return false;
@@ -1497,19 +1497,19 @@ public:
         } while (metaObject != nullptr);
         return false;
     }
-    bool hasAttributes(NodePtr) const
+    bool hasAttributes(NodePtr) const override
     { return true; }
-    QStringList nodeIds(NodePtr node) const
+    QStringList nodeIds(NodePtr node) const override
     { return isNullNode(node) ? QStringList() : QStringList(WIDGET(node)->objectName()); }
-    bool isNullNode(NodePtr node) const
+    bool isNullNode(NodePtr node) const override
     { return node.ptr == nullptr; }
-    NodePtr parentNode(NodePtr node) const
+    NodePtr parentNode(NodePtr node) const override
     { NodePtr n; n.ptr = isNullNode(node) ? nullptr : parentWidget(WIDGET(node)); return n; }
-    NodePtr previousSiblingNode(NodePtr) const
+    NodePtr previousSiblingNode(NodePtr) const override
     { NodePtr n; n.ptr = nullptr; return n; }
-    NodePtr duplicateNode(NodePtr node) const
+    NodePtr duplicateNode(NodePtr node) const override
     { return node; }
-    void freeNode(NodePtr) const
+    void freeNode(NodePtr) const override
     { }
 
 private:

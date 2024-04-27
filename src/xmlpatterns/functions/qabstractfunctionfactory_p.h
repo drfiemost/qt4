@@ -75,12 +75,12 @@ namespace QPatternist
     class AbstractFunctionFactory : public FunctionFactory
     {
     public:
-        virtual Expression::Ptr createFunctionCall(const QXmlName name,
+        Expression::Ptr createFunctionCall(const QXmlName name,
                                                    const Expression::List &arguments,
                                                    const StaticContext::Ptr &context,
-                                                   const SourceLocationReflection *const r);
+                                                   const SourceLocationReflection *const r) override;
 
-        virtual FunctionSignature::Hash functionSignatures() const;
+        FunctionSignature::Hash functionSignatures() const override;
 
     protected:
         /**

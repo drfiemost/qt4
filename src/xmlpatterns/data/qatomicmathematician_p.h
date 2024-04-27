@@ -73,7 +73,7 @@ namespace QPatternist
     class Q_AUTOTEST_EXPORT AtomicMathematician : public AtomicTypeVisitorResult
     {
     public:
-        virtual ~AtomicMathematician();
+        ~AtomicMathematician() override;
 
         typedef QExplicitlySharedDataPointer<AtomicMathematician> Ptr;
 

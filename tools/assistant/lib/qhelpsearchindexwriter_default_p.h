@@ -97,7 +97,7 @@ class QHelpSearchIndexWriter : public QThread
 
 public:
     QHelpSearchIndexWriter();
-    ~QHelpSearchIndexWriter();
+    ~QHelpSearchIndexWriter() override;
 
     void cancelIndexing();
     void updateIndex(const QString &collectionFile,
@@ -108,7 +108,7 @@ signals:
     void indexingFinished();
 
 private:
-    void run();
+    void run() override;
     QString addNamespace(const QString namespaces, const QString &namespaceName);
     QString removeNamespace(const QString namespaces, const QString &namespaceName);
 

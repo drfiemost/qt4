@@ -83,7 +83,7 @@ public:
 
 #ifndef QT_NO_PRINTDIALOG
     explicit QAbstractPrintDialog(QPrinter *printer, QWidget *parent = nullptr);
-    ~QAbstractPrintDialog();
+    ~QAbstractPrintDialog() override;
 
     virtual int exec() = 0;
 

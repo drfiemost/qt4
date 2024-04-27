@@ -80,12 +80,12 @@ public:
     QDeclarativeScene(QObject *parent = nullptr);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *);
-    virtual void keyReleaseEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *) override;
+    void keyReleaseEvent(QKeyEvent *) override;
 
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override;
 };
 
 QDeclarativeScene::QDeclarativeScene(QObject *parent) : QGraphicsScene(parent)
@@ -134,9 +134,9 @@ public:
     QDeclarativeViewPrivate()
         : root(nullptr), declarativeItemRoot(nullptr), graphicsWidgetRoot(nullptr), component(nullptr),
           resizeMode(QDeclarativeView::SizeViewToRootObject), initialSize(0,0) {}
-    ~QDeclarativeViewPrivate() { delete root; delete engine; }
+    ~QDeclarativeViewPrivate() override { delete root; delete engine; }
     void execute();
-    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry);
+    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) override;
     void initResize();
     void updateSize();
     inline QSize rootObjectSize() const;

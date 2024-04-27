@@ -87,13 +87,13 @@ class Q_AUTOTEST_EXPORT QDeclarativeXmlListModel : public QListModelInterface, p
 
 public:
     QDeclarativeXmlListModel(QObject *parent = nullptr);
-    ~QDeclarativeXmlListModel();
+    ~QDeclarativeXmlListModel() override;
 
     virtual QHash<int,QVariant> data(int index, const QList<int> &roles = (QList<int>())) const;
-    virtual QVariant data(int index, int role) const;
-    virtual int count() const;
-    virtual QList<int> roles() const;
-    virtual QString toString(int role) const;
+    QVariant data(int index, int role) const override;
+    int count() const override;
+    QList<int> roles() const override;
+    QString toString(int role) const override;
 
     QDeclarativeListProperty<QDeclarativeXmlListModelRole> roleObjects();
 
@@ -117,8 +117,8 @@ public:
 
     Q_INVOKABLE QString errorString() const;
 
-    virtual void classBegin();
-    virtual void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 
 Q_SIGNALS:
     void statusChanged(QDeclarativeXmlListModel::Status);
@@ -156,7 +156,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeXmlListModelRole : public QObject
     Q_PROPERTY(bool isKey READ isKey WRITE setIsKey NOTIFY isKeyChanged)
 public:
     QDeclarativeXmlListModelRole() : m_isKey(false) {}
-    ~QDeclarativeXmlListModelRole() {}
+    ~QDeclarativeXmlListModelRole() override {}
 
     QString name() const { return m_name; }
     void setName(const QString &name) {

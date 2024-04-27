@@ -74,7 +74,7 @@ class QDESIGNER_SHARED_EXPORT QSimpleResource : public QAbstractFormBuilder
 {
 public:
     explicit QSimpleResource(QDesignerFormEditorInterface *core);
-    virtual ~QSimpleResource();
+    ~QSimpleResource() override;
 
     QBrush setupBrush(DomBrush *brush);
     DomBrush *saveBrush(const QBrush &brush);
@@ -104,12 +104,12 @@ public:
                                        const DomCustomWidgets *dom_custom_widgets);
 
 protected:
-    virtual QIcon nameToIcon(const QString &filePath, const QString &qrcPath);
-    virtual QString iconToFilePath(const QIcon &pm) const;
-    virtual QString iconToQrcPath(const QIcon &pm) const;
-    virtual QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath);
-    virtual QString pixmapToFilePath(const QPixmap &pm) const;
-    virtual QString pixmapToQrcPath(const QPixmap &pm) const;
+    QIcon nameToIcon(const QString &filePath, const QString &qrcPath) override;
+    QString iconToFilePath(const QIcon &pm) const override;
+    QString iconToQrcPath(const QIcon &pm) const override;
+    QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath) override;
+    QString pixmapToFilePath(const QPixmap &pm) const override;
+    QString pixmapToQrcPath(const QPixmap &pm) const override;
 
     enum ScriptSource { ScriptDesigner, ScriptExtension, ScriptCustomWidgetPlugin };
     static DomScript*createScript(const QString &script, ScriptSource source);

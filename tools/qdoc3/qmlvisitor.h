@@ -54,18 +54,18 @@ class QmlDocVisitor : public QDeclarativeJS::AST::Visitor
 public:
     QmlDocVisitor(const QString &filePath, const QString &code,
                QDeclarativeJS::Engine *engine, Tree *tree, QSet<QString> &commands);
-    virtual ~QmlDocVisitor();
+    ~QmlDocVisitor() override;
 
-    bool visit(QDeclarativeJS::AST::UiImportList *imports);
-    void endVisit(QDeclarativeJS::AST::UiImportList *definition);
+    bool visit(QDeclarativeJS::AST::UiImportList *imports) override;
+    void endVisit(QDeclarativeJS::AST::UiImportList *definition) override;
 
-    bool visit(QDeclarativeJS::AST::UiObjectDefinition *definition);
-    void endVisit(QDeclarativeJS::AST::UiObjectDefinition *definition);
+    bool visit(QDeclarativeJS::AST::UiObjectDefinition *definition) override;
+    void endVisit(QDeclarativeJS::AST::UiObjectDefinition *definition) override;
 
-    bool visit(QDeclarativeJS::AST::UiPublicMember *member);
-    void endVisit(QDeclarativeJS::AST::UiPublicMember *definition);
+    bool visit(QDeclarativeJS::AST::UiPublicMember *member) override;
+    void endVisit(QDeclarativeJS::AST::UiPublicMember *definition) override;
 
-    bool visit(QDeclarativeJS::AST::IdentifierPropertyName *idproperty);
+    bool visit(QDeclarativeJS::AST::IdentifierPropertyName *idproperty) override;
 
 private:
     QDeclarativeJS::AST::SourceLocation precedingComment(quint32 offset) const;

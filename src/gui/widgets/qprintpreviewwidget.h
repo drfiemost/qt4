@@ -74,7 +74,7 @@ public:
 
     explicit QPrintPreviewWidget(QPrinter *printer, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     explicit QPrintPreviewWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QPrintPreviewWidget();
+    ~QPrintPreviewWidget() override;
 
     qreal zoomFactor() const;
     QPrinter::Orientation orientation() const;
@@ -85,7 +85,7 @@ public:
     QT_DEPRECATED int numPages() const;
 #endif
     int pageCount() const;
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
 public Q_SLOTS:
     void print();

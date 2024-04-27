@@ -61,7 +61,7 @@ public:
     };
 
     QBearerEngineImpl(QObject *parent = nullptr) : QBearerEngine(parent) {}
-    ~QBearerEngineImpl() {}
+    ~QBearerEngineImpl() override {}
 
     virtual void connectToId(const QString &id) = 0;
     virtual void disconnectFromId(const QString &id) = 0;

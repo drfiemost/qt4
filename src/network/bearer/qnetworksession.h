@@ -92,7 +92,7 @@ public:
     };
 
     explicit QNetworkSession(const QNetworkConfiguration &connConfig, QObject *parent = nullptr);
-    virtual ~QNetworkSession();
+    ~QNetworkSession() override;
 
     bool isOpen() const;
     QNetworkConfiguration configuration() const;
@@ -132,8 +132,8 @@ Q_SIGNALS:
     void newConfigurationActivated();
 
 protected:
-    virtual void connectNotify(const char *signal);
-    virtual void disconnectNotify(const char *signal);
+    void connectNotify(const char *signal) override;
+    void disconnectNotify(const char *signal) override;
 
 private:
     friend class QNetworkSessionPrivate;

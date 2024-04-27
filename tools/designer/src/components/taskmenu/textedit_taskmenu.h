@@ -61,10 +61,10 @@ public:
     explicit TextEditTaskMenu(QTextEdit *button, QObject *parent = nullptr);
     explicit TextEditTaskMenu(QPlainTextEdit *button, QObject *parent = nullptr);
 
-    virtual ~TextEditTaskMenu();
+    ~TextEditTaskMenu() override;
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editText();

@@ -79,7 +79,7 @@ public:
 
     // Install helper on QStackedWidget
     static void install(QStackedWidget *stackedWidget);
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
     void setButtonToolTipEnabled(bool v) { m_buttonToolTipEnabled = v; }
     bool buttonToolTipEnabled() const    { return m_buttonToolTipEnabled; }
@@ -127,7 +127,7 @@ private slots:
     void changeOrder();
 
 protected:
-    virtual void gotoPage(int page);
+    void gotoPage(int page) override;
 
 private:
     QAction *m_actionPreviousPage;
@@ -144,10 +144,10 @@ class QDESIGNER_SHARED_EXPORT QStackedWidgetPropertySheet : public QDesignerProp
 public:
     explicit QStackedWidgetPropertySheet(QStackedWidget *object, QObject *parent = nullptr);
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual QVariant property(int index) const;
-    virtual bool reset(int index);
-    virtual bool isEnabled(int index) const;
+    void setProperty(int index, const QVariant &value) override;
+    QVariant property(int index) const override;
+    bool reset(int index) override;
+    bool isEnabled(int index) const override;
 
     // Check whether the property is to be saved. Returns false for the page
     // properties (as the property sheet has no concept of 'stored')

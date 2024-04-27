@@ -256,7 +256,7 @@ class VDMDelegateDataType : public QDeclarativeOpenMetaObjectType
 public:
     VDMDelegateDataType(const QMetaObject *base, QDeclarativeEngine *engine) : QDeclarativeOpenMetaObjectType(base, engine) {}
 
-    void propertyCreated(int, QMetaPropertyBuilder &prop) {
+    void propertyCreated(int, QMetaPropertyBuilder &prop) override {
         prop.setWritable(false);
     }
 };
@@ -413,8 +413,8 @@ public:
     QDeclarativeVisualDataModelDataMetaObject(QObject *parent, QDeclarativeOpenMetaObjectType *type)
     : QDeclarativeOpenMetaObject(parent, type) {}
 
-    virtual QVariant initialValue(int);
-    virtual int createProperty(const char *, const char *);
+    QVariant initialValue(int) override;
+    int createProperty(const char *, const char *) override;
 
 private:
     friend class QDeclarativeVisualDataModelData;
@@ -425,7 +425,7 @@ class QDeclarativeVisualDataModelData : public QObject
 Q_OBJECT
 public:
     QDeclarativeVisualDataModelData(int index, QDeclarativeVisualDataModel *model);
-    ~QDeclarativeVisualDataModelData();
+    ~QDeclarativeVisualDataModelData() override;
 
     Q_PROPERTY(int index READ index NOTIFY indexChanged)
     int index() const;
@@ -585,8 +585,8 @@ public:
     QDeclarativeVisualDataModelPartsMetaObject(QObject *parent)
     : QDeclarativeOpenMetaObject(parent) {}
 
-    virtual void propertyCreated(int, QMetaPropertyBuilder &);
-    virtual QVariant initialValue(int);
+    void propertyCreated(int, QMetaPropertyBuilder &) override;
+    QVariant initialValue(int) override;
 };
 
 class QDeclarativeVisualDataModelParts : public QObject

@@ -265,7 +265,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePinchArea : public QDeclarativeItem
 
 public:
     QDeclarativePinchArea(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativePinchArea();
+    ~QDeclarativePinchArea() override;
 
     bool isEnabled() const;
     void setEnabled(bool);
@@ -279,17 +279,17 @@ Q_SIGNALS:
     void pinchFinished(QDeclarativePinchEvent *pinch);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    bool sceneEvent(QEvent *);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    bool sceneEvent(QEvent *) override;
     bool sendMouseEvent(QGraphicsSceneMouseEvent *event);
-    bool sceneEventFilter(QGraphicsItem *i, QEvent *e);
-    bool event(QEvent *);
+    bool sceneEventFilter(QGraphicsItem *i, QEvent *e) override;
+    bool event(QEvent *) override;
 
-    virtual void geometryChanged(const QRectF &newGeometry,
-                                 const QRectF &oldGeometry);
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value);
+    void geometryChanged(const QRectF &newGeometry,
+                                 const QRectF &oldGeometry) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
     void updatePinch();

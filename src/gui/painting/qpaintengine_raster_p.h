@@ -79,7 +79,7 @@ class QRasterPaintEngineState : public QPainterState
 public:
     QRasterPaintEngineState(QRasterPaintEngineState &other);
     QRasterPaintEngineState();
-    ~QRasterPaintEngineState();
+    ~QRasterPaintEngineState() override;
 
 
     QPen lastPen;
@@ -139,21 +139,21 @@ QRasterPaintEngine : public QPaintEngineEx
 public:
 
     QRasterPaintEngine(QPaintDevice *device);
-    ~QRasterPaintEngine();
-    bool begin(QPaintDevice *device);
-    bool end();
+    ~QRasterPaintEngine() override;
+    bool begin(QPaintDevice *device) override;
+    bool end() override;
 
-    void penChanged();
-    void brushChanged();
-    void brushOriginChanged();
-    void opacityChanged();
-    void compositionModeChanged();
-    void renderHintsChanged();
-    void transformChanged();
-    void clipEnabledChanged();
+    void penChanged() override;
+    void brushChanged() override;
+    void brushOriginChanged() override;
+    void opacityChanged() override;
+    void compositionModeChanged() override;
+    void renderHintsChanged() override;
+    void transformChanged() override;
+    void clipEnabledChanged() override;
 
-    void setState(QPainterState *s);
-    QPainterState *createState(QPainterState *orig) const;
+    void setState(QPainterState *s) override;
+    QPainterState *createState(QPainterState *orig) const override;
     inline QRasterPaintEngineState *state() {
         return static_cast<QRasterPaintEngineState *>(QPaintEngineEx::state());
     }
@@ -166,41 +166,41 @@ public:
 
     void updateMatrix(const QTransform &matrix);
 
-    void drawPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode);
-    void drawPolygon(const QPoint *points, int pointCount, PolygonDrawMode mode);
+    void drawPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode) override;
+    void drawPolygon(const QPoint *points, int pointCount, PolygonDrawMode mode) override;
     void fillPath(const QPainterPath &path, QSpanData *fillData);
     void fillPolygon(const QPointF *points, int pointCount, PolygonDrawMode mode);
 
-    void drawEllipse(const QRectF &rect);
+    void drawEllipse(const QRectF &rect) override;
 
-    void fillRect(const QRectF &rect, const QBrush &brush);
-    void fillRect(const QRectF &rect, const QColor &color);
+    void fillRect(const QRectF &rect, const QBrush &brush) override;
+    void fillRect(const QRectF &rect, const QColor &color) override;
 
-    void drawRects(const QRect  *rects, int rectCount);
-    void drawRects(const QRectF *rects, int rectCount);
+    void drawRects(const QRect  *rects, int rectCount) override;
+    void drawRects(const QRectF *rects, int rectCount) override;
 
-    void drawPixmap(const QPointF &p, const QPixmap &pm);
-    void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr);
-    void drawImage(const QPointF &p, const QImage &img);
+    void drawPixmap(const QPointF &p, const QPixmap &pm) override;
+    void drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr) override;
+    void drawImage(const QPointF &p, const QImage &img) override;
     void drawImage(const QRectF &r, const QImage &pm, const QRectF &sr,
-                   Qt::ImageConversionFlags falgs = Qt::AutoColor);
-    void drawTiledPixmap(const QRectF &r, const QPixmap &pm, const QPointF &sr);
-    void drawTextItem(const QPointF &p, const QTextItem &textItem);
+                   Qt::ImageConversionFlags falgs = Qt::AutoColor) override;
+    void drawTiledPixmap(const QRectF &r, const QPixmap &pm, const QPointF &sr) override;
+    void drawTextItem(const QPointF &p, const QTextItem &textItem) override;
 
-    void drawLines(const QLine *line, int lineCount);
-    void drawLines(const QLineF *line, int lineCount);
+    void drawLines(const QLine *line, int lineCount) override;
+    void drawLines(const QLineF *line, int lineCount) override;
 
-    void drawPoints(const QPointF *points, int pointCount);
-    void drawPoints(const QPoint *points, int pointCount);
+    void drawPoints(const QPointF *points, int pointCount) override;
+    void drawPoints(const QPoint *points, int pointCount) override;
 
-    void stroke(const QVectorPath &path, const QPen &pen);
-    void fill(const QVectorPath &path, const QBrush &brush);
+    void stroke(const QVectorPath &path, const QPen &pen) override;
+    void fill(const QVectorPath &path, const QBrush &brush) override;
 
-    void clip(const QVectorPath &path, Qt::ClipOperation op);
-    void clip(const QRect &rect, Qt::ClipOperation op);
-    void clip(const QRegion &region, Qt::ClipOperation op);
+    void clip(const QVectorPath &path, Qt::ClipOperation op) override;
+    void clip(const QRect &rect, Qt::ClipOperation op) override;
+    void clip(const QRegion &region, Qt::ClipOperation op) override;
 
-    void drawStaticTextItem(QStaticTextItem *textItem);
+    void drawStaticTextItem(QStaticTextItem *textItem) override;
 
     enum ClipType {
         RectClip,
@@ -237,9 +237,9 @@ public:
 
     void alphaPenBlt(const void* src, int bpl, int depth, int rx,int ry,int w,int h);
 
-    Type type() const { return Raster; }
+    Type type() const override { return Raster; }
 
-    QPoint coordinateOffset() const;
+    QPoint coordinateOffset() const override;
 
 #if defined(Q_WS_QWS) && !defined(QT_NO_RASTERCALLBACKS)
     virtual void drawColorSpans(const QSpan *spans, int count, uint color);
@@ -247,7 +247,7 @@ public:
                                 int x, int y, int length, uint const_alpha);
 #endif
     bool supportsTransformations(const QFontEngine *fontEngine) const;
-    bool supportsTransformations(qreal pixelSize, const QTransform &m) const;
+    bool supportsTransformations(qreal pixelSize, const QTransform &m) const override;
 
 protected:
     QRasterPaintEngine(QRasterPaintEnginePrivate &d, QPaintDevice *);
@@ -307,7 +307,7 @@ public:
     void rasterize(QT_FT_Outline *outline, ProcessSpans callback, void *userData, QRasterBuffer *rasterBuffer);
     void updateMatrixData(QSpanData *spanData, const QBrush &brush, const QTransform &brushMatrix);
 
-    void systemStateChanged();
+    void systemStateChanged() override;
 
     void drawImage(const QPointF &pt, const QImage &img, SrcOverBlendFunc func,
                    const QRect &clip, int alpha, const QRect &sr = QRect());

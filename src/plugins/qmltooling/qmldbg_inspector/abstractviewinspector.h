@@ -135,7 +135,7 @@ signals:
     void animationPausedChanged(bool paused);
 
 protected:
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) override;
 
     virtual bool leaveEvent(QEvent *);
     virtual bool mousePressEvent(QMouseEvent *event);

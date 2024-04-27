@@ -85,14 +85,14 @@ public:
     void removeSubFocusHelper(QWidget *widget, Qt::FocusReason reason);
 
     // ### Qt 5: Remove. Workaround for reimplementation added after Qt 4.4.
-    QVariant inputMethodQueryHelper(Qt::InputMethodQuery query) const;
+    QVariant inputMethodQueryHelper(Qt::InputMethodQuery query) const override;
 
     void _q_removeWidgetSlot();
 
     void embedSubWindow(QWidget *);
     void unembedSubWindow(QWidget *);
 
-    bool isProxyWidget() const;
+    bool isProxyWidget() const override;
 
     QPointer<QWidget> widget;
     QPointer<QWidget> lastWidgetUnderMouse;

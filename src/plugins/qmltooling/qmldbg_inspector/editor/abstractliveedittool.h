@@ -66,9 +66,9 @@ class AbstractLiveEditTool : public AbstractTool
 public:
     AbstractLiveEditTool(QDeclarativeViewInspector *inspector);
 
-    virtual ~AbstractLiveEditTool();
+    ~AbstractLiveEditTool() override;
 
-    void leaveEvent(QEvent *) {}
+    void leaveEvent(QEvent *) override {}
 
     virtual void itemsAboutToRemoved(const QList<QGraphicsItem*> &itemList) = 0;
 

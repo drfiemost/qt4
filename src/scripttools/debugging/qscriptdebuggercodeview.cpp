@@ -56,7 +56,7 @@ class QScriptDebuggerCodeViewPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerCodeView)
 public:
     QScriptDebuggerCodeViewPrivate();
-    ~QScriptDebuggerCodeViewPrivate();
+    ~QScriptDebuggerCodeViewPrivate() override;
 
     QScriptEdit *editor;
 };

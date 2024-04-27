@@ -68,7 +68,7 @@ public:
     QScriptDebuggerConsoleCommandJob(QScriptDebuggerConsole *console,
                                      QScriptMessageHandlerInterface *messageHandler,
                                      QScriptDebuggerCommandSchedulerInterface *scheduler);
-    ~QScriptDebuggerConsoleCommandJob();
+    ~QScriptDebuggerConsoleCommandJob() override;
 
 protected:
     QScriptDebuggerConsoleCommandJob(QScriptDebuggerConsoleCommandJobPrivate &dd,

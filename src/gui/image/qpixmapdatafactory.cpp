@@ -67,8 +67,8 @@ QT_BEGIN_NAMESPACE
 class QSimplePixmapDataFactory : public QPixmapDataFactory
 {
 public:
-    ~QSimplePixmapDataFactory() {}
-    QPixmapData* create(QPixmapData::PixelType type);
+    ~QSimplePixmapDataFactory() override {}
+    QPixmapData* create(QPixmapData::PixelType type) override;
 };
 
 QPixmapData* QSimplePixmapDataFactory::create(QPixmapData::PixelType type)

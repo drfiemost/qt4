@@ -48,14 +48,14 @@ class QVariantDelegate : public QScriptObjectDelegate
 {
 public:
     QVariantDelegate(const QVariant &value);
-    ~QVariantDelegate();
+    ~QVariantDelegate() override;
 
-    virtual bool compareToObject(QScriptObject*, JSC::ExecState*, JSC::JSObject*);
+    bool compareToObject(QScriptObject*, JSC::ExecState*, JSC::JSObject*) override;
 
     QVariant &value();
     void setValue(const QVariant &value);
 
-    Type type() const;
+    Type type() const override;
 
 private:
     QVariant m_value;

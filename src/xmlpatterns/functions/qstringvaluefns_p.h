@@ -81,7 +81,7 @@ namespace QPatternist
     class ConcatFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -93,14 +93,14 @@ namespace QPatternist
     class StringJoinFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
 
         /**
          * Optimization: when the cardinality of the sequence of items to join
          * cannot be two or more, we have no effect and therefore rewrite
          * ourselves to our first operand.
          */
-        virtual Expression::Ptr compress(const StaticContext::Ptr &context);
+        Expression::Ptr compress(const StaticContext::Ptr &context) override;
     };
 
     /**
@@ -112,7 +112,7 @@ namespace QPatternist
     class SubstringFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -124,7 +124,7 @@ namespace QPatternist
     class StringLengthFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -136,7 +136,7 @@ namespace QPatternist
     class NormalizeSpaceFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -156,8 +156,8 @@ namespace QPatternist
          * Initializes private data.
          */
         NormalizeUnicodeFN();
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
-        virtual Expression::Ptr compress(const StaticContext::Ptr &context);
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
+        Expression::Ptr compress(const StaticContext::Ptr &context) override;
 
     private:
         int determineNormalizationForm(const DynamicContext::Ptr &context) const;
@@ -173,7 +173,7 @@ namespace QPatternist
     class UpperCaseFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -186,7 +186,7 @@ namespace QPatternist
     class LowerCaseFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -198,7 +198,7 @@ namespace QPatternist
     class TranslateFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -216,7 +216,7 @@ namespace QPatternist
          * is returned. Otherwise, the item's string value is returned percent encoded
          * as specified in this class's constructor.
          */
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
 
     protected:
         /**

@@ -64,7 +64,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeBorderImage : public QDeclarativeImageBase
 
 public:
     QDeclarativeBorderImage(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeBorderImage();
+    ~QDeclarativeBorderImage() override;
 
     QDeclarativeScaleGrid *border();
 
@@ -76,24 +76,24 @@ public:
     TileMode verticalTileMode() const;
     void setVerticalTileMode(TileMode);
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
-    void setSource(const QUrl &url);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
+    void setSource(const QUrl &url) override;
 
-    void setSourceSize(const QSize&);
+    void setSourceSize(const QSize&) override;
 
 Q_SIGNALS:
     void horizontalTileModeChanged();
     void verticalTileModeChanged();
 
 protected:
-    virtual void load();
+    void load() override;
 
 private:
     void setGridScaledImage(const QDeclarativeGridScaledImage& sci);
 
 private Q_SLOTS:
     void doUpdate();
-    void requestFinished();
+    void requestFinished() override;
     void sciRequestFinished();
 
 private:

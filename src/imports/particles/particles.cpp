@@ -50,7 +50,7 @@ class QParticlesQmlModule : public QDeclarativeExtensionPlugin
 {
     Q_OBJECT
 public:
-    virtual void registerTypes(const char *uri)
+    void registerTypes(const char *uri) override
     {
         Q_ASSERT(QLatin1String(uri) == QLatin1String("Qt.labs.particles"));
         qmlRegisterType<QDeclarativeParticleMotion>(uri,1,0,"ParticleMotion");

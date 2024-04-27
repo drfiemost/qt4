@@ -65,15 +65,15 @@ class QmlCodeParser : public CodeParser
 {
 public:
     QmlCodeParser();
-    virtual ~QmlCodeParser();
+    ~QmlCodeParser() override;
 
-    virtual void initializeParser(const Config& config);
-    virtual void terminateParser();
-    virtual QString language();
-    virtual QStringList sourceFileNameFilter();
-    virtual void parseSourceFile(const Location& location,
-                                 const QString& filePath, Tree *tree);
-    virtual void doneParsingSourceFiles(Tree *tree);
+    void initializeParser(const Config& config) override;
+    void terminateParser() override;
+    QString language() override;
+    QStringList sourceFileNameFilter() override;
+    void parseSourceFile(const Location& location,
+                                 const QString& filePath, Tree *tree) override;
+    void doneParsingSourceFiles(Tree *tree) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     void extractPragmas(QString &script);

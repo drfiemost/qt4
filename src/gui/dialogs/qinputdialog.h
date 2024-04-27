@@ -93,7 +93,7 @@ public:
     };
 
     QInputDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QInputDialog();
+    ~QInputDialog() override;
 
     void setInputMode(InputMode mode);
     InputMode inputMode() const;
@@ -156,10 +156,10 @@ public:
 
     void open(QObject *receiver, const char *member);
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
 
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
 #ifdef Q_QDOC
     static QString getText(QWidget *parent, const QString &title, const QString &label,
@@ -209,7 +209,7 @@ Q_SIGNALS:
 
 
 public:
-    void done(int result); // ### Qt 5: Make protected.
+    void done(int result) override; // ### Qt 5: Make protected.
 
 private:
     Q_DISABLE_COPY(QInputDialog)

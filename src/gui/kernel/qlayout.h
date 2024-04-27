@@ -82,7 +82,7 @@ public:
 
     QLayout(QWidget *parent);
     QLayout();
-    ~QLayout();
+    ~QLayout() override;
 
     int margin() const;
     int spacing() const;
@@ -108,8 +108,8 @@ public:
 
     QWidget *parentWidget() const;
 
-    void invalidate();
-    QRect geometry() const;
+    void invalidate() override;
+    QRect geometry() const override;
     bool activate();
     void update();
 
@@ -119,21 +119,21 @@ public:
     void removeWidget(QWidget *w);
     void removeItem(QLayoutItem *);
 
-    Qt::Orientations expandingDirections() const;
-    QSize minimumSize() const;
-    QSize maximumSize() const;
-    virtual void setGeometry(const QRect&);
+    Qt::Orientations expandingDirections() const override;
+    QSize minimumSize() const override;
+    QSize maximumSize() const override;
+    void setGeometry(const QRect&) override;
     virtual QLayoutItem *itemAt(int index) const = 0;
     virtual QLayoutItem *takeAt(int index) = 0;
     virtual int indexOf(QWidget *) const;
     virtual int count() const = 0;
-    bool isEmpty() const;
+    bool isEmpty() const override;
 
     int totalHeightForWidth(int w) const;
     QSize totalMinimumSize() const;
     QSize totalMaximumSize() const;
     QSize totalSizeHint() const;
-    QLayout *layout();
+    QLayout *layout() override;
 
     void setEnabled(bool);
     bool isEnabled() const;
@@ -142,7 +142,7 @@ public:
 
 protected:
     void widgetEvent(QEvent *);
-    void childEvent(QChildEvent *e);
+    void childEvent(QChildEvent *e) override;
     void addChildLayout(QLayout *l);
     void addChildWidget(QWidget *w);
     bool adoptLayout(QLayout *layout);

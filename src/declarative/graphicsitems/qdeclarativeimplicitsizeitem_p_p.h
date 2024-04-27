@@ -67,8 +67,8 @@ public:
     {
     }
 
-    virtual void implicitWidthChanged();
-    virtual void implicitHeightChanged();
+    void implicitWidthChanged() override;
+    void implicitHeightChanged() override;
 };
 
 
@@ -81,8 +81,8 @@ public:
     {
     }
 
-    virtual void implicitWidthChanged();
-    virtual void implicitHeightChanged();
+    void implicitWidthChanged() override;
+    void implicitHeightChanged() override;
 };
 
 QT_END_NAMESPACE

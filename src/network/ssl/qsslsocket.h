@@ -81,7 +81,7 @@ public:
     };
 
     QSslSocket(QObject *parent = nullptr);
-    ~QSslSocket();
+    ~QSslSocket() override;
 
     // Autostarting the SSL client handshake.
     void connectToHostEncrypted(const QString &hostName, quint16 port, OpenMode mode = ReadWrite);
@@ -109,11 +109,11 @@ public:
     void setPeerVerifyName(const QString &hostName);
 
     // From QIODevice
-    qint64 bytesAvailable() const;
-    qint64 bytesToWrite() const;
-    bool canReadLine() const;
-    void close();
-    bool atEnd() const;
+    qint64 bytesAvailable() const override;
+    qint64 bytesToWrite() const override;
+    bool canReadLine() const override;
+    void close() override;
+    bool atEnd() const override;
     bool flush();
     void abort();
 
@@ -168,8 +168,8 @@ public:
 
     bool waitForConnected(int msecs = 30000);
     bool waitForEncrypted(int msecs = 30000);
-    bool waitForReadyRead(int msecs = 30000);
-    bool waitForBytesWritten(int msecs = 30000);
+    bool waitForReadyRead(int msecs = 30000) override;
+    bool waitForBytesWritten(int msecs = 30000) override;
     bool waitForDisconnected(int msecs = 30000);
 
     QList<QSslError> sslErrors() const;
@@ -195,8 +195,8 @@ protected Q_SLOTS:
     void disconnectFromHostImplementation();
 
 protected:
-    qint64 readData(char *data, qint64 maxlen);
-    qint64 writeData(const char *data, qint64 len);
+    qint64 readData(char *data, qint64 maxlen) override;
+    qint64 writeData(const char *data, qint64 len) override;
 
 private:
     Q_DECLARE_PRIVATE(QSslSocket)

@@ -66,7 +66,7 @@ class QScriptDebuggerCommandSchedulerJobPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerCommandSchedulerJob)
 public:
     QScriptDebuggerCommandSchedulerJobPrivate();
-    ~QScriptDebuggerCommandSchedulerJobPrivate();
+    ~QScriptDebuggerCommandSchedulerJobPrivate() override;
 
     QScriptDebuggerCommandSchedulerInterface *commandScheduler;
 };

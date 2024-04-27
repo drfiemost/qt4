@@ -43,7 +43,7 @@ class QHELP_EXPORT QCLuceneTokenizer : public QCLuceneTokenStream
 {
 public:
     QCLuceneTokenizer(const QCLuceneReader &reader);
-    virtual ~QCLuceneTokenizer();
+    ~QCLuceneTokenizer() override;
 
     void close();
     bool next(QCLuceneToken &token);
@@ -60,7 +60,7 @@ class QHELP_EXPORT QCLuceneStandardTokenizer : public QCLuceneTokenizer
 {
 public:
     QCLuceneStandardTokenizer(const QCLuceneReader &reader);
-    ~QCLuceneStandardTokenizer();
+    ~QCLuceneStandardTokenizer() override;
 
     bool readApostrophe(const QString &string, QCLuceneToken &token);
     bool readAt(const QString &string, QCLuceneToken &token);

@@ -67,7 +67,7 @@ class QDeclarativeAbstractBoundSignal : public QObject
     Q_OBJECT
 public:
     QDeclarativeAbstractBoundSignal(QObject *parent = nullptr);
-    virtual ~QDeclarativeAbstractBoundSignal() = 0;
+    ~QDeclarativeAbstractBoundSignal() override = 0;
     virtual void disconnect() = 0;
 
 protected slots:
@@ -81,9 +81,9 @@ public:
     QDeclarativeBoundSignal(QObject *scope, const QMetaMethod &signal, QObject *parent);
     QDeclarativeBoundSignal(QDeclarativeContext *ctxt, const QString &val, QObject *scope, 
                    const QMetaMethod &signal, QObject *parent);
-    virtual ~QDeclarativeBoundSignal();
+    ~QDeclarativeBoundSignal() override;
 
-    void disconnect();
+    void disconnect() override;
 
     int index() const;
 
@@ -95,8 +95,8 @@ public:
     static QDeclarativeBoundSignal *cast(QObject *);
 
 protected:
-    void unregisterScopeObject();
-    virtual int qt_metacall(QMetaObject::Call c, int id, void **a);
+    void unregisterScopeObject() override;
+    int qt_metacall(QMetaObject::Call c, int id, void **a) override;
 
 private:
     class ScopeGuard : public QDeclarativeGuard<QObject>
@@ -107,7 +107,7 @@ private:
         {
         }
 
-        void objectDestroyed(QObject *obj) {
+        void objectDestroyed(QObject *obj) override {
             Q_UNUSED(obj);
             m_signal->unregisterScopeObject();
         }

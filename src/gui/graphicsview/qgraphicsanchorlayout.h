@@ -68,7 +68,7 @@ public:
     qreal spacing() const;
     void setSizePolicy(QSizePolicy::Policy policy);
     QSizePolicy::Policy sizePolicy() const;
-    ~QGraphicsAnchor();
+    ~QGraphicsAnchor() override;
 private:
     QGraphicsAnchor(QGraphicsAnchorLayout *parent);
 
@@ -82,7 +82,7 @@ class Q_GUI_EXPORT QGraphicsAnchorLayout : public QGraphicsLayout
 {
 public:
     QGraphicsAnchorLayout(QGraphicsLayoutItem *parent = nullptr);
-    virtual ~QGraphicsAnchorLayout();
+    ~QGraphicsAnchorLayout() override;
 
     QGraphicsAnchor *addAnchor(QGraphicsLayoutItem *firstItem, Qt::AnchorPoint firstEdge,
                                QGraphicsLayoutItem *secondItem, Qt::AnchorPoint secondEdge);
@@ -102,14 +102,14 @@ public:
     qreal horizontalSpacing() const;
     qreal verticalSpacing() const;
 
-    void removeAt(int index);
-    void setGeometry(const QRectF &rect);
-    int count() const;
-    QGraphicsLayoutItem *itemAt(int index) const;
+    void removeAt(int index) override;
+    void setGeometry(const QRectF &rect) override;
+    int count() const override;
+    QGraphicsLayoutItem *itemAt(int index) const override;
 
-    void invalidate();
+    void invalidate() override;
 protected:
-    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override;
 
 private:
     Q_DISABLE_COPY(QGraphicsAnchorLayout)

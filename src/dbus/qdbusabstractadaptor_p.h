@@ -109,7 +109,7 @@ public: // typedefs
 
 public: // methods
     explicit QDBusAdaptorConnector(QObject *parent);
-    ~QDBusAdaptorConnector();
+    ~QDBusAdaptorConnector() override;
 
     void addAdaptor(QDBusAbstractAdaptor *adaptor);
     void connectAllSignals(QObject *object);

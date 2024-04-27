@@ -54,24 +54,24 @@ class PlainCodeMarker : public CodeMarker
 {
 public:
     PlainCodeMarker();
-    ~PlainCodeMarker();
+    ~PlainCodeMarker() override;
 
-    bool recognizeCode( const QString& code );
-    bool recognizeExtension( const QString& ext );
-    bool recognizeLanguage( const QString& lang );
-    Atom::Type atomType() const;
-    QString plainName( const Node *node );
-    QString plainFullName( const Node *node, const Node *relative );
-    QString markedUpCode( const QString& code, const Node *relative, const Location &location );
+    bool recognizeCode( const QString& code ) override;
+    bool recognizeExtension( const QString& ext ) override;
+    bool recognizeLanguage( const QString& lang ) override;
+    Atom::Type atomType() const override;
+    QString plainName( const Node *node ) override;
+    QString plainFullName( const Node *node, const Node *relative ) override;
+    QString markedUpCode( const QString& code, const Node *relative, const Location &location ) override;
     QString markedUpSynopsis( const Node *node, const Node *relative,
-        		      SynopsisStyle style );
-    QString markedUpName( const Node *node );
-    QString markedUpFullName( const Node *node, const Node *relative );
-    QString markedUpEnumValue(const QString &enumValue, const Node *relative);
-    QString markedUpIncludes( const QStringList& includes );
-    QString functionBeginRegExp( const QString& funcName );
-    QString functionEndRegExp( const QString& funcName );
-    QList<Section> sections(const InnerNode *innerNode, SynopsisStyle style, Status status);
+        		      SynopsisStyle style ) override;
+    QString markedUpName( const Node *node ) override;
+    QString markedUpFullName( const Node *node, const Node *relative ) override;
+    QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
+    QString markedUpIncludes( const QStringList& includes ) override;
+    QString functionBeginRegExp( const QString& funcName ) override;
+    QString functionEndRegExp( const QString& funcName ) override;
+    QList<Section> sections(const InnerNode *innerNode, SynopsisStyle style, Status status) override;
 };
 
 QT_END_NAMESPACE

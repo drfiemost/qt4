@@ -72,7 +72,7 @@ public:
     explicit QTemporaryFile(QObject *parent);
     QTemporaryFile(const QString &templateName, QObject *parent);
 #endif
-    ~QTemporaryFile();
+    ~QTemporaryFile() override;
 
     bool autoRemove() const;
     void setAutoRemove(bool b);

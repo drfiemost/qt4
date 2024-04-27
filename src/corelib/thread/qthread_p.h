@@ -142,7 +142,7 @@ class QThreadPrivate : public QObjectPrivate
 
 public:
     QThreadPrivate(QThreadData *d = nullptr);
-    ~QThreadPrivate();
+    ~QThreadPrivate() override;
 
     mutable QMutex mutex;
     QThreadData *data;
@@ -288,13 +288,13 @@ class QAdoptedThread : public QThread
 
 public:
     QAdoptedThread(QThreadData *data = nullptr);
-    ~QAdoptedThread();
+    ~QAdoptedThread() override;
     void init();
 
     static QThread *createThreadForAdoption();
 private:
 #ifndef QT_NO_THREAD
-    void run();
+    void run() override;
 #endif
 };
 

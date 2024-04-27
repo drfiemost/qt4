@@ -58,7 +58,7 @@ class SelectionRectShape : public QGraphicsRectItem
 {
 public:
     SelectionRectShape(QGraphicsItem *parent = nullptr) : QGraphicsRectItem(parent) {}
-    int type() const { return Constants::EditorItemType; }
+    int type() const override { return Constants::EditorItemType; }
 };
 
 LiveSelectionRectangle::LiveSelectionRectangle(QGraphicsObject *layerItem)

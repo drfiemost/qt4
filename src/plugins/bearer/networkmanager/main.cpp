@@ -54,10 +54,10 @@ class QNetworkManagerEnginePlugin : public QBearerEnginePlugin
 {
 public:
     QNetworkManagerEnginePlugin();
-    ~QNetworkManagerEnginePlugin();
+    ~QNetworkManagerEnginePlugin() override;
 
-    QStringList keys() const;
-    QBearerEngine *create(const QString &key) const;
+    QStringList keys() const override;
+    QBearerEngine *create(const QString &key) const override;
 };
 
 QNetworkManagerEnginePlugin::QNetworkManagerEnginePlugin()

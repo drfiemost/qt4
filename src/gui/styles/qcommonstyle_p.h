@@ -74,7 +74,7 @@ public:
     { }
 
 #ifndef QT_NO_ITEMVIEWS
-    ~QCommonStylePrivate()
+    ~QCommonStylePrivate() override
     {
         delete cachedOption;
     }

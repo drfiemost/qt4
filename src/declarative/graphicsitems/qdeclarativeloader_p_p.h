@@ -67,9 +67,9 @@ class QDeclarativeLoaderPrivate : public QDeclarativeImplicitSizeItemPrivate, pu
 
 public:
     QDeclarativeLoaderPrivate();
-    ~QDeclarativeLoaderPrivate();
+    ~QDeclarativeLoaderPrivate() override;
 
-    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry);
+    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) override;
     void clear();
     void initResize();
     void load();

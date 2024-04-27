@@ -85,9 +85,9 @@ public:
     TranslatingTextBuilder(bool trEnabled, const QByteArray &className) :
         m_trEnabled(trEnabled), m_className(className) {}
 
-    virtual QVariant loadText(const DomProperty *icon) const;
+    QVariant loadText(const DomProperty *icon) const override;
 
-    virtual QVariant toNativeValue(const QVariant &value) const;
+    QVariant toNativeValue(const QVariant &value) const override;
 
 private:
     bool m_trEnabled;
@@ -210,7 +210,7 @@ public:
     {
     }
 
-    virtual bool eventFilter(QObject *o, QEvent *event)
+    bool eventFilter(QObject *o, QEvent *event) override
     {
         if (event->type() == QEvent::LanguageChange) {
             foreach (const QByteArray &prop, o->dynamicPropertyNames()) {
@@ -335,7 +335,7 @@ public:
         return ParentClass::createActionGroup(parent, name);
     }
 
-    virtual QWidget *createWidget(const QString &className, QWidget *parent, const QString &name)
+    QWidget *createWidget(const QString &className, QWidget *parent, const QString &name) override
     {
         if (QWidget *widget = loader->createWidget(className, parent, name)) {
             widget->setObjectName(name);
@@ -345,7 +345,7 @@ public:
         return nullptr;
     }
 
-    virtual QLayout *createLayout(const QString &className, QObject *parent, const QString &name)
+    QLayout *createLayout(const QString &className, QObject *parent, const QString &name) override
     {
         if (QLayout *layout = loader->createLayout(className, parent, name)) {
             layout->setObjectName(name);
@@ -355,7 +355,7 @@ public:
         return nullptr;
     }
 
-    virtual QActionGroup *createActionGroup(QObject *parent, const QString &name)
+    QActionGroup *createActionGroup(QObject *parent, const QString &name) override
     {
         if (QActionGroup *actionGroup = loader->createActionGroup(parent, name)) {
             actionGroup->setObjectName(name);
@@ -365,7 +365,7 @@ public:
         return nullptr;
     }
 
-    virtual QAction *createAction(QObject *parent, const QString &name)
+    QAction *createAction(QObject *parent, const QString &name) override
     {
         if (QAction *action = loader->createAction(parent, name)) {
             action->setObjectName(name);
@@ -375,10 +375,10 @@ public:
         return nullptr;
     }
 
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
-    virtual QWidget *create(DomUI *ui, QWidget *parentWidget);
-    virtual QWidget *create(DomWidget *ui_widget, QWidget *parentWidget);
-    virtual bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget);
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
+    QWidget *create(DomUI *ui, QWidget *parentWidget) override;
+    QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
+    bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
 private:
     QByteArray m_class;

@@ -80,7 +80,7 @@ class ResetDecorator : public QObject
     Q_OBJECT
 public:
     ResetDecorator(QObject *parent = nullptr) : QObject(parent), m_spacing(-1) {}
-    ~ResetDecorator();
+    ~ResetDecorator() override;
 
     void connectPropertyManager(QtAbstractPropertyManager *manager);
     QWidget *editor(QWidget *subEditor, bool resettable, QtAbstractPropertyManager *manager, QtProperty *property,
@@ -103,17 +103,17 @@ class DesignerPropertyManager : public QtVariantPropertyManager
     Q_OBJECT
 public:
     explicit DesignerPropertyManager(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~DesignerPropertyManager();
+    ~DesignerPropertyManager() override;
 
-    virtual QStringList attributes(int propertyType) const;
-    virtual int attributeType(int propertyType, const QString &attribute) const;
+    QStringList attributes(int propertyType) const override;
+    int attributeType(int propertyType, const QString &attribute) const override;
 
-    virtual QVariant attributeValue(const QtProperty *property, const QString &attribute) const;
-    virtual bool isPropertyTypeSupported(int propertyType) const;
-    virtual QVariant value(const QtProperty *property) const;
-    virtual int valueType(int propertyType) const;
-    virtual QString valueText(const QtProperty *property) const;
-    virtual QIcon valueIcon(const QtProperty *property) const;
+    QVariant attributeValue(const QtProperty *property, const QString &attribute) const override;
+    bool isPropertyTypeSupported(int propertyType) const override;
+    QVariant value(const QtProperty *property) const override;
+    int valueType(int propertyType) const override;
+    QString valueText(const QtProperty *property) const override;
+    QIcon valueIcon(const QtProperty *property) const override;
 
     bool resetFontSubProperty(QtProperty *property);
     bool resetIconSubProperty(QtProperty *subProperty);
@@ -131,16 +131,16 @@ public:
     void setObject(QObject *object) { m_object = object; }
 
 public Q_SLOTS:
-    virtual void setAttribute(QtProperty *property,
-                const QString &attribute, const QVariant &value);
-    virtual void setValue(QtProperty *property, const QVariant &value);
+    void setAttribute(QtProperty *property,
+                const QString &attribute, const QVariant &value) override;
+    void setValue(QtProperty *property, const QVariant &value) override;
 Q_SIGNALS:
     // sourceOfChange - a subproperty (or just property) which caused a change
     //void valueChanged(QtProperty *property, const QVariant &value, QtProperty *sourceOfChange);
     void valueChanged(QtProperty *property, const QVariant &value, bool enableSubPropertyHandling);
 protected:
-    virtual void initializeProperty(QtProperty *property);
-    virtual void uninitializeProperty(QtProperty *property);
+    void initializeProperty(QtProperty *property) override;
+    void uninitializeProperty(QtProperty *property) override;
 private Q_SLOTS:
     void slotValueChanged(QtProperty *property, const QVariant &value);
     void slotPropertyDestroyed(QtProperty *property);
@@ -243,16 +243,16 @@ class DesignerEditorFactory : public QtVariantEditorFactory
     Q_OBJECT
 public:
     explicit DesignerEditorFactory(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    ~DesignerEditorFactory();
+    ~DesignerEditorFactory() override;
     void setSpacing(int spacing);
     void setFormWindowBase(FormWindowBase *fwb);
 signals:
     void resetProperty(QtProperty *property);
 protected:
-    void connectPropertyManager(QtVariantPropertyManager *manager);
+    void connectPropertyManager(QtVariantPropertyManager *manager) override;
     QWidget *createEditor(QtVariantPropertyManager *manager, QtProperty *property,
-                QWidget *parent);
-    void disconnectPropertyManager(QtVariantPropertyManager *manager);
+                QWidget *parent) override;
+    void disconnectPropertyManager(QtVariantPropertyManager *manager) override;
 private slots:
     void slotEditorDestroyed(QObject *object);
     void slotAttributeChanged(QtProperty *property, const QString &attribute, const QVariant &value);

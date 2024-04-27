@@ -61,7 +61,7 @@ class Q_AUTOTEST_EXPORT QDeclarativePackage : public QObject
 
 public:
     QDeclarativePackage(QObject *parent=nullptr);
-    virtual ~QDeclarativePackage();
+    ~QDeclarativePackage() override;
 
     QDeclarativeListProperty<QObject> data();
 
@@ -77,7 +77,7 @@ Q_OBJECT
 Q_PROPERTY(QString name READ name WRITE setName)
 public:
     QDeclarativePackageAttached(QObject *parent);
-    virtual ~QDeclarativePackageAttached();
+    ~QDeclarativePackageAttached() override;
 
     QString name() const;
     void setName(const QString &n);

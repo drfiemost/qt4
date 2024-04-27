@@ -2091,7 +2091,7 @@ public:
 
 public:
     QScriptParser();
-    ~QScriptParser();
+    ~QScriptParser() override;
 
     void setLexer(QScript::Lexer *);
     void setTranslator(Translator *);
@@ -2118,7 +2118,7 @@ protected:
 
     std::ostream &yyMsg(int line = 0);
 
-    virtual void processComment(const QChar *, int);
+    void processComment(const QChar *, int) override;
 
 protected:
     int tos;

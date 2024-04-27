@@ -56,10 +56,10 @@ public:
     explicit SaveFormAsTemplate(QDesignerFormEditorInterface *m_core,
                                 QDesignerFormWindowInterface *formWindow,
                                 QWidget *parent = nullptr);
-    virtual ~SaveFormAsTemplate();
+    ~SaveFormAsTemplate() override;
 
 private slots:
-    void accept();
+    void accept() override;
     void updateOKButton(const QString &str);
     void checkToAddPath(int itemIndex);
 

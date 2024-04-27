@@ -64,13 +64,13 @@ class QT_TABORDEREDITOR_EXPORT TabOrderEditorPlugin: public QObject, public QDes
     Q_INTERFACES(QDesignerFormEditorPluginInterface)
 public:
     TabOrderEditorPlugin();
-    virtual ~TabOrderEditorPlugin();
+    ~TabOrderEditorPlugin() override;
 
-    virtual bool isInitialized() const;
-    virtual void initialize(QDesignerFormEditorInterface *core);
-    QAction *action() const;
+    bool isInitialized() const override;
+    void initialize(QDesignerFormEditorInterface *core) override;
+    QAction *action() const override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
 public slots:
     void activeFormWindowChanged(QDesignerFormWindowInterface *formWindow);

@@ -105,7 +105,7 @@ public:
     };
 
     QDeclarativeItem(QDeclarativeItem *parent = nullptr);
-    virtual ~QDeclarativeItem();
+    ~QDeclarativeItem() override;
 
     QDeclarativeItem *parentItem() const;
     void setParentItem(QDeclarativeItem *parent);
@@ -138,8 +138,8 @@ public:
     bool smooth() const;
     void setSmooth(bool);
 
-    QRectF boundingRect() const;
-    virtual void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+    QRectF boundingRect() const override;
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
     bool hasActiveFocus() const;
     bool hasFocus() const;
@@ -168,21 +168,21 @@ Q_SIGNALS:
 
 protected:
     bool isComponentComplete() const;
-    virtual bool sceneEvent(QEvent *);
-    virtual bool event(QEvent *);
-    virtual QVariant itemChange(GraphicsItemChange, const QVariant &);
+    bool sceneEvent(QEvent *) override;
+    bool event(QEvent *) override;
+    QVariant itemChange(GraphicsItemChange, const QVariant &) override;
 
     void setImplicitWidth(qreal);
     bool widthValid() const; // ### better name?
     void setImplicitHeight(qreal);
     bool heightValid() const; // ### better name?
 
-    virtual void classBegin();
-    virtual void componentComplete();
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
-    virtual void inputMethodEvent(QInputMethodEvent *);
-    virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
+    void classBegin() override;
+    void componentComplete() override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+    void inputMethodEvent(QInputMethodEvent *) override;
+    QVariant inputMethodQuery(Qt::InputMethodQuery query) const override;
     void keyPressPreHandler(QKeyEvent *);
     void keyReleasePreHandler(QKeyEvent *);
     void inputMethodPreHandler(QInputMethodEvent *);

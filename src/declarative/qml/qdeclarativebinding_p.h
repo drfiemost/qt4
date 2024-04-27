@@ -148,18 +148,18 @@ class QDeclarativeValueTypeProxyBinding : public QDeclarativeAbstractBinding
 public:
     QDeclarativeValueTypeProxyBinding(QObject *o, int coreIndex);
 
-    virtual Type bindingType() const { return ValueTypeProxy; }
+    Type bindingType() const override { return ValueTypeProxy; }
 
-    virtual void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags);
-    virtual void update(QDeclarativePropertyPrivate::WriteFlags);
-    virtual void disconnect(DisconnectMode disconnectMode);
+    void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags) override;
+    void update(QDeclarativePropertyPrivate::WriteFlags) override;
+    void disconnect(DisconnectMode disconnectMode) override;
 
     QDeclarativeAbstractBinding *binding(int propertyIndex);
 
     void removeBindings(quint32 mask);
 
 protected:
-    ~QDeclarativeValueTypeProxyBinding();
+    ~QDeclarativeValueTypeProxyBinding() override;
 
 private:
     void recursiveEnable(QDeclarativeAbstractBinding *, QDeclarativePropertyPrivate::WriteFlags);
@@ -195,10 +195,10 @@ public:
     bool enabled() const;
 
     // Inherited from  QDeclarativeAbstractBinding
-    virtual void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags flags);
-    virtual void update(QDeclarativePropertyPrivate::WriteFlags flags);
-    virtual QString expression() const;
-    virtual void disconnect(DisconnectMode disconnectMode);
+    void setEnabled(bool, QDeclarativePropertyPrivate::WriteFlags flags) override;
+    void update(QDeclarativePropertyPrivate::WriteFlags flags) override;
+    QString expression() const override;
+    void disconnect(DisconnectMode disconnectMode) override;
 
     typedef int Identifier;
     static Identifier Invalid;
@@ -208,7 +208,7 @@ public Q_SLOTS:
     void update() { update(QDeclarativePropertyPrivate::DontRemoveBinding); }
 
 protected:
-    ~QDeclarativeBinding();
+    ~QDeclarativeBinding() override;
     void emitValueChanged();
 
 private:

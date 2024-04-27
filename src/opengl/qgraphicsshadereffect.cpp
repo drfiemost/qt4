@@ -145,7 +145,7 @@ public:
         setSource(source);
     }
 
-    void setUniforms(QGLShaderProgram *program);
+    void setUniforms(QGLShaderProgram *program) override;
 
     QGraphicsShaderEffect *effect;
 };

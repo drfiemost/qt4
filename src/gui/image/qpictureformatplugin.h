@@ -75,12 +75,12 @@ class Q_GUI_EXPORT QPictureFormatPlugin : public QObject, public QPictureFormatI
     Q_INTERFACES(QPictureFormatInterface:QFactoryInterface)
 public:
     explicit QPictureFormatPlugin(QObject *parent = nullptr);
-    ~QPictureFormatPlugin();
+    ~QPictureFormatPlugin() override;
 
-    virtual QStringList keys() const = 0;
-    virtual bool loadPicture(const QString &format, const QString &filename, QPicture *pic);
-    virtual bool savePicture(const QString &format, const QString &filename, const QPicture &pic);
-    virtual bool installIOHandler(const QString &format) = 0;
+    QStringList keys() const override = 0;
+    bool loadPicture(const QString &format, const QString &filename, QPicture *pic) override;
+    bool savePicture(const QString &format, const QString &filename, const QPicture &pic) override;
+    bool installIOHandler(const QString &format) override = 0;
 
 };
 

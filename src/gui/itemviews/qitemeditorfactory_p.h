@@ -77,7 +77,7 @@ public:
     }
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent *e) override;
 
 public Q_SLOTS:
     void resizeToContents();

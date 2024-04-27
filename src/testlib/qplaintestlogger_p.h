@@ -61,21 +61,21 @@ class QPlainTestLogger : public QAbstractTestLogger
 {
 public:
     QPlainTestLogger();
-    ~QPlainTestLogger();
+    ~QPlainTestLogger() override;
 
-    void startLogging(const char *filename);
-    void stopLogging();
+    void startLogging(const char *filename) override;
+    void stopLogging() override;
 
-    void enterTestFunction(const char *function);
-    void leaveTestFunction();
+    void enterTestFunction(const char *function) override;
+    void leaveTestFunction() override;
 
     void addIncident(IncidentTypes type, const char *description,
-                     const char *file = nullptr, int line = 0);
-    void addBenchmarkResult(const QBenchmarkResult &result);
+                     const char *file = nullptr, int line = 0) override;
+    void addBenchmarkResult(const QBenchmarkResult &result) override;
 
     void addMessage(MessageTypes type, const char *message,
-                    const char *file = nullptr, int line = 0);
-    void registerRandomSeed(unsigned int seed);
+                    const char *file = nullptr, int line = 0) override;
+    void registerRandomSeed(unsigned int seed) override;
 private:
     unsigned int randomSeed;
     bool hasRandomSeed;

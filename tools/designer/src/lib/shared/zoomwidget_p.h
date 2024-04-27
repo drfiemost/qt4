@@ -133,7 +133,7 @@ public slots:
     void showContextMenu(const QPoint &globalPos);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
     // Overwrite for implementing additional behaviour when doing setZoom();
     virtual void applyZoom();
@@ -157,7 +157,7 @@ public:
     explicit ZoomProxyWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr);
 
 protected:
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 };
 
 /* Zoom widget: A QGraphicsView-based container for a widget that allows for
@@ -191,8 +191,8 @@ public:
     void setItemAcceptDrops(bool);
     bool itemAcceptDrops() const;
 
-    virtual QSize minimumSizeHint() const;
-    virtual QSize sizeHint() const;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
 
     bool zoomedEventFilter(QObject *watched, QEvent *event);
 
@@ -201,10 +201,10 @@ public slots:
     void dump() const;
 
 protected:
-    void resizeEvent(QResizeEvent * event);
+    void resizeEvent(QResizeEvent * event) override;
 
     // Overwritten from ZoomView
-    virtual void applyZoom();
+    void applyZoom() override;
     // Overwrite to actually perform a resize. This is required if we are in a layout. Default does resize().
     virtual void doResize(const QSize &s);
 

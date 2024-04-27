@@ -69,7 +69,7 @@ class QDeclarativeRepeaterPrivate : public QDeclarativeItemPrivate
 
 public:
     QDeclarativeRepeaterPrivate();
-    ~QDeclarativeRepeaterPrivate();
+    ~QDeclarativeRepeaterPrivate() override;
 
     QDeclarativeVisualModel *model;
     QVariant dataSource;

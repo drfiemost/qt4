@@ -78,7 +78,7 @@ namespace QPatternist
     {
     public:
         AtomicComparator();
-        virtual ~AtomicComparator();
+        ~AtomicComparator() override;
 
         typedef QExplicitlySharedDataPointer<AtomicComparator> Ptr;
 

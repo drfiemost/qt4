@@ -86,7 +86,7 @@ namespace QPatternist
     class AdjustTimezone : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
 
     protected:
         virtual Item createValue(const QDateTime &dt) const = 0;
@@ -101,7 +101,7 @@ namespace QPatternist
     class AdjustDateTimeToTimezoneFN : public AdjustTimezone
     {
     protected:
-        virtual Item createValue(const QDateTime &dt) const;
+        Item createValue(const QDateTime &dt) const override;
     };
 
     /**
@@ -113,7 +113,7 @@ namespace QPatternist
     class AdjustDateToTimezoneFN : public AdjustTimezone
     {
     protected:
-        virtual Item createValue(const QDateTime &dt) const;
+        Item createValue(const QDateTime &dt) const override;
     };
 
     /**
@@ -125,7 +125,7 @@ namespace QPatternist
     class AdjustTimeToTimezoneFN : public AdjustTimezone
     {
     protected:
-        virtual Item createValue(const QDateTime &dt) const;
+        Item createValue(const QDateTime &dt) const override;
     };
 }
 

@@ -53,8 +53,8 @@ class ReplayWidget : public QWidget
 public:
     ReplayWidget(const QString &filename, int from, int to, bool single, int frame);
 
-    void paintEvent(QPaintEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 public slots:
     void updateRect();

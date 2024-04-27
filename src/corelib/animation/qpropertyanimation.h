@@ -61,7 +61,7 @@ class Q_CORE_EXPORT QPropertyAnimation : public QVariantAnimation
 public:
     QPropertyAnimation(QObject *parent = nullptr);
     QPropertyAnimation(QObject *target, const QByteArray &propertyName, QObject *parent = nullptr);
-    ~QPropertyAnimation();
+    ~QPropertyAnimation() override;
 
     QObject *targetObject() const;
     void setTargetObject(QObject *target);
@@ -70,9 +70,9 @@ public:
     void setPropertyName(const QByteArray &propertyName);
 
 protected:
-    bool event(QEvent *event);
-    void updateCurrentValue(const QVariant &value);
-    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+    bool event(QEvent *event) override;
+    void updateCurrentValue(const QVariant &value) override;
+    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState) override;
 
 private:
     Q_DISABLE_COPY(QPropertyAnimation)

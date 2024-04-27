@@ -68,7 +68,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCommandSchedulerJob
 {
 public:
     QScriptDebuggerCommandSchedulerJob(QScriptDebuggerCommandSchedulerInterface *commandScheduler);
-    ~QScriptDebuggerCommandSchedulerJob();
+    ~QScriptDebuggerCommandSchedulerJob() override;
 
     QScriptDebuggerCommandSchedulerInterface *commandScheduler() const;
 

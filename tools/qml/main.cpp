@@ -237,7 +237,7 @@ public:
     {}
 
 protected:
-    bool event(QEvent *ev)
+    bool event(QEvent *ev) override
     {
         if (ev->type() != QEvent::FileOpen)
             return QApplication::event(ev);

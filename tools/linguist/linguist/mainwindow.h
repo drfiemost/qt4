@@ -86,7 +86,7 @@ public:
     enum {PhraseCloseMenu, PhraseEditMenu, PhrasePrintMenu};
 
     MainWindow();
-    ~MainWindow();
+    ~MainWindow() override;
 
     bool openFiles(const QStringList &names, bool readWrite = true);
     static RecentFiles &recentFiles();
@@ -96,8 +96,8 @@ public:
 protected:
     void readConfig();
     void writeConfig();
-    void closeEvent(QCloseEvent *);
-    bool eventFilter(QObject *object, QEvent *event);
+    void closeEvent(QCloseEvent *) override;
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private slots:
     void doneAndNext();

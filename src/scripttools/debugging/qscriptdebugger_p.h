@@ -112,7 +112,7 @@ public:
     };
 
     QScriptDebugger(QObject *parent = nullptr);
-    ~QScriptDebugger();
+    ~QScriptDebugger() override;
 
     QScriptDebuggerFrontend *frontend() const;
     void setFrontend(QScriptDebuggerFrontend *frontend);
@@ -173,7 +173,7 @@ public:
 #ifndef QT_NO_TOOLBAR
     QToolBar *createStandardToolBar(QWidget *widgetParent, QObject *actionParent);
 #endif
-    bool eventFilter(QObject *, QEvent *e);
+    bool eventFilter(QObject *, QEvent *e) override;
 
     bool isInteractive() const;
 
@@ -182,7 +182,7 @@ Q_SIGNALS:
     void started() const;
 
 protected:
-    void timerEvent(QTimerEvent *e);
+    void timerEvent(QTimerEvent *e) override;
 
 protected:
     QScriptDebugger(QScriptDebuggerPrivate &dd, QObject *parent);

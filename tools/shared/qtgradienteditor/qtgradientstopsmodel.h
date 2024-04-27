@@ -74,7 +74,7 @@ public:
     typedef QMap<qreal, QtGradientStop *> PositionStopMap;
 
     QtGradientStopsModel(QObject *parent = nullptr);
-    ~QtGradientStopsModel();
+    ~QtGradientStopsModel() override;
 
     PositionStopMap stops() const;
     QtGradientStop *at(qreal pos) const;

@@ -107,7 +107,7 @@ class DeviceSkin : public QWidget
     Q_OBJECT
 public:
     explicit DeviceSkin(const DeviceSkinParameters &parameters,  QWidget *p );
-    ~DeviceSkin( );
+    ~DeviceSkin( ) override;
 
     QWidget *view() const { return m_view; }
     void setView( QWidget *v );
@@ -132,10 +132,10 @@ protected slots:
     void moveParent();
 
 protected:
-    virtual void paintEvent( QPaintEvent * );
-    virtual void mousePressEvent( QMouseEvent *e );
-    virtual void mouseMoveEvent( QMouseEvent *e );
-    virtual void mouseReleaseEvent( QMouseEvent * );
+    void paintEvent( QPaintEvent * ) override;
+    void mousePressEvent( QMouseEvent *e ) override;
+    void mouseMoveEvent( QMouseEvent *e ) override;
+    void mouseReleaseEvent( QMouseEvent * ) override;
 
 private:
     void calcRegions();

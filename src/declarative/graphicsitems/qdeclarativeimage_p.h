@@ -62,7 +62,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeImage : public QDeclarativeImageBase
 
 public:
     QDeclarativeImage(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeImage();
+    ~QDeclarativeImage() override;
 
     enum FillMode { Stretch, PreserveAspectFit, PreserveAspectCrop, Tile, TileVertically, TileHorizontally };
     FillMode fillMode() const;
@@ -74,8 +74,8 @@ public:
     qreal paintedWidth() const;
     qreal paintedHeight() const;
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
-    QRectF boundingRect() const;
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
+    QRectF boundingRect() const override;
 
 Q_SIGNALS:
     void fillModeChanged();
@@ -83,8 +83,8 @@ Q_SIGNALS:
 
 protected:
     QDeclarativeImage(QDeclarativeImagePrivate &dd, QDeclarativeItem *parent);
-    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
-    void pixmapChange();
+    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    void pixmapChange() override;
     void updatePaintedGeometry();
 
 private:

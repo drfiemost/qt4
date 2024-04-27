@@ -63,7 +63,7 @@ class Q_DECLARATIVE_EXPORT QPacketProtocol : public QObject
 Q_OBJECT
 public:
     explicit QPacketProtocol(QIODevice * dev, QObject * parent = nullptr);
-    virtual ~QPacketProtocol();
+    ~QPacketProtocol() override;
 
     qint32 maximumPacketSize() const;
     qint32 setMaximumPacketSize(qint32);
@@ -95,7 +95,7 @@ class Q_DECLARATIVE_EXPORT QPacket : public QDataStream
 public:
     QPacket();
     QPacket(const QPacket &);
-    virtual ~QPacket();
+    ~QPacket() override;
 
     void clear();
     bool isEmpty() const;
@@ -111,7 +111,7 @@ protected:
 class Q_DECLARATIVE_PRIVATE_EXPORT QPacketAutoSend : public QPacket
 {
 public:
-    virtual ~QPacketAutoSend();
+    ~QPacketAutoSend() override;
 
 private:
     friend class QPacketProtocol;

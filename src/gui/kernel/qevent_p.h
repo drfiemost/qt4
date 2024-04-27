@@ -68,7 +68,7 @@ public:
                 quint32 nativeScanCode, quint32 nativeVirtualKey, quint32 nativeModifiers);
     QKeyEventEx(const QKeyEventEx &other);
 
-    ~QKeyEventEx();
+    ~QKeyEventEx() override;
 
 protected:
     quint32 nScanCode;

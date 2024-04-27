@@ -71,7 +71,7 @@ class Q_CORE_EXPORT QAbstractTransition : public QObject
     Q_PROPERTY(QList<QAbstractState*> targetStates READ targetStates WRITE setTargetStates)
 public:
     QAbstractTransition(QState *sourceState = nullptr);
-    virtual ~QAbstractTransition();
+    ~QAbstractTransition() override;
 
     QState *sourceState() const;
     QAbstractState *targetState() const;
@@ -98,7 +98,7 @@ protected:
 
     virtual void onTransition(QEvent *event) = 0;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 protected:
     QAbstractTransition(QAbstractTransitionPrivate &dd, QState *parent);

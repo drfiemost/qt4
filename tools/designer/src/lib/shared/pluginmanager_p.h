@@ -112,7 +112,7 @@ public:
     typedef QList<QDesignerCustomWidgetInterface*> CustomWidgetList;
 
     explicit QDesignerPluginManager(QDesignerFormEditorInterface *core);
-    virtual ~QDesignerPluginManager();
+    ~QDesignerPluginManager() override;
 
     QDesignerFormEditorInterface *core() const;
 

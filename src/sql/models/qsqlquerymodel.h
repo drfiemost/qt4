@@ -62,21 +62,21 @@ class Q_SQL_EXPORT QSqlQueryModel: public QAbstractTableModel
 
 public:
     explicit QSqlQueryModel(QObject *parent = nullptr);
-    virtual ~QSqlQueryModel();
+    ~QSqlQueryModel() override;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QSqlRecord record(int row) const;
     QSqlRecord record() const;
 
-    QVariant data(const QModelIndex &item, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &item, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const;
+                        int role = Qt::DisplayRole) const override;
     bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value,
-                       int role = Qt::EditRole);
+                       int role = Qt::EditRole) override;
 
-    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
-    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex());
+    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
     void setQuery(const QSqlQuery &query);
     void setQuery(const QString &query, const QSqlDatabase &db = QSqlDatabase());
@@ -86,8 +86,8 @@ public:
 
     QSqlError lastError() const;
 
-    void fetchMore(const QModelIndex &parent = QModelIndex());
-    bool canFetchMore(const QModelIndex &parent = QModelIndex()) const;
+    void fetchMore(const QModelIndex &parent = QModelIndex()) override;
+    bool canFetchMore(const QModelIndex &parent = QModelIndex()) const override;
 
 protected:
     virtual void queryChange();

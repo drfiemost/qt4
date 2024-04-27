@@ -152,7 +152,7 @@ class Q_DECLARATIVE_EXPORT QDeclarativeState : public QObject
 
 public:
     QDeclarativeState(QObject *parent=nullptr);
-    virtual ~QDeclarativeState();
+    ~QDeclarativeState() override;
 
     QString name() const;
     void setName(const QString &);

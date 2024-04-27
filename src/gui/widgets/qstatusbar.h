@@ -61,7 +61,7 @@ class Q_GUI_EXPORT QStatusBar: public QWidget
 
 public:
     explicit QStatusBar(QWidget* parent=nullptr);
-    virtual ~QStatusBar();
+    ~QStatusBar() override;
 
     void addWidget(QWidget *widget, int stretch = 0);
     int insertWidget(int index, QWidget *widget, int stretch = 0);
@@ -82,14 +82,14 @@ Q_SIGNALS:
     void messageChanged(const QString &text);
 
 protected:
-    void showEvent(QShowEvent *);
-    void paintEvent(QPaintEvent *);
-    void resizeEvent(QResizeEvent *);
+    void showEvent(QShowEvent *) override;
+    void paintEvent(QPaintEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
 
     // ### Qt 5: consider making reformat() and hideOrShow() private
     void reformat();
     void hideOrShow();
-    bool event(QEvent *);
+    bool event(QEvent *) override;
 
 private:
     Q_DISABLE_COPY(QStatusBar)

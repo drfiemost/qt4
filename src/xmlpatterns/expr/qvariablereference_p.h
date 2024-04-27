@@ -94,7 +94,7 @@ namespace QPatternist
         /**
          * @returns DisableElimination
          */
-        virtual Properties properties() const;
+        Properties properties() const override;
 
     private:
         /**

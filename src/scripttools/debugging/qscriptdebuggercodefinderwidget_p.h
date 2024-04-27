@@ -64,18 +64,18 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeFinderWidget:
     Q_OBJECT
 public:
     QScriptDebuggerCodeFinderWidget(QWidget *parent = nullptr);
-    ~QScriptDebuggerCodeFinderWidget();
+    ~QScriptDebuggerCodeFinderWidget() override;
 
-    int findOptions() const;
+    int findOptions() const override;
 
-    QString text() const;
-    void setText(const QString &text);
+    QString text() const override;
+    void setText(const QString &text) override;
 
-    void setOK(bool ok);
-    void setWrapped(bool wrapped);
+    void setOK(bool ok) override;
+    void setWrapped(bool wrapped) override;
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
+    void keyPressEvent(QKeyEvent *e) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerCodeFinderWidget)

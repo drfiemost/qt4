@@ -60,12 +60,12 @@ class LayoutPropertySheet: public QDesignerPropertySheet
     Q_INTERFACES(QDesignerPropertySheetExtension)
 public:
     explicit LayoutPropertySheet(QLayout *object, QObject *parent = nullptr);
-    virtual ~LayoutPropertySheet();
+    ~LayoutPropertySheet() override;
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual QVariant property(int index) const;
-    virtual bool reset(int index);
-    void setChanged(int index, bool changed);
+    void setProperty(int index, const QVariant &value) override;
+    QVariant property(int index) const override;
+    bool reset(int index) override;
+    void setChanged(int index, bool changed) override;
 
     static void stretchAttributesToDom(QDesignerFormEditorInterface *core, QLayout *lt, DomLayout *domLayout);
     static void markChangedStretchProperties(QDesignerFormEditorInterface *core, QLayout *lt, const DomLayout *domLayout);

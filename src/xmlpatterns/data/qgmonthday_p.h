@@ -77,9 +77,9 @@ namespace QPatternist
         static GMonthDay::Ptr fromLexical(const QString &string);
         static GMonthDay::Ptr fromDateTime(const QDateTime &dt);
 
-        virtual ItemType::Ptr type() const;
+        ItemType::Ptr type() const override;
 
-        virtual QString stringValue() const;
+        QString stringValue() const override;
 
     protected:
         friend class CommonValues;

@@ -109,7 +109,7 @@ Q_SIGNALS:
     void newBreakpointRequest(const QString &fileName, int lineNumber);
 
 protected:
-    void keyPressEvent(QKeyEvent *e)
+    void keyPressEvent(QKeyEvent *e) override
     {
         if (e->key() == Qt::Key_Escape)
             hide();
@@ -146,7 +146,7 @@ class QScriptBreakpointsWidgetPrivate
     Q_DECLARE_PUBLIC(QScriptBreakpointsWidget)
 public:
     QScriptBreakpointsWidgetPrivate();
-    ~QScriptBreakpointsWidgetPrivate();
+    ~QScriptBreakpointsWidgetPrivate() override;
 
     void _q_newBreakpoint();
     void _q_deleteBreakpoint();
@@ -209,7 +209,7 @@ public:
 
     QWidget *createEditor(QWidget *parent,
                           const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const
+                          const QModelIndex &index) const override
     {
         QWidget *editor = QStyledItemDelegate::createEditor(parent, option, index);
         if (index.column() == 2) {
@@ -223,7 +223,7 @@ public:
         return editor;
     }
 
-    bool eventFilter(QObject *editor, QEvent *event)
+    bool eventFilter(QObject *editor, QEvent *event) override
     {
         if (QLineEdit *le = qobject_cast<QLineEdit*>(editor)) {
             if (event->type() == QEvent::KeyPress) {
@@ -240,7 +240,7 @@ public:
     }
 
     void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const
+                      const QModelIndex &index) const override
     {
         if (index.column() == 2) {
             // check that the syntax is OK

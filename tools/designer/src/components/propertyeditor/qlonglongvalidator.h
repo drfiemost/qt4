@@ -57,9 +57,9 @@ class QLongLongValidator : public QValidator
 public:
     explicit QLongLongValidator(QObject * parent);
     QLongLongValidator(qlonglong bottom, qlonglong top, QObject * parent);
-    ~QLongLongValidator();
+    ~QLongLongValidator() override;
 
-    QValidator::State validate(QString &, int &) const;
+    QValidator::State validate(QString &, int &) const override;
 
     void setBottom(qlonglong);
     void setTop(qlonglong);
@@ -85,9 +85,9 @@ class QULongLongValidator : public QValidator
 public:
     explicit QULongLongValidator(QObject * parent);
     QULongLongValidator(qulonglong bottom, qulonglong top, QObject * parent);
-    ~QULongLongValidator();
+    ~QULongLongValidator() override;
 
-    QValidator::State validate(QString &, int &) const;
+    QValidator::State validate(QString &, int &) const override;
 
     void setBottom(qulonglong);
     void setTop(qulonglong);

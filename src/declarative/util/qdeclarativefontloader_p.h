@@ -67,7 +67,7 @@ public:
     enum Status { Null = 0, Ready, Loading, Error };
 
     QDeclarativeFontLoader(QObject *parent = nullptr);
-    ~QDeclarativeFontLoader();
+    ~QDeclarativeFontLoader() override;
 
     QUrl source() const;
     void setSource(const QUrl &url);

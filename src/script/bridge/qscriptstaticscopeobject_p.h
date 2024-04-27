@@ -57,21 +57,21 @@ public:
     QScriptStaticScopeObject(WTF::NonNullPassRefPtr<JSC::Structure> structure,
                             int propertyCount, const PropertyInfo*);
     QScriptStaticScopeObject(WTF::NonNullPassRefPtr<JSC::Structure> structure);
-    virtual ~QScriptStaticScopeObject();
+    ~QScriptStaticScopeObject() override;
 
-    virtual bool isDynamicScope() const { return false; }
+    bool isDynamicScope() const override { return false; }
 
-    virtual bool getOwnPropertySlot(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertyDescriptor&);
+    bool getOwnPropertySlot(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::PropertyDescriptor&) override;
 
-    virtual void putWithAttributes(JSC::ExecState *exec, const JSC::Identifier &propertyName, JSC::JSValue value, unsigned attributes);
-    virtual void put(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSValue value, JSC::PutPropertySlot&);
+    void putWithAttributes(JSC::ExecState *exec, const JSC::Identifier &propertyName, JSC::JSValue value, unsigned attributes) override;
+    void put(JSC::ExecState*, const JSC::Identifier& propertyName, JSC::JSValue value, JSC::PutPropertySlot&) override;
 
-    virtual bool deleteProperty(JSC::ExecState*, const JSC::Identifier& propertyName);
+    bool deleteProperty(JSC::ExecState*, const JSC::Identifier& propertyName) override;
 
-    virtual void markChildren(JSC::MarkStack&);
+    void markChildren(JSC::MarkStack&) override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     static WTF::PassRefPtr<JSC::Structure> createStructure(JSC::JSValue proto) {

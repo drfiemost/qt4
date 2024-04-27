@@ -63,7 +63,7 @@ class Q_GUI_EXPORT QUndoGroup : public QObject
 
 public:
     explicit QUndoGroup(QObject *parent = nullptr);
-    ~QUndoGroup();
+    ~QUndoGroup() override;
 
     void addStack(QUndoStack *stack);
     void removeStack(QUndoStack *stack);

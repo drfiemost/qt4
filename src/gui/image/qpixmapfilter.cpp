@@ -211,7 +211,7 @@ class QPixmapConvolutionFilterPrivate : public QPixmapFilterPrivate
 {
 public:
     QPixmapConvolutionFilterPrivate(): convolutionKernel(nullptr), kernelWidth(0), kernelHeight(0), convoluteAlpha(false) {}
-    ~QPixmapConvolutionFilterPrivate() {
+    ~QPixmapConvolutionFilterPrivate() override {
         delete[] convolutionKernel;
     }
 

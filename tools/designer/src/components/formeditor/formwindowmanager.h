@@ -71,54 +71,54 @@ class QT_FORMEDITOR_EXPORT FormWindowManager
     Q_OBJECT
 public:
     explicit FormWindowManager(QDesignerFormEditorInterface *core, QObject *parent = nullptr);
-    virtual ~FormWindowManager();
+    ~FormWindowManager() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
-    inline QAction *actionCut() const { return m_actionCut; }
-    inline QAction *actionCopy() const { return m_actionCopy; }
-    inline QAction *actionPaste() const { return m_actionPaste; }
-    inline QAction *actionDelete() const { return m_actionDelete; }
-    inline QAction *actionSelectAll() const { return m_actionSelectAll; }
-    inline QAction *actionLower() const { return m_actionLower; }
-    inline QAction *actionRaise() const { return m_actionRaise; }
-    QAction *actionUndo() const;
-    QAction *actionRedo() const;
+    inline QAction *actionCut() const override { return m_actionCut; }
+    inline QAction *actionCopy() const override { return m_actionCopy; }
+    inline QAction *actionPaste() const override { return m_actionPaste; }
+    inline QAction *actionDelete() const override { return m_actionDelete; }
+    inline QAction *actionSelectAll() const override { return m_actionSelectAll; }
+    inline QAction *actionLower() const override { return m_actionLower; }
+    inline QAction *actionRaise() const override { return m_actionRaise; }
+    QAction *actionUndo() const override;
+    QAction *actionRedo() const override;
 
-    inline QAction *actionHorizontalLayout() const { return m_actionHorizontalLayout; }
-    inline QAction *actionVerticalLayout() const { return m_actionVerticalLayout; }
-    inline QAction *actionSplitHorizontal() const { return m_actionSplitHorizontal; }
-    inline QAction *actionSplitVertical() const { return m_actionSplitVertical; }
-    inline QAction *actionGridLayout() const { return m_actionGridLayout; }
-    inline QAction *actionBreakLayout() const { return m_actionBreakLayout; }
-    inline QAction *actionAdjustSize() const { return m_actionAdjustSize; }
+    inline QAction *actionHorizontalLayout() const override { return m_actionHorizontalLayout; }
+    inline QAction *actionVerticalLayout() const override { return m_actionVerticalLayout; }
+    inline QAction *actionSplitHorizontal() const override { return m_actionSplitHorizontal; }
+    inline QAction *actionSplitVertical() const override { return m_actionSplitVertical; }
+    inline QAction *actionGridLayout() const override { return m_actionGridLayout; }
+    inline QAction *actionBreakLayout() const override { return m_actionBreakLayout; }
+    inline QAction *actionAdjustSize() const override { return m_actionAdjustSize; }
 
-    inline QAction *actionDefaultPreview() const { return m_actionDefaultPreview; }
-    QActionGroup *actionGroupPreviewInStyle() const;
-    virtual QAction *actionShowFormWindowSettingsDialog() const;
+    inline QAction *actionDefaultPreview() const override { return m_actionDefaultPreview; }
+    QActionGroup *actionGroupPreviewInStyle() const override;
+    QAction *actionShowFormWindowSettingsDialog() const override;
 
-    QDesignerFormWindowInterface *activeFormWindow() const;
+    QDesignerFormWindowInterface *activeFormWindow() const override;
 
-    int formWindowCount() const;
-    QDesignerFormWindowInterface *formWindow(int index) const;
+    int formWindowCount() const override;
+    QDesignerFormWindowInterface *formWindow(int index) const override;
 
-    QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = nullptr, Qt::WindowFlags flags = nullptr);
+    QDesignerFormWindowInterface *createFormWindow(QWidget *parentWidget = nullptr, Qt::WindowFlags flags = nullptr) override;
 
-    QPixmap createPreviewPixmap(QString *errorMessage);
+    QPixmap createPreviewPixmap(QString *errorMessage) override;
 
-    bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject *o, QEvent *e) override;
 
-    void dragItems(const QList<QDesignerDnDItemInterface*> &item_list);
+    void dragItems(const QList<QDesignerDnDItemInterface*> &item_list) override;
 
     QUndoGroup *undoGroup() const;
 
-    virtual PreviewManager *previewManager() const { return m_previewManager; }
+    PreviewManager *previewManager() const override { return m_previewManager; }
 
 public slots:
-    void addFormWindow(QDesignerFormWindowInterface *formWindow);
-    void removeFormWindow(QDesignerFormWindowInterface *formWindow);
-    void setActiveFormWindow(QDesignerFormWindowInterface *formWindow);
-    void closeAllPreviews();
+    void addFormWindow(QDesignerFormWindowInterface *formWindow) override;
+    void removeFormWindow(QDesignerFormWindowInterface *formWindow) override;
+    void setActiveFormWindow(QDesignerFormWindowInterface *formWindow) override;
+    void closeAllPreviews() override;
     void deviceProfilesChanged();
 
 private slots:

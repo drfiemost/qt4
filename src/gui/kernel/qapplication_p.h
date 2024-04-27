@@ -263,7 +263,7 @@ class Q_GUI_EXPORT QApplicationPrivate : public QCoreApplicationPrivate
     Q_DECLARE_PUBLIC(QApplication)
 public:
     QApplicationPrivate(int &argc, char **argv, QApplication::Type type, int flags);
-    ~QApplicationPrivate();
+    ~QApplicationPrivate() override;
 
 #if defined(Q_WS_X11)
 #ifndef QT_NO_SETTINGS
@@ -294,8 +294,8 @@ public:
     { return QCoreApplication::instance()->d_func()->threadData.loadRelaxed()->eventDispatcher.loadRelaxed(); }
 #endif
 
-    void createEventDispatcher();
-    QString appName() const;
+    void createEventDispatcher() override;
+    QString appName() const override;
     static void dispatchEnterLeave(QWidget *enter, QWidget *leave);
 
     //modality

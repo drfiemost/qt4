@@ -49,7 +49,7 @@ class qmlshaderspluginPlugin : public QDeclarativeExtensionPlugin
     Q_OBJECT
 
 public:
-    void registerTypes(const char *uri);
+    void registerTypes(const char *uri) override;
 };
 
 #endif // QMLSHADERSPLUGIN_PLUGIN_H

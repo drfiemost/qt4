@@ -69,16 +69,16 @@ class QDnotifyFileSystemWatcherEngine : public QFileSystemWatcherEngine
     Q_OBJECT
 
 public:
-    virtual ~QDnotifyFileSystemWatcherEngine();
+    ~QDnotifyFileSystemWatcherEngine() override;
 
     static QDnotifyFileSystemWatcherEngine *create();
 
-    void run();
+    void run() override;
 
-    QStringList addPaths(const QStringList &paths, QStringList *files, QStringList *directories);
-    QStringList removePaths(const QStringList &paths, QStringList *files, QStringList *directories);
+    QStringList addPaths(const QStringList &paths, QStringList *files, QStringList *directories) override;
+    QStringList removePaths(const QStringList &paths, QStringList *files, QStringList *directories) override;
 
-    void stop();
+    void stop() override;
 
 private Q_SLOTS:
     void refresh(int);

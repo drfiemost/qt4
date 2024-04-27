@@ -66,13 +66,13 @@ class QDESIGNER_SHARED_EXPORT QDesignerQSettings : public QDesignerSettingsInter
 public:
     QDesignerQSettings();
 
-    virtual void beginGroup(const QString &prefix);
-    virtual void endGroup();
+    void beginGroup(const QString &prefix) override;
+    void endGroup() override;
 
-    virtual bool contains(const QString &key) const;
-    virtual void setValue(const QString &key, const QVariant &value);
-    virtual QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
-    virtual void remove(const QString &key);
+    bool contains(const QString &key) const override;
+    void setValue(const QString &key, const QVariant &value) override;
+    QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const override;
+    void remove(const QString &key) override;
 
     // The application name to be used for settings. Allows for including
     // the Qt version to prevent settings of different Qt versions from

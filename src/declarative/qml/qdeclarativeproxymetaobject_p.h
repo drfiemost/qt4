@@ -78,10 +78,10 @@ public:
     };
 
     QDeclarativeProxyMetaObject(QObject *, QList<ProxyData> *);
-    virtual ~QDeclarativeProxyMetaObject();
+    ~QDeclarativeProxyMetaObject() override;
 
 protected:
-    virtual int metaCall(QMetaObject::Call _c, int _id, void **_a);
+    int metaCall(QMetaObject::Call _c, int _id, void **_a) override;
 
 private:
     QList<ProxyData> *metaObjects;

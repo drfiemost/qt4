@@ -87,7 +87,7 @@ public:
     enum ReadError { NoError, Loading, Decoding };
 
     QDeclarativePixmapReply(QDeclarativePixmapData *);
-    ~QDeclarativePixmapReply();
+    ~QDeclarativePixmapReply() override;
 
     QDeclarativePixmapData *data;
     QDeclarativeEngine *engineForReader; // always access reader inside readerMutex.
@@ -114,7 +114,7 @@ Q_SIGNALS:
     void downloadProgress(qint64, qint64);
 
 protected:
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
 private:
     Q_DISABLE_COPY(QDeclarativePixmapReply)
@@ -129,7 +129,7 @@ class QDeclarativePixmapReaderThreadObject : public QObject {
 public:
     QDeclarativePixmapReaderThreadObject(QDeclarativePixmapReader *);
     void processJobs();
-    virtual bool event(QEvent *e);
+    bool event(QEvent *e) override;
 private slots:
     void networkRequestDone();
 private:
@@ -142,7 +142,7 @@ class QDeclarativePixmapReader : public QThread
     Q_OBJECT
 public:
     QDeclarativePixmapReader(QDeclarativeEngine *eng);
-    ~QDeclarativePixmapReader();
+    ~QDeclarativePixmapReader() override;
 
     QDeclarativePixmapReply *getImage(QDeclarativePixmapData *);
     void cancel(QDeclarativePixmapReply *rep);
@@ -151,7 +151,7 @@ public:
     static QDeclarativePixmapReader *existingInstance(QDeclarativeEngine *engine);
 
 protected:
-    void run();
+    void run() override;
 
 private:
     friend class QDeclarativePixmapReaderThreadObject;
@@ -607,7 +607,7 @@ public:
     void flushCache();
 
 protected:
-    virtual void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
 
 public:
     QHash<QDeclarativePixmapKey, QDeclarativePixmapData *> m_cache;

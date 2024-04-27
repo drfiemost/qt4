@@ -83,37 +83,37 @@ class QDESIGNER_SHARED_EXPORT QDesignerPropertySheet: public QObject, public QDe
     Q_INTERFACES(QDesignerPropertySheetExtension QDesignerDynamicPropertySheetExtension)
 public:
     explicit QDesignerPropertySheet(QObject *object, QObject *parent = nullptr);
-    virtual ~QDesignerPropertySheet();
+    ~QDesignerPropertySheet() override;
 
-    virtual int indexOf(const QString &name) const;
+    int indexOf(const QString &name) const override;
 
-    virtual int count() const;
-    virtual QString propertyName(int index) const;
+    int count() const override;
+    QString propertyName(int index) const override;
 
-    virtual QString propertyGroup(int index) const;
-    virtual void setPropertyGroup(int index, const QString &group);
+    QString propertyGroup(int index) const override;
+    void setPropertyGroup(int index, const QString &group) override;
 
-    virtual bool hasReset(int index) const;
-    virtual bool reset(int index);
+    bool hasReset(int index) const override;
+    bool reset(int index) override;
 
-    virtual bool isAttribute(int index) const;
-    virtual void setAttribute(int index, bool b);
+    bool isAttribute(int index) const override;
+    void setAttribute(int index, bool b) override;
 
-    virtual bool isVisible(int index) const;
-    virtual void setVisible(int index, bool b);
+    bool isVisible(int index) const override;
+    void setVisible(int index, bool b) override;
 
-    virtual QVariant property(int index) const;
-    virtual void setProperty(int index, const QVariant &value);
+    QVariant property(int index) const override;
+    void setProperty(int index, const QVariant &value) override;
 
-    virtual bool isChanged(int index) const;
+    bool isChanged(int index) const override;
 
-    virtual void setChanged(int index, bool changed);
+    void setChanged(int index, bool changed) override;
 
-    virtual bool dynamicPropertiesAllowed() const;
-    virtual int addDynamicProperty(const QString &propertyName, const QVariant &value);
-    virtual bool removeDynamicProperty(int index);
-    virtual bool isDynamicProperty(int index) const;
-    virtual bool canAddDynamicProperty(const QString &propertyName) const;
+    bool dynamicPropertiesAllowed() const override;
+    int addDynamicProperty(const QString &propertyName, const QVariant &value) override;
+    bool removeDynamicProperty(int index) override;
+    bool isDynamicProperty(int index) const override;
+    bool canAddDynamicProperty(const QString &propertyName) const override;
 
     bool isDefaultDynamicProperty(int index) const;
 
@@ -204,9 +204,9 @@ class QDESIGNER_SHARED_EXPORT QDesignerAbstractPropertySheetFactory: public QExt
     Q_INTERFACES(QAbstractExtensionFactory)
 public:
     explicit QDesignerAbstractPropertySheetFactory(QExtensionManager *parent = nullptr);
-    virtual ~QDesignerAbstractPropertySheetFactory();
+    ~QDesignerAbstractPropertySheetFactory() override;
 
-    QObject *extension(QObject *object, const QString &iid) const;
+    QObject *extension(QObject *object, const QString &iid) const override;
 
 private slots:
     void objectDestroyed(QObject *object);
@@ -231,7 +231,7 @@ public:
 
 private:
     // Does a  qobject_cast on  the object.
-    virtual QObject *createPropertySheet(QObject *qObject, QObject *parent) const;
+    QObject *createPropertySheet(QObject *qObject, QObject *parent) const override;
 };
 
 template <class Object, class PropertySheet>

@@ -81,10 +81,10 @@ class Q_GUI_EXPORT QInternalMimeData : public QMimeData
     Q_OBJECT
 public:
     QInternalMimeData();
-    ~QInternalMimeData();
+    ~QInternalMimeData() override;
 
-    bool hasFormat(const QString &mimeType) const;
-    QStringList formats() const;
+    bool hasFormat(const QString &mimeType) const override;
+    QStringList formats() const override;
     static bool canReadData(const QString &mimeType);
 
 
@@ -93,7 +93,7 @@ public:
     static QByteArray renderDataHelper(const QString &mimeType, const QMimeData *data);
 
 protected:
-    QVariant retrieveData(const QString &mimeType, QVariant::Type type) const;
+    QVariant retrieveData(const QString &mimeType, QVariant::Type type) const override;
 
     virtual bool hasFormat_sys(const QString &mimeType) const = 0;
     virtual QStringList formats_sys() const = 0;
@@ -190,12 +190,12 @@ class QDropData : public QInternalMimeData
     Q_OBJECT
 public:
     QDropData();
-    ~QDropData();
+    ~QDropData() override;
 
 protected:
-    bool hasFormat_sys(const QString &mimeType) const;
-    QStringList formats_sys() const;
-    QVariant retrieveData_sys(const QString &mimeType, QVariant::Type type) const;
+    bool hasFormat_sys(const QString &mimeType) const override;
+    QStringList formats_sys() const override;
+    QVariant retrieveData_sys(const QString &mimeType, QVariant::Type type) const override;
 
 #if defined(Q_WS_WIN)
 public:
@@ -207,7 +207,7 @@ class QDragManager: public QObject {
     Q_OBJECT
 
     QDragManager();
-    ~QDragManager();
+    ~QDragManager() override;
     // only friend classes can use QDragManager.
     friend class QDrag;
     friend class QDragMoveEvent;
@@ -217,8 +217,8 @@ class QDragManager: public QObject {
     friend class QWidgetPrivate; //dnd is implemented here
 #endif
 
-    bool eventFilter(QObject *, QEvent *);
-    void timerEvent(QTimerEvent*);
+    bool eventFilter(QObject *, QEvent *) override;
+    void timerEvent(QTimerEvent*) override;
 
 public:
     Qt::DropAction drag(QDrag *);

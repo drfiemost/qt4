@@ -64,21 +64,21 @@ class CppCodeParser : public CodeParser
 {
  public:
     CppCodeParser();
-    ~CppCodeParser();
+    ~CppCodeParser() override;
 
-    virtual void initializeParser(const Config& config);
-    virtual void terminateParser();
-    virtual QString language();
-    virtual QStringList headerFileNameFilter();
-    virtual QStringList sourceFileNameFilter();
-    virtual void parseHeaderFile(const Location& location,
+    void initializeParser(const Config& config) override;
+    void terminateParser() override;
+    QString language() override;
+    QStringList headerFileNameFilter() override;
+    QStringList sourceFileNameFilter() override;
+    void parseHeaderFile(const Location& location,
                                  const QString& filePath, 
-                                 Tree *tree);
-    virtual void parseSourceFile(const Location& location,
+                                 Tree *tree) override;
+    void parseSourceFile(const Location& location,
                                  const QString& filePath, 
-                                 Tree *tree);
-    virtual void doneParsingHeaderFiles(Tree *tree);
-    virtual void doneParsingSourceFiles(Tree *tree);
+                                 Tree *tree) override;
+    void doneParsingHeaderFiles(Tree *tree) override;
+    void doneParsingSourceFiles(Tree *tree) override;
 
     const FunctionNode *findFunctionNode(const QString& synopsis, 
                                          Tree *tree, 

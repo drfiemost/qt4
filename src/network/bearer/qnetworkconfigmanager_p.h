@@ -72,7 +72,7 @@ class Q_NETWORK_EXPORT QNetworkConfigurationManagerPrivate : public QObject
 
 public:
     QNetworkConfigurationManagerPrivate();
-    virtual ~QNetworkConfigurationManagerPrivate();
+    ~QNetworkConfigurationManagerPrivate() override;
 
     QNetworkConfiguration defaultConfiguration() const;
     QList<QNetworkConfiguration> allConfigurations(QNetworkConfiguration::StateFlags filter) const;

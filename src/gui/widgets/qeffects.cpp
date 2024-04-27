@@ -66,15 +66,15 @@ class QAlphaWidget: public QWidget, private QEffects
     Q_OBJECT
 public:
     QAlphaWidget(QWidget* w, Qt::WindowFlags f = nullptr);
-    ~QAlphaWidget();
+    ~QAlphaWidget() override;
 
     void run(int time);
 
 protected:
-    void paintEvent(QPaintEvent* e);
-    void closeEvent(QCloseEvent*);
+    void paintEvent(QPaintEvent* e) override;
+    void closeEvent(QCloseEvent*) override;
     void alphaBlend();
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) override;
 
 protected slots:
     void render();
@@ -349,8 +349,8 @@ public:
     void run(int time);
 
 protected:
-    void paintEvent(QPaintEvent*);
-    void closeEvent(QCloseEvent*);
+    void paintEvent(QPaintEvent*) override;
+    void closeEvent(QCloseEvent*) override;
 
 private slots:
     void scroll();

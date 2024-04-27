@@ -242,7 +242,7 @@ class QScriptEngineDebuggerPrivate
     Q_DECLARE_PUBLIC(QScriptEngineDebugger)
 public:
     QScriptEngineDebuggerPrivate();
-    ~QScriptEngineDebuggerPrivate();
+    ~QScriptEngineDebuggerPrivate() override;
 
     // private slots
     void _q_showStandardWindow();
@@ -271,7 +271,7 @@ public:
         w->installEventFilter(this);
     }
 
-    bool eventFilter(QObject *watched, QEvent *e)
+    bool eventFilter(QObject *watched, QEvent *e) override
     {
         if (watched != widget)
             return false;

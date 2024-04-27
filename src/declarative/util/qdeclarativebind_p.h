@@ -64,7 +64,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeBind : public QObject, public QDeclarativePa
 
 public:
     QDeclarativeBind(QObject *parent=nullptr);
-    ~QDeclarativeBind();
+    ~QDeclarativeBind() override;
 
     bool when() const;
     void setWhen(bool);
@@ -79,8 +79,8 @@ public:
     void setValue(const QVariant &);
 
 protected:
-    virtual void classBegin();
-    virtual void componentComplete();
+    void classBegin() override;
+    void componentComplete() override;
 
 private:
     void eval();

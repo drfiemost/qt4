@@ -58,8 +58,8 @@ class LineEditTaskMenu: public QDesignerTaskMenu
 public:
     explicit LineEditTaskMenu(QLineEdit *button, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QList<QAction*> m_taskActions;

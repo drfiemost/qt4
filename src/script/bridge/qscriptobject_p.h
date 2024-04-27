@@ -58,25 +58,25 @@ public:
     };
 
     explicit QScriptObject(WTF::PassRefPtr<JSC::Structure> sid);
-    virtual ~QScriptObject();
+    ~QScriptObject() override;
 
-    virtual bool getOwnPropertySlot(JSC::ExecState*,
+    bool getOwnPropertySlot(JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(JSC::ExecState*, const JSC::Identifier&, JSC::PropertyDescriptor&);
-    virtual void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
-                     JSC::JSValue, JSC::PutPropertySlot&);
-    virtual bool deleteProperty(JSC::ExecState*,
-                                const JSC::Identifier& propertyName);
-    virtual void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&,
-                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
-    virtual void markChildren(JSC::MarkStack& markStack);
-    virtual JSC::CallType getCallData(JSC::CallData&);
-    virtual JSC::ConstructType getConstructData(JSC::ConstructData&);
-    virtual bool hasInstance(JSC::ExecState*, JSC::JSValue value, JSC::JSValue proto);
-    virtual bool compareToObject(JSC::ExecState*, JSC::JSObject*);
+                                    JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(JSC::ExecState*, const JSC::Identifier&, JSC::PropertyDescriptor&) override;
+    void put(JSC::ExecState* exec, const JSC::Identifier& propertyName,
+                     JSC::JSValue, JSC::PutPropertySlot&) override;
+    bool deleteProperty(JSC::ExecState*,
+                                const JSC::Identifier& propertyName) override;
+    void getOwnPropertyNames(JSC::ExecState*, JSC::PropertyNameArray&,
+                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
+    void markChildren(JSC::MarkStack& markStack) override;
+    JSC::CallType getCallData(JSC::CallData&) override;
+    JSC::ConstructType getConstructData(JSC::ConstructData&) override;
+    bool hasInstance(JSC::ExecState*, JSC::JSValue value, JSC::JSValue proto) override;
+    bool compareToObject(JSC::ExecState*, JSC::JSObject*) override;
 
-    virtual const JSC::ClassInfo* classInfo() const { return &info; }
+    const JSC::ClassInfo* classInfo() const override { return &info; }
     static const JSC::ClassInfo info;
 
     static WTF::PassRefPtr<JSC::Structure> createStructure(JSC::JSValue prototype)

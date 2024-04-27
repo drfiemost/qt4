@@ -75,7 +75,7 @@ class QHelpContentProvider : public QThread
     Q_OBJECT
 public:
     QHelpContentProvider(QHelpEnginePrivate *helpEngine);
-    ~QHelpContentProvider();
+    ~QHelpContentProvider() override;
     void collectContents(const QString &customFilterName);
     void stopCollecting();
     QHelpContentItem *rootItem();
@@ -85,7 +85,7 @@ signals:
     void finishedSuccessFully();
 
 private:
-    void run();
+    void run() override;
 
     QHelpEnginePrivate *m_helpEngine;
     QStringList m_filterAttributes;

@@ -171,9 +171,9 @@ class QPMCache : public QObject, public QCache<QPixmapCache::Key, QPixmapCacheEn
     Q_OBJECT
 public:
     QPMCache();
-    ~QPMCache();
+    ~QPMCache() override;
 
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
     bool insert(const QString& key, const QPixmap &pixmap, int cost);
     QPixmapCache::Key insert(const QPixmap &pixmap, int cost);
     bool replace(const QPixmapCache::Key &key, const QPixmap &pixmap, int cost);

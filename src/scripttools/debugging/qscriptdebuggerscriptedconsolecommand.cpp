@@ -74,7 +74,7 @@ class QScriptDebuggerScriptedConsoleCommandPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerScriptedConsoleCommand)
 public:
     QScriptDebuggerScriptedConsoleCommandPrivate();
-    ~QScriptDebuggerScriptedConsoleCommandPrivate();
+    ~QScriptDebuggerScriptedConsoleCommandPrivate() override;
 
     QString name;
     QString group;
@@ -136,15 +136,15 @@ public:
         QScriptDebuggerConsole *console,
         QScriptMessageHandlerInterface *messageHandler,
         QScriptDebuggerCommandSchedulerInterface *commandScheduler);
-    ~QScriptDebuggerScriptedConsoleCommandJob();
+    ~QScriptDebuggerScriptedConsoleCommandJob() override;
 
     int scheduleCommand(
         const QScriptDebuggerCommand &command,
-        QScriptDebuggerResponseHandlerInterface *responseHandler);
+        QScriptDebuggerResponseHandlerInterface *responseHandler) override;
 
-    void start();
+    void start() override;
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int commandId);
+                        int commandId) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerScriptedConsoleCommandJob)
@@ -156,7 +156,7 @@ class QScriptDebuggerScriptedConsoleCommandJobPrivate
 {
 public:
     QScriptDebuggerScriptedConsoleCommandJobPrivate() : command(nullptr), commandCount(0) {}
-    ~QScriptDebuggerScriptedConsoleCommandJobPrivate() {}
+    ~QScriptDebuggerScriptedConsoleCommandJobPrivate() override {}
 
     QScriptDebuggerScriptedConsoleCommandPrivate *command;
     QStringList arguments;

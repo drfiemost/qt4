@@ -77,7 +77,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeSystemPalette : public QObject
 
 public:
     QDeclarativeSystemPalette(QObject *parent=nullptr);
-    ~QDeclarativeSystemPalette();
+    ~QDeclarativeSystemPalette() override;
 
     enum ColorGroup { Active = QPalette::Active, Inactive = QPalette::Inactive, Disabled = QPalette::Disabled };
 
@@ -107,8 +107,8 @@ Q_SIGNALS:
     void paletteChanged();
 
 private:
-    bool eventFilter(QObject *watched, QEvent *event);
-    bool event(QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
+    bool event(QEvent *event) override;
 
 };
 

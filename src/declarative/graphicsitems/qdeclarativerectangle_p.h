@@ -113,7 +113,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeGradient : public QObject
 
 public:
     QDeclarativeGradient(QObject *parent=nullptr) : QObject(parent), m_gradient(nullptr) {}
-    ~QDeclarativeGradient() { delete m_gradient; }
+    ~QDeclarativeGradient() override { delete m_gradient; }
 
     QDeclarativeListProperty<QDeclarativeGradientStop> stops() { return QDeclarativeListProperty<QDeclarativeGradientStop>(this, m_stops); }
 
@@ -154,9 +154,9 @@ public:
     qreal radius() const;
     void setRadius(qreal radius);
 
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
-    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
 Q_SIGNALS:
     void colorChanged();

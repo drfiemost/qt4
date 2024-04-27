@@ -93,7 +93,7 @@ class QSslSocketBackendPrivate : public QSslSocketPrivate
     Q_DECLARE_PUBLIC(QSslSocket)
 public:
     QSslSocketBackendPrivate();
-    virtual ~QSslSocketBackendPrivate();
+    ~QSslSocketBackendPrivate() override;
 
     // SSL context
     bool initSslContext();
@@ -109,13 +109,13 @@ public:
     QList<QPair<int, int> > errorList;
 
     // Platform specific functions
-    void startClientEncryption();
-    void startServerEncryption();
-    void transmit();
+    void startClientEncryption() override;
+    void startServerEncryption() override;
+    void transmit() override;
     bool startHandshake();
-    void disconnectFromHost();
-    void disconnected();
-    QSslCipher sessionCipher() const;
+    void disconnectFromHost() override;
+    void disconnected() override;
+    QSslCipher sessionCipher() const override;
 
     static QSslCipher QSslCipher_from_SSL_CIPHER(SSL_CIPHER *cipher);
     static QList<QSslCertificate> STACKOFX509_to_QSslCertificates(STACK_OF(X509) *x509);

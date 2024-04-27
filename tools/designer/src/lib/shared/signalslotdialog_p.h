@@ -88,7 +88,7 @@ class SignatureModel : public QStandardItemModel {
 
 public:
     SignatureModel(QObject *parent = nullptr);
-    virtual bool setData (const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData (const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 signals:
     void checkSignature(const QString &signature, bool *ok);
@@ -141,7 +141,7 @@ public:
     enum FocusMode { FocusSlots, FocusSignals };
 
     explicit SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidget *parent = nullptr, FocusMode m = FocusSlots);
-    virtual ~SignalSlotDialog();
+    ~SignalSlotDialog() override;
 
     DialogCode showDialog(SignalSlotDialogData &slotData, SignalSlotDialogData &signalData);
 

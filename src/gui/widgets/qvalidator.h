@@ -61,7 +61,7 @@ class Q_GUI_EXPORT QValidator : public QObject
     Q_OBJECT
 public:
     explicit QValidator(QObject * parent = nullptr);
-    ~QValidator();
+    ~QValidator() override;
 
     enum State {
         Invalid,
@@ -93,10 +93,10 @@ class Q_GUI_EXPORT QIntValidator : public QValidator
 public:
     explicit QIntValidator(QObject * parent = nullptr);
     QIntValidator(int bottom, int top, QObject *parent = nullptr);
-    ~QIntValidator();
+    ~QIntValidator() override;
 
-    QValidator::State validate(QString &, int &) const;
-    void fixup(QString &input) const;
+    QValidator::State validate(QString &, int &) const override;
+    void fixup(QString &input) const override;
 
     void setBottom(int);
     void setTop(int);
@@ -128,14 +128,14 @@ class Q_GUI_EXPORT QDoubleValidator : public QValidator
 public:
     explicit QDoubleValidator(QObject * parent = nullptr);
     QDoubleValidator(double bottom, double top, int decimals, QObject *parent = nullptr);
-    ~QDoubleValidator();
+    ~QDoubleValidator() override;
 
     enum Notation {
         StandardNotation,
         ScientificNotation
     };
 
-    QValidator::State validate(QString &, int &) const;
+    QValidator::State validate(QString &, int &) const override;
 
     virtual void setRange(double bottom, double top, int decimals = 0);
     void setBottom(double);
@@ -166,9 +166,9 @@ class Q_GUI_EXPORT QRegExpValidator : public QValidator
 public:
     explicit QRegExpValidator(QObject *parent = nullptr);
     QRegExpValidator(const QRegExp& rx, QObject *parent = nullptr);
-    ~QRegExpValidator();
+    ~QRegExpValidator() override;
 
-    virtual QValidator::State validate(QString& input, int& pos) const;
+    QValidator::State validate(QString& input, int& pos) const override;
 
     void setRegExp(const QRegExp& rx);
     const QRegExp& regExp() const { return r; } // ### make inline for 5.0

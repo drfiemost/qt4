@@ -86,7 +86,7 @@ namespace QDeclarativePrivate
     class QDeclarativeElement : public T
     {
     public:
-        virtual ~QDeclarativeElement() { 
+        ~QDeclarativeElement() override { 
             QDeclarativePrivate::qdeclarativeelement_destructor(this); 
         }
     };

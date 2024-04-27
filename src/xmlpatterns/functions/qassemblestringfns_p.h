@@ -80,7 +80,7 @@ namespace QPatternist
     class CodepointsToStringFN : public FunctionCall
     {
     public:
-        virtual Item evaluateSingleton(const DynamicContext::Ptr &context) const;
+        Item evaluateSingleton(const DynamicContext::Ptr &context) const override;
     };
 
     /**
@@ -92,7 +92,7 @@ namespace QPatternist
     class StringToCodepointsFN : public FunctionCall
     {
     public:
-        virtual Item::Iterator::Ptr evaluateSequence(const DynamicContext::Ptr &context) const;
+        Item::Iterator::Ptr evaluateSequence(const DynamicContext::Ptr &context) const override;
     };
 }
 

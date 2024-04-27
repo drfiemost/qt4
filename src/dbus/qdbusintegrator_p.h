@@ -98,7 +98,7 @@ public:
         : QMetaCallEvent(0, id, nullptr, sender, -1), connection(c), message(msg), metaTypes(types), flags(f)
         { }
 
-    void placeMetaCall(QObject *object)
+    void placeMetaCall(QObject *object) override
     {
         QDBusConnectionPrivate::d(connection)->deliverCall(object, flags, message, metaTypes, id());
     }
@@ -119,9 +119,9 @@ public:
         : QMetaCallEvent(0, -1, nullptr, sender, -1, 0, nullptr, nullptr, s), connection(c), node(n),
           pathStartPos(p), message(m), handled(false)
         { }
-    ~QDBusActivateObjectEvent();
+    ~QDBusActivateObjectEvent() override;
 
-    void placeMetaCall(QObject *);
+    void placeMetaCall(QObject *) override;
 
 private:
     QDBusConnection connection; // just for refcounting

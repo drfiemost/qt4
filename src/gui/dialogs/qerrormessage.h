@@ -59,7 +59,7 @@ class Q_GUI_EXPORT QErrorMessage: public QDialog
     Q_DECLARE_PRIVATE(QErrorMessage)
 public:
     explicit QErrorMessage(QWidget* parent = nullptr);
-    ~QErrorMessage();
+    ~QErrorMessage() override;
 
     static QErrorMessage * qtHandler();
 
@@ -68,8 +68,8 @@ public Q_SLOTS:
     void showMessage(const QString &message, const QString &type);
 
 protected:
-    void done(int);
-    void changeEvent(QEvent *e);
+    void done(int) override;
+    void changeEvent(QEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QErrorMessage)

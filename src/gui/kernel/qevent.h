@@ -70,7 +70,7 @@ class Q_GUI_EXPORT QInputEvent : public QEvent
 {
 public:
     QInputEvent(Type type, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
-    ~QInputEvent();
+    ~QInputEvent() override;
     inline Qt::KeyboardModifiers modifiers() const { return modState; }
     inline void setModifiers(Qt::KeyboardModifiers amodifiers) { modState = amodifiers; }
 protected:
@@ -85,7 +85,7 @@ public:
     QMouseEvent(Type type, const QPointF &pos, const QPointF &globalPos,
                 Qt::MouseButton button, Qt::MouseButtons buttons,
                 Qt::KeyboardModifiers modifiers);
-    ~QMouseEvent();
+    ~QMouseEvent() override;
 
     inline QPoint pos() const { return p.toPoint(); }
     inline QPoint globalPos() const { return g.toPoint(); }
@@ -109,7 +109,7 @@ class Q_GUI_EXPORT QHoverEvent : public QEvent
 {
 public:
     QHoverEvent(Type type, const QPointF &pos, const QPointF &oldPos);
-    ~QHoverEvent();
+    ~QHoverEvent() override;
 
     inline QPoint pos() const { return p.toPoint(); }
     inline QPoint oldPos() const { return op.toPoint(); }
@@ -131,7 +131,7 @@ public:
     QWheelEvent(const QPointF &pos, const QPointF& globalPos, int delta,
                 Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers,
                 Qt::Orientation orient = Qt::Vertical);
-    ~QWheelEvent();
+    ~QWheelEvent() override;
 
     inline int delta() const { return d; }
     inline QPoint pos() const { return p.toPoint(); }
@@ -167,7 +167,7 @@ public:
                  int device, int pointerType, qreal pressure, int xTilt, int yTilt,
                  qreal tangentialPressure, qreal rotation, int z,
                  Qt::KeyboardModifiers keyState, qint64 uniqueID);
-    ~QTabletEvent();
+    ~QTabletEvent() override;
 
     inline const QPoint &pos() const { return mPos; }
     inline const QPoint &globalPos() const { return mGPos; }
@@ -207,7 +207,7 @@ class Q_GUI_EXPORT QKeyEvent : public QInputEvent
 public:
     QKeyEvent(Type type, int key, Qt::KeyboardModifiers modifiers, const QString& text = QString(),
               bool autorep = false, ushort count = 1);
-    ~QKeyEvent();
+    ~QKeyEvent() override;
 
     int key() const { return k; }
 #ifndef QT_NO_SHORTCUT
@@ -241,7 +241,7 @@ class Q_GUI_EXPORT QFocusEvent : public QEvent
 {
 public:
     QFocusEvent(Type type, Qt::FocusReason reason=Qt::OtherFocusReason);
-    ~QFocusEvent();
+    ~QFocusEvent() override;
 
     inline bool gotFocus() const { return type() == FocusIn; }
     inline bool lostFocus() const { return type() == FocusOut; }
@@ -259,7 +259,7 @@ class Q_GUI_EXPORT QPaintEvent : public QEvent
 public:
     QPaintEvent(const QRegion& paintRegion);
     QPaintEvent(const QRect &paintRect);
-    ~QPaintEvent();
+    ~QPaintEvent() override;
 
     inline const QRect &rect() const { return m_rect; }
     inline const QRegion &region() const { return m_region; }
@@ -276,7 +276,7 @@ class QUpdateLaterEvent : public QEvent
 {
 public:
     QUpdateLaterEvent(const QRegion& paintRegion);
-    ~QUpdateLaterEvent();
+    ~QUpdateLaterEvent() override;
 
     inline const QRegion &region() const { return m_region; }
 
@@ -288,7 +288,7 @@ class Q_GUI_EXPORT QMoveEvent : public QEvent
 {
 public:
     QMoveEvent(const QPoint &pos, const QPoint &oldPos);
-    ~QMoveEvent();
+    ~QMoveEvent() override;
 
     inline const QPoint &pos() const { return p; }
     inline const QPoint &oldPos() const { return oldp;}
@@ -303,7 +303,7 @@ class Q_GUI_EXPORT QResizeEvent : public QEvent
 {
 public:
     QResizeEvent(const QSize &size, const QSize &oldSize);
-    ~QResizeEvent();
+    ~QResizeEvent() override;
 
     inline const QSize &size() const { return s; }
     inline const QSize &oldSize()const { return olds;}
@@ -318,7 +318,7 @@ class Q_GUI_EXPORT QCloseEvent : public QEvent
 {
 public:
     QCloseEvent();
-    ~QCloseEvent();
+    ~QCloseEvent() override;
 };
 
 
@@ -326,7 +326,7 @@ class Q_GUI_EXPORT QIconDragEvent : public QEvent
 {
 public:
     QIconDragEvent();
-    ~QIconDragEvent();
+    ~QIconDragEvent() override;
 };
 
 
@@ -334,7 +334,7 @@ class Q_GUI_EXPORT QShowEvent : public QEvent
 {
 public:
     QShowEvent();
-    ~QShowEvent();
+    ~QShowEvent() override;
 };
 
 
@@ -342,7 +342,7 @@ class Q_GUI_EXPORT QHideEvent : public QEvent
 {
 public:
     QHideEvent();
-    ~QHideEvent();
+    ~QHideEvent() override;
 };
 
 #ifndef QT_NO_CONTEXTMENU
@@ -355,7 +355,7 @@ public:
                       Qt::KeyboardModifiers modifiers);
     QContextMenuEvent(Reason reason, const QPoint &pos, const QPoint &globalPos);
     QContextMenuEvent(Reason reason, const QPoint &pos);
-    ~QContextMenuEvent();
+    ~QContextMenuEvent() override;
 
     inline int x() const { return p.x(); }
     inline int y() const { return p.y(); }
@@ -429,7 +429,7 @@ class Q_GUI_EXPORT QDropEvent : public QEvent
 public:
     QDropEvent(const QPoint& pos, Qt::DropActions actions, const QMimeData *data,
                Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Type type = Drop);
-    ~QDropEvent();
+    ~QDropEvent() override;
 
     inline const QPoint &pos() const { return p; }
     inline Qt::MouseButtons mouseButtons() const { return mouseState; }
@@ -446,9 +446,9 @@ public:
     inline const QMimeData *mimeData() const { return mdata; }
 
 // QT3_SUPPORT
-    const char* format(int n = 0) const;
-    QByteArray encodedData(const char*) const;
-    bool provides(const char*) const;
+    const char* format(int n = 0) const override;
+    QByteArray encodedData(const char*) const override;
+    bool provides(const char*) const override;
 // END QT3_SUPPORT
 
 protected:
@@ -469,7 +469,7 @@ class Q_GUI_EXPORT QDragMoveEvent : public QDropEvent
 public:
     QDragMoveEvent(const QPoint &pos, Qt::DropActions actions, const QMimeData *data,
                    Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Type type = DragMove);
-    ~QDragMoveEvent();
+    ~QDragMoveEvent() override;
 
     inline QRect answerRect() const { return rect; }
 
@@ -490,7 +490,7 @@ class Q_GUI_EXPORT QDragEnterEvent : public QDragMoveEvent
 public:
     QDragEnterEvent(const QPoint &pos, Qt::DropActions actions, const QMimeData *data,
                     Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
-    ~QDragEnterEvent();
+    ~QDragEnterEvent() override;
 };
 
 
@@ -499,7 +499,7 @@ class Q_GUI_EXPORT QDragResponseEvent : public QEvent
 {
 public:
     QDragResponseEvent(bool accepted);
-    ~QDragResponseEvent();
+    ~QDragResponseEvent() override;
 
     inline bool dragAccepted() const { return a; }
 protected:
@@ -511,7 +511,7 @@ class Q_GUI_EXPORT QDragLeaveEvent : public QEvent
 {
 public:
     QDragLeaveEvent();
-    ~QDragLeaveEvent();
+    ~QDragLeaveEvent() override;
 };
 #endif // QT_NO_DRAGANDDROP
 
@@ -520,7 +520,7 @@ class Q_GUI_EXPORT QHelpEvent : public QEvent
 {
 public:
     QHelpEvent(Type type, const QPoint &pos, const QPoint &globalPos);
-    ~QHelpEvent();
+    ~QHelpEvent() override;
 
     inline int x() const { return p.x(); }
     inline int y() const { return p.y(); }
@@ -540,7 +540,7 @@ class Q_GUI_EXPORT QStatusTipEvent : public QEvent
 {
 public:
     QStatusTipEvent(const QString &tip);
-    ~QStatusTipEvent();
+    ~QStatusTipEvent() override;
 
     inline QString tip() const { return s; }
 private:
@@ -553,7 +553,7 @@ class Q_GUI_EXPORT QWhatsThisClickedEvent : public QEvent
 {
 public:
     QWhatsThisClickedEvent(const QString &href);
-    ~QWhatsThisClickedEvent();
+    ~QWhatsThisClickedEvent() override;
 
     inline QString href() const { return s; }
 private:
@@ -567,7 +567,7 @@ class Q_GUI_EXPORT QActionEvent : public QEvent
     QAction *act, *bef;
 public:
     QActionEvent(int type, QAction *action, QAction *before = nullptr);
-    ~QActionEvent();
+    ~QActionEvent() override;
 
     inline QAction *action() const { return act; }
     inline QAction *before() const { return bef; }
@@ -579,7 +579,7 @@ class Q_GUI_EXPORT QFileOpenEvent : public QEvent
 public:
     QFileOpenEvent(const QString &file);
     QFileOpenEvent(const QUrl &url);
-    ~QFileOpenEvent();
+    ~QFileOpenEvent() override;
 
     inline QString file() const { return f; }
     QUrl url() const;
@@ -593,7 +593,7 @@ class Q_GUI_EXPORT QToolBarChangeEvent : public QEvent
 {
 public:
     QToolBarChangeEvent(bool t);
-    ~QToolBarChangeEvent();
+    ~QToolBarChangeEvent() override;
 
     inline bool toggle() const { return tog; }
 private:
@@ -606,7 +606,7 @@ class Q_GUI_EXPORT QShortcutEvent : public QEvent
 {
 public:
     QShortcutEvent(const QKeySequence &key, int id, bool ambiguous = false);
-    ~QShortcutEvent();
+    ~QShortcutEvent() override;
 
     inline const QKeySequence &key() { return sequence; }
     inline const QKeySequence &key() const { return sequence; }
@@ -626,7 +626,7 @@ class Q_GUI_EXPORT QClipboardEvent : public QEvent
 {
 public:
     QClipboardEvent(QEventPrivate *data);
-    ~QClipboardEvent();
+    ~QClipboardEvent() override;
 
     QEventPrivate *data() { return d; }
 };
@@ -637,7 +637,7 @@ class Q_GUI_EXPORT QWindowStateChangeEvent: public QEvent
 public:
     QWindowStateChangeEvent(Qt::WindowStates aOldState);
     QWindowStateChangeEvent(Qt::WindowStates aOldState, bool isOverride);
-    ~QWindowStateChangeEvent();
+    ~QWindowStateChangeEvent() override;
 
     inline Qt::WindowStates oldState() const { return ostate; }
     bool isOverride() const;
@@ -730,7 +730,7 @@ public:
                 Qt::KeyboardModifiers modifiers = Qt::NoModifier,
                 Qt::TouchPointStates touchPointStates = nullptr,
                 const QList<QTouchEvent::TouchPoint> &touchPoints = QList<QTouchEvent::TouchPoint>());
-    ~QTouchEvent();
+    ~QTouchEvent() override;
 
     inline QWidget *widget() const { return _widget; }
     inline QTouchEvent::DeviceType deviceType() const { return _deviceType; }
@@ -760,7 +760,7 @@ class Q_GUI_EXPORT QGestureEvent : public QEvent
 {
 public:
     QGestureEvent(const QList<QGesture *> &gestures);
-    ~QGestureEvent();
+    ~QGestureEvent() override;
 
     QList<QGesture *> gestures() const;
     QGesture *gesture(Qt::GestureType type) const;

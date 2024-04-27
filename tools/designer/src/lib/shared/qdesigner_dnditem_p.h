@@ -72,15 +72,15 @@ class QDESIGNER_SHARED_EXPORT QDesignerDnDItem: public QDesignerDnDItemInterface
 {
 public:
     explicit QDesignerDnDItem(DropType type, QWidget *source = nullptr);
-    virtual ~QDesignerDnDItem();
+    ~QDesignerDnDItem() override;
 
-    virtual DomUI *domUi() const;
-    virtual QWidget *decoration() const;
-    virtual QWidget *widget() const;
-    virtual QPoint hotSpot() const;
-    virtual QWidget *source() const;
+    DomUI *domUi() const override;
+    QWidget *decoration() const override;
+    QWidget *widget() const override;
+    QPoint hotSpot() const override;
+    QWidget *source() const override;
 
-    virtual DropType type() const;
+    DropType type() const override;
 
 protected:
     void setDomUi(DomUI *dom_ui);
@@ -106,7 +106,7 @@ class  QDESIGNER_SHARED_EXPORT QDesignerMimeData : public QMimeData {
 public:
     typedef QList<QDesignerDnDItemInterface *> QDesignerDnDItems;
 
-    virtual ~QDesignerMimeData();
+    ~QDesignerMimeData() override;
 
     const QDesignerDnDItems &items() const { return m_items; }
 

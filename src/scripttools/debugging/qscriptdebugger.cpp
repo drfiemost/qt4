@@ -152,26 +152,26 @@ class QScriptDebuggerPrivate
     Q_DECLARE_PUBLIC(QScriptDebugger)
 public:
     QScriptDebuggerPrivate();
-    ~QScriptDebuggerPrivate();
+    ~QScriptDebuggerPrivate() override;
 
-    int scheduleJob(QScriptDebuggerJob *job);
-    void finishJob(QScriptDebuggerJob *job);
-    void hibernateUntilEvaluateFinished(QScriptDebuggerJob *job);
+    int scheduleJob(QScriptDebuggerJob *job) override;
+    void finishJob(QScriptDebuggerJob *job) override;
+    void hibernateUntilEvaluateFinished(QScriptDebuggerJob *job) override;
 
     void maybeStartNewJob();
 
     int scheduleCommand(const QScriptDebuggerCommand &command,
-                        QScriptDebuggerResponseHandlerInterface *responseHandler);
+                        QScriptDebuggerResponseHandlerInterface *responseHandler) override;
 
     void handleResponse(
-        const QScriptDebuggerResponse &response, int commandId);
-    bool debuggerEvent(const QScriptDebuggerEvent &event);
+        const QScriptDebuggerResponse &response, int commandId) override;
+    bool debuggerEvent(const QScriptDebuggerEvent &event) override;
 
     QScriptCompletionTaskInterface *createCompletionTask(
-        const QString &contents, int cursorPosition, int frameIndex, int options);
+        const QString &contents, int cursorPosition, int frameIndex, int options) override;
 
     void showToolTip(const QPoint &pos, int frameIndex,
-                     int lineNumber, const QStringList &path);
+                     int lineNumber, const QStringList &path) override;
 
     static QPixmap pixmap(const QString &path);
 
@@ -642,12 +642,12 @@ public:
           m_frameIndex(frameIndex), m_lineNumber(lineNumber), m_path(path)
         {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetPropertyExpressionValue(m_frameIndex, m_lineNumber, m_path);
     }
-    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/)
+    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/) override
     {
         QString tip = response.result().toString();
         if (tip.indexOf(QLatin1Char('\n')) != -1) {
@@ -902,12 +902,12 @@ public:
           m_scriptId(scriptId), m_lineNumber(lineNumber),
         m_messageHandler(messageHandler) {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetScriptData(m_scriptId);
     }
-    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/)
+    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/) override
     {
         QScriptScriptData data = response.resultAsScriptData();
         QString line = data.lines(m_lineNumber, 1).value(0);
@@ -930,13 +930,13 @@ public:
     SyncStackJob(QScriptDebuggerPrivate *debugger)
         : QScriptDebuggerCommandSchedulerJob(debugger),
           m_debugger(debugger), m_index(0) {}
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetContextInfo(m_index); // ### getContextInfos()
     }
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         if (response.error() != QScriptDebuggerResponse::InvalidContextIndex) {
@@ -965,13 +965,13 @@ public:
         : QScriptDebuggerCommandSchedulerJob(debugger),
           m_debugger(debugger), m_index(-1) {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleScriptsCheckpoint();
     }
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         if (m_index == -1) {
@@ -1022,13 +1022,13 @@ public:
     SyncBreakpointsJob(QScriptDebuggerPrivate *debugger)
         : QScriptDebuggerCommandSchedulerJob(debugger),
           m_debugger(debugger), m_index(-1) {}
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetBreakpoints();
     }
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         QScriptBreakpointMap breakpoints = response.resultAsBreakpoints();
         QScriptBreakpointMap::const_iterator it;
@@ -1055,13 +1055,13 @@ public:
         : QScriptDebuggerCommandSchedulerJob(debugger),
           m_debugger(debugger) {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleContextsCheckpoint();
     }
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         QScriptContextsDelta delta = qvariant_cast<QScriptContextsDelta>(response.result());
         for (int i = 0; i < delta.first.size(); ++i) {
@@ -1082,13 +1082,13 @@ public:
         : QScriptDebuggerCommandSchedulerJob(debugger),
           m_debugger(debugger), m_frameIndex(frameIndex) {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetContextId(m_frameIndex);
     }
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         qint64 contextId = response.resultAsLongLong();
@@ -1120,7 +1120,7 @@ public:
     EmitStoppedSignalJob(QScriptDebuggerPrivate *debugger)
         : m_debugger(debugger) {}
 
-    void start()
+    void start() override
     {
         m_debugger->emitStoppedSignal();
         finish();
@@ -1239,13 +1239,13 @@ public:
         : QScriptDebuggerCommandSchedulerJob(debugger),
           m_debugger(debugger), m_frameIndex(frameIndex) {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetContextInfo(m_frameIndex);
     }
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         if (m_info.isNull()) {
             m_info = response.resultAsContextInfo();

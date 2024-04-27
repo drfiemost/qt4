@@ -132,7 +132,7 @@ namespace QPatternist
         Q_DECLARE_FLAGS(DerivationConstraints, DerivationConstraint)
 
         SchemaType();
-        virtual ~SchemaType();
+        ~SchemaType() override;
 
         /**
          * Determines how this SchemaType is derived from its super type.

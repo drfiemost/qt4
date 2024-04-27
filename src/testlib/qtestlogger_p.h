@@ -65,7 +65,7 @@ class QTestLogger : public QAbstractTestLogger
 {
     public:
         QTestLogger(int fm = 0);
-        ~QTestLogger();
+        ~QTestLogger() override;
 
         enum TestLoggerFormat
         {
@@ -74,19 +74,19 @@ class QTestLogger : public QAbstractTestLogger
             TLF_XunitXml = 2
         };
 
-        void startLogging(const char *filename);
-        void stopLogging();
+        void startLogging(const char *filename) override;
+        void stopLogging() override;
 
-        void enterTestFunction(const char *function);
-        void leaveTestFunction();
+        void enterTestFunction(const char *function) override;
+        void leaveTestFunction() override;
 
         void addIncident(IncidentTypes type, const char *description,
-                     const char *file = nullptr, int line = 0);
-        void addBenchmarkResult(const QBenchmarkResult &result);
+                     const char *file = nullptr, int line = 0) override;
+        void addBenchmarkResult(const QBenchmarkResult &result) override;
         void addTag(QTestElement* element);
 
         void addMessage(MessageTypes type, const char *message,
-                    const char *file = nullptr, int line = 0);
+                    const char *file = nullptr, int line = 0) override;
 
         void setLogFormat(TestLoggerFormat fm);
         TestLoggerFormat logFormat();
@@ -101,7 +101,7 @@ class QTestLogger : public QAbstractTestLogger
         int qwarnCount() const;
         int qfatalCount() const;
         int infoCount() const;
-        void registerRandomSeed(unsigned int seed);
+        void registerRandomSeed(unsigned int seed) override;
         unsigned int randomSeed() const;
         bool hasRandomSeed() const;
 

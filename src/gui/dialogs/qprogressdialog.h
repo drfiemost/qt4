@@ -74,7 +74,7 @@ public:
     explicit QProgressDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     QProgressDialog(const QString &labelText, const QString &cancelButtonText,
                     int minimum, int maximum, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QProgressDialog();
+    ~QProgressDialog() override;
 
     void setLabel(QLabel *label);
     void setCancelButton(QPushButton *button);
@@ -87,7 +87,7 @@ public:
 
     int value() const;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     QString labelText() const;
     int minimumDuration() const;
@@ -116,10 +116,10 @@ Q_SIGNALS:
     void canceled();
 
 protected:
-    void resizeEvent(QResizeEvent *event);
-    void closeEvent(QCloseEvent *event);
-    void changeEvent(QEvent *event);
-    void showEvent(QShowEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
+    void changeEvent(QEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 protected Q_SLOTS:
     void forceShow();

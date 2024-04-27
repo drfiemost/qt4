@@ -71,7 +71,7 @@ public:
     QHelpDBReader(const QString &dbName); 
     QHelpDBReader(const QString &dbName, const QString &uniqueId,
         QObject *parent);
-    ~QHelpDBReader();
+    ~QHelpDBReader() override;
 
     bool init();
 

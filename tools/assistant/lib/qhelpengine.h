@@ -63,7 +63,7 @@ class QHELP_EXPORT QHelpEngine : public QHelpEngineCore
 
 public:
     explicit QHelpEngine(const QString &collectionFile, QObject *parent = nullptr);
-    ~QHelpEngine();
+    ~QHelpEngine() override;
 
     QHelpContentModel *contentModel() const;
     QHelpIndexModel *indexModel() const;

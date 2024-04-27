@@ -551,7 +551,7 @@ class BlankSuppressingValidator : public QValidator {
 public:
     explicit BlankSuppressingValidator(QObject * parent = nullptr) : QValidator(parent) {}
 
-    virtual State validate(QString &input, int &pos) const {
+    State validate(QString &input, int &pos) const override {
         const int blankPos = input.indexOf(QLatin1Char(' '));
         if (blankPos != -1) {
             pos = blankPos;

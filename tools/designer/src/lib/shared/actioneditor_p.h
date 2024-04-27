@@ -81,20 +81,20 @@ class QDESIGNER_SHARED_EXPORT ActionEditor: public QDesignerActionEditorInterfac
     Q_OBJECT
 public:
     explicit ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    virtual ~ActionEditor();
+    ~ActionEditor() override;
 
     QDesignerFormWindowInterface *formWindow() const;
-    virtual void setFormWindow(QDesignerFormWindowInterface *formWindow);
+    void setFormWindow(QDesignerFormWindowInterface *formWindow) override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
     QAction *actionNew() const;
     QAction *actionDelete() const;
 
     QString filter() const;
 
-    virtual void manageAction(QAction *action);
-    virtual void unmanageAction(QAction *action);
+    void manageAction(QAction *action) override;
+    void unmanageAction(QAction *action) override;
 
     static QString actionTextToName(const QString &text, const QString &prefix = QLatin1String("action"));
 

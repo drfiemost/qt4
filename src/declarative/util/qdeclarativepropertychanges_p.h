@@ -61,7 +61,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativePropertyChanges : public QDeclara
     Q_PROPERTY(bool explicit READ isExplicit WRITE setIsExplicit)
 public:
     QDeclarativePropertyChanges();
-    ~QDeclarativePropertyChanges();
+    ~QDeclarativePropertyChanges() override;
 
     QObject *object() const;
     void setObject(QObject *);
@@ -72,7 +72,7 @@ public:
     bool isExplicit() const;
     void setIsExplicit(bool);
 
-    virtual ActionList actions();
+    ActionList actions() override;
 
     bool containsProperty(const QString &name) const;
     bool containsValue(const QString &name) const;
@@ -97,8 +97,8 @@ public:
 
     void compileList(QList<QPair<QByteArray, QVariant> > &list, const QByteArray &pre, const QDeclarativeCustomParserProperty &prop);
 
-    virtual QByteArray compile(const QList<QDeclarativeCustomParserProperty> &);
-    virtual void setCustomData(QObject *, const QByteArray &);
+    QByteArray compile(const QList<QDeclarativeCustomParserProperty> &) override;
+    void setCustomData(QObject *, const QByteArray &) override;
 };
 
 

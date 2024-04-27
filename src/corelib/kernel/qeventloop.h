@@ -58,7 +58,7 @@ class Q_CORE_EXPORT QEventLoop : public QObject
 
 public:
     explicit QEventLoop(QObject *parent = nullptr);
-    ~QEventLoop();
+    ~QEventLoop() override;
 
     enum ProcessEventsFlag {
         AllEvents = 0x00,

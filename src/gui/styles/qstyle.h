@@ -74,7 +74,7 @@ protected:
 
 public:
     QStyle();
-    virtual ~QStyle();
+    ~QStyle() override;
 
     virtual void polish(QWidget *);
     virtual void unpolish(QWidget *);

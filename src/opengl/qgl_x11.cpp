@@ -1286,10 +1286,10 @@ public:
     QGLOverlayWidget(const QGLFormat& format, QGLWidget* parent, const QGLWidget* shareWidget=nullptr);
 
 protected:
-    void                initializeGL();
-    void                paintGL();
-    void                resizeGL(int w, int h);
-    bool                x11Event(XEvent *e) { return realWidget->x11Event(e); }
+    void                initializeGL() override;
+    void                paintGL() override;
+    void                resizeGL(int w, int h) override;
+    bool                x11Event(XEvent *e) override { return realWidget->x11Event(e); }
 
 private:
     QGLWidget*                realWidget;

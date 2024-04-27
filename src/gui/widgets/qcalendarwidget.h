@@ -95,10 +95,10 @@ public:
     };
 
     explicit QCalendarWidget(QWidget *parent = nullptr);
-    ~QCalendarWidget();
+    ~QCalendarWidget() override;
 
-    virtual QSize sizeHint() const;
-    virtual QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
     QDate selectedDate() const;
 
@@ -148,11 +148,11 @@ public:
     void setDateEditAcceptDelay(int delay);
 
 protected:
-    bool event(QEvent *event);
-    bool eventFilter(QObject *watched, QEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void resizeEvent(QResizeEvent * event);
-    void keyPressEvent(QKeyEvent * event);
+    bool event(QEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent * event) override;
+    void keyPressEvent(QKeyEvent * event) override;
 
     virtual void paintCell(QPainter *painter, const QRect &rect, const QDate &date) const;
     void updateCell(const QDate &date);

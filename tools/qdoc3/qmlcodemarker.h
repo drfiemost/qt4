@@ -55,23 +55,23 @@ class QmlCodeMarker : public CppCodeMarker
 {
 public:
     QmlCodeMarker();
-    ~QmlCodeMarker();
+    ~QmlCodeMarker() override;
 
-    virtual bool recognizeCode(const QString &code);
-    virtual bool recognizeExtension(const QString &ext);
-    virtual bool recognizeLanguage(const QString &language);
-    virtual Atom::Type atomType() const;
-    virtual QString plainName(const Node *node);
-    virtual QString plainFullName(const Node *node, const Node *relative);
-    virtual QString markedUpCode(const QString &code, 
+    bool recognizeCode(const QString &code) override;
+    bool recognizeExtension(const QString &ext) override;
+    bool recognizeLanguage(const QString &language) override;
+    Atom::Type atomType() const override;
+    QString plainName(const Node *node) override;
+    QString plainFullName(const Node *node, const Node *relative) override;
+    QString markedUpCode(const QString &code, 
                                  const Node *relative, 
-                                 const Location &location);
+                                 const Location &location) override;
 
-    virtual QString markedUpName(const Node *node);
-    virtual QString markedUpFullName(const Node *node, const Node *relative);
-    virtual QString markedUpIncludes(const QStringList &includes);
-    virtual QString functionBeginRegExp(const QString &funcName);
-    virtual QString functionEndRegExp(const QString &funcName);
+    QString markedUpName(const Node *node) override;
+    QString markedUpFullName(const Node *node, const Node *relative) override;
+    QString markedUpIncludes(const QStringList &includes) override;
+    QString functionBeginRegExp(const QString &funcName) override;
+    QString functionEndRegExp(const QString &funcName) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     QList<QDeclarativeJS::AST::SourceLocation> extractPragmas(QString &script);

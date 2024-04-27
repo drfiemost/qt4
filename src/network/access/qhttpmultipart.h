@@ -94,7 +94,7 @@ public:
 
     QHttpMultiPart(QObject *parent = nullptr);
     QHttpMultiPart(ContentType contentType, QObject *parent = nullptr);
-    ~QHttpMultiPart();
+    ~QHttpMultiPart() override;
 
     void append(const QHttpPart &httpPart);
 

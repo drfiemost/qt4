@@ -66,7 +66,7 @@ class QHELP_EXPORT QHelpSearchQueryWidget : public QWidget
 
 public:
     QHelpSearchQueryWidget(QWidget *parent = nullptr);
-    ~QHelpSearchQueryWidget();
+    ~QHelpSearchQueryWidget() override;
 
     void expandExtendedSearch();
     void collapseExtendedSearch();
@@ -78,8 +78,8 @@ Q_SIGNALS:
     void search();
 
 private:
-    virtual void focusInEvent(QFocusEvent *focusEvent);
-    virtual void changeEvent(QEvent *event);
+    void focusInEvent(QFocusEvent *focusEvent) override;
+    void changeEvent(QEvent *event) override;
 
 private:
     QHelpSearchQueryWidgetPrivate *d;

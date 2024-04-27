@@ -85,7 +85,7 @@ class QDeclarativeContents : public QObject, public QDeclarativeItemChangeListen
     Q_OBJECT
 public:
     QDeclarativeContents(QDeclarativeItem *item);
-    ~QDeclarativeContents();
+    ~QDeclarativeContents() override;
 
     QRectF rectF() const;
 
@@ -99,8 +99,8 @@ Q_SIGNALS:
     void rectChanged(QRectF);
 
 protected:
-    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry);
-    void itemDestroyed(QDeclarativeItem *item);
+    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    void itemDestroyed(QDeclarativeItem *item) override;
     //void itemVisibilityChanged(QDeclarativeItem *item)
 
 private:
@@ -157,13 +157,13 @@ public:
     }
 
     // Private Properties
-    qreal width() const;
-    void setWidth(qreal);
-    void resetWidth();
+    qreal width() const override;
+    void setWidth(qreal) override;
+    void resetWidth() override;
 
-    qreal height() const;
-    void setHeight(qreal);
-    void resetHeight();
+    qreal height() const override;
+    void setHeight(qreal) override;
+    void resetHeight() override;
 
     virtual qreal implicitWidth() const;
     virtual qreal implicitHeight() const;
@@ -304,7 +304,7 @@ public:
 
     QPointF computeTransformOrigin() const;
 
-    virtual void setPosHelper(const QPointF &pos)
+    void setPosHelper(const QPointF &pos) override
     {
         Q_Q(QDeclarativeItem);
         QRectF oldGeometry(this->pos.x(), this->pos.y(), mWidth, mHeight);
@@ -313,7 +313,7 @@ public:
     }
 
     // Reimplemented from QGraphicsItemPrivate
-    virtual void focusScopeItemChange(bool isSubFocusItem)
+    void focusScopeItemChange(bool isSubFocusItem) override
     {
         if (hadFocus != isSubFocusItem) {
             hadFocus = isSubFocusItem;
@@ -322,7 +322,7 @@ public:
     }
 
     // Reimplemented from QGraphicsItemPrivate
-    virtual void siblingOrderChange()
+    void siblingOrderChange() override
     {
         Q_Q(QDeclarativeItem);
         for(int ii = 0; ii < changeListeners.count(); ++ii) {
@@ -334,7 +334,7 @@ public:
     }
 
     // Reimplemented from QGraphicsItemPrivate
-    virtual void transformChanged();
+    void transformChanged() override;
 
     virtual void focusChanged(bool);
 
@@ -432,8 +432,8 @@ Q_SIGNALS:
     void priorityChanged();
 
 private:
-    virtual void keyPressed(QKeyEvent *event, bool post);
-    virtual void keyReleased(QKeyEvent *event, bool post);
+    void keyPressed(QKeyEvent *event, bool post) override;
+    void keyReleased(QKeyEvent *event, bool post) override;
     void setFocusNavigation(QDeclarativeItem *currentItem, const char *dir);
 };
 
@@ -505,7 +505,7 @@ class QDeclarativeKeysAttached : public QObject, public QDeclarativeItemKeyFilte
 
 public:
     QDeclarativeKeysAttached(QObject *parent=nullptr);
-    ~QDeclarativeKeysAttached();
+    ~QDeclarativeKeysAttached() override;
 
     bool enabled() const { Q_D(const QDeclarativeKeysAttached); return d->enabled; }
     void setEnabled(bool enabled) {
@@ -525,7 +525,7 @@ public:
         return QDeclarativeListProperty<QDeclarativeItem>(this, d->targets);
     }
 
-    virtual void componentComplete();
+    void componentComplete() override;
 
     static QDeclarativeKeysAttached *qmlAttachedProperties(QObject *);
 
@@ -576,10 +576,10 @@ Q_SIGNALS:
     void volumeDownPressed(QDeclarativeKeyEvent *event);
 
 private:
-    virtual void keyPressed(QKeyEvent *event, bool post);
-    virtual void keyReleased(QKeyEvent *event, bool post);
-    virtual void inputMethodEvent(QInputMethodEvent *, bool post);
-    virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
+    void keyPressed(QKeyEvent *event, bool post) override;
+    void keyReleased(QKeyEvent *event, bool post) override;
+    void inputMethodEvent(QInputMethodEvent *, bool post) override;
+    QVariant inputMethodQuery(Qt::InputMethodQuery query) const override;
 
     const QByteArray keyToSignal(int key) {
         QByteArray keySignal;

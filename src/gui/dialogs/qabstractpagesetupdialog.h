@@ -64,10 +64,10 @@ public:
     explicit QAbstractPageSetupDialog(QPrinter *printer, QWidget *parent = nullptr);
     QAbstractPageSetupDialog(QAbstractPageSetupDialogPrivate &ptr,
                              QPrinter *printer, QWidget *parent = nullptr);
-    ~QAbstractPageSetupDialog();
+    ~QAbstractPageSetupDialog() override;
 
     virtual int exec() = 0;
-    void done(int result);
+    void done(int result) override;
 
     QPrinter *printer();
 };

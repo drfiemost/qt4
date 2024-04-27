@@ -69,7 +69,7 @@ public:
     QStackedLayout();
     explicit QStackedLayout(QWidget *parent);
     explicit QStackedLayout(QLayout *parentLayout);
-    ~QStackedLayout();
+    ~QStackedLayout() override;
 
     int addWidget(QWidget *w);
     int insertWidget(int index, QWidget *w);
@@ -80,18 +80,18 @@ public:
     using QLayout::widget;
 
     QWidget *widget(int) const;
-    int count() const;
+    int count() const override;
 
     StackingMode stackingMode() const;
     void setStackingMode(StackingMode stackingMode);
 
     // abstract virtual functions:
-    void addItem(QLayoutItem *item);
-    QSize sizeHint() const;
-    QSize minimumSize() const;
-    QLayoutItem *itemAt(int) const;
-    QLayoutItem *takeAt(int);
-    void setGeometry(const QRect &rect);
+    void addItem(QLayoutItem *item) override;
+    QSize sizeHint() const override;
+    QSize minimumSize() const override;
+    QLayoutItem *itemAt(int) const override;
+    QLayoutItem *takeAt(int) override;
+    void setGeometry(const QRect &rect) override;
 
 Q_SIGNALS:
     void widgetRemoved(int index);

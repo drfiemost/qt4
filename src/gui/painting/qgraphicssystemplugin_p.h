@@ -78,10 +78,10 @@ class Q_GUI_EXPORT QGraphicsSystemPlugin : public QObject, public QGraphicsSyste
     Q_INTERFACES(QGraphicsSystemFactoryInterface:QFactoryInterface)
 public:
     explicit QGraphicsSystemPlugin(QObject *parent = nullptr);
-    ~QGraphicsSystemPlugin();
+    ~QGraphicsSystemPlugin() override;
 
-    virtual QStringList keys() const = 0;
-    virtual QGraphicsSystem *create(const QString &key) = 0;
+    QStringList keys() const override = 0;
+    QGraphicsSystem *create(const QString &key) override = 0;
 };
 
 QT_END_NAMESPACE

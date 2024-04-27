@@ -86,7 +86,7 @@ public:
 #if defined(Q_WS_MAC) || defined(Q_OS_WIN)
     virtual void setVisible(bool visible);
 #endif
-    virtual int exec();
+    int exec() override;
 
     using QDialog::open;
 

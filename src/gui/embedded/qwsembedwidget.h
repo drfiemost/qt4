@@ -59,15 +59,15 @@ class Q_GUI_EXPORT QWSEmbedWidget : public QWidget
 
 public:
     QWSEmbedWidget(WId winId, QWidget *parent = nullptr);
-    ~QWSEmbedWidget();
+    ~QWSEmbedWidget() override;
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
-    void changeEvent(QEvent *event);
-    void resizeEvent(QResizeEvent *event);
-    void moveEvent(QMoveEvent *event);
-    void hideEvent(QHideEvent *event);
-    void showEvent(QShowEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
+    void changeEvent(QEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private:
     Q_DECLARE_PRIVATE(QWSEmbedWidget)

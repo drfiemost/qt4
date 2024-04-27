@@ -60,8 +60,8 @@ class LabelTaskMenu: public QDesignerTaskMenu
 public:
     explicit LabelTaskMenu(QLabel *button, QObject *parent = nullptr);
 
-    virtual QAction *preferredEditAction() const;
-    virtual QList<QAction*> taskActions() const;
+    QAction *preferredEditAction() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editRichText();

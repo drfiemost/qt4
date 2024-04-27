@@ -70,16 +70,16 @@ Q_SIGNALS:
 
 public:
     explicit QColumnViewGrip(QWidget *parent = nullptr);
-    ~QColumnViewGrip();
+    ~QColumnViewGrip() override;
     int moveGrip(int offset);
 
 protected:
     QColumnViewGrip(QColumnViewGripPrivate &, QWidget *parent = nullptr, Qt::WFlags f = nullptr);
-    void paintEvent(QPaintEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 
 private:
     Q_DECLARE_PRIVATE(QColumnViewGrip)
@@ -92,7 +92,7 @@ class QColumnViewGripPrivate : public QWidgetPrivate
 
 public:
     QColumnViewGripPrivate();
-    ~QColumnViewGripPrivate() {}
+    ~QColumnViewGripPrivate() override {}
 
     int originalXLocation;
 };

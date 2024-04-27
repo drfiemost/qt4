@@ -117,47 +117,47 @@ struct WriteInitialization : public TreeWalker
 //
 // widgets
 //
-    void acceptUI(DomUI *node);
-    void acceptWidget(DomWidget *node);
-    void acceptWidgetScripts(const DomScripts &, DomWidget *node, const  DomWidgets &childWidgets);
+    void acceptUI(DomUI *node) override;
+    void acceptWidget(DomWidget *node) override;
+    void acceptWidgetScripts(const DomScripts &, DomWidget *node, const  DomWidgets &childWidgets) override;
 
-    void acceptLayout(DomLayout *node);
-    void acceptSpacer(DomSpacer *node);
-    void acceptLayoutItem(DomLayoutItem *node);
+    void acceptLayout(DomLayout *node) override;
+    void acceptSpacer(DomSpacer *node) override;
+    void acceptLayoutItem(DomLayoutItem *node) override;
 
 //
 // actions
 //
-    void acceptActionGroup(DomActionGroup *node);
-    void acceptAction(DomAction *node);
-    void acceptActionRef(DomActionRef *node);
+    void acceptActionGroup(DomActionGroup *node) override;
+    void acceptAction(DomAction *node) override;
+    void acceptActionRef(DomActionRef *node) override;
 
 //
 // tab stops
 //
-    void acceptTabStops(DomTabStops *tabStops);
+    void acceptTabStops(DomTabStops *tabStops) override;
 
 //
 // custom widgets
 //
-    void acceptCustomWidgets(DomCustomWidgets *node);
-    void acceptCustomWidget(DomCustomWidget *node);
+    void acceptCustomWidgets(DomCustomWidgets *node) override;
+    void acceptCustomWidget(DomCustomWidget *node) override;
 
 //
 // layout defaults/functions
 //
-    void acceptLayoutDefault(DomLayoutDefault *node)   { m_LayoutDefaultHandler.acceptLayoutDefault(node); }
-    void acceptLayoutFunction(DomLayoutFunction *node) { m_LayoutDefaultHandler.acceptLayoutFunction(node); }
+    void acceptLayoutDefault(DomLayoutDefault *node) override   { m_LayoutDefaultHandler.acceptLayoutDefault(node); }
+    void acceptLayoutFunction(DomLayoutFunction *node) override { m_LayoutDefaultHandler.acceptLayoutFunction(node); }
 
 //
 // signal/slot connections
 //
-    void acceptConnection(DomConnection *connection);
+    void acceptConnection(DomConnection *connection) override;
 
 //
 // images
 //
-    void acceptImage(DomImage *image);
+    void acceptImage(DomImage *image) override;
 
     enum {
         Use43UiFile = 0,

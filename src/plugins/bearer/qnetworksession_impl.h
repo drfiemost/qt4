@@ -72,35 +72,35 @@ public:
     QNetworkSessionPrivateImpl()
         : startTime(0), sessionTimeout(-1)
     {}
-    ~QNetworkSessionPrivateImpl()
+    ~QNetworkSessionPrivateImpl() override
     {}
 
     //called by QNetworkSession constructor and ensures
     //that the state is immediately updated (w/o actually opening
     //a session). Also this function should take care of 
     //notification hooks to discover future state changes.
-    void syncStateWithInterface();
+    void syncStateWithInterface() override;
 
 #ifndef QT_NO_NETWORKINTERFACE
-    QNetworkInterface currentInterface() const;
+    QNetworkInterface currentInterface() const override;
 #endif
-    QVariant sessionProperty(const QString& key) const;
-    void setSessionProperty(const QString& key, const QVariant& value);
+    QVariant sessionProperty(const QString& key) const override;
+    void setSessionProperty(const QString& key, const QVariant& value) override;
 
-    void open();
-    void close();
-    void stop();
-    void migrate();
-    void accept();
-    void ignore();
-    void reject();
+    void open() override;
+    void close() override;
+    void stop() override;
+    void migrate() override;
+    void accept() override;
+    void ignore() override;
+    void reject() override;
 
-    QString errorString() const; //must return translated string
-    QNetworkSession::SessionError error() const;
+    QString errorString() const override; //must return translated string
+    QNetworkSession::SessionError error() const override;
 
-    quint64 bytesWritten() const;
-    quint64 bytesReceived() const;
-    quint64 activeTime() const;
+    quint64 bytesWritten() const override;
+    quint64 bytesReceived() const override;
+    quint64 activeTime() const override;
 
 private Q_SLOTS:
     void networkConfigurationsChanged();

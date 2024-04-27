@@ -209,7 +209,7 @@ class Q_GUI_EXPORT QListWidget : public QListView
     friend class QListModel;
 public:
     explicit QListWidget(QWidget *parent = nullptr);
-    ~QListWidget();
+    ~QListWidget() override;
 
     QListWidgetItem *item(int row) const;
     int row(const QListWidgetItem *item) const;
@@ -253,7 +253,7 @@ public:
 
     bool isItemHidden(const QListWidgetItem *item) const;
     void setItemHidden(const QListWidgetItem *item, bool hide);
-    void dropEvent(QDropEvent *event);
+    void dropEvent(QDropEvent *event) override;
 
 public Q_SLOTS:
     void scrollToItem(const QListWidgetItem *item, QAbstractItemView::ScrollHint hint = EnsureVisible);
@@ -274,7 +274,7 @@ Q_SIGNALS:
     void itemSelectionChanged();
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
     virtual QStringList mimeTypes() const;
     virtual QMimeData *mimeData(const QList<QListWidgetItem*> items) const;
 #ifndef QT_NO_DRAGANDDROP
@@ -287,7 +287,7 @@ protected:
     QListWidgetItem *itemFromIndex(const QModelIndex &index) const;
 
 private:
-    void setModel(QAbstractItemModel *model);
+    void setModel(QAbstractItemModel *model) override;
     Qt::SortOrder sortOrder() const;
 
     Q_DECLARE_PRIVATE(QListWidget)

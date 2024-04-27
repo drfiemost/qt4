@@ -59,10 +59,10 @@ class BookmarkManagerWidget : public QWidget
 public:
     explicit BookmarkManagerWidget(BookmarkModel *bookmarkModel,
         QWidget *parent = nullptr);
-    ~BookmarkManagerWidget();
+    ~BookmarkManagerWidget() override;
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 
 signals:
     void setSource(const QUrl &url);
@@ -73,7 +73,7 @@ signals:
 private:
     void renameItem(const QModelIndex &index);
     void selectNextIndex(bool direction) const;
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private slots:
     void findNext();

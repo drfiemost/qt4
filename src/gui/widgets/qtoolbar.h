@@ -80,7 +80,7 @@ class Q_GUI_EXPORT QToolBar : public QWidget
 public:
     explicit QToolBar(const QString &title, QWidget *parent = nullptr);
     explicit QToolBar(QWidget *parent = nullptr);
-    ~QToolBar();
+    ~QToolBar() override;
 
     void setMovable(bool movable);
     bool isMovable() const;
@@ -140,12 +140,12 @@ Q_SIGNALS:
     void visibilityChanged(bool visible);
 
 protected:
-    void actionEvent(QActionEvent *event);
-    void changeEvent(QEvent *event);
-    void childEvent(QChildEvent *event);
-    void paintEvent(QPaintEvent *event);
-    void resizeEvent(QResizeEvent *event);
-    bool event(QEvent *event);
+    void actionEvent(QActionEvent *event) override;
+    void changeEvent(QEvent *event) override;
+    void childEvent(QChildEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+    bool event(QEvent *event) override;
     void initStyleOption(QStyleOptionToolBar *option) const;
 
 private:

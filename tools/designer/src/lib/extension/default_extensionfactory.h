@@ -62,7 +62,7 @@ class QDESIGNER_EXTENSION_EXPORT QExtensionFactory : public QObject, public QAbs
 public:
     QExtensionFactory(QExtensionManager *parent = nullptr);
 
-    virtual QObject *extension(QObject *object, const QString &iid) const;
+    QObject *extension(QObject *object, const QString &iid) const override;
     QExtensionManager *extensionManager() const;
 
 private Q_SLOTS:

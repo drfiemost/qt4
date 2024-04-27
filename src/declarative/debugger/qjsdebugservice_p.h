@@ -89,7 +89,7 @@ class QJSDebugService : public QDeclarativeDebugService
 
 public:
     QJSDebugService(QObject *parent = nullptr);
-    ~QJSDebugService();
+    ~QJSDebugService() override;
 
     static QJSDebugService *instance();
 
@@ -100,8 +100,8 @@ public:
     QElapsedTimer m_timer;
 
 protected:
-    void statusChanged(Status status);
-    void messageReceived(const QByteArray &);
+    void statusChanged(Status status) override;
+    void messageReceived(const QByteArray &) override;
 
 private Q_SLOTS:
     void executionStopped(bool becauseOfException,

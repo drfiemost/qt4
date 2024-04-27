@@ -72,7 +72,7 @@ class QKeyMapper : public QObject
     Q_OBJECT
 public:
     explicit QKeyMapper();
-    ~QKeyMapper();
+    ~QKeyMapper() override;
 
     static QKeyMapper *instance();
     static void changeKeyboard();
@@ -147,7 +147,7 @@ class QKeyMapperPrivate : public QObjectPrivate
     Q_DECLARE_PUBLIC(QKeyMapper)
 public:
     QKeyMapperPrivate();
-    ~QKeyMapperPrivate();
+    ~QKeyMapperPrivate() override;
 
     void clearMappings();
     QList<int> possibleKeys(QKeyEvent *e);

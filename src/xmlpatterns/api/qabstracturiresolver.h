@@ -56,7 +56,7 @@ class Q_XMLPATTERNS_EXPORT QAbstractUriResolver : public QObject
     Q_OBJECT
 public:
     QAbstractUriResolver(QObject *parent = nullptr);
-    virtual ~QAbstractUriResolver();
+    ~QAbstractUriResolver() override;
 
     virtual QUrl resolve(const QUrl &relative,
                          const QUrl &baseURI) const = 0;

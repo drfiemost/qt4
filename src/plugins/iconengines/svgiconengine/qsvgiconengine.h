@@ -56,23 +56,23 @@ class QSvgIconEngine : public QIconEngineV2
 public:
     QSvgIconEngine();
     QSvgIconEngine(const QSvgIconEngine &other);
-    ~QSvgIconEngine();
+    ~QSvgIconEngine() override;
     void paint(QPainter *painter, const QRect &rect,
-               QIcon::Mode mode, QIcon::State state);
+               QIcon::Mode mode, QIcon::State state) override;
     QSize actualSize(const QSize &size, QIcon::Mode mode,
-                     QIcon::State state);
+                     QIcon::State state) override;
     QPixmap pixmap(const QSize &size, QIcon::Mode mode,
-                   QIcon::State state);
+                   QIcon::State state) override;
 
     void addPixmap(const QPixmap &pixmap, QIcon::Mode mode,
-                   QIcon::State state);
+                   QIcon::State state) override;
     void addFile(const QString &fileName, const QSize &size,
-                 QIcon::Mode mode, QIcon::State state);
+                 QIcon::Mode mode, QIcon::State state) override;
 
-    QString key() const;
-    QIconEngineV2 *clone() const;
-    bool read(QDataStream &in);
-    bool write(QDataStream &out) const;
+    QString key() const override;
+    QIconEngineV2 *clone() const override;
+    bool read(QDataStream &in) override;
+    bool write(QDataStream &out) const override;
 
 private:
     QSharedDataPointer<QSvgIconEnginePrivate> d;

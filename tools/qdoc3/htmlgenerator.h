@@ -81,12 +81,12 @@ class HtmlGenerator : public PageGenerator
 
  public:
     HtmlGenerator();
-    ~HtmlGenerator();
+    ~HtmlGenerator() override;
 
-    virtual void initializeGenerator(const Config& config);
-    virtual void terminateGenerator();
-    virtual QString format();
-    virtual void generateTree(const Tree *tree);
+    void initializeGenerator(const Config& config) override;
+    void terminateGenerator() override;
+    QString format() override;
+    void generateTree(const Tree *tree) override;
     void generateManifestFiles();
 
     QString protectEnc(const QString &string);
@@ -96,13 +96,13 @@ class HtmlGenerator : public PageGenerator
     static QString fullDocumentLocation(const Node *node);
 
  protected:
-    virtual void startText(const Node *relative, CodeMarker *marker);
-    virtual int generateAtom(const Atom *atom, 
+    void startText(const Node *relative, CodeMarker *marker) override;
+    int generateAtom(const Atom *atom, 
                              const Node *relative,
-                             CodeMarker *marker);
-    virtual void generateClassLikeNode(const InnerNode *inner, CodeMarker *marker);
-    virtual void generateFakeNode(const FakeNode *fake, CodeMarker *marker);
-    virtual QString fileExtension(const Node *node) const;
+                             CodeMarker *marker) override;
+    void generateClassLikeNode(const InnerNode *inner, CodeMarker *marker) override;
+    void generateFakeNode(const FakeNode *fake, CodeMarker *marker) override;
+    QString fileExtension(const Node *node) const override;
     virtual QString refForNode(const Node *node);
     virtual QString linkForNode(const Node *node, const Node *relative);
     virtual QString refForAtom(Atom *atom, const Node *node);
@@ -178,7 +178,7 @@ class HtmlGenerator : public PageGenerator
     void generateDetailedQmlMember(const Node *node,
                                    const InnerNode *relative,
                                    CodeMarker *marker);
-    void generateQmlInherits(const QmlClassNode* cn, CodeMarker* marker);
+    void generateQmlInherits(const QmlClassNode* cn, CodeMarker* marker) override;
     void generateQmlInheritedBy(const QmlClassNode* cn, CodeMarker* marker);
     void generateQmlInstantiates(const QmlClassNode* qcn, CodeMarker* marker);
     void generateInstantiatedBy(const ClassNode* cn, CodeMarker* marker);
@@ -215,7 +215,7 @@ class HtmlGenerator : public PageGenerator
     void generateStatus(const Node *node, CodeMarker *marker);
     
     QString registerRef(const QString& ref);
-    virtual QString fileBase(const Node *node) const;
+    QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
     void findAllClasses(const InnerNode *node);
     void findAllFunctions(const InnerNode *node);

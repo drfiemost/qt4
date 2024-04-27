@@ -55,7 +55,7 @@ class Q_CORE_EXPORT QObjectCleanupHandler : public QObject
 
 public:
     QObjectCleanupHandler();
-    ~QObjectCleanupHandler();
+    ~QObjectCleanupHandler() override;
 
     QObject* add(QObject* object);
     void remove(QObject *object);

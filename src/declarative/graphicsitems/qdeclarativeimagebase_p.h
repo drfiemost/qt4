@@ -64,7 +64,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeImageBase : public QDeclarativeImplicitSizeI
 
 public:
     QDeclarativeImageBase(QDeclarativeItem *parent=nullptr);
-    ~QDeclarativeImageBase();
+    ~QDeclarativeImageBase() override;
     enum Status { Null, Ready, Loading, Error };
     Status status() const;
     qreal progress() const;
@@ -96,7 +96,7 @@ Q_SIGNALS:
 
 protected:
     virtual void load();
-    virtual void componentComplete();
+    void componentComplete() override;
     virtual void pixmapChange();
     QDeclarativeImageBase(QDeclarativeImageBasePrivate &dd, QDeclarativeItem *parent);
 

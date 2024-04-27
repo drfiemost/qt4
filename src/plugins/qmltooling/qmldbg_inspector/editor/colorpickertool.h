@@ -56,29 +56,29 @@ class ColorPickerTool : public AbstractLiveEditTool
 public:
     explicit ColorPickerTool(QDeclarativeViewInspector *view);
 
-    virtual ~ColorPickerTool();
+    ~ColorPickerTool() override;
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *) {}
-    void mouseDoubleClickEvent(QMouseEvent *) {}
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *) override {}
+    void mouseDoubleClickEvent(QMouseEvent *) override {}
 
-    void hoverMoveEvent(QMouseEvent *) {}
+    void hoverMoveEvent(QMouseEvent *) override {}
 
-    void keyPressEvent(QKeyEvent *) {}
-    void keyReleaseEvent(QKeyEvent *) {}
+    void keyPressEvent(QKeyEvent *) override {}
+    void keyReleaseEvent(QKeyEvent *) override {}
 
-    void wheelEvent(QWheelEvent *) {}
+    void wheelEvent(QWheelEvent *) override {}
 
-    void itemsAboutToRemoved(const QList<QGraphicsItem*> &) {}
+    void itemsAboutToRemoved(const QList<QGraphicsItem*> &) override {}
 
-    void clear();
+    void clear() override;
 
 signals:
     void selectedColorChanged(const QColor &color);
 
 protected:
-    void selectedItemsChanged(const QList<QGraphicsItem*> &) {}
+    void selectedItemsChanged(const QList<QGraphicsItem*> &) override {}
 
 private:
     void pickColor(const QPoint &pos);

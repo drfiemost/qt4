@@ -136,7 +136,7 @@ class QDeclarativeVMEMetaObject : public QAbstractDynamicMetaObject
 public:
     QDeclarativeVMEMetaObject(QObject *obj, const QMetaObject *other, const QDeclarativeVMEMetaData *data,
                      QDeclarativeCompiledData *compiledData);
-    ~QDeclarativeVMEMetaObject();
+    ~QDeclarativeVMEMetaObject() override;
 
     bool aliasTarget(int index, QObject **target, int *coreIndex, int *valueTypeIndex) const;
     void registerInterceptor(int index, int valueIndex, QDeclarativePropertyValueInterceptor *interceptor);
@@ -149,7 +149,7 @@ public:
     void connectAliasSignal(int index);
 
 protected:
-    virtual int metaCall(QMetaObject::Call _c, int _id, void **_a);
+    int metaCall(QMetaObject::Call _c, int _id, void **_a) override;
 
 private:
     QObject *object;

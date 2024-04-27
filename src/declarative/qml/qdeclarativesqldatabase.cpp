@@ -77,7 +77,7 @@ public:
 
     QueryFlags queryProperty(const QScriptValue &,
                              const QScriptString &name,
-                             QueryFlags flags, uint *)
+                             QueryFlags flags, uint *) override
     {
         if (flags & HandlesReadAccess) {
             if (name == str_length) {
@@ -93,7 +93,7 @@ public:
     }
 
     QScriptValue property(const QScriptValue &object,
-                          const QScriptString &name, uint)
+                          const QScriptString &name, uint) override
     {
         QSqlQuery query = qscriptvalue_cast<QSqlQuery>(object.data());
         if (name == str_length) {
@@ -115,7 +115,7 @@ public:
     }
 
     void setProperty(QScriptValue &object,
-                      const QScriptString &name, uint, const QScriptValue & value)
+                      const QScriptString &name, uint, const QScriptValue & value) override
     {
         if (name == str_forwardOnly) {
             QSqlQuery query = qscriptvalue_cast<QSqlQuery>(object.data());
@@ -123,7 +123,7 @@ public:
         }
     }
 
-    QScriptValue::PropertyFlags propertyFlags(const QScriptValue &/*object*/, const QScriptString &name, uint /*id*/)
+    QScriptValue::PropertyFlags propertyFlags(const QScriptValue &/*object*/, const QScriptString &name, uint /*id*/) override
     {
         if (name == str_length) {
             return QScriptValue::Undeletable

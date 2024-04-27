@@ -94,7 +94,7 @@ private slots:
 private:
     OpenPagesManager(QObject *parent, bool defaultCollection,
         const QUrl &cmdLineUrl);
-    ~OpenPagesManager();
+    ~OpenPagesManager() override;
 
     void setupInitialPages(bool defaultCollection, const QUrl &cmdLineUrl);
     void closeOrReloadPages(const QString &nameSpace, bool tryReload);

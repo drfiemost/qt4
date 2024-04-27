@@ -82,29 +82,29 @@ public:
 
     explicit QSqlRelationalTableModel(QObject *parent = nullptr,
                                       QSqlDatabase db = QSqlDatabase());
-    virtual ~QSqlRelationalTableModel();
+    ~QSqlRelationalTableModel() override;
 
-    QVariant data(const QModelIndex &item, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &item, const QVariant &value, int role = Qt::EditRole);
-    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex());
+    QVariant data(const QModelIndex &item, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &item, const QVariant &value, int role = Qt::EditRole) override;
+    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
-    void clear();
-    bool select();
+    void clear() override;
+    bool select() override;
 
-    void setTable(const QString &tableName);
+    void setTable(const QString &tableName) override;
     virtual void setRelation(int column, const QSqlRelation &relation);
     QSqlRelation relation(int column) const;
     virtual QSqlTableModel *relationModel(int column) const;
     void setJoinMode( QSqlRelationalTableModel::JoinMode joinMode );
 
 public Q_SLOTS:
-    void revertRow(int row);
+    void revertRow(int row) override;
 
 protected:
-    QString selectStatement() const;
-    bool updateRowInTable(int row, const QSqlRecord &values);
-    bool insertRowIntoTable(const QSqlRecord &values);
-    QString orderByClause() const;
+    QString selectStatement() const override;
+    bool updateRowInTable(int row, const QSqlRecord &values) override;
+    bool insertRowIntoTable(const QSqlRecord &values) override;
+    QString orderByClause() const override;
 
 private:
     Q_DECLARE_PRIVATE(QSqlRelationalTableModel)

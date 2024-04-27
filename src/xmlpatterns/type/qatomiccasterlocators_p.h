@@ -75,52 +75,52 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GDayType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const NOTATIONType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const QNameType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GDayType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GYearType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const NOTATIONType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const QNameType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -130,52 +130,52 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GDayType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const NOTATIONType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const QNameType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GDayType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GYearType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const NOTATIONType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const QNameType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -185,12 +185,12 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -200,20 +200,20 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -223,20 +223,20 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -246,20 +246,20 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -269,20 +269,20 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -292,20 +292,20 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -315,14 +315,14 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -332,14 +332,14 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const Base64BinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const HexBinaryType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -349,10 +349,10 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const QNameType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const QNameType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -362,16 +362,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GYearType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -381,16 +381,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GDayType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GDayType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -400,16 +400,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -419,16 +419,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -438,16 +438,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -457,14 +457,14 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -474,14 +474,14 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -491,14 +491,14 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -508,16 +508,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -527,16 +527,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -546,16 +546,16 @@ namespace QPatternist
     {
     public:
         using AtomicCasterLocator::visit;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const DurationType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const;
-        virtual AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
-                                                   const SourceLocationReflection *const r) const;
+        AtomicTypeVisitorResult::Ptr visit(const DayTimeDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const DurationType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override;
+        AtomicTypeVisitorResult::Ptr visit(const YearMonthDurationType *,
+                                                   const SourceLocationReflection *const r) const override;
     };
 
     /**
@@ -567,36 +567,36 @@ namespace QPatternist
     public:
         using ToIntegerCasterLocator::visit;
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new BooleanToDerivedIntegerCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new StringToDerivedIntegerCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new StringToDerivedIntegerCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new StringToDerivedIntegerCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new NumericToDerivedIntegerCaster<type>());
@@ -686,15 +686,15 @@ namespace QPatternist
             return AtomicTypeVisitorResult::Ptr(new NumericToDerivedIntegerCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new NumericToDerivedIntegerCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new NumericToDerivedIntegerCaster<type>());
@@ -710,29 +710,29 @@ namespace QPatternist
     public:
         using ToStringCasterLocator::visit;
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const BooleanType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const StringType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const StringType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const AnyURIType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const UntypedAtomicType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
@@ -802,99 +802,99 @@ namespace QPatternist
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const DateTimeType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const DateType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const DateType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const SchemaTimeType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const FloatType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const FloatType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const DoubleType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const DecimalType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const IntegerType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const DurationType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const DurationType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const GYearMonthType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const GYearType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const GYearType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const GMonthDayType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const GDayType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const GDayType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const GMonthType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());
         }
 
-        virtual AtomicTypeVisitorResult::Ptr visit(const QNameType *,
-                                                   const SourceLocationReflection *const r) const
+        AtomicTypeVisitorResult::Ptr visit(const QNameType *,
+                                                   const SourceLocationReflection *const r) const override
         {
             Q_UNUSED(r);
             return AtomicTypeVisitorResult::Ptr(new AnyToDerivedStringCaster<type>());

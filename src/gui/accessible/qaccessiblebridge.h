@@ -76,10 +76,10 @@ class Q_GUI_EXPORT QAccessibleBridgePlugin : public QObject, public QAccessibleB
     Q_INTERFACES(QAccessibleBridgeFactoryInterface:QFactoryInterface)
 public:
     explicit QAccessibleBridgePlugin(QObject *parent = nullptr);
-    ~QAccessibleBridgePlugin();
+    ~QAccessibleBridgePlugin() override;
 
-    virtual QStringList keys() const = 0;
-    virtual QAccessibleBridge *create(const QString &key) = 0;
+    QStringList keys() const override = 0;
+    QAccessibleBridge *create(const QString &key) override = 0;
 };
 
 #endif // QT_NO_ACCESSIBILITY

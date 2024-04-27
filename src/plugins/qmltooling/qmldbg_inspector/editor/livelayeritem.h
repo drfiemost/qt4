@@ -50,11 +50,11 @@ class LiveLayerItem : public QGraphicsObject
 {
 public:
     LiveLayerItem(QGraphicsScene *scene);
-    ~LiveLayerItem();
+    ~LiveLayerItem() override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                QWidget *widget = nullptr);
-    QRectF boundingRect() const;
-    int type() const;
+                QWidget *widget = nullptr) override;
+    QRectF boundingRect() const override;
+    int type() const override;
 
     QList<QGraphicsItem*> findAllChildItems() const;
 

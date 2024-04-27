@@ -71,7 +71,7 @@ class QDeclarativeViewer
 
 public:
     QDeclarativeViewer(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QDeclarativeViewer();
+    ~QDeclarativeViewer() override;
 
     static void registerTypes();
 
@@ -128,8 +128,8 @@ public slots:
     void launch(const QString &);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *);
-    virtual bool event(QEvent *);
+    void keyPressEvent(QKeyEvent *) override;
+    bool event(QEvent *) override;
     void createMenu();
 
 private slots:

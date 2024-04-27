@@ -67,7 +67,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerScriptsModel
     Q_OBJECT
 public:
     QScriptDebuggerScriptsModel(QObject *parent = nullptr);
-    ~QScriptDebuggerScriptsModel();
+    ~QScriptDebuggerScriptsModel() override;
 
     void removeScript(qint64 id);
     void addScript(qint64 id, const QScriptScriptData &data);
@@ -85,11 +85,11 @@ public:
     qint64 scriptIdFromIndex(const QModelIndex &index) const;
     QPair<QString, int> scriptFunctionInfoFromIndex(const QModelIndex &index) const;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex &child) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerScriptsModel)

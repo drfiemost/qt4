@@ -96,7 +96,7 @@ namespace QPatternist
         typedef QHash<QXmlName, QExplicitlySharedDataPointer<Expression> > TemplateParameterHash;
         typedef QExplicitlySharedDataPointer<DynamicContext> Ptr;
 
-        virtual ~DynamicContext()
+        ~DynamicContext() override
         {
         }
 
@@ -140,7 +140,7 @@ namespace QPatternist
         virtual NodeBuilder::Ptr nodeBuilder(const QUrl &baseURI) const = 0;
         virtual ResourceLoader::Ptr resourceLoader() const = 0;
         virtual ExternalVariableLoader::Ptr externalVariableLoader() const = 0;
-        virtual NamePool::Ptr namePool() const = 0;
+        NamePool::Ptr namePool() const override = 0;
 
         /**
          * @short Returns the item that @c fn:current() returns.

@@ -431,7 +431,7 @@ namespace {
         {
         }
 
-        virtual void updateState(const QPaintEngineState &newState)
+        void updateState(const QPaintEngineState &newState) override
         {
             if (newState.state() & QPaintEngine::DirtyPen
                 && newState.pen().color() != m_currentColor) {
@@ -440,7 +440,7 @@ namespace {
             }
         }
 
-        virtual void drawTextItem(const QPointF &position, const QTextItem &textItem)
+        void drawTextItem(const QPointF &position, const QTextItem &textItem) override
         {
             const QTextItemInt &ti = static_cast<const QTextItemInt &>(textItem);
 
@@ -482,15 +482,15 @@ namespace {
             m_items.append(currentItem);
         }
 
-        virtual void drawPolygon(const QPointF *, int , PolygonDrawMode )
+        void drawPolygon(const QPointF *, int , PolygonDrawMode ) override
         {
             /* intentionally empty */
         }
 
-        virtual bool begin(QPaintDevice *)  { return true; }
-        virtual bool end() { return true; }
-        virtual void drawPixmap(const QRectF &, const QPixmap &, const QRectF &) {}
-        virtual Type type() const
+        bool begin(QPaintDevice *) override  { return true; }
+        bool end() override { return true; }
+        void drawPixmap(const QRectF &, const QPixmap &, const QRectF &) override {}
+        Type type() const override
         {
             return User;
         }
@@ -536,12 +536,12 @@ namespace {
                                                      useBackendOptimizations);
         }
 
-        ~DrawTextItemDevice()
+        ~DrawTextItemDevice() override
         {
             delete m_paintEngine;
         }
 
-        int metric(PaintDeviceMetric m) const
+        int metric(PaintDeviceMetric m) const override
         {
             int val;
             switch (m) {
@@ -572,7 +572,7 @@ namespace {
             return val;
         }
 
-        virtual QPaintEngine *paintEngine() const
+        QPaintEngine *paintEngine() const override
         {
             return m_paintEngine;
         }

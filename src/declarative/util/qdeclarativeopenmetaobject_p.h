@@ -61,7 +61,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeOpenMetaObjectType : public QDecl
 {
 public:
     QDeclarativeOpenMetaObjectType(const QMetaObject *base, QDeclarativeEngine *engine);
-    ~QDeclarativeOpenMetaObjectType();
+    ~QDeclarativeOpenMetaObjectType() override;
 
     int createProperty(const QByteArray &name);
 
@@ -83,7 +83,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeOpenMetaObject : public QAbstract
 public:
     QDeclarativeOpenMetaObject(QObject *, bool = true);
     QDeclarativeOpenMetaObject(QObject *, QDeclarativeOpenMetaObjectType *, bool = true);
-    ~QDeclarativeOpenMetaObject();
+    ~QDeclarativeOpenMetaObject() override;
 
     QVariant value(const QByteArray &) const;
     void setValue(const QByteArray &, const QVariant &);
@@ -106,8 +106,8 @@ public:
     QDeclarativeOpenMetaObjectType *type() const;
 
 protected:
-    virtual int metaCall(QMetaObject::Call _c, int _id, void **_a);
-    virtual int createProperty(const char *, const char *);
+    int metaCall(QMetaObject::Call _c, int _id, void **_a) override;
+    int createProperty(const char *, const char *) override;
 
     virtual void propertyRead(int);
     virtual void propertyWrite(int);

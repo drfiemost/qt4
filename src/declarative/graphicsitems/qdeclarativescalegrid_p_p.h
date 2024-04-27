@@ -68,7 +68,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeScaleGrid : public QObject
 
 public:
     QDeclarativeScaleGrid(QObject *parent=nullptr);
-    ~QDeclarativeScaleGrid();
+    ~QDeclarativeScaleGrid() override;
 
     bool isNull() const;
 

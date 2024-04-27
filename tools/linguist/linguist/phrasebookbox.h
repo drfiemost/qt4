@@ -60,7 +60,7 @@ public:
     PhraseBookBox(PhraseBook *phraseBook, QWidget *parent = nullptr);
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
     void newPhrase();

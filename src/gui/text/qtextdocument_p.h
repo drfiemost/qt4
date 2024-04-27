@@ -169,7 +169,7 @@ public:
     typedef QFragmentMap<QTextBlockData> BlockMap;
 
     QTextDocumentPrivate();
-    ~QTextDocumentPrivate();
+    ~QTextDocumentPrivate() override;
 
     void init();
     void clear();

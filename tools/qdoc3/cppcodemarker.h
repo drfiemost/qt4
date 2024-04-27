@@ -54,39 +54,39 @@ class CppCodeMarker : public CodeMarker
 {
  public:
     CppCodeMarker();
-    ~CppCodeMarker();
+    ~CppCodeMarker() override;
 
-    virtual bool recognizeCode(const QString& code);
-    virtual bool recognizeExtension(const QString& ext);
-    virtual bool recognizeLanguage(const QString& lang);
-    virtual Atom::Type atomType() const;
-    virtual QString plainName(const Node *node);
-    virtual QString plainFullName(const Node *node, const Node *relative);
-    virtual QString markedUpCode(const QString& code, 
+    bool recognizeCode(const QString& code) override;
+    bool recognizeExtension(const QString& ext) override;
+    bool recognizeLanguage(const QString& lang) override;
+    Atom::Type atomType() const override;
+    QString plainName(const Node *node) override;
+    QString plainFullName(const Node *node, const Node *relative) override;
+    QString markedUpCode(const QString& code, 
                                  const Node *relative, 
-                                 const Location &location);
-    virtual QString markedUpSynopsis(const Node *node, 
+                                 const Location &location) override;
+    QString markedUpSynopsis(const Node *node, 
                                      const Node *relative,
-                                     SynopsisStyle style);
+                                     SynopsisStyle style) override;
 #ifdef QDOC_QML
-    virtual QString markedUpQmlItem(const Node *node, bool summary);
+    QString markedUpQmlItem(const Node *node, bool summary) override;
 #endif
-    virtual QString markedUpName(const Node *node);
-    virtual QString markedUpFullName(const Node *node, const Node *relative);
-    virtual QString markedUpEnumValue(const QString &enumValue, const Node *relative);
-    virtual QString markedUpIncludes(const QStringList& includes);
-    virtual QString functionBeginRegExp(const QString& funcName);
-    virtual QString functionEndRegExp(const QString& funcName);
-    virtual QList<Section> sections(const InnerNode *innerNode, 
+    QString markedUpName(const Node *node) override;
+    QString markedUpFullName(const Node *node, const Node *relative) override;
+    QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
+    QString markedUpIncludes(const QStringList& includes) override;
+    QString functionBeginRegExp(const QString& funcName) override;
+    QString functionEndRegExp(const QString& funcName) override;
+    QList<Section> sections(const InnerNode *innerNode, 
                                     SynopsisStyle style, 
-                                    Status status);
-    virtual QList<Section> qmlSections(const QmlClassNode* qmlClassNode,
+                                    Status status) override;
+    QList<Section> qmlSections(const QmlClassNode* qmlClassNode,
                                        SynopsisStyle style,
-                                       const Tree* tree);
-    virtual const Node* resolveTarget(const QString& target, 
+                                       const Tree* tree) override;
+    const Node* resolveTarget(const QString& target, 
                                       const Tree* tree, 
                                       const Node* relative,
-                                      const Node* self = nullptr);
+                                      const Node* self = nullptr) override;
 
 private:
     QString addMarkUp(const QString& protectedCode, 

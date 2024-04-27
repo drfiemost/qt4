@@ -72,7 +72,7 @@ class Q_GUI_EXPORT QPixmapFilter : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(QPixmapFilter)
 public:
-    virtual ~QPixmapFilter() = 0;
+    ~QPixmapFilter() override = 0;
 
     enum FilterType {
         ConvolutionFilter,
@@ -103,12 +103,12 @@ class Q_GUI_EXPORT QPixmapConvolutionFilter : public QPixmapFilter
 
 public:
     QPixmapConvolutionFilter(QObject *parent = nullptr);
-    ~QPixmapConvolutionFilter();
+    ~QPixmapConvolutionFilter() override;
 
     void setConvolutionKernel(const qreal *matrix, int rows, int columns);
 
-    QRectF boundingRectFor(const QRectF &rect) const;
-    void draw(QPainter *painter, const QPointF &dest, const QPixmap &src, const QRectF &srcRect = QRectF()) const;
+    QRectF boundingRectFor(const QRectF &rect) const override;
+    void draw(QPainter *painter, const QPointF &dest, const QPixmap &src, const QRectF &srcRect = QRectF()) const override;
 
 private:
     friend class QGLPixmapConvolutionFilter;
@@ -127,7 +127,7 @@ class Q_GUI_EXPORT QPixmapBlurFilter : public QPixmapFilter
 
 public:
     QPixmapBlurFilter(QObject *parent = nullptr);
-    ~QPixmapBlurFilter();
+    ~QPixmapBlurFilter() override;
 
     void setRadius(qreal radius);
     void setBlurHints(QGraphicsBlurEffect::BlurHints hints);
@@ -135,8 +135,8 @@ public:
     qreal radius() const;
     QGraphicsBlurEffect::BlurHints blurHints() const;
 
-    QRectF boundingRectFor(const QRectF &rect) const;
-    void draw(QPainter *painter, const QPointF &dest, const QPixmap &src, const QRectF &srcRect = QRectF()) const;
+    QRectF boundingRectFor(const QRectF &rect) const override;
+    void draw(QPainter *painter, const QPointF &dest, const QPixmap &src, const QRectF &srcRect = QRectF()) const override;
 
 private:
     friend class QGLPixmapBlurFilter;
@@ -158,7 +158,7 @@ public:
     void setStrength(qreal strength);
     qreal strength() const;
 
-    void draw(QPainter *painter, const QPointF &dest, const QPixmap &src, const QRectF &srcRect = QRectF()) const;
+    void draw(QPainter *painter, const QPointF &dest, const QPixmap &src, const QRectF &srcRect = QRectF()) const override;
 };
 
 class QPixmapDropShadowFilterPrivate;
@@ -170,10 +170,10 @@ class Q_GUI_EXPORT QPixmapDropShadowFilter : public QPixmapFilter
 
 public:
     QPixmapDropShadowFilter(QObject *parent = nullptr);
-    ~QPixmapDropShadowFilter();
+    ~QPixmapDropShadowFilter() override;
 
-    QRectF boundingRectFor(const QRectF &rect) const;
-    void draw(QPainter *p, const QPointF &pos, const QPixmap &px, const QRectF &src = QRectF()) const;
+    QRectF boundingRectFor(const QRectF &rect) const override;
+    void draw(QPainter *p, const QPointF &pos, const QPixmap &px, const QRectF &src = QRectF()) const override;
 
     qreal blurRadius() const;
     void setBlurRadius(qreal radius);

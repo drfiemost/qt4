@@ -110,7 +110,7 @@ class QML_PARSER_EXPORT NodePool : public MemoryPool
 {
 public:
     NodePool(const QString &fileName, Engine *engine);
-    virtual ~NodePool();
+    ~NodePool() override;
 
     Code *createCompiledCode(AST::Node *node, CompilationUnit &compilation);
 

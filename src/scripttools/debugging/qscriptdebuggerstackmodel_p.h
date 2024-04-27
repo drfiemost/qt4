@@ -67,15 +67,15 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerStackModel
 {
 public:
     QScriptDebuggerStackModel(QObject *parent = nullptr);
-    ~QScriptDebuggerStackModel();
+    ~QScriptDebuggerStackModel() override;
 
     QList<QScriptContextInfo> contextInfos() const;
     void setContextInfos(const QList<QScriptContextInfo> &infos);
 
-    int columnCount(const QModelIndex &parent) const;
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation, int role) const;
+    int columnCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation, int role) const override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerStackModel)

@@ -100,8 +100,8 @@ namespace qdesigner_internal {
 
         QString text() const;
 
-        virtual QSize sizeHint () const;
-        virtual QSize minimumSizeHint () const;
+        QSize sizeHint () const override;
+        QSize minimumSizeHint () const override;
 
         void setAlignment(Qt::Alignment alignment);
 
@@ -130,7 +130,7 @@ namespace qdesigner_internal {
         void clear();
 
     protected:
-        void resizeEvent(QResizeEvent * event );
+        void resizeEvent(QResizeEvent * event ) override;
 
     private slots:
         void slotTextChanged(const QString &text);

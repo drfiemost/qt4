@@ -71,29 +71,29 @@ class QConnmanEngine : public QBearerEngineImpl
 
 public:
     QConnmanEngine(QObject *parent = nullptr);
-    ~QConnmanEngine();
+    ~QConnmanEngine() override;
 
     bool connmanAvailable() const;
 
-    virtual QString getInterfaceFromId(const QString &id);
-    bool hasIdentifier(const QString &id);
+    QString getInterfaceFromId(const QString &id) override;
+    bool hasIdentifier(const QString &id) override;
 
-    virtual void connectToId(const QString &id);
-    virtual void disconnectFromId(const QString &id);
+    void connectToId(const QString &id) override;
+    void disconnectFromId(const QString &id) override;
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE void requestUpdate();
 
-    QNetworkSession::State sessionStateForId(const QString &id);
-    QNetworkSessionPrivate *createSessionBackend();
+    QNetworkSession::State sessionStateForId(const QString &id) override;
+    QNetworkSessionPrivate *createSessionBackend() override;
 
-    virtual quint64 bytesWritten(const QString &id);
-    virtual quint64 bytesReceived(const QString &id);
-    virtual quint64 startTime(const QString &id);
+    quint64 bytesWritten(const QString &id) override;
+    quint64 bytesReceived(const QString &id) override;
+    quint64 startTime(const QString &id) override;
 
 
-    virtual QNetworkConfigurationManager::Capabilities capabilities() const;
-    virtual QNetworkConfigurationPrivatePointer defaultConfiguration();
+    QNetworkConfigurationManager::Capabilities capabilities() const override;
+    QNetworkConfigurationPrivatePointer defaultConfiguration() override;
 
     void configurationChange(const QString &id);
     QList<QNetworkConfigurationPrivate *> getConfigurations();
@@ -129,7 +129,7 @@ private:
     QNetworkConfiguration::BearerType ofonoTechToBearerType(const QString &type);
     bool isRoamingAllowed(const QString &context);
 protected:
-    bool requiresPolling() const;
+    bool requiresPolling() const override;
 };
 
 

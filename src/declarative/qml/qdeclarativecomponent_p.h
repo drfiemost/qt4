@@ -85,8 +85,8 @@ public:
     void completeCreate();
 
     QDeclarativeTypeData *typeData;
-    virtual void typeDataReady(QDeclarativeTypeData *);
-    virtual void typeDataProgress(QDeclarativeTypeData *, qreal);
+    void typeDataReady(QDeclarativeTypeData *) override;
+    void typeDataProgress(QDeclarativeTypeData *, qreal) override;
     
     void fromTypeData(QDeclarativeTypeData *data);
 
@@ -133,7 +133,7 @@ class QDeclarativeComponentAttached : public QObject
     Q_OBJECT
 public:
     QDeclarativeComponentAttached(QObject *parent = nullptr);
-    ~QDeclarativeComponentAttached();
+    ~QDeclarativeComponentAttached() override;
 
     void add(QDeclarativeComponentAttached **a) {
         prev = a; next = *a; *a = this;

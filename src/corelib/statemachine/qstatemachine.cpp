@@ -1144,8 +1144,8 @@ public:
     StartState(QState *parent)
         : QState(parent) {}
 protected:
-    void onEntry(QEvent *) {}
-    void onExit(QEvent *) {}
+    void onEntry(QEvent *) override {}
+    void onExit(QEvent *) override {}
 };
 
 class InitialTransition : public QAbstractTransition
@@ -1155,8 +1155,8 @@ public:
         : QAbstractTransition()
     { setTargetState(target); }
 protected:
-    virtual bool eventTest(QEvent *) { return true; }
-    virtual void onTransition(QEvent *) {}
+    bool eventTest(QEvent *) override { return true; }
+    void onTransition(QEvent *) override {}
 };
 
 } // namespace
@@ -1401,8 +1401,8 @@ public:
         : QAbstractTransition()
     { setTargetState(target); }
 protected:
-    void onTransition(QEvent *) { deleteLater(); }
-    bool eventTest(QEvent *) { return true; }
+    void onTransition(QEvent *) override { deleteLater(); }
+    bool eventTest(QEvent *) override { return true; }
 };
 
 } // namespace

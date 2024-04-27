@@ -64,7 +64,7 @@ class QScriptCompletionTaskPrivate
     Q_DECLARE_PUBLIC(QScriptCompletionTask)
 public:
     QScriptCompletionTaskPrivate();
-    ~QScriptCompletionTaskPrivate();
+    ~QScriptCompletionTaskPrivate() override;
 
     void completeScriptExpression();
     void emitFinished();
@@ -97,12 +97,12 @@ public:
           m_frameIndex(frameIndex), m_path(path), m_task(task)
         {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetCompletions(m_frameIndex, m_path);
     }
-    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/)
+    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/) override
     {
         m_task->results = response.result().toStringList();
         m_task->emitFinished();
@@ -140,12 +140,12 @@ public:
           m_prefix(prefix), m_task(task)
         {}
 
-    void start()
+    void start() override
     {
         QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler(), this);
         frontend.scheduleGetScripts();
     }
-    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/)
+    void handleResponse(const QScriptDebuggerResponse &response, int /*commandId*/) override
     {
         QScriptScriptMap scripts = response.resultAsScripts();
         QScriptScriptMap::const_iterator it;

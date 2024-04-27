@@ -61,7 +61,7 @@ public:
     QSignalTransition(QState *sourceState = nullptr);
     QSignalTransition(QObject *sender, const char *signal,
                       QState *sourceState = nullptr);
-    ~QSignalTransition();
+    ~QSignalTransition() override;
 
     QObject *senderObject() const;
     void setSenderObject(QObject *sender);
@@ -70,10 +70,10 @@ public:
     void setSignal(const QByteArray &signal);
 
 protected:
-    bool eventTest(QEvent *event);
-    void onTransition(QEvent *event);
+    bool eventTest(QEvent *event) override;
+    void onTransition(QEvent *event) override;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) override;
 
 private:
     Q_DISABLE_COPY(QSignalTransition)

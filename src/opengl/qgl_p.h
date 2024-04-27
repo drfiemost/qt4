@@ -175,13 +175,13 @@ public:
         isGLWidget = 1;
     }
 
-    ~QGLWidgetPrivate() {}
+    ~QGLWidgetPrivate() override {}
 
     void init(QGLContext *context, const QGLWidget* shareWidget);
     void initContext(QGLContext *context, const QGLWidget* shareWidget);
     bool renderCxPm(QPixmap *pixmap);
     void cleanupColormaps();
-    void aboutToDestroy() {
+    void aboutToDestroy() override {
         if (glcx)
             glcx->reset();
     }
@@ -713,7 +713,7 @@ template <class T>
 class QGLContextGroupResource : public QGLContextGroupResourceBase
 {
 public:
-    ~QGLContextGroupResource() {
+    ~QGLContextGroupResource() override {
         for (int i = 0; i < m_groups.size(); ++i) {
             const QGLContext *context = m_groups.at(i)->context();
             T *resource = reinterpret_cast<T *>(QGLContextGroupResourceBase::value(context));
@@ -734,7 +734,7 @@ public:
     }
 
 protected:
-    void freeResource(void *resource) {
+    void freeResource(void *resource) override {
         delete reinterpret_cast<T *>(resource);
     }
 };
@@ -776,7 +776,7 @@ template <class T>
 class QGLContextResource : public QGLContextResourceBase
 {
 public:
-    ~QGLContextResource() {
+    ~QGLContextResource() override {
         for (int i = 0; i < m_contexts.size(); ++i) {
             const QGLContext *context = m_contexts.at(i);
             T *resource = reinterpret_cast<T *>(QGLContextResourceBase::value(context));
@@ -797,7 +797,7 @@ public:
     }
 
 protected:
-    void freeResource(void *resource) {
+    void freeResource(void *resource) override {
         delete reinterpret_cast<T *>(resource);
     }
 };

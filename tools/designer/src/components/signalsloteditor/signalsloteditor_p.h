@@ -86,7 +86,7 @@ public:
 
     DomConnection *toUi() const;
 
-    virtual void updateVisibility();
+    void updateVisibility() override;
 
     enum State { Valid, ObjectDeleted, InvalidMethod, NotAncestor };
     State isValid(const QWidget *background) const;
@@ -105,16 +105,16 @@ public:
     explicit ConnectionModel(QObject *parent = nullptr);
     void setEditor(SignalSlotEditor *editor = nullptr);
 
-    virtual QModelIndex index(int row, int column,
-                              const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &child) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual bool setData(const QModelIndex &index, const QVariant &data, int role = Qt::DisplayRole);
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QModelIndex index(int row, int column,
+                              const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &data, int role = Qt::DisplayRole) override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const override;
 
     QModelIndex connectionToIndex(Connection *con) const;
     Connection *indexToConnection(const QModelIndex &index) const;

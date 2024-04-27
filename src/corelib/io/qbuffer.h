@@ -67,7 +67,7 @@ public:
      QBuffer();
      explicit QBuffer(QByteArray *buf);
 #endif
-    ~QBuffer();
+    ~QBuffer() override;
 
     QByteArray &buffer();
     const QByteArray &buffer() const;
@@ -88,8 +88,8 @@ public:
 
 protected:
 #ifndef QT_NO_QOBJECT
-    void connectNotify(const char*);
-    void disconnectNotify(const char*);
+    void connectNotify(const char*) override;
+    void disconnectNotify(const char*) override;
 #endif
     qint64 readData(char *data, qint64 maxlen) override;
     qint64 writeData(const char *data, qint64 len) override;

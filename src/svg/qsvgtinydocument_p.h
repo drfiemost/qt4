@@ -79,7 +79,7 @@ public:
     static QSvgTinyDocument * load(QXmlStreamReader *contents);
 public:
     QSvgTinyDocument();
-    ~QSvgTinyDocument();
+    ~QSvgTinyDocument() override;
     Type type() const override;
 
     QSize size() const;

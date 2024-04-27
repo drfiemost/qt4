@@ -70,7 +70,7 @@ class Q_GUI_EXPORT QDockWidget : public QWidget
 public:
     explicit QDockWidget(const QString &title, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     explicit QDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QDockWidget();
+    ~QDockWidget() override;
 
     QWidget *widget() const;
     void setWidget(QWidget *widget);
@@ -116,10 +116,10 @@ Q_SIGNALS:
     void dockLocationChanged(Qt::DockWidgetArea area);
 
 protected:
-    void changeEvent(QEvent *event);
-    void closeEvent(QCloseEvent *event);
-    void paintEvent(QPaintEvent *event);
-    bool event(QEvent *event);
+    void changeEvent(QEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    bool event(QEvent *event) override;
     void initStyleOption(QStyleOptionDockWidget *option) const;
 
 private:

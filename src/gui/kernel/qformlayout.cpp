@@ -183,7 +183,7 @@ public:
     typedef FixedColumnMatrix<QFormLayoutItem *, ColumnCount> ItemMatrix;
 
     QFormLayoutPrivate();
-    ~QFormLayoutPrivate() { }
+    ~QFormLayoutPrivate() override { }
 
     int insertRow(int row);
     void insertRows(int row, int count);

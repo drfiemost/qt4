@@ -59,18 +59,18 @@ class QT_OBJECTINSPECTOR_EXPORT ObjectInspector: public QDesignerObjectInspector
     Q_OBJECT
 public:
     explicit ObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    virtual ~ObjectInspector();
+    ~ObjectInspector() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
-    virtual void getSelection(Selection &s) const;
-    virtual bool selectObject(QObject *o);
-    virtual void clearSelection();
+    void getSelection(Selection &s) const override;
+    bool selectObject(QObject *o) override;
+    void clearSelection() override;
 
-    void setFormWindow(QDesignerFormWindowInterface *formWindow);
+    void setFormWindow(QDesignerFormWindowInterface *formWindow) override;
 
 public slots:
-    virtual void mainContainerChanged();
+    void mainContainerChanged() override;
 
 private slots:
     void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
@@ -78,10 +78,10 @@ private slots:
     void slotHeaderDoubleClicked(int column);
 
 protected:
-    virtual void dragEnterEvent (QDragEnterEvent * event);
-    virtual void dragMoveEvent(QDragMoveEvent * event);
-    virtual void dragLeaveEvent(QDragLeaveEvent * event);
-    virtual void dropEvent (QDropEvent * event);
+    void dragEnterEvent (QDragEnterEvent * event) override;
+    void dragMoveEvent(QDragMoveEvent * event) override;
+    void dragLeaveEvent(QDragLeaveEvent * event) override;
+    void dropEvent (QDropEvent * event) override;
 
 private:
     class ObjectInspectorPrivate;

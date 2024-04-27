@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerCodeViewInterface:
 {
     Q_OBJECT
 public:
-    ~QScriptDebuggerCodeViewInterface();
+    ~QScriptDebuggerCodeViewInterface() override;
 
     virtual QString text() const = 0;
     virtual void setText(const QString &text) = 0;

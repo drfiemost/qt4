@@ -118,9 +118,9 @@ public:
     QScriptDebuggerBackendEventReceiver(QScriptDebuggerBackendPrivate *backend,
                                         QObject *parent = nullptr)
         : QObject(parent), m_backend(backend) {}
-    ~QScriptDebuggerBackendEventReceiver() {}
+    ~QScriptDebuggerBackendEventReceiver() override {}
 
-    bool event(QEvent *e)
+    bool event(QEvent *e) override
     {
         return m_backend->event(e);
     }

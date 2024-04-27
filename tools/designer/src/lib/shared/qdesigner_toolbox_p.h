@@ -84,7 +84,7 @@ public:
     QPalette::ColorRole currentItemBackgroundRole() const;
     void setCurrentItemBackgroundRole(QPalette::ColorRole role);
 
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
     // Add context menu and return page submenu or 0.
 
     QMenu *addContextMenuActions(QMenu *popup) const;
@@ -109,10 +109,10 @@ class QDESIGNER_SHARED_EXPORT QToolBoxWidgetPropertySheet : public QDesignerProp
 public:
     explicit QToolBoxWidgetPropertySheet(QToolBox *object, QObject *parent = nullptr);
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual QVariant property(int index) const;
-    virtual bool reset(int index);
-    virtual bool isEnabled(int index) const;
+    void setProperty(int index, const QVariant &value) override;
+    QVariant property(int index) const override;
+    bool reset(int index) override;
+    bool isEnabled(int index) const override;
 
     // Check whether the property is to be saved. Returns false for the page
     // properties (as the property sheet has no concept of 'stored')

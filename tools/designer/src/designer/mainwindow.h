@@ -93,7 +93,7 @@ signals:
     void closeEventReceived(QCloseEvent *e);
 
 protected:
-    virtual void closeEvent(QCloseEvent *e);
+    void closeEvent(QCloseEvent *e) override;
 private:
     CloseEventPolicy m_policy;
 };
@@ -111,7 +111,7 @@ signals:
     void fileDropped(const QString &);
 
 protected:
-    bool event (QEvent *event);
+    bool event (QEvent *event) override;
 
 private:
     QStringList uiFiles(const QMimeData *d) const;

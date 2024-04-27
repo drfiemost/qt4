@@ -62,7 +62,7 @@ class Q_CORE_EXPORT QTimer : public QObject
 public:
     explicit QTimer(QObject *parent = nullptr);
 
-    ~QTimer();
+    ~QTimer() override;
 
     inline bool isActive() const { return id >= 0; }
     int timerId() const { return id; }
@@ -89,7 +89,7 @@ Q_SIGNALS:
     void timeout();
 
 protected:
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
 
 private:
     Q_DISABLE_COPY(QTimer)

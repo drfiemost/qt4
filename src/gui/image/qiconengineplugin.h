@@ -68,10 +68,10 @@ class Q_GUI_EXPORT QIconEnginePlugin : public QObject, public QIconEngineFactory
     Q_INTERFACES(QIconEngineFactoryInterface:QFactoryInterface)
 public:
     QIconEnginePlugin(QObject *parent = nullptr);
-    ~QIconEnginePlugin();
+    ~QIconEnginePlugin() override;
 
-    virtual QStringList keys() const = 0;
-    virtual QIconEngine *create(const QString &filename) = 0;
+    QStringList keys() const override = 0;
+    QIconEngine *create(const QString &filename) override = 0;
 };
 
 // ### Qt 5: remove version 2
@@ -90,10 +90,10 @@ class Q_GUI_EXPORT QIconEnginePluginV2 : public QObject, public QIconEngineFacto
     Q_INTERFACES(QIconEngineFactoryInterfaceV2:QFactoryInterface)
 public:
     QIconEnginePluginV2(QObject *parent = nullptr);
-    ~QIconEnginePluginV2();
+    ~QIconEnginePluginV2() override;
 
-    virtual QStringList keys() const = 0;
-    virtual QIconEngineV2 *create(const QString &filename = QString()) = 0;
+    QStringList keys() const override = 0;
+    QIconEngineV2 *create(const QString &filename = QString()) override = 0;
 };
 
 QT_END_NAMESPACE

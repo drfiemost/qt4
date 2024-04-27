@@ -67,7 +67,7 @@ class QScriptDebuggerConsoleWidgetInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerConsoleWidgetInterface)
 public:
     QScriptDebuggerConsoleWidgetInterfacePrivate();
-    ~QScriptDebuggerConsoleWidgetInterfacePrivate();
+    ~QScriptDebuggerConsoleWidgetInterfacePrivate() override;
 
     QScriptDebuggerConsoleHistorianInterface *historian;
     QScriptCompletionProviderInterface *completionProvider;

@@ -130,7 +130,7 @@ public:
               const QString &application = QString());
     QSettings(const QString &fileName, Format format);
 #endif
-    ~QSettings();
+    ~QSettings() override;
 
     void clear();
     void sync();
@@ -186,7 +186,7 @@ public:
 
 protected:
 #ifndef QT_NO_QOBJECT
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 #endif
 
 private:

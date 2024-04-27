@@ -56,7 +56,7 @@ public:
         , writtenSinceLastEmit(0), signalConnectionCount(0), signalsEmitted(false)
 #endif
     { }
-    ~QBufferPrivate() { }
+    ~QBufferPrivate() override { }
 
     QByteArray *buf;
     QByteArray defaultBuf;

@@ -65,7 +65,7 @@ class QAbstractSliderPrivate : public QWidgetPrivate
     Q_DECLARE_PUBLIC(QAbstractSlider)
 public:
     QAbstractSliderPrivate();
-    ~QAbstractSliderPrivate();
+    ~QAbstractSliderPrivate() override;
 
     void setSteps(int single, int page);
 

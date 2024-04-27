@@ -988,7 +988,7 @@ class QPlastiqueStylePrivate : public QWindowsStylePrivate
     Q_DECLARE_PUBLIC(QPlastiqueStyle)
 public:
     QPlastiqueStylePrivate();
-    virtual ~QPlastiqueStylePrivate();
+    ~QPlastiqueStylePrivate() override;
     void drawPartialFrame(QPainter *painter, const QStyleOptionComplex *option,
                           const QRect &rect, const QWidget *widget) const;
 

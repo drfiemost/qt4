@@ -197,7 +197,7 @@ public:
         , compiled(false)
     {
     }
-    ~QGLShaderPrivate();
+    ~QGLShaderPrivate() override;
 
     QGLSharedResourceGuard shaderGuard;
     QGLShader::ShaderType shaderType;
@@ -551,7 +551,7 @@ public:
         , geometryOutputType(0)
     {
     }
-    ~QGLShaderProgramPrivate();
+    ~QGLShaderProgramPrivate() override;
 
     QGLSharedResourceGuard programGuard;
     bool linked;

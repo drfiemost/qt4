@@ -99,7 +99,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTextInput : public QDeclarativeImplicitSizeP
 
 public:
     QDeclarativeTextInput(QDeclarativeItem* parent=nullptr);
-    ~QDeclarativeTextInput();
+    ~QDeclarativeTextInput() override;
 
     enum EchoMode {//To match QLineEdit::EchoMode
         Normal,
@@ -205,10 +205,10 @@ public:
 
     bool hasAcceptableInput() const;
 
-    void drawContents(QPainter *p,const QRect &r);
-    QVariant inputMethodQuery(Qt::InputMethodQuery property) const;
+    void drawContents(QPainter *p,const QRect &r) override;
+    QVariant inputMethodQuery(Qt::InputMethodQuery property) const override;
 
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
     bool canPaste() const;
 
     bool isInputMethodComposing() const;
@@ -247,18 +247,18 @@ Q_SIGNALS:
     Q_REVISION(1) void inputMethodComposingChanged();
 
 protected:
-    virtual void geometryChanged(const QRectF &newGeometry,
-                                 const QRectF &oldGeometry);
+    void geometryChanged(const QRectF &newGeometry,
+                                 const QRectF &oldGeometry) override;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    bool sceneEvent(QEvent *event);
-    void keyPressEvent(QKeyEvent* ev);
-    void inputMethodEvent(QInputMethodEvent *);
-    bool event(QEvent *e);
-    void focusInEvent(QFocusEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    bool sceneEvent(QEvent *event) override;
+    void keyPressEvent(QKeyEvent* ev) override;
+    void inputMethodEvent(QInputMethodEvent *) override;
+    bool event(QEvent *e) override;
+    void focusInEvent(QFocusEvent *event) override;
 
 public Q_SLOTS:
     void selectAll();

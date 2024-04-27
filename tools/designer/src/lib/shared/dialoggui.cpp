@@ -66,7 +66,7 @@ class IconProvider : public QFileIconProvider {
 
 public:
     IconProvider();
-    virtual QIcon icon (const QFileInfo &info) const;
+    QIcon icon (const QFileInfo &info) const override;
 
     inline bool loadCheck(const QFileInfo &info) const;
     QImage loadImage(const QString &fileName) const;

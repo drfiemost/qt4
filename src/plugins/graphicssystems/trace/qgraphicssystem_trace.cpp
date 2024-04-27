@@ -54,13 +54,13 @@ class QTraceWindowSurface : public QRasterWindowSurface
 {
 public:
     QTraceWindowSurface(QWidget *widget);
-    ~QTraceWindowSurface();
+    ~QTraceWindowSurface() override;
 
-    QPaintDevice *paintDevice();
-    void beginPaint(const QRegion &rgn);
-    void endPaint(const QRegion &rgn);
+    QPaintDevice *paintDevice() override;
+    void beginPaint(const QRegion &rgn) override;
+    void endPaint(const QRegion &rgn) override;
 
-    bool scroll(const QRegion &area, int dx, int dy);
+    bool scroll(const QRegion &area, int dx, int dy) override;
 
 private:
     QPaintBuffer *buffer;

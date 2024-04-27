@@ -92,7 +92,7 @@ public:
     };
 
     QNetworkAccessCache();
-    ~QNetworkAccessCache();
+    ~QNetworkAccessCache() override;
 
     void clear();
 
@@ -107,7 +107,7 @@ signals:
     void entryReady(QNetworkAccessCache::CacheableObject *);
 
 protected:
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
 
 private:
     // idea copied from qcache.h

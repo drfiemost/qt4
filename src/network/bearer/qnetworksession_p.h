@@ -71,7 +71,7 @@ public:
     QNetworkSessionPrivate() : QObject(),
         state(QNetworkSession::Invalid), isOpen(false), mutex(QMutex::Recursive)
     {}
-    virtual ~QNetworkSessionPrivate()
+    ~QNetworkSessionPrivate() override
     {}
 
     //called by QNetworkSession constructor and ensures

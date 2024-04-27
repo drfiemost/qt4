@@ -64,16 +64,16 @@ class Q_AUTOTEST_EXPORT QScriptBreakpointsWidget:
     Q_OBJECT
 public:
     QScriptBreakpointsWidget(QWidget *parent = nullptr);
-    ~QScriptBreakpointsWidget();
+    ~QScriptBreakpointsWidget() override;
 
-    QScriptBreakpointsModel *breakpointsModel() const;
-    void setBreakpointsModel(QScriptBreakpointsModel *model);
+    QScriptBreakpointsModel *breakpointsModel() const override;
+    void setBreakpointsModel(QScriptBreakpointsModel *model) override;
 
-    QScriptDebuggerScriptsModel *scriptsModel() const;
-    void setScriptsModel(QScriptDebuggerScriptsModel *model);
+    QScriptDebuggerScriptsModel *scriptsModel() const override;
+    void setScriptsModel(QScriptDebuggerScriptsModel *model) override;
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
+    void keyPressEvent(QKeyEvent *e) override;
 
 private:
     Q_PRIVATE_SLOT(d_func(), void _q_newBreakpoint())

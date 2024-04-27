@@ -67,12 +67,12 @@ class QNetworkAccessDebugPipeBackend: public QNetworkAccessBackend
     Q_OBJECT
 public:
     QNetworkAccessDebugPipeBackend();
-    virtual ~QNetworkAccessDebugPipeBackend();
+    ~QNetworkAccessDebugPipeBackend() override;
 
-    virtual void open();
-    virtual void closeDownstreamChannel();
+    void open() override;
+    void closeDownstreamChannel() override;
 
-    virtual void downstreamReadyWrite();
+    void downstreamReadyWrite() override;
 
 protected:
     void pushFromSocketToDownstream();
@@ -102,8 +102,8 @@ private:
 class QNetworkAccessDebugPipeBackendFactory: public QNetworkAccessBackendFactory
 {
 public:
-    virtual QNetworkAccessBackend *create(QNetworkAccessManager::Operation op,
-                                          const QNetworkRequest &request) const;
+    QNetworkAccessBackend *create(QNetworkAccessManager::Operation op,
+                                          const QNetworkRequest &request) const override;
 };
 
 #endif  // QT_BUILD_INTERNAL

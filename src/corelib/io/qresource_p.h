@@ -64,54 +64,54 @@ private:
     Q_DECLARE_PRIVATE(QResourceFileEngine)
 public:
     explicit QResourceFileEngine(const QString &path);
-    ~QResourceFileEngine();
+    ~QResourceFileEngine() override;
 
-    virtual void setFileName(const QString &file);
+    void setFileName(const QString &file) override;
 
-    virtual bool open(QIODevice::OpenMode flags) ;
-    virtual bool close();
-    virtual bool flush();
-    virtual qint64 size() const;
-    virtual qint64 pos() const;
+    bool open(QIODevice::OpenMode flags) override ;
+    bool close() override;
+    bool flush() override;
+    qint64 size() const override;
+    qint64 pos() const override;
     virtual bool atEnd() const;
-    virtual bool seek(qint64);
-    virtual qint64 read(char *data, qint64 maxlen);
-    virtual qint64 write(const char *data, qint64 len);
+    bool seek(qint64) override;
+    qint64 read(char *data, qint64 maxlen) override;
+    qint64 write(const char *data, qint64 len) override;
 
-    virtual bool remove();
-    virtual bool copy(const QString &newName);
-    virtual bool rename(const QString &newName);
-    virtual bool link(const QString &newName);
+    bool remove() override;
+    bool copy(const QString &newName) override;
+    bool rename(const QString &newName) override;
+    bool link(const QString &newName) override;
 
-    virtual bool isSequential() const;
+    bool isSequential() const override;
 
-    virtual bool isRelativePath() const;
+    bool isRelativePath() const override;
 
-    virtual bool mkdir(const QString &dirName, bool createParentDirectories) const;
-    virtual bool rmdir(const QString &dirName, bool recurseParentDirectories) const;
+    bool mkdir(const QString &dirName, bool createParentDirectories) const override;
+    bool rmdir(const QString &dirName, bool recurseParentDirectories) const override;
 
-    virtual bool setSize(qint64 size);
+    bool setSize(qint64 size) override;
 
-    virtual QStringList entryList(QDir::Filters filters, const QStringList &filterNames) const;
+    QStringList entryList(QDir::Filters filters, const QStringList &filterNames) const override;
 
-    virtual bool caseSensitive() const;
+    bool caseSensitive() const override;
 
-    virtual FileFlags fileFlags(FileFlags type) const;
+    FileFlags fileFlags(FileFlags type) const override;
 
-    virtual bool setPermissions(uint perms);
+    bool setPermissions(uint perms) override;
 
-    virtual QString fileName(QAbstractFileEngine::FileName file) const;
+    QString fileName(QAbstractFileEngine::FileName file) const override;
 
-    virtual uint ownerId(FileOwner) const;
-    virtual QString owner(FileOwner) const;
+    uint ownerId(FileOwner) const override;
+    QString owner(FileOwner) const override;
 
-    virtual QDateTime fileTime(FileTime time) const;
+    QDateTime fileTime(FileTime time) const override;
 
-    virtual Iterator *beginEntryList(QDir::Filters filters, const QStringList &filterNames);
-    virtual Iterator *endEntryList();
+    Iterator *beginEntryList(QDir::Filters filters, const QStringList &filterNames) override;
+    Iterator *endEntryList() override;
     
-    bool extension(Extension extension, const ExtensionOption *option = nullptr, ExtensionReturn *output = nullptr);
-    bool supportsExtension(Extension extension) const;
+    bool extension(Extension extension, const ExtensionOption *option = nullptr, ExtensionReturn *output = nullptr) override;
+    bool supportsExtension(Extension extension) const override;
 };
 
 QT_END_NAMESPACE

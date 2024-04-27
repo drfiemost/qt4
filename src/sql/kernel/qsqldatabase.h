@@ -68,7 +68,7 @@ template <class T>
 class QSqlDriverCreator : public QSqlDriverCreatorBase
 {
 public:
-    QSqlDriver *createObject() const { return new T; }
+    QSqlDriver *createObject() const override { return new T; }
 };
 
 class Q_SQL_EXPORT QSqlDatabase

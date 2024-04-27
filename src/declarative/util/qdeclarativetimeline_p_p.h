@@ -68,7 +68,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTimeLine : public QAbstractAnimation
 Q_OBJECT
 public:
     QDeclarativeTimeLine(QObject *parent = nullptr);
-    ~QDeclarativeTimeLine();
+    ~QDeclarativeTimeLine() override;
 
     enum SyncMode { LocalSync, GlobalSync };
     SyncMode syncMode() const;
@@ -102,13 +102,13 @@ public:
 
     int time() const;
 
-    virtual int duration() const;
+    int duration() const override;
 Q_SIGNALS:
     void updated();
     void completed();
 
 protected:
-    virtual void updateCurrentTime(int);
+    void updateCurrentTime(int) override;
 
 private:
     void remove(QDeclarativeTimeLineObject *);
@@ -182,7 +182,7 @@ public:
         Q_ASSERT(_class);
     }
 
-    virtual void setValue(qreal v)
+    void setValue(qreal v) override
     {
         QDeclarativeTimeLineValue::setValue(v);
         if (_setFunctionReal) (_class->*_setFunctionReal)(v);

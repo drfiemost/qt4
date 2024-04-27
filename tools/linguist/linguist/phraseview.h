@@ -80,7 +80,7 @@ class PhraseView : public QTreeView
 
 public:
     PhraseView(MultiDataModel *model, QList<QHash<QString, QList<Phrase *> > > *phraseDict, QWidget *parent = nullptr);
-    ~PhraseView();
+    ~PhraseView() override;
     void setSourceText(int model, const QString &sourceText);
 
 public slots:
@@ -92,9 +92,9 @@ signals:
 
 protected:
     // QObject
-    virtual void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
     // QAbstractItemView
-    virtual void mouseDoubleClickEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
     void guessShortcut(int nkey);

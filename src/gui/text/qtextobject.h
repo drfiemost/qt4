@@ -66,7 +66,7 @@ class Q_GUI_EXPORT QTextObject : public QObject
 
 protected:
     explicit QTextObject(QTextDocument *doc);
-    ~QTextObject();
+    ~QTextObject() override;
 
     void setFormat(const QTextFormat &format);
 
@@ -96,7 +96,7 @@ class Q_GUI_EXPORT QTextBlockGroup : public QTextObject
 
 protected:
     explicit QTextBlockGroup(QTextDocument *doc);
-    ~QTextBlockGroup();
+    ~QTextBlockGroup() override;
 
     virtual void blockInserted(const QTextBlock &block);
     virtual void blockRemoved(const QTextBlock &block);
@@ -124,7 +124,7 @@ class Q_GUI_EXPORT QTextFrame : public QTextObject
 
 public:
     explicit QTextFrame(QTextDocument *doc);
-    ~QTextFrame();
+    ~QTextFrame() override;
 
     inline void setFrameFormat(const QTextFrameFormat &format);
     QTextFrameFormat frameFormat() const { return QTextObject::format().toFrameFormat(); }

@@ -70,9 +70,9 @@ public:
     QSizeF preferredSize() const { return m_preferredSize; }
     void setPreferredSize(const QSizeF &s) { if(s==m_preferredSize) return; m_preferredSize = s; emit preferredSizeChanged(); }
 
-    virtual void setGeometry(const QRectF & rect);
+    void setGeometry(const QRectF & rect) override;
 protected:
-    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override;
 
 Q_SIGNALS:
     void maximumSizeChanged();

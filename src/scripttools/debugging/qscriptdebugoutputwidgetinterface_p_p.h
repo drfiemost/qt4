@@ -64,7 +64,7 @@ class QScriptDebugOutputWidgetInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptDebugOutputWidgetInterface)
 public:
     QScriptDebugOutputWidgetInterfacePrivate();
-    ~QScriptDebugOutputWidgetInterfacePrivate();
+    ~QScriptDebugOutputWidgetInterfacePrivate() override;
 };
 
 QT_END_NAMESPACE

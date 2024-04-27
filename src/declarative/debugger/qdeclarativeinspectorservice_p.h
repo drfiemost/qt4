@@ -73,8 +73,8 @@ Q_SIGNALS:
     void gotMessage(const QByteArray &message);
 
 protected:
-    virtual void statusChanged(Status status);
-    virtual void messageReceived(const QByteArray &);
+    void statusChanged(Status status) override;
+    void messageReceived(const QByteArray &) override;
 
 private:
     void updateStatus();

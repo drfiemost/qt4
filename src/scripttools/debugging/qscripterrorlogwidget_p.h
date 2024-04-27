@@ -64,14 +64,14 @@ class Q_AUTOTEST_EXPORT QScriptErrorLogWidget:
     Q_OBJECT
 public:
     QScriptErrorLogWidget(QWidget *parent = nullptr);
-    ~QScriptErrorLogWidget();
+    ~QScriptErrorLogWidget() override;
 
     void message(QtMsgType type, const QString &text,
                  const QString &fileName = QString(),
                  int lineNumber = -1, int columnNumber = -1,
-                 const QVariant &data = QVariant());
+                 const QVariant &data = QVariant()) override;
 
-    void clear();
+    void clear() override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptErrorLogWidget)

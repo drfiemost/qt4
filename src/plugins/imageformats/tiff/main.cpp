@@ -54,9 +54,9 @@ QT_BEGIN_NAMESPACE
 class QTiffPlugin : public QImageIOPlugin
 {
 public:
-    Capabilities capabilities(QIODevice * device, const QByteArray & format) const;
-    QImageIOHandler * create(QIODevice * device, const QByteArray & format = QByteArray()) const;
-    QStringList keys() const;
+    Capabilities capabilities(QIODevice * device, const QByteArray & format) const override;
+    QImageIOHandler * create(QIODevice * device, const QByteArray & format = QByteArray()) const override;
+    QStringList keys() const override;
 };
 
 QImageIOPlugin::Capabilities QTiffPlugin::capabilities(QIODevice *device, const QByteArray &format) const

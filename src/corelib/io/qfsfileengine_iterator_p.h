@@ -69,7 +69,7 @@ class QFSFileEngineIterator : public QAbstractFileEngineIterator
 {
 public:
     QFSFileEngineIterator(QDir::Filters filters, const QStringList &filterNames);
-    ~QFSFileEngineIterator();
+    ~QFSFileEngineIterator() override;
 
     QString next() override;
     bool hasNext() const override;

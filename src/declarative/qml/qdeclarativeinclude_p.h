@@ -79,7 +79,7 @@ public:
     };
 
     QDeclarativeInclude(const QUrl &, QDeclarativeEngine *, QScriptContext *ctxt);
-    ~QDeclarativeInclude();
+    ~QDeclarativeInclude() override;
 
     void setCallback(const QScriptValue &);
     QScriptValue callback() const;

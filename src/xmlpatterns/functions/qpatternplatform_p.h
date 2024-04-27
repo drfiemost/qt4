@@ -106,7 +106,7 @@ namespace QPatternist
         };
         typedef QFlags<Flag> Flags;
 
-        virtual Expression::Ptr compress(const StaticContext::Ptr &context);
+        Expression::Ptr compress(const StaticContext::Ptr &context) override;
 
         /**
          * Retrieves the pattern supplied in the arguments, taking care of compiling it,

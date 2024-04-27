@@ -58,7 +58,7 @@ class QT_PROPERTYEDITOR_EXPORT PaletteEditorButton: public QToolButton
     Q_OBJECT
 public:
     PaletteEditorButton(QDesignerFormEditorInterface *core, const QPalette &palette, QWidget *parent = nullptr);
-    virtual ~PaletteEditorButton();
+    ~PaletteEditorButton() override;
 
     void setSuperPalette(const QPalette &palette);
     inline QPalette palette() const

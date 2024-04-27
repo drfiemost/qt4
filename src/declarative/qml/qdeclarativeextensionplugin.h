@@ -59,10 +59,10 @@ class Q_DECLARATIVE_EXPORT QDeclarativeExtensionPlugin : public QObject, public 
     Q_INTERFACES(QDeclarativeExtensionInterface)
 public:
     explicit QDeclarativeExtensionPlugin(QObject *parent = nullptr);
-    ~QDeclarativeExtensionPlugin();
+    ~QDeclarativeExtensionPlugin() override;
 
-    virtual void registerTypes(const char *uri) = 0;
-    virtual void initializeEngine(QDeclarativeEngine *engine, const char *uri);
+    void registerTypes(const char *uri) override = 0;
+    void initializeEngine(QDeclarativeEngine *engine, const char *uri) override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeExtensionPlugin)

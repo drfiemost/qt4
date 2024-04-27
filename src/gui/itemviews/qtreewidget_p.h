@@ -80,7 +80,7 @@ class QTreeModel : public QAbstractItemModel
 
 public:
     explicit QTreeModel(int columns = 0, QTreeWidget *parent = nullptr);
-    ~QTreeModel();
+    ~QTreeModel() override;
 
     inline QTreeWidget *view() const
         { return qobject_cast<QTreeWidget*>(QObject::parent()); }
@@ -92,24 +92,24 @@ public:
     void itemChanged(QTreeWidgetItem *item);
 
     QModelIndex index(const QTreeWidgetItem *item, int column) const;
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
-    QModelIndex parent(const QModelIndex &child) const;
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    bool hasChildren(const QModelIndex &parent) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    bool hasChildren(const QModelIndex &parent) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    QMap<int, QVariant> itemData(const QModelIndex &index) const;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value,
-                       int role);
+                       int role) override;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void sort(int column, Qt::SortOrder order);
+    void sort(int column, Qt::SortOrder order) override;
     void ensureSorted(int column, Qt::SortOrder order,
                       int start, int end, const QModelIndex &parent);
     static bool itemLessThan(const QPair<QTreeWidgetItem*,int> &left,
@@ -121,17 +121,17 @@ public:
         const QList<QTreeWidgetItem*>::iterator &end,
         Qt::SortOrder order, QTreeWidgetItem *item);
 
-    bool insertRows(int row, int count, const QModelIndex &);
-    bool insertColumns(int column, int count, const QModelIndex &);
+    bool insertRows(int row, int count, const QModelIndex &) override;
+    bool insertColumns(int column, int count, const QModelIndex &) override;
 
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
     // dnd
-    QStringList mimeTypes() const;
-    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QStringList mimeTypes() const override;
+    QMimeData *mimeData(const QModelIndexList &indexes) const override;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,
-                      int row, int column, const QModelIndex &parent);
-    Qt::DropActions supportedDropActions() const;
+                      int row, int column, const QModelIndex &parent) override;
+    Qt::DropActions supportedDropActions() const override;
 
     QMimeData *internalMimeData() const;
 
@@ -146,7 +146,7 @@ protected:
     void beginRemoveItems(QTreeWidgetItem *parent, int row, int count);
     void endRemoveItems();
     void sortItems(QList<QTreeWidgetItem*> *items, int column, Qt::SortOrder order);
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) override;
 
 private:
     QTreeWidgetItem *rootItem;

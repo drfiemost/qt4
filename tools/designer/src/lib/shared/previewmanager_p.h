@@ -128,7 +128,7 @@ public:
         MultipleFormNonModalPreview };
 
     explicit PreviewManager(PreviewMode mode, QObject *parent);
-    virtual ~PreviewManager();
+    ~PreviewManager() override;
 
     // Show preview. Raise existing preview window if there is one with a matching
     // configuration, else create a new preview.
@@ -145,7 +145,7 @@ public:
     QPixmap createPreviewPixmap(const QDesignerFormWindowInterface *fw, const QString &style, int deviceProfileIndex /*=-1*/, QString *errorMessage);
     QPixmap createPreviewPixmap(const QDesignerFormWindowInterface *fw, const QString &style, QString *errorMessage);
 
-    virtual bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 public slots:
     void closeAllPreviews();

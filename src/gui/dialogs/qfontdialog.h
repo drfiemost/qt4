@@ -73,7 +73,7 @@ public:
 
     explicit QFontDialog(QWidget *parent = nullptr);
     explicit QFontDialog(const QFont &initial, QWidget *parent = nullptr);
-    ~QFontDialog();
+    ~QFontDialog() override;
 
     void setCurrentFont(const QFont &font);
     QFont currentFont() const;
@@ -89,7 +89,7 @@ public:
 
     void open(QObject *receiver, const char *member);
 
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
     // ### Qt 5: merge overloads
     static QFont getFont(bool *ok, const QFont &initial, QWidget *parent, const QString &title,
@@ -103,12 +103,12 @@ Q_SIGNALS:
     void fontSelected(const QFont &font);
 
 protected:
-    void changeEvent(QEvent *event);
-    void done(int result);
+    void changeEvent(QEvent *event) override;
+    void done(int result) override;
 
 private:
     // ### Qt 5: make protected
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
     Q_DISABLE_COPY(QFontDialog)
 

@@ -58,15 +58,15 @@ class QTcpServerConnection : public QObject, public QDeclarativeDebugServerConne
 
 public:
     QTcpServerConnection();
-    ~QTcpServerConnection();
+    ~QTcpServerConnection() override;
 
-    void setServer(QDeclarativeDebugServer *server);
-    void setPort(int port, bool bock);
+    void setServer(QDeclarativeDebugServer *server) override;
+    void setPort(int port, bool bock) override;
 
-    bool isConnected() const;
-    void send(const QByteArray &message);
-    void disconnect();
-    bool waitForMessage();
+    bool isConnected() const override;
+    void send(const QByteArray &message) override;
+    void disconnect() override;
+    bool waitForMessage() override;
 
     void listen();
     void waitForConnection();

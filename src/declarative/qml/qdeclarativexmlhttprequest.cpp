@@ -149,7 +149,7 @@ class DocumentImpl : public QDeclarativeRefCount, public NodeImpl
 {
 public:
     DocumentImpl() : root(nullptr) { type = Document; }
-    virtual ~DocumentImpl() {
+    ~DocumentImpl() override {
         if (root) delete root;
     }
 
@@ -189,8 +189,8 @@ class NamedNodeMapClass : public QScriptClass
 public:
     NamedNodeMapClass(QScriptEngine *engine) : QScriptClass(engine) {}
 
-    virtual QueryFlags queryProperty(const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id);
-    virtual QScriptValue property(const QScriptValue &object, const QScriptString &name, uint id);
+    QueryFlags queryProperty(const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id) override;
+    QScriptValue property(const QScriptValue &object, const QScriptString &name, uint id) override;
 };
 
 class NodeList 
@@ -217,8 +217,8 @@ class NodeListClass : public QScriptClass
 {
 public:
     NodeListClass(QScriptEngine *engine) : QScriptClass(engine) {}
-    virtual QueryFlags queryProperty(const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id);
-    virtual QScriptValue property(const QScriptValue &object, const QScriptString &name, uint id);
+    QueryFlags queryProperty(const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id) override;
+    QScriptValue property(const QScriptValue &object, const QScriptString &name, uint id) override;
 };
 
 class Node
@@ -951,7 +951,7 @@ public:
                  Loading = 3, Done = 4 };
 
     QDeclarativeXMLHttpRequest(QNetworkAccessManager *manager);
-    virtual ~QDeclarativeXMLHttpRequest();
+    ~QDeclarativeXMLHttpRequest() override;
 
     bool sendFlag() const;
     bool errorFlag() const;

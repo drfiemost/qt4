@@ -878,10 +878,10 @@ class QDynamicBufferResourceRoot: public QResourceRoot
 
 public:
     inline QDynamicBufferResourceRoot(const QString &_root) : root(_root), buffer(nullptr) { }
-    inline ~QDynamicBufferResourceRoot() { }
+    inline ~QDynamicBufferResourceRoot() override { }
     inline const uchar *mappingBuffer() const { return buffer; }
-    virtual QString mappingRoot() const { return root; }
-    virtual ResourceRootType type() const { return Resource_Buffer; }
+    QString mappingRoot() const override { return root; }
+    ResourceRootType type() const override { return Resource_Buffer; }
 
     bool registerSelf(const uchar *b) {
         //setup the data now
@@ -944,7 +944,7 @@ class QDynamicFileResourceRoot: public QDynamicBufferResourceRoot
 
 public:
     inline QDynamicFileResourceRoot(const QString &_root) : QDynamicBufferResourceRoot(_root), unmapPointer(nullptr), unmapLength(0) { }
-    ~QDynamicFileResourceRoot() {
+    ~QDynamicFileResourceRoot() override {
 #if defined(QT_USE_MMAP)
         if (unmapPointer) {
             munmap((char*)unmapPointer, unmapLength);
@@ -957,7 +957,7 @@ public:
         }
     }
     QString mappingFile() const { return fileName; }
-    virtual ResourceRootType type() const { return Resource_File; }
+    ResourceRootType type() const override { return Resource_File; }
 
     bool registerSelf(const QString &f) {
         bool fromMM = false;

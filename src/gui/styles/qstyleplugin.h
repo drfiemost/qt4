@@ -67,10 +67,10 @@ class Q_GUI_EXPORT QStylePlugin : public QObject, public QStyleFactoryInterface
     Q_INTERFACES(QStyleFactoryInterface:QFactoryInterface)
 public:
     explicit QStylePlugin(QObject *parent = nullptr);
-    ~QStylePlugin();
+    ~QStylePlugin() override;
 
-    virtual QStringList keys() const = 0;
-    virtual QStyle *create(const QString &key) = 0;
+    QStringList keys() const override = 0;
+    QStyle *create(const QString &key) override = 0;
 };
 
 QT_END_NAMESPACE

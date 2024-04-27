@@ -70,9 +70,9 @@ public:
     bool isSharable(const QString &code);
     bool isSharable(AST::Node *Node);
     
-    virtual bool visit(AST::FunctionDeclaration *) { _sharable = false; return false; }
-    virtual bool visit(AST::FunctionExpression *) { _sharable = false; return false; }
-    virtual bool visit(AST::CallExpression *) { _sharable = false; return false; }
+    bool visit(AST::FunctionDeclaration *) override { _sharable = false; return false; }
+    bool visit(AST::FunctionExpression *) override { _sharable = false; return false; }
+    bool visit(AST::CallExpression *) override { _sharable = false; return false; }
 };
 
 class RewriteBinding: protected AST::Visitor
@@ -94,26 +94,26 @@ protected:
     void accept(AST::Node *node);
     QString rewrite(QString code, unsigned position, AST::Statement *node);
 
-    virtual bool visit(AST::Block *ast);
-    virtual bool visit(AST::ExpressionStatement *ast);
+    bool visit(AST::Block *ast) override;
+    bool visit(AST::ExpressionStatement *ast) override;
 
-    virtual bool visit(AST::DoWhileStatement *ast);
-    virtual void endVisit(AST::DoWhileStatement *ast);
+    bool visit(AST::DoWhileStatement *ast) override;
+    void endVisit(AST::DoWhileStatement *ast) override;
 
-    virtual bool visit(AST::WhileStatement *ast);
-    virtual void endVisit(AST::WhileStatement *ast);
+    bool visit(AST::WhileStatement *ast) override;
+    void endVisit(AST::WhileStatement *ast) override;
 
-    virtual bool visit(AST::ForStatement *ast);
-    virtual void endVisit(AST::ForStatement *ast);
+    bool visit(AST::ForStatement *ast) override;
+    void endVisit(AST::ForStatement *ast) override;
 
-    virtual bool visit(AST::LocalForStatement *ast);
-    virtual void endVisit(AST::LocalForStatement *ast);
+    bool visit(AST::LocalForStatement *ast) override;
+    void endVisit(AST::LocalForStatement *ast) override;
 
-    virtual bool visit(AST::ForEachStatement *ast);
-    virtual void endVisit(AST::ForEachStatement *ast);
+    bool visit(AST::ForEachStatement *ast) override;
+    void endVisit(AST::ForEachStatement *ast) override;
 
-    virtual bool visit(AST::LocalForEachStatement *ast);
-    virtual void endVisit(AST::LocalForEachStatement *ast);
+    bool visit(AST::LocalForEachStatement *ast) override;
+    void endVisit(AST::LocalForEachStatement *ast) override;
 
 private:
     int _inLoop;

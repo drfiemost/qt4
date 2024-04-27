@@ -76,7 +76,7 @@ class Q_GUI_EXPORT QAbstractSpinBox : public QWidget
     Q_PROPERTY(bool keyboardTracking READ keyboardTracking WRITE setKeyboardTracking)
 public:
     explicit QAbstractSpinBox(QWidget *parent = nullptr);
-    ~QAbstractSpinBox();
+    ~QAbstractSpinBox() override;
 
     enum StepEnabledFlag { StepNone = 0x00, StepUpEnabled = 0x01,
                            StepDownEnabled = 0x02 };
@@ -116,12 +116,12 @@ public:
     void setAccelerated(bool on);
     bool isAccelerated() const;
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
     void interpretText();
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
-    QVariant inputMethodQuery(Qt::InputMethodQuery) const;
+    QVariant inputMethodQuery(Qt::InputMethodQuery) const override;
 
     virtual QValidator::State validate(QString &input, int &pos) const;
     virtual void fixup(QString &input) const;
@@ -133,24 +133,24 @@ public Q_SLOTS:
     void selectAll();
     virtual void clear();
 protected:
-    void resizeEvent(QResizeEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 #ifndef QT_NO_WHEELEVENT
-    void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent *event) override;
 #endif
-    void focusInEvent(QFocusEvent *event);
-    void focusOutEvent(QFocusEvent *event);
-    void contextMenuEvent(QContextMenuEvent *event);
-    void changeEvent(QEvent *event);
-    void closeEvent(QCloseEvent *event);
-    void hideEvent(QHideEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void timerEvent(QTimerEvent *event);
-    void paintEvent(QPaintEvent *event);
-    void showEvent(QShowEvent *event);
+    void focusInEvent(QFocusEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void changeEvent(QEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    void showEvent(QShowEvent *event) override;
     void initStyleOption(QStyleOptionSpinBox *option) const;
 
     QLineEdit *lineEdit() const;

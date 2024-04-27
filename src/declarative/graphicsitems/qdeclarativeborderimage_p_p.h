@@ -72,7 +72,7 @@ public:
     {
     }
 
-    ~QDeclarativeBorderImagePrivate()
+    ~QDeclarativeBorderImagePrivate() override
     {
     }
 

@@ -106,7 +106,7 @@ class QDESIGNER_SDK_EXPORT QDesignerWidgetDataBaseInterface: public QObject
     Q_OBJECT
 public:
     QDesignerWidgetDataBaseInterface(QObject *parent = nullptr);
-    virtual ~QDesignerWidgetDataBaseInterface();
+    ~QDesignerWidgetDataBaseInterface() override;
 
     virtual int count() const;
     virtual QDesignerWidgetDataBaseItemInterface *item(int index) const;

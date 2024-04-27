@@ -137,8 +137,8 @@ struct GlobalClientData : public JSC::JSGlobalData::ClientData
 {
     GlobalClientData(QScriptEnginePrivate *e)
         : engine(e) {}
-    virtual ~GlobalClientData() {}
-    virtual void mark(JSC::MarkStack& markStack);
+    ~GlobalClientData() override {}
+    void mark(JSC::MarkStack& markStack) override;
 
     QScriptEnginePrivate *engine;
 };
@@ -153,7 +153,7 @@ class QScriptEnginePrivate
     Q_DECLARE_PUBLIC(QScriptEngine)
 public:
     QScriptEnginePrivate();
-    virtual ~QScriptEnginePrivate();
+    ~QScriptEnginePrivate() override;
 
     static QScriptEnginePrivate *get(QScriptEngine *q) { return q ? q->d_func() : nullptr; }
     static QScriptEngine *get(QScriptEnginePrivate *d) { return d ? d->q_func() : nullptr; }
@@ -438,7 +438,7 @@ public:
 
     /* Destruction means that there is no more copies of script so create scriptUnload event
        and unregister script in QScriptEnginePrivate::loadedScripts */
-    virtual ~UStringSourceProviderWithFeedback()
+    ~UStringSourceProviderWithFeedback() override
     {
         if (m_ptr) {
             if (JSC::Debugger* debugger = this->debugger())

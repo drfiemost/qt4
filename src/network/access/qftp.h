@@ -61,7 +61,7 @@ class Q_NETWORK_EXPORT QFtp : public QObject
 
 public:
     explicit QFtp(QObject *parent = nullptr);
-    virtual ~QFtp();
+    ~QFtp() override;
 
     enum State {
         Unconnected,

@@ -50,37 +50,37 @@ class ClassObjectDelegate : public QScriptObjectDelegate
 {
 public:
     ClassObjectDelegate(QScriptClass *scriptClass);
-    ~ClassObjectDelegate();
+    ~ClassObjectDelegate() override;
 
     inline QScriptClass *scriptClass() const;
     inline void setScriptClass(QScriptClass *scriptClass);
 
-    virtual Type type() const;
+    Type type() const override;
 
-    virtual bool getOwnPropertySlot(QScriptObject*, JSC::ExecState*,
+    bool getOwnPropertySlot(QScriptObject*, JSC::ExecState*,
                                     const JSC::Identifier& propertyName,
-                                    JSC::PropertySlot&);
-    virtual bool getOwnPropertyDescriptor(QScriptObject*, JSC::ExecState*,
+                                    JSC::PropertySlot&) override;
+    bool getOwnPropertyDescriptor(QScriptObject*, JSC::ExecState*,
                                           const JSC::Identifier& propertyName,
-                                          JSC::PropertyDescriptor&);
-    virtual void put(QScriptObject*, JSC::ExecState* exec,
+                                          JSC::PropertyDescriptor&) override;
+    void put(QScriptObject*, JSC::ExecState* exec,
                      const JSC::Identifier& propertyName,
-                     JSC::JSValue, JSC::PutPropertySlot&);
-    virtual bool deleteProperty(QScriptObject*, JSC::ExecState*,
-                                const JSC::Identifier& propertyName);
-    virtual void getOwnPropertyNames(QScriptObject*, JSC::ExecState*,
+                     JSC::JSValue, JSC::PutPropertySlot&) override;
+    bool deleteProperty(QScriptObject*, JSC::ExecState*,
+                                const JSC::Identifier& propertyName) override;
+    void getOwnPropertyNames(QScriptObject*, JSC::ExecState*,
                                      JSC::PropertyNameArray&,
-                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties);
+                                     JSC::EnumerationMode mode = JSC::ExcludeDontEnumProperties) override;
 
-    virtual JSC::CallType getCallData(QScriptObject*, JSC::CallData&);
+    JSC::CallType getCallData(QScriptObject*, JSC::CallData&) override;
     static JSC::JSValue JSC_HOST_CALL call(JSC::ExecState*, JSC::JSObject*,
                                            JSC::JSValue, const JSC::ArgList&);
-    virtual JSC::ConstructType getConstructData(QScriptObject*, JSC::ConstructData&);
+    JSC::ConstructType getConstructData(QScriptObject*, JSC::ConstructData&) override;
     static JSC::JSObject* construct(JSC::ExecState*, JSC::JSObject*,
                                     const JSC::ArgList&);
 
-    virtual bool hasInstance(QScriptObject*, JSC::ExecState*,
-                             JSC::JSValue value, JSC::JSValue proto);
+    bool hasInstance(QScriptObject*, JSC::ExecState*,
+                             JSC::JSValue value, JSC::JSValue proto) override;
 
 private:
     QScriptClass *m_scriptClass;

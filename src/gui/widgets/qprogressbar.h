@@ -73,7 +73,7 @@ public:
     enum Direction { TopToBottom, BottomToTop };
 
     explicit QProgressBar(QWidget *parent = nullptr);
-    ~QProgressBar();
+    ~QProgressBar() override;
 
     int minimum() const;
     int maximum() const;
@@ -87,8 +87,8 @@ public:
     Qt::Alignment alignment() const;
     void setAlignment(Qt::Alignment alignment);
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
     Qt::Orientation orientation() const;
 
@@ -114,8 +114,8 @@ Q_SIGNALS:
     void valueChanged(int value);
 
 protected:
-    bool event(QEvent *e);
-    void paintEvent(QPaintEvent *);
+    bool event(QEvent *e) override;
+    void paintEvent(QPaintEvent *) override;
     void initStyleOption(QStyleOptionProgressBar *option) const;
 
 private:

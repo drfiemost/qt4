@@ -59,7 +59,7 @@ public:
 
     QSocketNotifier(qintptr socket, Type, QObject *parent = nullptr);
 
-    ~QSocketNotifier();
+    ~QSocketNotifier() override;
 
     inline int socket() const { return sockfd; }
     inline Type type() const { return sntype; }
@@ -73,7 +73,7 @@ Q_SIGNALS:
     void activated(int socket);
 
 protected:
-    bool event(QEvent *);
+    bool event(QEvent *) override;
 
 private:
     Q_DISABLE_COPY(QSocketNotifier)

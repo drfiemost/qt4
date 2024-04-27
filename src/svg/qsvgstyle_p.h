@@ -174,7 +174,7 @@ public:
         COMP_OP
     };
 public:
-    virtual ~QSvgStyleProperty();
+    ~QSvgStyleProperty() override;
     virtual void apply(QPainter *p, const QSvgNode *node, QSvgExtraStates &states) = 0;
     virtual void revert(QPainter *p, QSvgExtraStates &states) =0;
     virtual Type type() const=0;
@@ -589,7 +589,7 @@ class QSvgGradientStyle : public QSvgFillStyleProperty
 {
 public:
     QSvgGradientStyle(QGradient *grad);
-    ~QSvgGradientStyle() { delete m_gradient; }
+    ~QSvgGradientStyle() override { delete m_gradient; }
     Type type() const override;
 
     void setStopLink(const QString &link, QSvgTinyDocument *doc);

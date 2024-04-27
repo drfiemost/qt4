@@ -56,7 +56,7 @@ class QDeclarativeFlipablePrivate : public QDeclarativeItemPrivate
 public:
     QDeclarativeFlipablePrivate() : current(QDeclarativeFlipable::Front), front(nullptr), back(nullptr) {}
 
-    void updateSceneTransformFromParent();
+    void updateSceneTransformFromParent() override;
     void setBackTransform();
 
     QDeclarativeFlipable::Side current;

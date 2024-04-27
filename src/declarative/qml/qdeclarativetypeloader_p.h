@@ -89,7 +89,7 @@ public:
     };
 
     QDeclarativeDataBlob(const QUrl &, Type);
-    virtual ~QDeclarativeDataBlob();
+    ~QDeclarativeDataBlob() override;
 
     Type type() const;
 
@@ -159,7 +159,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeDataLoader : public QObject
     Q_OBJECT
 public:
     QDeclarativeDataLoader(QDeclarativeEngine *);
-    ~QDeclarativeDataLoader();
+    ~QDeclarativeDataLoader() override;
 
     void load(QDeclarativeDataBlob *);
     void loadWithStaticData(QDeclarativeDataBlob *, const QByteArray &);
@@ -186,7 +186,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeTypeLoader : public QDeclarativeDataLoader
     Q_OBJECT
 public:
     QDeclarativeTypeLoader(QDeclarativeEngine *);
-    ~QDeclarativeTypeLoader();
+    ~QDeclarativeTypeLoader() override;
 
     enum Option {
         None,
@@ -245,7 +245,7 @@ public:
     };
 
     QDeclarativeTypeData(const QUrl &, QDeclarativeTypeLoader::Options, QDeclarativeTypeLoader *);
-    ~QDeclarativeTypeData();
+    ~QDeclarativeTypeData() override;
 
     QDeclarativeTypeLoader *typeLoader() const;
 

@@ -61,45 +61,45 @@ class Q_GUI_EXPORT QMotifStyle : public QCommonStyle
     Q_OBJECT
 public:
     explicit QMotifStyle(bool useHighlightCols=false);
-    virtual ~QMotifStyle();
+    ~QMotifStyle() override;
 
     void setUseHighlightColors(bool);
     bool useHighlightColors() const;
 
-    void polish(QPalette&);
-    void polish(QWidget*);
-    void unpolish(QWidget*);
-    void polish(QApplication*);
-    void unpolish(QApplication*);
+    void polish(QPalette&) override;
+    void polish(QWidget*) override;
+    void unpolish(QWidget*) override;
+    void polish(QApplication*) override;
+    void unpolish(QApplication*) override;
 
     void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p,
-                        const QWidget *w = nullptr) const;
+                        const QWidget *w = nullptr) const override;
 
     void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p,
-                      const QWidget *w = nullptr) const;
+                      const QWidget *w = nullptr) const override;
 
     void drawComplexControl(ComplexControl cc, const QStyleOptionComplex *opt, QPainter *p,
-                            const QWidget *w = nullptr) const;
+                            const QWidget *w = nullptr) const override;
 
     QRect subControlRect(ComplexControl cc, const QStyleOptionComplex *opt,
-                         SubControl sc, const QWidget *widget = nullptr) const;
+                         SubControl sc, const QWidget *widget = nullptr) const override;
 
     int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
-                     const QWidget *widget = nullptr) const;
+                     const QWidget *widget = nullptr) const override;
 
     QSize sizeFromContents(ContentsType ct, const QStyleOption *opt,
-                           const QSize &contentsSize, const QWidget *widget = nullptr) const;
+                           const QSize &contentsSize, const QWidget *widget = nullptr) const override;
 
-    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = nullptr) const;
+    QRect subElementRect(SubElement r, const QStyleOption *opt, const QWidget *widget = nullptr) const override;
 
     QPixmap standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                           const QWidget *widget = nullptr) const;
+                           const QWidget *widget = nullptr) const override;
 
     int styleHint(StyleHint hint, const QStyleOption *opt = nullptr, const QWidget *widget = nullptr,
-                  QStyleHintReturn *returnData = nullptr) const;
+                  QStyleHintReturn *returnData = nullptr) const override;
 
-    bool event(QEvent *);
-    QPalette standardPalette() const;
+    bool event(QEvent *) override;
+    QPalette standardPalette() const override;
 
 protected Q_SLOTS:
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *opt = nullptr,
@@ -108,8 +108,8 @@ protected Q_SLOTS:
 protected:
     QPointer<QFocusFrame> focus;
     QMotifStyle(QMotifStylePrivate &dd, bool useHighlightCols = false);
-    void timerEvent(QTimerEvent *event);
-    bool eventFilter(QObject *o, QEvent *e);
+    void timerEvent(QTimerEvent *event) override;
+    bool eventFilter(QObject *o, QEvent *e) override;
 
 private:
     Q_DECLARE_PRIVATE(QMotifStyle)

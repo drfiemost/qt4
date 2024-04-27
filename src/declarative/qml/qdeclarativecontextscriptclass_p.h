@@ -65,7 +65,7 @@ class QDeclarativeContextScriptClass : public QScriptDeclarativeClass
 {
 public:
     QDeclarativeContextScriptClass(QDeclarativeEngine *);
-    ~QDeclarativeContextScriptClass();
+    ~QDeclarativeContextScriptClass() override;
 
     QScriptValue newContext(QDeclarativeContextData *, QObject * = nullptr);
     QScriptValue newUrlContext(QDeclarativeContextData *, QObject *, const QString &);

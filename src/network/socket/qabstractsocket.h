@@ -119,7 +119,7 @@ public:
     };
 
     QAbstractSocket(SocketType socketType, QObject *parent);
-    virtual ~QAbstractSocket();
+    ~QAbstractSocket() override;
 
     // ### Qt 5: Make connectToHost() and disconnectFromHost() virtual.
     void connectToHost(const QString &hostName, quint16 port, OpenMode mode = ReadWrite);
@@ -128,10 +128,10 @@ public:
 
     bool isValid() const;
 
-    qint64 bytesAvailable() const;
-    qint64 bytesToWrite() const;
+    qint64 bytesAvailable() const override;
+    qint64 bytesToWrite() const override;
 
-    bool canReadLine() const;
+    bool canReadLine() const override;
 
     quint16 localPort() const;
     QHostAddress localAddress() const;
@@ -159,16 +159,16 @@ public:
     SocketError error() const;
 
     // from QIODevice
-    void close();
-    bool isSequential() const;
-    bool atEnd() const;
+    void close() override;
+    bool isSequential() const override;
+    bool atEnd() const override;
     bool flush();
 
     // for synchronous access
     // ### Qt 5: Make waitForConnected() and waitForDisconnected() virtual.
     bool waitForConnected(int msecs = 30000);
-    bool waitForReadyRead(int msecs = 30000);
-    bool waitForBytesWritten(int msecs = 30000);
+    bool waitForReadyRead(int msecs = 30000) override;
+    bool waitForBytesWritten(int msecs = 30000) override;
     bool waitForDisconnected(int msecs = 30000);
 
 #ifndef QT_NO_NETWORKPROXY
@@ -191,9 +191,9 @@ protected Q_SLOTS:
     void disconnectFromHostImplementation();
 
 protected:
-    qint64 readData(char *data, qint64 maxlen);
-    qint64 readLineData(char *data, qint64 maxlen);
-    qint64 writeData(const char *data, qint64 len);
+    qint64 readData(char *data, qint64 maxlen) override;
+    qint64 readLineData(char *data, qint64 maxlen) override;
+    qint64 writeData(const char *data, qint64 len) override;
 
     void setSocketState(SocketState state);
     void setSocketError(SocketError socketError);

@@ -74,7 +74,7 @@ class QHelpSearchIndexReader : public QThread
 
 public:
     QHelpSearchIndexReader();
-    ~QHelpSearchIndexReader();
+    ~QHelpSearchIndexReader() override;
 
     void cancelSearching();
     void search(const QString &collectionFile,
@@ -96,7 +96,7 @@ protected:
     QString m_indexFilesFolder;
 
 private:
-    virtual void run()=0;
+    void run() override  override =0;
 };
 
 }   // namespace fulltextsearch

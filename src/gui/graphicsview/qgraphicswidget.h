@@ -85,7 +85,7 @@ class Q_GUI_EXPORT QGraphicsWidget : public QGraphicsObject, public QGraphicsLay
     Q_PROPERTY(QGraphicsLayout* layout READ layout WRITE setLayout NOTIFY layoutChanged)
 public:
     QGraphicsWidget(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr);
-    ~QGraphicsWidget();
+    ~QGraphicsWidget() override;
     QGraphicsLayout *layout() const;
     void setLayout(QGraphicsLayout *layout);
     void adjustSize();
@@ -110,12 +110,12 @@ public:
     inline void resize(qreal w, qreal h) { resize(QSizeF(w, h)); }
     QSizeF size() const;
 
-    void setGeometry(const QRectF &rect);
+    void setGeometry(const QRectF &rect) override;
     inline void setGeometry(qreal x, qreal y, qreal w, qreal h);
     inline QRectF rect() const { return QRectF(QPointF(), size()); }
 
     void setContentsMargins(qreal left, qreal top, qreal right, qreal bottom);
-    void getContentsMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const;
+    void getContentsMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const override;
 
     void setWindowFrameMargins(qreal left, qreal top, qreal right, qreal bottom);
     void getWindowFrameMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const;
@@ -160,12 +160,12 @@ public:
     enum {
         Type = 11
     };
-    int type() const;
+    int type() const override;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
     virtual void paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
+    QRectF boundingRect() const override;
+    QPainterPath shape() const override;
 
 #if 0
     void dumpFocusChain();
@@ -183,28 +183,28 @@ public Q_SLOTS:
 protected:
     virtual void initStyleOption(QStyleOption *option) const;
 
-    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
-    void updateGeometry();
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override;
+    void updateGeometry() override;
 
     // Notification
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     virtual QVariant propertyChange(const QString &propertyName, const QVariant &value);
 
     // Scene events
-    bool sceneEvent(QEvent *event);
+    bool sceneEvent(QEvent *event) override;
     virtual bool windowFrameEvent(QEvent *e);
     virtual Qt::WindowFrameSection windowFrameSectionAt(const QPointF& pos) const;
 
     // Base event handlers
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
     //virtual void actionEvent(QActionEvent *event);
     virtual void changeEvent(QEvent *event);
     virtual void closeEvent(QCloseEvent *event);
     //void create(WId window = 0, bool initializeWindow = true, bool destroyOldWindow = true);
     //void destroy(bool destroyWindow = true, bool destroySubWindows = true);
-    void focusInEvent(QFocusEvent *event);
+    void focusInEvent(QFocusEvent *event) override;
     virtual bool focusNextPrevChild(bool next);
-    void focusOutEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event) override;
     virtual void hideEvent(QHideEvent *event);
     //virtual bool macEvent(EventHandlerCallRef caller, EventRef event);
     //virtual int metric(PaintDeviceMetric m ) const;
@@ -217,8 +217,8 @@ protected:
     //virtual void tabletEvent(QTabletEvent *event);
     //virtual bool winEvent(MSG *message, long *result);
     //virtual bool x11Event(XEvent *event);
-    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     virtual void grabMouseEvent(QEvent *event);
     virtual void ungrabMouseEvent(QEvent *event);
     virtual void grabKeyboardEvent(QEvent *event);

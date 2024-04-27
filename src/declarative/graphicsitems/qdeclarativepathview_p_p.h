@@ -93,7 +93,7 @@ public:
 
     void init();
 
-    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) {
+    void itemGeometryChanged(QDeclarativeItem *item, const QRectF &newGeometry, const QRectF &oldGeometry) override {
         if ((newGeometry.size() != oldGeometry.size())
             && (!highlightItem || item != highlightItem)) {
             if (QDeclarativePathViewAttached *att = attached(item))

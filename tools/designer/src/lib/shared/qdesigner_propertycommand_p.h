@@ -160,7 +160,7 @@ public:
     void setOldValue(const QVariant &oldValue, int index = 0);
 
     // Calls restoreDefaultValue() and update()
-    virtual void undo();
+    void undo() override;
 
 protected:
     typedef QSharedPointer<PropertyHelper> PropertyHelperPtr;
@@ -236,10 +236,10 @@ public:
     inline void setNewValue(const QVariant &newValue)
     { m_newValue = newValue; }
 
-    int id() const;
-    bool mergeWith(const QUndoCommand *other);
+    int id() const override;
+    bool mergeWith(const QUndoCommand *other) override;
 
-    virtual void redo();
+    void redo() override;
 
 protected:
     virtual QVariant mergeValue(const QVariant &newValue);
@@ -262,10 +262,10 @@ public:
     bool init(QObject *object, const QString &propertyName);
     bool init(const ObjectList &list, const QString &propertyName, QObject *referenceObject = nullptr);
 
-    virtual void redo();
+    void redo() override;
 
 protected:
-    virtual bool mergeWith(const QUndoCommand *) { return false; }
+    bool mergeWith(const QUndoCommand *) override { return false; }
 
 private:
     void setDescription();
@@ -281,8 +281,8 @@ public:
 
     bool init(const QList<QObject *> &selection, QObject *current, const QString &propertyName, const QVariant &value);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     void setDescription();
     QString m_propertyName;
@@ -298,8 +298,8 @@ public:
 
     bool init(const QList<QObject *> &selection, QObject *current, const QString &propertyName);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     void setDescription();
     QString m_propertyName;

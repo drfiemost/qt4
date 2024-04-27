@@ -96,7 +96,7 @@ class QBoxLayoutPrivate : public QLayoutPrivate
     Q_DECLARE_PUBLIC(QBoxLayout)
 public:
     QBoxLayoutPrivate() : hfwWidth(-1), dirty(true), spacing(-1) { }
-    ~QBoxLayoutPrivate();
+    ~QBoxLayoutPrivate() override;
 
     void setDirty() {
         geomArray.clear();

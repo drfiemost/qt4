@@ -57,13 +57,13 @@ Q_OBJECT
 public:
     ProxySettings(QWidget * parent = nullptr);
 
-    ~ProxySettings();
+    ~ProxySettings() override;
 
     static QNetworkProxy httpProxy ();
     static bool httpProxyInUse ();
 
 public slots:
-    virtual void accept ();
+    void accept () override;
 };
 
 QT_END_NAMESPACE

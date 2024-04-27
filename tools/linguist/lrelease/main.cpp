@@ -199,7 +199,7 @@ static void print(const QString &fileName, int lineNo, const QString &msg)
 
 class ParseHandler : public ProFileParserHandler {
 public:
-    virtual void parseError(const QString &fileName, int lineNo, const QString &msg)
+    void parseError(const QString &fileName, int lineNo, const QString &msg) override
         { if (verbose) print(fileName, lineNo, msg); }
 
     bool verbose;
@@ -207,15 +207,15 @@ public:
 
 class EvalHandler : public ProFileEvaluatorHandler {
 public:
-    virtual void configError(const QString &msg)
+    void configError(const QString &msg) override
         { printErr(msg); }
-    virtual void evalError(const QString &fileName, int lineNo, const QString &msg)
+    void evalError(const QString &fileName, int lineNo, const QString &msg) override
         { if (verbose) print(fileName, lineNo, msg); }
-    virtual void fileMessage(const QString &msg)
+    void fileMessage(const QString &msg) override
         { printErr(msg); }
 
-    virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
-    virtual void doneWithEval(ProFile *) {}
+    void aboutToEval(ProFile *, ProFile *, EvalFileType) override {}
+    void doneWithEval(ProFile *) override {}
 
     bool verbose;
 };

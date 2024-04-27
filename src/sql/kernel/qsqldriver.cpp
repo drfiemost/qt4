@@ -64,7 +64,7 @@ class QSqlDriverPrivate : public QObjectPrivate
 {
 public:
     QSqlDriverPrivate();
-    virtual ~QSqlDriverPrivate();
+    ~QSqlDriverPrivate() override;
 
 public:
     // @CHECK: this member is never used. It was named q, which expanded to q_func().

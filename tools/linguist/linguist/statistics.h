@@ -53,13 +53,13 @@ class Statistics : public QDialog, public Ui::Statistics
 
 public:
     Statistics(QWidget *parent = nullptr, Qt::WindowFlags fl = nullptr);
-    ~Statistics() {}
+    ~Statistics() override {}
 
 public slots:
     virtual void updateStats(int w1, int c1, int cs1, int w2, int c2, int cs2);
 
 protected slots:
-    virtual void languageChange();
+    void languageChange() override;
 };
 
 QT_END_NAMESPACE

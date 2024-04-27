@@ -56,11 +56,11 @@ class LinePropertySheet: public QDesignerPropertySheet
     Q_INTERFACES(QDesignerPropertySheetExtension)
 public:
     explicit LinePropertySheet(Line *object, QObject *parent = nullptr);
-    virtual ~LinePropertySheet();
+    ~LinePropertySheet() override;
 
-    virtual void setProperty(int index, const QVariant &value);
-    virtual bool isVisible(int index) const;
-    virtual QString propertyGroup(int index) const;
+    void setProperty(int index, const QVariant &value) override;
+    bool isVisible(int index) const override;
+    QString propertyGroup(int index) const override;
 };
 
 typedef QDesignerPropertySheetFactory<Line, LinePropertySheet> LinePropertySheetFactory;

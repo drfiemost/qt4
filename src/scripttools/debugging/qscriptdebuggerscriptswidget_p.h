@@ -64,13 +64,13 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerScriptsWidget:
     Q_OBJECT
 public:
     QScriptDebuggerScriptsWidget(QWidget *parent = nullptr);
-    ~QScriptDebuggerScriptsWidget();
+    ~QScriptDebuggerScriptsWidget() override;
 
-    QScriptDebuggerScriptsModel *scriptsModel() const;
-    void setScriptsModel(QScriptDebuggerScriptsModel *model);
+    QScriptDebuggerScriptsModel *scriptsModel() const override;
+    void setScriptsModel(QScriptDebuggerScriptsModel *model) override;
 
-    qint64 currentScriptId() const;
-    void setCurrentScript(qint64 id);
+    qint64 currentScriptId() const override;
+    void setCurrentScript(qint64 id) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerScriptsWidget)

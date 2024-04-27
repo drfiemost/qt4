@@ -289,7 +289,7 @@ public:
     };
 
     QProcessPrivate();
-    virtual ~QProcessPrivate();
+    ~QProcessPrivate() override;
 
     // private slots
     bool _q_canReadStandardOutput();

@@ -55,7 +55,7 @@ class QNmDBusHelper: public QObject, protected QDBusContext
      Q_OBJECT
  public:
     QNmDBusHelper(QObject *parent = nullptr);
-    ~QNmDBusHelper();
+    ~QNmDBusHelper() override;
 
  public slots:
     void deviceStateChanged(quint32);

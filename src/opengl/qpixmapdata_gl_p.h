@@ -82,13 +82,13 @@ QGLFramebufferObjectPool* qgl_fbo_pool();
 class QGLPixmapGLPaintDevice : public QGLPaintDevice
 {
 public:
-    QPaintEngine* paintEngine() const;
+    QPaintEngine* paintEngine() const override;
 
-    void beginPaint();
-    void endPaint();
-    QGLContext* context() const;
-    QSize size() const;
-    bool alphaRequested() const;
+    void beginPaint() override;
+    void endPaint() override;
+    QGLContext* context() const override;
+    QSize size() const override;
+    bool alphaRequested() const override;
 
     void setPixmapData(QGLPixmapData*);
 private:
@@ -99,26 +99,26 @@ class Q_OPENGL_EXPORT QGLPixmapData : public QPixmapData
 {
 public:
     QGLPixmapData(PixelType type);
-    ~QGLPixmapData();
+    ~QGLPixmapData() override;
 
-    QPixmapData *createCompatiblePixmapData() const;
+    QPixmapData *createCompatiblePixmapData() const override;
 
     // Re-implemented from QPixmapData:
-    void resize(int width, int height);
-    void fromImage(const QImage &image, Qt::ImageConversionFlags flags);
+    void resize(int width, int height) override;
+    void fromImage(const QImage &image, Qt::ImageConversionFlags flags) override;
     void fromImageReader(QImageReader *imageReader,
-                          Qt::ImageConversionFlags flags);
+                          Qt::ImageConversionFlags flags) override;
     bool fromFile(const QString &filename, const char *format,
-                  Qt::ImageConversionFlags flags);
+                  Qt::ImageConversionFlags flags) override;
     bool fromData(const uchar *buffer, uint len, const char *format,
-                  Qt::ImageConversionFlags flags);
-    void copy(const QPixmapData *data, const QRect &rect);
-    bool scroll(int dx, int dy, const QRect &rect);
-    void fill(const QColor &color);
-    bool hasAlphaChannel() const;
-    QImage toImage() const;
-    QPaintEngine *paintEngine() const;
-    int metric(QPaintDevice::PaintDeviceMetric metric) const;
+                  Qt::ImageConversionFlags flags) override;
+    void copy(const QPixmapData *data, const QRect &rect) override;
+    bool scroll(int dx, int dy, const QRect &rect) override;
+    void fill(const QColor &color) override;
+    bool hasAlphaChannel() const override;
+    QImage toImage() const override;
+    QPaintEngine *paintEngine() const override;
+    int metric(QPaintDevice::PaintDeviceMetric metric) const override;
 
     // For accessing as a target:
     QGLPaintDevice *glDevice() const;

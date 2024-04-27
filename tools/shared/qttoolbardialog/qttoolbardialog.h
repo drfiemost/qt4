@@ -69,7 +69,7 @@ class QtToolBarManager : public QObject
 public:
 
     explicit QtToolBarManager(QObject *parent = nullptr);
-    ~QtToolBarManager();
+    ~QtToolBarManager() override;
 
     void setMainWindow(QMainWindow *mainWindow);
     QMainWindow *mainWindow() const;
@@ -101,14 +101,14 @@ class QtToolBarDialog : public QDialog
 public:
 
     explicit QtToolBarDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    ~QtToolBarDialog();
+    ~QtToolBarDialog() override;
 
     void setToolBarManager(QtToolBarManager *toolBarManager);
 
 protected:
 
-    void showEvent(QShowEvent *event);
-    void hideEvent(QHideEvent *event);
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
 
 private:
 

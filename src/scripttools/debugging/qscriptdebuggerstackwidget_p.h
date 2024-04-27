@@ -64,13 +64,13 @@ class Q_AUTOTEST_EXPORT QScriptDebuggerStackWidget:
     Q_OBJECT
 public:
     QScriptDebuggerStackWidget(QWidget *parent = nullptr);
-    ~QScriptDebuggerStackWidget();
+    ~QScriptDebuggerStackWidget() override;
 
-    QAbstractItemModel *stackModel() const;
-    void setStackModel(QAbstractItemModel *model);
+    QAbstractItemModel *stackModel() const override;
+    void setStackModel(QAbstractItemModel *model) override;
 
-    int currentFrameIndex() const;
-    void setCurrentFrameIndex(int frameIndex);
+    int currentFrameIndex() const override;
+    void setCurrentFrameIndex(int frameIndex) override;
 
 private:
     Q_DECLARE_PRIVATE(QScriptDebuggerStackWidget)

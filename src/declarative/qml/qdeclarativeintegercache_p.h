@@ -68,7 +68,7 @@ class QDeclarativeIntegerCache : public QDeclarativeRefCount, public QDeclarativ
 {
 public:
     QDeclarativeIntegerCache(QDeclarativeEngine *);
-    virtual ~QDeclarativeIntegerCache();
+    ~QDeclarativeIntegerCache() override;
 
     inline int count() const;
     void add(const QString &, int);
@@ -77,7 +77,7 @@ public:
     inline int value(const QScriptDeclarativeClass::Identifier &id) const;
 
 protected:
-    virtual void clear();
+    void clear() override;
 
 private:
     struct Data : public QScriptDeclarativeClass::PersistentIdentifier {

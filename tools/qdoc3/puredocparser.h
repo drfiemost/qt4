@@ -62,10 +62,10 @@ class PureDocParser : public CppCodeParser
 {
 public:
     PureDocParser();
-    virtual ~PureDocParser();
+    ~PureDocParser() override;
 
-    virtual QString language();
-    virtual QStringList sourceFileNameFilter();
+    QString language() override;
+    QStringList sourceFileNameFilter() override;
 };
 
 QT_END_NAMESPACE

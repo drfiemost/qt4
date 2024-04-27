@@ -80,7 +80,7 @@ public:
 
     QSharedMemory(QObject *parent = nullptr);
     QSharedMemory(const QString &key, QObject *parent = nullptr);
-    ~QSharedMemory();
+    ~QSharedMemory() override;
 
     void setKey(const QString &key);
     QString key() const;

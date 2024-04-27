@@ -116,7 +116,7 @@ public:
     QApplication(Display *dpy, int &argc, char **argv, Qt::HANDLE visual = 0, Qt::HANDLE cmap= 0, int = ApplicationFlags);
 #endif
 #endif
-    virtual ~QApplication();
+    ~QApplication() override;
 
     static Type type();
 
@@ -254,7 +254,7 @@ public:
     static Qt::LayoutDirection keyboardInputDirection();
 
     static int exec();
-    bool notify(QObject *, QEvent *);
+    bool notify(QObject *, QEvent *) override;
 
 
     static void setQuitOnLastWindowClosed(bool quit);
@@ -291,8 +291,8 @@ protected:
 #if defined(Q_WS_QWS)
     void setArgs(int, char **);
 #endif
-    bool event(QEvent *);
-    bool compressEvent(QEvent *, QObject *receiver, QPostEventList *);
+    bool event(QEvent *) override;
+    bool compressEvent(QEvent *, QObject *receiver, QPostEventList *) override;
 
 #if defined(Q_INTERNAL_QAPP_SRC) || defined(qdoc)
     QApplication(int &argc, char **argv);

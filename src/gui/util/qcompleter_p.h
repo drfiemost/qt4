@@ -75,7 +75,7 @@ class QCompleterPrivate : public QObjectPrivate
 
 public:
     QCompleterPrivate();
-    ~QCompleterPrivate() { delete popup; }
+    ~QCompleterPrivate() override { delete popup; }
     void init(QAbstractItemModel *model = nullptr);
 
     QPointer<QWidget> widget;
@@ -174,7 +174,7 @@ class QSortedModelEngine : public QCompletionEngine
 {
 public:
     QSortedModelEngine(QCompleterPrivate *c) : QCompletionEngine(c) { }
-    QMatchData filter(const QString&, const QModelIndex&, int);
+    QMatchData filter(const QString&, const QModelIndex&, int) override;
     QIndexMapper indexHint(QString, const QModelIndex&, Qt::SortOrder);
     Qt::SortOrder sortOrder(const QModelIndex&) const;
 };
@@ -184,8 +184,8 @@ class QUnsortedModelEngine : public QCompletionEngine
 public:
     QUnsortedModelEngine(QCompleterPrivate *c) : QCompletionEngine(c) { }
 
-    void filterOnDemand(int);
-    QMatchData filter(const QString&, const QModelIndex&, int);
+    void filterOnDemand(int) override;
+    QMatchData filter(const QString&, const QModelIndex&, int) override;
 private:
     int buildIndices(const QString& str, const QModelIndex& parent, int n,
                      const QIndexMapper& iv, QMatchData* m);
@@ -196,7 +196,7 @@ class QCompleterItemDelegate : public QItemDelegate
 public:
     QCompleterItemDelegate(QAbstractItemView *view)
         : QItemDelegate(view), view(view) { }
-    void paint(QPainter *p, const QStyleOptionViewItem& opt, const QModelIndex& idx) const {
+    void paint(QPainter *p, const QStyleOptionViewItem& opt, const QModelIndex& idx) const override {
         QStyleOptionViewItem optCopy = opt;
         optCopy.showDecorationSelected = true;
         if (view->currentIndex() == idx)
@@ -225,16 +225,16 @@ public:
     bool setCurrentRow(int row);
     QModelIndex currentIndex(bool) const;
 
-    QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const;
-    int rowCount(const QModelIndex &index = QModelIndex()) const;
-    int columnCount(const QModelIndex &index = QModelIndex()) const;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex & = QModelIndex()) const { return QModelIndex(); }
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override;
+    int rowCount(const QModelIndex &index = QModelIndex()) const override;
+    int columnCount(const QModelIndex &index = QModelIndex()) const override;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex & = QModelIndex()) const override { return QModelIndex(); }
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
-    void setSourceModel(QAbstractItemModel *sourceModel);
-    QModelIndex mapToSource(const QModelIndex& proxyIndex) const;
-    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+    void setSourceModel(QAbstractItemModel *sourceModel) override;
+    QModelIndex mapToSource(const QModelIndex& proxyIndex) const override;
+    QModelIndex mapFromSource(const QModelIndex& sourceIndex) const override;
 
     QCompleterPrivate *c;
     QScopedPointer<QCompletionEngine> engine;

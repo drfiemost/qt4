@@ -70,7 +70,7 @@ class Q_SVG_EXPORT QSvgGenerator : public QPaintDevice
     Q_PROPERTY(int resolution READ resolution WRITE setResolution)
 public:
     QSvgGenerator();
-    ~QSvgGenerator();
+    ~QSvgGenerator() override;
 
     QString title() const;
     void setTitle(const QString &title);

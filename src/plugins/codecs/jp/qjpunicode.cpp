@@ -320,15 +320,15 @@ public:
 //    uint Jisx0201ToUnicode(uint h, uint l) const;
 //    uint Jisx0201LatinToUnicode(uint h, uint l) const;
 //    uint Jisx0201KanaToUnicode(uint h, uint l) const;
-    uint jisx0208ToUnicode(uint h, uint l) const;
-    uint jisx0212ToUnicode(uint h, uint l) const;
+    uint jisx0208ToUnicode(uint h, uint l) const override;
+    uint jisx0212ToUnicode(uint h, uint l) const override;
 
 //    uint UnicodeToAscii(uint h, uint l) const;
 //    uint UnicodeToJisx0201(uint h, uint l) const;
 //    uint UnicodeToJisx0201Latin(uint h, uint l) const;
 //    uint UnicodeToJisx0201Kana(uint h, uint l) const;
-    uint unicodeToJisx0208(uint h, uint l) const;
-    uint unicodeToJisx0212(uint h, uint l) const;
+    uint unicodeToJisx0208(uint h, uint l) const override;
+    uint unicodeToJisx0212(uint h, uint l) const override;
 };
 
 uint QJpUnicodeConv_Unicode_ASCII::jisx0208ToUnicode(uint h, uint l) const
@@ -375,18 +375,18 @@ class QJpUnicodeConv_JISX0221_JISX0201 : public QJpUnicodeConv {
 public:
     QJpUnicodeConv_JISX0221_JISX0201(int r) : QJpUnicodeConv(r) {}
 
-    uint asciiToUnicode(uint h, uint l) const;
+    uint asciiToUnicode(uint h, uint l) const override;
 //    uint Jisx0201ToUnicode(uint h, uint l) const;
 //    uint Jisx0201LatinToUnicode(uint h, uint l) const;
 //    uint Jisx0201KanaToUnicode(uint h, uint l) const;
-    uint jisx0208ToUnicode(uint h, uint l) const;
+    uint jisx0208ToUnicode(uint h, uint l) const override;
 //    uint Jisx0212ToUnicode(uint h, uint l) const;
 
-    uint unicodeToAscii(uint h, uint l) const;
+    uint unicodeToAscii(uint h, uint l) const override;
 //    uint UnicodeToJisx0201(uint h, uint l) const;
 //    uint UnicodeToJisx0201Latin(uint h, uint l) const;
 //    uint UnicodeToJisx0201Kana(uint h, uint l) const;
-    uint unicodeToJisx0208(uint h, uint l) const;
+    uint unicodeToJisx0208(uint h, uint l) const override;
 //    uint UnicodeToJisx0212(uint h, uint l) const;
 };
 
@@ -431,17 +431,17 @@ public:
 
 //    uint AsciiToUnicode(uint h, uint l) const;
 //    uint Jisx0201ToUnicode(uint h, uint l) const;
-    uint jisx0201LatinToUnicode(uint h, uint l) const;
+    uint jisx0201LatinToUnicode(uint h, uint l) const override;
 //    uint Jisx0201KanaToUnicode(uint h, uint l) const;
-    uint jisx0208ToUnicode(uint h, uint l) const;
-    uint jisx0212ToUnicode(uint h, uint l) const;
+    uint jisx0208ToUnicode(uint h, uint l) const override;
+    uint jisx0212ToUnicode(uint h, uint l) const override;
 
 //    uint UnicodeToAscii(uint h, uint l) const;
 //    uint UnicodeToJisx0201(uint h, uint l) const;
-    uint unicodeToJisx0201Latin(uint h, uint l) const;
+    uint unicodeToJisx0201Latin(uint h, uint l) const override;
 //    uint UnicodeToJisx0201Kana(uint h, uint l) const;
-    uint unicodeToJisx0208(uint h, uint l) const;
-    uint unicodeToJisx0212(uint h, uint l) const;
+    uint unicodeToJisx0208(uint h, uint l) const override;
+    uint unicodeToJisx0212(uint h, uint l) const override;
 };
 
 uint QJpUnicodeConv_JISX0221_ASCII::jisx0201LatinToUnicode(uint h, uint l) const
@@ -525,17 +525,17 @@ public:
 
 //    uint AsciiToUnicode(uint h, uint l) const;
 //    uint Jisx0201ToUnicode(uint h, uint l) const;
-    uint jisx0201LatinToUnicode(uint h, uint l) const;
+    uint jisx0201LatinToUnicode(uint h, uint l) const override;
 //    uint Jisx0201KanaToUnicode(uint h, uint l) const;
-    uint jisx0208ToUnicode(uint h, uint l) const;
-    uint jisx0212ToUnicode(uint h, uint l) const;
+    uint jisx0208ToUnicode(uint h, uint l) const override;
+    uint jisx0212ToUnicode(uint h, uint l) const override;
 
-    uint unicodeToAscii(uint h, uint l) const;
+    uint unicodeToAscii(uint h, uint l) const override;
 //    uint UnicodeToJisx0201(uint h, uint l) const;
-    uint unicodeToJisx0201Latin(uint h, uint l) const;
+    uint unicodeToJisx0201Latin(uint h, uint l) const override;
 //    uint UnicodeToJisx0201Kana(uint h, uint l) const;
-    uint unicodeToJisx0208(uint h, uint l) const;
-    uint unicodeToJisx0212(uint h, uint l) const;
+    uint unicodeToJisx0208(uint h, uint l) const override;
+    uint unicodeToJisx0212(uint h, uint l) const override;
 };
 
 uint QJpUnicodeConv_Sun::jisx0201LatinToUnicode(uint h, uint l) const
@@ -612,17 +612,17 @@ public:
 
 //    uint AsciiToUnicode(uint h, uint l) const;
 //    uint Jisx0201ToUnicode(uint h, uint l) const;
-    uint jisx0201LatinToUnicode(uint h, uint l) const;
+    uint jisx0201LatinToUnicode(uint h, uint l) const override;
 //    uint Jisx0201KanaToUnicode(uint h, uint l) const;
-    uint jisx0208ToUnicode(uint h, uint l) const;
-    uint jisx0212ToUnicode(uint h, uint l) const;
+    uint jisx0208ToUnicode(uint h, uint l) const override;
+    uint jisx0212ToUnicode(uint h, uint l) const override;
 
 //    uint UnicodeToAscii(uint h, uint l) const;
 //    uint UnicodeToJisx0201(uint h, uint l) const;
-    uint unicodeToJisx0201Latin(uint h, uint l) const;
+    uint unicodeToJisx0201Latin(uint h, uint l) const override;
 //    uint UnicodeToJisx0201Kana(uint h, uint l) const;
-    uint unicodeToJisx0208(uint h, uint l) const;
-    uint unicodeToJisx0212(uint h, uint l) const;
+    uint unicodeToJisx0208(uint h, uint l) const override;
+    uint unicodeToJisx0212(uint h, uint l) const override;
 };
 
 uint QJpUnicodeConv_Microsoft::jisx0201LatinToUnicode(uint h, uint l) const

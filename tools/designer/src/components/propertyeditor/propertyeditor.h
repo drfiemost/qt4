@@ -77,27 +77,27 @@ class QT_PROPERTYEDITOR_EXPORT PropertyEditor: public QDesignerPropertyEditor
     Q_OBJECT
 public:
     explicit PropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
-    virtual ~PropertyEditor();
+    ~PropertyEditor() override;
 
-    virtual QDesignerFormEditorInterface *core() const;
+    QDesignerFormEditorInterface *core() const override;
 
-    virtual bool isReadOnly() const;
-    virtual void setReadOnly(bool readOnly);
-    virtual void setPropertyValue(const QString &name, const QVariant &value, bool changed = true);
-    virtual void updatePropertySheet();
+    bool isReadOnly() const override;
+    void setReadOnly(bool readOnly) override;
+    void setPropertyValue(const QString &name, const QVariant &value, bool changed = true) override;
+    void updatePropertySheet() override;
 
-    virtual void setObject(QObject *object);
+    void setObject(QObject *object) override;
 
-    void reloadResourceProperties();
+    void reloadResourceProperties() override;
 
-    virtual QObject *object() const
+    QObject *object() const override
     { return m_object; }
 
-    virtual QString currentPropertyName() const;
+    QString currentPropertyName() const override;
 
 protected:
 
-    bool event(QEvent *event);
+    bool event(QEvent *event) override;
 
 private slots:
     void slotResetProperty(QtProperty *property);

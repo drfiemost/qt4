@@ -71,7 +71,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerFormWindowManager
     Q_OBJECT
 public:
     explicit QDesignerFormWindowManager(QObject *parent = nullptr);
-    virtual ~QDesignerFormWindowManager();
+    ~QDesignerFormWindowManager() override;
 
     virtual QAction *actionDefaultPreview() const;
     virtual QActionGroup *actionGroupPreviewInStyle() const;

@@ -164,7 +164,7 @@ class QJSDebuggerAgent : public QObject, public QScriptEngineAgent
 public:
     QJSDebuggerAgent(QScriptEngine *engine, QObject *parent = nullptr);
     QJSDebuggerAgent(QDeclarativeEngine *engine, QObject *parent = nullptr);
-    ~QJSDebuggerAgent();
+    ~QJSDebuggerAgent() override;
 
     bool isInitialized() const;
 
@@ -189,28 +189,28 @@ public:
 
     // reimplemented
     void scriptLoad(qint64 id, const QString &program,
-                    const QString &fileName, int baseLineNumber);
-    void scriptUnload(qint64 id);
+                    const QString &fileName, int baseLineNumber) override;
+    void scriptUnload(qint64 id) override;
 
-    void contextPush();
-    void contextPop();
+    void contextPush() override;
+    void contextPop() override;
 
-    void functionEntry(qint64 scriptId);
+    void functionEntry(qint64 scriptId) override;
     void functionExit(qint64 scriptId,
-                      const QScriptValue &returnValue);
+                      const QScriptValue &returnValue) override;
 
     void positionChange(qint64 scriptId,
-                        int lineNumber, int columnNumber);
+                        int lineNumber, int columnNumber) override;
 
     void exceptionThrow(qint64 scriptId,
                         const QScriptValue &exception,
-                        bool hasHandler);
+                        bool hasHandler) override;
     void exceptionCatch(qint64 scriptId,
-                        const QScriptValue &exception);
+                        const QScriptValue &exception) override;
 
-    bool supportsExtension(Extension extension) const;
+    bool supportsExtension(Extension extension) const override;
     QVariant extension(Extension extension,
-                       const QVariant &argument = QVariant());
+                       const QVariant &argument = QVariant()) override;
 
 Q_SIGNALS:
     void stopped(bool becauseOfException,

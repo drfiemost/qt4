@@ -73,7 +73,7 @@ class QNetworkSessionManagerPrivate : public QObject
 
 public:
     QNetworkSessionManagerPrivate(QObject *parent = nullptr) : QObject(parent) {}
-    ~QNetworkSessionManagerPrivate() {}
+    ~QNetworkSessionManagerPrivate() override {}
 
     inline void forceSessionClose(const QNetworkConfiguration &config)
     { emit forcedSessionClose(config); }

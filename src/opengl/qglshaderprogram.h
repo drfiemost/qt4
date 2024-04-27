@@ -72,7 +72,7 @@ public:
 
     explicit QGLShader(QGLShader::ShaderType type, QObject *parent = nullptr);
     QGLShader(QGLShader::ShaderType type, const QGLContext *context, QObject *parent = nullptr);
-    virtual ~QGLShader();
+    ~QGLShader() override;
 
     QGLShader::ShaderType shaderType() const;
 
@@ -116,7 +116,7 @@ class Q_OPENGL_EXPORT QGLShaderProgram : public QObject
 public:
     explicit QGLShaderProgram(QObject *parent = nullptr);
     explicit QGLShaderProgram(const QGLContext *context, QObject *parent = nullptr);
-    virtual ~QGLShaderProgram();
+    ~QGLShaderProgram() override;
 
     bool addShader(QGLShader *shader);
     void removeShader(QGLShader *shader);

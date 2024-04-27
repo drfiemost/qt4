@@ -63,7 +63,7 @@ class Q_GUI_EXPORT QDrag : public QObject
     Q_DECLARE_PRIVATE(QDrag)
 public:
     explicit QDrag(QWidget *dragSource);
-    ~QDrag();
+    ~QDrag() override;
 
     void setMimeData(QMimeData *data);
     QMimeData *mimeData() const;

@@ -96,12 +96,12 @@ class QDeclarativeCompiledBindings : public QObject, public QDeclarativeAbstract
 {
 public:
     QDeclarativeCompiledBindings(const char *program, QDeclarativeContextData *context, QDeclarativeRefCount *);
-    virtual ~QDeclarativeCompiledBindings();
+    ~QDeclarativeCompiledBindings() override;
 
     QDeclarativeAbstractBinding *configBinding(int index, QObject *target, QObject *scope, int property);
 
 protected:
-    int qt_metacall(QMetaObject::Call, int, void **);
+    int qt_metacall(QMetaObject::Call, int, void **) override;
 
 private:
     Q_DISABLE_COPY(QDeclarativeCompiledBindings)

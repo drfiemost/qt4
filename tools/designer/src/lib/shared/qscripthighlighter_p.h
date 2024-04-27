@@ -63,7 +63,7 @@ class QScriptHighlighter : public QSyntaxHighlighter
 {
 public:
     explicit QScriptHighlighter(QTextDocument *parent);
-    virtual void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) override;
 
 private:
     void highlightKeyword(int currentPos, const QString &buffer);

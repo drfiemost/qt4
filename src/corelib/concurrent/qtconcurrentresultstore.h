@@ -222,7 +222,7 @@ public:
         m_results.clear();
     }
 
-    ~ResultStore()
+    ~ResultStore() override
     {
         clear();
     }

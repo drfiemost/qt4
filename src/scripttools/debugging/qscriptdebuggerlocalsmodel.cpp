@@ -108,7 +108,7 @@ class QScriptDebuggerLocalsModelPrivate
     Q_DECLARE_PUBLIC(QScriptDebuggerLocalsModel)
 public:
     QScriptDebuggerLocalsModelPrivate();
-    ~QScriptDebuggerLocalsModelPrivate();
+    ~QScriptDebuggerLocalsModelPrivate() override;
 
     static QScriptDebuggerLocalsModelPrivate *get(QScriptDebuggerLocalsModel *q);
 
@@ -276,7 +276,7 @@ public:
         return QScriptDebuggerLocalsModelPrivate::get(lm);
     }
 
-    void start()
+    void start() override
     {
         if (!m_index.isValid()) {
             // nothing to do, the node has been removed
@@ -290,7 +290,7 @@ public:
                                   .arg(QDateTime::currentDateTime().toString()));
     }
 
-    void handleResponse(const QScriptDebuggerResponse &, int)
+    void handleResponse(const QScriptDebuggerResponse &, int) override
     {
         switch (m_state) {
         case 0:
@@ -303,7 +303,7 @@ public:
         }
     }
 
-    void evaluateFinished(const QScriptDebuggerValue &result)
+    void evaluateFinished(const QScriptDebuggerValue &result) override
     {
         if (!m_index.isValid()) {
             // nothing to do, the node has been removed
@@ -367,7 +367,7 @@ public:
         return QScriptDebuggerLocalsModelPrivate::get(lm);
     }
 
-    void start()
+    void start() override
     {
         if (!m_index.isValid()) {
             // nothing to do, the node has been removed
@@ -379,7 +379,7 @@ public:
     }
 
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         if (!m_index.isValid()) {
             // the node has been removed
@@ -484,7 +484,7 @@ public:
           m_model(model), m_frameIndex(frameIndex), m_state(0)
     { }
 
-    void start()
+    void start() override
     {
         if (!m_model) {
             // Model has been deleted.
@@ -496,7 +496,7 @@ public:
     }
 
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         if (!m_model) {
             // Model has been deleted.
@@ -556,7 +556,7 @@ public:
           m_model(model), m_frameIndex(frameIndex), m_state(0)
     { }
 
-    void start()
+    void start() override
     {
         if (!m_model) {
             // Model has been deleted.
@@ -568,7 +568,7 @@ public:
     }
 
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         if (!m_model) {
             // Model has been deleted.
@@ -656,7 +656,7 @@ public:
         return QScriptDebuggerLocalsModelPrivate::get(lm);
     }
 
-    void start()
+    void start() override
     {
         if (!m_index.isValid()) {
             // nothing to do, the node has been removed
@@ -669,7 +669,7 @@ public:
     }
 
     void handleResponse(const QScriptDebuggerResponse &response,
-                        int)
+                        int) override
     {
         QScriptDebuggerObjectSnapshotDelta delta;
         delta = qvariant_cast<QScriptDebuggerObjectSnapshotDelta>(response.result());

@@ -69,13 +69,13 @@ class QMultiInputContextPlugin : public QInputContextPlugin
     Q_OBJECT
 public:
     QMultiInputContextPlugin();
-    ~QMultiInputContextPlugin();
+    ~QMultiInputContextPlugin() override;
 
-    QStringList keys() const;
-    QInputContext *create( const QString &key );
-    QStringList languages( const QString &key );
-    QString displayName( const QString &key );
-    QString description( const QString &key );
+    QStringList keys() const override;
+    QInputContext *create( const QString &key ) override;
+    QStringList languages( const QString &key ) override;
+    QString displayName( const QString &key ) override;
+    QString description( const QString &key ) override;
 };
 
 #endif // QT_NO_IM

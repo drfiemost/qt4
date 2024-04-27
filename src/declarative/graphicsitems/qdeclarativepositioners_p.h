@@ -66,7 +66,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeBasePositioner : public QDeclarat
 public:
     enum PositionerType { None = 0x0, Horizontal = 0x1, Vertical = 0x2, Both = 0x3 };
     QDeclarativeBasePositioner(PositionerType, QDeclarativeItem *parent);
-    ~QDeclarativeBasePositioner();
+    ~QDeclarativeBasePositioner() override;
 
     int spacing() const;
     void setSpacing(int);
@@ -79,8 +79,8 @@ public:
 
 protected:
     QDeclarativeBasePositioner(QDeclarativeBasePositionerPrivate &dd, PositionerType at, QDeclarativeItem *parent);
-    virtual void componentComplete();
-    virtual QVariant itemChange(GraphicsItemChange, const QVariant &);
+    void componentComplete() override;
+    QVariant itemChange(GraphicsItemChange, const QVariant &) override;
     void finishApplyTransitions();
 
 Q_SIGNALS:
@@ -119,8 +119,8 @@ class Q_AUTOTEST_EXPORT QDeclarativeColumn : public QDeclarativeBasePositioner
 public:
     QDeclarativeColumn(QDeclarativeItem *parent=nullptr);
 protected:
-    virtual void doPositioning(QSizeF *contentSize);
-    virtual void reportConflictingAnchors();
+    void doPositioning(QSizeF *contentSize) override;
+    void reportConflictingAnchors() override;
 private:
     Q_DISABLE_COPY(QDeclarativeColumn)
 };
@@ -140,8 +140,8 @@ Q_SIGNALS:
     Q_REVISION(1) void layoutDirectionChanged();
 
 protected:
-    virtual void doPositioning(QSizeF *contentSize);
-    virtual void reportConflictingAnchors();
+    void doPositioning(QSizeF *contentSize) override;
+    void reportConflictingAnchors() override;
 private:
     Q_DISABLE_COPY(QDeclarativeRow)
 };
@@ -178,8 +178,8 @@ Q_SIGNALS:
     Q_REVISION(1) void layoutDirectionChanged();
 
 protected:
-    virtual void doPositioning(QSizeF *contentSize);
-    virtual void reportConflictingAnchors();
+    void doPositioning(QSizeF *contentSize) override;
+    void reportConflictingAnchors() override;
 
 private:
     int m_rows;
@@ -210,8 +210,8 @@ Q_SIGNALS:
     Q_REVISION(1) void layoutDirectionChanged();
 
 protected:
-    virtual void doPositioning(QSizeF *contentSize);
-    virtual void reportConflictingAnchors();
+    void doPositioning(QSizeF *contentSize) override;
+    void reportConflictingAnchors() override;
 protected:
     QDeclarativeFlow(QDeclarativeFlowPrivate &dd, QDeclarativeItem *parent);
 private:

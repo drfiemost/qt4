@@ -64,7 +64,7 @@ class QScriptBreakpointsWidgetInterfacePrivate
     Q_DECLARE_PUBLIC(QScriptBreakpointsWidgetInterface)
 public:
     QScriptBreakpointsWidgetInterfacePrivate();
-    ~QScriptBreakpointsWidgetInterfacePrivate();
+    ~QScriptBreakpointsWidgetInterfacePrivate() override;
 };
 
 QT_END_NAMESPACE

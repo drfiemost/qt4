@@ -69,10 +69,10 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QDeclarativeBehavior : public QObject, public
 
 public:
     QDeclarativeBehavior(QObject *parent=nullptr);
-    ~QDeclarativeBehavior();
+    ~QDeclarativeBehavior() override;
 
-    virtual void setTarget(const QDeclarativeProperty &);
-    virtual void write(const QVariant &value);
+    void setTarget(const QDeclarativeProperty &) override;
+    void write(const QVariant &value) override;
 
     QDeclarativeAbstractAnimation *animation();
     void setAnimation(QDeclarativeAbstractAnimation *);

@@ -59,7 +59,7 @@ public:
 
     void firstShow();
 
-    virtual ~QDesignerFormWindow();
+    ~QDesignerFormWindow() override;
 
     QAction *action() const;
     QDesignerWorkbench *workbench() const;
@@ -79,9 +79,9 @@ signals:
     void triggerAction();
 
 protected:
-    virtual void changeEvent(QEvent *e);
-    virtual void closeEvent(QCloseEvent *ev);
-    virtual void resizeEvent(QResizeEvent* rev);
+    void changeEvent(QEvent *e) override;
+    void closeEvent(QCloseEvent *ev) override;
+    void resizeEvent(QResizeEvent* rev) override;
 
 private:
     int getNumberOfUntitledWindows() const;

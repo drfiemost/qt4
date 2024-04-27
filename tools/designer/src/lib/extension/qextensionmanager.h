@@ -58,12 +58,12 @@ class QDESIGNER_EXTENSION_EXPORT QExtensionManager: public QObject, public QAbst
     Q_INTERFACES(QAbstractExtensionManager)
 public:
     QExtensionManager(QObject *parent = nullptr);
-    ~QExtensionManager();
+    ~QExtensionManager() override;
 
-    virtual void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString());
-    virtual void unregisterExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString());
+    void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) override;
+    void unregisterExtensions(QAbstractExtensionFactory *factory, const QString &iid = QString()) override;
 
-    virtual QObject *extension(QObject *object, const QString &iid) const;
+    QObject *extension(QObject *object, const QString &iid) const override;
 
 private:
     typedef QList<QAbstractExtensionFactory*> FactoryList;

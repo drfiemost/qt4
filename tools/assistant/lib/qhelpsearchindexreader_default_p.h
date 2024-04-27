@@ -114,10 +114,10 @@ class QHelpSearchIndexReaderDefault : public QHelpSearchIndexReader
 
 public:
     QHelpSearchIndexReaderDefault();
-    ~QHelpSearchIndexReaderDefault();
+    ~QHelpSearchIndexReaderDefault() override;
 
 private:
-    void run();
+    void run() override;
 
 private:
     Reader m_reader;

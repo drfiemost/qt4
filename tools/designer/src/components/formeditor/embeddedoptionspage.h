@@ -61,7 +61,7 @@ class EmbeddedOptionsControl : public QWidget {
     Q_OBJECT
 public:
     explicit EmbeddedOptionsControl(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
-    ~EmbeddedOptionsControl();
+    ~EmbeddedOptionsControl() override;
 
     bool isDirty() const;
 
@@ -86,10 +86,10 @@ class EmbeddedOptionsPage : public QDesignerOptionsPageInterface
 public:
     explicit EmbeddedOptionsPage(QDesignerFormEditorInterface *core);
 
-    QString name() const;
-    QWidget *createPage(QWidget *parent);
-    virtual void finish();
-    virtual void apply();
+    QString name() const override;
+    QWidget *createPage(QWidget *parent) override;
+    void finish() override;
+    void apply() override;
 
 private:
     QDesignerFormEditorInterface *m_core;

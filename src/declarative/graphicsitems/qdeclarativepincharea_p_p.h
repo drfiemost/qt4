@@ -75,7 +75,7 @@ public:
     {
     }
 
-    ~QDeclarativePinchAreaPrivate();
+    ~QDeclarativePinchAreaPrivate() override;
 
     void init()
     {
