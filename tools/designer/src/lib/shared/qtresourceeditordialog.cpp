@@ -1843,7 +1843,7 @@ QString QtResourceEditorDialogPrivate::browseForNewLocation(const QString &resou
 {
     QFileInfo fi(resourceFile);
     const QString initialPath = rootDir.absoluteFilePath(fi.fileName());
-    while (1) {
+    while (true) {
         QString newPath = m_dlgGui->getSaveFileName(q_ptr,
                     QApplication::translate("QtResourceEditorDialog", "Copy As", nullptr, QApplication::UnicodeUTF8),
                     initialPath);
@@ -2144,7 +2144,7 @@ QString QtResourceEditorDialog::selectedResource() const
 
     const QString dotSlash(QLatin1String("./"));
     const QString dotDotSlash(QLatin1String("../"));
-    while (1) {
+    while (true) {
         if (resourceEnding.startsWith(slash))
             resourceEnding = resourceEnding.mid(1);
         else if (resourceEnding.startsWith(dotSlash))

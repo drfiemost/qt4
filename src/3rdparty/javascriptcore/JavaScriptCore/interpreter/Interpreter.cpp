@@ -1203,7 +1203,7 @@ JSValue Interpreter::privateExecute(ExecutionFlag flag, RegisterFile* registerFi
 #else
     #define DEFINE_OPCODE(opcode) case opcode:
 #endif
-    while (1) { // iterator loop begins
+    while (true) { // iterator loop begins
     interpreterLoopStart:;
     switch (vPC->u.opcode)
 #endif

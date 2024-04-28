@@ -316,7 +316,7 @@ JSValue JSC_HOST_CALL arrayProtoFuncConcat(ExecState* exec, JSObject*, JSValue t
     JSValue curArg = thisValue.toThisObject(exec);
     ArgList::const_iterator it = args.begin();
     ArgList::const_iterator end = args.end();
-    while (1) {
+    while (true) {
         if (curArg.inherits(&JSArray::info)) {
             unsigned length = curArg.get(exec, exec->propertyNames().length).toUInt32(exec);
             JSObject* curObject = curArg.toObject(exec);

@@ -617,7 +617,7 @@ void QStaticTextPrivate::paintText(const QPointF &topLeftPosition, QPainter *p)
         qreal height = -leading;
 
         textLayout.beginLayout();
-        while (1) {
+        while (true) {
             QTextLine line = textLayout.createLine();
             if (!line.isValid())
                 break;

@@ -1418,7 +1418,7 @@ void QTextEngine::itemize() const
 
         int prevPosition = 0;
         int position = prevPosition;
-        while (1) {
+        while (true) {
             const QTextFragmentData * const frag = it.value();
             if (it == end || format != frag->format) {
                 if (s && position >= s->preeditPosition) {

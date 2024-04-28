@@ -2395,7 +2395,7 @@ static bool unstylable(const QWidget *w)
 #ifndef QT_NO_FRAME
     // detect QComboBoxPrivateContainer
     else if (qobject_cast<const QFrame *>(w)) {
-        if (0
+        if (false
 #ifndef QT_NO_COMBOBOX
             || qobject_cast<const QComboBox *>(w->parentWidget())
 #endif

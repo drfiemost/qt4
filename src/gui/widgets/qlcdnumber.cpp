@@ -442,7 +442,7 @@ void QLCDNumber::setDigitCount(int numDigits)
     if (d->digitStr.isNull()) {                  // from constructor
         d->ndigits = numDigits;
         d->digitStr.fill(QLatin1Char(' '), d->ndigits);
-        d->points.fill(0, d->ndigits);
+        d->points.fill(false, d->ndigits);
         d->digitStr[d->ndigits - 1] = QLatin1Char('0'); // "0" is the default number
     } else {
         bool doDisplay = d->ndigits == 0;

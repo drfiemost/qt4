@@ -482,7 +482,7 @@ namespace WTF {
         int probeCount = 0;
 #endif
 
-        while (1) {
+        while (true) {
             ValueType* entry = table + i;
                 
             // we count on the compiler to optimize out this branch
@@ -529,7 +529,7 @@ namespace WTF {
 
         ValueType* deletedEntry = nullptr;
 
-        while (1) {
+        while (true) {
             ValueType* entry = table + i;
             
             // we count on the compiler to optimize out this branch
@@ -581,7 +581,7 @@ namespace WTF {
 
         ValueType* deletedEntry = nullptr;
 
-        while (1) {
+        while (true) {
             ValueType* entry = table + i;
             
             // we count on the compiler to optimize out this branch
@@ -641,7 +641,7 @@ namespace WTF {
 
         ValueType* deletedEntry = nullptr;
         ValueType* entry;
-        while (1) {
+        while (true) {
             entry = table + i;
             
             // we count on the compiler to optimize out this branch

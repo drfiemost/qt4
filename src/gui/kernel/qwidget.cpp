@@ -4649,7 +4649,7 @@ void QWidgetPrivate::updateFont(const QFont &font)
     for (int i = 0; i < children.size(); ++i) {
         QWidget *w = qobject_cast<QWidget*>(children.at(i));
         if (w) {
-            if (0) {
+            if (false) {
 #ifndef QT_NO_STYLE_STYLESHEET
             } else if (w->testAttribute(Qt::WA_StyleSheet)) {
                 // Style sheets follow a different font propagation scheme.

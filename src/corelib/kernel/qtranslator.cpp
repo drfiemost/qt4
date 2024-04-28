@@ -221,7 +221,7 @@ public:
     enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88 };
 
     QTranslatorPrivate()
-        : used_mmap(0), unmapPointer(nullptr), unmapLength(0), resource(nullptr),
+        : used_mmap(false), unmapPointer(nullptr), unmapLength(0), resource(nullptr),
           messageArray(nullptr), offsetArray(nullptr), contextArray(nullptr), numerusRulesArray(nullptr),
           messageLength(0), offsetLength(0), contextLength(0), numerusRulesLength(0) {}
 

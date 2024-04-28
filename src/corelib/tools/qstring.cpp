@@ -1967,7 +1967,7 @@ QString &QString::replace(const QChar *before, int blen,
     QChar *beforeBuffer = nullptr, *afterBuffer = nullptr;
 
     int index = 0;
-    while (1) {
+    while (true) {
         uint indices[1024];
         uint pos = 0;
         while (pos < 1024) {
@@ -2032,7 +2032,7 @@ QString& QString::replace(QChar ch, const QString &after, Qt::CaseSensitivity cs
     ushort cc = (cs == Qt::CaseSensitive ? ch.unicode() : ch.toCaseFolded().unicode());
 
     int index = 0;
-    while (1) {
+    while (true) {
         uint indices[1024];
         uint pos = 0;
         if (cs == Qt::CaseSensitive) {

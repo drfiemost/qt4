@@ -127,8 +127,8 @@ public:
         qAddPostRoutine(qt_cleanup_brush_pattern_image_cache);
         for (int style = Qt::Dense1Pattern; style <= Qt::DiagCrossPattern; ++style) {
             int i = style - Qt::Dense1Pattern;
-            m_images[i][0] = QImage(qt_patternForBrush(style, 0), 8, 8, 1, QImage::Format_MonoLSB);
-            m_images[i][1] = QImage(qt_patternForBrush(style, 1), 8, 8, 1, QImage::Format_MonoLSB);
+            m_images[i][0] = QImage(qt_patternForBrush(style, false), 8, 8, 1, QImage::Format_MonoLSB);
+            m_images[i][1] = QImage(qt_patternForBrush(style, true), 8, 8, 1, QImage::Format_MonoLSB);
         }
         m_initialized = true;
     }

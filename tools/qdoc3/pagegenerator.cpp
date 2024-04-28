@@ -101,7 +101,7 @@ bool PageGenerator::parseArg(const QString& src,
     //SKIP_CHAR('@');
 
     if (tag != QStringRef(&src, i, tag.length())) {
-        if (0 && debug)
+        if (false && debug)
             qDebug() << "tag " << tag << " not found at " << i;
         return false;
     }

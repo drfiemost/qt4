@@ -82,7 +82,7 @@ static QString msgImageNotLoaded(const QString &f)        {
 // ------------ DeviceSkinButtonArea
 DeviceSkinButtonArea::DeviceSkinButtonArea() :
     keyCode(0),
-    activeWhenClosed(0)
+    activeWhenClosed(false)
 {
 }
 
@@ -383,7 +383,7 @@ DeviceSkin::DeviceSkin(const DeviceSkinParameters &parameters,  QWidget *p ) :
     buttonPressed(false),
     buttonIndex(0),
     cursorw(nullptr),
-    joydown(0),
+    joydown(false),
     t_skinkey(new QTimer(this)),
     t_parentmove(new QTimer(this)),
     flipped_open(true)

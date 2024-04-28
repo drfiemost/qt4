@@ -1715,16 +1715,16 @@ void QLineControl::processKeyEvent(QKeyEvent* event)
     }
 #endif //QT_NO_CLIPBOARD
     else if (event == QKeySequence::MoveToStartOfLine || event == QKeySequence::MoveToStartOfBlock) {
-        home(0);
+        home(false);
     }
     else if (event == QKeySequence::MoveToEndOfLine || event == QKeySequence::MoveToEndOfBlock) {
-        end(0);
+        end(false);
     }
     else if (event == QKeySequence::SelectStartOfLine || event == QKeySequence::SelectStartOfBlock) {
-        home(1);
+        home(true);
     }
     else if (event == QKeySequence::SelectEndOfLine || event == QKeySequence::SelectEndOfBlock) {
-        end(1);
+        end(true);
     }
     else if (event == QKeySequence::MoveToNextChar) {
 #if !defined(Q_WS_WIN) || defined(QT_NO_COMPLETER)
@@ -1735,11 +1735,11 @@ void QLineControl::processKeyEvent(QKeyEvent* event)
 #endif
             moveCursor(selectionEnd(), false);
         } else {
-            cursorForward(0, visual ? 1 : (layoutDirection() == Qt::LeftToRight ? 1 : -1));
+            cursorForward(false, visual ? 1 : (layoutDirection() == Qt::LeftToRight ? 1 : -1));
         }
     }
     else if (event == QKeySequence::SelectNextChar) {
-        cursorForward(1, visual ? 1 : (layoutDirection() == Qt::LeftToRight ? 1 : -1));
+        cursorForward(true, visual ? 1 : (layoutDirection() == Qt::LeftToRight ? 1 : -1));
     }
     else if (event == QKeySequence::MoveToPreviousChar) {
 #if !defined(Q_WS_WIN) || defined(QT_NO_COMPLETER)
@@ -1750,36 +1750,36 @@ void QLineControl::processKeyEvent(QKeyEvent* event)
 #endif
             moveCursor(selectionStart(), false);
         } else {
-            cursorForward(0, visual ? -1 : (layoutDirection() == Qt::LeftToRight ? -1 : 1));
+            cursorForward(false, visual ? -1 : (layoutDirection() == Qt::LeftToRight ? -1 : 1));
         }
     }
     else if (event == QKeySequence::SelectPreviousChar) {
-        cursorForward(1, visual ? -1 : (layoutDirection() == Qt::LeftToRight ? -1 : 1));
+        cursorForward(true, visual ? -1 : (layoutDirection() == Qt::LeftToRight ? -1 : 1));
     }
     else if (event == QKeySequence::MoveToNextWord) {
         if (echoMode() == QLineEdit::Normal)
-            layoutDirection() == Qt::LeftToRight ? cursorWordForward(0) : cursorWordBackward(0);
+            layoutDirection() == Qt::LeftToRight ? cursorWordForward(false) : cursorWordBackward(false);
         else
-            layoutDirection() == Qt::LeftToRight ? end(0) : home(0);
+            layoutDirection() == Qt::LeftToRight ? end(false) : home(false);
     }
     else if (event == QKeySequence::MoveToPreviousWord) {
         if (echoMode() == QLineEdit::Normal)
-            layoutDirection() == Qt::LeftToRight ? cursorWordBackward(0) : cursorWordForward(0);
+            layoutDirection() == Qt::LeftToRight ? cursorWordBackward(false) : cursorWordForward(false);
         else if (!isReadOnly()) {
-            layoutDirection() == Qt::LeftToRight ? home(0) : end(0);
+            layoutDirection() == Qt::LeftToRight ? home(false) : end(false);
         }
     }
     else if (event == QKeySequence::SelectNextWord) {
         if (echoMode() == QLineEdit::Normal)
-            layoutDirection() == Qt::LeftToRight ? cursorWordForward(1) : cursorWordBackward(1);
+            layoutDirection() == Qt::LeftToRight ? cursorWordForward(true) : cursorWordBackward(true);
         else
-            layoutDirection() == Qt::LeftToRight ? end(1) : home(1);
+            layoutDirection() == Qt::LeftToRight ? end(true) : home(true);
     }
     else if (event == QKeySequence::SelectPreviousWord) {
         if (echoMode() == QLineEdit::Normal)
-            layoutDirection() == Qt::LeftToRight ? cursorWordBackward(1) : cursorWordForward(1);
+            layoutDirection() == Qt::LeftToRight ? cursorWordBackward(true) : cursorWordForward(true);
         else
-            layoutDirection() == Qt::LeftToRight ? home(1) : end(1);
+            layoutDirection() == Qt::LeftToRight ? home(true) : end(true);
     }
     else if (event == QKeySequence::Delete) {
         if (!isReadOnly())
@@ -1836,7 +1836,7 @@ void QLineControl::processKeyEvent(QKeyEvent* event)
 #endif
 #if defined(Q_WS_X11)
             case Qt::Key_E:
-                end(0);
+                end(false);
                 break;
 
             case Qt::Key_U:

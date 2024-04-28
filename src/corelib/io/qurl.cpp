@@ -3321,7 +3321,7 @@ static QString qt_ACE_do(const QString &domain, AceOperation op)
     int lastIdx = 0;
     QString aceForm; // this variable is here for caching
 
-    while (1) {
+    while (true) {
         int idx = nextDotDelimiter(domain, lastIdx);
         int labelLength = idx - lastIdx;
         if (labelLength == 0) {

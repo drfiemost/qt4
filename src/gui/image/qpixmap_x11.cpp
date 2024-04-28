@@ -684,7 +684,7 @@ void QX11PixmapData::fromImage(const QImage &img,
               [4*Dn+3*Un  4*Dn+1*Un]
             */
             int n,i,j;
-            init=1;
+            init=true;
 
             /* Set D2 */
             D[0][0]=0;

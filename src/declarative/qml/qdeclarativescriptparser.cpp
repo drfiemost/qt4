@@ -684,7 +684,7 @@ bool ProcessAST::visit(AST::UiScriptBinding *node)
         error.setLine(this->location(propertyName).start.line);
         error.setColumn(this->location(propertyName).start.column);
         _parser->_errors << error;
-        return 0;
+        return false;
     }
 
     QDeclarativeParser::Variant primitive;
@@ -743,7 +743,7 @@ bool ProcessAST::visit(AST::UiArrayBinding *node)
         error.setLine(this->location(propertyName).start.line);
         error.setColumn(this->location(propertyName).start.column);
         _parser->_errors << error;
-        return 0;
+        return false;
     }
 
     accept(node->members);

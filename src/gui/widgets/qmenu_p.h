@@ -124,7 +124,7 @@ public:
                       cancelAction(0),
 #endif
                       scroll(nullptr), eventLoop(nullptr), tearoff(0), tornoff(0), tearoffHighlighted(0),
-                      hasCheckableItems(0), sloppyDelayTimer(0), sloppyAction(nullptr), doChildEffects(false)
+                      hasCheckableItems(false), sloppyDelayTimer(0), sloppyAction(nullptr), doChildEffects(false)
 #ifdef Q_WS_MAC
                       ,mac_menu(0)
 #endif

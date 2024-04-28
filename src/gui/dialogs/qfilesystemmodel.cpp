@@ -462,7 +462,7 @@ QFileSystemModelPrivate::QFileSystemNode *QFileSystemModelPrivate::node(const QS
             QFileSystemModelPrivate *p = const_cast<QFileSystemModelPrivate*>(this);
             p->addVisibleFiles(parent, QStringList(element));
             if (!p->bypassFilters.contains(node))
-                p->bypassFilters[node] = 1;
+                p->bypassFilters[node] = true;
             QString dir = q->filePath(this->index(parent));
             if (!node->hasInformation() && fetch) {
                 Fetching f;

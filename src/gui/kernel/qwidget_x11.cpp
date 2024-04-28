@@ -399,7 +399,7 @@ void qt_x11_wait_for_window_manager(QWidget *w, bool sendPostedEvents)
         }
         if (t.elapsed() > maximumWaitTime)
             return;
-    } while(1);
+    } while(true);
 }
 
 Q_GUI_EXPORT void qt_x11_wait_for_window_manager(QWidget *w)

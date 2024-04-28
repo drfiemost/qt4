@@ -75,15 +75,15 @@ QT_BEGIN_NAMESPACE
 struct QShortcutEntry
 {
     QShortcutEntry()
-        : keyseq(0), context(Qt::WindowShortcut), enabled(false), autorepeat(1), id(0), owner(nullptr)
+        : keyseq(0), context(Qt::WindowShortcut), enabled(false), autorepeat(true), id(0), owner(nullptr)
     {}
 
     QShortcutEntry(const QKeySequence &k)
-        : keyseq(k), context(Qt::WindowShortcut), enabled(false), autorepeat(1), id(0), owner(nullptr)
+        : keyseq(k), context(Qt::WindowShortcut), enabled(false), autorepeat(true), id(0), owner(nullptr)
     {}
 
     QShortcutEntry(QObject *o, const QKeySequence &k, Qt::ShortcutContext c, int i)
-        : keyseq(k), context(c), enabled(true), autorepeat(1), id(i), owner(o)
+        : keyseq(k), context(c), enabled(true), autorepeat(true), id(i), owner(o)
     {}
 
     QShortcutEntry(QObject *o, const QKeySequence &k, Qt::ShortcutContext c, int i, bool a)

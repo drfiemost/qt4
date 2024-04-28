@@ -1330,7 +1330,7 @@ bool QDate::isValid(int year, int month, int day)
 
     // passage from Julian to Gregorian calendar
     if (year == 1582 && month == 10 && day > 4 && day < 15)
-        return 0;
+        return false;
 
     return (day > 0 && month > 0 && month <= 12) &&
            (day <= monthDays[month] || (day == 29 && month == 2 && isLeapYear(year)));

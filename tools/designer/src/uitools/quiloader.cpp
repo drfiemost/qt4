@@ -224,7 +224,7 @@ public:
                     o->setProperty(propName, text);
                 }
             }
-            if (0) {
+            if (false) {
 #ifndef QT_NO_TABWIDGET
             } else if (QTabWidget *tabw = qobject_cast<QTabWidget*>(o)) {
                 const int cnt = tabw->count();
@@ -451,7 +451,7 @@ QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
     if (w == nullptr)
         return nullptr;
 
-    if (0) {
+    if (false) {
 #ifndef QT_NO_TABWIDGET
     } else if (qobject_cast<QTabWidget*>(w)) {
 #endif
@@ -508,7 +508,7 @@ bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget 
 
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
 
-    if (0) {
+    if (false) {
 #ifndef QT_NO_TABWIDGET
     } else if (QTabWidget *tabWidget = qobject_cast<QTabWidget*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());

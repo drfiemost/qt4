@@ -2757,7 +2757,7 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
 void QAbstractFormBuilder::loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget)
 {
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-    if (0) {
+    if (false) {
 #ifndef QT_NO_LISTWIDGET
     } else if (QListWidget *listWidget = qobject_cast<QListWidget*>(widget)) {
         loadListWidgetExtraInfo(ui_widget, listWidget, parentWidget);

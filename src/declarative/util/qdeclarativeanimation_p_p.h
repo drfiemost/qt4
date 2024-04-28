@@ -304,7 +304,7 @@ class QDeclarativePropertyAnimationPrivate : public QDeclarativeAbstractAnimatio
 public:
     QDeclarativePropertyAnimationPrivate()
     : QDeclarativeAbstractAnimationPrivate(), target(nullptr), fromSourced(false), fromIsDefined(false), toIsDefined(false),
-      rangeIsSet(false), defaultToInterpolatorType(0), interpolatorType(0), interpolator(nullptr), va(nullptr), actions(nullptr) {}
+      rangeIsSet(false), defaultToInterpolatorType(false), interpolatorType(0), interpolator(nullptr), va(nullptr), actions(nullptr) {}
 
     void init();
 

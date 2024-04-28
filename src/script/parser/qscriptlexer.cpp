@@ -1029,7 +1029,7 @@ bool QScript::Lexer::scanRegExp(RegExpBodyPrefix prefix)
     if (prefix == EqualPrefix)
         record16(QLatin1Char('='));
 
-    while (1) {
+    while (true) {
         if (isLineTerminator() || current == 0) {
             errmsg = QLatin1String("Unterminated regular expression literal");
             return false;

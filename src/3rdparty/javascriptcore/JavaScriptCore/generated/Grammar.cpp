@@ -5221,7 +5221,7 @@ yyerrorlab:
   /* Pacify compilers like GCC when the user code never invokes
      YYERROR and the label yyerrorlab therefore never appears in user
      code.  */
-  if (/*CONSTCOND*/ 0)
+  if (/*CONSTCOND*/ false)
      goto yyerrorlab;
 
   yyerror_range[0] = yylsp[1-yylen];

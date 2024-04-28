@@ -1511,7 +1511,7 @@ QDeclarativePropertyPrivate::restore(const QDeclarativePropertyCache::Data &data
 */
 bool QDeclarativePropertyPrivate::equal(const QMetaObject *lhs, const QMetaObject *rhs)
 {
-    return lhs == rhs || (1 && lhs && rhs && lhs->d.stringdata == rhs->d.stringdata);
+    return lhs == rhs || (true && lhs && rhs && lhs->d.stringdata == rhs->d.stringdata);
 }
 
 /*!

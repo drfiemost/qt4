@@ -322,7 +322,7 @@ void Structure::despecifyDictionaryFunction(const Identifier& propertyName)
 
     unsigned k = 1 | doubleHash(rep->existingHash());
 
-    while (1) {
+    while (true) {
         i += k;
 
 #if DUMP_PROPERTYMAP_STATS
@@ -707,7 +707,7 @@ size_t Structure::get(const UString::Rep* rep, unsigned& attributes, JSCell*& sp
 
     unsigned k = 1 | doubleHash(rep->existingHash());
 
-    while (1) {
+    while (true) {
         i += k;
 
 #if DUMP_PROPERTYMAP_STATS
@@ -758,7 +758,7 @@ bool Structure::despecifyFunction(const Identifier& propertyName)
 
     unsigned k = 1 | doubleHash(rep->existingHash());
 
-    while (1) {
+    while (true) {
         i += k;
 
 #if DUMP_PROPERTYMAP_STATS
@@ -814,7 +814,7 @@ size_t Structure::put(const Identifier& propertyName, unsigned attributes, JSCel
     ++numProbes;
 #endif
 
-    while (1) {
+    while (true) {
         unsigned entryIndex = m_propertyTable->entryIndices[i & m_propertyTable->sizeMask];
         if (entryIndex == emptyEntryIndex)
             break;
@@ -912,7 +912,7 @@ size_t Structure::remove(const Identifier& propertyName)
     unsigned k = 0;
     unsigned entryIndex;
     UString::Rep* key = nullptr;
-    while (1) {
+    while (true) {
         entryIndex = m_propertyTable->entryIndices[i & m_propertyTable->sizeMask];
         if (entryIndex == emptyEntryIndex)
             return notFound;
@@ -973,7 +973,7 @@ void Structure::insertIntoPropertyMapHashTable(const PropertyMapEntry& entry)
     ++numProbes;
 #endif
 
-    while (1) {
+    while (true) {
         unsigned entryIndex = m_propertyTable->entryIndices[i & m_propertyTable->sizeMask];
         if (entryIndex == emptyEntryIndex)
             break;

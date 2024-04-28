@@ -441,7 +441,7 @@ void JSObject::getPropertyNames(ExecState* exec, PropertyNameArray& propertyName
         return;
 
     JSObject* prototype = asObject(this->prototype());
-    while(1) {
+    while(true) {
         if (prototype->structure()->typeInfo().overridesGetPropertyNames()) {
             prototype->getPropertyNames(exec, propertyNames, mode);
             break;

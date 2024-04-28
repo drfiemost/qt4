@@ -673,7 +673,7 @@ NEVER_INLINE JSValue Walker::walk(JSValue unfiltered)
     localTimeoutChecker.copyTimeoutValues(m_exec->globalData().timeoutChecker);
     localTimeoutChecker.reset();
     unsigned tickCount = localTimeoutChecker.ticksUntilNextCheck();
-    while (1) {
+    while (true) {
         switch (state) {
             arrayStartState:
             case ArrayStartState: {

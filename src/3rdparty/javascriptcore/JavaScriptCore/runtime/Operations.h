@@ -377,7 +377,7 @@ namespace JSC {
     inline size_t normalizePrototypeChain(CallFrame* callFrame, JSCell* base)
     {
         size_t count = 0;
-        while (1) {
+        while (true) {
             JSValue v = base->structure()->prototypeForLookup(callFrame);
             if (v.isNull())
                 return count;

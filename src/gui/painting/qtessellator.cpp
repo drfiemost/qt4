@@ -864,7 +864,7 @@ void QTessellatorPrivate::processIntersections()
         Q27Dot5 xmin = INT_MAX;
         Q27Dot5 xmax = INT_MIN;
         int num = 0;
-        while (1) {
+        while (true) {
             const Intersection &i = it.key();
             int next = it->next;
 
@@ -1028,7 +1028,7 @@ static void checkLinkChain(const QTessellatorPrivate::Intersections &intersectio
 bool QTessellatorPrivate::edgeInChain(Intersection i, int edge)
 {
     int end = i.edge;
-    while (1) {
+    while (true) {
         if (i.edge == edge)
             return true;
         IntersectionLink l = intersections.value(i);

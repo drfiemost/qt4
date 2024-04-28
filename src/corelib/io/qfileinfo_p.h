@@ -154,7 +154,7 @@ public:
     mutable qint64 fileSize;
     mutable QDateTime fileTimes[3];
     inline bool getCachedFlag(uint c) const
-    { return cache_enabled ? (cachedFlags & c) : 0; }
+    { return cache_enabled ? (cachedFlags & c) : false; }
     inline void setCachedFlag(uint c) const
     { if (cache_enabled) cachedFlags |= c; }
 

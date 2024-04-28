@@ -210,7 +210,7 @@ public:
     ~QDeclarativeCompiledBindingsPrivate() override;
 
     struct Binding : public QDeclarativeAbstractBinding, public QDeclarativeDelayedError {
-        Binding() : enabled(false), updating(0), property(0),
+        Binding() : enabled(false), updating(false), property(0),
                     scope(nullptr), target(nullptr), parent(nullptr) {}
 
         // Inherited from QDeclarativeAbstractBinding

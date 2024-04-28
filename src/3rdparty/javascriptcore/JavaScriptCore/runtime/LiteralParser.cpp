@@ -287,7 +287,7 @@ JSValue LiteralParser::parse(ParserState initialState)
     JSValue lastValue;
     Vector<ParserState, 16> stateStack;
     Vector<Identifier, 16> identifierStack;
-    while (1) {
+    while (true) {
         switch(state) {
             startParseArray:
             case StartParseArray: {

@@ -333,7 +333,7 @@ TCHAR cl_tcasefold(const TCHAR ch){
 	if (ch >= casefold_table[start].ch &&
         ch <= casefold_table[end - 1].ch)
     {
-        while (1)
+        while (true)
         {
             int half = (start + end) / 2;
             if (ch == casefold_table[half].ch)

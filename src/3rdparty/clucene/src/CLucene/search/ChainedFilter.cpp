@@ -185,15 +185,15 @@ BitSet* ChainedFilter::doChain( BitSet* resultset, IndexReader* reader, int logi
 		{
 		case OR:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, (resultset->get(i) || (filterbits==nullptr || filterbits->get(i) ))?1:0 );
+				resultset->set( i, (resultset->get(i) || (filterbits==nullptr || filterbits->get(i) ))?true:false );
 			break;
 		case AND:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, (resultset->get(i) && (filterbits==nullptr || filterbits->get(i) ))?1:0 );
+				resultset->set( i, (resultset->get(i) && (filterbits==nullptr || filterbits->get(i) ))?true:false );
 			break;
 		case ANDNOT:
 			for( i=0; i < maxDoc; i++ )
-				resultset->set( i, (resultset->get(i) && (filterbits==nullptr || filterbits->get(i)))?0:1 );
+				resultset->set( i, (resultset->get(i) && (filterbits==nullptr || filterbits->get(i)))?false:true );
 			break;
 		case XOR:
 			for( i=0; i < maxDoc; i++ )

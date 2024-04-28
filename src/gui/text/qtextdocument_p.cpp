@@ -884,7 +884,7 @@ int QTextDocumentPrivate::undoRedo(bool undo)
     beginEditBlock();
     int editPos = -1;
     int editLength = -1;
-    while (1) {
+    while (true) {
         if (undo)
             --undoState;
         QTextUndoCommand &c = undoStack[undoState];
@@ -1453,7 +1453,7 @@ QTextFrame *QTextDocumentPrivate::frameAt(int pos) const
 {
     QTextFrame *f = rootFrame();
 
-    while (1) {
+    while (true) {
         QTextFrame *c = findChildFrame(f, pos);
         if (!c)
             return f;

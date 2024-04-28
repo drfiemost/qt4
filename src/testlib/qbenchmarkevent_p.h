@@ -69,7 +69,7 @@ public:
     bool isMeasurementAccepted(qint64 measurement) override;
     int adjustIterationCount(int suggestion) override;
     int adjustMedianCount(int suggestion) override;
-    bool repeatCount() override { return 1; } 
+    bool repeatCount() override { return true; } 
     QTest::QBenchmarkMetric metricType() override;
     static bool eventCountingMechanism(void *message);
     static qint64 eventCounter;

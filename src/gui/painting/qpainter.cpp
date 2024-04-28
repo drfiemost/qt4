@@ -7823,7 +7823,7 @@ start_lengthVariant:
         qreal leading = fm.leading();
         height = -leading;
 
-        while (1) {
+        while (true) {
             QTextLine l = textLayout.createLine();
             if (!l.isValid())
                 break;

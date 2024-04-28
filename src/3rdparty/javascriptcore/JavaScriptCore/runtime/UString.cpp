@@ -647,7 +647,7 @@ uint32_t UString::toStrictUInt32(bool* ok) const
 
     // Convert to UInt32, checking for overflow.
     uint32_t i = 0;
-    while (1) {
+    while (true) {
         // Process character, turning it into a digit.
         if (c < '0' || c > '9')
             return 0;

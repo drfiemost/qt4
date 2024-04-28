@@ -252,7 +252,7 @@ namespace JSC {
 
         unsigned k = 1 | WTF::doubleHash(rep->existingHash());
 
-        while (1) {
+        while (true) {
             i += k;
 
 #if DUMP_PROPERTYMAP_STATS

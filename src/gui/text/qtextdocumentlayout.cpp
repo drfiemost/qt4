@@ -2604,7 +2604,7 @@ void QTextDocumentLayoutPrivate::layoutBlock(const QTextBlock &bl, int blockPosi
 
         tl->beginLayout();
         bool firstLine = true;
-        while (1) {
+        while (true) {
             QTextLine line = tl->createLine();
             if (!line.isValid())
                 break;
@@ -2782,7 +2782,7 @@ QFixed QTextDocumentLayoutPrivate::findY(QFixed yFrom, const QTextLayoutStruct *
     requiredWidth = std::min(requiredWidth, layoutStruct->x_right - layoutStruct->x_left);
 
 //     qDebug() << "findY:" << yFrom;
-    while (1) {
+    while (true) {
         floatMargins(yFrom, layoutStruct, &left, &right);
 //         qDebug() << "    yFrom=" << yFrom<<"right=" << right << "left=" << left << "requiredWidth=" << requiredWidth;
         if (right-left >= requiredWidth)

@@ -293,7 +293,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         toolTip(nullptr),
 #endif
-        act(0), window(nullptr), movable(1), pressed(0), autoraise(0), moving(0)
+        act(false), window(nullptr), movable(true), pressed(false), autoraise(false), moving(false)
     {
     }
 
@@ -350,7 +350,7 @@ QWorkspaceTitleBar::QWorkspaceTitleBar(QWidget *w, QWidget *parent, Qt::WindowFl
     d->flags = f;
     d->window = w;
     d->buttonDown = QStyle::SC_None;
-    d->act = 0;
+    d->act = false;
     if (w) {
         if (w->maximumSize() != QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX))
             d->flags &= ~Qt::WindowMaximizeButtonHint;

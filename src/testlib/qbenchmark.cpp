@@ -86,7 +86,7 @@ void QBenchmarkGlobalData::setMode(Mode mode)
 QBenchmarkMeasurerBase * QBenchmarkGlobalData::createMeasurer()
 {
     QBenchmarkMeasurerBase *measurer = nullptr;
-    if (0) {
+    if (false) {
 #ifdef QTESTLIB_USE_VALGRIND
     } else if (mode_ == CallgrindChildProcess || mode_ == CallgrindParentProcess) {
         measurer = new QBenchmarkCallgrindMeasurer;

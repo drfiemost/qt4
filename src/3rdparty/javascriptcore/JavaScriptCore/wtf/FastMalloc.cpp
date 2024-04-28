@@ -2351,7 +2351,7 @@ void TCMalloc_PageHeap::scavengerThread()
   pthread_setname_np("JavaScriptCore: FastMalloc scavenger");
 #endif
 
-  while (1) {
+  while (true) {
       if (!shouldContinueScavenging()) {
           pthread_mutex_lock(&m_scavengeMutex);
           m_scavengeThreadActive = false;
@@ -2892,7 +2892,7 @@ void TCMalloc_ThreadCache::InitModule() {
       central_cache[i].Init(i);
     }
     pageheap->init();
-    phinited = 1;
+    phinited = true;
 #if defined(WTF_CHANGES) && OS(DARWIN)
     FastMallocZone::init();
 #endif

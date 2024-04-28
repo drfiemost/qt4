@@ -473,7 +473,7 @@ void QCommonStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, Q
                 p1 = QPoint(0, opt->rect.height()/2);
                 p2 = QPoint(opt->rect.width(), p1.y());
             }
-            qDrawShadeLine(p, p1, p2, opt->palette, 1, 1, 0);
+            qDrawShadeLine(p, p1, p2, opt->palette, true, 1, 0);
             break;
         }
 #endif // QT_NO_TOOLBAR

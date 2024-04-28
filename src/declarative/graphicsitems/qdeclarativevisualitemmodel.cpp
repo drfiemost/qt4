@@ -744,7 +744,7 @@ void QDeclarativeVisualDataModel::setModel(const QVariant &model)
     d->m_roleNames.clear();
     if (d->m_delegateDataType)
         d->m_delegateDataType->release();
-    d->m_metaDataCreated = 0;
+    d->m_metaDataCreated = false;
     d->m_metaDataCacheable = false;
     d->m_delegateDataType = new VDMDelegateDataType(&QDeclarativeVisualDataModelData::staticMetaObject, d->m_context?d->m_context->engine():qmlEngine(this));
 

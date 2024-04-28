@@ -366,7 +366,7 @@ int qt_xlfd_encoding_id(const char *encoding)
         // the enc->name can contain '*'s we have to interpret correctly
         const char *n = enc->name;
         const char *e = encoding;
-        while (1) {
+        while (true) {
             // qDebug("bol: *e='%c', *n='%c'", *e, *n);
             if (*e == '\0') {
                 if (*n)

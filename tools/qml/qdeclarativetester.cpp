@@ -160,7 +160,7 @@ void QDeclarativeTester::testSkip()
             }else{
                 qWarning() << "Test skipped: " << e;
             }
-            hasFailed = 0;
+            hasFailed = false;
         }
     }
 }

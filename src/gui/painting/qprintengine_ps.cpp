@@ -241,7 +241,7 @@ static QByteArray runlengthEncode(const QByteArray &input)
 
     int i = 1;
     int written = 0;
-    while (1) {
+    while (true) {
         bool flush = (i == input.size());
         if (!flush) {
             switch(state) {

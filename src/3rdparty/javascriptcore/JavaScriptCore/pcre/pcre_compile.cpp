@@ -2375,7 +2375,7 @@ static int calculateCompiledPatternLength(const UChar* pattern, int patternLengt
                             return -1;
                     }
                 } else
-                    capturing = 1;
+                    capturing = true;
                 
                 /* Capturing brackets must be counted so we can process escapes in a
                  Perlish way. If the number exceeds EXTRACT_BASIC_MAX we are going to need

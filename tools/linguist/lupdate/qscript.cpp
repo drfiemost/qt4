@@ -2028,7 +2028,7 @@ bool QScript::Lexer::scanRegExp(RegExpBodyPrefix prefix)
     if (prefix == EqualPrefix)
         record16(QLatin1Char('='));
 
-    while (1) {
+    while (true) {
         if (isLineTerminator() || current == 0) {
             errmsg = LU::tr("Unterminated regular expression literal");
             return false;

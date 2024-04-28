@@ -148,7 +148,7 @@ static void buildTargets(QObject *o, TargetsHash *targets)
                 TranslatableProperty, object = o, name = qstrdup(propName.data()));
         }
     }
-    if (0) {
+    if (false) {
 #ifndef QT_NO_TABWIDGET
     } else if (QTabWidget *tabw = qobject_cast<QTabWidget*>(o)) {
         const int cnt = tabw->count();
