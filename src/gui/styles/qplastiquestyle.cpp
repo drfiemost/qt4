@@ -50,13 +50,16 @@ static const int ProgressBarFps = 25;
 static const int blueFrameWidth =  2;  // with of line edit focus frame
 
 #include "qwindowsstyle_p.h"
+#include <climits>
+#include <private/qstylehelper_p.h>
+#include <qabstractitemview.h>
 #include <qapplication.h>
 #include <qbitmap.h>
-#include <qabstractitemview.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qdebug.h>
 #include <qdialogbuttonbox.h>
+#include <qelapsedtimer.h>
 #include <qformlayout.h>
 #include <qgroupbox.h>
 #include <qimage.h>
@@ -64,13 +67,14 @@ static const int blueFrameWidth =  2;  // with of line edit focus frame
 #include <qmainwindow.h>
 #include <qmenu.h>
 #include <qmenubar.h>
-#include <qpainter.h>
 #include <qpaintengine.h>
+#include <qpainter.h>
 #include <qpainterpath.h>
 #include <qpalette.h>
 #include <qpen.h>
 #include <qpixmap.h>
 #include <qpixmapcache.h>
+#include <qprocess.h>
 #include <qprogressbar.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
@@ -79,15 +83,11 @@ static const int blueFrameWidth =  2;  // with of line edit focus frame
 #include <qsplitter.h>
 #include <qstyleoption.h>
 #include <qtextedit.h>
-#include <qelapsedtimer.h>
 #include <qtoolbar.h>
 #include <qtoolbox.h>
 #include <qtoolbutton.h>
-#include <qworkspace.h>
-#include <qprocess.h>
 #include <qvarlengtharray.h>
-#include <limits.h>
-#include <private/qstylehelper_p.h>
+#include <qworkspace.h>
 
 QT_BEGIN_NAMESPACE
 

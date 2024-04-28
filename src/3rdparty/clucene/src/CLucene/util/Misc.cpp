@@ -10,8 +10,8 @@
 #include "Misc.h"
 
 #ifdef _CL_TIME_WITH_SYS_TIME
+# include <ctime>
 # include <sys/time.h>
-# include <time.h>
 #else
 # if defined(_CL_HAVE_SYS_TIME_H)
 #  include <sys/time.h>

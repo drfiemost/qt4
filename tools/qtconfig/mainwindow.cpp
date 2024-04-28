@@ -66,7 +66,7 @@
 #include <QtDebug>
 #include <QPixmap>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifdef Q_WS_X11
 #include <QtGui/private/qt_x11_p.h>

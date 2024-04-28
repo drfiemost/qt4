@@ -62,9 +62,9 @@
 
 #ifndef QT_NO_CRASHHANDLER
 
-#include <stdio.h>
-#include <signal.h>
-#include <stdlib.h>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

@@ -51,7 +51,7 @@
 
 #if !defined(Q_OS_WIN)
 #include "private/qcore_unix_p.h"       // overrides QT_OPEN
-#include <errno.h>
+#include <cerrno>
 #endif
 
 #if defined(QT_BUILD_CORE_LIB)
@@ -407,7 +407,7 @@ class QTemporaryFilePrivate : public QFilePrivate
 
 protected:
     QTemporaryFilePrivate();
-    ~QTemporaryFilePrivate() override;
+    ~QTemporaryFilePrivate() ;
 
     bool autoRemove;
     QString templateName;

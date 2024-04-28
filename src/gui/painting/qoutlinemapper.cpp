@@ -43,7 +43,7 @@
 #include <private/qpainterpath_p.h>
 #include "qmath.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

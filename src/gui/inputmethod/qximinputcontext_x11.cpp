@@ -76,8 +76,8 @@ QT_BEGIN_INCLUDE_NAMESPACE
 
 #include "qx11info_x11.h"
 
-#include <stdlib.h>
-#include <limits.h>
+#include <climits>
+#include <cstdlib>
 QT_END_INCLUDE_NAMESPACE
 
 // #define QT_XIM_DEBUG

@@ -58,7 +58,7 @@
 #include <QStringList>
 #include <QtCore/qdebug.h>
 
-#include <math.h>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 

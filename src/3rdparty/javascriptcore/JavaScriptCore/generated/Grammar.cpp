@@ -107,8 +107,8 @@
 #include "Lexer.h"
 #include "NodeConstructors.h"
 #include "NodeInfo.h"
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <wtf/MathExtras.h>
 
 #define YYMALLOC fastMalloc

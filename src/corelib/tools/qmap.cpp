@@ -41,7 +41,7 @@
 
 #include "qmap.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifdef QT_QMAP_DEBUG
 # include <qstring.h>

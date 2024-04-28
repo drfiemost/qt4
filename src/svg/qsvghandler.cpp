@@ -69,7 +69,7 @@
 #include "qvarlengtharray.h"
 #include "private/qmath_p.h"
 
-#include "float.h"
+#include <cfloat>
 #include <cmath>
 
 #include  <algorithm>

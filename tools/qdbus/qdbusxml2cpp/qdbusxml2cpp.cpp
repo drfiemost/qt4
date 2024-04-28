@@ -53,8 +53,8 @@
 #include "private/qdbusmetaobject_p.h"
 #include "private/qdbusintrospection_p.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #define PROGRAMNAME     "qdbusxml2cpp"
 #define PROGRAMVERSION  "0.7"

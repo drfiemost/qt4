@@ -44,9 +44,9 @@
 
 #include "QtCore/qbytearray.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 
 #ifndef Q_OS_WIN
 #include <unistd.h>

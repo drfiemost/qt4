@@ -81,10 +81,10 @@
 #  include "qcore_mac_p.h"
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifdef Q_OS_UNIX
-#  include <locale.h>
+#  include <clocale>
 #endif
 
 QT_BEGIN_NAMESPACE

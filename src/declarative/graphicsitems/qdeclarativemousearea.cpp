@@ -46,7 +46,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-#include <float.h>
+#include <cfloat>
 
 QT_BEGIN_NAMESPACE
 static const int PressAndHoldDelay = 800;

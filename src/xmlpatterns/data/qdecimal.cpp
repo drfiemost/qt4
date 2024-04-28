@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <math.h>
+#include <cmath>
 
 #include "qabstractfloat_p.h"
 #include "qatomictype_p.h"

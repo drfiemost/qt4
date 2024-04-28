@@ -928,8 +928,8 @@ public:
 #if defined(QT_USE_MMAP)
 // for mmap
 QT_BEGIN_INCLUDE_NAMESPACE
+#include <cerrno>
 #include <sys/mman.h>
-#include <errno.h>
 QT_END_INCLUDE_NAMESPACE
 #endif
 

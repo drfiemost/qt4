@@ -52,8 +52,8 @@
 #include <qtextcursor.h>
 #include <qtextdocument.h>
 
-#include <math.h>
-#include <limits.h>
+#include <climits>
+#include <cmath>
 
 #include  <algorithm>
 

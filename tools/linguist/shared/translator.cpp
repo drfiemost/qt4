@@ -45,7 +45,7 @@
 
 #include <iostream>
 
-#include <stdio.h>
+#include <cstdio>
 #ifdef Q_OS_WIN
 // required for _setmode, to avoid _O_TEXT streams...
 #  include <io.h> // for _setmode

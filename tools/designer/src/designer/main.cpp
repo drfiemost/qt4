@@ -43,7 +43,7 @@
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QDir>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_USE_NAMESPACE
 

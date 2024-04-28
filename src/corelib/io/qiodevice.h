@@ -87,7 +87,7 @@ public:
 #ifndef QT_NO_QOBJECT
     explicit QIODevice(QObject *parent);
 #endif
-    ~QIODevice() override;
+    virtual ~QIODevice();
 
     OpenMode openMode() const;
 

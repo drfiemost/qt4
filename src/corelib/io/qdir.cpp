@@ -64,7 +64,7 @@
 #endif
 
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

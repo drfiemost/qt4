@@ -72,8 +72,8 @@
 #ifndef Q_OS_WIN
 #include <unistd.h>
 #endif
-#include <stdlib.h>
-#include <limits.h>
+#include <climits>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

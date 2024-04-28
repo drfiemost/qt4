@@ -68,7 +68,7 @@
 #include <private/qprinter_p.h>
 #include <private/qabstracttextdocumentlayout_p.h>
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

@@ -44,7 +44,7 @@
 #include "qdebug.h"
 #include "qmath.h"
 
-#include <math.h>
+#include <cmath>
 
 #include  <algorithm>
 

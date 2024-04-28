@@ -43,8 +43,8 @@
 #include "qlist.h"
 #include "qtools_p.h"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

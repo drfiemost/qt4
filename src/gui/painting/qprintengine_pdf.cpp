@@ -53,8 +53,8 @@
 #include <qdatetime.h>
 
 #ifndef QT_NO_PRINTER
-#include <limits.h>
-#include <math.h>
+#include <climits>
+#include <cmath>
 #ifndef QT_NO_COMPRESS
 #include <zlib.h>
 #endif

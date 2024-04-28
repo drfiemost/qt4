@@ -43,8 +43,6 @@
   main.cpp
 */
 
-#include <qglobal.h>
-#include <stdlib.h>
 #include "codemarker.h"
 #include "codeparser.h"
 #include "config.h"
@@ -60,7 +58,9 @@
 #include "qmlcodeparser.h"
 #include "tokenizer.h"
 #include "tree.h"
+#include <cstdlib>
 #include <qdebug.h>
+#include <qglobal.h>
 
 #include "qtranslator.h"
 #ifndef QT_BOOTSTRAPPED

@@ -128,10 +128,10 @@ extern "C" {
 #include <X11/extensions/XI.h>
 #endif
 
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <locale.h>
+#include <cctype>
+#include <clocale>
+#include <cstdlib>
+#include <cstring>
 
 #include "qwidget_p.h"
 

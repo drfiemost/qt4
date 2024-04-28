@@ -49,9 +49,9 @@
 #include <QtCore/qatomic.h>
 #include <QtCore/qbytearray.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
+#include <climits>
+#include <cstdlib>
+#include <cstring>
 
 
 #include "qtestlogger_p.h"

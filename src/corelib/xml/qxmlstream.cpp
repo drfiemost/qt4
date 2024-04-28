@@ -44,13 +44,13 @@
 #ifndef QT_NO_XMLSTREAM
 
 #include "qxmlutils_p.h"
+#include <cstdio>
+#include <qbuffer.h>
 #include <qdebug.h>
 #include <qfile.h>
-#include <stdio.h>
-#include <qtextcodec.h>
-#include <qstack.h>
-#include <qbuffer.h>
 #include <qscopeguard.h>
+#include <qstack.h>
+#include <qtextcodec.h>
 #ifndef QT_BOOTSTRAPPED
 #include <qcoreapplication.h>
 #else

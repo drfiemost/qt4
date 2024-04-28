@@ -44,7 +44,7 @@
 
 #include <QtCore/qmetaobject.h>
 
-#include <string.h>
+#include <cstring>
 
 #include "QtTest/qtestassert.h"
 

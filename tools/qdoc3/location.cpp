@@ -43,12 +43,12 @@
 #include "config.h"
 #include "location.h"
 
+#include <climits>
+#include <cstdlib>
 #include <qregexp.h>
 #include <qtranslator.h>
-#include <stdlib.h>
-#include <limits.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

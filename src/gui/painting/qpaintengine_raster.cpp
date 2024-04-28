@@ -99,8 +99,8 @@
 #if defined(Q_WS_WIN64)
 #  include <malloc.h>
 #endif
-#include <limits.h>
 #include <algorithm>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

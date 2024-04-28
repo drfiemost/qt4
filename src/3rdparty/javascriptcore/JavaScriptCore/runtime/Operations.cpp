@@ -25,8 +25,8 @@
 #include "Error.h"
 #include "JSObject.h"
 #include "JSString.h"
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 #include <wtf/MathExtras.h>
 
 namespace JSC {

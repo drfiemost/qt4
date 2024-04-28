@@ -39,16 +39,16 @@
 **
 ****************************************************************************/
 
-#include "preprocessor.h"
+#include "../../corelib/global/qconfig.cpp"
 #include "moc.h"
 #include "outputrevision.h"
-#include "../../corelib/global/qconfig.cpp"
+#include "preprocessor.h"
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QDir>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

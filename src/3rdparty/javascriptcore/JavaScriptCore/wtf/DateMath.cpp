@@ -78,14 +78,14 @@
 #include "StringExtras.h"
 
 #include <algorithm>
-#include <limits.h>
+#include <climits>
+#include <cstdint>
+#include <ctime>
 #include <limits>
-#include <stdint.h>
-#include <time.h>
 
 
 #if HAVE(ERRNO_H)
-#include <errno.h>
+#include <cerrno>
 #endif
 
 #if OS(WINCE)

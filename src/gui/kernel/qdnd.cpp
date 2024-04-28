@@ -41,24 +41,24 @@
 
 #include "qplatformdefs.h"
 
-#include "qbitmap.h"
-#include "qdrag.h"
-#include "qpixmap.h"
-#include "qevent.h"
-#include "qfile.h"
-#include "qtextcodec.h"
 #include "qapplication.h"
-#include "qpoint.h"
-#include "qwidget.h"
+#include "qbitmap.h"
 #include "qbuffer.h"
-#include "qimage.h"
-#include "qregexp.h"
+#include "qdebug.h"
 #include "qdir.h"
 #include "qdnd_p.h"
+#include "qdrag.h"
+#include "qevent.h"
+#include "qfile.h"
+#include "qimage.h"
 #include "qimagereader.h"
 #include "qimagewriter.h"
-#include "qdebug.h"
-#include <ctype.h>
+#include "qpixmap.h"
+#include "qpoint.h"
+#include "qregexp.h"
+#include "qtextcodec.h"
+#include "qwidget.h"
+#include <cctype>
 
 #include <private/qapplication_p.h>
 

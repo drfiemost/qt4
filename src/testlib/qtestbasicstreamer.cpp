@@ -44,8 +44,8 @@
 #include "qtestelement.h"
 #include "qtestelementattribute.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #ifndef Q_OS_WIN
 #include <unistd.h>

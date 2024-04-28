@@ -41,8 +41,8 @@
 
 #include "helpgenerator.h"
 
+#include <cstdio>
 #include <private/qhelpgenerator_p.h>
-#include <stdio.h>
 
 QT_BEGIN_NAMESPACE
 

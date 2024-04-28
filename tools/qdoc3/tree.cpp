@@ -53,8 +53,8 @@
 #include "text.h"
 #include "tree.h"
 
-#include <limits.h>
 #include <algorithm>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

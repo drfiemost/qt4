@@ -48,8 +48,8 @@
 #include "QtTest/private/qtestresult_p.h"
 #include "QtTest/private/qxmltestlogger_p.h"
 
-#include <string.h>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

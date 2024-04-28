@@ -54,7 +54,7 @@
 
 #include <iostream>
 
-#include <ctype.h>              // for isXXX()
+#include <cctype>              // for isXXX()
 
 QT_BEGIN_NAMESPACE
 

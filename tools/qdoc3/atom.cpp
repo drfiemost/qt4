@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 
-#include <qregexp.h>
 #include "atom.h"
 #include "location.h"
-#include <stdio.h>
+#include <cstdio>
+#include <qregexp.h>
 
 QT_BEGIN_NAMESPACE
 

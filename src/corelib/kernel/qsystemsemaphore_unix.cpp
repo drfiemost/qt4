@@ -53,8 +53,8 @@
 #ifndef QT_POSIX_IPC
 #include <sys/sem.h>
 #endif
+#include <cerrno>
 #include <fcntl.h>
-#include <errno.h>
 
 #include "private/qcore_unix_p.h"
 

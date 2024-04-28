@@ -46,10 +46,10 @@
 #include "QtTest/private/qbenchmark_p.h"
 #include "QtTest/private/qbenchmarkmetric_p.h"
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #ifdef Q_OS_WIN
 #include "windows.h"

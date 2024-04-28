@@ -69,7 +69,7 @@
 #include "private/qdialog_p.h"
 #include <qdebug.h>
 
-#include <string.h>     // for memset()
+#include <cstring>     // for memset()
 
 #ifdef QT_SOFTKEYS_ENABLED
 #include "qaction.h"

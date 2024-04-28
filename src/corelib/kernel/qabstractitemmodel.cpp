@@ -50,7 +50,7 @@
 #include <qstack.h>
 #include <qbitarray.h>
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

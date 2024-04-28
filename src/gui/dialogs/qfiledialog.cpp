@@ -45,21 +45,21 @@
 
 #ifndef QT_NO_FILEDIALOG
 #include "qfiledialog_p.h"
-#include <qfontmetrics.h>
+#include "ui_qfiledialog.h"
+#include <cstdlib>
+#include <private/qfileiconprovider_p.h>
 #include <qaction.h>
-#include <qheaderview.h>
-#include <qshortcut.h>
+#include <qapplication.h>
+#include <qdebug.h>
+#include <qfontmetrics.h>
 #include <qgridlayout.h>
+#include <qheaderview.h>
+#include <qinputdialog.h>
 #include <qmenu.h>
 #include <qmessagebox.h>
-#include <qinputdialog.h>
-#include <stdlib.h>
 #include <qsettings.h>
-#include <qdebug.h>
-#include <qapplication.h>
+#include <qshortcut.h>
 #include <qstylepainter.h>
-#include <private/qfileiconprovider_p.h>
-#include "ui_qfiledialog.h"
 
 QT_BEGIN_NAMESPACE
 

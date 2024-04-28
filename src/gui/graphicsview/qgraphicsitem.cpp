@@ -763,7 +763,7 @@
 
 #include <private/qgesturemanager_p.h>
 
-#include <math.h>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 

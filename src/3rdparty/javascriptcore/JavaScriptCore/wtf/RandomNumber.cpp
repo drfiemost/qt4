@@ -29,10 +29,10 @@
 
 #include "RandomNumberSeed.h"
 
+#include <climits>
+#include <cstdint>
+#include <cstdlib>
 #include <limits>
-#include <limits.h>
-#include <stdint.h>
-#include <stdlib.h>
 
 #if OS(WINCE)
 extern "C" {

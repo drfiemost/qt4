@@ -43,7 +43,7 @@
 #include "outputrevision.h"
 #include "utils.h"
 #include <QtCore/qmetatype.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include <private/qmetaobject_p.h> //for the flags.
 

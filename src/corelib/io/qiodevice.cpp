@@ -48,7 +48,7 @@
 #include "qstringlist.h"
 
 #include <algorithm>
-#include <limits.h>
+#include <climits>
 
 #ifdef QIODEVICE_DEBUG
 #  include <ctype.h>

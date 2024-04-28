@@ -65,17 +65,17 @@
 
 #include <cmath>
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 
 #ifdef Q_OS_WIN
 #include <windows.h> // for Sleep
 #endif
 #ifdef Q_OS_UNIX
-#include <errno.h>
-#include <signal.h>
-#include <time.h>
+#include <cerrno>
+#include <csignal>
+#include <ctime>
 #endif
 
 #ifdef Q_WS_MAC

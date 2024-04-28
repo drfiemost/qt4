@@ -60,10 +60,10 @@
 #include "qtextlist.h"
 #include "private/qtextcontrol_p.h"
 
-#include <qtextformat.h>
-#include <qdatetime.h>
+#include <climits>
 #include <qapplication.h>
-#include <limits.h>
+#include <qdatetime.h>
+#include <qtextformat.h>
 #include <qtexttable.h>
 #include <qvariant.h>
 

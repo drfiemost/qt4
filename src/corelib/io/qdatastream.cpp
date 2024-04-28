@@ -44,11 +44,11 @@
 
 #if !defined(QT_NO_DATASTREAM) || defined(QT_BOOTSTRAPPED)
 #include "qbuffer.h"
-#include "qstring.h"
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include "qendian.h"
+#include "qstring.h"
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

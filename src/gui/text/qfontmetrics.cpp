@@ -47,7 +47,7 @@
 #include "qfontengine_p.h"
 #include <private/qunicodetables_p.h>
 
-#include <math.h>
+#include <cmath>
 
 #ifdef Q_WS_X11
 #include "qx11info_x11.h"

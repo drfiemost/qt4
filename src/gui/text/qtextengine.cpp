@@ -39,23 +39,23 @@
 **
 ****************************************************************************/
 
-#include "qdebug.h"
-#include "qtextformat.h"
-#include "qtextformat_p.h"
-#include "qtextengine_p.h"
 #include "qabstracttextdocumentlayout.h"
-#include "qtextlayout.h"
-#include "qtextboundaryfinder.h"
-#include "qvarlengtharray.h"
+#include "qdebug.h"
 #include "qfont.h"
 #include "qfont_p.h"
 #include "qfontengine_p.h"
 #include "qstring.h"
-#include <private/qunicodetables_p.h>
+#include "qtextboundaryfinder.h"
 #include "qtextdocument_p.h"
-#include <qapplication.h>
+#include "qtextengine_p.h"
+#include "qtextformat.h"
+#include "qtextformat_p.h"
+#include "qtextlayout.h"
+#include "qvarlengtharray.h"
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
+#include <private/qunicodetables_p.h>
+#include <qapplication.h>
 
 
 QT_BEGIN_NAMESPACE

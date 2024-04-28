@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include <QtCore/qglobal.h>
+#include <cstdio>
+#include <cstring>
 
 #include "QtTest/private/qxmltestlogger_p.h"
 #include "QtTest/private/qtestresult_p.h"

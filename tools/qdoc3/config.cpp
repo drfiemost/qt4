@@ -43,14 +43,14 @@
   config.cpp
 */
 
+#include "config.h"
 #include <QDir>
-#include <QVariant>
 #include <QFile>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QVariant>
+#include <cstdlib>
 #include <qdebug.h>
-#include "config.h"
-#include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
 

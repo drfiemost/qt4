@@ -71,9 +71,9 @@
 #include <private/qpaintengine_p.h>
 #include "qpaintengine_x11_p.h"
 
-#include <private/qt_x11_p.h>
+#include <climits>
 #include <private/qnumeric_p.h>
-#include <limits.h>
+#include <private/qt_x11_p.h>
 
 #ifndef QT_NO_XRENDER
 #include <private/qtessellator_p.h>

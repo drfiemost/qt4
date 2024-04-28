@@ -41,7 +41,7 @@
 
 #include "qbytearraymatcher.h"
 
-#include <limits.h>
+#include <climits>
 
 #include  <algorithm>
 

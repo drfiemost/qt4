@@ -52,7 +52,7 @@
 
 #include <private/qtranslator_p.h>
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

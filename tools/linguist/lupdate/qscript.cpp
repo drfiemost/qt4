@@ -56,10 +56,10 @@
 
 #include <iostream>
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

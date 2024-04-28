@@ -39,21 +39,21 @@
 **
 ****************************************************************************/
 
-#include "qpainter.h"
-#include "qevent.h"
-#include "qdrawutil.h"
-#include "qapplication.h"
+#include "private/qstylesheetstyle_p.h"
 #include "qabstractbutton.h"
+#include "qaction.h"
+#include "qapplication.h"
+#include "qclipboard.h"
+#include "qdrawutil.h"
+#include "qevent.h"
+#include "qlabel_p.h"
+#include "qpainter.h"
 #include "qstyle.h"
 #include "qstyleoption.h"
-#include <limits.h>
-#include "qaction.h"
-#include "qclipboard.h"
+#include <climits>
 #include <qdebug.h>
-#include <qurl.h>
-#include "qlabel_p.h"
-#include "private/qstylesheetstyle_p.h"
 #include <qmath.h>
+#include <qurl.h>
 
 #ifndef QT_NO_ACCESSIBILITY
 #include <qaccessible.h>

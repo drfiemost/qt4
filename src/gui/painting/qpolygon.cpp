@@ -49,7 +49,7 @@
 #include "qpainterpath_p.h"
 #include "qbezier_p.h"
 
-#include <stdarg.h>
+#include <cstdarg>
 
 QT_BEGIN_NAMESPACE
 

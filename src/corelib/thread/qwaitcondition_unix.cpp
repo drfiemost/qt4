@@ -53,9 +53,9 @@
 #include "qmutex_p.h"
 #include "qreadwritelock_p.h"
 
-#include <errno.h>
+#include <cerrno>
+#include <ctime>
 #include <sys/time.h>
-#include <time.h>
 
 #ifndef QT_NO_THREAD
 

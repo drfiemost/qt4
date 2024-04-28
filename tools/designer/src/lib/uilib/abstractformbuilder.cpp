@@ -99,7 +99,7 @@
 
 #include <QtCore/qdebug.h>
 
-#include <limits.h>
+#include <climits>
 
 Q_DECLARE_METATYPE(QWidgetList)
 

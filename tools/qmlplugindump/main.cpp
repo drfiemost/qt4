@@ -63,7 +63,7 @@
 #endif
 
 #ifdef Q_OS_UNIX
-#include <signal.h>
+#include <csignal>
 #endif
 #if defined(Q_OS_WIN)
 #  if !defined(Q_CC_MINGW)

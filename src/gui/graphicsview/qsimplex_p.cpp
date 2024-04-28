@@ -44,7 +44,7 @@
 #include <QtCore/qset.h>
 #include <QtCore/qdebug.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

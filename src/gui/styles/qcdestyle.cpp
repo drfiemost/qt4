@@ -43,28 +43,28 @@
 
 #if !defined(QT_NO_STYLE_CDE) || defined(QT_PLUGIN)
 
-#include "qmenu.h"
 #include "qapplication.h"
-#include "qpainter.h"
+#include "qcombobox.h"
+#include "qdebug.h"
 #include "qdrawutil.h"
-#include "qpixmap.h"
+#include "qfocusframe.h"
+#include "qimage.h"
+#include "qlineedit.h"
+#include "qlistview.h"
+#include "qmenu.h"
+#include "qpainter.h"
+#include "qpainterpath.h"
 #include "qpalette.h"
-#include "qwidget.h"
+#include "qpixmap.h"
+#include "qprogressbar.h"
 #include "qpushbutton.h"
 #include "qscrollbar.h"
+#include "qslider.h"
+#include "qsplitter.h"
 #include "qtabbar.h"
 #include "qtabwidget.h"
-#include "qlistview.h"
-#include "qsplitter.h"
-#include "qslider.h"
-#include "qcombobox.h"
-#include "qlineedit.h"
-#include "qprogressbar.h"
-#include "qimage.h"
-#include "qfocusframe.h"
-#include "qpainterpath.h"
-#include "qdebug.h"
-#include <limits.h>
+#include "qwidget.h"
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

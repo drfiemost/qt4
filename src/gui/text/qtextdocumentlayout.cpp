@@ -50,16 +50,16 @@
 #include "qabstracttextdocumentlayout_p.h"
 #include "qcssparser_p.h"
 
-#include <qpainter.h>
-#include <qmath.h>
-#include <qrect.h>
-#include <qpalette.h>
-#include <qdebug.h>
-#include <qvarlengtharray.h>
-#include <limits.h>
-#include <qstyle.h>
-#include <qbasictimer.h>
 #include "private/qfunctions_p.h"
+#include <climits>
+#include <qbasictimer.h>
+#include <qdebug.h>
+#include <qmath.h>
+#include <qpainter.h>
+#include <qpalette.h>
+#include <qrect.h>
+#include <qstyle.h>
+#include <qvarlengtharray.h>
 
 #include <algorithm>
 

@@ -45,9 +45,9 @@
 #include <qdebug.h>
 #include <qthreadstorage.h>
 
-#include <errno.h>
-#include <locale.h>
-#include <stdio.h>
+#include <cerrno>
+#include <clocale>
+#include <cstdio>
 #include <dlfcn.h>
 
 // unistd.h is needed for the _XOPEN_UNIX macro

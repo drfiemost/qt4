@@ -41,7 +41,7 @@
 #include "VMTags.h"
 
 #if HAVE(STDINT_H)
-#include <stdint.h>
+#include <cstdint>
 #elif HAVE(INTTYPES_H)
 #include <inttypes.h>
 #else
@@ -51,9 +51,9 @@
 #if OS(WINDOWS)
 #include "windows.h"
 #else
-#include <errno.h>
-#include <unistd.h>
+#include <cerrno>
 #include <sys/mman.h>
+#include <unistd.h>
 #endif
 
 #ifndef MAP_ANONYMOUS

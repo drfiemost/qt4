@@ -48,8 +48,8 @@
 #include <qstring.h>
 #include <qtextcodec.h>
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

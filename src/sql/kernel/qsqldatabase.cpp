@@ -86,18 +86,18 @@
 #undef SCHAR
 #endif
 
-#include "qdebug.h"
+#include "private/qfactoryloader_p.h"
+#include "private/qsqlnulldriver_p.h"
 #include "qcoreapplication.h"
+#include "qdebug.h"
+#include "qhash.h"
+#include "qmutex.h"
 #include "qreadwritelock.h"
-#include "qsqlresult.h"
 #include "qsqldriver.h"
 #include "qsqldriverplugin.h"
 #include "qsqlindex.h"
-#include "private/qfactoryloader_p.h"
-#include "private/qsqlnulldriver_p.h"
-#include "qmutex.h"
-#include "qhash.h"
-#include <stdlib.h>
+#include "qsqlresult.h"
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

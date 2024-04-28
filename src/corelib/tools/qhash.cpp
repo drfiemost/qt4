@@ -45,7 +45,7 @@
 #ifndef _CRT_RAND_S
 #define _CRT_RAND_S
 #endif
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "qhash.h"
 
@@ -65,11 +65,11 @@
 #endif // QT_BOOTSTRAPPED
 
 #ifdef Q_OS_UNIX
-#include <stdio.h>
 #include "private/qcore_unix_p.h"
+#include <cstdio>
 #endif // Q_OS_UNIX
 
-#include <limits.h>
+#include <climits>
 
 #include  <algorithm>
 

@@ -93,7 +93,7 @@
 
 #include <private/qfont_p.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #if defined(Q_WS_X11) && !defined(QT_NO_EGL)
 #include <link.h>

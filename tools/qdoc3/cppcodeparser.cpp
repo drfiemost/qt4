@@ -45,14 +45,14 @@
 
 #include <qfile.h>
 
-#include <stdio.h>
-#include <errno.h>
-#include <qdebug.h>
 #include "codechunk.h"
 #include "config.h"
 #include "cppcodeparser.h"
 #include "tokenizer.h"
 #include "tree.h"
+#include <cerrno>
+#include <cstdio>
+#include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

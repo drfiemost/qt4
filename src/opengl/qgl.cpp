@@ -61,7 +61,7 @@
 
 #include <qdatetime.h>
 
-#include <stdlib.h> // malloc
+#include <cstdlib> // malloc
 
 #include "qpixmap.h"
 #include "qimage.h"

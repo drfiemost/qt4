@@ -83,9 +83,9 @@
 #include "qmutex.h"
 #include "qhash.h"
 
-#include <stdlib.h>
-#include <ctype.h>
-#include <locale.h>
+#include <cctype>
+#include <clocale>
+#include <cstdlib>
 #if defined (_XOPEN_UNIX)
 #include <langinfo.h>
 #endif

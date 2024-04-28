@@ -19,12 +19,12 @@
  *
  */
 
-#include "config.h"
 #include "RegExp.h"
 #include "Lexer.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "config.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <wtf/Assertions.h>
 #include <wtf/OwnArrayPtr.h>
 

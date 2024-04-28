@@ -43,19 +43,19 @@
   ditaxmlgenerator.cpp
 */
 
+#include "ditaxmlgenerator.h"
 #include "codemarker.h"
 #include "codeparser.h"
-#include "ditaxmlgenerator.h"
 #include "node.h"
 #include "quoter.h"
 #include "separator.h"
 #include "tree.h"
-#include <ctype.h>
-#include <qdebug.h>
-#include <qlist.h>
-#include <qiterator.h>
-#include <qtextcodec.h>
 #include <QUuid>
+#include <cctype>
+#include <qdebug.h>
+#include <qiterator.h>
+#include <qlist.h>
+#include <qtextcodec.h>
 
 QT_BEGIN_NAMESPACE
 

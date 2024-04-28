@@ -37,9 +37,9 @@
 #include "Nodes.h"
 #include "Tracing.h"
 #include <algorithm>
-#include <limits.h>
-#include <setjmp.h>
-#include <stdlib.h>
+#include <climits>
+#include <csetjmp>
+#include <cstdlib>
 #include <wtf/FastMalloc.h>
 #include <wtf/HashCountedSet.h>
 #include <wtf/UnusedParam.h>
@@ -66,7 +66,7 @@
 
 #elif OS(UNIX)
 
-#include <stdlib.h>
+#include <cstdlib>
 #if !OS(HAIKU)
 #include <sys/mman.h>
 #endif

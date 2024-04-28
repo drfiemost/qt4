@@ -82,7 +82,7 @@ in doc/dnd.doc, where the documentation system can see it. */
 #include "qiodevice.h"
 #include "qdnd_p.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

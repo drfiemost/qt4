@@ -43,9 +43,9 @@
   text.cpp
 */
 
-#include <qregexp.h>
 #include "text.h"
-#include <stdio.h>
+#include <cstdio>
+#include <qregexp.h>
 
 QT_BEGIN_NAMESPACE
 

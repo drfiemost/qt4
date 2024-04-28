@@ -42,7 +42,7 @@
 #include <QtCore/QtDebug>
 #include <QtGui/QApplication>
 
-#include <string.h>
+#include <cstring>
 
 #include "private/qdeclarativejsengine_p.h"
 #include "private/qdeclarativejslexer_p.h"

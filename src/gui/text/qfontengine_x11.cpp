@@ -71,7 +71,7 @@
 #include "qx11info_x11.h"
 #include "qfontengine_x11_p.h"
 
-#include <limits.h>
+#include <climits>
 
 #include <ft2build.h>
 #if defined(FT_LCD_FILTER_H)

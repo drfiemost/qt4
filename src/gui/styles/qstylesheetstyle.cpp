@@ -83,8 +83,8 @@
 #include <QLabel>
 #include "qdrawutil.h"
 
-#include <limits.h>
 #include <QtGui/qtoolbar.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

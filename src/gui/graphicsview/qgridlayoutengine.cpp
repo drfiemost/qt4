@@ -43,7 +43,7 @@
 
 #ifndef QT_NO_GRAPHICSVIEW
 
-#include <math.h>
+#include <cmath>
 
 #include "qgraphicslayoutitem.h"
 #include "qgridlayoutengine_p.h"

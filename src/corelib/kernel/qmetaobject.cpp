@@ -61,7 +61,7 @@
 // for normalizeTypeInternal
 #include "private/qmetaobject_moc_p.h"
 
-#include <ctype.h>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

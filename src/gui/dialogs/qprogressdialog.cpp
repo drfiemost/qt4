@@ -43,19 +43,19 @@
 
 #ifndef QT_NO_PROGRESSDIALOG
 
-#include "qshortcut.h"
-#include "qpainter.h"
-#include "qdrawutil.h"
-#include "qlabel.h"
-#include "qprogressbar.h"
 #include "qapplication.h"
-#include "qstyle.h"
-#include "qpushbutton.h"
 #include "qcursor.h"
-#include "qtimer.h"
+#include "qdrawutil.h"
 #include "qelapsedtimer.h"
+#include "qlabel.h"
+#include "qpainter.h"
+#include "qprogressbar.h"
+#include "qpushbutton.h"
+#include "qshortcut.h"
+#include "qstyle.h"
+#include "qtimer.h"
+#include <climits>
 #include <private/qdialog_p.h>
-#include <limits.h>
 
 #if defined(QT_SOFTKEYS_ENABLED)
 #include <qaction.h>

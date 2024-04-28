@@ -67,7 +67,7 @@
 #include "qglgradientcache_p.h"
 #include "qpaintengineex_opengl2_p.h"
 
-#include <string.h> //for memcpy
+#include <cstring> //for memcpy
 #include <qmath.h>
 
 #include <private/qgl_p.h>

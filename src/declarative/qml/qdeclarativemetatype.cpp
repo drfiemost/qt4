@@ -68,7 +68,7 @@
 #include <QtCore/qcryptographichash.h>
 #include <QtScript/qscriptvalue.h>
 
-#include <ctype.h>
+#include <cctype>
 
 #ifdef QT_BOOTSTRAPPED
 # ifndef QT_NO_GEOM_VARIANT

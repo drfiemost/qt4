@@ -62,7 +62,7 @@
 #endif
 
 #if defined(Q_WS_X11)
-#include <limits.h>
+#include <climits>
 #endif
 
 //#define QABSTRACTSPINBOX_QSBDEBUG

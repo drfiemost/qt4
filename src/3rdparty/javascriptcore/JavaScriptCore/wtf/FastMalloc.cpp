@@ -161,7 +161,7 @@ void fastMallocAllow()
 } // namespace WTF
 #endif // NDEBUG
 
-#include <string.h>
+#include <cstring>
 
 namespace WTF {
 
@@ -369,7 +369,7 @@ extern "C" const int jscore_fastmalloc_introspection = 0;
 #else // FORCE_SYSTEM_MALLOC
 
 #if HAVE(STDINT_H)
-#include <stdint.h>
+#include <cstdint>
 #elif HAVE(INTTYPES_H)
 #include <inttypes.h>
 #else
@@ -383,13 +383,13 @@ extern "C" const int jscore_fastmalloc_introspection = 0;
 #include "TCSpinLock.h"
 #include "TCSystemAlloc.h"
 #include <algorithm>
-#include <errno.h>
+#include <cerrno>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdio>
 #include <limits>
 #include <new>
 #include <pthread.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
 #if OS(UNIX)
 #include <unistd.h>
 #endif

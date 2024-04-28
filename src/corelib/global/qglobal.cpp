@@ -54,18 +54,18 @@
 #include <private/qthread_p.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <stdarg.h>
-#include <string.h>
+#include <climits>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #ifndef QT_NO_EXCEPTIONS
 #  include <string>
 #  include <exception>
 #endif
 
-#include <errno.h>
+#include <cerrno>
 #if defined(Q_CC_MSVC)
 #  include <crtdbg.h>
 #endif

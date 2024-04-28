@@ -48,8 +48,8 @@
 
 #include <private/qobject_p.h>
 
-#include <limits.h>
-#include <math.h>
+#include <climits>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 

@@ -41,8 +41,8 @@
 
 #include "qdbusmetatype.h"
 
-#include <string.h>
 #include "qdbus_symbols_p.h"
+#include <cstring>
 
 #include <qbytearray.h>
 #include <qglobal.h>

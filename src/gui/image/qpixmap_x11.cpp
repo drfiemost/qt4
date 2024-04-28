@@ -70,7 +70,7 @@
 #include <private/qimage_p.h>
 #include <private/qimagepixmapcleanuphooks_p.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #if defined(Q_CC_MIPS)
 #  define for if(0){}else for

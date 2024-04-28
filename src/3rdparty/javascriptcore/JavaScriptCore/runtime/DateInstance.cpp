@@ -24,7 +24,7 @@
 
 #include "JSGlobalObject.h"
 
-#include <math.h>
+#include <cmath>
 #include <wtf/DateMath.h>
 #include <wtf/MathExtras.h>
 

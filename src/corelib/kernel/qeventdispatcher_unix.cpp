@@ -52,9 +52,9 @@
 #include <private/qcoreapplication_p.h>
 #include <private/qcore_unix_p.h>
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
 
 #if (_POSIX_MONOTONIC_CLOCK-0 <= 0) || defined(QT_BOOTSTRAPPED)
 #  include <sys/times.h>

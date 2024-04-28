@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qglobal.h>
 #include "qsystemerror_p.h"
-#include <errno.h>
+#include <cerrno>
+#include <qglobal.h>
 #if defined(Q_CC_MSVC)
 #  include <crtdbg.h>
 #endif

@@ -41,7 +41,7 @@
 
 #include <QtCore/QtCore>
 
-#include <stdio.h>
+#include <cstdio>
 
 QT_USE_NAMESPACE
 

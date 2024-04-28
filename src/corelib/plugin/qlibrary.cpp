@@ -57,7 +57,7 @@
 #  include <private/qcore_mac_p.h>
 #endif
 #ifndef NO_ERRNO_H
-#include <errno.h>
+#include <cerrno>
 #endif // NO_ERROR_H
 #include <qdebug.h>
 #include <qvector.h>

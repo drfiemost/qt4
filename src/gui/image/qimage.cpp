@@ -40,24 +40,24 @@
 ****************************************************************************/
 
 #include "qimage.h"
-#include "qdatastream.h"
 #include "qbuffer.h"
-#include "qmap.h"
-#include "qmatrix.h"
-#include "qtransform.h"
+#include "qdatastream.h"
+#include "qimagepixmapcleanuphooks_p.h"
 #include "qimagereader.h"
 #include "qimagewriter.h"
+#include "qmap.h"
+#include "qmatrix.h"
 #include "qstringlist.h"
+#include "qtransform.h"
 #include "qvariant.h"
-#include "qimagepixmapcleanuphooks_p.h"
-#include <ctype.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <math.h>
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdlib>
 #include <private/qdrawhelper_p.h>
+#include <private/qimagescale_p.h>
 #include <private/qmemrotate_p.h>
 #include <private/qpixmapdata_p.h>
-#include <private/qimagescale_p.h>
 #include <private/qsimd_p.h>
 
 #include <qhash.h>

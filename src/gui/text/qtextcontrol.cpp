@@ -67,20 +67,20 @@
 #include "qtextdocumentwriter.h"
 #include "private/qtextcursor_p.h"
 
-#include <qtextformat.h>
-#include <qdatetime.h>
-#include <qbuffer.h>
+#include <QtGui/qaccessible.h>
+#include <QtGui/qlineedit.h>
+#include <climits>
 #include <qapplication.h>
-#include <limits.h>
-#include <qtexttable.h>
-#include <qvariant.h>
-#include <qurl.h>
+#include <qbuffer.h>
+#include <qdatetime.h>
 #include <qdesktopservices.h>
 #include <qinputcontext.h>
-#include <qtooltip.h>
 #include <qstyleoption.h>
-#include <QtGui/qlineedit.h>
-#include <QtGui/qaccessible.h>
+#include <qtextformat.h>
+#include <qtexttable.h>
+#include <qtooltip.h>
+#include <qurl.h>
+#include <qvariant.h>
 
 #ifndef QT_NO_SHORTCUT
 #include "private/qapplication_p.h"

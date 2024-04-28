@@ -24,12 +24,12 @@
 #include "Completion.h"
 
 #include "CallFrame.h"
+#include "Debugger.h"
+#include "Interpreter.h"
 #include "JSGlobalObject.h"
 #include "JSLock.h"
-#include "Interpreter.h"
 #include "Parser.h"
-#include "Debugger.h"
-#include <stdio.h>
+#include <cstdio>
 
 namespace JSC {
 

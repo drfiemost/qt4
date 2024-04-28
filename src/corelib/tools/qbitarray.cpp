@@ -40,9 +40,9 @@
 ****************************************************************************/
 
 #include "qbitarray.h"
+#include <cstring>
 #include <qdatastream.h>
 #include <qdebug.h>
-#include <string.h>
 
 #include  <algorithm>
 

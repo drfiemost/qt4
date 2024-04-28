@@ -33,10 +33,10 @@
 #include <langinfo.h>
 #endif
 
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <time.h>
+#include <climits>
+#include <clocale>
+#include <cmath>
+#include <ctime>
 #include <wtf/Assertions.h>
 #include <wtf/DateMath.h>
 #include <wtf/MathExtras.h>

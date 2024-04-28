@@ -66,11 +66,11 @@
 
 #include <private/qfunctions_p.h>
 
-#include <limits.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
+#include <climits>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include  <algorithm>
 

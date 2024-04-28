@@ -71,7 +71,7 @@
 #include <qdialog.h>
 #include <qmath.h>
 
-#include <limits.h>
+#include <climits>
 
 #ifndef DBL_DIG
 #  define DBL_DIG 10

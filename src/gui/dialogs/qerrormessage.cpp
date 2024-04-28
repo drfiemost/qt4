@@ -58,8 +58,8 @@
 #include "qqueue.h"
 #include "qset.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #if defined(QT_SOFTKEYS_ENABLED)
 #include <qaction.h>

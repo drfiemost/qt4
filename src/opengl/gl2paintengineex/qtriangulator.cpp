@@ -55,7 +55,7 @@
 #include <QtCore/qalgorithms.h>
 #include <QtDebug>
 
-#include <math.h>
+#include <cmath>
 
 #include <private/qgl_p.h>
 

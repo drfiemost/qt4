@@ -28,14 +28,14 @@
 #include "ErrorConstructor.h"
 #include "GetterSetter.h"
 #include "JSGlobalObject.h"
+#include "Lookup.h"
 #include "NativeErrorConstructor.h"
+#include "Nodes.h"
 #include "ObjectPrototype.h"
+#include "Operations.h"
 #include "PropertyDescriptor.h"
 #include "PropertyNameArray.h"
-#include "Lookup.h"
-#include "Nodes.h"
-#include "Operations.h"
-#include <math.h>
+#include <cmath>
 #include <wtf/Assertions.h>
 
 namespace JSC {

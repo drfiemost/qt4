@@ -46,7 +46,7 @@
 #include "qthread_p.h"
 #include "qmutex.h"
 
-#include <string.h>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

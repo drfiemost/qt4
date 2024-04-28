@@ -44,7 +44,7 @@
 #include "qobject_p.h"
 #include "qmetaobject_p.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

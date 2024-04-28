@@ -84,7 +84,7 @@
 #define ACCEL_KEY(k) QString()
 #endif
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

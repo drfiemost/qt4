@@ -22,8 +22,8 @@
 #include "Identifier.h"
 
 #include "CallFrame.h"
+#include <cstring> // for strlen
 #include <new> // for placement new
-#include <string.h> // for strlen
 #include <wtf/Assertions.h>
 #include <wtf/FastMalloc.h>
 #include <wtf/HashSet.h>

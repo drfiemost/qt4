@@ -61,7 +61,7 @@
 #include "qline.h"
 #endif
 
-#include <float.h>
+#include <cfloat>
 
 QT_BEGIN_NAMESPACE
 

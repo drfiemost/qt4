@@ -61,7 +61,7 @@
 #include <qsettings.h>
 #include <qmenu.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

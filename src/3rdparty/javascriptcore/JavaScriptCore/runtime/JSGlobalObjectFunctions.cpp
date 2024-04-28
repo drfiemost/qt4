@@ -37,9 +37,9 @@
 #include "StringBuilder.h"
 #include "StringExtras.h"
 #include "dtoa.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <wtf/ASCIICType.h>
 #include <wtf/Assertions.h>
 #include <wtf/MathExtras.h>

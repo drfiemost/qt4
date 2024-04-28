@@ -23,7 +23,7 @@
 
 #include "ObjectPrototype.h"
 #include "Operations.h"
-#include <time.h>
+#include <ctime>
 #include <wtf/Assertions.h>
 #include <wtf/MathExtras.h>
 #include <wtf/RandomNumber.h>

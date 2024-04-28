@@ -42,16 +42,16 @@
 #include "qhelpgenerator_p.h"
 #include "qhelpdatainterface_p.h"
 
-#include <math.h>
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QDebug>
 #include <QtCore/QSet>
-#include <QtCore/QVariant>
-#include <QtCore/QDateTime>
 #include <QtCore/QTextCodec>
+#include <QtCore/QVariant>
 #include <QtSql/QSqlQuery>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 

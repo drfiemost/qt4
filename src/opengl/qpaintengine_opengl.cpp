@@ -74,8 +74,8 @@
 
 #define QGL_FUNC_CONTEXT QGLContext *ctx = const_cast<QGLContext *>(device->context());
 
-#include <stdlib.h>
 #include "qpaintengine_opengl_p.h"
+#include <cstdlib>
 
 #include  <algorithm>
 

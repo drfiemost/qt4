@@ -60,13 +60,13 @@
 #include "private/qtextcontrol_p.h"
 #include "qaccessible.h"
 
-#include <qtextformat.h>
-#include <qdatetime.h>
+#include <climits>
 #include <qapplication.h>
-#include <limits.h>
+#include <qdatetime.h>
+#include <qinputcontext.h>
+#include <qtextformat.h>
 #include <qtexttable.h>
 #include <qvariant.h>
-#include <qinputcontext.h>
 
 #ifndef QT_NO_TEXTEDIT
 

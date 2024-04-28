@@ -73,7 +73,7 @@
 #include <private/qsystemlibrary_p.h>
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifndef CSIDL_COMMON_APPDATA
 #define CSIDL_COMMON_APPDATA	0x0023  // All Users\Application Data

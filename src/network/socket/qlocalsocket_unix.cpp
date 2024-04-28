@@ -45,12 +45,12 @@
 
 #ifndef QT_NO_LOCALSOCKET
 
-#include <sys/types.h>
+#include <cerrno>
+#include <fcntl.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/un.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
 
 #include <qdir.h>
 #include <qdebug.h>

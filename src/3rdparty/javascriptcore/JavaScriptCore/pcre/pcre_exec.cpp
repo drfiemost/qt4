@@ -45,7 +45,7 @@ the JavaScript specification. There are also some supporting functions. */
 #include "config.h"
 #include "pcre_internal.h"
 
-#include <limits.h>
+#include <climits>
 #include <wtf/ASCIICType.h>
 #include <wtf/Vector.h>
 

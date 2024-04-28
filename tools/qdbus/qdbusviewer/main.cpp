@@ -45,7 +45,7 @@
 #include <QtDBus/qdbusconnection.h>
 #include "qdbusviewer.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 int main(int argc, char *argv[])
 {

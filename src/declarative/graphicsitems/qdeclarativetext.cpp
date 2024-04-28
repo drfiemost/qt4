@@ -45,15 +45,15 @@
 #include <qdeclarativeinfo.h>
 #include <qdeclarativepixmapcache_p.h>
 
-#include <QSet>
-#include <QTextLayout>
-#include <QTextLine>
-#include <QTextDocument>
+#include <QAbstractTextDocumentLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include <QAbstractTextDocumentLayout>
+#include <QSet>
+#include <QTextDocument>
+#include <QTextLayout>
+#include <QTextLine>
+#include <climits>
 #include <qmath.h>
-#include <limits.h>
 
 QT_BEGIN_NAMESPACE
 

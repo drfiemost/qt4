@@ -49,7 +49,7 @@
 #ifndef QT_NO_ACCESSIBILITY
 #include <qaccessible.h>
 #endif
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

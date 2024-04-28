@@ -43,14 +43,14 @@
   htmlgenerator.cpp
 */
 
+#include "htmlgenerator.h"
 #include "codemarker.h"
 #include "codeparser.h"
 #include "helpprojectwriter.h"
-#include "htmlgenerator.h"
 #include "node.h"
 #include "separator.h"
 #include "tree.h"
-#include <ctype.h>
+#include <cctype>
 
 #include <qdebug.h>
 #include <qlist.h>

@@ -112,7 +112,7 @@ static PtrSHGetStockIconInfo pSHGetStockIconInfo = 0;
 #endif //Q_WS_WIN
 
 QT_BEGIN_INCLUDE_NAMESPACE
-#include <limits.h>
+#include <climits>
 QT_END_INCLUDE_NAMESPACE
 
 enum QSliderDirection { SlUp, SlDown, SlLeft, SlRight };

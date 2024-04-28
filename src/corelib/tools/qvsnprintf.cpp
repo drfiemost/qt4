@@ -44,7 +44,7 @@
 #include "qbytearray.h"
 #include "qstring.h"
 
-#include "string.h"
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 
@@ -94,7 +94,7 @@ int qvsnprintf(char *str, size_t n, const char *fmt, va_list ap)
 #else
 
 QT_BEGIN_INCLUDE_NAMESPACE
-#include <stdio.h>
+#include <cstdio>
 QT_END_INCLUDE_NAMESPACE
 
 int qvsnprintf(char *str, size_t n, const char *fmt, va_list ap)

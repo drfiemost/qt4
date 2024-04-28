@@ -45,8 +45,8 @@
 #include <QApplication>
 #include <QGraphicsScene>
 
-#include <float.h>
-#include <math.h>
+#include <cfloat>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 

@@ -59,7 +59,7 @@
 #define XK_XKB_KEYS
 #include <X11/keysymdef.h>
 
-#include <ctype.h>
+#include <cctype>
 
 #ifdef QT_LINUXBASE
 // LSB's IsKeypadKey define is wrong - see

@@ -47,7 +47,7 @@
 #endif
 #include <sys/time.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifdef Q_OS_MAC
 #include <mach/mach_time.h>

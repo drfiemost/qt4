@@ -28,9 +28,9 @@
 #include "NodeInfo.h"
 #include "Nodes.h"
 #include "dtoa.h"
-#include <ctype.h>
-#include <limits.h>
-#include <string.h>
+#include <cctype>
+#include <climits>
+#include <cstring>
 #include <wtf/Assertions.h>
 
 using namespace WTF;

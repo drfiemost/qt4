@@ -50,9 +50,9 @@
 #include <qdebug.h>
 
 #if defined(Q_OS_UNIX) || defined(Q_WS_WIN)
-#include "qimage.h"
 #include "qbitmap.h"
-#include <stdlib.h>
+#include "qimage.h"
+#include <cstdlib>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -1693,7 +1693,7 @@ SOFTWARE.
 #define _XREGION_H
 
 QT_BEGIN_INCLUDE_NAMESPACE
-#include <limits.h>
+#include <climits>
 QT_END_INCLUDE_NAMESPACE
 
 /*  1 if two BOXes overlap.

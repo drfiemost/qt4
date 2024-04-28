@@ -41,7 +41,7 @@
 
 #include "qplatformdefs.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 /*
     Define the container allocation functions in a separate file, so that our

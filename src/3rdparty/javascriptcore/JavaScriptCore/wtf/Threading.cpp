@@ -26,7 +26,7 @@
 #include "config.h"
 #include "Threading.h"
 
-#include <string.h>
+#include <cstring>
 
 namespace WTF {
 

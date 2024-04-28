@@ -54,8 +54,8 @@
 #include "qvector.h"
 #include "private/qfunctions_p.h"
 
-#include <limits.h>
 #include <algorithm>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

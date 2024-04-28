@@ -44,33 +44,33 @@
 
 #if !defined(QT_NO_STYLE_MOTIF) || defined(QT_PLUGIN)
 
-#include "qmenu.h"
 #include "qapplication.h"
-#include "qpainter.h"
+#include "qcombobox.h"
+#include "qdebug.h"
+#include "qdialogbuttonbox.h"
 #include "qdrawutil.h"
-#include "qpixmap.h"
+#include "qfocusframe.h"
+#include "qformlayout.h"
+#include "qimage.h"
+#include "qlineedit.h"
+#include "qlistview.h"
+#include "qmenu.h"
+#include "qmotifstyle_p.h"
+#include "qpainter.h"
+#include "qpainterpath.h"
 #include "qpalette.h"
-#include "qwidget.h"
+#include "qpixmap.h"
+#include "qprogressbar.h"
 #include "qpushbutton.h"
 #include "qscrollbar.h"
+#include "qslider.h"
+#include "qsplitter.h"
 #include "qtabbar.h"
 #include "qtabwidget.h"
-#include "qlistview.h"
-#include "qsplitter.h"
-#include "qslider.h"
-#include "qcombobox.h"
-#include "qlineedit.h"
-#include "qprogressbar.h"
-#include "qimage.h"
-#include "qfocusframe.h"
-#include "qdebug.h"
-#include "qpainterpath.h"
-#include "qmotifstyle_p.h"
-#include "qdialogbuttonbox.h"
-#include "qformlayout.h"
-#include <limits.h>
+#include "qwidget.h"
 #include <QtGui/qgraphicsproxywidget.h>
 #include <QtGui/qgraphicsview.h>
+#include <climits>
 
 #ifdef Q_WS_X11
 #include "qx11info_x11.h"

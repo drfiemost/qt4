@@ -42,11 +42,11 @@
 // ask for the latest POSIX, just in case
 #define _POSIX_C_SOURCE 200809L
 
-#include "qelapsedtimer.h"
 #include "qdeadlinetimer.h"
 #include "qdeadlinetimer_p.h"
+#include "qelapsedtimer.h"
+#include <ctime>
 #include <sys/time.h>
-#include <time.h>
 #include <unistd.h>
 
 #include <qatomic.h>

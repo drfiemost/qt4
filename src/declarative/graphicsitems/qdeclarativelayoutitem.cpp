@@ -43,7 +43,7 @@
 
 #include <QDebug>
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

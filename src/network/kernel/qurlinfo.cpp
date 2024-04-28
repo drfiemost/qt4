@@ -43,9 +43,9 @@
 
 #ifndef QT_NO_URLINFO
 
-#include "qurl.h"
 #include "qdir.h"
-#include <limits.h>
+#include "qurl.h"
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

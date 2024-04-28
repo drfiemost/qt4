@@ -69,11 +69,11 @@
 // also this lacks Large File support but that's probably irrelevant
 #if defined(QT_USE_MMAP)
 // for mmap
+#include <cerrno>
 #include <sys/mman.h>
-#include <errno.h>
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "qobject_p.h"
 

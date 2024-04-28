@@ -43,15 +43,15 @@
 #include "qlocale_p.h"
 #include "qstring.h"
 
-#include <ctype.h>
-#include <float.h>
-#include <limits.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cctype>
+#include <cfloat>
+#include <climits>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
 
 #if defined(Q_OS_LINUX) && !defined(__UCLIBC__)
-#    include <fenv.h>
+#    include <cfenv>
 #endif
 
 #include  <algorithm>

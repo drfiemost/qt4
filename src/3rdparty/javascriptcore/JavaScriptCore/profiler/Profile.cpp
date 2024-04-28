@@ -27,7 +27,7 @@
 #include "Profile.h"
 
 #include "ProfileNode.h"
-#include <stdio.h>
+#include <cstdio>
 
 namespace JSC {
 

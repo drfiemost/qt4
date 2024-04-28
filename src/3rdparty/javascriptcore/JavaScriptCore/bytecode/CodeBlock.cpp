@@ -30,14 +30,14 @@
 #include "config.h"
 #include "CodeBlock.h"
 
-#include "JIT.h"
-#include "JSValue.h"
+#include "BytecodeGenerator.h"
+#include "Debugger.h"
 #include "Interpreter.h"
+#include "JIT.h"
 #include "JSFunction.h"
 #include "JSStaticScopeObject.h"
-#include "Debugger.h"
-#include "BytecodeGenerator.h"
-#include <stdio.h>
+#include "JSValue.h"
+#include <cstdio>
 #include <wtf/StringExtras.h>
 
 #define DUMP_CODE_BLOCK_STATISTICS 0

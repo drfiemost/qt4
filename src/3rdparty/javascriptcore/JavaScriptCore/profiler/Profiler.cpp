@@ -29,16 +29,16 @@
 #include "config.h"
 #include "Profiler.h"
 
-#include "CommonIdentifiers.h"
 #include "CallFrame.h"
 #include "CodeBlock.h"
+#include "CommonIdentifiers.h"
 #include "JSFunction.h"
 #include "JSGlobalObject.h"
 #include "Nodes.h"
 #include "Profile.h"
 #include "ProfileGenerator.h"
 #include "ProfileNode.h"
-#include <stdio.h>
+#include <cstdio>
 
 namespace JSC {
 

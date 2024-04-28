@@ -45,9 +45,9 @@
 #include <QList>
 #include <QDebug>
 
-#include <qmath.h>
-#include <limits.h>
 #include <algorithm>
+#include <climits>
+#include <qmath.h>
 
 QT_BEGIN_NAMESPACE
 

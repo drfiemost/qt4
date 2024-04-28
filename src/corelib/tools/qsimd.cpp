@@ -41,7 +41,7 @@
 
 #include "qsimd_p.h"
 #include <QByteArray>
-#include <stdio.h>
+#include <cstdio>
 
 #if defined(Q_OS_WIN64)
 #include <intrin.h>

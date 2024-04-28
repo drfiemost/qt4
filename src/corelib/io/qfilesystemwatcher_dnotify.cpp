@@ -45,20 +45,20 @@
 
 #ifndef QT_NO_FILESYSTEMWATCHER
 
-#include <qsocketnotifier.h>
+#include <csignal>
+#include <ctime>
+#include <dirent.h>
+#include <fcntl.h>
 #include <qcoreapplication.h>
+#include <qdir.h>
 #include <qfileinfo.h>
+#include <qmutex.h>
+#include <qsocketnotifier.h>
 #include <qtimer.h>
 #include <qwaitcondition.h>
-#include <qmutex.h>
-#include <dirent.h>
-#include <qdir.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <signal.h>
+#include <sys/types.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <time.h>
 
 #include "private/qcore_unix_p.h"
 

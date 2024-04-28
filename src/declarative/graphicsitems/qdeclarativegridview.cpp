@@ -50,9 +50,9 @@
 #include <qlistmodelinterface_p.h>
 #include <QKeyEvent>
 
-#include <qmath.h>
-#include <math.h>
 #include "qplatformdefs.h"
+#include <cmath>
+#include <qmath.h>
 
 QT_BEGIN_NAMESPACE
 

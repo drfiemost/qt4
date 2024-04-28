@@ -25,7 +25,7 @@
 #include "JSGlobalObject.h"
 #include "JSObject.h"
 #include "PropertyNameArray.h"
-#include <stdio.h>
+#include <cstdio>
 
 namespace JSC {
 

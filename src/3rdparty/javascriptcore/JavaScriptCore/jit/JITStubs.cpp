@@ -56,9 +56,9 @@
 #include "RegExpPrototype.h"
 #include "Register.h"
 #include "SamplingTool.h"
+#include <cstdarg>
+#include <cstdio>
 #include <wtf/StdLibExtras.h>
-#include <stdarg.h>
-#include <stdio.h>
 
 #ifdef QT_BUILD_SCRIPT_LIB
 #include "bridge/qscriptobject_p.h"

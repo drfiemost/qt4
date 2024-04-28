@@ -63,7 +63,7 @@
 #include <QtGui/qgraphicstransform.h>
 #include <qlistmodelinterface_p.h>
 
-#include <float.h>
+#include <cfloat>
 
 QT_BEGIN_NAMESPACE
 

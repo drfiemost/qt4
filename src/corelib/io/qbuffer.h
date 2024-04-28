@@ -67,7 +67,7 @@ public:
      QBuffer();
      explicit QBuffer(QByteArray *buf);
 #endif
-    ~QBuffer() override;
+    ~QBuffer() ;
 
     QByteArray &buffer();
     const QByteArray &buffer() const;

@@ -40,15 +40,15 @@
 ****************************************************************************/
 
 //#define QNATIVESOCKETENGINE_DEBUG
-#include "qnativesocketengine_p.h"
 #include "private/qnet_unix_p.h"
-#include "qiodevice.h"
-#include "qhostaddress.h"
 #include "qelapsedtimer.h"
-#include "qvarlengtharray.h"
+#include "qhostaddress.h"
+#include "qiodevice.h"
+#include "qnativesocketengine_p.h"
 #include "qnetworkinterface.h"
-#include <time.h>
-#include <errno.h>
+#include "qvarlengtharray.h"
+#include <cerrno>
+#include <ctime>
 #include <fcntl.h>
 #ifndef QT_NO_IPV6IFNAME
 #include <net/if.h>

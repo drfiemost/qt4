@@ -29,7 +29,7 @@
 
 #if ENABLE(EXECUTABLE_ALLOCATOR_FIXED)
 
-#include <errno.h>
+#include <cerrno>
 
 #include "TCSpinLock.h"
 #include <sys/mman.h>

@@ -54,7 +54,7 @@
 #include "qtexttable.h"
 #include "qtextengine_p.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

@@ -45,15 +45,15 @@
 
 #ifndef QT_NO_ITEMVIEWS
 
+#include <cfloat>
+#include <climits>
+#include <qapplication.h>
 #include <qcombobox.h>
 #include <qdatetimeedit.h>
+#include <qdebug.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qspinbox.h>
-#include <limits.h>
-#include <float.h>
-#include <qapplication.h>
-#include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include <private/qdatetimeedit_p.h>
+#include <private/qlineedit_p.h>
 #include <qabstractspinbox.h>
 #include <qapplication.h>
 #include <qdatetimeedit.h>
-#include <qdesktopwidget.h>
 #include <qdebug.h>
+#include <qdesktopwidget.h>
 #include <qevent.h>
+#include <qlayout.h>
 #include <qlineedit.h>
-#include <private/qlineedit_p.h>
 #include <qlocale.h>
 #include <qpainter.h>
-#include <qlayout.h>
 #include <qset.h>
 #include <qstyle.h>
 

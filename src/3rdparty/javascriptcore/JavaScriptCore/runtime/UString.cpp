@@ -24,25 +24,24 @@
 #include "config.h"
 #include "UString.h"
 
-#include "JSGlobalObjectFunctions.h"
 #include "Collector.h"
-#include "dtoa.h"
 #include "Identifier.h"
+#include "JSGlobalObjectFunctions.h"
 #include "Operations.h"
-#include <ctype.h>
-#include <limits.h>
+#include "dtoa.h"
+#include <cctype>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <limits>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <wtf/ASCIICType.h>
 #include <wtf/Assertions.h>
 #include <wtf/MathExtras.h>
 #include <wtf/StringExtras.h>
 #include <wtf/Vector.h>
 #include <wtf/unicode/UTF8.h>
-#include <wtf/StringExtras.h>
 
 #if HAVE(STRINGS_H)
 #include <strings.h>

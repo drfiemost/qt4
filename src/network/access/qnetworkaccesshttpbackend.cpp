@@ -58,7 +58,7 @@
 
 #ifndef QT_NO_HTTP
 
-#include <string.h>             // for strchr
+#include <cstring>             // for strchr
 
 Q_DECLARE_METATYPE(QSharedPointer<char>)
 

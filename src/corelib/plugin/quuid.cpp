@@ -832,7 +832,7 @@ QT_BEGIN_INCLUDE_NAMESPACE
 #include "qdatetime.h"
 #include "qfile.h"
 #include "qthreadstorage.h"
-#include <stdlib.h> // for RAND_MAX
+#include <cstdlib> // for RAND_MAX
 QT_END_INCLUDE_NAMESPACE
 
 #if !defined(QT_BOOTSTRAPPED) && defined(Q_OS_UNIX)

@@ -73,7 +73,7 @@
 #include <qdialog.h>
 #include <qtableview.h>
 
-#include <limits.h>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

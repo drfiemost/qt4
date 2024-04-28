@@ -55,8 +55,8 @@
 #include <qx11info_x11.h>
 #endif
 
-#include <limits.h>
 #include <algorithm>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

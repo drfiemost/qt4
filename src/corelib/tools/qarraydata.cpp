@@ -42,7 +42,7 @@
 #include <QtCore/qarraydata.h>
 #include <QtCore/private/qtools_p.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

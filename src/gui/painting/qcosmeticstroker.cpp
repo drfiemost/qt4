@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 
-#include "qcosmeticstroker_p.h"
 #include "private/qpainterpath_p.h"
+#include "qcosmeticstroker_p.h"
+#include <cmath>
 #include <qdebug.h>
-#include <math.h>
 
 QT_BEGIN_NAMESPACE
 

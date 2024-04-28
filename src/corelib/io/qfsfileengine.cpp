@@ -49,12 +49,12 @@
 
 #ifndef QT_NO_FSFILEENGINE
 
-#include <errno.h>
+#include <cerrno>
 #if defined(Q_OS_UNIX)
 #include "private/qcore_unix_p.h"
 #endif
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #if defined(Q_OS_MAC)
 # include <private/qcore_mac_p.h>
 #endif

@@ -67,8 +67,8 @@
 #else
 #include <Windows.h>
 #endif
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #ifdef Q_OS_WIN32
 #define QT_POPEN _popen

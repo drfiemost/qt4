@@ -39,23 +39,23 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "doc.h"
 #include "codemarker.h"
+#include "config.h"
 #include "editdistance.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "text.h"
 #include "tokenizer.h"
+#include <cctype>
+#include <climits>
 #include <qdatetime.h>
+#include <qdebug.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qhash.h>
-#include <qtextstream.h>
 #include <qregexp.h>
-#include <ctype.h>
-#include <limits.h>
-#include <qdebug.h>
+#include <qtextstream.h>
 
 QT_BEGIN_NAMESPACE
 

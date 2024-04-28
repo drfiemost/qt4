@@ -75,7 +75,7 @@
 #include <qpixmapcache.h>
 #include <private/qguiplatformplugin_p.h>
 
-#include <limits.h>
+#include <climits>
 
 #ifndef QT_NO_ITEMVIEWS
 #   include "private/qtextengine_p.h"

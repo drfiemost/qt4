@@ -41,8 +41,8 @@
 #include <QtCore/qshareddata.h>
 #include <QtCore/qmetaobject.h>
 
-#include <math.h>
 #include <algorithm>
+#include <cmath>
 
 #include "CodeBlock.h"
 #include "Error.h"

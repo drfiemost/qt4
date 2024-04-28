@@ -49,7 +49,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
 
-#include <stdio.h>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

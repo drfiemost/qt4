@@ -61,7 +61,7 @@
 #include <private/qstroker_p.h>
 #include <private/qtextengine_p.h>
 
-#include <limits.h>
+#include <climits>
 
 #if 0
 #include <performance.h>

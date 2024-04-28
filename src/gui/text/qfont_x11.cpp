@@ -62,9 +62,9 @@
 #include <private/qt_x11_p.h>
 #include "qx11info_x11.h"
 
-#include <time.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <cctype>
+#include <cstdlib>
+#include <ctime>
 
 #define QFONTLOADER_DEBUG
 #define QFONTLOADER_DEBUG_VERBOSE

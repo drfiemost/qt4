@@ -491,8 +491,8 @@ QLibraryInfo::location(LibraryLocation loc)
 QT_END_NAMESPACE
 
 #if defined(Q_CC_GNU) && defined(ELF_INTERPRETER)
-#  include <stdio.h>
-#  include <stdlib.h>
+#  include <cstdio>
+#  include <cstdlib>
 
 extern const char qt_core_interpreter[] __attribute__((section(".interp")))
     = ELF_INTERPRETER;

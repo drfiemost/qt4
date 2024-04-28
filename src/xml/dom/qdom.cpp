@@ -47,17 +47,17 @@
 
 #ifndef QT_NO_DOM
 
+#include <cstdio>
+#include <limits>
 #include <qatomic.h>
 #include <qbuffer.h>
+#include <qdebug.h>
 #include <qiodevice.h>
 #include <qregexp.h>
 #include <qtextcodec.h>
 #include <qtextstream.h>
-#include <qxml.h>
 #include <qvariant.h>
-#include <qdebug.h>
-#include <stdio.h>
-#include <limits>
+#include <qxml.h>
 
 QT_BEGIN_NAMESPACE
 

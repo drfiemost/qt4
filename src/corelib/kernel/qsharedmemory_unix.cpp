@@ -59,7 +59,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #endif // QT_NO_SHAREDMEMORY
-#include <errno.h>
+#include <cerrno>
 
 #include "private/qcore_unix_p.h"
 

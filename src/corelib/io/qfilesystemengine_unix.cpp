@@ -48,10 +48,10 @@
 
 #include <QtCore/qvarlengtharray.h>
 
-#include <stdlib.h> // for realpath()
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib> // for realpath()
 #include <unistd.h>
-#include <stdio.h>
-#include <errno.h>
 
 #if defined(Q_OS_MAC)
 # include <QtCore/private/qcore_mac_p.h>

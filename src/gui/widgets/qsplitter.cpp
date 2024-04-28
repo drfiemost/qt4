@@ -60,7 +60,7 @@
 #include "qtimer.h"
 #include "qdebug.h"
 
-#include <ctype.h>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

@@ -102,9 +102,9 @@ QT_END_NAMESPACE
 #include <qthread.h>
 #include <qelapsedtimer.h>
 
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

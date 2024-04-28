@@ -94,7 +94,7 @@
 #include <QUrl>
 #include <QWhatsThis>
 
-#include <ctype.h>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

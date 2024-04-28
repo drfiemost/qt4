@@ -48,8 +48,8 @@
 #include <qiodevice.h>
 #include <qvariant.h>
 
-#include <stdio.h>
-#include <ctype.h>
+#include <cctype>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

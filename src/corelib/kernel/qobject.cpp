@@ -62,8 +62,8 @@
 
 #include <new>
 
-#include <ctype.h>
-#include <limits.h>
+#include <cctype>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

@@ -30,7 +30,7 @@
 #include "ProfileNode.h"
 
 #include "Profiler.h"
-#include <stdio.h>
+#include <cstdio>
 #include <wtf/DateMath.h>
 
 #if OS(WINDOWS)

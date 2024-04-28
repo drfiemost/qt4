@@ -57,11 +57,11 @@
 #endif
 
 #ifdef Q_WS_X11
-#include <locale.h>
+#include <clocale>
 #endif
-#include <stdlib.h>
-#include <limits.h>
 #include <algorithm>
+#include <climits>
+#include <cstdlib>
 
 #if defined(Q_WS_QWS) && !defined(QT_NO_FREETYPE)
 #  include <ft2build.h>

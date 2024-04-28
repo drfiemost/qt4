@@ -67,7 +67,7 @@
 #include "qt_x11_p.h"
 #include "qx11info_x11.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 //#define ALIEN_DEBUG
 

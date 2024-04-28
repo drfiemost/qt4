@@ -136,22 +136,22 @@
 #include "dtoa.h"
 
 #if HAVE(ERRNO_H)
-#include <errno.h>
+#include <cerrno>
 #else
 #define NO_ERRNO
 #endif
-#include <math.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cmath>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
 #include <wtf/AlwaysInline.h>
 #include <wtf/Assertions.h>
 #include <wtf/FastMalloc.h>
 #include <wtf/MathExtras.h>
-#include <wtf/Vector.h>
 #include <wtf/Threading.h>
+#include <wtf/Vector.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 #if COMPILER(MSVC)
 #pragma warning(disable: 4244)

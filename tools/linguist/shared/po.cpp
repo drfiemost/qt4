@@ -48,7 +48,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
-#include <ctype.h>
+#include <cctype>
 
 // Uncomment if you wish to hard wrap long lines in .po files. Note that this
 // affects only msg strings, not comments.

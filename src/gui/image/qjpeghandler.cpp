@@ -47,8 +47,8 @@
 #include <qbuffer.h>
 #include <private/qsimd_p.h>
 
-#include <stdio.h>      // jpeglib needs this to be pre-included
-#include <setjmp.h>
+#include <csetjmp>
+#include <cstdio>      // jpeglib needs this to be pre-included
 
 #ifdef FAR
 #undef FAR

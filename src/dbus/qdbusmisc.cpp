@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <string.h>
+#include <cstring>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qvariant.h>

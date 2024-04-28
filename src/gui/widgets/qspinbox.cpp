@@ -49,8 +49,8 @@
 #include <qvalidator.h>
 #include <qdebug.h>
 
-#include <math.h>
-#include <float.h>
+#include <cfloat>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 

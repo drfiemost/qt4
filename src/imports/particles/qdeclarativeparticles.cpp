@@ -51,8 +51,8 @@
 #include <QtGui/qdrawutil.h>
 #include <QVarLengthArray>
 
-#include <stdlib.h>
-#include <math.h>
+#include <cmath>
+#include <cstdlib>
 
 #include  <algorithm>
 

@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qscriptstdmessagehandler_p.h"
-#include <stdio.h>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

@@ -44,8 +44,8 @@
 
 #ifndef QT_NO_FILESYSTEMITERATOR
 
-#include <stdlib.h>
-#include <errno.h>
+#include <cerrno>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

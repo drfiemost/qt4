@@ -60,7 +60,7 @@
 #include <QtGui/qformlayout.h>
 #include <QtCore/QCoreApplication>
 
-#include <math.h>
+#include <cmath>
 
 #ifndef QT_NO_PRINTPREVIEWDIALOG
 

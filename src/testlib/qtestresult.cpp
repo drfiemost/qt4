@@ -46,8 +46,8 @@
 #include "QtTest/qtestdata.h"
 #include "QtTest/qtestassert.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

@@ -67,8 +67,8 @@
 #include "qtextformat.h"
 #include "qpalette.h"
 
-#include <stdlib.h>
-#include <limits.h>
+#include <climits>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

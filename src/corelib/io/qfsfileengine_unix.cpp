@@ -53,10 +53,10 @@
 #include "qdatetime.h"
 #include "qvarlengtharray.h"
 
+#include <cerrno>
+#include <climits>
+#include <cstdlib>
 #include <sys/mman.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <errno.h>
 #if !defined(QWS) && defined(Q_OS_MAC)
 # include <private/qcore_mac_p.h>
 #endif

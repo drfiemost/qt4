@@ -48,7 +48,7 @@
 #include "private/qfunctions_p.h"
 
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

@@ -398,7 +398,7 @@
 #include <qdebug.h>
 #endif
 
-#include <time.h>
+#include <ctime>
 
 #define Q_CHECK_SOCKETENGINE(returnValue) do { \
     if (!d->socketEngine) { \

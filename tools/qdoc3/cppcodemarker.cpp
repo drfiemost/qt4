@@ -49,7 +49,7 @@
 #include "text.h"
 #include "tree.h"
 
-#include <ctype.h>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

@@ -47,9 +47,9 @@
 #include "JSFunction.h"
 #include "JSNotAnObject.h"
 #include "JSPropertyNameIterator.h"
-#include "LiteralParser.h"
 #include "JSStaticScopeObject.h"
 #include "JSString.h"
+#include "LiteralParser.h"
 #include "ObjectPrototype.h"
 #include "Operations.h"
 #include "Parser.h"
@@ -58,8 +58,8 @@
 #include "RegExpPrototype.h"
 #include "Register.h"
 #include "SamplingTool.h"
-#include <limits.h>
-#include <stdio.h>
+#include <climits>
+#include <cstdio>
 #include <wtf/Threading.h>
 
 #if ENABLE(JIT)

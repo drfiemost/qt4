@@ -56,9 +56,9 @@ static bool allowX11ColorNames = false;
 
 #endif
 
-#include <math.h>
-#include <stdio.h>
-#include <limits.h>
+#include <climits>
+#include <cmath>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

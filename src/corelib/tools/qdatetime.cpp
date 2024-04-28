@@ -52,11 +52,11 @@
 #include <qt_windows.h>
 #endif
 #ifndef Q_WS_WIN
-#include <locale.h>
+#include <clocale>
 #endif
 
 #include <cmath>
-#include <time.h>
+#include <ctime>
 
 //#define QDATETIMEPARSER_DEBUG
 #if defined (QDATETIMEPARSER_DEBUG) && !defined(QT_NO_DEBUG_STREAM)

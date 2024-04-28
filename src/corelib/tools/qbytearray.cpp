@@ -52,10 +52,10 @@
 #ifndef QT_NO_COMPRESS
 #include <zlib.h>
 #endif
-#include <ctype.h>
-#include <limits.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cctype>
+#include <climits>
+#include <cstdlib>
+#include <cstring>
 
 #include  <algorithm>
 

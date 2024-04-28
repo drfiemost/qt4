@@ -43,10 +43,10 @@
 
 #ifndef QT_NO_IMAGEFORMAT_PPM
 
+#include <cctype>
 #include <qimage.h>
 #include <qvariant.h>
 #include <qvector.h>
-#include <ctype.h>
 
 QT_BEGIN_NAMESPACE
 

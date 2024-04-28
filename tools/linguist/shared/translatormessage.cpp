@@ -48,7 +48,7 @@
 #include <QDataStream>
 #include <QDebug>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 
 QT_BEGIN_NAMESPACE

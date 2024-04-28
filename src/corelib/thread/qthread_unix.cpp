@@ -56,8 +56,8 @@
 
 #include "qdebug.h"
 
+#include <cerrno>
 #include <sched.h>
-#include <errno.h>
 
 #include <algorithm>
 

@@ -54,7 +54,7 @@
 
 #include <iostream>
 
-#include <ctype.h>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

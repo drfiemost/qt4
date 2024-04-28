@@ -54,12 +54,12 @@
 #include "qthread.h"
 #include "qthreadstorage.h"
 
-#include <private/qunicodetables_p.h>
 #include "qfont_p.h"
+#include <climits>
 #include <private/qfontengine_p.h>
 #include <private/qpainter_p.h>
 #include <private/qtextengine_p.h>
-#include <limits.h>
+#include <private/qunicodetables_p.h>
 
 #ifdef Q_WS_X11
 #include "qx11info_x11.h"
