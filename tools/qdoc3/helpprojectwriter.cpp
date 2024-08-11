@@ -151,8 +151,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
             pieces = pieces[1].split(",");
             if (typeHash.contains(lower)) {
                 QSet<Node::SubType> subTypes;
-                for (int i = 0; i < pieces.size(); ++i) {
-                    QString lower = pieces[i].toLower();
+                for (const auto & piece : pieces) {
+                    QString lower = piece.toLower();
                     if (subTypeHash.contains(lower))
                         subTypes.insert(subTypeHash[lower]);
                 }
@@ -164,14 +164,14 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
 
 void HelpProjectWriter::addExtraFile(const QString &file)
 {
-    for (int i = 0; i < projects.size(); ++i)
-        projects[i].extraFiles.insert(file);
+    for (auto & project : projects)
+        project.extraFiles.insert(file);
 }
 
 void HelpProjectWriter::addExtraFiles(const QSet<QString> &files)
 {
-    for (int i = 0; i < projects.size(); ++i)
-        projects[i].extraFiles.unite(files);
+    for (auto & project : projects)
+        project.extraFiles.unite(files);
 }
 
 /*
@@ -472,8 +472,8 @@ void HelpProjectWriter::generateSections(HelpProject &project,
 void HelpProjectWriter::generate(const Tree *tre)
 {
     this->tree = tre;
-    for (int i = 0; i < projects.size(); ++i)
-        generateProject(projects[i]);
+    for (auto & project : projects)
+        generateProject(project);
 }
 
 void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer,

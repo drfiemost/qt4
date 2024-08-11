@@ -184,9 +184,7 @@ void QPaintEngineExPrivate::replayClipOperations()
 
     QTransform transform = q->state()->matrix;
 
-    for (int i = 0; i <  clipInfo.size(); ++i) {
-        const QPainterClipInfo &info = clipInfo.at(i);
-
+    for (const auto & info : clipInfo) {
         if (info.matrix != q->state()->matrix) {
             q->state()->matrix = info.matrix;
             q->transformChanged();

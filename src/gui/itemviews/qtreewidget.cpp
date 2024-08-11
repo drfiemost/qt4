@@ -3070,8 +3070,8 @@ QList<QTreeWidgetItem*> QTreeWidget::findItems(const QString &text, Qt::MatchFla
     QModelIndexList indexes = d->model->match(model()->index(0, column, QModelIndex()),
                                                 Qt::DisplayRole, text, -1, flags);
     QList<QTreeWidgetItem*> items;
-    for (int i = 0; i < indexes.size(); ++i)
-        items.append(d->item(indexes.at(i)));
+    for (const auto & indexe : indexes)
+        items.append(d->item(indexe));
     return items;
 }
 

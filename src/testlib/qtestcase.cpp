@@ -1070,10 +1070,10 @@ static void qPrintDataTags()
                     printf("%s %s\n", currTestMetaObj->className(), slot);
                 } else {
                     // Only local tags, so print each of them:
-                    for (int k = 0; k < localTags.size(); ++k)
+                    for (const auto & localTag : localTags)
                         printf(
                             "%s %s %s\n",
-                            currTestMetaObj->className(), slot, localTags.at(k).toLatin1().data());
+                            currTestMetaObj->className(), slot, localTag.toLatin1().data());
                 }
             } else {
                 for (int j = 0; j < gTable->dataCount(); ++j) {
@@ -1085,10 +1085,10 @@ static void qPrintDataTags()
                     } else {
                         // Local and global tags, so print each of the local ones and
                         // the current global one:
-                        for (int k = 0; k < localTags.size(); ++k)
+                        for (const auto & localTag : localTags)
                             printf(
                                 "%s %s %s __global__ %s\n", currTestMetaObj->className(), slot,
-                                localTags.at(k).toLatin1().data(), gTable->testData(j)->dataTag());
+                                localTag.toLatin1().data(), gTable->testData(j)->dataTag());
                     }
                 }
             }

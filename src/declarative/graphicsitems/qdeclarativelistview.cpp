@@ -616,9 +616,9 @@ void QDeclarativeListViewPrivate::clear()
     for (int i = 0; i < visibleItems.count(); ++i)
         releaseItem(visibleItems.at(i));
     visibleItems.clear();
-    for (int i = 0; i < sectionCacheSize; ++i) {
-        delete sectionCache[i];
-        sectionCache[i] = nullptr;
+    for (auto & i : sectionCache) {
+        delete i;
+        i = nullptr;
     }
     visiblePos = header ? header->size() : 0;
     visibleIndex = 0;

@@ -285,9 +285,9 @@ QScriptBreakpointData QScriptBreakpointsModel::breakpointDataAt(int row) const
 QScriptBreakpointData QScriptBreakpointsModel::breakpointData(int id) const
 {
     Q_D(const QScriptBreakpointsModel);
-    for (int i = 0; i < d->breakpoints.size(); ++i) {
-        if (d->breakpoints.at(i).first == id)
-            return d->breakpoints.at(i).second;
+    for (const auto & breakpoint : d->breakpoints) {
+        if (breakpoint.first == id)
+            return breakpoint.second;
     }
     return QScriptBreakpointData();
 }
@@ -300,10 +300,10 @@ QScriptBreakpointData QScriptBreakpointsModel::breakpointData(int id) const
 int QScriptBreakpointsModel::resolveBreakpoint(qint64 scriptId, int lineNumber) const
 {
     Q_D(const QScriptBreakpointsModel);
-    for (int i = 0; i < d->breakpoints.size(); ++i) {
-        if ((d->breakpoints.at(i).second.scriptId() == scriptId)
-            && (d->breakpoints.at(i).second.lineNumber() == lineNumber)) {
-            return d->breakpoints.at(i).first;
+    for (const auto & breakpoint : d->breakpoints) {
+        if ((breakpoint.second.scriptId() == scriptId)
+            && (breakpoint.second.lineNumber() == lineNumber)) {
+            return breakpoint.first;
         }
     }
     return -1;
@@ -312,10 +312,10 @@ int QScriptBreakpointsModel::resolveBreakpoint(qint64 scriptId, int lineNumber) 
 int QScriptBreakpointsModel::resolveBreakpoint(const QString &fileName, int lineNumber) const
 {
     Q_D(const QScriptBreakpointsModel);
-    for (int i = 0; i < d->breakpoints.size(); ++i) {
-        if ((d->breakpoints.at(i).second.fileName() == fileName)
-            && (d->breakpoints.at(i).second.lineNumber() == lineNumber)) {
-            return d->breakpoints.at(i).first;
+    for (const auto & breakpoint : d->breakpoints) {
+        if ((breakpoint.second.fileName() == fileName)
+            && (breakpoint.second.lineNumber() == lineNumber)) {
+            return breakpoint.first;
         }
     }
     return -1;

@@ -485,8 +485,7 @@ void QLineControl::processInputMethodEvent(QInputMethodEvent *event)
 
     m_cursor = qBound(0, c, m_text.length());
 
-    for (int i = 0; i < event->attributes().size(); ++i) {
-        const QInputMethodEvent::Attribute &a = event->attributes().at(i);
+    for (const auto & a : event->attributes()) {
         if (a.type == QInputMethodEvent::Selection) {
             m_cursor = qBound(0, a.start + a.length, m_text.length());
             if (a.length) {
@@ -509,8 +508,7 @@ void QLineControl::processInputMethodEvent(QInputMethodEvent *event)
     m_preeditCursor = event->preeditString().length();
     m_hideCursor = false;
     QList<QTextLayout::FormatRange> formats;
-    for (int i = 0; i < event->attributes().size(); ++i) {
-        const QInputMethodEvent::Attribute &a = event->attributes().at(i);
+    for (const auto & a : event->attributes()) {
         if (a.type == QInputMethodEvent::Cursor) {
             m_preeditCursor = a.start;
             m_hideCursor = !a.length;
@@ -893,8 +891,8 @@ void QLineControl::parseInputMask(const QString &maskFields)
     bool s;
     bool escape = false;
     int index = 0;
-    for (int i = 0; i < m_inputMask.length(); i++) {
-        c = m_inputMask.at(i);
+    for (auto i : m_inputMask) {
+        c = i;
         if (escape) {
             s = true;
             m_maskData[index].maskChar = c;

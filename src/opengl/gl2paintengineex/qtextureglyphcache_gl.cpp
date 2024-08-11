@@ -129,13 +129,13 @@ void QGLTextureGlyphCache::createTextureData(int width, int height)
 
     if (m_type == QFontEngineGlyphCache::Raster_RGBMask) {
         QVarLengthArray<uchar> data(width * height * 4);
-        for (int i = 0; i < data.size(); ++i)
-            data[i] = 0;
+        for (unsigned char & i : data)
+            i = 0;
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
     } else {
         QVarLengthArray<uchar> data(width * height);
-        for (int i = 0; i < data.size(); ++i)
-            data[i] = 0;
+        for (unsigned char & i : data)
+            i = 0;
         glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, &data[0]);
     }
 

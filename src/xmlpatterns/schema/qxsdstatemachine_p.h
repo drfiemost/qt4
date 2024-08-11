@@ -282,8 +282,8 @@ namespace QPatternist
                     const QVector<StateId> targetStates = transitions.value(input);
 
                     // add all target states to the result
-                    for (int i = 0; i < targetStates.size(); ++i)
-                        result.insert(targetStates.at(i));
+                    for (int targetState : targetStates)
+                        result.insert(targetState);
                 }
 
                 return result;

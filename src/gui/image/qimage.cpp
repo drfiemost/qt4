@@ -1403,8 +1403,8 @@ void QImage::setColorTable(const QVector<QRgb> colors)
 
     d->colortable = colors;
     d->has_alpha_clut = false;
-    for (int i = 0; i < d->colortable.size(); ++i) {
-        if (qAlpha(d->colortable.at(i)) != 255) {
+    for (unsigned int i : d->colortable) {
+        if (qAlpha(i) != 255) {
             d->has_alpha_clut = true;
             break;
         }
@@ -1996,8 +1996,8 @@ static bool convert_indexed8_to_ARGB_PM_inplace(QImageData *data, Qt::ImageConve
         for (int i = 0; i < 256; ++i)
             data->colortable[i] = qRgb(i, i, i);
     } else {
-        for (int i = 0; i < data->colortable.size(); ++i)
-            data->colortable[i] = PREMUL(data->colortable.at(i));
+        for (unsigned int & i : data->colortable)
+            i = PREMUL(i);
 
         // Fill the rest of the table in case src_data > colortable.size()
         const int oldSize = data->colortable.size();
@@ -2253,13 +2253,13 @@ static QVector<QRgb> fix_color_table(const QVector<QRgb> &ctbl, QImage::Format f
     QVector<QRgb> colorTable = ctbl;
     if (format == QImage::Format_RGB32) {
         // check if the color table has alpha
-        for (int i = 0; i < colorTable.size(); ++i)
-            if (qAlpha(colorTable.at(i) != 0xff))
-                colorTable[i] = colorTable.at(i) | 0xff000000;
+        for (unsigned int & i : colorTable)
+            if (qAlpha(i != 0xff))
+                i = i | 0xff000000;
     } else if (format == QImage::Format_ARGB32_Premultiplied) {
         // check if the color table has alpha
-        for (int i = 0; i < colorTable.size(); ++i)
-            colorTable[i] = PREMUL(colorTable.at(i));
+        for (unsigned int & i : colorTable)
+            i = PREMUL(i);
     }
     return colorTable;
 }
@@ -3916,8 +3916,8 @@ bool QImage::allGray() const
     case Format_Mono:
     case Format_MonoLSB:
     case Format_Indexed8:
-        for (int i = 0; i < d->colortable.size(); ++i) {
-            if (!qIsGray(d->colortable.at(i)))
+        for (unsigned int i : d->colortable) {
+            if (!qIsGray(i))
                 return false;
         }
         return true;
@@ -4558,9 +4558,9 @@ QImage QImage::rgbSwapped() const
     case Format_Indexed8:
         res = copy();
         QIMAGE_SANITYCHECK_MEMORY(res);
-        for (int i = 0; i < res.d->colortable.size(); i++) {
-            QRgb c = res.d->colortable.at(i);
-            res.d->colortable[i] = QRgb(((c << 16) & 0xff0000) | ((c >> 16) & 0xff) | (c & 0xff00ff00));
+        for (unsigned int & i : res.d->colortable) {
+            QRgb c = i;
+            i = QRgb(((c << 16) & 0xff0000) | ((c >> 16) & 0xff) | (c & 0xff00ff00));
         }
         return res;
     case Format_RGB32:
@@ -5180,10 +5180,10 @@ QStringList QImage::textLanguages() const
         return QStringList();
     QStringList keys = textKeys();
     QStringList languages;
-    for (int i = 0; i < keys.size(); ++i) {
-        int index = keys.at(i).indexOf(QLatin1Char('/'));
+    for (const auto & key : keys) {
+        int index = key.indexOf(QLatin1Char('/'));
         if (index > 0)
-            languages += keys.at(i).mid(index+1);
+            languages += key.mid(index+1);
     }
 
     return languages;
@@ -5206,12 +5206,12 @@ QList<QImageTextKeyLang> QImage::textList() const
     if (!d)
         return imageTextKeys;
     QStringList keys = textKeys();
-    for (int i = 0; i < keys.size(); ++i) {
-        int index = keys.at(i).indexOf(QLatin1Char('/'));
+    for (const auto & key : keys) {
+        int index = key.indexOf(QLatin1Char('/'));
         if (index > 0) {
             QImageTextKeyLang tkl;
-            tkl.key = keys.at(i).left(index).toAscii();
-            tkl.lang = keys.at(i).mid(index+1).toAscii();
+            tkl.key = key.left(index).toAscii();
+            tkl.lang = key.mid(index+1).toAscii();
             imageTextKeys += tkl;
         }
     }

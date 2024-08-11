@@ -425,8 +425,8 @@ void QPMCache::clear()
     keyArraySize = 0;
     //Mark all keys as invalid
     QList<QPixmapCache::Key> keys = QCache<QPixmapCache::Key, QPixmapCacheEntry>::keys();
-    for (int i = 0; i < keys.size(); ++i)
-        keys.at(i).d->isValid = false;
+    for (const auto & key : keys)
+        key.d->isValid = false;
     QCache<QPixmapCache::Key, QPixmapCacheEntry>::clear();
 }
 

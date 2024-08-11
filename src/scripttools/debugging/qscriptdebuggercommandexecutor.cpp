@@ -295,8 +295,8 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
         if (ctx) {
             QScriptDebuggerValueList dest;
             QScriptValueList src = ctx->scopeChain();
-            for (int i = 0; i < src.size(); ++i)
-                dest.append(src.at(i));
+            for (const auto & i : src)
+                dest.append(i);
             response.setResult(dest);
         } else {
             response.setError(QScriptDebuggerResponse::InvalidContextIndex);
@@ -328,8 +328,7 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
         } else {
             objects << ctx->scopeChain();
         }
-        for (int i = 0; i < objects.size(); ++i) {
-            QScriptValue val = objects.at(i);
+        for (auto val : objects) {
             for (int j = pathIndex; val.isValid() && (j < path.size()); ++j) {
                 val = val.property(path.at(j));
             }
@@ -361,8 +360,8 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
             } else {
                 QScriptValueList scopeChain;
                 scopeChain = ctx->scopeChain();
-                for (int i = 0; i < scopeChain.size(); ++i) {
-                    QScriptValue oo = scopeChain.at(i).property(topLevelIdent);
+                for (const auto & i : scopeChain) {
+                    QScriptValue oo = i.property(topLevelIdent);
                     if (oo.isObject()) {
                         obj = oo;
                         break;
@@ -380,15 +379,13 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
             keywords.append(QString::fromLatin1("true"));
             keywords.append(QString::fromLatin1("false"));
             keywords.append(QString::fromLatin1("null"));
-            for (int i = 0; i < keywords.size(); ++i) {
-                const QString &kwd = keywords.at(i);
+            for (const auto & kwd : keywords) {
                 if (isPrefixOf(prefix, kwd))
                     matches.insert(kwd);
             }
         }
 
-        for (int i = 0; i < objects.size(); ++i) {
-            QScriptValue obj = objects.at(i);
+        for (auto obj : objects) {
             while (obj.isObject()) {
                 QScriptValueIterator it(obj);
                 while (it.hasNext()) {
@@ -424,8 +421,7 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
         result.removedProperties = delta.removedProperties;
         bool didIgnoreExceptions = backend->ignoreExceptions();
         backend->setIgnoreExceptions(true);
-        for (int i = 0; i < delta.changedProperties.size(); ++i) {
-            const QScriptValueProperty &src = delta.changedProperties.at(i);
+        for (const auto & src : delta.changedProperties) {
             bool hadException = engine->hasUncaughtException();
             QString str = src.value().toString();
             if (!hadException && engine->hasUncaughtException())
@@ -433,8 +429,7 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
             QScriptDebuggerValueProperty dest(src.name(), src.value(), str, src.flags());
             result.changedProperties.append(dest);
         }
-        for (int j = 0; j < delta.addedProperties.size(); ++j) {
-            const QScriptValueProperty &src = delta.addedProperties.at(j);
+        for (const auto & src : delta.addedProperties) {
             bool hadException = engine->hasUncaughtException();
             QString str = src.value().toString();
             if (!hadException && engine->hasUncaughtException())

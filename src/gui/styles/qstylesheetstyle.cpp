@@ -306,8 +306,8 @@ struct QStyleSheetBorderImageData : public QSharedData
     QStyleSheetBorderImageData()
         : horizStretch(QCss::TileMode_Unknown), vertStretch(QCss::TileMode_Unknown)
     {
-        for (int i = 0; i < 4; i++)
-            cuts[i] = -1;
+        for (int & cut : cuts)
+            cut = -1;
     }
     int cuts[4];
     QPixmap pixmap;
@@ -390,8 +390,8 @@ struct QStyleSheetOutlineData : public QStyleSheetBorderData
 {
     QStyleSheetOutlineData()
     {
-        for (int i = 0; i < 4; i++) {
-            offsets[i] = 0;
+        for (int & offset : offsets) {
+            offset = 0;
         }
     }
 
@@ -967,8 +967,8 @@ QRenderRule::QRenderRule(const QVector<Declaration> &declarations, const QWidget
             // intentionally left blank...
         } else if (decl.d->propertyId == UnknownProperty) {
             bool knownStyleHint = false;
-            for (int i = 0; i < numKnownStyleHints; i++) {
-                QLatin1String styleHint(knownStyleHints[i]);
+            for (auto & i : knownStyleHints) {
+                QLatin1String styleHint(i);
                 if (decl.d->property.compare(styleHint) == 0) {
                    QString hintName = QString(styleHint);
                    QVariant hintValue;
@@ -2586,15 +2586,14 @@ void QStyleSheetStyle::unsetPalette(QWidget *w)
 static void updateWidgets(const QList<const QWidget *>& widgets)
 {
     if (!styleSheetCaches->styleRulesCache.isEmpty() || !styleSheetCaches->hasStyleRuleCache.isEmpty() || !styleSheetCaches->renderRulesCache.isEmpty()) {
-        for (int i = 0; i < widgets.size(); ++i) {
-            const QWidget *widget = widgets.at(i);
+        for (auto widget : widgets) {
             styleSheetCaches->styleRulesCache.remove(widget);
             styleSheetCaches->hasStyleRuleCache.remove(widget);
             styleSheetCaches->renderRulesCache.remove(widget);
         }
     }
-    for (int i = 0; i < widgets.size(); ++i) {
-        QWidget *widget = const_cast<QWidget *>(widgets.at(i));
+    for (auto i : widgets) {
+        QWidget *widget = const_cast<QWidget *>(i);
         if (widget == nullptr)
             continue;
         widget->style()->polish(widget);
@@ -3276,8 +3275,7 @@ void QStyleSheetStyle::drawComplexControl(ComplexControl cc, const QStyleOptionC
                 PseudoElement_TitleBarContextHelpButton
             };
 
-            for (unsigned int i = 0; i < sizeof(pes)/sizeof(int); i++) {
-                int pe = pes[i];
+            for (int pe : pes) {
                 QStyle::SubControl sc = knownPseudoElements[pe].subControl;
                 ir = layout[sc];
                 if (!ir.isValid())

@@ -295,8 +295,8 @@ int QPrintPreviewWidgetPrivate::calcCurrentPage()
     int newPage = curPage;
     QRect viewRect = graphicsView->viewport()->rect();
     QList<QGraphicsItem*> items = graphicsView->items(viewRect);
-    for (int i=0; i<items.size(); ++i) {
-        PageItem* pg = static_cast<PageItem*>(items.at(i));
+    for (auto item : items) {
+        PageItem* pg = static_cast<PageItem*>(item);
         QRect overlap = graphicsView->mapFromScene(pg->sceneBoundingRect()).boundingRect() & viewRect;
         int area = overlap.width() * overlap.height();
         if (area > maxArea) {
@@ -334,8 +334,8 @@ void QPrintPreviewWidgetPrivate::init()
 void QPrintPreviewWidgetPrivate::populateScene()
 {
     // remove old pages
-    for (int i = 0; i < pages.size(); i++)
-        scene->removeItem(pages.at(i));
+    for (auto page : pages)
+        scene->removeItem(page);
     qDeleteAll(pages);
     pages.clear();
 

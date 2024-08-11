@@ -2660,8 +2660,8 @@ void qt_cleanup()
 #if !defined (QT_NO_TABLET)
         QTabletDeviceDataList *devices = qt_tablet_devices();
         if (X11->ptrXCloseDevice)
-            for (int i = 0; i < devices->size(); ++i)
-                X11->ptrXCloseDevice(X11->display, (XDevice*)devices->at(i).device);
+            for (const auto & device : *devices)
+                X11->ptrXCloseDevice(X11->display, (XDevice*)device.device);
         devices->clear();
 #endif
     }
@@ -3005,8 +3005,7 @@ void QApplication::alert(QWidget *widget, int msec)
         windowsToMark.append(widget->window());
     }
 
-    for (int i = 0; i < windowsToMark.size(); ++i) {
-        QWidget *window = windowsToMark.at(i);
+    for (auto window : windowsToMark) {
         if (!window->isActiveWindow()) {
             qt_change_net_wm_state(window, true, ATOM(_NET_WM_STATE_DEMANDS_ATTENTION));
             if (msec != 0) {
@@ -5511,9 +5510,9 @@ static void sm_setProperty(const QString& name, const QStringList& value)
     SmPropValue *prop = new SmPropValue[value.count()];
     int count = 0;
     QList<QByteArray> vl;
-    for (QStringList::ConstIterator it = value.begin(); it != value.end(); ++it) {
-      prop[count].length = (*it).length();
-      vl.append((*it).toUtf8());
+    for (const auto & it : value) {
+      prop[count].length = it.length();
+      vl.append(it.toUtf8());
       prop[count].value = (char*)vl.last().data();
       ++count;
     }

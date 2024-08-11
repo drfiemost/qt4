@@ -86,8 +86,8 @@ struct Q_CORE_EXPORT QUuid
         data1 = 0;
         data2 = 0;
         data3 = 0;
-        for(int i = 0; i < 8; i++)
-            data4[i] = 0;
+        for(unsigned char & i : data4)
+            i = 0;
     }
     QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8)
     {

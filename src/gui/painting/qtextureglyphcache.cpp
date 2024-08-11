@@ -86,8 +86,8 @@ int QTextureGlyphCache::calculateSubPixelPositionCount(glyph_t glyph) const
             images.append(img);
         } else {
             bool found = false;
-            for (int j=0; j<images.size(); ++j) {
-                if (images.at(j) == img) {
+            for (const auto & image : images) {
+                if (image == img) {
                     found = true;
                     break;
                 }

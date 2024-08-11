@@ -581,8 +581,8 @@ QPolygonF::QPolygonF(const QRectF &r)
 QPolygonF::QPolygonF(const QPolygon &a)
 {
     reserve(a.size());
-    for (int i=0; i<a.size(); ++i)
-        append(a.at(i));
+    for (auto i : a)
+        append(i);
 }
 
 /*!
@@ -694,8 +694,8 @@ QPolygon QPolygonF::toPolygon() const
 {
     QPolygon a;
     a.reserve(size());
-    for (int i=0; i<size(); ++i)
-        a.append(at(i).toPoint());
+    for (auto i : *this)
+        a.append(i.toPoint());
     return a;
 }
 

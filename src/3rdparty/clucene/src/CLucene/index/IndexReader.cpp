@@ -628,8 +628,8 @@ bool IndexReader::isLuceneFile(const QString& filename)
     if (suffix.leftRef(2) == QLatin1String(".f")) {
         suffix = suffix.remove(0, 2);
         if (suffix.length() > 0) {
-            for (int i = 0; i < suffix.length(); ++i) {
-                if (!suffix.at(i).isDigit())
+            for (auto i : suffix) {
+                if (!i.isDigit())
                     return false;
             }
             return true;

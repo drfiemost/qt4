@@ -1432,12 +1432,12 @@ void CodeBlock::refStructures(Instruction* vPC) const
 
 void CodeBlock::markAggregate(MarkStack& markStack)
 {
-    for (size_t i = 0; i < m_constantRegisters.size(); ++i)
-        markStack.append(m_constantRegisters[i].jsValue());
-    for (size_t i = 0; i < m_functionExprs.size(); ++i)
-        m_functionExprs[i]->markAggregate(markStack);
-    for (size_t i = 0; i < m_functionDecls.size(); ++i)
-        m_functionDecls[i]->markAggregate(markStack);
+    for (auto m_constantRegister : m_constantRegisters)
+        markStack.append(m_constantRegister.jsValue());
+    for (const auto & m_functionExpr : m_functionExprs)
+        m_functionExpr->markAggregate(markStack);
+    for (const auto & m_functionDecl : m_functionDecls)
+        m_functionDecl->markAggregate(markStack);
 }
 
 void CodeBlock::reparseForExceptionInfoIfNecessary(CallFrame* callFrame)
@@ -1469,11 +1469,11 @@ HandlerInfo* CodeBlock::handlerForBytecodeOffset(unsigned bytecodeOffset)
         return nullptr;
     
     Vector<HandlerInfo>& exceptionHandlers = m_rareData->m_exceptionHandlers;
-    for (size_t i = 0; i < exceptionHandlers.size(); ++i) {
+    for (auto & exceptionHandler : exceptionHandlers) {
         // Handlers are ordered innermost first, so the first handler we encounter
         // that contains the source address is the correct handler to use.
-        if (exceptionHandlers[i].start <= bytecodeOffset && exceptionHandlers[i].end >= bytecodeOffset)
-            return &exceptionHandlers[i];
+        if (exceptionHandler.start <= bytecodeOffset && exceptionHandler.end >= bytecodeOffset)
+            return &exceptionHandler;
     }
 
     return nullptr;

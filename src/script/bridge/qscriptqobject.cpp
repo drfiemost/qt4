@@ -793,8 +793,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                     && (index < meta->methodOffset())) {
                     // it is possible that a virtual method is redeclared in a subclass,
                     // in which case we want to ignore the superclass declaration
-                    for (int i = 0; i < candidates.size(); ++i) {
-                        const QScriptMetaArguments &other = candidates.at(i);
+                    for (const auto & other : candidates) {
                         if (mtd.types() == other.method.types()) {
                             redundant = true;
                             break;
@@ -1584,8 +1583,8 @@ void QObjectDelegate::getOwnPropertyNames(QScriptObject *object, JSC::ExecState 
 
     {
         QList<QByteArray> dpNames = qobject->dynamicPropertyNames();
-        for (int i = 0; i < dpNames.size(); ++i) {
-            QString name = QString::fromLatin1(dpNames.at(i));
+        for (const auto & dpName : dpNames) {
+            QString name = QString::fromLatin1(dpName);
             propertyNames.add(JSC::Identifier(exec, name));
         }
     }
@@ -2055,8 +2054,7 @@ void QObjectConnectionManager::execute(int slotIndex, void **argv)
     QScript::APIShim shim(engine);
     for (int i = 0; i < connections.size(); ++i) {
         const QVector<QObjectConnection> &cs = connections.at(i);
-        for (int j = 0; j < cs.size(); ++j) {
-            const QObjectConnection &c = cs.at(j);
+        for (const auto & c : cs) {
             if (c.slotIndex == slotIndex) {
                 receiver = c.receiver;
                 slot = c.slot;
@@ -2162,10 +2160,9 @@ QObjectConnectionManager::~QObjectConnectionManager()
 
 void QObjectConnectionManager::mark(JSC::MarkStack& markStack)
 {
-    for (int i = 0; i < connections.size(); ++i) {
-        QVector<QObjectConnection> &cs = connections[i];
-        for (int j = 0; j < cs.size(); ++j)
-            cs[j].mark(markStack);
+    for (auto & cs : connections) {
+        for (auto & c : cs)
+            c.mark(markStack);
     }
 }
 
@@ -2272,8 +2269,7 @@ bool QObjectData::removeSignalHandler(QObject *sender,
 QScriptObject *QObjectData::findWrapper(QScriptEngine::ValueOwnership ownership,
                                         const QScriptEngine::QObjectWrapOptions &options) const
 {
-    for (int i = 0; i < wrappers.size(); ++i) {
-        const QObjectWrapperInfo &info = wrappers.at(i);
+    for (const auto & info : wrappers) {
         if ((info.ownership == ownership) && (info.options == options))
             return info.object;
     }

@@ -450,10 +450,10 @@ void Translator::stripIdenticalSourceTranslations()
 
 void Translator::dropTranslations()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
-        if (it->type() == TranslatorMessage::Finished)
-            it->setType(TranslatorMessage::Unfinished);
-        it->setTranslation(QString());
+    for (auto & m_message : m_messages) {
+        if (m_message.type() == TranslatorMessage::Finished)
+            m_message.setType(TranslatorMessage::Unfinished);
+        m_message.setTranslation(QString());
     }
 }
 
@@ -623,8 +623,7 @@ void Translator::reportDuplicates(const Duplicates &dupes,
 // Used by lupdate to be able to search using absolute paths during merging
 void Translator::makeFileNamesAbsolute(const QDir &originalPath)
 {
-    for (TMM::iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
-        TranslatorMessage &msg = *it;
+    for (auto & msg : m_messages) {
         TranslatorMessage::References refs = msg.allReferences();
         msg.setReferences(TranslatorMessage::References());
         foreach (const TranslatorMessage::Reference &ref, refs) {

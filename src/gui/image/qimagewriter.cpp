@@ -224,8 +224,8 @@ static QImageIOHandler *createWriteHandlerHelper(QIODevice *device,
 
 #ifndef QT_NO_LIBRARY
     if (!testFormat.isEmpty()) {
-        for (int i = 0; i < keys.size(); ++i) {
-            QImageIOPlugin *plugin = qobject_cast<QImageIOPlugin *>(l->instance(keys.at(i)));
+        for (const auto & key : keys) {
+            QImageIOPlugin *plugin = qobject_cast<QImageIOPlugin *>(l->instance(key));
             if (plugin && (plugin->capabilities(device, testFormat) & QImageIOPlugin::CanWrite)) {
                 delete handler;
                 handler = plugin->create(device, testFormat);

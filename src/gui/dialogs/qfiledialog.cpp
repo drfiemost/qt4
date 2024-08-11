@@ -953,8 +953,8 @@ QStringList QFileDialogPrivate::typedFiles() const
 QStringList QFileDialogPrivate::addDefaultSuffixToFiles(const QStringList filesToFix) const
 {
     QStringList files;
-    for (int i=0; i<filesToFix.size(); ++i) {
-        QString name = toInternal(filesToFix.at(i));
+    for (const auto & i : filesToFix) {
+        QString name = toInternal(i);
         QFileInfo info(name);
         // if the filename has no suffix, add the default suffix
         if (!defaultSuffix.isEmpty() && !info.isDir() && name.lastIndexOf(QLatin1Char('.')) == -1)

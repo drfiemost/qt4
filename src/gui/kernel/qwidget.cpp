@@ -382,8 +382,8 @@ void QWidgetPrivate::scrollChildren(int dx, int dy)
     if (q->children().size() > 0) {        // scroll children
         QPoint pd(dx, dy);
         QObjectList childObjects = q->children();
-        for (int i = 0; i < childObjects.size(); ++i) { // move all children
-            QWidget *w = qobject_cast<QWidget*>(childObjects.at(i));
+        for (auto childObject : childObjects) { // move all children
+            QWidget *w = qobject_cast<QWidget*>(childObject);
             if (w && !w->isWindow()) {
                 QPoint oldp = w->pos();
                 QRect  r(w->pos() + pd, w->size());
@@ -1347,8 +1347,8 @@ void QWidgetPrivate::createRecursively()
 {
     Q_Q(QWidget);
     q->create(0, true, true);
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *child = qobject_cast<QWidget *>(children.at(i));
+    for (auto i : children) {
+        QWidget *child = qobject_cast<QWidget *>(i);
         if (child && !child->isHidden() && !child->isWindow() && !child->testAttribute(Qt::WA_WState_Created))
             child->d_func()->createRecursively();
     }
@@ -1497,8 +1497,8 @@ QWidget::~QWidget()
 
 #ifndef QT_NO_ACTION
     // remove all actions from this widget
-    for (int i = 0; i < d->actions.size(); ++i) {
-        QActionPrivate *apriv = d->actions.at(i)->d_func();
+    for (auto action : d->actions) {
+        QActionPrivate *apriv = action->d_func();
         apriv->widgets.removeAll(this);
     }
     d->actions.clear();
@@ -1764,8 +1764,8 @@ bool QWidgetPrivate::isOverlapped(const QRect &rect) const
             return false;
         QWidgetPrivate *pd = w->parentWidget()->d_func();
         bool above = false;
-        for (int i = 0; i < pd->children.size(); ++i) {
-            QWidget *sibling = qobject_cast<QWidget *>(pd->children.at(i));
+        for (auto i : pd->children) {
+            QWidget *sibling = qobject_cast<QWidget *>(i);
             if (!sibling || !sibling->isVisible() || sibling->isWindow())
                 continue;
             if (!above) {
@@ -1822,8 +1822,8 @@ void QWidgetPrivate::setUpdatesEnabled_helper(bool enable)
         q->update();
 
     Qt::WidgetAttribute attribute = enable ? Qt::WA_ForceUpdatesDisabled : Qt::WA_UpdatesDisabled;
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget *>(children.at(i));
+    for (auto i : children) {
+        QWidget *w = qobject_cast<QWidget *>(i);
         if (w && !w->isWindow() && !w->testAttribute(attribute))
             w->d_func()->setUpdatesEnabled_helper(enable);
     }
@@ -1853,8 +1853,8 @@ void QWidgetPrivate::propagatePaletteChange()
 
     QEvent pc(QEvent::PaletteChange);
     QApplication::sendEvent(q, &pc);
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget*>(children.at(i));
+    for (auto i : children) {
+        QWidget *w = qobject_cast<QWidget*>(i);
         if (w && !w->testAttribute(Qt::WA_StyleSheet)
             && (!w->isWindow() || w->testAttribute(Qt::WA_WindowPropagation))) {
             QWidgetPrivate *wd = w->d_func();
@@ -1976,8 +1976,8 @@ const QRegion &QWidgetPrivate::getOpaqueChildren() const
     QWidgetPrivate *that = const_cast<QWidgetPrivate*>(this);
     that->opaqueChildren = QRegion();
 
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *child = qobject_cast<QWidget *>(children.at(i));
+    for (auto i : children) {
+        QWidget *child = qobject_cast<QWidget *>(i);
         if (!child || !child->isVisible() || child->isWindow())
             continue;
 
@@ -2269,8 +2269,8 @@ static inline void fillRegion(QPainter *painter, const QRegion &rgn, const QBrus
         painter->restore();
     } else {
         const QVector<QRect> &rects = rgn.rects();
-        for (int i = 0; i < rects.size(); ++i)
-            painter->fillRect(rects.at(i), brush);
+        for (auto rect : rects)
+            painter->fillRect(rect, brush);
     }
 }
 
@@ -2432,8 +2432,8 @@ void QWidgetPrivate::createWinId(WId winid)
                 pd->createWinId();
             }
 
-            for (int i = 0; i < pd->children.size(); ++i) {
-                QWidget *w = qobject_cast<QWidget *>(pd->children.at(i));
+            for (auto i : pd->children) {
+                QWidget *w = qobject_cast<QWidget *>(i);
                 if (w && !w->isWindow() && (!w->testAttribute(Qt::WA_WState_Created)
                                             || (!w->internalWinId() && w->testAttribute(Qt::WA_NativeWindow)))) {
                     if (w!=q) {
@@ -2669,8 +2669,8 @@ void QWidgetPrivate::setStyle_helper(QStyle *newStyle, bool propagate, bool
     }
 
     if (propagate) {
-        for (int i = 0; i < children.size(); ++i) {
-            QWidget *c = qobject_cast<QWidget*>(children.at(i));
+        for (auto i : children) {
+            QWidget *c = qobject_cast<QWidget*>(i);
             if (c)
                 c->d_func()->inheritStyle();
         }
@@ -3241,8 +3241,8 @@ void QWidgetPrivate::setEnabled_helper(bool enable)
     }
 
     Qt::WidgetAttribute attribute = enable ? Qt::WA_ForceDisabled : Qt::WA_Disabled;
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget *>(children.at(i));
+    for (auto i : children) {
+        QWidget *w = qobject_cast<QWidget *>(i);
         if (w && !w->testAttribute(attribute))
             w->d_func()->setEnabled_helper(enable);
     }
@@ -3597,8 +3597,8 @@ QRect QWidget::childrenRect() const
 {
     Q_D(const QWidget);
     QRect r(0, 0, 0, 0);
-    for (int i = 0; i < d->children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget *>(d->children.at(i));
+    for (auto i : d->children) {
+        QWidget *w = qobject_cast<QWidget *>(i);
         if (w && !w->isWindow() && !w->isHidden())
             r |= w->geometry();
     }
@@ -3621,8 +3621,8 @@ QRegion QWidget::childrenRegion() const
 {
     Q_D(const QWidget);
     QRegion r;
-    for (int i = 0; i < d->children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget *>(d->children.at(i));
+    for (auto i : d->children) {
+        QWidget *w = qobject_cast<QWidget *>(i);
         if (w && !w->isWindow() && !w->isHidden()) {
             QRegion mask = w->mask();
             if (mask.isEmpty())
@@ -4646,8 +4646,8 @@ void QWidgetPrivate::updateFont(const QFont &font)
     }
     uint newMask = data.fnt.resolve() | inheritedFontResolveMask;
 
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget*>(children.at(i));
+    for (auto i : children) {
+        QWidget *w = qobject_cast<QWidget*>(i);
         if (w) {
             if (false) {
 #ifndef QT_NO_STYLE_STYLESHEET
@@ -4683,8 +4683,8 @@ void QWidgetPrivate::setLayoutDirection_helper(Qt::LayoutDirection direction)
         return;
     q->setAttribute(Qt::WA_RightToLeft, (direction == Qt::RightToLeft));
     if (!children.isEmpty()) {
-        for (int i = 0; i < children.size(); ++i) {
-            QWidget *w = qobject_cast<QWidget*>(children.at(i));
+        for (auto i : children) {
+            QWidget *w = qobject_cast<QWidget*>(i);
             if (w && !w->isWindow() && !w->testAttribute(Qt::WA_SetLayoutDirection))
                 w->d_func()->setLayoutDirection_helper(direction);
         }
@@ -5092,8 +5092,7 @@ QRegion QWidgetPrivate::prepareToRender(const QRegion &region, QWidget::RenderFl
         topLevel->d_func()->activateChildLayoutsRecursively();
 
         // We're not cheating with WA_WState_Hidden anymore.
-        for (int i = 0; i < hiddenWidgets.size(); ++i) {
-            QWidget *widget = hiddenWidgets.at(i);
+        for (auto widget : hiddenWidgets) {
             widget->setAttribute(Qt::WA_WState_Hidden);
             if (!widget->isWindow() && widget->parentWidget()->d_func()->layout)
                 widget->parentWidget()->d_func()->layout->invalidate();
@@ -5626,8 +5625,8 @@ void QWidgetPrivate::setLocale_helper(const QLocale &loc, bool forceUpdate)
     locale = loc;
 
     if (!children.isEmpty()) {
-        for (int i = 0; i < children.size(); ++i) {
-            QWidget *w = qobject_cast<QWidget*>(children.at(i));
+        for (auto i : children) {
+            QWidget *w = qobject_cast<QWidget*>(i);
             if (!w)
                 continue;
             if (w->testAttribute(Qt::WA_SetLocale))
@@ -5838,8 +5837,8 @@ void QWidgetPrivate::setWindowIcon_helper()
 {
     QEvent e(QEvent::WindowIconChange);
     QApplication::sendEvent(q_func(), &e);
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget *>(children.at(i));
+    for (auto i : children) {
+        QWidget *w = qobject_cast<QWidget *>(i);
         if (w && !w->isWindow())
             QApplication::sendEvent(w, &e);
     }
@@ -7159,8 +7158,8 @@ void QWidgetPrivate::sendPendingMoveAndResizeEvents(bool recursive, bool disable
     if (!recursive)
         return;
 
-    for (int i = 0; i < children.size(); ++i) {
-        if (QWidget *child = qobject_cast<QWidget *>(children.at(i)))
+    for (auto i : children) {
+        if (QWidget *child = qobject_cast<QWidget *>(i))
             child->d_func()->sendPendingMoveAndResizeEvents(recursive, disableUpdates);
     }
 }
@@ -7169,8 +7168,8 @@ void QWidgetPrivate::activateChildLayoutsRecursively()
 {
     sendPendingMoveAndResizeEvents(false, true);
 
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *child = qobject_cast<QWidget *>(children.at(i));
+    for (auto i : children) {
+        QWidget *child = qobject_cast<QWidget *>(i);
         if (!child || child->isHidden() || child->isWindow())
             continue;
 
@@ -7544,8 +7543,8 @@ void QWidgetPrivate::_q_showIfNotHidden()
 void QWidgetPrivate::showChildren(bool spontaneous)
 {
     QList<QObject*> childList = children;
-    for (int i = 0; i < childList.size(); ++i) {
-        QWidget *widget = qobject_cast<QWidget*>(childList.at(i));
+    for (auto i : childList) {
+        QWidget *widget = qobject_cast<QWidget*>(i);
         if (!widget
             || widget->isWindow()
             || widget->testAttribute(Qt::WA_WState_Hidden))
@@ -7567,8 +7566,8 @@ void QWidgetPrivate::showChildren(bool spontaneous)
 void QWidgetPrivate::hideChildren(bool spontaneous)
 {
     QList<QObject*> childList = children;
-    for (int i = 0; i < childList.size(); ++i) {
-        QWidget *widget = qobject_cast<QWidget*>(childList.at(i));
+    for (auto i : childList) {
+        QWidget *widget = qobject_cast<QWidget*>(i);
         if (!widget || widget->isWindow() || widget->testAttribute(Qt::WA_WState_Hidden))
             continue;
 #ifdef QT_MAC_USE_COCOA
@@ -7651,8 +7650,7 @@ bool QWidgetPrivate::close_helper(CloseMode mode)
            signal */
         QWidgetList list = QApplication::topLevelWidgets();
         bool lastWindowClosed = true;
-        for (int i = 0; i < list.size(); ++i) {
-            QWidget *w = list.at(i);
+        for (auto w : list) {
             if (!w->isVisible() || w->parentWidget() || !w->testAttribute(Qt::WA_QuitOnClose))
                 continue;
             lastWindowClosed = false;
@@ -8301,8 +8299,8 @@ bool QWidget::event(QEvent *event)
         if (isVisible() && !palette().isEqual(QPalette::Active, QPalette::Inactive))
             update();
         QList<QObject*> childList = d->children;
-        for (int i = 0; i < childList.size(); ++i) {
-            QWidget *w = qobject_cast<QWidget *>(childList.at(i));
+        for (auto i : childList) {
+            QWidget *w = qobject_cast<QWidget *>(i);
             if (w && w->isVisible() && !w->isWindow())
                 QApplication::sendEvent(w, event);
         }
@@ -8318,8 +8316,7 @@ bool QWidget::event(QEvent *event)
         changeEvent(event);
         {
             QList<QObject*> childList = d->children;
-            for (int i = 0; i < childList.size(); ++i) {
-                QObject *o = childList.at(i);
+            for (auto o : childList) {
                 if (o)
                     QApplication::sendEvent(o, event);
             }
@@ -8348,8 +8345,7 @@ bool QWidget::event(QEvent *event)
     case QEvent::WindowUnblocked:
         {
             QList<QObject*> childList = d->children;
-            for (int i = 0; i < childList.size(); ++i) {
-                QObject *o = childList.at(i);
+            for (auto o : childList) {
                 if (o && o != QApplication::activeModalWidget()) {
                     if (qobject_cast<QWidget *>(o) && static_cast<QWidget *>(o)->isWindow()) {
                         // do not forward the event to child windows,
@@ -8408,8 +8404,8 @@ bool QWidget::event(QEvent *event)
 
             // inform children of the change
             QList<QObject*> childList = d->children;
-            for (int i = 0; i < childList.size(); ++i) {
-                QWidget *w = qobject_cast<QWidget *>(childList.at(i));
+            for (auto i : childList) {
+                QWidget *w = qobject_cast<QWidget *>(i);
                 if (w && w->isVisible() && !w->isWindow())
                     QApplication::sendEvent(w, event);
             }
@@ -9366,8 +9362,7 @@ void QWidget::ensurePolished() const
 
     // polish children after 'this'
     QList<QObject*> children = d->children;
-    for (int i = 0; i < children.size(); ++i) {
-        QObject *o = children.at(i);
+    for (auto o : children) {
         if(!o->isWidgetType())
             continue;
         if (QWidget *w = qobject_cast<QWidget *>(o))
@@ -10319,8 +10314,8 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
     }
     case Qt::WA_DropSiteRegistered:  {
         d->registerDropSite(on);
-        for (int i = 0; i < d->children.size(); ++i) {
-            QWidget *w = qobject_cast<QWidget *>(d->children.at(i));
+        for (auto i : d->children) {
+            QWidget *w = qobject_cast<QWidget *>(i);
             if (w && !w->isWindow() && !w->testAttribute(Qt::WA_AcceptDrops) && w->testAttribute(Qt::WA_DropSiteRegistered) != on)
                 w->setAttribute(Qt::WA_DropSiteRegistered, on);
         }
@@ -10569,9 +10564,9 @@ void QWidget::setAttribute(Qt::WidgetAttribute attribute, bool on)
 
         if (on) {
             // We can only have one of these set at a time
-            for (int i = 0; i < 3; ++i) {
-                if (orientations[i] != attribute)
-                    setAttribute_internal(orientations[i], false, data, d);
+            for (auto orientation : orientations) {
+                if (orientation != attribute)
+                    setAttribute_internal(orientation, false, data, d);
             }
         }
 

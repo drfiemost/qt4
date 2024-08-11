@@ -165,11 +165,11 @@ class TCMalloc_PageMap2 {
   template<class Visitor, class MemoryReader>
   void visitValues(Visitor& visitor, const MemoryReader& reader)
   {
-    for (int i = 0; i < ROOT_LENGTH; i++) {
-      if (!root_[i])
+    for (auto & i : root_) {
+      if (!i)
         continue;
 
-      Leaf* l = reader(reinterpret_cast<Leaf*>(root_[i]));
+      Leaf* l = reader(reinterpret_cast<Leaf*>(i));
       for (int j = 0; j < LEAF_LENGTH; j += visitor.visit(l->values[j]))
         ;
     }
@@ -177,9 +177,9 @@ class TCMalloc_PageMap2 {
 
   template<class Visitor, class MemoryReader>
   void visitAllocations(Visitor& visitor, const MemoryReader&) {
-    for (int i = 0; i < ROOT_LENGTH; i++) {
-      if (root_[i])
-        visitor.visit(root_[i], sizeof(Leaf));
+    for (auto & i : root_) {
+      if (i)
+        visitor.visit(i, sizeof(Leaf));
     }
   }
 #endif

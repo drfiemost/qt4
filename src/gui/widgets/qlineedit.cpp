@@ -2025,8 +2025,8 @@ QMenu *QLineEdit::createStandardContextMenu()
     QInputContext *qic = inputContext();
     if (qic) {
         QList<QAction *> imActions = qic->actions();
-        for (int i = 0; i < imActions.size(); ++i)
-            popup->addAction(imActions.at(i));
+        for (auto imAction : imActions)
+            popup->addAction(imAction);
     }
 #endif
 

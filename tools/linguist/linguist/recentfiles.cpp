@@ -98,8 +98,8 @@ void RecentFiles::addFiles(const QStringList &names)
         // chosen arrangement. However, we do the searching on sorted lists, so
         // we throw out (probably) obsolete arrangements.
         QList<QStringList> sortedLists = m_strLists;
-        for (int i = 0; i < sortedLists.size(); ++i)
-            sortedLists[i].sort();
+        for (auto & sortedList : sortedLists)
+            sortedList.sort();
         QStringList sortedNames = names;
         sortedNames.sort();
 

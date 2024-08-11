@@ -1108,8 +1108,7 @@ void FlatListModel::moveNodes(int from, int to, int n)
 
 FlatNodeData::~FlatNodeData()
 {
-    for (QSet<FlatNodeObjectData *>::Iterator iter = objects.begin(); iter != objects.end(); ++iter) {
-        FlatNodeObjectData *data = *iter;
+    for (auto data : objects) {
         data->nodeData = nullptr;
     }
 }

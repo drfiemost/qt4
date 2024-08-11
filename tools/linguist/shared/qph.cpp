@@ -131,8 +131,8 @@ static QString protect(const QString &str)
 {
     QString result;
     result.reserve(str.length() * 12 / 10);
-    for (int i = 0; i != str.size(); ++i) {
-        uint c = str.at(i).unicode();
+    for (auto i : str) {
+        uint c = i.unicode();
         switch (c) {
         case '\"':
             result += QLatin1String("&quot;");

@@ -141,8 +141,8 @@ QStringList QTextCodecPlugin::keys() const
     QStringList keys;
     QList<QByteArray> list = names();
     list += aliases();
-    for (int i = 0; i < list.size(); ++i)
-        keys += QString::fromLatin1(list.at(i));
+    for (const auto & i : list)
+        keys += QString::fromLatin1(i);
     QList<int> mibs = mibEnums();
     for (int i = 0; i < mibs.count(); ++i)
         keys += QLatin1String("MIB: ") + QString::number(mibs.at(i));

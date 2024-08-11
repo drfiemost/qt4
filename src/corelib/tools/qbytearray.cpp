@@ -3934,9 +3934,8 @@ QByteArray QByteArray::fromBase64(const QByteArray &base64)
     QByteArray tmp((base64.size() * 3) / 4, Qt::Uninitialized);
 
     int offset = 0;
-    for (int i = 0; i < base64.size(); ++i) {
-	int ch = base64.at(i);
-	int d;
+    for (int ch : base64) {
+		int d;
 
 	if (ch >= 'A' && ch <= 'Z')
 	    d = ch - 'A';

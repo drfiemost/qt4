@@ -718,8 +718,8 @@ static QTtfTable generateName(const QList<QTtfNameRecord> &name)
 
     const int name_size = 6 + 12*name.size();
     int string_size = 0;
-    for (int i = 0; i < name.size(); ++i) {
-        string_size += name.at(i).value.length()*char_size;
+    for (const auto & i : name) {
+        string_size += i.value.length()*char_size;
     }
     t.data.resize(name_size + string_size);
 
@@ -734,8 +734,8 @@ static QTtfTable generateName(const QList<QTtfNameRecord> &name)
 // (Variable)
 
     int off = 0;
-    for (int i = 0; i < name.size(); ++i) {
-        int len = name.at(i).value.length()*char_size;
+    for (const auto & i : name) {
+        int len = i.value.length()*char_size;
 // quint16  platformID  Platform ID.
 // quint16  encodingID  Platform-specific encoding ID.
 // quint16  languageID  Language ID.
@@ -743,15 +743,15 @@ static QTtfTable generateName(const QList<QTtfNameRecord> &name)
           << quint16(1)
           << quint16(0x0409) // en_US
 // quint16  nameId  Name ID.
-          << name.at(i).nameId
+          << i.nameId
 // quint16  length  String length (in bytes).
           << quint16(len)
 // quint16  offset  String offset from start of storage area (in bytes).
           << quint16(off);
         off += len;
     }
-    for (int i = 0; i < name.size(); ++i) {
-        const QString &n = name.at(i).value;
+    for (const auto & i : name) {
+        const QString &n = i.value;
         const ushort *uc = n.utf16();
         for (int i = 0; i < n.length(); ++i) {
             s << quint16(*uc);
@@ -924,13 +924,13 @@ static int convertToRelative(QList<TTF_POINT> *points)
     qint16 prev_x = 0;
     qint16 prev_y = 0;
     int point_array_size = 0;
-    for (int i = 0; i < points->size(); ++i) {
-        const int x = points->at(i).x;
-        const int y = points->at(i).y;
+    for (auto & point : *points) {
+        const int x = point.x;
+        const int y = point.y;
         TTF_POINT rel;
         rel.x = x - prev_x;
         rel.y = y - prev_y;
-        rel.flags = points->at(i).flags;
+        rel.flags = point.flags;
         Q_ASSERT(rel.flags < 2);
         if (!rel.x) {
             rel.flags |= XSame;
@@ -956,7 +956,7 @@ static int convertToRelative(QList<TTF_POINT> *points)
         } else {
             point_array_size += 2;
         }
-        (*points)[i] = rel;
+        point = rel;
 // #define toString(x) ((rel.flags & x) ? #x : "")
 //         qDebug() << "    " << QPoint(rel.x, rel.y) << "flags="
 //                  << toString(OnCurve) << toString(XShortVector)
@@ -984,26 +984,26 @@ static void getGlyphData(QTtfGlyph *glyph, const QList<TTF_POINT> &points, const
     s << qint16(endPoints.size())
       << glyph->xMin << glyph->yMin << glyph->xMax << glyph->yMax;
 
-    for (int i = 0; i < endPoints.size(); ++i)
-        s << quint16(endPoints.at(i));
+    for (int endPoint : endPoints)
+        s << quint16(endPoint);
     s << quint16(0); // instruction length
 
     // emit flags
-    for (int i = 0; i < points.size(); ++i)
-        s << quint8(points.at(i).flags);
+    for (auto point : points)
+        s << quint8(point.flags);
     // emit points
-    for (int i = 0; i < points.size(); ++i) {
-        quint8 flags = points.at(i).flags;
-        qint16 x = points.at(i).x;
+    for (auto point : points) {
+        quint8 flags = point.flags;
+        qint16 x = point.x;
 
         if (flags & XShortVector)
             s << quint8(x);
         else if (!(flags & XSame))
             s << qint16(x);
     }
-    for (int i = 0; i < points.size(); ++i) {
-        quint8 flags = points.at(i).flags;
-        qint16 y = points.at(i).y;
+    for (auto point : points) {
+        quint8 flags = point.flags;
+        qint16 y = point.y;
 
         if (flags & YShortVector)
             s << quint8(y);
@@ -1066,8 +1066,8 @@ static QList<QTtfTable> generateGlyphTables(qttf_font_tables &tables, const QLis
     int nGlyphs = tables.maxp.numGlyphs;
 
     int glyf_size = 0;
-    for (int i = 0; i < glyphs.size(); ++i)
-        glyf_size += (glyphs.at(i).data.size() + 3) & ~3;
+    for (const auto & glyph : glyphs)
+        glyf_size += (glyph.data.size() + 3) & ~3;
 
     tables.head.indexToLocFormat = glyf_size < max_size_small ? 0 : 1;
     tables.hhea.numberOfHMetrics = nGlyphs;
@@ -1177,8 +1177,7 @@ static QByteArray bindFont(const QList<QTtfTable>& _tables)
 //   quint32  offset  Offset from beginning of TrueType font file.
 //   quint32  length  Length of this table.
         quint32 table_offset = header_size + directory_size;
-        for (int i = 0; i < tables.size(); ++i) {
-            const QTtfTable &t = tables.at(i);
+        for (const auto & t : tables) {
             const quint32 size = (t.data.size() + 3) & ~3;
             if (t.tag == MAKE_TAG('h', 'e', 'a', 'd'))
                 head_offset = table_offset;
@@ -1191,8 +1190,8 @@ static QByteArray bindFont(const QList<QTtfTable>& _tables)
             //qDebug() << "table " << TAG(t.tag) << "has size " << t.data.size() << "stream at " << f.offset();
         }
     }
-    for (int i = 0; i < tables.size(); ++i) {
-        const QByteArray &t = tables.at(i).data;
+    for (const auto & table : tables) {
+        const QByteArray &t = table.data;
         font += t;
         int s = t.size();
         while (s & 3) { font += '\0'; ++s; }

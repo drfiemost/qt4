@@ -422,8 +422,8 @@ bool QTranslator::load(const QString & filename, const QString & directory,
             break;
 
         int rightmost = 0;
-        for (int i = 0; i < (int)delims.length(); i++) {
-            int k = fname.lastIndexOf(delims[i]);
+        for (auto && delim : delims) {
+            int k = fname.lastIndexOf(delim);
             if (k > rightmost)
                 rightmost = k;
         }
@@ -801,8 +801,8 @@ end:
         return QString();
     QString str = QString((const QChar *)tn, tn_length/2);
     if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-        for (int i = 0; i < str.length(); ++i)
-            str[i] = QChar((str.at(i).unicode() >> 8) + ((str.at(i).unicode() << 8) & 0xff00));
+        for (auto i : str)
+            i = QChar((i.unicode() >> 8) + ((i.unicode() << 8) & 0xff00));
     }
     return str;
 }

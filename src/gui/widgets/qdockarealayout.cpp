@@ -273,8 +273,7 @@ QSize QDockAreaLayoutInfo::minimumSize() const
 
     int a = 0, b = 0;
     bool first = true;
-    for (int i = 0; i < item_list.size(); ++i) {
-        const QDockAreaLayoutItem &item = item_list.at(i);
+    for (const auto & item : item_list) {
         if (item.skip())
             continue;
 
@@ -339,8 +338,7 @@ QSize QDockAreaLayoutInfo::maximumSize() const
     int min_perp = 0;
 
     bool first = true;
-    for (int i = 0; i < item_list.size(); ++i) {
-        const QDockAreaLayoutItem &item = item_list.at(i);
+    for (const auto & item : item_list) {
         if (item.skip())
             continue;
 
@@ -401,8 +399,7 @@ QSize QDockAreaLayoutInfo::sizeHint() const
     int min_perp = 0;
     int max_perp = QWIDGETSIZE_MAX;
     const QDockAreaLayoutItem *previous = nullptr;
-    for (int i = 0; i < item_list.size(); ++i) {
-        const QDockAreaLayoutItem &item = item_list.at(i);
+    for (const auto & item : item_list) {
         if (item.skip())
             continue;
 
@@ -466,8 +463,8 @@ QSize QDockAreaLayoutInfo::sizeHint() const
 
 bool QDockAreaLayoutInfo::expansive(Qt::Orientation o) const
 {
-    for (int i = 0; i < item_list.size(); ++i) {
-        if (item_list.at(i).expansive(o))
+    for (const auto & i : item_list) {
+        if (i.expansive(o))
             return true;
     }
     return false;
@@ -550,8 +547,7 @@ void QDockAreaLayoutInfo::fitItems()
     int last_index = -1;
 
     const QDockAreaLayoutItem *previous = nullptr;
-    for (int i = 0; i < item_list.size(); ++i) {
-        QDockAreaLayoutItem &item = item_list[i];
+    for (auto & item : item_list) {
         if (item.skip())
             continue;
 
@@ -855,8 +851,7 @@ static int separatorMoveHelper(QVector<QLayoutStruct> &list, int index, int delt
 {
     // adjust sizes
     int pos = -1;
-    for (int i = 0; i < list.size(); ++i) {
-        const QLayoutStruct &ls = list.at(i);
+    for (const auto & ls : list) {
         if (!ls.empty) {
             pos = ls.pos;
             break;
@@ -913,8 +908,7 @@ static int separatorMoveHelper(QVector<QLayoutStruct> &list, int index, int delt
 
     // adjust positions
     bool first = true;
-    for (int i = 0; i < list.size(); ++i) {
-        QLayoutStruct &ls = list[i];
+    for (auto & ls : list) {
         if (ls.empty) {
             ls.pos = pos + (first ? 0 : sep);
             continue;
@@ -2294,8 +2288,8 @@ void QDockAreaLayout::saveState(QDataStream &stream) const
 {
     stream << (uchar) DockWidgetStateMarker;
     int cnt = 0;
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        if (!docks[i].item_list.isEmpty())
+    for (const auto & dock : docks) {
+        if (!dock.item_list.isEmpty())
             ++cnt;
     }
     stream << cnt;
@@ -2308,8 +2302,8 @@ void QDockAreaLayout::saveState(QDataStream &stream) const
 
     stream << centralWidgetRect.size();
 
-    for (int i = 0; i < 4; ++i)
-        stream << static_cast<int>(corners[i]);
+    for (auto corner : corners)
+        stream << static_cast<int>(corner);
 }
 
 bool QDockAreaLayout::restoreState(QDataStream &stream, const QList<QDockWidget*> &_dockwidgets, bool testing)
@@ -2340,8 +2334,8 @@ bool QDockAreaLayout::restoreState(QDataStream &stream, const QList<QDockWidget*
 
     if (ok) {
         int cornerData[4];
-        for (int i = 0; i < 4; ++i)
-            stream >> cornerData[i];
+        for (int & i : cornerData)
+            stream >> i;
         if (stream.status() == QDataStream::Ok) {
             for (int i = 0; i < 4; ++i)
                 corners[i] = static_cast<Qt::DockWidgetArea>(cornerData[i]);
@@ -2470,8 +2464,8 @@ QList<int> QDockAreaLayout::findSeparator(const QPoint &pos) const
 
 QDockAreaLayoutInfo *QDockAreaLayout::info(QWidget *widget)
 {
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        if (QDockAreaLayoutInfo *result = docks[i].info(widget))
+    for (auto & dock : docks) {
+        if (QDockAreaLayoutInfo *result = dock.info(widget))
             return result;
     }
 
@@ -2871,8 +2865,8 @@ void QDockAreaLayout::fitLayout()
 
 void QDockAreaLayout::clear()
 {
-    for (int i = 0; i < QInternal::DockCount; ++i)
-        docks[i].clear();
+    for (auto & dock : docks)
+        dock.clear();
 
     rect = QRect();
     centralWidgetRect = QRect();
@@ -3078,8 +3072,8 @@ void QDockAreaLayout::apply(bool animate)
 {
     QWidgetAnimator &widgetAnimator = qt_mainwindow_layout(mainWindow)->widgetAnimator;
 
-    for (int i = 0; i < QInternal::DockCount; ++i)
-        docks[i].apply(animate);
+    for (auto & dock : docks)
+        dock.apply(animate);
     if (centralWidgetItem != nullptr && !centralWidgetItem->isEmpty()) {
         widgetAnimator.animate(centralWidgetItem->widget(), centralWidgetRect,
                                 animate);
@@ -3205,8 +3199,7 @@ QLayoutItem *QDockAreaLayout::itemAt(int *x, int index) const
 {
     Q_ASSERT(x != 0);
 
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QDockAreaLayoutInfo &dock = docks[i];
+    for (const auto & dock : docks) {
         if (QLayoutItem *ret = dock.itemAt(x, index))
             return ret;
     }
@@ -3221,8 +3214,7 @@ QLayoutItem *QDockAreaLayout::takeAt(int *x, int index)
 {
     Q_ASSERT(x != 0);
 
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        QDockAreaLayoutInfo &dock = docks[i];
+    for (auto & dock : docks) {
         if (QLayoutItem *ret = dock.takeAt(x, index))
             return ret;
     }
@@ -3238,16 +3230,15 @@ QLayoutItem *QDockAreaLayout::takeAt(int *x, int index)
 
 void QDockAreaLayout::deleteAllLayoutItems()
 {
-    for (int i = 0; i < QInternal::DockCount; ++i)
-        docks[i].deleteAllLayoutItems();
+    for (auto & dock : docks)
+        dock.deleteAllLayoutItems();
 }
 
 #ifndef QT_NO_TABBAR
 QSet<QTabBar*> QDockAreaLayout::usedTabBars() const
 {
     QSet<QTabBar*> result;
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QDockAreaLayoutInfo &dock = docks[i];
+    for (const auto & dock : docks) {
         result += dock.usedTabBars();
     }
     return result;
@@ -3260,8 +3251,7 @@ QSet<QWidget*> QDockAreaLayout::usedSeparatorWidgets() const
 
     for (int i = 0; i < separatorWidgets.count(); ++i)
         result << separatorWidgets.at(i);
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QDockAreaLayoutInfo &dock = docks[i];
+    for (const auto & dock : docks) {
         result += dock.usedSeparatorWidgets();
     }
     return result;

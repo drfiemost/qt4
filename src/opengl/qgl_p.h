@@ -746,8 +746,8 @@ class Q_OPENGL_EXPORT QGLContextResourceBase
 {
 public:
     virtual ~QGLContextResourceBase() {
-        for (int i = 0; i < m_contexts.size(); ++i)
-            m_contexts.at(i)->d_ptr->m_resources.remove(this);
+        for (auto m_context : m_contexts)
+            m_context->d_ptr->m_resources.remove(this);
     }
 
     void insert(const QGLContext *context, void *value) {
@@ -862,8 +862,8 @@ public:
         Q_ASSERT(str_length > 0);
         Q_ASSERT(str[str_length-1] != ' ');
 
-        for (int i = 0; i < m_offsets.size(); ++i) {
-            const char *extension = m_extensions.constData() + m_offsets.at(i);
+        for (int m_offset : m_offsets) {
+            const char *extension = m_extensions.constData() + m_offset;
             if (qstrncmp(extension, str, str_length) == 0 && extension[str_length] == ' ')
                 return true;
         }

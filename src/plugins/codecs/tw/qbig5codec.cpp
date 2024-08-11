@@ -1690,17 +1690,17 @@ static int qt_Big5ToUnicode(const uchar *buf, uint *u)
 static int qt_UnicodeToBig5(ushort ch, uchar *buf)
 {
     //all the tables are individually sorted on Y
-    for(int i = 0; i < 5; i++) {
+    for(auto & i : b5_map_table) {
         int start = 0;
-        int end = b5_map_table[i].tableSize - 1;
+        int end = i.tableSize - 1;
 
         while (start <= end) {
             int middle = (end + start + 1)/2;
-            if (b5_map_table[i].table[middle].y == ch) {
-                buf[0] = b5_map_table[i].table[middle].x >> 8;
-                buf[1] = b5_map_table[i].table[middle].x & 0xff;
+            if (i.table[middle].y == ch) {
+                buf[0] = i.table[middle].x >> 8;
+                buf[1] = i.table[middle].x & 0xff;
                 return 2;
-            } else if (b5_map_table[i].table[middle].y > ch) {
+            } else if (i.table[middle].y > ch) {
                 end = middle - 1;
             } else {
                 start = middle + 1;

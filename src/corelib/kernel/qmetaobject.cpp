@@ -1967,8 +1967,8 @@ int QMetaEnum::keysToValue(const char *keys) const
     int value = 0;
     int count = mobj->d.data[handle + 2];
     int data = mobj->d.data[handle + 3];
-    for (int li = 0; li < l.size(); ++li) {
-        QString trimmed = l.at(li).trimmed();
+    for (const auto & li : l) {
+        QString trimmed = li.trimmed();
         QByteArray qualified_key = trimmed.toLatin1();
         const char *key = qualified_key.constData();
         uint scope = 0;

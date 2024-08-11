@@ -54,9 +54,9 @@ QT_BEGIN_NAMESPACE
 static quint64 xpmHash(const QString &str)
 {
     unsigned int hashValue = 0;
-    for (int i = 0; i < str.size(); ++i) {
+    for (auto i : str) {
         hashValue <<= 8;
-        hashValue += (unsigned int)str.at(i).unicode();
+        hashValue += (unsigned int)i.unicode();
     }
     return hashValue;
 }

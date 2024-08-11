@@ -526,22 +526,22 @@ void QDeclarativeParticlesPrivate::tick(int time)
     }
 
     //Deal with emissions from requested bursts
-    for(int i=0; i<bursts.size(); i++){
+    for(auto & burst : bursts){
         int emission = 0;
-        if(bursts[i].second == -1){
-            emission = bursts[i].first;
+        if(burst.second == -1){
+            emission = burst.first;
         }else{
             qreal variance = 1.;
             if (emissionVariance > 0.){
                 variance += (qreal(qrand())/RAND_MAX) * emissionVariance * (qrand()%2?-1.:1.);
             }
-            qreal workingEmission = bursts[i].second * (qreal(interval)/1000.);
+            qreal workingEmission = burst.second * (qreal(interval)/1000.);
             workingEmission *= variance;
             emission = (int)workingEmission;
             emission = std::max(emission, 0);
         }
-        emission = std::min(emission, bursts[i].first);
-        bursts[i].first -= emission;
+        emission = std::min(emission, burst.first);
+        burst.first -= emission;
         while(emission--)
             createParticle(time);
     }

@@ -1759,18 +1759,18 @@ void QX11PaintEnginePrivate::fillPath(const QPainterPath &path, QX11PaintEngineP
         clippedPath = path.intersected(clipPath);
 
     QList<QPolygonF> polys = clippedPath.toFillPolygons();
-    for (int i = 0; i < polys.size(); ++i) {
-        QVarLengthArray<QPointF> translated_points(polys.at(i).size());
+    for (const auto & poly : polys) {
+        QVarLengthArray<QPointF> translated_points(poly.size());
 
-        for (int j = 0; j < polys.at(i).size(); ++j) {
-            translated_points[j] = polys.at(i).at(j);
+        for (int j = 0; j < poly.size(); ++j) {
+            translated_points[j] = poly.at(j);
             if (!X11->use_xrender || !(render_hints & QPainter::Antialiasing)) {
                 translated_points[j].rx() = qRound(translated_points[j].rx() + aliasedCoordinateDelta) + offs;
                 translated_points[j].ry() = qRound(translated_points[j].ry() + aliasedCoordinateDelta) + offs;
             }
         }
 
-        fillPolygon_dev(translated_points.data(), polys.at(i).size(), gc_mode,
+        fillPolygon_dev(translated_points.data(), poly.size(), gc_mode,
                         path.fillRule() == Qt::OddEvenFill ? QPaintEngine::OddEvenMode : QPaintEngine::WindingMode);
     }
 }
@@ -1825,8 +1825,8 @@ void QX11PaintEngine::drawPath(const QPainterPath &path)
     } else if (d->has_pen) {
         // if we have a cosmetic pen - use XDrawLine() for speed
         QList<QPolygonF> polys = path.toSubpathPolygons(d->matrix);
-        for (int i = 0; i < polys.size(); ++i)
-            d->strokePolygon_dev(polys.at(i).data(), polys.at(i).size(), false);
+        for (const auto & poly : polys)
+            d->strokePolygon_dev(poly.data(), poly.size(), false);
     }
 }
 

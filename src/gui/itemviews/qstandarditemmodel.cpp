@@ -2446,8 +2446,8 @@ QList<QStandardItem*> QStandardItemModel::findItems(const QString &text,
     QModelIndexList indexes = match(index(0, column, QModelIndex()),
                                     Qt::DisplayRole, text, -1, flags);
     QList<QStandardItem*> items;
-    for (int i = 0; i < indexes.size(); ++i)
-        items.append(itemFromIndex(indexes.at(i)));
+    for (const auto & indexe : indexes)
+        items.append(itemFromIndex(indexe));
     return items;
 }
 

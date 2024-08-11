@@ -787,8 +787,8 @@ inline void PropertyNode::addSignal(FunctionNode* function, FunctionRole role)
 inline NodeList PropertyNode::functions() const
 {
     NodeList list;
-    for (int i = 0; i < NumFunctionRoles; ++i)
-	list += funcs[i];
+    for (const auto & func : funcs)
+	list += func;
     return list;
 }
 

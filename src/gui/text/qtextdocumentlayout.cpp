@@ -623,8 +623,7 @@ QTextDocumentLayoutPrivate::hitTest(QTextFrame *frame, const QFixedPoint &point,
                     const QFixedPoint pointInCell = relativePoint - cellPos;
 
                     const QList<QTextFrame *> childFrames = td->childFrameMap.values(r + c * rows);
-                    for (int i = 0; i < childFrames.size(); ++i) {
-                        QTextFrame *child = childFrames.at(i);
+                    for (auto child : childFrames) {
                         if (isFrameFromInlineObject(child)
                             && child->frameFormat().position() != QTextFrameFormat::InFlow
                             && hitTest(child, pointInCell, position, l, accuracy) == PointExact)
@@ -640,8 +639,7 @@ QTextDocumentLayoutPrivate::hitTest(QTextFrame *frame, const QFixedPoint &point,
     }
 
     const QList<QTextFrame *> childFrames = frame->childFrames();
-    for (int i = 0; i < childFrames.size(); ++i) {
-        QTextFrame *child = childFrames.at(i);
+    for (auto child : childFrames) {
         if (isFrameFromInlineObject(child)
             && child->frameFormat().position() != QTextFrameFormat::InFlow
             && hitTest(child, relativePoint, position, l, accuracy) == PointExact)
@@ -1280,8 +1278,7 @@ void QTextDocumentLayoutPrivate::drawBlock(const QPointF &offset, QPainter *pain
     int blpos = bl.position();
     int bllen = bl.length();
     const QTextCharFormat *selFormat = nullptr;
-    for (int i = 0; i < context.selections.size(); ++i) {
-        const QAbstractTextDocumentLayout::Selection &range = context.selections.at(i);
+    for (const auto & range : context.selections) {
         const int selStart = range.cursor.selectionStart() - blpos;
         const int selEnd = range.cursor.selectionEnd() - blpos;
         if (selStart < bllen && selEnd > 0
@@ -1538,8 +1535,7 @@ QTextLayoutStruct QTextDocumentLayoutPrivate::layoutCell(QTextTable *t, const QT
     layoutStruct.y = std::max(layoutStruct.y, pageTop);
 
     const QList<QTextFrame *> childFrames = td->childFrameMap.values(cell.row() + cell.column() * t->rows());
-    for (int i = 0; i < childFrames.size(); ++i) {
-        QTextFrame *frame = childFrames.at(i);
+    for (auto frame : childFrames) {
         QTextFrameData *cd = data(frame);
         cd->sizeDirty = true;
     }
@@ -1552,8 +1548,7 @@ QTextLayoutStruct QTextDocumentLayoutPrivate::layoutCell(QTextTable *t, const QT
     // layoutFlow with regards to the cell height (layoutStruct->y), so for a safety measure we
     // do that here. For example with <td><img align="right" src="..." />blah</td>
     // when the image happens to be higher than the text
-    for (int i = 0; i < childFrames.size(); ++i) {
-        QTextFrame *frame = childFrames.at(i);
+    for (auto frame : childFrames) {
         QTextFrameData *cd = data(frame);
 
         if (frame->frameFormat().position() != QTextFrameFormat::InFlow)
@@ -2159,8 +2154,7 @@ QRectF QTextDocumentLayoutPrivate::layoutFrame(QTextFrame *f, int layoutFrom, in
 
     QFixed maxChildFrameWidth = 0;
     QList<QTextFrame *> children = f->childFrames();
-    for (int i = 0; i < children.size(); ++i) {
-        QTextFrame *c = children.at(i);
+    for (auto c : children) {
         QTextFrameData *cd = data(c);
         maxChildFrameWidth = std::max(maxChildFrameWidth, cd->size.width);
     }
@@ -2693,8 +2687,7 @@ void QTextDocumentLayoutPrivate::layoutBlock(const QTextBlock &bl, int blockPosi
                 = std::max<QFixed>(layoutStruct->contentsWidth, QFixed::fromReal(line.x() + line.naturalTextWidth()) + totalRightMargin);
 
             // position floats
-            for (int i = 0; i < layoutStruct->pendingFloats.size(); ++i) {
-                QTextFrame *f = layoutStruct->pendingFloats.at(i);
+            for (auto f : layoutStruct->pendingFloats) {
                 positionFloat(f);
             }
             layoutStruct->pendingFloats.clear();
@@ -2761,12 +2754,12 @@ void QTextDocumentLayoutPrivate::floatMargins(const QFixed &y, const QTextLayout
     *left = layoutStruct->x_left;
     *right = layoutStruct->x_right;
     QTextFrameData *lfd = data(layoutStruct->frame);
-    for (int i = 0; i < lfd->floats.size(); ++i) {
-        QTextFrameData *fd = data(lfd->floats.at(i));
+    for (const auto & i : lfd->floats) {
+        QTextFrameData *fd = data(i);
         if (!fd->layoutDirty) {
             if (fd->position.y <= y && fd->position.y + fd->size.height > y) {
 //                 qDebug() << "adjusting with float" << f << fd->position.x()<< fd->size.width();
-                if (lfd->floats.at(i)->frameFormat().position() == QTextFrameFormat::FloatLeft)
+                if (i->frameFormat().position() == QTextFrameFormat::FloatLeft)
                     *left = std::max(*left, fd->position.x + fd->size.width);
                 else
                     *right = std::min(*right, fd->position.x);
@@ -2791,8 +2784,8 @@ QFixed QTextDocumentLayoutPrivate::findY(QFixed yFrom, const QTextLayoutStruct *
         // move float down until we find enough space
         QFixed newY = QFIXED_MAX;
         QTextFrameData *lfd = data(layoutStruct->frame);
-        for (int i = 0; i < lfd->floats.size(); ++i) {
-            QTextFrameData *fd = data(lfd->floats.at(i));
+        for (const auto & i : lfd->floats) {
+            QTextFrameData *fd = data(i);
             if (!fd->layoutDirty) {
                 if (fd->position.y <= yFrom && fd->position.y + fd->size.height > yFrom)
                     newY = std::min(newY, fd->position.y + fd->size.height);
@@ -2868,8 +2861,8 @@ static void markFrames(QTextFrame *current, int from, int oldLength, int length)
 
 //     qDebug("    marking frame (%d--%d) as dirty", current->firstPosition(), current->lastPosition());
     QList<QTextFrame *> children = current->childFrames();
-    for (int i = 0; i < children.size(); ++i)
-        markFrames(children.at(i), from, oldLength, length);
+    for (auto i : children)
+        markFrames(i, from, oldLength, length);
 }
 
 void QTextDocumentLayout::documentChanged(int from, int oldLength, int length)

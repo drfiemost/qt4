@@ -611,8 +611,8 @@ static QList<T> findChildrenHelper(const QObject *o)
     const QObjectList &list = o->children();
     QList<T> result;
 
-    for (int i=0; i < list.size(); ++i) {
-        if (T t = qobject_cast<T>(list[i])) {
+    for (auto i : list) {
+        if (T t = qobject_cast<T>(i)) {
             result.append(t);
         }
     }
@@ -701,8 +701,7 @@ bool QMainWindowLayoutState::restoreState(QDataStream &_stream,
                     if (!dockAreaLayout.restoreState(stream, dockWidgets))
                         return false;
 
-                    for (int i = 0; i < dockWidgets.size(); ++i) {
-                        QDockWidget *w = dockWidgets.at(i);
+                    for (auto w : dockWidgets) {
                         QList<int> path = dockAreaLayout.indexOf(w);
                         if (path.isEmpty()) {
                             QList<int> oldPath = oldState.dockAreaLayout.indexOf(w);
@@ -728,8 +727,7 @@ bool QMainWindowLayoutState::restoreState(QDataStream &_stream,
                     if (!toolBarAreaLayout.restoreState(stream, toolBars, marker, oldFormat))
                         return false;
 
-                    for (int i = 0; i < toolBars.size(); ++i) {
-                        QToolBar *w = toolBars.at(i);
+                    for (auto w : toolBars) {
                         QList<int> path = toolBarAreaLayout.indexOf(w);
                         if (path.isEmpty()) {
                             QList<int> oldPath = oldState.toolBarAreaLayout.indexOf(w);
@@ -1717,8 +1715,8 @@ QMainWindowLayout::QMainWindowLayout(QMainWindow *mainwindow, QLayout *parentLay
 #endif
 
 #ifndef QT_NO_TABWIDGET
-    for (int i = 0; i < QInternal::DockCount; ++i)
-        tabPositions[i] = QTabWidget::South;
+    for (auto & tabPosition : tabPositions)
+        tabPosition = QTabWidget::South;
 #endif
 #endif // QT_NO_DOCKWIDGET
 

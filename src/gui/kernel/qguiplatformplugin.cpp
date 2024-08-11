@@ -201,8 +201,8 @@ QStringList QGuiPlatformPlugin::iconThemeSearchPaths()
 
     QStringList xdgDirs = xdgDirString.split(QLatin1Char(':'));
 
-    for (int i = 0 ; i < xdgDirs.size() ; ++i) {
-        QDir dir(xdgDirs[i]);
+    for (const auto & xdgDir : xdgDirs) {
+        QDir dir(xdgDir);
         if (dir.exists())
             paths.append(dir.path() + QLatin1String("/icons"));
     }

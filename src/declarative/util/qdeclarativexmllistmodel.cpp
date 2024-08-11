@@ -721,8 +721,7 @@ QHash<int,QVariant> QDeclarativeXmlListModel::data(int index, const QList<int> &
 {
     Q_D(const QDeclarativeXmlListModel);
     QHash<int, QVariant> rv;
-    for (int i = 0; i < roles.size(); ++i) {
-        int role = roles.at(i);
+    for (int role : roles) {
         int roleIndex = d->roles.indexOf(role);
         rv.insert(role, roleIndex == -1 ? QVariant() : d->data.value(roleIndex).value(index));
     }

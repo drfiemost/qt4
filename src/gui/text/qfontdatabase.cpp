@@ -1046,8 +1046,8 @@ static QStringList familyList(const QFontDef &req)
         return family_list;
 
     QStringList list = req.family.split(QLatin1Char(','));
-    for (int i = 0; i < list.size(); ++i) {
-        QString str = list.at(i).trimmed();
+    for (const auto & i : list) {
+        QString str = i.trimmed();
         if ((str.startsWith(QLatin1Char('"')) && str.endsWith(QLatin1Char('"')))
             || (str.startsWith(QLatin1Char('\'')) && str.endsWith(QLatin1Char('\''))))
             str = str.mid(1, str.length() - 2);

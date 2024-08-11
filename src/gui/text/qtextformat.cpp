@@ -1046,8 +1046,7 @@ QVector<QTextLength> QTextFormat::lengthVectorProperty(int propertyId) const
         return vector;
 
     QList<QVariant> propertyList = prop.toList();
-    for (int i=0; i<propertyList.size(); ++i) {
-        QVariant var = propertyList.at(i);
+    for (auto var : propertyList) {
         if (var.userType() == QVariant::TextLength)
             vector.append(qvariant_cast<QTextLength>(var));
     }
@@ -1090,8 +1089,8 @@ void QTextFormat::setProperty(int propertyId, const QVector<QTextLength> &value)
     if (!d)
         d = new QTextFormatPrivate;
     QVariantList list;
-    for (int i=0; i<value.size(); ++i)
-        list << value.at(i);
+    for (auto i : value)
+        list << i;
     d->insertProperty(propertyId, list);
 }
 

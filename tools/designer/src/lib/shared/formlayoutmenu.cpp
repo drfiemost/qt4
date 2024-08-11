@@ -377,8 +377,8 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
         const int fwCount = sizeof(fieldWidgetBaseClasses)/sizeof(const char*);
         // Turn known base classes into list
         QStringList baseClasses;
-        for (int i = 0; i < fwCount; i++)
-            baseClasses.push_back(QLatin1String(fieldWidgetBaseClasses[i]));
+        for (auto & fieldWidgetBaseClasse : fieldWidgetBaseClasses)
+            baseClasses.push_back(QLatin1String(fieldWidgetBaseClasse));
         // Scan for custom widgets that inherit them and store them in a
         // multimap of base class->custom widgets unless we have a language
         // extension installed which might do funny things with custom widgets.

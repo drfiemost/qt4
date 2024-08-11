@@ -253,8 +253,8 @@ private:
 
     inline void updateStaticContentsSize()
     {
-        for (int i = 0; i < staticWidgets.size(); ++i) {
-            QWidgetPrivate *wd = staticWidgets.at(i)->d_func();
+        for (auto staticWidget : staticWidgets) {
+            QWidgetPrivate *wd = staticWidget->d_func();
             if (!wd->extra)
                 wd->createExtra();
             wd->extra->staticContentsSize = wd->data.crect.size();

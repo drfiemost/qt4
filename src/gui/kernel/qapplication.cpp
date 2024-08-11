@@ -1373,8 +1373,8 @@ QStyle *QApplication::style()
         app_style = QStyleFactory::create(style);
         if (!app_style) {
             QStringList styles = QStyleFactory::keys();
-            for (int i = 0; i < styles.size(); ++i) {
-                if ((app_style = QStyleFactory::create(styles.at(i))))
+            for (const auto & style : styles) {
+                if ((app_style = QStyleFactory::create(style)))
                     break;
             }
         }
@@ -2360,8 +2360,7 @@ bool QApplication::event(QEvent *e)
         closeAllWindows();
 
         QWidgetList list = topLevelWidgets();
-        for (int i = 0; i < list.size(); ++i) {
-            QWidget *w = list.at(i);
+        for (auto w : list) {
             if (w->isVisible() && !(w->windowType() == Qt::Desktop) && !(w->windowType() == Qt::Popup) &&
                  (!(w->windowType() == Qt::Dialog) || !w->parentWidget())) {
                 ce->ignore();
@@ -2380,8 +2379,7 @@ bool QApplication::event(QEvent *e)
         qt_mac_post_retranslateAppMenu();
 #endif
         QWidgetList list = topLevelWidgets();
-        for (int i = 0; i < list.size(); ++i) {
-            QWidget *w = list.at(i);
+        for (auto w : list) {
             if (!(w->windowType() == Qt::Desktop))
                 postEvent(w, new QEvent(QEvent::LanguageChange));
         }
@@ -2390,8 +2388,7 @@ bool QApplication::event(QEvent *e)
         // on Windows the event propagation is taken care by the
         // WM_SETTINGCHANGE event handler.
         QWidgetList list = topLevelWidgets();
-        for (int i = 0; i < list.size(); ++i) {
-            QWidget *w = list.at(i);
+        for (auto w : list) {
             if (!(w->windowType() == Qt::Desktop)) {
                 if (!w->testAttribute(Qt::WA_SetLocale))
                     w->d_func()->setLocale_helper(QLocale(), true);
@@ -2479,8 +2476,7 @@ void QApplication::setActiveWindow(QWidget* act)
     if (QApplicationPrivate::active_window) {
         if (style()->styleHint(QStyle::SH_Widget_ShareActivation, nullptr, QApplicationPrivate::active_window)) {
             QWidgetList list = topLevelWidgets();
-            for (int i = 0; i < list.size(); ++i) {
-                QWidget *w = list.at(i);
+            for (auto w : list) {
                 if (w->isVisible() && w->isActiveWindow())
                     toBeDeactivated.append(w);
             }
@@ -2497,8 +2493,7 @@ void QApplication::setActiveWindow(QWidget* act)
     if (QApplicationPrivate::active_window) {
         if (style()->styleHint(QStyle::SH_Widget_ShareActivation, nullptr, QApplicationPrivate::active_window)) {
             QWidgetList list = topLevelWidgets();
-            for (int i = 0; i < list.size(); ++i) {
-                QWidget *w = list.at(i);
+            for (auto w : list) {
                 if (w->isVisible() && w->isActiveWindow())
                     toBeActivated.append(w);
             }
@@ -2520,8 +2515,7 @@ void QApplication::setActiveWindow(QWidget* act)
     }
 #endif
 
-    for (int i = 0; i < toBeActivated.size(); ++i) {
-        QWidget *w = toBeActivated.at(i);
+    for (auto w : toBeActivated) {
         sendSpontaneousEvent(w, &windowActivate);
         sendSpontaneousEvent(w, &activationChange);
     }
@@ -2533,8 +2527,7 @@ void QApplication::setActiveWindow(QWidget* act)
     qt_cocoaStackChildWindowOnTopOfOtherChildren(window);
 #endif
 
-    for(int i = 0; i < toBeDeactivated.size(); ++i) {
-        QWidget *w = toBeDeactivated.at(i);
+    for(auto w : toBeDeactivated) {
         sendSpontaneousEvent(w, &windowDeactivate);
         sendSpontaneousEvent(w, &activationChange);
     }
@@ -2687,8 +2680,8 @@ void QApplicationPrivate::dispatchEnterLeave(QWidget* enter, QWidget* leave) {
     }
 
     QEvent leaveEvent(QEvent::Leave);
-    for (int i = 0; i < leaveList.size(); ++i) {
-        w = leaveList.at(i);
+    for (auto i : leaveList) {
+        w = i;
         if (!QApplication::activeModalWidget() || QApplicationPrivate::tryModalHelper(w, nullptr)) {
 #if defined(Q_WS_WIN) || defined(Q_WS_X11) || defined(Q_WS_MAC)
             if (leaveAfterRelease == w)
@@ -2705,8 +2698,8 @@ void QApplicationPrivate::dispatchEnterLeave(QWidget* enter, QWidget* leave) {
     }
     QPoint posEnter = QCursor::pos();
     QEvent enterEvent(QEvent::Enter);
-    for (int i = 0; i < enterList.size(); ++i) {
-        w = enterList.at(i);
+    for (auto i : enterList) {
+        w = i;
         if (!QApplication::activeModalWidget() || QApplicationPrivate::tryModalHelper(w, nullptr)) {
             QApplication::sendEvent(w, &enterEvent);
             if (w->testAttribute(Qt::WA_Hover) &&
@@ -2725,8 +2718,8 @@ void QApplicationPrivate::dispatchEnterLeave(QWidget* enter, QWidget* leave) {
     //Whenever we leave an alien widget on X11, we need to reset its nativeParentWidget()'s cursor.
     // This is not required on Windows as the cursor is reset on every single mouse move.
     QWidget *parentOfLeavingCursor = nullptr;
-    for (int i = 0; i < leaveList.size(); ++i) {
-        w = leaveList.at(i);
+    for (auto i : leaveList) {
+        w = i;
         if (!isAlien(w))
             break;
         if (w->testAttribute(Qt::WA_SetCursor)) {
@@ -2800,9 +2793,7 @@ bool QApplicationPrivate::isBlockedByModal(QWidget *widget)
     if (QApplication::activePopupWidget() == widget)
         return false;
 
-    for (int i = 0; i < qt_modal_stack->size(); ++i) {
-        QWidget *modalWidget = qt_modal_stack->at(i);
-
+    for (auto modalWidget : *qt_modal_stack) {
         {
             // check if the active modal widget is our widget or a parent of our widget
             QWidget *w = widget;
@@ -3599,8 +3590,7 @@ void QApplication::setLayoutDirection(Qt::LayoutDirection direction)
     layout_direction = direction;
 
     QWidgetList list = topLevelWidgets();
-    for (int i = 0; i < list.size(); ++i) {
-        QWidget *w = list.at(i);
+    for (auto w : list) {
         QEvent ev(QEvent::ApplicationLayoutDirectionChange);
         sendEvent(w, &ev);
     }
@@ -4225,8 +4215,7 @@ bool QApplication::notify(QObject *receiver, QEvent *e)
             QPoint offset = widget->pos();
             widget = widget->parentWidget();
             touchEvent->setWidget(widget);
-            for (int i = 0; i < touchEvent->_touchPoints.size(); ++i) {
-                QTouchEvent::TouchPoint &pt = touchEvent->_touchPoints[i];
+            for (auto & pt : touchEvent->_touchPoints) {
                 QRectF rect = pt.rect();
                 rect.moveCenter(offset);
                 pt.d->rect = rect;
@@ -4304,8 +4293,7 @@ bool QApplication::notify(QObject *receiver, QEvent *e)
                     res = d->notify_helper(w, &ge);
                     gestureEvent->spont = false;
                     eventAccepted = ge.isAccepted();
-                    for (int i = 0; i < gestures.size(); ++i) {
-                        QGesture *g = gestures.at(i);
+                    for (auto g : gestures) {
                         // Ignore res [event return value] because handling of multiple gestures
                         // packed into a single QEvent depends on not consuming the event
                         if (eventAccepted || ge.isAccepted(g)) {

@@ -1752,8 +1752,8 @@ void QGLContextPrivate::init(QPaintDevice *dev, const QGLFormat &format)
     workaround_brokenAlphaTexSubImage = false;
     workaround_brokenAlphaTexSubImage_init = false;
 
-    for (int i = 0; i < QT_GL_VERTEX_ARRAY_TRACKED_COUNT; ++i)
-        vertexAttributeArraysEnabledState[i] = false;
+    for (bool & i : vertexAttributeArraysEnabledState)
+        i = false;
 }
 
 QGLContext* QGLContext::currentCtx = nullptr;
@@ -1893,11 +1893,11 @@ bool QGLTextureCache::remove(QGLContext* ctx, GLuint textureId)
 {
     QWriteLocker locker(&m_lock);
     QList<QGLTextureCacheKey> keys = m_cache.keys();
-    for (int i = 0; i < keys.size(); ++i) {
-        QGLTexture *tex = m_cache.object(keys.at(i));
+    for (auto key : keys) {
+        QGLTexture *tex = m_cache.object(key);
         if (tex->id == textureId && tex->context == ctx) {
             tex->options |= QGLContext::MemoryManagedBindOption; // forces a glDeleteTextures() call
-            m_cache.remove(keys.at(i));
+            m_cache.remove(key);
             return true;
         }
     }
@@ -1908,8 +1908,7 @@ void QGLTextureCache::removeContextTextures(QGLContext* ctx)
 {
     QWriteLocker locker(&m_lock);
     QList<QGLTextureCacheKey> keys = m_cache.keys();
-    for (int i = 0; i < keys.size(); ++i) {
-        const QGLTextureCacheKey &key = keys.at(i);
+    for (auto key : keys) {
         if (m_cache.object(key)->context == ctx)
             m_cache.remove(key);
     }
@@ -5563,8 +5562,8 @@ QGLContextGroupResourceBase::~QGLContextGroupResourceBase()
 #ifdef QT_GL_CONTEXT_RESOURCE_DEBUG
     qDebug("Deleting context group resource %p. Group size: %d.", this, m_groups.size());
 #endif
-    for (int i = 0; i < m_groups.size(); ++i) {
-        m_groups.at(i)->m_resources.remove(this);
+    for (auto m_group : m_groups) {
+        m_group->m_resources.remove(this);
         active.deref();
     }
 #ifndef QT_NO_DEBUG

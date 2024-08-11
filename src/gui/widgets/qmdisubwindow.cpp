@@ -1554,11 +1554,11 @@ QRegion QMdiSubWindowPrivate::getRegion(Operation operation) const
         QRegion move(frameWidth, frameWidth, width - 2 * frameWidth, cornerConst);
         // Depending on which window flags are set, activated sub controllers will
         // be subtracted from the 'move' region.
-        for (int i = 0; i < NumSubControls; ++i) {
-            if (SubControls[i] == QStyle::SC_TitleBarLabel)
+        for (auto SubControl : SubControls) {
+            if (SubControl == QStyle::SC_TitleBarLabel)
                 continue;
             move -= QRegion(q->style()->subControlRect(QStyle::CC_TitleBar, &titleBarOptions,
-                            SubControls[i]));
+                            SubControl));
         }
         return move;
     }
@@ -1748,12 +1748,12 @@ void QMdiSubWindowPrivate::sizeParameters(int *margin, int *minWidth) const
 
     QStyleOptionTitleBar opt = this->titleBarOptions();
     int tempWidth = 0;
-    for (int i = 0; i < NumSubControls; ++i) {
-        if (SubControls[i] == QStyle::SC_TitleBarLabel) {
+    for (auto SubControl : SubControls) {
+        if (SubControl == QStyle::SC_TitleBarLabel) {
             tempWidth += 30;
             continue;
         }
-        QRect rect = q->style()->subControlRect(QStyle::CC_TitleBar, &opt, SubControls[i], q);
+        QRect rect = q->style()->subControlRect(QStyle::CC_TitleBar, &opt, SubControl, q);
         if (!rect.isValid())
             continue;
         tempWidth += rect.width();

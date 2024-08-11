@@ -126,8 +126,7 @@ QPaintBufferPrivate::~QPaintBufferPrivate()
 {
     QPaintBufferSignalProxy::instance()->emitAboutToDestroy(this);
 
-    for (int i = 0; i < commands.size(); ++i) {
-        const QPaintBufferCommand &cmd = commands.at(i);
+    for (auto cmd : commands) {
         if (cmd.id == QPaintBufferPrivate::Cmd_DrawTextItem)
             delete reinterpret_cast<QTextItemIntCopy *>(qvariant_cast<void *>(variants.at(cmd.offset)));
     }
@@ -2187,8 +2186,8 @@ QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer)
     QHash<qint64, QImage> images;
 
     QVector<QVariant> variants = buffer.d_ptr->variants;
-    for (int i = 0; i < variants.size(); ++i) {
-        const QVariant &v = variants.at(i);
+    for (auto & variant : variants) {
+        const QVariant &v = variant;
         if (v.type() == QVariant::Image) {
             const QImage image(v.value<QImage>());
 
@@ -2203,7 +2202,7 @@ QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer)
                 images[images.size()] = image;
             }
 
-            variants[i] = QVariant::fromValue(entry);
+            variant = QVariant::fromValue(entry);
         } else if (v.type() == QVariant::Pixmap) {
             const QPixmap pixmap(v.value<QPixmap>());
 
@@ -2218,7 +2217,7 @@ QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer)
                 pixmaps[pixmaps.size()] = pixmap;
             }
 
-            variants[i] = QVariant::fromValue(entry);
+            variant = QVariant::fromValue(entry);
         }
     }
 
@@ -2251,21 +2250,21 @@ QDataStream &operator>>(QDataStream &stream, QPaintBuffer &buffer)
     stream >> buffer.d_ptr->frames;
 
     QVector<QVariant> &variants = buffer.d_ptr->variants;
-    for (int i = 0; i < variants.size(); ++i) {
-        const QVariant &v = variants.at(i);
+    for (auto & variant : variants) {
+        const QVariant &v = variant;
         if (v.canConvert<QPaintBufferCacheEntry>()) {
             QPaintBufferCacheEntry entry = v.value<QPaintBufferCacheEntry>();
             if (entry.type == QVariant::Image)
-                variants[i] = QVariant(images.value(entry.cacheKey));
+                variant = QVariant(images.value(entry.cacheKey));
             else
-                variants[i] = QVariant(pixmaps.value(entry.cacheKey));
+                variant = QVariant(pixmaps.value(entry.cacheKey));
         } else if (v.canConvert<QPaintBufferCacheEntryV2>()) {
             QPaintBufferCacheEntryV2 entry = v.value<QPaintBufferCacheEntryV2>();
 
             if (entry.flags.type == QPaintBufferCacheEntryV2::ImageKey)
-                variants[i] = QVariant(images.value(entry.flags.key));
+                variant = QVariant(images.value(entry.flags.key));
             else if (entry.flags.type == QPaintBufferCacheEntryV2::PixmapKey)
-                variants[i] = QVariant(pixmaps.value(entry.flags.key));
+                variant = QVariant(pixmaps.value(entry.flags.key));
             else
                 qWarning() << "operator<<(QDataStream &stream, QPaintBuffer &buffer): unrecognized cache entry type:" << entry.flags.type;
         }

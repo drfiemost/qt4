@@ -563,8 +563,8 @@ QString Config::copyFile(const Location& location,
 int Config::numParams(const QString& value)
 {
     int max = 0;
-    for (int i = 0; i != value.length(); i++) {
-        uint c = value[i].unicode();
+    for (auto i : value) {
+        uint c = i.unicode();
         if (c > 0 && c < 8)
             max = std::max(max, (int)c);
     }

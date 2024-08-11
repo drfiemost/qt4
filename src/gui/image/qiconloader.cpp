@@ -164,8 +164,8 @@ QIconTheme::QIconTheme(const QString &themeName)
 
     QList <QIconDirInfo> keyList;
     QStringList iconDirs = QIcon::themeSearchPaths();
-    for ( int i = 0 ; i < iconDirs.size() ; ++i) {
-        QDir iconDir(iconDirs[i]);
+    for (const auto & i : iconDirs) {
+        QDir iconDir(i);
         QString themeDir = iconDir.path() + QLatin1Char('/') + themeName;
         themeIndex.setFileName(themeDir + QLatin1String("/index.theme"));
         if (themeIndex.exists()) {
@@ -258,8 +258,7 @@ QThemeIconEntries QIconLoader::findIconHelper(const QString &themeName,
     const QString pngext(QLatin1String(".png"));
 
     // Add all relevant files
-    for (int i = 0; i < subDirs.size() ; ++i) {
-        const QIconDirInfo &dirInfo = subDirs.at(i);
+    for (const auto & dirInfo : subDirs) {
         QString subdir = dirInfo.path;
         QDir currentDir(contentDir + subdir);
         if (currentDir.exists(iconName + pngext)) {
@@ -281,9 +280,9 @@ QThemeIconEntries QIconLoader::findIconHelper(const QString &themeName,
     if (entries.isEmpty()) {
         const QStringList parents = theme.parents();
         // Search recursively through inherited themes
-        for (int i = 0 ; i < parents.size() ; ++i) {
+        for (const auto & parent : parents) {
 
-            const QString parentTheme = parents.at(i).trimmed();
+            const QString parentTheme = parent.trimmed();
 
             if (!visited.contains(parentTheme)) // guard against recursion
                 entries = findIconHelper(parentTheme, iconName, visited);
@@ -548,8 +547,8 @@ void QIconLoaderEngine::virtual_hook(int id, void *data)
             arg.sizes.clear();
 
             // Gets all sizes from the DirectoryInfo entries
-            for (int i = 0 ; i < m_entries.size() ; ++i) {
-                int size = m_entries.at(i)->dir.size;
+            for (auto m_entrie : m_entries) {
+                int size = m_entrie->dir.size;
                 arg.sizes.append(QSize(size, size));
             }
         }

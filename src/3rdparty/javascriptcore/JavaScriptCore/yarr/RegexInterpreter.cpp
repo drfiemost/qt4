@@ -262,18 +262,18 @@ public:
     bool testCharacterClass(CharacterClass* characterClass, int ch)
     {
         if (ch & 0xFF80) {
-            for (unsigned i = 0; i < characterClass->m_matchesUnicode.size(); ++i)
-                if (ch == characterClass->m_matchesUnicode[i])
+            for (unsigned short i : characterClass->m_matchesUnicode)
+                if (ch == i)
                     return true;
-            for (unsigned i = 0; i < characterClass->m_rangesUnicode.size(); ++i)
-                if ((ch >= characterClass->m_rangesUnicode[i].begin) && (ch <= characterClass->m_rangesUnicode[i].end))
+            for (auto & i : characterClass->m_rangesUnicode)
+                if ((ch >= i.begin) && (ch <= i.end))
                     return true;
         } else {
-            for (unsigned i = 0; i < characterClass->m_matches.size(); ++i)
-                if (ch == characterClass->m_matches[i])
+            for (unsigned short m_matche : characterClass->m_matches)
+                if (ch == m_matche)
                     return true;
-            for (unsigned i = 0; i < characterClass->m_ranges.size(); ++i)
-                if ((ch >= characterClass->m_ranges[i].begin) && (ch <= characterClass->m_ranges[i].end))
+            for (auto & m_range : characterClass->m_ranges)
+                if ((ch >= m_range.begin) && (ch <= m_range.end))
                     return true;
         }
 
@@ -1529,9 +1529,7 @@ public:
                 checkInput(countToCheck);
             currentCountAlreadyChecked += countToCheck;
 
-            for (unsigned i = 0; i < alternative->m_terms.size(); ++i) {
-                PatternTerm& term = alternative->m_terms[i];
-
+            for (auto & term : alternative->m_terms) {
                 switch (term.type) {
                 case PatternTerm::TypeAssertionBOL:
                     assertionBOL(term.inputPosition - currentCountAlreadyChecked);

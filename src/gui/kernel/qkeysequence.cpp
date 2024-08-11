@@ -997,14 +997,14 @@ QList<QKeySequence> QKeySequence::keyBindings(StandardKey key)
 {
     uint platform = QApplicationPrivate::currentPlatform();
     QList <QKeySequence> list;
-    for (uint i = 0; i < QKeySequencePrivate::numberOfKeyBindings ; ++i) {
-        QKeyBinding keyBinding = QKeySequencePrivate::keyBindings[i];
+    for (auto i : QKeySequencePrivate::keyBindings) {
+        QKeyBinding keyBinding = i;
         if (keyBinding.standardKey == key && (keyBinding.platform & platform)) {
             uint shortcut =
 #ifdef Q_WS_MAC
                     maybeSwapShortcut(QKeySequencePrivate::keyBindings[i].shortcut);
 #else
-                    QKeySequencePrivate::keyBindings[i].shortcut;
+                    i.shortcut;
 #endif
             if (keyBinding.priority > 0)
                 list.prepend(QKeySequence(shortcut));
@@ -1261,8 +1261,7 @@ int QKeySequencePrivate::decodeString(const QString &str, QKeySequence::Sequence
         // Rational: A modifier will contain the name AND +, so longer than 1, a length of 1 is just
         // the remaining part of the shortcut (ei. The 'C' in "Ctrl+C"), so no need to check that.
         if (sub.length() > 1) {
-            for (int j = 0; j < modifs.size(); ++j) {
-                const QModifKeyName &mkf = modifs.at(j);
+            for (const auto & mkf : modifs) {
                 if (sub == mkf.name) {
                     ret |= mkf.qt_key;
                     break; // Shortcut, since if we find an other it would/should just be a dup

@@ -1303,12 +1303,12 @@ void Generator::appendSortedQmlNames(Text& text,
 #ifdef DEBUG_MULTIPLE_QDOCCONF_FILES
     qDebug() << "Generator::appendSortedQmlNames():" << base->name() << "is inherited by...";
 #endif
-    for (int i = 0; i < subs.size(); ++i) {
+    for (auto sub : subs) {
         Text t;
 #ifdef DEBUG_MULTIPLE_QDOCCONF_FILES
         qDebug() << "    " << subs[i]->name();
 #endif
-        appendFullName(t, subs[i], base, marker);
+        appendFullName(t, sub, base, marker);
         classMap[t.toString().toLower()] = t;
     }
 

@@ -733,9 +733,7 @@ QLayoutItem *QToolBarAreaLayout::itemAt(int *x, int index) const
 {
     Q_ASSERT(x != 0);
 
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (const auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             const QToolBarAreaLayoutLine &line = dock.lines.at(j);
 
@@ -753,9 +751,7 @@ QLayoutItem *QToolBarAreaLayout::takeAt(int *x, int index)
 {
     Q_ASSERT(x != 0);
 
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             QToolBarAreaLayoutLine &line = dock.lines[j];
 
@@ -775,9 +771,7 @@ QLayoutItem *QToolBarAreaLayout::takeAt(int *x, int index)
 
 void QToolBarAreaLayout::deleteAllLayoutItems()
 {
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             QToolBarAreaLayoutLine &line = dock.lines[j];
 
@@ -884,9 +878,7 @@ void QToolBarAreaLayout::apply(bool animate)
 
     Qt::LayoutDirection dir = mainWindow->layoutDirection();
 
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (const auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             const QToolBarAreaLayoutLine &line = dock.lines.at(j);
             if (line.skip())
@@ -942,9 +934,7 @@ void QToolBarAreaLayout::apply(bool animate)
 
 bool QToolBarAreaLayout::toolBarBreak(QToolBar *toolBar) const
 {
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (const auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             const QToolBarAreaLayoutLine &line = dock.lines.at(j);
 
@@ -960,9 +950,7 @@ bool QToolBarAreaLayout::toolBarBreak(QToolBar *toolBar) const
 
 void QToolBarAreaLayout::getStyleOptionInfo(QStyleOptionToolBar *option, QToolBar *toolBar) const
 {
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        const QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (const auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             const QToolBarAreaLayoutLine &line = dock.lines.at(j);
 
@@ -1085,9 +1073,7 @@ void QToolBarAreaLayout::remove(const QList<int> &path)
 
 void QToolBarAreaLayout::remove(QLayoutItem *item)
 {
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        QToolBarAreaLayoutInfo &dock = docks[i];
-
+    for (auto & dock : docks) {
         for (int j = 0; j < dock.lines.count(); ++j) {
             QToolBarAreaLayoutLine &line = dock.lines[j];
 
@@ -1105,8 +1091,8 @@ void QToolBarAreaLayout::remove(QLayoutItem *item)
 
 void QToolBarAreaLayout::clear()
 {
-    for (int i = 0; i < QInternal::DockCount; ++i)
-        docks[i].clear();
+    for (auto & dock : docks)
+        dock.clear();
     rect = QRect();
 }
 
@@ -1254,8 +1240,8 @@ void QToolBarAreaLayout::saveState(QDataStream &stream) const
     stream << (uchar) ToolBarStateMarkerEx;
 
     int lineCount = 0;
-    for (int i = 0; i < QInternal::DockCount; ++i)
-        lineCount += docks[i].lines.count();
+    for (const auto & dock : docks)
+        lineCount += dock.lines.count();
 
     stream << lineCount;
 
@@ -1392,8 +1378,8 @@ bool QToolBarAreaLayout::restoreState(QDataStream &stream, const QList<QToolBar*
 
 bool QToolBarAreaLayout::isEmpty() const
 {
-    for (int i = 0; i < QInternal::DockCount; ++i) {
-        if (!docks[i].lines.isEmpty())
+    for (const auto & dock : docks) {
+        if (!dock.lines.isEmpty())
             return false;
     }
     return true;

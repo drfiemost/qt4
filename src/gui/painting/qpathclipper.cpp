@@ -2116,8 +2116,7 @@ QPainterPath intersectPath(const QPainterPath &path, const QRectF &rect)
 
     QPainterPath result;
     result.setFillRule(path.fillRule());
-    for (int i = 0; i < subpaths.size(); ++i) {
-        QPainterPath subPath = subpaths.at(i);
+    for (auto subPath : subpaths) {
         QRectF bounds = subPath.boundingRect();
         if (bounds.intersects(rect)) {
             if (bounds.left() < rect.left())

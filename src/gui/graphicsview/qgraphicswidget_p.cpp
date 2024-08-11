@@ -178,8 +178,7 @@ void QGraphicsWidgetPrivate::updatePalette(const QPalette &palette)
     int mask = palette.resolve() | inheritedPaletteResolveMask;
 
     // Propagate to children.
-    for (int i = 0; i < children.size(); ++i) {
-        QGraphicsItem *item = children.at(i);
+    for (auto item : children) {
         if (item->isWidget()) {
             QGraphicsWidget *w = static_cast<QGraphicsWidget *>(item);
             if (!w->isWindow() || w->testAttribute(Qt::WA_WindowPropagation))
@@ -202,8 +201,7 @@ void QGraphicsWidgetPrivate::setLayoutDirection_helper(Qt::LayoutDirection direc
     q->setAttribute(Qt::WA_RightToLeft, (direction == Qt::RightToLeft));
 
     // Propagate this change to all children.
-    for (int i = 0; i < children.size(); ++i) {
-        QGraphicsItem *item = children.at(i);
+    for (auto item : children) {
         if (item->isWidget()) {
             QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
             if (widget->parentWidget() && !widget->testAttribute(Qt::WA_SetLayoutDirection))
@@ -288,8 +286,7 @@ void QGraphicsWidgetPrivate::updateFont(const QFont &font)
     int mask = font.resolve() | inheritedFontResolveMask;
 
     // Propagate to children.
-    for (int i = 0; i < children.size(); ++i) {
-        QGraphicsItem *item = children.at(i);
+    for (auto item : children) {
         if (item->isWidget()) {
             QGraphicsWidget *w = static_cast<QGraphicsWidget *>(item);
             if (!w->isWindow() || w->testAttribute(Qt::WA_WindowPropagation))

@@ -171,8 +171,8 @@ class PackedCache {
 
   void Clear(V value) {
     DCHECK_EQ(value, value & kValueMask);
-    for (int i = 0; i < 1 << kHashbits; i++) {
-      array_[i] = static_cast<T>(value);
+    for (auto & i : array_) {
+      i = static_cast<T>(value);
     }
   }
 

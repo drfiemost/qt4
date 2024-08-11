@@ -1366,8 +1366,7 @@ void QZipWriter::close()
     //qDebug("QZip::close writing directory, %d entries", d->fileHeaders.size());
     d->device->seek(d->start_of_directory);
     // write new directory
-    for (int i = 0; i < d->fileHeaders.size(); ++i) {
-        const FileHeader &header = d->fileHeaders.at(i);
+    for (const auto & header : d->fileHeaders) {
         d->device->write((const char *)&header.h, sizeof(CentralFileHeader));
         d->device->write(header.file_name);
         d->device->write(header.extra_field);

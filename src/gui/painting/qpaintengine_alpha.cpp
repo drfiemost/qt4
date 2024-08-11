@@ -334,8 +334,8 @@ void QAlphaPaintEngine::flushAndInit(bool init)
         d->resetState(painter());
 
         // fill in the alpha images
-        for (int i=0; i<rects.size(); ++i)
-            d->drawAlphaImage(rects.at(i));
+        for (auto rect : rects)
+            d->drawAlphaImage(rect);
 
         d->m_alphargn = QRegion();
 

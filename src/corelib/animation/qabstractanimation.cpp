@@ -375,8 +375,7 @@ void QUnifiedTimer::unregisterRunningAnimation(QAbstractAnimation *animation)
 int QUnifiedTimer::closestPauseAnimationTimeToFinish()
 {
     int closestTimeToFinish = INT_MAX;
-    for (int i = 0; i < runningPauseAnimations.size(); ++i) {
-        QAbstractAnimation *animation = runningPauseAnimations.at(i);
+    for (auto animation : runningPauseAnimations) {
         int timeToFinish;
 
         if (animation->direction() == QAbstractAnimation::Forward)

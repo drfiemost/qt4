@@ -312,8 +312,7 @@ QCoreApplicationPrivate::~QCoreApplicationPrivate()
 
         // need to clear the state of the mainData, just in case a new QCoreApplication comes along.
         QMutexLocker locker(&thisThreadData->postEventList.mutex);
-        for (int i = 0; i < thisThreadData->postEventList.size(); ++i) {
-            const QPostEvent &pe = thisThreadData->postEventList.at(i);
+        for (const auto & pe : thisThreadData->postEventList) {
             if (pe.event) {
                 --pe.receiver->d_func()->postedEvents;
                 pe.event->posted = false;
@@ -777,8 +776,8 @@ bool QCoreApplicationPrivate::sendThroughApplicationEventFilters(QObject *receiv
     auto thisThreadData = threadData.loadRelaxed();
     if (receiver->d_func()->threadData.loadRelaxed() == thisThreadData) {
         // application event filters are only called for objects in the GUI thread
-        for (int i = 0; i < eventFilters.size(); ++i) {
-            QObject *obj = eventFilters.at(i);
+        for (const auto & eventFilter : eventFilters) {
+            QObject *obj = eventFilter;
             if (!obj)
                 continue;
             if (obj->d_func()->threadData.loadRelaxed() != thisThreadData) {
@@ -1003,8 +1002,7 @@ void QCoreApplication::exit(int returnCode)
         return;
     QThreadData *data = self->d_func()->threadData.loadRelaxed();
     data->quitNow = true;
-    for (int i = 0; i < data->eventLoops.size(); ++i) {
-        QEventLoop *eventLoop = data->eventLoops.at(i);
+    for (auto eventLoop : data->eventLoops) {
         eventLoop->exit(returnCode);
     }
 }
@@ -1170,8 +1168,7 @@ bool QCoreApplication::compressEvent(QEvent *event, QObject *receiver, QPostEven
     }
 
     if (event->type() == QEvent::Quit && receiver->d_func()->postedEvents > 0) {
-        for (int i = 0; i < postedEvents->size(); ++i) {
-            const QPostEvent &cur = postedEvents->at(i);
+        for (const auto & cur : *postedEvents) {
             if (cur.receiver != receiver
                     || cur.event == nullptr
                     || cur.event->type() != event->type())
@@ -1452,8 +1449,7 @@ void QCoreApplicationPrivate::removePostedEvent(QEvent * event)
 #endif
     }
 
-    for (int i = 0; i < data->postEventList.size(); ++i) {
-        const QPostEvent & pe = data->postEventList.at(i);
+    for (const auto & pe : data->postEventList) {
         if (pe.event == event) {
 #ifndef QT_NO_DEBUG
             qWarning("QCoreApplication::removePostedEvent: Event of type %d deleted while posted to %s %s",

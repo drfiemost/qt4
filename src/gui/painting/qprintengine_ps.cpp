@@ -636,8 +636,8 @@ void QPSPrintEnginePrivate::flushPage(bool last)
             }
         }
     }
-    for (int i = 0; i < currentPage->fonts.size(); ++i)
-        buffer << "(F" << QByteArray::number(currentPage->fonts.at(i)) << ") T1Setup\n";
+    for (unsigned int font : currentPage->fonts)
+        buffer << "(F" << QByteArray::number(font) << ") T1Setup\n";
 
     buffer << "%%EndPageSetup\nq\n";
     e << "\nQ QP\n";

@@ -3264,8 +3264,8 @@ QString QString::section(const QString &sep, int start, int end, SectionFlags fl
             end += sections.count();
     } else {
         int skip = 0;
-        for (int k=0; k<sections.size(); ++k) {
-            if (sections.at(k).isEmpty())
+        for (const auto & section : sections) {
+            if (section.isEmpty())
                 skip++;
         }
         if (start < 0)
@@ -6250,8 +6250,7 @@ void qt_string_normalize(QString *data, QString::NormalizationForm mode, QChar::
     } else if (int(version) <= NormalizationCorrectionsVersionMax) {
         const QString &s = *data;
         QChar *d = nullptr;
-        for (int i = 0; i < NumNormalizationCorrections; ++i) {
-            const NormalizationCorrection &n = uc_normalization_corrections[i];
+        for (auto n : uc_normalization_corrections) {
             if (n.version > version) {
                 int pos = from;
                 if (QChar::requiresSurrogates(n.ucs4)) {

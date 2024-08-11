@@ -106,10 +106,10 @@ void QSimplex::clearDataStructures()
     matrix = nullptr;
 
     // Constraints
-    for (int i = 0; i < constraints.size(); ++i) {
-        delete constraints[i]->helper.first;
-        delete constraints[i]->artificial;
-        delete constraints[i];
+    for (auto & constraint : constraints) {
+        delete constraint->helper.first;
+        delete constraint->artificial;
+        delete constraint;
     }
     constraints.clear();
 
@@ -138,11 +138,11 @@ bool QSimplex::setConstraints(const QList<QSimplexConstraint *> newConstraints)
 
     // Make deep copy of constraints. We need this copy because we may change
     // them in the simplification method.
-    for (int i = 0; i < newConstraints.size(); ++i) {
+    for (auto newConstraint : newConstraints) {
         QSimplexConstraint *c = new QSimplexConstraint;
-        c->constant = newConstraints[i]->constant;
-        c->ratio = newConstraints[i]->ratio;
-        c->variables = newConstraints[i]->variables;
+        c->constant = newConstraint->constant;
+        c->ratio = newConstraint->ratio;
+        c->variables = newConstraint->variables;
         constraints << c;
     }
 
@@ -161,9 +161,9 @@ bool QSimplex::setConstraints(const QList<QSimplexConstraint *> newConstraints)
     // "variables" is a list that provides a stable, indexed list of all variables
     // used in this problem.
     QSet<QSimplexVariable *> variablesSet;
-    for (int i = 0; i < constraints.size(); ++i)
+    for (auto & constraint : constraints)
         variablesSet += \
-            QSet<QSimplexVariable *>::fromList(constraints[i]->variables.keys());
+            QSet<QSimplexVariable *>::fromList(constraint->variables.keys());
     variables = variablesSet.toList();
 
     // Set Variables reverse mapping
@@ -189,7 +189,7 @@ bool QSimplex::setConstraints(const QList<QSimplexConstraint *> newConstraints)
     int variableIndex = variables.size();
     QList <QSimplexVariable *> artificialList;
 
-    for (int i = 0; i < constraints.size(); ++i) {
+    for (auto & constraint : constraints) {
         QSimplexVariable *slack;
         QSimplexVariable *surplus;
         QSimplexVariable *artificial;
@@ -197,23 +197,23 @@ bool QSimplex::setConstraints(const QList<QSimplexConstraint *> newConstraints)
         Q_ASSERT(constraints[i]->helper.first == 0);
         Q_ASSERT(constraints[i]->artificial == 0);
 
-        switch(constraints[i]->ratio) {
+        switch(constraint->ratio) {
         case QSimplexConstraint::LessOrEqual:
             slack = new QSimplexVariable;
             slack->index = ++variableIndex;
-            constraints[i]->helper.first = slack;
-            constraints[i]->helper.second = 1.0;
+            constraint->helper.first = slack;
+            constraint->helper.second = 1.0;
             break;
         case QSimplexConstraint::MoreOrEqual:
             surplus = new QSimplexVariable;
             surplus->index = ++variableIndex;
-            constraints[i]->helper.first = surplus;
-            constraints[i]->helper.second = -1.0;
+            constraint->helper.first = surplus;
+            constraint->helper.second = -1.0;
             // fall through
         case QSimplexConstraint::Equal:
             artificial = new QSimplexVariable;
-            constraints[i]->artificial = artificial;
-            artificialList += constraints[i]->artificial;
+            constraint->artificial = artificial;
+            artificialList += constraint->artificial;
             break;
         }
     }
@@ -223,8 +223,8 @@ bool QSimplex::setConstraints(const QList<QSimplexConstraint *> newConstraints)
     // as to ensure they are at the end of the variable list and therefore
     // can be easily removed at the end of this method.
     firstArtificial = variableIndex + 1;
-    for (int i = 0; i < artificialList.size(); ++i)
-        artificialList[i]->index = ++variableIndex;
+    for (auto & i : artificialList)
+        i->index = ++variableIndex;
     artificialList.clear();
 
     /////////////////////////////
@@ -584,8 +584,8 @@ void QSimplex::collectResults()
 
     // ### Is this really needed? Is there any chance that an
     // important variable remains as non-basic at the end of simplex?
-    for (int i = 0; i < variables.size(); ++i)
-        variables[i]->result = 0;
+    for (auto & variable : variables)
+        variable->result = 0;
 
     // Basic variables
     // Update the variable indicated in the first column with the value

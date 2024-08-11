@@ -305,10 +305,10 @@ void HtmlTextEdit::contextMenuEvent(QContextMenuEvent *event)
         { "&&reg; (Trade Mark)", "&reg;" },
     };
 
-    for (int i = 0; i < 6; ++i) {
-        QAction *entityAction = new QAction(QLatin1String(entries[i].text),
+    for (auto entrie : entries) {
+        QAction *entityAction = new QAction(QLatin1String(entrie.text),
                                             htmlMenu);
-        entityAction->setData(QLatin1String(entries[i].entity));
+        entityAction->setData(QLatin1String(entrie.entity));
         htmlMenu->addAction(entityAction);
     }
 

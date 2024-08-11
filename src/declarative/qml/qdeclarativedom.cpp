@@ -623,8 +623,8 @@ QDeclarativeDomObjectPrivate::properties(QDeclarativeParser::Property *property)
         }
 
         QByteArray name(property->name + '.');
-        for (Properties::Iterator iter = rv.begin(); iter != rv.end(); ++iter)
-            iter->second.prepend(name);
+        for (auto & iter : rv)
+            iter.second.prepend(name);
 
     } else {
         rv << qMakePair(property, property->name);
@@ -827,10 +827,10 @@ QList<QDeclarativeDomDynamicProperty> QDeclarativeDomObject::dynamicProperties()
 {
     QList<QDeclarativeDomDynamicProperty> properties;
 
-    for (int i = 0; i < d->object->dynamicProperties.size(); ++i) {
+    for (const auto & dynamicPropertie : d->object->dynamicProperties) {
         QDeclarativeDomDynamicProperty p;
         p.d = new QDeclarativeDomDynamicPropertyPrivate;
-        p.d->property = d->object->dynamicProperties.at(i);
+        p.d->property = dynamicPropertie;
         p.d->valid = true;
 
         if (p.d->property.defaultValue)
@@ -849,10 +849,10 @@ QDeclarativeDomDynamicProperty QDeclarativeDomObject::dynamicProperty(const QByt
     if (!isValid())
         return p;
 
-    for (int i = 0; i < d->object->dynamicProperties.size(); ++i) {
-        if (d->object->dynamicProperties.at(i).name == name) {
+    for (const auto & dynamicPropertie : d->object->dynamicProperties) {
+        if (dynamicPropertie.name == name) {
             p.d = new QDeclarativeDomDynamicPropertyPrivate;
-            p.d->property = d->object->dynamicProperties.at(i);
+            p.d->property = dynamicPropertie;
             if (p.d->property.defaultValue) p.d->property.defaultValue->addref();
             p.d->valid = true;
         }

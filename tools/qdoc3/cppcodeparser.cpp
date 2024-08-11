@@ -633,8 +633,7 @@ Node *CppCodeParser::processTopicCommand(const Doc& doc,
             else {
                 func->setMetaness(FunctionNode::MacroWithParams);
                 QList<Parameter> params = func->parameters();
-                for (int i = 0; i < params.size(); ++i) {
-                    Parameter &param = params[i];
+                for (auto & param : params) {
                     if (param.name().isEmpty() && !param.leftType().isEmpty()
                             && param.leftType() != "...")
                         param = Parameter("", "", param.leftType());

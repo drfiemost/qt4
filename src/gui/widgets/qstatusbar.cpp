@@ -139,8 +139,7 @@ QRect QStatusBarPrivate::messageRect() const
     }
 #endif
 
-    for (int i=0; i<items.size(); ++i) {
-        QStatusBarPrivate::SBItem* item = items.at(i);
+    for (auto item : items) {
         if (!item)
             break;
         if (item->p && item->w->isVisible()) {
@@ -631,8 +630,8 @@ void QStatusBar::hideOrShow()
     bool haveMessage = !d->tempItem.isEmpty();
 
     QStatusBarPrivate::SBItem* item = nullptr;
-    for (int i=0; i<d->items.size(); ++i) {
-        item = d->items.at(i);
+    for (auto i : d->items) {
+        item = i;
         if (!item || item->p)
             break;
         if (haveMessage && item->w->isVisible()) {
@@ -682,8 +681,7 @@ void QStatusBar::paintEvent(QPaintEvent *event)
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_PanelStatusBar, &opt, &p, this);
 
-    for (int i=0; i<d->items.size(); ++i) {
-        QStatusBarPrivate::SBItem* item = d->items.at(i);
+    for (auto item : d->items) {
         if (item && item->w->isVisible() && (!haveMessage || item->p)) {
             QRect ir = item->w->geometry().adjusted(-2, -1, 2, 1);
             if (event->rect().intersects(ir)) {
@@ -722,8 +720,8 @@ bool QStatusBar::event(QEvent *e)
         int maxH = fontMetrics().height();
 
         QStatusBarPrivate::SBItem* item = nullptr;
-        for (int i=0; i<d->items.size(); ++i) {
-            item = d->items.at(i);
+        for (auto i : d->items) {
+            item = i;
             if (!item)
                 break;
             int itemH = std::min(qSmartMinSize(item->w).height(), item->w->maximumHeight());

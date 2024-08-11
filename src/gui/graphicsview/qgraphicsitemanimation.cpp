@@ -343,8 +343,8 @@ void QGraphicsItemAnimation::setRotationAt(qreal step, qreal angle)
 QList<QPair<qreal, qreal> > QGraphicsItemAnimation::rotationList() const
 {
     QList<QPair<qreal, qreal> > list;
-    for (int i = 0; i < d->rotation.size(); ++i)
-        list << QPair<qreal, qreal>(d->rotation.at(i).step, d->rotation.at(i).value);
+    for (auto i : d->rotation)
+        list << QPair<qreal, qreal>(i.step, i.value);
 
     return list;
 }

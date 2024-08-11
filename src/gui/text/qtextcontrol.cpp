@@ -1953,8 +1953,7 @@ void QTextControlPrivate::inputMethodEvent(QInputMethodEvent *e)
         c.insertText(e->commitString());
     }
 
-    for (int i = 0; i < e->attributes().size(); ++i) {
-        const QInputMethodEvent::Attribute &a = e->attributes().at(i);
+    for (const auto & a : e->attributes()) {
         if (a.type == QInputMethodEvent::Selection) {
             QTextCursor oldCursor = cursor;
             int blockStart = a.start + cursor.block().position();
@@ -1973,8 +1972,7 @@ void QTextControlPrivate::inputMethodEvent(QInputMethodEvent *e)
     const int oldPreeditCursor = preeditCursor;
     preeditCursor = e->preeditString().length();
     hideCursor = false;
-    for (int i = 0; i < e->attributes().size(); ++i) {
-        const QInputMethodEvent::Attribute &a = e->attributes().at(i);
+    for (const auto & a : e->attributes()) {
         if (a.type == QInputMethodEvent::Cursor) {
             preeditCursor = a.start;
             hideCursor = !a.length;
@@ -2163,8 +2161,8 @@ QMenu *QTextControl::createStandardContextMenu(const QPointF &pos, QWidget *pare
         QInputContext *qic = d->inputContext();
         if (qic) {
             QList<QAction *> imActions = qic->actions();
-            for (int i = 0; i < imActions.size(); ++i)
-                menu->addAction(imActions.at(i));
+            for (auto imAction : imActions)
+                menu->addAction(imAction);
         }
     }
 #endif
@@ -3097,8 +3095,8 @@ QUnicodeControlCharacterMenu::QUnicodeControlCharacterMenu(QObject *_editWidget,
     : QMenu(parent), editWidget(_editWidget)
 {
     setTitle(tr("Insert Unicode control character"));
-    for (int i = 0; i < NUM_CONTROL_CHARACTERS; ++i) {
-        addAction(tr(qt_controlCharacters[i].text), this, SLOT(menuActionTriggered()));
+    for (auto qt_controlCharacter : qt_controlCharacters) {
+        addAction(tr(qt_controlCharacter.text), this, SLOT(menuActionTriggered()));
     }
 }
 

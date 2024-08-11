@@ -143,8 +143,7 @@ static QString fixedXmlName(const QString &_name, bool *ok, bool namespaces = fa
 
     QString result;
     bool firstChar = true;
-    for (int i = 0; i < name.size(); ++i) {
-        QChar c = name.at(i);
+    for (auto c : name) {
         if (firstChar) {
             if (QXmlUtils::isLetter(c) || c.unicode() == '_' || c.unicode() == ':') {
                 result.append(c);
@@ -185,8 +184,7 @@ static QString fixedCharData(const QString &data, bool *ok)
     }
 
     QString result;
-    for (int i = 0; i < data.size(); ++i) {
-        QChar c = data.at(i);
+    for (auto c : data) {
         if (QXmlUtils::isChar(c)) {
             result.append(c);
         } else if (QDomImplementationPrivate::invalidDataPolicy == QDomImplementation::ReturnNullNode) {

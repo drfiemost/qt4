@@ -204,8 +204,8 @@ bool QUndoCommand::mergeWith(const QUndoCommand *command)
 
 void QUndoCommand::redo()
 {
-    for (int i = 0; i < d->child_list.size(); ++i)
-        d->child_list.at(i)->redo();
+    for (auto i : d->child_list)
+        i->redo();
 }
 
 /*!

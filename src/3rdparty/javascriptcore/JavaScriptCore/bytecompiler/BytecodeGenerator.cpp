@@ -255,33 +255,31 @@ BytecodeGenerator::BytecodeGenerator(ProgramNode* programNode, const Debugger* d
         // Shift new symbols so they get stored prior to existing symbols.
         m_nextGlobalIndex -= symbolTable->size();
 
-        for (size_t i = 0; i < functionStack.size(); ++i) {
-            FunctionBodyNode* function = functionStack[i];
+        for (auto function : functionStack) {
             globalObject->removeDirect(function->ident()); // Make sure our new function is not shadowed by an old property.
             emitNewFunction(addGlobalVar(function->ident(), false), function);
         }
 
         Vector<RegisterID*, 32> newVars;
-        for (size_t i = 0; i < varStack.size(); ++i)
-            if (!globalObject->hasProperty(exec, *varStack[i].first))
-                newVars.append(addGlobalVar(*varStack[i].first, varStack[i].second & DeclarationStacks::IsConstant));
+        for (const auto & i : varStack)
+            if (!globalObject->hasProperty(exec, *i.first))
+                newVars.append(addGlobalVar(*i.first, i.second & DeclarationStacks::IsConstant));
 
         preserveLastVar();
 
-        for (size_t i = 0; i < newVars.size(); ++i)
-            emitLoad(newVars[i], jsUndefined());
+        for (auto & newVar : newVars)
+            emitLoad(newVar, jsUndefined());
     } else {
-        for (size_t i = 0; i < functionStack.size(); ++i) {
-            FunctionBodyNode* function = functionStack[i];
+        for (auto function : functionStack) {
             globalObject->putWithAttributes(exec, function->ident(), new (exec) JSFunction(exec, makeFunction(exec, function), scopeChain.node()), DontDelete);
         }
-        for (size_t i = 0; i < varStack.size(); ++i) {
-            if (globalObject->hasProperty(exec, *varStack[i].first))
+        for (const auto & i : varStack) {
+            if (globalObject->hasProperty(exec, *i.first))
                 continue;
             int attributes = DontDelete;
-            if (varStack[i].second & DeclarationStacks::IsConstant)
+            if (i.second & DeclarationStacks::IsConstant)
                 attributes |= ReadOnly;
-            globalObject->putWithAttributes(exec, *varStack[i].first, jsUndefined(), attributes);
+            globalObject->putWithAttributes(exec, *i.first, jsUndefined(), attributes);
         }
 
         preserveLastVar();
@@ -338,16 +336,15 @@ BytecodeGenerator::BytecodeGenerator(FunctionBodyNode* functionBody, const Debug
     }
 
     const DeclarationStacks::FunctionStack& functionStack = functionBody->functionStack();
-    for (size_t i = 0; i < functionStack.size(); ++i) {
-        FunctionBodyNode* function = functionStack[i];
+    for (auto function : functionStack) {
         const Identifier& ident = function->ident();
         m_functions.add(ident.ustring().rep());
         emitNewFunction(addVar(ident, false), function);
     }
 
     const DeclarationStacks::VarStack& varStack = functionBody->varStack();
-    for (size_t i = 0; i < varStack.size(); ++i)
-        addVar(*varStack[i].first, varStack[i].second & DeclarationStacks::IsConstant);
+    for (const auto & i : varStack)
+        addVar(*i.first, i.second & DeclarationStacks::IsConstant);
 
     FunctionParameters& parameters = *functionBody->parameters();
     size_t parameterCount = parameters.size();
@@ -398,8 +395,8 @@ BytecodeGenerator::BytecodeGenerator(EvalNode* evalNode, const Debugger* debugge
     m_codeBlock->m_numParameters = 1; // Allocate space for "this"
 
     const DeclarationStacks::FunctionStack& functionStack = evalNode->functionStack();
-    for (size_t i = 0; i < functionStack.size(); ++i)
-        m_codeBlock->addFunctionDecl(makeFunction(m_globalData, functionStack[i]));
+    for (auto i : functionStack)
+        m_codeBlock->addFunctionDecl(makeFunction(m_globalData, i));
 
     const DeclarationStacks::VarStack& varStack = evalNode->varStack();
     unsigned numVariables = varStack.size();

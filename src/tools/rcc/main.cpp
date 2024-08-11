@@ -244,8 +244,8 @@ int runRcc(int argc, char *argv[])
     // do the task
     if (list) {
         const QStringList data = library.dataFiles();
-        for (int i = 0; i < data.size(); ++i) {
-            out.write(qPrintable(QDir::cleanPath(data.at(i))));
+        for (const auto & i : data) {
+            out.write(qPrintable(QDir::cleanPath(i)));
             out.write("\n");
         }
         return 0;

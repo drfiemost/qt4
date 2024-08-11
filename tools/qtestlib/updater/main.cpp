@@ -135,10 +135,10 @@ int main(int argc, char *argv[])
             line.replace(QLatin1String("QTest::sleep"), QLatin1String("QTest::qSleep"));
             line.replace(QLatin1String("QTest::wait"), QLatin1String("QTest::qWait"));
 
-            for (int m = 0; m < MacroCount; ++m) {
+            for (auto & macroName : macroNames) {
                 QRegExp macroRe(QString::fromLatin1("\\b%1(\\s*\\()").arg(
-                                 QLatin1String(macroNames[m])));
-                QString newMacroName = QLatin1Char('Q') + QString::fromLatin1(macroNames[m]);
+                                 QLatin1String(macroName)));
+                QString newMacroName = QLatin1Char('Q') + QString::fromLatin1(macroName);
                 int pos = 0;
                 while ((pos = macroRe.indexIn(line)) != -1) {
                     line.replace(macroRe, newMacroName + macroRe.cap(1));

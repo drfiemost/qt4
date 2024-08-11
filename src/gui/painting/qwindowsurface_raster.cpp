@@ -153,8 +153,8 @@ void QRasterWindowSurface::beginPaint(const QRegion &rgn)
         p.setCompositionMode(QPainter::CompositionMode_Source);
         const QVector<QRect> rects = rgn.rects();
         const QColor blank = Qt::transparent;
-        for (QVector<QRect>::const_iterator it = rects.begin(); it != rects.end(); ++it) {
-            p.fillRect(*it, blank);
+        for (auto rect : rects) {
+            p.fillRect(rect, blank);
         }
     }
 #else
@@ -397,8 +397,8 @@ bool QRasterWindowSurface::scroll(const QRegion &area, int dx, int dy)
 #endif
 
     const QVector<QRect> rects = area.rects();
-    for (int i = 0; i < rects.size(); ++i)
-        qt_scrollRectInImage(d->image->image, rects.at(i), QPoint(dx, dy));
+    for (auto rect : rects)
+        qt_scrollRectInImage(d->image->image, rect, QPoint(dx, dy));
 
     return true;
 #endif

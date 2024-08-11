@@ -209,8 +209,8 @@ bool QWindowsStyle::eventFilter(QObject *o, QEvent *e)
             d->alt_down = true;
 
             // Repaint all relevant widgets
-            for (int pos = 0; pos < l.size(); ++pos)
-                l.at(pos)->update();
+            for (auto pos : l)
+                pos->update();
         }
         break;
     case QEvent::KeyRelease:
@@ -221,8 +221,8 @@ bool QWindowsStyle::eventFilter(QObject *o, QEvent *e)
             d->alt_down = false;
 #ifndef QT_NO_MENUBAR
             QList<QMenuBar *> l = widget->findChildren<QMenuBar *>();
-            for (int i = 0; i < l.size(); ++i)
-                l.at(i)->update();
+            for (auto i : l)
+                i->update();
 #endif
         }
         break;

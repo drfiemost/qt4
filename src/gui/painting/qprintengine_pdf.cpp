@@ -1090,9 +1090,9 @@ void QPdfEnginePrivate::embedFont(QFontSubset *font)
 
 void QPdfEnginePrivate::writeFonts()
 {
-    for (QHash<QFontEngine::FaceId, QFontSubset *>::iterator it = fonts.begin(); it != fonts.end(); ++it) {
-        embedFont(*it);
-        delete *it;
+    for (auto & font : fonts) {
+        embedFont(font);
+        delete font;
     }
     fonts.clear();
 }
@@ -1134,23 +1134,23 @@ void QPdfEnginePrivate::writePage()
             "/GSa %d 0 R\n",
             patternColorSpace, graphicsState);
 
-    for (int i = 0; i < currentPage->graphicStates.size(); ++i)
-        xprintf("/GState%d %d 0 R\n", currentPage->graphicStates.at(i), currentPage->graphicStates.at(i));
+    for (unsigned int graphicState : currentPage->graphicStates)
+        xprintf("/GState%d %d 0 R\n", graphicState, graphicState);
     xprintf(">>\n");
 
     xprintf("/Pattern <<\n");
-    for (int i = 0; i < currentPage->patterns.size(); ++i)
-        xprintf("/Pat%d %d 0 R\n", currentPage->patterns.at(i), currentPage->patterns.at(i));
+    for (unsigned int pattern : currentPage->patterns)
+        xprintf("/Pat%d %d 0 R\n", pattern, pattern);
     xprintf(">>\n");
 
     xprintf("/Font <<\n");
-    for (int i = 0; i < currentPage->fonts.size();++i)
-        xprintf("/F%d %d 0 R\n", currentPage->fonts[i], currentPage->fonts[i]);
+    for (unsigned int font : currentPage->fonts)
+        xprintf("/F%d %d 0 R\n", font, font);
     xprintf(">>\n");
 
     xprintf("/XObject <<\n");
-    for (int i = 0; i<currentPage->images.size(); ++i) {
-        xprintf("/Im%d %d 0 R\n", currentPage->images.at(i), currentPage->images.at(i));
+    for (unsigned int image : currentPage->images) {
+        xprintf("/Im%d %d 0 R\n", image, image);
     }
     xprintf(">>\n");
 
@@ -1159,8 +1159,8 @@ void QPdfEnginePrivate::writePage()
 
     addXrefEntry(annots);
     xprintf("[ ");
-    for (int i = 0; i<currentPage->annotations.size(); ++i) {
-        xprintf("%d 0 R ", currentPage->annotations.at(i));
+    for (unsigned int annotation : currentPage->annotations) {
+        xprintf("%d 0 R ", annotation);
     }
     xprintf("]\nendobj\n");
 
@@ -1229,10 +1229,10 @@ void QPdfEnginePrivate::printString(const QString &string) {
     
     for (int i=0; i < string.size(); ++i) {
         char part[2] = {char((*(utf16 + i)) >> 8), char((*(utf16 + i)) & 0xff)};
-        for(int j=0; j < 2; ++j) {
-            if (part[j] == '(' || part[j] == ')' || part[j] == '\\')
+        for(char j : part) {
+            if (j == '(' || j == ')' || j == '\\')
                 array.append('\\');
-            array.append(part[j]);
+            array.append(j);
         }
     }
     array.append(")");

@@ -234,8 +234,7 @@ QString PageGenerator::fileBase(const Node *node) const
     // +5 prevents realloc in fileName() below
     res.reserve(base.size() + 5);
     bool begun = false;
-    for (int i = 0; i != base.size(); ++i) {
-        QChar c = base.at(i);
+    for (auto c : base) {
         uint u = c.unicode();
         if (u >= 'A' && u <= 'Z')
             u -= 'A' - 'a';

@@ -74,8 +74,8 @@ TCHAR* Explanation::toString(int32_t depth) {
  buffer.append(getDescription());
  buffer.append(_T("\n"));
 
- for ( uint32_t j=0;j<details.size();j++ ){
-   TCHAR* tmp = details[j]->toString(depth+1);
+ for (auto & detail : details){
+   TCHAR* tmp = detail->toString(depth+1);
    buffer.append(tmp);
    _CLDELETE_CARRAY(tmp);
  }
@@ -121,8 +121,8 @@ TCHAR* Explanation::toHtml() {
  buffer.append(getDescription());
  buffer.append(_T("</li>\n"));
 
- for ( uint32_t i=0;i<details.size();i++ ){
-   tmp = details[i]->toHtml();
+ for (auto & detail : details){
+   tmp = detail->toHtml();
     buffer.append(tmp);
     _CLDELETE_CARRAY(tmp);
  }

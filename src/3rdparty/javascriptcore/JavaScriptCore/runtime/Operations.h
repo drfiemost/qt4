@@ -135,8 +135,7 @@ namespace JSC {
             ropeLength += asString(thisValue)->ropeLength();
         else
             ++ropeLength;
-        for (unsigned i = 0; i < args.size(); ++i) {
-            JSValue v = args.at(i);
+        for (auto v : args) {
             if (LIKELY(v.isString()))
                 ropeLength += asString(v)->ropeLength();
             else
@@ -152,8 +151,7 @@ namespace JSC {
             rope->append(index, asString(thisValue));
         else
             rope->append(index, thisValue.toString(exec));
-        for (unsigned i = 0; i < args.size(); ++i) {
-            JSValue v = args.at(i);
+        for (auto v : args) {
             if (LIKELY(v.isString()))
                 rope->append(index, asString(v));
             else

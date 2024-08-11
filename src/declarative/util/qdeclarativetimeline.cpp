@@ -734,8 +734,7 @@ int QDeclarativeTimeLinePrivate::advance(int t)
         pauseTime = -1;
         // Minimal advance time
         int advanceTime = t;
-        for (Ops::Iterator iter = ops.begin(); iter != ops.end(); ++iter) {
-            TimeLine &tl = *iter;
+        for (auto & tl : ops) {
             Op &op = tl.ops.first();
             int length = op.length - tl.consumedOpLength;
                 
@@ -835,12 +834,10 @@ void QDeclarativeTimeLine::remove(QDeclarativeTimeLineObject *v)
     if (len == d->length) {
         // We need to recalculate the length
         d->length = 0;
-        for (QDeclarativeTimeLinePrivate::Ops::Iterator iter = d->ops.begin();
-                iter != d->ops.end();
-                ++iter) {
+        for (auto & op : d->ops) {
 
-            if (iter->length > d->length)
-                d->length = iter->length;
+            if (op.length > d->length)
+                d->length = op.length;
 
         }
     }

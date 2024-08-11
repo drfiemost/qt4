@@ -415,10 +415,10 @@ QTextEdit *MessageEditor::activeTranslation() const
 QTextEdit *MessageEditor::activeOr1stTranslation() const
 {
     if (m_currentNumerus < 0) {
-        for (int i = 0; i < m_editors.size(); ++i)
-            if (m_editors[i].container->isVisible()
-                && !m_editors[i].transTexts.first()->getEditors().first()->isReadOnly())
-                return m_editors[i].transTexts.first()->getEditors().first();
+        for (const auto & m_editor : m_editors)
+            if (m_editor.container->isVisible()
+                && !m_editor.transTexts.first()->getEditors().first()->isReadOnly())
+                return m_editor.transTexts.first()->getEditors().first();
         return nullptr;
     }
     return activeTranslation();
@@ -651,8 +651,8 @@ void MessageEditor::showMessage(const MultiDataIndex &index)
 
         // Translation forms
         if (item->text().isEmpty() && !item->context().isEmpty()) {
-            for (int i = 0; i < ed.transTexts.size(); ++i)
-                ed.transTexts.at(i)->setVisible(false);
+            for (auto transText : ed.transTexts)
+                transText->setVisible(false);
         } else {
             QStringList normalizedTranslations =
                 m_dataModel->model(j)->normalizedTranslations(*item);

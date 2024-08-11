@@ -288,9 +288,9 @@ QString QClipboard::text(QString &subtype, Mode mode) const
         if (formats.contains(QLatin1String("text/plain")))
             subtype = QLatin1String("plain");
         else {
-            for (int i = 0; i < formats.size(); ++i)
-                if (formats.at(i).startsWith(QLatin1String("text/"))) {
-                    subtype = formats.at(i).mid(5);
+            for (const auto & format : formats)
+                if (format.startsWith(QLatin1String("text/"))) {
+                    subtype = format.mid(5);
                     break;
                 }
             if (subtype.isEmpty())
@@ -577,8 +577,8 @@ const char* QMimeDataWrapper::format(int n) const
 {
     if (formats.isEmpty()) {
         QStringList fmts = data->formats();
-        for (int i = 0; i < fmts.size(); ++i)
-            formats.append(fmts.at(i).toLatin1());
+        for (const auto & fmt : fmts)
+            formats.append(fmt.toLatin1());
     }
     if (n < 0 || n >= formats.size())
         return nullptr;

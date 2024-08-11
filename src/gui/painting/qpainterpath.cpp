@@ -1258,8 +1258,8 @@ void QPainterPath::addRegion(const QRegion &region)
 
     QVector<QRect> rects = region.rects();
     d_func()->elements.reserve(rects.size() * 5);
-    for (int i=0; i<rects.size(); ++i)
-        addRect(rects.at(i));
+    for (auto rect : rects)
+        addRect(rect);
 }
 
 
@@ -1638,8 +1638,7 @@ QList<QPolygonF> QPainterPath::toFillPolygons(const QTransform &matrix) const
     // flatten the sets of intersections
     for (int i=0; i<count; ++i) {
         const QList<int> &current_isects = isects.at(i);
-        for (int j=0; j<current_isects.size(); ++j) {
-            int isect_j = current_isects.at(j);
+        for (int isect_j : current_isects) {
             if (isect_j == i)
                 continue;
             for (int k=0; k<isects[isect_j].size(); ++k) {
@@ -1668,8 +1667,8 @@ QList<QPolygonF> QPainterPath::toFillPolygons(const QTransform &matrix) const
         const QList<int> &subpath_list = isects[i];
         if (!subpath_list.isEmpty()) {
             QPolygonF buildUp;
-            for (int j=0; j<subpath_list.size(); ++j) {
-                const QPolygonF &subpath = subpaths.at(subpath_list.at(j));
+            for (int j : subpath_list) {
+                const QPolygonF &subpath = subpaths.at(j);
                 buildUp += subpath;
                 if (!subpath.isClosed())
                     buildUp += subpath.first();
@@ -2034,8 +2033,7 @@ bool QPainterPath::intersects(const QRectF &rect) const
     Q_D(QPainterPath);
 
     // Check if the rectangle surounds any subpath...
-    for (int i=0; i<d->elements.size(); ++i) {
-        const Element &e = d->elements.at(i);
+    for (const auto & e : d->elements) {
         if (e.type == QPainterPath::MoveToElement && rect.contains(e))
             return true;
     }
@@ -2353,8 +2351,7 @@ QDataStream &operator<<(QDataStream &s, const QPainterPath &p)
     }
 
     s << p.elementCount();
-    for (int i=0; i < p.d_func()->elements.size(); ++i) {
-        const QPainterPath::Element &e = p.d_func()->elements.at(i);
+    for (const auto & e : p.d_func()->elements) {
         s << int(e.type);
         s << double(e.x) << double(e.y);
     }
@@ -2675,8 +2672,8 @@ void QPainterPathStroker::setDashPattern(Qt::PenStyle style)
 void QPainterPathStroker::setDashPattern(const QVector<qreal> &dashPattern)
 {
     d_func()->dashPattern.clear();
-    for (int i=0; i<dashPattern.size(); ++i)
-        d_func()->dashPattern << qt_real_to_fixed(dashPattern.at(i));
+    for (double i : dashPattern)
+        d_func()->dashPattern << qt_real_to_fixed(i);
 }
 
 /*!

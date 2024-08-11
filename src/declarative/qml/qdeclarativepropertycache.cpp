@@ -226,10 +226,10 @@ QDeclarativePropertyCache *QDeclarativePropertyCache::copy() const
     for (int ii = 0; ii < methodIndexCache.count(); ++ii) {
         if (methodIndexCache.at(ii)) methodIndexCache.at(ii)->addref();
     }
-    for (StringCache::ConstIterator iter = stringCache.begin(); iter != stringCache.end(); ++iter)
-        (*iter)->addref();
-    for (IdentifierCache::ConstIterator iter = identifierCache.begin(); iter != identifierCache.end(); ++iter)
-        (*iter)->addref();
+    for (auto iter : stringCache)
+        iter->addref();
+    for (auto iter : identifierCache)
+        iter->addref();
 
     return cache;
 }

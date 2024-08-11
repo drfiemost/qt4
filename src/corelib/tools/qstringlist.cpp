@@ -269,9 +269,9 @@ QStringList QtPrivate::QStringList_filter(const QStringList *that, const QString
 {
     QStringMatcher matcher(str, cs);
     QStringList res;
-    for (int i = 0; i < that->size(); ++i)
-        if (matcher.indexIn(that->at(i)) != -1)
-            res << that->at(i);
+    for (const auto & i : *that)
+        if (matcher.indexIn(i) != -1)
+            res << i;
     return res;
 }
 
@@ -288,8 +288,7 @@ QStringList QtPrivate::QStringList_filter(const QStringList *that, const QString
 bool QtPrivate::QStringList_contains(const QStringList *that, const QString &str,
                                       Qt::CaseSensitivity cs)
 {
-    for (int i = 0; i < that->size(); ++i) {
-        const QString & string = that->at(i);
+    for (const auto & string : *that) {
         if (string.length() == str.length() && str.compare(string, cs) == 0)
             return true;
     }
@@ -308,9 +307,9 @@ bool QtPrivate::QStringList_contains(const QStringList *that, const QString &str
 QStringList QtPrivate::QStringList_filter(const QStringList *that, const QRegExp &rx)
 {
     QStringList res;
-    for (int i = 0; i < that->size(); ++i)
-        if (that->at(i).contains(rx))
-            res << that->at(i);
+    for (const auto & i : *that)
+        if (i.contains(rx))
+            res << i;
     return res;
 }
 #endif
@@ -333,8 +332,8 @@ QStringList QtPrivate::QStringList_filter(const QStringList *that, const QRegExp
 void QtPrivate::QStringList_replaceInStrings(QStringList *that, const QString &before,
                                              const QString &after, Qt::CaseSensitivity cs)
 {
-    for (int i = 0; i < that->size(); ++i)
-        (*that)[i].replace(before, after, cs);
+    for (auto & i : *that)
+        i.replace(before, after, cs);
 }
 
 
@@ -363,8 +362,8 @@ void QtPrivate::QStringList_replaceInStrings(QStringList *that, const QString &b
 */
 void QtPrivate::QStringList_replaceInStrings(QStringList *that, const QRegExp &rx, const QString &after)
 {
-    for (int i = 0; i < that->size(); ++i)
-        (*that)[i].replace(rx, after);
+    for (auto & i : *that)
+        i.replace(rx, after);
 }
 #endif
 

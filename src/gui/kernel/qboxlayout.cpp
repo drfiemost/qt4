@@ -1096,8 +1096,7 @@ bool QBoxLayout::setStretchFactor(QWidget *widget, int stretch)
     Q_D(QBoxLayout);
     if (!widget)
         return false;
-    for (int i = 0; i < d->list.size(); ++i) {
-        QBoxLayoutItem *box = d->list.at(i);
+    for (auto box : d->list) {
         if (box->item->widget() == widget) {
             box->stretch = stretch;
             invalidate();
@@ -1117,8 +1116,7 @@ bool QBoxLayout::setStretchFactor(QWidget *widget, int stretch)
 bool QBoxLayout::setStretchFactor(QLayout *layout, int stretch)
 {
     Q_D(QBoxLayout);
-    for (int i = 0; i < d->list.size(); ++i) {
-        QBoxLayoutItem *box = d->list.at(i);
+    for (auto box : d->list) {
         if (box->item->layout() == layout) {
             if (box->stretch != stretch) {
                 box->stretch = stretch;
@@ -1175,8 +1173,7 @@ void QBoxLayout::setDirection(Direction direction)
         //#### a bit yucky, knows too much.
         //#### probably best to add access functions to spacerItem
         //#### or even a QSpacerItem::flip()
-        for (int i = 0; i < d->list.size(); ++i) {
-            QBoxLayoutItem *box = d->list.at(i);
+        for (auto box : d->list) {
             if (box->magic) {
                 QSpacerItem *sp = box->item->spacerItem();
                 if (sp) {

@@ -791,8 +791,7 @@ void Moc::generate(FILE *out)
     if (!noInclude) {
         if (includePath.size() && !includePath.endsWith('/'))
             includePath += '/';
-        for (int i = 0; i < includeFiles.size(); ++i) {
-            QByteArray inc = includeFiles.at(i);
+        for (auto inc : includeFiles) {
             if (inc[0] != '<' && inc[0] != '"') {
                 if (includePath.size() && includePath != "./")
                     inc.prepend(includePath);

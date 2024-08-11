@@ -779,8 +779,8 @@ void QToolBar::setToolButtonStyle(Qt::ToolButtonStyle toolButtonStyle)
 void QToolBar::clear()
 {
     QList<QAction *> actions = this->actions();
-    for(int i = 0; i < actions.size(); i++)
-        removeAction(actions.at(i));
+    for(auto action : actions)
+        removeAction(action);
 }
 
 /*!

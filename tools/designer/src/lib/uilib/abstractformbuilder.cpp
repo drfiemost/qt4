@@ -1016,9 +1016,7 @@ void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGro
     const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
 
     const QList<DomColorRole*> colorRoles = group->elementColorRole();
-    for (int role = 0; role < colorRoles.size(); ++role) {
-        const DomColorRole *colorRole = colorRoles.at(role);
-
+    for (auto colorRole : colorRoles) {
         if (colorRole->hasAttributeRole()) {
             const int r = colorRole_enum.keyToValue(colorRole->attributeRole().toLatin1());
             if (r != -1) {

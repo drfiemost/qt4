@@ -229,8 +229,8 @@ namespace JSC {
         }
         size_t isEmpty() // Much more efficient than testing count() == 0.
         {
-            for (size_t i = 0; i < BITMAP_WORDS; ++i)
-                if (bits[i] != 0)
+            for (unsigned int bit : bits)
+                if (bit != 0)
                     return false;
             return true;
         }

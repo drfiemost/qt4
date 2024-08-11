@@ -1518,23 +1518,23 @@ int QRegExpEngine::createState(int bref)
 
 void QRegExpEngine::addCatTransitions(const QVector<int> &from, const QVector<int> &to)
 {
-    for (int i = 0; i < from.size(); i++)
-        mergeInto(&s[from.at(i)].outs, to);
+    for (int i : from)
+        mergeInto(&s[i].outs, to);
 }
 
 #ifndef QT_NO_REGEXP_CAPTURE
 void QRegExpEngine::addPlusTransitions(const QVector<int> &from, const QVector<int> &to, int atom)
 {
-    for (int i = 0; i < from.size(); i++) {
-        QRegExpAutomatonState &st = s[from.at(i)];
+    for (int i : from) {
+        QRegExpAutomatonState &st = s[i];
         const QVector<int> oldOuts = st.outs;
         mergeInto(&st.outs, to);
         if (f.at(atom).capture != QRegExpAtom::NoCapture) {
-            for (int j = 0; j < to.size(); j++) {
+            for (int j : to) {
                 // ### st.reenter.contains(to.at(j)) check looks suspicious
-                if (!st.reenter.contains(to.at(j)) &&
-                     !std::binary_search(oldOuts.constBegin(), oldOuts.constEnd(), to.at(j)))
-                    st.reenter.insert(to.at(j), atom);
+                if (!st.reenter.contains(j) &&
+                     !std::binary_search(oldOuts.constBegin(), oldOuts.constEnd(), j))
+                    st.reenter.insert(j, atom);
             }
         }
     }
@@ -2529,9 +2529,9 @@ void QRegExpEngine::Box::cat(const Box &b)
     if (minl == 0) {
         lanchors.unite(b.lanchors);
         if (skipanchors != 0) {
-            for (int i = 0; i < b.ls.size(); i++) {
-                int a = eng->anchorConcatenation(lanchors.value(b.ls.at(i), 0), skipanchors);
-                lanchors.insert(b.ls.at(i), a);
+            for (int l : b.ls) {
+                int a = eng->anchorConcatenation(lanchors.value(l, 0), skipanchors);
+                lanchors.insert(l, a);
             }
         }
         mergeInto(&ls, b.ls);
@@ -2539,9 +2539,9 @@ void QRegExpEngine::Box::cat(const Box &b)
     if (b.minl == 0) {
         ranchors.unite(b.ranchors);
         if (b.skipanchors != 0) {
-            for (int i = 0; i < rs.size(); i++) {
-                int a = eng->anchorConcatenation(ranchors.value(rs.at(i), 0), b.skipanchors);
-                ranchors.insert(rs.at(i), a);
+            for (int r : rs) {
+                int a = eng->anchorConcatenation(ranchors.value(r, 0), b.skipanchors);
+                ranchors.insert(r, a);
             }
         }
         mergeInto(&rs, b.rs);
@@ -2653,9 +2653,9 @@ void QRegExpEngine::Box::opt()
 void QRegExpEngine::Box::catAnchor(int a)
 {
     if (a != 0) {
-        for (int i = 0; i < rs.size(); i++) {
-            a = eng->anchorConcatenation(ranchors.value(rs.at(i), 0), a);
-            ranchors.insert(rs.at(i), a);
+        for (int r : rs) {
+            a = eng->anchorConcatenation(ranchors.value(r, 0), a);
+            ranchors.insert(r, a);
         }
         if (minl == 0)
             skipanchors = eng->anchorConcatenation(skipanchors, a);
@@ -2719,10 +2719,10 @@ void QRegExpEngine::Box::dump() const
 void QRegExpEngine::Box::addAnchorsToEngine(const Box &to) const
 {
     for (int i = 0; i < to.ls.size(); i++) {
-        for (int j = 0; j < rs.size(); j++) {
-            int a = eng->anchorConcatenation(ranchors.value(rs.at(j), 0),
+        for (int r : rs) {
+            int a = eng->anchorConcatenation(ranchors.value(r, 0),
                                              to.lanchors.value(to.ls.at(i), 0));
-            eng->addAnchors(rs[j], to.ls[i], a);
+            eng->addAnchors(r, to.ls[i], a);
         }
     }
 }

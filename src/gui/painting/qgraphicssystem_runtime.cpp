@@ -370,8 +370,7 @@ void QRuntimeGraphicsSystem::setGraphicsSystem(const QString &name)
 
     m_pendingGraphicsSystemName = QString();
 
-    for (int i = 0; i < m_pixmapDatas.size(); ++i) {
-        QRuntimePixmapData *proxy = m_pixmapDatas.at(i);
+    for (auto proxy : m_pixmapDatas) {
         QPixmapData *newData = m_graphicsSystem->createPixmapData(proxy->m_data);
         newData->fromImage(proxy->m_data->toImage(), Qt::NoOpaqueDetection);
         delete proxy->m_data;
@@ -379,8 +378,7 @@ void QRuntimeGraphicsSystem::setGraphicsSystem(const QString &name)
         proxy->readBackInfo();
     }
 
-    for (int i = 0; i < m_windowSurfaces.size(); ++i) {
-        QRuntimeWindowSurface *proxy = m_windowSurfaces.at(i);
+    for (auto proxy : m_windowSurfaces) {
         QWidget *widget = proxy->m_windowSurface->window();
 
         if(m_windowSurfaceDestroyPolicy == DestroyAfterFirstFlush)

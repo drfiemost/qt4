@@ -790,11 +790,11 @@ static Atom send_targets_selection(QClipboardData *d, Window window, Atom proper
 {
     QVector<Atom> types;
     QStringList formats = QInternalMimeData::formatsHelper(d->source());
-    for (int i = 0; i < formats.size(); ++i) {
-        QList<Atom> atoms = X11->xdndMimeAtomsForFormat(formats.at(i));
-        for (int j = 0; j < atoms.size(); ++j) {
-            if (!types.contains(atoms.at(j)))
-                types.append(atoms.at(j));
+    for (const auto & format : formats) {
+        QList<Atom> atoms = X11->xdndMimeAtomsForFormat(format);
+        for (unsigned long atom : atoms) {
+            if (!types.contains(atom))
+                types.append(atom);
         }
     }
     types.append(ATOM(TARGETS));
@@ -1223,9 +1223,9 @@ QStringList QClipboardWatcher::formats_sys() const
                     continue;
 
                 QStringList formatsForAtom = X11->xdndMimeFormatsForAtom(targets[i]);
-                for (int j = 0; j < formatsForAtom.size(); ++j) {
-                    if (!formatList.contains(formatsForAtom.at(j)))
-                        formatList.append(formatsForAtom.at(j));
+                for (const auto & j : formatsForAtom) {
+                    if (!formatList.contains(j))
+                        formatList.append(j);
                 }
                 VDEBUG("    format: %s", X11->xdndAtomToString(targets[i]).data());
                 VDEBUG("    data:\n%s\n", getDataInFormat(targets[i]).data());

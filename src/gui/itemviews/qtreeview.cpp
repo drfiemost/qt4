@@ -1410,10 +1410,10 @@ void QTreeView::drawTree(QPainter *painter, const QRegion &region) const
     QVector<QRect> rects = region.rects();
     QVector<int> drawn;
     bool multipleRects = (rects.size() > 1);
-    for (int a = 0; a < rects.size(); ++a) {
+    for (auto rect : rects) {
         const QRect area = (multipleRects
-                            ? QRect(0, rects.at(a).y(), viewportWidth, rects.at(a).height())
-                            : rects.at(a));
+                            ? QRect(0, rect.y(), viewportWidth, rect.height())
+                            : rect);
         d->leftAndRight = d->startAndEndColumns(area);
 
         int i = firstVisibleItem; // the first item at the top of the viewport

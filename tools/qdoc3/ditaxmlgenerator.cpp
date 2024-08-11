@@ -921,8 +921,7 @@ int DitaXmlGenerator::generateAtom(const Atom *atom,
         {
             QList<Node*> values = myTree->groups().values(atom->string());
             NodeMap nodeMap;
-            for (int i = 0; i < values.size(); ++i) {
-                const Node* n = values.at(i);
+            for (auto n : values) {
                 if ((n->status() != Node::Internal) && (n->access() != Node::Private)) {
                     nodeMap.insert(n->nameForLists(),n);
                 }
@@ -2575,8 +2574,8 @@ void DitaXmlGenerator::generateTableOfContents(const Node* node,
               << "\"><xref href=\"#"
               << registerRef("details")
               << "\">Detailed Description</xref></li>\n";
-        for (int i = 0; i < toc.size(); ++i) {
-            if (toc.at(i)->string().toInt() == 1) {
+        for (auto i : toc) {
+            if (i->string().toInt() == 1) {
                 detailsBase = 1;
                 break;
             }
@@ -2600,16 +2599,15 @@ void DitaXmlGenerator::generateTableOfContents(const Node* node,
               << "\"><xref href=\"#"
               << registerRef("details")
               << "\">Detailed Description</xref></li>\n";
-        for (int i = 0; i < toc.size(); ++i) {
-            if (toc.at(i)->string().toInt() == 1) {
+        for (auto i : toc) {
+            if (i->string().toInt() == 1) {
                 detailsBase = 1;
                 break;
             }
         }
     }
 
-    for (int i = 0; i < toc.size(); ++i) {
-        Atom *atom = toc.at(i);
+    for (auto atom : toc) {
         int nextLevel = atom->string().toInt() + detailsBase;
         if (sectionNumber.size() < nextLevel) {
             do {
@@ -5296,10 +5294,10 @@ void DitaXmlGenerator::writeMacros(const Section& s,
                     QStringList params = fn->parameterNames();
                     if (!params.isEmpty()) {
                         writeStartTag(DT_cxxDefineParameters);
-                        for (int i = 0; i < params.size(); ++i) {
+                        for (const auto & param : params) {
                             writeStartTag(DT_cxxDefineParameter);
                             writeStartTag(DT_cxxDefineParameterDeclarationName);
-                            writeCharacters(params[i]);
+                            writeCharacters(param);
                             writeEndTag(); // <cxxDefineParameterDeclarationName>
 
                             // not included: <apiDefNote>
@@ -5572,9 +5570,9 @@ bool DitaXmlGenerator::writeMetadataElements(const InnerNode* inner,
     QStringList s = getMetadataElements(inner,t);
     if (s.isEmpty())
         return false;
-    for (int i=0; i<s.size(); ++i) {
+    for (const auto & i : s) {
         writeStartTag(t);
-        xmlWriter().writeCharacters(s[i]);
+        xmlWriter().writeCharacters(i);
         writeEndTag();
     }
     return true;
@@ -5692,9 +5690,9 @@ DitaXmlGenerator::writeProlog(const InnerNode* inner)
     writeStartTag(DT_metadata);
     QStringList sl = getMetadataElements(inner,DT_audience);
     if (!sl.isEmpty()) {
-        for (int i=0; i<sl.size(); ++i) {
+        for (const auto & i : sl) {
             writeStartTag(DT_audience);
-            xmlWriter().writeAttribute("type",sl[i]);
+            xmlWriter().writeAttribute("type",i);
             writeEndTag(); // </audience>
         }
     }

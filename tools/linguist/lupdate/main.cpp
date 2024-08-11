@@ -304,19 +304,19 @@ static void processSources(Translator &fetchedTor,
                            const QStringList &sourceFiles, ConversionData &cd)
 {
     QStringList sourceFilesCpp;
-    for (QStringList::const_iterator it = sourceFiles.begin(); it != sourceFiles.end(); ++it) {
-        if (it->endsWith(QLatin1String(".java"), Qt::CaseInsensitive))
-            loadJava(fetchedTor, *it, cd);
-        else if (it->endsWith(QLatin1String(".ui"), Qt::CaseInsensitive)
-                 || it->endsWith(QLatin1String(".jui"), Qt::CaseInsensitive))
-            loadUI(fetchedTor, *it, cd);
-        else if (it->endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
-                 || it->endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
-            loadQScript(fetchedTor, *it, cd);
-        else if (it->endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
-            loadQml(fetchedTor, *it, cd);
+    for (const auto & sourceFile : sourceFiles) {
+        if (sourceFile.endsWith(QLatin1String(".java"), Qt::CaseInsensitive))
+            loadJava(fetchedTor, sourceFile, cd);
+        else if (sourceFile.endsWith(QLatin1String(".ui"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".jui"), Qt::CaseInsensitive))
+            loadUI(fetchedTor, sourceFile, cd);
+        else if (sourceFile.endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
+            loadQScript(fetchedTor, sourceFile, cd);
+        else if (sourceFile.endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
+            loadQml(fetchedTor, sourceFile, cd);
         else
-            sourceFilesCpp << *it;
+            sourceFilesCpp << sourceFile;
     }
     loadCPP(fetchedTor, sourceFilesCpp, cd);
     if (!cd.error().isEmpty())

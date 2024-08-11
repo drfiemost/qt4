@@ -376,16 +376,16 @@ void QSvgStrokeStyle::apply(QPainter *p, const QSvgNode *, QSvgExtraStates &stat
         } else {
             // If dash array was set, but not the width, the dash array has to be scaled with respect to the old width.
             QVector<qreal> dashes = m_stroke.dashPattern();
-            for (int i = 0; i < dashes.size(); ++i)
-                dashes[i] /= oldWidth;
+            for (double & dashe : dashes)
+                dashe /= oldWidth;
             pen.setDashPattern(dashes);
             setDashOffsetNeeded = true;
         }
     } else if (m_strokeWidthSet && pen.style() != Qt::SolidLine && scale != 1) {
         // If the width was set, but not the dash array, the old dash array must be scaled with respect to the new width.
         QVector<qreal> dashes = pen.dashPattern();
-        for (int i = 0; i < dashes.size(); ++i)
-            dashes[i] *= scale;
+        for (double & dashe : dashes)
+            dashe *= scale;
         pen.setDashPattern(dashes);
         setDashOffsetNeeded = true;
     }
@@ -426,8 +426,8 @@ void QSvgStrokeStyle::setDashArray(const QVector<qreal> &dashes)
         QVector<qreal> d = dashes;
         qreal w = m_stroke.widthF();
         if (w != 0 && w != 1) {
-            for (int i = 0; i < d.size(); ++i)
-                d[i] /= w;
+            for (double & i : d)
+                i /= w;
         }
         m_stroke.setDashPattern(d);
     } else {

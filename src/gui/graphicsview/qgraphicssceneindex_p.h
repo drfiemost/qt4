@@ -154,8 +154,8 @@ inline void QGraphicsSceneIndexPrivate::items_helper(const QRectF &rect, QGraphi
 {
     Q_Q(const QGraphicsSceneIndex);
     const QList<QGraphicsItem *> tli = q->estimateTopLevelItems(rect, Qt::AscendingOrder);
-    for (int i = 0; i < tli.size(); ++i)
-        recursive_items_helper(tli.at(i), rect, intersector, items, viewTransform, mode);
+    for (auto i : tli)
+        recursive_items_helper(i, rect, intersector, items, viewTransform, mode);
     if (order == Qt::DescendingOrder) {
         const int n = items->size();
         for (int i = 0; i < n / 2; ++i)

@@ -719,8 +719,8 @@ void QPalette::setBrush(ColorGroup cg, ColorRole cr, const QBrush &b)
     detach();
     if(cg >= (int)NColorGroups) {
         if(cg == All) {
-            for(int i = 0; i < (int)NColorGroups; i++)
-                d->br[i][cr] = b;
+            for(auto & i : d->br)
+                i[cr] = b;
             resolve_mask |= (1<<cr);
             return;
         } else if(cg == Current) {
@@ -921,11 +921,11 @@ static const int oldRoles[7] = { QPalette::Foreground, QPalette::Background, QPa
 
 QDataStream &operator<<(QDataStream &s, const QPalette &p)
 {
-    for (int grp = 0; grp < (int)QPalette::NColorGroups; grp++) {
+    for (auto & grp : p.d->br) {
         if (s.version() == 1) {
             // Qt 1.x
-            for (int i = 0; i < NumOldRoles; ++i)
-                s << p.d->br[grp][oldRoles[i]].color();
+            for (int oldRole : oldRoles)
+                s << grp[oldRole].color();
         } else {
             int max = QPalette::ToolTipText + 1;
             if (s.version() <= QDataStream::Qt_2_1)
@@ -933,7 +933,7 @@ QDataStream &operator<<(QDataStream &s, const QPalette &p)
             else if (s.version() <= QDataStream::Qt_4_3)
                 max = QPalette::AlternateBase + 1;
             for (int r = 0; r < max; r++)
-                s << p.d->br[grp][r];
+                s << grp[r];
         }
     }
     return s;
@@ -941,10 +941,10 @@ QDataStream &operator<<(QDataStream &s, const QPalette &p)
 
 static void readV1ColorGroup(QDataStream &s, QPalette &pal, QPalette::ColorGroup grp)
 {
-    for (int i = 0; i < NumOldRoles; ++i) {
+    for (int oldRole : oldRoles) {
         QColor col;
         s >> col;
-        pal.setColor(grp, (QPalette::ColorRole)oldRoles[i], col);
+        pal.setColor(grp, (QPalette::ColorRole)oldRole, col);
     }
 }
 

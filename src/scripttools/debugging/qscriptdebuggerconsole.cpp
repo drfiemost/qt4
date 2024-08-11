@@ -335,8 +335,7 @@ void QScriptDebuggerConsolePrivate::loadScriptedCommands(
     QDir dir(scriptsPath);
     QFileInfoList entries = dir.entryInfoList(QStringList()
                                               << QLatin1String("*.qs"));
-    for (int i = 0; i < entries.size(); ++i) {
-        const QFileInfo &fi = entries.at(i);
+    for (const auto & fi : entries) {
         QString fileName = fi.fileName();
         QFile file(scriptsPath + QLatin1Char('/') + fileName);
         if (!file.open(QIODevice::ReadOnly))

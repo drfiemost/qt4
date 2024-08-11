@@ -1362,9 +1362,9 @@ void QWorkspacePrivate::place(QWidget *w)
     Q_Q(QWorkspace);
 
     QList<QWidget *> widgets;
-    for (QList<QWorkspaceChild *>::Iterator it(windows.begin()); it != windows.end(); ++it)
-        if (*it != w)
-            widgets.append(*it);
+    for (auto & window : windows)
+        if (window != w)
+            widgets.append(window);
 
     int overlap, minOverlap = 0;
     int possible;
@@ -1603,8 +1603,7 @@ void QWorkspacePrivate::minimizeWindow(QWidget* w)
             wasMax = true;
             maxWindow = nullptr;
             hideMaximizeControls();
-            for (QList<QWorkspaceChild *>::Iterator it(windows.begin()); it != windows.end(); ++it) {
-                QWorkspaceChild* c = *it;
+            for (auto c : windows) {
                 if (c->titlebar)
                     c->titlebar->setMovable(true);
                 c->widgetResizeHandler->setActive(true);
@@ -1655,8 +1654,7 @@ void QWorkspacePrivate::normalizeWindow(QWidget* w)
         }
 
         hideMaximizeControls();
-        for (QList<QWorkspaceChild *>::Iterator it(windows.begin()); it != windows.end(); ++it) {
-            QWorkspaceChild* c = *it;
+        for (auto c : windows) {
             if (c->titlebar)
                 c->titlebar->setMovable(true);
             if (c->childWidget && c->childWidget->minimumSize() != c->childWidget->maximumSize())
@@ -1763,8 +1761,8 @@ QWidgetList QWorkspace::windowList(WindowOrder order) const
     QWidgetList windows;
     if (order == StackingOrder) {
         QObjectList cl = children();
-        for (int i = 0; i < cl.size(); ++i) {
-            QWorkspaceChild *c = qobject_cast<QWorkspaceChild*>(cl.at(i));
+        for (auto i : cl) {
+            QWorkspaceChild *c = qobject_cast<QWorkspaceChild*>(i);
             if (c && c->isWindowOrIconVisible())
                 windows.append(c->windowWidget());
         }
@@ -2889,8 +2887,7 @@ void QWorkspaceChild::setActive(bool b)
 
     QList<QWidget*> wl = childWidget->findChildren<QWidget*>();
     if (act) {
-        for (int i = 0; i < wl.size(); ++i) {
-            QWidget *w = wl.at(i);
+        for (auto w : wl) {
             w->removeEventFilter(this);
         }
         if (!hasFocus) {
@@ -2901,8 +2898,7 @@ void QWorkspaceChild::setActive(bool b)
                 childWidget->setFocus();
             } else {
                 // find something, anything, that accepts focus, and use that.
-                for (int i = 0; i < wl.size(); ++i) {
-                    QWidget *w = wl.at(i);
+                for (auto w : wl) {
                     if(w->focusPolicy() != Qt::NoFocus) {
                         w->setFocus();
                         hasFocus = true;
@@ -2914,8 +2910,7 @@ void QWorkspaceChild::setActive(bool b)
             }
         }
     } else {
-        for (int i = 0; i < wl.size(); ++i) {
-            QWidget *w = wl.at(i);
+        for (auto w : wl) {
             w->removeEventFilter(this);
             w->installEventFilter(this);
         }

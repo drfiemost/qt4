@@ -117,9 +117,9 @@ QSize QMenuBarExtension::sizeHint() const
 */
 QAction *QMenuBarPrivate::actionAt(QPoint p) const
 {
-    for(int i = 0; i < actions.size(); ++i) {
-        if(actionRect(actions.at(i)).contains(p))
-            return actions.at(i);
+    for(auto action : actions) {
+        if(actionRect(action).contains(p))
+            return action;
     }
     return nullptr;
 }
@@ -953,8 +953,8 @@ void QMenuBar::setActiveAction(QAction *act)
 void QMenuBar::clear()
 {
     QList<QAction*> acts = actions();
-    for(int i = 0; i < acts.size(); i++)
-        removeAction(acts[i]);
+    for(auto & act : acts)
+        removeAction(act);
 }
 
 /*!

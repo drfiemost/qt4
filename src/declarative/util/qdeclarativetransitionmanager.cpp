@@ -143,8 +143,7 @@ void QDeclarativeTransitionManager::transition(const QList<QDeclarativeAction> &
     if (!d->bindingsList.isEmpty()) {
 
         // Apply all the property and binding changes
-        for (int ii = 0; ii < applyList.size(); ++ii) {
-            const QDeclarativeAction &action = applyList.at(ii);
+        for (const auto & action : applyList) {
             if (!action.toBinding.isNull()) {
                 QDeclarativePropertyPrivate::setBinding(action.property, action.toBinding.data(), QDeclarativePropertyPrivate::BypassInterceptor | QDeclarativePropertyPrivate::DontRemoveBinding);
             } else if (!action.event) {
@@ -158,8 +157,8 @@ void QDeclarativeTransitionManager::transition(const QList<QDeclarativeAction> &
         }
 
         // Read all the end values for binding changes
-        for (int ii = 0; ii < applyList.size(); ++ii) {
-            QDeclarativeAction *action = &applyList[ii];
+        for (auto & ii : applyList) {
+            QDeclarativeAction *action = &ii;
             if (action->event) {
                 action->event->saveTargetValues();
                 continue;

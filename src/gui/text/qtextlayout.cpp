@@ -898,8 +898,7 @@ QRectF QTextLayout::boundingRect() const
     QFixed xmin = d->lines.at(0).x;
     QFixed ymin = d->lines.at(0).y;
 
-    for (int i = 0; i < d->lines.size(); ++i) {
-        const QScriptLine &si = d->lines[i];
+    for (const auto & si : d->lines) {
         xmin = std::min(xmin, si.x);
         ymin = std::min(ymin, si.y);
         QFixed lineWidth = si.width < QFIXED_MAX ? std::max(si.width, si.textWidth) : si.textWidth;
@@ -1064,8 +1063,7 @@ void QTextLayout::draw(QPainter *p, const QPointF &pos, const QVector<FormatRang
 
     QPainterPath excludedRegion;
     QPainterPath textDoneRegion;
-    for (int i = 0; i < selections.size(); ++i) {
-        FormatRange selection = selections.at(i);
+    for (auto selection : selections) {
         const QBrush bg = selection.format.background();
 
         QPainterPath region;
@@ -2202,9 +2200,7 @@ QList<QGlyphRun> QTextLine::glyphs(int from, int length) const
     QHash<QPair<QFontEngine *, int>, QGlyphRun> glyphsHash;
 
     QList<QFontEngine *> keys = glyphLayoutHash.uniqueKeys();
-    for (int i=0; i<keys.size(); ++i) {
-        QFontEngine *fontEngine = keys.at(i);
-
+    for (auto fontEngine : keys) {
         // Make a font for this particular engine
         QRawFont font;
         QRawFontPrivate *fontD = QRawFontPrivate::get(font);
@@ -2237,10 +2233,10 @@ QList<QGlyphRun> QTextLine::glyphs(int from, int length) const
 #endif
 
         QList<GlyphInfo> glyphLayouts = glyphLayoutHash.values(fontEngine);
-        for (int j=0; j<glyphLayouts.size(); ++j) {
-            const QPointF &pos = glyphLayouts.at(j).itemPosition;
-            const QGlyphLayout &glyphLayout = glyphLayouts.at(j).glyphLayout;
-            const QTextItem::RenderFlags &flags = glyphLayouts.at(j).flags;            
+        for (const auto & j : glyphLayouts) {
+            const QPointF &pos = j.itemPosition;
+            const QGlyphLayout &glyphLayout = j.glyphLayout;
+            const QTextItem::RenderFlags &flags = j.flags;            
 
             QVarLengthArray<glyph_t> glyphsArray;
             QVarLengthArray<QFixedPoint> positionsArray;

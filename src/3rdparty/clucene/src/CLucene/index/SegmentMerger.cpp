@@ -126,9 +126,8 @@ int32_t SegmentMerger::merge()
 
 void SegmentMerger::closeReaders()
 {
-    for (uint32_t i = 0; i < readers.size(); i++) {
+    for (auto reader : readers) {
         // close readers
-        IndexReader* reader = readers[i];
         reader->close();
     }
 }
@@ -171,8 +170,8 @@ void SegmentMerger::createCompoundFile(const QString& filename, QStringList& fil
 
     { //msvc6 scope fix
         // Now merge all added files
-        for (size_t i=0;i<files.size();i++) {
-            cfsWriter->addFile(files[i]);
+        for (const auto & file : files) {
+            cfsWriter->addFile(file);
         }
     }
 
@@ -211,9 +210,9 @@ int32_t SegmentMerger::mergeFields()
     int32_t docCount = 0;
 
     //Iterate through all readers
-    for (uint32_t i = 0; i < readers.size(); i++) {
+    for (auto & i : readers) {
         //get the i-th reader
-        reader = readers[i];
+        reader = i;
         //Condition check to see if reader points to a valid instance
         CND_CONDITION(reader != NULL,"No IndexReader found");
 
@@ -267,9 +266,9 @@ int32_t SegmentMerger::mergeFields()
         IndexReader* reader = nullptr;
         int32_t maxDoc          = 0;
         //Iterate through all readers
-        for (uint32_t i = 0; i < readers.size(); i++) {
+        for (auto & i : readers) {
             // get the i-th reader
-            reader = readers[i];
+            reader = i;
 
 
             // Condition check to see if reader points to a valid instance
@@ -313,8 +312,7 @@ void SegmentMerger::mergeVectors()
         _CLNEW TermVectorsWriter(directory, segment, fieldInfos);
 
     try {
-        for (uint32_t r = 0; r < readers.size(); r++) {
-            IndexReader* reader = readers[r];
+        for (auto reader : readers) {
             int32_t maxDoc = reader->maxDoc();
             for (int32_t docNum = 0; docNum < maxDoc; docNum++) {
                 // skip deleted docs
@@ -409,9 +407,9 @@ void SegmentMerger::mergeTermInfos()
     SegmentMergeInfo* smi = nullptr;
 
     //iterate through all the readers
-    for (uint32_t i = 0; i < readers.size(); i++) {
+    for (auto & i : readers) {
         //Get the i-th reader
-        reader = readers[i];
+        reader = i;
 
         //Condition check to see if reader points to a valid instance
         CND_CONDITION(reader != NULL, "No IndexReader found");
@@ -679,9 +677,8 @@ void SegmentMerger::mergeNorms()
 
             uint8_t* input = nullptr;
             try {
-                for (uint32_t j = 0; j < readers.size(); ++j) {
+                for (auto reader : readers) {
                     // get the next index reader + condition check
-                    IndexReader* reader = readers[j];
                     CND_CONDITION(reader != NULL, "No reader found");
 
                     // Get the total number of documents including the documents

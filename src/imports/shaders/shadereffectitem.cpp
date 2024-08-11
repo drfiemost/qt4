@@ -636,8 +636,8 @@ void ShaderEffectItem::setActive(bool enable)
         return;
 
     if (m_active) {
-        for (int i = 0; i < m_sources.size(); ++i) {
-            ShaderEffectSource *source = m_sources.at(i).source;
+        for (const auto & m_source : m_sources) {
+            ShaderEffectSource *source = m_source.source;
             if (!source)
                 continue;
             disconnect(source, SIGNAL(repaintRequired()), this, SLOT(markDirty()));
@@ -648,8 +648,8 @@ void ShaderEffectItem::setActive(bool enable)
     m_active = enable;
 
     if (m_active) {
-        for (int i = 0; i < m_sources.size(); ++i) {
-            ShaderEffectSource *source = m_sources.at(i).source;
+        for (const auto & m_source : m_sources) {
+            ShaderEffectSource *source = m_source.source;
             if (!source)
                 continue;
             source->refFromEffectItem();
@@ -669,8 +669,8 @@ void ShaderEffectItem::setActive(bool enable)
 
 void ShaderEffectItem::preprocess()
 {
-    for (int i = 0; i < m_sources.size(); ++i) {
-        ShaderEffectSource *source = m_sources.at(i).source;
+    for (const auto & m_source : m_sources) {
+        ShaderEffectSource *source = m_source.source;
         if (source)
             source->updateBackbuffer();
     }
@@ -739,8 +739,7 @@ void ShaderEffectItem::setSource(const QVariant &var, int index)
 void ShaderEffectItem::disconnectPropertySignals()
 {
     disconnect(this, nullptr, this, SLOT(markDirty()));
-    for (int i = 0; i < m_sources.size(); ++i) {
-        SourceData &source = m_sources[i];
+    for (auto & source : m_sources) {
         disconnect(this, nullptr, source.mapper, nullptr);
         disconnect(source.mapper, nullptr, this, nullptr);
     }
@@ -787,8 +786,7 @@ void ShaderEffectItem::reset()
 
     m_attributeNames.clear();
     m_uniformNames.clear();
-    for (int i = 0; i < m_sources.size(); ++i) {
-        const SourceData &source = m_sources.at(i);
+    for (const auto & source : m_sources) {
         if (m_active && source.source)
             source.source->derefFromEffectItem();
         delete source.mapper;

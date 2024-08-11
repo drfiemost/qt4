@@ -276,9 +276,9 @@ QSvgText::QSvgText(QSvgNode *parent, const QPointF &coord)
 
 QSvgText::~QSvgText()
 {
-    for (int i = 0; i < m_tspans.size(); ++i) {
-        if (m_tspans[i] != LINEBREAK)
-            delete m_tspans[i];
+    for (auto & m_tspan : m_tspans) {
+        if (m_tspan != LINEBREAK)
+            delete m_tspan;
     }
 }
 
@@ -338,8 +338,8 @@ void QSvgText::draw_helper(QPainter *p, QSvgExtraStates &states, QRectF *boundin
     paragraphs.push_back(QString());
     formatRanges.push_back(QList<QTextLayout::FormatRange>());
 
-    for (int i = 0; i < m_tspans.size(); ++i) {
-        if (m_tspans[i] == LINEBREAK) {
+    for (auto m_tspan : m_tspans) {
+        if (m_tspan == LINEBREAK) {
             if (m_type == TEXTAREA) {
                 if (paragraphs.back().isEmpty()) {
                     QFont font = p->font();
@@ -358,21 +358,21 @@ void QSvgText::draw_helper(QPainter *p, QSvgExtraStates &states, QRectF *boundin
                 formatRanges.push_back(QList<QTextLayout::FormatRange>());
             }
         } else {
-            WhitespaceMode mode = m_tspans[i]->whitespaceMode();
-            m_tspans[i]->applyStyle(p, states);
+            WhitespaceMode mode = m_tspan->whitespaceMode();
+            m_tspan->applyStyle(p, states);
 
             QFont font = p->font();
             font.setPixelSize(font.pointSizeF() * scale);
 
-            QString newText(m_tspans[i]->text());
+            QString newText(m_tspan->text());
             newText.replace(QLatin1Char('\t'), QLatin1Char(' '));
             newText.replace(QLatin1Char('\n'), QLatin1Char(' '));
 
-            bool prependSpace = !appendSpace && !m_tspans[i]->isTspan() && (mode == Default) && !paragraphs.back().isEmpty() && newText.startsWith(QLatin1Char(' '));
+            bool prependSpace = !appendSpace && !m_tspan->isTspan() && (mode == Default) && !paragraphs.back().isEmpty() && newText.startsWith(QLatin1Char(' '));
             if (appendSpace || prependSpace)
                 paragraphs.back().append(QLatin1Char(' '));
 
-            bool appendSpaceNext = (!m_tspans[i]->isTspan() && (mode == Default) && newText.endsWith(QLatin1Char(' ')));
+            bool appendSpaceNext = (!m_tspan->isTspan() && (mode == Default) && newText.endsWith(QLatin1Char(' ')));
 
             if (mode == Default) {
                 newText = newText.simplified();
@@ -399,7 +399,7 @@ void QSvgText::draw_helper(QPainter *p, QSvgExtraStates &states, QRectF *boundin
             appendSpace = appendSpaceNext;
             paragraphs.back() += newText;
 
-            m_tspans[i]->revertStyle(p, states);
+            m_tspan->revertStyle(p, states);
         }
     }
 

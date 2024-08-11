@@ -288,9 +288,7 @@ void CompoundFileWriter::close()
         // adjust the offsets later
         { //msvc6 for scope fix
             TCHAR tfile[CL_MAX_PATH];
-            for (CLLinkedList<WriterFileEntry*>::iterator i = entries.begin();
-                i != entries.end(); i++) {
-                WriterFileEntry* fe = *i;
+            for (auto fe : entries) {
                 fe->directoryOffset = os->getFilePointer();
                 os->writeLong(0);    // for now
                 tfile[fe->file.toWCharArray(tfile)] = '\0';
@@ -303,9 +301,7 @@ void CompoundFileWriter::close()
         { //msvc6 for scope fix
             int32_t bufferLength = 1024;
             uint8_t buffer[1024];
-            for (CLLinkedList<WriterFileEntry*>::iterator i = entries.begin();
-                i != entries.end(); i++) {
-                WriterFileEntry* fe = *i;
+            for (auto fe : entries) {
                 fe->dataOffset = os->getFilePointer();
                 copyFile(fe, os, buffer, bufferLength);
             }
@@ -313,9 +309,7 @@ void CompoundFileWriter::close()
 
         { //msvc6 for scope fix
             // Write the data offsets into the directory of the compound stream
-            for (CLLinkedList<WriterFileEntry*>::iterator i = entries.begin();
-                i != entries.end(); i++) {
-                WriterFileEntry* fe = *i;
+            for (auto fe : entries) {
                 os->seek(fe->directoryOffset);
                 os->writeLong(fe->dataOffset);
             }

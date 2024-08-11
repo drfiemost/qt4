@@ -560,9 +560,9 @@ qDBusSignalFilter(DBusConnection *connection, DBusMessage *message, void *data)
 bool QDBusConnectionPrivate::handleMessage(const QDBusMessage &amsg)
 {
     const QDBusSpyHookList *list = qDBusSpyHookList();
-    for (int i = 0; i < list->size(); ++i) {
+    for (auto i : *list) {
         qDBusDebug() << "calling the message spy hook";
-        (*(*list)[i])(amsg);
+        (*i)(amsg);
     }
 
     if (!ref.loadRelaxed())
@@ -1151,8 +1151,8 @@ void QDBusConnectionPrivate::socketRead(int fd)
         }
     }
 
-    for (int i = 0; i < pendingWatches.size(); ++i)
-        if (!q_dbus_watch_handle(pendingWatches[i], DBUS_WATCH_READABLE))
+    for (auto & pendingWatche : pendingWatches)
+        if (!q_dbus_watch_handle(pendingWatche, DBUS_WATCH_READABLE))
             qDebug("OUT OF MEM");
     doDispatch();
 }
@@ -1171,8 +1171,8 @@ void QDBusConnectionPrivate::socketWrite(int fd)
         }
     }
 
-    for (int i = 0; i < pendingWatches.size(); ++i)
-        if (!q_dbus_watch_handle(pendingWatches[i], DBUS_WATCH_WRITABLE))
+    for (auto & pendingWatche : pendingWatches)
+        if (!q_dbus_watch_handle(pendingWatche, DBUS_WATCH_WRITABLE))
             qDebug("OUT OF MEM");
 }
 

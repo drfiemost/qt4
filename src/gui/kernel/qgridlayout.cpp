@@ -880,8 +880,7 @@ void QGridLayoutPrivate::setupHfwLayoutData()
     }
 
     for (int pass = 0; pass < 2; ++pass) {
-        for (int i = 0; i < things.size(); ++i) {
-            QGridBox *box = things.at(i);
+        for (auto box : things) {
             int r1 = box->row;
             int c1 = box->col;
             int r2 = box->toRow(rr);

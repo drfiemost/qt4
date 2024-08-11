@@ -1185,8 +1185,7 @@ void QDeclarativeAnchorChanges::execute(Reason reason)
 
     //destroy old bindings
     if (reason == ActualChange) {
-        for (int i = 0; i < d->oldBindings.size(); ++i) {
-            QDeclarativeAbstractBinding *binding = d->oldBindings.at(i);
+        for (auto binding : d->oldBindings) {
             if (binding)
                 binding->destroy();
         }

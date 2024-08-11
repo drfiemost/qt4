@@ -236,8 +236,8 @@ bool useGui(int argc, char *argv[])
         "-rebuild-search-index"
     };
     for (int i = 1; i < argc; ++i) {
-        for (size_t j = 0; j < sizeof cmdModeArgs/sizeof *cmdModeArgs; ++j) {
-            if(strcmp(argv[i], cmdModeArgs[j]) == 0) {
+        for (auto & cmdModeArg : cmdModeArgs) {
+            if(strcmp(argv[i], cmdModeArg) == 0) {
                 gui = false;
                 break;
             }

@@ -2886,8 +2886,8 @@ QByteArray QDeclarativeBindingCompilerPrivate::buildSignalTable() const
 
     for (int ii = 0; ii < committed.count(); ++ii) {
         const QSet<int> &deps = committed.dependencies.at(ii);
-        for (QSet<int>::ConstIterator iter = deps.begin(); iter != deps.end(); ++iter) 
-            table[*iter].append(ii);
+        for (int dep : deps) 
+            table[dep].append(ii);
     }
 
     QVector<quint32> header;

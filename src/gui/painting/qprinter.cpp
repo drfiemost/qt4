@@ -230,8 +230,8 @@ void QPrinterPrivate::setPreviewMode(bool enable)
 
 void QPrinterPrivate::addToManualSetList(QPrintEngine::PrintEnginePropertyKey key)
 {
-    for (int c = 0; c < manualSetList.size(); ++c) {
-        if (manualSetList[c] == key) return;
+    for (auto & c : manualSetList) {
+        if (c == key) return;
     }
     manualSetList.append(key);
 }
@@ -853,8 +853,8 @@ void QPrinter::setPrinterName(const QString &name)
         d->validPrinter = d->outputFormat == QPrinter::PdfFormat || d->outputFormat == QPrinter::PostScriptFormat;
     } else {
         d->validPrinter = false;
-        for (int i = 0; i < prnList.size(); ++i) {
-            if (prnList[i].printerName() == name) {
+        for (const auto & i : prnList) {
+            if (i.printerName() == name) {
                 d->validPrinter = true;
                 break;
             }
@@ -1842,8 +1842,8 @@ QList<int> QPrinter::supportedResolutions() const
     QList<QVariant> varlist
         = d->printEngine->property(QPrintEngine::PPK_SupportedResolutions).toList();
     QList<int> intlist;
-    for (int i=0; i<varlist.size(); ++i)
-        intlist << varlist.at(i).toInt();
+    for (const auto & i : varlist)
+        intlist << i.toInt();
     return intlist;
 }
 

@@ -581,8 +581,7 @@ void QTextFramePrivate::remove_me()
     int index = parentFrame->d_func()->childFrames.indexOf(q);
 
     // iterator over all children and move them to the parent
-    for (int i = 0; i < childFrames.size(); ++i) {
-        QTextFrame *c = childFrames.at(i);
+    for (auto c : childFrames) {
         parentFrame->d_func()->childFrames.insert(index, c);
         c->d_func()->parentFrame = parentFrame;
         ++index;

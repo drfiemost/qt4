@@ -581,8 +581,8 @@ public:
             return;
         extra->nativeChildrenForced = 1;
 
-        for (int i = 0; i < children.size(); ++i) {
-            if (QWidget *child = qobject_cast<QWidget *>(children.at(i)))
+        for (auto i : children) {
+            if (QWidget *child = qobject_cast<QWidget *>(i))
                 child->setAttribute(Qt::WA_NativeWindow);
         }
     }

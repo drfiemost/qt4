@@ -4094,8 +4094,7 @@ void QAbstractItemViewPrivate::clearOrRemove()
     } else {
         // we can't remove the rows so reset the items (i.e. the view is like a table)
         QModelIndexList list = selection.indexes();
-        for (int i=0; i < list.size(); ++i) {
-            QModelIndex index = list.at(i);
+        for (auto index : list) {
             QMap<int, QVariant> roles = model->itemData(index);
             for (QMap<int, QVariant>::Iterator it = roles.begin(); it != roles.end(); ++it)
                 it.value() = QVariant();

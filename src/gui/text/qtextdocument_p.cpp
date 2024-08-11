@@ -1124,8 +1124,7 @@ void QTextDocumentPrivate::clearUndoRedoStacks(QTextDocument::Stacks stacksToCle
             emitRedoAvailable(false);
     } else if (stacksToClear == QTextDocument::UndoAndRedoStacks
                && !undoStack.isEmpty()) {
-        for (int i = 0; i < undoStack.size(); ++i) {
-            QTextUndoCommand c = undoStack[i];
+        for (auto c : undoStack) {
             if (c.command & QTextUndoCommand::Custom)
                 delete c.custom;
         }
@@ -1338,8 +1337,7 @@ QString QTextDocumentPrivate::plainText() const
     result.resize(length());
     const QChar *text_unicode = text.unicode();
     QChar *data = result.data();
-    for (QTextDocumentPrivate::FragmentIterator it = begin(); it != end(); ++it) {
-        const QTextFragmentData *f = *it;
+    for (auto f : *this) {
         ::memcpy(data, text_unicode + f->stringPosition, f->size_array[0] * sizeof(QChar));
         data += f->size_array[0];
     }
@@ -1479,14 +1477,14 @@ void QTextDocumentPrivate::scan_frames(int pos, int charsRemoved, int charsAdded
     QTextFrame *f = rootFrame();
     clearFrame(f);
 
-    for (FragmentIterator it = begin(); it != end(); ++it) {
+    for (auto it : *this) {
         // QTextFormat fmt = formats.format(it->format);
-        QTextFrame *frame = qobject_cast<QTextFrame *>(objectForFormat(it->format));
+        QTextFrame *frame = qobject_cast<QTextFrame *>(objectForFormat(it.format));
         if (!frame)
             continue;
 
         Q_ASSERT(it.size() == 1);
-        QChar ch = text.at(it->stringPosition);
+        QChar ch = text.at(it.stringPosition);
 
         if (ch == QTextBeginningOfFrame) {
             if (f != frame) {

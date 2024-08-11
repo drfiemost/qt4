@@ -319,8 +319,7 @@ int QSequentialAnimationGroup::duration() const
     Q_D(const QSequentialAnimationGroup);
     int ret = 0;
 
-    for (int i = 0; i < d->animations.size(); ++i) {
-        QAbstractAnimation *animation = d->animations.at(i);
+    for (auto animation : d->animations) {
         const int currentDuration = animation->totalDuration();
         if (currentDuration == -1)
             return -1; // Undetermined length

@@ -579,9 +579,7 @@ bool QTextHtmlImporter::appendNodeText()
     QString textToInsert;
     textToInsert.reserve(text.size());
 
-    for (int i = 0; i < text.length(); ++i) {
-        QChar ch = text.at(i);
-
+    for (auto ch : text) {
         if (ch.isSpace()
             && ch != QChar::Nbsp
             && ch != QChar::ParagraphSeparator) {

@@ -2085,8 +2085,8 @@ void QXmlStreamReader::addExtraNamespaceDeclaration(const QXmlStreamNamespaceDec
  */
 void QXmlStreamReader::addExtraNamespaceDeclarations(const QXmlStreamNamespaceDeclarations &extraNamespaceDeclarations)
 {
-    for (int i = 0; i < extraNamespaceDeclarations.size(); ++i)
-        addExtraNamespaceDeclaration(extraNamespaceDeclarations.at(i));
+    for (const auto & extraNamespaceDeclaration : extraNamespaceDeclarations)
+        addExtraNamespaceDeclaration(extraNamespaceDeclaration);
 }
 
 
@@ -2667,8 +2667,7 @@ Returns the entity's value.
  */
 QStringRef QXmlStreamAttributes::value(const QString &namespaceUri, const QString &name) const
 {
-    for (int i = 0; i < size(); ++i) {
-        const QXmlStreamAttribute &attribute = at(i);
+    for (const auto & attribute : *this) {
         if (attribute.name() == name && attribute.namespaceUri() == namespaceUri)
             return attribute.value();
     }
@@ -2682,8 +2681,7 @@ QStringRef QXmlStreamAttributes::value(const QString &namespaceUri, const QStrin
  */
 QStringRef QXmlStreamAttributes::value(const QString &namespaceUri, QLatin1String name) const
 {
-    for (int i = 0; i < size(); ++i) {
-        const QXmlStreamAttribute &attribute = at(i);
+    for (const auto & attribute : *this) {
         if (attribute.name() == name && attribute.namespaceUri() == namespaceUri)
             return attribute.value();
     }
@@ -2697,8 +2695,7 @@ QStringRef QXmlStreamAttributes::value(const QString &namespaceUri, QLatin1Strin
  */
 QStringRef QXmlStreamAttributes::value(QLatin1String namespaceUri, QLatin1String name) const
 {
-    for (int i = 0; i < size(); ++i) {
-        const QXmlStreamAttribute &attribute = at(i);
+    for (const auto & attribute : *this) {
         if (attribute.name() == name && attribute.namespaceUri() == namespaceUri)
             return attribute.value();
     }
@@ -2719,8 +2716,7 @@ QStringRef QXmlStreamAttributes::value(QLatin1String namespaceUri, QLatin1String
  */
 QStringRef QXmlStreamAttributes::value(const QString &qualifiedName) const
 {
-    for (int i = 0; i < size(); ++i) {
-        const QXmlStreamAttribute &attribute = at(i);
+    for (const auto & attribute : *this) {
         if (attribute.qualifiedName() == qualifiedName)
             return attribute.value();
     }
@@ -2741,8 +2737,7 @@ QStringRef QXmlStreamAttributes::value(const QString &qualifiedName) const
  */
 QStringRef QXmlStreamAttributes::value(QLatin1String qualifiedName) const
 {
-    for (int i = 0; i < size(); ++i) {
-        const QXmlStreamAttribute &attribute = at(i);
+    for (const auto & attribute : *this) {
         if (attribute.qualifiedName() == qualifiedName)
             return attribute.value();
     }
@@ -3083,8 +3078,7 @@ void QXmlStreamWriterPrivate::writeEscaped(const QString &s, bool escapeWhitespa
 {
     QString escaped;
     escaped.reserve(s.size());
-    for ( int i = 0; i < s.size(); ++i ) {
-        QChar c = s.at(i);
+    for (auto c : s) {
         switch (c.unicode()) {
         case '<':
             escaped.append(QLatin1String("&lt;"));
@@ -3518,8 +3512,8 @@ void QXmlStreamWriter::writeAttributes(const QXmlStreamAttributes& attributes)
     Q_D(QXmlStreamWriter);
     Q_ASSERT(d->inStartElement);
     Q_UNUSED(d);
-    for (int i = 0; i < attributes.size(); ++i)
-        writeAttribute(attributes.at(i));
+    for (const auto & attribute : attributes)
+        writeAttribute(attribute);
 }
 
 
@@ -3931,8 +3925,7 @@ void QXmlStreamWriter::writeCurrentToken(const QXmlStreamReader &reader)
     case QXmlStreamReader::StartElement: {
         writeStartElement(reader.namespaceUri().toString(), reader.name().toString());
         QXmlStreamNamespaceDeclarations namespaceDeclarations = reader.namespaceDeclarations();
-        for (int i = 0; i < namespaceDeclarations.size(); ++i) {
-            const QXmlStreamNamespaceDeclaration &namespaceDeclaration = namespaceDeclarations.at(i);
+        for (const auto & namespaceDeclaration : namespaceDeclarations) {
             writeNamespace(namespaceDeclaration.namespaceUri().toString(),
                            namespaceDeclaration.prefix().toString());
         }

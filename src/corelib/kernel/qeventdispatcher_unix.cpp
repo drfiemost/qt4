@@ -162,9 +162,7 @@ int QEventDispatcherUNIXPrivate::doSelect(QEventLoop::ProcessEventsFlags flags, 
                 if (list.size() == 0)
                     continue;
 
-                for (int i = 0; i < list.size(); ++i) {
-                    QSockNot *sn = list[i];
-
+                for (auto sn : list) {
                     FD_ZERO(&fdset);
                     FD_SET(sn->fd, &fdset);
 
@@ -205,11 +203,10 @@ int QEventDispatcherUNIXPrivate::doSelect(QEventLoop::ProcessEventsFlags flags, 
     if (! (flags & QEventLoop::ExcludeSocketNotifiers) && nsel > 0 && sn_highest >= 0) {
         // if select says data is ready on any socket, then set the socket notifier
         // to pending
-        for (int i=0; i<3; i++) {
-            QSockNotType::List &list = sn_vec[i].list;
-            for (int j = 0; j < list.size(); ++j) {
-                QSockNot *sn = list[j];
-                if (FD_ISSET(sn->fd, &sn_vec[i].select_fds))
+        for (auto & i : sn_vec) {
+            QSockNotType::List &list = i.list;
+            for (auto sn : list) {
+                if (FD_ISSET(sn->fd, &i.select_fds))
                     q->setSocketNotifierPending(sn->obj);
             }
         }
@@ -339,8 +336,8 @@ QSockNotType::QSockNotType()
 
 QSockNotType::~QSockNotType()
 {
-    for (int i = 0; i < list.size(); ++i)
-        delete list[i];
+    for (auto & i : list)
+        delete i;
 }
 
 /*****************************************************************************
@@ -429,10 +426,10 @@ void QEventDispatcherUNIX::unregisterSocketNotifier(QSocketNotifier *notifier)
 
     if (d->sn_highest == sockfd) {                // find highest fd
         d->sn_highest = -1;
-        for (int i=0; i<3; i++) {
-            if (!d->sn_vec[i].list.isEmpty())
+        for (auto & i : d->sn_vec) {
+            if (!i.list.isEmpty())
                 d->sn_highest = std::max(d->sn_highest,  // list is fd-sorted
-                                     d->sn_vec[i].list[0]->fd);
+                                     i.list[0]->fd);
         }
     }
 }

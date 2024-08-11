@@ -1638,11 +1638,11 @@ void QDragManager::move(const QPoint & globalPos)
             QVector<Atom> types;
             int flags = target_version << 24;
             QStringList fmts = QInternalMimeData::formatsHelper(dragPrivate()->data);
-            for (int i = 0; i < fmts.size(); ++i) {
-                QList<Atom> atoms = X11->xdndMimeAtomsForFormat(fmts.at(i));
-                for (int j = 0; j < atoms.size(); ++j) {
-                    if (!types.contains(atoms.at(j)))
-                        types.append(atoms.at(j));
+            for (const auto & fmt : fmts) {
+                QList<Atom> atoms = X11->xdndMimeAtomsForFormat(fmt);
+                for (unsigned long atom : atoms) {
+                    if (!types.contains(atom))
+                        types.append(atom);
                 }
             }
             if (types.size() > 3) {
@@ -2104,9 +2104,9 @@ QStringList QDropData::formats_sys() const
         int i = 0;
         while ((qt_xdnd_types[i])) {
             QStringList formatsForAtom = X11->xdndMimeFormatsForAtom(qt_xdnd_types[i]);
-            for (int j = 0; j < formatsForAtom.size(); ++j) {
-                if (!formats.contains(formatsForAtom.at(j)))
-                    formats.append(formatsForAtom.at(j));
+            for (const auto & j : formatsForAtom) {
+                if (!formats.contains(j))
+                    formats.append(j);
             }
             ++i;
         }

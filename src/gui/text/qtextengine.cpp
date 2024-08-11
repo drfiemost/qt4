@@ -2149,9 +2149,9 @@ void QTextEngine::freeMemory()
         layoutData->layoutState = LayoutEmpty;
         layoutData->haveCharAttributes = false;
     }
-    for (int i = 0; i < lines.size(); ++i) {
-        lines[i].justified = 0;
-        lines[i].gridfitted = 0;
+    for (auto & line : lines) {
+        line.justified = 0;
+        line.gridfitted = 0;
     }
 }
 
@@ -2200,8 +2200,7 @@ QTextCharFormat QTextEngine::format(const QScriptItem *si) const
 void QTextEngine::addRequiredBoundaries() const
 {
     if (specialData) {
-        for (int i = 0; i < specialData->addFormats.size(); ++i) {
-            const QTextLayout::FormatRange &r = specialData->addFormats.at(i);
+        for (const auto & r : specialData->addFormats) {
             setBoundary(r.start);
             setBoundary(r.start + r.length);
             //qDebug("adding boundaries %d %d", r.start, r.start+r.length);
@@ -2551,10 +2550,10 @@ QFixed QTextEngine::calculateTabWidth(int item, QFixed x) const
             }
             tabArray = newTabs;
         }
-        for (int i = 0; i < tabArray.size(); ++i) {
-            QFixed tab = QFixed::fromReal(tabArray[i].position) * dpiScale;
+        for (auto & i : tabArray) {
+            QFixed tab = QFixed::fromReal(i.position) * dpiScale;
             if (tab > x) {  // this is the tab we need.
-                QTextOption::Tab tabSpec = tabArray[i];
+                QTextOption::Tab tabSpec = i;
                 int tabSectionEnd = layoutData->string.count();
                 if (tabSpec.type == QTextOption::RightTab || tabSpec.type == QTextOption::CenterTab) {
                     // find next tab to calculate the width required.

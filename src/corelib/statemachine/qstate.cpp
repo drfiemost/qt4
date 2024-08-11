@@ -240,8 +240,7 @@ void QState::assignProperty(QObject *object, const char *name,
         qWarning("QState::assignProperty: cannot assign property '%s' of null object", name);
         return;
     }
-    for (int i = 0; i < d->propertyAssignments.size(); ++i) {
-        QPropertyAssignment &assn = d->propertyAssignments[i];
+    for (auto & assn : d->propertyAssignments) {
         if ((assn.object == object) && (assn.propertyName == name)) {
             assn.value = value;
             return;
@@ -300,8 +299,8 @@ void QState::addTransition(QAbstractTransition *transition)
 
     transition->setParent(this);
     const QList<QWeakPointer<QAbstractState> > &targets = QAbstractTransitionPrivate::get(transition)->targetStates;
-    for (int i = 0; i < targets.size(); ++i) {
-        QAbstractState *t = targets.at(i).data();
+    for (const auto & target : targets) {
+        QAbstractState *t = target.data();
         if (!t) {
             qWarning("QState::addTransition: cannot add transition to null state");
             return ;

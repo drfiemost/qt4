@@ -104,8 +104,8 @@ QAbstractSocketEngine *QAbstractSocketEngine::createSocketEngine(QAbstractSocket
 #endif
 
     QMutexLocker locker(&socketHandlers()->mutex);
-    for (int i = 0; i < socketHandlers()->size(); i++) {
-        if (QAbstractSocketEngine *ret = socketHandlers()->at(i)->createSocketEngine(socketType, proxy, parent))
+    for (auto i : *socketHandlers()) {
+        if (QAbstractSocketEngine *ret = i->createSocketEngine(socketType, proxy, parent))
             return ret;
     }
 
@@ -121,8 +121,8 @@ QAbstractSocketEngine *QAbstractSocketEngine::createSocketEngine(QAbstractSocket
 QAbstractSocketEngine *QAbstractSocketEngine::createSocketEngine(qintptr socketDescripter, QObject *parent)
 {
     QMutexLocker locker(&socketHandlers()->mutex);
-    for (int i = 0; i < socketHandlers()->size(); i++) {
-        if (QAbstractSocketEngine *ret = socketHandlers()->at(i)->createSocketEngine(socketDescripter, parent))
+    for (auto i : *socketHandlers()) {
+        if (QAbstractSocketEngine *ret = i->createSocketEngine(socketDescripter, parent))
             return ret;
     }
     return new QNativeSocketEngine(parent);

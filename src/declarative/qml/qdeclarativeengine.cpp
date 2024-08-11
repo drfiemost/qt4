@@ -514,10 +514,10 @@ QDeclarativeEnginePrivate::~QDeclarativeEnginePrivate()
 
     for(QHash<int, QDeclarativeCompiledData*>::ConstIterator iter = m_compositeTypes.constBegin(); iter != m_compositeTypes.constEnd(); ++iter)
         (*iter)->release();
-    for(QHash<const QMetaObject *, QDeclarativePropertyCache *>::Iterator iter = propertyCache.begin(); iter != propertyCache.end(); ++iter)
-        (*iter)->release();
-    for(QHash<QPair<QDeclarativeType *, int>, QDeclarativePropertyCache *>::Iterator iter = typePropertyCache.begin(); iter != typePropertyCache.end(); ++iter)
-        (*iter)->release();
+    for(auto & iter : propertyCache)
+        iter->release();
+    for(auto & iter : typePropertyCache)
+        iter->release();
 
 }
 

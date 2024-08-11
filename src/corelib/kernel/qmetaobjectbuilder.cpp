@@ -843,13 +843,13 @@ void QMetaObjectBuilder::removeMethod(int index)
 {
     if (index >= 0 && index < d->methods.size()) {
         d->methods.removeAt(index);
-        for (int prop = 0; prop < d->properties.size(); ++prop) {
+        for (auto & propertie : d->properties) {
             // Adjust the indices of property notify signal references.
-            if (d->properties[prop].notifySignal == index) {
-                d->properties[prop].notifySignal = -1;
-                d->properties[prop].setFlag(Notify, false);
-            } else if (d->properties[prop].notifySignal > index)
-                (d->properties[prop].notifySignal)--;
+            if (propertie.notifySignal == index) {
+                propertie.notifySignal = -1;
+                propertie.setFlag(Notify, false);
+            } else if (propertie.notifySignal > index)
+                (propertie.notifySignal)--;
         }
     }
 }

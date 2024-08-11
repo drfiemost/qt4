@@ -213,8 +213,8 @@ void QPainterPrivate::checkEmulation()
 QPainterPrivate::~QPainterPrivate()
 {
     delete emulationEngine;
-    for (int i=0; i<states.size(); ++i)
-        delete states.at(i);
+    for (auto state : states)
+        delete state;
 
     if (dummyState)
         delete dummyState;
@@ -419,8 +419,7 @@ void QPainterPrivate::draw_helper(const QPainterPath &originalPath, DrawOperatio
 
     if (q->hasClipping()) {
         bool hasPerspectiveTransform = false;
-        for (int i = 0; i < state->clipInfo.size(); ++i) {
-            const QPainterClipInfo &info = state->clipInfo.at(i);
+        for (const auto & info : state->clipInfo) {
             if (info.matrix.type() == QTransform::TxProject) {
                 hasPerspectiveTransform = true;
                 break;

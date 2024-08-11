@@ -410,10 +410,10 @@ QFontEngineData::QFontEngineData()
 QFontEngineData::~QFontEngineData()
 {
 #if !defined(Q_WS_MAC)
-    for (int i = 0; i < QUnicodeTables::ScriptCount; ++i) {
-        if (engines[i] && !engines[i]->ref.deref())
-            delete engines[i];
-        engines[i] = nullptr;
+    for (auto & engine : engines) {
+        if (engine && !engine->ref.deref())
+            delete engine;
+        engine = nullptr;
     }
 #else
     if (engine && !engine->ref.deref())
@@ -2777,10 +2777,10 @@ void QFontCache::clear()
         while (it != end) {
             QFontEngineData *data = it.value();
 #if !defined(Q_WS_MAC)
-            for (int i = 0; i < QUnicodeTables::ScriptCount; ++i) {
-                if (data->engines[i] && !data->engines[i]->ref.deref())
-                    delete data->engines[i];
-                data->engines[i] = nullptr;
+            for (auto & engine : data->engines) {
+                if (engine && !engine->ref.deref())
+                    delete engine;
+                engine = nullptr;
             }
 #else
             if (data->engine && !data->engine->ref.deref())
@@ -2791,11 +2791,10 @@ void QFontCache::clear()
         }
     }
 
-    for (EngineCache::Iterator it = engineCache.begin(), end = engineCache.end();
-         it != end; ++it) {
-        if (it->data->ref.deref() == 0) {
-            delete it->data;
-            it->data = nullptr;
+    for (auto & it : engineCache) {
+        if (it.data->ref.deref() == 0) {
+            delete it.data;
+            it.data = nullptr;
         }
     }
 

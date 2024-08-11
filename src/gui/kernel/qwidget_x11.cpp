@@ -874,8 +874,7 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
 #if !defined (QT_NO_TABLET)
         QTabletDeviceDataList *tablet_list = qt_tablet_devices();
         if (X11->ptrXSelectExtensionEvent) {
-            for (int i = 0; i < tablet_list->size(); ++i) {
-                QTabletDeviceData tablet = tablet_list->at(i);
+            for (auto tablet : *tablet_list) {
                 X11->ptrXSelectExtensionEvent(dpy, id, reinterpret_cast<XEventClass*>(tablet.eventList),
                                               tablet.eventCount);
             }
@@ -986,8 +985,8 @@ static void qt_x11_recreateNativeWidgetsRecursive(QWidget *widget)
         qt_x11_recreateWidget(widget);
 
     const QObjectList &children = widget->children();
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *child = qobject_cast<QWidget*>(children.at(i));
+    for (auto i : children) {
+        QWidget *child = qobject_cast<QWidget*>(i);
         if (child)
             qt_x11_recreateNativeWidgetsRecursive(child);
     }
@@ -1058,8 +1057,7 @@ void QWidget::destroy(bool destroyWindow, bool destroySubWindows)
     if (testAttribute(Qt::WA_WState_Created)) {
         setAttribute(Qt::WA_WState_Created, false);
         QObjectList childList = children();
-        for (int i = 0; i < childList.size(); ++i) { // destroy all widget children
-            QObject *obj = childList.at(i);
+        for (auto obj : childList) { // destroy all widget children
             if (obj->isWidgetType())
                 static_cast<QWidget*>(obj)->destroy(destroySubWindows,
                                                     destroySubWindows);
@@ -1204,8 +1202,7 @@ void QWidgetPrivate::setParent_sys(QWidget *parent, Qt::WindowFlags f)
 
     if (wasCreated) {
         QObjectList chlist = q->children();
-        for (int i = 0; i < chlist.size(); ++i) { // reparent children
-            QObject *obj = chlist.at(i);
+        for (auto obj : chlist) { // reparent children
             if (obj->isWidgetType()) {
                 QWidget *w = (QWidget *)obj;
                 if (!w->testAttribute(Qt::WA_WState_Created))
@@ -1485,8 +1482,7 @@ void QWidgetPrivate::setWindowIcon_sys(bool forceReset)
             availableSizes.push_back(QSize(64,64));
             availableSizes.push_back(QSize(128,128));
         }
-        for(int i = 0; i < availableSizes.size(); ++i) {
-            QSize size = availableSizes.at(i);
+        for(auto size : availableSizes) {
             QPixmap pixmap = icon.pixmap(size);
             if (!pixmap.isNull()) {
                 QImage image = pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
@@ -2457,8 +2453,7 @@ void QWidgetPrivate::setWSGeometry(bool dontShow, const QRect &)
 
     // and now recursively for all children...
     // ### can be optimized
-    for (int i = 0; i < children.size(); ++i) {
-        QObject *object = children.at(i);
+    for (auto object : children) {
         if (object->isWidgetType()) {
             QWidget *w = static_cast<QWidget *>(object);
             if (!w->isWindow() && w->testAttribute(Qt::WA_WState_Created))
@@ -2479,8 +2474,7 @@ void QWidgetPrivate::setWSGeometry(bool dontShow, const QRect &)
 
     //to avoid flicker, we have to show children after the helper widget has moved
     if (jump) {
-        for (int i = 0; i < children.size(); ++i) {
-            QObject *object = children.at(i);
+        for (auto object : children) {
             if (object->isWidgetType()) {
                 QWidget *w = static_cast<QWidget *>(object);
                 if (!w->testAttribute(Qt::WA_OutsideWSRange) && !w->testAttribute(Qt::WA_Mapped) && !w->isHidden()) {
@@ -2751,8 +2745,7 @@ void QWidgetPrivate::scroll_sys(int dx, int dy, const QRect &r)
 
     if (!valid_rect && !children.isEmpty()) {        // scroll children
         QPoint pd(dx, dy);
-        for (int i = 0; i < children.size(); ++i) { // move all children
-            QObject *object = children.at(i);
+        for (auto object : children) { // move all children
             if (object->isWidgetType()) {
                 QWidget *w = static_cast<QWidget *>(object);
                 if (!w->isWindow())

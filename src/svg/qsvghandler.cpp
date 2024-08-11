@@ -856,8 +856,8 @@ static bool resolveColor(const QStringRef &colorStr, QColor &color, QSvgHandler 
                     if (compo.size() == 1) {
                         s = colorStrTr.constData() + 4;
                         compo = parsePercentageList(s);
-                        for (int i = 0; i < compo.size(); ++i)
-                            compo[i] *= (qreal)2.55;
+                        for (double & i : compo)
+                            i *= (qreal)2.55;
                     }
 
                     if (compo.size() == 3) {
@@ -3877,8 +3877,8 @@ void QSvgHandler::resolveGradients(QSvgNode *node, int nestedDepth)
     QSvgStructureNode *structureNode = static_cast<QSvgStructureNode *>(node);
 
     const QList<QSvgNode *> ren = structureNode->renderers();
-    for (auto it = ren.begin(); it != ren.end(); ++it) {
-        QSvgFillStyle *fill = static_cast<QSvgFillStyle *>((*it)->styleProperty(QSvgStyleProperty::FILL));
+    for (auto it : ren) {
+        QSvgFillStyle *fill = static_cast<QSvgFillStyle *>(it->styleProperty(QSvgStyleProperty::FILL));
         if (fill && !fill->isGradientResolved()) {
             QString id = fill->gradientId();
             QSvgFillStyleProperty *style = structureNode->styleProperty(id);
@@ -3890,7 +3890,7 @@ void QSvgHandler::resolveGradients(QSvgNode *node, int nestedDepth)
             }
         }
 
-        QSvgStrokeStyle *stroke = static_cast<QSvgStrokeStyle *>((*it)->styleProperty(QSvgStyleProperty::STROKE));
+        QSvgStrokeStyle *stroke = static_cast<QSvgStrokeStyle *>(it->styleProperty(QSvgStyleProperty::STROKE));
         if (stroke && !stroke->isGradientResolved()) {
             QString id = stroke->gradientId();
             QSvgFillStyleProperty *style = structureNode->styleProperty(id);
@@ -3903,7 +3903,7 @@ void QSvgHandler::resolveGradients(QSvgNode *node, int nestedDepth)
         }
 
         if (nestedDepth < 2048)
-            resolveGradients(*it, nestedDepth + 1);
+            resolveGradients(it, nestedDepth + 1);
     }
 }
 

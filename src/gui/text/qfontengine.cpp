@@ -1321,8 +1321,8 @@ void QFontEngineBox::addOutlineToPath(qreal x, qreal y, const QGlyphLayout &glyp
     getGlyphPositions(glyphs, matrix, flags, positioned_glyphs, positions);
 
     QSize s(_size - 3, _size - 3);
-    for (int k = 0; k < positions.size(); k++)
-        path->addRect(QRectF(positions[k].toPointF(), s));
+    for (auto position : positions)
+        path->addRect(QRectF(position.toPointF(), s));
 }
 
 glyph_metrics_t QFontEngineBox::boundingBox(const QGlyphLayout &glyphs)
@@ -1451,8 +1451,7 @@ QFontEngineMulti::QFontEngineMulti(int engineCount)
 
 QFontEngineMulti::~QFontEngineMulti()
 {
-    for (int i = 0; i < engines.size(); ++i) {
-        QFontEngine *fontEngine = engines.at(i);
+    for (auto fontEngine : engines) {
         if (fontEngine && !fontEngine->ref.deref())
             delete fontEngine;
     }

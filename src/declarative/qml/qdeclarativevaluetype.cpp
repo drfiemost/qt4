@@ -87,8 +87,8 @@ QDeclarativeValueTypeFactory::QDeclarativeValueTypeFactory()
 
 QDeclarativeValueTypeFactory::~QDeclarativeValueTypeFactory()
 {
-    for (unsigned int ii = 0; ii < (QVariant::UserType - 1); ++ii)
-        delete valueTypes[ii];
+    for (auto & valueType : valueTypes)
+        delete valueType;
 }
 
 bool QDeclarativeValueTypeFactory::isValueType(int idx)

@@ -1024,8 +1024,8 @@ void QPaintEnginePrivate::drawBoxTextItem(const QPointF &p, const QTextItemInt &
     QPen pen = painter->pen();
     pen.setWidthF(ti.fontEngine->lineThickness().toReal());
     painter->setPen(pen);
-    for (int k = 0; k < positions.size(); k++)
-        painter->drawRect(QRectF(positions[k].toPointF(), s));
+    for (auto position : positions)
+        painter->drawRect(QRectF(position.toPointF(), s));
     painter->restore();
 }
 

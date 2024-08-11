@@ -208,10 +208,10 @@ bool QColumnView::isIndexHidden(const QModelIndex &index) const
 QModelIndex QColumnView::indexAt(const QPoint &point) const
 {
     Q_D(const QColumnView);
-    for (int i = 0; i < d->columns.size(); ++i) {
-        QPoint topLeft = d->columns.at(i)->frameGeometry().topLeft();
+    for (auto column : d->columns) {
+        QPoint topLeft = column->frameGeometry().topLeft();
         QPoint adjustedPoint(point.x() - topLeft.x(), point.y() - topLeft.y());
-        QModelIndex index = d->columns.at(i)->indexAt(adjustedPoint);
+        QModelIndex index = column->indexAt(adjustedPoint);
         if (index.isValid())
             return index;
     }
@@ -227,10 +227,10 @@ QRect QColumnView::visualRect(const QModelIndex &index) const
         return QRect();
 
     Q_D(const QColumnView);
-    for (int i = 0; i < d->columns.size(); ++i) {
-        QRect rect = d->columns.at(i)->visualRect(index);
+    for (auto column : d->columns) {
+        QRect rect = column->visualRect(index);
         if (!rect.isNull()) {
-            rect.translate(d->columns.at(i)->frameGeometry().topLeft());
+            rect.translate(column->frameGeometry().topLeft());
             return rect;
         }
     }
@@ -497,9 +497,9 @@ void QColumnView::setSelection(const QRect &rect, QItemSelectionModel::Selection
 void QColumnView::setSelectionModel(QItemSelectionModel *newSelectionModel)
 {
     Q_D(const QColumnView);
-    for (int i = 0; i < d->columns.size(); ++i) {
-        if (d->columns.at(i)->selectionModel() == selectionModel()) {
-            d->columns.at(i)->setSelectionModel(newSelectionModel);
+    for (auto column : d->columns) {
+        if (column->selectionModel() == selectionModel()) {
+            column->setSelectionModel(newSelectionModel);
             break;
         }
     }
@@ -513,8 +513,8 @@ QSize QColumnView::sizeHint() const
 {
     Q_D(const QColumnView);
     QSize sizeHint;
-    for (int i = 0; i < d->columns.size(); ++i) {
-        sizeHint += d->columns.at(i)->sizeHint();
+    for (auto column : d->columns) {
+        sizeHint += column->sizeHint();
     }
     return sizeHint.expandedTo(QAbstractItemView::sizeHint());
 }
@@ -1099,15 +1099,13 @@ void QColumnViewPrivate::doLayout()
 
     if (q->isRightToLeft()) {
         x = viewport->width() + q->horizontalOffset();
-        for (int i = 0; i < columns.size(); ++i) {
-            QAbstractItemView *view = columns.at(i);
+        for (auto view : columns) {
             x -= view->width();
             if (x != view->x() || viewportHeight != view->height())
                 view->setGeometry(x, 0, view->width(), viewportHeight);
         }
     } else {
-        for (int i = 0; i < columns.size(); ++i) {
-            QAbstractItemView *view = columns.at(i);
+        for (auto view : columns) {
             int currentColumnWidth = view->width();
             if (x != view->x() || viewportHeight != view->height())
                 view->setGeometry(x, 0, currentColumnWidth, viewportHeight);

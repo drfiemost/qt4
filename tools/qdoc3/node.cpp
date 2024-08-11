@@ -376,8 +376,7 @@ Node *InnerNode::findNode(const QString& name)
     if (node && node->subType() != QmlPropertyGroup)
         return node;
     if ((type() == Fake) && (subType() == QmlClass)) {
-        for (int i=0; i<children.size(); ++i) {
-            Node* n = children.at(i);
+        for (auto n : children) {
             if (n->subType() == QmlPropertyGroup) {
                 node = static_cast<InnerNode*>(n)->findNode(name);
                 if (node)
@@ -1003,8 +1002,8 @@ const PropertyNode *ClassNode::findPropertyNode(const QString &name) const
 
     const QList<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
-        for (int i = 0; i < bases.size(); ++i) {
-            const ClassNode *cn = bases[i].node;
+        for (const auto & base : bases) {
+            const ClassNode *cn = base.node;
             pn = cn->findPropertyNode(name);
             if (pn)
                 break;
@@ -1012,8 +1011,8 @@ const PropertyNode *ClassNode::findPropertyNode(const QString &name) const
     }
     const QList<RelatedClass>& ignoredBases = ignoredBaseClasses();
     if (!ignoredBases.isEmpty()) {
-        for (int i = 0; i < ignoredBases.size(); ++i) {
-            const ClassNode *cn = ignoredBases[i].node;
+        for (const auto & ignoredBase : ignoredBases) {
+            const ClassNode *cn = ignoredBase.node;
             pn = cn->findPropertyNode(name);
             if (pn)
                 break;

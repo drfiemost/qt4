@@ -264,9 +264,8 @@ void Reader::searchInIndex(const QStringList &terms)
                 }
 
                 bool found = false;
-                for(QList<TermInfo>::Iterator tit = termList.begin();
-                    tit != termList.end(); ++tit) {
-                    TermInfo *t = &(*tit);
+                for(auto & tit : termList) {
+                    TermInfo *t = &tit;
                     if(t->term == term) {
                         t->documents += documentsInfo;
                         t->frequency += documentsInfo.count();
@@ -288,8 +287,8 @@ QVector<DocumentInfo> Reader::hits()
         return documents;
 
     documents = termList.takeFirst().documents;
-    for(QList<TermInfo>::Iterator it = termList.begin(); it != termList.end(); ++it) {
-        TermInfo *t = &(*it);
+    for(auto & it : termList) {
+        TermInfo *t = &it;
         QVector<DocumentInfo> docs = t->documents;
         for(QVector<DocumentInfo>::Iterator minDoc_it = documents.begin();
             minDoc_it != documents.end(); ) {
@@ -398,10 +397,10 @@ QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
                                               const EntryTable &entryTable)
 {
     QList<Term> termList;
-    for (QStringList::ConstIterator it = terms.begin(); it != terms.end(); ++it) {
-        if (entryTable.value(*it)) {
-            Entry *e = entryTable.value(*it);
-            termList.append(Term(*it, e->documents.count(), e->documents ) );
+    for (const auto & term : terms) {
+        if (entryTable.value(term)) {
+            Entry *e = entryTable.value(term);
+            termList.append(Term(term, e->documents.count(), e->documents ) );
         }
     }
     QVector<Document> maxList(0);
@@ -410,12 +409,12 @@ QVector<Document> Reader::setupDummyTerm(const QStringList &terms,
     ::std::sort(termList.begin(), termList.end());
 
     maxList = termList.takeLast().documents;
-    for(QList<Term>::Iterator it = termList.begin(); it != termList.end(); ++it) {
-        Term *t = &(*it);
+    for(auto & it : termList) {
+        Term *t = &it;
         QVector<Document> docs = t->documents;
-        for (QVector<Document>::iterator docIt = docs.begin(); docIt != docs.end(); ++docIt ) {
-            if ( maxList.indexOf( *docIt ) == -1 )
-                maxList.append( *docIt );
+        for (auto & doc : docs) {
+            if ( maxList.indexOf( doc ) == -1 )
+                maxList.append( doc );
         }
     }
     return maxList;

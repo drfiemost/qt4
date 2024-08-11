@@ -164,8 +164,7 @@ void QScriptDebuggerConsoleCommandManager::addCommandGroup(
 QScriptDebuggerConsoleCommand *QScriptDebuggerConsoleCommandManager::findCommand(const QString &name) const
 {
     Q_D(const QScriptDebuggerConsoleCommandManager);
-    for (int i = 0; i < d->commands.size(); ++i) {
-        QScriptDebuggerConsoleCommand *cmd = d->commands.at(i);
+    for (auto cmd : d->commands) {
         if (cmd->name() == name)
             return cmd;
         else if (cmd->aliases().contains(name))
@@ -181,8 +180,7 @@ QMap<QString, QList<QScriptDebuggerConsoleCommand*> > QScriptDebuggerConsoleComm
 {
     Q_D(const QScriptDebuggerConsoleCommandManager);
     QMap<QString, QList<QScriptDebuggerConsoleCommand*> > result;
-    for (int i = 0; i < d->commands.size(); ++i) {
-        QScriptDebuggerConsoleCommand *cmd = d->commands.at(i);
+    for (auto cmd : d->commands) {
         result[cmd->group()].append(cmd);
     }
     return result;
@@ -195,8 +193,7 @@ QScriptDebuggerConsoleCommandList QScriptDebuggerConsoleCommandManager::commands
 {
     Q_D(const QScriptDebuggerConsoleCommandManager);
     QScriptDebuggerConsoleCommandList result;
-    for (int i = 0; i < d->commands.size(); ++i) {
-        QScriptDebuggerConsoleCommand *cmd = d->commands.at(i);
+    for (auto cmd : d->commands) {
         if (cmd->group() == name)
             result.append(cmd);
     }
@@ -228,13 +225,11 @@ QStringList QScriptDebuggerConsoleCommandManager::completions(const QString &pre
 {
     Q_D(const QScriptDebuggerConsoleCommandManager);
     QStringList result;
-    for (int i = 0; i < d->commands.size(); ++i) {
-        QScriptDebuggerConsoleCommand *cmd = d->commands.at(i);
+    for (auto cmd : d->commands) {
         QStringList names;
         names.append(cmd->name());
 //        names += cmd->aliases();
-        for (int j = 0; j < names.size(); ++j) {
-            const QString &name = names.at(j);
+        for (const auto & name : names) {
             if ((name.length() > prefix.length()) && name.startsWith(prefix))
                 result.append(name);
         }

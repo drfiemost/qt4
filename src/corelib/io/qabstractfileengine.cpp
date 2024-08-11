@@ -167,8 +167,8 @@ QAbstractFileEngine *qt_custom_file_engine_handler_create(const QString &path)
 
         // check for registered handlers that can load the file
         QAbstractFileEngineHandlerList *handlers = fileEngineHandlers();
-        for (int i = 0; i < handlers->size(); i++) {
-            if ((engine = handlers->at(i)->create(path)))
+        for (auto handler : *handlers) {
+            if ((engine = handler->create(path)))
                 break;
         }
     }

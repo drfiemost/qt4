@@ -2199,8 +2199,8 @@ const char* QDropEvent::format(int n) const
 {
     if (fmts.isEmpty()) {
         QStringList formats = mdata->formats();
-        for (int i = 0; i < formats.size(); ++i)
-            fmts.append(formats.at(i).toLatin1());
+        for (const auto & format : formats)
+            fmts.append(format.toLatin1());
     }
     if (n < 0 || n >= fmts.size())
         return nullptr;
@@ -4200,9 +4200,9 @@ QList<QGesture *> QGestureEvent::gestures() const
 QGesture *QGestureEvent::gesture(Qt::GestureType type) const
 {
     const QGestureEventPrivate *d = d_func();
-    for(int i = 0; i < d->gestures.size(); ++i)
-        if (d->gestures.at(i)->gestureType() == type)
-            return d->gestures.at(i);
+    for(auto gesture : d->gestures)
+        if (gesture->gestureType() == type)
+            return gesture;
     return nullptr;
 }
 

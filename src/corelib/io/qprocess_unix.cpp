@@ -1258,8 +1258,8 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
                 const QString path = QString::fromLocal8Bit(::getenv("PATH"));
                 if (!path.isEmpty()) {
                     QStringList pathEntries = path.split(QLatin1Char(':'));
-                    for (int k = 0; k < pathEntries.size(); ++k) {
-                        QByteArray tmp = QFile::encodeName(pathEntries.at(k));
+                    for (const auto & pathEntrie : pathEntries) {
+                        QByteArray tmp = QFile::encodeName(pathEntrie);
                         if (!tmp.endsWith('/')) tmp += '/';
                         tmp += QFile::encodeName(program);
                         argv[0] = tmp.data();

@@ -675,8 +675,7 @@ void *qt_find_obj_child(QObject *parent, const char *type, const QString &name)
 {
     QObjectList list = parent->children();
     if (list.size() == 0) return nullptr;
-    for (int i = 0; i < list.size(); ++i) {
-        QObject *obj = list.at(i);
+    for (auto obj : list) {
         if (name == obj->objectName() && obj->inherits(type))
             return obj;
     }
@@ -1355,8 +1354,7 @@ void QObjectPrivate::moveToThread_helper()
     Q_Q(QObject);
     QEvent e(QEvent::ThreadChange);
     QCoreApplication::sendEvent(q, &e);
-    for (int i = 0; i < children.size(); ++i) {
-        QObject *child = children.at(i);
+    for (auto child : children) {
         child->d_func()->moveToThread_helper();
     }
 }
@@ -1367,8 +1365,7 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
 
     // move posted events
     int eventsMoved = 0;
-    for (int i = 0; i < currentData->postEventList.size(); ++i) {
-        const QPostEvent &pe = currentData->postEventList.at(i);
+    for (const auto & pe : currentData->postEventList) {
         if (!pe.event)
             continue;
         if (pe.receiver == q) {
@@ -1395,8 +1392,7 @@ void QObjectPrivate::setThreadData_helper(QThreadData *currentData, QThreadData 
     // synchronizes with loadAcquire e.g. in QCoreApplication::postEvent
     threadData.storeRelease(targetData);
 
-    for (int i = 0; i < children.size(); ++i) {
-        QObject *child = children.at(i);
+    for (auto child : children) {
         child->d_func()->setThreadData_helper(currentData, targetData);
     }
 }
@@ -1406,8 +1402,7 @@ void QObjectPrivate::_q_reregisterTimers(void *pointer)
     Q_Q(QObject);
     QList<QPair<int, int> > *timerList = reinterpret_cast<QList<QPair<int, int> > *>(pointer);
     QAbstractEventDispatcher *eventDispatcher = threadData.loadRelaxed()->eventDispatcher.loadRelaxed();
-    for (int i = 0; i < timerList->size(); ++i) {
-        const QPair<int, int> &pair = timerList->at(i);
+    for (const auto & pair : *timerList) {
         eventDispatcher->registerTimer(pair.first, pair.second, q);
     }
     delete timerList;
@@ -1635,8 +1630,8 @@ void qt_qFindChildren_helper(const QObject *parent, const QString &name, const Q
         return;
     const QObjectList &children = parent->children();
     QObject *obj;
-    for (int i = 0; i < children.size(); ++i) {
-        obj = children.at(i);
+    for (auto i : children) {
+        obj = i;
         if (mo.cast(obj)) {
             if (re) {
                 if (re->indexIn(obj->objectName()) != -1)

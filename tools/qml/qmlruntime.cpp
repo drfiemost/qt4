@@ -901,8 +901,7 @@ void QDeclarativeViewer::loadDummyDataFiles(const QString& directory)
 {
     QDir dir(directory + QLatin1String("/dummydata"), QLatin1String("*.qml"));
     QStringList list = dir.entryList();
-    for (int i = 0; i < list.size(); ++i) {
-        QString qml = list.at(i);
+    for (auto qml : list) {
         QDeclarativeComponent comp(canvas->engine(), dir.filePath(qml));
         QObject *dummyData = comp.create();
 

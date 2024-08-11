@@ -740,8 +740,8 @@ bool QShortcutMap::correctGraphicsWidgetContext(Qt::ShortcutContext context, QGr
         // is shadowed by modality. In QGV there's no modality concept, but we
         // must still check if all views are shadowed.
         QList<QGraphicsView *> views = w->scene()->views();
-        for (int i = 0; i < views.size(); ++i) {
-            if (QApplicationPrivate::tryModalHelper(views.at(i), nullptr))
+        for (auto view : views) {
+            if (QApplicationPrivate::tryModalHelper(view, nullptr))
                 return true;
         }
         return false;
@@ -766,8 +766,7 @@ bool QShortcutMap::correctGraphicsWidgetContext(Qt::ShortcutContext context, QGr
     // Find the active view (if any).
     QList<QGraphicsView *> views = w->scene()->views();
     QGraphicsView *activeView = nullptr;
-    for (int i = 0; i < views.size(); ++i) {
-        QGraphicsView *view = views.at(i);
+    for (auto view : views) {
         if (view->window() == active_window) {
             activeView = view;
             break;
@@ -791,8 +790,8 @@ bool QShortcutMap::correctContext(Qt::ShortcutContext context, QAction *a, QWidg
     if (widgets.isEmpty())
         qDebug() << a << "not connected to any widgets; won't trigger";
 #endif
-    for (int i = 0; i < widgets.size(); ++i) {
-        QWidget *w = widgets.at(i);
+    for (auto w : widgets) {
+        
 #ifndef QT_NO_MENU
         if (QMenu *menu = qobject_cast<QMenu *>(w)) {
             QAction *a = menu->menuAction();
@@ -810,8 +809,7 @@ bool QShortcutMap::correctContext(Qt::ShortcutContext context, QAction *a, QWidg
     if (graphicsWidgets.isEmpty())
         qDebug() << a << "not connected to any widgets; won't trigger";
 #endif
-    for (int i = 0; i < graphicsWidgets.size(); ++i) {
-        QGraphicsWidget *w = graphicsWidgets.at(i);
+    for (auto w : graphicsWidgets) {
         if (correctGraphicsWidgetContext(context, w, active_window))
             return true;
     }

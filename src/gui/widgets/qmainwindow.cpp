@@ -1634,11 +1634,11 @@ QMenu *QMainWindow::createPopupMenu()
     QList<QDockWidget *> dockwidgets = findChildren<QDockWidget *>();
     if (dockwidgets.size()) {
         menu = new QMenu(this);
-        for (int i = 0; i < dockwidgets.size(); ++i) {
-            QDockWidget *dockWidget = dockwidgets.at(i);
+        for (auto dockwidget : dockwidgets) {
+            QDockWidget *dockWidget = dockwidget;
             if (dockWidget->parentWidget() == this
                 && !d->layout->layoutState.dockAreaLayout.indexOf(dockWidget).isEmpty()) {
-                menu->addAction(dockwidgets.at(i)->toggleViewAction());
+                menu->addAction(dockwidget->toggleViewAction());
             }
         }
         menu->addSeparator();
@@ -1649,13 +1649,13 @@ QMenu *QMainWindow::createPopupMenu()
     if (toolbars.size()) {
         if (!menu)
             menu = new QMenu(this);
-        for (int i = 0; i < toolbars.size(); ++i) {
-            QToolBar *toolBar = toolbars.at(i);
+        for (auto toolbar : toolbars) {
+            QToolBar *toolBar = toolbar;
             if (toolBar->parentWidget() == this
                 && (!d->layout->layoutState.toolBarAreaLayout.indexOf(toolBar).isEmpty()
                     || (unifiedTitleAndToolBarOnMac()
                         && toolBarArea(toolBar) == Qt::TopToolBarArea))) {
-                menu->addAction(toolbars.at(i)->toggleViewAction());
+                menu->addAction(toolbar->toggleViewAction());
             }
         }
     }

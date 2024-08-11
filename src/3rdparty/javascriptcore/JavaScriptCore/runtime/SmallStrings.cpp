@@ -60,8 +60,8 @@ SmallStrings::SmallStrings()
 {
     COMPILE_ASSERT(numCharactersToStore == sizeof(m_singleCharacterStrings) / sizeof(m_singleCharacterStrings[0]), IsNumCharactersConstInSyncWithClassUsage);
 
-    for (unsigned i = 0; i < numCharactersToStore; ++i)
-        m_singleCharacterStrings[i] = nullptr;
+    for (auto & m_singleCharacterString : m_singleCharacterStrings)
+        m_singleCharacterString = nullptr;
 }
 
 SmallStrings::~SmallStrings()
@@ -72,9 +72,9 @@ void SmallStrings::markChildren(MarkStack& markStack)
 {
     if (m_emptyString)
         markStack.append(m_emptyString);
-    for (unsigned i = 0; i < numCharactersToStore; ++i) {
-        if (m_singleCharacterStrings[i])
-            markStack.append(m_singleCharacterStrings[i]);
+    for (auto & m_singleCharacterString : m_singleCharacterStrings) {
+        if (m_singleCharacterString)
+            markStack.append(m_singleCharacterString);
     }
 }
 
@@ -83,8 +83,8 @@ unsigned SmallStrings::count() const
     unsigned count = 0;
     if (m_emptyString)
         ++count;
-    for (unsigned i = 0; i < numCharactersToStore; ++i) {
-        if (m_singleCharacterStrings[i])
+    for (auto m_singleCharacterString : m_singleCharacterStrings) {
+        if (m_singleCharacterString)
             ++count;
     }
     return count;

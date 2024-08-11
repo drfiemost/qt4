@@ -432,8 +432,7 @@ void IndexWriter::deleteSegments(CLVector<SegmentReader*>* segments)
     }
 
     QStringList files;
-    for (uint32_t i = 0; i < segments->size(); i++) {
-        SegmentReader* reader = (*segments)[i];
+    for (auto reader : *segments) {
         files.clear();
         reader->files(files);
         if (reader->getDirectory() == this->directory)

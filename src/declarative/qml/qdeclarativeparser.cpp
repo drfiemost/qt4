@@ -321,8 +321,7 @@ double QDeclarativeParser::Variant::asNumber() const
 QString escapedString(const QString &string)
 {
     QString tmp = QLatin1String("\"");
-    for (int i = 0; i < string.length(); ++i) {
-        const QChar &c = string.at(i);
+    for (auto c : string) {
         switch(c.unicode()) {
         case 0x08:
             tmp += QLatin1String("\\b");

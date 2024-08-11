@@ -385,8 +385,8 @@ void DataModel::doCharCounting(const QString &text, int &trW, int &trC, int &trC
 {
     trCS += text.length();
     bool inWord = false;
-    for (int i = 0; i < text.length(); ++i) {
-        if (text[i].isLetterOrNumber() || text[i] == QLatin1Char('_')) {
+    for (auto i : text) {
+        if (i.isLetterOrNumber() || i == QLatin1Char('_')) {
             if (!inWord) {
                 ++trW;
                 inWord = true;
@@ -394,7 +394,7 @@ void DataModel::doCharCounting(const QString &text, int &trW, int &trC, int &trC
         } else {
             inWord = false;
         }
-        if (!text[i].isSpace())
+        if (!i.isSpace())
             trC++;
     }
 }
@@ -821,8 +821,8 @@ void MultiDataModel::moveModel(int oldPos, int newPos)
     int delPos = oldPos < newPos ? oldPos : oldPos + 1;
     m_dataModels.insert(newPos, m_dataModels[oldPos]);
     m_dataModels.removeAt(delPos);
-    for (int i = 0; i < m_multiContextList.size(); ++i)
-        m_multiContextList[i].moveModel(oldPos, newPos);
+    for (auto & i : m_multiContextList)
+        i.moveModel(oldPos, newPos);
 }
 
 QStringList MultiDataModel::prettifyFileNames(const QStringList &names)
@@ -949,8 +949,7 @@ int MultiDataModel::findContextIndex(const QString &context) const
 
 MultiContextItem *MultiDataModel::findContext(const QString &context) const
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        const MultiContextItem &mc = m_multiContextList[i];
+    for (const auto & mc : m_multiContextList) {
         if (mc.context() == context)
             return const_cast<MultiContextItem *>(&mc);
     }
@@ -1062,8 +1061,7 @@ void MultiDataModel::setDanger(const MultiDataIndex &index, bool danger)
 
 void MultiDataModel::updateCountsOnAdd(int model, bool writable)
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        MultiContextItem &mc = m_multiContextList[i];
+    for (auto & mc : m_multiContextList) {
         for (int j = 0; j < mc.messageCount(); ++j)
             if (MessageItem *m = mc.messageItem(model, j)) {
                 MultiMessageItem *mm = mc.multiMessageItem(j);
@@ -1097,8 +1095,7 @@ void MultiDataModel::updateCountsOnAdd(int model, bool writable)
 
 void MultiDataModel::updateCountsOnRemove(int model, bool writable)
 {
-    for (int i = 0; i < m_multiContextList.size(); ++i) {
-        MultiContextItem &mc = m_multiContextList[i];
+    for (auto & mc : m_multiContextList) {
         for (int j = 0; j < mc.messageCount(); ++j)
             if (MessageItem *m = mc.messageItem(model, j)) {
                 MultiMessageItem *mm = mc.multiMessageItem(j);

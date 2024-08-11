@@ -53,14 +53,14 @@ public:
 
     void append(const CharacterClass* other)
     {
-        for (size_t i = 0; i < other->m_matches.size(); ++i)
-            addSorted(m_matches, other->m_matches[i]);
-        for (size_t i = 0; i < other->m_ranges.size(); ++i)
-            addSortedRange(m_ranges, other->m_ranges[i].begin, other->m_ranges[i].end);
-        for (size_t i = 0; i < other->m_matchesUnicode.size(); ++i)
-            addSorted(m_matchesUnicode, other->m_matchesUnicode[i]);
-        for (size_t i = 0; i < other->m_rangesUnicode.size(); ++i)
-            addSortedRange(m_rangesUnicode, other->m_rangesUnicode[i].begin, other->m_rangesUnicode[i].end);
+        for (unsigned short m_matche : other->m_matches)
+            addSorted(m_matches, m_matche);
+        for (auto m_range : other->m_ranges)
+            addSortedRange(m_ranges, m_range.begin, m_range.end);
+        for (unsigned short i : other->m_matchesUnicode)
+            addSorted(m_matchesUnicode, i);
+        for (auto i : other->m_rangesUnicode)
+            addSortedRange(m_rangesUnicode, i.begin, i.end);
     }
 
     void putChar(UChar ch)
@@ -498,11 +498,10 @@ public:
         PatternDisjunction* newDisjunction = new PatternDisjunction();
 
         newDisjunction->m_parent = disjunction->m_parent;
-        for (unsigned alt = 0; alt < disjunction->m_alternatives.size(); ++alt) {
-            PatternAlternative* alternative = disjunction->m_alternatives[alt];
+        for (auto alternative : disjunction->m_alternatives) {
             PatternAlternative* newAlternative = newDisjunction->addNewAlternative();
-            for (unsigned i = 0; i < alternative->m_terms.size(); ++i)
-                newAlternative->m_terms.append(copyTerm(alternative->m_terms[i]));
+            for (auto & m_term : alternative->m_terms)
+                newAlternative->m_terms.append(copyTerm(m_term));
         }
 
         m_pattern.m_disjunctions.append(newDisjunction);
@@ -663,8 +662,7 @@ public:
         unsigned maximumCallFrameSize = 0;
         bool hasFixedSize = true;
 
-        for (unsigned alt = 0; alt < disjunction->m_alternatives.size(); ++alt) {
-            PatternAlternative* alternative = disjunction->m_alternatives[alt];
+        for (auto alternative : disjunction->m_alternatives) {
             unsigned currentAlternativeCallFrameSize = setupAlternativeOffsets(alternative, initialCallFrameSize, initialInputPosition);
             minimumInputSize = min(minimumInputSize, alternative->m_minimumSize);
             maximumCallFrameSize = max(maximumCallFrameSize, currentAlternativeCallFrameSize);

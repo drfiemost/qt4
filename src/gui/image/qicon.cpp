@@ -433,8 +433,7 @@ void QPixmapIconEngine::virtual_hook(int id, void *data)
         QIconEngineV2::AvailableSizesArgument &arg =
             *reinterpret_cast<QIconEngineV2::AvailableSizesArgument*>(data);
         arg.sizes.clear();
-        for (int i = 0; i < pixmaps.size(); ++i) {
-            QPixmapIconEngineEntry &pe = pixmaps[i];
+        for (auto & pe : pixmaps) {
             if (pe.size == QSize() && pe.pixmap.isNull()) {
                 pe.pixmap = QPixmap(pe.fileName);
                 pe.size = pe.pixmap.size();

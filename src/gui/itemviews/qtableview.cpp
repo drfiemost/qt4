@@ -219,8 +219,8 @@ void QSpanCollection::updateInsertedRows(int start, int end)
 #ifdef DEBUG_SPAN_UPDATE
     qDebug("Before");
 #endif
-    for (SpanList::iterator it = spans.begin(); it != spans.end(); ++it) {
-        Span *span = *it;
+    for (auto span : spans) {
+        
 #ifdef DEBUG_SPAN_UPDATE
         qDebug() << span << *span;
 #endif
@@ -269,8 +269,8 @@ void QSpanCollection::updateInsertedColumns(int start, int end)
 #ifdef DEBUG_SPAN_UPDATE
     qDebug("Before");
 #endif
-    for (SpanList::iterator it = spans.begin(); it != spans.end(); ++it) {
-        Span *span = *it;
+    for (auto span : spans) {
+        
 #ifdef DEBUG_SPAN_UPDATE
         qDebug() << span << *span;
 #endif
@@ -1343,8 +1343,7 @@ void QTableView::paintEvent(QPaintEvent *event)
                              firstVisualRow, lastVisualRow, firstVisualColumn, lastVisualColumn);
     }
 
-    for (int i = 0; i < rects.size(); ++i) {
-        QRect dirtyArea = rects.at(i);
+    for (auto dirtyArea : rects) {
         dirtyArea.setBottom(std::min(dirtyArea.bottom(), int(y)));
         if (rightToLeft) {
             dirtyArea.setLeft(std::max(dirtyArea.left(), d->viewport->width() - int(x)));

@@ -932,8 +932,8 @@ QList<QNetworkCookie> QNetworkCookie::parseCookies(const QByteArray &cookieStrin
     // by \n, parse each line separately.
     QList<QNetworkCookie> cookies;
     QList<QByteArray> list = cookieString.split('\n');
-    for (int a = 0; a < list.size(); a++)
-        cookies += QNetworkCookiePrivate::parseSetCookieHeaderLine(list.at(a));
+    for (const auto & a : list)
+        cookies += QNetworkCookiePrivate::parseSetCookieHeaderLine(a);
     return cookies;
 }
 

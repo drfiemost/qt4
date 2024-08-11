@@ -107,8 +107,7 @@ inline QHash<QString, DomProperty *> propertyMap(const QList<DomProperty *> &pro
 {
     QHash<QString, DomProperty *> map;
 
-    for (int i=0; i<properties.size(); ++i) {
-        DomProperty *p = properties.at(i);
+    for (auto p : properties) {
         map.insert(p->attributeName(), p);
     }
 
@@ -118,8 +117,8 @@ inline QHash<QString, DomProperty *> propertyMap(const QList<DomProperty *> &pro
 inline QStringList unique(const QStringList &lst)
 {
     QHash<QString, bool> h;
-    for (int i=0; i<lst.size(); ++i)
-        h.insert(lst.at(i), true);
+    for (const auto & i : lst)
+        h.insert(i, true);
     return h.keys();
 }
 

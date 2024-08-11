@@ -98,8 +98,8 @@ QDirPrivate::QDirPrivate(const QString &path, const QStringList &nameFilters_, Q
     bool empty = nameFilters.isEmpty();
     if (!empty) {
         empty = true;
-        for (int i = 0; i < nameFilters.size(); ++i) {
-            if (!nameFilters.at(i).isEmpty()) {
+        for (const auto & nameFilter : nameFilters) {
+            if (!nameFilter.isEmpty()) {
                 empty = false;
                 break;
             }

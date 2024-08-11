@@ -311,22 +311,21 @@ public:
 
     virtual void resolveFont(uint inheritedMask)
     {
-        for (int i = 0; i < children.size(); ++i)
-            children.at(i)->d_ptr->resolveFont(inheritedMask);
+        for (auto i : children)
+            i->d_ptr->resolveFont(inheritedMask);
     }
 
     virtual void resolvePalette(uint inheritedMask)
     {
-        for (int i = 0; i < children.size(); ++i)
-            children.at(i)->d_ptr->resolveFont(inheritedMask);
+        for (auto i : children)
+            i->d_ptr->resolveFont(inheritedMask);
     }
 
     virtual bool isProxyWidget() const;
 
     inline QVariant extra(Extra type) const
     {
-        for (int i = 0; i < extras.size(); ++i) {
-            const ExtraStruct &extra = extras.at(i);
+        for (const auto & extra : extras) {
             if (extra.type == type)
                 return extra.value;
         }
@@ -394,8 +393,8 @@ public:
 
     inline void invalidateChildrenSceneTransform()
     {
-        for (int i = 0; i < children.size(); ++i)
-            children.at(i)->d_ptr->dirtySceneTransform = 1;
+        for (auto i : children)
+            i->d_ptr->dirtySceneTransform = 1;
     }
 
     inline qreal calcEffectiveOpacity() const
@@ -460,8 +459,8 @@ public:
         if (flags & QGraphicsItem::ItemDoesntPropagateOpacityToChildren)
             return false;
 
-        for (int i = 0; i < children.size(); ++i) {
-            if (children.at(i)->d_ptr->flags & QGraphicsItem::ItemIgnoresParentOpacity)
+        for (auto i : children) {
+            if (i->d_ptr->flags & QGraphicsItem::ItemIgnoresParentOpacity)
                 return false;
         }
         return true;
@@ -622,8 +621,8 @@ struct QGraphicsItemPrivate::TransformData
         QTransform x(transform);
         if (!graphicsTransforms.isEmpty()) {
             QMatrix4x4 m;
-            for (int i = 0; i < graphicsTransforms.size(); ++i)
-                graphicsTransforms.at(i)->applyTo(&m);
+            for (auto graphicsTransform : graphicsTransforms)
+                graphicsTransform->applyTo(&m);
             x *= m.toTransform();
         }
         x.translate(xOrigin, yOrigin);

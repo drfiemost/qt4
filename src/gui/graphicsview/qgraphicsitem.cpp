@@ -882,8 +882,8 @@ void QGraphicsItemPrivate::updateAncestorFlag(QGraphicsItem::GraphicsItemFlag ch
             return;
     }
 
-    for (int i = 0; i < children.size(); ++i)
-        children.at(i)->d_ptr->updateAncestorFlag(childFlag, flag, enabled, false);
+    for (auto i : children)
+        i->d_ptr->updateAncestorFlag(childFlag, flag, enabled, false);
 }
 
 void QGraphicsItemPrivate::updateAncestorFlags()
@@ -910,8 +910,8 @@ void QGraphicsItemPrivate::updateAncestorFlags()
     ancestorFlags = flags;
 
     // Propagate to children recursively.
-    for (int i = 0; i < children.size(); ++i)
-        children.at(i)->d_ptr->updateAncestorFlags();
+    for (auto i : children)
+        i->d_ptr->updateAncestorFlags();
 }
 
 /*!
@@ -1293,8 +1293,7 @@ void QGraphicsItemPrivate::childrenBoundingRectHelper(QTransform *x, QRectF *rec
     rect = &childrenRect;
     const bool setTopMostEffectItem = !topMostEffectItem;
 
-    for (int i = 0; i < children.size(); ++i) {
-        QGraphicsItem *child = children.at(i);
+    for (auto child : children) {
         QGraphicsItemPrivate *childd = child->d_ptr.data();
         if (setTopMostEffectItem)
             topMostEffectItem = child;
@@ -1363,8 +1362,8 @@ void QGraphicsItemPrivate::initStyleOption(QStyleOptionGraphicsItem *option, con
         option->exposedRect = QRectF();
         const QTransform reverseMap = worldTransform.inverted();
         const QVector<QRect> exposedRects(exposedRegion.rects());
-        for (int i = 0; i < exposedRects.size(); ++i) {
-            option->exposedRect |= reverseMap.mapRect(QRectF(exposedRects.at(i)));
+        for (auto exposedRect : exposedRects) {
+            option->exposedRect |= reverseMap.mapRect(QRectF(exposedRect));
             if (option->exposedRect.contains(brect))
                 break;
         }
@@ -1505,8 +1504,7 @@ QGraphicsItem::~QGraphicsItem()
     delete d_ptr->graphicsEffect;
 #endif //QT_NO_GRAPHICSEFFECT
     if (d_ptr->transformData) {
-        for(int i = 0; i < d_ptr->transformData->graphicsTransforms.size(); ++i) {
-            QGraphicsTransform *t = d_ptr->transformData->graphicsTransforms.at(i);
+        for(auto t : d_ptr->transformData->graphicsTransforms) {
             static_cast<QGraphicsTransformPrivate *>(t->d_ptr.data())->item = nullptr;
             delete t;
         }
@@ -4028,8 +4026,8 @@ void QGraphicsItem::setTransformations(const QList<QGraphicsTransform *> &transf
     if (!d_ptr->transformData)
         d_ptr->transformData = new QGraphicsItemPrivate::TransformData;
     d_ptr->transformData->graphicsTransforms = transformations;
-    for (int i = 0; i < transformations.size(); ++i)
-        transformations.at(i)->d_func()->setItem(this);
+    for (auto transformation : transformations)
+        transformation->d_func()->setItem(this);
     d_ptr->transformData->onlyTransform = false;
     d_ptr->dirtySceneTransform = 1;
     d_ptr->transformChanged();
@@ -4234,8 +4232,7 @@ QTransform QGraphicsItem::deviceTransform(const QTransform &viewportTransform) c
         matrix = untransformedAncestor->d_ptr->transformData->computedFullTransform(&matrix);
 
     // Then transform and translate all children.
-    for (int i = 0; i < parents.size(); ++i) {
-        const QGraphicsItem *parent = parents.at(i);
+    for (auto parent : parents) {
         parent->d_ptr->combineTransformFromParent(&matrix);
     }
 
@@ -5413,8 +5410,8 @@ void QGraphicsItemPrivate::invalidateChildGraphicsEffectsRecursively(QGraphicsIt
     if (!mayHaveChildWithGraphicsEffect)
         return;
 
-    for (int i = 0; i < children.size(); ++i) {
-        QGraphicsItemPrivate *childPrivate = children.at(i)->d_ptr.data();
+    for (auto i : children) {
+        QGraphicsItemPrivate *childPrivate = i->d_ptr.data();
         if (reason == OpacityChanged && (childPrivate->flags & QGraphicsItem::ItemIgnoresParentOpacity))
             continue;
         if (childPrivate->graphicsEffect) {
@@ -5436,8 +5433,8 @@ void QGraphicsItemPrivate::invalidateDepthRecursively()
         return;
 
     itemDepth = -1;
-    for (int i = 0; i < children.size(); ++i)
-        children.at(i)->d_ptr->invalidateDepthRecursively();
+    for (auto i : children)
+        i->d_ptr->invalidateDepthRecursively();
 }
 
 /*!
@@ -5538,16 +5535,16 @@ void QGraphicsItemPrivate::updatePaintedViewBoundingRects(bool updateChildren)
     if (!scene)
         return;
 
-    for (int i = 0; i < scene->d_func()->views.size(); ++i) {
-        QGraphicsViewPrivate *viewPrivate = scene->d_func()->views.at(i)->d_func();
+    for (auto view : scene->d_func()->views) {
+        QGraphicsViewPrivate *viewPrivate = view->d_func();
         QRect rect = paintedViewBoundingRects.value(viewPrivate->viewport);
         rect.translate(viewPrivate->dirtyScrollOffset);
         viewPrivate->updateRect(rect);
     }
 
     if (updateChildren) {
-        for (int i = 0; i < children.size(); ++i)
-            children.at(i)->d_ptr->updatePaintedViewBoundingRects(true);
+        for (auto i : children)
+            i->d_ptr->updatePaintedViewBoundingRects(true);
     }
 }
 
@@ -5637,8 +5634,8 @@ void QGraphicsItemPrivate::clearSubFocus(QGraphicsItem *rootItem, QGraphicsItem 
 */
 void QGraphicsItemPrivate::resetFocusProxy()
 {
-    for (int i = 0; i < focusProxyRefs.size(); ++i)
-        *focusProxyRefs.at(i) = nullptr;
+    for (auto focusProxyRef : focusProxyRefs)
+        *focusProxyRef = nullptr;
     focusProxyRefs.clear();
 }
 
@@ -5819,8 +5816,7 @@ void QGraphicsItem::scroll(qreal dx, qreal dy, const QRectF &rect)
     cache->key = QPixmapCache::insert(cachedPixmap);
 
     // Translate the existing expose.
-    for (int i = 0; i < cache->exposed.size(); ++i) {
-        QRectF &e = cache->exposed[i];
+    for (auto & e : cache->exposed) {
         if (!rect.isNull() && !e.intersects(rect))
             continue;
         e.translate(dx, dy);
@@ -5830,8 +5826,8 @@ void QGraphicsItem::scroll(qreal dx, qreal dy, const QRectF &rect)
     // in pixmap coordinates, so we have to translate it to item coordinates.
     exposed.translate(cache->boundingRect.topLeft());
     const QVector<QRect> exposedRects = exposed.rects();
-    for (int i = 0; i < exposedRects.size(); ++i)
-        cache->exposed += exposedRects.at(i);
+    for (auto exposedRect : exposedRects)
+        cache->exposed += exposedRect;
 
     // Trigger update. This will redraw the newly exposed area and make sure
     // the pixmap is re-blitted in case there are overlapping items.
@@ -11122,8 +11118,8 @@ void QGraphicsItemGroup::addToGroup(QGraphicsItem *item)
     QPointF origin = item->transformOriginPoint();
     QMatrix4x4 m;
     QList<QGraphicsTransform*> transformList = item->transformations();
-    for (int i = 0; i < transformList.size(); ++i)
-        transformList.at(i)->applyTo(&m);
+    for (auto i : transformList)
+        i->applyTo(&m);
     newItemTransform *= m.toTransform().inverted();
     newItemTransform.translate(origin.x(), origin.y());
     newItemTransform.rotate(-item->rotation());
@@ -11178,8 +11174,8 @@ void QGraphicsItemGroup::removeFromGroup(QGraphicsItem *item)
     QPointF origin = item->transformOriginPoint();
     QMatrix4x4 m;
     QList<QGraphicsTransform*> transformList = item->transformations();
-    for (int i = 0; i < transformList.size(); ++i)
-        transformList.at(i)->applyTo(&m);
+    for (auto i : transformList)
+        i->applyTo(&m);
     itemTransform *= m.toTransform().inverted();
     itemTransform.translate(origin.x(), origin.y());
     itemTransform.rotate(-item->rotation());

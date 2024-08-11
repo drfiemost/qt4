@@ -1886,8 +1886,7 @@ void QPlainTextEdit::paintEvent(QPaintEvent *e)
             QVector<QTextLayout::FormatRange> selections;
             int blpos = block.position();
             int bllen = block.length();
-            for (int i = 0; i < context.selections.size(); ++i) {
-                const QAbstractTextDocumentLayout::Selection &range = context.selections.at(i);
+            for (const auto & range : context.selections) {
                 const int selStart = range.cursor.selectionStart() - blpos;
                 const int selEnd = range.cursor.selectionEnd() - blpos;
                 if (selStart < bllen && selEnd > 0

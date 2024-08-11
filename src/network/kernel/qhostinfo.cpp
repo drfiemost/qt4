@@ -550,8 +550,8 @@ void QHostInfoLookupManager::work()
 
     if (!finishedLookups.isEmpty()) {
         // remove ID from aborted if it is in there
-        for (int i = 0; i < finishedLookups.length(); i++) {
-           abortedLookups.removeAll(finishedLookups.at(i)->id);
+        for (auto finishedLookup : finishedLookups) {
+           abortedLookups.removeAll(finishedLookup->id);
         }
 
         finishedLookups.clear();
@@ -566,8 +566,8 @@ void QHostInfoLookupManager::work()
 
             // check if none of the postponed hostnames is currently running
             bool alreadyRunning = false;
-            for (int i = 0; i < currentLookups.length(); i++) {
-                if (currentLookups.at(i)->toBeLookedUp == postponed->toBeLookedUp) {
+            for (auto currentLookup : currentLookups) {
+                if (currentLookup->toBeLookedUp == postponed->toBeLookedUp) {
                     alreadyRunning = true;
                     break;
                 }
@@ -586,8 +586,8 @@ void QHostInfoLookupManager::work()
             QHostInfoRunnable *scheduled = iterator.next();
 
             // check if a lookup for this host is already running, then postpone
-            for (int i = 0; i < currentLookups.size(); i++) {
-                if (currentLookups.at(i)->toBeLookedUp == scheduled->toBeLookedUp) {
+            for (auto currentLookup : currentLookups) {
+                if (currentLookup->toBeLookedUp == scheduled->toBeLookedUp) {
                     iterator.remove();
                     postponedLookups.append(scheduled);
                     scheduled = nullptr;

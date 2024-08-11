@@ -94,8 +94,7 @@ void QKeyMapper::changeKeyboard()
     // inform all toplevel widgets of the change
     QEvent e(QEvent::KeyboardLayoutChange);
     QWidgetList list = QApplication::topLevelWidgets();
-    for (int i = 0; i < list.size(); ++i) {
-        QWidget *w = list.at(i);
+    for (auto w : list) {
         qt_sendSpontaneousEvent(w, &e);
     }
 }

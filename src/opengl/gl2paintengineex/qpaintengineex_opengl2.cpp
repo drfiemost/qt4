@@ -986,9 +986,9 @@ void QGL2PaintEngineExPrivate::fillStencilWithVertexArray(const float *data,
     if (dirtyStencilRegion.intersects(currentScissorBounds)) {
         QVector<QRect> clearRegion = dirtyStencilRegion.intersected(currentScissorBounds).rects();
         glClearStencil(0); // Clear to zero
-        for (int i = 0; i < clearRegion.size(); ++i) {
+        for (auto i : clearRegion) {
 #ifndef QT_GL_NO_SCISSOR_TEST
-            setScissor(clearRegion.at(i));
+            setScissor(i);
 #endif
             glClear(GL_STENCIL_BUFFER_BIT);
         }
@@ -2242,8 +2242,8 @@ void QGL2PaintEngineEx::ensureActive()
         d->lastMaskTextureUsed = 0;
         d->shaderManager->setDirty();
         d->ctx->d_func()->syncGlState();
-        for (int i = 0; i < 3; ++i)
-            d->vertexAttribPointers[i] = (GLfloat*)-1; // Assume the pointers are clobbered
+        for (auto & vertexAttribPointer : d->vertexAttribPointers)
+            vertexAttribPointer = (GLfloat*)-1; // Assume the pointers are clobbered
         setState(state());
     }
 }

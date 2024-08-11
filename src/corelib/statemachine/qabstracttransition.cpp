@@ -214,8 +214,8 @@ QList<QAbstractState*> QAbstractTransition::targetStates() const
 {
     Q_D(const QAbstractTransition);
     QList<QAbstractState*> result;
-    for (int i = 0; i < d->targetStates.size(); ++i) {
-        QAbstractState *target = d->targetStates.at(i).data();
+    for (const auto & targetState : d->targetStates) {
+        QAbstractState *target = targetState.data();
         if (target)
             result.append(target);
     }
@@ -229,8 +229,7 @@ void QAbstractTransition::setTargetStates(const QList<QAbstractState*> &targets)
 {
     Q_D(QAbstractTransition);
 
-    for (int i = 0; i < targets.size(); ++i) {
-        QAbstractState *target = targets.at(i);
+    for (auto target : targets) {
         if (!target) {
             qWarning("QAbstractTransition::setTargetStates: target state(s) cannot be null");
             return;
@@ -238,8 +237,8 @@ void QAbstractTransition::setTargetStates(const QList<QAbstractState*> &targets)
     }
 
     d->targetStates.clear();
-    for (int i = 0; i < targets.size(); ++i)
-        d->targetStates.append(targets.at(i));
+    for (auto target : targets)
+        d->targetStates.append(target);
 }
 
 /*!

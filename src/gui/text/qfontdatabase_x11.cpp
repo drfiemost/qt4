@@ -1838,9 +1838,9 @@ QFontEngine *QFontDatabase::loadXlfd(int screen, int script, const QFontDef &req
         families_and_foundries << QString::fromLatin1(stylehint);
     families_and_foundries << QString();
     FM_DEBUG() << "loadXlfd: list is" << families_and_foundries;
-    for (int i = 0; i < families_and_foundries.size(); ++i) {
+    for (const auto & families_and_foundrie : families_and_foundries) {
         QString family, foundry;
-        QT_PREPEND_NAMESPACE(parseFontName)(families_and_foundries.at(i), foundry, family);
+        QT_PREPEND_NAMESPACE(parseFontName)(families_and_foundrie, foundry, family);
         FM_DEBUG("loadXlfd: >>>>>>>>>>>>>>trying to match '%s' encoding=%d", family.toLatin1().data(), force_encoding_id);
         QT_PREPEND_NAMESPACE(match)(script, request, family, foundry, force_encoding_id, &desc, QList<int>(), true);
         if (desc.family)
@@ -2017,9 +2017,9 @@ void QFontDatabase::load(const QFontPrivate *d, int script)
         }
     }
     if (fe->symbol || (d->request.styleStrategy & QFont::NoFontMerging)) {
-        for (int i = 0; i < QUnicodeTables::ScriptCount; ++i) {
-            if (!d->engineData->engines[i]) {
-                d->engineData->engines[i] = fe;
+        for (auto & engine : d->engineData->engines) {
+            if (!engine) {
+                engine = fe;
                 fe->ref.ref();
             }
         }

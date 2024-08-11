@@ -325,9 +325,9 @@ static const char * const suffixes[NumSuffixes] = { "", "s", "es" };
  */
 const FakeNode *Tree::findFakeNodeByTitle(const QString &title) const
 {
-    for (int pass = 0; pass < NumSuffixes; ++pass) {
+    for (auto suffixe : suffixes) {
         FakeNodeHash::const_iterator i =
-                priv->fakeNodesByTitle.find(Doc::canonicalTitle(title + suffixes[pass]));
+                priv->fakeNodesByTitle.find(Doc::canonicalTitle(title + suffixe));
         if (i != priv->fakeNodesByTitle.constEnd()) {
             FakeNodeHash::const_iterator j = i;
             ++j;
@@ -359,9 +359,9 @@ Tree::findUnambiguousTarget(const QString &target, Atom *&atom) const
     Target bestTarget = {nullptr, nullptr, INT_MAX};
     int numBestTargets = 0;
 
-    for (int pass = 0; pass < NumSuffixes; ++pass) {
+    for (auto suffixe : suffixes) {
         TargetHash::const_iterator i =
-                priv->targetHash.find(Doc::canonicalTitle(target + suffixes[pass]));
+                priv->targetHash.find(Doc::canonicalTitle(target + suffixe));
         if (i != priv->targetHash.constEnd()) {
             TargetHash::const_iterator j = i;
             do {
@@ -388,8 +388,8 @@ Tree::findUnambiguousTarget(const QString &target, Atom *&atom) const
  */
 Atom *Tree::findTarget(const QString &target, const Node *node) const
 {
-    for (int pass = 0; pass < NumSuffixes; ++pass) {
-        QString key = Doc::canonicalTitle(target + suffixes[pass]);
+    for (auto suffixe : suffixes) {
+        QString key = Doc::canonicalTitle(target + suffixe);
         TargetHash::const_iterator i = priv->targetHash.find(key);
 
         if (i != priv->targetHash.constEnd()) {
@@ -616,8 +616,8 @@ void Tree::resolveTargets()
             target.node = child;
             target.priority = 3;
 
-            for (int i = 0; i < toc.size(); ++i) {
-                target.atom = toc.at(i);
+            for (auto i : toc) {
+                target.atom = i;
                 QString title = Text::sectionHeading(target.atom).toString();
                 if (!title.isEmpty())
                     priv->targetHash.insert(Doc::canonicalTitle(title), target);
@@ -629,8 +629,8 @@ void Tree::resolveTargets()
             target.node = child;
             target.priority = 1;
 
-            for (int i = 0; i < keywords.size(); ++i) {
-                target.atom = keywords.at(i);
+            for (auto keyword : keywords) {
+                target.atom = keyword;
                 priv->targetHash.insert(Doc::canonicalTitle(target.atom->string()), target);
             }
         }
@@ -640,8 +640,8 @@ void Tree::resolveTargets()
             target.node = child;
             target.priority = 2;
 
-            for (int i = 0; i < toc.size(); ++i) {
-                target.atom = toc.at(i);
+            for (auto i : toc) {
+                target.atom = i;
                 priv->targetHash.insert(Doc::canonicalTitle(target.atom->string()), target);
             }
         }

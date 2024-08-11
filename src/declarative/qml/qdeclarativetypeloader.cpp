@@ -505,8 +505,8 @@ QDeclarativeDataLoader::QDeclarativeDataLoader(QDeclarativeEngine *engine)
 /*! \internal */
 QDeclarativeDataLoader::~QDeclarativeDataLoader()
 {
-    for (NetworkReplies::Iterator iter = m_networkReplies.begin(); iter != m_networkReplies.end(); ++iter) 
-        (*iter)->release();
+    for (auto & m_networkReplie : m_networkReplies) 
+        m_networkReplie->release();
 }
 
 /*!
@@ -838,12 +838,12 @@ and qmldir information.
 */
 void QDeclarativeTypeLoader::clearCache()
 {
-    for (TypeCache::Iterator iter = m_typeCache.begin(); iter != m_typeCache.end(); ++iter) 
-        (*iter)->release();
-    for (ScriptCache::Iterator iter = m_scriptCache.begin(); iter != m_scriptCache.end(); ++iter) 
-        (*iter)->release();
-    for (QmldirCache::Iterator iter = m_qmldirCache.begin(); iter != m_qmldirCache.end(); ++iter) 
-        (*iter)->release();
+    for (auto & iter : m_typeCache) 
+        iter->release();
+    for (auto & iter : m_scriptCache) 
+        iter->release();
+    for (auto & iter : m_qmldirCache) 
+        iter->release();
     qDeleteAll(m_importDirCache);
     qDeleteAll(m_importQmlDirCache);
 

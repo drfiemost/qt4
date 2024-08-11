@@ -129,8 +129,8 @@ void QGraphicsSceneBspTreeIndexPrivate::_q_updateIndex()
     purgeRemovedItems();
 
      // Add unindexedItems to indexedItems
-    for (int i = 0; i < unindexedItems.size(); ++i) {
-        if (QGraphicsItem *item = unindexedItems.at(i)) {
+    for (auto item : unindexedItems) {
+        if (item) {
             Q_ASSERT(!item->d_ptr->itemDiscovered);
             if (!freeItemIndexes.isEmpty()) {
                 int freeIndex = freeItemIndexes.takeFirst();
@@ -163,8 +163,8 @@ void QGraphicsSceneBspTreeIndexPrivate::_q_updateIndex()
     }
 
     // Insert all unindexed items into the tree.
-    for (int i = 0; i < unindexedItems.size(); ++i) {
-        if (QGraphicsItem *item = unindexedItems.at(i)) {
+    for (auto item : unindexedItems) {
+        if (item) {
             if (item->d_ptr->itemIsUntransformable()) {
                 untransformableItems << item;
                 continue;
@@ -222,8 +222,8 @@ void QGraphicsSceneBspTreeIndexPrivate::startIndexTimer(int interval)
 void QGraphicsSceneBspTreeIndexPrivate::resetIndex()
 {
     purgeRemovedItems();
-    for (int i = 0; i < indexedItems.size(); ++i) {
-        if (QGraphicsItem *item = indexedItems.at(i)) {
+    for (auto item : indexedItems) {
+        if (item) {
             item->d_ptr->index = -1;
             Q_ASSERT(!item->d_ptr->itemDiscovered);
             unindexedItems << item;
@@ -244,16 +244,16 @@ void QGraphicsSceneBspTreeIndexPrivate::climbTree(QGraphicsItem *item, int *stac
     if (!item->d_ptr->children.isEmpty()) {
         QList<QGraphicsItem *> childList = item->d_ptr->children;
         std::sort(childList.begin(), childList.end(), qt_closestLeaf);
-        for (int i = 0; i < childList.size(); ++i) {
-            QGraphicsItem *item = childList.at(i);
+        for (auto i : childList) {
+            QGraphicsItem *item = i;
             if (!(item->flags() & QGraphicsItem::ItemStacksBehindParent))
-                climbTree(childList.at(i), stackingOrder);
+                climbTree(i, stackingOrder);
         }
         item->d_ptr->globalStackingOrder = (*stackingOrder)++;
-        for (int i = 0; i < childList.size(); ++i) {
-            QGraphicsItem *item = childList.at(i);
+        for (auto i : childList) {
+            QGraphicsItem *item = i;
             if (item->flags() & QGraphicsItem::ItemStacksBehindParent)
-                climbTree(childList.at(i), stackingOrder);
+                climbTree(i, stackingOrder);
         }
     } else {
         item->d_ptr->globalStackingOrder = (*stackingOrder)++;
@@ -276,15 +276,14 @@ void QGraphicsSceneBspTreeIndexPrivate::_q_updateSortCache()
 
     QList<QGraphicsItem *> topLevels;
     const QList<QGraphicsItem *> items = q->items();
-    for (int i = 0; i < items.size(); ++i) {
-        QGraphicsItem *item = items.at(i);
+    for (auto item : items) {
         if (item && !item->d_ptr->parent)
             topLevels << item;
     }
 
     std::sort(topLevels.begin(), topLevels.end(), qt_closestLeaf);
-    for (int i = 0; i < topLevels.size(); ++i)
-        climbTree(topLevels.at(i), &stackingOrder);
+    for (auto topLevel : topLevels)
+        climbTree(topLevel, &stackingOrder);
 }
 
 /*!
@@ -326,8 +325,8 @@ void QGraphicsSceneBspTreeIndexPrivate::addItem(QGraphicsItem *item, bool recurs
     }
 
     if (recursive) {
-        for (int i = 0; i < item->d_ptr->children.size(); ++i)
-            addItem(item->d_ptr->children.at(i), recursive);
+        for (auto i : item->d_ptr->children)
+            addItem(i, recursive);
     }
 }
 
@@ -368,8 +367,8 @@ void QGraphicsSceneBspTreeIndexPrivate::removeItem(QGraphicsItem *item, bool rec
         addItem(item);
 
     if (recursive) {
-        for (int i = 0; i < item->d_ptr->children.size(); ++i)
-            removeItem(item->d_ptr->children.at(i), recursive, moveToUnindexedItems);
+        for (auto i : item->d_ptr->children)
+            removeItem(i, recursive, moveToUnindexedItems);
     }
 }
 
@@ -386,8 +385,7 @@ QList<QGraphicsItem *> QGraphicsSceneBspTreeIndexPrivate::estimateItems(const QR
 
     QList<QGraphicsItem *> rectItems = bsp.items(rect, onlyTopLevelItems);
     if (onlyTopLevelItems) {
-        for (int i = 0; i < untransformableItems.size(); ++i) {
-            QGraphicsItem *item = untransformableItems.at(i);
+        for (auto item : untransformableItems) {
             if (!item->d_ptr->parent) {
                 rectItems << item;
             } else {
@@ -450,9 +448,9 @@ QGraphicsSceneBspTreeIndex::QGraphicsSceneBspTreeIndex(QGraphicsScene *scene)
 QGraphicsSceneBspTreeIndex::~QGraphicsSceneBspTreeIndex()
 {
     Q_D(QGraphicsSceneBspTreeIndex);
-    for (int i = 0; i < d->indexedItems.size(); ++i) {
+    for (auto item : d->indexedItems) {
         // Ensure item bits are reset properly.
-        if (QGraphicsItem *item = d->indexedItems.at(i)) {
+        if (item) {
             Q_ASSERT(!item->d_ptr->itemDiscovered);
             item->d_ptr->index = -1;
         }
@@ -469,9 +467,9 @@ void QGraphicsSceneBspTreeIndex::clear()
     d->bsp.clear();
     d->lastItemCount = 0;
     d->freeItemIndexes.clear();
-    for (int i = 0; i < d->indexedItems.size(); ++i) {
+    for (auto item : d->indexedItems) {
         // Ensure item bits are reset properly.
-        if (QGraphicsItem *item = d->indexedItems.at(i)) {
+        if (item) {
             Q_ASSERT(!item->d_ptr->itemDiscovered);
             item->d_ptr->index = -1;
         }
@@ -517,8 +515,8 @@ void QGraphicsSceneBspTreeIndex::prepareBoundingRectChange(const QGraphicsItem *
     Q_D(QGraphicsSceneBspTreeIndex);
     QGraphicsItem *thatItem = const_cast<QGraphicsItem *>(item);
     d->removeItem(thatItem, /*recursive=*/false, /*moveToUnindexedItems=*/true);
-    for (int i = 0; i < item->d_ptr->children.size(); ++i)  // ### Do we really need this?
-        prepareBoundingRectChange(item->d_ptr->children.at(i));
+    for (auto i : item->d_ptr->children)  // ### Do we really need this?
+        prepareBoundingRectChange(i);
 }
 
 /*!

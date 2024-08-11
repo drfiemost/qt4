@@ -2455,9 +2455,7 @@ QList<QSimplexConstraint *> QGraphicsAnchorLayoutPrivate::constraintsFromSizeHin
     // For each variable, create constraints based on size hints
     QList<QSimplexConstraint *> anchorConstraints;
     bool unboundedProblem = true;
-    for (int i = 0; i < anchors.size(); ++i) {
-        AnchorData *ad = anchors.at(i);
-
+    for (auto ad : anchors) {
         // Anchors that have their size directly linked to another one don't need constraints
         // For exammple, the second half of an item has exactly the same size as the first half
         // thus constraining the latter is enough.
@@ -2836,8 +2834,8 @@ bool QGraphicsAnchorLayoutPrivate::solveMinMax(const QList<QSimplexConstraint *>
 
         // Save sizeAtMinimum results
         QList<AnchorData *> variables = getVariables(constraints);
-        for (int i = 0; i < variables.size(); ++i) {
-            AnchorData *ad = static_cast<AnchorData *>(variables.at(i));
+        for (auto variable : variables) {
+            AnchorData *ad = static_cast<AnchorData *>(variable);
             ad->sizeAtMinimum = ad->result - g_offset;
         }
 
@@ -2845,8 +2843,8 @@ bool QGraphicsAnchorLayoutPrivate::solveMinMax(const QList<QSimplexConstraint *>
         *max = simplex.solveMax() - objectiveOffset;
 
         // Save sizeAtMaximum results
-        for (int i = 0; i < variables.size(); ++i) {
-            AnchorData *ad = static_cast<AnchorData *>(variables.at(i));
+        for (auto variable : variables) {
+            AnchorData *ad = static_cast<AnchorData *>(variable);
             ad->sizeAtMaximum = ad->result - g_offset;
         }
     }
@@ -2962,8 +2960,7 @@ bool QGraphicsAnchorLayoutPrivate::solvePreferred(const QList<QSimplexConstraint
         simplex->solveMin();
 
         // Save sizeAtPreferred results
-        for (int i = 0; i < variables.size(); ++i) {
-            AnchorData *ad = variables.at(i);
+        for (auto ad : variables) {
             ad->sizeAtPreferred = ad->result - g_offset;
         }
     }

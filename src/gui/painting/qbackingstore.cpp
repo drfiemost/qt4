@@ -437,8 +437,7 @@ QRegion QWidgetBackingStore::dirtyRegion(QWidget *widget) const
 
     // Calculate the region that needs repaint.
     QRegion r(dirty);
-    for (int i = 0; i < dirtyWidgets.size(); ++i) {
-        QWidget *w = dirtyWidgets.at(i);
+    for (auto w : dirtyWidgets) {
         if (widgetDirty && w != widget && !widget->isAncestorOf(w))
             continue;
         r += w->d_func()->dirty.translated(w->mapTo(tlw, QPoint()));
@@ -448,8 +447,7 @@ QRegion QWidgetBackingStore::dirtyRegion(QWidget *widget) const
     r += dirtyOnScreen;
 
     if (dirtyOnScreenWidgets) { // Only in use with native child widgets.
-        for (int i = 0; i < dirtyOnScreenWidgets->size(); ++i) {
-            QWidget *w = dirtyOnScreenWidgets->at(i);
+        for (auto w : *dirtyOnScreenWidgets) {
             if (widgetDirty && w != widget && !widget->isAncestorOf(w))
                 continue;
             QWidgetPrivate *wd = w->d_func();
@@ -863,8 +861,8 @@ void QWidgetBackingStore::updateLists(QWidget *cur)
         return;
 
     QList<QObject*> children = cur->children();
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *child = qobject_cast<QWidget*>(children.at(i));
+    for (auto i : children) {
+        QWidget *child = qobject_cast<QWidget*>(i);
         if (!child)
             continue;
 
@@ -902,8 +900,8 @@ QWidgetBackingStore::QWidgetBackingStore(QWidget *topLevel)
 
 QWidgetBackingStore::~QWidgetBackingStore()
 {
-    for (int c = 0; c < dirtyWidgets.size(); ++c) {
-        resetWidget(dirtyWidgets.at(c));
+    for (auto dirtyWidget : dirtyWidgets) {
+        resetWidget(dirtyWidget);
     }
 
     delete windowSurface;
@@ -1175,8 +1173,8 @@ void QWidgetBackingStore::sync()
         // be invalidated once the widget is shown again, so clear all dirty states.
         if (!tlw->isVisible()) {
             dirty = QRegion();
-            for (int i = 0; i < dirtyWidgets.size(); ++i)
-                resetWidget(dirtyWidgets.at(i));
+            for (auto dirtyWidget : dirtyWidgets)
+                resetWidget(dirtyWidget);
             dirtyWidgets.clear();
             fullUpdatePending = false;
         }
@@ -1205,8 +1203,8 @@ void QWidgetBackingStore::sync()
         } else {
             // Repaint everything.
             dirty = QRegion(0, 0, tlwRect.width(), tlwRect.height());
-            for (int i = 0; i < dirtyWidgets.size(); ++i)
-                resetWidget(dirtyWidgets.at(i));
+            for (auto dirtyWidget : dirtyWidgets)
+                resetWidget(dirtyWidget);
             dirtyWidgets.clear();
             repaintAllWidgets = true;
         }
@@ -1234,8 +1232,7 @@ void QWidgetBackingStore::sync()
     // and does not have transparent overlapping siblings, append it to the
     // opaqueNonOverlappedWidgets list and paint it directly without composition.
     QVarLengthArray<QWidget *, 32> opaqueNonOverlappedWidgets;
-    for (int i = 0; i < dirtyWidgets.size(); ++i) {
-        QWidget *w = dirtyWidgets.at(i);
+    for (auto w : dirtyWidgets) {
         QWidgetPrivate *wd = w->d_func();
         if (wd->data.in_destructor)
             continue;
@@ -1293,8 +1290,8 @@ void QWidgetBackingStore::sync()
         updateStaticContentsSize();
         dirty = QRegion();
         const QVector<QRect> rects(toClean.rects());
-        for (int i = 0; i < rects.size(); ++i)
-            tlw->d_func()->extra->proxyWidget->update(rects.at(i));
+        for (auto rect : rects)
+            tlw->d_func()->extra->proxyWidget->update(rect);
         return;
     }
 #endif
@@ -1303,8 +1300,8 @@ void QWidgetBackingStore::sync()
     BeginPaintInfo beginPaintInfo;
     beginPaint(toClean, tlw, windowSurface, &beginPaintInfo);
     if (beginPaintInfo.nothingToPaint) {
-        for (int i = 0; i < opaqueNonOverlappedWidgets.size(); ++i)
-            resetWidget(opaqueNonOverlappedWidgets[i]);
+        for (auto & opaqueNonOverlappedWidget : opaqueNonOverlappedWidgets)
+            resetWidget(opaqueNonOverlappedWidget);
         dirty = QRegion();
         return;
     }
@@ -1317,8 +1314,7 @@ void QWidgetBackingStore::sync()
     dirty = QRegion();
 
     // Paint opaque non overlapped widgets.
-    for (int i = 0; i < opaqueNonOverlappedWidgets.size(); ++i) {
-        QWidget *w = opaqueNonOverlappedWidgets[i];
+    for (auto w : opaqueNonOverlappedWidgets) {
         QWidgetPrivate *wd = w->d_func();
 
         int flags = QWidgetPrivate::DrawRecursive;
@@ -1438,8 +1434,7 @@ void QWidgetBackingStore::flush(QWidget *widget, QWindowSurface *surface)
     if (!dirtyOnScreenWidgets || dirtyOnScreenWidgets->isEmpty())
         return;
 
-    for (int i = 0; i < dirtyOnScreenWidgets->size(); ++i) {
-        QWidget *w = dirtyOnScreenWidgets->at(i);
+    for (auto w : *dirtyOnScreenWidgets) {
         QWidgetPrivate *wd = w->d_func();
         Q_ASSERT(wd->needsFlush);
         qt_flush(w, *wd->needsFlush, windowSurface, tlw, tlwOffset);

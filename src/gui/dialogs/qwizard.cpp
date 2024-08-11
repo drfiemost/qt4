@@ -561,8 +561,8 @@ public:
         , maximumWidth(QWIDGETSIZE_MAX)
         , maximumHeight(QWIDGETSIZE_MAX)
     {
-        for (int i = 0; i < QWizard::NButtons; ++i) {
-            btns[i] = nullptr;
+        for (auto & btn : btns) {
+            btn = nullptr;
 #ifdef QT_SOFTKEYS_ENABLED
             softKeys[i] = 0;
 #endif
@@ -738,10 +738,10 @@ void QWizardPrivate::init()
 
     updateButtonLayout();
 
-    for (int i = 0; i < NFallbackDefaultProperties; ++i)
-        defaultPropertyTable.append(QWizardDefaultProperty(fallbackProperties[i].className,
-                                                           fallbackProperties[i].property,
-                                                           fallbackProperties[i].changedSignal));
+    for (const auto & fallbackPropertie : fallbackProperties)
+        defaultPropertyTable.append(QWizardDefaultProperty(fallbackPropertie.className,
+                                                           fallbackPropertie.property,
+                                                           fallbackPropertie.changedSignal));
 }
 
 void QWizardPrivate::reset()
@@ -1741,9 +1741,9 @@ void QWizardPrivate::_q_handleFieldObjectDestroyed(QObject *object)
 
 void QWizardPrivate::setStyle(QStyle *style)
 {
-    for (int i = 0; i < QWizard::NButtons; i++)
-        if (btns[i])
-            btns[i]->setStyle(style);
+    for (auto & btn : btns)
+        if (btn)
+            btn->setStyle(style);
     const PageMap::const_iterator pcend = pageMap.constEnd();
     for (PageMap::const_iterator it = pageMap.constBegin(); it != pcend; ++it)
         it.value()->setStyle(style);

@@ -243,17 +243,17 @@ void QFontComboBoxPrivate::_q_updateModel()
     int offset = 0;
     QFontInfo fi(currentFont);
 
-    for (int i = 0; i < list.size(); ++i) {
+    for (const auto & i : list) {
         if ((filters & scalableMask) && (filters & scalableMask) != scalableMask) {
-            if (bool(filters & QFontComboBox::ScalableFonts) != fdb.isSmoothlyScalable(list.at(i)))
+            if (bool(filters & QFontComboBox::ScalableFonts) != fdb.isSmoothlyScalable(i))
                 continue;
         }
         if ((filters & spacingMask) && (filters & spacingMask) != spacingMask) {
-            if (bool(filters & QFontComboBox::MonospacedFonts) != fdb.isFixedPitch(list.at(i)))
+            if (bool(filters & QFontComboBox::MonospacedFonts) != fdb.isFixedPitch(i))
                 continue;
         }
-        result += list.at(i);
-        if (list.at(i) == fi.family() || list.at(i).startsWith(fi.family() + QLatin1String(" [")))
+        result += i;
+        if (i == fi.family() || i.startsWith(fi.family() + QLatin1String(" [")))
             offset = result.count() - 1;
     }
     list = result;

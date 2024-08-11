@@ -150,16 +150,15 @@ class RegexGenerator : private MacroAssembler {
             Jump isAscii = branch32(LessThanOrEqual, character, Imm32(0x7f));
         
             if (charClass->m_matchesUnicode.size()) {
-                for (unsigned i = 0; i < charClass->m_matchesUnicode.size(); ++i) {
-                    UChar ch = charClass->m_matchesUnicode[i];
+                for (unsigned short ch : charClass->m_matchesUnicode) {
                     matchDest.append(branch32(Equal, character, Imm32(ch)));
                 }
             }
             
             if (charClass->m_rangesUnicode.size()) {
-                for (unsigned i = 0; i < charClass->m_rangesUnicode.size(); ++i) {
-                    UChar lo = charClass->m_rangesUnicode[i].begin;
-                    UChar hi = charClass->m_rangesUnicode[i].end;
+                for (auto i : charClass->m_rangesUnicode) {
+                    UChar lo = i.begin;
+                    UChar hi = i.end;
                     
                     Jump below = branch32(LessThan, character, Imm32(lo));
                     matchDest.append(branch32(LessThanOrEqual, character, Imm32(hi)));
@@ -183,8 +182,7 @@ class RegexGenerator : private MacroAssembler {
             // optimization: gather 'a','A' etc back together, can mask & test once.
             Vector<char> matchesAZaz;
 
-            for (unsigned i = 0; i < charClass->m_matches.size(); ++i) {
-                char ch = charClass->m_matches[i];
+            for (char ch : charClass->m_matches) {
                 if (m_pattern.m_ignoreCase) {
                     if (isASCIILower(ch)) {
                         matchesAZaz.append(ch);
@@ -1367,8 +1365,8 @@ public:
 
         LinkBuffer patchBuffer(this, globalData->executableAllocator.poolForSize(size()));
 
-        for (unsigned i = 0; i < m_backtrackRecords.size(); ++i)
-            patchBuffer.patch(m_backtrackRecords[i].dataLabel, patchBuffer.locationOf(m_backtrackRecords[i].backtrackLocation));
+        for (auto & m_backtrackRecord : m_backtrackRecords)
+            patchBuffer.patch(m_backtrackRecord.dataLabel, patchBuffer.locationOf(m_backtrackRecord.backtrackLocation));
 
         jitObject.set(patchBuffer.finalizeCode());
     }

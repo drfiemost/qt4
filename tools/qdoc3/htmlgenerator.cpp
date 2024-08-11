@@ -477,8 +477,7 @@ int HtmlGenerator::generateAtom(const Atom *atom,
         {
             QList<Node*> values = myTree->groups().values(atom->string());
             NodeMap nodeMap;
-            for (int i = 0; i < values.size(); ++i) {
-                const Node* n = values.at(i);
+            for (auto n : values) {
                 if ((n->status() != Node::Internal) && (n->access() != Node::Private)) {
                     nodeMap.insert(n->nameForLists(),n);
                 }
@@ -1835,8 +1834,8 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
               << "\"><a href=\"#"
               << registerRef("details")
               << "\">Detailed Description</a></li>\n";
-        for (int i = 0; i < toc.size(); ++i) {
-            if (toc.at(i)->string().toInt() == 1) {
+        for (auto i : toc) {
+            if (i->string().toInt() == 1) {
                 detailsBase = 1;
                 break;
             }
@@ -1862,16 +1861,15 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
               << "\"><a href=\"#"
               << registerRef("details")
               << "\">Detailed Description</a></li>\n";
-        for (int i = 0; i < toc.size(); ++i) {
-            if (toc.at(i)->string().toInt() == 1) {
+        for (auto i : toc) {
+            if (i->string().toInt() == 1) {
                 detailsBase = 1;
                 break;
             }
         }
     }
 
-    for (int i = 0; i < toc.size(); ++i) {
-        Atom *atom = toc.at(i);
+    for (auto atom : toc) {
         int nextLevel = atom->string().toInt() + detailsBase;
         if (sectionNumber.size() < nextLevel) {
             do {
@@ -4082,8 +4080,8 @@ bool HtmlGenerator::generatePageElement(QXmlStreamWriter& writer,
     if (node->type() == Node::Fake && node->doc().hasTableOfContents()) {
         QList<Atom*> toc = node->doc().tableOfContents();
         if (!toc.isEmpty()) {
-            for (int i = 0; i < toc.size(); ++i) {
-                Text headingText = Text::sectionHeading(toc.at(i));
+            for (auto i : toc) {
+                Text headingText = Text::sectionHeading(i);
                 QString s = headingText.toString();
                 writer.writeStartElement("page");
                 guid = QUuid::createUuid().toString();
@@ -4504,9 +4502,8 @@ void HtmlGenerator::generateManifestFile(QString manifest, QString element)
             }
         }
         if (!en->dependencies().isEmpty()) {
-            for (int idx=0; idx<en->dependencies().size(); ++idx) {
+            for (auto file : en->dependencies()) {
                 writer.writeStartElement("dependency");
-                QString file(en->dependencies()[idx]);
                 if (!relativePath.isEmpty())
                     file.prepend(relativePath);
                 writer.writeCharacters(file);

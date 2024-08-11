@@ -1015,8 +1015,7 @@ void QMenuPrivate::activateCausedStack(const QList<QPointer<QWidget> > &causedSt
     if(self)
         action->activate(action_e);
 
-    for(int i = 0; i < causedStack.size(); ++i) {
-        QPointer<QWidget> widget = causedStack.at(i);
+    for(auto widget : causedStack) {
         if (!widget)
             continue;
         //fire
@@ -1676,16 +1675,16 @@ void QMenu::clear()
 {
     QList<QAction*> acts = actions();
 
-    for(int i = 0; i < acts.size(); i++) {
+    for(auto & act : acts) {
 #ifdef QT_SOFTKEYS_ENABLED
         Q_D(QMenu);
         // Lets not touch to our internal softkey actions
         if(acts[i] == d->selectAction || acts[i] == d->cancelAction)
             continue;
 #endif
-        removeAction(acts[i]);
-        if (acts[i]->parent() == this && acts[i]->d_func()->widgets.isEmpty())
-            delete acts[i];
+        removeAction(act);
+        if (act->parent() == this && act->d_func()->widgets.isEmpty())
+            delete act;
     }
 }
 
@@ -2719,8 +2718,8 @@ void QMenu::keyPressEvent(QKeyEvent *e)
                         continue;
                     QAction *act = d->actions.at(i);
                     const QString act_text = act->text();
-                    for(int c = 0; c < d->searchBuffer.size(); ++c) {
-                        if(act_text.indexOf(d->searchBuffer.at(c), 0, Qt::CaseInsensitive) != -1)
+                    for(auto c : d->searchBuffer) {
+                        if(act_text.indexOf(c, 0, Qt::CaseInsensitive) != -1)
                             ++match_count;
                     }
                     if(match_count > best_match_count) {

@@ -575,8 +575,7 @@ void QScriptDebuggerAgent::positionChange(qint64 scriptId,
     // check breakpoints
     {
         QList<int> lst = d->resolvedBreakpoints.value(scriptId);
-        for (int i = 0; i < lst.size(); ++i) {
-            int id = lst.at(i);
+        for (int id : lst) {
             QScriptBreakpointData &data = d->breakpoints[id];
             if (!data.isEnabled())
                 continue;

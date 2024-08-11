@@ -352,8 +352,8 @@ void QStrokerOps::strokeEllipse(const QRectF &rect, void *data, const QTransform
 
     if (!matrix.isIdentity()) {
         start = start * matrix;
-        for (int i=0; i<12; ++i) {
-            pts[i] = pts[i] * matrix;
+        for (auto & pt : pts) {
+            pt = pt * matrix;
         }
     }
 

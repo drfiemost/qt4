@@ -196,8 +196,8 @@ void QScriptDebuggerScriptedConsoleCommandJob::start()
     QScriptEngine *engine = d->command->globalObject.engine();
     engine->setGlobalObject(d->command->globalObject);
     QScriptValueList args;
-    for (int i = 0; i < d->arguments.size(); ++i)
-        args.append(QScriptValue(engine, d->arguments.at(i)));
+    for (const auto & argument : d->arguments)
+        args.append(QScriptValue(engine, argument));
     QScriptDebuggerConsoleGlobalObject *global;
     global = qobject_cast<QScriptDebuggerConsoleGlobalObject*>(engine->globalObject().toQObject());
     Q_ASSERT(global != 0);

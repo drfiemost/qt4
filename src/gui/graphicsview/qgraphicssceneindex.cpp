@@ -577,8 +577,8 @@ void QGraphicsSceneIndex::updateSceneRect(const QRectF &rect)
 void QGraphicsSceneIndex::clear()
 {
     const QList<QGraphicsItem *> allItems = items();
-    for (int i = 0 ; i < allItems.size(); ++i)
-        removeItem(allItems.at(i));
+    for (auto allItem : allItems)
+        removeItem(allItem);
 }
 
 /*!

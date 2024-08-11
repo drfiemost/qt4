@@ -365,8 +365,7 @@ bool getNumerusInfo(QLocale::Language language, QLocale::Country country,
                     QByteArray *rules, QStringList *forms, const char **gettextRules)
 {
     while (true) {
-        for (int i = 0; i < NumerusTableSize; ++i) {
-            const NumerusTableEntry &entry = numerusTable[i];
+        for (const auto & entry : numerusTable) {
             for (int j = 0; entry.languages[j] != EOL; ++j) {
                 if (entry.languages[j] == language
                         && ((!entry.countries && country == QLocale::AnyCountry)
@@ -398,8 +397,7 @@ QString getNumerusInfoString()
 {
     QStringList langs;
 
-    for (int i = 0; i < NumerusTableSize; ++i) {
-        const NumerusTableEntry &entry = numerusTable[i];
+    for (const auto & entry : numerusTable) {
         for (int j = 0; entry.languages[j] != EOL; ++j) {
             QLocale loc(entry.languages[j], entry.countries ? entry.countries[j] : QLocale::AnyCountry);
             QString lang = QLocale::languageToString(entry.languages[j]);

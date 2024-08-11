@@ -174,8 +174,7 @@ void QTimerInfoList::timerInsert(QTimerInfo *ti)
 void QTimerInfoList::timerRepair(const timespec &diff)
 {
     // repair all timers
-    for (int i = 0; i < size(); ++i) {
-        QTimerInfo *t = at(i);
+    for (auto t : *this) {
         t->timeout = t->timeout + diff;
     }
 }

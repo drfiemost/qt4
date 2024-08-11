@@ -578,9 +578,8 @@ bool RCCResourceLibrary::readFiles(bool ignoreErrors, QIODevice &errorDevice)
             .arg(m_fileNames.size()).arg(static_cast<int>(ignoreErrors));
         m_errorDevice->write(msg.toUtf8());
     }
-    for (int i = 0; i < m_fileNames.size(); ++i) {
+    for (auto fname : m_fileNames) {
         QFile fileIn;
-        QString fname = m_fileNames.at(i);
         QString pwd;
         if (fname == QLatin1String("-")) {
             fname = QLatin1String("(stdin)");
@@ -848,8 +847,7 @@ bool RCCResourceLibrary::writeDataStructure()
         std::sort(m_children.begin(), m_children.end(), qt_rcc_compare_hash);
 
         //write out the actual data now
-        for (int i = 0; i < m_children.size(); ++i) {
-            RCCFileInfo *child = m_children.at(i);
+        for (auto child : m_children) {
             ++offset;
             if (child->m_flags & RCCFileInfo::Directory)
                 pending.push(child);
@@ -867,8 +865,7 @@ bool RCCResourceLibrary::writeDataStructure()
         std::sort(m_children.begin(), m_children.end(), qt_rcc_compare_hash);
 
         //write out the actual data now
-        for (int i = 0; i < m_children.size(); ++i) {
-            RCCFileInfo *child = m_children.at(i);
+        for (auto child : m_children) {
             child->writeDataInfo(*this);
             if (child->m_flags & RCCFileInfo::Directory)
                 pending.push(child);

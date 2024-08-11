@@ -182,8 +182,8 @@ CL_NS_DEF(search)
    
    qreal Similarity::idf(CL_NS(util)::CLVector<Term*>* terms, Searcher* searcher) {
       qreal _idf = 0.0f;
-      for (CL_NS(util)::CLVector<Term*>::iterator i = terms->begin(); i != terms->end(); i++ ) {
-         _idf += idf((Term*)*i, searcher);
+      for (auto & term : *terms) {
+         _idf += idf((Term*)term, searcher);
       }
       return _idf;
    }

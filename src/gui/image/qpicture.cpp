@@ -1475,9 +1475,9 @@ static QPictureHandler *get_picture_handler(const char *format)
     qt_init_picture_handlers();
     qt_init_picture_plugins();
     if (QPHList *list = pictureHandlers()) {
-        for (int i = 0; i < list->size(); ++i) {
-            if (list->at(i)->format == format)
-                return list->at(i);
+        for (auto i : *list) {
+            if (i->format == format)
+                return i;
         }
     }
     return nullptr;                                        // no such handler
@@ -1802,9 +1802,9 @@ QByteArray QPictureIO::pictureFormat(QIODevice *d)
         buf[rdlen - 1] = '\0';
         QString bufStr = QString::fromLatin1(buf);
         if (QPHList *list = pictureHandlers()) {
-            for (int i = 0; i < list->size(); ++i) {
-                if (list->at(i)->header.indexIn(bufStr) != -1) { // try match with headers
-                    format = list->at(i)->format;
+            for (auto i : *list) {
+                if (i->header.indexIn(bufStr) != -1) { // try match with headers
+                    format = i->format;
                     break;
                 }
             }
@@ -1826,8 +1826,7 @@ QList<QByteArray> QPictureIO::inputFormats()
     qt_init_picture_plugins();
 
     if (QPHList *list = pictureHandlers()) {
-        for (int i = 0; i < list->size(); ++i) {
-            QPictureHandler *p = list->at(i);
+        for (auto p : *list) {
             if (p->read_picture && !p->obsolete  && !result.contains(p->format))
                 result.append(p->format);
         }
@@ -1848,8 +1847,7 @@ QList<QByteArray> QPictureIO::outputFormats()
 
     QList<QByteArray> result;
     if (QPHList *list = pictureHandlers()) {
-        for (int i = 0; i < list->size(); ++i) {
-            QPictureHandler *p = list->at(i);
+        for (auto p : *list) {
             if (p->write_picture && !p->obsolete && !result.contains(p->format))
                 result.append(p->format);
         }

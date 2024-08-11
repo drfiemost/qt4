@@ -1624,8 +1624,8 @@ void QTriangulator<T>::initialize(const QVectorPath &path, const QTransform &mat
                     qreal pts[8];
                     for (int i = 0; i < 4; ++i)
                         matrix.map(p[2 * i - 2], p[2 * i - 1], &pts[2 * i + 0], &pts[2 * i + 1]);
-                    for (int i = 0; i < 8; ++i)
-                        pts[i] *= lod;
+                    for (double & pt : pts)
+                        pt *= lod;
                     QBezier bezier = QBezier::fromPoints(QPointF(pts[0], pts[1]), QPointF(pts[2], pts[3]), QPointF(pts[4], pts[5]), QPointF(pts[6], pts[7]));
                     QPolygonF poly = bezier.toPolygon();
                     // Skip first point, it already exists in 'm_vertices'.

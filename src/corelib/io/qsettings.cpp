@@ -592,8 +592,8 @@ static const char hexDigits[] = "0123456789ABCDEF";
 void QSettingsPrivate::iniEscapedKey(const QString &key, QByteArray &result)
 {
     result.reserve(result.length() + key.length() * 3 / 2);
-    for (int i = 0; i < key.size(); ++i) {
-        uint ch = key.at(i).unicode();
+    for (auto i : key) {
+        uint ch = i.unicode();
 
         if (ch == '/') {
             result += '\\';
@@ -831,9 +831,9 @@ StNormal:
                 goto end;
 
             ch = str.at(i++);
-            for (int j = 0; j < numEscapeCodes; ++j) {
-                if (ch == escapeCodes[j][0]) {
-                    stringResult += QLatin1Char(escapeCodes[j][1]);
+            for (auto escapeCode : escapeCodes) {
+                if (ch == escapeCode[0]) {
+                    stringResult += QLatin1Char(escapeCode[1]);
                     goto StNormal;
                 }
             }
@@ -1196,31 +1196,31 @@ QConfFileSettingsPrivate::~QConfFileSettingsPrivate()
     ConfFileHash *usedHash = usedHashFunc();
     ConfFileCache *unusedCache = unusedCacheFunc();
 
-    for (int i = 0; i < NumConfFiles; ++i) {
-        if (confFiles[i] && !confFiles[i]->ref.deref()) {
-            if (confFiles[i]->size == 0) {
-                delete confFiles[i].take();
+    for (auto & confFile : confFiles) {
+        if (confFile && !confFile->ref.deref()) {
+            if (confFile->size == 0) {
+                delete confFile.take();
             } else {
                 if (usedHash)
-                    usedHash->remove(confFiles[i]->name);
+                    usedHash->remove(confFile->name);
                 if (unusedCache) {
                     QT_TRY {
                         // compute a better size?
-                        unusedCache->insert(confFiles[i]->name, confFiles[i].data(),
-                                        10 + (confFiles[i]->originalKeys.size() / 4));
-                        confFiles[i].take();
+                        unusedCache->insert(confFile->name, confFile.data(),
+                                        10 + (confFile->originalKeys.size() / 4));
+                        confFile.take();
                     } QT_CATCH(...) {
                         // out of memory. Do not cache the file.
-                        delete confFiles[i].take();
+                        delete confFile.take();
                     }
                 } else {
                     // unusedCache is gone - delete the entry to prevent a memory leak
-                    delete confFiles[i].take();
+                    delete confFile.take();
                 }
             }
         }
         // prevent the ScopedPointer to deref it again.
-        confFiles[i].take();
+        confFile.take();
     }
 }
 
@@ -1269,8 +1269,8 @@ bool QConfFileSettingsPrivate::get(const QString &key, QVariant *value) const
     ParsedSettingsMap::const_iterator j;
     bool found = false;
 
-    for (int i = 0; i < NumConfFiles; ++i) {
-        if (QConfFile *confFile = confFiles[i].data()) {
+    for (const auto & i : confFiles) {
+        if (QConfFile *confFile = i.data()) {
             QMutexLocker locker(&confFile->mutex);
 
             if (!confFile->addedKeys.isEmpty()) {
@@ -1304,8 +1304,8 @@ QStringList QConfFileSettingsPrivate::children(const QString &prefix, ChildSpec 
     QSettingsKey thePrefix(prefix, caseSensitivity);
     int startPos = prefix.size();
 
-    for (int i = 0; i < NumConfFiles; ++i) {
-        if (QConfFile *confFile = confFiles[i].data()) {
+    for (const auto & i : confFiles) {
+        if (QConfFile *confFile = i.data()) {
             QMutexLocker locker(&confFile->mutex);
 
             if (thePrefix.isEmpty()) {

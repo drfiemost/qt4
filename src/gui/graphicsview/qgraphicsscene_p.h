@@ -259,8 +259,8 @@ public:
         }
 #endif //QT_NO_GRAPHICSEFFECT
         if (recursive) {
-            for (int i = 0; i < item->d_ptr->children.size(); ++i)
-                resetDirtyItem(item->d_ptr->children.at(i), recursive);
+            for (auto i : item->d_ptr->children)
+                resetDirtyItem(i, recursive);
         }
 #ifndef QT_NO_GRAPHICSEFFECT
         if (flags && item->d_ptr->graphicsEffect)

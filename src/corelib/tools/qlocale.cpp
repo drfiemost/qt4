@@ -2259,10 +2259,10 @@ Qt::DayOfWeek QLocale::firstDayOfWeek() const
 
 QLocale::MeasurementSystem QLocalePrivate::measurementSystem() const
 {
-    for (int i = 0; i < ImperialMeasurementSystemsCount; ++i) {
-        if (ImperialMeasurementSystems[i].languageId == m_data->m_language_id
-            && ImperialMeasurementSystems[i].countryId == m_data->m_country_id) {
-            return ImperialMeasurementSystems[i].system;
+    for (auto ImperialMeasurementSystem : ImperialMeasurementSystems) {
+        if (ImperialMeasurementSystem.languageId == m_data->m_language_id
+            && ImperialMeasurementSystem.countryId == m_data->m_country_id) {
+            return ImperialMeasurementSystem.system;
         }
     }
     return QLocale::MetricSystem;

@@ -537,8 +537,7 @@ public:
     {
         // 1. see if we have an entry for the ctx context
         QList<GLProgram> progs = programs.values(ctx);
-        for (int i=0; i<progs.size(); ++i) {
-            const GLProgram &prg = progs.at(i);
+        for (auto prg : progs) {
             if (mask_mode) {
                 if (prg.mask && prg.brush == brush)
                     return prg.program;
@@ -551,12 +550,10 @@ public:
         // 2. try to find a match in a shared context, and update the
         // hash with the entry found
         QList<const QGLContext *> contexts = programs.uniqueKeys();
-        for (int i=0; i<contexts.size(); ++i) {
-            const QGLContext *cx = contexts.at(i);
+        for (auto cx : contexts) {
             if (cx != ctx && QGLContext::areSharing(cx, ctx)) {
                 QList<GLProgram> progs = programs.values(cx);
-                for (int k=0; k<progs.size(); ++k) {
-                    const GLProgram &prg = progs.at(k);
+                for (auto prg : progs) {
                     if (mask_mode) {
                         if (prg.mask && prg.brush == brush) {
                             programs.insert(ctx, prg);
@@ -2293,11 +2290,11 @@ void QOpenGLPaintEnginePrivate::updateDepthClip()
 
     // rectangle count * 2 (triangles) * vertex count * component count (Z omitted)
     QDataBuffer<GLfloat> clipVertex(rects.size()*2*3*2);
-    for (int i = 0; i < rects.size(); ++i) {
-        GLfloat x = GLfloat(rects.at(i).left());
-        GLfloat w = GLfloat(rects.at(i).width());
-        GLfloat h = GLfloat(rects.at(i).height());
-        GLfloat y = GLfloat(rects.at(i).top());
+    for (auto rect : rects) {
+        GLfloat x = GLfloat(rect.left());
+        GLfloat w = GLfloat(rect.width());
+        GLfloat h = GLfloat(rect.height());
+        GLfloat y = GLfloat(rect.top());
 
         // First triangle
         clipVertex.add(x);
@@ -2651,12 +2648,12 @@ void QGLMaskTextureCache::clearCache()
     for (int i = block_size; i < offscreenSize.width(); i *= 2)
         quad_tree_size += quad_tree_size * 4;
 
-    for (int i = 0; i < 4; ++i) {
-        occupied_quadtree[i].resize(quad_tree_size);
+    for (auto & i : occupied_quadtree) {
+        i.resize(quad_tree_size);
 
-        occupied_quadtree[i][0].key = 0;
-        occupied_quadtree[i][0].largest_available_block = offscreenSize.width();
-        occupied_quadtree[i][0].largest_used_block = 0;
+        i[0].key = 0;
+        i[0].largest_available_block = offscreenSize.width();
+        i[0].largest_used_block = 0;
 
         DEBUG_ONCE qDebug() << "QGLMaskTextureCache:: created quad tree of size" << quad_tree_size;
     }
@@ -3156,8 +3153,8 @@ void QGLTrapezoidMaskGenerator::drawMask(const QRect &rect)
 
     QPoint delta = rect.topLeft() - screen_rect.topLeft();
     glBegin(GL_QUADS);
-    for (int i = 0; i < trapezoids.size(); ++i)
-        drawTrapezoid(trapezoids[i].translated(delta), offscreen->offscreenSize().height(), ctx);
+    for (const auto & trapezoid : trapezoids)
+        drawTrapezoid(trapezoid.translated(delta), offscreen->offscreenSize().height(), ctx);
     glEnd();
 
     if (needs_scissor)
@@ -3304,8 +3301,8 @@ QRect QGLEllipseMaskGenerator::screenRect()
 
     qreal min_screen_delta_len = QREAL_MAX;
 
-    for (int i = 0; i < 4; ++i) {
-        QPointF delta = points[i] - center;
+    for (auto point : points) {
+        QPointF delta = point - center;
 
         // normalize
         delta /= qSqrt(delta.x() * delta.x() + delta.y() * delta.y());
@@ -4589,10 +4586,10 @@ void QGLGlyphCache::fontEngineDestroyed(QObject *o)
     QList<const QGLContext *> keys = qt_context_cache.keys();
     const QGLContext *ctx = nullptr;
 
-    for (int i=0; i < keys.size(); ++i) {
-        QGLFontGlyphHash *font_cache = qt_context_cache.value(keys.at(i));
+    for (auto key : keys) {
+        QGLFontGlyphHash *font_cache = qt_context_cache.value(key);
         if (font_cache->find(fe) != font_cache->end()) {
-            ctx = keys.at(i);
+            ctx = key;
             QGLGlyphHash *cache = font_cache->take(fe);
             qt_delete_glyph_hash(cache);
             break;
@@ -4629,8 +4626,7 @@ void QGLGlyphCache::cleanupContext(const QGLContext *ctx)
 
     if (font_cache) {
         QList<QFontEngine *> keys = font_cache->keys();
-        for (int i=0; i < keys.size(); ++i) {
-            QFontEngine *fe = keys.at(i);
+        for (auto fe : keys) {
             qt_delete_glyph_hash(font_cache->take(fe));
             quint64 font_key = (reinterpret_cast<quint64>(ctx) << 32) | reinterpret_cast<quint64>(fe);
             QGLFontTexture *font_tex = qt_font_textures.take(font_key);
@@ -4670,8 +4666,8 @@ void QGLGlyphCache::cleanCache()
     qt_font_textures.clear();
 
     QList<const QGLContext *> keys = qt_context_cache.keys();
-    for (int i=0; i < keys.size(); ++i) {
-        QGLFontGlyphHash *font_cache = qt_context_cache.value(keys.at(i));
+    for (auto key : keys) {
+        QGLFontGlyphHash *font_cache = qt_context_cache.value(key);
         QGLFontGlyphHash::Iterator it = font_cache->begin();
         for (; it != font_cache->end(); ++it)
             qt_delete_glyph_hash(it.value());
@@ -4722,8 +4718,7 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
     if (dev_it == qt_context_cache.constEnd()) {
         // check for shared contexts
         QList<const QGLContext *> contexts = qt_context_cache.keys();
-        for (int i=0; i<contexts.size(); ++i) {
-            const QGLContext *ctx = contexts.at(i);
+        for (auto ctx : contexts) {
             if (ctx != context && QGLContext::areSharing(context, ctx)) {
                 context_key = ctx;
                 dev_it = qt_context_cache.constFind(context_key);

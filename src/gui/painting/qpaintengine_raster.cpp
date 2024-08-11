@@ -1622,8 +1622,8 @@ void QRasterPaintEngine::stroke(const QVectorPath &path, const QPen &pen)
         bool inDash = true;
         qreal patternLength = 0;
         const QVector<qreal> pattern = s->lastPen.dashPattern();
-        for (int i = 0; i < pattern.size(); ++i)
-            patternLength += pattern.at(i);
+        for (double i : pattern)
+            patternLength += i;
 
         if (patternLength > 0) {
             int n = qFloor(dashOffset / patternLength);
@@ -3227,8 +3227,8 @@ void QRasterPaintEnginePrivate::rasterizeLine_dashed(QLineF line,
     const QVector<qreal> pattern = pen.dashPattern();
 
     qreal patternLength = 0;
-    for (int i = 0; i < pattern.size(); ++i)
-        patternLength += pattern.at(i);
+    for (double i : pattern)
+        patternLength += i;
 
     if (patternLength <= 0)
         return;

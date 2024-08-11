@@ -91,9 +91,9 @@ void QMimeDataPrivate::setData(const QString &format, const QVariant &data)
 QVariant QMimeDataPrivate::getData(const QString &format) const
 {
     QVariant data;
-    for (int i=0; i<dataList.size(); i++) {
-        if (dataList.at(i).format == format) {
-            data = dataList.at(i).data;
+    for (const auto & i : dataList) {
+        if (i.format == format) {
+            data = i.data;
             break;
         }
     }
@@ -152,8 +152,8 @@ QVariant QMimeDataPrivate::retrieveTypedData(const QString &format, QVariant::Ty
 
             QList<QByteArray> urls = ba.split('\n');
             QList<QVariant> list;
-            for (int i = 0; i < urls.size(); ++i) {
-                QByteArray ba = urls.at(i).trimmed();
+            for (const auto & url : urls) {
+                QByteArray ba = url.trimmed();
                 if (!ba.isEmpty())
                     list.append(QUrl::fromEncoded(ba));
             }
@@ -178,9 +178,9 @@ QVariant QMimeDataPrivate::retrieveTypedData(const QString &format, QVariant::Ty
             // has to be list of URLs
             QByteArray result;
             QList<QVariant> list = data.toList();
-            for (int i = 0; i < list.size(); ++i) {
-                if (list.at(i).type() == QVariant::Url) {
-                    result += list.at(i).toUrl().toEncoded();
+            for (const auto & i : list) {
+                if (i.type() == QVariant::Url) {
+                    result += i.toUrl().toEncoded();
                     result += "\r\n";
                 }
             }
@@ -310,9 +310,9 @@ QList<QUrl> QMimeData::urls() const
         urls.append(data.toUrl());
     else if (data.type() == QVariant::List) {
         QList<QVariant> list = data.toList();
-        for (int i = 0; i < list.size(); ++i) {
-            if (list.at(i).type() == QVariant::Url)
-                urls.append(list.at(i).toUrl());
+        for (const auto & i : list) {
+            if (i.type() == QVariant::Url)
+                urls.append(i.toUrl());
         }
     }
     return urls;
@@ -329,8 +329,8 @@ void QMimeData::setUrls(const QList<QUrl> &urls)
 {
     Q_D(QMimeData);
     QList<QVariant> list;
-    for (int i = 0; i < urls.size(); ++i)
-        list.append(urls.at(i));
+    for (const auto & url : urls)
+        list.append(url);
 
     d->setData(QLatin1String("text/uri-list"), list);
 }
@@ -574,8 +574,8 @@ QStringList QMimeData::formats() const
 {
     Q_D(const QMimeData);
     QStringList list;
-    for (int i=0; i<d->dataList.size(); i++)
-        list += d->dataList.at(i).format;
+    for (const auto & i : d->dataList)
+        list += i.format;
     return list;
 }
 

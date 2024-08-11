@@ -62,8 +62,8 @@ static QList<QWidget*> childWidgets(const QWidget *widget)
 {
     QList<QObject*> list = widget->children();
     QList<QWidget*> widgets;
-    for (int i = 0; i < list.size(); ++i) {
-        QWidget *w = qobject_cast<QWidget *>(list.at(i));
+    for (auto i : list) {
+        QWidget *w = qobject_cast<QWidget *>(i);
         if (w && !w->isWindow() 
             && !qobject_cast<QFocusFrame*>(w)
 #if !defined(QT_NO_MENU)
@@ -84,8 +84,8 @@ static QString buddyString(const QWidget *widget)
         return QString();
 #ifndef QT_NO_SHORTCUT
     QObjectList ol = parent->children();
-    for (int i = 0; i < ol.size(); ++i) {
-        QLabel *label = qobject_cast<QLabel*>(ol.at(i));
+    for (auto i : ol) {
+        QLabel *label = qobject_cast<QLabel*>(i);
         if (label && label->buddy() == widget)
             return label->text();
     }
@@ -755,8 +755,7 @@ int QAccessibleWidget::navigate(RelationFlag relation, int entry,
             QACConnectionObject *connectionObject = (QACConnectionObject*)object();
             QObjectList allSenders = connectionObject->senderList();
             QObjectList senders;
-            for (int s = 0; s < allSenders.size(); ++s) {
-                QObject *sender = allSenders.at(s);
+            for (auto sender : allSenders) {
                 QAccessibleInterface *candidate = QAccessible::queryAccessibleInterface(sender);
                 if (!candidate)
                     continue;

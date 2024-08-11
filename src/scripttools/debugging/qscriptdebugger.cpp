@@ -979,8 +979,8 @@ public:
             delta = qvariant_cast<QScriptScriptsDelta>(response.result());
 
             const QList<qint64> &removed = delta.second;
-            for (int i = 0; i < removed.size(); ++i)
-                m_debugger->scriptsModel->removeScript(removed.at(i));
+            for (long long i : removed)
+                m_debugger->scriptsModel->removeScript(i);
 
             m_added = delta.first;
             if (!m_added.isEmpty()) {
@@ -1064,8 +1064,8 @@ public:
                         int) override
     {
         QScriptContextsDelta delta = qvariant_cast<QScriptContextsDelta>(response.result());
-        for (int i = 0; i < delta.first.size(); ++i) {
-            QScriptDebuggerLocalsModel *model = m_debugger->localsModels.take(delta.first.at(i));
+        for (long long i : delta.first) {
+            QScriptDebuggerLocalsModel *model = m_debugger->localsModels.take(i);
             delete model;
         }
         finish();

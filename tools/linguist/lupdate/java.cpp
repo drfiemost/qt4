@@ -440,14 +440,14 @@ static const QString context()
 {
       QString context(yyPackage);
       bool innerClass = false;
-      for (int i = 0; i < yyScope.size(); ++i) {
-         if (yyScope.at(i)->type == Scope::Clazz) {
+      for (auto i : yyScope) {
+         if (i->type == Scope::Clazz) {
              if (innerClass)
                  context.append(QLatin1String("$"));
              else
                  context.append(QLatin1String("."));
 
-             context.append(yyScope.at(i)->name);
+             context.append(i->name);
              innerClass = true;
          }
      }

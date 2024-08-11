@@ -582,9 +582,9 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 m += 4;
                 QString str = QString((const QChar *)m, len/2);
                 if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-                    for (int i = 0; i < str.length(); ++i)
-                        str[i] = QChar((str.at(i).unicode() >> 8) +
-                            ((str.at(i).unicode() << 8) & 0xff00));
+                    for (auto i : str)
+                        i = QChar((i.unicode() >> 8) +
+                            ((i.unicode() << 8) & 0xff00));
                 }
                 translations << str;
                 m += len;
@@ -723,9 +723,9 @@ bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
             QStringList tlns = msg.translations();
             if (msg.type() == TranslatorMessage::Unfinished
                 && (cd.m_idBased || !cd.m_unTrPrefix.isEmpty()))
-                for (int j = 0; j < tlns.size(); ++j)
-                    if (tlns.at(j).isEmpty())
-                        tlns[j] = cd.m_unTrPrefix + msg.sourceText();
+                for (auto & tln : tlns)
+                    if (tln.isEmpty())
+                        tln = cd.m_unTrPrefix + msg.sourceText();
             if (cd.m_idBased) {
                 if (!msg.context().isEmpty() || !msg.comment().isEmpty())
                     ++droppedData;

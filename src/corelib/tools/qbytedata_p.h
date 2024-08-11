@@ -208,8 +208,8 @@ public:
     }
 
     inline bool canReadLine() const {
-        for (int i = 0; i < buffers.length(); i++)
-            if (buffers.at(i).contains('\n'))
+        for (const auto & buffer : buffers)
+            if (buffer.contains('\n'))
                 return true;
         return false;
     }

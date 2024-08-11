@@ -602,8 +602,7 @@ void QGLWindowSurface::flush(QWidget *widget, const QRegion &rgn, const QPoint &
                 glBindTexture(target, d_ptr->tex_id);
 
                 QVector<QRect> rects = d_ptr->paintedRegion.rects();
-                for (int i = 0; i < rects.size(); ++i) {
-                    QRect br = rects.at(i);
+                for (auto br : rects) {
                     if (br.isEmpty())
                         continue;
 
@@ -630,8 +629,7 @@ void QGLWindowSurface::flush(QWidget *widget, const QRegion &rgn, const QPoint &
 
                     QVector<QRect> rects = dirtyRegion.rects();
                     glColor4f(1, 1, 1, 1);
-                    for (int i = 0; i < rects.size(); ++i) {
-                        QRect rect = rects.at(i);
+                    for (auto rect : rects) {
                         if (rect.isEmpty())
                             continue;
 

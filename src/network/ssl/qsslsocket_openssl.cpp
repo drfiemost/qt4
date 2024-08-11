@@ -1093,8 +1093,7 @@ bool QSslSocketBackendPrivate::startHandshake()
     int result = (mode == QSslSocket::SslClientMode) ? q_SSL_connect(ssl) : q_SSL_accept(ssl);
 
     const QList<QPair<int, int> > &lastErrors = _q_sslErrorList()->errors;
-    for (int i = 0; i < lastErrors.size(); ++i) {
-        const QPair<int, int> &currentError = lastErrors.at(i);
+    for (const auto & currentError : lastErrors) {
         // Initialize the peer certificate chain in order to find which certificate caused this error
         if (configuration.peerCertificateChain.isEmpty())
             configuration.peerCertificateChain = STACKOFX509_to_QSslCertificates(q_SSL_get_peer_cert_chain(ssl));
@@ -1201,8 +1200,7 @@ bool QSslSocketBackendPrivate::startHandshake()
     }
 
     // Translate errors from the error list into QSslErrors.
-    for (int i = 0; i < errorList.size(); ++i) {
-        const QPair<int, int> &errorAndDepth = errorList.at(i);
+    for (const auto & errorAndDepth : errorList) {
         int err = errorAndDepth.first;
         int depth = errorAndDepth.second;
         errors << _q_OpenSSL_to_QSslError(err, configuration.peerCertificateChain.value(depth));

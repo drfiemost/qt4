@@ -101,10 +101,10 @@ void QX11WindowSurface::beginPaint(const QRegion &rgn)
         const QVector<QRect> rects = rgn.rects();
         const int w = d_ptr->device.width();
         const int h = d_ptr->device.height();
-        for (QVector<QRect>::const_iterator it = rects.begin(); it != rects.end(); ++it)
+        for (auto rect : rects)
             XRenderComposite(X11->display, PictOpSrc, src, 0, dst,
-                             0, 0, w, h, it->x(), it->y(),
-                             it->width(), it->height());
+                             0, 0, w, h, rect.x(), rect.y(),
+                             rect.width(), rect.height());
     }
 #endif
 }

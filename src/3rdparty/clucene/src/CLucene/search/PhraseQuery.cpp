@@ -91,8 +91,8 @@ CL_NS_DEF(search)
   //Post 0 The instance has been destroyed
       
 	  //Iterate through all the terms
-	  for (uint32_t i = 0; i < terms.size(); i++){
-        _CLLDECDELETE(terms[i]);
+	  for (auto & term : terms){
+        _CLLDECDELETE(term);
       }
 	  positions.clear();
   }

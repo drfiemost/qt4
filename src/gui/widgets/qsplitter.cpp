@@ -559,8 +559,7 @@ void QSplitterPrivate::doResize()
 
 void QSplitterPrivate::storeSizes()
 {
-    for (int i = 0; i < list.size(); ++i) {
-        QSplitterLayoutStruct *sls = list.at(i);
+    for (auto sls : list) {
         sls->sizer = pick(sls->rect.size());
     }
 }
@@ -704,9 +703,7 @@ void QSplitterPrivate::setSizes_helper(const QList<int> &sizes, bool clampNegati
 {
     int j = 0;
 
-    for (int i = 0; i < list.size(); ++i) {
-        QSplitterLayoutStruct *s = list.at(i);
-
+    for (auto s : list) {
         s->collapsed = false;
         s->sizer = sizes.value(j++);
         if (clampNegativeSize && s->sizer < 0)
@@ -809,9 +806,9 @@ void QSplitterPrivate::doMove(bool backwards, int hPos, int index, int delta, bo
 
 QSplitterLayoutStruct *QSplitterPrivate::findWidget(QWidget *w) const
 {
-    for (int i = 0; i < list.size(); ++i) {
-        if (list.at(i)->widget == w)
-            return list.at(i);
+    for (auto i : list) {
+        if (i->widget == w)
+            return i;
     }
     return nullptr;
 }
@@ -1001,8 +998,7 @@ void QSplitter::setOrientation(Qt::Orientation orientation)
 
     d->orient = orientation;
 
-    for (int i = 0; i < d->list.size(); ++i) {
-        QSplitterLayoutStruct *s = d->list.at(i);
+    for (auto s : d->list) {
         s->handle->setOrientation(orientation);
     }
     d->recalc(isVisible());
@@ -1587,8 +1583,7 @@ QByteArray QSplitter::saveState() const
     stream << qint32(SplitterMagic);
     stream << qint32(version);
     QList<int> list;
-    for (int i = 0; i < d->list.size(); ++i) {
-        QSplitterLayoutStruct *s = d->list.at(i);
+    for (auto s : d->list) {
         list.append(s->sizer);
     }
     stream << list;

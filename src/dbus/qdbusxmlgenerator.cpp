@@ -63,15 +63,15 @@ static inline QString typeNameToXml(const char *typeName)
     QString plain = QLatin1String(typeName);
     QString rich;
     rich.reserve(int(plain.length() * 1.1));
-    for (int i = 0; i < plain.length(); ++i) {
-        if (plain.at(i) == QLatin1Char('<'))
+    for (auto i : plain) {
+        if (i == QLatin1Char('<'))
             rich += QLatin1String("&lt;");
-        else if (plain.at(i) == QLatin1Char('>'))
+        else if (i == QLatin1Char('>'))
             rich += QLatin1String("&gt;");
-        else if (plain.at(i) == QLatin1Char('&'))
+        else if (i == QLatin1Char('&'))
             rich += QLatin1String("&amp;");
         else
-            rich += plain.at(i);
+            rich += i;
     }
     return rich;
 }

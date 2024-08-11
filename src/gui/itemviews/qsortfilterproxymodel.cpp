@@ -62,8 +62,8 @@ static inline QSet<int> qVectorToSet(const QVector<int> &vector)
 {
     QSet<int> set;
     set.reserve(vector.size());
-    for(int i=0; i < vector.size(); ++i)
-        set << vector.at(i);
+    for(int i : vector)
+        set << i;
     return set;
 }
 
@@ -290,8 +290,8 @@ void QSortFilterProxyModelPrivate::_q_sourceModelDestroyed()
 void QSortFilterProxyModelPrivate::remove_from_mapping(const QModelIndex &source_parent)
 {
     if (Mapping *m = source_index_mapping.take(source_parent)) {
-        for (int i = 0; i < m->mapped_children.size(); ++i)
-            remove_from_mapping(m->mapped_children.at(i));
+        for (const auto & i : m->mapped_children)
+            remove_from_mapping(i);
         delete m;
     }
 }

@@ -522,10 +522,10 @@ void QXIMInputContext::close_xim()
 
     if ( --fontsetRefCount == 0 ) {
 	Display *dpy = X11->display;
-	for ( int i = 0; i < 8; i++ ) {
-	    if ( fontsetCache[i] && fontsetCache[i] != (XFontSet)-1 ) {
-		XFreeFontSet(dpy, fontsetCache[i]);
-		fontsetCache[i] = nullptr;
+	for (auto & i : fontsetCache) {
+	    if ( i && i != (XFontSet)-1 ) {
+		XFreeFontSet(dpy, i);
+		i = nullptr;
 	    }
 	}
     }

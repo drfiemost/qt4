@@ -234,8 +234,8 @@ QGraphicsWidget::~QGraphicsWidget()
     Q_D(QGraphicsWidget);
 #ifndef QT_NO_ACTION
     // Remove all actions from this widget
-    for (int i = 0; i < d->actions.size(); ++i) {
-        QActionPrivate *apriv = d->actions.at(i)->d_func();
+    for (auto action : d->actions) {
+        QActionPrivate *apriv = action->d_func();
         apriv->graphicsWidgets.removeAll(this);
     }
     d->actions.clear();

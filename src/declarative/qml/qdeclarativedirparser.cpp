@@ -256,8 +256,7 @@ bool QDeclarativeDirParser::hasError() const
 QList<QDeclarativeError> QDeclarativeDirParser::errors(const QString &uri) const
 {
     QList<QDeclarativeError> errors = _errors;
-    for (int i = 0; i < errors.size(); ++i) {
-        QDeclarativeError &e = errors[i];
+    for (auto & e : errors) {
         QString description = e.description();
         description.replace(QLatin1String("$$URI$$"), uri);
         e.setDescription(description);

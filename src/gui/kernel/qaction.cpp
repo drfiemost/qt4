@@ -116,13 +116,11 @@ void QActionPrivate::sendDataChanged()
 {
     Q_Q(QAction);
     QActionEvent e(QEvent::ActionChanged, q);
-    for (int i = 0; i < widgets.size(); ++i) {
-        QWidget *w = widgets.at(i);
+    for (auto w : widgets) {
         QApplication::sendEvent(w, &e);
     }
 #ifndef QT_NO_GRAPHICSVIEW
-    for (int i = 0; i < graphicsWidgets.size(); ++i) {
-        QGraphicsWidget *w = graphicsWidgets.at(i);
+    for (auto w : graphicsWidgets) {
         QApplication::sendEvent(w, &e);
     }
 #endif

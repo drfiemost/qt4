@@ -66,8 +66,8 @@ void Profiler::startProfiling(ExecState* exec, const UString& title)
     // If so return early and don't create a new Profile.
     ExecState* globalExec = exec ? exec->lexicalGlobalObject()->globalExec() : nullptr;
 
-    for (size_t i = 0; i < m_currentProfiles.size(); ++i) {
-        ProfileGenerator* profileGenerator = m_currentProfiles[i].get();
+    for (const auto & m_currentProfile : m_currentProfiles) {
+        ProfileGenerator* profileGenerator = m_currentProfile.get();
         if (profileGenerator->originatingGlobalExec() == globalExec && profileGenerator->title() == title)
             return;
     }
@@ -99,9 +99,9 @@ PassRefPtr<Profile> Profiler::stopProfiling(ExecState* exec, const UString& titl
 
 static inline void dispatchFunctionToProfiles(const Vector<RefPtr<ProfileGenerator> >& profiles, ProfileGenerator::ProfileFunction function, const CallIdentifier& callIdentifier, unsigned currentProfileTargetGroup)
 {
-    for (size_t i = 0; i < profiles.size(); ++i) {
-        if (profiles[i]->profileGroup() == currentProfileTargetGroup || !profiles[i]->originatingGlobalExec())
-            (profiles[i].get()->*function)(callIdentifier);
+    for (const auto & profile : profiles) {
+        if (profile->profileGroup() == currentProfileTargetGroup || !profile->originatingGlobalExec())
+            (profile.get()->*function)(callIdentifier);
     }
 }
 

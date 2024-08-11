@@ -240,8 +240,8 @@ public:
     public:
         FlaggedDebugSignatures() : idx(0)
         {
-            for (uint i = 0; i < Count; ++i)
-                locations[i] = nullptr;
+            for (auto & location : locations)
+                location = nullptr;
         }
 
         void store(const char* method)
@@ -249,8 +249,8 @@ public:
 
         bool contains(const char *method) const
         {
-            for (uint i = 0; i < Count; ++i)
-                if (locations[i] == method)
+            for (auto location : locations)
+                if (location == method)
                     return true;
             return false;
         }

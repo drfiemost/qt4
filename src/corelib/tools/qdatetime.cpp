@@ -5397,8 +5397,8 @@ int QDateTimeParser::findAmPm(QString &str, int index, int *used) const
     QString ampm[2];
     ampm[amindex] = getAmPmText(AmText, s.count == 1 ? UpperCase : LowerCase);
     ampm[pmindex] = getAmPmText(PmText, s.count == 1 ? UpperCase : LowerCase);
-    for (int i=0; i<2; ++i)
-        ampm[i].truncate(size);
+    for (auto & i : ampm)
+        i.truncate(size);
 
     QDTPDEBUG << "findAmPm" << str << ampm[0] << ampm[1];
 

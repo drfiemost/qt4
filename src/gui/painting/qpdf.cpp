@@ -355,8 +355,8 @@ QByteArray QPdf::generateDashes(const QPen &pen)
     qreal w = pen.widthF();
     if (w < 0.001)
         w = 1;
-    for (int i = 0; i < dasharray.size(); ++i) {
-        qreal dw = dasharray.at(i)*w;
+    for (double i : dasharray) {
+        qreal dw = i*w;
         if (dw < 0.0001) dw = 0.0001;
         s << dw;
     }
@@ -781,8 +781,8 @@ void QPdf::Stroker::setPen(const QPen &pen)
 
     QVector<qreal> dashpattern = pen.dashPattern();
     if (zeroWidth) {
-        for (int i = 0; i < dashpattern.size(); ++i)
-            dashpattern[i] *= 10.;
+        for (double & i : dashpattern)
+            i *= 10.;
     }
     if (!dashpattern.isEmpty()) {
         dashStroker.setDashPattern(dashpattern);
@@ -1174,8 +1174,8 @@ void QPdfBaseEngine::updateState(const QPaintEngineState &state)
         d->clipEnabled = true;
         QPainterPath path;
         QVector<QRect> rects = state.clipRegion().rects();
-        for (int i = 0; i < rects.size(); ++i)
-            path.addRect(rects.at(i));
+        for (auto rect : rects)
+            path.addRect(rect);
         updateClipPath(path, state.clipOperation());
         flags |= DirtyClipPath;
     } else if (flags & DirtyClipEnabled) {
@@ -1735,8 +1735,8 @@ bool QPdfBaseEnginePrivate::openPrintDevice()
                 if (!pr.isEmpty() || !selectionOption.isEmpty()) {
                     if (!selectionOption.isEmpty()) {
                         QStringList list = selectionOption.split(QLatin1Char(' '));
-                        for (int i = 0; i < list.size(); ++i)
-                            lprhack.append(list.at(i).toLocal8Bit());
+                        for (const auto & i : list)
+                            lprhack.append(i.toLocal8Bit());
                         lphack = lprhack;
                     } else {
                         lprhack.append("-P");
@@ -1883,10 +1883,10 @@ void QPdfBaseEnginePrivate::closePrintDevice()
             it += 2;
         }
 
-        for (int c = 0; c < options.size(); ++c) {
+        for (auto & option : options) {
             cups_option_t opt;
-            opt.name = options[c].first.data();
-            opt.value = options[c].second.data();
+            opt.name = option.first.data();
+            opt.value = option.second.data();
             cupsOptStruct.append(opt);
         }
 

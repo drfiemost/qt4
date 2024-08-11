@@ -181,15 +181,15 @@ void ReplayWidget::paintEvent(QPaintEvent *)
                 qreal stddev = 0;
                 uint min = INT_MAX;
 
-                for (int i = 0; i < iterationTimes.size(); ++i) {
-                    mean += iterationTimes.at(i);
-                    min = std::min(min, iterationTimes.at(i));
+                for (unsigned int iterationTime : iterationTimes) {
+                    mean += iterationTime;
+                    min = std::min(min, iterationTime);
                 }
 
                 mean /= qreal(iterationTimes.size());
 
-                for (int i = 0; i < iterationTimes.size(); ++i) {
-                    qreal delta = iterationTimes.at(i) - mean;
+                for (unsigned int iterationTime : iterationTimes) {
+                    qreal delta = iterationTime - mean;
                     stddev += delta * delta;
                 }
 

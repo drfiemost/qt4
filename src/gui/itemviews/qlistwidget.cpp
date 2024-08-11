@@ -1705,8 +1705,8 @@ QList<QListWidgetItem*> QListWidget::findItems(const QString &text, Qt::MatchFla
     QModelIndexList indexes = d->listModel()->match(model()->index(0, 0, QModelIndex()),
                                                 Qt::DisplayRole, text, -1, flags);
     QList<QListWidgetItem*> items;
-    for (int i = 0; i < indexes.size(); ++i)
-        items.append(d->listModel()->at(indexes.at(i).row()));
+    for (const auto & indexe : indexes)
+        items.append(d->listModel()->at(indexe.row()));
     return items;
 }
 

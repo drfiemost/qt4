@@ -1038,8 +1038,8 @@ void QTextHtmlParserNode::initializeProperties(const QTextHtmlParserNode *parent
     margin[QTextHtmlParser::MarginBottom] = 0;
     cssFloat = QTextFrameFormat::InFlow;
 
-    for (int i = 0; i < 4; ++i)
-        padding[i] = -1;
+    for (int & i : padding)
+        i = -1;
 
     // set element specific attributes
     switch (id) {

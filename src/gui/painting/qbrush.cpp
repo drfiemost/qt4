@@ -849,8 +849,8 @@ bool QBrush::isOpaque() const
         || d->style == Qt::RadialGradientPattern
         || d->style == Qt::ConicalGradientPattern) {
         QGradientStops stops = gradient()->stops();
-        for (int i=0; i<stops.size(); ++i)
-            if (stops.at(i).second.alpha() != 255)
+        for (const auto & stop : stops)
+            if (stop.second.alpha() != 255)
                 return false;
         return true;
     } else if (d->style == Qt::TexturePattern) {
@@ -1049,8 +1049,7 @@ QDataStream &operator<<(QDataStream &s, const QBrush &b)
             // data that cannot be read on other platforms.
             QVector<QGradientStop> stops = gradient->stops();
             s << quint32(stops.size());
-            for (int i = 0; i < stops.size(); ++i) {
-                const QGradientStop &stop = stops.at(i);
+            for (const auto & stop : stops) {
                 s << QPair<double, QColor>(double(stop.first), stop.second);
             }
         }
@@ -1384,8 +1383,8 @@ void QGradient::setColorAt(qreal pos, const QColor &color)
 void QGradient::setStops(const QGradientStops &stops)
 {
     m_stops.clear();
-    for (int i=0; i<stops.size(); ++i)
-        setColorAt(stops.at(i).first, stops.at(i).second);
+    for (const auto & stop : stops)
+        setColorAt(stop.first, stop.second);
 }
 
 

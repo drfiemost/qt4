@@ -165,9 +165,9 @@ QDirIteratorPrivate::QDirIteratorPrivate(const QFileSystemEntry &entry, const QS
 {
 #ifndef QT_NO_REGEXP
     nameRegExps.reserve(nameFilters.size());
-    for (int i = 0; i < nameFilters.size(); ++i)
+    for (const auto & nameFilter : nameFilters)
         nameRegExps.append(
-            QRegExp(nameFilters.at(i),
+            QRegExp(nameFilter,
                     (filters & QDir::CaseSensitive) ? Qt::CaseSensitive : Qt::CaseInsensitive,
                     QRegExp::Wildcard));
 #endif

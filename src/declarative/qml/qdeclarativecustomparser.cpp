@@ -101,11 +101,7 @@ QDeclarativeCustomParserNodePrivate::fromObject(QDeclarativeParser::Object *root
     rootNode.d->name = root->typeName;
     rootNode.d->location = root->location.start;
 
-    for(QHash<QByteArray, Property *>::Iterator iter = root->properties.begin();
-        iter != root->properties.end();
-        ++iter) {
-
-        Property *p = *iter;
+    for(auto p : root->properties) {
 
         rootNode.d->properties << fromProperty(p);
     }

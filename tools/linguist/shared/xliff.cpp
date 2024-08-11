@@ -134,8 +134,7 @@ static const CharMnemonic charCodeMnemonics[] = {
 
 static char charFromEscape(char escape)
 {
-    for (uint i = 0; i < sizeof(charCodeMnemonics)/sizeof(CharMnemonic); ++i) {
-        CharMnemonic cm =  charCodeMnemonics[i];
+    for (auto cm : charCodeMnemonics) {
         if (cm.escape == escape)
             return cm.ch;
     }

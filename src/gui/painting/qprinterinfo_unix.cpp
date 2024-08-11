@@ -114,9 +114,9 @@ static inline QPrinter::PaperSize string2PaperSize(const char *name)
 
 static inline const char *paperSize2String(QPrinter::PaperSize size)
 {
-    for (int i = 0; i < QPrinter::NPageSize; ++i) {
-        if (size == named_sizes_map[i].size)
-            return named_sizes_map[i].name;
+    for (auto i : named_sizes_map) {
+        if (size == i.size)
+            return i.name;
     }
     return nullptr;
 }
@@ -126,8 +126,8 @@ void qt_perhapsAddPrinter(QList<QPrinterDescription> *printers, const QString &n
                                QString host, QString comment,
                                QStringList aliases)
 {
-    for (int i = 0; i < printers->size(); ++i)
-        if (printers->at(i).samePrinter(name))
+    for (const auto & printer : *printers)
+        if (printer.samePrinter(name))
             return;
 
 #ifndef QT_NO_PRINTDIALOG
@@ -254,8 +254,7 @@ void qt_parseEtcLpPrinters(QList<QPrinterDescription> *printers)
         return;
 
     QString tmp;
-    for (int i = 0; i < dirs.size(); ++i) {
-        QFileInfo printer = dirs.at(i);
+    for (auto printer : dirs) {
         if (printer.isDir()) {
             tmp.sprintf("/etc/lp/printers/%s/configuration",
                          printer.fileName().toAscii().data());
@@ -597,8 +596,7 @@ void qt_parseEtcLpMember(QList<QPrinterDescription> *printers)
     Q_UNUSED(printers);
 #else
     QString tmp;
-    for (int i = 0; i < dirs.size(); ++i) {
-        QFileInfo printer = dirs.at(i);
+    for (auto printer : dirs) {
         // I haven't found any real documentation, so I'm guessing that
         // since lpstat uses /etc/lp/member rather than one of the
         // other directories, it's the one to use.  I did not find a
@@ -621,9 +619,7 @@ void qt_parseSpoolInterface(QList<QPrinterDescription> *printers)
     if(files.isEmpty())
         return;
 
-    for (int i = 0; i < files.size(); ++i) {
-        QFileInfo printer = files.at(i);
-
+    for (auto printer : files) {
         if (!printer.isFile())
             continue;
 

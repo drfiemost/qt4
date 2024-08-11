@@ -336,11 +336,11 @@ Query* QueryParserBase::GetBooleanQuery(CL_NS_STD(vector)<CL_NS(search)::Boolean
 	CND_CONDITION(query != NULL, "No memory could be allocated for query");
 
 	//iterate through all the clauses
-	for( uint32_t i=0;i<clauses.size();i++ ){
+	for(auto & clause : clauses){
 		//Condition check to see if clauses[i] is valdid
 		CND_CONDITION(clauses[i] != NULL, "clauses[i] is NULL");
 		//Add it to query
-		query->add(clauses[i]);
+		query->add(clause);
 	}
 	return query;
 }

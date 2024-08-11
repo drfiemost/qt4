@@ -1436,9 +1436,9 @@ void TCMalloc_PageHeap::init()
   COMPILE_ASSERT(kNumClasses <= (1 << PageMapCache::kValuebits), valuebits);
   DLL_Init(&large_.normal);
   DLL_Init(&large_.returned);
-  for (size_t i = 0; i < kMaxPages; i++) {
-    DLL_Init(&free_[i].normal);
-    DLL_Init(&free_[i].returned);
+  for (auto & i : free_) {
+    DLL_Init(&i.normal);
+    DLL_Init(&i.returned);
   }
 
 #if USE_BACKGROUND_THREAD_TO_SCAVENGE_MEMORY
@@ -2031,8 +2031,8 @@ static void ReleaseFreeList(Span* list, Span* returned) {
 }
 
 void TCMalloc_PageHeap::ReleaseFreePages() {
-  for (Length s = 0; s < kMaxPages; s++) {
-    ReleaseFreeList(&free_[s].normal, &free_[s].returned);
+  for (auto & s : free_) {
+    ReleaseFreeList(&s.normal, &s.returned);
   }
   ReleaseFreeList(&large_.normal, &large_.returned);
   ASSERT(Check());
@@ -2173,8 +2173,8 @@ class TCMalloc_ThreadCache {
   template <class Finder, class Reader>
   void enumerateFreeObjects(Finder& finder, const Reader& reader)
   {
-      for (unsigned sizeClass = 0; sizeClass < kNumClasses; sizeClass++)
-          list_[sizeClass].enumerateFreeObjects(finder, reader);
+      for (auto & sizeClass : list_)
+          sizeClass.enumerateFreeObjects(finder, reader);
   }
 #endif
 };
@@ -2723,8 +2723,8 @@ void TCMalloc_ThreadCache::Init(ThreadIdentifier tid) {
   prev_ = nullptr;
   tid_  = tid;
   in_setspecific_ = false;
-  for (size_t cl = 0; cl < kNumClasses; ++cl) {
-    list_[cl].Init();
+  for (auto & cl : list_) {
+    cl.Init();
   }
 
   // Initialize RNG -- run it for a bit to get to good values

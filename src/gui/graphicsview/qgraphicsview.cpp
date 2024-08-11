@@ -950,8 +950,8 @@ bool QGraphicsViewPrivate::updateRegion(const QRectF &rect, const QTransform &xf
         return false; // Update region for sure outside viewport.
 
     const QVector<QRect> &rects = region.rects();
-    for (int i = 0; i < rects.size(); ++i) {
-        viewRect = rects.at(i);
+    for (auto rect : rects) {
+        viewRect = rect;
         if (dontAdjustForAntialiasing)
             viewRect.adjust(-1, -1, 1, 1);
         else
@@ -2577,8 +2577,8 @@ void QGraphicsView::updateScene(const QList<QRectF> &rects)
     // Extract and reset dirty scene rect info.
     QVector<QRect> dirtyViewportRects;
     const QVector<QRect> &dirtyRects = d->dirtyRegion.rects();
-    for (int i = 0; i < dirtyRects.size(); ++i)
-        dirtyViewportRects += dirtyRects.at(i);
+    for (auto dirtyRect : dirtyRects)
+        dirtyViewportRects += dirtyRect;
     d->dirtyRegion = QRegion();
     d->dirtyBoundingRect = QRect();
 

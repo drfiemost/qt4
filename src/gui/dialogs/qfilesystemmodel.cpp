@@ -1613,8 +1613,8 @@ void QFileSystemModel::setNameFilters(const QStringList &filters)
     d->nameFilters.clear();
     const Qt::CaseSensitivity caseSensitive =
         (filter() & QDir::CaseSensitive) ? Qt::CaseSensitive : Qt::CaseInsensitive;
-    for (int i = 0; i < filters.size(); ++i) {
-        d->nameFilters << QRegExp(filters.at(i), caseSensitive, QRegExp::Wildcard);
+    for (const auto & filter : filters) {
+        d->nameFilters << QRegExp(filter, caseSensitive, QRegExp::Wildcard);
     }
     d->forceSort = true;
     d->delayedSort();
@@ -1629,8 +1629,8 @@ QStringList QFileSystemModel::nameFilters() const
     Q_D(const QFileSystemModel);
     QStringList filters;
 #ifndef QT_NO_REGEXP
-    for (int i = 0; i < d->nameFilters.size(); ++i) {
-         filters << d->nameFilters.at(i).pattern();
+    for (const auto & nameFilter : d->nameFilters) {
+         filters << nameFilter.pattern();
     }
 #endif
     return filters;
@@ -2017,8 +2017,8 @@ bool QFileSystemModelPrivate::passNameFilters(const QFileSystemNode *node) const
 
     // Check the name regularexpression filters
     if (!(node->isDir() && (filters & QDir::AllDirs))) {
-        for (int i = 0; i < nameFilters.size(); ++i) {
-            if (nameFilters.at(i).exactMatch(node->fileName))
+        for (const auto & nameFilter : nameFilters) {
+            if (nameFilter.exactMatch(node->fileName))
                 return true;
         }
         return false;

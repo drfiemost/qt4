@@ -454,8 +454,8 @@ void ProFileEvaluator::Private::initStatics()
         { "prompt", E_PROMPT }, // interactive, so cannot be implemented
         { "replace", E_REPLACE }
     };
-    for (unsigned i = 0; i < sizeof(expandInits)/sizeof(expandInits[0]); ++i)
-        statics.expands.insert(ProString(expandInits[i].name), expandInits[i].func);
+    for (auto expandInit : expandInits)
+        statics.expands.insert(ProString(expandInit.name), expandInit.func);
 
     static const struct {
         const char * const name;
@@ -490,8 +490,8 @@ void ProFileEvaluator::Private::initStatics()
         { "warning", T_MESSAGE },
         { "error", T_MESSAGE },
     };
-    for (unsigned i = 0; i < sizeof(testInits)/sizeof(testInits[0]); ++i)
-        statics.functions.insert(ProString(testInits[i].name), testInits[i].func);
+    for (auto testInit : testInits)
+        statics.functions.insert(ProString(testInit.name), testInit.func);
 
     static const char * const names[] = {
         "LITERAL_DOLLAR", "LITERAL_HASH", "LITERAL_WHITESPACE",
@@ -528,9 +528,9 @@ void ProFileEvaluator::Private::initStatics()
         { "QMAKE_FRAMEWORKDIR", "QMAKE_FRAMEWORKPATH" },
         { "QMAKE_FRAMEWORKDIR_FLAGS", "QMAKE_FRAMEWORKPATH_FLAGS" }
     };
-    for (unsigned i = 0; i < sizeof(mapInits)/sizeof(mapInits[0]); ++i)
-        statics.varMap.insert(ProString(mapInits[i].oldname),
-                              ProString(mapInits[i].newname));
+    for (auto mapInit : mapInits)
+        statics.varMap.insert(ProString(mapInit.oldname),
+                              ProString(mapInit.newname));
 }
 
 const ProString &ProFileEvaluator::Private::map(const ProString &var)
@@ -2442,8 +2442,8 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
             ret += args;
             break;
         case E_ESCAPE_EXPAND:
-            for (int i = 0; i < args.size(); ++i) {
-                QString str = args.at(i).toQString();
+            for (const auto & arg : args) {
+                QString str = arg.toQString();
                 QChar *i_data = str.data();
                 int i_len = str.length();
                 for (int x = 0; x < i_len; ++x) {
@@ -2471,13 +2471,13 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
                         }
                     }
                 }
-                ret.append(ProString(QString(i_data, i_len), NoHash).setSource(args.at(i)));
+                ret.append(ProString(QString(i_data, i_len), NoHash).setSource(arg));
             }
             break;
         case E_RE_ESCAPE:
-            for (int i = 0; i < args.size(); ++i) {
-                const QString &rstr = QRegExp::escape(args.at(i).toQString(m_tmp1));
-                ret << (rstr.isSharedWith(m_tmp1) ? args.at(i) : ProString(rstr, NoHash).setSource(args.at(i)));
+            for (const auto & arg : args) {
+                const QString &rstr = QRegExp::escape(arg.toQString(m_tmp1));
+                ret << (rstr.isSharedWith(m_tmp1) ? arg : ProString(rstr, NoHash).setSource(arg));
             }
             break;
         case E_UPPER:
@@ -2799,8 +2799,7 @@ ProFileEvaluator::Private::VisitReturn ProFileEvaluator::Private::evaluateCondit
             const ProStringList &l = values(map(args.at(0)));
             if (args.count() == 2) {
                 int t = 0;
-                for (int i = 0; i < l.size(); ++i) {
-                    const ProString &val = l[i];
+                for (const auto & val : l) {
                     if ((!regx.isEmpty() && regx.exactMatch(val.toQString(m_tmp[t]))) || val == qry)
                         return ReturnTrue;
                     t ^= 1;

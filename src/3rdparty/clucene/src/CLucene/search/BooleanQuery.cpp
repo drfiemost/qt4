@@ -27,8 +27,8 @@ CL_NS_DEF(search)
 	BooleanQuery::BooleanQuery(const BooleanQuery& clone):
 		Query(clone)
 	{
-		for ( uint32_t i=0;i<clone.clauses.size();i++ ){
-			BooleanClause* clause = clone.clauses[i]->clone();
+		for (auto i : clone.clauses){
+			BooleanClause* clause = i->clone();
 			clause->deleteQuery=true;
 			add(clause);
 		}
@@ -41,9 +41,8 @@ CL_NS_DEF(search)
 	size_t BooleanQuery::hashCode() const {
 		//todo: do cachedHashCode, and invalidate on add/remove clause
 		size_t ret = 0;
-		for (uint32_t i = 0 ; i < clauses.size(); i++) {
-			BooleanClause* c = clauses[i];
-			ret = 31 * ret + c->hashCode();
+		for (auto c : clauses) {
+				ret = 31 * ret + c->hashCode();
 		}
 		ret = ret ^ Similarity::floatToByte(getBoost());
 		return ret;
@@ -217,8 +216,8 @@ CL_NS_DEF(search)
 		this->searcher = searcher;
 		this->parentQuery = parentQuery;
 		this->clauses = clauses;
-		for (uint32_t i = 0 ; i < clauses->size(); i++) {
-			weights.push_back((*clauses)[i]->query->_createWeight(searcher));
+		for (auto & clause : *clauses) {
+			weights.push_back(clause->query->_createWeight(searcher));
 		}
 	}
 	BooleanQuery::BooleanWeight::~BooleanWeight(){
@@ -269,8 +268,7 @@ CL_NS_DEF(search)
       if (allRequired && noneBoolean) {           // ConjunctionScorer is okay
         ConjunctionScorer* result =
           _CLNEW ConjunctionScorer(parentQuery->getSimilarity(searcher));
-        for (uint32_t i = 0 ; i < weights.size(); i++) {
-          Weight* w = weights[i];
+        for (auto w : weights) {
           Scorer* subScorer = w->scorer(reader);
           if (subScorer == nullptr)
             return nullptr;

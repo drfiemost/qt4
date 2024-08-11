@@ -247,8 +247,7 @@ QResourcePrivate::clear()
     size = 0;
     children.clear();
     container = 0;
-    for(int i = 0; i < related.size(); ++i) {
-        QResourceRoot *root = related.at(i);
+    for(auto root : related) {
         if(!root->ref.deref())
             delete root;
     }
@@ -262,8 +261,7 @@ QResourcePrivate::load(const QString &file)
     QMutexLocker lock(resourceMutex());
     const ResourceList *list = resourceList();
     QString cleaned = cleanPath(file);
-    for(int i = 0; i < list->size(); ++i) {
-        QResourceRoot *res = list->at(i);
+    for(auto res : *list) {
         const int node = res->findNode(cleaned, locale);
         if(node != -1) {
             if(related.isEmpty()) {
@@ -315,8 +313,8 @@ QResourcePrivate::ensureInitialized() const
         QMutexLocker lock(resourceMutex());
         QStringList searchPaths = *resourceSearchPaths();
         searchPaths << QLatin1String("");
-        for(int i = 0; i < searchPaths.size(); ++i) {
-            const QString searchPath(searchPaths.at(i) + QLatin1Char('/') + path);
+        for(const auto & i : searchPaths) {
+            const QString searchPath(i + QLatin1Char('/') + path);
             if(that->load(searchPath)) {
                 that->absoluteFilePath = QLatin1Char(':') + searchPath;
                 break;
@@ -337,8 +335,7 @@ QResourcePrivate::ensureChildren() const
         path = path.mid(1);
     QSet<QString> kids;
     QString cleaned = cleanPath(path);
-    for(int i = 0; i < related.size(); ++i) {
-        QResourceRoot *res = related.at(i);
+    for(auto res : related) {
         if(res->mappingRootSubdir(path, &k) && !k.isEmpty()) {
             if(!kids.contains(k)) {
                 children += k;
@@ -348,8 +345,8 @@ QResourcePrivate::ensureChildren() const
             const int node = res->findNode(cleaned);
             if(node != -1) {
                 QStringList related_children = res->children(node);
-                for(int kid = 0; kid < related_children.size(); ++kid) {
-                    k = related_children.at(kid);
+                for(const auto & kid : related_children) {
+                    k = kid;
                     if(!kids.contains(k)) {
                         children += k;
                         kids.insert(k);
@@ -833,8 +830,8 @@ Q_CORE_EXPORT bool qRegisterResourceData(int version, const unsigned char *tree,
     if(version == 0x01 && resourceList()) {
         bool found = false;
         QResourceRoot res(tree, name, data);
-        for(int i = 0; i < resourceList()->size(); ++i) {
-            if(*resourceList()->at(i) == res) {
+        for(auto i : *resourceList()) {
+            if(*i == res) {
                 found = true;
                 break;
             }

@@ -276,8 +276,8 @@ void QDeclarativeEngineDebugService::buildObjectDump(QDataStream &message,
 
     message << propertyIndexes.size() + fakeProperties.count();
 
-    for (int ii = 0; ii < propertyIndexes.size(); ++ii)
-        message << propertyData(object, propertyIndexes.at(ii));
+    for (int propertyIndexe : propertyIndexes)
+        message << propertyData(object, propertyIndexe);
 
     for (int ii = 0; ii < fakeProperties.count(); ++ii)
         message << fakeProperties[ii];

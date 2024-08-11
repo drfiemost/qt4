@@ -979,9 +979,9 @@ QColor QGLContext::overlayTransparentColor() const
 
 static uint qt_transparent_pixel(VisualID id, int screen)
 {
-    for (int i = 0; i < trans_colors.size(); i++) {
-        if (trans_colors[i].vis == id && trans_colors[i].screen == screen)
-            return trans_colors[i].color;
+    for (auto & trans_color : trans_colors) {
+        if (trans_color.vis == id && trans_color.screen == screen)
+            return trans_color.color;
     }
     return 0;
 }

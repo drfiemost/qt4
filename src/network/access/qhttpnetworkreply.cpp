@@ -347,8 +347,7 @@ bool QHttpNetworkReplyPrivate::findChallenge(bool forProxy, QByteArray &challeng
     QByteArray header = forProxy ? "proxy-authenticate" : "www-authenticate";
     // pick the best protocol (has to match parsing in QAuthenticatorPrivate)
     QList<QByteArray> challenges = headerFieldValues(header);
-    for (int i = 0; i<challenges.size(); i++) {
-        QByteArray line = challenges.at(i);
+    for (auto line : challenges) {
         // todo use qstrincmp
         if (!line.toLower().startsWith("negotiate"))
             challenge = line;
@@ -362,8 +361,8 @@ QAuthenticatorPrivate::Method QHttpNetworkReplyPrivate::authenticationMethod(boo
     QAuthenticatorPrivate::Method method = QAuthenticatorPrivate::None;
     QByteArray header = isProxy ? "proxy-authenticate" : "www-authenticate";
     QList<QByteArray> challenges = headerFieldValues(header);
-    for (int i = 0; i<challenges.size(); i++) {
-        QByteArray line = challenges.at(i).trimmed().toLower();
+    for (const auto & challenge : challenges) {
+        QByteArray line = challenge.trimmed().toLower();
         if (method < QAuthenticatorPrivate::Basic
             && line.startsWith("basic")) {
             method = QAuthenticatorPrivate::Basic;

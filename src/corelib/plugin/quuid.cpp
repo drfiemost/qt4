@@ -417,8 +417,8 @@ QUuid QUuid::fromRfc4122(const QByteArray &bytes)
     d3 = qFromBigEndian<quint16>(data);
     data += sizeof(quint16);
 
-    for (int i = 0; i < 8; ++i) {
-        d4[i] = *(data);
+    for (unsigned char & i : d4) {
+        i = *(data);
         data++;
     }
 
@@ -583,8 +583,8 @@ QByteArray QUuid::toRfc4122() const
     qToBigEndian(data3, data);
     data += sizeof(quint16);
 
-    for (int i = 0; i < 8; ++i) {
-        *(data) = data4[i];
+    for (unsigned char i : data4) {
+        *(data) = i;
         data++;
     }
 
@@ -613,8 +613,8 @@ QDataStream &operator<<(QDataStream &s, const QUuid &id)
         qToLittleEndian(id.data3, data);
         data += sizeof(quint16);
 
-        for (int i = 0; i < 8; ++i) {
-            *(data) = id.data4[i];
+        for (unsigned char i : id.data4) {
+            *(data) = i;
             data++;
         }
     }
@@ -649,8 +649,8 @@ QDataStream &operator>>(QDataStream &s, QUuid &id)
         id.data3 = qFromLittleEndian<quint16>(data);
         data += sizeof(quint16);
 
-        for (int i = 0; i < 8; ++i) {
-            id.data4[i] = *(data);
+        for (unsigned char & i : id.data4) {
+            i = *(data);
             data++;
         }
     }

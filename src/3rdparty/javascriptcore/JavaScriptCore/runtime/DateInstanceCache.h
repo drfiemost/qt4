@@ -61,8 +61,8 @@ namespace JSC {
         
         void reset()
         {
-            for (size_t i = 0; i < cacheSize; ++i)
-                m_cache[i].key = NaN;
+            for (auto & i : m_cache)
+                i.key = NaN;
         }
         
         DateInstanceData* add(double d)

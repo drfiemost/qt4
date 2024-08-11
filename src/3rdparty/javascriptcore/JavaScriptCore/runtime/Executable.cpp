@@ -267,10 +267,10 @@ UString FunctionExecutable::paramString() const
 {
     FunctionParameters& parameters = *m_parameters;
     StringBuilder builder;
-    for (size_t pos = 0; pos < parameters.size(); ++pos) {
+    for (const auto & parameter : parameters) {
         if (!builder.isEmpty())
             builder.append(", ");
-        builder.append(parameters[pos].ustring());
+        builder.append(parameter.ustring());
     }
     return builder.release();
 }

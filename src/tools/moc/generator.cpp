@@ -107,8 +107,7 @@ static inline int lengthOfEscapeSequence(const QByteArray &s, int i)
 int Generator::strreg(const QByteArray &s)
 {
     int idx = 0;
-    for (int i = 0; i < strings.size(); ++i) {
-        const QByteArray &str = strings.at(i);
+    for (const auto & str : strings) {
         if (str == s)
             return idx;
         idx += str.length() + 1;
@@ -243,8 +242,7 @@ void Generator::generateCode()
     fprintf(out, "    \"");
     int col = 0;
     int len = 0;
-    for (int i = 0; i < strings.size(); ++i) {
-        QByteArray s = strings.at(i);
+    for (auto s : strings) {
         len = s.length();
         if (col && col + len >= 72) {
             fprintf(out, "\"\n    \"");
@@ -368,8 +366,7 @@ void Generator::generateCode()
         fprintf(out, "    if (!strcmp(_clname, \"%s\"))\n        return static_cast< %s*>(const_cast< %s*>(this));\n",
                 cname, cname, cdef->classname.constData());
     }
-    for (int i = 0; i < cdef->interfaceList.size(); ++i) {
-        const QList<ClassDef::Interface> &iface = cdef->interfaceList.at(i);
+    for (const auto & iface : cdef->interfaceList) {
         for (int j = 0; j < iface.size(); ++j) {
             fprintf(out, "    if (!strcmp(_clname, %s))\n        return ", iface.at(j).interfaceId.constData());
             for (int k = j; k >= 0; --k)
@@ -411,8 +408,7 @@ void Generator::generateClassInfos()
 
     fprintf(out, "\n // classinfo: key, value\n");
 
-    for (int i = 0; i < cdef->classInfoList.size(); ++i) {
-        const ClassInfoDef &c = cdef->classInfoList.at(i);
+    for (const auto & c : cdef->classInfoList) {
         fprintf(out, "    %4d, %4d,\n", strreg(c.name), strreg(c.value));
     }
 }
@@ -641,8 +637,7 @@ void Generator::generateMetacall()
         bool needStored = false;
         bool needEditable = false;
         bool needUser = false;
-        for (int i = 0; i < cdef->propertyList.size(); ++i) {
-            const PropertyDef &p = cdef->propertyList.at(i);
+        for (const auto & p : cdef->propertyList) {
             needGet |= !p.read.isEmpty();
             if (!p.read.isEmpty())
                 needTempVarForGet |= (p.gspec != PropertyDef::PointerSpec

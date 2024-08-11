@@ -985,16 +985,15 @@ QTextCodec *QTextCodec::codecForName(const QByteArray &name)
             return codec;
     }
 
-    for (int i = 0; i < all->size(); ++i) {
-        QTextCodec *cursor = all->at(i);
+    for (auto cursor : *all) {
         if (nameMatch(cursor->name(), name)) {
             if (cache)
                 cache->insert(name, cursor);
             return cursor;
         }
         QList<QByteArray> aliases = cursor->aliases();
-        for (int y = 0; y < aliases.size(); ++y)
-            if (nameMatch(aliases.at(y), name)) {
+        for (const auto & aliase : aliases)
+            if (nameMatch(aliase, name)) {
                 if (cache)
                     cache->insert(name, cursor);
                 return cursor;
@@ -1032,8 +1031,7 @@ QTextCodec* QTextCodec::codecForMib(int mib)
     }
 
     QList<QTextCodec*>::ConstIterator i;
-    for (int i = 0; i < all->size(); ++i) {
-        QTextCodec *cursor = all->at(i);
+    for (auto cursor : *all) {
         if (cursor->mibEnum() == mib) {
             if (cache)
                 cache->insert(key, cursor);
@@ -1074,9 +1072,9 @@ QList<QByteArray> QTextCodec::availableCodecs()
     if (!validCodecs())
         return codecs;
 
-    for (int i = 0; i < all->size(); ++i) {
-        codecs += all->at(i)->name();
-        codecs += all->at(i)->aliases();
+    for (auto i : *all) {
+        codecs += i->name();
+        codecs += i->aliases();
     }
 
 #ifndef QT_NO_THREAD
@@ -1116,8 +1114,8 @@ QList<int> QTextCodec::availableMibs()
     if (!validCodecs())
         return codecs;
 
-    for (int i = 0; i < all->size(); ++i)
-        codecs += all->at(i)->mibEnum();
+    for (auto i : *all)
+        codecs += i->mibEnum();
 
 #ifndef QT_NO_THREAD
     locker.unlock();

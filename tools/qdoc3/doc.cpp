@@ -2607,8 +2607,7 @@ QString DocParser::untabifyEtc(const QString& str)
     result.reserve(str.length());
     int column = 0;
 
-    for (int i = 0; i < str.length(); i++) {
-        const QChar c = str.at(i);
+    for (auto c : str) {
         if (c == QLatin1Char('\r'))
             continue;
         if (c == QLatin1Char('\t')) {
@@ -2640,12 +2639,12 @@ int DocParser::indentLevel(const QString& str)
     int minIndent = INT_MAX;
     int column = 0;
 
-    for (int i = 0; i < (int) str.length(); i++) {
-        if (str[i] == '\n') {
+    for (auto i : str) {
+        if (i == '\n') {
             column = 0;
         }
         else {
-            if (str[i] != ' ' && column < minIndent)
+            if (i != ' ' && column < minIndent)
                 minIndent = column;
             column++;
         }
@@ -2661,14 +2660,14 @@ QString DocParser::unindent(int level, const QString& str)
     QString t;
     int column = 0;
 
-    for (int i = 0; i < (int) str.length(); i++) {
-        if (str[i] == QLatin1Char('\n')) {
+    for (auto i : str) {
+        if (i == QLatin1Char('\n')) {
             t += '\n';
             column = 0;
         }
         else {
             if (column >= level)
-                t += str[i];
+                t += i;
             column++;
         }
     }
@@ -3205,8 +3204,8 @@ QString Doc::canonicalTitle(const QString &title)
     bool dashAppended = false;
     bool begun = false;
     int lastAlnum = 0;
-    for (int i = 0; i != title.size(); ++i) {
-        uint c = title.at(i).unicode();
+    for (auto i : title) {
+        uint c = i.unicode();
         if (c >= 'A' && c <= 'Z')
             c -= 'A' - 'a';
         bool alnum = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');

@@ -777,8 +777,8 @@ static bool convert(const QVariant::Private *d, QVariant::Type t, void *result, 
         if (d->type == QVariant::List) {
             QStringList *slst = static_cast<QStringList *>(result);
             const QVariantList *list = v_cast<QVariantList >(d);
-            for (int i = 0; i < list->size(); ++i)
-                slst->append(list->at(i).toString());
+            for (const auto & i : *list)
+                slst->append(i.toString());
         } else if (d->type == QVariant::String) {
             QStringList *slst = static_cast<QStringList *>(result);
             *slst = QStringList(*v_cast<QString>(d));
@@ -1004,8 +1004,8 @@ static bool convert(const QVariant::Private *d, QVariant::Type t, void *result, 
         if (d->type == QVariant::StringList) {
             QVariantList *lst = static_cast<QVariantList *>(result);
             const QStringList *slist = v_cast<QStringList>(d);
-            for (int i = 0; i < slist->size(); ++i)
-                lst->append(QVariant(slist->at(i)));
+            for (const auto & i : *slist)
+                lst->append(QVariant(i));
         } else if (qstrcmp(QMetaType::typeName(d->type), "QList<QVariant>") == 0) {
             *static_cast<QVariantList *>(result) =
                 *static_cast<QList<QVariant> *>(d->data.shared->ptr);

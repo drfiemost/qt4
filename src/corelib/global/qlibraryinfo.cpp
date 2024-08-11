@@ -373,8 +373,7 @@ QLibraryInfo::location(LibraryLocation loc)
                 };
                 int maj = 0, min = 0, pat = 0;
                 QStringList children = config->childGroups();
-                for(int child = 0; child < children.size(); ++child) {
-                    QString cver = children.at(child);
+                for(auto cver : children) {
                     QStringList cver_list = cver.split(QLatin1Char('.'));
                     if(cver_list.size() > 0 && cver_list.size() < 4) {
                         bool ok;

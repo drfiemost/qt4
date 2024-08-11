@@ -397,8 +397,8 @@ void QDialogButtonBoxPrivate::layoutButtons()
     static const int ModalRoles[M] = { AcceptRole, RejectRole, DestructiveRole, YesRole, NoRole };
     if (tmpPolicy == QDialogButtonBox::MacLayout) {
         bool hasModalButton = false;
-        for (int i = 0; i < M; ++i) {
-            if (!buttonLists[ModalRoles[i]].isEmpty()) {
+        for (int ModalRole : ModalRoles) {
+            if (!buttonLists[ModalRole].isEmpty()) {
                 hasModalButton = true;
                 break;
             }
@@ -933,8 +933,7 @@ void QDialogButtonBox::clear()
     // Remove the created standard buttons, they should be in the other lists, which will
     // do the deletion
     d->standardButtonHash.clear();
-    for (int i = 0; i < NRoles; ++i) {
-        QList<QAbstractButton *> &list = d->buttonLists[i];
+    for (auto & list : d->buttonLists) {
         while (list.count()) {
             QAbstractButton *button = list.takeAt(0);
             QObject::disconnect(button, SIGNAL(destroyed()), this, SLOT(_q_handleButtonDestroyed()));
@@ -952,8 +951,7 @@ QList<QAbstractButton *> QDialogButtonBox::buttons() const
 {
     Q_D(const QDialogButtonBox);
     QList<QAbstractButton *> finalList;
-    for (int i = 0; i < NRoles; ++i) {
-        const QList<QAbstractButton *> &list = d->buttonLists[i];
+    for (const auto & list : d->buttonLists) {
         for (int j = 0; j < list.count(); ++j)
             finalList.append(list.at(j));
     }
@@ -994,8 +992,7 @@ void QDialogButtonBox::removeButton(QAbstractButton *button)
     // Remove it from the standard button hash first and then from the roles
     if (QPushButton *pushButton = qobject_cast<QPushButton *>(button))
         d->standardButtonHash.remove(pushButton);
-    for (int i = 0; i < NRoles; ++i) {
-        QList<QAbstractButton *> &list = d->buttonLists[i];
+    for (auto & list : d->buttonLists) {
         for (int j = 0; j < list.count(); ++j) {
             if (list.at(j) == button) {
                 list.takeAt(j);

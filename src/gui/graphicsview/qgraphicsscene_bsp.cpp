@@ -74,8 +74,7 @@ public:
 
     void visit(QList<QGraphicsItem *> *items) override
     {
-        for (int i = 0; i < items->size(); ++i) {
-            QGraphicsItem *item = items->at(i);
+        for (auto item : *items) {
             if (onlyTopLevelItems && item->d_ptr->parent)
                 item = item->topLevelItem();
             if (!item->d_func()->itemDiscovered && item->d_ptr->visible) {
@@ -134,15 +133,14 @@ void QGraphicsSceneBspTree::removeItem(QGraphicsItem *item, const QRectF &rect)
 
 void QGraphicsSceneBspTree::removeItems(const QSet<QGraphicsItem *> &items)
 {
-    for (int i = 0; i < leaves.size(); ++i) {
+    for (auto & leave : leaves) {
         QList<QGraphicsItem *> newItemList;
-        const QList<QGraphicsItem *> &oldItemList = leaves[i];
-        for (int j = 0; j < oldItemList.size(); ++j) {
-            QGraphicsItem *item = oldItemList.at(j);
+        const QList<QGraphicsItem *> &oldItemList = leave;
+        for (auto item : oldItemList) {
             if (!items.contains(item))
                 newItemList << item;
         }
-        leaves[i] = newItemList;
+        leave = newItemList;
     }
 }
 
@@ -153,8 +151,8 @@ QList<QGraphicsItem *> QGraphicsSceneBspTree::items(const QRectF &rect, bool onl
     findVisitor->onlyTopLevelItems = onlyTopLevelItems;
     climbTree(findVisitor, rect);
     // Reset discovery bits.
-    for (int i = 0; i < tmp.size(); ++i)
-        tmp.at(i)->d_ptr->itemDiscovered = 0;
+    for (auto i : tmp)
+        i->d_ptr->itemDiscovered = 0;
     return tmp;
 }
 

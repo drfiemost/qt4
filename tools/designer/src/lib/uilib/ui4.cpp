@@ -885,8 +885,7 @@ void DomIncludes::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("includes") : tagName.toLower());
 
-    for (int i = 0; i < m_include.size(); ++i) {
-        DomInclude* v = m_include[i];
+    for (auto v : m_include) {
         v->write(writer, QLatin1String("include"));
     }
     if (!m_text.isEmpty())
@@ -1095,8 +1094,7 @@ void DomResources::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeName())
         writer.writeAttribute(QLatin1String("name"), attributeName());
 
-    for (int i = 0; i < m_include.size(); ++i) {
-        DomResource* v = m_include[i];
+    for (auto v : m_include) {
         v->write(writer, QLatin1String("include"));
     }
     if (!m_text.isEmpty())
@@ -1341,20 +1339,16 @@ void DomActionGroup::write(QXmlStreamWriter &writer, const QString &tagName) con
     if (hasAttributeName())
         writer.writeAttribute(QLatin1String("name"), attributeName());
 
-    for (int i = 0; i < m_action.size(); ++i) {
-        DomAction* v = m_action[i];
+    for (auto v : m_action) {
         v->write(writer, QLatin1String("action"));
     }
-    for (int i = 0; i < m_actionGroup.size(); ++i) {
-        DomActionGroup* v = m_actionGroup[i];
+    for (auto v : m_actionGroup) {
         v->write(writer, QLatin1String("actiongroup"));
     }
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
-    for (int i = 0; i < m_attribute.size(); ++i) {
-        DomProperty* v = m_attribute[i];
+    for (auto v : m_attribute) {
         v->write(writer, QLatin1String("attribute"));
     }
     if (!m_text.isEmpty())
@@ -1510,12 +1504,10 @@ void DomAction::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeMenu())
         writer.writeAttribute(QLatin1String("menu"), attributeMenu());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
-    for (int i = 0; i < m_attribute.size(); ++i) {
-        DomProperty* v = m_attribute[i];
+    for (auto v : m_attribute) {
         v->write(writer, QLatin1String("attribute"));
     }
     if (!m_text.isEmpty())
@@ -1734,12 +1726,10 @@ void DomButtonGroup::write(QXmlStreamWriter &writer, const QString &tagName) con
     if (hasAttributeName())
         writer.writeAttribute(QLatin1String("name"), attributeName());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
-    for (int i = 0; i < m_attribute.size(); ++i) {
-        DomProperty* v = m_attribute[i];
+    for (auto v : m_attribute) {
         v->write(writer, QLatin1String("attribute"));
     }
     if (!m_text.isEmpty())
@@ -1839,8 +1829,7 @@ void DomButtonGroups::write(QXmlStreamWriter &writer, const QString &tagName) co
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("buttongroups") : tagName.toLower());
 
-    for (int i = 0; i < m_buttonGroup.size(); ++i) {
-        DomButtonGroup* v = m_buttonGroup[i];
+    for (auto v : m_buttonGroup) {
         v->write(writer, QLatin1String("buttongroup"));
     }
     if (!m_text.isEmpty())
@@ -1934,8 +1923,7 @@ void DomImages::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("images") : tagName.toLower());
 
-    for (int i = 0; i < m_image.size(); ++i) {
-        DomImage* v = m_image[i];
+    for (auto v : m_image) {
         v->write(writer, QLatin1String("image"));
     }
     if (!m_text.isEmpty())
@@ -2257,8 +2245,7 @@ void DomCustomWidgets::write(QXmlStreamWriter &writer, const QString &tagName) c
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("customwidgets") : tagName.toLower());
 
-    for (int i = 0; i < m_customWidget.size(); ++i) {
-        DomCustomWidget* v = m_customWidget[i];
+    for (auto v : m_customWidget) {
         v->write(writer, QLatin1String("customwidget"));
     }
     if (!m_text.isEmpty())
@@ -2919,8 +2906,7 @@ void DomProperties::write(QXmlStreamWriter &writer, const QString &tagName) cons
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("properties") : tagName.toLower());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomPropertyData* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
     if (!m_text.isEmpty())
@@ -3411,8 +3397,7 @@ void DomTabStops::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("tabstops") : tagName.toLower());
 
-    for (int i = 0; i < m_tabStop.size(); ++i) {
-        QString v = m_tabStop[i];
+    for (auto v : m_tabStop) {
         writer.writeTextElement(QLatin1String("tabstop"), v);
     }
     if (!m_text.isEmpty())
@@ -3621,16 +3606,13 @@ void DomLayout::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeColumnMinimumWidth())
         writer.writeAttribute(QLatin1String("columnminimumwidth"), attributeColumnMinimumWidth());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
-    for (int i = 0; i < m_attribute.size(); ++i) {
-        DomProperty* v = m_attribute[i];
+    for (auto v : m_attribute) {
         v->write(writer, QLatin1String("attribute"));
     }
-    for (int i = 0; i < m_item.size(); ++i) {
-        DomLayoutItem* v = m_item[i];
+    for (auto v : m_item) {
         v->write(writer, QLatin1String("item"));
     }
     if (!m_text.isEmpty())
@@ -3991,8 +3973,7 @@ void DomRow::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("row") : tagName.toLower());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
     if (!m_text.isEmpty())
@@ -4086,8 +4067,7 @@ void DomColumn::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("column") : tagName.toLower());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
     if (!m_text.isEmpty())
@@ -4229,12 +4209,10 @@ void DomItem::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeColumn())
         writer.writeAttribute(QLatin1String("column"), QString::number(attributeColumn()));
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
-    for (int i = 0; i < m_item.size(); ++i) {
-        DomItem* v = m_item[i];
+    for (auto v : m_item) {
         v->write(writer, QLatin1String("item"));
     }
     if (!m_text.isEmpty())
@@ -4571,60 +4549,46 @@ void DomWidget::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeNative())
         writer.writeAttribute(QLatin1String("native"), (attributeNative() ? QLatin1String("true") : QLatin1String("false")));
 
-    for (int i = 0; i < m_class.size(); ++i) {
-        QString v = m_class[i];
+    for (auto v : m_class) {
         writer.writeTextElement(QLatin1String("class"), v);
     }
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
-    for (int i = 0; i < m_script.size(); ++i) {
-        DomScript* v = m_script[i];
+    for (auto v : m_script) {
         v->write(writer, QLatin1String("script"));
     }
-    for (int i = 0; i < m_widgetData.size(); ++i) {
-        DomWidgetData* v = m_widgetData[i];
+    for (auto v : m_widgetData) {
         v->write(writer, QLatin1String("widgetdata"));
     }
-    for (int i = 0; i < m_attribute.size(); ++i) {
-        DomProperty* v = m_attribute[i];
+    for (auto v : m_attribute) {
         v->write(writer, QLatin1String("attribute"));
     }
-    for (int i = 0; i < m_row.size(); ++i) {
-        DomRow* v = m_row[i];
+    for (auto v : m_row) {
         v->write(writer, QLatin1String("row"));
     }
-    for (int i = 0; i < m_column.size(); ++i) {
-        DomColumn* v = m_column[i];
+    for (auto v : m_column) {
         v->write(writer, QLatin1String("column"));
     }
-    for (int i = 0; i < m_item.size(); ++i) {
-        DomItem* v = m_item[i];
+    for (auto v : m_item) {
         v->write(writer, QLatin1String("item"));
     }
-    for (int i = 0; i < m_layout.size(); ++i) {
-        DomLayout* v = m_layout[i];
+    for (auto v : m_layout) {
         v->write(writer, QLatin1String("layout"));
     }
-    for (int i = 0; i < m_widget.size(); ++i) {
-        DomWidget* v = m_widget[i];
+    for (auto v : m_widget) {
         v->write(writer, QLatin1String("widget"));
     }
-    for (int i = 0; i < m_action.size(); ++i) {
-        DomAction* v = m_action[i];
+    for (auto v : m_action) {
         v->write(writer, QLatin1String("action"));
     }
-    for (int i = 0; i < m_actionGroup.size(); ++i) {
-        DomActionGroup* v = m_actionGroup[i];
+    for (auto v : m_actionGroup) {
         v->write(writer, QLatin1String("actiongroup"));
     }
-    for (int i = 0; i < m_addAction.size(); ++i) {
-        DomActionRef* v = m_addAction[i];
+    for (auto v : m_addAction) {
         v->write(writer, QLatin1String("addaction"));
     }
-    for (int i = 0; i < m_zOrder.size(); ++i) {
-        QString v = m_zOrder[i];
+    for (auto v : m_zOrder) {
         writer.writeTextElement(QLatin1String("zorder"), v);
     }
     if (!m_text.isEmpty())
@@ -4813,8 +4777,7 @@ void DomSpacer::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeName())
         writer.writeAttribute(QLatin1String("name"), attributeName());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
     if (!m_text.isEmpty())
@@ -5370,8 +5333,7 @@ void DomGradient::write(QXmlStreamWriter &writer, const QString &tagName) const
     if (hasAttributeCoordinateMode())
         writer.writeAttribute(QLatin1String("coordinatemode"), attributeCoordinateMode());
 
-    for (int i = 0; i < m_gradientStop.size(); ++i) {
-        DomGradientStop* v = m_gradientStop[i];
+    for (auto v : m_gradientStop) {
         v->write(writer, QLatin1String("gradientstop"));
     }
     if (!m_text.isEmpty())
@@ -5812,12 +5774,10 @@ void DomColorGroup::write(QXmlStreamWriter &writer, const QString &tagName) cons
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("colorgroup") : tagName.toLower());
 
-    for (int i = 0; i < m_colorRole.size(); ++i) {
-        DomColorRole* v = m_colorRole[i];
+    for (auto v : m_colorRole) {
         v->write(writer, QLatin1String("colorrole"));
     }
-    for (int i = 0; i < m_color.size(); ++i) {
-        DomColor* v = m_color[i];
+    for (auto v : m_color) {
         v->write(writer, QLatin1String("color"));
     }
     if (!m_text.isEmpty())
@@ -7629,8 +7589,7 @@ void DomStringList::write(QXmlStreamWriter &writer, const QString &tagName) cons
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("stringlist") : tagName.toLower());
 
-    for (int i = 0; i < m_string.size(); ++i) {
-        QString v = m_string[i];
+    for (auto v : m_string) {
         writer.writeTextElement(QLatin1String("string"), v);
     }
     if (!m_text.isEmpty())
@@ -10101,8 +10060,7 @@ void DomConnections::write(QXmlStreamWriter &writer, const QString &tagName) con
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("connections") : tagName.toLower());
 
-    for (int i = 0; i < m_connection.size(); ++i) {
-        DomConnection* v = m_connection[i];
+    for (auto v : m_connection) {
         v->write(writer, QLatin1String("connection"));
     }
     if (!m_text.isEmpty())
@@ -10399,8 +10357,7 @@ void DomConnectionHints::write(QXmlStreamWriter &writer, const QString &tagName)
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("connectionhints") : tagName.toLower());
 
-    for (int i = 0; i < m_hint.size(); ++i) {
-        DomConnectionHint* v = m_hint[i];
+    for (auto v : m_hint) {
         v->write(writer, QLatin1String("hint"));
     }
     if (!m_text.isEmpty())
@@ -10727,8 +10684,7 @@ void DomWidgetData::write(QXmlStreamWriter &writer, const QString &tagName) cons
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("widgetdata") : tagName.toLower());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
     if (!m_text.isEmpty())
@@ -10822,8 +10778,7 @@ void DomDesignerData::write(QXmlStreamWriter &writer, const QString &tagName) co
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("designerdata") : tagName.toLower());
 
-    for (int i = 0; i < m_property.size(); ++i) {
-        DomProperty* v = m_property[i];
+    for (auto v : m_property) {
         v->write(writer, QLatin1String("property"));
     }
     if (!m_text.isEmpty())
@@ -10921,12 +10876,10 @@ void DomSlots::write(QXmlStreamWriter &writer, const QString &tagName) const
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("slots") : tagName.toLower());
 
-    for (int i = 0; i < m_signal.size(); ++i) {
-        QString v = m_signal[i];
+    for (auto v : m_signal) {
         writer.writeTextElement(QLatin1String("signal"), v);
     }
-    for (int i = 0; i < m_slot.size(); ++i) {
-        QString v = m_slot[i];
+    for (auto v : m_slot) {
         writer.writeTextElement(QLatin1String("slot"), v);
     }
     if (!m_text.isEmpty())
@@ -11026,8 +10979,7 @@ void DomPropertySpecifications::write(QXmlStreamWriter &writer, const QString &t
 {
     writer.writeStartElement(tagName.isEmpty() ? QString::fromUtf8("propertyspecifications") : tagName.toLower());
 
-    for (int i = 0; i < m_stringpropertyspecification.size(); ++i) {
-        DomStringPropertySpecification* v = m_stringpropertyspecification[i];
+    for (auto v : m_stringpropertyspecification) {
         v->write(writer, QLatin1String("stringpropertyspecification"));
     }
     if (!m_text.isEmpty())

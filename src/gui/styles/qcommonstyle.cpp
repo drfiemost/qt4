@@ -5470,8 +5470,8 @@ QIcon QCommonStyle::standardIconImplementation(StandardPixmap standardIcon, cons
                 if (!linkIcon.isNull()) {
                     QIcon baseIcon = standardIconImplementation(SP_FileIcon, option, widget);
                     const QList<QSize> sizes = baseIcon.availableSizes(QIcon::Normal, QIcon::Off);
-                    for (int i = 0 ; i < sizes.size() ; ++i) {
-                        int size = sizes[i].width();
+                    for (auto i : sizes) {
+                        int size = i.width();
                         QPixmap basePixmap = baseIcon.pixmap(size);
                         QPixmap linkPixmap = linkIcon.pixmap(size/2);
                         QPainter painter(&basePixmap);
@@ -5487,8 +5487,8 @@ QIcon QCommonStyle::standardIconImplementation(StandardPixmap standardIcon, cons
                 if (!linkIcon.isNull()) {
                     QIcon baseIcon = standardIconImplementation(SP_DirIcon, option, widget);
                     const QList<QSize> sizes = baseIcon.availableSizes(QIcon::Normal, QIcon::Off);
-                    for (int i = 0 ; i < sizes.size() ; ++i) {
-                        int size = sizes[i].width();
+                    for (auto i : sizes) {
+                        int size = i.width();
                         QPixmap basePixmap = baseIcon.pixmap(size);
                         QPixmap linkPixmap = linkIcon.pixmap(size/2);
                         QPainter painter(&basePixmap);

@@ -1315,9 +1315,9 @@ void QLayoutSupport::showIndicator(Indicator i, const QRect &geometry, const QPa
 QLayoutSupport::~QLayoutSupport()
 {
     delete m_helper;
-    for (int i = 0; i < NumIndicators; i++)
-        if (m_indicators[i])
-            m_indicators[i]->deleteLater();
+    for (const auto & m_indicator : m_indicators)
+        if (m_indicator)
+            m_indicator->deleteLater();
 }
 
 QGridLayout * QLayoutSupport::gridLayout() const

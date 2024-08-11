@@ -1926,10 +1926,10 @@ QFontEngineFT::QGlyphSet::~QGlyphSet()
 void QFontEngineFT::QGlyphSet::clear()
 {
     if (fast_glyph_count > 0) {
-        for (int i = 0; i < 256; ++i) {
-            if (fast_glyph_data[i]) {
-                delete fast_glyph_data[i];
-                fast_glyph_data[i] = nullptr;
+        for (auto & i : fast_glyph_data) {
+            if (i) {
+                delete i;
+                i = nullptr;
             }
         }
         fast_glyph_count = 0;

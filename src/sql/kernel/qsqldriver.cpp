@@ -633,8 +633,8 @@ QString QSqlDriver::formatValue(const QSqlField &field, bool trimStrings) const
                 QByteArray ba = field.value().toByteArray();
                 QString res;
                 static const char hexchars[] = "0123456789abcdef";
-                for (int i = 0; i < ba.size(); ++i) {
-                    uchar s = (uchar) ba[i];
+                for (auto && i : ba) {
+                    uchar s = (uchar) i;
                     res += QLatin1Char(hexchars[s >> 4]);
                     res += QLatin1Char(hexchars[s & 0x0f]);
                 }

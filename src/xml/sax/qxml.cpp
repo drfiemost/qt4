@@ -3768,9 +3768,9 @@ bool QXmlSimpleReaderPrivate::processElementEmptyTag()
             namespaceSupport.popContext();
             // call the handler for prefix mapping
             prefixesAfter = namespaceSupport.prefixes();
-            for (QStringList::Iterator it = prefixesBefore.begin(); it != prefixesBefore.end(); ++it) {
-                if (!prefixesAfter.contains(*it)) {
-                    if (!contentHnd->endPrefixMapping(*it)) {
+            for (auto & it : prefixesBefore) {
+                if (!prefixesAfter.contains(it)) {
+                    if (!contentHnd->endPrefixMapping(it)) {
                         reportParseError(contentHnd->errorString());
                         return false;
                     }
@@ -7505,8 +7505,8 @@ bool QXmlSimpleReaderPrivate::processReference()
                     {
                         // Bypassed
                         stringAddC(QLatin1Char('&'));
-                        for (int i=0; i<(int)reference.length(); i++) {
-                            stringAddC(reference[i]);
+                        for (auto && i : reference) {
+                            stringAddC(i);
                         }
                         stringAddC(QLatin1Char(';'));
                         parseReference_charDataRead = true;
@@ -7527,8 +7527,8 @@ bool QXmlSimpleReaderPrivate::processReference()
                 if (parseReference_context == InEntityValue) {
                     // Bypassed
                     stringAddC(QLatin1Char('&'));
-                    for (int i=0; i<(int)reference.length(); i++) {
-                        stringAddC(reference[i]);
+                    for (auto && i : reference) {
+                        stringAddC(i);
                     }
                     stringAddC(QLatin1Char(';'));
                     parseReference_charDataRead = true;
@@ -7609,8 +7609,8 @@ bool QXmlSimpleReaderPrivate::processReference()
                         {
                             // Bypassed
                             stringAddC(QLatin1Char('&'));
-                            for (int i=0; i<(int)reference.length(); i++) {
-                                stringAddC(reference[i]);
+                            for (auto && i : reference) {
+                                stringAddC(i);
                             }
                             stringAddC(QLatin1Char(';'));
                             parseReference_charDataRead = true;

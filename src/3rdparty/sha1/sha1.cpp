@@ -155,8 +155,8 @@ static inline void sha1ProcessChunk(Sha1State *state, const unsigned char *buffe
 
     Sha1Chunk *chunk = &chunkBuffer;
 
-    for (int i = 0; i < 16; ++i)
-        chunk->words[i] = qFromBigEndian(chunk->words[i]);
+    for (unsigned int & word : chunk->words)
+        word = qFromBigEndian(word);
 
     sha1Round0(chunk,  0, a,b,c,d,e); sha1Round0(chunk,  1, e,a,b,c,d); sha1Round0(chunk,  2, d,e,a,b,c); sha1Round0(chunk,  3, c,d,e,a,b);
     sha1Round0(chunk,  4, b,c,d,e,a); sha1Round0(chunk,  5, a,b,c,d,e); sha1Round0(chunk,  6, e,a,b,c,d); sha1Round0(chunk,  7, d,e,a,b,c);

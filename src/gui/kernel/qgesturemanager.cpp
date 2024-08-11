@@ -594,9 +594,7 @@ void QGestureManager::deliverEvents(const QSet<QGesture *> &gestures,
 
     QSet<QGesture *> startedGestures;
     // first figure out the initial receivers of gestures
-    for (QSet<QGesture *>::const_iterator it = gestures.begin(),
-         e = gestures.end(); it != e; ++it) {
-        QGesture *gesture = *it;
+    for (auto gesture : gestures) {
         QWidget *target = m_gestureTargets.value(gesture, 0);
         if (!target) {
             // the gesture has just started and doesn't have a target yet.

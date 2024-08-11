@@ -825,8 +825,8 @@ void QHttpNetworkConnectionChannel::detectPipeliningSupport()
 // called when the connection broke and we need to queue some pipelined requests again
 void QHttpNetworkConnectionChannel::requeueCurrentlyPipelinedRequests()
 {
-    for (int i = 0; i < alreadyPipelinedRequests.length(); i++)
-        connection->d_func()->requeueRequest(alreadyPipelinedRequests.at(i));
+    for (const auto & alreadyPipelinedRequest : alreadyPipelinedRequests)
+        connection->d_func()->requeueRequest(alreadyPipelinedRequest);
     alreadyPipelinedRequests.clear();
 
     // only run when the QHttpNetworkConnection is not currently being destructed, e.g.

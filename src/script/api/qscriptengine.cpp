@@ -698,8 +698,8 @@ JSC::JSValue JSC_HOST_CALL functionConnect(JSC::ExecState *exec, JSC::JSObject *
             QString message = QString::fromLatin1("Function.prototype.connect: ambiguous connect to %0::%1(); candidates are\n")
                               .arg(QLatin1String(qtSignal->metaObject()->className()))
                               .arg(QLatin1String(signature.left(signature.indexOf('('))));
-            for (int i = 0; i < overloads.size(); ++i) {
-                QMetaMethod mtd = meta->method(overloads.at(i));
+            for (int overload : overloads) {
+                QMetaMethod mtd = meta->method(overload);
                 message.append(QString::fromLatin1("    %0\n").arg(QString::fromLatin1(mtd.signature())));
             }
             message.append(QString::fromLatin1("Use e.g. object['%0'].connect() to connect to a particular overload")
@@ -3554,8 +3554,8 @@ QScriptValue QScriptEngine::importExtension(const QString &extension)
         QString initjsFileName;
 
         // look for the extension in static plugins
-        for (int j = 0; j < staticPlugins.size(); ++j) {
-            iface = qobject_cast<QScriptExtensionInterface*>(staticPlugins.at(j));
+        for (auto staticPlugin : staticPlugins) {
+            iface = qobject_cast<QScriptExtensionInterface*>(staticPlugin);
             if (!iface)
                 continue;
             if (iface->keys().contains(ext))
@@ -3705,9 +3705,9 @@ QStringList QScriptEngine::availableExtensions() const
     QSet<QString> result;
 
     QObjectList staticPlugins = QPluginLoader::staticInstances();
-    for (int i = 0; i < staticPlugins.size(); ++i) {
+    for (auto staticPlugin : staticPlugins) {
         QScriptExtensionInterface *iface;
-        iface = qobject_cast<QScriptExtensionInterface*>(staticPlugins.at(i));
+        iface = qobject_cast<QScriptExtensionInterface*>(staticPlugin);
         if (iface) {
             QStringList keys = iface->keys();
             for (int j = 0; j < keys.count(); ++j)

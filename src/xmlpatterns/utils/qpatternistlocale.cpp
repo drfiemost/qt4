@@ -50,9 +50,9 @@ namespace QPatternist
         QString rich;
         rich.reserve(int(input.length() * 1.1));
 
-        for(int i = 0; i < input.length(); ++i)
+        for(auto i : input)
         {
-            switch(input.at(i).unicode())
+            switch(i.unicode())
             {
                 case '<':
                 {
@@ -80,7 +80,7 @@ namespace QPatternist
                     break;
                 }
                 default:
-                    rich += input.at(i);
+                    rich += i;
             }
         }
 

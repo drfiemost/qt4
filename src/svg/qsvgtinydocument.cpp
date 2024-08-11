@@ -340,8 +340,8 @@ void QSvgTinyDocument::draw(QPainter *p, const QString &id,
 
     p->setWorldTransform(currentTransform);
 
-    for (int i = 0; i < parentApplyStack.size(); ++i)
-        parentApplyStack[i]->revertStyle(p, m_states);
+    for (auto & i : parentApplyStack)
+        i->revertStyle(p, m_states);
 
     //p->fillRect(bounds.adjusted(-5, -5, 5, 5), QColor(0, 0, 255, 100));
 

@@ -86,8 +86,7 @@ struct QScriptDebuggerLocalsModelNode
 
     QScriptDebuggerLocalsModelNode *findChild(const QString &name)
     {
-        for (int i = 0; i < children.size(); ++i) {
-            QScriptDebuggerLocalsModelNode *child = children.at(i);
+        for (auto child : children) {
             if (child->property.name() == name)
                 return child;
         }
@@ -231,16 +230,16 @@ void QScriptDebuggerLocalsModelPrivate::addChildren(const QModelIndex &parentInd
     int first = parentNode->children.size();
     int last = first + props.size() - 1;
     q->beginInsertRows(parentIndex, first, last);
-    for (int i = 0; i < props.size(); ++i)
-        new QScriptDebuggerLocalsModelNode(props.at(i), parentNode);
+    for (const auto & prop : props)
+        new QScriptDebuggerLocalsModelNode(prop, parentNode);
     q->endInsertRows();
 }
 
 void QScriptDebuggerLocalsModelPrivate::deleteObjectSnapshots(const QList<qint64> &snapshotIds)
 {
     QScriptDebuggerCommandSchedulerFrontend frontend(commandScheduler, nullptr);
-    for (int i = 0; i < snapshotIds.size(); ++i)
-        frontend.scheduleDeleteScriptObjectSnapshot(snapshotIds.at(i));
+    for (long long snapshotId : snapshotIds)
+        frontend.scheduleDeleteScriptObjectSnapshot(snapshotId);
 }
 
 void QScriptDebuggerLocalsModelPrivate::deleteAllObjectSnapshots()

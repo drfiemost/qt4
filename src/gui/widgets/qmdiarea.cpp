@@ -1146,8 +1146,8 @@ void QMdiAreaPrivate::updateActiveWindow(int removedIndex, bool activeRemoved)
     }
 
     // Update indices list
-    for (int i = 0; i < indicesToActivatedChildren.size(); ++i) {
-        int *index = &indicesToActivatedChildren[i];
+    for (int & i : indicesToActivatedChildren) {
+        int *index = &i;
         if (*index > removedIndex)
             --*index;
     }
@@ -2653,8 +2653,8 @@ void QMdiArea::paintEvent(QPaintEvent *paintEvent)
     Q_D(QMdiArea);
     QPainter painter(d->viewport);
     const QVector<QRect> &exposedRects = paintEvent->region().rects();
-    for (int i = 0; i < exposedRects.size(); ++i)
-        painter.fillRect(exposedRects.at(i), d->background);
+    for (auto exposedRect : exposedRects)
+        painter.fillRect(exposedRect, d->background);
 }
 
 /*!

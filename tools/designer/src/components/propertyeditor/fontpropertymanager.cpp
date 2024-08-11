@@ -68,8 +68,8 @@ namespace qdesigner_internal {
         m_createdFontProperty(nullptr)
     {
         const int nameCount = sizeof(aliasingC)/sizeof(const char *);
-        for (int  i = 0; i < nameCount; i++)
-            m_aliasingEnumNames.push_back(QCoreApplication::translate("FontPropertyManager", aliasingC[i]));
+        for (auto & i : aliasingC)
+            m_aliasingEnumNames.push_back(QCoreApplication::translate("FontPropertyManager", i));
 
         QString errorMessage;
         if (!readFamilyMapping(&m_familyMappings, &errorMessage)) {

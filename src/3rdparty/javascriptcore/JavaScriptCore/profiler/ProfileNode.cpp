@@ -88,10 +88,10 @@ ProfileNode::ProfileNode(ProfileNode* headNode, ProfileNode* nodeToCopy)
 
 ProfileNode* ProfileNode::willExecute(const CallIdentifier& callIdentifier)
 {
-    for (StackIterator currentChild = m_children.begin(); currentChild != m_children.end(); ++currentChild) {
-        if ((*currentChild)->callIdentifier() == callIdentifier) {
-            (*currentChild)->startTimer();
-            return (*currentChild).get();
+    for (const auto & currentChild : m_children) {
+        if (currentChild->callIdentifier() == callIdentifier) {
+            currentChild->startTimer();
+            return currentChild.get();
         }
     }
 
@@ -122,9 +122,9 @@ ProfileNode* ProfileNode::findChild(ProfileNode* node) const
     if (!node)
         return nullptr;
 
-    for (size_t i = 0; i < m_children.size(); ++i) {
-        if (*node == m_children[i].get())
-            return m_children[i].get();
+    for (const auto & i : m_children) {
+        if (*node == i.get())
+            return i.get();
     }
 
     return nullptr;
@@ -149,8 +149,8 @@ void ProfileNode::insertNode(PassRefPtr<ProfileNode> prpNode)
 {
     RefPtr<ProfileNode> node = prpNode;
 
-    for (unsigned i = 0; i < m_children.size(); ++i)
-        node->addChild(m_children[i].release());
+    for (auto & i : m_children)
+        node->addChild(i.release());
 
     m_children.clear();
     m_children.append(node.release());
@@ -166,8 +166,8 @@ void ProfileNode::stopProfiling()
     ASSERT(m_actualSelfTime == 0.0 && m_startTime == 0.0);
 
     // Because we iterate in post order all of our children have been stopped before us.
-    for (unsigned i = 0; i < m_children.size(); ++i)
-        m_actualSelfTime += m_children[i]->totalTime();
+    for (const auto & i : m_children)
+        m_actualSelfTime += i->totalTime();
 
     ASSERT(m_actualSelfTime <= m_actualTotalTime);
     m_actualSelfTime = m_actualTotalTime - m_actualSelfTime;
@@ -224,9 +224,9 @@ void ProfileNode::calculateVisibleTotalTime()
 {
     double sumOfVisibleChildrensTime = 0.0;
 
-    for (unsigned i = 0; i < m_children.size(); ++i) {
-        if (m_children[i]->visible())
-            sumOfVisibleChildrensTime += m_children[i]->totalTime();
+    for (const auto & i : m_children) {
+        if (i->visible())
+            sumOfVisibleChildrensTime += i->totalTime();
     }
 
     m_visibleTotalTime = m_visibleSelfTime + sumOfVisibleChildrensTime;

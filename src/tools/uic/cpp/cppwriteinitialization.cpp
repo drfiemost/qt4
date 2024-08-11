@@ -531,9 +531,7 @@ void WriteInitialization::acceptUI(DomUI *node)
         writeSetupUIScriptVariableDeclarations(m_indent, m_output);
 
     const QStringList connections = m_uic->databaseInfo()->connections();
-    for (int i=0; i<connections.size(); ++i) {
-        QString connection = connections.at(i);
-
+    for (auto connection : connections) {
         if (connection == QLatin1String("(default)"))
             continue;
 
@@ -545,9 +543,7 @@ void WriteInitialization::acceptUI(DomUI *node)
 
     if (m_buddies.size() > 0)
         openIfndef(m_output, QLatin1String(shortcutDefineC));
-    for (int i=0; i<m_buddies.size(); ++i) {
-        const Buddy &b = m_buddies.at(i);
-
+    for (const auto & b : m_buddies) {
         if (!m_registeredWidgets.contains(b.objName)) {
             fprintf(stderr, "%s: Warning: Buddy assignment: '%s' is not a valid widget.\n",
                     qPrintable(m_option.messagePrefix()),
@@ -877,9 +873,7 @@ void WriteInitialization::acceptWidget(DomWidget *node)
         m_layoutChain.pop();
 
     const QStringList zOrder = node->elementZOrder();
-    for (int i = 0; i < zOrder.size(); ++i) {
-        const QString name = zOrder.at(i);
-
+    for (auto name : zOrder) {
         if (!m_registeredWidgets.contains(name)) {
             fprintf(stderr, "%s: Warning: Z-order assignment: '%s' is not a valid widget.\n",
                     qPrintable(m_option.messagePrefix()),
@@ -993,8 +987,7 @@ void WriteInitialization::acceptLayout(DomLayout *node)
     if (m_layoutWidget) {
         bool left, top, right, bottom;
         left = top = right = bottom = false;
-        for (int i = 0; i < propList.size(); ++i) {
-            const DomProperty *p = propList.at(i);
+        for (auto p : propList) {
             const QString propertyName = p->attributeName();
             if (propertyName == QLatin1String("leftMargin") && p->kind() == DomProperty::Number)
                 left = true;
@@ -1234,8 +1227,7 @@ void WriteInitialization::writeProperties(const QString &varName,
     leftMargin = topMargin = rightMargin = bottomMargin = -1;
     bool frameShadowEncountered = false;
 
-    for (int i=0; i<lst.size(); ++i) {
-        const DomProperty *p = lst.at(i);
+    for (auto p : lst) {
         if (!checkProperty(m_option.inputFile, p))
             continue;
         const QString propertyName = p->attributeName();
@@ -1519,9 +1511,9 @@ void WriteInitialization::writeProperties(const QString &varName,
             propertyValue = QLatin1String("QStringList()");
             if (p->elementStringList()->elementString().size()) {
                 const QStringList lst = p->elementStringList()->elementString();
-                for (int i=0; i<lst.size(); ++i) {
+                for (const auto & i : lst) {
                     propertyValue += QLatin1String(" << QString::fromUtf8(");
-                    propertyValue += fixString(lst.at(i), m_dindent);
+                    propertyValue += fixString(i, m_dindent);
                     propertyValue += QLatin1Char(')');
                 }
             }
@@ -1948,9 +1940,7 @@ void WriteInitialization::initializeQ3ListBox(DomWidget *w)
 
     m_refreshOut << m_indent << varName << "->clear();\n";
 
-    for (int i=0; i<items.size(); ++i) {
-        const DomItem *item = items.at(i);
-
+    for (auto item : items) {
         const DomPropertyMap properties = propertyMap(item->elementProperty());
         const DomProperty *text = properties.value(QLatin1String("text"));
         const DomProperty *pixmap = properties.value(QLatin1String("pixmap"));
@@ -1982,9 +1972,7 @@ void WriteInitialization::initializeQ3IconView(DomWidget *w)
 
     m_refreshOut << m_indent << varName << "->clear();\n";
 
-    for (int i=0; i<items.size(); ++i) {
-        const DomItem *item = items.at(i);
-
+    for (auto item : items) {
         const DomPropertyMap properties = propertyMap(item->elementProperty());
         const DomProperty *text = properties.value(QLatin1String("text"));
         const DomProperty *pixmap = properties.value(QLatin1String("pixmap"));
@@ -2052,17 +2040,14 @@ void WriteInitialization::initializeQ3ListViewItems(const QString &className, co
         return;
 
     // items
-    for (int i=0; i<items.size(); ++i) {
-        const DomItem *item = items.at(i);
-
+    for (auto item : items) {
         const QString itemName = m_driver->unique(QLatin1String("__item"));
         m_refreshOut << "\n";
         m_refreshOut << m_indent << "Q3ListViewItem *" << itemName << " = new Q3ListViewItem(" << varName << ");\n";
 
         int textCount = 0, pixCount = 0;
         const DomPropertyList properties = item->elementProperty();
-        for (int i=0; i<properties.size(); ++i) {
-            const DomProperty *p = properties.at(i);
+        for (auto p : properties) {
             if (p->attributeName() == QLatin1String("text"))
                 m_refreshOut << m_indent << itemName << "->setText(" << textCount++ << ", "
                            << trCall(p->elementString()) << ");\n";
@@ -2249,8 +2234,8 @@ void WriteInitialization::initializeComboBox(DomWidget *w)
         if (translatable)
             o << m_indent << varName << "->clear();\n";
         o << m_indent << varName << "->insertItems(0, QStringList()" << '\n';
-        for (int i = 0; i < list.size(); ++i)
-            o << m_indent << " << " << list.at(i) << "\n";
+        for (const auto & i : list)
+            o << m_indent << " << " << i << "\n";
         o << m_indent << ");\n";
     } else {
         for (int i = 0; i < items.size(); ++i) {
@@ -2484,9 +2469,7 @@ QList<WriteInitialization::Item *> WriteInitialization::initializeTreeWidgetItem
     // items
     QList<Item *> items;
 
-    for (int i = 0; i < domItems.size(); ++i) {
-        const DomItem *domItem = domItems.at(i);
-
+    for (auto domItem : domItems) {
         Item *item = new Item(QLatin1String("QTreeWidgetItem"), m_indent, m_output, m_refreshOut, m_driver);
         items << item;
 
@@ -2494,8 +2477,7 @@ QList<WriteInitialization::Item *> WriteInitialization::initializeTreeWidgetItem
 
         int col = -1;
         const DomPropertyList properties = domItem->elementProperty();
-        for (int j = 0; j < properties.size(); ++j) {
-            DomProperty *p = properties.at(j);
+        for (auto p : properties) {
             if (p->attributeName() == QLatin1String("text")) {
                 if (!map.isEmpty()) {
                     addCommonInitializers(item, map, col);
@@ -2569,8 +2551,7 @@ void WriteInitialization::initializeTableWidget(DomWidget *w)
 
     const QList<DomItem *> items = w->elementItem();
 
-    for (int i = 0; i < items.size(); ++i) {
-        const DomItem *cell = items.at(i);
+    for (auto cell : items) {
         if (cell->hasAttributeRow() && cell->hasAttributeColumn() && !cell->elementProperty().isEmpty()) {
             const int r = cell->attributeRow();
             const int c = cell->attributeColumn();

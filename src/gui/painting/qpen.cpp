@@ -904,8 +904,8 @@ QDataStream &operator<<(QDataStream &s, const QPen &p)
             // data that cannot be read on other platforms.
             QVector<qreal> pattern = p.dashPattern();
             s << quint32(pattern.size());
-            for (int i = 0; i < pattern.size(); ++i)
-                s << double(pattern.at(i));
+            for (double i : pattern)
+                s << double(i);
         }
         if (s.version() >= 9)
             s << double(p.dashOffset());

@@ -1123,11 +1123,11 @@ void Structure::getPropertyNames(PropertyNameArray& propertyNames, EnumerationMo
 
     // Put the keys of the sorted entries into the list.
     if (!propertyNames.size()) {
-        for (size_t i = 0; i < sortedEnumerables.size(); ++i)
-            propertyNames.addKnownUnique(sortedEnumerables[i]->key);
+        for (auto & sortedEnumerable : sortedEnumerables)
+            propertyNames.addKnownUnique(sortedEnumerable->key);
     } else {
-        for (size_t i = 0; i < sortedEnumerables.size(); ++i)
-            propertyNames.add(sortedEnumerables[i]->key);
+        for (auto & sortedEnumerable : sortedEnumerables)
+            propertyNames.add(sortedEnumerable->key);
     }
 }
 

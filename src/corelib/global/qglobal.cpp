@@ -2908,8 +2908,8 @@ bool QInternal::activateCallbacks(Callback cb, void **parameters)
     if (cbt && cb < cbt->callbacks.size()) {
         QList<qInternalCallback> callbacks = cbt->callbacks[cb];
         bool ret = false;
-        for (int i=0; i<callbacks.size(); ++i)
-            ret |= (callbacks.at(i))(parameters);
+        for (auto callback : callbacks)
+            ret |= callback(parameters);
         return ret;
     }
     return false;

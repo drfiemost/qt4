@@ -486,8 +486,7 @@ JITCode JIT::privateCompile()
     LinkBuffer patchBuffer(this, m_globalData->executableAllocator.poolForSize(m_assembler.size()));
 
     // Translate vPC offsets into addresses in JIT generated code, for switch tables.
-    for (unsigned i = 0; i < m_switches.size(); ++i) {
-        SwitchRecord record = m_switches[i];
+    for (auto record : m_switches) {
         unsigned bytecodeIndex = record.bytecodeIndex;
 
         if (record.type != SwitchRecord::String) {
@@ -518,20 +517,20 @@ JITCode JIT::privateCompile()
         handler.nativeCode = patchBuffer.locationOf(m_labels[handler.target]);
     }
 
-    for (Vector<CallRecord>::iterator iter = m_calls.begin(); iter != m_calls.end(); ++iter) {
-        if (iter->to)
-            patchBuffer.link(iter->from, FunctionPtr(iter->to));
+    for (auto & m_call : m_calls) {
+        if (m_call.to)
+            patchBuffer.link(m_call.from, FunctionPtr(m_call.to));
     }
 
     if (m_codeBlock->hasExceptionInfo()) {
         m_codeBlock->callReturnIndexVector().reserveCapacity(m_calls.size());
-        for (Vector<CallRecord>::iterator iter = m_calls.begin(); iter != m_calls.end(); ++iter)
-            m_codeBlock->callReturnIndexVector().append(CallReturnOffsetToBytecodeIndex(patchBuffer.returnAddressOffset(iter->from), iter->bytecodeIndex));
+        for (auto & m_call : m_calls)
+            m_codeBlock->callReturnIndexVector().append(CallReturnOffsetToBytecodeIndex(patchBuffer.returnAddressOffset(m_call.from), m_call.bytecodeIndex));
     }
 
     // Link absolute addresses for jsr
-    for (Vector<JSRInfo>::iterator iter = m_jsrSites.begin(); iter != m_jsrSites.end(); ++iter)
-        patchBuffer.patch(iter->storeLocation, patchBuffer.locationOf(iter->target).executableAddress());
+    for (auto & m_jsrSite : m_jsrSites)
+        patchBuffer.patch(m_jsrSite.storeLocation, patchBuffer.locationOf(m_jsrSite.target).executableAddress());
 
 #if ENABLE(JIT_OPTIMIZE_PROPERTY_ACCESS)
     for (unsigned i = 0; i < m_codeBlock->numberOfStructureStubInfos(); ++i) {

@@ -739,8 +739,8 @@ void QToolButtonPrivate::popupTimerDone()
     } else {
         actualMenu = new QMenu(q);
         mustDeleteActualMenu = true;
-        for(int i = 0; i < actions.size(); i++)
-            actualMenu->addAction(actions.at(i));
+        for(auto action : actions)
+            actualMenu->addAction(action);
     }
     repeat = q->autoRepeat();
     q->setAutoRepeat(false);
