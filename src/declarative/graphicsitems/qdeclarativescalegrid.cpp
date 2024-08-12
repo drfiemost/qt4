@@ -58,8 +58,7 @@ QDeclarativeScaleGrid::QDeclarativeScaleGrid(QObject *parent) : QObject(parent),
 }
 
 QDeclarativeScaleGrid::~QDeclarativeScaleGrid()
-{
-}
+= default;
 
 bool QDeclarativeScaleGrid::isNull() const
 {
@@ -105,21 +104,11 @@ QDeclarativeGridScaledImage::QDeclarativeGridScaledImage()
 }
 
 QDeclarativeGridScaledImage::QDeclarativeGridScaledImage(const QDeclarativeGridScaledImage &o)
-: _l(o._l), _r(o._r), _t(o._t), _b(o._b), _h(o._h), _v(o._v), _pix(o._pix)
-{
-}
+ 
+= default;
 
 QDeclarativeGridScaledImage &QDeclarativeGridScaledImage::operator=(const QDeclarativeGridScaledImage &o)
-{
-    _l = o._l;
-    _r = o._r;
-    _t = o._t;
-    _b = o._b;
-    _h = o._h;
-    _v = o._v;
-    _pix = o._pix;
-    return *this;
-}
+= default;
 
 QDeclarativeGridScaledImage::QDeclarativeGridScaledImage(QIODevice *data)
 : _l(-1), _r(-1), _t(-1), _b(-1), _h(QDeclarativeBorderImage::Stretch), _v(QDeclarativeBorderImage::Stretch)

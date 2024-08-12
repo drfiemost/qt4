@@ -133,8 +133,7 @@ QTextCodecPlugin::QTextCodecPlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QTextCodecPlugin::~QTextCodecPlugin()
-{
-}
+= default;
 
 QStringList QTextCodecPlugin::keys() const
 {

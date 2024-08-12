@@ -69,7 +69,7 @@ class QString;
 class QDESIGNER_SDK_EXPORT QDesignerSettingsInterface
 {
 public:
-    virtual ~QDesignerSettingsInterface() {}
+    virtual ~QDesignerSettingsInterface() = default;
 
     virtual void beginGroup(const QString &prefix) = 0;
     virtual void endGroup() = 0;

@@ -355,8 +355,7 @@ QStyle::QStyle(QStylePrivate &dd)
     Destroys the style object.
 */
 QStyle::~QStyle()
-{
-}
+= default;
 
 /*!
     Initializes the appearance of the given \a widget.

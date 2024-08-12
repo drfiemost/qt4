@@ -11,8 +11,7 @@ CL_NS_USE(util)
 CL_NS_DEF(store)
 
 	IndexInput::IndexInput()
-	{
-	}
+	= default;
 	IndexInput::IndexInput(const IndexInput& other)
 	{
 	}
@@ -216,8 +215,7 @@ IndexInputStream::IndexInputStream(IndexInput* input){
 	this->size = input->length();
     this->position = input->getFilePointer();
 }
-IndexInputStream::~IndexInputStream(){
-}
+IndexInputStream::~IndexInputStream()= default;
 int32_t IndexInputStream::fillBuffer(char* start, int32_t space){
     int64_t avail = input->length()-input->getFilePointer();
     if ( avail == 0 )

@@ -55,8 +55,7 @@ QFSFileEngineIterator::QFSFileEngineIterator(QDir::Filters filters, const QStrin
 }
 
 QFSFileEngineIterator::~QFSFileEngineIterator()
-{
-}
+= default;
 
 bool QFSFileEngineIterator::hasNext() const
 {

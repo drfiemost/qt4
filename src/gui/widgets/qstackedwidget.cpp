@@ -192,8 +192,7 @@ QStackedWidget::QStackedWidget(QWidget *parent)
     Destroys this stacked widget, and frees any allocated resources.
 */
 QStackedWidget::~QStackedWidget()
-{
-}
+= default;
 
 /*!
     Appends the given \a widget to the QStackedWidget and returns the

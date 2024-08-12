@@ -174,7 +174,7 @@ namespace QPatternist
             /**
              * @short This class can only be used via its static members.
              */
-            inline CompressedWhitespace();
+            inline CompressedWhitespace() = delete;
             Q_DISABLE_COPY(CompressedWhitespace)
     };
 }

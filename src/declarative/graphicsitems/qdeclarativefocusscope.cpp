@@ -68,6 +68,5 @@ QDeclarativeFocusScope::QDeclarativeFocusScope(QDeclarativeItem *parent) :
 }
 
 QDeclarativeFocusScope::~QDeclarativeFocusScope()
-{
-}
+= default;
 QT_END_NAMESPACE

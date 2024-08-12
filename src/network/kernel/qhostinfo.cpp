@@ -311,8 +311,7 @@ QHostInfo &QHostInfo::operator=(const QHostInfo &other)
     Destroys the host info object.
 */
 QHostInfo::~QHostInfo()
-{
-}
+= default;
 
 /*!
     Returns the list of IP addresses associated with hostName(). This

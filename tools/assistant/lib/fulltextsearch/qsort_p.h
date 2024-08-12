@@ -58,7 +58,7 @@ public:
     bool deleteCLuceneSort;
 
 private:
-    QCLuceneSortPrivate &operator=(const QCLuceneSortPrivate &other);
+    QCLuceneSortPrivate &operator=(const QCLuceneSortPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneSort

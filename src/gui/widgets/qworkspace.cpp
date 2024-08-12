@@ -1146,8 +1146,7 @@ QWorkspacePrivate::init()
 */
 
 QWorkspace::~QWorkspace()
-{
-}
+= default;
 
 /*! \reimp */
 QSize QWorkspace::sizeHint() const

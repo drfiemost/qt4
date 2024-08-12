@@ -92,7 +92,7 @@ private:
         QRect rect;
         QList<Box> boxes;
 
-        Paragraph() { }
+        Paragraph() = default;
         Paragraph( QPoint p ) : rect( p, QSize(0, 0) ) { }
     };
 

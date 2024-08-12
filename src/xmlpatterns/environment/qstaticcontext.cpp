@@ -49,8 +49,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 StaticContext::~StaticContext()
-{
-}
+= default;
 
 void StaticContext::wrapExpressionWith(const SourceLocationReflection *const existingNode,
                                        const QExplicitlySharedDataPointer<Expression> &newNode)

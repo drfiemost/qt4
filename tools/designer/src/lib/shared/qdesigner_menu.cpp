@@ -123,8 +123,7 @@ QDesignerMenu::QDesignerMenu(QWidget *parent) :
 }
 
 QDesignerMenu::~QDesignerMenu()
-{
-}
+= default;
 
 void QDesignerMenu::slotAdjustSizeNow()
 {

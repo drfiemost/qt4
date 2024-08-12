@@ -56,7 +56,7 @@ class QString; // FIXME: fool syncqt
 class QDesignerMemberSheetExtension
 {
 public:
-    virtual ~QDesignerMemberSheetExtension() {}
+    virtual ~QDesignerMemberSheetExtension() = default;
 
     virtual int count() const = 0;
 

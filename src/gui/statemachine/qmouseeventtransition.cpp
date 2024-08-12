@@ -85,8 +85,7 @@ public:
 };
 
 QMouseEventTransitionPrivate::QMouseEventTransitionPrivate()
-{
-}
+= default;
 
 /*!
   Constructs a new mouse event transition with the given \a sourceState.

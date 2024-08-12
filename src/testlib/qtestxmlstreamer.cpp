@@ -59,7 +59,7 @@ QTestXmlStreamer::QTestXmlStreamer()
 }
 
 QTestXmlStreamer::~QTestXmlStreamer()
-{}
+= default;
 
 void QTestXmlStreamer::formatStart(const QTestElement *element, QTestCharBuffer *formatted) const
 {

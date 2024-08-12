@@ -50,8 +50,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 ItemType::~ItemType()
-{
-}
+= default;
 
 const ItemType &ItemType::operator|(const ItemType &other) const
 {

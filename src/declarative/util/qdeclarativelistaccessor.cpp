@@ -57,8 +57,7 @@ QDeclarativeListAccessor::QDeclarativeListAccessor()
 }
 
 QDeclarativeListAccessor::~QDeclarativeListAccessor()
-{
-}
+= default;
 
 QVariant QDeclarativeListAccessor::list() const
 {

@@ -279,8 +279,7 @@ QHttpNetworkReplyPrivate::QHttpNetworkReplyPrivate(const QUrl &newUrl)
 }
 
 QHttpNetworkReplyPrivate::~QHttpNetworkReplyPrivate()
-{
-}
+= default;
 
 void QHttpNetworkReplyPrivate::clearHttpLayerInformation()
 {

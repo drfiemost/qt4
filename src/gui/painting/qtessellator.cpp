@@ -76,7 +76,7 @@ class QTessellatorPrivate {
 public:
     struct Vertices;
 
-    QTessellatorPrivate() {}
+    QTessellatorPrivate() = default;
 
     QRectF collectAndSortVertices(const QPointF *points, int *maxActiveEdges);
     void cancelCoincidingEdges();

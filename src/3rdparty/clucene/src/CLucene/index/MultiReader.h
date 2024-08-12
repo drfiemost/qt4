@@ -101,7 +101,7 @@ public:
 class MultiTermPositions:public MultiTermDocs,public TermPositions {
 public:
 	MultiTermPositions(IndexReader** subReaders, const int32_t* s);
-	~MultiTermPositions() {};
+	~MultiTermPositions() = default;
 	int32_t nextPosition();
 
 

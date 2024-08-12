@@ -99,7 +99,7 @@ public:
     typedef QVector<QExplicitlySharedDataPointer<QAbstractXmlForwardIterator<T> > > Vector;
 
     inline QAbstractXmlForwardIterator() : d_ptr(nullptr) {}
-    virtual ~QAbstractXmlForwardIterator() {}
+    virtual ~QAbstractXmlForwardIterator() = default;
 
     virtual T next() = 0;
     virtual T current() const = 0;

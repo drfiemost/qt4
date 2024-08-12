@@ -301,8 +301,7 @@ QDeclarativeSmoothedAnimation::QDeclarativeSmoothedAnimation(QObject *parent)
 }
 
 QDeclarativeSmoothedAnimation::~QDeclarativeSmoothedAnimation()
-{
-}
+= default;
 
 QDeclarativeSmoothedAnimationPrivate::QDeclarativeSmoothedAnimationPrivate()
     : wrapperGroup(new QParallelAnimationGroup), anim(new QSmoothedAnimation)

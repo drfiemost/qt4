@@ -190,8 +190,7 @@ QPSPrintEnginePrivate::QPSPrintEnginePrivate(QPrinter::PrinterMode m)
 }
 
 QPSPrintEnginePrivate::~QPSPrintEnginePrivate()
-{
-}
+= default;
 
 QT_BEGIN_INCLUDE_NAMESPACE
 #include <qdebug.h>

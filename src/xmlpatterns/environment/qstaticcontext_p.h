@@ -154,8 +154,7 @@ namespace QPatternist
         };
 
         inline StaticContext()
-        {
-        }
+        = default;
 
         ~StaticContext() override;
 

@@ -68,8 +68,7 @@ QKeyMapper::QKeyMapper()
     Destroys the key mapper.
 */
 QKeyMapper::~QKeyMapper()
-{
-}
+= default;
 
 QList<int> QKeyMapper::possibleKeys(QKeyEvent *e)
 {

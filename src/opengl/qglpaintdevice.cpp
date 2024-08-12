@@ -60,8 +60,7 @@ QGLPaintDevice::QGLPaintDevice()
 }
 
 QGLPaintDevice::~QGLPaintDevice()
-{
-}
+= default;
 
 int QGLPaintDevice::metric(QPaintDevice::PaintDeviceMetric metric) const
 {
@@ -154,8 +153,7 @@ bool QGLPaintDevice::isFlipped() const
 ////////////////// QGLWidgetGLPaintDevice //////////////////
 
 QGLWidgetGLPaintDevice::QGLWidgetGLPaintDevice()
-{
-}
+= default;
 
 QPaintEngine* QGLWidgetGLPaintDevice::paintEngine() const
 {

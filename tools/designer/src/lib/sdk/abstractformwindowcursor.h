@@ -77,7 +77,7 @@ public:
     };
 
 public:
-    virtual ~QDesignerFormWindowCursorInterface() {}
+    virtual ~QDesignerFormWindowCursorInterface() = default;
 
     virtual QDesignerFormWindowInterface *formWindow() const = 0;
 

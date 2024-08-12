@@ -70,7 +70,7 @@ class QScriptBreakpointsWidgetInterface;
 class Q_AUTOTEST_EXPORT QScriptDebuggerWidgetFactoryInterface
 {
 public:
-    virtual ~QScriptDebuggerWidgetFactoryInterface() {}
+    virtual ~QScriptDebuggerWidgetFactoryInterface() = default;
 
     virtual QScriptDebugOutputWidgetInterface *createDebugOutputWidget() = 0;
     virtual QScriptDebuggerConsoleWidgetInterface *createConsoleWidget() = 0;

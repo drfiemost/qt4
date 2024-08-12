@@ -58,7 +58,7 @@ public:
 		__cl_refcount--;
 		return __cl_refcount;
 	}
-    virtual ~LuceneBase(){};
+    virtual ~LuceneBase()= default;
 };
 
 class LuceneVoidBase{
@@ -68,7 +68,7 @@ class LuceneVoidBase{
 		//used correctly.
 		int dummy__see_mem_h_for_details; 
 	#endif
-        virtual ~LuceneVoidBase(){};
+        virtual ~LuceneVoidBase()= default;
 };
 
 CL_NS_END

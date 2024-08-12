@@ -250,8 +250,7 @@ LayoutPropertySheet::LayoutPropertySheet(QLayout *l, QObject *parent)
 }
 
 LayoutPropertySheet::~LayoutPropertySheet()
-{
-}
+= default;
 
 void LayoutPropertySheet::setProperty(int index, const QVariant &value)
 {

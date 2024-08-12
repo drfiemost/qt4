@@ -69,7 +69,7 @@ public:
     };
 
     QStaticTextUserData(Type t) : ref(0), type(t) {}
-    virtual ~QStaticTextUserData() {}
+    virtual ~QStaticTextUserData() = default;
 
     QAtomicInt ref;
     Type type;

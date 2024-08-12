@@ -92,7 +92,7 @@ namespace QAccessible2
 class Q_GUI_EXPORT QAccessible2Interface
 {
 public:
-    virtual ~QAccessible2Interface() {}
+    virtual ~QAccessible2Interface() = default;
 };
 
 // catch-all functions. If an accessible class doesn't implement interface T, return 0
@@ -133,7 +133,7 @@ class Q_GUI_EXPORT QAccessibleTextInterface: public QAccessible2Interface
 public:
     inline QAccessible2Interface *qAccessibleTextCastHelper() { return this; }
 
-    ~QAccessibleTextInterface() override {}
+    ~QAccessibleTextInterface() override = default;
 
     virtual void addSelection(int startOffset, int endOffset) = 0;
     virtual QString attributes(int offset, int *startOffset, int *endOffset) = 0;
@@ -161,7 +161,7 @@ class Q_GUI_EXPORT QAccessibleEditableTextInterface: public QAccessible2Interfac
 public:
     inline QAccessible2Interface *qAccessibleEditableTextCastHelper() { return this; }
 
-    ~QAccessibleEditableTextInterface() override {}
+    ~QAccessibleEditableTextInterface() override = default;
 
     virtual void copyText(int startOffset, int endOffset) = 0;
     virtual void deleteText(int startOffset, int endOffset) = 0;
@@ -194,7 +194,7 @@ class Q_GUI_EXPORT QAccessibleValueInterface: public QAccessible2Interface
 public:
     inline QAccessible2Interface *qAccessibleValueCastHelper() { return this; }
 
-    ~QAccessibleValueInterface() override {}
+    ~QAccessibleValueInterface() override = default;
 
     virtual QVariant currentValue() = 0;
     virtual void setCurrentValue(const QVariant &value) = 0;

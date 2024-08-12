@@ -250,9 +250,8 @@ void QDBusPendingCallPrivate::waitForFinished()
     that both objects will refer to the same pending call.
 */
 QDBusPendingCall::QDBusPendingCall(const QDBusPendingCall &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     \internal
@@ -290,10 +289,7 @@ QDBusPendingCall::~QDBusPendingCall()
     the reply's contents when it arrives.
 */
 QDBusPendingCall &QDBusPendingCall::operator=(const QDBusPendingCall &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     \fn bool QDBusPendingCallWatcher::isFinished() const
@@ -518,8 +514,7 @@ QDBusPendingCallWatcher::QDBusPendingCallWatcher(const QDBusPendingCall &call, Q
     canceled.
 */
 QDBusPendingCallWatcher::~QDBusPendingCallWatcher()
-{
-}
+= default;
 
 /*!
     \fn void QDBusPendingCallWatcher::waitForFinished()

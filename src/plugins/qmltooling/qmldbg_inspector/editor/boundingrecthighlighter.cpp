@@ -96,9 +96,7 @@ BoundingRectHighlighter::BoundingRectHighlighter(QDeclarativeViewInspector *view
 }
 
 BoundingRectHighlighter::~BoundingRectHighlighter()
-{
-
-}
+= default;
 
 void BoundingRectHighlighter::clear()
 {

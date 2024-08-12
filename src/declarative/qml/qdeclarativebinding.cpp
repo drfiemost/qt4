@@ -288,8 +288,7 @@ QDeclarativeBinding::QDeclarativeBinding(const QScriptValue &func, QObject *obj,
 }
 
 QDeclarativeBinding::~QDeclarativeBinding()
-{
-}
+= default;
 
 void QDeclarativeBinding::setTarget(const QDeclarativeProperty &prop)
 {

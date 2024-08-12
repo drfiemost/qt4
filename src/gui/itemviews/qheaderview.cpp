@@ -335,8 +335,7 @@ QHeaderView::QHeaderView(QHeaderViewPrivate &dd,
 */
 
 QHeaderView::~QHeaderView()
-{
-}
+= default;
 
 /*!
   \internal

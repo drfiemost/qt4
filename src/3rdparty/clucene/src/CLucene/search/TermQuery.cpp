@@ -92,8 +92,7 @@ CL_NS_DEF(search)
 		queryNorm=0;
 		queryWeight=0;
 	}
-   TermQuery::TermWeight::~TermWeight(){
-   }
+   TermQuery::TermWeight::~TermWeight()= default;
 
     //return a *new* string describing this object
 	TCHAR* TermQuery::TermWeight::toString() { 

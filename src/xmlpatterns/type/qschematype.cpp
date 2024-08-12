@@ -46,12 +46,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 SchemaType::SchemaType()
-{
-}
+= default;
 
 SchemaType::~SchemaType()
-{
-}
+= default;
 
 bool SchemaType::isSimpleType() const
 {

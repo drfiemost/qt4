@@ -2543,8 +2543,7 @@ QTreeWidget::QTreeWidget(QWidget *parent)
 */
 
 QTreeWidget::~QTreeWidget()
-{
-}
+= default;
 
 /*
   Retuns the number of header columns in the view.

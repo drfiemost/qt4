@@ -291,8 +291,7 @@ QMimeData::QMimeData()
     Destroys the MIME data object.
 */
 QMimeData::~QMimeData()
-{
-}
+= default;
 
 /*!
     Returns a list of URLs contained within the MIME data object.

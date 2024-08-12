@@ -20,8 +20,7 @@ TransactionalRAMDirectory::TransactionalRAMDirectory()
 }
 
 TransactionalRAMDirectory::~TransactionalRAMDirectory()
-{
-}
+= default;
 
 bool TransactionalRAMDirectory::archiveOrigFileIfNecessary(const QString& name)
 {

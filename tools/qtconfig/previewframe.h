@@ -53,7 +53,7 @@ class Workspace : public QMdiArea
 
 public:
     Workspace(PreviewFrame *parent = nullptr);
-    ~Workspace() override {}
+    ~Workspace() override = default;
 
 protected:
     void paintEvent(QPaintEvent *) override;

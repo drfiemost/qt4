@@ -21,8 +21,7 @@ CL_NS_DEF2(analysis,standard)
   {
   }
 
-  StandardFilter::~StandardFilter(){
-  }
+  StandardFilter::~StandardFilter()= default;
 
   bool StandardFilter::next(Token* t) {
     if (!input->next(t))

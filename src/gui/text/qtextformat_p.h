@@ -62,7 +62,7 @@ QT_BEGIN_NAMESPACE
 class Q_GUI_EXPORT QTextFormatCollection
 {
 public:
-    QTextFormatCollection() {}
+    QTextFormatCollection() = default;
     ~QTextFormatCollection();
 
     QTextFormatCollection(const QTextFormatCollection &rhs);

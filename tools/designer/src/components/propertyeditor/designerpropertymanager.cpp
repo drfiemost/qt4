@@ -2238,8 +2238,7 @@ DesignerEditorFactory::DesignerEditorFactory(QDesignerFormEditorInterface *core,
 }
 
 DesignerEditorFactory::~DesignerEditorFactory()
-{
-}
+= default;
 
 void DesignerEditorFactory::setSpacing(int spacing)
 {

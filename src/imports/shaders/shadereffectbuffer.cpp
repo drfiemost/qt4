@@ -47,6 +47,5 @@ ShaderEffectBuffer::ShaderEffectBuffer(const QSize & size, const QGLFramebufferO
 }
 
 ShaderEffectBuffer::~ShaderEffectBuffer()
-{
-}
+= default;
 

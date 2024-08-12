@@ -211,8 +211,7 @@ QFontMetrics::QFontMetrics(const QFontMetrics &fm)
     resources.
 */
 QFontMetrics::~QFontMetrics()
-{
-}
+= default;
 
 /*!
     Assigns the font metrics \a fm.
@@ -1108,8 +1107,7 @@ QFontMetricsF::QFontMetricsF(const QFontMetricsF &fm)
     resources.
 */
 QFontMetricsF::~QFontMetricsF()
-{
-}
+= default;
 
 /*!
     Assigns the font metrics \a fm to this font metrics object.

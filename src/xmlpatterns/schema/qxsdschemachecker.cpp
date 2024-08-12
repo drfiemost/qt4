@@ -71,8 +71,7 @@ XsdSchemaChecker::XsdSchemaChecker(const QExplicitlySharedDataPointer<XsdSchemaC
 }
 
 XsdSchemaChecker::~XsdSchemaChecker()
-{
-}
+= default;
 
 /*
  * This method is called after the resolver has set the base type for every

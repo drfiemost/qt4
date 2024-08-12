@@ -306,8 +306,7 @@ QCommandLinkButton::QCommandLinkButton(const QString &text, const QString &descr
     Destructor.
 */
 QCommandLinkButton::~QCommandLinkButton()
-{
-}
+= default;
 
 /*! \reimp */
 bool QCommandLinkButton::event(QEvent *e)

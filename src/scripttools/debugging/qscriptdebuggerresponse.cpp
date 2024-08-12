@@ -85,8 +85,7 @@ QScriptDebuggerResponsePrivate::QScriptDebuggerResponsePrivate()
 }
 
 QScriptDebuggerResponsePrivate::~QScriptDebuggerResponsePrivate()
-{
-}
+= default;
 
 QScriptDebuggerResponse::QScriptDebuggerResponse()
     : d_ptr(new QScriptDebuggerResponsePrivate)
@@ -100,8 +99,7 @@ QScriptDebuggerResponse::QScriptDebuggerResponse(const QScriptDebuggerResponse &
 }
 
 QScriptDebuggerResponse::~QScriptDebuggerResponse()
-{
-}
+= default;
 
 QScriptDebuggerResponse &QScriptDebuggerResponse::operator=(const QScriptDebuggerResponse &other)
 {

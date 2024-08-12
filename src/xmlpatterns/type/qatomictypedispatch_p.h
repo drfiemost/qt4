@@ -139,8 +139,8 @@ namespace QPatternist
     {
     public:
         typedef QExplicitlySharedDataPointer<AtomicTypeVisitorResult> Ptr;
-        AtomicTypeVisitorResult() {}
-        virtual ~AtomicTypeVisitorResult() {}
+        AtomicTypeVisitorResult() = default;
+        virtual ~AtomicTypeVisitorResult() = default;
     };
 
     /**
@@ -154,7 +154,7 @@ namespace QPatternist
     {
     public:
         typedef QExplicitlySharedDataPointer<AtomicTypeVisitor> Ptr;
-        virtual ~AtomicTypeVisitor() {}
+        virtual ~AtomicTypeVisitor() = default;
 
         virtual AtomicTypeVisitorResult::Ptr visit(const AnyAtomicType *,
                                                    const SourceLocationReflection *const reflection) const = 0;
@@ -217,7 +217,7 @@ namespace QPatternist
     {
     public:
         typedef QExplicitlySharedDataPointer<ParameterizedAtomicTypeVisitor> Ptr;
-        virtual ~ParameterizedAtomicTypeVisitor() {}
+        virtual ~ParameterizedAtomicTypeVisitor() = default;
 
         virtual AtomicTypeVisitorResult::Ptr visit(const AnyAtomicType *, const qint16 param,
                                                    const SourceLocationReflection *const reflection) const = 0;

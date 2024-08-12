@@ -204,8 +204,7 @@ public:
     }
 
     ~QNonContiguousByteDeviceThreadForwardImpl() override
-    {
-    }
+    = default;
 
     qint64 pos() override
     {

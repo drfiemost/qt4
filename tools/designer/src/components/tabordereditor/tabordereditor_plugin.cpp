@@ -58,8 +58,7 @@ TabOrderEditorPlugin::TabOrderEditorPlugin()
 }
 
 TabOrderEditorPlugin::~TabOrderEditorPlugin()
-{
-}
+= default;
 
 bool TabOrderEditorPlugin::isInitialized() const
 {

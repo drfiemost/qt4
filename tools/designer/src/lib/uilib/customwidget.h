@@ -57,7 +57,7 @@ class QDesignerFormEditorInterface;
 class QDesignerCustomWidgetInterface
 {
 public:
-    virtual ~QDesignerCustomWidgetInterface() {}
+    virtual ~QDesignerCustomWidgetInterface() = default;
 
     virtual QString name() const = 0;
     virtual QString group() const = 0;
@@ -87,7 +87,7 @@ Q_DECLARE_INTERFACE(QDesignerCustomWidgetInterface, "com.trolltech.Qt.Designer.C
 class QDesignerCustomWidgetCollectionInterface
 {
 public:
-    virtual ~QDesignerCustomWidgetCollectionInterface() {}
+    virtual ~QDesignerCustomWidgetCollectionInterface() = default;
 
     virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const = 0;
 };

@@ -88,7 +88,7 @@ public:
     {
     }
 
-    ~QAbstractAnimationPrivate() override {}
+    ~QAbstractAnimationPrivate() override = default;
 
     static QAbstractAnimationPrivate *get(QAbstractAnimation *q)
     {

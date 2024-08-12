@@ -259,7 +259,7 @@ void QLayoutItem::setAlignment(Qt::Alignment alignment)
 /*!
     Destructor.
 */
-QSpacerItem::~QSpacerItem() {}
+QSpacerItem::~QSpacerItem() = default;
 
 /*!
     Changes this spacer item to have preferred width \a w, preferred
@@ -292,14 +292,13 @@ void QSpacerItem::changeSize(int w, int h, QSizePolicy::Policy hPolicy,
 /*!
     Destructor.
 */
-QWidgetItem::~QWidgetItem() {}
+QWidgetItem::~QWidgetItem() = default;
 
 /*!
     Destroys the QLayoutItem.
 */
 QLayoutItem::~QLayoutItem()
-{
-}
+= default;
 
 /*!
     Invalidates any cached information in this layout item.

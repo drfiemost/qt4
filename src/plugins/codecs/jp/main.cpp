@@ -57,7 +57,7 @@ QT_BEGIN_NAMESPACE
 class JPTextCodecs : public QTextCodecPlugin
 {
 public:
-    JPTextCodecs() {}
+    JPTextCodecs() = default;
 
     QList<QByteArray> names() const override;
     QList<QByteArray> aliases() const override;

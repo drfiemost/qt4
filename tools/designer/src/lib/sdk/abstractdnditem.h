@@ -57,8 +57,8 @@ class QDESIGNER_SDK_EXPORT QDesignerDnDItemInterface
 public:
     enum DropType { MoveDrop, CopyDrop };
 
-    QDesignerDnDItemInterface() {}
-    virtual ~QDesignerDnDItemInterface() {}
+    QDesignerDnDItemInterface() = default;
+    virtual ~QDesignerDnDItemInterface() = default;
 
     virtual DomUI *domUi() const = 0;
     virtual QWidget *widget() const = 0;

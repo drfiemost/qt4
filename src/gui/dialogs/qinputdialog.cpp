@@ -485,8 +485,7 @@ QInputDialog::QInputDialog(QWidget *parent, Qt::WindowFlags flags)
     Destroys the input dialog.
 */
 QInputDialog::~QInputDialog()
-{
-}
+= default;
 
 /*!
     \since 4.5

@@ -59,7 +59,7 @@ class QDebug;
 class QDesignerWidgetDataBaseItemInterface
 {
 public:
-    virtual ~QDesignerWidgetDataBaseItemInterface() {}
+    virtual ~QDesignerWidgetDataBaseItemInterface() = default;
 
     virtual QString name() const = 0;
     virtual void setName(const QString &name) = 0;

@@ -95,7 +95,7 @@ class QStyleSheetStylePrivate : public QWindowsStylePrivate
 {
     Q_DECLARE_PUBLIC(QStyleSheetStyle)
 public:
-    QStyleSheetStylePrivate() { }
+    QStyleSheetStylePrivate() = default;
 };
 
 
@@ -470,7 +470,7 @@ class QRenderRule
 public:
     QRenderRule() : features(0), hasFont(false), pal(nullptr), b(nullptr), bg(nullptr), bd(nullptr), ou(nullptr), geo(nullptr), p(nullptr), img(nullptr), clipset(0) { }
     QRenderRule(const QVector<QCss::Declaration> &, const QWidget *);
-    ~QRenderRule() { }
+    ~QRenderRule() = default;
 
     QRect borderRect(const QRect &r) const;
     QRect outlineRect(const QRect &r) const;
@@ -1421,7 +1421,7 @@ static inline QWidget *parentWidget(const QWidget *w)
 class QStyleSheetStyleSelector : public StyleSelector
 {
 public:
-    QStyleSheetStyleSelector() { }
+    QStyleSheetStyleSelector() = default;
 
     QStringList nodeNames(NodePtr node) const override
     {

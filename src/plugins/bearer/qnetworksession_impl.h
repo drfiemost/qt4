@@ -73,7 +73,7 @@ public:
         : startTime(0), sessionTimeout(-1)
     {}
     ~QNetworkSessionPrivateImpl() override
-    {}
+    = default;
 
     //called by QNetworkSession constructor and ensures
     //that the state is immediately updated (w/o actually opening

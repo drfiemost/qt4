@@ -916,7 +916,7 @@ namespace {
 
 struct Segment
 {
-    Segment() {}
+    Segment() = default;
     Segment(const QPoint &p)
         : added(false)
         , point(p)
@@ -1102,14 +1102,7 @@ struct QRegionPrivate {
         innerArea = r.innerArea;
     }
 
-    inline QRegionPrivate &operator=(const QRegionPrivate &r) {
-        rects = r.rects;
-        numRects = r.numRects;
-        extents = r.extents;
-        innerRect = r.innerRect;
-        innerArea = r.innerArea;
-        return *this;
-    }
+    inline QRegionPrivate &operator=(const QRegionPrivate &r) = default;
 
     void intersect(const QRect &r);
 
@@ -3419,7 +3412,7 @@ static void FreeStorage(ScanLineListBlock *pSLLBlock)
 }
 
 struct QRegionSpan {
-    QRegionSpan() {}
+    QRegionSpan() = default;
     QRegionSpan(int x1_, int x2_) : x1(x1_), x2(x2_) {}
 
     int x1;

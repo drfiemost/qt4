@@ -87,8 +87,7 @@ QDeclarativeAction::QDeclarativeAction(QObject *target, const QString &propertyN
 
 
 QDeclarativeActionEvent::~QDeclarativeActionEvent()
-{
-}
+= default;
 
 QString QDeclarativeActionEvent::typeName() const
 {

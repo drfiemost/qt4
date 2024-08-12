@@ -317,8 +317,7 @@ void QToolButton::initStyleOption(QStyleOptionToolButton *option) const
 */
 
 QToolButton::~QToolButton()
-{
-}
+= default;
 
 /*!
     \reimp

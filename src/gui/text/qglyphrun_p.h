@@ -79,19 +79,8 @@ public:
     }
 
     QGlyphRunPrivate(const QGlyphRunPrivate &other)
-      : QSharedData(other)
-      , glyphIndexes(other.glyphIndexes)
-      , glyphPositions(other.glyphPositions)
-      , rawFont(other.rawFont)
-      , overline(other.overline)
-      , underline(other.underline)
-      , strikeOut(other.strikeOut)
-      , glyphIndexData(other.glyphIndexData)
-      , glyphIndexDataSize(other.glyphIndexDataSize)
-      , glyphPositionData(other.glyphPositionData)
-      , glyphPositionDataSize(other.glyphPositionDataSize)
-    {
-    }
+       
+    = default;
 
     QVector<quint32> glyphIndexes;
     QVector<QPointF> glyphPositions;

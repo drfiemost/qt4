@@ -55,8 +55,7 @@ XsdValidatedXmlNodeModel::XsdValidatedXmlNodeModel(const QAbstractXmlNodeModel *
 }
 
 XsdValidatedXmlNodeModel::~XsdValidatedXmlNodeModel()
-{
-}
+= default;
 
 QUrl XsdValidatedXmlNodeModel::baseUri(const QXmlNodeModelIndex &index) const
 {

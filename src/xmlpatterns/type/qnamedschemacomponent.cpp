@@ -46,12 +46,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 NamedSchemaComponent::NamedSchemaComponent()
-{
-}
+= default;
 
 NamedSchemaComponent::~NamedSchemaComponent()
-{
-}
+= default;
 
 void NamedSchemaComponent::setName(const QXmlName &name)
 {

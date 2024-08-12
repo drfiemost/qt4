@@ -78,8 +78,7 @@ inline QScriptStringPrivate::QScriptStringPrivate(QScriptEnginePrivate *e, const
 }
 
 inline QScriptStringPrivate::~QScriptStringPrivate()
-{
-}
+= default;
 
 inline void QScriptStringPrivate::init(QScriptString &q, QScriptStringPrivate *d)
 {

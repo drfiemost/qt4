@@ -66,7 +66,7 @@ public:
         ConsoleCommandCompletion = 1
     };
 
-    virtual ~QScriptCompletionProviderInterface() {}
+    virtual ~QScriptCompletionProviderInterface() = default;
 
     virtual QScriptCompletionTaskInterface *createCompletionTask(
         const QString &contents, int cursorPosition,

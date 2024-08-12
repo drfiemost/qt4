@@ -50,7 +50,6 @@ QGraphicsSystemPlugin::QGraphicsSystemPlugin(QObject *parent)
 }
 
 QGraphicsSystemPlugin::~QGraphicsSystemPlugin()
-{
-}
+= default;
 
 QT_END_NAMESPACE

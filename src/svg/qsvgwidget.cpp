@@ -114,9 +114,7 @@ QSvgWidget::QSvgWidget(const QString &file, QWidget *parent)
     Destroys the widget.
 */
 QSvgWidget::~QSvgWidget()
-{
-
-}
+= default;
 
 /*!
     Returns the renderer used to display the contents of the widget.

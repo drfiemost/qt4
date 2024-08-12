@@ -146,8 +146,8 @@ namespace JSC  {
 
         static const intptr_t HostCallFrameFlag = 1;
 
-        ExecState();
-        ~ExecState();
+        ExecState() = delete;
+        ~ExecState() = delete;
     };
 
 } // namespace JSC

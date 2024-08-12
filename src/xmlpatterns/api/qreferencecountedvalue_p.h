@@ -95,7 +95,7 @@ namespace QPatternist
         /*!
           Disabled, no implementation provided.
          */
-        inline ReferenceCountedValue();
+        inline ReferenceCountedValue() = delete;
         Q_DISABLE_COPY(ReferenceCountedValue)
     };
 }

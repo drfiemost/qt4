@@ -324,8 +324,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
 }
 
 WidgetDataBase::~WidgetDataBase()
-{
-}
+= default;
 
 QDesignerFormEditorInterface *WidgetDataBase::core() const
 {

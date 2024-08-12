@@ -45,12 +45,10 @@
 QT_BEGIN_NAMESPACE
 
 QScriptDebuggerCommandSchedulerJobPrivate::QScriptDebuggerCommandSchedulerJobPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCommandSchedulerJobPrivate::~QScriptDebuggerCommandSchedulerJobPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCommandSchedulerJob::QScriptDebuggerCommandSchedulerJob(
     QScriptDebuggerCommandSchedulerInterface *commandScheduler)
@@ -61,8 +59,7 @@ QScriptDebuggerCommandSchedulerJob::QScriptDebuggerCommandSchedulerJob(
 }
 
 QScriptDebuggerCommandSchedulerJob::~QScriptDebuggerCommandSchedulerJob()
-{
-}
+= default;
 
 QScriptDebuggerCommandSchedulerJob::QScriptDebuggerCommandSchedulerJob(
     QScriptDebuggerCommandSchedulerJobPrivate &dd,

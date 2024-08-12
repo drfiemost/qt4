@@ -219,8 +219,7 @@ QScriptContextInfoPrivate::QScriptContextInfoPrivate(const QScriptContext *conte
   \internal
 */
 QScriptContextInfoPrivate::~QScriptContextInfoPrivate()
-{
-}
+= default;
 
 /*!
   Constructs a new QScriptContextInfo from the given \a context.
@@ -243,9 +242,8 @@ QScriptContextInfo::QScriptContextInfo(const QScriptContext *context)
   Constructs a new QScriptContextInfo from the \a other info.
 */
 QScriptContextInfo::QScriptContextInfo(const QScriptContextInfo &other)
-    : d_ptr(other.d_ptr)
-{
-}
+     
+= default;
 
 /*!
   Constructs a null QScriptContextInfo.
@@ -261,18 +259,14 @@ QScriptContextInfo::QScriptContextInfo()
   Destroys the QScriptContextInfo.
 */
 QScriptContextInfo::~QScriptContextInfo()
-{
-}
+= default;
 
 /*!
   Assigns the \a other info to this QScriptContextInfo,
   and returns a reference to this QScriptContextInfo.
 */
 QScriptContextInfo &QScriptContextInfo::operator=(const QScriptContextInfo &other)
-{
-    d_ptr = other.d_ptr;
-    return *this;
-}
+= default;
 
 /*!
   Returns the ID of the script where the code being executed was

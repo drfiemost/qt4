@@ -1175,7 +1175,7 @@ int QKeySequence::assign(const QString &ks, QKeySequence::SequenceFormat format)
 }
 
 struct QModifKeyName {
-    QModifKeyName() { }
+    QModifKeyName() = default;
     QModifKeyName(int q, QChar n) : qt_key(q), name(n) { }
     QModifKeyName(int q, const QString &n) : qt_key(q), name(n) { }
     int qt_key;

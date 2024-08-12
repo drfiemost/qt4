@@ -478,8 +478,7 @@ QDirIterator::QDirIterator(const QString &path, const QStringList &nameFilters,
     Destroys the QDirIterator.
 */
 QDirIterator::~QDirIterator()
-{
-}
+= default;
 
 /*!
     Advances the iterator to the next entry, and returns the file path of this

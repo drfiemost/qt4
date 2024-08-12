@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 class KRTextCodecs : public QTextCodecPlugin
 {
 public:
-    KRTextCodecs() {}
+    KRTextCodecs() = default;
 
     QList<QByteArray> names() const override;
     QList<QByteArray> aliases() const override;

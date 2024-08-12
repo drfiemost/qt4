@@ -250,10 +250,8 @@ private:
     struct AttributePoint {
         AttributePoint() : percent(0), scale(1), origpercent(0) {}
         AttributePoint(const AttributePoint &other)
-            : percent(other.percent), scale(other.scale), origpercent(other.origpercent), values(other.values) {}
-        AttributePoint &operator=(const AttributePoint &other) {
-            percent = other.percent; scale = other.scale; origpercent = other.origpercent; values = other.values; return *this;
-        }
+             = default;
+        AttributePoint &operator=(const AttributePoint &other) = default;
         qreal percent;      //massaged percent along the painter path
         qreal scale;
         qreal origpercent;  //'real' percent along the painter path

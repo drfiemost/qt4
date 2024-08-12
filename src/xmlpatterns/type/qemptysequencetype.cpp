@@ -49,8 +49,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 EmptySequenceType::EmptySequenceType()
-{
-}
+= default;
 
 bool EmptySequenceType::xdtTypeMatches(const ItemType::Ptr &other) const
 {

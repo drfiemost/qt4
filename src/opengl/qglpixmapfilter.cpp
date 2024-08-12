@@ -265,8 +265,7 @@ QGLPixmapConvolutionFilter::QGLPixmapConvolutionFilter()
 }
 
 QGLPixmapConvolutionFilter::~QGLPixmapConvolutionFilter()
-{
-}
+= default;
 
 bool QGLPixmapConvolutionFilter::processGL(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect) const
 {
@@ -288,8 +287,7 @@ bool QGLPixmapConvolutionFilter::processGL(QPainter *painter, const QPointF &pos
 }
 
 QGLPixmapBlurFilter::QGLPixmapBlurFilter()
-{
-}
+= default;
 
 class QGLBlurTextureInfo
 {

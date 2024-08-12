@@ -182,8 +182,7 @@ CL_NS_DEF(search)
       next(nullptr)
   {	
   }
-  BooleanScorer::Bucket::~Bucket(){
-  }
+  BooleanScorer::Bucket::~Bucket()= default;
 
 
 

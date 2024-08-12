@@ -69,7 +69,7 @@ class QImageDataMisc; // internal
 class Q_GUI_EXPORT QImageTextKeyLang {
 public:
     QImageTextKeyLang(const char* k, const char* l) : key(k), lang(l) { }
-    QImageTextKeyLang() { }
+    QImageTextKeyLang() = default;
 
     QByteArray key;
     QByteArray lang;

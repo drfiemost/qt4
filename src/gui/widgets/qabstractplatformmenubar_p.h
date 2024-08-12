@@ -73,7 +73,7 @@ Q_DECLARE_INTERFACE(QPlatformMenuBarFactoryInterface, QPlatformMenuBarFactoryInt
 class QAbstractPlatformMenuBar
 {
 public:
-    virtual ~QAbstractPlatformMenuBar() {}
+    virtual ~QAbstractPlatformMenuBar() = default;
 
     virtual void init(QMenuBar *) = 0;
 

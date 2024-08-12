@@ -74,8 +74,7 @@ LiveSelectionTool::LiveSelectionTool(QDeclarativeViewInspector *editorView) :
 }
 
 LiveSelectionTool::~LiveSelectionTool()
-{
-}
+= default;
 
 void LiveSelectionTool::setRubberbandSelectionMode(bool value)
 {

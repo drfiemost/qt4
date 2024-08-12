@@ -175,8 +175,7 @@ QDBusConnectionInterface::QDBusConnectionInterface(const QDBusConnection &connec
     \internal
 */
 QDBusConnectionInterface::~QDBusConnectionInterface()
-{
-}
+= default;
 
 /*!
     Returns the unique connection name of the primary owner of the

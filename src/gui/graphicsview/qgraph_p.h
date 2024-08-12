@@ -66,7 +66,7 @@ template <typename Vertex, typename EdgeData>
 class Graph
 {
 public:
-    Graph() {}
+    Graph() = default;
 
     class const_iterator {
     public:

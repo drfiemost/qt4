@@ -55,8 +55,8 @@ class QTextStream;
 
 class RCCResourceLibrary
 {
-    RCCResourceLibrary(const RCCResourceLibrary &);
-    RCCResourceLibrary &operator=(const RCCResourceLibrary &);
+    RCCResourceLibrary(const RCCResourceLibrary &) = delete;
+    RCCResourceLibrary &operator=(const RCCResourceLibrary &) = delete;
 
 public:
     RCCResourceLibrary();

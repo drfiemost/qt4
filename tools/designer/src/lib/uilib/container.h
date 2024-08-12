@@ -54,7 +54,7 @@ class QWidget;
 class QDesignerContainerExtension
 {
 public:
-    virtual ~QDesignerContainerExtension() {}
+    virtual ~QDesignerContainerExtension() = default;
 
     virtual int count() const = 0;
     virtual QWidget *widget(int index) const = 0;

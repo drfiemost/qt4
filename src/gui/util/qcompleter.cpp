@@ -956,8 +956,7 @@ QCompleter::QCompleter(const QStringList& list, QObject *parent)
     Destroys the completer object.
 */
 QCompleter::~QCompleter()
-{
-}
+= default;
 
 /*!
     Sets the widget for which completion are provided for to \a widget. This

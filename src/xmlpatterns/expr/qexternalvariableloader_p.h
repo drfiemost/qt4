@@ -91,7 +91,7 @@ namespace QPatternist
     {
     public:
         typedef QExplicitlySharedDataPointer<ExternalVariableLoader> Ptr;
-        inline ExternalVariableLoader() {}
+        inline ExternalVariableLoader() = default;
 
         virtual ~ExternalVariableLoader();
 

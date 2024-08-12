@@ -90,8 +90,7 @@ QConnmanManagerInterface::QConnmanManagerInterface( QObject *parent)
 }
 
 QConnmanManagerInterface::~QConnmanManagerInterface()
-{
-}
+= default;
 
 void QConnmanManagerInterface::connectNotify(const char *signal)
 {
@@ -373,8 +372,7 @@ QConnmanProfileInterface::QConnmanProfileInterface(const QString &dbusPathName,Q
 }
 
 QConnmanProfileInterface::~QConnmanProfileInterface()
-{
-}
+= default;
 
 void QConnmanProfileInterface::connectNotify(const char *signal)
 {
@@ -441,8 +439,7 @@ QConnmanServiceInterface::QConnmanServiceInterface(const QString &dbusPathName,Q
 }
 
 QConnmanServiceInterface::~QConnmanServiceInterface()
-{
-}
+= default;
 
 void QConnmanServiceInterface::connectNotify(const char *signal)
 {
@@ -768,8 +765,7 @@ QConnmanTechnologyInterface::QConnmanTechnologyInterface(const QString &dbusPath
 }
 
 QConnmanTechnologyInterface::~QConnmanTechnologyInterface()
-{
-}
+= default;
 
 void QConnmanTechnologyInterface::connectNotify(const char *signal)
 {
@@ -848,8 +844,7 @@ QConnmanAgentInterface::QConnmanAgentInterface(const QString &dbusPathName, QObj
 }
 
 QConnmanAgentInterface::~QConnmanAgentInterface()
-{
-}
+= default;
 
 void QConnmanAgentInterface::connectNotify(const char *signal)
 {
@@ -897,8 +892,7 @@ QConnmanCounterInterface::QConnmanCounterInterface(const QString &dbusPathName,Q
 }
 
 QConnmanCounterInterface::~QConnmanCounterInterface()
-{
-}
+= default;
 
 quint32 QConnmanCounterInterface::getReceivedByteCount()
 {
@@ -922,8 +916,7 @@ QConnmanDBusHelper::QConnmanDBusHelper(QObject * parent)
 }
 
 QConnmanDBusHelper::~QConnmanDBusHelper()
-{
-}
+= default;
 
 void QConnmanDBusHelper::propertyChanged(const QString &item, const QDBusVariant &var)
 {

@@ -175,8 +175,7 @@ QDeclarativeFontLoader::QDeclarativeFontLoader(QObject *parent)
 }
 
 QDeclarativeFontLoader::~QDeclarativeFontLoader()
-{
-}
+= default;
 
 /*!
     \qmlproperty url FontLoader::source

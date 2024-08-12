@@ -21,8 +21,7 @@ StringReader::StringReader ( const TCHAR* value, const int32_t length, bool copy
   Reader(nullptr,true){
 	  reader = new jstreams::StringReader<TCHAR>(value,length, copyData);
 }
-StringReader::~StringReader(){
-}
+StringReader::~StringReader()= default;
 
 
 FileReader::FileReader ( const char* path, const char* enc,

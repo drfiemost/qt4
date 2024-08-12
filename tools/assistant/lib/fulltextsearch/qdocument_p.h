@@ -63,7 +63,7 @@ public:
     bool deleteCLuceneDocument;
 
 private:
-    QCLuceneDocumentPrivate &operator=(const QCLuceneDocumentPrivate &other);
+    QCLuceneDocumentPrivate &operator=(const QCLuceneDocumentPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneDocument

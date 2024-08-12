@@ -73,12 +73,10 @@ public:
 };
 
 QScriptBreakpointsModelPrivate::QScriptBreakpointsModelPrivate()
-{
-}
+= default;
 
 QScriptBreakpointsModelPrivate::~QScriptBreakpointsModelPrivate()
-{
-}
+= default;
 
 QScriptBreakpointsModel::QScriptBreakpointsModel(
     QScriptDebuggerJobSchedulerInterface *jobScheduler,
@@ -92,8 +90,7 @@ QScriptBreakpointsModel::QScriptBreakpointsModel(
 }
 
 QScriptBreakpointsModel::~QScriptBreakpointsModel()
-{
-}
+= default;
 
 namespace
 {

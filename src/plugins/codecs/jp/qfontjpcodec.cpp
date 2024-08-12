@@ -49,8 +49,7 @@ QT_BEGIN_NAMESPACE
 // JIS X 0201
 
 QFontJis0201Codec::QFontJis0201Codec()
-{
-}
+= default;
 
 QByteArray QFontJis0201Codec::_name()
 {

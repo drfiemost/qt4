@@ -93,9 +93,7 @@ public:
     {
     }
 
-    ~QPrinterPrivate() {
-
-    }
+    ~QPrinterPrivate() = default;
 
     void createDefaultEngines();
 #ifndef QT_NO_PRINTPREVIEWWIDGET

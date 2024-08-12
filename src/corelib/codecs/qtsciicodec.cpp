@@ -64,8 +64,7 @@ static unsigned int qt_TSCIIToUnicode(unsigned int code, uint *s);
     Destroys the text codec object.
 */
 QTsciiCodec::~QTsciiCodec()
-{
-}
+= default;
 
 /*!
     Converts the first \a len characters in \a uc from Unicode to this

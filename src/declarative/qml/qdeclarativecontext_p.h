@@ -205,7 +205,7 @@ public:
     }
 
 private:
-    ~QDeclarativeContextData() {}
+    ~QDeclarativeContextData() = default;
 };
 
 class QDeclarativeGuardedContextData
@@ -224,8 +224,8 @@ public:
     inline QDeclarativeGuardedContextData &operator=(QDeclarativeContextData *d);
 
 private:
-    QDeclarativeGuardedContextData &operator=(const QDeclarativeGuardedContextData &);
-    QDeclarativeGuardedContextData(const QDeclarativeGuardedContextData &);
+    QDeclarativeGuardedContextData &operator=(const QDeclarativeGuardedContextData &) = delete;
+    QDeclarativeGuardedContextData(const QDeclarativeGuardedContextData &) = delete;
     friend class QDeclarativeContextData;
 
     inline void clear();

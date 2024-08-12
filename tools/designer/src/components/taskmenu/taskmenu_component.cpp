@@ -94,8 +94,7 @@ TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject
 }
 
 TaskMenuComponent::~TaskMenuComponent()
-{
-}
+= default;
 
 QDesignerFormEditorInterface *TaskMenuComponent::core() const
 {

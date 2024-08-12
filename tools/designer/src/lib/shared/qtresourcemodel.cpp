@@ -140,8 +140,7 @@ QtResourceSet::QtResourceSet(QtResourceModel *model) :
 }
 
 QtResourceSet::~QtResourceSet()
-{
-}
+= default;
 
 QStringList QtResourceSet::activeQrcPaths() const
 {

@@ -168,8 +168,7 @@ QPicture::QPicture(QPicturePrivate &dptr)
     Destroys the picture.
 */
 QPicture::~QPicture()
-{
-}
+= default;
 
 /*!
   \internal

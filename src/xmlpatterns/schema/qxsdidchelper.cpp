@@ -49,8 +49,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 FieldNode::FieldNode()
-{
-}
+= default;
 
 FieldNode::FieldNode(const QXmlItem &item, const QString &data, const SchemaType::Ptr &type)
     : m_item(item)

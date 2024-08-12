@@ -66,7 +66,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualModel : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 
 public:
-    ~QDeclarativeVisualModel() override {}
+    ~QDeclarativeVisualModel() override = default;
 
     enum ReleaseFlag { Referenced = 0x01, Destroyed = 0x02 };
     Q_DECLARE_FLAGS(ReleaseFlags, ReleaseFlag)
@@ -112,7 +112,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeVisualItemModel : public QDeclarativeVisualM
 
 public:
     QDeclarativeVisualItemModel(QObject *parent=nullptr);
-    ~QDeclarativeVisualItemModel() override {}
+    ~QDeclarativeVisualItemModel() override = default;
 
     int count() const override;
     bool isValid() const override;

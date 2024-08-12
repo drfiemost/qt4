@@ -128,9 +128,8 @@ public:
         reset();
     }
 
-    inline QXmlNodeModelIndex(const QXmlNodeModelIndex &other) : m_storage(other.m_storage)
-    {
-    }
+    inline QXmlNodeModelIndex(const QXmlNodeModelIndex &other)  
+    = default;
     inline QXmlNodeModelIndex& operator=(const QXmlNodeModelIndex&) = default;
 
     bool operator==(const QXmlNodeModelIndex &other) const;

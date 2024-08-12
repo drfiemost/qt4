@@ -368,8 +368,7 @@ QAbstractFileEngine::QAbstractFileEngine(QAbstractFileEnginePrivate &dd) : d_ptr
     Destroys the QAbstractFileEngine.
  */
 QAbstractFileEngine::~QAbstractFileEngine()
-{
-}
+= default;
 
 /*!
     \fn bool QAbstractFileEngine::open(QIODevice::OpenMode mode)
@@ -895,8 +894,7 @@ QAbstractFileEngineIterator::QAbstractFileEngineIterator(QDir::Filters filters,
     \sa QDirIterator
 */
 QAbstractFileEngineIterator::~QAbstractFileEngineIterator()
-{
-}
+= default;
 
 /*!
     Returns the path for this iterator. QDirIterator is responsible for

@@ -79,8 +79,7 @@ namespace QPatternist
     public:
         typedef QList<OrderSpecTransfer> List;
         inline OrderSpecTransfer()
-        {
-        }
+        = default;
 
         inline OrderSpecTransfer(const Expression::Ptr &aExpr,
                                  const OrderBy::OrderSpec aOrderSpec) : expression(aExpr),

@@ -59,8 +59,7 @@ SpacerPropertySheet::SpacerPropertySheet(Spacer *object, QObject *parent)
 }
 
 SpacerPropertySheet::~SpacerPropertySheet()
-{
-}
+= default;
 
 bool SpacerPropertySheet::isVisible(int index) const
 {

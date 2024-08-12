@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 class CNTextCodecs : public QTextCodecPlugin
 {
 public:
-    CNTextCodecs() {}
+    CNTextCodecs() = default;
 
     QList<QByteArray> names() const override;
     QList<QByteArray> aliases() const override;

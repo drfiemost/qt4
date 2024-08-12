@@ -191,7 +191,7 @@ class Q_CORE_EXPORT QMutexLocker
 {
 public:
     inline explicit QMutexLocker(QMutex *) {}
-    inline ~QMutexLocker() {}
+    inline ~QMutexLocker() = default;
 
     static inline void unlock() {}
     static void relock() {}

@@ -57,8 +57,7 @@ SignalSlotEditorPlugin::SignalSlotEditorPlugin()
 }
 
 SignalSlotEditorPlugin::~SignalSlotEditorPlugin()
-{
-}
+= default;
 
 bool SignalSlotEditorPlugin::isInitialized() const
 {

@@ -503,8 +503,7 @@ QAbstractSocketPrivate::QAbstractSocketPrivate()
     will be reset.
 */
 QAbstractSocketPrivate::~QAbstractSocketPrivate()
-{
-}
+= default;
 
 /*! \internal
 

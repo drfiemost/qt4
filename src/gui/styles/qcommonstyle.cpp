@@ -131,7 +131,7 @@ QCommonStyle::QCommonStyle(QCommonStylePrivate &dd)
     Destroys the style.
 */
 QCommonStyle::~QCommonStyle()
-{ }
+= default;
 
 
 /*!

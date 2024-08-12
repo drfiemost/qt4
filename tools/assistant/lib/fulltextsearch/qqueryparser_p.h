@@ -60,7 +60,7 @@ public:
     bool deleteCLuceneQueryParser;
 
 private:
-    QCLuceneQueryParserPrivate &operator=(const QCLuceneQueryParserPrivate &other);
+    QCLuceneQueryParserPrivate &operator=(const QCLuceneQueryParserPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneQueryParser

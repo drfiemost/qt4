@@ -71,8 +71,7 @@ static const Codecs codecs [] = {
 };
 
 QIsciiCodec::~QIsciiCodec()
-{
-}
+= default;
 
 QByteArray QIsciiCodec::name() const
 {

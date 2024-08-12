@@ -58,8 +58,7 @@ Query::Query():
 {
 	//constructor
 }
-Query::~Query(){
-}
+Query::~Query()= default;
 
 /** Expert: called to re-write queries into primitive queries. */
 Query* Query::rewrite(CL_NS(index)::IndexReader* reader){

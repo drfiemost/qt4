@@ -310,9 +310,8 @@ class Q_CORE_EXPORT QVariant
     {
         inline Private(): type(Invalid), is_shared(false), is_null(true) { data.ptr = nullptr; }
         Private(const Private &other)
-            : data(other.data), type(other.type),
-              is_shared(other.is_shared), is_null(other.is_null)
-        {}
+             
+        = default;
         Private &operator=(const Private &other) = default;
         union Data
         {
@@ -433,7 +432,7 @@ inline void qVariantSetValue<QVariant>(QVariant &v, const QVariant &t)
 }
 
 
-inline QVariant::QVariant() {}
+inline QVariant::QVariant() = default;
 inline bool QVariant::isValid() const { return d.type != Invalid; }
 
 template<typename T>

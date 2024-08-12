@@ -66,7 +66,7 @@ class QGLPixelBuffer;
 class QGLPixmapFilterBase
 {
 public:
-    virtual ~QGLPixmapFilterBase() {}
+    virtual ~QGLPixmapFilterBase() = default;
 protected:
     void bindTexture(const QPixmap &src) const;
     void drawImpl(QPainter *painter, const QPointF &pos, const QPixmap &src, const QRectF &srcRect = QRectF()) const;

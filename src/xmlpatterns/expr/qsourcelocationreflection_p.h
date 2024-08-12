@@ -83,12 +83,10 @@ namespace QPatternist
     {
     public:
         inline SourceLocationReflection()
-        {
-        }
+        = default;
 
         virtual ~SourceLocationReflection()
-        {
-        }
+        = default;
 
         virtual const SourceLocationReflection *actualReflection() const = 0;
 

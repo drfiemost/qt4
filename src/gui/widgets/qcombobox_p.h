@@ -337,7 +337,7 @@ class Q_AUTOTEST_EXPORT QComboBoxPrivate : public QWidgetPrivate
     Q_DECLARE_PUBLIC(QComboBox)
 public:
     QComboBoxPrivate();
-    ~QComboBoxPrivate() override {}
+    ~QComboBoxPrivate() override = default;
     void init();
     QComboBoxPrivateContainer* viewContainer();
     void updateLineEditGeometry();

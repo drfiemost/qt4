@@ -75,8 +75,7 @@ ComboBoxTaskMenu::ComboBoxTaskMenu(QComboBox *button, QObject *parent)
 }
 
 ComboBoxTaskMenu::~ComboBoxTaskMenu()
-{
-}
+= default;
 
 QAction *ComboBoxTaskMenu::preferredEditAction() const
 {

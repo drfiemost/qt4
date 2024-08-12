@@ -86,8 +86,7 @@ QScriptExtensionPlugin::QScriptExtensionPlugin(QObject *parent)
     used, so there is no need for calling the destructor explicitly.
 */
 QScriptExtensionPlugin::~QScriptExtensionPlugin()
-{
-}
+= default;
 
 /*!
 

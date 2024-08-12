@@ -50,12 +50,10 @@ QScriptDebuggerLocalsWidgetInterfacePrivate::QScriptDebuggerLocalsWidgetInterfac
 }
 
 QScriptDebuggerLocalsWidgetInterfacePrivate::~QScriptDebuggerLocalsWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptDebuggerLocalsWidgetInterface::~QScriptDebuggerLocalsWidgetInterface()
-{
-}
+= default;
 
 QScriptDebuggerLocalsWidgetInterface::QScriptDebuggerLocalsWidgetInterface(
     QScriptDebuggerLocalsWidgetInterfacePrivate &dd,

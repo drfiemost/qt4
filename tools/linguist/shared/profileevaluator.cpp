@@ -113,8 +113,7 @@ ProFileOption::ProFileOption()
 }
 
 ProFileOption::~ProFileOption()
-{
-}
+= default;
 
 void ProFileOption::setCommandLineArguments(const QStringList &args)
 {
@@ -560,8 +559,7 @@ ProFileEvaluator::Private::Private(ProFileEvaluator *q_, ProFileOption *option,
 }
 
 ProFileEvaluator::Private::~Private()
-{
-}
+= default;
 
 //////// Evaluator tools /////////
 

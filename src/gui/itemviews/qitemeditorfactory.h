@@ -59,7 +59,7 @@ class QWidget;
 class Q_GUI_EXPORT QItemEditorCreatorBase
 {
 public:
-    virtual ~QItemEditorCreatorBase() {}
+    virtual ~QItemEditorCreatorBase() = default;
 
     virtual QWidget *createWidget(QWidget *parent) const = 0;
     virtual QByteArray valuePropertyName() const = 0;
@@ -99,7 +99,7 @@ Q_INLINE_TEMPLATE QItemEditorCreator<T>::QItemEditorCreator(const QByteArray &av
 class Q_GUI_EXPORT QItemEditorFactory
 {
 public:
-    inline QItemEditorFactory() {}
+    inline QItemEditorFactory() = default;
     virtual ~QItemEditorFactory();
 
     virtual QWidget *createEditor(QVariant::Type type, QWidget *parent) const;

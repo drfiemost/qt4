@@ -67,7 +67,7 @@ QT_BEGIN_NAMESPACE
 class QSimplePixmapDataFactory : public QPixmapDataFactory
 {
 public:
-    ~QSimplePixmapDataFactory() override {}
+    ~QSimplePixmapDataFactory() override = default;
     QPixmapData* create(QPixmapData::PixelType type) override;
 };
 
@@ -94,8 +94,7 @@ Q_GLOBAL_STATIC(QSimplePixmapDataFactory, factory)
 #endif // !defined(Q_WS_QWS)
 
 QPixmapDataFactory::~QPixmapDataFactory()
-{
-}
+= default;
 
 QPixmapDataFactory* QPixmapDataFactory::instance(int screen)
 {

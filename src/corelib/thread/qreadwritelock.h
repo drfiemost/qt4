@@ -185,7 +185,7 @@ class Q_CORE_EXPORT QReadWriteLock
 public:
     enum RecursionMode { NonRecursive, Recursive };
     inline explicit QReadWriteLock(RecursionMode = NonRecursive) { }
-    inline ~QReadWriteLock() { }
+    inline ~QReadWriteLock() = default;
 
     static inline void lockForRead() { }
     static inline bool tryLockForRead() { return true; }
@@ -205,7 +205,7 @@ class Q_CORE_EXPORT QReadLocker
 {
 public:
     inline QReadLocker(QReadWriteLock *) { }
-    inline ~QReadLocker() { }
+    inline ~QReadLocker() = default;
 
     static inline void unlock() { }
     static inline void relock() { }
@@ -219,7 +219,7 @@ class Q_CORE_EXPORT QWriteLocker
 {
 public:
     inline explicit QWriteLocker(QReadWriteLock *) { }
-    inline ~QWriteLocker() { }
+    inline ~QWriteLocker() = default;
 
     static inline void unlock() { }
     static inline void relock() { }

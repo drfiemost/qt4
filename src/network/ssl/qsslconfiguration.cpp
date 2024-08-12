@@ -127,9 +127,8 @@ QSslConfiguration::QSslConfiguration()
     null, this object will be null too.
 */
 QSslConfiguration::QSslConfiguration(const QSslConfiguration &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Releases any resources held by QSslConfiguration.
@@ -144,10 +143,7 @@ QSslConfiguration::~QSslConfiguration()
     null, this object will be null too.
 */
 QSslConfiguration &QSslConfiguration::operator=(const QSslConfiguration &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this QSslConfiguration object is equal to \a

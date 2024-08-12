@@ -114,8 +114,7 @@ QSslCipher::QSslCipher(const QSslCipher &other)
     Destroys the QSslCipher object.
 */
 QSslCipher::~QSslCipher()
-{
-}
+= default;
 
 /*!
     Copies the contents of \a other into this cipher, making the two

@@ -145,8 +145,7 @@ QNonContiguousByteDevice::QNonContiguousByteDevice() : QObject((QObject*)nullptr
 }
 
 QNonContiguousByteDevice::~QNonContiguousByteDevice()
-{
-}
+= default;
 
 void QNonContiguousByteDevice::disableReset()
 {
@@ -165,8 +164,7 @@ QNonContiguousByteDeviceBufferImpl::QNonContiguousByteDeviceBufferImpl(QBuffer *
 }
 
 QNonContiguousByteDeviceBufferImpl::~QNonContiguousByteDeviceBufferImpl()
-{
-}
+= default;
 
 const char* QNonContiguousByteDeviceBufferImpl::readPointer(qint64 maximumLength, qint64 &len)
 {
@@ -201,8 +199,7 @@ QNonContiguousByteDeviceByteArrayImpl::QNonContiguousByteDeviceByteArrayImpl(QBy
 }
 
 QNonContiguousByteDeviceByteArrayImpl::~QNonContiguousByteDeviceByteArrayImpl()
-{
-}
+= default;
 
 const char* QNonContiguousByteDeviceByteArrayImpl::readPointer(qint64 maximumLength, qint64 &len)
 {
@@ -258,8 +255,7 @@ QNonContiguousByteDeviceRingBufferImpl::QNonContiguousByteDeviceRingBufferImpl(Q
 }
 
 QNonContiguousByteDeviceRingBufferImpl::~QNonContiguousByteDeviceRingBufferImpl()
-{
-}
+= default;
 
 const char* QNonContiguousByteDeviceRingBufferImpl::readPointer(qint64 maximumLength, qint64 &len)
 {
@@ -443,9 +439,7 @@ QByteDeviceWrappingIoDevice::QByteDeviceWrappingIoDevice(QNonContiguousByteDevic
 }
 
 QByteDeviceWrappingIoDevice::~QByteDeviceWrappingIoDevice()
-{
-
-}
+= default;
 
 bool QByteDeviceWrappingIoDevice::isSequential() const
 {

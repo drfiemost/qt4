@@ -74,8 +74,7 @@ ListWidgetTaskMenu::ListWidgetTaskMenu(QListWidget *button, QObject *parent)
 }
 
 ListWidgetTaskMenu::~ListWidgetTaskMenu()
-{
-}
+= default;
 
 QAction *ListWidgetTaskMenu::preferredEditAction() const
 {

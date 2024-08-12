@@ -150,12 +150,10 @@ QScriptObjectPrototype::QScriptObjectPrototype(JSC::ExecState*, WTF::PassRefPtr<
 }
 
 QScriptObjectDelegate::QScriptObjectDelegate()
-{
-}
+= default;
 
 QScriptObjectDelegate::~QScriptObjectDelegate()
-{
-}
+= default;
 
 bool QScriptObjectDelegate::getOwnPropertySlot(QScriptObject* object, JSC::ExecState* exec,
                                                const JSC::Identifier& propertyName,

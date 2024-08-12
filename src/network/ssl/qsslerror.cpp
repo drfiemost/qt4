@@ -162,8 +162,7 @@ QSslError::QSslError(const QSslError &other)
     Destroys the QSslError object.
 */
 QSslError::~QSslError()
-{
-}
+= default;
 
 /*!
     \since 4.4

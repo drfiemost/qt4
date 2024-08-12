@@ -89,7 +89,7 @@ CL_NS_DEF(search)
       * between 0 and 1.
       */
       virtual void collect(const int32_t doc, const qreal score) = 0;
-		virtual ~HitCollector(){}
+		virtual ~HitCollector()= default;
     };
 
    /** Expert: Calculate query weights and build query scorers.
@@ -103,8 +103,7 @@ CL_NS_DEF(search)
    */
 	class Weight: LUCENE_BASE {
     public:
-		virtual ~Weight(){
-		};
+		virtual ~Weight()= default;
 
       /** The query that this concerns. */
       virtual Query* getQuery() = 0;
@@ -201,8 +200,7 @@ CL_NS_DEF(search)
    */
    class Searchable: LUCENE_BASE {
    public:
-   	virtual ~Searchable(){
-	}
+   	virtual ~Searchable()= default;
 
       /** Lower-level search API.
       *
@@ -293,8 +291,7 @@ CL_NS_DEF(search)
 		Searcher(){
 			similarity = Similarity::getDefault();
 		}
-		virtual ~Searcher(){
-		}
+		virtual ~Searcher()= default;
 
 		// Returns the documents matching <code>query</code>.
 		Hits* search(Query* query) {

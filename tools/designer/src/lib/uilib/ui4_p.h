@@ -364,8 +364,8 @@ private:
         ButtonGroups = 65536
     };
 
-    DomUI(const DomUI &other);
-    void operator = (const DomUI&other);
+    DomUI(const DomUI &other) = delete;
+    void operator = (const DomUI&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomIncludes {
@@ -398,8 +398,8 @@ private:
         Include = 1
     };
 
-    DomIncludes(const DomIncludes &other);
-    void operator = (const DomIncludes&other);
+    DomIncludes(const DomIncludes &other) = delete;
+    void operator = (const DomIncludes&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomInclude {
@@ -441,8 +441,8 @@ private:
     // child element data
     uint m_children;
 
-    DomInclude(const DomInclude &other);
-    void operator = (const DomInclude&other);
+    DomInclude(const DomInclude &other) = delete;
+    void operator = (const DomInclude&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomResources {
@@ -483,8 +483,8 @@ private:
         Include = 1
     };
 
-    DomResources(const DomResources &other);
-    void operator = (const DomResources&other);
+    DomResources(const DomResources &other) = delete;
+    void operator = (const DomResources&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomResource {
@@ -518,8 +518,8 @@ private:
     // child element data
     uint m_children;
 
-    DomResource(const DomResource &other);
-    void operator = (const DomResource&other);
+    DomResource(const DomResource &other) = delete;
+    void operator = (const DomResource&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomActionGroup {
@@ -575,8 +575,8 @@ private:
         Attribute = 8
     };
 
-    DomActionGroup(const DomActionGroup &other);
-    void operator = (const DomActionGroup&other);
+    DomActionGroup(const DomActionGroup &other) = delete;
+    void operator = (const DomActionGroup&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomAction {
@@ -630,8 +630,8 @@ private:
         Attribute = 2
     };
 
-    DomAction(const DomAction &other);
-    void operator = (const DomAction&other);
+    DomAction(const DomAction &other) = delete;
+    void operator = (const DomAction&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomActionRef {
@@ -665,8 +665,8 @@ private:
     // child element data
     uint m_children;
 
-    DomActionRef(const DomActionRef &other);
-    void operator = (const DomActionRef&other);
+    DomActionRef(const DomActionRef &other) = delete;
+    void operator = (const DomActionRef&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomButtonGroup {
@@ -712,8 +712,8 @@ private:
         Attribute = 2
     };
 
-    DomButtonGroup(const DomButtonGroup &other);
-    void operator = (const DomButtonGroup&other);
+    DomButtonGroup(const DomButtonGroup &other) = delete;
+    void operator = (const DomButtonGroup&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomButtonGroups {
@@ -746,8 +746,8 @@ private:
         ButtonGroup = 1
     };
 
-    DomButtonGroups(const DomButtonGroups &other);
-    void operator = (const DomButtonGroups&other);
+    DomButtonGroups(const DomButtonGroups &other) = delete;
+    void operator = (const DomButtonGroups&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomImages {
@@ -780,8 +780,8 @@ private:
         Image = 1
     };
 
-    DomImages(const DomImages &other);
-    void operator = (const DomImages&other);
+    DomImages(const DomImages &other) = delete;
+    void operator = (const DomImages&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomImage {
@@ -825,8 +825,8 @@ private:
         Data = 1
     };
 
-    DomImage(const DomImage &other);
-    void operator = (const DomImage&other);
+    DomImage(const DomImage &other) = delete;
+    void operator = (const DomImage&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomImageData {
@@ -868,8 +868,8 @@ private:
     // child element data
     uint m_children;
 
-    DomImageData(const DomImageData &other);
-    void operator = (const DomImageData&other);
+    DomImageData(const DomImageData &other) = delete;
+    void operator = (const DomImageData&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomCustomWidgets {
@@ -902,8 +902,8 @@ private:
         CustomWidget = 1
     };
 
-    DomCustomWidgets(const DomCustomWidgets &other);
-    void operator = (const DomCustomWidgets&other);
+    DomCustomWidgets(const DomCustomWidgets &other) = delete;
+    void operator = (const DomCustomWidgets&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomHeader {
@@ -937,8 +937,8 @@ private:
     // child element data
     uint m_children;
 
-    DomHeader(const DomHeader &other);
-    void operator = (const DomHeader&other);
+    DomHeader(const DomHeader &other) = delete;
+    void operator = (const DomHeader&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomCustomWidget {
@@ -1057,8 +1057,8 @@ private:
         Propertyspecifications = 2048
     };
 
-    DomCustomWidget(const DomCustomWidget &other);
-    void operator = (const DomCustomWidget&other);
+    DomCustomWidget(const DomCustomWidget &other) = delete;
+    void operator = (const DomCustomWidget&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomProperties {
@@ -1091,8 +1091,8 @@ private:
         Property = 1
     };
 
-    DomProperties(const DomProperties &other);
-    void operator = (const DomProperties&other);
+    DomProperties(const DomProperties &other) = delete;
+    void operator = (const DomProperties&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPropertyData {
@@ -1126,8 +1126,8 @@ private:
     // child element data
     uint m_children;
 
-    DomPropertyData(const DomPropertyData &other);
-    void operator = (const DomPropertyData&other);
+    DomPropertyData(const DomPropertyData &other) = delete;
+    void operator = (const DomPropertyData&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSizePolicyData {
@@ -1169,8 +1169,8 @@ private:
         VerData = 2
     };
 
-    DomSizePolicyData(const DomSizePolicyData &other);
-    void operator = (const DomSizePolicyData&other);
+    DomSizePolicyData(const DomSizePolicyData &other) = delete;
+    void operator = (const DomSizePolicyData&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomLayoutDefault {
@@ -1212,8 +1212,8 @@ private:
     // child element data
     uint m_children;
 
-    DomLayoutDefault(const DomLayoutDefault &other);
-    void operator = (const DomLayoutDefault&other);
+    DomLayoutDefault(const DomLayoutDefault &other) = delete;
+    void operator = (const DomLayoutDefault&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomLayoutFunction {
@@ -1255,8 +1255,8 @@ private:
     // child element data
     uint m_children;
 
-    DomLayoutFunction(const DomLayoutFunction &other);
-    void operator = (const DomLayoutFunction&other);
+    DomLayoutFunction(const DomLayoutFunction &other) = delete;
+    void operator = (const DomLayoutFunction&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomTabStops {
@@ -1289,8 +1289,8 @@ private:
         TabStop = 1
     };
 
-    DomTabStops(const DomTabStops &other);
-    void operator = (const DomTabStops&other);
+    DomTabStops(const DomTabStops &other) = delete;
+    void operator = (const DomTabStops&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomLayout {
@@ -1389,8 +1389,8 @@ private:
         Item = 4
     };
 
-    DomLayout(const DomLayout &other);
-    void operator = (const DomLayout&other);
+    DomLayout(const DomLayout &other) = delete;
+    void operator = (const DomLayout&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomLayoutItem {
@@ -1474,8 +1474,8 @@ private:
     DomLayout* m_layout;
     DomSpacer* m_spacer;
 
-    DomLayoutItem(const DomLayoutItem &other);
-    void operator = (const DomLayoutItem&other);
+    DomLayoutItem(const DomLayoutItem &other) = delete;
+    void operator = (const DomLayoutItem&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomRow {
@@ -1508,8 +1508,8 @@ private:
         Property = 1
     };
 
-    DomRow(const DomRow &other);
-    void operator = (const DomRow&other);
+    DomRow(const DomRow &other) = delete;
+    void operator = (const DomRow&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomColumn {
@@ -1542,8 +1542,8 @@ private:
         Property = 1
     };
 
-    DomColumn(const DomColumn &other);
-    void operator = (const DomColumn&other);
+    DomColumn(const DomColumn &other) = delete;
+    void operator = (const DomColumn&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomItem {
@@ -1597,8 +1597,8 @@ private:
         Item = 2
     };
 
-    DomItem(const DomItem &other);
-    void operator = (const DomItem&other);
+    DomItem(const DomItem &other) = delete;
+    void operator = (const DomItem&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomWidget {
@@ -1720,8 +1720,8 @@ private:
         ZOrder = 8192
     };
 
-    DomWidget(const DomWidget &other);
-    void operator = (const DomWidget&other);
+    DomWidget(const DomWidget &other) = delete;
+    void operator = (const DomWidget&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSpacer {
@@ -1762,8 +1762,8 @@ private:
         Property = 1
     };
 
-    DomSpacer(const DomSpacer &other);
-    void operator = (const DomSpacer&other);
+    DomSpacer(const DomSpacer &other) = delete;
+    void operator = (const DomSpacer&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomColor {
@@ -1820,8 +1820,8 @@ private:
         Blue = 4
     };
 
-    DomColor(const DomColor &other);
-    void operator = (const DomColor&other);
+    DomColor(const DomColor &other) = delete;
+    void operator = (const DomColor&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomGradientStop {
@@ -1865,8 +1865,8 @@ private:
         Color = 1
     };
 
-    DomGradientStop(const DomGradientStop &other);
-    void operator = (const DomGradientStop&other);
+    DomGradientStop(const DomGradientStop &other) = delete;
+    void operator = (const DomGradientStop&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomGradient {
@@ -2003,8 +2003,8 @@ private:
         GradientStop = 1
     };
 
-    DomGradient(const DomGradient &other);
-    void operator = (const DomGradient&other);
+    DomGradient(const DomGradient &other) = delete;
+    void operator = (const DomGradient&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomBrush {
@@ -2056,8 +2056,8 @@ private:
     DomProperty* m_texture;
     DomGradient* m_gradient;
 
-    DomBrush(const DomBrush &other);
-    void operator = (const DomBrush&other);
+    DomBrush(const DomBrush &other) = delete;
+    void operator = (const DomBrush&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomColorRole {
@@ -2101,8 +2101,8 @@ private:
         Brush = 1
     };
 
-    DomColorRole(const DomColorRole &other);
-    void operator = (const DomColorRole&other);
+    DomColorRole(const DomColorRole &other) = delete;
+    void operator = (const DomColorRole&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomColorGroup {
@@ -2140,8 +2140,8 @@ private:
         Color = 2
     };
 
-    DomColorGroup(const DomColorGroup &other);
-    void operator = (const DomColorGroup&other);
+    DomColorGroup(const DomColorGroup &other) = delete;
+    void operator = (const DomColorGroup&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPalette {
@@ -2193,8 +2193,8 @@ private:
         Disabled = 4
     };
 
-    DomPalette(const DomPalette &other);
-    void operator = (const DomPalette&other);
+    DomPalette(const DomPalette &other) = delete;
+    void operator = (const DomPalette&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomFont {
@@ -2292,8 +2292,8 @@ private:
         Kerning = 512
     };
 
-    DomFont(const DomFont &other);
-    void operator = (const DomFont&other);
+    DomFont(const DomFont &other) = delete;
+    void operator = (const DomFont&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPoint {
@@ -2335,8 +2335,8 @@ private:
         Y = 2
     };
 
-    DomPoint(const DomPoint &other);
-    void operator = (const DomPoint&other);
+    DomPoint(const DomPoint &other) = delete;
+    void operator = (const DomPoint&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomRect {
@@ -2392,8 +2392,8 @@ private:
         Height = 8
     };
 
-    DomRect(const DomRect &other);
-    void operator = (const DomRect&other);
+    DomRect(const DomRect &other) = delete;
+    void operator = (const DomRect&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomLocale {
@@ -2435,8 +2435,8 @@ private:
     // child element data
     uint m_children;
 
-    DomLocale(const DomLocale &other);
-    void operator = (const DomLocale&other);
+    DomLocale(const DomLocale &other) = delete;
+    void operator = (const DomLocale&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSizePolicy {
@@ -2508,8 +2508,8 @@ private:
         VerStretch = 8
     };
 
-    DomSizePolicy(const DomSizePolicy &other);
-    void operator = (const DomSizePolicy&other);
+    DomSizePolicy(const DomSizePolicy &other) = delete;
+    void operator = (const DomSizePolicy&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSize {
@@ -2551,8 +2551,8 @@ private:
         Height = 2
     };
 
-    DomSize(const DomSize &other);
-    void operator = (const DomSize&other);
+    DomSize(const DomSize &other) = delete;
+    void operator = (const DomSize&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomDate {
@@ -2601,8 +2601,8 @@ private:
         Day = 4
     };
 
-    DomDate(const DomDate &other);
-    void operator = (const DomDate&other);
+    DomDate(const DomDate &other) = delete;
+    void operator = (const DomDate&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomTime {
@@ -2651,8 +2651,8 @@ private:
         Second = 4
     };
 
-    DomTime(const DomTime &other);
-    void operator = (const DomTime&other);
+    DomTime(const DomTime &other) = delete;
+    void operator = (const DomTime&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomDateTime {
@@ -2722,8 +2722,8 @@ private:
         Day = 32
     };
 
-    DomDateTime(const DomDateTime &other);
-    void operator = (const DomDateTime&other);
+    DomDateTime(const DomDateTime &other) = delete;
+    void operator = (const DomDateTime&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomStringList {
@@ -2756,8 +2756,8 @@ private:
         String = 1
     };
 
-    DomStringList(const DomStringList &other);
-    void operator = (const DomStringList&other);
+    DomStringList(const DomStringList &other) = delete;
+    void operator = (const DomStringList&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomResourcePixmap {
@@ -2799,8 +2799,8 @@ private:
     // child element data
     uint m_children;
 
-    DomResourcePixmap(const DomResourcePixmap &other);
-    void operator = (const DomResourcePixmap&other);
+    DomResourcePixmap(const DomResourcePixmap &other) = delete;
+    void operator = (const DomResourcePixmap&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomResourceIcon {
@@ -2908,8 +2908,8 @@ private:
         SelectedOn = 128
     };
 
-    DomResourceIcon(const DomResourceIcon &other);
-    void operator = (const DomResourceIcon&other);
+    DomResourceIcon(const DomResourceIcon &other) = delete;
+    void operator = (const DomResourceIcon&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomString {
@@ -2959,8 +2959,8 @@ private:
     // child element data
     uint m_children;
 
-    DomString(const DomString &other);
-    void operator = (const DomString&other);
+    DomString(const DomString &other) = delete;
+    void operator = (const DomString&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPointF {
@@ -3002,8 +3002,8 @@ private:
         Y = 2
     };
 
-    DomPointF(const DomPointF &other);
-    void operator = (const DomPointF&other);
+    DomPointF(const DomPointF &other) = delete;
+    void operator = (const DomPointF&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomRectF {
@@ -3059,8 +3059,8 @@ private:
         Height = 8
     };
 
-    DomRectF(const DomRectF &other);
-    void operator = (const DomRectF&other);
+    DomRectF(const DomRectF &other) = delete;
+    void operator = (const DomRectF&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSizeF {
@@ -3102,8 +3102,8 @@ private:
         Height = 2
     };
 
-    DomSizeF(const DomSizeF &other);
-    void operator = (const DomSizeF&other);
+    DomSizeF(const DomSizeF &other) = delete;
+    void operator = (const DomSizeF&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomChar {
@@ -3138,8 +3138,8 @@ private:
         Unicode = 1
     };
 
-    DomChar(const DomChar &other);
-    void operator = (const DomChar&other);
+    DomChar(const DomChar &other) = delete;
+    void operator = (const DomChar&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomUrl {
@@ -3175,8 +3175,8 @@ private:
         String = 1
     };
 
-    DomUrl(const DomUrl &other);
-    void operator = (const DomUrl&other);
+    DomUrl(const DomUrl &other) = delete;
+    void operator = (const DomUrl&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomProperty {
@@ -3374,8 +3374,8 @@ private:
     qulonglong m_uLongLong;
     DomBrush* m_brush;
 
-    DomProperty(const DomProperty &other);
-    void operator = (const DomProperty&other);
+    DomProperty(const DomProperty &other) = delete;
+    void operator = (const DomProperty&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomConnections {
@@ -3408,8 +3408,8 @@ private:
         Connection = 1
     };
 
-    DomConnections(const DomConnections &other);
-    void operator = (const DomConnections&other);
+    DomConnections(const DomConnections &other) = delete;
+    void operator = (const DomConnections&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomConnection {
@@ -3473,8 +3473,8 @@ private:
         Hints = 16
     };
 
-    DomConnection(const DomConnection &other);
-    void operator = (const DomConnection&other);
+    DomConnection(const DomConnection &other) = delete;
+    void operator = (const DomConnection&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomConnectionHints {
@@ -3507,8 +3507,8 @@ private:
         Hint = 1
     };
 
-    DomConnectionHints(const DomConnectionHints &other);
-    void operator = (const DomConnectionHints&other);
+    DomConnectionHints(const DomConnectionHints &other) = delete;
+    void operator = (const DomConnectionHints&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomConnectionHint {
@@ -3558,8 +3558,8 @@ private:
         Y = 2
     };
 
-    DomConnectionHint(const DomConnectionHint &other);
-    void operator = (const DomConnectionHint&other);
+    DomConnectionHint(const DomConnectionHint &other) = delete;
+    void operator = (const DomConnectionHint&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomScript {
@@ -3601,8 +3601,8 @@ private:
     // child element data
     uint m_children;
 
-    DomScript(const DomScript &other);
-    void operator = (const DomScript&other);
+    DomScript(const DomScript &other) = delete;
+    void operator = (const DomScript&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomWidgetData {
@@ -3635,8 +3635,8 @@ private:
         Property = 1
     };
 
-    DomWidgetData(const DomWidgetData &other);
-    void operator = (const DomWidgetData&other);
+    DomWidgetData(const DomWidgetData &other) = delete;
+    void operator = (const DomWidgetData&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomDesignerData {
@@ -3669,8 +3669,8 @@ private:
         Property = 1
     };
 
-    DomDesignerData(const DomDesignerData &other);
-    void operator = (const DomDesignerData&other);
+    DomDesignerData(const DomDesignerData &other) = delete;
+    void operator = (const DomDesignerData&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomSlots {
@@ -3708,8 +3708,8 @@ private:
         Slot = 2
     };
 
-    DomSlots(const DomSlots &other);
-    void operator = (const DomSlots&other);
+    DomSlots(const DomSlots &other) = delete;
+    void operator = (const DomSlots&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomPropertySpecifications {
@@ -3742,8 +3742,8 @@ private:
         Stringpropertyspecification = 1
     };
 
-    DomPropertySpecifications(const DomPropertySpecifications &other);
-    void operator = (const DomPropertySpecifications&other);
+    DomPropertySpecifications(const DomPropertySpecifications &other) = delete;
+    void operator = (const DomPropertySpecifications&other) = delete;
 };
 
 class QDESIGNER_UILIB_EXPORT DomStringPropertySpecification {
@@ -3793,8 +3793,8 @@ private:
     // child element data
     uint m_children;
 
-    DomStringPropertySpecification(const DomStringPropertySpecification &other);
-    void operator = (const DomStringPropertySpecification&other);
+    DomStringPropertySpecification(const DomStringPropertySpecification &other) = delete;
+    void operator = (const DomStringPropertySpecification&other) = delete;
 };
 
 

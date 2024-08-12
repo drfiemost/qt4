@@ -68,7 +68,7 @@ class QNetworkProxy;
 
 class QAbstractSocketEngineReceiver {
 public:
-    virtual ~QAbstractSocketEngineReceiver(){}
+    virtual ~QAbstractSocketEngineReceiver()= default;
     virtual void readNotification()= 0;
     virtual void writeNotification()= 0;
     virtual void exceptionNotification()= 0;

@@ -46,7 +46,7 @@ protected:
 public:
     DEFINE_MUTEX(THIS_LOCK)
 
-    virtual ~Directory() {};
+    virtual ~Directory() = default;
 
     // Returns an array of strings, one for each file in the directory.
     virtual QStringList list() const = 0;

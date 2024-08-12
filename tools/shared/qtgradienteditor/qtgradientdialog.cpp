@@ -216,8 +216,7 @@ QtGradientDialog::QtGradientDialog(QWidget *parent)
 */
 
 QtGradientDialog::~QtGradientDialog()
-{
-}
+= default;
 
 /*!
     \property QtGradientDialog::gradient

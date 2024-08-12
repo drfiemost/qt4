@@ -57,8 +57,7 @@ namespace QTest
 }
 
 QTestFileLogger::QTestFileLogger()
-{
-}
+= default;
 
 QTestFileLogger::~QTestFileLogger()
 {

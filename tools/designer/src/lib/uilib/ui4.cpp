@@ -921,8 +921,7 @@ DomInclude::DomInclude()
 }
 
 DomInclude::~DomInclude()
-{
-}
+= default;
 
 void DomInclude::read(QXmlStreamReader &reader)
 {
@@ -1127,8 +1126,7 @@ DomResource::DomResource()
 }
 
 DomResource::~DomResource()
-{
-}
+= default;
 
 void DomResource::read(QXmlStreamReader &reader)
 {
@@ -1546,8 +1544,7 @@ DomActionRef::DomActionRef()
 }
 
 DomActionRef::~DomActionRef()
-{
-}
+= default;
 
 void DomActionRef::read(QXmlStreamReader &reader)
 {
@@ -2089,8 +2086,7 @@ DomImageData::DomImageData()
 }
 
 DomImageData::~DomImageData()
-{
-}
+= default;
 
 void DomImageData::read(QXmlStreamReader &reader)
 {
@@ -2279,8 +2275,7 @@ DomHeader::DomHeader()
 }
 
 DomHeader::~DomHeader()
-{
-}
+= default;
 
 void DomHeader::read(QXmlStreamReader &reader)
 {
@@ -2939,8 +2934,7 @@ DomPropertyData::DomPropertyData()
 }
 
 DomPropertyData::~DomPropertyData()
-{
-}
+= default;
 
 void DomPropertyData::read(QXmlStreamReader &reader)
 {
@@ -3027,8 +3021,7 @@ DomSizePolicyData::DomSizePolicyData()
 }
 
 DomSizePolicyData::~DomSizePolicyData()
-{
-}
+= default;
 
 void DomSizePolicyData::read(QXmlStreamReader &reader)
 {
@@ -3150,8 +3143,7 @@ DomLayoutDefault::DomLayoutDefault()
 }
 
 DomLayoutDefault::~DomLayoutDefault()
-{
-}
+= default;
 
 void DomLayoutDefault::read(QXmlStreamReader &reader)
 {
@@ -3247,8 +3239,7 @@ DomLayoutFunction::DomLayoutFunction()
 }
 
 DomLayoutFunction::~DomLayoutFunction()
-{
-}
+= default;
 
 void DomLayoutFunction::read(QXmlStreamReader &reader)
 {
@@ -4818,8 +4809,7 @@ DomColor::DomColor()
 }
 
 DomColor::~DomColor()
-{
-}
+= default;
 
 void DomColor::read(QXmlStreamReader &reader)
 {
@@ -6025,8 +6015,7 @@ DomFont::DomFont()
 }
 
 DomFont::~DomFont()
-{
-}
+= default;
 
 void DomFont::read(QXmlStreamReader &reader)
 {
@@ -6328,8 +6317,7 @@ DomPoint::DomPoint()
 }
 
 DomPoint::~DomPoint()
-{
-}
+= default;
 
 void DomPoint::read(QXmlStreamReader &reader)
 {
@@ -6451,8 +6439,7 @@ DomRect::DomRect()
 }
 
 DomRect::~DomRect()
-{
-}
+= default;
 
 void DomRect::read(QXmlStreamReader &reader)
 {
@@ -6616,8 +6603,7 @@ DomLocale::DomLocale()
 }
 
 DomLocale::~DomLocale()
-{
-}
+= default;
 
 void DomLocale::read(QXmlStreamReader &reader)
 {
@@ -6721,8 +6707,7 @@ DomSizePolicy::DomSizePolicy()
 }
 
 DomSizePolicy::~DomSizePolicy()
-{
-}
+= default;
 
 void DomSizePolicy::read(QXmlStreamReader &reader)
 {
@@ -6910,8 +6895,7 @@ DomSize::DomSize()
 }
 
 DomSize::~DomSize()
-{
-}
+= default;
 
 void DomSize::read(QXmlStreamReader &reader)
 {
@@ -7031,8 +7015,7 @@ DomDate::DomDate()
 }
 
 DomDate::~DomDate()
-{
-}
+= default;
 
 void DomDate::read(QXmlStreamReader &reader)
 {
@@ -7175,8 +7158,7 @@ DomTime::DomTime()
 }
 
 DomTime::~DomTime()
-{
-}
+= default;
 
 void DomTime::read(QXmlStreamReader &reader)
 {
@@ -7325,8 +7307,7 @@ DomDateTime::DomDateTime()
 }
 
 DomDateTime::~DomDateTime()
-{
-}
+= default;
 
 void DomDateTime::read(QXmlStreamReader &reader)
 {
@@ -7625,8 +7606,7 @@ DomResourcePixmap::DomResourcePixmap()
 }
 
 DomResourcePixmap::~DomResourcePixmap()
-{
-}
+= default;
 
 void DomResourcePixmap::read(QXmlStreamReader &reader)
 {
@@ -8159,8 +8139,7 @@ DomString::DomString()
 }
 
 DomString::~DomString()
-{
-}
+= default;
 
 void DomString::read(QXmlStreamReader &reader)
 {
@@ -8265,8 +8244,7 @@ DomPointF::DomPointF()
 }
 
 DomPointF::~DomPointF()
-{
-}
+= default;
 
 void DomPointF::read(QXmlStreamReader &reader)
 {
@@ -8388,8 +8366,7 @@ DomRectF::DomRectF()
 }
 
 DomRectF::~DomRectF()
-{
-}
+= default;
 
 void DomRectF::read(QXmlStreamReader &reader)
 {
@@ -8553,8 +8530,7 @@ DomSizeF::DomSizeF()
 }
 
 DomSizeF::~DomSizeF()
-{
-}
+= default;
 
 void DomSizeF::read(QXmlStreamReader &reader)
 {
@@ -8670,8 +8646,7 @@ DomChar::DomChar()
 }
 
 DomChar::~DomChar()
-{
-}
+= default;
 
 void DomChar::read(QXmlStreamReader &reader)
 {
@@ -10394,8 +10369,7 @@ DomConnectionHint::DomConnectionHint()
 }
 
 DomConnectionHint::~DomConnectionHint()
-{
-}
+= default;
 
 void DomConnectionHint::read(QXmlStreamReader &reader)
 {
@@ -10528,8 +10502,7 @@ DomScript::DomScript()
 }
 
 DomScript::~DomScript()
-{
-}
+= default;
 
 void DomScript::read(QXmlStreamReader &reader)
 {
@@ -11016,8 +10989,7 @@ DomStringPropertySpecification::DomStringPropertySpecification()
 }
 
 DomStringPropertySpecification::~DomStringPropertySpecification()
-{
-}
+= default;
 
 void DomStringPropertySpecification::read(QXmlStreamReader &reader)
 {

@@ -72,8 +72,7 @@ QScriptDebuggerValuePropertyPrivate::QScriptDebuggerValuePropertyPrivate()
 }
 
 QScriptDebuggerValuePropertyPrivate::~QScriptDebuggerValuePropertyPrivate()
-{
-}
+= default;
 
 /*!
   Constructs an invalid QScriptDebuggerValueProperty.
@@ -114,8 +113,7 @@ QScriptDebuggerValueProperty::QScriptDebuggerValueProperty(const QScriptDebugger
   Destroys this QScriptDebuggerValueProperty.
 */
 QScriptDebuggerValueProperty::~QScriptDebuggerValueProperty()
-{
-}
+= default;
 
 /*!
   Assigns the \a other property to this QScriptDebuggerValueProperty.

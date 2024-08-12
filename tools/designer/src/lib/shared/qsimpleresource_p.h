@@ -132,7 +132,7 @@ private:
 struct QDESIGNER_SHARED_EXPORT FormBuilderClipboard {
     typedef QList<QAction*> ActionList;
 
-    FormBuilderClipboard() {}
+    FormBuilderClipboard() = default;
     FormBuilderClipboard(QWidget *w);
 
     bool empty() const;

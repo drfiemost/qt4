@@ -233,7 +233,7 @@ namespace WTF {
         HashTableIterator(HashTableType* table, PointerType pos, PointerType end, HashItemKnownGoodTag tag) : m_iterator(table, pos, end, tag) { }
 
     public:
-        HashTableIterator() { }
+        HashTableIterator() = default;
 
         // default copy, assignment and destructor are OK
 

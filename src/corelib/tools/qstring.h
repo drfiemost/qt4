@@ -1106,20 +1106,17 @@ public:
     inline QStringRef(const QString *string, int position, int size);
     inline QStringRef(const QString *string);
     inline QStringRef(const QStringRef &other)
-        :m_string(other.m_string), m_position(other.m_position), m_size(other.m_size)
-        {}
+         
+        = default;
 
-    inline ~QStringRef(){}
+    inline ~QStringRef()= default;
     inline const QString *string() const { return m_string; }
     inline int position() const { return m_position; }
     inline int size() const { return m_size; }
     inline int count() const { return m_size; }
     inline int length() const { return m_size; }
 
-    inline QStringRef &operator=(const QStringRef &other) {
-        m_string = other.m_string; m_position = other.m_position;
-        m_size = other.m_size; return *this;
-    }
+    inline QStringRef &operator=(const QStringRef &other) = default;
 
     int indexOf(const QString &str, int from = 0, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
     int indexOf(QChar ch, int from = 0, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;

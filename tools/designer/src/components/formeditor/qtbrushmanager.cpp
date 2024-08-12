@@ -63,8 +63,7 @@ QtBrushManager::QtBrushManager(QObject *parent)
 }
 
 QtBrushManager::~QtBrushManager()
-{
-}
+= default;
 
 QBrush QtBrushManager::brush(const QString &name) const
 {

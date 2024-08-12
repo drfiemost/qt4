@@ -102,7 +102,6 @@ QSqlDriverPlugin::QSqlDriverPlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QSqlDriverPlugin::~QSqlDriverPlugin()
-{
-}
+= default;
 
 QT_END_NAMESPACE

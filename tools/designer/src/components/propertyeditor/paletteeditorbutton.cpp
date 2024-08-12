@@ -61,8 +61,7 @@ PaletteEditorButton::PaletteEditorButton(QDesignerFormEditorInterface *core, con
 }
 
 PaletteEditorButton::~PaletteEditorButton()
-{
-}
+= default;
 
 void PaletteEditorButton::setPalette(const QPalette &palette)
 {

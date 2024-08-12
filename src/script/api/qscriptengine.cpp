@@ -331,8 +331,8 @@ QT_BEGIN_NAMESPACE
 class QScriptSyntaxCheckResultPrivate : public QSharedData
 {
 public:
-    QScriptSyntaxCheckResultPrivate() {}
-    ~QScriptSyntaxCheckResultPrivate() {}
+    QScriptSyntaxCheckResultPrivate() = default;
+    ~QScriptSyntaxCheckResultPrivate() = default;
 
     QScriptSyntaxCheckResult::State state;
     int errorColumnNumber;
@@ -4346,9 +4346,8 @@ QScriptValue QScriptEngine::objectById(qint64 id) const
   Constructs a new QScriptSyntaxCheckResult from the \a other result.
 */
 QScriptSyntaxCheckResult::QScriptSyntaxCheckResult(const QScriptSyntaxCheckResult &other)
-    : d_ptr(other.d_ptr)
-{
-}
+     
+= default;
 
 /*!
   \internal
@@ -4370,8 +4369,7 @@ QScriptSyntaxCheckResult::QScriptSyntaxCheckResult()
   Destroys this QScriptSyntaxCheckResult.
 */
 QScriptSyntaxCheckResult::~QScriptSyntaxCheckResult()
-{
-}
+= default;
 
 /*!
   Returns the state of this QScriptSyntaxCheckResult.

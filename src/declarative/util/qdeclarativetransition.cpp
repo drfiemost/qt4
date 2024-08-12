@@ -185,8 +185,7 @@ QDeclarativeTransition::QDeclarativeTransition(QObject *parent)
 }
 
 QDeclarativeTransition::~QDeclarativeTransition()
-{
-}
+= default;
 
 void QDeclarativeTransition::stop()
 {

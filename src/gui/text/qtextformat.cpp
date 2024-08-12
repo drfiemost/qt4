@@ -173,7 +173,7 @@ public:
     struct Property
     {
         inline Property(qint32 k, const QVariant &v) : key(k), value(v) {}
-        inline Property() {}
+        inline Property() = default;
 
         qint32 key;
         QVariant value;
@@ -768,9 +768,8 @@ QTextFormat::QTextFormat(int type)
     text format.
 */
 QTextFormat::QTextFormat(const QTextFormat &rhs)
-    : d(rhs.d), format_type(rhs.format_type)
-{
-}
+     
+= default;
 
 /*!
     \fn QTextFormat &QTextFormat::operator=(const QTextFormat &other)
@@ -779,18 +778,13 @@ QTextFormat::QTextFormat(const QTextFormat &rhs)
     reference to this text format.
 */
 QTextFormat &QTextFormat::operator=(const QTextFormat &rhs)
-{
-    d = rhs.d;
-    format_type = rhs.format_type;
-    return *this;
-}
+= default;
 
 /*!
     Destroys this text format.
 */
 QTextFormat::~QTextFormat()
-{
-}
+= default;
 
 
 /*!
@@ -3226,8 +3220,7 @@ QTextFormatCollection &QTextFormatCollection::operator=(const QTextFormatCollect
 }
 
 QTextFormatCollection::~QTextFormatCollection()
-{
-}
+= default;
 
 int QTextFormatCollection::indexForFormat(const QTextFormat &format)
 {

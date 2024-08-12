@@ -112,8 +112,7 @@ QFormBuilder::QFormBuilder() : QAbstractFormBuilder()
     Destroys the form builder.
 */
 QFormBuilder::~QFormBuilder()
-{
-}
+= default;
 
 /*!
     \internal

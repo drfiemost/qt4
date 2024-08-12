@@ -179,7 +179,7 @@ class Q_OPENGL_EXPORT QGLFunctions
 public:
     QGLFunctions();
     explicit QGLFunctions(const QGLContext *context);
-    ~QGLFunctions() {}
+    ~QGLFunctions() = default;
 
     enum OpenGLFeature
     {

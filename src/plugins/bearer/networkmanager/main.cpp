@@ -61,12 +61,10 @@ public:
 };
 
 QNetworkManagerEnginePlugin::QNetworkManagerEnginePlugin()
-{
-}
+= default;
 
 QNetworkManagerEnginePlugin::~QNetworkManagerEnginePlugin()
-{
-}
+= default;
 
 QStringList QNetworkManagerEnginePlugin::keys() const
 {

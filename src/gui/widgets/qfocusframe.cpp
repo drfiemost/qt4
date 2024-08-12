@@ -169,8 +169,7 @@ QFocusFrame::QFocusFrame(QWidget *parent)
 */
 
 QFocusFrame::~QFocusFrame()
-{
-}
+= default;
 
 /*!
   QFocusFrame will track changes to \a widget and resize itself automatically.

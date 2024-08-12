@@ -3850,8 +3850,7 @@ QImage QRasterBuffer::colorizeBitmap(const QImage &image, const QColor &color)
 }
 
 QRasterBuffer::~QRasterBuffer()
-{
-}
+= default;
 
 void QRasterBuffer::init()
 {

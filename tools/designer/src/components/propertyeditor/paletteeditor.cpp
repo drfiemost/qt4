@@ -88,8 +88,7 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
 }
 
 PaletteEditor::~PaletteEditor()
-{
-}
+= default;
 
 QPalette PaletteEditor::palette() const
 {

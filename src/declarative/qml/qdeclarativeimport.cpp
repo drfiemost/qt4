@@ -753,8 +753,7 @@ QDeclarativeImportDatabase::QDeclarativeImportDatabase(QDeclarativeEngine *e)
 }
 
 QDeclarativeImportDatabase::~QDeclarativeImportDatabase()
-{
-}
+= default;
 
 /*!
   \internal

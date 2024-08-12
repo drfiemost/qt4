@@ -104,32 +104,23 @@ QSqlError::QSqlError(const QString& driverText, const QString& databaseText, Err
     Creates a copy of \a other.
 */
 QSqlError::QSqlError(const QSqlError& other)
-    : driverError(other.driverError), databaseError(other.databaseError),
-      errorType(other.errorType),
-      errorNumber(other.errorNumber)
-{
-}
+    
+      
+= default;
 
 /*!
     Assigns the \a other error's values to this error.
 */
 
 QSqlError& QSqlError::operator=(const QSqlError& other)
-{
-    driverError = other.driverError;
-    databaseError = other.databaseError;
-    errorType = other.errorType;
-    errorNumber = other.errorNumber;
-    return *this;
-}
+= default;
 
 /*!
     Destroys the object and frees any allocated resources.
 */
 
 QSqlError::~QSqlError()
-{
-}
+= default;
 
 /*!
     Returns the text of the error as reported by the driver. This may

@@ -88,9 +88,7 @@ QSimpleResource::QSimpleResource(QDesignerFormEditorInterface *core) :
 }
 
 QSimpleResource::~QSimpleResource()
-{
-
-}
+= default;
 
 QBrush QSimpleResource::setupBrush(DomBrush *brush)
 {

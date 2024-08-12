@@ -69,8 +69,7 @@ QScriptDebuggerAgentPrivate::QScriptDebuggerAgentPrivate()
 }
 
 QScriptDebuggerAgentPrivate::~QScriptDebuggerAgentPrivate()
-{
-}
+= default;
 
 QScriptDebuggerAgentPrivate *QScriptDebuggerAgentPrivate::get(
     QScriptDebuggerAgent *q)

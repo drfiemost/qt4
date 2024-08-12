@@ -74,8 +74,7 @@ CL_NS_DEF(search)
  */
 class SortComparatorSource:LUCENE_BASE {
 public:
-   virtual ~SortComparatorSource(){
-   }
+   virtual ~SortComparatorSource()= default;
 
    /**
    * return a reference to a string describing the name of the comparator

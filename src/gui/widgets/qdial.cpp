@@ -258,8 +258,7 @@ QDial::QDial(QWidget *parent)
     Destroys the dial.
 */
 QDial::~QDial()
-{
-}
+= default;
 
 /*! \reimp */
 void QDial::resizeEvent(QResizeEvent *e)

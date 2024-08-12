@@ -60,8 +60,7 @@ StringListEditorButton::StringListEditorButton(
 }
 
 StringListEditorButton::~StringListEditorButton()
-{
-}
+= default;
 
 void StringListEditorButton::setStringList(const QStringList &stringList)
 {

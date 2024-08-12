@@ -38,8 +38,7 @@ protected:
 
 public:
 	CharTokenizer(CL_NS(util)::Reader* in);
-	virtual ~CharTokenizer(){
-	}
+	virtual ~CharTokenizer()= default;
 	bool next(Token* token);
 };
 
@@ -56,7 +55,7 @@ public:
 	LetterTokenizer(CL_NS(util)::Reader* in):
 	CharTokenizer(in) {}
 
-    ~LetterTokenizer(){}
+    ~LetterTokenizer()= default;
 protected:
     /** Collects only characters which satisfy _istalpha.*/
 	bool isTokenChar(const TCHAR c) const;
@@ -80,7 +79,7 @@ public:
 	LowerCaseTokenizer(CL_NS(util)::Reader* in):
 	LetterTokenizer(in) {}
 
-    ~LowerCaseTokenizer(){}
+    ~LowerCaseTokenizer()= default;
 protected:
 	/** Collects only characters which satisfy _totlower. */
 	TCHAR normalize(const TCHAR chr) const;
@@ -93,7 +92,7 @@ class WhitespaceTokenizer: public CharTokenizer {
 public:
 	/** Construct a new WhitespaceTokenizer. */ 
 	WhitespaceTokenizer(CL_NS(util)::Reader* in):CharTokenizer(in) {}
-	~WhitespaceTokenizer(){}
+	~WhitespaceTokenizer()= default;
 protected:
 	/** Collects only characters which do not satisfy _istspace.
 	*/
@@ -105,14 +104,14 @@ protected:
 class WhitespaceAnalyzer: public Analyzer {
  public:
   TokenStream* tokenStream(const TCHAR* fieldName, CL_NS(util)::Reader* reader);
-  ~WhitespaceAnalyzer(){}
+  ~WhitespaceAnalyzer()= default;
 };
 
 /** An Analyzer that filters LetterTokenizer with LowerCaseFilter. */
 class SimpleAnalyzer: public Analyzer {
 public:
 	TokenStream* tokenStream(const TCHAR* fieldName, CL_NS(util)::Reader* reader);
-	~SimpleAnalyzer(){}
+	~SimpleAnalyzer()= default;
 };
 
 
@@ -123,7 +122,7 @@ public:
 class LowerCaseFilter: public TokenFilter {
 public:
 	LowerCaseFilter(TokenStream* in, bool deleteTokenStream):TokenFilter(in,deleteTokenStream) {}
-	~LowerCaseFilter(){}
+	~LowerCaseFilter()= default;
 	bool next(Token* token);
 };
 
@@ -141,7 +140,7 @@ public:
 	//	TokenStream that are named in the array of words. 
 	StopFilter(TokenStream* in, bool deleteTokenStream, const TCHAR** stopWords);
 
-	~StopFilter(){}
+	~StopFilter()= default;
 
 	/** Constructs a filter which removes words from the input
 	*	TokenStream that are named in the CLSetList.
@@ -279,7 +278,7 @@ public:
 class KeywordAnalyzer: public Analyzer {
 public:
     TokenStream* tokenStream(const TCHAR* fieldName, CL_NS(util)::Reader* reader);
-    virtual ~KeywordAnalyzer(){}
+    virtual ~KeywordAnalyzer()= default;
 };
 
     

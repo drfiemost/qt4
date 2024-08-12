@@ -299,8 +299,7 @@ CL_NS_DEF(search)
   ScoreDocComparator* ScoreDocComparator::INDEXORDER = _CLNEW ScoreDocComparators::IndexOrder;
   ScoreDocComparator* ScoreDocComparator::RELEVANCE = _CLNEW ScoreDocComparators::Relevance;
 
-  ScoreDocComparator::~ScoreDocComparator(){
-  }
+  ScoreDocComparator::~ScoreDocComparator()= default;
 
 
 class ScoreDocComparatorImpl: public ScoreDocComparator{
@@ -315,8 +314,7 @@ public:
 		this->cachedValues = fca->comparableArray;
 		this->cachedValuesLen = fca->contentLen;
 	}
-	~ScoreDocComparatorImpl(){
-	}
+	~ScoreDocComparatorImpl()= default;
 	int32_t compare (struct ScoreDoc* i, struct ScoreDoc* j){
 		CND_PRECONDITION(i->doc >= 0 && i->doc < cachedValuesLen, "i->doc out of range")
 		CND_PRECONDITION(j->doc >= 0 && j->doc < cachedValuesLen, "j->doc out of range")
@@ -336,10 +334,8 @@ public:
 ScoreDocComparator* SortComparator::newComparator (CL_NS(index)::IndexReader* reader, const TCHAR* fieldname){
 	return _CLNEW ScoreDocComparatorImpl(FieldCache::DEFAULT->getCustom (reader, fieldname, this));
 }
-SortComparator::SortComparator(){
-}
-SortComparator::~SortComparator(){
-}
+SortComparator::SortComparator()= default;
+SortComparator::~SortComparator()= default;
 
 
 CL_NS_END

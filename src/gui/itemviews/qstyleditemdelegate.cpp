@@ -251,8 +251,7 @@ QStyledItemDelegate::QStyledItemDelegate(QObject *parent)
     Destroys the item delegate.
 */
 QStyledItemDelegate::~QStyledItemDelegate()
-{
-}
+= default;
 
 /*!
     This function returns the string that the delegate will use to display the

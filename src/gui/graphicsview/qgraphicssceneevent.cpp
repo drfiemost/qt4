@@ -277,7 +277,7 @@ public:
     { }
 
     inline virtual ~QGraphicsSceneEventPrivate()
-    { }
+    = default;
 
     QWidget *widget;
     QGraphicsSceneEvent *q_ptr;
@@ -309,8 +309,7 @@ QGraphicsSceneEvent::QGraphicsSceneEvent(QGraphicsSceneEventPrivate &dd, Type ty
     Destroys the event.
 */
 QGraphicsSceneEvent::~QGraphicsSceneEvent()
-{
-}
+= default;
 
 /*!
     Returns the widget where the event originated, or 0 if the event
@@ -370,8 +369,7 @@ QGraphicsSceneMouseEvent::QGraphicsSceneMouseEvent(Type type)
     Destroys the event.
 */
 QGraphicsSceneMouseEvent::~QGraphicsSceneMouseEvent()
-{
-}
+= default;
 
 /*!
     Returns the mouse cursor position in item coordinates.
@@ -657,8 +655,7 @@ QGraphicsSceneWheelEvent::QGraphicsSceneWheelEvent(Type type)
     Destroys the QGraphicsSceneWheelEvent.
 */
 QGraphicsSceneWheelEvent::~QGraphicsSceneWheelEvent()
-{
-}
+= default;
 
 /*!
     Returns the position of the cursor in item coordinates when the
@@ -835,8 +832,7 @@ QGraphicsSceneContextMenuEvent::QGraphicsSceneContextMenuEvent(Type type)
     Destroys the event.
 */
 QGraphicsSceneContextMenuEvent::~QGraphicsSceneContextMenuEvent()
-{
-}
+= default;
 
 /*!
     Returns the position of the mouse cursor in item coordinates at the moment
@@ -983,8 +979,7 @@ QGraphicsSceneHoverEvent::QGraphicsSceneHoverEvent(Type type)
     Destroys the event.
 */
 QGraphicsSceneHoverEvent::~QGraphicsSceneHoverEvent()
-{
-}
+= default;
 
 /*!
     Returns the position of the mouse cursor in item coordinates at the moment
@@ -1175,8 +1170,7 @@ QGraphicsSceneHelpEvent::QGraphicsSceneHelpEvent(Type type)
     Destroys the event.
 */
 QGraphicsSceneHelpEvent::~QGraphicsSceneHelpEvent()
-{
-}
+= default;
 
 /*!
     Returns the position of the mouse cursor in scene coordinates at the
@@ -1265,8 +1259,7 @@ QGraphicsSceneDragDropEvent::QGraphicsSceneDragDropEvent(Type type)
     Destroys the object.
 */
 QGraphicsSceneDragDropEvent::~QGraphicsSceneDragDropEvent()
-{
-}
+= default;
 
 /*!
     Returns the mouse position of the event relative to the
@@ -1540,7 +1533,7 @@ class QGraphicsSceneResizeEventPrivate : public QGraphicsSceneEventPrivate
     Q_DECLARE_PUBLIC(QGraphicsSceneResizeEvent)
 public:
     inline QGraphicsSceneResizeEventPrivate()
-    { }
+    = default;
 
     QSizeF oldSize;
     QSizeF newSize;
@@ -1558,8 +1551,7 @@ QGraphicsSceneResizeEvent::QGraphicsSceneResizeEvent()
     Destroys the QGraphicsSceneResizeEvent.
 */
 QGraphicsSceneResizeEvent::~QGraphicsSceneResizeEvent()
-{
-}
+= default;
 
 /*!
     Returns the old size (i.e., the size immediately before the widget was
@@ -1607,7 +1599,7 @@ class QGraphicsSceneMoveEventPrivate : public QGraphicsSceneEventPrivate
     Q_DECLARE_PUBLIC(QGraphicsSceneMoveEvent)
 public:
     inline QGraphicsSceneMoveEventPrivate()
-    { }
+    = default;
 
     QPointF oldPos;
     QPointF newPos;
@@ -1625,8 +1617,7 @@ QGraphicsSceneMoveEvent::QGraphicsSceneMoveEvent()
     Destroys the QGraphicsSceneMoveEvent.
 */
 QGraphicsSceneMoveEvent::~QGraphicsSceneMoveEvent()
-{
-}
+= default;
 
 /*!
     Returns the old position (i.e., the position immediately before the widget

@@ -291,17 +291,14 @@ public:
         : QFutureInterfaceBase(initialState)
     { }
     QFutureInterface<void>(const QFutureInterface<void> &other)
-        : QFutureInterfaceBase(other)
-    { }
+         
+    = default;
 
     static QFutureInterface<void> canceledResult()
     { return QFutureInterface(State(Started | Finished | Canceled)); }
 
     QFutureInterface<void> &operator=(const QFutureInterface<void> &other)
-    {
-        QFutureInterfaceBase::operator=(other);
-        return *this;
-    }
+    = default;
 
     inline QFuture<void> future(); // implemented in qfuture.h
 

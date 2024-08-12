@@ -152,8 +152,7 @@ QHistoryState::QHistoryState(HistoryType type, QState *parent)
   Destroys this history state.
 */
 QHistoryState::~QHistoryState()
-{
-}
+= default;
 
 /*!
   Returns this history state's default state.  The default state indicates the

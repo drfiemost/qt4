@@ -172,8 +172,7 @@ QScrollArea::QScrollArea(QScrollAreaPrivate &dd, QWidget *parent)
     \sa setWidget()
 */
 QScrollArea::~QScrollArea()
-{
-}
+= default;
 
 void QScrollAreaPrivate::updateWidgetPosition()
 {

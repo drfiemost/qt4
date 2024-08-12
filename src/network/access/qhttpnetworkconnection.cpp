@@ -906,8 +906,7 @@ QHttpNetworkConnection::QHttpNetworkConnection(quint16 connectionCount, const QS
 #endif
 
 QHttpNetworkConnection::~QHttpNetworkConnection()
-{
-}
+= default;
 
 QString QHttpNetworkConnection::hostName() const
 {

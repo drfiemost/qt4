@@ -60,8 +60,7 @@ QHttpSocketEngine::QHttpSocketEngine(QObject *parent)
 }
 
 QHttpSocketEngine::~QHttpSocketEngine()
-{
-}
+= default;
 
 bool QHttpSocketEngine::initialize(QAbstractSocket::SocketType type, QAbstractSocket::NetworkLayerProtocol protocol)
 {
@@ -817,8 +816,7 @@ QHttpSocketEnginePrivate::QHttpSocketEnginePrivate()
 }
 
 QHttpSocketEnginePrivate::~QHttpSocketEnginePrivate()
-{
-}
+= default;
 
 QAbstractSocketEngine *QHttpSocketEngineHandler::createSocketEngine(QAbstractSocket::SocketType socketType,
                                                                     const QNetworkProxy &proxy,

@@ -64,12 +64,10 @@ public:
 };
 
 QScriptDebuggerStackWidgetPrivate::QScriptDebuggerStackWidgetPrivate()
-{
-}
+= default;
 
 QScriptDebuggerStackWidgetPrivate::~QScriptDebuggerStackWidgetPrivate()
-{
-}
+= default;
 
 void QScriptDebuggerStackWidgetPrivate::_q_onCurrentChanged(const QModelIndex &index)
 {
@@ -95,8 +93,7 @@ QScriptDebuggerStackWidget::QScriptDebuggerStackWidget(QWidget *parent)
 }
 
 QScriptDebuggerStackWidget::~QScriptDebuggerStackWidget()
-{
-}
+= default;
 
 /*!
   \reimp

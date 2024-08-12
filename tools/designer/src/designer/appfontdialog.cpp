@@ -103,8 +103,7 @@ private:
 };
 
 AppFontManager::AppFontManager()
-{
-}
+= default;
 
 AppFontManager &AppFontManager::instance()
 {

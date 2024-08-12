@@ -201,8 +201,7 @@ QDeclarativeParentChange::QDeclarativeParentChange(QObject *parent)
 }
 
 QDeclarativeParentChange::~QDeclarativeParentChange()
-{
-}
+= default;
 
 /*!
     \qmlproperty real ParentChange::x
@@ -591,7 +590,7 @@ void QDeclarativeParentChange::rewind()
 class QDeclarativeStateChangeScriptPrivate : public QDeclarativeStateOperationPrivate
 {
 public:
-    QDeclarativeStateChangeScriptPrivate() {}
+    QDeclarativeStateChangeScriptPrivate() = default;
 
     QDeclarativeScriptString script;
     QString name;
@@ -617,8 +616,7 @@ QDeclarativeStateChangeScript::QDeclarativeStateChangeScript(QObject *parent)
 }
 
 QDeclarativeStateChangeScript::~QDeclarativeStateChangeScript()
-{
-}
+= default;
 
 /*!
     \qmlproperty script StateChangeScript::script
@@ -756,8 +754,7 @@ QDeclarativeAnchorSet::QDeclarativeAnchorSet(QObject *parent)
 }
 
 QDeclarativeAnchorSet::~QDeclarativeAnchorSet()
-{
-}
+= default;
 
 QDeclarativeScriptString QDeclarativeAnchorSet::top() const
 {
@@ -1047,8 +1044,7 @@ QDeclarativeAnchorChanges::QDeclarativeAnchorChanges(QObject *parent)
 }
 
 QDeclarativeAnchorChanges::~QDeclarativeAnchorChanges()
-{
-}
+= default;
 
 QDeclarativeAnchorChanges::ActionList QDeclarativeAnchorChanges::actions()
 {

@@ -428,8 +428,7 @@ QTimerEvent::QTimerEvent(int timerId)
 /*! \internal
 */
 QTimerEvent::~QTimerEvent()
-{
-}
+= default;
 
 /*!
     \fn int QTimerEvent::timerId() const
@@ -473,8 +472,7 @@ QChildEvent::QChildEvent(Type type, QObject *child)
 /*! \internal
 */
 QChildEvent::~QChildEvent()
-{
-}
+= default;
 
 /*!
     \fn QObject *QChildEvent::child() const
@@ -576,8 +574,7 @@ QDynamicPropertyChangeEvent::QDynamicPropertyChangeEvent(const QByteArray &name)
     \internal
 */
 QDynamicPropertyChangeEvent::~QDynamicPropertyChangeEvent()
-{
-}
+= default;
 
 /*!
     \fn QByteArray QDynamicPropertyChangeEvent::propertyName() const

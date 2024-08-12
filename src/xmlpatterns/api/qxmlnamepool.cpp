@@ -83,9 +83,8 @@ QXmlNamePool::QXmlNamePool() : d(new QPatternist::NamePool())
 /*!
   Constructs a copy of the \a other name pool.
  */
-QXmlNamePool::QXmlNamePool(const QXmlNamePool &other) : d(other.d)
-{
-}
+QXmlNamePool::QXmlNamePool(const QXmlNamePool &other)  
+= default;
 
 /*!
   Destroys the name pool. Instances of QXmlName constructed
@@ -93,8 +92,7 @@ QXmlNamePool::QXmlNamePool(const QXmlNamePool &other) : d(other.d)
   is called, but their text strings cannot be accessed.
  */
 QXmlNamePool::~QXmlNamePool()
-{
-}
+= default;
 
 QXmlNamePool::QXmlNamePool(QPatternist::NamePool *namePool) : d(QExplicitlySharedDataPointer<QPatternist::NamePool>(namePool))
 {
@@ -104,10 +102,7 @@ QXmlNamePool::QXmlNamePool(QPatternist::NamePool *namePool) : d(QExplicitlyShare
   Assigns the \a other name pool to this one.
  */
 QXmlNamePool &QXmlNamePool::operator=(const QXmlNamePool &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 QT_END_NAMESPACE
 

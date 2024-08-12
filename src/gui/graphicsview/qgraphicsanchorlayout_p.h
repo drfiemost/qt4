@@ -318,7 +318,7 @@ inline QString AnchorVertex::toString() const
 class GraphPath
 {
 public:
-    GraphPath() {}
+    GraphPath() = default;
 
     QSimplexConstraint *constraint(const GraphPath &path) const;
 #ifdef QT_DEBUG

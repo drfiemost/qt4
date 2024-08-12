@@ -55,7 +55,7 @@ class QSet
     typedef QHash<T, QHashDummyValue> Hash;
 
 public:
-    inline QSet() {}
+    inline QSet() = default;
     inline QSet(const QSet<T> &other) : q_hash(other.q_hash) {}
 
     inline QSet<T> &operator=(const QSet<T> &other)
@@ -106,7 +106,7 @@ public:
         typedef const T *pointer;
         typedef const T &reference;
 
-        inline iterator() {}
+        inline iterator() = default;
         inline iterator(typename Hash::iterator o) : i(o) {}
         inline iterator(const iterator &o) : i(o.i) {}
         inline iterator &operator=(const iterator &o) { i = o.i; return *this; }
@@ -141,7 +141,7 @@ public:
         typedef const T *pointer;
         typedef const T &reference;
 
-        inline const_iterator() {}
+        inline const_iterator() = default;
         inline const_iterator(typename Hash::const_iterator o) : i(o) {}
         inline const_iterator(const const_iterator &o) : i(o.i) {}
         inline const_iterator(const iterator &o)

@@ -58,8 +58,7 @@ _active(false), _filterChildren(false)
 }
 
 QDeclarativeDrag::~QDeclarativeDrag()
-{
-}
+= default;
 
 QGraphicsObject *QDeclarativeDrag::target() const
 {
@@ -362,8 +361,7 @@ QDeclarativeMouseArea::QDeclarativeMouseArea(QDeclarativeItem *parent)
 }
 
 QDeclarativeMouseArea::~QDeclarativeMouseArea()
-{
-}
+= default;
 
 /*!
     \qmlproperty real MouseArea::mouseX

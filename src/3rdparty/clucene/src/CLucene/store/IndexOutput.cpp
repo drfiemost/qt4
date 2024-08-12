@@ -12,11 +12,9 @@ CL_NS_DEF(store)
 
 
   IndexOutput::IndexOutput()
-  {
-  }
+  = default;
 
-  IndexOutput::~IndexOutput(){
-  }
+  IndexOutput::~IndexOutput()= default;
 
   BufferedIndexOutput::BufferedIndexOutput()
   {

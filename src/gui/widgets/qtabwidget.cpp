@@ -215,7 +215,7 @@ QTabWidgetPrivate::QTabWidgetPrivate()
 {}
 
 QTabWidgetPrivate::~QTabWidgetPrivate()
-{}
+= default;
 
 void QTabWidgetPrivate::init()
 {
@@ -349,8 +349,7 @@ QTabWidget::QTabWidget(QWidget *parent)
     Destroys the tabbed widget.
 */
 QTabWidget::~QTabWidget()
-{
-}
+= default;
 
 /*!
     \fn int QTabWidget::addTab(QWidget *page, const QString &label)

@@ -56,8 +56,7 @@ LiveLayerItem::LiveLayerItem(QGraphicsScene* scene)
 }
 
 LiveLayerItem::~LiveLayerItem()
-{
-}
+= default;
 
 void LiveLayerItem::paint(QPainter * /*painter*/, const QStyleOptionGraphicsItem * /*option*/,
                           QWidget * /*widget*/)

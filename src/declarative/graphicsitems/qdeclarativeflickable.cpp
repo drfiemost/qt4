@@ -541,8 +541,7 @@ QDeclarativeFlickable::QDeclarativeFlickable(QDeclarativeFlickablePrivate &dd, Q
 }
 
 QDeclarativeFlickable::~QDeclarativeFlickable()
-{
-}
+= default;
 
 /*!
     \qmlproperty real Flickable::contentX

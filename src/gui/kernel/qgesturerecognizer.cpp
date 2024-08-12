@@ -150,15 +150,13 @@ QT_BEGIN_NAMESPACE
     Constructs a new gesture recognizer object.
 */
 QGestureRecognizer::QGestureRecognizer()
-{
-}
+= default;
 
 /*!
     Destroys the gesture recognizer.
 */
 QGestureRecognizer::~QGestureRecognizer()
-{
-}
+= default;
 
 /*!
     This function is called by Qt to create a new QGesture object for the

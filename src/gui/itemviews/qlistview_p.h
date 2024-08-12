@@ -119,7 +119,7 @@ class QCommonListViewBase
 {
 public:
     inline QCommonListViewBase(QListView *q, QListViewPrivate *d) : dd(d), qq(q), batchStartRow(0), batchSavedDeltaSeg(0) {}
-    virtual ~QCommonListViewBase() {}
+    virtual ~QCommonListViewBase() = default;
 
     //common interface
     virtual int itemIndex(const QListViewItem &item) const = 0;

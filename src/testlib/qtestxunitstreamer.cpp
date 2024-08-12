@@ -53,7 +53,7 @@ QTestXunitStreamer::QTestXunitStreamer()
 {}
 
 QTestXunitStreamer::~QTestXunitStreamer()
-{}
+= default;
 
 void QTestXunitStreamer::indentForElement(const QTestElement* element, char* buf, int size)
 {

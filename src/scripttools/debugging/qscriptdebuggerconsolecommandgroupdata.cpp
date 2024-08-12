@@ -70,8 +70,7 @@ QScriptDebuggerConsoleCommandGroupDataPrivate::QScriptDebuggerConsoleCommandGrou
 }
 
 QScriptDebuggerConsoleCommandGroupDataPrivate::~QScriptDebuggerConsoleCommandGroupDataPrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommandGroupData::QScriptDebuggerConsoleCommandGroupData()
     : d_ptr(nullptr)
@@ -96,8 +95,7 @@ QScriptDebuggerConsoleCommandGroupData::QScriptDebuggerConsoleCommandGroupData(
 }
 
 QScriptDebuggerConsoleCommandGroupData::~QScriptDebuggerConsoleCommandGroupData()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommandGroupData &QScriptDebuggerConsoleCommandGroupData::operator=(
     const QScriptDebuggerConsoleCommandGroupData &other)

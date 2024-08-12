@@ -82,7 +82,7 @@ public:
         : JSC::JSObject(sid), originalGlobalObject(object)
     {}
     ~OriginalGlobalObjectProxy() override
-    {}
+    = default;
     JSC::UString className() const override
     { return originalGlobalObject->className(); }
     void markChildren(JSC::MarkStack& markStack) override

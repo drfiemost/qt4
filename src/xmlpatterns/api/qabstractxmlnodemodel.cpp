@@ -300,8 +300,7 @@ QAbstractXmlNodeModel::QAbstractXmlNodeModel(QAbstractXmlNodeModelPrivate *d) : 
   Destructor.
  */
 QAbstractXmlNodeModel::~QAbstractXmlNodeModel()
-{
-}
+= default;
 
 /*!
   \typedef QAbstractXmlNodeModel::List
@@ -449,8 +448,7 @@ namespace QPatternist
     {
     public:
         inline MergeIterator()
-        {
-        }
+        = default;
 
         inline
         QXmlNodeModelIndexIteratorPointer

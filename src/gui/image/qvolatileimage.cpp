@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
 class QVolatileImagePaintEnginePrivate : public QRasterPaintEnginePrivate
 {
 public:
-    QVolatileImagePaintEnginePrivate() { }
+    QVolatileImagePaintEnginePrivate() = default;
     QVolatileImage *img;
 };
 
@@ -89,19 +89,14 @@ QVolatileImage::QVolatileImage(void *nativeImage, void *nativeMask)
 // fwd declared QSharedData working.
 
 QVolatileImage::QVolatileImage(const QVolatileImage &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 QVolatileImage::~QVolatileImage()
-{
-}
+= default;
 
 QVolatileImage &QVolatileImage::operator=(const QVolatileImage &rhs)
-{
-    d = rhs.d;
-    return *this;
-}
+= default;
 
 bool QVolatileImage::paintingActive() const
 {

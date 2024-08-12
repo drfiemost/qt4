@@ -114,8 +114,7 @@ QDeclarativeImage::QDeclarativeImage(QDeclarativeImagePrivate &dd, QDeclarativeI
 }
 
 QDeclarativeImage::~QDeclarativeImage()
-{
-}
+= default;
 
 QPixmap QDeclarativeImage::pixmap() const
 {

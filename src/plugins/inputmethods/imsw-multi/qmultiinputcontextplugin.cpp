@@ -62,12 +62,10 @@
 QT_BEGIN_NAMESPACE
 
 QMultiInputContextPlugin::QMultiInputContextPlugin()
-{
-}
+= default;
 
 QMultiInputContextPlugin::~QMultiInputContextPlugin()
-{
-}
+= default;
 
 QStringList QMultiInputContextPlugin::keys() const
 {

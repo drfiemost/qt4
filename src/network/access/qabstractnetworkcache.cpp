@@ -134,18 +134,14 @@ QNetworkCacheMetaData::~QNetworkCacheMetaData()
     Constructs a copy of the \a other QNetworkCacheMetaData.
  */
 QNetworkCacheMetaData::QNetworkCacheMetaData(const QNetworkCacheMetaData &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Makes a copy of the \a other QNetworkCacheMetaData and returns a reference to the copy.
  */
 QNetworkCacheMetaData &QNetworkCacheMetaData::operator=(const QNetworkCacheMetaData &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this meta data is equal to the \a other meta data; otherwise returns false.
@@ -433,8 +429,7 @@ QAbstractNetworkCache::QAbstractNetworkCache(QAbstractNetworkCachePrivate &dd, Q
     \sa insert()
  */
 QAbstractNetworkCache::~QAbstractNetworkCache()
-{
-}
+= default;
 
 /*!
     \fn QNetworkCacheMetaData QAbstractNetworkCache::metaData(const QUrl &url) = 0

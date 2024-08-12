@@ -113,8 +113,7 @@ QAbstractItemViewPrivate::QAbstractItemViewPrivate()
 }
 
 QAbstractItemViewPrivate::~QAbstractItemViewPrivate()
-{
-}
+= default;
 
 void QAbstractItemViewPrivate::init()
 {

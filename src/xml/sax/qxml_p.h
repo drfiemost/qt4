@@ -77,7 +77,7 @@ private:
     // used for entity declarations
     struct ExternParameterEntity
     {
-        ExternParameterEntity() {}
+        ExternParameterEntity() = default;
         ExternParameterEntity(const QString &p, const QString &s)
             : publicId(p), systemId(s) {}
         QString publicId;
@@ -87,7 +87,7 @@ private:
     };
     struct ExternEntity
     {
-        ExternEntity() {}
+        ExternEntity() = default;
         ExternEntity(const QString &p, const QString &s, const QString &n)
             : publicId(p), systemId(s), notation(n) {}
         QString publicId;

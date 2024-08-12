@@ -51,12 +51,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 NumericType::NumericType()
-{
-}
+= default;
 
 NumericType::~NumericType()
-{
-}
+= default;
 
 bool NumericType::itemMatches(const Item &item) const
 {

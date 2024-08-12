@@ -151,7 +151,7 @@ public:
     QByteArray property;
     QByteArray changedSignal;
 
-    inline QWizardDefaultProperty() {}
+    inline QWizardDefaultProperty() = default;
     inline QWizardDefaultProperty(const char *className, const char *property,
                                    const char *changedSignal)
         : className(className), property(property), changedSignal(changedSignal) {}
@@ -160,7 +160,7 @@ public:
 class QWizardField
 {
 public:
-    inline QWizardField() {}
+    inline QWizardField() = default;
     QWizardField(QWizardPage *page, const QString &spec, QObject *object, const char *property,
                   const char *changedSignal);
 
@@ -3445,8 +3445,7 @@ QWizardPage::QWizardPage(QWidget *parent)
     Destructor.
 */
 QWizardPage::~QWizardPage()
-{
-}
+= default;
 
 /*!
     \property QWizardPage::title

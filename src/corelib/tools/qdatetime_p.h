@@ -132,7 +132,7 @@ public:
         none.count = -1;
         none.zeroesAdded = 0;
     }
-    virtual ~QDateTimeParser() {}
+    virtual ~QDateTimeParser() = default;
     enum {
         Neither = -1,
         AM = 0,

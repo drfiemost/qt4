@@ -341,8 +341,7 @@ QUndoView::QUndoView(QUndoGroup *group, QWidget *parent)
 */
 
 QUndoView::~QUndoView()
-{
-}
+= default;
 
 /*!
     Returns the stack currently displayed by this view. If the view is looking at a

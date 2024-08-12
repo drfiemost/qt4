@@ -101,8 +101,7 @@ QScriptDebuggerScriptsModel::QScriptDebuggerScriptsModel(QObject *parent)
 }
 
 QScriptDebuggerScriptsModel::~QScriptDebuggerScriptsModel()
-{
-}
+= default;
 
 void QScriptDebuggerScriptsModel::removeScript(qint64 id)
 {

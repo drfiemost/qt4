@@ -20,8 +20,7 @@ class ScoreDocComparators:LUCENE_BASE {
 protected:
 	ScoreDocComparators(){}
 public:
-    ~ScoreDocComparators(){
-    }
+    ~ScoreDocComparators()= default;
 
 	class Relevance:public ScoreDocComparator {
 	public:

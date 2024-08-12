@@ -47,7 +47,7 @@ public:
         PropertyInfo(const JSC::Identifier& i, JSC::JSValue v, unsigned a)
             : identifier(i), value(v), attributes(a)
             { }
-        PropertyInfo() {}
+        PropertyInfo() = default;
 
         JSC::Identifier identifier;
         JSC::JSValue value;

@@ -161,8 +161,8 @@ public:
 
     QPODVector<T,Increment> &operator<<(const T &v) { append(v); return *this; }
 private:
-    QPODVector(const QPODVector &);
-    QPODVector &operator=(const QPODVector &);
+    QPODVector(const QPODVector &) = delete;
+    QPODVector &operator=(const QPODVector &) = delete;
     int m_count;
     int m_capacity;
     T *m_data;

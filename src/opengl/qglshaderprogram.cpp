@@ -347,8 +347,7 @@ QGLShader::QGLShader(QGLShader::ShaderType type, const QGLContext *context, QObj
     until the QGLShaderProgram is destroyed.
 */
 QGLShader::~QGLShader()
-{
-}
+= default;
 
 /*!
     Returns the type of this shader.
@@ -619,8 +618,7 @@ QGLShaderProgram::QGLShaderProgram(const QGLContext *context, QObject *parent)
     Deletes this shader program.
 */
 QGLShaderProgram::~QGLShaderProgram()
-{
-}
+= default;
 
 bool QGLShaderProgram::init()
 {

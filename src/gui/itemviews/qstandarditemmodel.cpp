@@ -63,7 +63,7 @@ class QStandardItemModelLessThan
 {
 public:
     inline QStandardItemModelLessThan()
-        { }
+        = default;
 
     inline bool operator()(const QPair<QStandardItem*, int> &l,
                            const QPair<QStandardItem*, int> &r) const
@@ -76,7 +76,7 @@ class QStandardItemModelGreaterThan
 {
 public:
     inline QStandardItemModelGreaterThan()
-        { }
+        = default;
 
     inline bool operator()(const QPair<QStandardItem*, int> &l,
                            const QPair<QStandardItem*, int> &r) const
@@ -777,8 +777,7 @@ QStandardItem &QStandardItem::operator=(const QStandardItem &other)
   This causes the item's children to be destructed as well.
 */
 QStandardItem::~QStandardItem()
-{
-}
+= default;
 
 /*!
   Returns the item's parent item, or 0 if the item has no parent.
@@ -2075,8 +2074,7 @@ QStandardItemModel::QStandardItemModel(QStandardItemModelPrivate &dd, QObject *p
     Destructs the model. The model destroys all its items.
 */
 QStandardItemModel::~QStandardItemModel()
-{
-}
+= default;
 
 /*!
     Removes all items (including header items) from the model and sets the

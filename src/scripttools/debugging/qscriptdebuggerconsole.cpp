@@ -416,8 +416,7 @@ QScriptDebuggerConsole::QScriptDebuggerConsole()
 }
 
 QScriptDebuggerConsole::~QScriptDebuggerConsole()
-{
-}
+= default;
 
 void QScriptDebuggerConsole::loadScriptedCommands(const QString &scriptsPath,
                                                   QScriptMessageHandlerInterface *messageHandler)

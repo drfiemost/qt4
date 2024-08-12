@@ -184,7 +184,7 @@ class QPdfBaseEngine : public QAlphaPaintEngine, public QPrintEngine
     Q_DECLARE_PRIVATE(QPdfBaseEngine)
 public:
     QPdfBaseEngine(QPdfBaseEnginePrivate &d, PaintEngineFeatures f);
-    ~QPdfBaseEngine() override {}
+    ~QPdfBaseEngine() override = default;
 
     // reimplementations QPaintEngine
     bool begin(QPaintDevice *pdev) override;

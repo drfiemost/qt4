@@ -404,7 +404,7 @@ class NetworkAccessManagerFactory : public QObject, public QDeclarativeNetworkAc
     Q_OBJECT
 public:
     NetworkAccessManagerFactory() : cacheSize(0) {}
-    ~NetworkAccessManagerFactory() override {}
+    ~NetworkAccessManagerFactory() override = default;
 
     QNetworkAccessManager *create(QObject *parent) override;
 

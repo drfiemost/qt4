@@ -117,8 +117,8 @@ class QScriptClassPrivate
 {
     Q_DECLARE_PUBLIC(QScriptClass)
 public:
-    QScriptClassPrivate() {}
-    virtual ~QScriptClassPrivate() {}
+    QScriptClassPrivate() = default;
+    virtual ~QScriptClassPrivate() = default;
 
     QScriptEngine *engine;
 
@@ -155,8 +155,7 @@ QScriptClass::QScriptClass(QScriptEngine *engine, QScriptClassPrivate &dd)
   normal Qt Script objects.
 */
 QScriptClass::~QScriptClass()
-{
-}
+= default;
 
 /*!
   Returns the engine that this QScriptClass is associated with.

@@ -60,12 +60,10 @@ public:
 };
 
 QGenericEnginePlugin::QGenericEnginePlugin()
-{
-}
+= default;
 
 QGenericEnginePlugin::~QGenericEnginePlugin()
-{
-}
+= default;
 
 QStringList QGenericEnginePlugin::keys() const
 {

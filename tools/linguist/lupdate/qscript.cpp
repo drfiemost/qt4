@@ -797,7 +797,7 @@ namespace QScript
 class CommentProcessor
 {
 public:
-    virtual ~CommentProcessor() {}
+    virtual ~CommentProcessor() = default;
     virtual void processComment(const QChar *chars, int length) = 0;
 };
 

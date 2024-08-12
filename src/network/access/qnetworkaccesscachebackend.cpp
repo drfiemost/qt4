@@ -56,8 +56,7 @@ QNetworkAccessCacheBackend::QNetworkAccessCacheBackend()
 }
 
 QNetworkAccessCacheBackend::~QNetworkAccessCacheBackend()
-{
-}
+= default;
 
 void QNetworkAccessCacheBackend::open()
 {

@@ -61,12 +61,10 @@ public:
 };
 
 QScriptDebuggerStackModelPrivate::QScriptDebuggerStackModelPrivate()
-{
-}
+= default;
 
 QScriptDebuggerStackModelPrivate::~QScriptDebuggerStackModelPrivate()
-{
-}
+= default;
 
 QScriptDebuggerStackModel::QScriptDebuggerStackModel(QObject *parent)
     : QAbstractTableModel(*new QScriptDebuggerStackModelPrivate, parent)
@@ -74,8 +72,7 @@ QScriptDebuggerStackModel::QScriptDebuggerStackModel(QObject *parent)
 }
 
 QScriptDebuggerStackModel::~QScriptDebuggerStackModel()
-{
-}
+= default;
 
 QList<QScriptContextInfo> QScriptDebuggerStackModel::contextInfos() const
 {

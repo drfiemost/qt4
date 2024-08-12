@@ -116,8 +116,7 @@ QGesture::QGesture(QGesturePrivate &dd, QObject *parent)
     Destroys the gesture object.
 */
 QGesture::~QGesture()
-{
-}
+= default;
 
 /*!
     \property QGesture::state
@@ -296,8 +295,7 @@ QPanGesture::QPanGesture(QObject *parent)
     Destructor.
 */
 QPanGesture::~QPanGesture()
-{
-}
+= default;
 
 QPointF QPanGesture::lastOffset() const
 {
@@ -492,8 +490,7 @@ QPinchGesture::QPinchGesture(QObject *parent)
     Destructor.
 */
 QPinchGesture::~QPinchGesture()
-{
-}
+= default;
 
 QPinchGesture::ChangeFlags QPinchGesture::totalChangeFlags() const
 {
@@ -685,8 +682,7 @@ QSwipeGesture::QSwipeGesture(QObject *parent)
     Destructor.
 */
 QSwipeGesture::~QSwipeGesture()
-{
-}
+= default;
 
 QSwipeGesture::SwipeDirection QSwipeGesture::horizontalDirection() const
 {
@@ -750,8 +746,7 @@ QTapGesture::QTapGesture(QObject *parent)
     Destructor.
 */
 QTapGesture::~QTapGesture()
-{
-}
+= default;
 
 QPointF QTapGesture::position() const
 {
@@ -793,8 +788,7 @@ QTapAndHoldGesture::QTapAndHoldGesture(QObject *parent)
     Destructor.
 */
 QTapAndHoldGesture::~QTapAndHoldGesture()
-{
-}
+= default;
 
 QPointF QTapAndHoldGesture::position() const
 {

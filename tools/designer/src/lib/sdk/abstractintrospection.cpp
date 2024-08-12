@@ -62,15 +62,13 @@ QT_BEGIN_NAMESPACE
 */
 
 QDesignerMetaEnumInterface::QDesignerMetaEnumInterface()
-{
-}
+= default;
 
 /*!
     Destroys the QDesignerMetaEnumInterface object.
 */
 QDesignerMetaEnumInterface::~QDesignerMetaEnumInterface()
-{
-}
+= default;
 
 /*!
     \fn bool QDesignerMetaEnumInterface::isFlag() const
@@ -157,16 +155,14 @@ QDesignerMetaEnumInterface::~QDesignerMetaEnumInterface()
 */
 
 QDesignerMetaPropertyInterface::QDesignerMetaPropertyInterface()
-{
-}
+= default;
 
 /*!
     Destroys the QDesignerMetaPropertyInterface object.
 */
 
 QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface()
-{
-}
+= default;
 
 /*!
     \enum QDesignerMetaPropertyInterface::Kind
@@ -291,16 +287,14 @@ QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface()
 */
 
 QDesignerMetaMethodInterface::QDesignerMetaMethodInterface()
-{
-}
+= default;
 
 /*!
     Destroys the QDesignerMetaMethodInterface object.
 */
 
 QDesignerMetaMethodInterface::~QDesignerMetaMethodInterface()
-{
-}
+= default;
 
 /*!
     \enum QDesignerMetaMethodInterface::MethodType
@@ -394,16 +388,14 @@ QDesignerMetaMethodInterface::~QDesignerMetaMethodInterface()
 */
 
 QDesignerMetaObjectInterface::QDesignerMetaObjectInterface()
-{
-}
+= default;
 
 /*!
     Destroys the QDesignerMetaObjectInterface object.
 */
 
 QDesignerMetaObjectInterface::~QDesignerMetaObjectInterface()
-{
-}
+= default;
 
 /*!
     \fn QString QDesignerMetaObjectInterface::className() const
@@ -528,16 +520,14 @@ QDesignerMetaObjectInterface::~QDesignerMetaObjectInterface()
 */
 
 QDesignerIntrospectionInterface::QDesignerIntrospectionInterface()
-{
-}
+= default;
 
 /*!
     Destroys the QDesignerIntrospectionInterface object.
 */
 
 QDesignerIntrospectionInterface::~QDesignerIntrospectionInterface()
-{
-}
+= default;
 
 /*!
    \fn const QDesignerMetaObjectInterface* QDesignerIntrospectionInterface::metaObject(const QObject *object) const

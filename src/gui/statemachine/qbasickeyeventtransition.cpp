@@ -123,8 +123,7 @@ QBasicKeyEventTransition::QBasicKeyEventTransition(QEvent::Type type, int key,
   Destroys this event transition.
 */
 QBasicKeyEventTransition::~QBasicKeyEventTransition()
-{
-}
+= default;
 
 /*!
   Returns the event type that this key event transition is associated with.

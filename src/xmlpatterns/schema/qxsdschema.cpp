@@ -54,8 +54,7 @@ XsdSchema::XsdSchema(const NamePool::Ptr &namePool)
 }
 
 XsdSchema::~XsdSchema()
-{
-}
+= default;
 
 NamePool::Ptr XsdSchema::namePool() const
 {

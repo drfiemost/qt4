@@ -64,8 +64,7 @@ QmlDocVisitor::QmlDocVisitor(const QString &filePath, const QString &code,
 }
 
 QmlDocVisitor::~QmlDocVisitor()
-{
-}
+= default;
 
 QDeclarativeJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) const
 {

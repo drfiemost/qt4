@@ -62,7 +62,7 @@ class QScriptDebuggerEvent;
 class Q_AUTOTEST_EXPORT QScriptDebuggerEventHandlerInterface
 {
 public:
-    virtual ~QScriptDebuggerEventHandlerInterface() {}
+    virtual ~QScriptDebuggerEventHandlerInterface() = default;
 
     virtual bool debuggerEvent(const QScriptDebuggerEvent &event) = 0;
 };

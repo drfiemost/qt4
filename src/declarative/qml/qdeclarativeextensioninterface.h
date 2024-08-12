@@ -53,7 +53,7 @@ class QDeclarativeEngine;
 
 struct Q_DECLARATIVE_EXPORT QDeclarativeExtensionInterface
 {
-    virtual ~QDeclarativeExtensionInterface() {}
+    virtual ~QDeclarativeExtensionInterface() = default;
     virtual void registerTypes(const char *uri) = 0;
     virtual void initializeEngine(QDeclarativeEngine *engine, const char *uri) = 0;
 };

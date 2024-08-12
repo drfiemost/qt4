@@ -67,8 +67,8 @@ namespace qdesigner_internal {
 
 class QDESIGNER_SHARED_EXPORT ScriptCommand: public QDesignerFormWindowCommand
 {
-    ScriptCommand(const ScriptCommand &);
-    ScriptCommand& operator=(const ScriptCommand &);
+    ScriptCommand(const ScriptCommand &) = delete;
+    ScriptCommand& operator=(const ScriptCommand &) = delete;
 
 public:
     explicit ScriptCommand(QDesignerFormWindowInterface *formWindow);

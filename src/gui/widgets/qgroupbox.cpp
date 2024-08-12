@@ -212,8 +212,7 @@ QGroupBox::QGroupBox(const QString &title, QWidget *parent)
     Destroys the group box.
 */
 QGroupBox::~QGroupBox()
-{
-}
+= default;
 
 void QGroupBoxPrivate::init()
 {

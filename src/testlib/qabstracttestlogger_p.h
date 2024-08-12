@@ -81,8 +81,8 @@ public:
         Info
     };
 
-    QAbstractTestLogger() {}
-    virtual ~QAbstractTestLogger() {}
+    QAbstractTestLogger() = default;
+    virtual ~QAbstractTestLogger() = default;
 
     virtual void startLogging(const char *filename);
     virtual void stopLogging();

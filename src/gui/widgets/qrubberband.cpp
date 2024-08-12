@@ -160,8 +160,7 @@ QRubberBand::QRubberBand(Shape s, QWidget *p)
     Destructor.
 */
 QRubberBand::~QRubberBand()
-{
-}
+= default;
 
 /*!
     \enum QRubberBand::Shape

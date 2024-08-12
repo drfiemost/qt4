@@ -81,8 +81,7 @@ QScriptDebuggerFrontendEventReceiver::QScriptDebuggerFrontendEventReceiver(
 }
     
 QScriptDebuggerFrontendEventReceiver::~QScriptDebuggerFrontendEventReceiver()
-{
-}
+= default;
 
 bool QScriptDebuggerFrontendEventReceiver::event(QEvent *e)
 {
@@ -142,8 +141,7 @@ QScriptDebuggerFrontend::QScriptDebuggerFrontend()
 }
 
 QScriptDebuggerFrontend::~QScriptDebuggerFrontend()
-{
-}
+= default;
 
 QScriptDebuggerFrontend::QScriptDebuggerFrontend(QScriptDebuggerFrontendPrivate &dd)
     : d_ptr(&dd)

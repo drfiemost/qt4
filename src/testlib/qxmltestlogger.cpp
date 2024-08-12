@@ -99,8 +99,7 @@ QXmlTestLogger::QXmlTestLogger(XmlMode mode )
 }
 
 QXmlTestLogger::~QXmlTestLogger()
-{
-}
+= default;
 
 void QXmlTestLogger::startLogging(const char *filename)
 {

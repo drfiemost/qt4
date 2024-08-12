@@ -130,8 +130,7 @@ QtColorButton::QtColorButton(QWidget *parent)
 }
 
 QtColorButton::~QtColorButton()
-{
-}
+= default;
 
 void QtColorButton::setColor(const QColor &color)
 {

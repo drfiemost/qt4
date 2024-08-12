@@ -55,7 +55,7 @@ QDomHandler::QDomHandler(QDomDocumentPrivate *adoc, QXmlSimpleReader *areader,
 {
 }
 
-QDomHandler::~QDomHandler() {}
+QDomHandler::~QDomHandler() = default;
 
 bool QDomHandler::endDocument()
 {
@@ -203,7 +203,7 @@ QDomBuilder::QDomBuilder(QDomDocumentPrivate *d, QXmlDocumentLocator *l, bool na
 {
 }
 
-QDomBuilder::~QDomBuilder() {}
+QDomBuilder::~QDomBuilder() = default;
 
 bool QDomBuilder::endDocument()
 {

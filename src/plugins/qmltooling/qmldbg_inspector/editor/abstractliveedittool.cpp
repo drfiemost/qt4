@@ -57,8 +57,7 @@ AbstractLiveEditTool::AbstractLiveEditTool(QDeclarativeViewInspector *editorView
 
 
 AbstractLiveEditTool::~AbstractLiveEditTool()
-{
-}
+= default;
 
 QDeclarativeViewInspector *AbstractLiveEditTool::inspector() const
 {

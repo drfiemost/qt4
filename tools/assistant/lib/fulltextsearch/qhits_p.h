@@ -59,7 +59,7 @@ public:
     bool deleteCLuceneHits;
 
 private:
-    QCLuceneHitsPrivate &operator=(const QCLuceneHitsPrivate &other);
+    QCLuceneHitsPrivate &operator=(const QCLuceneHitsPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneHits

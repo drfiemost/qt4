@@ -46,12 +46,10 @@ QT_QML_BEGIN_NAMESPACE
 namespace QDeclarativeJS { namespace AST {
 
 Visitor::Visitor()
-{
-}
+= default;
 
 Visitor::~Visitor()
-{
-}
+= default;
 
 } } // namespace QDeclarativeJS::AST
 

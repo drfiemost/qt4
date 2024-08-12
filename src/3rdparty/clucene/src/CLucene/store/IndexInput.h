@@ -32,7 +32,7 @@ CL_NS_DEF(store)
 		IndexInput();
 		IndexInput(const IndexInput& clone);
 	public:
-	    virtual ~IndexInput(){}
+	    virtual ~IndexInput()= default;
 		virtual IndexInput* clone() const =0;
 
 		DEFINE_MUTEX(THIS_LOCK)

@@ -103,9 +103,8 @@ QHttpPart::QHttpPart() : d(new QHttpPartPrivate)
 /*!
     Creates a copy of \a other.
 */
-QHttpPart::QHttpPart(const QHttpPart &other) : d(other.d)
-{
-}
+QHttpPart::QHttpPart(const QHttpPart &other)  
+= default;
 
 /*!
     Destroys this QHttpPart.
@@ -119,10 +118,7 @@ QHttpPart::~QHttpPart()
     Creates a copy of \a other.
 */
 QHttpPart &QHttpPart::operator=(const QHttpPart &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this object is the same as \a other (i.e., if they
@@ -282,8 +278,7 @@ QHttpMultiPart::QHttpMultiPart(QHttpMultiPart::ContentType contentType, QObject 
     Destroys the multipart.
 */
 QHttpMultiPart::~QHttpMultiPart()
-{
-}
+= default;
 
 /*!
     Appends \a httpPart to this multipart.

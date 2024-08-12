@@ -102,8 +102,7 @@ QProxyModel::QProxyModel(QProxyModelPrivate &dd, QObject *parent)
     Destroys the proxy model.
 */
 QProxyModel::~QProxyModel()
-{
-}
+= default;
 
 /*!
     Sets the given \a model to be processed by the proxy model.

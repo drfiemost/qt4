@@ -50,8 +50,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 EBVType::EBVType()
-{
-}
+= default;
 
 bool EBVType::itemMatches(const Item &item) const
 {

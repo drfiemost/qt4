@@ -135,8 +135,7 @@ Layout::Layout(const QWidgetList &wl, QWidget *p, QDesignerFormWindowInterface *
 }
 
 Layout::~Layout()
-{
-}
+= default;
 
 /*!  The widget list we got in the constructor might contain too much
   widgets (like widgets with different parents, already laid out

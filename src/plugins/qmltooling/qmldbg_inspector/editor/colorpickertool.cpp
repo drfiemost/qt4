@@ -60,8 +60,7 @@ ColorPickerTool::ColorPickerTool(QDeclarativeViewInspector *view) :
 }
 
 ColorPickerTool::~ColorPickerTool()
-{
-}
+= default;
 
 void ColorPickerTool::mousePressEvent(QMouseEvent *event)
 {

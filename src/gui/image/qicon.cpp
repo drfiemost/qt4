@@ -135,17 +135,14 @@ QIconPrivate::QIconPrivate()
 }
 
 QPixmapIconEngine::QPixmapIconEngine()
-{
-}
+= default;
 
 QPixmapIconEngine::QPixmapIconEngine(const QPixmapIconEngine &other)
-    : QIconEngineV2(other), pixmaps(other.pixmaps)
-{
-}
+     
+= default;
 
 QPixmapIconEngine::~QPixmapIconEngine()
-{
-}
+= default;
 
 void QPixmapIconEngine::paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state)
 {

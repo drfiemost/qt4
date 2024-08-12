@@ -67,7 +67,7 @@ public:
     bool deleteCLuceneAnalyzer;
 
 private:
-    QCLuceneAnalyzerPrivate &operator=(const QCLuceneAnalyzerPrivate &other);
+    QCLuceneAnalyzerPrivate &operator=(const QCLuceneAnalyzerPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneAnalyzer

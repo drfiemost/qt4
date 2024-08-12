@@ -59,7 +59,7 @@ QTestBasicStreamer::QTestBasicStreamer()
 }
 
 QTestBasicStreamer::~QTestBasicStreamer()
-{}
+= default;
 
 void QTestBasicStreamer::formatStart(const QTestElement *element, QTestCharBuffer *formatted) const
 {

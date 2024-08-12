@@ -116,7 +116,7 @@ QGuiPlatformPlugin *qt_guiPlatformPlugin()
     The constructor can be used to install hooks in Qt
  */
 QGuiPlatformPlugin::QGuiPlatformPlugin(QObject *parent) : QObject(parent) {}
-QGuiPlatformPlugin::~QGuiPlatformPlugin() {}
+QGuiPlatformPlugin::~QGuiPlatformPlugin() = default;
 
 
 /* return the string key to be used by default the application */

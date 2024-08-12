@@ -327,8 +327,7 @@ QDBusAbstractInterface::QDBusAbstractInterface(const QString &service, const QSt
     Releases this object's resources.
 */
 QDBusAbstractInterface::~QDBusAbstractInterface()
-{
-}
+= default;
 
 /*!
     Returns true if this is a valid reference to a remote object. It returns false if

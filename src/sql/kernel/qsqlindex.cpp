@@ -74,31 +74,22 @@ QSqlIndex::QSqlIndex(const QString& cursorname, const QString& name)
 */
 
 QSqlIndex::QSqlIndex(const QSqlIndex& other)
-    : QSqlRecord(other), cursor(other.cursor), nm(other.nm), sorts(other.sorts)
-{
-}
+     
+= default;
 
 /*!
     Sets the index equal to \a other.
 */
 
 QSqlIndex& QSqlIndex::operator=(const QSqlIndex& other)
-{
-    cursor = other.cursor;
-    nm = other.nm;
-    sorts = other.sorts;
-    QSqlRecord::operator=(other);
-    return *this;
-}
+= default;
 
 /*!
     Destroys the object and frees any allocated resources.
 */
 
 QSqlIndex::~QSqlIndex()
-{
-
-}
+= default;
 
 /*!
     Sets the name of the index to \a name.

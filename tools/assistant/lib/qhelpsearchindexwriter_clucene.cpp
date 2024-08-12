@@ -394,7 +394,7 @@ class DocumentHelper
 public:
     DocumentHelper(const QString &fileName, const QByteArray &data)
         : fileName(fileName) , data(readData(data)) {}
-    ~DocumentHelper() {}
+    ~DocumentHelper() = default;
 
     bool addFieldsToDocument(QCLuceneDocument *document,
         const QString &namespaceName, const QString &attributes = QString())

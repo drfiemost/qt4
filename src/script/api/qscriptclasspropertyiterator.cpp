@@ -57,8 +57,8 @@ class QScriptClassPropertyIteratorPrivate
 {
     Q_DECLARE_PUBLIC(QScriptClassPropertyIterator)
 public:
-    QScriptClassPropertyIteratorPrivate() {}
-    virtual ~QScriptClassPropertyIteratorPrivate() {}
+    QScriptClassPropertyIteratorPrivate() = default;
+    virtual ~QScriptClassPropertyIteratorPrivate() = default;
 
     QScriptValue object;
 
@@ -93,8 +93,7 @@ QScriptClassPropertyIterator::QScriptClassPropertyIterator(const QScriptValue &o
   Destroys the iterator.
 */
 QScriptClassPropertyIterator::~QScriptClassPropertyIterator()
-{
-}
+= default;
 
 /*!
   Returns the Qt Script object this iterator is traversing.

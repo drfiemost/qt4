@@ -53,8 +53,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 ReportContext::~ReportContext()
-{
-}
+= default;
 
 QString ReportContext::finalizeDescription(const QString &desc)
 {

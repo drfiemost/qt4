@@ -66,10 +66,8 @@ ProString::ProString() :
 {
 }
 
-ProString::ProString(const ProString &other) :
-    m_string(other.m_string), m_offset(other.m_offset), m_length(other.m_length), m_file(other.m_file), m_hash(other.m_hash)
-{
-}
+ProString::ProString(const ProString &other)  
+= default;
 
 ProString::ProString(const ProString &other, OmitPreHashing) :
     m_string(other.m_string), m_offset(other.m_offset), m_length(other.m_length), m_file(other.m_file), m_hash(0x80000000)
@@ -368,7 +366,6 @@ ProFile::ProFile(const QString &fileName)
 }
 
 ProFile::~ProFile()
-{
-}
+= default;
 
 QT_END_NAMESPACE

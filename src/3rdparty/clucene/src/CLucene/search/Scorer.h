@@ -26,8 +26,7 @@ class Scorer: LUCENE_BASE {
          this->similarity = similarity;
       }
 	public:
-		virtual ~Scorer(){
-		}
+		virtual ~Scorer()= default;
 
       /** Returns the Similarity implementation used by this scorer. */
       Similarity* getSimilarity()  const{

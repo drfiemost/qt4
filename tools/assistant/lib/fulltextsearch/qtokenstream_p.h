@@ -64,7 +64,7 @@ public:
     bool deleteCLuceneTokenStream;
 
 private:
-    QCLuceneTokenStreamPrivate &operator=(const QCLuceneTokenStreamPrivate &other);
+    QCLuceneTokenStreamPrivate &operator=(const QCLuceneTokenStreamPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneTokenStream

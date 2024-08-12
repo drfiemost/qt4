@@ -100,7 +100,7 @@ inline T *v_cast(QVariant::Private *d, T * = nullptr)
 template <class T> class QVariantPrivateSharedEx : public QVariant::PrivateShared
 {
 public:
-    QVariantPrivateSharedEx() : QVariant::PrivateShared(&m_t) { }
+    QVariantPrivateSharedEx() : QVariant::PrivateShared(&m_t) {}
     QVariantPrivateSharedEx(const T&t) : QVariant::PrivateShared(&m_t), m_t(t) { }
 
 private:

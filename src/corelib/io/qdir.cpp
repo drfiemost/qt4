@@ -548,17 +548,15 @@ QDir::QDir(const QString &path, const QString &nameFilter,
     \sa operator=()
 */
 QDir::QDir(const QDir &dir)
-    : d_ptr(dir.d_ptr)
-{
-}
+     
+= default;
 
 /*!
     Destroys the QDir object frees up its resources. This has no
     effect on the underlying directory in the file system.
 */
 QDir::~QDir()
-{
-}
+= default;
 
 /*!
     Sets the path of the directory to \a path. The path is cleaned of
@@ -1642,10 +1640,7 @@ bool QDir::operator==(const QDir &dir) const
     object.
 */
 QDir &QDir::operator=(const QDir &dir)
-{
-    d_ptr = dir.d_ptr;
-    return *this;
-}
+= default;
 
 /*!
     \overload

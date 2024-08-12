@@ -251,8 +251,7 @@ QtGradientWidget::QtGradientWidget(QWidget *parent)
 }
 
 QtGradientWidget::~QtGradientWidget()
-{
-}
+= default;
 
 QSize QtGradientWidget::sizeHint() const
 {

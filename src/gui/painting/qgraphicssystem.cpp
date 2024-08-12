@@ -58,8 +58,7 @@
 QT_BEGIN_NAMESPACE
 
 QGraphicsSystem::~QGraphicsSystem()
-{
-}
+= default;
 
 QPixmapData *QGraphicsSystem::createDefaultPixmapData(QPixmapData::PixelType type)
 {

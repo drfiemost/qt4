@@ -27,8 +27,7 @@ class TermPositions;
  */
 class TermDocs: LUCENE_BASE {
 public:
-	virtual ~TermDocs(){
-	}
+	virtual ~TermDocs()= default;
 
 	// Sets this to the data for a term.
 	// The enumeration is reset to the start of the data for this term.
@@ -111,8 +110,7 @@ public:
 	// Closes the enumeration to further activity, freeing resources.
 	virtual void close() =0;
 
-	virtual ~TermEnum(){
-	}
+	virtual ~TermEnum()= default;
 	
 	// Term Vector support
 	/** Skips terms to the first beyond the current whose value is
@@ -161,8 +159,7 @@ public:
 	//	the first time.
 	virtual int32_t nextPosition() = 0;
 
-	virtual ~TermPositions(){
-	}
+	virtual ~TermPositions()= default;
 
 	/** Solve the diamond inheritence problem by providing a reinterpret function.
 	  *	No dynamic casting is required and no RTTI data is needed to do this

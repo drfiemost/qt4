@@ -114,7 +114,7 @@ namespace QPatternist
          * For some reason GCC fails to synthesize it, so we provide an empty
          * one here.
          */
-        inline ReportContext() {}
+        inline ReportContext() = default;
 
         virtual ~ReportContext();
 

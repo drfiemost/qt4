@@ -151,8 +151,7 @@ QGraphicsAnchor::QGraphicsAnchor(QGraphicsAnchorLayout *parentLayout)
     Removes the QGraphicsAnchor object from the layout and destroys it.
 */
 QGraphicsAnchor::~QGraphicsAnchor()
-{
-}
+= default;
 
 /*!
     \property QGraphicsAnchor::sizePolicy

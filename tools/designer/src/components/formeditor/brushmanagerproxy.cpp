@@ -151,8 +151,7 @@ BrushManagerProxy::BrushManagerProxy(QDesignerFormEditorInterface *core, QObject
 }
 
 BrushManagerProxy::~BrushManagerProxy()
-{
-}
+= default;
 
 void BrushManagerProxy::setBrushManager(QtBrushManager *manager)
 {

@@ -83,7 +83,7 @@ public:
 
     QFontEngineGlyphCache(const QTransform &matrix, Type type) : m_transform(matrix), m_type(type) { }
 
-    virtual ~QFontEngineGlyphCache() { }
+    virtual ~QFontEngineGlyphCache() = default;
 
     Type cacheType() const { return m_type; }
 

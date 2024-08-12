@@ -68,8 +68,7 @@ QDeclarativeTypeNameScriptClass::QDeclarativeTypeNameScriptClass(QDeclarativeEng
 }
 
 QDeclarativeTypeNameScriptClass::~QDeclarativeTypeNameScriptClass()
-{
-}
+= default;
 
 QScriptValue QDeclarativeTypeNameScriptClass::newObject(QObject *object, QDeclarativeType *type, TypeNameMode mode)
 {

@@ -279,8 +279,7 @@ CL_NS_DEF(search)
  TCHAR* PhraseQuery::PhraseWeight::toString() { 
 	return STRDUP_TtoT(_T("weight(PhraseQuery)"));
  }
- PhraseQuery::PhraseWeight::~PhraseWeight(){
- }
+ PhraseQuery::PhraseWeight::~PhraseWeight()= default;
 
  
  Query* PhraseQuery::PhraseWeight::getQuery() { return _this; }

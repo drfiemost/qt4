@@ -59,8 +59,7 @@ QDeclarativeImageBase::QDeclarativeImageBase(QDeclarativeImageBasePrivate &dd, Q
 }
 
 QDeclarativeImageBase::~QDeclarativeImageBase()
-{
-}
+= default;
 
 QDeclarativeImageBase::Status QDeclarativeImageBase::status() const
 {

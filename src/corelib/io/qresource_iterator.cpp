@@ -53,8 +53,7 @@ QResourceFileEngineIterator::QResourceFileEngineIterator(QDir::Filters filters,
 }
 
 QResourceFileEngineIterator::~QResourceFileEngineIterator()
-{
-}
+= default;
 
 QString QResourceFileEngineIterator::next()
 {

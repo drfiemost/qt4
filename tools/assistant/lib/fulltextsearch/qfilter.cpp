@@ -49,9 +49,4 @@ QCLuceneFilter::QCLuceneFilter()
     // nothing todo
 }
 
-QCLuceneFilter::~QCLuceneFilter()
-{
-    // nothing todo
-}
-
 QT_END_NAMESPACE

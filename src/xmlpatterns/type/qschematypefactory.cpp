@@ -46,11 +46,9 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 SchemaTypeFactory::SchemaTypeFactory()
-{
-}
+= default;
 
 SchemaTypeFactory::~SchemaTypeFactory()
-{
-}
+= default;
 
 QT_END_NAMESPACE

@@ -67,8 +67,7 @@ QDeclarativeTranslate::QDeclarativeTranslate(QObject *parent)
     Destroys the graphics scale.
 */
 QDeclarativeTranslate::~QDeclarativeTranslate()
-{
-}
+= default;
 
 /*!
     \property QDeclarativeTranslate::x

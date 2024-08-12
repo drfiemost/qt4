@@ -1170,8 +1170,7 @@ QtBrowserItem::QtBrowserItem(QtAbstractPropertyBrowser *browser, QtProperty *pro
 }
 
 QtBrowserItem::~QtBrowserItem()
-{
-}
+= default;
 
 
 ////////////////////////////////////

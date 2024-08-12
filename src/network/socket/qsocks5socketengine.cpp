@@ -353,8 +353,7 @@ QSocks5BindStore::QSocks5BindStore()
 }
 
 QSocks5BindStore::~QSocks5BindStore()
-{
-}
+= default;
 
 void QSocks5BindStore::add(qintptr socketDescriptor, QSocks5BindData *bindData)
 {
@@ -414,12 +413,10 @@ void QSocks5BindStore::timerEvent(QTimerEvent * event)
 }
 
 QSocks5Authenticator::QSocks5Authenticator()
-{
-}
+= default;
 
 QSocks5Authenticator::~QSocks5Authenticator()
-{
-}
+= default;
 
 char QSocks5Authenticator::methodId()
 {
@@ -532,8 +529,7 @@ QSocks5SocketEnginePrivate::QSocks5SocketEnginePrivate()
 }
 
 QSocks5SocketEnginePrivate::~QSocks5SocketEnginePrivate()
-{
-}
+= default;
 
 void QSocks5SocketEnginePrivate::initialize(Socks5Mode socks5Mode)
 {

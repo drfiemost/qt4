@@ -64,7 +64,7 @@ class QString; // FIXME: fool syncqt
 class QDesignerDynamicPropertySheetExtension
 {
 public:
-    virtual ~QDesignerDynamicPropertySheetExtension() {}
+    virtual ~QDesignerDynamicPropertySheetExtension() = default;
 
     virtual bool dynamicPropertiesAllowed() const = 0;
     virtual int addDynamicProperty(const QString &propertyName, const QVariant &value) = 0;

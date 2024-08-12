@@ -128,7 +128,7 @@ ThreadEngineBase::ThreadEngineBase()
     setAutoDelete(false);
 }
 
-ThreadEngineBase::~ThreadEngineBase() {}
+ThreadEngineBase::~ThreadEngineBase() = default;
 
 void ThreadEngineBase::startSingleThreaded()
 {

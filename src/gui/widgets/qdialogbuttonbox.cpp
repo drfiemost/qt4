@@ -778,8 +778,7 @@ QDialogButtonBox::QDialogButtonBox(StandardButtons buttons, Qt::Orientation orie
     Destroys the button box.
 */
 QDialogButtonBox::~QDialogButtonBox()
-{
-}
+= default;
 
 /*!
     \enum QDialogButtonBox::ButtonRole

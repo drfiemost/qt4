@@ -198,8 +198,7 @@ QtVariantProperty::QtVariantProperty(QtVariantPropertyManager *manager)
     \sa QtProperty::~QtProperty()
 */
 QtVariantProperty::~QtVariantProperty()
-{
-}
+= default;
 
 /*!
     Returns the property's current value.
@@ -1987,8 +1986,7 @@ QtVariantEditorFactory::QtVariantEditorFactory(QObject *parent)
     Destroys this factory, and all the widgets it has created.
 */
 QtVariantEditorFactory::~QtVariantEditorFactory()
-{
-}
+= default;
 
 /*!
     \internal

@@ -49,8 +49,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 ResourceLoader::~ResourceLoader()
-{
-}
+= default;
 
 bool ResourceLoader::isUnparsedTextAvailable(const QUrl &uri,
                                              const QString &encoding)

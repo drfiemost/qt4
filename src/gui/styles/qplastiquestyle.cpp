@@ -1014,8 +1014,7 @@ QPlastiqueStylePrivate::QPlastiqueStylePrivate() :
   \internal
  */
 QPlastiqueStylePrivate::~QPlastiqueStylePrivate()
-{
-}
+= default;
 
 /*!
     \class QPlastiqueStyle
@@ -1043,8 +1042,7 @@ QPlastiqueStyle::QPlastiqueStyle()
     Destructs the QPlastiqueStyle object.
 */
 QPlastiqueStyle::~QPlastiqueStyle()
-{
-}
+= default;
 
 /*
     Used by spin- and combo box.

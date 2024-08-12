@@ -73,8 +73,7 @@ public:
     }
 
     ~QDeclarativeBorderImagePrivate() override
-    {
-    }
+    = default;
 
 
     QDeclarativeScaleGrid *getScaleGrid()

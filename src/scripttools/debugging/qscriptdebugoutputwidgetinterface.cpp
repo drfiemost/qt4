@@ -45,16 +45,13 @@
 QT_BEGIN_NAMESPACE
 
 QScriptDebugOutputWidgetInterfacePrivate::QScriptDebugOutputWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptDebugOutputWidgetInterfacePrivate::~QScriptDebugOutputWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptDebugOutputWidgetInterface::~QScriptDebugOutputWidgetInterface()
-{
-}
+= default;
 
 QScriptDebugOutputWidgetInterface::QScriptDebugOutputWidgetInterface(
     QScriptDebugOutputWidgetInterfacePrivate &dd,

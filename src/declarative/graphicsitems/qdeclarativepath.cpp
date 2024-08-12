@@ -86,8 +86,7 @@ QDeclarativePath::QDeclarativePath(QObject *parent)
 }
 
 QDeclarativePath::~QDeclarativePath()
-{
-}
+= default;
 
 /*!
     \qmlproperty real Path::startX

@@ -438,7 +438,7 @@ class QSharedPointer: public QtSharedPointer::ExternalRefCount<T>
 {
     typedef typename QtSharedPointer::ExternalRefCount<T> BaseClass;
 public:
-    inline QSharedPointer() { }
+    inline QSharedPointer() = default;
     // inline ~QSharedPointer() { }
 
     inline explicit QSharedPointer(T *ptr) : BaseClass(ptr, &QtSharedPointer::normalDeleter<T>) // throws

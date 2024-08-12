@@ -72,7 +72,7 @@ class QScriptDebuggerCommandEvent : public QEvent
 public:
     QScriptDebuggerCommandEvent(int id, const QScriptDebuggerCommand &command)
         : QEvent(QEvent::Type(QEvent::User+3)), m_id(id), m_command(command) {}
-    ~QScriptDebuggerCommandEvent() override {}
+    ~QScriptDebuggerCommandEvent() override = default;
     int id() const
         { return m_id; }
     const QScriptDebuggerCommand &command() const
@@ -87,7 +87,7 @@ class QScriptDebuggerCommandFinishedEvent : public QEvent
 public:
     QScriptDebuggerCommandFinishedEvent(int id, const QScriptDebuggerResponse &response)
         : QEvent(QEvent::Type(QEvent::User+4)), m_id(id), m_response(response) {}
-    ~QScriptDebuggerCommandFinishedEvent() override {}
+    ~QScriptDebuggerCommandFinishedEvent() override = default;
     int id() const
         { return m_id; }
     const QScriptDebuggerResponse &response() const
@@ -195,8 +195,7 @@ QScriptEngineDebuggerBackend::QScriptEngineDebuggerBackend(
 }
 
 QScriptEngineDebuggerBackend::~QScriptEngineDebuggerBackend()
-{
-}
+= default;
 
 void QScriptEngineDebuggerBackend::processCommand(int id, const QScriptDebuggerCommand &command)
 {

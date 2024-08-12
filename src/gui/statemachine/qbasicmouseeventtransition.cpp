@@ -109,8 +109,7 @@ QBasicMouseEventTransition::QBasicMouseEventTransition(QEvent::Type type,
   Destroys this mouse event transition.
 */
 QBasicMouseEventTransition::~QBasicMouseEventTransition()
-{
-}
+= default;
 
 /*!
   Returns the event type that this mouse event transition is associated with.

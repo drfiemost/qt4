@@ -339,7 +339,7 @@ public:
         qreal overshoot = 1.70158)
         : _t(type), _p(period), _a(amplitude), _o(overshoot)
     { }
-    virtual ~QEasingCurveFunction() {}
+    virtual ~QEasingCurveFunction() = default;
     virtual qreal value(qreal t);
     virtual QEasingCurveFunction *copy() const;
     bool operator==(const QEasingCurveFunction& other);

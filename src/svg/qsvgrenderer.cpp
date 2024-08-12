@@ -166,9 +166,7 @@ QSvgRenderer::QSvgRenderer(QXmlStreamReader *contents, QObject *parent)
     Destroys the renderer.
 */
 QSvgRenderer::~QSvgRenderer()
-{
-
-}
+= default;
 
 /*!
     Returns true if there is a valid current document; otherwise returns false.

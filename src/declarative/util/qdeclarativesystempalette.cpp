@@ -90,8 +90,7 @@ QDeclarativeSystemPalette::QDeclarativeSystemPalette(QObject *parent)
 }
 
 QDeclarativeSystemPalette::~QDeclarativeSystemPalette()
-{
-}
+= default;
 
 /*!
     \qmlproperty color SystemPalette::window

@@ -140,7 +140,7 @@ public:
 
     // DeviceCoordinateCache only
     struct DeviceData {
-        DeviceData() {}
+        DeviceData() = default;
         QTransform lastTransform;
         QPoint cacheIndent;
         QPixmapCache::Key key;
@@ -245,7 +245,7 @@ public:
     }
 
     inline virtual ~QGraphicsItemPrivate()
-    { }
+    = default;
 
     static const QGraphicsItemPrivate *get(const QGraphicsItem *item)
     {

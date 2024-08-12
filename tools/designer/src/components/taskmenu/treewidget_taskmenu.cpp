@@ -72,8 +72,7 @@ TreeWidgetTaskMenu::TreeWidgetTaskMenu(QTreeWidget *button, QObject *parent)
 
 
 TreeWidgetTaskMenu::~TreeWidgetTaskMenu()
-{
-}
+= default;
 
 QAction *TreeWidgetTaskMenu::preferredEditAction() const
 {

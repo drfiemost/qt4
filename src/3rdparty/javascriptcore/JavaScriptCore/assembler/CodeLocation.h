@@ -76,7 +76,7 @@ protected:
 
 class CodeLocationInstruction : public CodeLocationCommon {
 public:
-    CodeLocationInstruction() {}
+    CodeLocationInstruction() = default;
     explicit CodeLocationInstruction(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationInstruction(void* location)
@@ -85,7 +85,7 @@ public:
 
 class CodeLocationLabel : public CodeLocationCommon {
 public:
-    CodeLocationLabel() {}
+    CodeLocationLabel() = default;
     explicit CodeLocationLabel(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationLabel(void* location)
@@ -94,7 +94,7 @@ public:
 
 class CodeLocationJump : public CodeLocationCommon {
 public:
-    CodeLocationJump() {}
+    CodeLocationJump() = default;
     explicit CodeLocationJump(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationJump(void* location)
@@ -103,7 +103,7 @@ public:
 
 class CodeLocationCall : public CodeLocationCommon {
 public:
-    CodeLocationCall() {}
+    CodeLocationCall() = default;
     explicit CodeLocationCall(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationCall(void* location)
@@ -112,7 +112,7 @@ public:
 
 class CodeLocationNearCall : public CodeLocationCommon {
 public:
-    CodeLocationNearCall() {}
+    CodeLocationNearCall() = default;
     explicit CodeLocationNearCall(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationNearCall(void* location)
@@ -121,7 +121,7 @@ public:
 
 class CodeLocationDataLabel32 : public CodeLocationCommon {
 public:
-    CodeLocationDataLabel32() {}
+    CodeLocationDataLabel32() = default;
     explicit CodeLocationDataLabel32(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationDataLabel32(void* location)
@@ -130,7 +130,7 @@ public:
 
 class CodeLocationDataLabelPtr : public CodeLocationCommon {
 public:
-    CodeLocationDataLabelPtr() {}
+    CodeLocationDataLabelPtr() = default;
     explicit CodeLocationDataLabelPtr(MacroAssemblerCodePtr location)
         : CodeLocationCommon(location) {}
     explicit CodeLocationDataLabelPtr(void* location)

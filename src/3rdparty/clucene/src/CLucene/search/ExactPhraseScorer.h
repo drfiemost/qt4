@@ -21,8 +21,7 @@ CL_NS_DEF(search)
     ExactPhraseScorer(Weight* weight, CL_NS(index)::TermPositions** tps, int32_t* positions, 
        Similarity* similarity, uint8_t* norms );
        
-	~ExactPhraseScorer(){
-	}
+	~ExactPhraseScorer()= default;
     protected:
       //Returns the exact freqency of the phrase
       qreal phraseFreq();

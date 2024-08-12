@@ -124,8 +124,7 @@ QTextList::QTextList(QTextDocument *doc)
   \internal
 */
 QTextList::~QTextList()
-{
-}
+= default;
 
 /*!
     Returns the number of items in the list.

@@ -80,7 +80,7 @@ public:
                                                m_w(0), m_h(0), m_cx(0), m_cy(0), m_currentRowHeight(0), m_subPixelPositionCount(0)
         { }
 
-    ~QTextureGlyphCache() override { }
+    ~QTextureGlyphCache() override = default;
 
     struct GlyphAndSubPixelPosition
     {

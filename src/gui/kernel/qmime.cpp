@@ -60,8 +60,7 @@ QT_BEGIN_NAMESPACE
     Destroys the MIME source.
 */
 QMimeSource::~QMimeSource()
-{
-}
+= default;
 
 /*!
     \fn const char *QMimeSource::format(int i) const

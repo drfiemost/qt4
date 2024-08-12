@@ -86,7 +86,7 @@ namespace QPatternist
          * No implementation is provided, this class is not supposed to be
          * instantiated.
          */
-        inline QtXmlPatterns();
+        inline QtXmlPatterns() = delete;
         Q_DISABLE_COPY(QtXmlPatterns)
     };
 

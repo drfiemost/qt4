@@ -178,8 +178,7 @@ Config::Config(const QString& programName)
   The destructor has nothing special to do.
  */
 Config::~Config()
-{
-}
+= default;
 
 /*!
   Loads and parses the qdoc configuration file \a fileName.

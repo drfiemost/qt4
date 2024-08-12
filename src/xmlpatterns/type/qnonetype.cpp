@@ -48,8 +48,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 NoneType::NoneType()
-{
-}
+= default;
 
 bool NoneType::itemMatches(const Item &) const
 {

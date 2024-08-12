@@ -77,8 +77,7 @@ XsdSchemaResolver::XsdSchemaResolver(const QExplicitlySharedDataPointer<XsdSchem
 }
 
 XsdSchemaResolver::~XsdSchemaResolver()
-{
-}
+= default;
 
 void XsdSchemaResolver::resolve()
 {

@@ -106,8 +106,7 @@ QNetworkCookieJar::QNetworkCookieJar(QObject *parent)
     QNetworkCookieJar and save the cookies to disk yourself.
 */
 QNetworkCookieJar::~QNetworkCookieJar()
-{
-}
+= default;
 
 /*!
     Returns all cookies stored in this cookie jar. This function is

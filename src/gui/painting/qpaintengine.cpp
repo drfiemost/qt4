@@ -719,8 +719,7 @@ QPaintEngine::QPaintEngine(QPaintEnginePrivate &dptr, PaintEngineFeatures caps)
     Destroys the paint engine.
 */
 QPaintEngine::~QPaintEngine()
-{
-}
+= default;
 
 /*!
     Returns the paint engine's painter.

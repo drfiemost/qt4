@@ -58,7 +58,7 @@ QTestLightXmlStreamer::QTestLightXmlStreamer()
 }
 
 QTestLightXmlStreamer::~QTestLightXmlStreamer()
-{}
+= default;
 
 void QTestLightXmlStreamer::formatStart(const QTestElement *element, QTestCharBuffer *formatted) const
 {

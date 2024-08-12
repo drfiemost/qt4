@@ -247,14 +247,8 @@ QMatrix::QMatrix(qreal m11, qreal m12, qreal m21, qreal m22, qreal dx, qreal dy)
      Constructs a matrix that is a copy of the given \a matrix.
  */
 QMatrix::QMatrix(const QMatrix &matrix)
-    : _m11(matrix._m11)
-    , _m12(matrix._m12)
-    , _m21(matrix._m21)
-    , _m22(matrix._m22)
-    , _dx(matrix._dx)
-    , _dy(matrix._dy)
-{
-}
+     
+= default;
 
 /*!
     Sets the matrix elements to the specified values, \a m11, \a m12,
@@ -1062,15 +1056,7 @@ QMatrix QMatrix::operator *(const QMatrix &m) const
     Assigns the given \a matrix's values to this matrix.
 */
 QMatrix &QMatrix::operator=(const QMatrix &matrix)
-{
-    _m11 = matrix._m11;
-    _m12 = matrix._m12;
-    _m21 = matrix._m21;
-    _m22 = matrix._m22;
-    _dx  = matrix._dx;
-    _dy  = matrix._dy;
-    return *this;
-}
+= default;
 
 /*!
     \since 4.2

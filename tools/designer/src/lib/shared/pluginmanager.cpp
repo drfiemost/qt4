@@ -181,10 +181,9 @@ QDesignerCustomWidgetData::QDesignerCustomWidgetData(const QString &pluginPath) 
 {
 }
 
-QDesignerCustomWidgetData::QDesignerCustomWidgetData(const QDesignerCustomWidgetData &o) :
-     m_d(o.m_d)
-{
-}
+QDesignerCustomWidgetData::QDesignerCustomWidgetData(const QDesignerCustomWidgetData &o) 
+     
+= default;
 
 QDesignerCustomWidgetData& QDesignerCustomWidgetData::operator=(const QDesignerCustomWidgetData &o)
 {
@@ -193,8 +192,7 @@ QDesignerCustomWidgetData& QDesignerCustomWidgetData::operator=(const QDesignerC
 }
 
 QDesignerCustomWidgetData::~QDesignerCustomWidgetData()
-{
-}
+= default;
 
 bool QDesignerCustomWidgetData::isNull() const
 {

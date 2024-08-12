@@ -66,7 +66,7 @@ public:
     bool deleteCLuceneSearchable;
 
 private:
-    QCLuceneSearchablePrivate &operator=(const QCLuceneSearchablePrivate &other);
+    QCLuceneSearchablePrivate &operator=(const QCLuceneSearchablePrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneSearchable

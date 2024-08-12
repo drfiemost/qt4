@@ -434,8 +434,7 @@ public:
     }
 
     ~QDeclarativeParticlesPrivate() override
-    {
-    }
+    = default;
 
     void init()
     {
@@ -693,8 +692,7 @@ QDeclarativeParticles::QDeclarativeParticles(QDeclarativeItem *parent)
 }
 
 QDeclarativeParticles::~QDeclarativeParticles()
-{
-}
+= default;
 
 /*!
     \qmlproperty string Particles::source

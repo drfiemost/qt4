@@ -332,8 +332,7 @@ QInternalMimeData::QInternalMimeData()
 }
 
 QInternalMimeData::~QInternalMimeData()
-{
-}
+= default;
 
 bool QInternalMimeData::hasFormat(const QString &mimeType) const
 {

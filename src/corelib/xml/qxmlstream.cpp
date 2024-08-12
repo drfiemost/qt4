@@ -179,8 +179,7 @@ enum { StreamEOF = ~0U };
   Destroys the entity resolver.
  */
 QXmlStreamEntityResolver::~QXmlStreamEntityResolver()
-{
-}
+= default;
 
 /*! \internal
 
@@ -2292,8 +2291,7 @@ QXmlStreamAttribute::QXmlStreamAttribute()
   Destructs an attribute.
  */
 QXmlStreamAttribute::~QXmlStreamAttribute()
-{
-}
+= default;
 
 /*!  Constructs an attribute in the namespace described with \a
   namespaceUri with \a name and value \a value.
@@ -2435,8 +2433,7 @@ QXmlStreamAttribute& QXmlStreamAttribute::operator=(const QXmlStreamAttribute &o
   Creates an empty notation declaration.
 */
 QXmlStreamNotationDeclaration::QXmlStreamNotationDeclaration()
-{
-}
+= default;
 /*!
   Creates a copy of \a other.
  */
@@ -2460,8 +2457,7 @@ QXmlStreamNotationDeclaration& QXmlStreamNotationDeclaration::operator=(const QX
 Destructs this notation declaration.
 */
 QXmlStreamNotationDeclaration::~QXmlStreamNotationDeclaration()
-{
-}
+= default;
 
 /*! \fn QStringRef QXmlStreamNotationDeclaration::name() const
 
@@ -2519,8 +2515,7 @@ Returns the public identifier.
   Creates an empty namespace declaration.
 */
 QXmlStreamNamespaceDeclaration::QXmlStreamNamespaceDeclaration()
-{
-}
+= default;
 
 /*!
   \since 4.4
@@ -2554,8 +2549,7 @@ QXmlStreamNamespaceDeclaration& QXmlStreamNamespaceDeclaration::operator=(const 
 Destructs this namespace declaration.
 */
 QXmlStreamNamespaceDeclaration::~QXmlStreamNamespaceDeclaration()
-{
-}
+= default;
 
 /*! \fn QStringRef QXmlStreamNamespaceDeclaration::prefix() const
 
@@ -2598,8 +2592,7 @@ Returns the namespaceUri.
   Creates an empty entity declaration.
 */
 QXmlStreamEntityDeclaration::QXmlStreamEntityDeclaration()
-{
-}
+= default;
 
 /*!
   Creates a copy of \a other.
@@ -2626,8 +2619,7 @@ QXmlStreamEntityDeclaration& QXmlStreamEntityDeclaration::operator=(const QXmlSt
   Destructs this entity declaration.
 */
 QXmlStreamEntityDeclaration::~QXmlStreamEntityDeclaration()
-{
-}
+= default;
 
 /*! \fn QStringRef QXmlStreamEntityDeclaration::name() const
 
@@ -3265,8 +3257,7 @@ QXmlStreamWriter::QXmlStreamWriter(QString *string)
     Destructor.
 */
 QXmlStreamWriter::~QXmlStreamWriter()
-{
-}
+= default;
 
 
 /*!

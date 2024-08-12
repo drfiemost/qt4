@@ -210,8 +210,7 @@ QBitmap &QBitmap::operator=(const QPixmap &pixmap)
   Destroys the bitmap.
 */
 QBitmap::~QBitmap()
-{
-}
+= default;
 
 /*!
     \fn void QBitmap::swap(QBitmap &other)

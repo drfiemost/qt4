@@ -52,12 +52,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AtomicType::AtomicType()
-{
-}
+= default;
 
 AtomicType::~AtomicType()
-{
-}
+= default;
 
 bool AtomicType::xdtTypeMatches(const ItemType::Ptr &other) const
 {

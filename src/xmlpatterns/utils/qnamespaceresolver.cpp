@@ -47,11 +47,9 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 NamespaceResolver::NamespaceResolver()
-{
-}
+= default;
 
 NamespaceResolver::~NamespaceResolver()
-{
-}
+= default;
 
 QT_END_NAMESPACE

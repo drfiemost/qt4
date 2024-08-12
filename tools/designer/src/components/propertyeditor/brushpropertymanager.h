@@ -59,8 +59,8 @@ namespace qdesigner_internal {
 // BrushPropertyManager: A mixin for DesignerPropertyManager that manages brush properties.
 
 class BrushPropertyManager {
-    BrushPropertyManager(const BrushPropertyManager&);
-    BrushPropertyManager &operator=(const BrushPropertyManager&);
+    BrushPropertyManager(const BrushPropertyManager&) = delete;
+    BrushPropertyManager &operator=(const BrushPropertyManager&) = delete;
 
 public:
     BrushPropertyManager();

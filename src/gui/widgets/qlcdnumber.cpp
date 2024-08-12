@@ -392,8 +392,7 @@ void QLCDNumberPrivate::init()
 */
 
 QLCDNumber::~QLCDNumber()
-{
-}
+= default;
 
 
 /*!

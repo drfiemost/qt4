@@ -533,8 +533,7 @@ QFileDialogPrivate::QFileDialogPrivate()
 }
 
 QFileDialogPrivate::~QFileDialogPrivate()
-{
-}
+= default;
 
 void QFileDialogPrivate::retranslateWindowTitle()
 {

@@ -44,12 +44,10 @@
 QT_BEGIN_NAMESPACE
 
 PlainCodeMarker::PlainCodeMarker()
-{
-}
+= default;
 
 PlainCodeMarker::~PlainCodeMarker()
-{
-}
+= default;
 
 bool PlainCodeMarker::recognizeCode( const QString& /* code */ )
 {

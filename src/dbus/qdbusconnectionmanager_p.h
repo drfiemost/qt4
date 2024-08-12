@@ -63,7 +63,7 @@ QT_BEGIN_NAMESPACE
 class QDBusConnectionManager
 {
 public:
-    QDBusConnectionManager() {}
+    QDBusConnectionManager() = default;
     ~QDBusConnectionManager();
     static QDBusConnectionManager* instance();
 

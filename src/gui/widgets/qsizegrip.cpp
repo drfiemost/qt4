@@ -238,8 +238,7 @@ void QSizeGripPrivate::init()
     Destroys this size grip.
 */
 QSizeGrip::~QSizeGrip()
-{
-}
+= default;
 
 /*!
   \reimp

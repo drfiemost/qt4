@@ -88,16 +88,14 @@ QXmlSchema::QXmlSchema()
   to the extent possible.
  */
 QXmlSchema::QXmlSchema(const QXmlSchema &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
   Destroys this QXmlSchema.
  */
 QXmlSchema::~QXmlSchema()
-{
-}
+= default;
 
 /*!
   Sets this QXmlSchema to a schema loaded from the \a source

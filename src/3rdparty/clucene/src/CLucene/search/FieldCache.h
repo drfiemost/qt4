@@ -25,8 +25,7 @@ class FieldCacheAuto; //predefine
  */
 class FieldCache :LUCENE_BASE {
 public:
-   virtual ~FieldCache(){
-   }
+   virtual ~FieldCache()= default;
 
 	/** Expert: Stores term text values and document ordering data. */
 	class StringIndex:LUCENE_BASE {

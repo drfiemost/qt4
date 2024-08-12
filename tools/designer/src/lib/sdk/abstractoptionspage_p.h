@@ -65,7 +65,7 @@ class QWidget;
 class QDESIGNER_SDK_EXPORT QDesignerOptionsPageInterface
 {
 public:
-    virtual ~QDesignerOptionsPageInterface() {}
+    virtual ~QDesignerOptionsPageInterface() = default;
     virtual QString name() const = 0;
     virtual QWidget *createPage(QWidget *parent) = 0;
     virtual void apply() = 0;

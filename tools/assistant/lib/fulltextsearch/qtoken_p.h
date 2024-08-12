@@ -58,7 +58,7 @@ public:
     bool deleteCLuceneToken;
 
 private:
-    QCLuceneTokenPrivate &operator=(const QCLuceneTokenPrivate &other);
+    QCLuceneTokenPrivate &operator=(const QCLuceneTokenPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneToken

@@ -261,8 +261,7 @@ public:
     };
 
     X86Assembler()
-    {
-    }
+    = default;
 
     size_t size() const { return m_formatter.size(); }
 

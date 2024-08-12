@@ -65,7 +65,7 @@ QEventDispatcherX11::QEventDispatcherX11(QObject *parent)
 { }
 
 QEventDispatcherX11::~QEventDispatcherX11()
-{ }
+= default;
 
 bool QEventDispatcherX11::processEvents(QEventLoop::ProcessEventsFlags flags)
 {

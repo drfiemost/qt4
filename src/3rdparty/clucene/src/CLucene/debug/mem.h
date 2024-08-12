@@ -108,7 +108,7 @@ public:
 		this->values = _CL_NEWARRAY(T,length);
 		this->length = length;
 	}
-	~Array(){}
+	~Array()= default;
 
 	const T operator[](size_t _Pos) const
 	{

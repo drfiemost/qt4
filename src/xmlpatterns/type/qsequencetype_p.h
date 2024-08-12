@@ -83,8 +83,7 @@ namespace QPatternist
     {
     public:
         inline SequenceType()
-        {
-        }
+        = default;
 
         /**
          * A smart pointer wrapping SequenceType instances.

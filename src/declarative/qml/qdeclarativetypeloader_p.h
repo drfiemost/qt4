@@ -259,7 +259,7 @@ public:
 
     // Used by QDeclarativeComponent to get notifications
     struct TypeDataCallback {
-        ~TypeDataCallback() {}
+        ~TypeDataCallback() = default;
         virtual void typeDataProgress(QDeclarativeTypeData *, qreal) {}
         virtual void typeDataReady(QDeclarativeTypeData *) {}
     };

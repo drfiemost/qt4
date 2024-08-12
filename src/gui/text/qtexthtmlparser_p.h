@@ -324,7 +324,7 @@ protected:
 
     struct ExternalStyleSheet
     {
-        inline ExternalStyleSheet() {}
+        inline ExternalStyleSheet() = default;
         inline ExternalStyleSheet(const QString &_url, const QCss::StyleSheet &_sheet)
             : url(_url), sheet(_sheet) {}
         QString url;

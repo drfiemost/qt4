@@ -308,8 +308,7 @@ QToolBox::QToolBox(QWidget *parent, Qt::WindowFlags f)
 */
 
 QToolBox::~QToolBox()
-{
-}
+= default;
 
 /*!
     \fn int QToolBox::addItem(QWidget *w, const QString &text)

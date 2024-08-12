@@ -94,7 +94,7 @@ namespace QPatternist
                                       const Mode validationMode,
                                       const StaticContext::Ptr &context);
     private:
-        Validate();
+        Validate() = delete;
         Q_DISABLE_COPY(Validate)
     };
 }

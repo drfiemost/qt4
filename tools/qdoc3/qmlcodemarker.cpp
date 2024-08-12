@@ -60,12 +60,10 @@
 QT_BEGIN_NAMESPACE
 
 QmlCodeMarker::QmlCodeMarker()
-{
-}
+= default;
 
 QmlCodeMarker::~QmlCodeMarker()
-{
-}
+= default;
 
 /*!
   Returns true if the \a code is recognized by the parser.

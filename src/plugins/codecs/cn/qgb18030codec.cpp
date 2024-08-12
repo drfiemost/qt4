@@ -81,8 +81,7 @@ static int qt_UnicodeToGb18030(uint unicode, uchar *gbchar);
 int qt_UnicodeToGbk(uint unicode, uchar *gbchar);
 
 QGb18030Codec::QGb18030Codec()
-{
-}
+= default;
 
 /*! \reimp */
 QByteArray QGb18030Codec::convertFromUnicode(const QChar *uc, int len, ConverterState *state) const
@@ -583,8 +582,7 @@ QByteArray QGb2312Codec::convertFromUnicode(const QChar *uc, int len, ConverterS
 #ifdef Q_WS_X11
 
 QFontGb2312Codec::QFontGb2312Codec()
-{
-}
+= default;
 
 
 QByteArray QFontGb2312Codec::_name()
@@ -631,8 +629,7 @@ QByteArray QFontGb2312Codec::convertFromUnicode(const QChar *uc, int len, Conver
 
 
 QFontGbkCodec::QFontGbkCodec()
-{
-}
+= default;
 
 
 QByteArray QFontGbkCodec::_name()

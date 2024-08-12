@@ -319,9 +319,9 @@ struct QVectorPathCmd
 class Q_GUI_EXPORT QPainterReplayer
 {
 public:
-    QPainterReplayer() { }
+    QPainterReplayer() = default;
 
-    virtual ~QPainterReplayer() { }
+    virtual ~QPainterReplayer() = default;
 
     void setupTransform(QPainter *painter);
     virtual void process(const QPaintBufferCommand &cmd);
@@ -337,7 +337,7 @@ protected:
 class Q_GUI_EXPORT QPaintEngineExReplayer : public QPainterReplayer
 {
 public:
-    QPaintEngineExReplayer() { }
+    QPaintEngineExReplayer() = default;
 
     void process(const QPaintBufferCommand &cmd) override;
 };

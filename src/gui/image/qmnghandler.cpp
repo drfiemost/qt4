@@ -375,8 +375,7 @@ QMngHandler::QMngHandler()
 }
 
 QMngHandler::~QMngHandler()
-{
-}
+= default;
 
 /*! \reimp */
 bool QMngHandler::canRead() const

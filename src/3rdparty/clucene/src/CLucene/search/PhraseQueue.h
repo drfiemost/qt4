@@ -21,8 +21,7 @@ CL_NS_DEF(search)
 		PhraseQueue(const int32_t size) {
 			initialize(size,false);
 		}
-		~PhraseQueue(){
-		}
+		~PhraseQueue()= default;
 
 	protected:
 		bool lessThan(PhrasePositions* pp1, PhrasePositions* pp2) {

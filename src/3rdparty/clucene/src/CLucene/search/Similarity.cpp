@@ -188,16 +188,13 @@ CL_NS_DEF(search)
       return _idf;
    }
 
-   Similarity::~Similarity(){
-  }
+   Similarity::~Similarity()= default;
 
 
 
 
-   DefaultSimilarity::DefaultSimilarity(){
-	}
-	DefaultSimilarity::~DefaultSimilarity(){
-	}
+   DefaultSimilarity::DefaultSimilarity()= default;
+	DefaultSimilarity::~DefaultSimilarity()= default;
 
   qreal DefaultSimilarity::lengthNorm(const TCHAR* fieldName, int32_t numTerms) {
     if ( numTerms == 0 ) //prevent div by zero

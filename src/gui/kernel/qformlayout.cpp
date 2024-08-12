@@ -59,7 +59,7 @@ class FixedColumnMatrix {
 public:
     typedef QVector<T> Storage;
 
-    FixedColumnMatrix() { }
+    FixedColumnMatrix() = default;
 
     void clear() { m_storage.clear(); }
 
@@ -183,7 +183,7 @@ public:
     typedef FixedColumnMatrix<QFormLayoutItem *, ColumnCount> ItemMatrix;
 
     QFormLayoutPrivate();
-    ~QFormLayoutPrivate() override { }
+    ~QFormLayoutPrivate() override = default;
 
     int insertRow(int row);
     void insertRows(int row, int count);

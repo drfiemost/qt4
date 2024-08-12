@@ -113,8 +113,7 @@ QAnimationGroup::QAnimationGroup(QAnimationGroupPrivate &dd, QObject *parent)
     Destroys the animation group. It will also destroy all its animations.
 */
 QAnimationGroup::~QAnimationGroup()
-{
-}
+= default;
 
 /*!
     Returns a pointer to the animation at \a index in this group. This

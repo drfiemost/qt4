@@ -587,8 +587,7 @@ QPainterPath &QPainterPath::operator=(const QPainterPath &other)
     Destroys this QPainterPath object.
 */
 QPainterPath::~QPainterPath()
-{
-}
+= default;
 
 /*!
     Closes the current subpath by drawing a line to the beginning of
@@ -2505,8 +2504,7 @@ QPainterPathStroker::QPainterPathStroker()
     Destroys the stroker.
 */
 QPainterPathStroker::~QPainterPathStroker()
-{
-}
+= default;
 
 
 /*!

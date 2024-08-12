@@ -1869,8 +1869,7 @@ QSslSocketPrivate::QSslSocketPrivate()
     \internal
 */
 QSslSocketPrivate::~QSslSocketPrivate()
-{
-}
+= default;
 
 /*!
     \internal

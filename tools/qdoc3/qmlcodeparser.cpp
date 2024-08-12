@@ -70,12 +70,10 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_QMLBASICTYPE            Doc::alias("qmlbasictype")
 
 QmlCodeParser::QmlCodeParser()
-{
-}
+= default;
 
 QmlCodeParser::~QmlCodeParser()
-{
-}
+= default;
 
 /*!
   Initialize the code parser base class.

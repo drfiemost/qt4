@@ -86,12 +86,10 @@ public:
 };
 
 QScriptDebuggerCommandExecutorPrivate::QScriptDebuggerCommandExecutorPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCommandExecutorPrivate::~QScriptDebuggerCommandExecutorPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCommandExecutor::QScriptDebuggerCommandExecutor()
     : d_ptr(new QScriptDebuggerCommandExecutorPrivate())
@@ -99,8 +97,7 @@ QScriptDebuggerCommandExecutor::QScriptDebuggerCommandExecutor()
 }
 
 QScriptDebuggerCommandExecutor::~QScriptDebuggerCommandExecutor()
-{
-}
+= default;
 
 static bool isPrefixOf(const QString &prefix, const QString &what)
 {

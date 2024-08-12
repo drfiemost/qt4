@@ -11,8 +11,7 @@
 CL_NS_USE(util)
 CL_NS_DEF(document)
 
-DateField::~DateField(){
-}
+DateField::~DateField()= default;
 
 TCHAR* DateField::timeToString(const int64_t time) {
     TCHAR* buf = _CL_NEWARRAY(TCHAR,DATEFIELD_DATE_LEN + 1);

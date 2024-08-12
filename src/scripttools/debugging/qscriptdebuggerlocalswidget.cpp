@@ -110,8 +110,7 @@ QScriptDebuggerLocalsWidgetPrivate::QScriptDebuggerLocalsWidgetPrivate()
 }
 
 QScriptDebuggerLocalsWidgetPrivate::~QScriptDebuggerLocalsWidgetPrivate()
-{
-}
+= default;
 
 void QScriptDebuggerLocalsWidgetPrivate::complete(QLineEdit *le)
 {
@@ -370,8 +369,7 @@ QScriptDebuggerLocalsWidget::QScriptDebuggerLocalsWidget(QWidget *parent)
 }
 
 QScriptDebuggerLocalsWidget::~QScriptDebuggerLocalsWidget()
-{
-}
+= default;
 
 /*!
   \reimp

@@ -81,8 +81,7 @@ QAbstractUriResolver::QAbstractUriResolver(QObject *parent) : QObject(parent)
   Destructor.
  */
 QAbstractUriResolver::~QAbstractUriResolver()
-{
-}
+= default;
 
 /*!
   \fn QUrl QAbstractUriResolver::resolve(const QUrl &relative, const QUrl &baseURI) const

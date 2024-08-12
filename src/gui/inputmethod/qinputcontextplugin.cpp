@@ -168,8 +168,7 @@ QInputContextPlugin::QInputContextPlugin(QObject *parent)
     automatically when it's no longer used.
 */
 QInputContextPlugin::~QInputContextPlugin()
-{
-}
+= default;
 
 QT_END_NAMESPACE
 

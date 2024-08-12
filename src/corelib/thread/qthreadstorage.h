@@ -140,7 +140,7 @@ private:
 
 public:
     inline QThreadStorage() : d(deleteData) { }
-    inline ~QThreadStorage() { }
+    inline ~QThreadStorage() = default;
 
     inline bool hasLocalData() const
     { return d.get() != nullptr; }

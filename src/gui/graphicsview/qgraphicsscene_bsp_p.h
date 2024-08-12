@@ -121,7 +121,7 @@ private:
 class QGraphicsSceneBspTreeVisitor
 {
 public:
-    virtual ~QGraphicsSceneBspTreeVisitor() { }
+    virtual ~QGraphicsSceneBspTreeVisitor() = default;
     virtual void visit(QList<QGraphicsItem *> *items) = 0;
 };
 

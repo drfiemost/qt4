@@ -56,7 +56,7 @@ class QPreviewPaintEnginePrivate : public QPaintEnginePrivate
     Q_DECLARE_PUBLIC(QPreviewPaintEngine)
 public:
     QPreviewPaintEnginePrivate() : state(QPrinter::Idle) {}
-    ~QPreviewPaintEnginePrivate() override {}
+    ~QPreviewPaintEnginePrivate() override = default;
 
     QList<const QPicture *> pages;
     QPaintEngine *engine;

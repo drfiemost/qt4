@@ -1408,8 +1408,7 @@ QTextEncoder::QTextEncoder(const QTextCodec *codec, QTextCodec::ConversionFlags 
     Destroys the encoder.
 */
 QTextEncoder::~QTextEncoder()
-{
-}
+= default;
 
 /*! \internal
     \since 4.5
@@ -1480,8 +1479,7 @@ QTextDecoder::QTextDecoder(const QTextCodec *codec, QTextCodec::ConversionFlags 
     Destroys the decoder.
 */
 QTextDecoder::~QTextDecoder()
-{
-}
+= default;
 
 /*!
     \fn QString QTextDecoder::toUnicode(const char *chars, int len)

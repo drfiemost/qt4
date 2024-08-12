@@ -88,8 +88,7 @@ QColumnViewGrip::QColumnViewGrip(QColumnViewGripPrivate & dd, QWidget *parent, Q
   Destroys the view.
 */
 QColumnViewGrip::~QColumnViewGrip()
-{
-}
+= default;
 
 /*!
     Attempt to resize the parent object by \a offset

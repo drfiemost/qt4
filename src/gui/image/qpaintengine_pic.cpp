@@ -86,8 +86,7 @@ QPicturePaintEngine::QPicturePaintEngine(QPaintEnginePrivate &dptr)
 }
 
 QPicturePaintEngine::~QPicturePaintEngine()
-{
-}
+= default;
 
 bool QPicturePaintEngine::begin(QPaintDevice *pd)
 {

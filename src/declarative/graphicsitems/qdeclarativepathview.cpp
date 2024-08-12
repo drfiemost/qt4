@@ -78,8 +78,7 @@ QDeclarativePathViewAttached::QDeclarativePathViewAttached(QObject *parent)
 }
 
 QDeclarativePathViewAttached::~QDeclarativePathViewAttached()
-{
-}
+= default;
 
 QVariant QDeclarativePathViewAttached::value(const QByteArray &name) const
 {

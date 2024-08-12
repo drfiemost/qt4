@@ -28,12 +28,10 @@ QT_BEGIN_NAMESPACE
 namespace QScript { namespace AST {
 
 Visitor::Visitor()
-{
-}
+= default;
 
 Visitor::~Visitor()
-{
-}
+= default;
 
 } } // namespace QScript::AST
 

@@ -77,8 +77,7 @@ SaveFormAsTemplate::SaveFormAsTemplate(QDesignerFormEditorInterface *core,
 }
 
 SaveFormAsTemplate::~SaveFormAsTemplate()
-{
-}
+= default;
 
 void SaveFormAsTemplate::accept()
 {

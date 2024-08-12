@@ -64,8 +64,7 @@ RegExpObject::RegExpObject(NonNullPassRefPtr<Structure> structure, NonNullPassRe
 }
 
 RegExpObject::~RegExpObject()
-{
-}
+= default;
 
 bool RegExpObject::getOwnPropertySlot(ExecState* exec, const Identifier& propertyName, PropertySlot& slot)
 {

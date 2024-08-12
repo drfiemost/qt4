@@ -201,8 +201,8 @@ class Q_GUI_EXPORT QTextBlock
 public:
     inline QTextBlock(QTextDocumentPrivate *priv, int b) : p(priv), n(b) {}
     inline QTextBlock() : p(nullptr), n(0) {}
-    inline QTextBlock(const QTextBlock &o) : p(o.p), n(o.n) {}
-    inline QTextBlock &operator=(const QTextBlock &o) { p = o.p; n = o.n; return *this; }
+    inline QTextBlock(const QTextBlock &o)  = default;
+    inline QTextBlock &operator=(const QTextBlock &o) = default;
 
     inline bool isValid() const { return p != nullptr && n != 0; }
 
@@ -256,7 +256,7 @@ public:
         iterator(const QTextDocumentPrivate *priv, int begin, int end, int f) : p(priv), b(begin), e(end), n(f) {}
     public:
         iterator() : p(nullptr), b(0), e(0), n(0) {}
-        iterator(const iterator &o) : p(o.p), b(o.b), e(o.e), n(o.n) {}
+        iterator(const iterator &o)  = default;
         iterator &operator=(const iterator &o) = default;
 
         QTextFragment fragment() const;
@@ -299,8 +299,8 @@ class Q_GUI_EXPORT QTextFragment
 public:
     inline QTextFragment(const QTextDocumentPrivate *priv, int f, int fe) : p(priv), n(f), ne(fe) {}
     inline QTextFragment() : p(nullptr), n(0), ne(0) {}
-    inline QTextFragment(const QTextFragment &o) : p(o.p), n(o.n), ne(o.ne) {}
-    inline QTextFragment &operator=(const QTextFragment &o) { p = o.p; n = o.n; ne = o.ne; return *this; }
+    inline QTextFragment(const QTextFragment &o)  = default;
+    inline QTextFragment &operator=(const QTextFragment &o) = default;
 
     inline bool isValid() const { return p && n; }
 

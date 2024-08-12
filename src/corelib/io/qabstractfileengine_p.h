@@ -63,9 +63,8 @@ class QAbstractFileEnginePrivate
 public:
     inline QAbstractFileEnginePrivate()
         : fileError(QFile::UnspecifiedError)
-    {
-    }
-    inline virtual ~QAbstractFileEnginePrivate() { }
+    {}
+    inline virtual ~QAbstractFileEnginePrivate() = default;
 
     QFile::FileError fileError;
     QString errorString;

@@ -1280,8 +1280,7 @@ QFontEngineBox::QFontEngineBox(int size)
 }
 
 QFontEngineBox::~QFontEngineBox()
-{
-}
+= default;
 
 bool QFontEngineBox::stringToCMap(const QChar *, int len, QGlyphLayout *glyphs, int *nglyphs, QFontEngine::ShaperFlags flags) const
 {

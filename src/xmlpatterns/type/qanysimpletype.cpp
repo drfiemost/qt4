@@ -48,12 +48,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AnySimpleType::AnySimpleType()
-{
-}
+= default;
 
 AnySimpleType::~AnySimpleType()
-{
-}
+= default;
 
 QXmlName AnySimpleType::name(const NamePool::Ptr &np) const
 {

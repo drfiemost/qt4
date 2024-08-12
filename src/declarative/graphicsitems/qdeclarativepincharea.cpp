@@ -247,8 +247,7 @@ QDeclarativePinchArea::QDeclarativePinchArea(QDeclarativeItem *parent)
 }
 
 QDeclarativePinchArea::~QDeclarativePinchArea()
-{
-}
+= default;
 
 /*!
     \qmlproperty bool PinchArea::enabled

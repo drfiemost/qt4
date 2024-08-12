@@ -106,8 +106,7 @@ QPauseAnimation::QPauseAnimation(int msecs, QObject *parent) : QAbstractAnimatio
     Destroys the pause animation.
 */
 QPauseAnimation::~QPauseAnimation()
-{
-}
+= default;
 
 /*!
     \property QPauseAnimation::duration

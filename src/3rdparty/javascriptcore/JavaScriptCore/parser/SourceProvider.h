@@ -43,7 +43,7 @@ namespace JSC {
             , m_hasBOMs(hasBOMs)
         {
         }
-        virtual ~SourceProvider() { }
+        virtual ~SourceProvider() = default;
 
         virtual UString getRange(int start, int end) const = 0;
         virtual const UChar* data() const = 0;

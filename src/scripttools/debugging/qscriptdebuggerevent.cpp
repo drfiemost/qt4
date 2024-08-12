@@ -65,8 +65,7 @@ QScriptDebuggerEventPrivate::QScriptDebuggerEventPrivate()
 }
 
 QScriptDebuggerEventPrivate::~QScriptDebuggerEventPrivate()
-{
-}
+= default;
 
 QScriptDebuggerEvent::QScriptDebuggerEvent()
     : d_ptr(new QScriptDebuggerEventPrivate)
@@ -97,8 +96,7 @@ QScriptDebuggerEvent::QScriptDebuggerEvent(const QScriptDebuggerEvent &other)
 }
 
 QScriptDebuggerEvent::~QScriptDebuggerEvent()
-{
-}
+= default;
 
 QScriptDebuggerEvent &QScriptDebuggerEvent::operator=(const QScriptDebuggerEvent &other)
 {

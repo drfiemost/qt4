@@ -73,8 +73,7 @@ QDesignerNewFormWidgetInterface::QDesignerNewFormWidgetInterface(QWidget *parent
 */
 
 QDesignerNewFormWidgetInterface::~QDesignerNewFormWidgetInterface()
-{
-}
+= default;
 
 /*!
     Creates an instance of the QDesignerNewFormWidgetInterface as a child

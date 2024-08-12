@@ -74,8 +74,7 @@ QDeclarativeValueTypeScriptClass::QDeclarativeValueTypeScriptClass(QDeclarativeE
 }
 
 QDeclarativeValueTypeScriptClass::~QDeclarativeValueTypeScriptClass()
-{
-}
+= default;
 
 QScriptValue QDeclarativeValueTypeScriptClass::newObject(QObject *object, int coreIndex, QDeclarativeValueType *type)
 {

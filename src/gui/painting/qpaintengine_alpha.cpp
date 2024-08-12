@@ -58,9 +58,7 @@ QAlphaPaintEngine::QAlphaPaintEngine(QAlphaPaintEnginePrivate &data, PaintEngine
 }
 
 QAlphaPaintEngine::~QAlphaPaintEngine()
-{
-
-}
+= default;
 
 bool QAlphaPaintEngine::begin(QPaintDevice *pdev)
 {

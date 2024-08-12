@@ -60,7 +60,7 @@ class QDeclarativeVisualTest : public QObject
     Q_PROPERTY(QDeclarativeListProperty<QObject> events READ events CONSTANT)
     Q_CLASSINFO("DefaultProperty", "events")
 public:
-    QDeclarativeVisualTest() {}
+    QDeclarativeVisualTest() = default;
 
     QDeclarativeListProperty<QObject> events() { return QDeclarativeListProperty<QObject>(this, m_events); }
 

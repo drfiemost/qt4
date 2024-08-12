@@ -169,8 +169,7 @@ class QTapGesturePrivate : public QGesturePrivate
 
 public:
     QTapGesturePrivate()
-    {
-    }
+    = default;
 
     QPointF position;
 };

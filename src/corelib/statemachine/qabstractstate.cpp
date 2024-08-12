@@ -148,8 +148,7 @@ QAbstractState::QAbstractState(QAbstractStatePrivate &dd, QState *parent)
   Destroys this state.
 */
 QAbstractState::~QAbstractState()
-{
-}
+= default;
 
 /*!
   Returns this state's parent state, or 0 if the state has no parent state.

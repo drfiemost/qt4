@@ -92,8 +92,7 @@ QSimpleXmlNodeModel::QSimpleXmlNodeModel(const QXmlNamePool &namePool)
   Destructor.
  */
 QSimpleXmlNodeModel::~QSimpleXmlNodeModel()
-{
-}
+= default;
 
 /*!
  If \a node is an element or attribute, typedValue() is called, and

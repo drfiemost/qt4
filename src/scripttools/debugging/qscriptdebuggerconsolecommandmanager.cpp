@@ -106,8 +106,7 @@ QScriptDebuggerConsoleCommandManager::QScriptDebuggerConsoleCommandManager()
 }
 
 QScriptDebuggerConsoleCommandManager::~QScriptDebuggerConsoleCommandManager()
-{
-}
+= default;
 
 /*!
   Adds the given \a command.

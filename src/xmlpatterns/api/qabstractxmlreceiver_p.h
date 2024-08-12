@@ -60,8 +60,7 @@ class QAbstractXmlReceiverPrivate
 {
 public:
     virtual ~QAbstractXmlReceiverPrivate()
-    {
-    }
+    = default;
 };
 
 QT_END_NAMESPACE

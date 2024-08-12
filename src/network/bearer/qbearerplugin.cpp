@@ -51,8 +51,7 @@ QBearerEnginePlugin::QBearerEnginePlugin(QObject *parent)
 }
 
 QBearerEnginePlugin::~QBearerEnginePlugin()
-{
-}
+= default;
 
 QT_END_NAMESPACE
 

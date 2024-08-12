@@ -149,8 +149,7 @@ QScriptValueIterator::QScriptValueIterator(const QScriptValue &object)
   Destroys the iterator.
 */
 QScriptValueIterator::~QScriptValueIterator()
-{
-}
+= default;
 
 /*!
   Returns true if there is at least one item ahead of the iterator

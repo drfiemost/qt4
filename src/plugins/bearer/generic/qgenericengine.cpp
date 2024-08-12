@@ -153,8 +153,7 @@ QGenericEngine::QGenericEngine(QObject *parent)
 }
 
 QGenericEngine::~QGenericEngine()
-{
-}
+= default;
 
 QString QGenericEngine::getInterfaceFromId(const QString &id)
 {

@@ -57,7 +57,7 @@ class Q_DECLARATIVE_PRIVATE_EXPORT QListModelInterface : public QObject
     Q_OBJECT
  public:
     QListModelInterface(QObject *parent = nullptr) : QObject(parent) {}
-    ~QListModelInterface() override {}
+    ~QListModelInterface() override = default;
 
     virtual int count() const = 0;
     virtual QVariant data(int index, int role) const = 0;

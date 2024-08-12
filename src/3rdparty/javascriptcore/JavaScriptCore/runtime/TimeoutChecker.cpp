@@ -102,8 +102,7 @@ TimeoutChecker::TimeoutChecker()
 }
 
 TimeoutChecker::~TimeoutChecker()
-{
-}
+= default;
 
 void TimeoutChecker::reset()
 {

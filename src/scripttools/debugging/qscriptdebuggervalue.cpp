@@ -163,8 +163,7 @@ QScriptDebuggerValue::QScriptDebuggerValue(const QScriptDebuggerValue &other)
 }
 
 QScriptDebuggerValue::~QScriptDebuggerValue()
-{
-}
+= default;
 
 QScriptDebuggerValue &QScriptDebuggerValue::operator=(const QScriptDebuggerValue &other)
 {

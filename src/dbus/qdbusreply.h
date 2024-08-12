@@ -176,10 +176,7 @@ public:
     }
 
     inline QDBusReply& operator=(const QDBusReply& other)
-    {
-        m_error = other.m_error;
-        return *this;
-    }
+    = default;
 
     inline bool isValid() const { return !m_error.isValid(); }
 

@@ -242,7 +242,7 @@ class QPPDOptionsEditor : public QStyledItemDelegate
     Q_OBJECT
 public:
     QPPDOptionsEditor(QObject* parent = nullptr) : QStyledItemDelegate(parent) {}
-    ~QPPDOptionsEditor() override {}
+    ~QPPDOptionsEditor() override = default;
 
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
@@ -378,8 +378,7 @@ QPrintDialogPrivate::QPrintDialogPrivate()
 }
 
 QPrintDialogPrivate::~QPrintDialogPrivate()
-{
-}
+= default;
 
 void QPrintDialogPrivate::init()
 {
@@ -640,8 +639,7 @@ QPrintDialog::QPrintDialog(QWidget *parent)
 }
 
 QPrintDialog::~QPrintDialog()
-{
-}
+= default;
 
 void QPrintDialog::setVisible(bool visible)
 {
@@ -1078,8 +1076,7 @@ QPPDOptionsModel::QPPDOptionsModel(QCUPSSupport *c, QObject *parent)
 }
 
 QPPDOptionsModel::~QPPDOptionsModel()
-{
-}
+= default;
 
 int QPPDOptionsModel::columnCount(const QModelIndex&) const
 {

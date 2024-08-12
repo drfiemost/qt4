@@ -58,7 +58,7 @@ public:
     bool deleteCLuceneIndexWriter;
 
 private:
-    QCLuceneIndexWriterPrivate &operator=(const QCLuceneIndexWriterPrivate &other);
+    QCLuceneIndexWriterPrivate &operator=(const QCLuceneIndexWriterPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneIndexWriter

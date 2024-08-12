@@ -841,8 +841,7 @@ QFont::QFont(const QFont &font)
     Destroys the font object and frees all allocated resources.
 */
 QFont::~QFont()
-{
-}
+= default;
 
 /*!
     Assigns \a font to this font and returns a reference to it.
@@ -2463,8 +2462,7 @@ QFontInfo::QFontInfo(const QFontInfo &fi)
     Destroys the font info object.
 */
 QFontInfo::~QFontInfo()
-{
-}
+= default;
 
 /*!
     Assigns the font info in \a fi.

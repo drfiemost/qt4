@@ -195,8 +195,7 @@ QScriptValue::QScriptValue()
   Destroys this QScriptValue.
 */
 QScriptValue::~QScriptValue()
-{
-}
+= default;
 
 /*!
   Constructs a new QScriptValue that is a copy of \a other.
@@ -206,9 +205,8 @@ QScriptValue::~QScriptValue()
   the new script value (i.e., the object itself is not copied).
 */
 QScriptValue::QScriptValue(const QScriptValue &other)
-    : d_ptr(other.d_ptr)
-{
-}
+     
+= default;
 
 /*!
   \obsolete
@@ -444,10 +442,7 @@ QScriptValue::QScriptValue(const char *value)
   the object itself will not be copied.
 */
 QScriptValue &QScriptValue::operator=(const QScriptValue &other)
-{
-    d_ptr = other.d_ptr;
-    return *this;
-}
+= default;
 
 /*!
   Returns true if this QScriptValue is an object of the Error class;

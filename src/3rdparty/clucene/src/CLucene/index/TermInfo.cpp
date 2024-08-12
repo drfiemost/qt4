@@ -18,8 +18,7 @@ TermInfo::TermInfo()
 }
 
 TermInfo::~TermInfo()
-{
-}
+= default;
 
 TermInfo::TermInfo(int32_t df, int64_t fp, int64_t pp)
 {

@@ -84,7 +84,7 @@ public:
 
     struct Plugin
     {
-        Plugin() {}
+        Plugin() = default;
 
         Plugin(const QString &name, const QString &path)
             : name(name), path(path) {}

@@ -199,8 +199,7 @@ QStrokerOps::QStrokerOps()
 }
 
 QStrokerOps::~QStrokerOps()
-{
-}
+= default;
 
 /*!
     Prepares the stroker. Call this function once before starting a
@@ -379,8 +378,7 @@ QStroker::QStroker()
 }
 
 QStroker::~QStroker()
-{
-}
+= default;
 
 Qt::PenCapStyle QStroker::capForJoinMode(LineJoinMode mode)
 {

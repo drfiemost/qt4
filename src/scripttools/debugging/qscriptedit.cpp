@@ -125,8 +125,7 @@ QScriptEdit::QScriptEdit(QWidget *parent)
 }
 
 QScriptEdit::~QScriptEdit()
-{
-}
+= default;
 
 int QScriptEdit::baseLineNumber() const
 {

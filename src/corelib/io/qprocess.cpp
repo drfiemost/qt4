@@ -213,26 +213,21 @@ QProcessEnvironment::QProcessEnvironment()
     Frees the resources associated with this QProcessEnvironment object.
 */
 QProcessEnvironment::~QProcessEnvironment()
-{
-}
+= default;
 
 /*!
     Creates a QProcessEnvironment object that is a copy of \a other.
 */
 QProcessEnvironment::QProcessEnvironment(const QProcessEnvironment &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Copies the contents of the \a other QProcessEnvironment object into this
     one.
 */
 QProcessEnvironment &QProcessEnvironment::operator=(const QProcessEnvironment &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     \fn void QProcessEnvironment::swap(QProcessEnvironment &other)

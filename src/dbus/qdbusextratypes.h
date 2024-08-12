@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
 class Q_DBUS_EXPORT QDBusObjectPath : private QString
 {
 public:
-    inline QDBusObjectPath() { }
+    inline QDBusObjectPath() = default;
 
     inline explicit QDBusObjectPath(const char *path);
     inline explicit QDBusObjectPath(QLatin1String path);
@@ -111,7 +111,7 @@ inline uint qHash(const QDBusObjectPath &objectPath, uint seed)
 class Q_DBUS_EXPORT QDBusSignature : private QString
 {
 public:
-    inline QDBusSignature() { }
+    inline QDBusSignature() = default;
 
     inline explicit QDBusSignature(const char *signature);
     inline explicit QDBusSignature(QLatin1String signature);
@@ -162,7 +162,7 @@ inline uint qHash(const QDBusSignature &signature, uint seed)
 class QDBusVariant : private QVariant
 {
 public:
-    inline QDBusVariant() { }
+    inline QDBusVariant() = default;
     inline explicit QDBusVariant(const QVariant &variant);
 
     inline void setVariant(const QVariant &variant);

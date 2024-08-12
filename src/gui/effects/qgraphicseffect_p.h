@@ -215,7 +215,7 @@ class QGraphicsOpacityEffectPrivate : public QGraphicsEffectPrivate
 public:
     QGraphicsOpacityEffectPrivate()
         : opacity(qreal(0.7)), isFullyTransparent(0), isFullyOpaque(0), hasOpacityMask(0) {}
-    ~QGraphicsOpacityEffectPrivate() override {}
+    ~QGraphicsOpacityEffectPrivate() override = default;
 
     qreal opacity;
     QBrush opacityMask;

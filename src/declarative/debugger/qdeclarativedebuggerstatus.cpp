@@ -44,8 +44,7 @@
 QT_BEGIN_NAMESPACE
 
 QDeclarativeDebuggerStatus::~QDeclarativeDebuggerStatus()
-{
-}
+= default;
 
 void QDeclarativeDebuggerStatus::setSelectedState(bool)
 {

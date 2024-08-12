@@ -50,8 +50,7 @@ QAbstractEventDispatcher::EventFilter oldEventFilter = nullptr;
 qint64 QBenchmarkEvent::eventCounter = 0;
 
 QBenchmarkEvent::~QBenchmarkEvent()
-{
-}
+= default;
 
 void QBenchmarkEvent::start()
 {

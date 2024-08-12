@@ -66,7 +66,7 @@ typedef QVector<MacroName> MacroSafeSet;
 class Preprocessor : public Parser
 {
 public:
-    Preprocessor(){}
+    Preprocessor()= default;
     static bool preprocessOnly;
     struct IncludePath
     {

@@ -64,8 +64,7 @@ class QDeclarativeImplicitSizeItemPrivate : public QDeclarativeItemPrivate
 
 public:
     QDeclarativeImplicitSizeItemPrivate()
-    {
-    }
+    = default;
 
     void implicitWidthChanged() override;
     void implicitHeightChanged() override;
@@ -78,8 +77,7 @@ class QDeclarativeImplicitSizePaintedItemPrivate : public QDeclarativePaintedIte
 
 public:
     QDeclarativeImplicitSizePaintedItemPrivate()
-    {
-    }
+    = default;
 
     void implicitWidthChanged() override;
     void implicitHeightChanged() override;

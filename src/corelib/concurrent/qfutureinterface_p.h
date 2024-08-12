@@ -119,7 +119,7 @@ private:
 class QFutureCallOutInterface
 {
 public:
-    virtual ~QFutureCallOutInterface() {}
+    virtual ~QFutureCallOutInterface() = default;
     virtual void postCallOutEvent(const QFutureCallOutEvent &) = 0;
     virtual void callOutInterfaceDisconnected() = 0;
 };

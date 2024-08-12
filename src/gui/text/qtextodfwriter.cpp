@@ -72,7 +72,7 @@ static QString pixelToPoint(qreal pixels)
 class QOutputStrategy {
 public:
     QOutputStrategy() : contentStream(nullptr), counter(1) { }
-    virtual ~QOutputStrategy() {}
+    virtual ~QOutputStrategy() = default;
     virtual void addFile(const QString &fileName, const QString &mimeType, const QByteArray &bytes) = 0;
 
     QString createUniqueImageName()

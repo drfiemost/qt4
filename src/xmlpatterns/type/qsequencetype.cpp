@@ -46,8 +46,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 SequenceType::~SequenceType()
-{
-}
+= default;
 
 bool SequenceType::matches(const SequenceType::Ptr other) const
 {

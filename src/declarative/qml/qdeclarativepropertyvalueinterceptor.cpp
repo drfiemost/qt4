@@ -58,12 +58,10 @@ QT_BEGIN_NAMESPACE
     Constructs a QDeclarativePropertyValueInterceptor.
 */
 QDeclarativePropertyValueInterceptor::QDeclarativePropertyValueInterceptor()
-{
-}
+= default;
 
 QDeclarativePropertyValueInterceptor::~QDeclarativePropertyValueInterceptor()
-{
-}
+= default;
 
 /*!
     \fn void QDeclarativePropertyValueInterceptor::setTarget(const QDeclarativeProperty &property)

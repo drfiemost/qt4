@@ -160,8 +160,7 @@ LanguageResourceDialog::LanguageResourceDialog(QDesignerResourceBrowserInterface
 }
 
 LanguageResourceDialog::~LanguageResourceDialog()
-{
-}
+= default;
 
 void LanguageResourceDialog::setCurrentPath(const QString &filePath)
 {
@@ -506,8 +505,7 @@ IconSelector::IconSelector(QWidget *parent) :
 }
 
 IconSelector::~IconSelector()
-{
-}
+= default;
 
 void IconSelector::setIcon(const PropertySheetIconValue &icon)
 {
@@ -611,8 +609,7 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
 }
 
 IconThemeEditor::~IconThemeEditor()
-{
-}
+= default;
 
 void IconThemeEditor::reset()
 {

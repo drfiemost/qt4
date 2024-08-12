@@ -63,7 +63,7 @@ class QStringList;
 class Q_AUTOTEST_EXPORT QScriptToolTipProviderInterface
 {
 public:
-    virtual ~QScriptToolTipProviderInterface() {}
+    virtual ~QScriptToolTipProviderInterface() = default;
 
     virtual void showToolTip(const QPoint &pos, int frameIndex,
                              int lineNumber, const QStringList &path) = 0;

@@ -352,18 +352,15 @@ QFileInfo::QFileInfo(const QDir &dir, const QString &file)
     Constructs a new QFileInfo that is a copy of the given \a fileinfo.
 */
 QFileInfo::QFileInfo(const QFileInfo &fileinfo)
-    : d_ptr(fileinfo.d_ptr)
-{
-
-}
+     
+= default;
 
 /*!
     Destroys the QFileInfo and frees its resources.
 */
 
 QFileInfo::~QFileInfo()
-{
-}
+= default;
 
 /*!
     \fn bool QFileInfo::operator!=(const QFileInfo &fileinfo)
@@ -439,10 +436,7 @@ bool QFileInfo::operator==(const QFileInfo &fileinfo)
     Makes a copy of the given \a fileinfo and assigns it to this QFileInfo.
 */
 QFileInfo &QFileInfo::operator=(const QFileInfo &fileinfo)
-{
-    d_ptr = fileinfo.d_ptr;
-    return *this;
-}
+= default;
 
 
 /*!

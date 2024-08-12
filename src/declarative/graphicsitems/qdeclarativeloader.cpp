@@ -54,8 +54,7 @@ QDeclarativeLoaderPrivate::QDeclarativeLoaderPrivate()
 }
 
 QDeclarativeLoaderPrivate::~QDeclarativeLoaderPrivate()
-{
-}
+= default;
 
 void QDeclarativeLoaderPrivate::itemGeometryChanged(QDeclarativeItem *resizeItem, const QRectF &newGeometry, const QRectF &oldGeometry)
 {

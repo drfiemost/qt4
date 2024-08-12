@@ -50,14 +50,10 @@ namespace QFormInternal {
 #endif
 
 QTextBuilder::QTextBuilder()
-{
-
-}
+= default;
 
 QTextBuilder::~QTextBuilder()
-{
-
-}
+= default;
 
 QVariant QTextBuilder::loadText(const DomProperty *property) const
 {

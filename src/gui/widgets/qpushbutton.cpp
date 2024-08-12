@@ -293,8 +293,7 @@ QPushButton::QPushButton(QPushButtonPrivate &dd, QWidget *parent)
     Destroys the push button.
 */
 QPushButton::~QPushButton()
-{
-}
+= default;
 
 QDialog *QPushButtonPrivate::dialogParent() const
 {

@@ -111,8 +111,7 @@ QTextObject::QTextObject(QTextObjectPrivate &p, QTextDocument *doc)
     never destroy them yourself.
 */
 QTextObject::~QTextObject()
-{
-}
+= default;
 
 /*!
     Returns the text object's format.
@@ -240,8 +239,7 @@ QTextBlockGroup::QTextBlockGroup(QTextBlockGroupPrivate &p, QTextDocument *doc)
     don't belong to this block anymore.
 */
 QTextBlockGroup::~QTextBlockGroup()
-{
-}
+= default;
 
 // ### DOC: Shouldn't this be insertBlock()?
 /*!
@@ -297,8 +295,7 @@ QList<QTextBlock> QTextBlockGroup::blockList() const
 
 
 QTextFrameLayoutData::~QTextFrameLayoutData()
-{
-}
+= default;
 
 
 /*!
@@ -683,14 +680,7 @@ QTextFrame::iterator::iterator(const iterator &other)
     this iterator.
 */
 QTextFrame::iterator &QTextFrame::iterator::operator=(const iterator &other)
-{
-    f = other.f;
-    b = other.b;
-    e = other.e;
-    cf = other.cf;
-    cb = other.cb;
-    return *this;
-}
+= default;
 
 /*!
     Returns the current frame pointed to by the iterator, or 0 if the
@@ -821,8 +811,7 @@ QTextFrame::iterator &QTextFrame::iterator::operator--()
     Destroys the user data.
 */
 QTextBlockUserData::~QTextBlockUserData()
-{
-}
+= default;
 
 /*!
     \class QTextBlock

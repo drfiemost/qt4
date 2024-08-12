@@ -108,8 +108,8 @@ struct OpaqueJSClass : public ThreadSafeShared<OpaqueJSClass> {
 private:
     friend struct OpaqueJSClassContextData;
 
-    OpaqueJSClass();
-    OpaqueJSClass(const OpaqueJSClass&);
+    OpaqueJSClass() = delete;
+    OpaqueJSClass(const OpaqueJSClass&) = delete;
     OpaqueJSClass(const JSClassDefinition*, OpaqueJSClass* protoClass);
 
     OpaqueJSClassContextData& contextData(JSC::ExecState*);

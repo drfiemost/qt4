@@ -73,11 +73,8 @@ public:
     }
 
     QTreeWidgetItemIteratorPrivate(const QTreeWidgetItemIteratorPrivate& other)
-        : m_currentIndex(other.m_currentIndex), m_model(other.m_model),
-          m_parentIndex(other.m_parentIndex), q_ptr(other.q_ptr)
-    {
-
-    }
+         
+    = default;
 
     QTreeWidgetItemIteratorPrivate &operator=(const QTreeWidgetItemIteratorPrivate& other)
     {
@@ -88,8 +85,7 @@ public:
     }
 
     ~QTreeWidgetItemIteratorPrivate()
-    {
-    }
+    = default;
 
     QTreeWidgetItem* nextSibling(const QTreeWidgetItem* item) const;
     void ensureValidIterator(const QTreeWidgetItem *itemToBeRemoved);

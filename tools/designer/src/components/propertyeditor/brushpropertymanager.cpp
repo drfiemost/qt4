@@ -71,8 +71,7 @@ QT_BEGIN_NAMESPACE
 namespace qdesigner_internal {
 
 BrushPropertyManager::BrushPropertyManager()
-{
-}
+= default;
 
 int BrushPropertyManager::brushStyleToIndex(Qt::BrushStyle st)
 {

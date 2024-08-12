@@ -50,8 +50,7 @@ QVariantDelegate::QVariantDelegate(const QVariant &value)
 }
 
 QVariantDelegate::~QVariantDelegate()
-{
-}
+= default;
 
 QVariant &QVariantDelegate::value()
 {

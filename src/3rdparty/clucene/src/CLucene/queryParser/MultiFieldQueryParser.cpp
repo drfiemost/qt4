@@ -30,8 +30,7 @@ MultiFieldQueryParser::MultiFieldQueryParser(const TCHAR** fields,
 }
 
 MultiFieldQueryParser::~MultiFieldQueryParser()
-{
-}
+= default;
 
 //static 
 Query* MultiFieldQueryParser::parse(const TCHAR* query, const TCHAR** fields,

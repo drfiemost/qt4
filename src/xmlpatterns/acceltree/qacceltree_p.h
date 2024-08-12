@@ -123,8 +123,7 @@ namespace QPatternist
         public:
             /* No need to initialize the members. See AccelTreeBuilder. */
             inline BasicNodeData()
-            {
-            }
+            = default;
 
             inline BasicNodeData(const PreNumber aDepth,
                                  const PreNumber aParent,

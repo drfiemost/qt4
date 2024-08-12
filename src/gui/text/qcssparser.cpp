@@ -1790,8 +1790,7 @@ void StyleSheet::buildIndexes(Qt::CaseSensitivity nameCaseSensitivity)
 ///////////////////////////////////////////////////////////////////////////////
 // StyleSelector
 StyleSelector::~StyleSelector()
-{
-}
+= default;
 
 bool StyleSelector::nodeNameEquals(NodePtr node, const QString& nodeName) const
 {

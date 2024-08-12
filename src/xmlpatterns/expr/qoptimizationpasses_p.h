@@ -131,7 +131,7 @@ namespace QPatternist
 
         private:
             Q_DISABLE_COPY(Coordinator)
-            inline Coordinator();
+            inline Coordinator() = delete;
         };
     }
 }

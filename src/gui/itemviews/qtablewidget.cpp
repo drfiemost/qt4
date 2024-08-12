@@ -896,16 +896,14 @@ QTableWidgetSelectionRange::QTableWidgetSelectionRange(int top, int left, int bo
     other table selection range.
 */
 QTableWidgetSelectionRange::QTableWidgetSelectionRange(const QTableWidgetSelectionRange &other)
-    : top(other.top), left(other.left), bottom(other.bottom), right(other.right)
-{
-}
+     
+= default;
 
 /*!
     Destroys the table selection range.
 */
 QTableWidgetSelectionRange::~QTableWidgetSelectionRange()
-{
-}
+= default;
 
 /*!
     \fn int QTableWidgetSelectionRange::topRow() const
@@ -1853,8 +1851,7 @@ QTableWidget::QTableWidget(int rows, int columns, QWidget *parent)
     Destroys this QTableWidget.
 */
 QTableWidget::~QTableWidget()
-{
-}
+= default;
 
 /*!
     Sets the number of rows in this table's model to \a rows. If

@@ -400,7 +400,7 @@ namespace QPatternist
          *
          * It should only be used via its static members.
          */
-        inline CommonSequenceTypes();
+        inline CommonSequenceTypes() = delete;
 
         Q_DISABLE_COPY(CommonSequenceTypes)
     };

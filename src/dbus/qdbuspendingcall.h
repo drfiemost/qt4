@@ -91,7 +91,7 @@ protected:
     QDBusPendingCall(QDBusPendingCallPrivate *dd);
 
 private:
-    QDBusPendingCall();         // not defined
+    QDBusPendingCall() = delete;         // not defined
 };
 
 class QDBusPendingCallWatcherPrivate;

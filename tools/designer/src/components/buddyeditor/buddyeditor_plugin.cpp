@@ -58,8 +58,7 @@ BuddyEditorPlugin::BuddyEditorPlugin()
 }
 
 BuddyEditorPlugin::~BuddyEditorPlugin()
-{
-}
+= default;
 
 bool BuddyEditorPlugin::isInitialized() const
 {

@@ -246,8 +246,7 @@ QEventDispatcherUNIX::QEventDispatcherUNIX(QEventDispatcherUNIXPrivate &dd, QObj
 { }
 
 QEventDispatcherUNIX::~QEventDispatcherUNIX()
-{
-}
+= default;
 
 int QEventDispatcherUNIX::select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
                                  timespec *timeout)

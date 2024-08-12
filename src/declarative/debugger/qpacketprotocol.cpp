@@ -238,8 +238,7 @@ QPacketProtocol::QPacketProtocol(QIODevice * dev, QObject * parent)
   Destroys the QPacketProtocol instance.
  */
 QPacketProtocol::~QPacketProtocol()
-{
-}
+= default;
 
 /*!
   Returns the maximum packet size allowed.  By default this is

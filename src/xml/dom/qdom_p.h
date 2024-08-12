@@ -70,7 +70,7 @@ QT_BEGIN_NAMESPACE
 class QDomImplementationPrivate
 {
 public:
-    inline QDomImplementationPrivate() {}
+    inline QDomImplementationPrivate() = default;
 
     QDomImplementationPrivate *clone();
     QAtomicInt ref;

@@ -467,9 +467,8 @@ QNetworkProxy::QNetworkProxy(ProxyType type, const QString &hostName, quint16 po
     Constructs a copy of \a other.
 */
 QNetworkProxy::QNetworkProxy(const QNetworkProxy &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Destroys the QNetworkProxy object.
@@ -504,10 +503,7 @@ bool QNetworkProxy::operator==(const QNetworkProxy &other) const
     Assigns the value of the network proxy \a other to this network proxy.
 */
 QNetworkProxy &QNetworkProxy::operator=(const QNetworkProxy &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Sets the proxy type for this instance to be \a type.
@@ -875,8 +871,7 @@ template<> void QSharedDataPointer<QNetworkProxyQueryPrivate>::detach()
     query type will be QNetworkProxyQuery::TcpSocket.
 */
 QNetworkProxyQuery::QNetworkProxyQuery()
-{
-}
+= default;
 
 /*!
     Constructs a QNetworkProxyQuery with the URL \a requestUrl and
@@ -999,9 +994,8 @@ QNetworkProxyQuery::QNetworkProxyQuery(const QNetworkConfiguration &networkConfi
     Constructs a QNetworkProxyQuery object that is a copy of \a other.
 */
 QNetworkProxyQuery::QNetworkProxyQuery(const QNetworkProxyQuery &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Destroys this QNetworkProxyQuery object.
@@ -1015,10 +1009,7 @@ QNetworkProxyQuery::~QNetworkProxyQuery()
     Copies the contents of \a other.
 */
 QNetworkProxyQuery &QNetworkProxyQuery::operator=(const QNetworkProxyQuery &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this QNetworkProxyQuery object contains the same
@@ -1287,15 +1278,13 @@ void QNetworkProxyQuery::setNetworkConfiguration(const QNetworkConfiguration &ne
     objects of type QNetworkProxyFactory directly.
 */
 QNetworkProxyFactory::QNetworkProxyFactory()
-{
-}
+= default;
 
 /*!
     Destroys the QNetworkProxyFactory object.
 */
 QNetworkProxyFactory::~QNetworkProxyFactory()
-{
-}
+= default;
 
 
 /*!

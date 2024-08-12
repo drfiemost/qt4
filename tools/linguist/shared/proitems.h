@@ -130,7 +130,7 @@ inline QString operator+(const QString &one, const ProString &two)
 
 class ProStringList : public QVector<ProString> {
 public:
-    ProStringList() {}
+    ProStringList() = default;
     ProStringList(const ProString &str) { *this << str; }
     QString join(const QString &sep) const;
     void removeDuplicates();

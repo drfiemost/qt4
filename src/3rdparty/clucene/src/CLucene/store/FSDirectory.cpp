@@ -39,8 +39,7 @@ FSDirectory::FSLock::FSLock(const QString& _lockDir, const QString& name)
 }
 
 FSDirectory::FSLock::~FSLock()
-{
-}
+= default;
 
 bool FSDirectory::FSLock::obtain()
 {
@@ -456,8 +455,7 @@ void FSDirectory::priv_getFN(QString& buffer, const QString& name) const
 }
 
 FSDirectory::~FSDirectory()
-{
-}
+= default;
 
 QStringList FSDirectory::list() const
 {

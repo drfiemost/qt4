@@ -342,8 +342,7 @@ TermVectorOffsetInfo::TermVectorOffsetInfo()
 }
 
 TermVectorOffsetInfo::~TermVectorOffsetInfo()
-{
-}
+= default;
 
 TermVectorOffsetInfo::TermVectorOffsetInfo(int32_t startOffset, int32_t endOffset)
 {

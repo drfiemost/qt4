@@ -229,8 +229,7 @@ QCheckBox::QCheckBox(const QString &text, QWidget *parent)
     Destructor.
 */
 QCheckBox::~QCheckBox()
-{
-}
+= default;
 
 void QCheckBox::setTristate(bool y)
 {

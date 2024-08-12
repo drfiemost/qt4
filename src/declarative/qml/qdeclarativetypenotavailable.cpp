@@ -48,6 +48,6 @@ int qmlRegisterTypeNotAvailable(const char *uri, int versionMajor, int versionMi
     return qmlRegisterUncreatableType<QDeclarativeTypeNotAvailable>(uri,versionMajor,versionMinor,qmlName,message);
 }
 
-QDeclarativeTypeNotAvailable::QDeclarativeTypeNotAvailable() { }
+QDeclarativeTypeNotAvailable::QDeclarativeTypeNotAvailable() = default;
 
 QT_END_NAMESPACE

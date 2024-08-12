@@ -94,25 +94,20 @@ QDeclarativeScriptString::QDeclarativeScriptString()
 Copies \a other.
 */
 QDeclarativeScriptString::QDeclarativeScriptString(const QDeclarativeScriptString &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
 \internal
 */
 QDeclarativeScriptString::~QDeclarativeScriptString()
-{
-}
+= default;
 
 /*!
 Assigns \a other to this.
 */
 QDeclarativeScriptString &QDeclarativeScriptString::operator=(const QDeclarativeScriptString &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
 Returns the context for the script.

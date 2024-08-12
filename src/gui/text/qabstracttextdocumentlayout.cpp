@@ -404,8 +404,7 @@ QAbstractTextDocumentLayout::QAbstractTextDocumentLayout(QAbstractTextDocumentLa
     \internal
 */
 QAbstractTextDocumentLayout::~QAbstractTextDocumentLayout()
-{
-}
+= default;
 
 /*!
     \fn void QAbstractTextDocumentLayout::registerHandler(int objectType, QObject *component)

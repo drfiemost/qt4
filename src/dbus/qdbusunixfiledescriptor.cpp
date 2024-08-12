@@ -165,9 +165,8 @@ QDBusUnixFileDescriptor::QDBusUnixFileDescriptor(int fileDescriptor)
     Constructs a QDBusUnixFileDescriptor object by copying \a other.
 */
 QDBusUnixFileDescriptor::QDBusUnixFileDescriptor(const QDBusUnixFileDescriptor &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Copies the Unix file descriptor from the \a other QDBusUnixFileDescriptor
@@ -185,8 +184,7 @@ QDBusUnixFileDescriptor &QDBusUnixFileDescriptor::operator=(const QDBusUnixFileD
     Destroys this QDBusUnixFileDescriptor object and disposes of the Unix file descriptor that it contained.
 */
 QDBusUnixFileDescriptor::~QDBusUnixFileDescriptor()
-{
-}
+= default;
 
 /*!
     Returns true if this Unix file descriptor is valid. A valid Unix file

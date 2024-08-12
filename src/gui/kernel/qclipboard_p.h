@@ -64,7 +64,7 @@ class QClipboardPrivate;
 class QMimeDataWrapper : public QMimeSource
 {
 public:
-    QMimeDataWrapper() {}
+    QMimeDataWrapper() = default;
 
     const char* format(int n) const override;
     QByteArray encodedData(const char*) const override;

@@ -133,8 +133,7 @@ QDeclarativeConnections::QDeclarativeConnections(QObject *parent) :
 }
 
 QDeclarativeConnections::~QDeclarativeConnections()
-{
-}
+= default;
 
 /*!
     \qmlproperty Object Connections::target

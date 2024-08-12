@@ -487,8 +487,7 @@ namespace QPatternist
         };
 
         inline Expression()
-        {
-        }
+        = default;
         ~Expression() override;
 
         /**

@@ -318,7 +318,7 @@ class QDeviceClosedNotifier : public QObject
     Q_OBJECT
 public:
     inline QDeviceClosedNotifier()
-    { }
+    = default;
 
     inline void setupDevice(QTextStream *stream, QIODevice *device)
     {

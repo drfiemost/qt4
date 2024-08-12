@@ -253,8 +253,7 @@ const Vector<Instruction>& JSGlobalData::numericCompareFunction(ExecState* exec)
 }
 
 JSGlobalData::ClientData::~ClientData()
-{
-}
+= default;
 
 void JSGlobalData::resetDateCache()
 {

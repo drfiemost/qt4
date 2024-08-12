@@ -674,8 +674,7 @@ QTextBrowser::QTextBrowser(QWidget *parent)
     \internal
 */
 QTextBrowser::~QTextBrowser()
-{
-}
+= default;
 
 /*!
     \property QTextBrowser::source

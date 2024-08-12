@@ -171,8 +171,8 @@ public:
 
 private:
 #ifdef Q_DISABLE_COPY
-    QConfFile(const QConfFile &);
-    QConfFile &operator=(const QConfFile &);
+    QConfFile(const QConfFile &) = delete;
+    QConfFile &operator=(const QConfFile &) = delete;
 #endif
     QConfFile(const QString &name, bool _userPerms);
 

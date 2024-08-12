@@ -78,7 +78,7 @@ class QKeyEventTransitionPrivate : public QEventTransitionPrivate
 {
     Q_DECLARE_PUBLIC(QKeyEventTransition)
 public:
-    QKeyEventTransitionPrivate() {}
+    QKeyEventTransitionPrivate() = default;
 
     QBasicKeyEventTransition *transition;
 };

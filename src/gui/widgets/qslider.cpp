@@ -316,8 +316,7 @@ QSlider::QSlider(Qt::Orientation orientation, QWidget *parent)
     Destroys this slider.
 */
 QSlider::~QSlider()
-{
-}
+= default;
 
 /*!
     \reimp

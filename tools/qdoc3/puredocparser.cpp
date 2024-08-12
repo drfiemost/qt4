@@ -48,12 +48,10 @@
 QT_BEGIN_NAMESPACE
 
 PureDocParser::PureDocParser()
-{
-}
+= default;
 
 PureDocParser::~PureDocParser()
-{
-}
+= default;
 
 QString PureDocParser::language()
 {

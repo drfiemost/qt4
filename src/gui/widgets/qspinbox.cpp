@@ -321,7 +321,7 @@ QString QSpinBox::cleanText() const
 /*!
     Destructor.
 */
-QSpinBox::~QSpinBox() {}
+QSpinBox::~QSpinBox() = default;
 
 /*!
     \property QSpinBox::singleStep
@@ -583,7 +583,7 @@ QDoubleSpinBox::QDoubleSpinBox(QWidget *parent)
 /*!
     Destructor.
 */
-QDoubleSpinBox::~QDoubleSpinBox() {}
+QDoubleSpinBox::~QDoubleSpinBox() = default;
 
 /*!
     \property QDoubleSpinBox::value

@@ -58,8 +58,7 @@ protected:
     }
 
     ~RefCountedBase()
-    {
-    }
+    = default;
 
     // Returns whether the pointer should be freed or not.
     bool derefBase()
@@ -111,8 +110,7 @@ public:
 
 protected:
     ~RefCounted()
-    {
-    }
+    = default;
 };
 
 template<class T> class RefCountedCustomAllocated : public RefCountedBase, public NoncopyableCustomAllocated {
@@ -125,8 +123,7 @@ public:
 
 protected:
     ~RefCountedCustomAllocated()
-    {
-    }
+    = default;
 };
 
 } // namespace WTF

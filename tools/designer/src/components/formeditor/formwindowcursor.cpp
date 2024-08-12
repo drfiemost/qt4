@@ -62,8 +62,7 @@ FormWindowCursor::FormWindowCursor(FormWindow *fw, QObject *parent)
 }
 
 FormWindowCursor::~FormWindowCursor()
-{
-}
+= default;
 
 QDesignerFormWindowInterface *FormWindowCursor::formWindow() const
 {

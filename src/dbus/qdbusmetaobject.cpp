@@ -608,8 +608,7 @@ QDBusMetaObject *QDBusMetaObject::createMetaObject(const QString &interface, con
 }
 
 QDBusMetaObject::QDBusMetaObject()
-{
-}
+= default;
 
 static inline const QDBusMetaObjectPrivate *priv(const uint* data)
 {

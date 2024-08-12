@@ -50,12 +50,10 @@
 QT_BEGIN_NAMESPACE
 
 QScriptObjectSnapshot::QScriptObjectSnapshot()
-{
-}
+= default;
 
 QScriptObjectSnapshot::~QScriptObjectSnapshot()
-{
-}
+= default;
 
 static bool _q_equal(const QScriptValue &v1, const QScriptValue &v2)
 {

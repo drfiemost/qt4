@@ -170,8 +170,7 @@ QNativeSocketEnginePrivate::QNativeSocketEnginePrivate() :
     Destructs the private class.
 */
 QNativeSocketEnginePrivate::~QNativeSocketEnginePrivate()
-{
-}
+= default;
 
 /*! \internal
 

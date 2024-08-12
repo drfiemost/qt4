@@ -338,8 +338,7 @@ void QAuthenticatorPrivate::parseHttpResponse(const QHttpResponseHeader &header,
 #endif
 
 QAuthenticatorPrivate::~QAuthenticatorPrivate()
-{
-}
+= default;
 
 void QAuthenticatorPrivate::updateCredentials()
 {

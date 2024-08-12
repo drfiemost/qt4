@@ -86,8 +86,7 @@ QT_BEGIN_NAMESPACE
     Destroys the factory. The default implementation does nothing.
  */
 QDeclarativeNetworkAccessManagerFactory::~QDeclarativeNetworkAccessManagerFactory()
-{
-}
+= default;
 
 /*!
     \fn QNetworkAccessManager *QDeclarativeNetworkAccessManagerFactory::create(QObject *parent)

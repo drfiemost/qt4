@@ -64,7 +64,7 @@ class QFactoryLoaderPrivate : public QObjectPrivate
 {
     Q_DECLARE_PUBLIC(QFactoryLoader)
 public:
-    QFactoryLoaderPrivate(){}
+    QFactoryLoaderPrivate()= default;
     ~QFactoryLoaderPrivate() override;
     mutable QMutex mutex;
     QByteArray iid;

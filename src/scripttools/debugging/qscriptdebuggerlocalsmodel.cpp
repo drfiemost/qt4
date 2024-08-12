@@ -452,8 +452,7 @@ QScriptDebuggerLocalsModel::QScriptDebuggerLocalsModel(
 }
 
 QScriptDebuggerLocalsModel::~QScriptDebuggerLocalsModel()
-{
-}
+= default;
 
 QModelIndex QScriptDebuggerLocalsModelPrivate::addTopLevelObject(const QString &name, const QScriptDebuggerValue &object)
 {

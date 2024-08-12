@@ -965,7 +965,7 @@ template <class Key, class T>
 class QMultiMap : public QMap<Key, T>
 {
 public:
-    QMultiMap() {}
+    QMultiMap() = default;
     QMultiMap(const QMap<Key, T> &other) : QMap<Key, T>(other) {}
     inline void swap(QMultiMap<Key, T> &other) { QMap<Key, T>::swap(other); }
 

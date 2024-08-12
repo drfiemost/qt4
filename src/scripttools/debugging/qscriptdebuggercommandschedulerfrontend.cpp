@@ -53,8 +53,7 @@ QScriptDebuggerCommandSchedulerFrontend::QScriptDebuggerCommandSchedulerFrontend
 }
 
 QScriptDebuggerCommandSchedulerFrontend::~QScriptDebuggerCommandSchedulerFrontend()
-{
-}
+= default;
 
 int QScriptDebuggerCommandSchedulerFrontend::scheduleCommand(const QScriptDebuggerCommand &command)
 {

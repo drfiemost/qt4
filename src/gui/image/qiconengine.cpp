@@ -91,8 +91,7 @@ QSize QIconEngine::actualSize(const QSize &size, QIcon::Mode /*mode*/, QIcon::St
   Destroys the icon engine.
  */
 QIconEngine::~QIconEngine()
-{
-}
+= default;
 
 
 /*!

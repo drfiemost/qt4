@@ -102,7 +102,7 @@ namespace JSC {
 
     class ParserArenaDeletable {
     public:
-        virtual ~ParserArenaDeletable() { }
+        virtual ~ParserArenaDeletable() = default;
 
         // ParserArenaDeletable objects are deleted when the arena is deleted.
         // Clients must not call delete directly on such objects.
@@ -125,7 +125,7 @@ namespace JSC {
         Node(JSGlobalData*);
 
     public:
-        virtual ~Node() { }
+        virtual ~Node() = default;
 
         virtual RegisterID* emitBytecode(BytecodeGenerator&, RegisterID* destination = nullptr) = 0;
 

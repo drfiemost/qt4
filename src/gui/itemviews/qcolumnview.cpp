@@ -122,8 +122,7 @@ void QColumnViewPrivate::initialize()
     Destroys the column view.
 */
 QColumnView::~QColumnView()
-{
-}
+= default;
 
 /*!
     \property QColumnView::resizeGripsVisible
@@ -1046,8 +1045,7 @@ QColumnViewPrivate::QColumnViewPrivate()
 }
 
 QColumnViewPrivate::~QColumnViewPrivate()
-{
-}
+= default;
 
 /*!
     \internal

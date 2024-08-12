@@ -132,7 +132,7 @@ class QGLFramebufferObjectPrivate
 public:
     QGLFramebufferObjectPrivate() : fbo_guard(nullptr), texture(0), depth_buffer(0), stencil_buffer(0)
                                   , color_buffer(0), valid(false), engine(nullptr) {}
-    ~QGLFramebufferObjectPrivate() {}
+    ~QGLFramebufferObjectPrivate() = default;
 
     void init(QGLFramebufferObject *q, const QSize& sz,
               QGLFramebufferObject::Attachment attachment,

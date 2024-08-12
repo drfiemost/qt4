@@ -365,8 +365,7 @@ QVariantAnimation::QVariantAnimation(QVariantAnimationPrivate &dd, QObject *pare
     Destroys the animation.
 */
 QVariantAnimation::~QVariantAnimation()
-{
-}
+= default;
 
 /*!
     \property QVariantAnimation::easingCurve

@@ -126,25 +126,20 @@ QScriptProgram::QScriptProgram(const QString &sourceCode,
   Constructs a new QScriptProgram that is a copy of \a other.
 */
 QScriptProgram::QScriptProgram(const QScriptProgram &other)
-    : d_ptr(other.d_ptr)
-{
-}
+     
+= default;
 
 /*!
   Destroys this QScriptProgram.
 */
 QScriptProgram::~QScriptProgram()
-{
-}
+= default;
 
 /*!
   Assigns the \a other value to this QScriptProgram.
 */
 QScriptProgram &QScriptProgram::operator=(const QScriptProgram &other)
-{
-    d_ptr = other.d_ptr;
-    return *this;
-}
+= default;
 
 /*!
   Returns true if this QScriptProgram is null; otherwise

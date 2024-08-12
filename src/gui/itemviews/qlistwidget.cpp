@@ -1337,8 +1337,7 @@ QListWidget::QListWidget(QWidget *parent)
 */
 
 QListWidget::~QListWidget()
-{
-}
+= default;
 
 /*!
     Returns the item that occupies the given \a row in the list if one has been

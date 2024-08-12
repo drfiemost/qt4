@@ -128,7 +128,7 @@ public:
     enum { Count = ForEach::Total };
 
     inline QDBusPendingReply()
-    { }
+    = default;
     inline QDBusPendingReply(const QDBusPendingReply &other)
         : QDBusPendingReplyData(other)
     { }

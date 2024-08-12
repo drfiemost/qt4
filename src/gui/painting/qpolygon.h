@@ -59,10 +59,10 @@ class QVariant;
 class Q_GUI_EXPORT QPolygon : public QVector<QPoint>
 {
 public:
-    inline QPolygon() {}
-    inline ~QPolygon() {}
+    inline QPolygon() = default;
+    inline ~QPolygon() = default;
     inline QPolygon(int size);
-    inline QPolygon(const QPolygon &a) : QVector<QPoint>(a) {}
+    inline QPolygon(const QPolygon &a)  = default;
     inline QPolygon& operator=(const QPolygon&) = default;
     inline QPolygon(const QVector<QPoint> &v) : QVector<QPoint>(v) {}
     QPolygon(const QRect &r, bool closed=false);
@@ -134,10 +134,10 @@ class QRectF;
 class Q_GUI_EXPORT QPolygonF : public QVector<QPointF>
 {
 public:
-    inline QPolygonF() {}
-    inline ~QPolygonF() {}
+    inline QPolygonF() = default;
+    inline ~QPolygonF() = default;
     inline QPolygonF(int size);
-    inline QPolygonF(const QPolygonF &a) : QVector<QPointF>(a) {}
+    inline QPolygonF(const QPolygonF &a)  = default;
     inline QPolygonF& operator=(const QPolygonF&) = default;
     inline QPolygonF(const QVector<QPointF> &v) : QVector<QPointF>(v) {}
     QPolygonF(const QRectF &r);

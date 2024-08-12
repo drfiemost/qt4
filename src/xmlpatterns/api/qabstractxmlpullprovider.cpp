@@ -103,15 +103,13 @@ using namespace QPatternist;
   Constucts a AbstractXmlPullProvider instance.
  */
 AbstractXmlPullProvider::AbstractXmlPullProvider()
-{
-}
+= default;
 
 /*!
   Destructs this AbstractXmlPullProvider.
  */
 AbstractXmlPullProvider::~AbstractXmlPullProvider()
-{
-}
+= default;
 
 /*!
   \fn Event AbstractXmlPullProvider::next() = 0;

@@ -104,25 +104,20 @@ QDeclarativeDomDocument::QDeclarativeDomDocument()
     Create a copy of \a other QDeclarativeDomDocument.
 */
 QDeclarativeDomDocument::QDeclarativeDomDocument(const QDeclarativeDomDocument &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomDocument
 */
 QDeclarativeDomDocument::~QDeclarativeDomDocument()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomDocument.
 */
 QDeclarativeDomDocument &QDeclarativeDomDocument::operator=(const QDeclarativeDomDocument &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns all import statements in qml.
@@ -253,25 +248,20 @@ QDeclarativeDomProperty::QDeclarativeDomProperty()
     Create a copy of \a other QDeclarativeDomProperty.
 */
 QDeclarativeDomProperty::QDeclarativeDomProperty(const QDeclarativeDomProperty &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomProperty.
 */
 QDeclarativeDomProperty::~QDeclarativeDomProperty()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomProperty.
 */
 QDeclarativeDomProperty &QDeclarativeDomProperty::operator=(const QDeclarativeDomProperty &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this is a valid QDeclarativeDomProperty, false otherwise.
@@ -404,26 +394,21 @@ QDeclarativeDomDynamicProperty::QDeclarativeDomDynamicProperty():
 /*!
     Create a copy of \a other QDeclarativeDomDynamicProperty.
 */
-QDeclarativeDomDynamicProperty::QDeclarativeDomDynamicProperty(const QDeclarativeDomDynamicProperty &other):
-        d(other.d)
-{
-}
+QDeclarativeDomDynamicProperty::QDeclarativeDomDynamicProperty(const QDeclarativeDomDynamicProperty &other)
+        
+= default;
 
 /*!
     Destroy the QDeclarativeDomDynamicProperty.
 */
 QDeclarativeDomDynamicProperty::~QDeclarativeDomDynamicProperty()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomDynamicProperty.
 */
 QDeclarativeDomDynamicProperty &QDeclarativeDomDynamicProperty::operator=(const QDeclarativeDomDynamicProperty &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 bool QDeclarativeDomDynamicProperty::isValid() const
 {
@@ -671,25 +656,20 @@ QDeclarativeDomObject::QDeclarativeDomObject()
     Create a copy of \a other QDeclarativeDomObject.
 */
 QDeclarativeDomObject::QDeclarativeDomObject(const QDeclarativeDomObject &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomObject.
 */
 QDeclarativeDomObject::~QDeclarativeDomObject()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomObject.
 */
 QDeclarativeDomObject &QDeclarativeDomObject::operator=(const QDeclarativeDomObject &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this is a valid QDeclarativeDomObject, false otherwise.
@@ -988,25 +968,20 @@ QDeclarativeDomValueLiteral::QDeclarativeDomValueLiteral():
     Create a copy of \a other QDeclarativeDomValueLiteral.
 */
 QDeclarativeDomValueLiteral::QDeclarativeDomValueLiteral(const QDeclarativeDomValueLiteral &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomValueLiteral.
 */
 QDeclarativeDomValueLiteral::~QDeclarativeDomValueLiteral()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomValueLiteral.
 */
 QDeclarativeDomValueLiteral &QDeclarativeDomValueLiteral::operator=(const QDeclarativeDomValueLiteral &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Return the literal value.
@@ -1047,25 +1022,20 @@ QDeclarativeDomValueBinding::QDeclarativeDomValueBinding():
     Create a copy of \a other QDeclarativeDomValueBinding.
 */
 QDeclarativeDomValueBinding::QDeclarativeDomValueBinding(const QDeclarativeDomValueBinding &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomValueBinding.
 */
 QDeclarativeDomValueBinding::~QDeclarativeDomValueBinding()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomValueBinding.
 */
 QDeclarativeDomValueBinding &QDeclarativeDomValueBinding::operator=(const QDeclarativeDomValueBinding &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Return the binding expression.
@@ -1116,25 +1086,20 @@ QDeclarativeDomValueValueSource::QDeclarativeDomValueValueSource():
     Create a copy of \a other QDeclarativeDomValueValueSource.
 */
 QDeclarativeDomValueValueSource::QDeclarativeDomValueValueSource(const QDeclarativeDomValueValueSource &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomValueValueSource.
 */
 QDeclarativeDomValueValueSource::~QDeclarativeDomValueValueSource()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomValueValueSource.
 */
 QDeclarativeDomValueValueSource &QDeclarativeDomValueValueSource::operator=(const QDeclarativeDomValueValueSource &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Return the value source object.
@@ -1190,25 +1155,20 @@ QDeclarativeDomValueValueInterceptor::QDeclarativeDomValueValueInterceptor():
     Create a copy of \a other QDeclarativeDomValueValueInterceptor.
 */
 QDeclarativeDomValueValueInterceptor::QDeclarativeDomValueValueInterceptor(const QDeclarativeDomValueValueInterceptor &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomValueValueInterceptor.
 */
 QDeclarativeDomValueValueInterceptor::~QDeclarativeDomValueValueInterceptor()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomValueValueInterceptor.
 */
 QDeclarativeDomValueValueInterceptor &QDeclarativeDomValueValueInterceptor::operator=(const QDeclarativeDomValueValueInterceptor &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Return the value interceptor object.
@@ -1297,25 +1257,20 @@ QDeclarativeDomValue::QDeclarativeDomValue()
     Create a copy of \a other QDeclarativeDomValue.
 */
 QDeclarativeDomValue::QDeclarativeDomValue(const QDeclarativeDomValue &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomValue
 */
 QDeclarativeDomValue::~QDeclarativeDomValue()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomValue.
 */
 QDeclarativeDomValue &QDeclarativeDomValue::operator=(const QDeclarativeDomValue &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     \enum QDeclarativeDomValue::Type
@@ -1577,32 +1532,26 @@ Item {
     Construct an empty QDeclarativeDomList.
 */
 QDeclarativeDomList::QDeclarativeDomList()
-{
-}
+= default;
 
 /*!
     Create a copy of \a other QDeclarativeDomList.
 */
 QDeclarativeDomList::QDeclarativeDomList(const QDeclarativeDomList &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomList.
 */
 QDeclarativeDomList::~QDeclarativeDomList()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomList.
 */
 QDeclarativeDomList &QDeclarativeDomList::operator=(const QDeclarativeDomList &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns the list of QDeclarativeDomValue's.
@@ -1692,23 +1641,20 @@ Item {
     Construct an empty QDeclarativeDomComponent.
 */
 QDeclarativeDomComponent::QDeclarativeDomComponent()
-{
-}
+= default;
 
 /*!
     Create a copy of \a other QDeclarativeDomComponent.
 */
 QDeclarativeDomComponent::QDeclarativeDomComponent(const QDeclarativeDomComponent &other)
-: QDeclarativeDomObject(other)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomComponent.
 */
 QDeclarativeDomComponent::~QDeclarativeDomComponent()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomComponent.
@@ -1759,8 +1705,7 @@ QDeclarativeDomImportPrivate::QDeclarativeDomImportPrivate()
 }
 
 QDeclarativeDomImportPrivate::~QDeclarativeDomImportPrivate()
-{
-}
+= default;
 
 /*!
     \class QDeclarativeDomImport
@@ -1780,25 +1725,20 @@ QDeclarativeDomImport::QDeclarativeDomImport()
     Create a copy of \a other QDeclarativeDomImport.
 */
 QDeclarativeDomImport::QDeclarativeDomImport(const QDeclarativeDomImport &other)
-: d(other.d)
-{
-}
+ 
+= default;
 
 /*!
     Destroy the QDeclarativeDomImport.
 */
 QDeclarativeDomImport::~QDeclarativeDomImport()
-{
-}
+= default;
 
 /*!
     Assign \a other to this QDeclarativeDomImport.
 */
 QDeclarativeDomImport &QDeclarativeDomImport::operator=(const QDeclarativeDomImport &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
   Returns the type of the import.

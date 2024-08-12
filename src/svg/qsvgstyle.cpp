@@ -73,8 +73,7 @@ QSvgExtraStates::QSvgExtraStates()
 }
 
 QSvgStyleProperty::~QSvgStyleProperty()
-{
-}
+= default;
 
 void QSvgFillStyleProperty::apply(QPainter *, const QSvgNode *, QSvgExtraStates &)
 {
@@ -552,8 +551,7 @@ QSvgStyleProperty::Type QSvgCompOpStyle::type() const
 }
 
 QSvgStyle::~QSvgStyle()
-{
-}
+= default;
 
 void QSvgStyle::apply(QPainter *p, const QSvgNode *node, QSvgExtraStates &states)
 {

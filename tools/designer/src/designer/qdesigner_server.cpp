@@ -69,8 +69,7 @@ QDesignerServer::QDesignerServer(QObject *parent)
 }
 
 QDesignerServer::~QDesignerServer()
-{
-}
+= default;
 
 quint16 QDesignerServer::serverPort() const
 {

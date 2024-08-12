@@ -23,8 +23,7 @@ const int32_t FastCharStream::maxRewindSize = LUCENE_MAX_WORD_LEN*2;
   {
     input->mark(maxRewindSize);
   }
-	FastCharStream::~FastCharStream(){
-  }
+	FastCharStream::~FastCharStream()= default;
   void FastCharStream::readChar(TCHAR &c) {
 	try{
 		int32_t r = input->read();

@@ -67,8 +67,7 @@ QHelpEnginePrivate::QHelpEnginePrivate()
 }
 
 QHelpEnginePrivate::~QHelpEnginePrivate()
-{
-}
+= default;
 
 void QHelpEnginePrivate::init(const QString &collectionFile,
                               QHelpEngineCore *helpEngineCore)

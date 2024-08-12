@@ -23,8 +23,7 @@ CL_NS_DEF(util)
 			virtual bool equals(_type a,_type b) const = 0; 
 			virtual int32_t compare(_type a,_type b) const = 0;
 		public:
-		   virtual ~_Arrays(){
-		   }
+		   virtual ~_Arrays()= default;
 
 			void sort(_type* a, int32_t alen, int32_t fromIndex, int32_t toIndex) const{
 				CND_PRECONDITION(fromIndex < toIndex,"fromIndex >= toIndex");
@@ -139,8 +138,7 @@ CL_NS_DEF(util)
 	typedef typename class1::const_iterator _itr1;
 	typedef typename class2::const_iterator _itr2;
 	public:
-		CLListEquals(){
-		}
+		CLListEquals()= default;
 		bool equals( class1* val1, class2* val2 ) const{
 			static _comparator comp;
 			if ( val1 == val2 )

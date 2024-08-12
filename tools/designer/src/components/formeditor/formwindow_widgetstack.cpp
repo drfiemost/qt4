@@ -77,8 +77,7 @@ FormWindowWidgetStack::FormWindowWidgetStack(QObject *parent) :
 }
 
 FormWindowWidgetStack::~FormWindowWidgetStack()
-{
-}
+= default;
 
 int FormWindowWidgetStack::count() const
 {

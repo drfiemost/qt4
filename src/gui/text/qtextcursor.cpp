@@ -1124,17 +1124,13 @@ QTextCursor::QTextCursor(const QTextCursor &cursor)
 
  */
 QTextCursor &QTextCursor::operator=(const QTextCursor &cursor)
-{
-    d = cursor.d;
-    return *this;
-}
+= default;
 
 /*!
     Destroys the QTextCursor.
  */
 QTextCursor::~QTextCursor()
-{
-}
+= default;
 
 /*!
     Returns true if the cursor is null; otherwise returns false. A null

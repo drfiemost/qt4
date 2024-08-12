@@ -137,8 +137,7 @@ public:
     /** Releases resources associated with this stream. */
 	virtual void close() = 0;
 
-	virtual ~TokenStream(){
-	}
+	virtual ~TokenStream()= default;
 
 	/* This is for backwards compatibility only. You should pass the token you want to fill
 	 * to next(), this will save a lot of object construction and destructions.
@@ -167,8 +166,7 @@ public:
 	field name for backward compatibility. */
 	virtual TokenStream* tokenStream(const TCHAR* fieldName, CL_NS(util)::Reader* reader)=0;
 	  
-	virtual ~Analyzer(){
-    }
+	virtual ~Analyzer()= default;
 
 	/**
 	* Invoked before indexing a Field instance if

@@ -356,8 +356,7 @@ QFontComboBox::QFontComboBox(QWidget *parent)
     Destroys the combobox.
 */
 QFontComboBox::~QFontComboBox()
-{
-}
+= default;
 
 /*!
     \property QFontComboBox::writingSystem

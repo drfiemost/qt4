@@ -499,8 +499,7 @@ QHelpSearchIndexReaderDefault::QHelpSearchIndexReaderDefault()
 }
 
 QHelpSearchIndexReaderDefault::~QHelpSearchIndexReaderDefault()
-{
-}
+= default;
 
 void QHelpSearchIndexReaderDefault::run()
 {

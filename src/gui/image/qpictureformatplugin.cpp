@@ -100,8 +100,7 @@ QPictureFormatPlugin::QPictureFormatPlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QPictureFormatPlugin::~QPictureFormatPlugin()
-{
-}
+= default;
 
 
 /*!

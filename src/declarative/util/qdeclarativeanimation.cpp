@@ -90,8 +90,7 @@ QDeclarativeAbstractAnimation::QDeclarativeAbstractAnimation(QObject *parent)
 }
 
 QDeclarativeAbstractAnimation::~QDeclarativeAbstractAnimation()
-{
-}
+= default;
 
 QDeclarativeAbstractAnimation::QDeclarativeAbstractAnimation(QDeclarativeAbstractAnimationPrivate &dd, QObject *parent)
 : QObject(dd, parent)
@@ -581,8 +580,7 @@ QDeclarativePauseAnimation::QDeclarativePauseAnimation(QObject *parent)
 }
 
 QDeclarativePauseAnimation::~QDeclarativePauseAnimation()
-{
-}
+= default;
 
 void QDeclarativePauseAnimationPrivate::init()
 {
@@ -662,8 +660,7 @@ QDeclarativeColorAnimation::QDeclarativeColorAnimation(QObject *parent)
 }
 
 QDeclarativeColorAnimation::~QDeclarativeColorAnimation()
-{
-}
+= default;
 
 /*!
     \qmlproperty color ColorAnimation::from
@@ -763,8 +760,7 @@ QDeclarativeScriptAction::QDeclarativeScriptAction(QObject *parent)
 }
 
 QDeclarativeScriptAction::~QDeclarativeScriptAction()
-{
-}
+= default;
 
 void QDeclarativeScriptActionPrivate::init()
 {
@@ -909,8 +905,7 @@ QDeclarativePropertyAction::QDeclarativePropertyAction(QObject *parent)
 }
 
 QDeclarativePropertyAction::~QDeclarativePropertyAction()
-{
-}
+= default;
 
 void QDeclarativePropertyActionPrivate::init()
 {
@@ -1162,8 +1157,7 @@ QDeclarativeNumberAnimation::QDeclarativeNumberAnimation(QDeclarativePropertyAni
 }
 
 QDeclarativeNumberAnimation::~QDeclarativeNumberAnimation()
-{
-}
+= default;
 
 void QDeclarativeNumberAnimation::init()
 {
@@ -1261,8 +1255,7 @@ QDeclarativeVector3dAnimation::QDeclarativeVector3dAnimation(QObject *parent)
 }
 
 QDeclarativeVector3dAnimation::~QDeclarativeVector3dAnimation()
-{
-}
+= default;
 
 /*!
     \qmlproperty real Vector3dAnimation::from
@@ -1403,8 +1396,7 @@ QDeclarativeRotationAnimation::QDeclarativeRotationAnimation(QObject *parent)
 }
 
 QDeclarativeRotationAnimation::~QDeclarativeRotationAnimation()
-{
-}
+= default;
 
 /*!
     \qmlproperty real RotationAnimation::from
@@ -1548,8 +1540,7 @@ void QDeclarativeAnimationGroupPrivate::clear_animation(QDeclarativeListProperty
 }
 
 QDeclarativeAnimationGroup::~QDeclarativeAnimationGroup()
-{
-}
+= default;
 
 QDeclarativeListProperty<QDeclarativeAbstractAnimation> QDeclarativeAnimationGroup::animations()
 {
@@ -1602,8 +1593,7 @@ QDeclarativeSequentialAnimation::QDeclarativeSequentialAnimation(QObject *parent
 }
 
 QDeclarativeSequentialAnimation::~QDeclarativeSequentialAnimation()
-{
-}
+= default;
 
 QAbstractAnimation *QDeclarativeSequentialAnimation::qtAnimation()
 {
@@ -1671,8 +1661,7 @@ QDeclarativeParallelAnimation::QDeclarativeParallelAnimation(QObject *parent) :
 }
 
 QDeclarativeParallelAnimation::~QDeclarativeParallelAnimation()
-{
-}
+= default;
 
 QAbstractAnimation *QDeclarativeParallelAnimation::qtAnimation()
 {
@@ -1825,8 +1814,7 @@ QDeclarativePropertyAnimation::QDeclarativePropertyAnimation(QDeclarativePropert
 }
 
 QDeclarativePropertyAnimation::~QDeclarativePropertyAnimation()
-{
-}
+= default;
 
 void QDeclarativePropertyAnimationPrivate::init()
 {
@@ -2495,8 +2483,7 @@ QDeclarativeParentAnimation::QDeclarativeParentAnimation(QObject *parent)
 }
 
 QDeclarativeParentAnimation::~QDeclarativeParentAnimation()
-{
-}
+= default;
 
 /*!
     \qmlproperty Item ParentAnimation::target
@@ -2609,7 +2596,7 @@ void QDeclarativeParentAnimation::transition(QDeclarativeStateActions &actions,
 
     struct QDeclarativeParentAnimationData : public QAbstractAnimationAction
     {
-        QDeclarativeParentAnimationData() {}
+        QDeclarativeParentAnimationData() = default;
         ~QDeclarativeParentAnimationData() override { qDeleteAll(pc); }
 
         QDeclarativeStateActions actions;
@@ -2833,8 +2820,7 @@ QDeclarativeAnchorAnimation::QDeclarativeAnchorAnimation(QObject *parent)
 }
 
 QDeclarativeAnchorAnimation::~QDeclarativeAnchorAnimation()
-{
-}
+= default;
 
 QAbstractAnimation *QDeclarativeAnchorAnimation::qtAnimation()
 {

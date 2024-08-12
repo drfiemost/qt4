@@ -145,7 +145,7 @@ QGraphicsEffectSource::QGraphicsEffectSource(QGraphicsEffectSourcePrivate &dd, Q
     Destroys the effect source.
 */
 QGraphicsEffectSource::~QGraphicsEffectSource()
-{}
+= default;
 
 /*!
     Returns the bounding rectangle of the source mapped to the given \a system.
@@ -616,8 +616,7 @@ QGraphicsColorizeEffect::QGraphicsColorizeEffect(QObject *parent)
     Destroys the effect.
 */
 QGraphicsColorizeEffect::~QGraphicsColorizeEffect()
-{
-}
+= default;
 
 /*!
     \property QGraphicsColorizeEffect::color
@@ -768,8 +767,7 @@ QGraphicsBlurEffect::QGraphicsBlurEffect(QObject *parent)
     Destroys the effect.
 */
 QGraphicsBlurEffect::~QGraphicsBlurEffect()
-{
-}
+= default;
 
 /*!
     \property QGraphicsBlurEffect::blurRadius
@@ -906,8 +904,7 @@ QGraphicsDropShadowEffect::QGraphicsDropShadowEffect(QObject *parent)
     Destroys the effect.
 */
 QGraphicsDropShadowEffect::~QGraphicsDropShadowEffect()
-{
-}
+= default;
 
 /*!
     \property QGraphicsDropShadowEffect::offset
@@ -1097,8 +1094,7 @@ QGraphicsOpacityEffect::QGraphicsOpacityEffect(QObject *parent)
     Destroys the effect.
 */
 QGraphicsOpacityEffect::~QGraphicsOpacityEffect()
-{
-}
+= default;
 
 /*!
     \property QGraphicsOpacityEffect::opacity

@@ -162,8 +162,7 @@ inline void ThreadSpecific<T>::set(T* ptr)
 
 template<typename T>
 inline ThreadSpecific<T>::ThreadSpecific()
-{
-}
+= default;
 
 template<typename T>
 inline ThreadSpecific<T>::~ThreadSpecific()

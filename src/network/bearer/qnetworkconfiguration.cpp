@@ -213,25 +213,20 @@ QNetworkConfiguration::QNetworkConfiguration()
     Creates a copy of the QNetworkConfiguration object contained in \a other.
 */
 QNetworkConfiguration::QNetworkConfiguration(const QNetworkConfiguration &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Frees the resources associated with the QNetworkConfiguration object.
 */
 QNetworkConfiguration::~QNetworkConfiguration()
-{
-}
+= default;
 
 /*!
     Copies the content of the QNetworkConfiguration object contained in \a other into this one.
 */
 QNetworkConfiguration &QNetworkConfiguration::operator=(const QNetworkConfiguration &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true, if this configuration is the same as the \a other

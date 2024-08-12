@@ -246,8 +246,7 @@ QImageIOHandlerPrivate::QImageIOHandlerPrivate(QImageIOHandler *q)
 }
 
 QImageIOHandlerPrivate::~QImageIOHandlerPrivate()
-{
-}
+= default;
 
 /*!
     Constructs a QImageIOHandler object.
@@ -271,8 +270,7 @@ QImageIOHandler::QImageIOHandler(QImageIOHandlerPrivate &dd)
     Destructs the QImageIOHandler object.
 */
 QImageIOHandler::~QImageIOHandler()
-{
-}
+= default;
 
 /*!
     Sets the device of the QImageIOHandler to \a device. The image
@@ -532,8 +530,7 @@ QImageIOPlugin::QImageIOPlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QImageIOPlugin::~QImageIOPlugin()
-{
-}
+= default;
 
 /*! \fn QImageIOPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 

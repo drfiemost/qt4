@@ -56,8 +56,7 @@ ShaderEffect::ShaderEffect(QObject *parent)
 }
 
 ShaderEffect::~ShaderEffect()
-{
-}
+= default;
 
 void ShaderEffect::prepareBufferedDraw(QPainter *painter)
 {

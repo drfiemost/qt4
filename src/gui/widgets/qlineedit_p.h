@@ -83,8 +83,7 @@ public:
     }
 
     ~QLineEditPrivate() override
-    {
-    }
+    = default;
 
     QLineControl *control;
 

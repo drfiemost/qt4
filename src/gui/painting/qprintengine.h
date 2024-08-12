@@ -55,7 +55,7 @@ QT_BEGIN_NAMESPACE
 class Q_GUI_EXPORT QPrintEngine
 {
 public:
-    virtual ~QPrintEngine() {}
+    virtual ~QPrintEngine() = default;
     enum PrintEnginePropertyKey {
         PPK_CollateCopies,
         PPK_ColorMode,

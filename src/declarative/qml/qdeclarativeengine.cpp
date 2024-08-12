@@ -1115,12 +1115,10 @@ public:
 };
 
 QDeclarativeDataExtended::QDeclarativeDataExtended()
-{
-}
+= default;
 
 QDeclarativeDataExtended::~QDeclarativeDataExtended()
-{
-}
+= default;
 
 QDeclarativeNotifier *QDeclarativeData::objectNameNotifier() const
 {

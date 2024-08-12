@@ -178,8 +178,7 @@ ProcessAST::ProcessAST(QDeclarativeScriptParser *parser)
 }
 
 ProcessAST::~ProcessAST()
-{
-}
+= default;
 
 void ProcessAST::operator()(const QString &code, AST::Node *node)
 {

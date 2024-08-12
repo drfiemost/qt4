@@ -92,7 +92,7 @@ class QColumnViewGripPrivate : public QWidgetPrivate
 
 public:
     QColumnViewGripPrivate();
-    ~QColumnViewGripPrivate() override {}
+    ~QColumnViewGripPrivate() override = default;
 
     int originalXLocation;
 };

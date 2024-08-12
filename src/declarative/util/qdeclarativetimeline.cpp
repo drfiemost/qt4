@@ -79,20 +79,14 @@ struct QDeclarativeTimeLinePrivate
             AccelDistance,
             Execute
         };
-        Op() {}
+        Op() = default;
         Op(Type t, int l, qreal v, qreal v2, int o, 
            const QDeclarativeTimeLineCallback &ev = QDeclarativeTimeLineCallback(), const QEasingCurve &es = QEasingCurve())
             : type(t), length(l), value(v), value2(v2), order(o), event(ev),
               easing(es) {}
         Op(const Op &o)
-            : type(o.type), length(o.length), value(o.value), value2(o.value2),
-              order(o.order), event(o.event), easing(o.easing) {}
-        Op &operator=(const Op &o) {
-            type = o.type; length = o.length; value = o.value; 
-            value2 = o.value2; order = o.order; event = o.event; 
-            easing = o.easing;
-            return *this;
-        }
+             = default;
+        Op &operator=(const Op &o) = default;
 
         Type type;
         int length;
@@ -926,17 +920,11 @@ QDeclarativeTimeLineCallback::QDeclarativeTimeLineCallback(QDeclarativeTimeLineO
 }
 
 QDeclarativeTimeLineCallback::QDeclarativeTimeLineCallback(const QDeclarativeTimeLineCallback &o)
-: d0(o.d0), d1(o.d1), d2(o.d2)
-{
-}
+ 
+= default;
 
 QDeclarativeTimeLineCallback &QDeclarativeTimeLineCallback::operator=(const QDeclarativeTimeLineCallback &o)
-{
-    d0 = o.d0;
-    d1 = o.d1;
-    d2 = o.d2;
-    return *this;
-}
+= default;
 
 QDeclarativeTimeLineObject *QDeclarativeTimeLineCallback::callbackObject() const
 {

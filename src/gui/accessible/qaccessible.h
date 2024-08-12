@@ -366,7 +366,7 @@ class QAccessibleTable2Interface;
 class Q_GUI_EXPORT QAccessibleInterface : public QAccessible
 {
 public:
-    virtual ~QAccessibleInterface() {}
+    virtual ~QAccessibleInterface() = default;
     // check for valid pointers
     virtual bool isValid() const = 0;
     virtual QObject *object() const = 0;

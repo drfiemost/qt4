@@ -68,8 +68,7 @@ QConnmanEngine::QConnmanEngine(QObject *parent)
 }
 
 QConnmanEngine::~QConnmanEngine()
-{
-}
+= default;
 
 bool QConnmanEngine::connmanAvailable() const
 {

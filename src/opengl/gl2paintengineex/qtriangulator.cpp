@@ -192,7 +192,7 @@ sort_loop_end:
 template<typename T>
 struct QVertexSet
 {
-    inline QVertexSet() { }
+    inline QVertexSet() = default;
     inline QVertexSet(const QVertexSet<T> &other) : vertices(other.vertices), indices(other.indices) { }
     QVertexSet<T> &operator = (const QVertexSet<T> &other) {vertices = other.vertices; indices = other.indices; return *this;}
 

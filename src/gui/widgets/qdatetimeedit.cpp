@@ -220,8 +220,7 @@ QDateTimeEdit::QDateTimeEdit(const QVariant &var, QVariant::Type parserType, QWi
     Destructor.
 */
 QDateTimeEdit::~QDateTimeEdit()
-{
-}
+= default;
 
 /*!
   \property QDateTimeEdit::dateTime
@@ -1574,8 +1573,7 @@ QTimeEdit::QTimeEdit(const QTime &time, QWidget *parent)
   Destructor.
 */
 QTimeEdit::~QTimeEdit()
-{
-}
+= default;
 
 /*!
   \class QDateEdit
@@ -1637,8 +1635,7 @@ QDateEdit::QDateEdit(const QDate &date, QWidget *parent)
   Destructor.
 */
 QDateEdit::~QDateEdit()
-{
-}
+= default;
 
 /*!
   \internal

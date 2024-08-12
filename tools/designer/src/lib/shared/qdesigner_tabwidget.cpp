@@ -100,8 +100,7 @@ QTabWidgetEventFilter::QTabWidgetEventFilter(QTabWidget *parent) :
 }
 
 QTabWidgetEventFilter::~QTabWidgetEventFilter()
-{
-}
+= default;
 
 void QTabWidgetEventFilter::install(QTabWidget *tabWidget)
 {

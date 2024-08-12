@@ -218,8 +218,7 @@ QGraphicsScale::QGraphicsScale(QObject *parent)
     Destroys the graphics scale.
 */
 QGraphicsScale::~QGraphicsScale()
-{
-}
+= default;
 
 /*!
     \property QGraphicsScale::origin
@@ -432,8 +431,7 @@ QGraphicsRotation::QGraphicsRotation(QObject *parent)
     Destroys the graphics rotation.
 */
 QGraphicsRotation::~QGraphicsRotation()
-{
-}
+= default;
 
 /*!
     \property QGraphicsRotation::origin

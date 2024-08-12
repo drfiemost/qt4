@@ -62,8 +62,7 @@ QNmDBusHelper::QNmDBusHelper(QObject * parent)
 }
 
 QNmDBusHelper::~QNmDBusHelper()
-{
-}
+= default;
 
 void QNmDBusHelper::deviceStateChanged(quint32 state)
  {

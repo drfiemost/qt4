@@ -65,8 +65,7 @@ SmallStrings::SmallStrings()
 }
 
 SmallStrings::~SmallStrings()
-{
-}
+= default;
 
 void SmallStrings::markChildren(MarkStack& markStack)
 {

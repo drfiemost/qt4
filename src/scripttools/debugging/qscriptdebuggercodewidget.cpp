@@ -86,8 +86,7 @@ QScriptDebuggerCodeWidgetPrivate::QScriptDebuggerCodeWidgetPrivate()
 }
 
 QScriptDebuggerCodeWidgetPrivate::~QScriptDebuggerCodeWidgetPrivate()
-{
-}
+= default;
 
 qint64 QScriptDebuggerCodeWidgetPrivate::scriptId(QScriptDebuggerCodeViewInterface *view) const
 {
@@ -210,8 +209,7 @@ QScriptDebuggerCodeWidget::QScriptDebuggerCodeWidget(QWidget *parent)
 }
 
 QScriptDebuggerCodeWidget::~QScriptDebuggerCodeWidget()
-{
-}
+= default;
 
 QScriptDebuggerScriptsModel *QScriptDebuggerCodeWidget::scriptsModel() const
 {

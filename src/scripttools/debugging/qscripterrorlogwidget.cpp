@@ -84,12 +84,10 @@ public:
 };
 
 QScriptErrorLogWidgetPrivate::QScriptErrorLogWidgetPrivate()
-{
-}
+= default;
 
 QScriptErrorLogWidgetPrivate::~QScriptErrorLogWidgetPrivate()
-{
-}
+= default;
 
 QScriptErrorLogWidget::QScriptErrorLogWidget(QWidget *parent)
     : QScriptErrorLogWidgetInterface(*new QScriptErrorLogWidgetPrivate, parent, nullptr)
@@ -106,8 +104,7 @@ QScriptErrorLogWidget::QScriptErrorLogWidget(QWidget *parent)
 }
 
 QScriptErrorLogWidget::~QScriptErrorLogWidget()
-{
-}
+= default;
 
 void QScriptErrorLogWidget::message(
     QtMsgType type, const QString &text, const QString &fileName,

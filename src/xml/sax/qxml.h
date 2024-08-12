@@ -118,8 +118,8 @@ private:
 class Q_XML_EXPORT QXmlAttributes
 {
 public:
-    QXmlAttributes() {}
-    virtual ~QXmlAttributes() {}
+    QXmlAttributes() = default;
+    virtual ~QXmlAttributes() = default;
 
     int index(const QString& qName) const;
     int index(QLatin1String qName) const;
@@ -209,7 +209,7 @@ private:
 class Q_XML_EXPORT QXmlReader
 {
 public:
-    virtual ~QXmlReader() {}
+    virtual ~QXmlReader() = default;
     virtual bool feature(const QString& name, bool *ok = nullptr) const = 0;
     virtual void setFeature(const QString& name, bool value) = 0;
     virtual bool hasFeature(const QString& name) const = 0;
@@ -296,7 +296,7 @@ public:
 class Q_XML_EXPORT QXmlContentHandler
 {
 public:
-    virtual ~QXmlContentHandler() {}
+    virtual ~QXmlContentHandler() = default;
     virtual void setDocumentLocator(QXmlLocator* locator) = 0;
     virtual bool startDocument() = 0;
     virtual bool endDocument() = 0;
@@ -314,7 +314,7 @@ public:
 class Q_XML_EXPORT QXmlErrorHandler
 {
 public:
-    virtual ~QXmlErrorHandler() {}
+    virtual ~QXmlErrorHandler() = default;
     virtual bool warning(const QXmlParseException& exception) = 0;
     virtual bool error(const QXmlParseException& exception) = 0;
     virtual bool fatalError(const QXmlParseException& exception) = 0;
@@ -324,7 +324,7 @@ public:
 class Q_XML_EXPORT QXmlDTDHandler
 {
 public:
-    virtual ~QXmlDTDHandler() {}
+    virtual ~QXmlDTDHandler() = default;
     virtual bool notationDecl(const QString& name, const QString& publicId, const QString& systemId) = 0;
     virtual bool unparsedEntityDecl(const QString& name, const QString& publicId, const QString& systemId, const QString& notationName) = 0;
     virtual QString errorString() const = 0;
@@ -333,7 +333,7 @@ public:
 class Q_XML_EXPORT QXmlEntityResolver
 {
 public:
-    virtual ~QXmlEntityResolver() {}
+    virtual ~QXmlEntityResolver() = default;
     virtual bool resolveEntity(const QString& publicId, const QString& systemId, QXmlInputSource*& ret) = 0;
     virtual QString errorString() const = 0;
 };
@@ -341,7 +341,7 @@ public:
 class Q_XML_EXPORT QXmlLexicalHandler
 {
 public:
-    virtual ~QXmlLexicalHandler() {}
+    virtual ~QXmlLexicalHandler() = default;
     virtual bool startDTD(const QString& name, const QString& publicId, const QString& systemId) = 0;
     virtual bool endDTD() = 0;
     virtual bool startEntity(const QString& name) = 0;
@@ -355,7 +355,7 @@ public:
 class Q_XML_EXPORT QXmlDeclHandler
 {
 public:
-    virtual ~QXmlDeclHandler() {}
+    virtual ~QXmlDeclHandler() = default;
     virtual bool attributeDecl(const QString& eName, const QString& aName, const QString& type, const QString& valueDefault, const QString& value) = 0;
     virtual bool internalEntityDecl(const QString& name, const QString& value) = 0;
     virtual bool externalEntityDecl(const QString& name, const QString& publicId, const QString& systemId) = 0;
@@ -367,8 +367,8 @@ public:
 class Q_XML_EXPORT QXmlDefaultHandler : public QXmlContentHandler, public QXmlErrorHandler, public QXmlDTDHandler, public QXmlEntityResolver, public QXmlLexicalHandler, public QXmlDeclHandler
 {
 public:
-    QXmlDefaultHandler() { }
-    ~QXmlDefaultHandler() override { }
+    QXmlDefaultHandler() = default;
+    ~QXmlDefaultHandler() override = default;
 
     void setDocumentLocator(QXmlLocator* locator) override;
     bool startDocument() override;

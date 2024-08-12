@@ -269,8 +269,7 @@ QDeclarativeSpringAnimation::QDeclarativeSpringAnimation(QObject *parent)
 }
 
 QDeclarativeSpringAnimation::~QDeclarativeSpringAnimation()
-{
-}
+= default;
 
 /*!
     \qmlproperty real SpringAnimation::velocity

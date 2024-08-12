@@ -129,9 +129,7 @@ QAccessibleBridgePlugin::QAccessibleBridgePlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QAccessibleBridgePlugin::~QAccessibleBridgePlugin()
-{
-
-}
+= default;
 
 /*!
     \fn QStringList QAccessibleBridgePlugin::keys() const

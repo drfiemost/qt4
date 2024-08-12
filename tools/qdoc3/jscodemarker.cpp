@@ -59,12 +59,10 @@
 QT_BEGIN_NAMESPACE
 
 JsCodeMarker::JsCodeMarker()
-{
-}
+= default;
 
 JsCodeMarker::~JsCodeMarker()
-{
-}
+= default;
 
 /*!
   Returns true if the \a code is recognized by the parser.

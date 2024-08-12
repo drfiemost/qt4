@@ -67,7 +67,7 @@ public:
         InsertColumnMode
     };
 
-    virtual ~QDesignerLayoutDecorationExtension() {}
+    virtual ~QDesignerLayoutDecorationExtension() = default;
 
     virtual QList<QWidget*> widgets(QLayout *layout) const = 0;
 

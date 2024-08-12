@@ -57,12 +57,10 @@ QT_BEGIN_NAMESPACE
 */
 
 QScriptDebuggerJobPrivate::QScriptDebuggerJobPrivate()
-{
-}
+= default;
 
 QScriptDebuggerJobPrivate::~QScriptDebuggerJobPrivate()
-{
-}
+= default;
 
 QScriptDebuggerJobPrivate *QScriptDebuggerJobPrivate::get(QScriptDebuggerJob *q)
 {
@@ -84,8 +82,7 @@ QScriptDebuggerJob::QScriptDebuggerJob(QScriptDebuggerJobPrivate &dd)
 }
 
 QScriptDebuggerJob::~QScriptDebuggerJob()
-{
-}
+= default;
 
 void QScriptDebuggerJob::finish()
 {

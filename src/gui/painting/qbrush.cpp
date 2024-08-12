@@ -566,8 +566,7 @@ QBrush::QBrush(const QGradient &gradient)
 */
 
 QBrush::~QBrush()
-{
-}
+= default;
 
 void QBrush::cleanUp(QBrushData *x)
 {

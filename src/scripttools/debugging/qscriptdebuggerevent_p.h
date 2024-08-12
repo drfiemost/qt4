@@ -152,7 +152,7 @@ class QScriptDebuggerEventEvent : public QEvent
 public:
     QScriptDebuggerEventEvent(const QScriptDebuggerEvent &event)
         : QEvent(QEvent::Type(QEvent::User+1)), m_event(event) {}
-    ~QScriptDebuggerEventEvent() override {}
+    ~QScriptDebuggerEventEvent() override = default;
     const QScriptDebuggerEvent &event() const
         { return m_event; }
 private:

@@ -75,7 +75,7 @@ bool memberFunctionListContains(QDesignerFormEditorInterface *core, QObject *obj
 // Members functions listed by class they were inherited from
 struct ClassMemberFunctions
 {
-    ClassMemberFunctions() {}
+    ClassMemberFunctions() = default;
     ClassMemberFunctions(const QString &_class_name);
 
     QString m_className;

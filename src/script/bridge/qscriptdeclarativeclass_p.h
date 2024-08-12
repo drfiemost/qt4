@@ -77,7 +77,7 @@ public:
 
     typedef void* Identifier;
 
-    struct Object { virtual ~Object() {} };
+    struct Object { virtual ~Object() = default; };
 
     static QScriptValue newObject(QScriptEngine *, QScriptDeclarativeClass *, Object *);
     static Value newObjectValue(QScriptEngine *, QScriptDeclarativeClass *, Object *);

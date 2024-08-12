@@ -91,8 +91,7 @@ NodePool::NodePool(const QString &fileName, Engine *engine)
 }
 
 NodePool::~NodePool()
-{
-}
+= default;
 
 Code *NodePool::createCompiledCode(AST::Node *, CompilationUnit &)
 {
@@ -176,7 +175,7 @@ Engine::Engine()
 { }
 
 Engine::~Engine()
-{ }
+= default;
 
 QSet<NameId> Engine::literals() const
 { return _literals; }

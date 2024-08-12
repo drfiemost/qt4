@@ -71,8 +71,7 @@ QScriptDebuggerScriptsWidgetPrivate::QScriptDebuggerScriptsWidgetPrivate()
 }
 
 QScriptDebuggerScriptsWidgetPrivate::~QScriptDebuggerScriptsWidgetPrivate()
-{
-}
+= default;
 
 void QScriptDebuggerScriptsWidgetPrivate::_q_onCurrentChanged(const QModelIndex &index)
 {
@@ -114,8 +113,7 @@ QScriptDebuggerScriptsWidget::QScriptDebuggerScriptsWidget(QWidget *parent)
 }
 
 QScriptDebuggerScriptsWidget::~QScriptDebuggerScriptsWidget()
-{
-}
+= default;
 
 /*!
   \reimp

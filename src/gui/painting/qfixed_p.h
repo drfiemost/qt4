@@ -189,7 +189,7 @@ inline QDebug &operator<<(QDebug &dbg, const QFixed &f)
 struct QFixedPoint {
     QFixed x;
     QFixed y;
-    inline QFixedPoint() {}
+    inline QFixedPoint() = default;
     inline QFixedPoint(const QFixed &_x, const QFixed &_y) : x(_x), y(_y) {}
     QPointF toPointF() const { return QPointF(x.toReal(), y.toReal()); }
     static QFixedPoint fromPointF(const QPointF &p) {

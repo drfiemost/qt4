@@ -67,8 +67,7 @@ MaintainingReader<TokenLookupClass, LookupKey>::MaintainingReader(const typename
 template<typename TokenLookupClass,
          typename LookupKey>
 MaintainingReader<TokenLookupClass, LookupKey>::~MaintainingReader()
-{
-}
+= default;
 
 template<typename TokenLookupClass,
          typename LookupKey>

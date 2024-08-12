@@ -114,8 +114,7 @@ QDBusContext::QDBusContext()
   An empty destructor.
  */
 QDBusContext::~QDBusContext()
-{
-}
+= default;
 
 /*!
     Returns true if we are processing a D-Bus call. If this function

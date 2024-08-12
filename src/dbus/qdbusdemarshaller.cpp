@@ -73,8 +73,7 @@ static inline T qIterGet(DBusMessageIter *it)
 }
 
 QDBusDemarshaller::~QDBusDemarshaller()
-{
-}
+= default;
 
 inline QString QDBusDemarshaller::currentSignature()
 {

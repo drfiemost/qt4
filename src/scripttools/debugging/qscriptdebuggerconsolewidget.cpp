@@ -219,8 +219,7 @@ QScriptDebuggerConsoleWidgetPrivate::QScriptDebuggerConsoleWidgetPrivate()
 }
 
 QScriptDebuggerConsoleWidgetPrivate::~QScriptDebuggerConsoleWidgetPrivate()
-{
-}
+= default;
 
 void QScriptDebuggerConsoleWidgetPrivate::_q_onLineEntered(const QString &contents)
 {
@@ -347,8 +346,7 @@ QScriptDebuggerConsoleWidget::QScriptDebuggerConsoleWidget(QWidget *parent)
 }
 
 QScriptDebuggerConsoleWidget::~QScriptDebuggerConsoleWidget()
-{
-}
+= default;
 
 void QScriptDebuggerConsoleWidget::message(
     QtMsgType type, const QString &text, const QString &fileName,

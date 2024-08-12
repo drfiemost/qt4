@@ -38,8 +38,7 @@ Collator::Collator(const char*)
 }
 
 Collator::~Collator()
-{
-}
+= default;
 
 void Collator::setOrderLowerFirst(bool)
 {

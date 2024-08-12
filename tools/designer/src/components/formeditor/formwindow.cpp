@@ -177,8 +177,7 @@ private:
 };
 
 FormWindow::Selection::Selection()
-{
-}
+= default;
 
 FormWindow::Selection::~Selection()
 {

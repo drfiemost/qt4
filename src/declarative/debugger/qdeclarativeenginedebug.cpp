@@ -849,16 +849,12 @@ QDeclarativeDebugEngineReference::QDeclarativeDebugEngineReference(int debugId)
 }
 
 QDeclarativeDebugEngineReference::QDeclarativeDebugEngineReference(const QDeclarativeDebugEngineReference &o)
-: m_debugId(o.m_debugId), m_name(o.m_name)
-{
-}
+ 
+= default;
 
 QDeclarativeDebugEngineReference &
 QDeclarativeDebugEngineReference::operator=(const QDeclarativeDebugEngineReference &o)
-{
-    m_debugId = o.m_debugId; m_name = o.m_name;
-    return *this;
-}
+= default;
 
 int QDeclarativeDebugEngineReference::debugId() const
 {
@@ -881,21 +877,12 @@ QDeclarativeDebugObjectReference::QDeclarativeDebugObjectReference(int debugId)
 }
 
 QDeclarativeDebugObjectReference::QDeclarativeDebugObjectReference(const QDeclarativeDebugObjectReference &o)
-: m_debugId(o.m_debugId), m_parentId(o.m_parentId), m_class(o.m_class), m_idString(o.m_idString),
-  m_name(o.m_name), m_source(o.m_source), m_contextDebugId(o.m_contextDebugId),
-  m_needsMoreData(o.m_needsMoreData), m_properties(o.m_properties), m_children(o.m_children)
-{
-}
+ 
+= default;
 
 QDeclarativeDebugObjectReference &
 QDeclarativeDebugObjectReference::operator=(const QDeclarativeDebugObjectReference &o)
-{
-    m_debugId = o.m_debugId; m_parentId = o.m_parentId; m_class = o.m_class;
-    m_idString = o.m_idString; m_name = o.m_name; m_source = o.m_source;
-    m_contextDebugId = o.m_contextDebugId; m_needsMoreData = o.m_needsMoreData;
-    m_properties = o.m_properties; m_children = o.m_children;
-    return *this;
-}
+= default;
 
 int QDeclarativeDebugObjectReference::debugId() const
 {
@@ -953,16 +940,11 @@ QDeclarativeDebugContextReference::QDeclarativeDebugContextReference()
 }
 
 QDeclarativeDebugContextReference::QDeclarativeDebugContextReference(const QDeclarativeDebugContextReference &o)
-: m_debugId(o.m_debugId), m_name(o.m_name), m_objects(o.m_objects), m_contexts(o.m_contexts)
-{
-}
+ 
+= default;
 
 QDeclarativeDebugContextReference &QDeclarativeDebugContextReference::operator=(const QDeclarativeDebugContextReference &o)
-{
-    m_debugId = o.m_debugId; m_name = o.m_name; m_objects = o.m_objects; 
-    m_contexts = o.m_contexts;
-    return *this;
-}
+= default;
 
 int QDeclarativeDebugContextReference::debugId() const
 {
@@ -990,15 +972,11 @@ QDeclarativeDebugFileReference::QDeclarativeDebugFileReference()
 }
 
 QDeclarativeDebugFileReference::QDeclarativeDebugFileReference(const QDeclarativeDebugFileReference &o)
-: m_url(o.m_url), m_lineNumber(o.m_lineNumber), m_columnNumber(o.m_columnNumber)
-{
-}
+ 
+= default;
 
 QDeclarativeDebugFileReference &QDeclarativeDebugFileReference::operator=(const QDeclarativeDebugFileReference &o)
-{
-    m_url = o.m_url; m_lineNumber = o.m_lineNumber; m_columnNumber = o.m_columnNumber;
-    return *this;
-}
+= default;
 
 QUrl QDeclarativeDebugFileReference::url() const
 {
@@ -1036,19 +1014,12 @@ QDeclarativeDebugPropertyReference::QDeclarativeDebugPropertyReference()
 }
 
 QDeclarativeDebugPropertyReference::QDeclarativeDebugPropertyReference(const QDeclarativeDebugPropertyReference &o)
-: m_objectDebugId(o.m_objectDebugId), m_name(o.m_name), m_value(o.m_value),
-  m_valueTypeName(o.m_valueTypeName), m_binding(o.m_binding),
-  m_hasNotifySignal(o.m_hasNotifySignal)
-{
-}
+
+  
+= default;
 
 QDeclarativeDebugPropertyReference &QDeclarativeDebugPropertyReference::operator=(const QDeclarativeDebugPropertyReference &o)
-{
-    m_objectDebugId = o.m_objectDebugId; m_name = o.m_name; m_value = o.m_value;
-    m_valueTypeName = o.m_valueTypeName; m_binding = o.m_binding;
-    m_hasNotifySignal = o.m_hasNotifySignal;
-    return *this;
-}
+= default;
 
 int QDeclarativeDebugPropertyReference::objectDebugId() const
 {

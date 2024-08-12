@@ -83,7 +83,7 @@ class Scope
         {}
 
         ~Scope()
-        {}
+        = default;
 };
 
 /*

@@ -120,7 +120,7 @@ public:
     inline QXmlStreamStringRef(const QStringRef &aString)
         :m_string(aString.string()?*aString.string():QString()), m_position(aString.position()), m_size(aString.size()){}
     inline QXmlStreamStringRef(const QString &aString):m_string(aString), m_position(0), m_size(aString.size()){}
-    inline ~QXmlStreamStringRef(){}
+    inline ~QXmlStreamStringRef()= default;
     inline void clear() { m_string.clear(); m_position = m_size = 0; }
     inline operator QStringRef() const { return QStringRef(&m_string, m_position, m_size); }
     inline const QString *string() const { return &m_string; }
@@ -168,7 +168,7 @@ Q_DECLARE_TYPEINFO(QXmlStreamAttribute, Q_MOVABLE_TYPE);
 class Q_XMLSTREAM_EXPORT QXmlStreamAttributes : public QVector<QXmlStreamAttribute>
 {
 public:
-    inline QXmlStreamAttributes() {}
+    inline QXmlStreamAttributes() = default;
     QStringRef value(const QString &namespaceUri, const QString &name) const;
     QStringRef value(const QString &namespaceUri, QLatin1String name) const;
     QStringRef value(QLatin1String namespaceUri, QLatin1String name) const;

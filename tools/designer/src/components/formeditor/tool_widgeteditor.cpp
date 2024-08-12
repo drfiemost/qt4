@@ -75,8 +75,7 @@ QAction *WidgetEditorTool::action() const
 }
 
 WidgetEditorTool::~WidgetEditorTool()
-{
-}
+= default;
 
 QDesignerFormEditorInterface *WidgetEditorTool::core() const
 {

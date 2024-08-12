@@ -31,8 +31,7 @@ CL_NS_DEF2(analysis,standard)
 		StopFilter::fillStopTable( &stopSet,stopWords );
 	}
 
-	StandardAnalyzer::~StandardAnalyzer(){
-	}
+	StandardAnalyzer::~StandardAnalyzer()= default;
 
 
 	TokenStream* StandardAnalyzer::tokenStream(const TCHAR* fieldName, Reader* reader) 

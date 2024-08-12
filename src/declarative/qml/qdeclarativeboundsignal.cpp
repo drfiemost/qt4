@@ -92,8 +92,7 @@ QDeclarativeAbstractBoundSignal::QDeclarativeAbstractBoundSignal(QObject *parent
 }
 
 QDeclarativeAbstractBoundSignal::~QDeclarativeAbstractBoundSignal()
-{
-}
+= default;
 
 QDeclarativeBoundSignal::QDeclarativeBoundSignal(QObject *scope, const QMetaMethod &signal, 
                                QObject *parent)

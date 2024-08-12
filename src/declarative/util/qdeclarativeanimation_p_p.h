@@ -77,7 +77,7 @@ QT_BEGIN_NAMESPACE
 class QAbstractAnimationAction
 {
 public:
-    virtual ~QAbstractAnimationAction() {}
+    virtual ~QAbstractAnimationAction() = default;
     virtual void doAction() = 0;
 };
 
@@ -138,7 +138,7 @@ private:
 class QDeclarativeBulkValueUpdater
 {
 public:
-    virtual ~QDeclarativeBulkValueUpdater() {}
+    virtual ~QDeclarativeBulkValueUpdater() = default;
     virtual void setValue(qreal value) = 0;
 };
 

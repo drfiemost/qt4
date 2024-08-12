@@ -60,7 +60,7 @@ class QSqlDatabasePrivate;
 class Q_SQL_EXPORT QSqlDriverCreatorBase
 {
 public:
-    virtual ~QSqlDriverCreatorBase() {}
+    virtual ~QSqlDriverCreatorBase() = default;
     virtual QSqlDriver *createObject() const = 0;
 };
 

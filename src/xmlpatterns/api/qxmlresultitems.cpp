@@ -88,8 +88,7 @@ QXmlResultItems::QXmlResultItems() : d_ptr(new QXmlResultItemsPrivate())
   Destroys this instance of QXmlResultItems.
  */
 QXmlResultItems::~QXmlResultItems()
-{
-}
+= default;
 
 /*!
   Returns the next result in the sequence produced by lazy evaluation

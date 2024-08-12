@@ -59,8 +59,7 @@ QLayoutWidgetPropertySheet::QLayoutWidgetPropertySheet(QLayoutWidget *object, QO
 }
 
 QLayoutWidgetPropertySheet::~QLayoutWidgetPropertySheet()
-{
-}
+= default;
 
 bool QLayoutWidgetPropertySheet::isVisible(int index) const
 {

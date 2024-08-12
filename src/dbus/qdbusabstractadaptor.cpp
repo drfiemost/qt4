@@ -149,8 +149,7 @@ QDBusAbstractAdaptor::QDBusAbstractAdaptor(QObject* obj)
              destroyed. Do not delete the adaptors yourself.
 */
 QDBusAbstractAdaptor::~QDBusAbstractAdaptor()
-{
-}
+= default;
 
 /*!
     Toggles automatic signal relaying from the real object (see object()).
@@ -200,8 +199,7 @@ QDBusAdaptorConnector::QDBusAdaptorConnector(QObject *obj)
 }
 
 QDBusAdaptorConnector::~QDBusAdaptorConnector()
-{
-}
+= default;
 
 void QDBusAdaptorConnector::addAdaptor(QDBusAbstractAdaptor *adaptor)
 {

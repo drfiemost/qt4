@@ -42,8 +42,7 @@ NativeExecutable::~NativeExecutable()
 #endif
 
 VPtrHackExecutable::~VPtrHackExecutable()
-{
-}
+= default;
 
 EvalExecutable::~EvalExecutable()
 {

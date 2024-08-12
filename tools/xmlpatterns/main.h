@@ -59,7 +59,7 @@ class QXmlPatternistCLI
 public:
     Q_DECLARE_TR_FUNCTIONS(QXmlPatternistCLI)
 private:
-    inline QXmlPatternistCLI();
+    inline QXmlPatternistCLI() = delete;
     Q_DISABLE_COPY(QXmlPatternistCLI)
 };
 

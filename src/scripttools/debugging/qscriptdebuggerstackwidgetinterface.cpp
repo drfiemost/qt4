@@ -45,16 +45,13 @@
 QT_BEGIN_NAMESPACE
 
 QScriptDebuggerStackWidgetInterfacePrivate::QScriptDebuggerStackWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptDebuggerStackWidgetInterfacePrivate::~QScriptDebuggerStackWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptDebuggerStackWidgetInterface::~QScriptDebuggerStackWidgetInterface()
-{
-}
+= default;
 
 QScriptDebuggerStackWidgetInterface::QScriptDebuggerStackWidgetInterface(
     QScriptDebuggerStackWidgetInterfacePrivate &dd,

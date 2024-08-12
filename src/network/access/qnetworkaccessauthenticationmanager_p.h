@@ -83,7 +83,7 @@ inline bool operator<(const QNetworkAuthenticationCredential &t1, const QString 
 class QNetworkAccessAuthenticationManager
 {
 public:
-    QNetworkAccessAuthenticationManager() { };
+    QNetworkAccessAuthenticationManager() = default;
 
     void cacheCredentials(const QUrl &url, const QAuthenticator *auth);
     QNetworkAuthenticationCredential fetchCachedCredentials(const QUrl &url,

@@ -99,8 +99,7 @@ QParallelAnimationGroup::QParallelAnimationGroup(QParallelAnimationGroupPrivate 
     Destroys the animation group. It will also destroy all its animations.
 */
 QParallelAnimationGroup::~QParallelAnimationGroup()
-{
-}
+= default;
 
 /*!
     \reimp

@@ -103,7 +103,7 @@ public:
         if (attached)
             attached->setView(view);
     }
-    ~FxListItem() {}
+    ~FxListItem() = default;
     qreal position() const {
         if (section) {
             if (view->orientation() == QDeclarativeListView::Vertical)

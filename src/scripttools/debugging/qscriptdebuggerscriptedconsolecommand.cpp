@@ -90,12 +90,10 @@ public:
 };
 
 QScriptDebuggerScriptedConsoleCommandPrivate::QScriptDebuggerScriptedConsoleCommandPrivate()
-{
-}
+= default;
 
 QScriptDebuggerScriptedConsoleCommandPrivate::~QScriptDebuggerScriptedConsoleCommandPrivate()
-{
-}
+= default;
 
 QScriptDebuggerScriptedConsoleCommand::QScriptDebuggerScriptedConsoleCommand(
     const QString &name, const QString &group,
@@ -121,8 +119,7 @@ QScriptDebuggerScriptedConsoleCommand::QScriptDebuggerScriptedConsoleCommand(
 }
 
 QScriptDebuggerScriptedConsoleCommand::~QScriptDebuggerScriptedConsoleCommand()
-{
-}
+= default;
 
 class QScriptDebuggerScriptedConsoleCommandJobPrivate;
 class QScriptDebuggerScriptedConsoleCommandJob
@@ -156,7 +153,7 @@ class QScriptDebuggerScriptedConsoleCommandJobPrivate
 {
 public:
     QScriptDebuggerScriptedConsoleCommandJobPrivate() : command(nullptr), commandCount(0) {}
-    ~QScriptDebuggerScriptedConsoleCommandJobPrivate() override {}
+    ~QScriptDebuggerScriptedConsoleCommandJobPrivate() override = default;
 
     QScriptDebuggerScriptedConsoleCommandPrivate *command;
     QStringList arguments;
@@ -178,8 +175,7 @@ QScriptDebuggerScriptedConsoleCommandJob::QScriptDebuggerScriptedConsoleCommandJ
 }
 
 QScriptDebuggerScriptedConsoleCommandJob::~QScriptDebuggerScriptedConsoleCommandJob()
-{
-}
+= default;
 
 int QScriptDebuggerScriptedConsoleCommandJob::scheduleCommand(
     const QScriptDebuggerCommand &command,

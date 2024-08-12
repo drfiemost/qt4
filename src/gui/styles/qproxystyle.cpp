@@ -128,8 +128,7 @@ QProxyStyle::QProxyStyle(QStyle *style) :
     Destroys the QProxyStyle object.
 */
 QProxyStyle::~QProxyStyle()
-{
-}
+= default;
 
 /*!
     Returns the proxy base style object. If no base style

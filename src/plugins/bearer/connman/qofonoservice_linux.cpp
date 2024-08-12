@@ -87,8 +87,7 @@ QOfonoManagerInterface::QOfonoManagerInterface( QObject *parent)
 }
 
 QOfonoManagerInterface::~QOfonoManagerInterface()
-{
-}
+= default;
 
 QList <QDBusObjectPath> QOfonoManagerInterface::getModems()
 {
@@ -177,8 +176,7 @@ QOfonoDBusHelper::QOfonoDBusHelper(QObject * parent)
 }
 
 QOfonoDBusHelper::~QOfonoDBusHelper()
-{
-}
+= default;
 
 void QOfonoDBusHelper::propertyChanged(const QString &item, const QDBusVariant &var)
 {
@@ -196,8 +194,7 @@ QOfonoModemInterface::QOfonoModemInterface(const QString &dbusPathName, QObject 
 }
 
 QOfonoModemInterface::~QOfonoModemInterface()
-{
-}
+= default;
 
 bool QOfonoModemInterface::isPowered()
 {
@@ -328,8 +325,7 @@ QOfonoNetworkRegistrationInterface::QOfonoNetworkRegistrationInterface(const QSt
 }
 
 QOfonoNetworkRegistrationInterface::~QOfonoNetworkRegistrationInterface()
-{
-}
+= default;
 
 QString QOfonoNetworkRegistrationInterface::getStatus()
 {
@@ -461,8 +457,7 @@ QOfonoNetworkOperatorInterface::QOfonoNetworkOperatorInterface(const QString &db
 }
 
 QOfonoNetworkOperatorInterface::~QOfonoNetworkOperatorInterface()
-{
-}
+= default;
 
 QString QOfonoNetworkOperatorInterface::getName()
 {
@@ -557,8 +552,7 @@ QOfonoSimInterface::QOfonoSimInterface(const QString &dbusPathName, QObject *par
 }
 
 QOfonoSimInterface::~QOfonoSimInterface()
-{
-}
+= default;
 
 bool QOfonoSimInterface::isPresent()
 {
@@ -660,8 +654,7 @@ QOfonoDataConnectionManagerInterface::QOfonoDataConnectionManagerInterface(const
 }
 
 QOfonoDataConnectionManagerInterface::~QOfonoDataConnectionManagerInterface()
-{
-}
+= default;
 
 QList<QDBusObjectPath> QOfonoDataConnectionManagerInterface::getPrimaryContexts()
 {
@@ -757,8 +750,7 @@ QOfonoPrimaryDataContextInterface::QOfonoPrimaryDataContextInterface(const QStri
 }
 
 QOfonoPrimaryDataContextInterface::~QOfonoPrimaryDataContextInterface()
-{
-}
+= default;
 
 bool QOfonoPrimaryDataContextInterface::isActive()
 {
@@ -893,8 +885,7 @@ QOfonoSmsInterface::QOfonoSmsInterface(const QString &dbusPathName, QObject *par
 }
 
 QOfonoSmsInterface::~QOfonoSmsInterface()
-{
-}
+= default;
 
 void QOfonoSmsInterface::connectNotify(const char *signal)
 {

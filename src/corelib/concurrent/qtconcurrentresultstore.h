@@ -133,7 +133,7 @@ public:
     ResultIteratorBase resultAt(int index) const;
     bool contains(int index) const;
     int count() const;
-    virtual ~ResultStoreBase() { };
+    virtual ~ResultStoreBase() = default;
 
 protected:
     int insertResultItem(int index, ResultItem &resultItem);
@@ -156,7 +156,7 @@ template <typename T>
 class ResultStore : public ResultStoreBase
 {
 public:
-    ResultStore() { }
+    ResultStore() = default;
 
     ResultStore(const ResultStoreBase &base)
     : ResultStoreBase(base) { }

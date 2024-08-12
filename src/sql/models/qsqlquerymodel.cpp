@@ -89,8 +89,7 @@ void QSqlQueryModelPrivate::prefetch(int limit)
 }
 
 QSqlQueryModelPrivate::~QSqlQueryModelPrivate()
-{
-}
+= default;
 
 void QSqlQueryModelPrivate::initColOffsets(int size)
 {
@@ -167,8 +166,7 @@ QSqlQueryModel::QSqlQueryModel(QSqlQueryModelPrivate &dd, QObject *parent)
     \sa clear()
 */
 QSqlQueryModel::~QSqlQueryModel()
-{
-}
+= default;
 
 /*!
     \since 4.1

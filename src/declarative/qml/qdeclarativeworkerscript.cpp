@@ -461,8 +461,7 @@ WorkerDataEvent::WorkerDataEvent(int workerId, const QVariant &data)
 }
 
 WorkerDataEvent::~WorkerDataEvent()
-{
-}
+= default;
 
 int WorkerDataEvent::workerId() const
 {

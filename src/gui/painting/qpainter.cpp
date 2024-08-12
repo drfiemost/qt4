@@ -7968,8 +7968,7 @@ QPainterState::QPainterState()
 }
 
 QPainterState::~QPainterState()
-{
-}
+= default;
 
 void QPainterState::init(QPainter *p) {
     bgBrush = Qt::white;

@@ -107,8 +107,7 @@ namespace QPatternist
              * @short Default constructor, which is needed by QVector.
              */
             inline OrderSpec()
-            {
-            }
+            = default;
 
             inline OrderSpec(const Direction dir,
                              const StaticContext::OrderingEmptySequence orderingEmpty) : direction(dir),

@@ -56,8 +56,8 @@ public:
     static QScriptEngineAgent* get(QScriptEngineAgentPrivate* p) {return p->q_func();}
     static QScriptEngineAgentPrivate* get(QScriptEngineAgent* p) {return p->d_func();}
 
-    QScriptEngineAgentPrivate(){}
-    ~QScriptEngineAgentPrivate() override{}
+    QScriptEngineAgentPrivate()= default;
+    ~QScriptEngineAgentPrivate() override= default;
 
     void attach();
     void detach();

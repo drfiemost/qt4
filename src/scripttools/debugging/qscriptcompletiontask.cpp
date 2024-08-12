@@ -84,8 +84,7 @@ QScriptCompletionTaskPrivate::QScriptCompletionTaskPrivate()
 }
 
 QScriptCompletionTaskPrivate::~QScriptCompletionTaskPrivate()
-{
-}
+= default;
 
 class QScriptCompleteExpressionJob : public QScriptDebuggerCommandSchedulerJob
 {
@@ -223,8 +222,7 @@ QScriptCompletionTask::QScriptCompletionTask(
 }
 
 QScriptCompletionTask::~QScriptCompletionTask()
-{
-}
+= default;
 
 void QScriptCompletionTask::start()
 {

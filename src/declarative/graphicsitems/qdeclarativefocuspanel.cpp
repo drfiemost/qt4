@@ -69,8 +69,7 @@ QDeclarativeFocusPanel::QDeclarativeFocusPanel(QDeclarativeItem *parent) :
 }
 
 QDeclarativeFocusPanel::~QDeclarativeFocusPanel()
-{
-}
+= default;
 
 /*!
     \qmlproperty bool FocusPanel::active

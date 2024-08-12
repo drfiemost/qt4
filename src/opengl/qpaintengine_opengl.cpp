@@ -124,7 +124,7 @@ struct QT_PointF {
 struct QGLTrapezoid
 {
     QGLTrapezoid()
-    {}
+    = default;
 
     QGLTrapezoid(qreal top_, qreal bottom_, qreal topLeftX_, qreal topRightX_, qreal bottomLeftX_, qreal bottomRightX_)
         : top(top_),
@@ -1237,8 +1237,7 @@ QOpenGLPaintEngine::QOpenGLPaintEngine()
 }
 
 QOpenGLPaintEngine::~QOpenGLPaintEngine()
-{
-}
+= default;
 
 bool QOpenGLPaintEngine::begin(QPaintDevice *pdev)
 {
@@ -1673,8 +1672,8 @@ void QOpenGLPaintEnginePrivate::updateGradient(const QBrush &brush, const QRectF
 class QOpenGLTessellator : public QTessellator
 {
 public:
-    QOpenGLTessellator() {}
-    ~QOpenGLTessellator() override { }
+    QOpenGLTessellator() = default;
+    ~QOpenGLTessellator() override = default;
     QGLTrapezoid toGLTrapezoid(const Trapezoid &trap);
 };
 
@@ -2621,7 +2620,7 @@ public:
     QTransform matrix() const { return m; }
     qreal strokeWidth() const { return w; }
 
-    virtual ~QGLMaskGenerator() {}
+    virtual ~QGLMaskGenerator() = default;
 
 private:
     QPainterPath p;
@@ -5602,8 +5601,7 @@ QOpenGLPaintEngineState::QOpenGLPaintEngineState()
 }
 
 QOpenGLPaintEngineState::~QOpenGLPaintEngineState()
-{
-}
+= default;
 
 void QOpenGLPaintEnginePrivate::ensureDrawableTexture()
 {

@@ -806,8 +806,7 @@ QTextControl::QTextControl(QTextDocument *doc, QObject *parent)
 }
 
 QTextControl::~QTextControl()
-{
-}
+= default;
 
 void QTextControl::setDocument(QTextDocument *document)
 {

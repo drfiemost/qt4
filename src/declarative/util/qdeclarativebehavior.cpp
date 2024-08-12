@@ -104,8 +104,7 @@ QDeclarativeBehavior::QDeclarativeBehavior(QObject *parent)
 }
 
 QDeclarativeBehavior::~QDeclarativeBehavior()
-{
-}
+= default;
 
 /*!
     \qmlproperty Animation Behavior::animation

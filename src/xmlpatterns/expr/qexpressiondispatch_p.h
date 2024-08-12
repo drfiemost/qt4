@@ -149,8 +149,8 @@ namespace QPatternist
     {
     public:
         typedef QExplicitlySharedDataPointer<ExpressionVisitorResult> Ptr;
-        ExpressionVisitorResult() {}
-        virtual ~ExpressionVisitorResult() {}
+        ExpressionVisitorResult() = default;
+        virtual ~ExpressionVisitorResult() = default;
     };
 
     /**
@@ -161,7 +161,7 @@ namespace QPatternist
     {
     public:
         typedef QExplicitlySharedDataPointer<ExpressionVisitor> Ptr;
-        virtual ~ExpressionVisitor() {}
+        virtual ~ExpressionVisitor() = default;
 
         virtual ExpressionVisitorResult::Ptr visit(const AndExpression *) const = 0;
         virtual ExpressionVisitorResult::Ptr visit(const ApplyTemplate *) const = 0;

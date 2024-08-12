@@ -367,8 +367,7 @@ QSqlTableModel::QSqlTableModel(QSqlTableModelPrivate &dd, QObject *parent, QSqlD
     Destroys the object and frees any allocated resources.
 */
 QSqlTableModel::~QSqlTableModel()
-{
-}
+= default;
 
 /*!
     Sets the database table on which the model operates to \a

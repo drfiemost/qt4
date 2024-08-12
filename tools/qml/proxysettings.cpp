@@ -67,8 +67,7 @@ ProxySettings::ProxySettings (QWidget * parent)
 }
 
 ProxySettings::~ProxySettings()
-{
-}
+= default;
 
 void ProxySettings::accept ()
 {

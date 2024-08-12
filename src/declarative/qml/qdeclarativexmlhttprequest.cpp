@@ -181,7 +181,7 @@ public:
     NodeImpl *d;
     QList<NodeImpl *> *list;
 private:
-    NamedNodeMap &operator=(const NamedNodeMap &);
+    NamedNodeMap &operator=(const NamedNodeMap &) = delete;
 };
 
 class NamedNodeMapClass : public QScriptClass
@@ -210,7 +210,7 @@ public:
 
     NodeImpl *d;
 private:
-    NodeList &operator=(const NodeList &);
+    NodeList &operator=(const NodeList &) = delete;
 };
 
 class NodeListClass : public QScriptClass
@@ -256,7 +256,7 @@ public:
     NodeImpl *d;
 
 private:
-    Node &operator=(const Node &);
+    Node &operator=(const Node &) = delete;
 };
 
 class Element : public Node

@@ -49,8 +49,7 @@ ClassObjectDelegate::ClassObjectDelegate(QScriptClass *scriptClass)
 }
 
 ClassObjectDelegate::~ClassObjectDelegate()
-{
-}
+= default;
 
 QScriptObjectDelegate::Type ClassObjectDelegate::type() const
 {

@@ -46,8 +46,7 @@ Profile::Profile(const UString& title, unsigned uid)
 }
 
 Profile::~Profile()
-{
-}
+= default;
 
 void Profile::forEach(void (ProfileNode::*function)())
 {

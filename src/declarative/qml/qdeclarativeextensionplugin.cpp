@@ -151,8 +151,7 @@ QDeclarativeExtensionPlugin::QDeclarativeExtensionPlugin(QObject *parent)
   \internal
  */
 QDeclarativeExtensionPlugin::~QDeclarativeExtensionPlugin()
-{
-}
+= default;
 
 /*!
     \fn void QDeclarativeExtensionPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri)

@@ -122,7 +122,7 @@ class QSvgRefCounted
 {
 public:
     QSvgRefCounted() { _ref = 0; }
-    virtual ~QSvgRefCounted() {}
+    virtual ~QSvgRefCounted() = default;
     void ref() {
         ++_ref;
 //        qDebug() << this << ": adding ref, now " << _ref;

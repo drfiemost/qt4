@@ -166,12 +166,10 @@ public:
 };
 
 QScriptBreakpointsWidgetPrivate::QScriptBreakpointsWidgetPrivate()
-{
-}
+= default;
 
 QScriptBreakpointsWidgetPrivate::~QScriptBreakpointsWidgetPrivate()
-{
-}
+= default;
 
 void QScriptBreakpointsWidgetPrivate::_q_newBreakpoint()
 {
@@ -322,8 +320,7 @@ QScriptBreakpointsWidget::QScriptBreakpointsWidget(QWidget *parent)
 }
 
 QScriptBreakpointsWidget::~QScriptBreakpointsWidget()
-{
-}
+= default;
 
 /*!
   \reimp

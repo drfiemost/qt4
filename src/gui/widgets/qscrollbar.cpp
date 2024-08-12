@@ -368,8 +368,7 @@ QScrollBar::QScrollBar(Qt::Orientation orientation, QWidget *parent)
     Destroys the scroll bar.
 */
 QScrollBar::~QScrollBar()
-{
-}
+= default;
 
 void QScrollBarPrivate::init()
 {

@@ -320,7 +320,7 @@ void Q_CORE_EXPORT qDeleteInEventHandler(QObject *o);
 
 struct Q_CORE_EXPORT QAbstractDynamicMetaObject : public QMetaObject
 {
-    virtual ~QAbstractDynamicMetaObject() {}
+    virtual ~QAbstractDynamicMetaObject() = default;
     virtual int metaCall(QMetaObject::Call, int _id, void **) { return _id; }
     virtual int createProperty(const char *, const char *) { return -1; }
 };

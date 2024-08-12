@@ -106,10 +106,9 @@ namespace QPatternist
          * A traditional copy constructor. This Cardinality becomes identical
          * to @p other.
          */
-        inline Cardinality(const Cardinality &other) : m_min(other.m_min),
-                                                       m_max(other.m_max)
-        {
-        }
+        inline Cardinality(const Cardinality &other) 
+                                                       
+        = default;
 
         /**
          * This default constructor constructs an invalid Cardinality. Using

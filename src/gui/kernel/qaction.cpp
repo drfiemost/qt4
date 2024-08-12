@@ -94,8 +94,7 @@ QActionPrivate::QActionPrivate() : group(nullptr), enabled(1), forceDisabled(0),
 }
 
 QActionPrivate::~QActionPrivate()
-{
-}
+= default;
 
 bool QActionPrivate::showStatusText(QWidget *widget, const QString &str)
 {

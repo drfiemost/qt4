@@ -305,7 +305,7 @@ class LeafNode : public Node
 {
  public:
     LeafNode();
-    ~LeafNode() override { }
+    ~LeafNode() override = default;
 
     bool isInnerNode() const override;
 
@@ -317,14 +317,14 @@ class NamespaceNode : public InnerNode
 {
  public:
     NamespaceNode(InnerNode* parent, const QString& name);
-    ~NamespaceNode() override { }
+    ~NamespaceNode() override = default;
 };
 
 class ClassNode;
 
 struct RelatedClass
 {
-    RelatedClass() { }
+    RelatedClass() = default;
     RelatedClass(Node::Access access0, 
                  ClassNode* node0,
                  const QString& dataTypeWithTemplateArgs0 = "")
@@ -344,7 +344,7 @@ class ClassNode : public InnerNode
 {
  public:
     ClassNode(InnerNode* parent, const QString& name);
-    ~ClassNode() override { }
+    ~ClassNode() override = default;
 
     void addBaseClass(Access access, 
                       ClassNode* node, 
@@ -381,7 +381,7 @@ class FakeNode : public InnerNode
  public:
 
     FakeNode(InnerNode* parent, const QString& name, SubType subType);
-    ~FakeNode() override { }
+    ~FakeNode() override = default;
 
     void setTitle(const QString &title) { tle = title; }
     void setSubTitle(const QString &subTitle) { stle = subTitle; }
@@ -407,7 +407,7 @@ class ExampleNode : public FakeNode
 {
  public:
     ExampleNode(InnerNode* parent, const QString& name);
-    ~ExampleNode() override { }
+    ~ExampleNode() override = default;
     QString imageFileName() const override { return imageFileName_; }
     void setImageFileName(const QString& ifn) override { imageFileName_ = ifn; }
     void addDependency(const QString& arg) override { dependencies_.append(arg); }
@@ -449,7 +449,7 @@ class QmlBasicTypeNode : public FakeNode
  public:
     QmlBasicTypeNode(InnerNode* parent, 
                      const QString& name);
-    ~QmlBasicTypeNode() override { }
+    ~QmlBasicTypeNode() override = default;
     bool isQmlNode() const override { return true; }
 };
 
@@ -459,7 +459,7 @@ class QmlPropGroupNode : public FakeNode
     QmlPropGroupNode(QmlClassNode* parent, 
                      const QString& name,
                      bool attached);
-    ~QmlPropGroupNode() override { }
+    ~QmlPropGroupNode() override = default;
     bool isQmlNode() const override { return true; }
 
     const QString& element() const { return parent()->name(); }
@@ -481,7 +481,7 @@ class QmlPropertyNode : public LeafNode
                     const QString& name,
                     const QString& type,
                     bool attached);
-    ~QmlPropertyNode() override { }
+    ~QmlPropertyNode() override = default;
 
     void setDataType(const QString& dataType) { dt = dataType; }
     void setStored(bool stored) { sto = toTrool(stored); }
@@ -516,7 +516,7 @@ class QmlPropertyNode : public LeafNode
 class EnumItem
 {
  public:
-    EnumItem() { }
+    EnumItem() = default;
     EnumItem(const QString& name, const QString& value)
 	: nam(name), val(value) { }
     EnumItem(const QString& name, const QString& value, const Text &txt)
@@ -538,7 +538,7 @@ class EnumNode : public LeafNode
 {
  public:
     EnumNode(InnerNode* parent, const QString& name);
-    ~EnumNode() override { }
+    ~EnumNode() override = default;
 
     void addItem(const EnumItem& item);
     void setFlagsType(TypedefNode* typedeff);
@@ -559,7 +559,7 @@ class TypedefNode : public LeafNode
 {
  public:
     TypedefNode(InnerNode* parent, const QString& name);
-    ~TypedefNode() override { }
+    ~TypedefNode() override = default;
 
     const EnumNode* associatedEnum() const { return ae; }
 
@@ -581,7 +581,7 @@ inline void EnumNode::setFlagsType(TypedefNode* typedeff)
 class Parameter
 {
  public:
-    Parameter() {}
+    Parameter() = default;
     Parameter(const QString& leftType, 
               const QString& rightType = "",
               const QString& name = "", 
@@ -625,7 +625,7 @@ class FunctionNode : public LeafNode
 
     FunctionNode(InnerNode* parent, const QString &name);
     FunctionNode(Type type, InnerNode* parent, const QString &name, bool attached);
-    ~FunctionNode() override { }
+    ~FunctionNode() override = default;
 
     void setReturnType(const QString& returnType) { rt = returnType; }
     void setParentPath(const QStringList& parentPath) { pp = parentPath; }
@@ -705,7 +705,7 @@ class PropertyNode : public LeafNode
     enum { NumFunctionRoles = Notifier + 1 };
 
     PropertyNode(InnerNode* parent, const QString& name);
-    ~PropertyNode() override { }
+    ~PropertyNode() override = default;
 
     void setDataType(const QString& dataType) { dt = dataType; }
     void addFunction(FunctionNode* function, FunctionRole role);
@@ -796,7 +796,7 @@ class VariableNode : public LeafNode
 {
  public:
     VariableNode(InnerNode* parent, const QString &name);
-    ~VariableNode() override { }
+    ~VariableNode() override = default;
 
     void setLeftType(const QString &leftType) { lt = leftType; }
     void setRightType(const QString &rightType) { rt = rightType; }
@@ -823,7 +823,7 @@ class TargetNode : public LeafNode
 {
  public:
     TargetNode(InnerNode* parent, const QString& name);
-    ~TargetNode() override { }
+    ~TargetNode() override = default;
 
     bool isInnerNode() const override;
 };

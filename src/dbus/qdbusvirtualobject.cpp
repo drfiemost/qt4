@@ -51,8 +51,7 @@ QDBusVirtualObject::QDBusVirtualObject(QObject *parent) :
 }
 
 QDBusVirtualObject::~QDBusVirtualObject()
-{
-}
+= default;
 
 QT_END_NAMESPACE
 

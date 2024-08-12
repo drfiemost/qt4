@@ -50,8 +50,6 @@ QDesignerResourceBrowserInterface::QDesignerResourceBrowserInterface(QWidget *pa
 }
 
 QDesignerResourceBrowserInterface::~QDesignerResourceBrowserInterface()
-{
-
-}
+= default;
 
 QT_END_NAMESPACE

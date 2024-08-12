@@ -1192,7 +1192,7 @@ QDockWidget::QDockWidget(const QString &title, QWidget *parent, Qt::WindowFlags 
     Destroys the dock widget.
 */
 QDockWidget::~QDockWidget()
-{ }
+= default;
 
 /*!
     Returns the widget for the dock widget. This function returns zero

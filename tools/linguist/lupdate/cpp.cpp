@@ -224,7 +224,7 @@ public:
 
 private:
     struct IfdefState {
-        IfdefState() {}
+        IfdefState() = default;
         IfdefState(int _bracketDepth, int _braceDepth, int _parenDepth) :
             bracketDepth(_bracketDepth),
             braceDepth(_braceDepth),

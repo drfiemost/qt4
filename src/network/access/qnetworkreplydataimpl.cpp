@@ -52,12 +52,10 @@ QNetworkReplyDataImplPrivate::QNetworkReplyDataImplPrivate()
 }
 
 QNetworkReplyDataImplPrivate::~QNetworkReplyDataImplPrivate()
-{
-}
+= default;
 
 QNetworkReplyDataImpl::~QNetworkReplyDataImpl()
-{
-}
+= default;
 
 QNetworkReplyDataImpl::QNetworkReplyDataImpl(QObject *parent, const QNetworkRequest &req, const QNetworkAccessManager::Operation op)
     : QNetworkReply(*new QNetworkReplyDataImplPrivate(), parent)

@@ -60,7 +60,7 @@ class IndexWriter : LUCENE_BASE
                   CL_NS(util)::CLVector<SegmentReader*>* std,
                   bool create);
 
-        ~LockWith2() {}
+        ~LockWith2() = default;
 
 		void doBody();
 
@@ -81,7 +81,7 @@ class IndexWriter : LUCENE_BASE
                     const QString& segName,
                     const QStringList& ftd);
 		
-        ~LockWithCFS() {}
+        ~LockWithCFS() = default;
 
         void doBody();
 

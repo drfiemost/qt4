@@ -20,7 +20,7 @@ class LuceneLock : LUCENE_BASE
 public:
     LUCENE_STATIC_CONSTANT(int64_t, LOCK_POLL_INTERVAL = 1000);
 
-    virtual ~LuceneLock() {}
+    virtual ~LuceneLock() = default;
 
     // Attempts to obtain exclusive access and immediately return upon success
     // or failure. Return true if exclusive access is obtained.
@@ -58,7 +58,7 @@ public:
         this->lockWaitTimeout = lockWaitTimeout;
     }
 
-    virtual ~LuceneLockWith() {} 
+    virtual ~LuceneLockWith() = default; 
 
     // Calls {@link #doBody} while <i>lock</i> is obtained. Blocks if lock
     // cannot be obtained immediately.  Retries to obtain lock once per second

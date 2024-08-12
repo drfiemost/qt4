@@ -116,7 +116,7 @@ class QObjectPrototypeObject : public QObject
 public:
     QObjectPrototypeObject(QObject *parent = nullptr)
         : QObject(parent) { }
-    ~QObjectPrototypeObject() override { }
+    ~QObjectPrototypeObject() override = default;
 };
 
 class QObjectPrototype : public QScriptObject

@@ -91,8 +91,7 @@ QRasterPixmapData::QRasterPixmapData(PixelType type)
 }
 
 QRasterPixmapData::~QRasterPixmapData()
-{
-}
+= default;
 
 QPixmapData *QRasterPixmapData::createCompatiblePixmapData() const
 {

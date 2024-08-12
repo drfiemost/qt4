@@ -543,8 +543,7 @@ QHostAddress::QHostAddress(SpecialAddress address)
     Destroys the host address object.
 */
 QHostAddress::~QHostAddress()
-{
-}
+= default;
 
 /*!
     Assigns another host \a address to this object, and returns a reference

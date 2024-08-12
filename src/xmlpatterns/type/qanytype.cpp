@@ -48,8 +48,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AnyType::~AnyType()
-{
-}
+= default;
 
 bool AnyType::wxsTypeMatches(const SchemaType::Ptr &other) const
 {

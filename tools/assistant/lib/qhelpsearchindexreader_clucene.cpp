@@ -68,8 +68,7 @@ QHelpSearchIndexReaderClucene::QHelpSearchIndexReaderClucene()
 }
 
 QHelpSearchIndexReaderClucene::~QHelpSearchIndexReaderClucene()
-{
-}
+= default;
 
 
 void QHelpSearchIndexReaderClucene::run()

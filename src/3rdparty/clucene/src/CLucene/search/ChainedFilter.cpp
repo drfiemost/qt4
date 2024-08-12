@@ -34,9 +34,7 @@ ChainedFilter::ChainedFilter( const ChainedFilter& copy ) :
 	filters = copy.filters;
 }
 ChainedFilter::~ChainedFilter(void)
-{
-	
-}
+= default;
 
 Filter* ChainedFilter::clone() const {
 	return _CLNEW ChainedFilter(*this );

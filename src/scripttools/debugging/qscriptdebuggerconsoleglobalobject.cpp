@@ -74,8 +74,7 @@ QScriptDebuggerConsoleGlobalObjectPrivate::QScriptDebuggerConsoleGlobalObjectPri
 }
 
 QScriptDebuggerConsoleGlobalObjectPrivate::~QScriptDebuggerConsoleGlobalObjectPrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleGlobalObject::QScriptDebuggerConsoleGlobalObject(QObject *parent)
     : QObject(*new QScriptDebuggerConsoleGlobalObjectPrivate, parent)
@@ -83,8 +82,7 @@ QScriptDebuggerConsoleGlobalObject::QScriptDebuggerConsoleGlobalObject(QObject *
 }
 
 QScriptDebuggerConsoleGlobalObject::~QScriptDebuggerConsoleGlobalObject()
-{
-}
+= default;
 
 QScriptDebuggerCommandSchedulerInterface *QScriptDebuggerConsoleGlobalObject::scheduler() const
 {

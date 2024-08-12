@@ -104,8 +104,7 @@ QSvgIconEngine::QSvgIconEngine(const QSvgIconEngine &other)
 
 
 QSvgIconEngine::~QSvgIconEngine()
-{
-}
+= default;
 
 
 QSize QSvgIconEngine::actualSize(const QSize &size, QIcon::Mode mode,

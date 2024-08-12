@@ -74,8 +74,7 @@ StringListEditor::StringListEditor(QWidget *parent)
 }
 
 StringListEditor::~StringListEditor()
-{
-}
+= default;
 
 QStringList StringListEditor::getStringList(QWidget *parent, const QStringList &init, int *result)
 {

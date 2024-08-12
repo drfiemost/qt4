@@ -67,8 +67,7 @@ QDeclarativeApplication::QDeclarativeApplication(QObject *parent) : QObject(*new
 }
 
 QDeclarativeApplication::~QDeclarativeApplication()
-{
-}
+= default;
 
 bool QDeclarativeApplication::active() const
 {

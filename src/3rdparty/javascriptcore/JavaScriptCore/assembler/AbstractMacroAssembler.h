@@ -223,8 +223,7 @@ public:
 
     public:
         Label()
-        {
-        }
+        = default;
 
         Label(AbstractMacroAssembler<AssemblerType>* masm)
             : m_label(masm->m_assembler.label())
@@ -247,8 +246,7 @@ public:
         friend class LinkBuffer;
     public:
         DataLabelPtr()
-        {
-        }
+        = default;
 
         DataLabelPtr(AbstractMacroAssembler<AssemblerType>* masm)
             : m_label(masm->m_assembler.label())
@@ -269,8 +267,7 @@ public:
         friend class LinkBuffer;
     public:
         DataLabel32()
-        {
-        }
+        = default;
 
         DataLabel32(AbstractMacroAssembler<AssemblerType>* masm)
             : m_label(masm->m_assembler.label())
@@ -338,8 +335,7 @@ public:
         friend class LinkBuffer;
     public:
         Jump()
-        {
-        }
+        = default;
         
         Jump(JmpSrc jmp)    
             : m_jmp(jmp)

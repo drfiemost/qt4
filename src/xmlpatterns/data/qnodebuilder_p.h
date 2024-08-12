@@ -76,8 +76,7 @@ namespace QPatternist
         typedef std::unique_ptr<NodeBuilder> Ptr;
 
         inline NodeBuilder()
-        {
-        }
+        = default;
 
         /**
          * @short Returns the document that has been built.

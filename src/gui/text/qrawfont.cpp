@@ -172,17 +172,13 @@ QRawFont::QRawFont(const QRawFont &other)
    Destroys the QRawFont
 */
 QRawFont::~QRawFont()
-{
-}
+= default;
 
 /*!
   Assigns \a other to this QRawFont.
 */
 QRawFont &QRawFont::operator=(const QRawFont &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
    Returns true if the QRawFont is valid and false otherwise.

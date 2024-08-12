@@ -1003,8 +1003,7 @@ QtColorLine::QtColorLine(QWidget *parent)
 }
 
 QtColorLine::~QtColorLine()
-{
-}
+= default;
 
 QSize QtColorLine::minimumSizeHint() const
 {

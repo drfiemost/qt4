@@ -54,7 +54,7 @@ namespace JSC {
         {
         }
 
-        virtual ~ExecutableBase() {}
+        virtual ~ExecutableBase() = default;
 
         bool isHostFunction() const { return m_numParameters == NUM_PARAMETERS_IS_HOST; }
 

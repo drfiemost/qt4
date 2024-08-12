@@ -309,8 +309,7 @@ QSettingsPrivate::QSettingsPrivate(QSettings::Format format, QSettings::Scope sc
 }
 
 QSettingsPrivate::~QSettingsPrivate()
-{
-}
+= default;
 
 QString QSettingsPrivate::actualKey(const QString &key) const
 {

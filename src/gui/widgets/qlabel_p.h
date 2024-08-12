@@ -72,7 +72,7 @@ class QLabelPrivate : public QFramePrivate
 {
     Q_DECLARE_PUBLIC(QLabel)
 public:
-    QLabelPrivate() {}
+    QLabelPrivate() = default;
 
     void init();
     void clearContents();

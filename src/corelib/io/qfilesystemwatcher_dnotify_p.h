@@ -86,11 +86,8 @@ private Q_SLOTS:
 private:
     struct Directory {
         Directory() : fd(0), parentFd(0), isMonitored(false) {}
-        Directory(const Directory &o) : path(o.path),
-                                        fd(o.fd),
-                                        parentFd(o.parentFd),
-                                        isMonitored(o.isMonitored),
-                                        files(o.files) {}
+        Directory(const Directory &o) 
+                                        = default;
         Directory& operator=(const QDnotifyFileSystemWatcherEngine::Directory&) = default;
         QString path;
         int fd;
@@ -99,11 +96,8 @@ private:
 
         struct File {
             File() : ownerId(0u), groupId(0u), permissions(nullptr) { }
-            File(const File &o) : path(o.path),
-                                  ownerId(o.ownerId),
-                                  groupId(o.groupId),
-                                  permissions(o.permissions),
-                                  lastWrite(o.lastWrite) {}
+            File(const File &o) 
+                                  = default;
             QString path;
 
             bool updateInfo();

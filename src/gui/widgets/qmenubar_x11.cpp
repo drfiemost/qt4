@@ -54,8 +54,7 @@
 QT_BEGIN_NAMESPACE
 
 QX11MenuBar::~QX11MenuBar()
-{
-}
+= default;
 
 void QX11MenuBar::init(QMenuBar *_menuBar)
 {

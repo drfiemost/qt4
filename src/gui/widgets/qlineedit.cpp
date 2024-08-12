@@ -293,8 +293,7 @@ QLineEdit::QLineEdit(const QString& contents, QWidget* parent)
 */
 
 QLineEdit::~QLineEdit()
-{
-}
+= default;
 
 
 /*!

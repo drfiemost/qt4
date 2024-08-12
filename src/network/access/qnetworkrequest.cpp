@@ -334,9 +334,8 @@ QNetworkRequest::QNetworkRequest(const QUrl &url)
     Creates a copy of \a other.
 */
 QNetworkRequest::QNetworkRequest(const QNetworkRequest &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Disposes of the QNetworkRequest object.
@@ -370,10 +369,7 @@ bool QNetworkRequest::operator==(const QNetworkRequest &other) const
     Creates a copy of \a other
 */
 QNetworkRequest &QNetworkRequest::operator=(const QNetworkRequest &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns the URL this network request is referring to.

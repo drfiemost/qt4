@@ -224,8 +224,7 @@ QFrame::QFrame(QFramePrivate &dd, QWidget* parent, Qt::WindowFlags f)
   Destroys the frame.
  */
 QFrame::~QFrame()
-{
-}
+= default;
 
 /*!
     Returns the frame style.

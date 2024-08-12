@@ -74,7 +74,7 @@ private:
             : offset(0), length(0) {}
         FileEntry(int64_t _offset)
             : offset(_offset), length(0) {}
-        ~FileEntry() {}
+        ~FileEntry() = default;
 
         int64_t offset;
         int64_t length;
@@ -160,7 +160,7 @@ class CompoundFileWriter : LUCENE_BASE
             : dataOffset(0), directoryOffset(0) {}
         WriterFileEntry(const QString& _file)
             : file(_file), dataOffset(0), directoryOffset(0) {}
-        ~WriterFileEntry() {}
+        ~WriterFileEntry() = default;
 
         QString file;
         // temporary holder for the start of this file's data section

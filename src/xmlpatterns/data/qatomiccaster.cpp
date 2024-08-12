@@ -46,11 +46,9 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AtomicCaster::AtomicCaster()
-{
-}
+= default;
 
 AtomicCaster::~AtomicCaster()
-{
-}
+= default;
 
 QT_END_NAMESPACE

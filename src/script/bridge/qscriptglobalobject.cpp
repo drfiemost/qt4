@@ -47,8 +47,7 @@ GlobalObject::GlobalObject()
 }
 
 GlobalObject::~GlobalObject()
-{
-}
+= default;
 
 void GlobalObject::markChildren(JSC::MarkStack& markStack)
 {

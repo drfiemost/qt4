@@ -68,7 +68,7 @@ class QDesignerResourceBrowserInterface;
 class QDesignerLanguageExtension
 {
 public:
-    virtual ~QDesignerLanguageExtension() {}
+    virtual ~QDesignerLanguageExtension() = default;
 
     virtual QDialog *createFormWindowSettingsDialog(QDesignerFormWindowInterface *formWindow, QWidget *parentWidget) = 0;
     virtual QDesignerResourceBrowserInterface *createResourceBrowser(QWidget *parentWidget) = 0;

@@ -104,9 +104,8 @@ namespace JSC {
         UString(const Vector<UChar>& buffer);
 
         UString(const UString& s)
-            : m_rep(s.m_rep)
-        {
-        }
+             
+        = default;
 
         // Special constructor for cases where we overwrite an object in place.
         UString(PlacementNewAdoptType)
@@ -115,8 +114,7 @@ namespace JSC {
         }
 
         ~UString()
-        {
-        }
+        = default;
 
         template<size_t inlineCapacity>
         static PassRefPtr<UStringImpl> adopt(Vector<UChar, inlineCapacity>& vector)
@@ -141,8 +139,7 @@ namespace JSC {
             }
 
             Range()
-            {
-            }
+            = default;
 
             int position;
             int length;

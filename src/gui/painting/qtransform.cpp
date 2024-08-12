@@ -1483,7 +1483,7 @@ struct QHomogeneousCoordinate
     qreal y;
     qreal w;
 
-    QHomogeneousCoordinate() {}
+    QHomogeneousCoordinate() = default;
     QHomogeneousCoordinate(qreal x_, qreal y_, qreal w_) : x(x_), y(y_), w(w_) {}
 
     const QPointF toPoint() const {

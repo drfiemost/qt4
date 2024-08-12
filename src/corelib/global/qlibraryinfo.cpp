@@ -170,7 +170,7 @@ QSettings *QLibraryInfoPrivate::findConfiguration()
 */
 
 QLibraryInfo::QLibraryInfo()
-{ }
+= default;
 
 /*!
   Returns the person to whom this build of Qt is licensed.

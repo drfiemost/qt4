@@ -341,8 +341,7 @@ public:
     }
 
     ~RegexPatternConstructor()
-    {
-    }
+    = default;
 
     void reset()
     {

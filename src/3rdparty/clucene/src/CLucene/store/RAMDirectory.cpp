@@ -27,8 +27,7 @@ RAMFile::RAMFile()
 }
 
 RAMFile::~RAMFile()
-{
-}
+= default;
 
 
 RAMDirectory::RAMLock::RAMLock(const QString& name, RAMDirectory* dir)

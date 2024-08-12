@@ -83,8 +83,7 @@ SpecialMenuAction::SpecialMenuAction(QObject *parent)
 }
 
 SpecialMenuAction::~SpecialMenuAction()
-{
-}
+= default;
 
 
 } // namespace qdesigner_internal
@@ -121,8 +120,7 @@ QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
 }
 
 QDesignerMenuBar::~QDesignerMenuBar()
-{
-}
+= default;
 
 void QDesignerMenuBar::paintEvent(QPaintEvent *event)
 {

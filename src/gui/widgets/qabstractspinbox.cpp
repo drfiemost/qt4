@@ -152,8 +152,7 @@ QAbstractSpinBox::QAbstractSpinBox(QAbstractSpinBoxPrivate &dd, QWidget *parent)
 */
 
 QAbstractSpinBox::~QAbstractSpinBox()
-{
-}
+= default;
 
 /*!
     \enum QAbstractSpinBox::ButtonSymbols
@@ -1347,8 +1346,7 @@ QAbstractSpinBoxPrivate::QAbstractSpinBoxPrivate()
    Called when the QAbstractSpinBoxPrivate is destroyed
 */
 QAbstractSpinBoxPrivate::~QAbstractSpinBoxPrivate()
-{
-}
+= default;
 
 /*!
     \internal

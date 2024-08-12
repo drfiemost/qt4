@@ -1659,8 +1659,7 @@ QStateMachine::QStateMachine(QStateMachinePrivate &dd, QObject *parent)
   Destroys this state machine.
 */
 QStateMachine::~QStateMachine()
-{
-}
+= default;
 
 /*!
   \enum QStateMachine::EventPriority
@@ -2291,8 +2290,7 @@ QStateMachine::SignalEvent::SignalEvent(QObject *sender, int signalIndex,
   Destroys this SignalEvent.
 */
 QStateMachine::SignalEvent::~SignalEvent()
-{
-}
+= default;
 
 /*!
   \fn QStateMachine::SignalEvent::sender() const

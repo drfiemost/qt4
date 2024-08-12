@@ -46,8 +46,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AtomicComparatorLocator::AtomicComparatorLocator()
-{
-}
+= default;
 
 AtomicComparatorLocator::~AtomicComparatorLocator()
 {

@@ -126,7 +126,7 @@ public:
 class QNoDebug
 {
 public:
-    inline QNoDebug(){}
+    inline QNoDebug()= default;
     inline QNoDebug(const QDebug &){}
     inline ~QNoDebug(){}
 #if !defined( QT_NO_TEXTSTREAM )

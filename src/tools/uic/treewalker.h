@@ -90,7 +90,7 @@ class DomButtonGroup;
 
 struct TreeWalker
 {
-    inline virtual ~TreeWalker() {}
+    inline virtual ~TreeWalker() = default;
 
     virtual void acceptUI(DomUI *ui);
     virtual void acceptLayoutDefault(DomLayoutDefault *layoutDefault);

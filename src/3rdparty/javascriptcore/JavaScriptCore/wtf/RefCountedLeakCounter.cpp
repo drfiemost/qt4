@@ -31,7 +31,7 @@ void RefCountedLeakCounter::suppressMessages(const char*) { }
 void RefCountedLeakCounter::cancelMessageSuppression(const char*) { }
 
 RefCountedLeakCounter::RefCountedLeakCounter(const char*) { }
-RefCountedLeakCounter::~RefCountedLeakCounter() { }
+RefCountedLeakCounter::~RefCountedLeakCounter() = default;
 
 void RefCountedLeakCounter::increment() { }
 void RefCountedLeakCounter::decrement() { }

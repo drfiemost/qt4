@@ -15,10 +15,8 @@ DEFINE_MUTEX(ThreadLocalBase::ThreadLocalBase_THIS_LOCK)
 ThreadLocalBase::ShutdownHooksType ThreadLocalBase::shutdownHooks(false);
 ThreadLocalBase::ThreadLocalsType ThreadLocalBase::threadLocals(false,false);
 
-ThreadLocalBase::ThreadLocalBase(){
-}
-ThreadLocalBase::~ThreadLocalBase(){
-}
+ThreadLocalBase::ThreadLocalBase()= default;
+ThreadLocalBase::~ThreadLocalBase()= default;
 
 void ThreadLocalBase::UnregisterCurrentThread(){
 	_LUCENE_THREADID_TYPE id = _LUCENE_CURRTHREADID;

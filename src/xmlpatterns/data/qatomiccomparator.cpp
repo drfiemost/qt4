@@ -48,12 +48,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AtomicComparator::AtomicComparator()
-{
-}
+= default;
 
 AtomicComparator::~AtomicComparator()
-{
-}
+= default;
 
 AtomicComparator::ComparisonResult
 AtomicComparator::compare(const Item &,

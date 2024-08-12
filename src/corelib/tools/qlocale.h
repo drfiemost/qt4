@@ -71,7 +71,7 @@ public:
 
     struct CurrencyToStringArgument
     {
-        CurrencyToStringArgument() { }
+        CurrencyToStringArgument() = default;
         CurrencyToStringArgument(const QVariant &v, const QString &s)
             : value(v), symbol(s) { }
         QVariant value;

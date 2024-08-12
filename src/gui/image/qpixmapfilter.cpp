@@ -139,8 +139,7 @@ QPixmapFilter::QPixmapFilter(QPixmapFilterPrivate&d, QPixmapFilter::FilterType t
     \internal
 */
 QPixmapFilter::~QPixmapFilter()
-{
-}
+= default;
 
 /*!
     Returns the type of the filter. All standard pixmap filter classes
@@ -242,8 +241,7 @@ QPixmapConvolutionFilter::QPixmapConvolutionFilter(QObject *parent)
     \internal
 */
 QPixmapConvolutionFilter::~QPixmapConvolutionFilter()
-{
-}
+= default;
 
 /*!
      Sets convolution kernel with the given number of \a rows and \a columns.
@@ -535,8 +533,7 @@ QPixmapBlurFilter::QPixmapBlurFilter(QObject *parent)
     \internal
 */
 QPixmapBlurFilter::~QPixmapBlurFilter()
-{
-}
+= default;
 
 /*!
     Sets the radius of the blur filter. Higher radius produces increased blurriness.
@@ -1218,8 +1215,7 @@ QPixmapDropShadowFilter::QPixmapDropShadowFilter(QObject *parent)
     \internal
 */
 QPixmapDropShadowFilter::~QPixmapDropShadowFilter()
-{
-}
+= default;
 
 /*!
     Returns the radius in pixels of the blur on the drop shadow.

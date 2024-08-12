@@ -62,12 +62,10 @@ public:
 };
 
 QScriptDebuggerCodeViewPrivate::QScriptDebuggerCodeViewPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCodeViewPrivate::~QScriptDebuggerCodeViewPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCodeView::QScriptDebuggerCodeView(QWidget *parent)
     : QScriptDebuggerCodeViewInterface(*new QScriptDebuggerCodeViewPrivate, parent, nullptr)
@@ -86,8 +84,7 @@ QScriptDebuggerCodeView::QScriptDebuggerCodeView(QWidget *parent)
 }
 
 QScriptDebuggerCodeView::~QScriptDebuggerCodeView()
-{
-}
+= default;
 
 QString QScriptDebuggerCodeView::text() const
 {

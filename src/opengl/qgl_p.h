@@ -175,7 +175,7 @@ public:
         isGLWidget = 1;
     }
 
-    ~QGLWidgetPrivate() override {}
+    ~QGLWidgetPrivate() override = default;
 
     void init(QGLContext *context, const QGLWidget* shareWidget);
     void initContext(QGLContext *context, const QGLWidget* shareWidget);

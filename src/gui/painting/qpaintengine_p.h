@@ -68,7 +68,7 @@ class QPaintEnginePrivate
 public:
     QPaintEnginePrivate() : pdev(nullptr), q_ptr(nullptr), currentClipWidget(nullptr), hasSystemTransform(0),
                             hasSystemViewport(0) {}
-    virtual ~QPaintEnginePrivate() { }
+    virtual ~QPaintEnginePrivate() = default;
     QPaintDevice *pdev;
     QPaintEngine *q_ptr;
     QRegion systemClip;

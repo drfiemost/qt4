@@ -1049,8 +1049,7 @@ QTableView::QTableView(QTableViewPrivate &dd, QWidget *parent)
   Destroys the table view.
 */
 QTableView::~QTableView()
-{
-}
+= default;
 
 /*!
   \reimp

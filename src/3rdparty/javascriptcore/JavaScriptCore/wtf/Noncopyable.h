@@ -29,19 +29,19 @@
 namespace WTFNoncopyable {
 
     class Noncopyable : public FastAllocBase {
-        Noncopyable(const Noncopyable&);
-        Noncopyable& operator=(const Noncopyable&);
+        Noncopyable(const Noncopyable&) = delete;
+        Noncopyable& operator=(const Noncopyable&) = delete;
     protected:
         Noncopyable() { }
-        ~Noncopyable() { }
+        ~Noncopyable() = default;
     };
 
     class NoncopyableCustomAllocated {
-        NoncopyableCustomAllocated(const NoncopyableCustomAllocated&);
-        NoncopyableCustomAllocated& operator=(const NoncopyableCustomAllocated&);
+        NoncopyableCustomAllocated(const NoncopyableCustomAllocated&) = delete;
+        NoncopyableCustomAllocated& operator=(const NoncopyableCustomAllocated&) = delete;
     protected:
         NoncopyableCustomAllocated() { }
-        ~NoncopyableCustomAllocated() { }
+        ~NoncopyableCustomAllocated() = default;
     };
 
 } // namespace WTFNoncopyable

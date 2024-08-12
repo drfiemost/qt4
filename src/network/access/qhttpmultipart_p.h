@@ -67,8 +67,7 @@ public:
     {
     }
     ~QHttpPartPrivate()
-    {
-    }
+    = default;
 
 
     QHttpPartPrivate(const QHttpPartPrivate &other)
@@ -122,8 +121,7 @@ public:
             QIODevice(), multiPart(parentMultiPart), readPointer(0), deviceSize(-1) {
     }
 
-    ~QHttpMultiPartIODevice() override {
-    }
+    ~QHttpMultiPartIODevice() override = default;
 
     bool atEnd() const override {
         return readPointer == size();

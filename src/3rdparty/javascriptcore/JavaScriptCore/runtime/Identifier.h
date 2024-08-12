@@ -32,7 +32,7 @@ namespace JSC {
     class Identifier {
         friend class Structure;
     public:
-        Identifier() { }
+        Identifier() = default;
 
         Identifier(ExecState* exec, const char* s) : _ustring(add(exec, s)) { } // Only to be used with string literals.
         Identifier(ExecState* exec, const UChar* s, int length) : _ustring(add(exec, s, length)) { }

@@ -45,16 +45,13 @@
 QT_BEGIN_NAMESPACE
 
 QScriptErrorLogWidgetInterfacePrivate::QScriptErrorLogWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptErrorLogWidgetInterfacePrivate::~QScriptErrorLogWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptErrorLogWidgetInterface::~QScriptErrorLogWidgetInterface()
-{
-}
+= default;
 
 QScriptErrorLogWidgetInterface::QScriptErrorLogWidgetInterface(
     QScriptErrorLogWidgetInterfacePrivate &dd,

@@ -166,8 +166,8 @@ inline void QGraphicsSceneIndexPrivate::items_helper(const QRectF &rect, QGraphi
 class QGraphicsSceneIndexIntersector
 {
 public:
-    QGraphicsSceneIndexIntersector() { }
-    virtual ~QGraphicsSceneIndexIntersector() { }
+    QGraphicsSceneIndexIntersector() = default;
+    virtual ~QGraphicsSceneIndexIntersector() = default;
     virtual bool intersect(const QGraphicsItem *item, const QRectF &exposeRect, Qt::ItemSelectionMode mode,
                            const QTransform &deviceTransform) const = 0;
 };

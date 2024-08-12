@@ -84,12 +84,10 @@ namespace QPatternist
          * use the Q_DISABLE_COPY macro.
          */
         inline ExpressionFactory()
-        {
-        }
+        = default;
 
         virtual ~ExpressionFactory()
-        {
-        }
+        = default;
 
         enum CompilationStage
         {

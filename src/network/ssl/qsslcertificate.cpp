@@ -165,26 +165,21 @@ QSslCertificate::QSslCertificate(const QByteArray &data, QSsl::EncodingFormat fo
 /*!
     Constructs an identical copy of \a other.
 */
-QSslCertificate::QSslCertificate(const QSslCertificate &other) : d(other.d)
-{
-}
+QSslCertificate::QSslCertificate(const QSslCertificate &other)  
+= default;
 
 /*!
     Destroys the QSslCertificate.
 */
 QSslCertificate::~QSslCertificate()
-{
-}
+= default;
 
 /*!
     Copies the contents of \a other into this certificate, making the two
     certificates identical.
 */
 QSslCertificate &QSslCertificate::operator=(const QSslCertificate &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this certificate is the same as \a other; otherwise

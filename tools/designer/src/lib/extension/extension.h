@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
 class QAbstractExtensionFactory
 {
 public:
-    virtual ~QAbstractExtensionFactory() {}
+    virtual ~QAbstractExtensionFactory() = default;
 
     virtual QObject *extension(QObject *object, const QString &iid) const = 0;
 };
@@ -63,7 +63,7 @@ Q_DECLARE_INTERFACE(QAbstractExtensionFactory, "com.trolltech.Qt.QAbstractExtens
 class QAbstractExtensionManager
 {
 public:
-    virtual ~QAbstractExtensionManager() {}
+    virtual ~QAbstractExtensionManager() = default;
 
     virtual void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid) = 0;
     virtual void unregisterExtensions(QAbstractExtensionFactory *factory, const QString &iid) = 0;

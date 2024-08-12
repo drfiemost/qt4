@@ -66,7 +66,7 @@ struct Section
     NodeList reimpMembers;
     QList<QPair<ClassNode *, int> > inherited;
 
-    Section() { }
+    Section() = default;
     Section(const QString& name0, 
             const QString& divClass0,
             const QString& singularMember0, 

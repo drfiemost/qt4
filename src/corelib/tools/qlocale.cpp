@@ -833,8 +833,7 @@ QLocale::QLocale(const QLocale &other)
 */
 
 QLocale::~QLocale()
-{
-}
+= default;
 
 /*!
     Assigns \a other to this QLocale object and returns a reference
@@ -842,10 +841,7 @@ QLocale::~QLocale()
 */
 
 QLocale &QLocale::operator=(const QLocale &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 bool QLocale::operator==(const QLocale &other) const
 {

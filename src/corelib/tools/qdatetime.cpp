@@ -2266,16 +2266,14 @@ QDateTimePrivate::QDateTimePrivate(const QDate &toDate, const QTime &toTime, Qt:
 */
 
 QDateTime::QDateTime(const QDateTime &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Destroys the datetime.
 */
 QDateTime::~QDateTime()
-{
-}
+= default;
 
 /*!
     Makes a copy of the \a other datetime and returns a reference to the
@@ -2283,10 +2281,7 @@ QDateTime::~QDateTime()
 */
 
 QDateTime &QDateTime::operator=(const QDateTime &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     \fn void QDateTime::swap(QDateTime &other)

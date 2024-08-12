@@ -125,8 +125,7 @@ QIconvCodec::QIconvCodec()
 }
 
 QIconvCodec::~QIconvCodec()
-{
-}
+= default;
 
 QIconvCodec::IconvState::IconvState(iconv_t x)
     : buffer(array), bufferLen(sizeof array), cd(x)

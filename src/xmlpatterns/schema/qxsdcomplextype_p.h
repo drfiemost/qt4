@@ -236,7 +236,7 @@ namespace QPatternist
             /**
              * Destroys the complex type object.
              */
-            ~XsdComplexType() override {};
+            ~XsdComplexType() override = default;
 
             /**
              * Returns the display name of the complex type.

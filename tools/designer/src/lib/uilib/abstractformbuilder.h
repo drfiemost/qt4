@@ -272,8 +272,8 @@ private:
 //
     static Qt::ToolBarArea toolbarAreaFromDOMAttributes(const DomPropertyHash &attributeMap);
 
-    QAbstractFormBuilder(const QAbstractFormBuilder &other);
-    void operator = (const QAbstractFormBuilder &other);
+    QAbstractFormBuilder(const QAbstractFormBuilder &other) = delete;
+    void operator = (const QAbstractFormBuilder &other) = delete;
 
     friend QDESIGNER_UILIB_EXPORT DomProperty *variantToDomProperty(QAbstractFormBuilder *abstractFormBuilder, const QMetaObject *meta, const QString &propertyName, const QVariant &value);
     friend QDESIGNER_UILIB_EXPORT QVariant domPropertyToVariant(QAbstractFormBuilder *abstractFormBuilder,const QMetaObject *meta, const DomProperty *property);

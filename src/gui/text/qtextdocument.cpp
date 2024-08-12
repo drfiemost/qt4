@@ -326,8 +326,7 @@ QTextDocument::QTextDocument(QTextDocumentPrivate &dd, QObject *parent)
     Destroys the document.
 */
 QTextDocument::~QTextDocument()
-{
-}
+= default;
 
 
 /*!

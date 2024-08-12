@@ -906,7 +906,7 @@ template <class Key, class T>
 class QMultiHash : public QHash<Key, T>
 {
 public:
-    QMultiHash() {}
+    QMultiHash() = default;
     QMultiHash(const QHash<Key, T> &other) : QHash<Key, T>(other) {}
     inline void swap(QMultiHash<Key, T> &other) { QHash<Key, T>::swap(other); } // prevent QMultiHash<->QHash swaps
 

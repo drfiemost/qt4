@@ -564,9 +564,7 @@ QtGroupPropertyManager::QtGroupPropertyManager(QObject *parent)
     Destroys this manager, and all the properties it has created.
 */
 QtGroupPropertyManager::~QtGroupPropertyManager()
-{
-
-}
+= default;
 
 /*!
     \reimp
@@ -2271,8 +2269,7 @@ public:
 };
 
 QtLocalePropertyManagerPrivate::QtLocalePropertyManagerPrivate()
-{
-}
+= default;
 
 void QtLocalePropertyManagerPrivate::slotEnumChanged(QtProperty *property, int value)
 {
@@ -5249,8 +5246,7 @@ public:
 };
 
 QtSizePolicyPropertyManagerPrivate::QtSizePolicyPropertyManagerPrivate()
-{
-}
+= default;
 
 void QtSizePolicyPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
 {

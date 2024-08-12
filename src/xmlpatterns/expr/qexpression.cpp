@@ -56,8 +56,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 Expression::~Expression()
-{
-}
+= default;
 
 StaticContext::Ptr Expression::finalizeStaticContext(const StaticContext::Ptr &context) const
 {

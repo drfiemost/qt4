@@ -157,8 +157,7 @@ QShortcutMap::QShortcutMap()
     QShortcutMap destructor.
 */
 QShortcutMap::~QShortcutMap()
-{
-}
+= default;
 
 /*! \internal
     Adds a shortcut to the global map.

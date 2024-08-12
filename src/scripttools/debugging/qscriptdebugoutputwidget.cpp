@@ -89,12 +89,10 @@ public:
 };
 
 QScriptDebugOutputWidgetPrivate::QScriptDebugOutputWidgetPrivate()
-{
-}
+= default;
 
 QScriptDebugOutputWidgetPrivate::~QScriptDebugOutputWidgetPrivate()
-{
-}
+= default;
 
 QScriptDebugOutputWidget::QScriptDebugOutputWidget(QWidget *parent)
     : QScriptDebugOutputWidgetInterface(*new QScriptDebugOutputWidgetPrivate, parent, nullptr)
@@ -113,8 +111,7 @@ QScriptDebugOutputWidget::QScriptDebugOutputWidget(QWidget *parent)
 }
 
 QScriptDebugOutputWidget::~QScriptDebugOutputWidget()
-{
-}
+= default;
 
 void QScriptDebugOutputWidget::message(
     QtMsgType type, const QString &text, const QString &fileName,

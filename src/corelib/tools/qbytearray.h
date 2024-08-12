@@ -395,7 +395,7 @@ public:
     inline DataPtr &data_ptr() { return d; }
 };
 
-inline QByteArray::QByteArray(): d(Data::sharedNull()) { }
+inline QByteArray::QByteArray(): d(Data::sharedNull()) {}
 inline QByteArray::~QByteArray() { if (!d->ref.deref()) Data::deallocate(d); }
 inline int QByteArray::size() const
 { return d->size; }

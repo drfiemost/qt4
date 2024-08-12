@@ -53,8 +53,7 @@
 QT_BEGIN_NAMESPACE
 
 QPanGestureRecognizer::QPanGestureRecognizer()
-{
-}
+= default;
 
 QGesture *QPanGestureRecognizer::create(QObject *target)
 {
@@ -150,8 +149,7 @@ void QPanGestureRecognizer::reset(QGesture *state)
 //
 
 QPinchGestureRecognizer::QPinchGestureRecognizer()
-{
-}
+= default;
 
 QGesture *QPinchGestureRecognizer::create(QObject *target)
 {
@@ -279,8 +277,7 @@ void QPinchGestureRecognizer::reset(QGesture *state)
 //
 
 QSwipeGestureRecognizer::QSwipeGestureRecognizer()
-{
-}
+= default;
 
 QGesture *QSwipeGestureRecognizer::create(QObject *target)
 {
@@ -417,8 +414,7 @@ void QSwipeGestureRecognizer::reset(QGesture *state)
 //
 
 QTapGestureRecognizer::QTapGestureRecognizer()
-{
-}
+= default;
 
 QGesture *QTapGestureRecognizer::create(QObject *target)
 {
@@ -488,8 +484,7 @@ void QTapGestureRecognizer::reset(QGesture *state)
 //
 
 QTapAndHoldGestureRecognizer::QTapAndHoldGestureRecognizer()
-{
-}
+= default;
 
 QGesture *QTapAndHoldGestureRecognizer::create(QObject *target)
 {

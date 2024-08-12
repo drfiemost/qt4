@@ -333,8 +333,7 @@ MorphWidgetCommand::MorphWidgetCommand(QDesignerFormWindowInterface *formWindow)
 }
 
 MorphWidgetCommand::~MorphWidgetCommand()
-{
-}
+= default;
 
 bool MorphWidgetCommand::init(QWidget *widget, const QString &newClassName)
 {

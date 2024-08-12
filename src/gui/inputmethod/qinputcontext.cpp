@@ -152,8 +152,7 @@ QInputContext::QInputContext(QObject* parent)
     Destroys the input context.
 */
 QInputContext::~QInputContext()
-{
-}
+= default;
 
 /*!
     Returns the widget that has an input focus for this input

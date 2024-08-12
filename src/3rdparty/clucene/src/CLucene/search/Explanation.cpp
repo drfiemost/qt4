@@ -39,8 +39,7 @@ void Explanation::set(const Explanation& copy){
     }
 }
 
-Explanation::~Explanation(){
-}
+Explanation::~Explanation()= default;
 
 void Explanation::setDescription(const TCHAR* description) {
    _tcsncpy(this->description,description,LUCENE_SEARCH_EXPLANATION_DESC_LEN);

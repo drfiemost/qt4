@@ -351,8 +351,7 @@ QDataWidgetMapper::QDataWidgetMapper(QObject *parent)
     Destroys the object.
  */
 QDataWidgetMapper::~QDataWidgetMapper()
-{
-}
+= default;
 
 /*!
      Sets the current model to \a model. If another model was set,

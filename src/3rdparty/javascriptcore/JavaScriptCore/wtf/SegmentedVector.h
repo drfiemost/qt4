@@ -41,7 +41,7 @@ namespace WTF {
     public:
         typedef SegmentedVectorIterator<T, SegmentSize> Iterator;
 
-        ~SegmentedVectorIterator() { }
+        ~SegmentedVectorIterator() = default;
 
         T& operator*() const { return m_vector.m_segments.at(m_segment)->at(m_index); }
         T* operator->() const { return &m_vector.m_segments.at(m_segment)->at(m_index); }

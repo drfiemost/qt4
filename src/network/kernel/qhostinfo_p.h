@@ -168,7 +168,7 @@ class QAbstractHostInfoLookupManager : public QObject
     Q_OBJECT
 
 public:
-    ~QAbstractHostInfoLookupManager() override {}
+    ~QAbstractHostInfoLookupManager() override = default;
     virtual void clear() = 0;
 
     QHostInfoCache cache;

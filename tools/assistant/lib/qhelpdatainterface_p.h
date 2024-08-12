@@ -80,7 +80,7 @@ private:
 };
 
 struct QHELP_EXPORT QHelpDataIndexItem {
-    QHelpDataIndexItem() {}
+    QHelpDataIndexItem() = default;
     QHelpDataIndexItem(const QString &n, const QString &id, const QString &r)
         : name(n), identifier(id), reference(r) {}
 
@@ -137,8 +137,8 @@ struct QHELP_EXPORT QHelpDataCustomFilter {
 class QHELP_EXPORT QHelpDataInterface
 {
 public:
-    QHelpDataInterface() {}
-    virtual ~QHelpDataInterface() {}
+    QHelpDataInterface() = default;
+    virtual ~QHelpDataInterface() = default;
 
     virtual QString namespaceName() const = 0;
     virtual QString virtualFolder() const = 0;

@@ -48,8 +48,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 FunctionFactory::~FunctionFactory()
-{
-}
+= default;
 
 bool FunctionFactory::isAvailable(const NamePool::Ptr &np,
                                   const QXmlName name, const xsInteger arity)

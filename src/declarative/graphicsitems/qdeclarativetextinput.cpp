@@ -85,8 +85,7 @@ QDeclarativeTextInput::QDeclarativeTextInput(QDeclarativeItem* parent)
 }
 
 QDeclarativeTextInput::~QDeclarativeTextInput()
-{
-}
+= default;
 
 /*!
     \qmlproperty string TextInput::text

@@ -91,8 +91,7 @@ QDeclarativeListModelWorkerAgent::QDeclarativeListModelWorkerAgent(QDeclarativeL
 }
 
 QDeclarativeListModelWorkerAgent::~QDeclarativeListModelWorkerAgent()
-{
-}
+= default;
 
 void QDeclarativeListModelWorkerAgent::setScriptEngine(QScriptEngine *eng)
 {

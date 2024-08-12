@@ -1479,12 +1479,12 @@ void QTextDocumentPrivate::scan_frames(int pos, int charsRemoved, int charsAdded
 
     for (auto it : *this) {
         // QTextFormat fmt = formats.format(it->format);
-        QTextFrame *frame = qobject_cast<QTextFrame *>(objectForFormat(it.format));
+        QTextFrame *frame = qobject_cast<QTextFrame *>(objectForFormat(it->format));
         if (!frame)
             continue;
 
         Q_ASSERT(it.size() == 1);
-        QChar ch = text.at(it.stringPosition);
+        QChar ch = text.at(it->stringPosition);
 
         if (ch == QTextBeginningOfFrame) {
             if (f != frame) {

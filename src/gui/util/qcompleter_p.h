@@ -145,7 +145,7 @@ public:
     typedef QMap<QModelIndex, CacheItem> Cache;
 
     QCompletionEngine(QCompleterPrivate *c) : c(c), curRow(-1), cost(0) { }
-    virtual ~QCompletionEngine() { }
+    virtual ~QCompletionEngine() = default;
 
     void filter(const QStringList &parts);
 

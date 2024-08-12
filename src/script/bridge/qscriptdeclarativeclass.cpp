@@ -421,8 +421,7 @@ QScriptContext * QScriptDeclarativeClass::pushCleanContext(QScriptEngine *engine
 }
 
 QScriptDeclarativeClass::~QScriptDeclarativeClass()
-{
-}
+= default;
 
 QScriptEngine *QScriptDeclarativeClass::engine() const
 {

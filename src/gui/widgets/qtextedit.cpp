@@ -606,8 +606,7 @@ QTextEdit::QTextEdit(const QString &text, QWidget *parent)
     Destructor.
 */
 QTextEdit::~QTextEdit()
-{
-}
+= default;
 
 /*!
     Returns the point size of the font of the current format.

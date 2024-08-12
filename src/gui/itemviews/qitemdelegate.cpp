@@ -322,8 +322,7 @@ QItemDelegate::QItemDelegate(QObject *parent)
 */
 
 QItemDelegate::~QItemDelegate()
-{
-}
+= default;
 
 /*!
   \property QItemDelegate::clipping

@@ -279,7 +279,7 @@ class QDeclarativeListViewAttached : public QObject
 public:
     QDeclarativeListViewAttached(QObject *parent)
         : QObject(parent), m_view(nullptr), m_isCurrent(false), m_delayRemove(false) {}
-    ~QDeclarativeListViewAttached() override {}
+    ~QDeclarativeListViewAttached() override = default;
 
     Q_PROPERTY(QDeclarativeListView *view READ view NOTIFY viewChanged)
     QDeclarativeListView *view() { return m_view; }

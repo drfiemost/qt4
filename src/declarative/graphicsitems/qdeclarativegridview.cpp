@@ -70,7 +70,7 @@ public:
         if (attached)
             attached->setView(view);
     }
-    ~FxGridItem() {}
+    ~FxGridItem() = default;
 
     qreal rowPos() const {
         qreal rowPos = 0;

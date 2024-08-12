@@ -153,8 +153,7 @@ QDeclarativeGestureArea::QDeclarativeGestureArea(QDeclarativeItem *parent) :
 }
 
 QDeclarativeGestureArea::~QDeclarativeGestureArea()
-{
-}
+= default;
 
 QByteArray
 QDeclarativeGestureAreaParser::compile(const QList<QDeclarativeCustomParserProperty> &props)

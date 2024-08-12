@@ -59,8 +59,7 @@ QDesignerDockWidget::QDesignerDockWidget(QWidget *parent)
 }
 
 QDesignerDockWidget::~QDesignerDockWidget()
-{
-}
+= default;
 
 bool QDesignerDockWidget::docked() const
 {

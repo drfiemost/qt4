@@ -66,8 +66,7 @@ namespace QPatternist
         typedef ProjectedExpression * Ptr;
         typedef QVector<ProjectedExpression::Ptr> Vector;
         virtual ~ProjectedExpression()
-        {
-        }
+        = default;
 
         enum Action
         {
@@ -92,8 +91,7 @@ namespace QPatternist
     public:
         typedef ProjectedNodeTest * Ptr;
         virtual ~ProjectedNodeTest()
-        {
-        }
+        = default;
 
         virtual bool isMatch(const QXmlNodeModelIndex::NodeKind kind) const
         {

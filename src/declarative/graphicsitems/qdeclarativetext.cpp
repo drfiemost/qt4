@@ -177,8 +177,7 @@ void QTextDocumentWithImageResources::setText(const QString &text)
 QSet<QUrl> QTextDocumentWithImageResources::errors;
 
 QDeclarativeTextPrivate::~QDeclarativeTextPrivate()
-{
-}
+= default;
 
 qreal QDeclarativeTextPrivate::implicitWidth() const
 {
@@ -712,8 +711,7 @@ QDeclarativeText::QDeclarativeText(QDeclarativeItem *parent)
 }
 
 QDeclarativeText::~QDeclarativeText()
-{
-}
+= default;
 
 /*!
   \qmlproperty bool Text::clip

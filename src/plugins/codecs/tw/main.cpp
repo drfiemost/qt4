@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 class TWTextCodecs : public QTextCodecPlugin
 {
 public:
-    TWTextCodecs() {}
+    TWTextCodecs() = default;
 
     QList<QByteArray> names() const override;
     QList<QByteArray> aliases() const override;

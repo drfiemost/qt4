@@ -82,8 +82,7 @@ public:
     }
 
     ~QDeclarativeTextInputPrivate() override
-    {
-    }
+    = default;
 
     int xToPos(int x, QTextLine::CursorPosition betweenOrOn = QTextLine::CursorBetweenCharacters) const
     {

@@ -252,8 +252,7 @@ QFileSystemModel::QFileSystemModel(QFileSystemModelPrivate &dd, QObject *parent)
   Destroys this file system model.
 */
 QFileSystemModel::~QFileSystemModel()
-{
-}
+= default;
 
 /*!
     \reimp

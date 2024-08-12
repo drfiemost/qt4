@@ -695,8 +695,7 @@ void DemoteFromCustomWidgetCommand::undo()
 
 // ----------  CursorSelectionState
 CursorSelectionState::CursorSelectionState()
-{
-}
+= default;
 
 void CursorSelectionState::save(const QDesignerFormWindowInterface *formWindow)
 {
@@ -984,8 +983,7 @@ ToolBoxCommand::ToolBoxCommand(QDesignerFormWindowInterface *formWindow)  :
 }
 
 ToolBoxCommand::~ToolBoxCommand()
-{
-}
+= default;
 
 void ToolBoxCommand::init(QToolBox *toolBox)
 {
@@ -1033,8 +1031,7 @@ MoveToolBoxPageCommand::MoveToolBoxPageCommand(QDesignerFormWindowInterface *for
 }
 
 MoveToolBoxPageCommand::~MoveToolBoxPageCommand()
-{
-}
+= default;
 
 void MoveToolBoxPageCommand::init(QToolBox *toolBox, QWidget *page, int newIndex)
 {
@@ -1067,8 +1064,7 @@ DeleteToolBoxPageCommand::DeleteToolBoxPageCommand(QDesignerFormWindowInterface 
 }
 
 DeleteToolBoxPageCommand::~DeleteToolBoxPageCommand()
-{
-}
+= default;
 
 void DeleteToolBoxPageCommand::init(QToolBox *toolBox)
 {
@@ -1095,8 +1091,7 @@ AddToolBoxPageCommand::AddToolBoxPageCommand(QDesignerFormWindowInterface *formW
 }
 
 AddToolBoxPageCommand::~AddToolBoxPageCommand()
-{
-}
+= default;
 
 void AddToolBoxPageCommand::init(QToolBox *toolBox)
 {
@@ -1142,8 +1137,7 @@ TabWidgetCommand::TabWidgetCommand(QDesignerFormWindowInterface *formWindow) :
 }
 
 TabWidgetCommand::~TabWidgetCommand()
-{
-}
+= default;
 
 void TabWidgetCommand::init(QTabWidget *tabWidget)
 {
@@ -1190,8 +1184,7 @@ DeleteTabPageCommand::DeleteTabPageCommand(QDesignerFormWindowInterface *formWin
 }
 
 DeleteTabPageCommand::~DeleteTabPageCommand()
-{
-}
+= default;
 
 void DeleteTabPageCommand::init(QTabWidget *tabWidget)
 {
@@ -1218,8 +1211,7 @@ AddTabPageCommand::AddTabPageCommand(QDesignerFormWindowInterface *formWindow)
 }
 
 AddTabPageCommand::~AddTabPageCommand()
-{
-}
+= default;
 
 void AddTabPageCommand::init(QTabWidget *tabWidget)
 {
@@ -1266,8 +1258,7 @@ MoveTabPageCommand::MoveTabPageCommand(QDesignerFormWindowInterface *formWindow)
 }
 
 MoveTabPageCommand::~MoveTabPageCommand()
-{
-}
+= default;
 
 void MoveTabPageCommand::init(QTabWidget *tabWidget, QWidget *page,
                       const QIcon &icon, const QString &label,
@@ -1305,8 +1296,7 @@ StackedWidgetCommand::StackedWidgetCommand(QDesignerFormWindowInterface *formWin
 }
 
 StackedWidgetCommand::~StackedWidgetCommand()
-{
-}
+= default;
 
 void StackedWidgetCommand::init(QStackedWidget *stackedWidget)
 {
@@ -1346,8 +1336,7 @@ MoveStackedWidgetCommand::MoveStackedWidgetCommand(QDesignerFormWindowInterface 
 }
 
 MoveStackedWidgetCommand::~MoveStackedWidgetCommand()
-{
-}
+= default;
 
 void MoveStackedWidgetCommand::init(QStackedWidget *stackedWidget, QWidget *page, int newIndex)
 {
@@ -1378,8 +1367,7 @@ DeleteStackedWidgetPageCommand::DeleteStackedWidgetPageCommand(QDesignerFormWind
 }
 
 DeleteStackedWidgetPageCommand::~DeleteStackedWidgetPageCommand()
-{
-}
+= default;
 
 void DeleteStackedWidgetPageCommand::init(QStackedWidget *stackedWidget)
 {
@@ -1406,8 +1394,7 @@ AddStackedWidgetPageCommand::AddStackedWidgetPageCommand(QDesignerFormWindowInte
 }
 
 AddStackedWidgetPageCommand::~AddStackedWidgetPageCommand()
-{
-}
+= default;
 
 void AddStackedWidgetPageCommand::init(QStackedWidget *stackedWidget)
 {
@@ -1700,8 +1687,7 @@ DockWidgetCommand::DockWidgetCommand(const QString &description, QDesignerFormWi
 }
 
 DockWidgetCommand::~DockWidgetCommand()
-{
-}
+= default;
 
 void DockWidgetCommand::init(QDockWidget *dockWidget)
 {
@@ -1986,8 +1972,7 @@ ContainerWidgetCommand::ContainerWidgetCommand(QDesignerFormWindowInterface *for
 }
 
 ContainerWidgetCommand::~ContainerWidgetCommand()
-{
-}
+= default;
 
 QDesignerContainerExtension *ContainerWidgetCommand::containerExtension() const
 {
@@ -2041,8 +2026,7 @@ DeleteContainerWidgetPageCommand::DeleteContainerWidgetPageCommand(QDesignerForm
 }
 
 DeleteContainerWidgetPageCommand::~DeleteContainerWidgetPageCommand()
-{
-}
+= default;
 
 void DeleteContainerWidgetPageCommand::init(QWidget *containerWidget, ContainerType ct)
 {
@@ -2077,8 +2061,7 @@ AddContainerWidgetPageCommand::AddContainerWidgetPageCommand(QDesignerFormWindow
 }
 
 AddContainerWidgetPageCommand::~AddContainerWidgetPageCommand()
-{
-}
+= default;
 
 void AddContainerWidgetPageCommand::init(QWidget *containerWidget, ContainerType ct, InsertionMode mode)
 {
@@ -2130,8 +2113,7 @@ ChangeCurrentPageCommand::ChangeCurrentPageCommand(QDesignerFormWindowInterface 
 }
 
 ChangeCurrentPageCommand::~ChangeCurrentPageCommand()
-{
-}
+= default;
 
 QDesignerContainerExtension *ChangeCurrentPageCommand::containerExtension() const
 {

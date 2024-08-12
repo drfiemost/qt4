@@ -223,8 +223,7 @@ QAbstractXmlReceiver::QAbstractXmlReceiver() : d_ptr(nullptr)
   Destroys the xml receiver.
  */
 QAbstractXmlReceiver::~QAbstractXmlReceiver()
-{
-}
+= default;
 
 /*!
   \fn void QAbstractXmlReceiver::startElement(const QXmlName &name)

@@ -129,8 +129,7 @@ public:
 };
 
 QBoxLayoutPrivate::~QBoxLayoutPrivate()
-{
-}
+= default;
 
 static inline bool horz(QBoxLayout::Direction dir)
 {
@@ -1273,8 +1272,7 @@ QHBoxLayout::QHBoxLayout()
     The layout's widgets aren't destroyed.
 */
 QHBoxLayout::~QHBoxLayout()
-{
-}
+= default;
 
 /*!
     \class QVBoxLayout
@@ -1331,8 +1329,7 @@ QVBoxLayout::QVBoxLayout()
     The layout's widgets aren't destroyed.
 */
 QVBoxLayout::~QVBoxLayout()
-{
-}
+= default;
 
 /*!
     \fn QWidget *QLayout::mainWidget() const

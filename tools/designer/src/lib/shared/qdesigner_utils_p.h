@@ -97,7 +97,7 @@ public:
     typedef QMap<QString, IntType> KeyToValueMap;
 
     MetaEnum(const QString &name, const QString &scope, const QString &separator);
-    MetaEnum() {}
+    MetaEnum() = default;
     void addKey(IntType value, const QString &name);
 
     QString valueToKey(IntType value, bool *ok = nullptr) const;
@@ -174,7 +174,7 @@ class QDESIGNER_SHARED_EXPORT DesignerMetaEnum : public MetaEnum<int>
 {
 public:
     DesignerMetaEnum(const QString &name, const QString &scope, const QString &separator);
-    DesignerMetaEnum() {}
+    DesignerMetaEnum() = default;
 
     enum SerializationMode { FullyQualified, NameOnly };
     QString toString(int value, SerializationMode sm, bool *ok = nullptr) const;
@@ -194,7 +194,7 @@ class QDESIGNER_SHARED_EXPORT DesignerMetaFlags : public MetaEnum<uint>
 {
 public:
     DesignerMetaFlags(const QString &name, const QString &scope, const QString &separator);
-    DesignerMetaFlags() {}
+    DesignerMetaFlags() = default;
 
     enum SerializationMode { FullyQualified, NameOnly };
     QString toString(int value, SerializationMode sm) const;

@@ -102,7 +102,7 @@ class QDESIGNER_SHARED_EXPORT Connection : public CETypes
 public:
     explicit Connection(ConnectionEdit *edit);
     explicit Connection(ConnectionEdit *edit, QObject *source, QObject *target);
-    virtual ~Connection() {}
+    virtual ~Connection() = default;
 
     QObject *object(EndPoint::Type type) const
     {

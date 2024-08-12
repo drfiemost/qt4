@@ -45,16 +45,13 @@
 QT_BEGIN_NAMESPACE
 
 QScriptBreakpointsWidgetInterfacePrivate::QScriptBreakpointsWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptBreakpointsWidgetInterfacePrivate::~QScriptBreakpointsWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptBreakpointsWidgetInterface::~QScriptBreakpointsWidgetInterface()
-{
-}
+= default;
 
 QScriptBreakpointsWidgetInterface::QScriptBreakpointsWidgetInterface(
     QScriptBreakpointsWidgetInterfacePrivate &dd,

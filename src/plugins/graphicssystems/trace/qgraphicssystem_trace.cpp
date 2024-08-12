@@ -137,8 +137,7 @@ bool QTraceWindowSurface::scroll(const QRegion &, int, int)
 }
 
 QTraceGraphicsSystem::QTraceGraphicsSystem()
-{
-}
+= default;
 
 QPixmapData *QTraceGraphicsSystem::createPixmapData(QPixmapData::PixelType type) const
 {

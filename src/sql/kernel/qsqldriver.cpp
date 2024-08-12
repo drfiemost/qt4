@@ -81,8 +81,7 @@ inline QSqlDriverPrivate::QSqlDriverPrivate()
 }
 
 QSqlDriverPrivate::~QSqlDriverPrivate()
-{
-}
+= default;
 
 /*!
     \class QSqlDriver
@@ -116,8 +115,7 @@ QSqlDriver::QSqlDriver(QObject *parent)
 */
 
 QSqlDriver::~QSqlDriver()
-{
-}
+= default;
 
 /*!
     \since 4.4

@@ -63,8 +63,7 @@ class QAbstractXmlNodeModelPrivate
 {
 public:
     virtual ~QAbstractXmlNodeModelPrivate()
-    {
-    }
+    = default;
 
     virtual QSourceLocation sourceLocation(const QXmlNodeModelIndex &index) const
     {

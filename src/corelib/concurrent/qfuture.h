@@ -73,7 +73,7 @@ public:
         : d(other.d)
     { }
     ~QFuture()
-    { }
+    = default;
 
     inline QFuture &operator=(const QFuture &other);
     bool operator==(const QFuture &other) const { return (d == other.d); }
@@ -115,7 +115,7 @@ public:
         typedef const T *pointer;
         typedef const T &reference;
 
-        inline const_iterator() {}
+        inline const_iterator() = default;
         inline const_iterator(QFuture const * const _future, int _index) : future(_future), index(_index) {}
         inline const_iterator(const const_iterator &o) : future(o.future), index(o.index)  {}
         inline const_iterator &operator=(const const_iterator &o)
@@ -200,10 +200,10 @@ public:
         : d(*p)
     { }
     QFuture(const QFuture &other)
-        : d(other.d)
-    { }
+         
+    = default;
     ~QFuture()
-    { }
+    = default;
 
     QFuture &operator=(const QFuture &other);
     bool operator==(const QFuture &other) const { return (d == other.d); }
@@ -253,10 +253,7 @@ public:
 };
 
 inline QFuture<void> &QFuture<void>::operator=(const QFuture<void> &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 inline QFuture<void> QFutureInterface<void>::future()
 {

@@ -103,8 +103,7 @@ QDeclarativeBind::QDeclarativeBind(QObject *parent)
 }
 
 QDeclarativeBind::~QDeclarativeBind()
-{
-}
+= default;
 
 /*!
     \qmlproperty bool Binding::when

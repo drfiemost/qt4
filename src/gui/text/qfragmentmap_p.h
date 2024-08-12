@@ -798,7 +798,7 @@ public:
     };
 
 
-    QFragmentMap() {}
+    QFragmentMap() = default;
     ~QFragmentMap()
     {
         if (!data.fragments)
@@ -879,8 +879,8 @@ private:
 
     QFragmentMapData<Fragment> data;
 
-    QFragmentMap(const QFragmentMap& m);
-    QFragmentMap& operator= (const QFragmentMap& m);
+    QFragmentMap(const QFragmentMap& m) = delete;
+    QFragmentMap& operator= (const QFragmentMap& m) = delete;
 };
 
 QT_END_NAMESPACE

@@ -46,12 +46,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 XsdDocumentation::XsdDocumentation()
-{
-}
+= default;
 
 XsdDocumentation::~XsdDocumentation()
-{
-}
+= default;
 
 void XsdDocumentation::setSource(const AnyURI::Ptr &source)
 {

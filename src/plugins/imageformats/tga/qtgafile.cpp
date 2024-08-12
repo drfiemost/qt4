@@ -48,13 +48,13 @@
 
 struct TgaReader
 {
-    virtual ~TgaReader() {}
+    virtual ~TgaReader() = default;
     virtual QRgb operator()(QIODevice *s) const = 0;
 };
 
 struct Tga16Reader : public TgaReader
 {
-    ~Tga16Reader() override {}
+    ~Tga16Reader() override = default;
     QRgb operator()(QIODevice *s) const override
     {
         char ch1, ch2;
@@ -195,8 +195,7 @@ QTgaFile::QTgaFile(QIODevice *device)
     Destroy the device, recovering any resources.
 */
 QTgaFile::~QTgaFile()
-{
-}
+= default;
 
 /*!
     \internal

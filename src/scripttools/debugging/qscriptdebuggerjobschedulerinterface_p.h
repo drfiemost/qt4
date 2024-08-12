@@ -62,7 +62,7 @@ class QScriptDebuggerJob;
 class Q_AUTOTEST_EXPORT QScriptDebuggerJobSchedulerInterface
 {
 public:
-    virtual ~QScriptDebuggerJobSchedulerInterface() {}
+    virtual ~QScriptDebuggerJobSchedulerInterface() = default;
 
     virtual int scheduleJob(QScriptDebuggerJob *job) = 0;
     virtual void finishJob(QScriptDebuggerJob *job) = 0;

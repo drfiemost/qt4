@@ -23,8 +23,7 @@ CL_NS_DEF(search)
 		SloppyPhraseScorer(Weight* weight, CL_NS(index)::TermPositions** tps, 
 			int32_t* positions, Similarity* similarity, 
 			int32_t slop, uint8_t* norms);
-		~SloppyPhraseScorer(){
-		}
+		~SloppyPhraseScorer()= default;
 
 	protected:
 		qreal phraseFreq();

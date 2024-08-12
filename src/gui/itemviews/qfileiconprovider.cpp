@@ -165,8 +165,7 @@ QFileIconProvider::QFileIconProvider()
 */
 
 QFileIconProvider::~QFileIconProvider()
-{
-}
+= default;
 
 /*!
   Returns an icon set for the given \a type.

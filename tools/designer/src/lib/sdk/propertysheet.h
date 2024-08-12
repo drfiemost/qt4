@@ -53,7 +53,7 @@ class QVariant;
 class QDesignerPropertySheetExtension
 {
 public:
-    virtual ~QDesignerPropertySheetExtension() {}
+    virtual ~QDesignerPropertySheetExtension() = default;
 
     virtual int count() const = 0;
 

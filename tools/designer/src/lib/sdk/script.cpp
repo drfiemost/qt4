@@ -84,8 +84,7 @@ QT_BEGIN_NAMESPACE
 */
 
 QDesignerScriptExtension::~QDesignerScriptExtension()
-{
-}
+= default;
 
 /*!
     \fn virtual QString QDesignerScriptExtension::script() const

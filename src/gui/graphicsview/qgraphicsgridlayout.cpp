@@ -96,7 +96,7 @@ QT_BEGIN_NAMESPACE
 class QGraphicsGridLayoutPrivate : public QGraphicsLayoutPrivate
 {
 public:
-    QGraphicsGridLayoutPrivate() { }
+    QGraphicsGridLayoutPrivate() = default;
     QLayoutStyleInfo styleInfo() const;
 
     QGridLayoutEngine engine;

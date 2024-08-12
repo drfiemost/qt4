@@ -224,8 +224,7 @@ QDesktopWidget::QDesktopWidget()
 }
 
 QDesktopWidget::~QDesktopWidget()
-{
-}
+= default;
 
 bool QDesktopWidget::isVirtualDesktop() const
 {

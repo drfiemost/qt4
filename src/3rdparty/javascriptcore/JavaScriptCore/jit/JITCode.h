@@ -45,8 +45,7 @@ namespace JSC {
         typedef MacroAssemblerCodePtr CodePtr;
     public:
         JITCode()
-        {
-        }
+        = default;
 
         JITCode(const CodeRef ref)
             : m_ref(ref)

@@ -161,7 +161,7 @@ namespace QPatternist
          * The constructor is protected because this class is not meant to be instantiated,
          * but should only be used via its static const members.
          */
-        BuiltinTypes();
+        BuiltinTypes() = delete;
         Q_DISABLE_COPY(BuiltinTypes)
     };
 }

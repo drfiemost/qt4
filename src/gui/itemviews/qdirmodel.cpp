@@ -265,9 +265,7 @@ QDirModel::QDirModel(QDirModelPrivate &dd, QObject *parent)
 */
 
 QDirModel::~QDirModel()
-{
-
-}
+= default;
 
 /*!
   Returns the model item index for the item in the \a parent with the

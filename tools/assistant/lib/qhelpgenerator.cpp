@@ -85,8 +85,7 @@ QHelpGeneratorPrivate::QHelpGeneratorPrivate()
 }
 
 QHelpGeneratorPrivate::~QHelpGeneratorPrivate()
-{
-}
+= default;
 
 
 

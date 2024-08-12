@@ -221,7 +221,7 @@ struct QtFontStyle
         Key(const QString &styleString);
         Key() : style(QFont::StyleNormal),
                 weight(QFont::Normal), stretch(0) { }
-        Key(const Key &o) : style(o.style), weight(o.weight), stretch(o.stretch) { }
+        Key(const Key &o)  = default;
         uint style : 2;
         signed int  weight : 8;
         signed int stretch : 12;

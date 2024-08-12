@@ -94,7 +94,7 @@ public:
                    SpecialProperty specialProperty,
                    QDesignerPropertySheetExtension *sheet,
                    int index);
-    virtual ~PropertyHelper() {}
+    virtual ~PropertyHelper() = default;
 
     QObject *object() const { return m_object; }
     SpecialProperty specialProperty() const { return m_specialProperty; }

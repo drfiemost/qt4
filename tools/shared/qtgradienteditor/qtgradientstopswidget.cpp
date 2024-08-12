@@ -389,8 +389,7 @@ QtGradientStopsWidget::QtGradientStopsWidget(QWidget *parent)
 }
 
 QtGradientStopsWidget::~QtGradientStopsWidget()
-{
-}
+= default;
 
 QSize QtGradientStopsWidget::sizeHint() const
 {

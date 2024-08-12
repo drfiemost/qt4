@@ -320,7 +320,7 @@ QMatrix PreviewDeviceSkin::skinTransform() const
 // ------------ PreviewConfigurationPrivate
 class PreviewConfigurationData : public QSharedData {
 public:
-    PreviewConfigurationData() {}
+    PreviewConfigurationData() = default;
     explicit PreviewConfigurationData(const QString &style, const QString &applicationStyleSheet, const QString &deviceSkin);
 
     QString m_style;
@@ -467,10 +467,9 @@ PreviewConfiguration::PreviewConfiguration(const QString &sty, const QString &ap
 {
 }
 
-PreviewConfiguration::PreviewConfiguration(const PreviewConfiguration &o) :
-    m_d(o.m_d)
-{
-}
+PreviewConfiguration::PreviewConfiguration(const PreviewConfiguration &o) 
+    
+= default;
 
 PreviewConfiguration &PreviewConfiguration::operator=(const PreviewConfiguration &o)
 {
@@ -479,8 +478,7 @@ PreviewConfiguration &PreviewConfiguration::operator=(const PreviewConfiguration
 }
 
 PreviewConfiguration::~PreviewConfiguration()
-{
-}
+= default;
 
 void PreviewConfiguration::clear()
 {

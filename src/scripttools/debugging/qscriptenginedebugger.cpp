@@ -362,8 +362,7 @@ QScriptEngineDebugger::QScriptEngineDebugger(QObject *parent)
   Destroys this QScriptEngineDebugger.
 */
 QScriptEngineDebugger::~QScriptEngineDebugger()
-{
-}
+= default;
 
 /*!
   Attaches to the given \a engine.

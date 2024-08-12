@@ -82,8 +82,7 @@ QScriptDebuggerCommandPrivate::QScriptDebuggerCommandPrivate()
 }
 
 QScriptDebuggerCommandPrivate::~QScriptDebuggerCommandPrivate()
-{
-}
+= default;
 
 /*!
   Constructs a QScriptDebuggerCommand of type None.
@@ -118,8 +117,7 @@ QScriptDebuggerCommand::QScriptDebuggerCommand(const QScriptDebuggerCommand &oth
   Destroys this QScriptDebuggerCommand.
 */
 QScriptDebuggerCommand::~QScriptDebuggerCommand()
-{
-}
+= default;
 
 /*!
   Assigns the \a other value to this QScriptDebuggerCommand.

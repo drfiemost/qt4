@@ -150,8 +150,7 @@ QNetworkAccessBackend::QNetworkAccessBackend()
 }
 
 QNetworkAccessBackend::~QNetworkAccessBackend()
-{
-}
+= default;
 
 void QNetworkAccessBackend::downstreamReadyWrite()
 {

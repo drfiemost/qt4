@@ -52,8 +52,8 @@ QT_BEGIN_NAMESPACE
 class Q_DECLARATIVE_EXPORT QDeclarativeInspectorInterface
 {
 public:
-    QDeclarativeInspectorInterface() {}
-    virtual ~QDeclarativeInspectorInterface() {}
+    QDeclarativeInspectorInterface() = default;
+    virtual ~QDeclarativeInspectorInterface() = default;
 
     virtual void activate() = 0;
     virtual void deactivate() = 0;

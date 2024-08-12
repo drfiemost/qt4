@@ -47,8 +47,7 @@
 
 template <const QXmlNodeModelIndex::NodeKind kind>
 BuiltinNodeType<kind>::BuiltinNodeType()
-{
-}
+= default;
 
 template <const QXmlNodeModelIndex::NodeKind kind>
 bool BuiltinNodeType<kind>::xdtTypeMatches(const ItemType::Ptr &other) const

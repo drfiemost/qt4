@@ -69,8 +69,7 @@ public:
     }
 
     ~QPolygonClipper()
-    {
-    }
+    = default;
 
     void setBoundingRect(const QRect bounds)
     {

@@ -79,7 +79,7 @@ public:
     QNetworkInterfacePrivate() : index(0), flags(nullptr)
     { }
     ~QNetworkInterfacePrivate()
-    { }
+    = default;
 
     int index;                  // interface index, if know
     QNetworkInterface::InterfaceFlags flags;
@@ -94,8 +94,8 @@ public:
 
 private:
     // disallow copying -- avoid detaching
-    QNetworkInterfacePrivate &operator=(const QNetworkInterfacePrivate &other);
-    QNetworkInterfacePrivate(const QNetworkInterfacePrivate &other);
+    QNetworkInterfacePrivate &operator=(const QNetworkInterfacePrivate &other) = delete;
+    QNetworkInterfacePrivate(const QNetworkInterfacePrivate &other) = delete;
 };
 
 class QNetworkInterfaceManager

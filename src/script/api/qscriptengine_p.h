@@ -137,7 +137,7 @@ struct GlobalClientData : public JSC::JSGlobalData::ClientData
 {
     GlobalClientData(QScriptEnginePrivate *e)
         : engine(e) {}
-    ~GlobalClientData() override {}
+    ~GlobalClientData() override = default;
     void mark(JSC::MarkStack& markStack) override;
 
     QScriptEnginePrivate *engine;

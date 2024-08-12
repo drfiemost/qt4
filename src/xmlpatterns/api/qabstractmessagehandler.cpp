@@ -97,8 +97,7 @@ QAbstractMessageHandler::QAbstractMessageHandler(QObject *parent) : QObject(*new
   Destructs this QAbstractMessageHandler.
  */
 QAbstractMessageHandler::~QAbstractMessageHandler()
-{
-}
+= default;
 
 /*!
   Sends a message to this message handler. \a type is the kind of

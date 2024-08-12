@@ -47,8 +47,7 @@
 QT_BEGIN_NAMESPACE
 
 QLatin1Codec::~QLatin1Codec()
-{
-}
+= default;
 
 QString QLatin1Codec::convertToUnicode(const char *chars, int len, ConverterState *) const
 {
@@ -103,8 +102,7 @@ int QLatin1Codec::mibEnum() const
 
 
 QLatin15Codec::~QLatin15Codec()
-{
-}
+= default;
 
 QString QLatin15Codec::convertToUnicode(const char* chars, int len, ConverterState *) const
 {

@@ -62,7 +62,7 @@ class QString;
 class Q_AUTOTEST_EXPORT QScriptDebuggerConsoleHistorianInterface
 {
 public:
-    virtual ~QScriptDebuggerConsoleHistorianInterface() {}
+    virtual ~QScriptDebuggerConsoleHistorianInterface() = default;
 
     virtual int historyCount() const = 0;
     virtual QString historyAt(int index) const = 0;

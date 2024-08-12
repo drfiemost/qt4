@@ -61,8 +61,7 @@ QDeclarativeViewInspectorPrivate::QDeclarativeViewInspectorPrivate(QDeclarativeV
 }
 
 QDeclarativeViewInspectorPrivate::~QDeclarativeViewInspectorPrivate()
-{
-}
+= default;
 
 QDeclarativeViewInspector::QDeclarativeViewInspector(QDeclarativeView *view,
                                                    QObject *parent) :
@@ -94,8 +93,7 @@ QDeclarativeViewInspector::QDeclarativeViewInspector(QDeclarativeView *view,
 }
 
 QDeclarativeViewInspector::~QDeclarativeViewInspector()
-{
-}
+= default;
 
 void QDeclarativeViewInspector::changeCurrentObjects(const QList<QObject*> &objects)
 {

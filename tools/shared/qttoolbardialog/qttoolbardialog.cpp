@@ -449,8 +449,7 @@ QtFullToolBarManager::QtFullToolBarManager(QObject *parent)
 }
 
 QtFullToolBarManager::~QtFullToolBarManager()
-{
-}
+= default;
 
 void QtFullToolBarManager::setMainWindow(QMainWindow *mainWindow)
 {
@@ -840,8 +839,7 @@ QtToolBarManager::QtToolBarManager(QObject *parent)
     Destroys the toolbar manager.
 */
 QtToolBarManager::~QtToolBarManager()
-{
-}
+= default;
 
 /*!
     Sets the main window upon which the toolbar manager operates, to

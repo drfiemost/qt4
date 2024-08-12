@@ -79,8 +79,7 @@ QAccessiblePlugin::QAccessiblePlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QAccessiblePlugin::~QAccessiblePlugin()
-{
-}
+= default;
 
 /*!
     \fn QStringList QAccessiblePlugin::keys() const

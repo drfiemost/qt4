@@ -46,11 +46,9 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 SchemaComponent::SchemaComponent()
-{
-}
+= default;
 
 SchemaComponent::~SchemaComponent()
-{
-}
+= default;
 
 QT_END_NAMESPACE

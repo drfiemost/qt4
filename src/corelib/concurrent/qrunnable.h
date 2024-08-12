@@ -60,7 +60,7 @@ public:
     virtual void run() = 0;
 
     QRunnable() : ref(0) { }
-    virtual ~QRunnable() { }
+    virtual ~QRunnable() = default;
 
     bool autoDelete() const { return ref != -1; }
     void setAutoDelete(bool _autoDelete) { ref = _autoDelete ? 0 : -1; }

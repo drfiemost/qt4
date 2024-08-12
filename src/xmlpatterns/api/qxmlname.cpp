@@ -408,8 +408,8 @@ QString QXmlName::toClarkName(const QXmlNamePool &namePool) const
   Assigns \a other to \e this.
  */
 QXmlName::QXmlName(const QXmlName &other)
-    : m_qNameCode(other.m_qNameCode)
-{}
+     
+= default;
 
 /*!
  Returns true if \a candidate is an \c NCName. An \c NCName

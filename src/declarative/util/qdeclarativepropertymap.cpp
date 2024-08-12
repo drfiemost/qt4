@@ -150,8 +150,7 @@ QDeclarativePropertyMap::QDeclarativePropertyMap(QObject *parent)
     Destroys the bindable map.
 */
 QDeclarativePropertyMap::~QDeclarativePropertyMap()
-{
-}
+= default;
 
 /*!
     Clears the value (if any) associated with \a key.

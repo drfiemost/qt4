@@ -142,7 +142,7 @@ QPlainTextDocumentLayout::QPlainTextDocumentLayout(QTextDocument *document)
 /*!
   Destructs a plain text document layout.
  */
-QPlainTextDocumentLayout::~QPlainTextDocumentLayout() {}
+QPlainTextDocumentLayout::~QPlainTextDocumentLayout() = default;
 
 
 /*!

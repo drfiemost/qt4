@@ -191,8 +191,7 @@ QByteArray QEucKrCodec::_name()
 
 #ifdef Q_WS_X11
 QFontKsc5601Codec::QFontKsc5601Codec()
-{
-}
+= default;
 
 
 QByteArray QFontKsc5601Codec::_name()

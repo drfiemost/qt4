@@ -42,7 +42,7 @@ public:
         hq(hitQueue),
         nDocs(ndocs),
         totalHits(totalhits) {}
-    ~SimpleTopDocsCollector() {}
+    ~SimpleTopDocsCollector() = default;
 
     void collect(const int32_t doc, const qreal score)
     {
@@ -75,7 +75,7 @@ public:
           totalHits(totalhits)
       {
       }
-      ~SortedTopDocsCollector() {}
+      ~SortedTopDocsCollector() = default;
       
       void collect(const int32_t doc, const qreal score)
       {
@@ -99,7 +99,7 @@ public:
     SimpleFilteredCollector(CL_NS(util)::BitSet* bs, HitCollector* collector)
         : bits(bs),
           results(collector) {}
-      ~SimpleFilteredCollector() {}
+      ~SimpleFilteredCollector() = default;
 
 protected:
     void collect(const int32_t doc, const qreal score)

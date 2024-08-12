@@ -125,7 +125,7 @@ private:
     friend class QFontEngineFT;
     friend class QScopedPointerDeleter<QFreetypeFace>;
     QFreetypeFace() : _lock(QMutex::Recursive) {}
-    ~QFreetypeFace() {}
+    ~QFreetypeFace() = default;
     QAtomicInt ref;
     QMutex _lock;
     QByteArray fontData;

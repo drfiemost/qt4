@@ -125,8 +125,7 @@ QSignalMapper::QSignalMapper(QObject* parent)
     Destroys the QSignalMapper.
 */
 QSignalMapper::~QSignalMapper()
-{
-}
+= default;
 
 /*!
     Adds a mapping so that when map() is signalled from the given \a

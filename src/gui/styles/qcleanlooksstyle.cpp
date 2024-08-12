@@ -622,8 +622,7 @@ QCleanlooksStyle::QCleanlooksStyle(QCleanlooksStylePrivate &dd) : QWindowsStyle(
     Destroys the QCleanlooksStyle object.
 */
 QCleanlooksStyle::~QCleanlooksStyle()
-{
-}
+= default;
 
 /*!
     \fn void QCleanlooksStyle::drawItemText(QPainter *painter, const QRect &rectangle, int alignment, const QPalette &palette,

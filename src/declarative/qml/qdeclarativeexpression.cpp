@@ -90,8 +90,7 @@ QDeclarativeExpressionPrivate::QDeclarativeExpressionPrivate()
 }
 
 QDeclarativeExpressionPrivate::~QDeclarativeExpressionPrivate()
-{
-}
+= default;
 
 void QDeclarativeExpressionPrivate::init(QDeclarativeContextData *ctxt, const QString &expr, 
                                          QObject *me)
@@ -334,8 +333,7 @@ QDeclarativeExpression::QDeclarativeExpression(QDeclarativeContextData *ctxt, QO
     Destroy the QDeclarativeExpression instance.
 */
 QDeclarativeExpression::~QDeclarativeExpression()
-{
-}
+= default;
 
 /*!
     Returns the QDeclarativeEngine this expression is associated with, or 0 if there

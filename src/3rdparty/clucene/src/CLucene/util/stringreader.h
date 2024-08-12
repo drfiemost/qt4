@@ -42,8 +42,8 @@ private:
     int64_t markpt;
     T* data;
     bool dataowner;
-    StringReader(const StringReader<T>&);
-    void operator=(const StringReader<T>&);
+    StringReader(const StringReader<T>&) = delete;
+    void operator=(const StringReader<T>&) = delete;
 public:
     StringReader(const T* value, int32_t length = -1, bool copy = true);
     ~StringReader();

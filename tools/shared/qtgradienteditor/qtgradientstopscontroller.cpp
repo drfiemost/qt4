@@ -669,8 +669,7 @@ void QtGradientStopsController::setUi(Ui::QtGradientEditor *ui)
 }
 
 QtGradientStopsController::~QtGradientStopsController()
-{
-}
+= default;
 
 void QtGradientStopsController::setGradientStops(const QGradientStops &stops)
 {

@@ -82,12 +82,10 @@ static QList<QNetworkInterfacePrivate *> postProcess(QList<QNetworkInterfacePriv
 Q_GLOBAL_STATIC(QNetworkInterfaceManager, manager)
 
 QNetworkInterfaceManager::QNetworkInterfaceManager()
-{
-}
+= default;
 
 QNetworkInterfaceManager::~QNetworkInterfaceManager()
-{
-}
+= default;
 
 QSharedDataPointer<QNetworkInterfacePrivate> QNetworkInterfaceManager::interfaceFromName(const QString &name)
 {
@@ -187,8 +185,7 @@ QNetworkAddressEntry &QNetworkAddressEntry::operator=(const QNetworkAddressEntry
     Destroys this QNetworkAddressEntry object.
 */
 QNetworkAddressEntry::~QNetworkAddressEntry()
-{
-}
+= default;
 
 /*!
     Returns true if this network address entry is the same as \a
@@ -392,27 +389,22 @@ QNetworkInterface::QNetworkInterface()
     Frees the resources associated with the QNetworkInterface object.
 */
 QNetworkInterface::~QNetworkInterface()
-{
-}
+= default;
 
 /*!
     Creates a copy of the QNetworkInterface object contained in \a
     other.
 */
 QNetworkInterface::QNetworkInterface(const QNetworkInterface &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Copies the contents of the QNetworkInterface object contained in \a
     other into this one.
 */
 QNetworkInterface &QNetworkInterface::operator=(const QNetworkInterface &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this QNetworkInterface object contains valid

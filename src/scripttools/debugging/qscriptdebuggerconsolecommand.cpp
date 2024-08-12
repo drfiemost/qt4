@@ -57,12 +57,10 @@ QT_BEGIN_NAMESPACE
 */
 
 QScriptDebuggerConsoleCommandPrivate::QScriptDebuggerConsoleCommandPrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommandPrivate::~QScriptDebuggerConsoleCommandPrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommand::QScriptDebuggerConsoleCommand()
     : d_ptr(new QScriptDebuggerConsoleCommandPrivate)
@@ -71,8 +69,7 @@ QScriptDebuggerConsoleCommand::QScriptDebuggerConsoleCommand()
 }
 
 QScriptDebuggerConsoleCommand::~QScriptDebuggerConsoleCommand()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommand::QScriptDebuggerConsoleCommand(QScriptDebuggerConsoleCommandPrivate &dd)
     : d_ptr(&dd)

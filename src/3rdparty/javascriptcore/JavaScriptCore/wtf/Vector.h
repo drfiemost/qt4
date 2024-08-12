@@ -351,8 +351,7 @@ namespace WTF {
         typedef VectorBufferBase<T> Base;
     public:
         VectorBuffer()
-        {
-        }
+        = default;
 
         VectorBuffer(size_t capacity)
         {

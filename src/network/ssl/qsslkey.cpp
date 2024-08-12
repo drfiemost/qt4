@@ -271,16 +271,14 @@ QSslKey::QSslKey(QIODevice *device, QSsl::KeyAlgorithm algorithm, QSsl::Encoding
 /*!
     Constructs an identical copy of \a other.
 */
-QSslKey::QSslKey(const QSslKey &other) : d(other.d)
-{
-}
+QSslKey::QSslKey(const QSslKey &other)  
+= default;
 
 /*!
     Destroys the QSslKey object.
 */
 QSslKey::~QSslKey()
-{
-}
+= default;
 
 /*!
     Copies the contents of \a other into this key, making the two keys
@@ -289,10 +287,7 @@ QSslKey::~QSslKey()
     Returns a reference to this QSslKey.
 */
 QSslKey &QSslKey::operator=(const QSslKey &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Returns true if this is a null key; otherwise false.

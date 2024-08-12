@@ -77,8 +77,7 @@ namespace JSC {
         void* to;
 
         CallRecord()
-        {
-        }
+        = default;
 
         CallRecord(MacroAssembler::Call from, unsigned bytecodeIndex, void* to = nullptr)
             : from(from)

@@ -372,7 +372,7 @@ QMainWindow::QMainWindow(QWidget *parent, Qt::WindowFlags flags)
     Destroys the main window.
  */
 QMainWindow::~QMainWindow()
-{ }
+= default;
 
 /*! \property QMainWindow::iconSize
     \brief size of toolbar icons in this mainwindow.

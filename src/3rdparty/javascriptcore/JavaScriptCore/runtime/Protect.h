@@ -89,7 +89,7 @@ namespace JSC {
 
     class ProtectedJSValue {
     public:
-        ProtectedJSValue() {}
+        ProtectedJSValue() = default;
         ProtectedJSValue(JSValue value);
         ProtectedJSValue(const ProtectedJSValue&);
         ~ProtectedJSValue();

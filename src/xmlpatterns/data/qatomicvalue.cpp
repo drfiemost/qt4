@@ -71,8 +71,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AtomicValue::~AtomicValue()
-{
-}
+= default;
 
 bool AtomicValue::evaluateEBV(const QExplicitlySharedDataPointer<DynamicContext> &context) const
 {

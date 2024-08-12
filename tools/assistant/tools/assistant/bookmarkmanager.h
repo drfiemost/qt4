@@ -131,7 +131,7 @@ class BookmarkManager::BookmarkWidget : public QWidget
 public:
     BookmarkWidget(QWidget *parent = nullptr)
         : QWidget(parent) { ui.setupUi(this); }
-    ~BookmarkWidget() override {}
+    ~BookmarkWidget() override = default;
 
     Ui::BookmarkWidget ui;
 
@@ -147,7 +147,7 @@ class BookmarkManager::BookmarkTreeView : public QTreeView
     Q_OBJECT
 public:
     BookmarkTreeView(QWidget *parent = nullptr);
-    ~BookmarkTreeView() override {}
+    ~BookmarkTreeView() override = default;
 
     void subclassKeyPressEvent(QKeyEvent *event);
 

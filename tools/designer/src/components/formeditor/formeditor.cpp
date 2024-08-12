@@ -173,8 +173,7 @@ FormEditor::FormEditor(QObject *parent)
 }
 
 FormEditor::~FormEditor()
-{
-}
+= default;
 
 void FormEditor::slotQrcFileChangedExternally(const QString &path)
 {

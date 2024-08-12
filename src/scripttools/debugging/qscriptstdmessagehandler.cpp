@@ -55,8 +55,8 @@ QT_BEGIN_NAMESPACE
 class QScriptStdMessageHandlerPrivate
 {
 public:
-    QScriptStdMessageHandlerPrivate() {}
-    ~QScriptStdMessageHandlerPrivate() {}
+    QScriptStdMessageHandlerPrivate() = default;
+    ~QScriptStdMessageHandlerPrivate() = default;
 };
 
 QScriptStdMessageHandler::QScriptStdMessageHandler()
@@ -65,8 +65,7 @@ QScriptStdMessageHandler::QScriptStdMessageHandler()
 }
 
 QScriptStdMessageHandler::~QScriptStdMessageHandler()
-{
-}
+= default;
 
 void QScriptStdMessageHandler::message(QtMsgType type, const QString &text,
                                        const QString &fileName,

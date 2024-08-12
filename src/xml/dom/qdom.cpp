@@ -3141,9 +3141,8 @@ QDomDocumentType::QDomDocumentType() : QDomNode()
     cloneNode().
 */
 QDomDocumentType::QDomDocumentType(const QDomDocumentType& n)
-    : QDomNode(n)
-{
-}
+     
+= default;
 
 QDomDocumentType::QDomDocumentType(QDomDocumentTypePrivate* n)
     : QDomNode(n)
@@ -3310,8 +3309,7 @@ QDomNodePrivate* QDomDocumentFragmentPrivate::cloneNode(bool deep)
     Constructs an empty document fragment.
 */
 QDomDocumentFragment::QDomDocumentFragment()
-{
-}
+= default;
 
 QDomDocumentFragment::QDomDocumentFragment(QDomDocumentFragmentPrivate* n)
     : QDomNode(n)
@@ -3326,9 +3324,8 @@ QDomDocumentFragment::QDomDocumentFragment(QDomDocumentFragmentPrivate* n)
     cloneNode().
 */
 QDomDocumentFragment::QDomDocumentFragment(const QDomDocumentFragment& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 /*!
     Assigns \a x to this DOM document fragment.
@@ -3444,8 +3441,7 @@ void QDomCharacterDataPrivate::appendData(const QString& arg)
     Constructs an empty character data object.
 */
 QDomCharacterData::QDomCharacterData()
-{
-}
+= default;
 
 /*!
     Constructs a copy of \a x.
@@ -3455,9 +3451,8 @@ QDomCharacterData::QDomCharacterData()
     cloneNode().
 */
 QDomCharacterData::QDomCharacterData(const QDomCharacterData& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomCharacterData::QDomCharacterData(QDomCharacterDataPrivate* n)
     : QDomNode(n)
@@ -3772,8 +3767,7 @@ void QDomAttrPrivate::save(QTextStream& s, int, int) const
     Constructs an empty attribute.
 */
 QDomAttr::QDomAttr()
-{
-}
+= default;
 
 /*!
     Constructs a copy of \a x.
@@ -3783,9 +3777,8 @@ QDomAttr::QDomAttr()
     cloneNode().
 */
 QDomAttr::QDomAttr(const QDomAttr& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomAttr::QDomAttr(QDomAttrPrivate* n)
     : QDomNode(n)
@@ -4202,9 +4195,8 @@ QDomElement::QDomElement()
     cloneNode().
 */
 QDomElement::QDomElement(const QDomElement& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomElement::QDomElement(QDomElementPrivate* n)
     : QDomNode(n)
@@ -4722,9 +4714,8 @@ QDomText::QDomText()
     cloneNode().
 */
 QDomText::QDomText(const QDomText& x)
-    : QDomCharacterData(x)
-{
-}
+     
+= default;
 
 QDomText::QDomText(QDomTextPrivate* n)
     : QDomCharacterData(n)
@@ -4851,9 +4842,8 @@ QDomComment::QDomComment()
     cloneNode().
 */
 QDomComment::QDomComment(const QDomComment& x)
-    : QDomCharacterData(x)
-{
-}
+     
+= default;
 
 QDomComment::QDomComment(QDomCommentPrivate* n)
     : QDomCharacterData(n)
@@ -4959,9 +4949,8 @@ QDomCDATASection::QDomCDATASection()
     cloneNode().
 */
 QDomCDATASection::QDomCDATASection(const QDomCDATASection& x)
-    : QDomText(x)
-{
-}
+     
+= default;
 
 QDomCDATASection::QDomCDATASection(QDomCDATASectionPrivate* n)
     : QDomText(n)
@@ -5083,9 +5072,8 @@ QDomNotation::QDomNotation()
     cloneNode().
 */
 QDomNotation::QDomNotation(const QDomNotation& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomNotation::QDomNotation(QDomNotationPrivate* n)
     : QDomNode(n)
@@ -5280,9 +5268,8 @@ QDomEntity::QDomEntity()
     cloneNode().
 */
 QDomEntity::QDomEntity(const QDomEntity& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomEntity::QDomEntity(QDomEntityPrivate* n)
     : QDomNode(n)
@@ -5432,9 +5419,8 @@ QDomEntityReference::QDomEntityReference()
     cloneNode().
 */
 QDomEntityReference::QDomEntityReference(const QDomEntityReference& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomEntityReference::QDomEntityReference(QDomEntityReferencePrivate* n)
     : QDomNode(n)
@@ -5549,9 +5535,8 @@ QDomProcessingInstruction::QDomProcessingInstruction()
     cloneNode().
 */
 QDomProcessingInstruction::QDomProcessingInstruction(const QDomProcessingInstruction& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomProcessingInstruction::QDomProcessingInstruction(QDomProcessingInstructionPrivate* n)
     : QDomNode(n)
@@ -5666,8 +5651,7 @@ QDomDocumentPrivate::QDomDocumentPrivate(QDomDocumentPrivate* n, bool deep)
 }
 
 QDomDocumentPrivate::~QDomDocumentPrivate()
-{
-}
+= default;
 
 void QDomDocumentPrivate::clear()
 {
@@ -6097,9 +6081,8 @@ QDomDocument::QDomDocument(const QDomDocumentType& doctype)
     cloneNode().
 */
 QDomDocument::QDomDocument(const QDomDocument& x)
-    : QDomNode(x)
-{
-}
+     
+= default;
 
 QDomDocument::QDomDocument(QDomDocumentPrivate* x)
     : QDomNode(x)
@@ -6122,8 +6105,7 @@ QDomDocument& QDomDocument::operator= (const QDomDocument& x)
     Destroys the object and frees its resources.
 */
 QDomDocument::~QDomDocument()
-{
-}
+= default;
 
 /*!
     \overload

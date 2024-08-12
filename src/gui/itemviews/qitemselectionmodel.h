@@ -57,9 +57,9 @@ class Q_GUI_EXPORT QItemSelectionRange
 {
 
 public:
-    inline QItemSelectionRange() {}
+    inline QItemSelectionRange() = default;
     inline QItemSelectionRange(const QItemSelectionRange &other)
-        : tl(other.tl), br(other.br) {}
+         = default;
     inline QItemSelectionRange& operator=(const QItemSelectionRange&) = default;
     inline QItemSelectionRange(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     explicit inline QItemSelectionRange(const QModelIndex &index)
@@ -230,7 +230,7 @@ inline uint qHash(const QItemSelectionRange &) { return 0; }
 class Q_GUI_EXPORT QItemSelection : public QList<QItemSelectionRange>
 {
 public:
-    QItemSelection() {}
+    QItemSelection() = default;
     QItemSelection(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void select(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     bool contains(const QModelIndex &index) const;

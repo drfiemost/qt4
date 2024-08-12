@@ -108,8 +108,7 @@ QFinalState::QFinalState(QState *parent)
   Destroys this final state.
 */
 QFinalState::~QFinalState()
-{
-}
+= default;
 
 /*!
   \reimp

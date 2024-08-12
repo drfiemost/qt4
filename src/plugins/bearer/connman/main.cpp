@@ -60,12 +60,10 @@ public:
 };
 
 QConnmanEnginePlugin::QConnmanEnginePlugin()
-{
-}
+= default;
 
 QConnmanEnginePlugin::~QConnmanEnginePlugin()
-{
-}
+= default;
 
 QStringList QConnmanEnginePlugin::keys() const
 {

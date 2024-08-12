@@ -78,7 +78,7 @@ class QWellArray : public QWidget
 
 public:
     QWellArray(int rows, int cols, QWidget* parent=nullptr);
-    ~QWellArray() override {}
+    ~QWellArray() override = default;
     QString cellContent(int row, int col) const;
 
     int selectedColumn() const { return selCol; }
@@ -816,8 +816,7 @@ QColorPicker::QColorPicker(QWidget* parent)
 }
 
 QColorPicker::~QColorPicker()
-{
-}
+= default;
 
 QSize QColorPicker::sizeHint() const
 {

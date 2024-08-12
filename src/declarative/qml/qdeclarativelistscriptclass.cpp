@@ -63,8 +63,7 @@ QDeclarativeListScriptClass::QDeclarativeListScriptClass(QDeclarativeEngine *e)
 }
 
 QDeclarativeListScriptClass::~QDeclarativeListScriptClass()
-{
-}
+= default;
 
 QScriptValue QDeclarativeListScriptClass::newList(QObject *object, int propId, int propType)
 {

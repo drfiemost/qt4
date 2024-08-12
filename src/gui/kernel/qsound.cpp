@@ -354,8 +354,7 @@ void QAuServer::init(QSound*)
 }
 
 QAuBucket::~QAuBucket()
-{
-}
+= default;
 /*!
     \fn bool QSound::available()
 

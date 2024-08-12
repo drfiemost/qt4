@@ -63,12 +63,10 @@ public:
 };
 
 QGifPlugin::QGifPlugin()
-{
-}
+= default;
 
 QGifPlugin::~QGifPlugin()
-{
-}
+= default;
 
 QStringList QGifPlugin::keys() const
 {

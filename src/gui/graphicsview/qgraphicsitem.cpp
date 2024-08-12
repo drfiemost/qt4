@@ -7585,8 +7585,7 @@ void QGraphicsItem::prepareGeometryChange()
   Destructor.
 */
 QGraphicsObject::~QGraphicsObject()
-{
-}
+= default;
 
 /*!
     \internal
@@ -8129,8 +8128,7 @@ QAbstractGraphicsShapeItem::QAbstractGraphicsShapeItem(QAbstractGraphicsShapeIte
     Destroys a QAbstractGraphicsShapeItem.
 */
 QAbstractGraphicsShapeItem::~QAbstractGraphicsShapeItem()
-{
-}
+= default;
 
 /*!
     Returns the item's pen. If no pen has been set, this function returns
@@ -8279,8 +8277,7 @@ QGraphicsPathItem::QGraphicsPathItem(QGraphicsItem *parent
     Destroys the QGraphicsPathItem.
 */
 QGraphicsPathItem::~QGraphicsPathItem()
-{
-}
+= default;
 
 /*!
     Returns the item's path as a QPainterPath. If no item has been set, an
@@ -8509,8 +8506,7 @@ QGraphicsRectItem::QGraphicsRectItem(QGraphicsItem *parent
     Destroys the QGraphicsRectItem.
 */
 QGraphicsRectItem::~QGraphicsRectItem()
-{
-}
+= default;
 
 /*!
     Returns the item's rectangle.
@@ -8760,8 +8756,7 @@ QGraphicsEllipseItem::QGraphicsEllipseItem(QGraphicsItem *parent
     Destroys the QGraphicsEllipseItem.
 */
 QGraphicsEllipseItem::~QGraphicsEllipseItem()
-{
-}
+= default;
 
 /*!
     Returns the item's ellipse geometry as a QRectF.
@@ -9045,8 +9040,7 @@ QGraphicsPolygonItem::QGraphicsPolygonItem(QGraphicsItem *parent
     Destroys the QGraphicsPolygonItem.
 */
 QGraphicsPolygonItem::~QGraphicsPolygonItem()
-{
-}
+= default;
 
 /*!
     Returns the item's polygon, or an empty polygon if no polygon
@@ -9292,8 +9286,7 @@ QGraphicsLineItem::QGraphicsLineItem(QGraphicsItem *parent
     Destroys the QGraphicsLineItem.
 */
 QGraphicsLineItem::~QGraphicsLineItem()
-{
-}
+= default;
 
 /*!
     Returns the item's pen, or a black solid 0-width pen if no pen has
@@ -9603,8 +9596,7 @@ QGraphicsPixmapItem::QGraphicsPixmapItem(QGraphicsItem *parent
     Destroys the QGraphicsPixmapItem.
 */
 QGraphicsPixmapItem::~QGraphicsPixmapItem()
-{
-}
+= default;
 
 /*!
     Sets the item's pixmap to \a pixmap.
@@ -10826,8 +10818,7 @@ QGraphicsSimpleTextItem::QGraphicsSimpleTextItem(const QString &text, QGraphicsI
     Destroys the QGraphicsSimpleTextItem.
 */
 QGraphicsSimpleTextItem::~QGraphicsSimpleTextItem()
-{
-}
+= default;
 
 /*!
     Sets the item's text to \a text. The text will be displayed as
@@ -11075,8 +11066,7 @@ QGraphicsItemGroup::QGraphicsItemGroup(QGraphicsItem *parent
     Destroys the QGraphicsItemGroup.
 */
 QGraphicsItemGroup::~QGraphicsItemGroup()
-{
-}
+= default;
 
 /*!
     Adds the given \a item and item's child items to this item group.

@@ -385,8 +385,7 @@ QDeclarativeItemKeyFilter::QDeclarativeItemKeyFilter(QDeclarativeItem *item)
 }
 
 QDeclarativeItemKeyFilter::~QDeclarativeItemKeyFilter()
-{
-}
+= default;
 
 void QDeclarativeItemKeyFilter::keyPressed(QKeyEvent *event, bool post)
 {
@@ -1340,8 +1339,7 @@ QDeclarativeKeysAttached::QDeclarativeKeysAttached(QObject *parent)
 }
 
 QDeclarativeKeysAttached::~QDeclarativeKeysAttached()
-{
-}
+= default;
 
 QDeclarativeKeysAttached::Priority QDeclarativeKeysAttached::priority() const
 {

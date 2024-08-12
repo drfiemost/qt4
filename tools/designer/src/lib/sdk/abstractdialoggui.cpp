@@ -83,15 +83,13 @@ QT_BEGIN_NAMESPACE
 */
 
 QDesignerDialogGuiInterface::QDesignerDialogGuiInterface()
-{
-}
+= default;
 
 /*!
     Destroys the QDesignerDialogGuiInterface object.
 */
 QDesignerDialogGuiInterface::~QDesignerDialogGuiInterface()
-{
-}
+= default;
 
 /*!
     \fn QMessageBox::StandardButton QDesignerDialogGuiInterface::message(QWidget *parent, Message context, QMessageBox::Icon icon, const QString &title, const QString &text, QMessageBox::StandardButtons buttons, QMessageBox::StandardButton defaultButton)

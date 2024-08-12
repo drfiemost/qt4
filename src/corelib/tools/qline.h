@@ -97,7 +97,7 @@ Q_DECLARE_TYPEINFO(QLine, Q_MOVABLE_TYPE);
  * class QLine inline members
  *******************************************************************************/
 
-constexpr inline QLine::QLine() { }
+constexpr inline QLine::QLine() = default;
 
 constexpr inline QLine::QLine(const QPoint &pt1_, const QPoint &pt2_) : pt1(pt1_), pt2(pt2_) { }
 
@@ -277,8 +277,7 @@ Q_DECLARE_TYPEINFO(QLineF, Q_MOVABLE_TYPE);
  *******************************************************************************/
 
 constexpr inline QLineF::QLineF()
-{
-}
+= default;
 
 constexpr inline QLineF::QLineF(const QPointF &apt1, const QPointF &apt2)
     : pt1(apt1), pt2(apt2)

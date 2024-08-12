@@ -19,8 +19,7 @@ CL_NS_DEF(search)
   // of an index.
   class Filter: LUCENE_BASE {
   public:
-    virtual ~Filter(){
-	}
+    virtual ~Filter()= default;
 	
 	virtual Filter* clone() const = 0;
 

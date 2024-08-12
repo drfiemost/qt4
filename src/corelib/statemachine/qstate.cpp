@@ -132,8 +132,7 @@ QStatePrivate::QStatePrivate()
 }
 
 QStatePrivate::~QStatePrivate()
-{
-}
+= default;
 
 void QStatePrivate::emitFinished()
 {
@@ -178,8 +177,7 @@ QState::QState(QStatePrivate &dd, QState *parent)
   Destroys this state.
 */
 QState::~QState()
-{
-}
+= default;
 
 QList<QAbstractState*> QStatePrivate::childStates() const
 {

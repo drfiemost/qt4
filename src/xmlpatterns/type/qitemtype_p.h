@@ -230,8 +230,7 @@ namespace QPatternist
         virtual InstanceOf instanceOf() const;
 
         inline ItemType()
-        {
-        }
+        = default;
 
     private:
         Q_DISABLE_COPY(ItemType)

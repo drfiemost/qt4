@@ -46,12 +46,10 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 ExpressionIdentifier::~ExpressionIdentifier()
-{
-}
+= default;
 
 ExpressionCreator::~ExpressionCreator()
-{
-}
+= default;
 
 OptimizationPass::OptimizationPass(const ExpressionIdentifier::Ptr &startID,
                                    const ExpressionIdentifier::List &opIDs,

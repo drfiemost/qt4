@@ -123,8 +123,7 @@ ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType 
 }
 
 ContainerWidgetTaskMenu::~ContainerWidgetTaskMenu()
-{
-}
+= default;
 
 QAction *ContainerWidgetTaskMenu::preferredEditAction() const
 {

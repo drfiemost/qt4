@@ -56,7 +56,7 @@ public:
         , writtenSinceLastEmit(0), signalConnectionCount(0), signalsEmitted(false)
 #endif
     { }
-    ~QBufferPrivate() { }
+    ~QBufferPrivate() = default;
 
     QByteArray *buf;
     QByteArray defaultBuf;
@@ -217,8 +217,7 @@ QBuffer::QBuffer(QByteArray *byteArray, QObject *parent)
 */
 
 QBuffer::~QBuffer()
-{
-}
+= default;
 
 /*!
     Makes QBuffer uses the QByteArray pointed to by \a

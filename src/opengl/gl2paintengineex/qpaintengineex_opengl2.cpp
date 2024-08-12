@@ -1203,8 +1203,7 @@ QGL2PaintEngineEx::QGL2PaintEngineEx()
 }
 
 QGL2PaintEngineEx::~QGL2PaintEngineEx()
-{
-}
+= default;
 
 void QGL2PaintEngineEx::fill(const QVectorPath &path, const QBrush &brush)
 {
@@ -1564,8 +1563,7 @@ namespace {
         }
 
         ~QOpenGLStaticTextUserData() override
-        {
-        }
+        = default;
 
         QSize cacheSize;
         QGL2PEXVertexArray vertexCoordinateArray;
@@ -2633,7 +2631,6 @@ QOpenGL2PaintEngineState::QOpenGL2PaintEngineState()
 }
 
 QOpenGL2PaintEngineState::~QOpenGL2PaintEngineState()
-{
-}
+= default;
 
 QT_END_NAMESPACE

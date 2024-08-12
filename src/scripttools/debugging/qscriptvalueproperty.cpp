@@ -63,8 +63,7 @@ QScriptValuePropertyPrivate::QScriptValuePropertyPrivate()
 }
 
 QScriptValuePropertyPrivate::~QScriptValuePropertyPrivate()
-{
-}
+= default;
 
 /*!
   Constructs an invalid QScriptValueProperty.
@@ -103,8 +102,7 @@ QScriptValueProperty::QScriptValueProperty(const QScriptValueProperty &other)
   Destroys this QScriptValueProperty.
 */
 QScriptValueProperty::~QScriptValueProperty()
-{
-}
+= default;
 
 /*!
   Assigns the \a other property to this QScriptValueProperty.

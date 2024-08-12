@@ -173,7 +173,7 @@ QAbstractEventDispatcher::QAbstractEventDispatcher(QAbstractEventDispatcherPriva
     Destroys the event dispatcher.
 */
 QAbstractEventDispatcher::~QAbstractEventDispatcher()
-{ }
+= default;
 
 /*!
     Returns a pointer to the event dispatcher object for the specified

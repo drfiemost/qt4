@@ -79,8 +79,8 @@ namespace JSC {
             OwnArrayPtr<Register> registerArray; // Independent copy of registers, used when a variable object copies its registers out of the register file.
 
         private:
-            JSVariableObjectData(const JSVariableObjectData&);
-            JSVariableObjectData& operator=(const JSVariableObjectData&);
+            JSVariableObjectData(const JSVariableObjectData&) = delete;
+            JSVariableObjectData& operator=(const JSVariableObjectData&) = delete;
         };
 
         JSVariableObject(NonNullPassRefPtr<Structure> structure, JSVariableObjectData* data)

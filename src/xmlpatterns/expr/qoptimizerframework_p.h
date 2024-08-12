@@ -85,8 +85,7 @@ namespace QPatternist
          * For some reason this constructor cannot be synthesized.
          */
         inline ExpressionCreator()
-        {
-        }
+        = default;
 
         virtual ~ExpressionCreator();
         /**
@@ -133,8 +132,7 @@ namespace QPatternist
          * For some reason this constructor cannot be synthesized.
          */
         inline ExpressionIdentifier()
-        {
-        }
+        = default;
 
         virtual ~ExpressionIdentifier();
         /**

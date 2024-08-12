@@ -69,7 +69,7 @@ public:
 
     struct ImageCacheItem {
         ImageCacheItem() : age(0) {}
-        ~ImageCacheItem() { }
+        ~ImageCacheItem() = default;
         int age;
         QRect area;
         QRect dirty; // one dirty area (allows optimization of common cases)

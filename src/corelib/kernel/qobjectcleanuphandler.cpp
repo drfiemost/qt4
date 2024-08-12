@@ -72,8 +72,7 @@ QT_BEGIN_NAMESPACE
     Constructs an empty QObjectCleanupHandler.
 */
 QObjectCleanupHandler::QObjectCleanupHandler()
-{
-}
+= default;
 
 /*!
     Destroys the cleanup handler. All objects in this cleanup handler

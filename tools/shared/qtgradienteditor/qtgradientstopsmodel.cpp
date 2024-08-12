@@ -86,8 +86,7 @@ QtGradientStop::QtGradientStop(QtGradientStopsModel *model)
 }
 
 QtGradientStop::~QtGradientStop()
-{
-}
+= default;
 
 class QtGradientStopsModelPrivate
 {

@@ -219,10 +219,7 @@ void QStaticText::prepare(const QTransform &matrix, const QFont &font)
     Assigns \a other to this QStaticText.
 */
 QStaticText &QStaticText::operator=(const QStaticText &other)
-{    
-    data = other.data;
-    return *this;
-}
+= default;
 
 /*!
     Compares \a other to this QStaticText. Returns true if the texts, fonts and text widths

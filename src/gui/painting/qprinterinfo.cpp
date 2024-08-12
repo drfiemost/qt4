@@ -115,8 +115,7 @@ QPrinterInfo::QPrinterInfo(const QString &name)
     object become invalid.
 */
 QPrinterInfo::~QPrinterInfo()
-{
-}
+= default;
 
 /*!
     \since 4.8

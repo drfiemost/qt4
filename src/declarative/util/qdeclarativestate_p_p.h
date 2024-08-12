@@ -91,8 +91,7 @@ public:
     }
 
     ~QDeclarativeSimpleAction()
-    {
-    }
+    = default;
 
     QDeclarativeSimpleAction(const QDeclarativeSimpleAction &other)
         :  m_property(other.m_property),

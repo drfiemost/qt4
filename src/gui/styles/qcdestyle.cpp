@@ -107,8 +107,7 @@ QCDEStyle::QCDEStyle(bool useHighlightCols)
     Destroys the style.
 */
 QCDEStyle::~QCDEStyle()
-{
-}
+= default;
 
 
 /*!\reimp

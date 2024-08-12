@@ -756,8 +756,7 @@ QMessageBox::QMessageBox(Icon icon, const QString &title, const QString &text,
     Destroys the message box.
 */
 QMessageBox::~QMessageBox()
-{
-}
+= default;
 
 /*!
     \since 4.2

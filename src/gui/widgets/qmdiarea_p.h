@@ -80,7 +80,7 @@ public:
     // Rearranges widgets relative to domain.
     virtual void rearrange(QList<QWidget *> &widgets, const QRect &domain) const = 0;
     virtual Type type() const = 0;
-    virtual ~Rearranger() {}
+    virtual ~Rearranger() = default;
 };
 
 class RegularTiler : public Rearranger
@@ -117,7 +117,7 @@ public:
     // Returns the position of the resulting rectangle.
     virtual QPoint place(
         const QSize &size, const QList<QRect> &rects, const QRect &domain) const = 0;
-    virtual ~Placer() {}
+    virtual ~Placer() = default;
 };
 
 class MinOverlapPlacer : public Placer

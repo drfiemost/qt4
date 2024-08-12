@@ -68,7 +68,7 @@ public:
     KeyData() : isValid(true), key(0), ref(1) {}
     KeyData(const KeyData &other)
      : isValid(other.isValid), key(other.key), ref(1) {}
-    ~KeyData() {}
+    ~KeyData() = default;
 
     bool isValid;
     int key;

@@ -105,8 +105,8 @@ private:
     class QFormScriptRunnerPrivate;
     QFormScriptRunnerPrivate *m_impl;
 
-    QFormScriptRunner(const QFormScriptRunner &);
-    void operator = (const QFormScriptRunner &);
+    QFormScriptRunner(const QFormScriptRunner &) = delete;
+    void operator = (const QFormScriptRunner &) = delete;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QFormScriptRunner::Options)

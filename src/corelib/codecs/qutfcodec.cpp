@@ -501,8 +501,7 @@ QString QUtf32::convertToUnicode(const char *chars, int len, QTextCodec::Convert
 #ifndef QT_NO_TEXTCODEC
 
 QUtf8Codec::~QUtf8Codec()
-{
-}
+= default;
 
 QByteArray QUtf8Codec::convertFromUnicode(const QChar *uc, int len, ConverterState *state) const
 {
@@ -530,8 +529,7 @@ int QUtf8Codec::mibEnum() const
 }
 
 QUtf16Codec::~QUtf16Codec()
-{
-}
+= default;
 
 QByteArray QUtf16Codec::convertFromUnicode(const QChar *uc, int len, ConverterState *state) const
 {
@@ -591,8 +589,7 @@ QList<QByteArray> QUtf16LECodec::aliases() const
 }
 
 QUtf32Codec::~QUtf32Codec()
-{
-}
+= default;
 
 QByteArray QUtf32Codec::convertFromUnicode(const QChar *uc, int len, ConverterState *state) const
 {

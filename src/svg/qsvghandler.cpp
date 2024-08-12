@@ -443,8 +443,7 @@ public:
         nameCaseSensitivity = Qt::CaseInsensitive;
     }
     ~QSvgStyleSelector() override
-    {
-    }
+    = default;
 
     inline QString nodeToName(QSvgNode *node) const
     {

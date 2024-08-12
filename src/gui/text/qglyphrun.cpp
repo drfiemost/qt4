@@ -121,10 +121,7 @@ void QGlyphRun::detach()
     Assigns \a other to this QGlyphRun object.
 */
 QGlyphRun &QGlyphRun::operator=(const QGlyphRun &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     Compares \a other to this QGlyphRun object. Returns true if the list of glyph indexes,

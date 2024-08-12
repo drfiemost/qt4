@@ -78,12 +78,10 @@ public:
 };
 
 QScriptDebuggerCodeFinderWidgetPrivate::QScriptDebuggerCodeFinderWidgetPrivate()
-{
-}
+= default;
 
 QScriptDebuggerCodeFinderWidgetPrivate::~QScriptDebuggerCodeFinderWidgetPrivate()
-{
-}
+= default;
 
 void QScriptDebuggerCodeFinderWidgetPrivate::_q_updateButtons()
 {
@@ -194,8 +192,7 @@ QScriptDebuggerCodeFinderWidget::QScriptDebuggerCodeFinderWidget(QWidget *parent
 }
 
 QScriptDebuggerCodeFinderWidget::~QScriptDebuggerCodeFinderWidget()
-{
-}
+= default;
 
 int QScriptDebuggerCodeFinderWidget::findOptions() const
 {

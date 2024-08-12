@@ -551,8 +551,7 @@ m_meta(new QDeclarativeVisualDataModelDataMetaObject(this, QDeclarativeVisualDat
 }
 
 QDeclarativeVisualDataModelData::~QDeclarativeVisualDataModelData()
-{
-}
+= default;
 
 void QDeclarativeVisualDataModelData::ensureProperties()
 {

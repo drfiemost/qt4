@@ -75,8 +75,7 @@ QInputEvent::QInputEvent(Type type, Qt::KeyboardModifiers modifiers)
   \internal
 */
 QInputEvent::~QInputEvent()
-{
-}
+= default;
 
 /*!
     \fn Qt::KeyboardModifiers QInputEvent::modifiers() const
@@ -172,8 +171,7 @@ QMouseEvent::QMouseEvent(Type type, const QPointF &position, Qt::MouseButton but
     \internal
 */
 QMouseEvent::~QMouseEvent()
-{
-}
+= default;
 
 /*!
     Constructs a mouse event object.
@@ -488,8 +486,7 @@ QWheelEvent::QWheelEvent(const QPointF &pos, int delta,
   \internal
 */
 QWheelEvent::~QWheelEvent()
-{
-}
+= default;
 
 /*!
     Constructs a wheel event object.
@@ -656,8 +653,7 @@ QKeyEvent::QKeyEvent(Type type, int key, Qt::KeyboardModifiers modifiers, const 
   \internal
 */
 QKeyEvent::~QKeyEvent()
-{
-}
+= default;
 
 /*!
     \internal
@@ -753,8 +749,7 @@ QKeyEventEx::QKeyEventEx(const QKeyEventEx &other)
     \internal
 */
 QKeyEventEx::~QKeyEventEx()
-{
-}
+= default;
 
 /*!
     \fn int QKeyEvent::key() const
@@ -937,8 +932,7 @@ QFocusEvent::QFocusEvent(Type type, Qt::FocusReason reason)
     \internal
 */
 QFocusEvent::~QFocusEvent()
-{
-}
+= default;
 
 // ### Qt 5: remove
 /*!
@@ -1041,8 +1035,7 @@ QPaintEvent::QPaintEvent(const QRect &paintRect)
   \internal
 */
 QPaintEvent::~QPaintEvent()
-{
-}
+= default;
 
 /*!
     \fn const QRect &QPaintEvent::rect() const
@@ -1067,8 +1060,7 @@ QUpdateLaterEvent::QUpdateLaterEvent(const QRegion& paintRegion)
 }
 
 QUpdateLaterEvent::~QUpdateLaterEvent()
-{
-}
+= default;
 
 /*!
     \class QMoveEvent
@@ -1096,8 +1088,7 @@ QMoveEvent::QMoveEvent(const QPoint &pos, const QPoint &oldPos)
   \internal
 */
 QMoveEvent::~QMoveEvent()
-{
-}
+= default;
 
 /*!
     \fn const QPoint &QMoveEvent::pos() const
@@ -1138,8 +1129,7 @@ QResizeEvent::QResizeEvent(const QSize &size, const QSize &oldSize)
   \internal
 */
 QResizeEvent::~QResizeEvent()
-{
-}
+= default;
 
 /*!
     \fn const QSize &QResizeEvent::size() const
@@ -1216,8 +1206,7 @@ QCloseEvent::QCloseEvent()
 /*! \internal
 */
 QCloseEvent::~QCloseEvent()
-{
-}
+= default;
 
 /*!
    \class QIconDragEvent
@@ -1305,8 +1294,7 @@ QContextMenuEvent::QContextMenuEvent(Reason reason, const QPoint &pos, const QPo
 
 /*! \internal */
 QContextMenuEvent::~QContextMenuEvent()
-{
-}
+= default;
 /*!
     Constructs a context menu event object with the accept parameter
     flag set to false.
@@ -2039,8 +2027,7 @@ QDragMoveEvent::QDragMoveEvent(const QPoint& pos, Qt::DropActions actions, const
     Destroys the event.
 */
 QDragMoveEvent::~QDragMoveEvent()
-{
-}
+= default;
 
 /*!
     \fn void QDragMoveEvent::accept(bool y)
@@ -2159,8 +2146,7 @@ QDropEvent::QDropEvent(const QPoint& pos, Qt::DropActions actions, const QMimeDa
 
 /*! \internal */
 QDropEvent::~QDropEvent()
-{
-}
+= default;
 
 /*!
     \compat
@@ -2408,8 +2394,7 @@ QDragEnterEvent::QDragEnterEvent(const QPoint& point, Qt::DropActions actions, c
 /*! \internal
 */
 QDragEnterEvent::~QDragEnterEvent()
-{
-}
+= default;
 
 /*!
     Constructs a drag response event containing the \a accepted value,
@@ -2423,8 +2408,7 @@ QDragResponseEvent::QDragResponseEvent(bool accepted)
 /*! \internal
 */
 QDragResponseEvent::~QDragResponseEvent()
-{
-}
+= default;
 
 /*!
     \class QDragMoveEvent
@@ -2760,8 +2744,7 @@ QHideEvent::QHideEvent()
 /*! \internal
 */
 QHideEvent::~QHideEvent()
-{
-}
+= default;
 
 /*!
     \class QShowEvent
@@ -2789,8 +2772,7 @@ QShowEvent::QShowEvent()
 /*! \internal
 */
 QShowEvent::~QShowEvent()
-{
-}
+= default;
 
 /*!
   \fn QByteArray QDropEvent::data(const char* f) const
@@ -2821,8 +2803,7 @@ QShowEvent::~QShowEvent()
 */
 
 QFileOpenEventPrivate::~QFileOpenEventPrivate()
-{
-}
+= default;
 
 /*!
     \internal
@@ -3497,8 +3478,7 @@ bool QWindowStateChangeEvent::isOverride() const
 /*! \internal
 */
 QWindowStateChangeEvent::~QWindowStateChangeEvent()
-{
-}
+= default;
 
 
 /*!
@@ -3672,7 +3652,7 @@ QTouchEvent::QTouchEvent(QEvent::Type eventType,
     Destroys the QTouchEvent.
 */
 QTouchEvent::~QTouchEvent()
-{ }
+= default;
 
 /*! \fn QWidget *QTouchEvent::widget() const
 

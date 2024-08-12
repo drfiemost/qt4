@@ -123,8 +123,7 @@ StopAnalyzer::StopAnalyzer():stopTable(false)
 	StopFilter::fillStopTable(&stopTable,ENGLISH_STOP_WORDS);
 }
 StopAnalyzer::~StopAnalyzer()
-{
-}
+= default;
 StopAnalyzer::StopAnalyzer( const TCHAR** stopWords) {
 	StopFilter::fillStopTable(&stopTable,stopWords);
 }
@@ -336,8 +335,7 @@ KeywordTokenizer::KeywordTokenizer(CL_NS(util)::Reader* input, int bufferSize):
 	if ( bufferSize < 0 )
 		this->bufferSize = DEFAULT_BUFFER_SIZE;
 }
-KeywordTokenizer::~KeywordTokenizer(){
-}
+KeywordTokenizer::~KeywordTokenizer()= default;
 
 bool KeywordTokenizer::next(Token* token){
     if (!done) {

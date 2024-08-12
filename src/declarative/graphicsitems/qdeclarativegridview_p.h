@@ -229,7 +229,7 @@ class QDeclarativeGridViewAttached : public QObject
 public:
     QDeclarativeGridViewAttached(QObject *parent)
         : QObject(parent), m_view(nullptr), m_isCurrent(false), m_delayRemove(false) {}
-    ~QDeclarativeGridViewAttached() override {}
+    ~QDeclarativeGridViewAttached() override = default;
 
     Q_PROPERTY(QDeclarativeGridView *view READ view NOTIFY viewChanged)
     QDeclarativeGridView *view() { return m_view; }

@@ -48,8 +48,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 Untyped::Untyped()
-{
-}
+= default;
 
 SchemaType::Ptr Untyped::wxsSuperType() const
 {

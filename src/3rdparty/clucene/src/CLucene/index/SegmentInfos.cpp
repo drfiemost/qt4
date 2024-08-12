@@ -31,8 +31,7 @@ SegmentInfo::SegmentInfo(const QString& Name, const int32_t DocCount,
 }
 
 SegmentInfo::~SegmentInfo()
-{
-}
+= default;
 
 SegmentInfos::SegmentInfos(bool _deleteMembers)
     : deleteMembers(_deleteMembers)

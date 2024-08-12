@@ -75,7 +75,7 @@ public:
     QHttpRequest() : finished(false)
     { id = idCounter.fetchAndAddRelaxed(1); }
     virtual ~QHttpRequest()
-    { }
+    = default;
 
     virtual void start(QHttp *) = 0;
     virtual bool hasRequestHeader();
@@ -318,7 +318,7 @@ public:
     { }
 
     ~QHttpPGHRequest() override
-    { }
+    = default;
 
     void start(QHttp *) override;
 };
@@ -485,7 +485,7 @@ class QHttpCloseRequest : public QHttpRequest
 {
 public:
     QHttpCloseRequest()
-    { }
+    = default;
     void start(QHttp *) override;
 
     QIODevice *sourceDevice() override
@@ -503,7 +503,7 @@ class QHttpHeaderPrivate
 {
     Q_DECLARE_PUBLIC(QHttpHeader)
 public:
-    inline virtual ~QHttpHeaderPrivate() {}
+    inline virtual ~QHttpHeaderPrivate() = default;
 
     QList<QPair<QString, QString> > values;
     bool valid;
@@ -629,8 +629,7 @@ QHttpHeader::QHttpHeader(QHttpHeaderPrivate &dd, const QHttpHeader &header)
     Destructor.
 */
 QHttpHeader::~QHttpHeader()
-{
-}
+= default;
 
 /*!
     Assigns \a h and returns a reference to this http header.

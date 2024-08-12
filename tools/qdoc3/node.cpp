@@ -1205,22 +1205,15 @@ Parameter::Parameter(const QString& leftType,
   The standard copy constructor copies the strings from \a p.
  */
 Parameter::Parameter(const Parameter& p)
-    : lef(p.lef), rig(p.rig), nam(p.nam), def(p.def)
-{
-}
+     
+= default;
 
 /*!
   Assigning Parameter \a p to this Parameter copies the
   strings across.
  */
 Parameter& Parameter::operator=(const Parameter& p)
-{
-    lef = p.lef;
-    rig = p.rig;
-    nam = p.nam;
-    def = p.def;
-    return *this;
-}
+= default;
 
 /*!
   Reconstructs the text describing the parameter and

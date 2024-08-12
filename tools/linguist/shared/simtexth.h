@@ -53,7 +53,7 @@ class Translator;
 
 struct Candidate
 {
-    Candidate() {}
+    Candidate() = default;
     Candidate(const QString& source0, const QString &target0)
 	: source(source0), target(target0)
     {}

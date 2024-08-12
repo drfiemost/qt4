@@ -167,8 +167,7 @@ QScriptSyntaxHighlighter::QScriptSyntaxHighlighter(QTextDocument *document)
 }
 
 QScriptSyntaxHighlighter::~QScriptSyntaxHighlighter()
-{
-}
+= default;
 
 void QScriptSyntaxHighlighter::highlightBlock(const QString &text)
 {

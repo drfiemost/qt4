@@ -162,7 +162,7 @@ public:
                               const QString &path = QString());
 
 private:
-    QDBusIntrospection();
+    QDBusIntrospection() = delete;
 };
 
 QT_END_NAMESPACE

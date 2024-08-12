@@ -273,8 +273,7 @@ QDBusServiceWatcher::QDBusServiceWatcher(const QString &service, const QDBusConn
     associated with it.
 */
 QDBusServiceWatcher::~QDBusServiceWatcher()
-{
-}
+= default;
 
 /*!
     Returns the list of D-Bus services that are being watched.

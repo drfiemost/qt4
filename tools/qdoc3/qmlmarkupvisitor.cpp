@@ -88,8 +88,7 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
 }
 
 QmlMarkupVisitor::~QmlMarkupVisitor()
-{
-}
+= default;
 
 // The protect() function is a copy of the one from CppCodeMarker.
 

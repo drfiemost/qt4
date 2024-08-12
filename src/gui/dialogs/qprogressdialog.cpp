@@ -341,8 +341,7 @@ QProgressDialog::QProgressDialog(const QString &labelText,
 */
 
 QProgressDialog::~QProgressDialog()
-{
-}
+= default;
 
 /*!
   \fn void QProgressDialog::canceled()

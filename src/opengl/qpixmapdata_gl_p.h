@@ -140,8 +140,8 @@ private:
 
 
 
-    QGLPixmapData(const QGLPixmapData &other);
-    QGLPixmapData &operator=(const QGLPixmapData &other);
+    QGLPixmapData(const QGLPixmapData &other) = delete;
+    QGLPixmapData &operator=(const QGLPixmapData &other) = delete;
 
     void copyBackFromRenderFbo(bool keepCurrentFboBound) const;
     QSize size() const { return QSize(w, h); }

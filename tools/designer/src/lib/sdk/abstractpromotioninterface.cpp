@@ -44,8 +44,7 @@
 QT_BEGIN_NAMESPACE
 
 QDesignerPromotionInterface::~QDesignerPromotionInterface()
-{
-}
+= default;
 
 /*!
     \class QDesignerPromotionInterface

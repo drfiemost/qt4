@@ -57,15 +57,13 @@ QT_BEGIN_NAMESPACE
     Constructs a QDeclarativePropertyValueSource.
 */
 QDeclarativePropertyValueSource::QDeclarativePropertyValueSource()
-{
-}
+= default;
 
 /*!
     Destroys the value source.
 */
 QDeclarativePropertyValueSource::~QDeclarativePropertyValueSource()
-{
-}
+= default;
 
 /*!
     \fn void QDeclarativePropertyValueSource::setTarget(const QDeclarativeProperty &property)

@@ -101,8 +101,7 @@ QDeclarativeContextScriptClass::QDeclarativeContextScriptClass(QDeclarativeEngin
 }
 
 QDeclarativeContextScriptClass::~QDeclarativeContextScriptClass()
-{
-}
+= default;
 
 QScriptValue QDeclarativeContextScriptClass::newContext(QDeclarativeContextData *context, QObject *scopeObject)
 {

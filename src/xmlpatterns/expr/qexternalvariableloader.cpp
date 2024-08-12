@@ -50,8 +50,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 ExternalVariableLoader::~ExternalVariableLoader()
-{
-}
+= default;
 
 
 SequenceType::Ptr ExternalVariableLoader::announceExternalVariable(const QXmlName name,

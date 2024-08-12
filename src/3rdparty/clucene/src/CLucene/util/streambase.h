@@ -61,7 +61,7 @@ protected:
     StreamStatus status;
 public:
     StreamBase() :size(-1), position(0), status(Ok){ }
-    virtual ~StreamBase(){}
+    virtual ~StreamBase()= default;
     /**
      * @brief  Return a string representation of the last error.
      * If no error has occurred, an empty string is returned.

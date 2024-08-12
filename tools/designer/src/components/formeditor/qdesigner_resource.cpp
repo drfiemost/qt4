@@ -343,7 +343,7 @@ bool QDesignerResourceBuilder::isResourceType(const QVariant &value) const
 class QDesignerTextBuilder : public QTextBuilder
 {
 public:
-    QDesignerTextBuilder() {}
+    QDesignerTextBuilder() = default;
 
     QVariant loadText(const DomProperty *icon) const override;
 
@@ -442,8 +442,7 @@ QDesignerResource::QDesignerResource(FormWindow *formWindow)  :
 }
 
 QDesignerResource::~QDesignerResource()
-{
-}
+= default;
 
 static inline QString messageBoxTitle()
 {

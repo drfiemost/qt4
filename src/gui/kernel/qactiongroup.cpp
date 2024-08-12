@@ -161,8 +161,7 @@ QActionGroup::QActionGroup(QObject* parent) : QObject(*new QActionGroupPrivate, 
     Destroys the action group.
 */
 QActionGroup::~QActionGroup()
-{
-}
+= default;
 
 /*!
     \fn QAction *QActionGroup::addAction(QAction *action)

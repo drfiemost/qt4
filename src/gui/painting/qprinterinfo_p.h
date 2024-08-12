@@ -73,7 +73,7 @@ public:
 #endif
     {}
     ~QPrinterInfoPrivate()
-    {}
+    = default;
 
     static QPrinterInfoPrivate shared_null;
 

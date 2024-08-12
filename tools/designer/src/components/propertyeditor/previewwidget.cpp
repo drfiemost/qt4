@@ -52,8 +52,7 @@ PreviewWidget::PreviewWidget(QWidget *parent)
 }
 
 PreviewWidget::~PreviewWidget()
-{
-}
+= default;
 
 
 QT_END_NAMESPACE

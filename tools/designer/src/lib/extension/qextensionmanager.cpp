@@ -107,8 +107,7 @@ QExtensionManager::QExtensionManager(QObject *parent)
   Destroys the extension manager
 */
 QExtensionManager::~QExtensionManager()
-{
-}
+= default;
 
 /*!
     Register the extension specified by the given \a factory and

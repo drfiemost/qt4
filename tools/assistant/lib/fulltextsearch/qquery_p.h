@@ -64,7 +64,7 @@ public:
     bool deleteCLuceneQuery;
 
 private:
-    QCLuceneQueryPrivate &operator=(const QCLuceneQueryPrivate &other);
+    QCLuceneQueryPrivate &operator=(const QCLuceneQueryPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneQuery

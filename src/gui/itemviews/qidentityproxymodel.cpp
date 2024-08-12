@@ -132,8 +132,7 @@ QIdentityProxyModel::QIdentityProxyModel(QIdentityProxyModelPrivate &dd, QObject
     Destroys this identity model.
 */
 QIdentityProxyModel::~QIdentityProxyModel()
-{
-}
+= default;
 
 /*!
     \reimp

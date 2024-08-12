@@ -60,7 +60,7 @@ public:
     bool deleteCLuceneReader;
 
 private:
-    QCLuceneReaderPrivate &operator=(const QCLuceneReaderPrivate &other);
+    QCLuceneReaderPrivate &operator=(const QCLuceneReaderPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneReader

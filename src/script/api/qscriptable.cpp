@@ -91,8 +91,7 @@ QScriptable::QScriptable()
   \internal
 */
 QScriptable::~QScriptable()
-{
-}
+= default;
 
 /*!
   Returns a pointer to the QScriptEngine associated with the current

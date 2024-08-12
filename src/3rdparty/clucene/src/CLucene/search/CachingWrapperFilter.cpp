@@ -19,8 +19,7 @@ AbstractCachingFilter::AbstractCachingFilter(const AbstractCachingFilter& copy):
 	cache(false,true)
 {
 }
-AbstractCachingFilter::~AbstractCachingFilter(){
-}
+AbstractCachingFilter::~AbstractCachingFilter()= default;
 AbstractCachingFilter::BitSetHolder::BitSetHolder(CL_NS(util)::BitSet* bits, bool deleteBs){
 	this->bits = bits;
 	this->deleteBs = deleteBs;

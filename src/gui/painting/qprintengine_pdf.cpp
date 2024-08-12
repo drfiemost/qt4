@@ -112,8 +112,7 @@ QPdfEngine::QPdfEngine(QPrinter::PrinterMode m)
 }
 
 QPdfEngine::~QPdfEngine()
-{
-}
+= default;
 
 bool QPdfEngine::begin(QPaintDevice *pdev)
 {

@@ -63,7 +63,7 @@ class QScriptDebuggerResponseHandlerInterface;
 class Q_AUTOTEST_EXPORT QScriptDebuggerCommandSchedulerInterface
 {
 public:
-    virtual ~QScriptDebuggerCommandSchedulerInterface() {}
+    virtual ~QScriptDebuggerCommandSchedulerInterface() = default;
 
     virtual int scheduleCommand(
         const QScriptDebuggerCommand &command,

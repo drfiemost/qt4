@@ -89,8 +89,7 @@ QDesignerObjectInspectorInterface::QDesignerObjectInspectorInterface(QWidget *pa
     Destroys the object inspector interface.
 */
 QDesignerObjectInspectorInterface::~QDesignerObjectInspectorInterface()
-{
-}
+= default;
 
 /*!
     Returns a pointer to \QD's current QDesignerFormEditorInterface

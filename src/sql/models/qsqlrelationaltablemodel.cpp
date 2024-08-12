@@ -420,8 +420,7 @@ QSqlRelationalTableModel::QSqlRelationalTableModel(QObject *parent, QSqlDatabase
     Destroys the object and frees any allocated resources.
 */
 QSqlRelationalTableModel::~QSqlRelationalTableModel()
-{
-}
+= default;
 
 /*!
     \reimp

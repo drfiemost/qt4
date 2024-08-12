@@ -47,12 +47,10 @@
 QT_BEGIN_NAMESPACE
 
 QScriptDebuggerConsoleCommandJobPrivate::QScriptDebuggerConsoleCommandJobPrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommandJobPrivate::~QScriptDebuggerConsoleCommandJobPrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommandJob::QScriptDebuggerConsoleCommandJob(
     QScriptDebuggerConsole *console,
@@ -67,8 +65,7 @@ QScriptDebuggerConsoleCommandJob::QScriptDebuggerConsoleCommandJob(
 }
 
 QScriptDebuggerConsoleCommandJob::~QScriptDebuggerConsoleCommandJob()
-{
-}
+= default;
 
 QScriptDebuggerConsoleCommandJob::QScriptDebuggerConsoleCommandJob(
     QScriptDebuggerConsoleCommandJobPrivate &dd,

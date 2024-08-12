@@ -158,8 +158,7 @@ QValidator::QValidator(QObject * parent)
 */
 
 QValidator::~QValidator()
-{
-}
+= default;
 
 /*!
     Returns the locale for the validator. The locale is by default initialized to the same as QLocale().
@@ -757,8 +756,7 @@ QRegExpValidator::QRegExpValidator(const QRegExp& rx, QObject *parent)
 */
 
 QRegExpValidator::~QRegExpValidator()
-{
-}
+= default;
 
 /*!
     Returns \l Acceptable if \a input is matched by the regular

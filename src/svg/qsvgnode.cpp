@@ -57,9 +57,7 @@ QSvgNode::QSvgNode(QSvgNode *parent)
 }
 
 QSvgNode::~QSvgNode()
-{
-
-}
+= default;
 
 bool QSvgNode::isDescendantOf(const QSvgNode *parent) const
 {

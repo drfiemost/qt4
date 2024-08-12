@@ -62,7 +62,7 @@ QT_BEGIN_NAMESPACE
 class Q_AUTOTEST_EXPORT QScriptMessageHandlerInterface
 {
 public:
-    virtual ~QScriptMessageHandlerInterface() {}
+    virtual ~QScriptMessageHandlerInterface() = default;
 
     virtual void message(QtMsgType type, const QString &text,
                          const QString &fileName = QString(),

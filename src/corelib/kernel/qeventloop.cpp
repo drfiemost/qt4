@@ -124,7 +124,7 @@ QEventLoop::QEventLoop(QObject *parent)
     Destroys the event loop object.
 */
 QEventLoop::~QEventLoop()
-{ }
+= default;
 
 
 /*!

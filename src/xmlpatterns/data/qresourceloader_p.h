@@ -126,7 +126,7 @@ namespace QPatternist
         };
 
         typedef QExplicitlySharedDataPointer<ResourceLoader> Ptr;
-        inline ResourceLoader() {}
+        inline ResourceLoader() = default;
         virtual ~ResourceLoader();
 
         /**

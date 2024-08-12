@@ -196,12 +196,10 @@ extern Q_TESTLIB_EXPORT bool printAvailableTags;
 }
 
 QTestLog::QTestLog()
-{
-}
+= default;
 
 QTestLog::~QTestLog()
-{
-}
+= default;
 
 void QTestLog::enterTestFunction(const char* function)
 {

@@ -118,9 +118,8 @@ QNetworkCookie::QNetworkCookie(const QByteArray &name, const QByteArray &value)
     other.
 */
 QNetworkCookie::QNetworkCookie(const QNetworkCookie &other)
-    : d(other.d)
-{
-}
+     
+= default;
 
 /*!
     Destroys this QNetworkCookie object.
@@ -136,10 +135,7 @@ QNetworkCookie::~QNetworkCookie()
     object.
 */
 QNetworkCookie &QNetworkCookie::operator=(const QNetworkCookie &other)
-{
-    d = other.d;
-    return *this;
-}
+= default;
 
 /*!
     \fn bool QNetworkCookie::operator!=(const QNetworkCookie &other) const

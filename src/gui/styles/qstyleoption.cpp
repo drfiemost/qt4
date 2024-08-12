@@ -163,8 +163,7 @@ QStyleOption::QStyleOption(int version, int type)
     Destroys this style option object.
 */
 QStyleOption::~QStyleOption()
-{
-}
+= default;
 
 /*!
     \fn void QStyleOption::initFrom(const QWidget *widget)
@@ -3741,9 +3740,7 @@ QStyleHintReturn::QStyleHintReturn(int version, int type)
 */
 
 QStyleHintReturn::~QStyleHintReturn()
-{
-
-}
+= default;
 
 /*!
     \class QStyleHintReturnMask
@@ -3773,8 +3770,7 @@ QStyleHintReturnMask::QStyleHintReturnMask() : QStyleHintReturn(Version, Type)
     Destructor.
 */
 QStyleHintReturnMask::~QStyleHintReturnMask()
-{
-}
+= default;
 
 /*!
     \enum QStyleHintReturnMask::StyleOptionType

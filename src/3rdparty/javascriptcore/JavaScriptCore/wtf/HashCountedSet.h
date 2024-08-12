@@ -37,7 +37,7 @@ namespace WTF {
         typedef typename ImplType::iterator iterator;
         typedef typename ImplType::const_iterator const_iterator;
         
-        HashCountedSet() {}
+        HashCountedSet() = default;
         
         int size() const;
         int capacity() const;

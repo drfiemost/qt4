@@ -156,7 +156,7 @@ class Q_AUTOTEST_EXPORT QDeclarativeXmlListModelRole : public QObject
     Q_PROPERTY(bool isKey READ isKey WRITE setIsKey NOTIFY isKeyChanged)
 public:
     QDeclarativeXmlListModelRole() : m_isKey(false) {}
-    ~QDeclarativeXmlListModelRole() override {}
+    ~QDeclarativeXmlListModelRole() override = default;
 
     QString name() const { return m_name; }
     void setName(const QString &name) {

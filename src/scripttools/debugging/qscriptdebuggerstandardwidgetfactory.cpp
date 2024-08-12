@@ -58,8 +58,7 @@ QScriptDebuggerStandardWidgetFactory::QScriptDebuggerStandardWidgetFactory(QObje
 }
 
 QScriptDebuggerStandardWidgetFactory::~QScriptDebuggerStandardWidgetFactory()
-{
-}
+= default;
 
 QScriptDebugOutputWidgetInterface *QScriptDebuggerStandardWidgetFactory::createDebugOutputWidget()
 {

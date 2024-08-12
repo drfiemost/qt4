@@ -414,7 +414,7 @@ class QScriptMetaMethod
 {
 public:
     inline QScriptMetaMethod()
-        { }
+        = default;
     inline QScriptMetaMethod(const QVector<QScriptMetaType> &types)
         : m_types(types), m_firstUnresolvedIndex(-1)
     {
@@ -2155,8 +2155,7 @@ QObjectConnectionManager::QObjectConnectionManager(QScriptEnginePrivate *eng)
 }
 
 QObjectConnectionManager::~QObjectConnectionManager()
-{
-}
+= default;
 
 void QObjectConnectionManager::mark(JSC::MarkStack& markStack)
 {

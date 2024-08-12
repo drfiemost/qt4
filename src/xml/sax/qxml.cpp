@@ -245,10 +245,8 @@ public:
     {
     }
     QXmlParseExceptionPrivate(const QXmlParseExceptionPrivate &other)
-        : msg(other.msg), column(other.column), line(other.line),
-          pub(other.pub), sys(other.sys)
-    {
-    }
+         
+    = default;
 
     QString msg;
     int column;
@@ -345,8 +343,7 @@ QXmlParseException::QXmlParseException(const QXmlParseException& other) :
     Destroys the QXmlParseException.
 */
 QXmlParseException::~QXmlParseException()
-{
-}
+= default;
 
 /*!
     Returns the error message.
@@ -405,15 +402,13 @@ QString QXmlParseException::systemId() const
     Constructor.
 */
 QXmlLocator::QXmlLocator()
-{
-}
+= default;
 
 /*!
     Destructor.
 */
 QXmlLocator::~QXmlLocator()
-{
-}
+= default;
 
 /*!
     \fn int QXmlLocator::columnNumber() const
@@ -437,8 +432,7 @@ public:
         reader = parent;
     }
     ~QXmlSimpleReaderLocator() override
-    {
-    }
+    = default;
 
     int columnNumber() const override
     {
@@ -472,8 +466,7 @@ public:
     }
 
     ~QXmlNamespaceSupportPrivate()
-    {
-    }
+    = default;
 
     QStack<NamespaceMap> nsStack;
     NamespaceMap ns;
@@ -2890,8 +2883,7 @@ QXmlSimpleReader::QXmlSimpleReader()
     Destroys the simple XML reader.
 */
 QXmlSimpleReader::~QXmlSimpleReader()
-{
-}
+= default;
 
 /*!
     \reimp

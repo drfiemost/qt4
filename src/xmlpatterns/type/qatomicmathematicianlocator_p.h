@@ -71,8 +71,7 @@ namespace QPatternist
         typedef QExplicitlySharedDataPointer<AtomicMathematicianLocator> Ptr;
 
         inline AtomicMathematicianLocator()
-        {
-        }
+        = default;
 
         ~AtomicMathematicianLocator() override;
 

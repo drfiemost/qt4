@@ -166,7 +166,7 @@ namespace QPatternist
          * @short This default constructor has no definition, in order to avoid
          * instantiation, since it makes no sense to instantiate this class.
          */
-        inline XPathHelper();
+        inline XPathHelper() = delete;
 
         Q_DISABLE_COPY(XPathHelper)
     };

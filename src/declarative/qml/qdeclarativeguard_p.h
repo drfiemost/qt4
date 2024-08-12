@@ -157,8 +157,7 @@ void QDeclarativeGuardImpl::remGuard()
 
 template<class T>
 QDeclarativeGuard<T>::QDeclarativeGuard()
-{
-}
+= default;
 
 template<class T>
 QDeclarativeGuard<T>::QDeclarativeGuard(T *g)
@@ -174,8 +173,7 @@ QDeclarativeGuard<T>::QDeclarativeGuard(const QDeclarativeGuard<T> &g)
 
 template<class T>
 QDeclarativeGuard<T>::~QDeclarativeGuard()
-{
-}
+= default;
 
 template<class T>
 QDeclarativeGuard<T> &QDeclarativeGuard<T>::operator=(const QDeclarativeGuard<T> &g)

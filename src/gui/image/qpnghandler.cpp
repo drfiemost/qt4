@@ -613,8 +613,7 @@ QPNGImageWriter::QPNGImageWriter(QIODevice* iod) :
 }
 
 QPNGImageWriter::~QPNGImageWriter()
-{
-}
+= default;
 
 void QPNGImageWriter::setDisposalMethod(DisposalMethod dm)
 {

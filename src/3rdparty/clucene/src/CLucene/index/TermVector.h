@@ -28,7 +28,7 @@ class TermPositionVector;
 class TermFreqVector : LUCENE_BASE
 {
 public:
-	virtual ~TermFreqVector() {}
+	virtual ~TermFreqVector() = default;
 
 	// @return The field this vector is associated with.
 	virtual const TCHAR* getField() = 0;
@@ -120,7 +120,7 @@ private:
 			this->storePositions = storePos;
 			this->storeOffsets = storeOff;
 		}
-        ~TVField() {}
+        ~TVField() = default;
 	};
 
 	class TVTerm : LUCENE_BASE
@@ -355,8 +355,7 @@ public:
      */ 
      virtual Array<TermVectorOffsetInfo>* getOffsets(int32_t index) = 0;
      
-     virtual ~TermPositionVector(){
-	 }
+     virtual ~TermPositionVector()= default;
 };
 
 

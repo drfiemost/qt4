@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
 class Q_SQL_EXPORT QSqlRelation
 {
 public:
-    QSqlRelation() {}
+    QSqlRelation() = default;
     QSqlRelation(const QString &aTableName, const QString &indexCol,
                const QString &displayCol)
         : tName(aTableName), iColumn(indexCol), dColumn(displayCol) {}

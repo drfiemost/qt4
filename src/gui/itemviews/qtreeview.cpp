@@ -207,8 +207,7 @@ QTreeView::QTreeView(QTreeViewPrivate &dd, QWidget *parent)
   Destroys the tree view.
 */
 QTreeView::~QTreeView()
-{
-}
+= default;
 
 /*!
   \reimp

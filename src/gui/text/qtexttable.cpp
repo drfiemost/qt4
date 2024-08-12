@@ -575,8 +575,7 @@ QTextTable::QTextTable(QTextDocument *doc)
 Destroys the table.
  */
 QTextTable::~QTextTable()
-{
-}
+= default;
 
 
 /*!

@@ -991,8 +991,7 @@ QItemSelectionModel::QItemSelectionModel(QItemSelectionModelPrivate &dd, QAbstra
     Destroys the selection model.
 */
 QItemSelectionModel::~QItemSelectionModel()
-{
-}
+= default;
 
 /*!
     Selects the model item \a index using the specified \a command, and emits

@@ -112,8 +112,7 @@ QDesignerWidgetBoxInterface::QDesignerWidgetBoxInterface(QWidget *parent, Qt::Wi
     Destroys the widget box interface.
 */
 QDesignerWidgetBoxInterface::~QDesignerWidgetBoxInterface()
-{
-}
+= default;
 
 /*!
     \internal

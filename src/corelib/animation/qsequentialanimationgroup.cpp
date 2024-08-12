@@ -260,8 +260,7 @@ QSequentialAnimationGroup::QSequentialAnimationGroup(QSequentialAnimationGroupPr
     Destroys the animation group. It will also destroy all its animations.
 */
 QSequentialAnimationGroup::~QSequentialAnimationGroup()
-{
-}
+= default;
 
 /*!
     Adds a pause of \a msecs to this animation group.

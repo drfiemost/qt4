@@ -88,8 +88,7 @@ namespace QPatternist
          * @see create()
          */
         inline EmptySequence()
-        {
-        }
+        = default;
 
         virtual QString stringValue() const;
 

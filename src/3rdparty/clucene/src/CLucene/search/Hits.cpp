@@ -59,9 +59,7 @@ CL_NS_DEF(search)
 		getMoreDocs(50);
 	}
 
-	Hits::~Hits(){
-
-	}
+	Hits::~Hits()= default;
 	int32_t Hits::length() const {
 		return _length;
 	}

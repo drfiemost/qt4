@@ -34,8 +34,7 @@ void CompoundFileReader::CSIndexInput::readInternal(uint8_t* b, const int32_t le
 }
 
 CompoundFileReader::CSIndexInput::~CSIndexInput()
-{
-}
+= default;
 
 IndexInput* CompoundFileReader::CSIndexInput::clone() const
 {
@@ -232,8 +231,7 @@ CompoundFileWriter::CompoundFileWriter(Directory* dir, const QString& name)
 }
 
 CompoundFileWriter::~CompoundFileWriter()
-{
-}
+= default;
 
 Directory* CompoundFileWriter::getDirectory()
 {

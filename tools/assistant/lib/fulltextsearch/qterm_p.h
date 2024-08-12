@@ -60,7 +60,7 @@ public:
     bool deleteCLuceneTerm;
 
 private:
-    QCLuceneTermPrivate &operator=(const QCLuceneTermPrivate &other);
+    QCLuceneTermPrivate &operator=(const QCLuceneTermPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneTerm

@@ -147,8 +147,7 @@ QRadioButton::QRadioButton(QWidget *parent)
     Destructor.
 */
 QRadioButton::~QRadioButton()
-{
-}
+= default;
 
 /*!
     Constructs a radio button with the given \a parent and a \a text string.

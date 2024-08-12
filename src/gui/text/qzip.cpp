@@ -436,8 +436,7 @@ QZipReader::FileInfo::FileInfo()
 }
 
 QZipReader::FileInfo::~FileInfo()
-{
-}
+= default;
 
 QZipReader::FileInfo::FileInfo(const FileInfo &other)
 {

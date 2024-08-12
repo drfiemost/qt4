@@ -56,8 +56,7 @@ Driver::Driver()
 }
 
 Driver::~Driver()
-{
-}
+= default;
 
 QString Driver::findOrInsertWidget(DomWidget *ui_widget)
 {

@@ -3142,9 +3142,7 @@ QAbstractTableModel::QAbstractTableModel(QAbstractItemModelPrivate &dd, QObject 
 */
 
 QAbstractTableModel::~QAbstractTableModel()
-{
-
-}
+= default;
 
 /*!
     \fn QModelIndex QAbstractTableModel::index(int row, int column, const QModelIndex &parent = QModelIndex()) const
@@ -3270,9 +3268,7 @@ QAbstractListModel::QAbstractListModel(QAbstractItemModelPrivate &dd, QObject *p
 */
 
 QAbstractListModel::~QAbstractListModel()
-{
-
-}
+= default;
 
 /*!
     \fn QModelIndex QAbstractListModel::index(int row, int column, const QModelIndex &parent = QModelIndex()) const

@@ -161,8 +161,7 @@ QSignalTransition::QSignalTransition(QObject *sender, const char *signal,
   Destroys this signal transition.
 */
 QSignalTransition::~QSignalTransition()
-{
-}
+= default;
 
 /*!
   Returns the sender object associated with this signal transition.

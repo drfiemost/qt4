@@ -60,7 +60,7 @@ class QDesignerFormEditorInterface;
 class QDesignerMetaDataBaseItemInterface
 {
 public:
-    virtual ~QDesignerMetaDataBaseItemInterface() {}
+    virtual ~QDesignerMetaDataBaseItemInterface() = default;
 
     virtual QString name() const = 0;
     virtual void setName(const QString &name) = 0;

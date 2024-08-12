@@ -56,13 +56,13 @@ public:
     bool deleteCLuceneFilter;
 
 private:
-    QCLuceneFilterPrivate &operator=(const QCLuceneFilterPrivate &other);
+    QCLuceneFilterPrivate &operator=(const QCLuceneFilterPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneFilter
 {
     QCLuceneFilter();
-    virtual ~QCLuceneFilter();
+    virtual ~QCLuceneFilter() = default;
 
 protected:
     friend class QCLuceneHits;

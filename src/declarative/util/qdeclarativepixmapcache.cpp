@@ -721,8 +721,7 @@ QDeclarativePixmapReply::QDeclarativePixmapReply(QDeclarativePixmapData *d)
 }
 
 QDeclarativePixmapReply::~QDeclarativePixmapReply()
-{
-}
+= default;
 
 bool QDeclarativePixmapReply::event(QEvent *event)
 {

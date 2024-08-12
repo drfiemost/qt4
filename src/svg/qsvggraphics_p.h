@@ -224,7 +224,7 @@ public:
         : QSvgNode(parent), m_mode(QSvgText::Default), m_isTspan(isProperTspan)
     {
     }
-    ~QSvgTspan() override { };
+    ~QSvgTspan() override = default;
     Type type() const override {return TSPAN;}
     void draw(QPainter *, QSvgExtraStates &) override {Q_ASSERT(!"Tspans should be drawn through QSvgText::draw().");}
     void addText(const QString &text) {m_text += text;}

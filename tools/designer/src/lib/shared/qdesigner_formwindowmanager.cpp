@@ -66,8 +66,7 @@ QDesignerFormWindowManager::QDesignerFormWindowManager(QObject *parent)
 }
 
 QDesignerFormWindowManager::~QDesignerFormWindowManager()
-{
-}
+= default;
 
 /*!
     Allows you to intervene and control \QD's form "Preview" action. The

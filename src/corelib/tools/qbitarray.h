@@ -58,9 +58,9 @@ class Q_CORE_EXPORT QBitArray
     QByteArray d;
 
 public:
-    inline QBitArray() {}
+    inline QBitArray() = default;
     explicit QBitArray(int size, bool val = false);
-    QBitArray(const QBitArray &other) : d(other.d) {}
+    QBitArray(const QBitArray &other)  = default;
     inline QBitArray &operator=(const QBitArray &other) { d = other.d; return *this; }
 #ifdef Q_COMPILER_RVALUE_REFS
     inline QBitArray &operator=(QBitArray &&other)

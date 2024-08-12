@@ -132,11 +132,10 @@ DeviceProfile::DeviceProfile() :
 {
 }
 
-DeviceProfile::DeviceProfile(const DeviceProfile &o) :
-    m_d(o.m_d)
+DeviceProfile::DeviceProfile(const DeviceProfile &o) 
+    
 
-{
-}
+= default;
 
 DeviceProfile& DeviceProfile::operator=(const DeviceProfile &o)
 {
@@ -145,8 +144,7 @@ DeviceProfile& DeviceProfile::operator=(const DeviceProfile &o)
 }
 
 DeviceProfile::~DeviceProfile()
-{
-}
+= default;
 
 void DeviceProfile::clear()
 {

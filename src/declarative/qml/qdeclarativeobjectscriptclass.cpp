@@ -104,8 +104,7 @@ QDeclarativeObjectScriptClass::QDeclarativeObjectScriptClass(QDeclarativeEngine 
 }
 
 QDeclarativeObjectScriptClass::~QDeclarativeObjectScriptClass()
-{
-}
+= default;
 
 QScriptValue QDeclarativeObjectScriptClass::newQObject(QObject *object, int type)
 {
@@ -585,8 +584,7 @@ QDeclarativeObjectMethodScriptClass::QDeclarativeObjectMethodScriptClass(QDeclar
 }
 
 QDeclarativeObjectMethodScriptClass::~QDeclarativeObjectMethodScriptClass()
-{
-}
+= default;
 
 QScriptValue QDeclarativeObjectMethodScriptClass::newMethod(QObject *object, const QDeclarativePropertyCache::Data *method)
 {
@@ -681,7 +679,7 @@ struct MetaCallArgument {
     inline QScriptDeclarativeClass::Value toValue(QDeclarativeEngine *);
 
 private:
-    MetaCallArgument(const MetaCallArgument &);
+    MetaCallArgument(const MetaCallArgument &) = delete;
 
     inline void cleanup();
 

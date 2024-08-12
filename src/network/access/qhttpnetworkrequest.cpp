@@ -67,8 +67,7 @@ QHttpNetworkRequestPrivate::QHttpNetworkRequestPrivate(const QHttpNetworkRequest
 }
 
 QHttpNetworkRequestPrivate::~QHttpNetworkRequestPrivate()
-{
-}
+= default;
 
 bool QHttpNetworkRequestPrivate::operator==(const QHttpNetworkRequestPrivate &other) const
 {
@@ -180,13 +179,11 @@ QHttpNetworkRequest::QHttpNetworkRequest(const QUrl &url, Operation operation, P
 }
 
 QHttpNetworkRequest::QHttpNetworkRequest(const QHttpNetworkRequest &other)
-    : QHttpNetworkHeader(other), d(other.d)
-{
-}
+     
+= default;
 
 QHttpNetworkRequest::~QHttpNetworkRequest()
-{
-}
+= default;
 
 QUrl QHttpNetworkRequest::url() const
 {

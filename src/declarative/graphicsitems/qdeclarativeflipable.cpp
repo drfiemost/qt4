@@ -115,8 +115,7 @@ QDeclarativeFlipable::QDeclarativeFlipable(QDeclarativeItem *parent)
 }
 
 QDeclarativeFlipable::~QDeclarativeFlipable()
-{
-}
+= default;
 
 /*!
   \qmlproperty Item Flipable::front

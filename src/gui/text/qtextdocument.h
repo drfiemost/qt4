@@ -99,8 +99,7 @@ public:
 };
 
 inline QAbstractUndoItem::~QAbstractUndoItem()
-{
-}
+= default;
 
 class QTextDocumentPrivate;
 

@@ -742,8 +742,7 @@ QTabBar::QTabBar(QWidget* parent)
     Destroys the tab bar.
 */
 QTabBar::~QTabBar()
-{
-}
+= default;
 
 /*!
     \property QTabBar::shape

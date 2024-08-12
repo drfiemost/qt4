@@ -147,7 +147,7 @@ void (*QAbstractDeclarativeData::destroyed)(QAbstractDeclarativeData *, QObject 
 void (*QAbstractDeclarativeData::parentChanged)(QAbstractDeclarativeData *, QObject *, QObject *) = nullptr;
 void (*QAbstractDeclarativeData::objectNameChanged)(QAbstractDeclarativeData *, QObject *) = nullptr;
 
-QObjectData::~QObjectData() {}
+QObjectData::~QObjectData() = default;
 
 QObjectPrivate::QObjectPrivate(int version)
     : threadData(nullptr), connectionLists(nullptr), senders(nullptr), currentSender(nullptr), currentChildBeingDeleted(nullptr)
@@ -3677,8 +3677,7 @@ uint QObject::registerUserData()
 /*!\internal
  */
 QObjectUserData::~QObjectUserData()
-{
-}
+= default;
 
 /*!\internal
  */

@@ -144,8 +144,7 @@ QSplashScreen::QSplashScreen(QWidget *parent, const QPixmap &pixmap, Qt::WindowF
   Destructor.
 */
 QSplashScreen::~QSplashScreen()
-{
-}
+= default;
 
 /*!
     \reimp

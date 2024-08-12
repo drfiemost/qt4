@@ -244,8 +244,7 @@ QDBusPendingReplyData::QDBusPendingReplyData()
 }
 
 QDBusPendingReplyData::~QDBusPendingReplyData()
-{
-}
+= default;
 
 void QDBusPendingReplyData::assign(const QDBusPendingCall &other)
 {

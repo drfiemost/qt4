@@ -196,7 +196,7 @@ public:
 #endif
     }
 
-    virtual ~IterateKernel() { }
+    virtual ~IterateKernel() = default;
 
     virtual bool runIteration(Iterator it, int index , T *result)
         { Q_UNUSED(it); Q_UNUSED(index); Q_UNUSED(result); return false; }

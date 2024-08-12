@@ -287,8 +287,7 @@ namespace qdesigner_internal
     }
 
     PropertySheetPixmapValue::PropertySheetPixmapValue()
-    {
-    }
+    = default;
 
     PropertySheetPixmapValue::PixmapSource PropertySheetPixmapValue::getPixmapSource(QDesignerFormEditorInterface *core, const QString & path)
     {
@@ -334,13 +333,11 @@ namespace qdesigner_internal
     }
 
     PropertySheetIconValue::~PropertySheetIconValue()
-    {
-    }
+    = default;
 
-    PropertySheetIconValue::PropertySheetIconValue(const PropertySheetIconValue &rhs) :
-        m_data(rhs.m_data)
-    {
-    }
+    PropertySheetIconValue::PropertySheetIconValue(const PropertySheetIconValue &rhs) 
+        
+    = default;
 
     PropertySheetIconValue &PropertySheetIconValue::operator=(const PropertySheetIconValue &rhs)
     {

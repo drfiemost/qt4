@@ -93,7 +93,7 @@ public:
           animationsEnabled(false), columnResizeTimerID(0),
           autoExpandDelay(-1), hoverBranch(-1), geometryRecursionBlock(false), hasRemovedItems(false) {}
 
-    ~QTreeViewPrivate() override {}
+    ~QTreeViewPrivate() override = default;
     void initialize();
 
     QItemViewPaintPairs draggablePaintPairs(const QModelIndexList &indexes, QRect *r) const override;

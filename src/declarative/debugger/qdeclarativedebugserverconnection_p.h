@@ -53,8 +53,8 @@ class QDeclarativeDebugServer;
 class Q_DECLARATIVE_EXPORT QDeclarativeDebugServerConnection
 {
 public:
-    QDeclarativeDebugServerConnection() {}
-    virtual ~QDeclarativeDebugServerConnection() {}
+    QDeclarativeDebugServerConnection() = default;
+    virtual ~QDeclarativeDebugServerConnection() = default;
 
     virtual void setServer(QDeclarativeDebugServer *server) = 0;
     virtual void setPort(int port, bool bock) = 0;

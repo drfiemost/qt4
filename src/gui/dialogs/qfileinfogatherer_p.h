@@ -71,7 +71,7 @@ class QExtendedInformation {
 public:
     enum Type { Dir, File, System };
 
-    QExtendedInformation() {}
+    QExtendedInformation() = default;
     QExtendedInformation(const QFileInfo &info) : mFileInfo(info) {}
 
     inline bool isDir() { return type() == Dir; }

@@ -57,7 +57,7 @@ public:
     bool deleteCLuceneField;
 
 private:
-    QCLuceneFieldPrivate &operator=(const QCLuceneFieldPrivate &other);
+    QCLuceneFieldPrivate &operator=(const QCLuceneFieldPrivate &other) = delete;
 };
 
 class QHELP_EXPORT QCLuceneField

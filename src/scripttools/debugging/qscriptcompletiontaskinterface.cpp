@@ -52,12 +52,10 @@ QScriptCompletionTaskInterfacePrivate::QScriptCompletionTaskInterfacePrivate()
 }
 
 QScriptCompletionTaskInterfacePrivate::~QScriptCompletionTaskInterfacePrivate()
-{
-}
+= default;
 
 QScriptCompletionTaskInterface::~QScriptCompletionTaskInterface()
-{
-}
+= default;
 
 QScriptCompletionTaskInterface::QScriptCompletionTaskInterface(
     QScriptCompletionTaskInterfacePrivate &dd, QObject *parent)

@@ -75,12 +75,10 @@ public:
 };
 
 QScriptBreakpointDataPrivate::QScriptBreakpointDataPrivate()
-{
-}
+= default;
 
 QScriptBreakpointDataPrivate::~QScriptBreakpointDataPrivate()
-{
-}
+= default;
 
 void QScriptBreakpointDataPrivate::init(int ln)
 {
@@ -135,8 +133,7 @@ QScriptBreakpointData::QScriptBreakpointData(const QScriptBreakpointData &other)
   Destroys this QScriptBreakpointData.
 */
 QScriptBreakpointData::~QScriptBreakpointData()
-{
-}
+= default;
 
 /*!
   Assigns \a other to this QScriptBreakpointData.

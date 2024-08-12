@@ -109,7 +109,6 @@ QStylePlugin::QStylePlugin(QObject *parent)
     used, so there is no need for calling the destructor explicitly.
 */
 QStylePlugin::~QStylePlugin()
-{
-}
+= default;
 
 QT_END_NAMESPACE

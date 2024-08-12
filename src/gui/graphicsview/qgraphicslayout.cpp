@@ -200,8 +200,7 @@ QGraphicsLayout::QGraphicsLayout(QGraphicsLayoutPrivate &dd, QGraphicsLayoutItem
     Destroys the QGraphicsLayout object.
 */
 QGraphicsLayout::~QGraphicsLayout()
-{
-}
+= default;
 
 /*!
     Sets the contents margins to \a left, \a top, \a right and \a bottom. The

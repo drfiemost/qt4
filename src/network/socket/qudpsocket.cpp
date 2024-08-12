@@ -221,8 +221,7 @@ QUdpSocket::QUdpSocket(QObject *parent)
     \sa close()
 */
 QUdpSocket::~QUdpSocket()
-{
-}
+= default;
 
 /*!
     Binds this socket to the address \a address and the port \a port.

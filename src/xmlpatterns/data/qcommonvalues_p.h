@@ -215,7 +215,7 @@ namespace QPatternist
          * The constructor is private because this class is not meant to be instantiated,
          * but should only be used via its static const members.
          */
-        inline CommonValues();
+        inline CommonValues() = delete;
 
         Q_DISABLE_COPY(CommonValues)
     };

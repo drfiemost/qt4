@@ -203,8 +203,7 @@ QListView::QListView(QListViewPrivate &dd, QWidget *parent)
   Destroys the view.
 */
 QListView::~QListView()
-{
-}
+= default;
 
 /*!
     \property QListView::movement

@@ -51,12 +51,10 @@ QScriptDebuggerConsoleWidgetInterfacePrivate::QScriptDebuggerConsoleWidgetInterf
 }
 
 QScriptDebuggerConsoleWidgetInterfacePrivate::~QScriptDebuggerConsoleWidgetInterfacePrivate()
-{
-}
+= default;
 
 QScriptDebuggerConsoleWidgetInterface::~QScriptDebuggerConsoleWidgetInterface()
-{
-}
+= default;
 
 QScriptDebuggerConsoleWidgetInterface::QScriptDebuggerConsoleWidgetInterface(
     QScriptDebuggerConsoleWidgetInterfacePrivate &dd,

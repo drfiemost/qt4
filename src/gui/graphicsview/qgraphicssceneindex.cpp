@@ -380,9 +380,7 @@ QGraphicsSceneIndex::QGraphicsSceneIndex(QGraphicsSceneIndexPrivate &dd, QGraphi
     Destroys the scene index.
 */
 QGraphicsSceneIndex::~QGraphicsSceneIndex()
-{
-
-}
+= default;
 
 /*!
     Returns the scene of this index.

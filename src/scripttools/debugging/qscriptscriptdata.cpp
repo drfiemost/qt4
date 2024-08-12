@@ -76,8 +76,7 @@ QScriptScriptDataPrivate::QScriptScriptDataPrivate()
 }
 
 QScriptScriptDataPrivate::~QScriptScriptDataPrivate()
-{
-}
+= default;
 
 QScriptScriptData::QScriptScriptData()
     : d_ptr(nullptr)
@@ -106,8 +105,7 @@ QScriptScriptData::QScriptScriptData(const QScriptScriptData &other)
 }
 
 QScriptScriptData::~QScriptScriptData()
-{
-}
+= default;
 
 QScriptScriptData &QScriptScriptData::operator=(const QScriptScriptData &other)
 {

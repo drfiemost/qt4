@@ -99,8 +99,7 @@ QIconEnginePlugin::QIconEnginePlugin(QObject *parent)
     automatically when it is no longer used.
 */
 QIconEnginePlugin::~QIconEnginePlugin()
-{
-}
+= default;
 
 // version 2
 
@@ -165,7 +164,6 @@ QIconEnginePluginV2::QIconEnginePluginV2(QObject *parent)
     automatically when it is no longer used.
 */
 QIconEnginePluginV2::~QIconEnginePluginV2()
-{
-}
+= default;
 
 QT_END_NAMESPACE

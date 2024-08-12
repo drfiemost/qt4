@@ -97,8 +97,7 @@ namespace QPatternist
         typedef QExplicitlySharedDataPointer<DynamicContext> Ptr;
 
         ~DynamicContext() override
-        {
-        }
+        = default;
 
         /**
          * This function intentionally returns by reference.

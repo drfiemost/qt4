@@ -113,7 +113,7 @@ public:
 
     inline QResourceRoot(): tree(nullptr), names(nullptr), payloads(nullptr) {}
     inline QResourceRoot(const uchar *t, const uchar *n, const uchar *d) { setSource(t, n, d); }
-    virtual ~QResourceRoot() { }
+    virtual ~QResourceRoot() = default;
     int findNode(const QString &path, const QLocale &locale=QLocale()) const;
     inline bool isContainer(int node) const { return flags(node) & Directory; }
     inline bool isCompressed(int node) const { return flags(node) & Compressed; }
@@ -375,8 +375,7 @@ QResource::QResource(const QString &file, const QLocale &locale) : d_ptr(new QRe
     Releases the resources of the QResource object.
 */
 QResource::~QResource()
-{
-}
+= default;
 
 /*!
     Sets a QResource to only load the localization of resource to for \a
@@ -875,7 +874,7 @@ class QDynamicBufferResourceRoot: public QResourceRoot
 
 public:
     inline QDynamicBufferResourceRoot(const QString &_root) : root(_root), buffer(nullptr) { }
-    inline ~QDynamicBufferResourceRoot() override { }
+    inline ~QDynamicBufferResourceRoot() override = default;
     inline const uchar *mappingBuffer() const { return buffer; }
     QString mappingRoot() const override { return root; }
     ResourceRootType type() const override { return Resource_Buffer; }
@@ -1228,8 +1227,7 @@ QResourceFileEngine::QResourceFileEngine(const QString &file) :
 }
 
 QResourceFileEngine::~QResourceFileEngine()
-{
-}
+= default;
 
 void QResourceFileEngine::setFileName(const QString &file)
 {

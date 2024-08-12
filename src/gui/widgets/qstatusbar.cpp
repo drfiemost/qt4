@@ -66,7 +66,7 @@ class QStatusBarPrivate : public QWidgetPrivate
 {
     Q_DECLARE_PUBLIC(QStatusBar)
 public:
-    QStatusBarPrivate() {}
+    QStatusBarPrivate() = default;
 
     struct SBItem {
         SBItem(QWidget* widget, int stretch, bool permanent)

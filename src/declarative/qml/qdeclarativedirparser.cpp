@@ -55,8 +55,7 @@ QDeclarativeDirParser::QDeclarativeDirParser()
 }
 
 QDeclarativeDirParser::~QDeclarativeDirParser()
-{
-}
+= default;
 
 QUrl QDeclarativeDirParser::url() const
 {

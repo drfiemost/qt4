@@ -121,7 +121,7 @@ public:
 
     QDeclarativeCustomParser() : compiler(nullptr), object(nullptr), m_flags(NoFlag) {}
     QDeclarativeCustomParser(Flags f) : compiler(nullptr), object(nullptr), m_flags(f) {}
-    virtual ~QDeclarativeCustomParser() {}
+    virtual ~QDeclarativeCustomParser() = default;
 
     void clearErrors();
     Flags flags() const { return m_flags; }

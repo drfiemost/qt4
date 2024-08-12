@@ -228,8 +228,7 @@ QAbstractSliderPrivate::QAbstractSliderPrivate()
 }
 
 QAbstractSliderPrivate::~QAbstractSliderPrivate()
-{
-}
+= default;
 
 /*!
     Sets the slider's minimum to \a min and its maximum to \a max.
@@ -286,8 +285,7 @@ QAbstractSlider::QAbstractSlider(QAbstractSliderPrivate &dd, QWidget *parent)
     Destroys the slider.
 */
 QAbstractSlider::~QAbstractSlider()
-{
-}
+= default;
 
 /*!
     \property QAbstractSlider::orientation

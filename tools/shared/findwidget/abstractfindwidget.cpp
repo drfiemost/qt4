@@ -195,8 +195,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     Destroys the AbstractFindWidget.
  */
 AbstractFindWidget::~AbstractFindWidget()
-{
-}
+= default;
 
 /*!
     Returns the icon set to be used for the action that initiates a search.

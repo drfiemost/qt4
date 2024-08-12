@@ -191,7 +191,7 @@ public:
         QBasicTimer scrollTimer;
 
         QMenuScroller() : scrollFlags(ScrollNone), scrollDirection(ScrollNone), scrollOffset(0) { }
-        ~QMenuScroller() { }
+        ~QMenuScroller() = default;
     } *scroll;
     void scrollMenu(QMenuScroller::ScrollLocation location, bool active=false);
     void scrollMenu(QMenuScroller::ScrollDirection direction, bool page=false, bool active=false);

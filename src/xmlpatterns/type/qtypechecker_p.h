@@ -172,7 +172,7 @@ namespace QPatternist
          * No implementation is provided for this constructor. This class
          * is not supposed to be instantiated.
          */
-        inline TypeChecker();
+        inline TypeChecker() = delete;
 
         Q_DISABLE_COPY(TypeChecker)
     };

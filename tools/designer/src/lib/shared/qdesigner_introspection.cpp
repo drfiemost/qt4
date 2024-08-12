@@ -347,8 +347,7 @@ namespace  {
 namespace qdesigner_internal {
 
     QDesignerIntrospection::QDesignerIntrospection()
-    {
-    }
+    = default;
 
     QDesignerIntrospection::~QDesignerIntrospection()
     {

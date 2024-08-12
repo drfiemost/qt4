@@ -158,7 +158,7 @@ private:
 class PROPARSER_EXPORT ProFileCache
 {
 public:
-    ProFileCache() {}
+    ProFileCache() = default;
     ~ProFileCache();
 
     void discardFile(const QString &fileName);

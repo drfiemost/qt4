@@ -88,8 +88,7 @@ WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::Wi
 }
 
 WidgetBox::~WidgetBox()
-{
-}
+= default;
 
 QDesignerFormEditorInterface *WidgetBox::core() const
 {

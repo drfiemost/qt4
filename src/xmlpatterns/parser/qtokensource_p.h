@@ -125,7 +125,7 @@ namespace QPatternist
              * Constructs an invalid Token. This default constructor
              * is need in Qt's container classes.
              */
-            inline Token() {}
+            inline Token() = default;
             inline Token(const TokenType t) : type(t) {}
             inline Token(const TokenType t, const QString &val) : type(t), value(val) {}
 
@@ -146,8 +146,7 @@ namespace QPatternist
          * Q_DISABLE_COPY() macro.
          */
         inline TokenSource()
-        {
-        }
+        = default;
 
         virtual ~TokenSource();
 

@@ -109,8 +109,7 @@ QT_BEGIN_NAMESPACE
 */
 
 QAbstractTransitionPrivate::QAbstractTransitionPrivate()
-{
-}
+= default;
 
 QAbstractTransitionPrivate *QAbstractTransitionPrivate::get(QAbstractTransition *q)
 {
@@ -169,8 +168,7 @@ QAbstractTransition::QAbstractTransition(QAbstractTransitionPrivate &dd,
   Destroys this transition.
 */
 QAbstractTransition::~QAbstractTransition()
-{
-}
+= default;
 
 /*!
   Returns the source state of this transition, or 0 if this transition has no

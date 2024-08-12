@@ -56,8 +56,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 NamespaceSupport::NamespaceSupport()
-{
-}
+= default;
 
 NamespaceSupport::NamespaceSupport(NamePool &namePool)
     : m_namePool(&namePool)

@@ -69,8 +69,7 @@ public:
         animationFps = 24;
     }
 
-    ~QCleanlooksStylePrivate() override {
-    }
+    ~QCleanlooksStylePrivate() override = default;
 };
 
 QT_END_NAMESPACE

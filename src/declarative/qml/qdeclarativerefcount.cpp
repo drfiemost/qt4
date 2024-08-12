@@ -49,8 +49,7 @@ QDeclarativeRefCount::QDeclarativeRefCount()
 }
 
 QDeclarativeRefCount::~QDeclarativeRefCount()
-{
-}
+= default;
 
 void QDeclarativeRefCount::addref()
 {

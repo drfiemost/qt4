@@ -77,8 +77,7 @@ public:
 class Comparable : LUCENE_BASE
 {
 public:
-   virtual ~Comparable(){
-   }
+   virtual ~Comparable()= default;
    
 	virtual int32_t compareTo(void* o) = 0;
 };
@@ -96,8 +95,7 @@ public:
 		};	// min_buckets = 2 ^^ N, 0 < N
 
 		_base()
-		{
-		}
+		= default;
 	};
 
 	class Int32:public _base, public Comparable{

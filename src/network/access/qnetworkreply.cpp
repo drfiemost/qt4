@@ -351,8 +351,7 @@ QNetworkReply::QNetworkReply(QNetworkReplyPrivate &dd, QObject *parent)
     \sa abort(), close()
 */
 QNetworkReply::~QNetworkReply()
-{
-}
+= default;
 
 /*!
     Closes this device for reading. Unread data is discarded, but the

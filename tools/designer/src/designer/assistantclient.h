@@ -51,8 +51,8 @@ class QString;
 
 class AssistantClient
 {
-    AssistantClient(const AssistantClient &);
-    AssistantClient &operator=(const AssistantClient &);
+    AssistantClient(const AssistantClient &) = delete;
+    AssistantClient &operator=(const AssistantClient &) = delete;
 
 public:
     AssistantClient();

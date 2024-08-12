@@ -153,8 +153,7 @@ QDeclarativeRepeater::QDeclarativeRepeater(QDeclarativeItem *parent)
 }
 
 QDeclarativeRepeater::~QDeclarativeRepeater()
-{
-}
+= default;
 
 /*!
     \qmlproperty any Repeater::model

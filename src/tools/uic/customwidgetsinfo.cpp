@@ -47,8 +47,7 @@
 QT_BEGIN_NAMESPACE
 
 CustomWidgetsInfo::CustomWidgetsInfo()
-{
-}
+= default;
 
 void CustomWidgetsInfo::acceptUI(DomUI *node)
 {

@@ -82,8 +82,8 @@ public:
         PrevSection
     };
 
-    QCalendarDateSectionValidator() {}
-    virtual ~QCalendarDateSectionValidator() {}
+    QCalendarDateSectionValidator() = default;
+    virtual ~QCalendarDateSectionValidator() = default;
     virtual Section handleKey(int key) = 0;
     virtual QDate applyToDate(const QDate &date) const = 0;
     virtual void setDate(const QDate &date) = 0;
@@ -2114,8 +2114,7 @@ QCalendarWidget::QCalendarWidget(QWidget *parent)
    Destroys the calendar widget.
 */
 QCalendarWidget::~QCalendarWidget()
-{
-}
+= default;
 
 /*!
    \reimp

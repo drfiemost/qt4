@@ -46,8 +46,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AtomicMathematician::~AtomicMathematician()
-{
-}
+= default;
 
 QString AtomicMathematician::displayName(const AtomicMathematician::Operator op)
 {

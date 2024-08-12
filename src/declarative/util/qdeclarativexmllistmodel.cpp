@@ -700,8 +700,7 @@ QDeclarativeXmlListModel::QDeclarativeXmlListModel(QObject *parent)
 }
 
 QDeclarativeXmlListModel::~QDeclarativeXmlListModel()
-{
-}
+= default;
 
 /*!
     \qmlproperty list<XmlRole> XmlListModel::roles

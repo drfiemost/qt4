@@ -83,7 +83,7 @@ QT_BEGIN_NAMESPACE
 class QDeclarativePackagePrivate : public QObjectPrivate
 {
 public:
-    QDeclarativePackagePrivate() {}
+    QDeclarativePackagePrivate() = default;
 
     struct DataGuard : public QDeclarativeGuard<QObject>
     {

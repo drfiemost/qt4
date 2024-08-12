@@ -644,8 +644,7 @@ QUiLoader::QUiLoader(QObject *parent)
     Destroys the loader.
 */
 QUiLoader::~QUiLoader()
-{
-}
+= default;
 
 /*!
     Loads a form from the given \a device and creates a new widget with the

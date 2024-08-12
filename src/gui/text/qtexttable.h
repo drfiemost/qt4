@@ -59,10 +59,10 @@ class Q_GUI_EXPORT QTextTableCell
 {
 public:
     QTextTableCell() : table(nullptr) {}
-    ~QTextTableCell() {}
-    QTextTableCell(const QTextTableCell &o) : table(o.table), fragment(o.fragment) {}
+    ~QTextTableCell() = default;
+    QTextTableCell(const QTextTableCell &o)  = default;
     QTextTableCell &operator=(const QTextTableCell &o)
-    { table = o.table; fragment = o.fragment; return *this; }
+    = default;
 
     void setFormat(const QTextCharFormat &format);
     QTextCharFormat format() const;

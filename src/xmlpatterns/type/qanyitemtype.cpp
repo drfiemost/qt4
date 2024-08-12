@@ -49,8 +49,7 @@ QT_BEGIN_NAMESPACE
 using namespace QPatternist;
 
 AnyItemType::AnyItemType()
-{
-}
+= default;
 
 bool AnyItemType::itemMatches(const Item &) const
 {

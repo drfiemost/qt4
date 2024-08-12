@@ -91,8 +91,7 @@ QNetworkAccessFileBackend::QNetworkAccessFileBackend()
 }
 
 QNetworkAccessFileBackend::~QNetworkAccessFileBackend()
-{
-}
+= default;
 
 void QNetworkAccessFileBackend::open()
 {

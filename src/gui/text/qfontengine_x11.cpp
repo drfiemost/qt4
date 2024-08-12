@@ -113,7 +113,7 @@ QFontEngineMultiXLFD::QFontEngineMultiXLFD(const QFontDef &r, const QList<int> &
 }
 
 QFontEngineMultiXLFD::~QFontEngineMultiXLFD()
-{ }
+= default;
 
 void QFontEngineMultiXLFD::loadEngine(int at)
 {

@@ -177,8 +177,7 @@ QEventTransition::QEventTransition(QEventTransitionPrivate &dd, QObject *object,
   Destroys this QObject event transition.
 */
 QEventTransition::~QEventTransition()
-{
-}
+= default;
 
 /*!
   Returns the event type that this event transition is associated with.
