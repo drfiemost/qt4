@@ -36,7 +36,7 @@ CL_NS_USE(util)
 		if ( clone._twhat != nullptr )
 			this->_twhat = STRDUP_TtoT(clone._twhat);
 	}
-	CLuceneError::~CLuceneError() throw(){
+	CLuceneError::~CLuceneError() noexcept{
 		_CLDELETE_CARRAY(_twhat);
 		_CLDELETE_CaARRAY(_awhat);
 	}

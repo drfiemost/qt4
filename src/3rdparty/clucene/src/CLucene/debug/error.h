@@ -56,7 +56,7 @@
   	int number(){return error_number;}
 	char* what();
 	TCHAR* twhat();
-	~CLuceneError() throw();
+	~CLuceneError() noexcept;
   };
 	
  //#define _THROWS //does nothing
