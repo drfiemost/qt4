@@ -537,6 +537,7 @@ public:
 
 private slots:
     void initTestCase();
+    void cleanupTestCase();
     void reportFailures() const;
     void reportFailures_data();
     void checkBaseline() const;
@@ -600,6 +601,11 @@ void tst_QXmlStream::initTestCase()
     reader.setContentHandler(&m_handler);
 
     QVERIFY(reader.parse(&source, false));
+}
+
+void tst_QXmlStream::cleanupTestCase()
+{
+    QFile::remove(QLatin1String("test.xml"));
 }
 
 void tst_QXmlStream::reportFailures() const
