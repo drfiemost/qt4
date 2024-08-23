@@ -322,7 +322,7 @@ static QString classNameForInterface(const QString &interface, ClassType classTy
 
     QString retval;
     if (classType == Proxy)
-        foreach (QString part, parts) {
+        for (QString part: parts) {
             part[0] = part[0].toUpper();
             retval += part;
         }
@@ -561,7 +561,7 @@ static void writeProxy(const QString &filename, const QDBusIntrospection::Interf
        << includeList
        << "#include <QtDBus/QtDBus>" << endl;
 
-    foreach (QString include, includes) {
+    for (QString include: includes) {
         hs << "#include \"" << include << "\"" << endl;
         if (headerName.isEmpty())
             cs << "#include \"" << include << "\"" << endl;
@@ -574,7 +574,7 @@ static void writeProxy(const QString &filename, const QDBusIntrospection::Interf
             cs << "#include \"" << headerName << "\"" << endl << endl;
     }
 
-    foreach (const QDBusIntrospection::Interface *interface, interfaces) {
+    for (const QDBusIntrospection::Interface *interface: interfaces) {
         QString className = classNameForInterface(interface->name, Proxy);
 
         // comment:
@@ -614,7 +614,7 @@ static void writeProxy(const QString &filename, const QDBusIntrospection::Interf
            << endl;
 
         // properties:
-        foreach (const QDBusIntrospection::Property &property, interface->properties) {
+        for (const QDBusIntrospection::Property &property: interface->properties) {
             QByteArray type = qtTypeName(property.type, property.annotations);
             QString templateType = templateArg(type);
             QString constRefType = constRefArg(type);
@@ -654,7 +654,7 @@ static void writeProxy(const QString &filename, const QDBusIntrospection::Interf
 
         // methods:
         hs << "public Q_SLOTS: // METHODS" << endl;
-        foreach (const QDBusIntrospection::Method &method, interface->methods) {
+        for (const QDBusIntrospection::Method &method: interface->methods) {
             bool isDeprecated = method.annotations.value(QLatin1String("org.freedesktop.DBus.Deprecated")) == QLatin1String("true");
             bool isNoReply =
                 method.annotations.value(QLatin1String(ANNOTATION_NO_WAIT)) == QLatin1String("true");
@@ -747,7 +747,7 @@ static void writeProxy(const QString &filename, const QDBusIntrospection::Interf
         }
 
         hs << "Q_SIGNALS: // SIGNALS" << endl;
-        foreach (const QDBusIntrospection::Signal &signal, interface->signals_) {
+        for (const QDBusIntrospection::Signal &signal: interface->signals_) {
             hs << "    ";
             if (signal.annotations.value(QLatin1String("org.freedesktop.DBus.Deprecated")) ==
                 QLatin1String("true"))
@@ -869,7 +869,7 @@ static void writeAdaptor(const QString &filename, const QDBusIntrospection::Inte
            << "#include <QtCore/QVariant>" << endl;
     hs << "#include <QtDBus/QtDBus>" << endl;
 
-    foreach (QString include, includes) {
+    for (QString include: includes) {
         hs << "#include \"" << include << "\"" << endl;
         if (headerName.isEmpty())
             cs << "#include \"" << include << "\"" << endl;
@@ -893,7 +893,7 @@ static void writeAdaptor(const QString &filename, const QDBusIntrospection::Inte
     if (parentClassName.isEmpty())
         parent = QLatin1String("QObject");
 
-    foreach (const QDBusIntrospection::Interface *interface, interfaces) {
+    for (const QDBusIntrospection::Interface *interface: interfaces) {
         QString className = classNameForInterface(interface->name, Adaptor);
 
         // comment:
@@ -938,7 +938,7 @@ static void writeAdaptor(const QString &filename, const QDBusIntrospection::Inte
            << endl;
 
         hs << "public: // PROPERTIES" << endl;
-        foreach (const QDBusIntrospection::Property &property, interface->properties) {
+        for (const QDBusIntrospection::Property &property: interface->properties) {
             QByteArray type = qtTypeName(property.type, property.annotations);
             QString constRefType = constRefArg(type);
             QString getter = propertyGetter(property);
@@ -981,7 +981,7 @@ static void writeAdaptor(const QString &filename, const QDBusIntrospection::Inte
         }
 
         hs << "public Q_SLOTS: // METHODS" << endl;
-        foreach (const QDBusIntrospection::Method &method, interface->methods) {
+        for (const QDBusIntrospection::Method &method: interface->methods) {
             bool isNoReply =
                 method.annotations.value(QLatin1String(ANNOTATION_NO_WAIT)) == QLatin1String("true");
             if (isNoReply && !method.outputArgs.isEmpty()) {
@@ -1090,7 +1090,7 @@ static void writeAdaptor(const QString &filename, const QDBusIntrospection::Inte
         }
 
         hs << "Q_SIGNALS: // SIGNALS" << endl;
-        foreach (const QDBusIntrospection::Signal &signal, interface->signals_) {
+        for (const QDBusIntrospection::Signal &signal: interface->signals_) {
             hs << "    ";
             if (signal.annotations.value(QLatin1String("org.freedesktop.DBus.Deprecated")) ==
                 QLatin1String("true"))

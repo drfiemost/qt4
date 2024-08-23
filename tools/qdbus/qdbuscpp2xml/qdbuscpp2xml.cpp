@@ -433,7 +433,7 @@ int main(int argc, char **argv)
 
     output.write(docTypeHeader);
     output.write("<node>\n");
-    foreach (QMetaObject mo, parser.objects) {
+    for (QMetaObject mo: parser.objects) {
         QString xml = qDBusGenerateMetaObjectXml(QString(), &mo, &QObject::staticMetaObject,
                                                  flags);
         output.write(xml.toLocal8Bit());
