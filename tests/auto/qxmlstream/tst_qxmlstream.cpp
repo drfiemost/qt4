@@ -1076,7 +1076,7 @@ void tst_QXmlStream::writeAttributesWithSpace() const
     QXmlStreamWriter writer(&buffer);
     writer.writeStartDocument();
     writer.writeEmptyElement("A");
-    writer.writeAttribute("attribute", QString("value")+QChar::Nbsp);
+    writer.writeAttribute("attribute", QString("value") + QChar(QChar::Nbsp));
     writer.writeEndDocument();
     QString s = QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><A attribute=\"value%1\"/>\n").arg(QChar(QChar::Nbsp));
     QCOMPARE(buffer.buffer().data(), s.toUtf8().data());
@@ -1762,6 +1762,7 @@ void tst_QXmlStream::readBack() const
 
         QVERIFY(buffer.open(QIODevice::WriteOnly));
         QXmlStreamWriter writer(&buffer);
+
         writer.writeStartDocument();
         writer.writeTextElement("a", QString(QChar(c)));
         writer.writeEndDocument();
