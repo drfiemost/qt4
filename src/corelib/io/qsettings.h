@@ -64,10 +64,9 @@ QT_BEGIN_NAMESPACE
 class QIODevice;
 class QSettingsPrivate;
 
-#ifndef QT_NO_QOBJECT
-class Q_CORE_EXPORT QSettings : public QObject
-#else
 class Q_CORE_EXPORT QSettings
+#ifndef QT_NO_QOBJECT
+     : public QObject
 #endif
 {
 #ifndef QT_NO_QOBJECT
@@ -130,7 +129,7 @@ public:
               const QString &application = QString());
     QSettings(const QString &fileName, Format format);
 #endif
-    ~QSettings() override;
+    ~QSettings();
 
     void clear();
     void sync();

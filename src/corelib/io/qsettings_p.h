@@ -193,7 +193,7 @@ public:
     QSettingsPrivate(QSettings::Format format);
     QSettingsPrivate(QSettings::Format format, QSettings::Scope scope,
                      const QString &organization, const QString &application);
-    ~QSettingsPrivate() override;
+    ~QSettingsPrivate();
 
     virtual void remove(const QString &key) = 0;
     virtual void set(const QString &key, const QVariant &value) = 0;
@@ -271,7 +271,7 @@ public:
     QConfFileSettingsPrivate(QSettings::Format format, QSettings::Scope scope,
                              const QString &organization, const QString &application);
     QConfFileSettingsPrivate(const QString &fileName, QSettings::Format format);
-    ~QConfFileSettingsPrivate() override;
+    ~QConfFileSettingsPrivate();
 
     void remove(const QString &key) override;
     void set(const QString &key, const QVariant &value) override;
