@@ -266,7 +266,7 @@ protected:
 
     QScriptEngine(QScriptEnginePrivate &dd);
 #else
-    QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = nullptr);
+    explicit QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = nullptr);
 #endif
 
 private:
