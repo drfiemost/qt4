@@ -403,6 +403,7 @@ QDBusXmlParser::QDBusXmlParser(const QString& service, const QString& path,
     }
 
     if (xml.hasError()) {
+        m_interfaces.clear();
         qDBusParserError() << "xml error" << xml.errorString() << "doc" << xmlData;
     }
 }

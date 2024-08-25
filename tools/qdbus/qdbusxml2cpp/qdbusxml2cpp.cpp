@@ -226,9 +226,12 @@ static QDBusIntrospection::Interfaces readInput()
     // check if the input is already XML
     data = data.trimmed();
     if (data.startsWith("<!DOCTYPE ") || data.startsWith("<?xml") ||
-        data.startsWith("<node") || data.startsWith("<interface"))
+        data.startsWith("<node") || data.startsWith("<interface")) {
         // already XML
-        return QDBusIntrospection::parseInterfaces(QString::fromUtf8(data));
+        QDBusIntrospection::Interfaces ifs = QDBusIntrospection::parseInterfaces(QString::fromUtf8(data));
+        if (!ifs.isEmpty())
+            return ifs;
+    }
 
     fprintf(stderr, "Cannot process input: '%s'. Stop.\n", qPrintable(inputFile));
     exit(1);
