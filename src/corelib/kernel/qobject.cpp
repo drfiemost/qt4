@@ -500,7 +500,7 @@ QMetaCallEvent::~QMetaCallEvent()
  */
 void QMetaCallEvent::placeMetaCall(QObject *object)
 {
-    if (callFunction_) {
+    if (callFunction_ && method_offset_ <= object->metaObject()->methodOffset()) {
         callFunction_(object, QMetaObject::InvokeMetaMethod, method_relative_, args_);
     } else {
         QMetaObject::metacall(object, QMetaObject::InvokeMetaMethod, method_offset_ + method_relative_, args_);

@@ -3966,12 +3966,25 @@ public slots:
     }
 };
 
+static void processEvents()
+{
+    qApp->processEvents();
+}
+
 void tst_QObject::baseDestroyed()
 {
-    BaseDestroyed d;
-    connect(&d, SIGNAL(destroyed()), &d, SLOT(slotUseList()));
-    //When d goes out of scope, slotUseList should not be called as the BaseDestroyed has
-    // already been destroyed while ~QObject emit destroyed
+    {
+        BaseDestroyed d;
+        connect(&d, SIGNAL(destroyed()), &d, SLOT(slotUseList()));
+        //When d goes out of scope, slotUseList should not be called as the BaseDestroyed has
+        // already been destroyed while ~QObject emit destroyed
+    }
+    /*{
+        BaseDestroyed d;
+        connect(&d, &QObject::destroyed, processEvents);
+        QMetaObject::invokeMethod(&d, "slotUseList", Qt::QueuedConnection);
+        //the destructor will call processEvents, that should not call the slotUseList
+    }*/
 }
 
 QTEST_MAIN(tst_QObject)
