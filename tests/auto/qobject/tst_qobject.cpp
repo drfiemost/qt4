@@ -278,10 +278,10 @@ void tst_QObject::disconnect()
     s->emitSignal3();
     s->emitSignal4();
 
-    QCOMPARE( r1->called(1), TRUE );
-    QCOMPARE( r1->called(2), TRUE );
-    QCOMPARE( r1->called(3), TRUE );
-    QCOMPARE( r1->called(4), TRUE );
+    QCOMPARE( r1->called(1), true );
+    QCOMPARE( r1->called(2), true );
+    QCOMPARE( r1->called(3), true );
+    QCOMPARE( r1->called(4), true );
     r1->reset();
 
     // usual disconnect with all parameters given
@@ -289,12 +289,12 @@ void tst_QObject::disconnect()
 
     s->emitSignal1();
 
-    QCOMPARE( r1->called(1), FALSE );
+    QCOMPARE( r1->called(1), false );
     r1->reset();
 
-    QCOMPARE( ret, TRUE );
+    QCOMPARE( ret, true );
     ret = QObject::disconnect( s, SIGNAL( signal1() ), r1, SLOT( slot1() ) );
-    QCOMPARE( ret, FALSE  );
+    QCOMPARE( ret, false  );
 
     // disconnect all signals from s from all slots from r1
     QObject::disconnect( s, 0, r1, 0 );
@@ -303,9 +303,9 @@ void tst_QObject::disconnect()
     s->emitSignal3();
     s->emitSignal4();
 
-    QCOMPARE( r1->called(2), FALSE );
-    QCOMPARE( r1->called(3), FALSE );
-    QCOMPARE( r1->called(4), FALSE );
+    QCOMPARE( r1->called(2), false );
+    QCOMPARE( r1->called(3), false );
+    QCOMPARE( r1->called(4), false );
     r1->reset();
 
     connect( s, SIGNAL( signal1() ), r1, SLOT( slot1() ) );
@@ -319,10 +319,10 @@ void tst_QObject::disconnect()
     s->emitSignal1();
     s->emitSignal2();
 
-    QCOMPARE( r1->called(1), FALSE );
-    QCOMPARE( r1->called(2), FALSE );
-    QCOMPARE( r1->called(3), FALSE );
-    QCOMPARE( r1->called(4), TRUE );
+    QCOMPARE( r1->called(1), false );
+    QCOMPARE( r1->called(2), false );
+    QCOMPARE( r1->called(3), false );
+    QCOMPARE( r1->called(4), true );
     r1->reset();
     // make sure all is disconnected again
     QObject::disconnect( s, 0, r1, 0 );
@@ -340,12 +340,12 @@ void tst_QObject::disconnect()
     s->emitSignal2();
     s->emitSignal3();
 
-    QCOMPARE( r1->called(1), FALSE );
-    QCOMPARE( r2->called(1), FALSE );
-    QCOMPARE( r1->called(2), TRUE );
-    QCOMPARE( r2->called(2), TRUE );
-    QCOMPARE( r1->called(2), TRUE );
-    QCOMPARE( r2->called(2), TRUE );
+    QCOMPARE( r1->called(1), false );
+    QCOMPARE( r2->called(1), false );
+    QCOMPARE( r1->called(2), true );
+    QCOMPARE( r2->called(2), true );
+    QCOMPARE( r1->called(2), true );
+    QCOMPARE( r2->called(2), true );
 
     r1->reset();
     r2->reset();
@@ -353,10 +353,10 @@ void tst_QObject::disconnect()
     // disconnect all signals of s from all receivers
     QObject::disconnect( s, 0, 0, 0 );
 
-    QCOMPARE( r1->called(2), FALSE );
-    QCOMPARE( r2->called(2), FALSE );
-    QCOMPARE( r1->called(2), FALSE );
-    QCOMPARE( r2->called(2), FALSE );
+    QCOMPARE( r1->called(2), false );
+    QCOMPARE( r2->called(2), false );
+    QCOMPARE( r1->called(2), false );
+    QCOMPARE( r2->called(2), false );
 
     delete r2;
     delete r1;
@@ -902,14 +902,14 @@ void tst_QObject::emitInDefinedOrder()
 
     SequenceObject::sequence = sequence = 0;
     sender2->emitSignal1();
-    QCOMPARE(seq1.called(1), TRUE);
-    QCOMPARE(seq2.called(1), TRUE);
-    QCOMPARE(seq3->called(1), FALSE);
-    QCOMPARE(seq4.called(1), TRUE);
-    QCOMPARE(seq1.called(2), TRUE);
-    QCOMPARE(seq2.called(2), TRUE);
-    QCOMPARE(seq3->called(2), FALSE);
-    QCOMPARE(seq4.called(2), TRUE);
+    QCOMPARE(seq1.called(1), true);
+    QCOMPARE(seq2.called(1), true);
+    QCOMPARE(seq3->called(1), false);
+    QCOMPARE(seq4.called(1), true);
+    QCOMPARE(seq1.called(2), true);
+    QCOMPARE(seq2.called(2), true);
+    QCOMPARE(seq3->called(2), false);
+    QCOMPARE(seq4.called(2), true);
     QCOMPARE(seq1.sequence_slot1, ++sequence);
     QCOMPARE(seq2.sequence_slot1, ++sequence);
     QCOMPARE(seq4.sequence_slot1, ++sequence);
@@ -938,14 +938,14 @@ void tst_QObject::emitInDefinedOrder()
 
     SequenceObject::sequence = sequence = 0;
     sender2->emitSignal1();
-    QCOMPARE(seq1.called(2), TRUE);
-    QCOMPARE(seq2.called(2), TRUE);
-    QCOMPARE(seq3->called(2), FALSE);
-    QCOMPARE(seq4.called(2), TRUE);
-    QCOMPARE(seq1.called(1), TRUE);
-    QCOMPARE(seq2.called(1), TRUE);
-    QCOMPARE(seq3->called(1), FALSE);
-    QCOMPARE(seq4.called(1), TRUE);
+    QCOMPARE(seq1.called(2), true);
+    QCOMPARE(seq2.called(2), true);
+    QCOMPARE(seq3->called(2), false);
+    QCOMPARE(seq4.called(2), true);
+    QCOMPARE(seq1.called(1), true);
+    QCOMPARE(seq2.called(1), true);
+    QCOMPARE(seq3->called(1), false);
+    QCOMPARE(seq4.called(1), true);
     QCOMPARE(seq1.sequence_slot2, ++sequence);
     QCOMPARE(seq2.sequence_slot2, ++sequence);
     QCOMPARE(seq4.sequence_slot2, ++sequence);
@@ -974,14 +974,14 @@ void tst_QObject::emitInDefinedOrder()
 
     SequenceObject::sequence = sequence = 0;
     sender2->emitSignal1();
-    QCOMPARE(seq1.called(1), TRUE);
-    QCOMPARE(seq2.called(1), TRUE);
-    QCOMPARE(seq3->called(1), FALSE);
-    QCOMPARE(seq4.called(1), TRUE);
-    QCOMPARE(seq1.called(2), TRUE);
-    QCOMPARE(seq2.called(2), TRUE);
-    QCOMPARE(seq3->called(2), FALSE);
-    QCOMPARE(seq4.called(2), TRUE);
+    QCOMPARE(seq1.called(1), true);
+    QCOMPARE(seq2.called(1), true);
+    QCOMPARE(seq3->called(1), false);
+    QCOMPARE(seq4.called(1), true);
+    QCOMPARE(seq1.called(2), true);
+    QCOMPARE(seq2.called(2), true);
+    QCOMPARE(seq3->called(2), false);
+    QCOMPARE(seq4.called(2), true);
     QCOMPARE(seq1.sequence_slot1, ++sequence);
     QCOMPARE(seq2.sequence_slot1, ++sequence);
     QCOMPARE(seq4.sequence_slot1, ++sequence);
@@ -1015,12 +1015,12 @@ void tst_QObject::emitInDefinedOrder()
     sender2->emitSignal1();
     QCOMPARE(static_cast<QObject *>(psender), static_cast<QObject *>(0));
     QCOMPARE(static_cast<QObject *>(pseq3), static_cast<QObject *>(0));
-    QCOMPARE(seq1.called(1), TRUE);
-    QCOMPARE(seq2.called(1), TRUE);
-    QCOMPARE(seq4.called(1), TRUE);
-    QCOMPARE(seq1.called(2), TRUE);
-    QCOMPARE(seq2.called(2), TRUE);
-    QCOMPARE(seq4.called(2), FALSE);
+    QCOMPARE(seq1.called(1), true);
+    QCOMPARE(seq2.called(1), true);
+    QCOMPARE(seq4.called(1), true);
+    QCOMPARE(seq1.called(2), true);
+    QCOMPARE(seq2.called(2), true);
+    QCOMPARE(seq4.called(2), false);
     QCOMPARE(seq1.sequence_slot1, ++sequence);
     QCOMPARE(seq2.sequence_slot1, ++sequence);
     QCOMPARE(seq4.sequence_slot1, ++sequence);
