@@ -645,6 +645,8 @@ QAbstractAnimation::~QAbstractAnimation()
         if (oldState == QAbstractAnimation::Running)
             QUnifiedTimer::unregisterAnimation(this);
     }
+    if (d->group)
+        d->group->removeAnimation(this);
 }
 
 /*!
