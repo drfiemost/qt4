@@ -1961,10 +1961,10 @@ static bool check_signal_macro(const QObject *sender, const char *signal,
     int sigcode = extract_code(signal);
     if (sigcode != QSIGNAL_CODE) {
         if (sigcode == QSLOT_CODE)
-            qWarning("Object::%s: Attempt to %s non-signal %s::%s",
+            qWarning("QObject::%s: Attempt to %s non-signal %s::%s",
                      func, op, sender->metaObject()->className(), signal+1);
         else
-            qWarning("Object::%s: Use the SIGNAL macro to %s %s::%s",
+            qWarning("QObject::%s: Use the SIGNAL macro to %s %s::%s",
                      func, op, sender->metaObject()->className(), signal);
         return false;
     }
@@ -1975,7 +1975,7 @@ static bool check_method_code(int code, const QObject *object,
                                const char *method, const char *func)
 {
     if (code != QSLOT_CODE && code != QSIGNAL_CODE) {
-        qWarning("Object::%s: Use the SLOT or SIGNAL macro to "
+        qWarning("QObject::%s: Use the SLOT or SIGNAL macro to "
                  "%s %s::%s", func, func, object->metaObject()->className(), method);
         return false;
     }
@@ -1992,11 +1992,11 @@ static void err_method_notfound(const QObject *object,
     }
     const char *loc = extract_location(method);
     if (strchr(method,')') == nullptr)                // common typing mistake
-        qWarning("Object::%s: Parentheses expected, %s %s::%s%s%s",
+        qWarning("QObject::%s: Parentheses expected, %s %s::%s%s%s",
                  func, type, object->metaObject()->className(), method+1,
                  loc ? " in ": "", loc ? loc : "");
     else
-        qWarning("Object::%s: No such %s %s::%s%s%s",
+        qWarning("QObject::%s: No such %s %s::%s%s%s",
                  func, type, object->metaObject()->className(), method+1,
                  loc ? " in ": "", loc ? loc : "");
 
@@ -2010,9 +2010,9 @@ static void err_info_about_objects(const char * func,
     QString a = sender ? sender->objectName() : QString();
     QString b = receiver ? receiver->objectName() : QString();
     if (!a.isEmpty())
-        qWarning("Object::%s:  (sender name:   '%s')", func, a.toLocal8Bit().data());
+        qWarning("QObject::%s:  (sender name:   '%s')", func, a.toLocal8Bit().data());
     if (!b.isEmpty())
-        qWarning("Object::%s:  (receiver name: '%s')", func, b.toLocal8Bit().data());
+        qWarning("QObject::%s:  (receiver name: '%s')", func, b.toLocal8Bit().data());
 }
 
 /*!
@@ -2600,7 +2600,7 @@ bool QObject::disconnect(const QObject *sender, const char *signal,
                          const QObject *receiver, const char *method)
 {
     if (sender == nullptr || (receiver == nullptr && method != nullptr)) {
-        qWarning("Object::disconnect: Unexpected null parameter");
+        qWarning("QObject::disconnect: Unexpected null parameter");
         return false;
     }
 
@@ -2731,12 +2731,12 @@ bool QObject::disconnect(const QObject *sender, const QMetaMethod &signal,
                          const QObject *receiver, const QMetaMethod &method)
 {
     if (sender == nullptr || (receiver == nullptr && method.mobj != nullptr)) {
-        qWarning("Object::disconnect: Unexpected null parameter");
+        qWarning("QObject::disconnect: Unexpected null parameter");
         return false;
     }
     if (signal.mobj) {
         if(signal.methodType() != QMetaMethod::Signal) {
-            qWarning("Object::%s: Attempt to %s non-signal %s::%s",
+            qWarning("QObject::%s: Attempt to %s non-signal %s::%s",
                      "disconnect","unbind",
                      sender->metaObject()->className(), signal.signature());
             return false;
