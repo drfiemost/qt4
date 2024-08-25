@@ -163,7 +163,6 @@ QObjectPrivate::QObjectPrivate(int version)
     pendTimer = false;                          // no timers yet
     blockSig = false;                           // not blocking signals
     wasDeleted = false;                         // double-delete catcher
-    isDeletingChildren = false;                 // set by deleteChildren()
     sendChildEvents = true;                     // if we should send ChildInsert and ChildRemove events to parent
     receiveChildEvents = true;
     postedEvents = 0;
@@ -1682,8 +1681,8 @@ void QObject::setParent(QObject *parent)
 
 void QObjectPrivate::deleteChildren()
 {
-    Q_ASSERT_X(!isDeletingChildren, "QObjectPrivate::deleteChildren()", "isDeletingChildren already set, did this function recurse?");
-    isDeletingChildren = true;
+    const bool reallyWasDeleted = wasDeleted;
+    wasDeleted = true;
     // delete children objects
     // don't use qDeleteAll as the destructor of the child might
     // delete siblings
@@ -1693,8 +1692,8 @@ void QObjectPrivate::deleteChildren()
         delete currentChildBeingDeleted;
     }
     children.clear();
-    currentChildBeingDeleted = nullptr;
-    isDeletingChildren = false;
+    currentChildBeingDeleted = 0;
+    wasDeleted = reallyWasDeleted;
 }
 
 void QObjectPrivate::setParent_helper(QObject *o)
@@ -1704,7 +1703,7 @@ void QObjectPrivate::setParent_helper(QObject *o)
         return;
     if (parent) {
         QObjectPrivate *parentD = parent->d_func();
-        if (parentD->isDeletingChildren && wasDeleted
+        if (parentD->wasDeleted && wasDeleted
             && parentD->currentChildBeingDeleted == q) {
             // don't do anything since QObjectPrivate::deleteChildren() already
             // cleared our entry in parentD->children.
@@ -1712,8 +1711,8 @@ void QObjectPrivate::setParent_helper(QObject *o)
             const int index = parentD->children.indexOf(q);
             if (index < 0) {
                 // we're probably recursing into setParent() from a ChildRemoved event, don't do anything
-            } else if (parentD->isDeletingChildren) {
-                parentD->children[index] = nullptr;
+            } else if (parentD->wasDeleted) {
+                parentD->children[index] = 0;
             } else {
                 parentD->children.removeAt(index);
                 if (sendChildEvents && parentD->receiveChildEvents) {
@@ -1739,7 +1738,7 @@ void QObjectPrivate::setParent_helper(QObject *o)
             }
         }
     }
-    if (!isDeletingChildren && declarativeData)
+    if (!wasDeleted && declarativeData)
         QAbstractDeclarativeData::parentChanged(declarativeData, q, o);
 }
 
