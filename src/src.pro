@@ -8,7 +8,6 @@ contains(QT_CONFIG, dbus):SRC_SUBDIRS += src_dbus
 !contains(QT_CONFIG, no-gui): SRC_SUBDIRS += src_gui
 
 include(tools/tools.pro)
-win32:SRC_SUBDIRS += src_activeqt
 
 contains(QT_CONFIG, opengl)|contains(QT_CONFIG, opengles1)|contains(QT_CONFIG, opengles2): SRC_SUBDIRS += src_opengl
 contains(QT_CONFIG, openvg): SRC_SUBDIRS += src_openvg
@@ -46,8 +45,6 @@ src_opengl.subdir = $$QT_SOURCE_TREE/src/opengl
 src_opengl.target = sub-opengl
 src_openvg.subdir = $$QT_SOURCE_TREE/src/openvg
 src_openvg.target = sub-openvg
-src_activeqt.subdir = $$QT_SOURCE_TREE/src/activeqt
-src_activeqt.target = sub-activeqt
 src_plugins.subdir = $$QT_SOURCE_TREE/src/plugins
 src_plugins.target = sub-plugins
 src_imports.subdir = $$QT_SOURCE_TREE/src/imports
@@ -74,7 +71,6 @@ src_declarative.target = sub-declarative
    src_sql.depends = src_corelib
    src_testlib.depends = src_corelib
    src_tools_idc.depends = src_corelib             # target defined in tools.pro
-   src_activeqt.depends = src_tools_idc src_gui
    src_declarative.depends = src_gui src_script src_network
    src_plugins.depends = src_gui src_sql src_svg
    contains(QT_CONFIG, declarative):src_plugins.depends += src_declarative

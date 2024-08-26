@@ -7354,7 +7354,6 @@ for file in .projects .projects.3; do
                 continue
             fi
             SPEC=$XQMAKESPEC ;;
-        *examples/activeqt/*) continue ;;
         */qmake/qmake.pro) continue ;;
         *tools/bootstrap*|*tools/moc*|*tools/rcc*|*tools/uic*|*linguist/lrelease*) SPEC=$QMAKESPEC ;;
         *) if [ "$CFG_NOPROCESS" = "yes" ]; then

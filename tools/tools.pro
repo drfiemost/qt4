@@ -16,7 +16,6 @@ TEMPLATE        = subdirs
             }
         }
         unix:!mac:!embedded:!qpa:SUBDIRS += qtconfig
-        win32:SUBDIRS += activeqt
     }
     contains(QT_CONFIG, declarative) {
         SUBDIRS += qml
