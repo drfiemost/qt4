@@ -773,7 +773,6 @@ CFG_DECORATION_PLUGIN_AVAILABLE=
 CFG_DECORATION_PLUGIN=
 CFG_XINPUT=runtime
 CFG_XKB=auto
-CFG_WAYLAND=auto
 CFG_NIS=auto
 CFG_CUPS=auto
 CFG_ICONV=auto
@@ -1010,7 +1009,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-    -incremental|-qvfb|-profile|-shared|-static|-sm|-xinerama|-xshape|-xsync|-xinput|-egl|-reduce-exports|-pch|-separate-debug-info|-freetype|-xcursor|-xfixes|-xrandr|-xrender|-mitshm|-fontconfig|-xkb|-wayland|-nis|-qdbus|-dbus|-dbus-linked|-glib|-cups|-iconv|-largefile|-h|-help|-v|-verbose|-debug|-release|-fast|-accessibility|-confirm-license|-gnumake|-framework|-debug-and-release|-cocoa|-carbon|-universal|-harfbuzz|-prefix-install|-silent|-armfpa|-optimized-qmake|-dwarf2|-reduce-relocations|-sse|-openssl|-openssl-linked|-xmlpatterns|-audio-backend|-svg|-declarative|-declarative-debug|-javascript-jit|-script|-scripttools|-rpath|-force-pkg-config|-usedeffiles|-icu|-alsa)
+    -incremental|-qvfb|-profile|-shared|-static|-sm|-xinerama|-xshape|-xsync|-xinput|-egl|-reduce-exports|-pch|-separate-debug-info|-freetype|-xcursor|-xfixes|-xrandr|-xrender|-mitshm|-fontconfig|-xkb|-nis|-qdbus|-dbus|-dbus-linked|-glib|-cups|-iconv|-largefile|-h|-help|-v|-verbose|-debug|-release|-fast|-accessibility|-confirm-license|-gnumake|-framework|-debug-and-release|-cocoa|-carbon|-universal|-harfbuzz|-prefix-install|-silent|-armfpa|-optimized-qmake|-dwarf2|-reduce-relocations|-sse|-openssl|-openssl-linked|-xmlpatterns|-audio-backend|-svg|-declarative|-declarative-debug|-javascript-jit|-script|-scripttools|-rpath|-force-pkg-config|-usedeffiles|-icu|-alsa)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -1854,13 +1853,6 @@ while [ "$#" -gt 0 ]; do
     xkb)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
             CFG_XKB="$VAL"
-        else
-            UNKNOWN_OPT=yes
-        fi
-        ;;
-    wayland)
-        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
-            CFG_WAYLAND="$VAL"
         else
             UNKNOWN_OPT=yes
         fi
@@ -3186,14 +3178,6 @@ if [ "$OPT_HELP" = "yes" ]; then
         PHN=" "
     fi
 
-    if [ "$CFG_WAYLAND" = "no" ]; then
-        XWY=" "
-        XWN="*"
-    else
-        XWY="*"
-        XWN=" "
-    fi
-
     cat <<EOF
 Usage:  $relconf [-h] [-prefix <dir>] [-prefix-install] [-bindir <dir>] [-libdir <dir>]
         [-docdir <dir>] [-headerdir <dir>] [-plugindir <dir> ] [-importdir <dir>] [-datadir <dir>]
@@ -3491,9 +3475,6 @@ if [ "$PLATFORM_X11" = "yes" "$PLATFORM_QPA" = "yes" ]; then
 
  $SBN  -no-separate-debug-info . Do not store debug information in a separate file.
  $SBY  -separate-debug-info .... Strip debug information into a separate file.
-
- $XWN  -no-wayland......... Do not compile Wayland support.
- $XWY  -wayland  .......... Compile Wayland support.
 
 EOF
 
@@ -5464,34 +5445,6 @@ if [ "$PLATFORM_QPA" = "yes" ]; then
         fi
 
     fi
-
-    if [ "$CFG_WAYLAND" != "no" ]; then
-        if [ -n "$PKG_CONFIG" ] && $PKG_CONFIG --exists wayland-client 2>/dev/null; then
-            QMAKE_CFLAGS_WAYLAND=`$PKG_CONFIG --cflags wayland-client 2>/dev/null`
-            QMAKE_LIBS_WAYLAND=`$PKG_CONFIG --libs wayland-client 2>/dev/null`
-            QMAKE_INCDIR_WAYLAND=`$PKG_CONFIG --variable=includedir wayland-client 2>/dev/null`
-            QMAKE_LIBDIR_WAYLAND=`$PKG_CONFIG --variable=libdir wayland-client 2>/dev/null`
-        fi
-        if "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" config.tests/qpa/wayland "Wayland" $L_FLAGS $I_FLAGS $l_FLAGS $QMAKE_CFLAGS_WAYLAND $QMAKE_LIBS_WAYLAND; then
-            CFG_WAYLAND=yes
-            QT_CONFIG="$QT_CONFIG wayland"
-        elif [ "$CFG_WAYLAND" = "yes" ]; then
-            echo "The Wayland functionality test failed!"
-            exit 1
-        else
-            CFG_WAYLAND=no
-        fi
-    fi
-
-    # QMake variables set here override those in the mkspec. Therefore we only set the variables here if they are not zero.
-    if [ -n "$QMAKE_CFLAGS_WAYLAND" ] || [ -n "$QMAKE_LIBS_WAYLAND" ]; then
-        QMakeVar set QMAKE_CFLAGS_WAYLAND "$QMAKE_CFLAGS_WAYLAND"
-        QMakeVar set QMAKE_INCDIR_WAYLAND "$QMAKE_INCDIR_WAYLAND"
-        QMakeVar set QMAKE_LIBS_WAYLAND "$QMAKE_LIBS_WAYLAND"
-        QMakeVar set QMAKE_LIBDIR_WAYLAND "$QMAKE_LIBDIR_WAYLAND"
-        QMakeVar set QMAKE_DEFINES_WAYLAND " $QMAKE_DEFINES_WAYLAND"
-    fi
-
 fi
 
 EGL_VARIANT=none
