@@ -1759,8 +1759,6 @@ while [ "$#" -gt 0 ]; do
         else
             UNKNOWN_OPT=yes
         fi
-        # No longer supported:
-        #[ "$VAL" = "no" ] && CFG_LIBPNG=no
         ;;
     sqlite)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
@@ -1770,8 +1768,8 @@ while [ "$#" -gt 0 ]; do
         fi
         ;;
     libpng)
-        [ "$VAL" = "yes" ] && VAL=qt
-        if [ "$VAL" = "qt" ] || [ "$VAL" = "no" ] || [ "$VAL" = "system" ]; then
+        [ "$VAL" = "yes" ] && VAL=system
+        if [ "$VAL" = "no" ] || [ "$VAL" = "system" ]; then
             CFG_LIBPNG="$VAL"
         else
             UNKNOWN_OPT=yes
@@ -2071,10 +2069,6 @@ while [ "$#" -gt 0 ]; do
             ;;
         imageformat)
             avail="$CFG_IMAGEFORMAT_PLUGIN_AVAILABLE"
-            if [ "$OPT" != "plugin" ]; then
-                # png is always built in
-                avail="$avail png"
-            fi
             ;;
         *)
             avail=""
@@ -3187,8 +3181,8 @@ Usage:  $relconf [-h] [-prefix <dir>] [-prefix-install] [-bindir <dir>] [-libdir
         [-largefile] [-no-accessibility] [-accessibility] [-no-sql-<driver>] [-sql-<driver>]
         [-plugin-sql-<driver>] [-platform] [-D <string>] [-I <string>] [-L <string>] [-help]
         [-qt-zlib] [-system-zlib] [-no-gif] [-no-libtiff] [-system-libtiff]
-        [-no-libpng] [-qt-libpng] [-system-libpng] [-no-libmng]
-        [-system-libmng] [-no-libjpeg] [-system-libjpeg] [-make <part>]
+        [-no-libpng] [-system-libpng] [-no-libmng] [-system-libmng]
+        [-no-libjpeg] [-system-libjpeg] [-make <part>]
         [-nomake <part>] [-R <string>]  [-l <string>] [-no-rpath]  [-rpath] [-continue]
         [-verbose] [-v] [-silent] [-no-nis] [-nis] [-no-cups] [-cups] [-no-iconv]
         [-iconv] [-no-pch] [-pch] [-no-dbus] [-dbus] [-dbus-linked] [-no-gui]
@@ -3386,7 +3380,6 @@ Third Party Libraries:
                          See http://www.libtiff.org
 
     -no-libpng ......... Do not compile PNG support.
-    -qt-libpng ......... Use the libpng bundled with Qt.
  +  -system-libpng ..... Use libpng from the operating system.
                          See http://www.libpng.org/pub/png
 
@@ -4553,7 +4546,7 @@ if [ "$CFG_LIBPNG" = "auto" ]; then
     if compileTest unix/libpng "libpng"; then
        CFG_LIBPNG=system
     else
-       CFG_LIBPNG=qt
+       CFG_LIBPNG=no
     fi
 fi
 
