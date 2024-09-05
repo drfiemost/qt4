@@ -710,7 +710,7 @@ CFG_XSYNC=auto
 CFG_XVIDEO=auto
 CFG_XINERAMA=runtime
 CFG_XFIXES=runtime
-CFG_ZLIB=auto
+CFG_ZLIB=no
 CFG_SQLITE=auto
 CFG_GIF=auto
 CFG_TIFF=auto
@@ -1748,14 +1748,6 @@ while [ "$#" -gt 0 ]; do
     reduce-relocations)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
             CFG_REDUCE_RELOCATIONS="$VAL"
-        else
-            UNKNOWN_OPT=yes
-        fi
-        ;;
-    zlib)
-        [ "$VAL" = "qt" ] && VAL=yes
-        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ] || [ "$VAL" = "system" ]; then
-            CFG_ZLIB="$VAL"
         else
             UNKNOWN_OPT=yes
         fi
@@ -3180,7 +3172,7 @@ Usage:  $relconf [-h] [-prefix <dir>] [-prefix-install] [-bindir <dir>] [-libdir
         [-developer-build] [-shared] [-static] [-no-fast] [-fast] [-no-largefile]
         [-largefile] [-no-accessibility] [-accessibility] [-no-sql-<driver>] [-sql-<driver>]
         [-plugin-sql-<driver>] [-platform] [-D <string>] [-I <string>] [-L <string>] [-help]
-        [-qt-zlib] [-system-zlib] [-no-gif] [-no-libtiff] [-system-libtiff]
+        [-no-gif] [-no-libtiff] [-system-libtiff]
         [-no-libpng] [-system-libpng] [-no-libmng] [-system-libmng]
         [-no-libjpeg] [-system-libjpeg] [-make <part>]
         [-nomake <part>] [-R <string>]  [-l <string>] [-no-rpath]  [-rpath] [-continue]
@@ -3368,10 +3360,6 @@ cat << EOF
     -help, -h .......... Display this information.
 
 Third Party Libraries:
-
-    -qt-zlib ........... Use the zlib bundled with Qt.
- +  -system-zlib ....... Use zlib from the operating system.
-                         See http://www.gzip.org/zlib
 
     -no-gif ............ Do not compile GIF reading support.
 
@@ -4454,25 +4442,11 @@ if ! compileTest unix/ipc_sysv "ipc_sysv" ; then
 fi
 
 # detect zlib
-if [ "$CFG_ZLIB" = "no" ]; then
-    # Note: Qt no longer support builds without zlib
-    # So we force a "no" to be "auto" here.
-    # If you REALLY really need no zlib support, you can still disable
-    # it by doing the following:
-    #   add "no-zlib" to mkspecs/qconfig.pri
-    #   #define QT_NO_COMPRESS (probably by adding to src/corelib/global/qconfig.h)
-    #
-    # There's no guarantee that Qt will build under those conditions
-
-    CFG_ZLIB=auto
-    ZLIB_FORCED=yes
-fi
-if [ "$CFG_ZLIB" = "auto" ]; then
-    if compileTest unix/zlib "zlib"; then
-       CFG_ZLIB=system
-    else
-       CFG_ZLIB=yes
-    fi
+if compileTest unix/zlib "zlib"; then
+    CFG_ZLIB=system
+else
+    echo "zlib not found."
+    exit 101
 fi
 
 if [ "$CFG_LARGEFILE" = "auto" ]; then
@@ -6088,14 +6062,7 @@ if [ "$CFG_GUI" = "no" ]; then
 fi
 
 
-if [ "x$PLATFORM_MAC" = "xyes" ] && [ "$XPLATFORM_MINGW" != "yes" ]; then
-    #On Mac we implicitly link against libz, so we
-    #never use the 3rdparty stuff.
-    [ "$CFG_ZLIB" = "yes" ] && CFG_ZLIB="system"
-fi
-if [ "$CFG_ZLIB" = "yes" ]; then
-    QT_CONFIG="$QT_CONFIG zlib"
-elif [ "$CFG_ZLIB" = "system" ]; then
+if [ "$CFG_ZLIB" = "system" ]; then
     QT_CONFIG="$QT_CONFIG system-zlib"
 fi
 
@@ -6628,7 +6595,6 @@ QMakeVar set sql-plugins "$SQL_PLUGINS"
 [ "$CFG_PNG" != "yes" ]      && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_IMAGEFORMAT_PNG"
 [ "$CFG_JPEG" != "yes" ]     && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_IMAGEFORMAT_JPEG"
 [ "$CFG_MNG" != "yes" ]      && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_IMAGEFORMAT_MNG"
-[ "$CFG_ZLIB" != "yes" ]     && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_ZLIB"
 QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_S60"
 [ "$CFG_SXE" = "no" ]        && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_SXE"
 [ "$CFG_DBUS" = "no" ]      && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_DBUS"
@@ -7420,26 +7386,6 @@ cat <<EOF
         single pthread_mutex_t to protect all atomic operations. This
         implementation is the slow (but safe) fallback implementation
         for architectures Qt does not yet support.
-EOF
-fi
-
-#-------------------------------------------------------------------------------
-# check if the user passed the -no-zlib option, which is no longer supported
-#-------------------------------------------------------------------------------
-if [ -n "$ZLIB_FORCED" ]; then
-    which_zlib="supplied"
-    if [ "$CFG_ZLIB" = "system" ]; then
-	which_zlib="system"
-    fi
-
-cat <<EOF
-
-        NOTICE: The -no-zlib option was supplied but is no longer
-        supported.
-
-        Qt now requires zlib support in all builds, so the -no-zlib
-        option was ignored. Qt will be built using the $which_zlib
-        zlib.
 EOF
 fi
 
