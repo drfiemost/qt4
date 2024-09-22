@@ -133,7 +133,7 @@ public:
 #ifdef Q_COMPILER_INITIALIZER_LISTS
     inline QList(std::initializer_list<T> args)
         : d(const_cast<QListData::Data *>(&QListData::shared_null))
-    { reserve(args.size()); std::copy(args.begin(), args.end(), std::back_inserter(*this)); }
+    { reserve(int(args.size())); std::copy(args.begin(), args.end(), std::back_inserter(*this)); }
 #endif
     bool operator==(const QList<T> &l) const;
     inline bool operator!=(const QList<T> &l) const { return !(*this == l); }
@@ -412,7 +412,7 @@ Q_INLINE_TEMPLATE void QList<T>::node_copy(Node *from, Node *to, Node *src)
         }
     } else {
         if (src != from && to - from > 0)
-            memcpy(from, src, (to - from) * sizeof(Node *));
+            memcpy(from, src, (to - from) * sizeof(Node));
     }
 }
 
@@ -812,7 +812,7 @@ Q_OUTOFLINE_TEMPLATE int QList<T>::removeAll(const T &_t)
             *n++ = *i;
     }
 
-    int removedCount = e - n;
+    int removedCount = int(e - n);
     d->end -= removedCount;
     return removedCount;
 }
