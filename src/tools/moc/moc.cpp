@@ -153,6 +153,7 @@ Type Moc::parseType()
     bool isVoid = false;
     type.firstToken = lookup();
     for (;;) {
+        skipCxxAttributes();
         switch (next()) {
             case SIGNED:
             case UNSIGNED:
@@ -181,8 +182,10 @@ Type Moc::parseType()
         }
         break;
     }
+    skipCxxAttributes();
     test(ENUM) || test(CLASS) || test(STRUCT);
     for(;;) {
+        skipCxxAttributes();
         switch (next()) {
         case IDENTIFIER:
             // void mySlot(unsigned myArg)
@@ -274,6 +277,7 @@ bool Moc::parseEnum(EnumDef *def)
             break;
         next(IDENTIFIER);
         def->values += lexem();
+        skipCxxAttributes();
     } while (test(EQ) ? until(COMMA) : test(COMMA));
     next(RBRACE);
     if (isTypdefEnum) {
@@ -317,6 +321,15 @@ bool Moc::testFunctionAttribute(FunctionDef *def)
         ++index;
         return true;
     }
+    return false;
+}
+
+bool Moc::skipCxxAttributes()
+{
+    auto rewind = index;
+    if (test(LBRACK) && test(LBRACK) && until(RBRACK) && test(RBRACK))
+        return true;
+    index = rewind;
     return false;
 }
 
@@ -369,7 +382,7 @@ bool Moc::parseFunction(FunctionDef *def, bool inMacro)
     //skip modifiers and attributes
     while (test(INLINE) || (test(STATIC) && (def->isStatic = true)) ||
         (test(VIRTUAL) && (def->isVirtual = true)) //mark as virtual
-        || testFunctionAttribute(def) || testFunctionRevision(def)) {}
+        || skipCxxAttributes() || testFunctionAttribute(def) || testFunctionRevision(def)) {}
     bool templateFunction = (lookup() == TEMPLATE);
     def->type = parseType();
     if (def->type.name.isEmpty()) {
@@ -439,10 +452,11 @@ bool Moc::parseFunction(FunctionDef *def, bool inMacro)
             until(RBRACE);
         else if ((def->isAbstract = test(EQ)))
             until(SEMIC);
+        else if (skipCxxAttributes())
+            until(SEMIC);
         else
             error();
     }
-
     if (scopedFunctionName) {
         QByteArray msg("Function declaration ");
         msg += def->name;
@@ -461,7 +475,7 @@ bool Moc::parseMaybeFunction(const ClassDef *cdef, FunctionDef *def)
     //skip modifiers and attributes
     while (test(EXPLICIT) || test(INLINE) || (test(STATIC) && (def->isStatic = true)) ||
         (test(VIRTUAL) && (def->isVirtual = true)) //mark as virtual
-        || testFunctionAttribute(def) || testFunctionRevision(def)) {}
+        || skipCxxAttributes() || testFunctionAttribute(def) || testFunctionRevision(def)) {}
     bool tilde = test(TILDE);
     def->type = parseType();
     if (def->type.name.isEmpty())
