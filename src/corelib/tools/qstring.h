@@ -1288,12 +1288,6 @@ inline bool QStringRef::contains(QChar c, Qt::CaseSensitivity cs) const
 inline bool QStringRef::contains(const QStringRef &s, Qt::CaseSensitivity cs) const
 { return indexOf(s, 0, cs) != -1; }
 
-namespace Qt {
-[[deprecated("Use QString::toHtmlEscaped()")]] inline QString escape(const QString &plain) {
-    return plain.toHtmlEscaped();
-}
-}
-
 QT_END_NAMESPACE
 
 QT_END_HEADER
