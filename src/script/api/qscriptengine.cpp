@@ -1325,8 +1325,10 @@ void QScriptEnginePrivate::collectGarbage()
 
 void QScriptEnginePrivate::reportAdditionalMemoryCost(int size)
 {
-    if (size > 0)
+    if (size > 0) {
+        QScript::APIShim shim(this);
         globalData->heap.reportExtraMemoryCost(size);
+    }
 }
 
 QScript::TimeoutCheckerProxy *QScriptEnginePrivate::timeoutChecker() const
