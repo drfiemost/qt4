@@ -77,7 +77,6 @@ my %modules = ( # path to module name map
         "QtDeclarative" => "$basedir/src/declarative",
         "QtScript" => "$basedir/src/script",
         "QtScriptTools" => "$basedir/src/scripttools",
-        "ActiveQt" => "$basedir/src/activeqt",
         "QtTest" => "$basedir/src/testlib",
         "QtHelp" => "$basedir/tools/assistant/lib",
         "QtDesigner" => "$basedir/tools/designer/src/lib",
