@@ -220,7 +220,7 @@ char *qstrncpy(char *dst, const char *src, uint len)
 */
 int qstrcmp(const char *str1, const char *str2)
 {
-    return (str1 && str2) ? strcmp(str1, str2)
+    return (str1 && str2) ? std::strcmp(str1, str2)
         : (str1 ? 1 : (str2 ? -1 : 0));
 }
 
@@ -348,7 +348,7 @@ int qstrcmp(const QByteArray &str1, const QByteArray &str2)
 {
     int l1 = str1.length();
     int l2 = str2.length();
-    int ret = memcmp(str1, str2, std::min(l1, l2));
+    int ret = std::memcmp(str1, str2, std::min(l1, l2));
     if (ret != 0)
         return ret;
 
@@ -2332,7 +2332,7 @@ static int lastIndexOfHelper(const char *haystack, int l, const char *needle, in
     hashHaystack -= *haystack;
     while (haystack >= end) {
         hashHaystack += *haystack;
-        if (hashHaystack == hashNeedle && memcmp(needle, haystack, ol) == 0)
+        if (hashHaystack == hashNeedle && std::memcmp(needle, haystack, ol) == 0)
             return haystack - end;
         --haystack;
         REHASH(*(haystack + ol));
@@ -2507,7 +2507,7 @@ bool QByteArray::startsWith(const QByteArray &ba) const
         return true;
     if (d->size < ba.d->size)
         return false;
-    return memcmp(d->data(), ba.d->data(), ba.d->size) == 0;
+    return std::memcmp(d->data(), ba.d->data(), ba.d->size) == 0;
 }
 
 /*! \overload
@@ -2552,7 +2552,7 @@ bool QByteArray::endsWith(const QByteArray &ba) const
         return true;
     if (d->size < ba.d->size)
         return false;
-    return memcmp(d->data() + d->size - ba.d->size, ba.d->data(), ba.d->size) == 0;
+    return std::memcmp(d->data() + d->size - ba.d->size, ba.d->data(), ba.d->size) == 0;
 }
 
 /*! \overload
