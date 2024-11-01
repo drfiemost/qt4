@@ -133,7 +133,7 @@ void tst_QElapsedTimer::basics()
 
     // However, since QElapsedTimer keeps internally the full resolution,
     // we have here a rounding error due to integer division
-    QVERIFY(qAbs(elapsed - qint64(value2 - value1)) <= 1);
+    QVERIFY(std::abs(elapsed - qint64(value2 - value1)) <= 1);
 }
 
 void tst_QElapsedTimer::elapsed()

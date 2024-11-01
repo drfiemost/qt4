@@ -806,7 +806,7 @@ void tst_QQuaternion::nlerp()
         resulty = q2.y();
         resultz = q2.z();
         resultscalar = q2.scalar();
-    } else if (qAbs(angle1 - angle2) <= 180.f) {
+    } else if (std::abs(angle1 - angle2) <= 180.f) {
         resultx = q1.x() * (1 - t) + q2.x() * t;
         resulty = q1.y() * (1 - t) + q2.y() * t;
         resultz = q1.z() * (1 - t) + q2.z() * t;

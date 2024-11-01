@@ -227,7 +227,7 @@ void tst_QToolButton::task176137_autoRepeatOfAction()
     qreal expected = (3000 - tb.autoRepeatDelay()) / tb.autoRepeatInterval() + 1;
     //we check that the difference is small (on some systems timers are not super accurate)
     qreal diff = (expected - repeatSpy.count()) / expected;
-    QVERIFY2(qAbs(diff) < 0.2, qPrintable(
+    QVERIFY2(std::abs(diff) < 0.2, qPrintable(
         QString("expected: %1, actual: %2, diff (fraction): %3")
             .arg(expected)
             .arg(repeatSpy.count())

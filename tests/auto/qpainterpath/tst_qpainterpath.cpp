@@ -908,13 +908,13 @@ void tst_QPainterPath::operators()
 
 static inline bool pathFuzzyCompare(double p1, double p2)
 {
-    return qAbs(p1 - p2) < 0.001;
+    return std::abs(p1 - p2) < 0.001;
 }
 
 
 static inline bool pathFuzzyCompare(float p1, float p2)
 {
-    return qAbs(p1 - p2) < 0.001;
+    return std::abs(p1 - p2) < 0.001;
 }
 
 
@@ -1003,15 +1003,15 @@ void tst_QPainterPath::testOnPath()
 
     qreal angle = path.angleAtPercent(0);
     QCOMPARE(SIGN(angle), signStart);
-    QVERIFY(qAbs(angle-start) < diff);
+    QVERIFY(std::abs(angle-start) < diff);
 
     angle = path.angleAtPercent(0.5);
     QCOMPARE(SIGN(angle), signMid);
-    QVERIFY(qAbs(angle-middle) < diff);
+    QVERIFY(std::abs(angle-middle) < diff);
 
     angle = path.angleAtPercent(1);
     QCOMPARE(SIGN(angle), signEnd);
-    QVERIFY(qAbs(angle-end) < diff);
+    QVERIFY(std::abs(angle-end) < diff);
 }
 
 void tst_QPainterPath::pointAtPercent_data()

@@ -2395,7 +2395,7 @@ void tst_QTreeView::extendedSelection()
     QStandardItemModel model(5, 2);
     QWidget topLevel;
     QTreeView view(&topLevel);
-    view.resize(std::max(mousePressPos.x() * 2, 200), qMax(mousePressPos.y() * 2, 200));
+    view.resize(std::max(mousePressPos.x() * 2, 200), std::max(mousePressPos.y() * 2, 200));
     view.setModel(&model);
 
     //ensure that mousePressPos is below the last row if we want to unselect

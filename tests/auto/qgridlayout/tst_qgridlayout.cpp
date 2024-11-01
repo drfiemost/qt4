@@ -358,7 +358,7 @@ void tst_QGridLayout::setMinAndMaxSize()
              leftChild.minimumWidth() + rightChild.minimumWidth() + spacerS);
     QCOMPARE(widget.maximumWidth(), QLAYOUTSIZE_MAX);
     QCOMPARE(widget.minimumHeight(),
-             std::max(qMax(leftChild.minimumHeight(), rightChild.minimumHeight()), spacerS));
+             std::max(std::max(leftChild.minimumHeight(), rightChild.minimumHeight()), spacerS));
     QCOMPARE(widget.maximumHeight(),
              std::max(leftChild.maximumHeight(), rightChild.maximumHeight()));
 

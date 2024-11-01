@@ -220,7 +220,7 @@ bool fuzzyCompareImages(const QImage &image1, const QImage &image2, int toleranc
         int bytes = image1.bytesPerLine();
         for (int j = 0; j < bytes; j++) {
             int delta = line1[j] - line2[j];
-            if (qAbs(delta) > tolerance)
+            if (std::abs(delta) > tolerance)
                 return false;
         }
     }

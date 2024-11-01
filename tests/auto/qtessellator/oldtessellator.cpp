@@ -126,7 +126,7 @@ static inline bool isEqual(const XPointFixed &p1, const XPointFixed &p2)
 
 static inline bool compareIntersections(const QIntersectionPoint &i1, const QIntersectionPoint &i2)
 {
-    if (qAbs(i1.x - i2.x) > 0.01) { // x != other.x in 99% of the cases
+    if (std::abs(i1.x - i2.x) > 0.01) { // x != other.x in 99% of the cases
         return i1.x < i2.x;
     } else {
         qreal x1 = (i1.edge->p1.x != i1.edge->p2.x) ?
@@ -329,7 +329,7 @@ void old_tesselate_polygon(QVector<XTrapezoid> *traps, const QPointF *pg, int pg
 		qreal m2 = edgeK->m;
 		qreal b2 = edgeK->b;
 
-		if (qAbs(m1 - m2) < 0.001)
+		if (std::abs(m1 - m2) < 0.001)
                     continue;
 
                 // ### intersect is not calculated correctly when optimized with -O2 (gcc)

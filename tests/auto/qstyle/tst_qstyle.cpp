@@ -779,8 +779,8 @@ void tst_QStyle::lineUpLayoutTest(QStyle *style)
 #else
     const int limit = 1;
 #endif
-    const int slDiff = qAbs(spinbox.height() - lineedit.height());
-    const int scDiff = qAbs(spinbox.height() - combo.height());
+    const int slDiff = std::abs(spinbox.height() - lineedit.height());
+    const int scDiff = std::abs(spinbox.height() - combo.height());
     QVERIFY2(slDiff <= limit,
              qPrintable(QString::fromLatin1("%1 exceeds %2 for %3")
                         .arg(slDiff).arg(limit).arg(style->objectName())));

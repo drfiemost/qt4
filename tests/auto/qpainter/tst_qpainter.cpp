@@ -779,10 +779,10 @@ void tst_QPainter::drawPixmap_comp()
                 // Compensate for possible roundoff / platform fudge
                 int off = 1;
                 QRgb pix = result.pixel(x, y);
-                diff = (qAbs(qRed(pix) - qRed(expected)) > off)
-                             || (qAbs(qGreen(pix) - qGreen(expected)) > off)
-                             || (qAbs(qBlue(pix) - qBlue(expected)) > off)
-                             || (qAbs(qAlpha(pix) - qAlpha(expected)) > off);
+                diff = (std::abs(qRed(pix) - qRed(expected)) > off)
+                             || (std::abs(qGreen(pix) - qGreen(expected)) > off)
+                             || (std::abs(qBlue(pix) - qBlue(expected)) > off)
+                             || (std::abs(qAlpha(pix) - qAlpha(expected)) > off);
             }
 	    if (diff && !different)
 		qDebug( "Different at %d,%d pixel [%d,%d,%d,%d] expected [%d,%d,%d,%d]", x, y,
@@ -1116,9 +1116,9 @@ void tst_QPainter::drawLine()
     QFETCH(QLine, line);
 
     QPixmap pixmapUnclipped(std::min(line.x1(), line.x2())
-                            + 2*offset + qAbs(line.dx()),
+                            + 2*offset + std::abs(line.dx()),
                             std::min(line.y1(), line.y2())
-                            + 2*offset + qAbs(line.dy()));
+                            + 2*offset + std::abs(line.dy()));
 
     { // unclipped
         pixmapUnclipped.fill(Qt::white);
@@ -1132,18 +1132,18 @@ void tst_QPainter::drawLine()
 
         QLine l = line;
         l.translate(offset, offset);
-        QVERIFY(qAbs(painted.width() - qAbs(l.dx())) <= epsilon);
-        QVERIFY(qAbs(painted.height() - qAbs(l.dy())) <= epsilon);
-        QVERIFY(qAbs(painted.top() - std::min(l.y1(), l.y2())) <= epsilon);
-        QVERIFY(qAbs(painted.left() - std::min(l.x1(), l.x2())) <= epsilon);
-        QVERIFY(qAbs(painted.bottom() - std::max(l.y1(), l.y2())) <= epsilon);
-        QVERIFY(qAbs(painted.right() - std::max(l.x1(), l.x2())) <= epsilon);
+        QVERIFY(std::abs(painted.width() - std::abs(l.dx())) <= epsilon);
+        QVERIFY(std::abs(painted.height() - std::abs(l.dy())) <= epsilon);
+        QVERIFY(std::abs(painted.top() - std::min(l.y1(), l.y2())) <= epsilon);
+        QVERIFY(std::abs(painted.left() - std::min(l.x1(), l.x2())) <= epsilon);
+        QVERIFY(std::abs(painted.bottom() - std::max(l.y1(), l.y2())) <= epsilon);
+        QVERIFY(std::abs(painted.right() - std::max(l.x1(), l.x2())) <= epsilon);
     }
 
     QPixmap pixmapClipped(std::min(line.x1(), line.x2())
-                          + 2*offset + qAbs(line.dx()),
+                          + 2*offset + std::abs(line.dx()),
                           std::min(line.y1(), line.y2())
-                          + 2*offset + qAbs(line.dy()));
+                          + 2*offset + std::abs(line.dy()));
     { // clipped
         const QRect clip = QRect(line.p1(), line.p2()).normalized();
 
@@ -2675,9 +2675,9 @@ void tst_QPainter::setOpacity()
     for (int y = 0; y < actual.height(); ++y) {
         QRgb *p = (QRgb *)actual.scanLine(y);
         for (int x = 0; x < actual.width(); ++x) {
-            QVERIFY(qAbs(qRed(p[x]) - 127) <= 0xf);
-            QVERIFY(qAbs(qGreen(p[x]) - 127) <= 0xf);
-            QVERIFY(qAbs(qBlue(p[x]) - 127) <= 0xf);
+            QVERIFY(std::abs(qRed(p[x]) - 127) <= 0xf);
+            QVERIFY(std::abs(qGreen(p[x]) - 127) <= 0xf);
+            QVERIFY(std::abs(qBlue(p[x]) - 127) <= 0xf);
         }
     }
 }
@@ -3860,7 +3860,7 @@ int diffColor(quint32 ap, quint32 bp)
     int b = qBlue(ap) - qBlue(bp);
     int g = qBlue(ap) - qBlue(bp);
 
-    return qAbs(a) + qAbs(r) + qAbs(g) + qAbs(b);
+    return std::abs(a) + std::abs(r) + std::abs(g) + std::abs(b);
 }
 
 // this test assumes premultiplied pixels...
@@ -4088,7 +4088,7 @@ void tst_QPainter::gradientInterpolation()
 
     for (int i = 0; i < 256; ++i) {
         QCOMPARE(qAlpha(line[i]), qBlue(line[i])); // bright blue
-        QVERIFY(qAbs(qAlpha(line[i]) - i) < 3); // linear alpha
+        QVERIFY(std::abs(qAlpha(line[i]) - i) < 3); // linear alpha
         QCOMPARE(qRed(line[i]), 0); // no red component
         QCOMPARE(qGreen(line[i]), 0); // no green component
     }
@@ -4108,7 +4108,7 @@ void tst_QPainter::gradientInterpolation()
         }
         QVERIFY((qRed(line[i]) - 0.5) * (qAlpha(line[i - 1]) - 0.5) <= (qRed(line[i - 1]) + 0.5) * (qAlpha(line[i]) + 0.5)); // decreasing red
         QVERIFY((qBlue(line[i]) + 0.5) * (qAlpha(line[i - 1]) + 0.5) >= (qBlue(line[i - 1]) - 0.5) * (qAlpha(line[i]) - 0.5)); // increasing blue
-        QVERIFY(qAbs(qAlpha(line[i]) - i) < 3); // linear alpha
+        QVERIFY(std::abs(qAlpha(line[i]) - i) < 3); // linear alpha
         QCOMPARE(qGreen(line[i]), 0); // no green component
     }
 }

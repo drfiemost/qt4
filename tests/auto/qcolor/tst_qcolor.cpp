@@ -596,7 +596,7 @@ void tst_QColor::setAlpha()
 
 bool veryFuzzyCompare(double a, double b)
 {
-    return qAbs(a - b) < 0.01;
+    return std::abs(a - b) < 0.01;
 }
 
 void tst_QColor::setRed()

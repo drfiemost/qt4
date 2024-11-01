@@ -11048,9 +11048,9 @@ void tst_QGraphicsItem::QTBUG_5418_textItemSetDefaultColor()
         for (int x = 0; x < image.width(); ++x) {
             // Because of antialiasing we allow a certain range of errors here.
             QRgb pixel = image.pixel(x, y);
-            if (qAbs((int)(pixel & 0xff) - (int)(rgb & 0xff)) +
-                qAbs((int)((pixel & 0xff00) >> 8) - (int)((rgb & 0xff00) >> 8)) +
-                qAbs((int)((pixel & 0xff0000) >> 16) - (int)((rgb & 0xff0000) >> 16)) <= 50) {
+            if (std::abs((int)(pixel & 0xff) - (int)(rgb & 0xff)) +
+                std::abs((int)((pixel & 0xff00) >> 8) - (int)((rgb & 0xff00) >> 8)) +
+                std::abs((int)((pixel & 0xff0000) >> 16) - (int)((rgb & 0xff0000) >> 16)) <= 50) {
                 if (++numRedPixel >= 10) {
                     return;
                 }

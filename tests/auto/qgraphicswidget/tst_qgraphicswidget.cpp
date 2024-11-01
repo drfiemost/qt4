@@ -3048,7 +3048,7 @@ void tst_QGraphicsWidget::respectHFW()
     }
     const QSizeF winSize = window->size();
     qreal minHFW = window->effectiveSizeHint(Qt::MinimumSize, QSizeF(winSize.width(), -1)).height();
-    QTRY_VERIFY(qAbs(minHFW - winSize.height()) < 1);
+    QTRY_VERIFY(std::abs(minHFW - winSize.height()) < 1);
 #endif
 }
 

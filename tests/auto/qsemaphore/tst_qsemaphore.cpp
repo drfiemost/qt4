@@ -342,7 +342,7 @@ void tst_QSemaphore::tryAcquireWithTimeout()
     do { \
         int a1 = a; \
         int e1 = e; \
-        QVERIFY2(qAbs(a1-e1) < fuzz, \
+        QVERIFY2(std::abs(a1-e1) < fuzz, \
             qPrintable(QString("(%1=%2) is more than %3 milliseconds different from (%4=%5)") \
                         .arg(#a).arg(a1).arg(fuzz).arg(#e).arg(e1))); \
     } while (0)

@@ -1234,10 +1234,10 @@ void tst_QGraphicsView::ensureVisibleRect()
                 QPoint viewPoint = view.mapFromScene(x, y);
 
                 QVERIFY(viewRect.contains(viewPoint));
-                QVERIFY(qAbs(viewPoint.x() - viewRect.left()) >= margin -1);
-                QVERIFY(qAbs(viewPoint.x() - viewRect.right()) >= margin -1);
-                QVERIFY(qAbs(viewPoint.y() - viewRect.top()) >= margin -1);
-                QVERIFY(qAbs(viewPoint.y() - viewRect.bottom()) >= margin -1);
+                QVERIFY(std::abs(viewPoint.x() - viewRect.left()) >= margin -1);
+                QVERIFY(std::abs(viewPoint.x() - viewRect.right()) >= margin -1);
+                QVERIFY(std::abs(viewPoint.y() - viewRect.top()) >= margin -1);
+                QVERIFY(std::abs(viewPoint.y() - viewRect.bottom()) >= margin -1);
 
                 QApplication::processEvents();
             }
@@ -1875,8 +1875,8 @@ void tst_QGraphicsView::mapFromScenePoint()
 
         QPoint mapped = view.mapFromScene(0, 0);
         QPoint center = view.viewport()->rect().center();
-        if (qAbs(mapped.x() - center.x()) >= 2
-            || qAbs(mapped.y() - center.y()) >= 2) {
+        if (std::abs(mapped.x() - center.x()) >= 2
+            || std::abs(mapped.y() - center.y()) >= 2) {
             QString error = QString("Compared values are not the same\n\tActual: (%1, %2)\n\tExpected: (%3, %4)")
                             .arg(mapped.x()).arg(mapped.y()).arg(center.x()).arg(center.y());
             QFAIL(qPrintable(error));
@@ -1926,8 +1926,8 @@ void tst_QGraphicsView::mapFromSceneRect()
 
     QPolygon viewPolygon = view.mapFromScene(0, 0, 10, 10);
     for (int i = 0; i < 4; ++i) {
-        QVERIFY(qAbs(viewPolygon[i].x() - polygon[i].x()) < 3);
-        QVERIFY(qAbs(viewPolygon[i].y() - polygon[i].y()) < 3);
+        QVERIFY(std::abs(viewPolygon[i].x() - polygon[i].x()) < 3);
+        QVERIFY(std::abs(viewPolygon[i].y() - polygon[i].y()) < 3);
     }
 
     QPoint pt = view.mapFromScene(QPointF());
@@ -1960,8 +1960,8 @@ void tst_QGraphicsView::mapFromScenePoly()
 
     QPolygon viewPolygon = view.mapFromScene(polygon);
     for (int i = 0; i < 4; ++i) {
-        QVERIFY(qAbs(viewPolygon[i].x() - polygon2[i].x()) < 3);
-        QVERIFY(qAbs(viewPolygon[i].y() - polygon2[i].y()) < 3);
+        QVERIFY(std::abs(viewPolygon[i].x() - polygon2[i].x()) < 3);
+        QVERIFY(std::abs(viewPolygon[i].y() - polygon2[i].y()) < 3);
     }
 }
 
@@ -1995,8 +1995,8 @@ void tst_QGraphicsView::mapFromScenePath()
     QPolygonF path2Poly = path2.toFillPolygon();
 
     for (int i = 0; i < pathPoly.size(); ++i) {
-        QVERIFY(qAbs(pathPoly[i].x() - path2Poly[i].x()) < 3);
-        QVERIFY(qAbs(pathPoly[i].y() - path2Poly[i].y()) < 3);
+        QVERIFY(std::abs(pathPoly[i].x() - path2Poly[i].x()) < 3);
+        QVERIFY(std::abs(pathPoly[i].y() - path2Poly[i].y()) < 3);
     }
 }
 
@@ -2239,12 +2239,12 @@ void tst_QGraphicsView::transformationAnchor()
 
         if (i == 0) {
             qreal slack = 3;
-            QVERIFY(qAbs(newCenter.x() - center.x()) < slack);
-            QVERIFY(qAbs(newCenter.y() - center.y()) < slack);
+            QVERIFY(std::abs(newCenter.x() - center.x()) < slack);
+            QVERIFY(std::abs(newCenter.y() - center.y()) < slack);
         } else {
             qreal slack = qreal(0.3);
-            QVERIFY(qAbs(newCenter.x() - center.x() / 10) < slack);
-            QVERIFY(qAbs(newCenter.y() - center.y() / 10) < slack);
+            QVERIFY(std::abs(newCenter.x() - center.x() / 10) < slack);
+            QVERIFY(std::abs(newCenter.y() - center.y() / 10) < slack);
         }
     }
 }
@@ -2285,8 +2285,8 @@ void tst_QGraphicsView::resizeAnchor()
 
                 QPointF newCenter = view.mapToScene(view.viewport()->rect().center());
                 int slack = 3;
-                QVERIFY(qAbs(newCenter.x() - center.x()) < slack);
-                QVERIFY(qAbs(newCenter.y() - center.y()) < slack);
+                QVERIFY(std::abs(newCenter.x() - center.x()) < slack);
+                QVERIFY(std::abs(newCenter.y() - center.y()) < slack);
             }
             QApplication::processEvents();
         }
@@ -4344,8 +4344,8 @@ void tst_QGraphicsView::task255529_transformationAnchorMouseAndViewportMargins()
     QPointF newMouseScenePos = view.mapToScene(mouseViewPos);
 
     qreal slack = 1;
-    QVERIFY(qAbs(newMouseScenePos.x() - mouseScenePos.x()) < slack);
-    QVERIFY(qAbs(newMouseScenePos.y() - mouseScenePos.y()) < slack);
+    QVERIFY(std::abs(newMouseScenePos.x() - mouseScenePos.x()) < slack);
+    QVERIFY(std::abs(newMouseScenePos.y() - mouseScenePos.y()) < slack);
 }
 
 void tst_QGraphicsView::task259503_scrollingArtifacts()

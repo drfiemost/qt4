@@ -201,9 +201,9 @@ bool checkPixel(QColor pixel, QColor expected)
 {
     const int allowedDiff = 20;
 
-    return !(qAbs(pixel.red() - expected.red()) > allowedDiff ||
-            qAbs(pixel.green() - expected.green()) > allowedDiff ||
-            qAbs(pixel.blue() - expected.blue()) > allowedDiff);
+    return !(std::abs(pixel.red() - expected.red()) > allowedDiff ||
+            std::abs(pixel.green() - expected.green()) > allowedDiff ||
+            std::abs(pixel.blue() - expected.blue()) > allowedDiff);
 }
 
 /*

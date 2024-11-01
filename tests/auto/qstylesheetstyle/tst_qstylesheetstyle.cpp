@@ -710,9 +710,9 @@ static bool testForColors(const QImage& image, const QColor& color, bool ensureP
             // Because of antialiasing we allow a certain range of errors here.
             QRgb pixel = image.pixel(x, y);
 
-            if (qAbs((int)(pixel & 0xff) - (int)(rgb & 0xff)) +
-                    qAbs((int)((pixel & 0xff00) >> 8) - (int)((rgb & 0xff00) >> 8)) +
-                    qAbs((int)((pixel & 0xff0000) >> 16) - (int)((rgb & 0xff0000) >> 16)) <= 50) {
+            if (std::abs((int)(pixel & 0xff) - (int)(rgb & 0xff)) +
+                    std::abs((int)((pixel & 0xff00) >> 8) - (int)((rgb & 0xff00) >> 8)) +
+                    std::abs((int)((pixel & 0xff0000) >> 16) - (int)((rgb & 0xff0000) >> 16)) <= 50) {
                 count++;
                 if (!ensurePrimary && count >=10 )
                     return true;
@@ -1057,15 +1057,15 @@ void tst_QStyleSheetStyle::minmaxSizes()
     tabWidget.show();
     QTest::qWait(50);
     //i allow 4px additional border from the native style (hence the -2, <=2)
-    QVERIFY(qAbs(page2->maximumSize().width() - 500 - 2) <= 2);
-    QVERIFY(qAbs(page2->minimumSize().width() - 250 - 2) <= 2);
-    QVERIFY(qAbs(page3->maximumSize().height() - 500 - 2) <= 2);
-    QVERIFY(qAbs(page3->minimumSize().height() - 250 - 2) <= 2);
-    QVERIFY(qAbs(page3->minimumSize().height() - 250 - 2) <= 2);
+    QVERIFY(std::abs(page2->maximumSize().width() - 500 - 2) <= 2);
+    QVERIFY(std::abs(page2->minimumSize().width() - 250 - 2) <= 2);
+    QVERIFY(std::abs(page3->maximumSize().height() - 500 - 2) <= 2);
+    QVERIFY(std::abs(page3->minimumSize().height() - 250 - 2) <= 2);
+    QVERIFY(std::abs(page3->minimumSize().height() - 250 - 2) <= 2);
     QTabBar *bar = qFindChild<QTabBar*>(&tabWidget);
     QVERIFY(bar);
-    QVERIFY(qAbs(bar->tabRect(index1).width() - 100 - 2) <= 2);
-    QVERIFY(qAbs(bar->tabRect(index3).width() - 130 - 2) <= 2);
+    QVERIFY(std::abs(bar->tabRect(index1).width() - 100 - 2) <= 2);
+    QVERIFY(std::abs(bar->tabRect(index3).width() - 130 - 2) <= 2);
 }
 
 void tst_QStyleSheetStyle::task206238_twice()

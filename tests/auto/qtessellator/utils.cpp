@@ -72,13 +72,13 @@ double compute_area(XTrapezoid *trap)
     if ((top_base < 0 && bottom_base > 0)
         || (top_base > 0 && bottom_base < 0)) {
         double y0 = top_base*h/(top_base - bottom_base) + top;
-        double area = qAbs(top_base * (y0 - top) / 2.);
-        area += qAbs(bottom_base * (bottom - y0) /2.);
+        double area = std::abs(top_base * (y0 - top) / 2.);
+        area += std::abs(bottom_base * (bottom - y0) /2.);
         return area;
     }
 
 
-    return 0.5 * h * qAbs(top_base + bottom_base);
+    return 0.5 * h * std::abs(top_base + bottom_base);
 }
 
 double compute_area_for_x(const QVector<XTrapezoid> &traps)

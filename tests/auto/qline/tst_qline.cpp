@@ -232,8 +232,8 @@ void tst_QLine::testIntersection()
 
     QCOMPARE(int(itype), type);
     if (type != QLineF::NoIntersection) {
-        QVERIFY(qAbs(ip.x() - ix) < epsilon);
-        QVERIFY(qAbs(ip.y() - iy) < epsilon);
+        QVERIFY(std::abs(ip.x() - ix) < epsilon);
+        QVERIFY(std::abs(ip.y() - iy) < epsilon);
     }
 }
 
@@ -411,10 +411,10 @@ void tst_QLine::testAngle2()
 
     QLineF polar = QLineF::fromPolar(line.length(), angle);
 
-    QVERIFY(qAbs(line.x1() - polar.x1()) < epsilon);
-    QVERIFY(qAbs(line.y1() - polar.y1()) < epsilon);
-    QVERIFY(qAbs(line.x2() - polar.x2()) < epsilon);
-    QVERIFY(qAbs(line.y2() - polar.y2()) < epsilon);
+    QVERIFY(std::abs(line.x1() - polar.x1()) < epsilon);
+    QVERIFY(std::abs(line.y1() - polar.y1()) < epsilon);
+    QVERIFY(std::abs(line.x2() - polar.x2()) < epsilon);
+    QVERIFY(std::abs(line.y2() - polar.y2()) < epsilon);
 }
 
 void tst_QLine::testAngle3()
@@ -424,7 +424,7 @@ void tst_QLine::testAngle3()
         line.setAngle(i);
         const int expected = (i + 720) % 360;
 
-        QVERIFY2(qAbs(line.angle() - qreal(expected)) < epsilon, qPrintable(QString::fromLatin1("value: %1").arg(i)));
+        QVERIFY2(std::abs(line.angle() - qreal(expected)) < epsilon, qPrintable(QString::fromLatin1("value: %1").arg(i)));
 
         QCOMPARE(line.length(), qreal(100.0));
 
@@ -448,7 +448,7 @@ void tst_QLine::testAngleTo()
     QLineF b(xb1, yb1, xb2, yb2);
 
     const qreal resultAngle = a.angleTo(b);
-    QVERIFY(qAbs(resultAngle - angle) < epsilon);
+    QVERIFY(std::abs(resultAngle - angle) < epsilon);
 
     a.translate(b.p1() - a.p1());
     a.setAngle(a.angle() + resultAngle);

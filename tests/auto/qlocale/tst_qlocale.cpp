@@ -1525,10 +1525,10 @@ void tst_QLocale::macDefaultLocale()
             expectedGMTSpecifier.append("+");
         else
             expectedGMTSpecifier.append("-");
-        if (qAbs(diff) < 10)
-            expectedGMTSpecifier.append(QString("0%1").arg(qAbs(diff)));
+        if (std::abs(diff) < 10)
+            expectedGMTSpecifier.append(QString("0%1").arg(std::abs(diff)));
         else
-            expectedGMTSpecifier.append(QString("%1").arg(qAbs(diff)));
+            expectedGMTSpecifier.append(QString("%1").arg(std::abs(diff)));
         QVERIFY2(timeString.contains(expectedGMTSpecifier), qPrintable(
             QString("timeString `%1', expectedGMTSpecifier `%2'")
             .arg(timeString)

@@ -50,18 +50,18 @@ static const qreal epsilon = qPow(0.1, precision);
 
 static inline bool fuzzyIsZero(qreal x, qreal relative)
 {
-    if (qAbs(relative) < epsilon)
-        return qAbs(x) < epsilon;
+    if (std::abs(relative) < epsilon)
+        return std::abs(x) < epsilon;
     else
-        return qAbs(x / relative) < epsilon;
+        return std::abs(x / relative) < epsilon;
 }
 
 static bool fuzzyCompare(const QPointF &a, const QPointF &b)
 {
     const QPointF delta = a - b;
 
-    const qreal x = qMax(qAbs(a.x()), qAbs(b.x()));
-    const qreal y = qMax(qAbs(a.y()), qAbs(b.y()));
+    const qreal x = std::max(std::abs(a.x()), std::abs(b.x()));
+    const qreal y = std::max(std::abs(a.y()), std::abs(b.y()));
 
     return fuzzyIsZero(delta.x(), x) && fuzzyIsZero(delta.y(), y);
 }

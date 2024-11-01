@@ -87,7 +87,7 @@ void tst_QPolygon::makeEllipse()
 	double r = sqrt( pow( double(p.x() - R), 2.0 ) + pow( double(p.y() - R), 2.0 ) );
 	// ### too strict ? at least from visual inspection it looks
 	// quite odd around the main axes. 2.0 passes easily.
-	err |= ( qAbs( r - double(R) ) > 2.0 );
+	err |= ( std::abs( r - double(R) ) > 2.0 );
     }
     QVERIFY( !err );
 }

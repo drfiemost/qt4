@@ -766,7 +766,7 @@ void tst_QSvgRenderer::gradientRefs()
         QRgb right = line[255]; // opaque blue
 
         QVERIFY((qAlpha(left) < 3) && (qRed(left) < 3) && (qGreen(left) == 0) && (qBlue(left) < 3));
-        QVERIFY((qAbs(qAlpha(mid) - 127) < 3) && (qAbs(qRed(mid) - 63) < 4) && (qGreen(mid) == 0) && (qAbs(qBlue(mid) - 63) < 4));
+        QVERIFY((std::abs(qAlpha(mid) - 127) < 3) && (std::abs(qRed(mid) - 63) < 4) && (qGreen(mid) == 0) && (std::abs(qBlue(mid) - 63) < 4));
         QVERIFY((qAlpha(right) > 253) && (qRed(right) < 3) && (qGreen(right) == 0) && (qBlue(right) > 251));
     }
 }

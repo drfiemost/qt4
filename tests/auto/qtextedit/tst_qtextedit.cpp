@@ -2101,9 +2101,9 @@ void tst_QTextEdit::compareWidgetAndImage(QTextEdit &widget, const QString &imag
             for (int x = 0; x < width; ++x) {
                 const QRgb a = firstLine[x];
                 const QRgb b = secondLine[x];
-                const bool same = qAbs(qRed(a) - qRed(b)) <= 20
-                    && qAbs(qGreen(a) - qGreen(b)) <= 20
-                    && qAbs(qBlue(a) - qBlue(b)) <= 20;
+                const bool same = std::abs(qRed(a) - qRed(b)) <= 20
+                    && std::abs(qGreen(a) - qGreen(b)) <= 20
+                    && std::abs(qBlue(a) - qBlue(b)) <= 20;
                 if (!same) {
                     QString fileName = imageFileName;
                     QImageWriter writer("failed_"+ fileName.replace('/','_'), "PNG");

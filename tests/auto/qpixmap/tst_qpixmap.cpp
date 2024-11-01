@@ -222,11 +222,11 @@ static bool lenientCompare(const QPixmap &actual, const QPixmap &expected)
 
         bool result = true;
 
-        if (qAbs(ca.red() - ce.red()) > threshold)
+        if (std::abs(ca.red() - ce.red()) > threshold)
             result = false;
-        if (qAbs(ca.green() - ce.green()) > threshold)
+        if (std::abs(ca.green() - ce.green()) > threshold)
             result = false;
-        if (qAbs(ca.blue() - ce.blue()) > threshold)
+        if (std::abs(ca.blue() - ce.blue()) > threshold)
             result = false;
 
         if (!result)
@@ -1085,10 +1085,10 @@ static void compareImages(const QImage &image1, const QImage &image2)
             QRgb p2 = image2.pixel(x, y);
 
             bool pixelMatches =
-                qAbs(qRed(p1) - qRed(p2)) <= fuzz
-                && qAbs(qGreen(p1) - qGreen(p2)) <= fuzz
-                && qAbs(qBlue(p1) - qBlue(p2)) <= fuzz
-                && qAbs(qAlpha(p1) - qAlpha(p2)) <= fuzz;
+                std::abs(qRed(p1) - qRed(p2)) <= fuzz
+                && std::abs(qGreen(p1) - qGreen(p2)) <= fuzz
+                && std::abs(qBlue(p1) - qBlue(p2)) <= fuzz
+                && std::abs(qAlpha(p1) - qAlpha(p2)) <= fuzz;
 
             QVERIFY(pixelMatches);
         }

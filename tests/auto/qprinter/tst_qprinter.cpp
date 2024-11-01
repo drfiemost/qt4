@@ -348,8 +348,8 @@ void tst_QPrinter::testPageRectAndPaperRect()
     if (painter != 0)
         delete painter;
 
-    QVERIFY(qAbs(otherInchesX - inchesX) < 0.01);
-    QVERIFY(qAbs(otherInchesY - inchesY) < 0.01);
+    QVERIFY(std::abs(otherInchesX - inchesX) < 0.01);
+    QVERIFY(std::abs(otherInchesY - inchesY) < 0.01);
 
     QVERIFY(printer.orientation() == QPrinter::Portrait || pageRect.width() > pageRect.height());
     QVERIFY(printer.orientation() != QPrinter::Portrait || pageRect.width() < pageRect.height());
@@ -518,8 +518,8 @@ void tst_QPrinter::testMulitpleSets()
 
     computePageValue(printer, paperWidth, paperHeight);
 
-    QVERIFY(qAbs(paperWidth - widthMMAfter) <= 2);
-    QVERIFY(qAbs(paperHeight - heightMMAfter) <= 2);
+    QVERIFY(std::abs(paperWidth - widthMMAfter) <= 2);
+    QVERIFY(std::abs(paperHeight - heightMMAfter) <= 2);
 
     // Set it again and see if it still works.
     printer.setPageSize(printerPageSize);
@@ -528,8 +528,8 @@ void tst_QPrinter::testMulitpleSets()
 
     printer.setOrientation(QPrinter::Landscape);
     computePageValue(printer, paperWidth, paperHeight);
-    QVERIFY(qAbs(paperWidth - heightMMAfter) <= 2);
-    QVERIFY(qAbs(paperHeight - widthMMAfter) <= 2);
+    QVERIFY(std::abs(paperWidth - heightMMAfter) <= 2);
+    QVERIFY(std::abs(paperHeight - widthMMAfter) <= 2);
 }
 
 void tst_QPrinter::changingOutputFormat()
@@ -565,8 +565,8 @@ void tst_QPrinter::setGetPaperSize()
         QCOMPARE(p.paperSize(QPrinter::Millimeter), size);
         QSizeF ptSize = p.paperSize(QPrinter::Point);
         //qDebug() << ptSize;
-        QVERIFY(qAbs(ptSize.width() - size.width() * (72/25.4)) < 1E-4);
-        QVERIFY(qAbs(ptSize.height() - size.height() * (72/25.4)) < 1E-4);
+        QVERIFY(std::abs(ptSize.width() - size.width() * (72/25.4)) < 1E-4);
+        QVERIFY(std::abs(ptSize.height() - size.height() * (72/25.4)) < 1E-4);
     }
     {
         QPrinter p;

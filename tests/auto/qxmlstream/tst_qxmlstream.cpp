@@ -78,7 +78,7 @@ static inline int best(int a, int b, int c)
         return best(a, c);
     if (c < 0)
         return best(a, b);
-    return std::min(qMin(a, b), c);
+    return std::min(std::min(a, b), c);
 }
 
 /**

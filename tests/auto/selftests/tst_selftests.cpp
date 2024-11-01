@@ -103,7 +103,7 @@ inline bool qCompare
         return qCompare(r1.toString(), r2.toString(), actual, expected, file, line);
     }
 
-    if (qAbs(qreal(r1.total) - qreal(r2.total)) <= qreal(r1.total)*variance) {
+    if (std::abs(qreal(r1.total) - qreal(r2.total)) <= qreal(r1.total)*variance) {
         return compare_helper(true, 0, 0, 0, actual, expected, file, line);
     }
 

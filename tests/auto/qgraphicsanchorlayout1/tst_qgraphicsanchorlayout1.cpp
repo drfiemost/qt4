@@ -1683,7 +1683,7 @@ inline QGraphicsLayoutItem *getItem(
 
 static bool fuzzierCompare(qreal a, qreal b)
 {
-    return qAbs(a - b) <= qreal(0.0001);
+    return std::abs(a - b) <= qreal(0.0001);
 }
 
 static bool fuzzierCompare(const QRectF &r1, const QRectF &r2)

@@ -608,7 +608,7 @@ void tst_QMdiSubWindow::showShaded()
     // Calculate mouse position for bottom right corner and simulate a
     // vertical resize with the mouse.
     int offset = window->style()->pixelMetric(QStyle::PM_MDIFrameWidth) / 2;
-    QPoint mousePosition(window->width() - std::max(offset, 2), window->height() - qMax(offset, 2));
+    QPoint mousePosition(window->width() - std::max(offset, 2), window->height() - std::max(offset, 2));
     QWidget *mouseReceiver = 0;
 #ifdef Q_WS_MAC
     if (qobject_cast<QMacStyle*>(window->style()))
@@ -751,14 +751,14 @@ void tst_QMdiSubWindow::setOpaqueResizeAndMove()
 
     // Enter resize mode.
     int offset = window->style()->pixelMetric(QStyle::PM_MDIFrameWidth) / 2;
-    QPoint mousePosition(mouseReceiver->width() - std::max(offset, 2), mouseReceiver->height() - qMax(offset, 2));
+    QPoint mousePosition(mouseReceiver->width() - std::max(offset, 2), mouseReceiver->height() - std::max(offset, 2));
     sendMouseMove(mouseReceiver, mousePosition, Qt::NoButton);
     sendMousePress(mouseReceiver, mousePosition);
 
     // The window itself is the grabber in rubberband mode
     if (!opaqueMode) {
         mouseReceiver = window;
-        mousePosition = QPoint(window->width() - std::max(offset, 2), window->height() - qMax(offset, 2));
+        mousePosition = QPoint(window->width() - std::max(offset, 2), window->height() - std::max(offset, 2));
     }
 
     // Trigger resize events

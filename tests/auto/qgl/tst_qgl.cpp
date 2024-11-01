@@ -767,10 +767,10 @@ static bool fuzzyComparePixels(const QRgb testPixel, const QRgb refPixel, const 
             maxFuzz = 32;
     }
 
-    int redFuzz = qAbs(qRed(testPixel) - qRed(refPixel));
-    int greenFuzz = qAbs(qGreen(testPixel) - qGreen(refPixel));
-    int blueFuzz = qAbs(qBlue(testPixel) - qBlue(refPixel));
-    int alphaFuzz = qAbs(qAlpha(testPixel) - qAlpha(refPixel));
+    int redFuzz = std::abs(qRed(testPixel) - qRed(refPixel));
+    int greenFuzz = std::abs(qGreen(testPixel) - qGreen(refPixel));
+    int blueFuzz = std::abs(qBlue(testPixel) - qBlue(refPixel));
+    int alphaFuzz = std::abs(qAlpha(testPixel) - qAlpha(refPixel));
 
     if (refPixel != 0 && testPixel == 0) {
         QString msg;

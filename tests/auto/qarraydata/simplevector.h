@@ -156,7 +156,7 @@ public:
             }
         }
 
-        SimpleVector detached(Data::allocate(qMax(n, size()),
+        SimpleVector detached(Data::allocate(std::max(n, size()),
                     d->detachFlags() | Data::CapacityReserved));
         if (size())
             detached.d->copyAppend(constBegin(), constEnd());

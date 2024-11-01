@@ -434,7 +434,7 @@ void tst_QEasingCurve::valueForProgress()
     const qreal errorBound = 0.00006;
     for (int i = 0; i < at.count(); ++i) {
         const qreal ex = expected.at(i);
-        const qreal error = qAbs(ex - curve.valueForProgress(at.at(i)/qreal(100)));
+        const qreal error = std::abs(ex - curve.valueForProgress(at.at(i)/qreal(100)));
         QVERIFY(error <= errorBound);
     }
 #endif

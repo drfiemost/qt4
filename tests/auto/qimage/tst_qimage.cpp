@@ -888,8 +888,8 @@ void tst_QImage::createAlphaMask()
 
     // Compare the set bits to whats expected for that alpha.
     const int threshold = 5;
-    QVERIFY(qAbs(sumAlpha1 * 255 / pixelsOutofLines - alpha1) < threshold);
-    QVERIFY(qAbs(sumAlpha2 * 255 / pixelsInLines - alpha2) < threshold);
+    QVERIFY(std::abs(sumAlpha1 * 255 / pixelsOutofLines - alpha1) < threshold);
+    QVERIFY(std::abs(sumAlpha2 * 255 / pixelsInLines - alpha2) < threshold);
 }
 
 void tst_QImage::dotsPerMeterZero()
@@ -1449,9 +1449,9 @@ void tst_QImage::smoothScale3()
 
                 // tolerate a little bit of rounding errors
                 bool r = true;
-                r &= qAbs(qRed(ca) - qRed(cb)) <= 18;
-                r &= qAbs(qGreen(ca) - qGreen(cb)) <= 18;
-                r &= qAbs(qBlue(ca) - qBlue(cb)) <= 18;
+                r &= std::abs(qRed(ca) - qRed(cb)) <= 18;
+                r &= std::abs(qGreen(ca) - qGreen(cb)) <= 18;
+                r &= std::abs(qBlue(ca) - qBlue(cb)) <= 18;
                 if (!r)
                     err++;
             }

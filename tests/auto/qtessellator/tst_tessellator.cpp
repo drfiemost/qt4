@@ -95,9 +95,9 @@ bool test(const QPointF *pg, int pgSize, bool winding, tessellate_function tesse
     tessellate(&traps, pg, pgSize, winding);
     area2 = compute_area_for_x(traps);
 
-    bool result = (qAbs(area2 - area1) < maxDiff);
+    bool result = (std::abs(area2 - area1) < maxDiff);
     if (!result && area1)
-        result = (qAbs(area1 - area2)/area1 < maxDiff);
+        result = (std::abs(area1 - area2)/area1 < maxDiff);
 
     if (!result)
         qDebug() << area1 << area2;
@@ -200,7 +200,7 @@ bool test_arc(const QPolygonF &poly, bool winding)
 
     bool result = (area2 - area1 < .02);
     if (!result && area1)
-        result = (qAbs(area1 - area2)/area1 < .02);
+        result = (std::abs(area1 - area2)/area1 < .02);
 
     return result;
 }

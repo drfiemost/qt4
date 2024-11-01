@@ -57,8 +57,8 @@ void tst_QMath::fastSinCos()
     const int LOOP_COUNT = 100000;
     for (int i = 0; i < LOOP_COUNT; ++i) {
         qreal angle = i * 2 * PI / (LOOP_COUNT - 1);
-        QVERIFY(qAbs(qSin(angle) - qFastSin(angle)) < 1e-5);
-        QVERIFY(qAbs(qCos(angle) - qFastCos(angle)) < 1e-5);
+        QVERIFY(std::abs(qSin(angle) - qFastSin(angle)) < 1e-5);
+        QVERIFY(std::abs(qCos(angle) - qFastCos(angle)) < 1e-5);
     }
 }
 

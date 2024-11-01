@@ -1123,7 +1123,7 @@ void tst_QToolBar::task191727_layout()
     mw.show();
 
     QWidget *actionwidget = toolBar->widgetForAction(action);
-    QVERIFY(qAbs(lineedit->pos().x() - (actionwidget->geometry().right() + 1 + toolBar->layout()->spacing())) < 2);
+    QVERIFY(std::abs(lineedit->pos().x() - (actionwidget->geometry().right() + 1 + toolBar->layout()->spacing())) < 2);
 }
 
 void tst_QToolBar::task197996_visibility()

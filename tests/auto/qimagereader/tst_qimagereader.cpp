@@ -343,7 +343,7 @@ void tst_QImageReader::jpegRgbCmyk()
             const uchar *s2 = image2.constScanLine(h);
             for (int w = 0; w < image1.width() * 4; ++w) {
                 if (*s1 != *s2) {
-                    QVERIFY2(qAbs(*s1 - *s2) <= 3, qPrintable(QString("images differ in line %1, col %2 (image1: %3, image2: %4)").arg(h).arg(w).arg(*s1, 0, 16).arg(*s2, 0, 16)));
+                    QVERIFY2(std::abs(*s1 - *s2) <= 3, qPrintable(QString("images differ in line %1, col %2 (image1: %3, image2: %4)").arg(h).arg(w).arg(*s1, 0, 16).arg(*s2, 0, 16)));
                 }
                 s1++;
                 s2++;

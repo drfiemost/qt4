@@ -1845,9 +1845,9 @@ void tst_QAccessibility::textEditTest()
         if (heightDelta || widthDelta)
             dumpTextDiagnostics(edit, offset);
 
-        QVERIFY(qAbs(widthDelta) <= 1);
+        QVERIFY(std::abs(widthDelta) <= 1);
 
-        if (qAbs(heightDelta) == 1) {
+        if (std::abs(heightDelta) == 1) {
             qDebug() << "Result is off by one, accepted. (" << actualSize.height() << expectedHeight << ")";
         } else {
             QCOMPARE(actualSize.height(), expectedHeight);

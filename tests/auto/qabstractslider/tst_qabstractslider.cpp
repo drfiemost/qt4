@@ -381,8 +381,8 @@ void tst_QAbstractSlider::triggerAction()
     slider->setRange(minimum,maximum);
     slider->setSingleStep(singleStep);
     slider->setPageStep(pageStep);
-    QCOMPARE(slider->singleStep(), qAbs(singleStep));
-    QCOMPARE(slider->pageStep(), qAbs(pageStep));
+    QCOMPARE(slider->singleStep(), std::abs(singleStep));
+    QCOMPARE(slider->pageStep(), std::abs(pageStep));
 
     int oldPosition = slider->sliderPosition();
     slider->setSliderPosition(initialSliderPosition);

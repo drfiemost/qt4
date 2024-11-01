@@ -434,7 +434,7 @@ inline int QByteArray::capacity() const
 inline void QByteArray::reserve(int asize)
 {
     if (d->ref.isShared() || uint(asize) + 1u > d->alloc) {
-        reallocData(qMax(uint(size()), uint(asize))  + 1u, d->detachFlags() | Data::CapacityReserved);
+        reallocData(std::max(uint(size()), uint(asize))  + 1u, d->detachFlags() | Data::CapacityReserved);
     } else {
         // cannot set unconditionally, since d could be the shared_null or
         // otherwise static

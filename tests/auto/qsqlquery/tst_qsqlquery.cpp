@@ -3308,7 +3308,7 @@ void tst_QSqlQuery::QTBUG_2192()
 
         // Check if retrieved value preserves reported precision
         int precision = std::max(0, q.record().field("dt").precision());
-        int diff = qAbs(q.value(0).toDateTime().msecsTo(dt));
+        int diff = std::abs(q.value(0).toDateTime().msecsTo(dt));
         int keep = std::min(1000, (int)qPow(10.0, precision));
         QVERIFY(diff <= 1000 - keep);
     }
