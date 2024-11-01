@@ -52,8 +52,8 @@
 #endif
 
 #include <map>
-
 #include <new>
+#include <functional>
 
 QT_BEGIN_HEADER
 
@@ -63,11 +63,8 @@ QT_BEGIN_NAMESPACE
 /*
     QMap uses qMapLessThanKey() to compare keys. The default
     implementation uses operator<(). For pointer types,
-    qMapLessThanKey() casts the pointers to integers before it
-    compares them, because operator<() is undefined on pointers
-    that come from different memory blocks. (In practice, this
-    is only a problem when running a program such as
-    BoundsChecker.)
+    qMapLessThanKey() uses std::less (because operator<() on
+    pointers can be used only between pointers in the same array).
 */
 
 template <class Key> inline bool qMapLessThanKey(const Key &key1, const Key &key2)
@@ -75,10 +72,9 @@ template <class Key> inline bool qMapLessThanKey(const Key &key1, const Key &key
     return key1 < key2;
 }
 
-template <class Ptr> inline bool qMapLessThanKey(Ptr *key1, Ptr *key2)
+template <class Ptr> inline bool qMapLessThanKey(const Ptr *key1, const Ptr *key2)
 {
-    static_assert(sizeof(quintptr) == sizeof(const Ptr *));
-    return quintptr(key1) < quintptr(key2);
+    return std::less<const Ptr *>()(key1, key2);
 }
 
 struct QMapDataBase;
@@ -118,9 +114,9 @@ struct QMapNode : public QMapNodeBase
     inline QMapNode *leftNode() const { return static_cast<QMapNode *>(left); }
     inline QMapNode *rightNode() const { return static_cast<QMapNode *>(right); }
 
-    inline const QMapNode *nextNode() const { return static_cast<const QMapNode *>(QMapNodeBase::nextNode()); }
+    inline const QMapNode *nextNode() const { return reinterpret_cast<const QMapNode *>(QMapNodeBase::nextNode()); }
     inline const QMapNode *previousNode() const { return static_cast<const QMapNode *>(QMapNodeBase::previousNode()); }
-    inline QMapNode *nextNode() { return static_cast<QMapNode *>(QMapNodeBase::nextNode()); }
+    inline QMapNode *nextNode() { return reinterpret_cast<QMapNode *>(QMapNodeBase::nextNode()); }
     inline QMapNode *previousNode() { return static_cast<QMapNode *>(QMapNodeBase::previousNode()); }
 
     QMapNode *minimumNode() { return static_cast<QMapNode *>(QMapNodeBase::minimumNode()); }
@@ -199,14 +195,16 @@ struct QMapData : public QMapDataBase
 
     Node *root() const { return static_cast<Node *>(header.left); }
 
-    const Node *end() const { return static_cast<const Node *>(&header); }
-    Node *end() { return static_cast<Node *>(&header); }
+    // using reinterpret_cast because QMapDataBase::header is not
+    // actually a QMapNode.
+    const Node *end() const { return reinterpret_cast<const Node *>(&header); }
+    Node *end() { return reinterpret_cast<Node *>(&header); }
     const Node *begin() const { if (root()) return root()->minimumNode(); return end(); }
     Node *begin() { if (root()) return root()->minimumNode(); return end(); }
 
     void deleteNode(Node *z);
     Node *findNode(const Key &akey) const;
-    void nodeRange(const Key &akey, Node **first, Node **last);
+    void nodeRange(const Key &akey, Node **firstNode, Node **lastNode);
 
     Node *createNode(const Key &k, const T &v, Node *parent = nullptr, bool left = false)
     {
@@ -288,15 +286,17 @@ void QMapData<Key, T>::deleteNode(QMapNode<Key, T> *z)
 template <class Key, class T>
 QMapNode<Key, T> *QMapData<Key, T>::findNode(const Key &akey) const
 {
-    Node *lb = root()->lowerBound(akey);
-    if (lb && !qMapLessThanKey(akey, lb->key))
-        return lb;
+    if (Node *r = root()) {
+        Node *lb = r->lowerBound(akey);
+        if (lb && !qMapLessThanKey(akey, lb->key))
+            return lb;
+    }
     return nullptr;
 }
 
 
 template <class Key, class T>
-void QMapData<Key, T>::nodeRange(const Key &akey, QMapNode<Key, T> **first, QMapNode<Key, T> **last)
+void QMapData<Key, T>::nodeRange(const Key &akey, QMapNode<Key, T> **firstNode, QMapNode<Key, T> **lastNode)
 {
     Node *n = root();
     Node *l = end();
@@ -307,16 +307,16 @@ void QMapData<Key, T>::nodeRange(const Key &akey, QMapNode<Key, T> **first, QMap
         } else if (qMapLessThanKey(n->key, akey)) {
             n = n->rightNode();
         } else {
-            *first = n->leftNode()->lowerBound(akey);
-            if (!*first)
-                *first = n;
-            *last = n->rightNode()->upperBound(akey);
-            if (!*last)
-                *last = l;
+            *firstNode = n->leftNode() ? n->leftNode()->lowerBound(akey) : nullptr;
+            if (!*firstNode)
+                *firstNode = n;
+            *lastNode = n->rightNode() ? n->rightNode()->upperBound(akey) : nullptr;
+            if (!*lastNode)
+                *lastNode = l;
             return;
         }
     }
-    *first = *last = l;
+    *firstNode = *lastNode = l;
 }
 
 
@@ -773,6 +773,27 @@ Q_OUTOFLINE_TEMPLATE typename QMap<Key, T>::iterator QMap<Key, T>::erase(iterato
     if (it == iterator(d->end()))
         return it;
 
+    if (d->ref.isShared()) {
+        const_iterator oldBegin = constBegin();
+        const_iterator old = const_iterator(it);
+        int backStepsWithSameKey = 0;
+
+        while (old != oldBegin) {
+            --old;
+            if (qMapLessThanKey(old.key(), it.key()))
+                break;
+            ++backStepsWithSameKey;
+        }
+
+        it = find(old.key()); // ensures detach
+        Q_ASSERT_X(it != iterator(d->end()), "QMap::erase", "Unable to locate same key in erase after detach.");
+
+        while (backStepsWithSameKey > 0) {
+            ++it;
+            --backStepsWithSameKey;
+        }
+    }
+
     Node *n = it.i;
     ++it;
     d->deleteNode(n);
@@ -882,7 +903,7 @@ Q_OUTOFLINE_TEMPLATE QList<T> QMap<Key, T>::values(const Key &akey) const
 template <class Key, class T>
 Q_INLINE_TEMPLATE typename QMap<Key, T>::const_iterator QMap<Key, T>::lowerBound(const Key &akey) const
 {
-    Node *lb = d->root()->lowerBound(akey);
+    Node *lb = d->root() ? d->root()->lowerBound(akey) : nullptr;
     if (!lb)
         lb = d->end();
     return const_iterator(lb);
@@ -892,7 +913,7 @@ template <class Key, class T>
 Q_INLINE_TEMPLATE typename QMap<Key, T>::iterator QMap<Key, T>::lowerBound(const Key &akey)
 {
     detach();
-    Node *lb = d->root()->lowerBound(akey);
+    Node *lb = d->root() ? d->root()->lowerBound(akey) : nullptr;
     if (!lb)
         lb = d->end();
     return iterator(lb);
@@ -902,7 +923,7 @@ template <class Key, class T>
 Q_INLINE_TEMPLATE typename QMap<Key, T>::const_iterator
 QMap<Key, T>::upperBound(const Key &akey) const
 {
-    Node *ub = d->root()->upperBound(akey);
+    Node *ub = d->root() ? d->root()->upperBound(akey) : nullptr;
     if (!ub)
         ub = d->end();
     return const_iterator(ub);
@@ -912,7 +933,7 @@ template <class Key, class T>
 Q_INLINE_TEMPLATE typename QMap<Key, T>::iterator QMap<Key, T>::upperBound(const Key &akey)
 {
     detach();
-    Node *ub = d->root()->upperBound(akey);
+    Node *ub = d->root() ? d->root()->upperBound(akey) : nullptr;
     if (!ub)
         ub = d->end();
     return iterator(ub);
