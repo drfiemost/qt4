@@ -43,6 +43,7 @@
 
 #include "qdatastream.h"
 #include "qendian.h"
+#include "private/qtools_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -50,17 +51,13 @@ QT_BEGIN_NAMESPACE
 template <class Char, class Integral>
 void _q_toHex(Char *&dst, Integral value)
 {
-    static const char digits[] = "0123456789abcdef";
-
     value = qToBigEndian(value);
 
     const char* p = reinterpret_cast<const char*>(&value);
 
     for (uint i = 0; i < sizeof(Integral); ++i, dst += 2) {
-        uint j = (p[i] >> 4) & 0xf;
-        dst[0] = Char(digits[j]);
-        j = p[i] & 0xf;
-        dst[1] = Char(digits[j]);
+        dst[0] = Char(QtMiscUtils::toHexLower((p[i] >> 4) & 0xf));
+        dst[1] = Char(QtMiscUtils::toHexLower(p[i] & 0xf));
     }
 }
 
@@ -70,15 +67,9 @@ bool _q_fromHex(const Char *&src, Integral &value)
     value = 0;
 
     for (uint i = 0; i < sizeof(Integral) * 2; ++i) {
-        int ch = *src++;
-        int tmp;
-        if (ch >= '0' && ch <= '9')
-            tmp = ch - '0';
-        else if (ch >= 'a' && ch <= 'f')
-            tmp = ch - 'a' + 10;
-        else if (ch >= 'A' && ch <= 'F')
-            tmp = ch - 'A' + 10;
-        else
+        uint ch = *src++;
+        int tmp = QtMiscUtils::fromHex(ch);
+        if (tmp == -1)
             return false;
 
         value = value * 16 + tmp;

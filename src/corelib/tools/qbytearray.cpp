@@ -72,7 +72,7 @@ int qFindByteArray(
 int qAllocMore(int alloc, int extra)
 {
     Q_ASSERT(alloc >= 0 && extra >= 0);
-    Q_ASSERT_X(alloc < (1 << 30) - extra, "qAllocMore", "Requested size is too large!");
+    Q_ASSERT_X(alloc < MaxAllocSize - extra, "qAllocMore", "Requested size is too large!");
 
     if (alloc == 0 && extra == 0)
         return 0;
@@ -1457,8 +1457,11 @@ void QByteArray::reallocData(uint alloc, Data::AllocationOptions options)
             Data::deallocate(d);
         d = x;
     } else {
-        if (options & Data::Grow)
+        if (options & Data::Grow) {
+            if (alloc > uint(MaxAllocSize) - uint(sizeof(Data)))
+                qBadAlloc();
             alloc = qAllocMore(alloc, sizeof(Data));
+        }
         Data *x = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc));
         Q_CHECK_PTR(x);
         x->alloc = alloc;
@@ -3983,15 +3986,9 @@ QByteArray QByteArray::fromHex(const QByteArray &hexEncoded)
 
     bool odd_digit = true;
     for (int i = hexEncoded.size() - 1; i >= 0; --i) {
-        int ch = hexEncoded.at(i);
-        int tmp;
-        if (ch >= '0' && ch <= '9')
-            tmp = ch - '0';
-        else if (ch >= 'a' && ch <= 'f')
-            tmp = ch - 'a' + 10;
-        else if (ch >= 'A' && ch <= 'F')
-            tmp = ch - 'A' + 10;
-        else
+        uchar ch = uchar(hexEncoded.at(i));
+        int tmp = QtMiscUtils::fromHex(ch);
+        if (tmp == -1)
             continue;
         if (odd_digit) {
             --result;
@@ -4019,16 +4016,8 @@ QByteArray QByteArray::toHex() const
     char *hexData = hex.data();
     const uchar *data = (const uchar *)d->data();
     for (int i = 0; i < d->size; ++i) {
-        int j = (data[i] >> 4) & 0xf;
-        if (j <= 9)
-            hexData[i*2] = (j + '0');
-         else
-            hexData[i*2] = (j + 'a' - 10);
-        j = data[i] & 0xf;
-        if (j <= 9)
-            hexData[i*2+1] = (j + '0');
-         else
-            hexData[i*2+1] = (j + 'a' - 10);
+        hexData[i*2] = QtMiscUtils::toHexLower(data[i] >> 4);
+        hexData[i*2+1] = QtMiscUtils::toHexLower(data[i] & 0xf);
     }
     return hex;
 }
@@ -4117,12 +4106,6 @@ static inline bool q_strchr(const char str[], char chr)
     return false;
 }
 
-static inline char toHexHelper(char c)
-{
-    static const char hexnumbers[] = "0123456789ABCDEF";
-    return hexnumbers[c & 0xf];
-}
-
 static void q_toPercentEncoding(QByteArray *ba, const char *dontEncode, const char *alsoEncode, char percent)
 {
     if (ba->isEmpty())
@@ -4155,8 +4138,8 @@ static void q_toPercentEncoding(QByteArray *ba, const char *dontEncode, const ch
                 output = ba->data();
             }
             output[length++] = percent;
-            output[length++] = toHexHelper((c & 0xf0) >> 4);
-            output[length++] = toHexHelper(c & 0xf);
+            output[length++] = QtMiscUtils::toHexUpper((c & 0xf0) >> 4);
+            output[length++] = QtMiscUtils::toHexUpper(c & 0xf);
         }
     }
     if (output)

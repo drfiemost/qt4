@@ -54,8 +54,34 @@
 //
 
 #include "QtCore/qglobal.h"
+#include <limits>
 
 QT_BEGIN_NAMESPACE
+
+namespace QtMiscUtils {
+constexpr inline char toHexUpper(uint value) noexcept
+{
+    return "0123456789ABCDEF"[value & 0xF];
+}
+
+constexpr inline char toHexLower(uint value) noexcept
+{
+    return "0123456789abcdef"[value & 0xF];
+}
+
+constexpr inline int fromHex(uint c) noexcept
+{
+    return ((c >= '0') && (c <= '9')) ? int(c - '0') :
+           ((c >= 'A') && (c <= 'F')) ? int(c - 'A' + 10) :
+           ((c >= 'a') && (c <= 'f')) ? int(c - 'a' + 10) :
+           /* otherwise */              -1;
+}
+}
+
+// We typically need an extra bit for qNextPowerOfTwo when determining the next allocation size.
+enum {
+    MaxAllocSize = (1 << (std::numeric_limits<int>::digits - 1)) - 1
+};
 
 // implemented in qbytearray.cpp
 int Q_CORE_EXPORT qAllocMore(int alloc, int extra);

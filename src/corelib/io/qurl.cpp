@@ -201,6 +201,7 @@
 #endif
 #include "qmutex.h"
 #include "private/qorderedmutexlocker_p.h"
+#include "private/qtools_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -4405,7 +4406,7 @@ inline static bool isHex(char c)
 
 static inline char toHex(quint8 c)
 {
-    return c > 9 ? c - 10 + 'A' : c + '0';
+    return QtMiscUtils::toHexUpper(c);
 }
 
 /*!

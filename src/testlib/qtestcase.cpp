@@ -54,6 +54,7 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qprocess.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/private/qtools_p.h>
 
 #include "QtTest/private/qtestlog_p.h"
 #include "QtTest/private/qtesttable_p.h"
@@ -89,6 +90,8 @@
 #endif
 
 QT_BEGIN_NAMESPACE
+
+using QtMiscUtils::toHexUpper;
 
 /*!
    \namespace QTest
@@ -1636,16 +1639,15 @@ char *toHexRepresentation(const char *ba, int length)
         result[size - 1] = '\0';
     }
 
-    const char toHex[] = "0123456789ABCDEF";
     int i = 0;
     int o = 0;
 
     while(true) {
         const char at = ba[i];
 
-        result[o] = toHex[(at >> 4) & 0x0F];
+        result[o] = toHexUpper(at >> 4);
         ++o;
-        result[o] = toHex[at & 0x0F];
+        result[o] = toHexUpper(at);
 
         ++i;
         ++o;
