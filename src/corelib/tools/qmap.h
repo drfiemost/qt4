@@ -140,32 +140,32 @@ template <class Key, class T>
 inline QMapNode<Key, T> *QMapNode<Key, T>::lowerBound(const Key &akey)
 {
     QMapNode<Key, T> *n = this;
-    QMapNode<Key, T> *last = nullptr;
+    QMapNode<Key, T> *lastNode = nullptr;
     while (n) {
         if (!qMapLessThanKey(n->key, akey)) {
-            last = n;
+            lastNode = n;
             n = n->leftNode();
         } else {
             n = n->rightNode();
         }
     }
-    return last;
+    return lastNode;
 }
 
 template <class Key, class T>
 inline QMapNode<Key, T> *QMapNode<Key, T>::upperBound(const Key &akey)
 {
     QMapNode<Key, T> *n = this;
-    QMapNode<Key, T> *last = nullptr;
+    QMapNode<Key, T> *lastNode = nullptr;
     while (n) {
         if (qMapLessThanKey(akey, n->key)) {
-            last = n;
+            lastNode = n;
             n = n->leftNode();
         } else {
             n = n->rightNode();
         }
     }
-    return last;
+    return lastNode;
 }
 
 struct Q_CORE_EXPORT QMapDataBase
@@ -261,11 +261,11 @@ QMapNode<Key, T> *QMapNode<Key, T>::copy(QMapData<Key, T> *d) const
 template <class Key, class T>
 void QMapNode<Key, T>::destroySubTree()
 {
-    if (QTypeInfo<Key>::isComplex)
+    if constexpr (QTypeInfo<Key>::isComplex)
         key.~Key();
-    if (QTypeInfo<T>::isComplex)
+    if constexpr (QTypeInfo<T>::isComplex)
         value.~T();
-    if (QTypeInfo<Key>::isComplex || QTypeInfo<T>::isComplex) {
+    if constexpr (QTypeInfo<Key>::isComplex || QTypeInfo<T>::isComplex) {
         if (left)
             leftNode()->destroySubTree();
         if (right)
@@ -276,9 +276,9 @@ void QMapNode<Key, T>::destroySubTree()
 template <class Key, class T>
 void QMapData<Key, T>::deleteNode(QMapNode<Key, T> *z)
 {
-    if (QTypeInfo<Key>::isComplex)
+    if constexpr (QTypeInfo<Key>::isComplex)
         z->key.~Key();
-    if (QTypeInfo<T>::isComplex)
+    if constexpr (QTypeInfo<T>::isComplex)
         z->value.~T();
     freeNodeAndRebalance(z);
 }
