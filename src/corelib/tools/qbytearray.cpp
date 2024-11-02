@@ -3635,7 +3635,7 @@ static char *qulltoa2(char *p, qulonglong n, int base)
 
 QByteArray &QByteArray::setNum(qlonglong n, int base)
 {
-    const int buffsize = 66; // big enough for MAX_ULLONG in base 2
+    static constexpr int buffsize = 66; // big enough for MAX_ULLONG in base 2
     char buff[buffsize];
     char *p;
 
@@ -3659,7 +3659,7 @@ QByteArray &QByteArray::setNum(qlonglong n, int base)
 
 QByteArray &QByteArray::setNum(qulonglong n, int base)
 {
-    const int buffsize = 66; // big enough for MAX_ULLONG in base 2
+    static constexpr int buffsize = 66; // big enough for MAX_ULLONG in base 2
     char buff[buffsize];
     char *p = qulltoa2(buff + buffsize, n, base);
 
