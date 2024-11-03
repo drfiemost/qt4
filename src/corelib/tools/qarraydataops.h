@@ -61,6 +61,7 @@ struct QPodArrayOps
 {
     void copyAppend(const T *b, const T *e)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(b < e);
         Q_ASSERT(size_t(e - b) <= this->alloc - uint(this->size));
@@ -72,6 +73,7 @@ struct QPodArrayOps
 
     void copyAppend(size_t n, const T &t)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(n <= this->alloc - uint(this->size));
 
@@ -84,7 +86,8 @@ struct QPodArrayOps
 
     void destroyAll() // Call from destructors, ONLY!
     {
-        Q_ASSERT(this->ref == 0);
+        Q_ASSERT(this->isMutable());
+        Q_ASSERT(this->ref.atomic.loadRelaxed() == 0);
 
         // As this is to be called only from destructor, it doesn't need to be
         // exception safe; size not updated.
@@ -92,14 +95,16 @@ struct QPodArrayOps
 
     void insert(T *where, const T *b, const T *e)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(where >= this->begin() && where < this->end()); // Use copyAppend at end
         Q_ASSERT(b < e);
         Q_ASSERT(e <= where || b > this->end()); // No overlap
         Q_ASSERT(size_t(e - b) <= this->alloc - uint(this->size));
 
-        ::memmove(where + (e - b), where, (this->end() - where) * sizeof(T));
-        ::memcpy(where, b, (e - b) * sizeof(T));
+        ::memmove(static_cast<void *>(where + (e - b)), static_cast<void *>(where),
+                  (static_cast<const T*>(this->end()) - where) * sizeof(T));
+        ::memcpy(static_cast<void *>(where), static_cast<const void *>(b), (e - b) * sizeof(T));
         this->size += (e - b);
     }
 };
@@ -110,6 +115,7 @@ struct QGenericArrayOps
 {
     void copyAppend(const T *b, const T *e)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(b < e);
         Q_ASSERT(size_t(e - b) <= this->alloc - uint(this->size));
@@ -123,6 +129,7 @@ struct QGenericArrayOps
 
     void copyAppend(size_t n, const T &t)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(n <= this->alloc - uint(this->size));
 
@@ -136,10 +143,11 @@ struct QGenericArrayOps
 
     void destroyAll() // Call from destructors, ONLY
     {
+        Q_ASSERT(this->isMutable());
         // As this is to be called only from destructor, it doesn't need to be
         // exception safe; size not updated.
 
-        Q_ASSERT(this->ref == 0);
+        Q_ASSERT(this->ref.atomic.loadRelaxed() == 0);
 
         const T *const b = this->begin();
         const T *i = this->end();
@@ -150,6 +158,7 @@ struct QGenericArrayOps
 
     void insert(T *where, const T *b, const T *e)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(where >= this->begin() && where < this->end()); // Use copyAppend at end
         Q_ASSERT(b < e);
@@ -166,9 +175,9 @@ struct QGenericArrayOps
 
         struct Destructor
         {
-            Destructor(T *&iter)
-                : iter(&iter)
-                , end(iter)
+            Destructor(T *&it)
+                : iter(&it)
+                , end(it)
             {
             }
 
@@ -223,6 +232,7 @@ struct QMovableArrayOps
 
     void insert(T *where, const T *b, const T *e)
     {
+        Q_ASSERT(this->isMutable());
         Q_ASSERT(this->ref.isShared());
         Q_ASSERT(where >= this->begin() && where < this->end()); // Use copyAppend at end
         Q_ASSERT(b < e);
@@ -234,12 +244,13 @@ struct QMovableArrayOps
 
         struct ReversibleDisplace
         {
-            ReversibleDisplace(T *begin, T *end, size_t displace)
-                : begin(begin)
-                , end(end)
-                , displace(displace)
+            ReversibleDisplace(T *start, T *finish, size_t diff)
+                : begin(start)
+                , end(finish)
+                , displace(diff)
             {
-                ::memmove(begin + displace, begin, (end - begin) * sizeof(T));
+                ::memmove(static_cast<void *>(begin + displace), static_cast<void *>(begin),
+                          (end - begin) * sizeof(T));
             }
 
             void commit() { displace = 0; }
@@ -247,7 +258,8 @@ struct QMovableArrayOps
             ~ReversibleDisplace()
             {
                 if (displace)
-                    ::memmove(begin, begin + displace, (end - begin) * sizeof(T));
+                    ::memmove(static_cast<void *>(begin), static_cast<void *>(begin + displace),
+                              (end - begin) * sizeof(T));
             }
 
             T *const begin;
@@ -258,7 +270,7 @@ struct QMovableArrayOps
 
         struct CopyConstructor
         {
-            CopyConstructor(T *where) : where(where) {}
+            CopyConstructor(T *w) : where(w) {}
 
             void copy(const T *src, const T *const srcEnd)
             {

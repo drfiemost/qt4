@@ -48,12 +48,12 @@ QT_BEGIN_NAMESPACE
 
 const QArrayData QArrayData::shared_null[2] = {
     { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, sizeof(QArrayData) }, // shared null
-    /* zero initialized terminator */};
+    { { Q_BASIC_ATOMIC_INITIALIZER(0) }, 0, 0, 0, 0 } /* zero initialized terminator */};
 
 static const QArrayData qt_array[3] = {
     { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, sizeof(QArrayData) }, // shared empty
     { { Q_BASIC_ATOMIC_INITIALIZER(0) }, 0, 0, 0, sizeof(QArrayData) }, // unsharable empty
-    /* zero initialized terminator */};
+    { { Q_BASIC_ATOMIC_INITIALIZER(0) }, 0, 0, 0, 0 } /* zero initialized terminator */};
 
 static const QArrayData &qt_array_empty = qt_array[0];
 static const QArrayData &qt_array_unsharable_empty = qt_array[1];

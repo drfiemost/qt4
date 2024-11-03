@@ -2846,7 +2846,8 @@ int qrand()
 
     \list
     \o \c Q_PRIMITIVE_TYPE specifies that \a Type is a POD (plain old
-       data) type with no constructor or destructor.
+       data) type with no constructor or destructor, and for which memcpy()ing
+       creates a valid independent copy of the object.
     \o \c Q_MOVABLE_TYPE specifies that \a Type has a constructor
        and/or a destructor but can be moved in memory using \c
        memcpy().

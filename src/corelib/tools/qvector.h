@@ -244,13 +244,8 @@ private:
 template <typename T>
 void QVector<T>::defaultConstruct(T *from, T *to)
 {
-    if constexpr (QTypeInfo<T>::isComplex) {
-        while (from != to) {
-            new (from++) T();
-        }
-    } else {
-        ::memset(static_cast<void *>(from), 0, (to - from) * sizeof(T));
-    }
+    while (from != to)
+        new (from++) T();
 }
 
 template <typename T>
@@ -471,7 +466,8 @@ void QVector<T>::reallocData(const int asize, const int aalloc, QArrayData::Allo
                 if (asize > d->size) {
                     // construct all new objects when growing
                     QT_TRY {
-                        defaultConstruct(dst, x->end());
+                        while (dst != x->end())
+                            new (dst++) T();
                     } QT_CATCH (...) {
                         // destruct already copied objects
                         destruct(x->begin(), dst);
