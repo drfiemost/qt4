@@ -62,16 +62,16 @@ struct Q_CORE_EXPORT QArrayData
 
     void *data()
     {
-        Q_ASSERT(size == 0
-                || offset < 0 || size_t(offset) >= sizeof(QArrayData));
-        return reinterpret_cast<char *>(this) + offset;
+        Q_ASSERT(size == 0 || offset < 0 || size_t(offset) >= sizeof(QArrayData));
+        const quintptr self = reinterpret_cast<qintptr>(this);
+        return reinterpret_cast<void *>(self + offset);
     }
 
     const void *data() const
     {
-        Q_ASSERT(size == 0
-                || offset < 0 || size_t(offset) >= sizeof(QArrayData));
-        return reinterpret_cast<const char *>(this) + offset;
+        Q_ASSERT(size == 0 || offset < 0 || size_t(offset) >= sizeof(QArrayData));
+        const quintptr self = reinterpret_cast<qintptr>(this);
+        return reinterpret_cast<const void *>(self + offset);
     }
 
     // This refers to array data mutability, not "header data" represented by
@@ -118,8 +118,8 @@ struct Q_CORE_EXPORT QArrayData
         return result;
     }
 
-    static QArrayData *allocate(size_t objectSize, size_t alignment,
-            size_t capacity, AllocationOptions options = Default) Q_REQUIRED_RESULT;
+    [[nodiscard]] static QArrayData *allocate(size_t objectSize, size_t alignment,
+            size_t capacity, AllocationOptions options = Default);
     static void deallocate(QArrayData *data, size_t objectSize,
             size_t alignment);
 
@@ -219,8 +219,8 @@ struct QTypedArrayData
 
     class AlignmentDummy { QArrayData header; T data; };
 
-    static QTypedArrayData *allocate(size_t capacity,
-            AllocationOptions options = Default) Q_REQUIRED_RESULT
+    [[nodiscard]] static QTypedArrayData *allocate(size_t capacity,
+            AllocationOptions options = Default)
     {
         static_assert(sizeof(QTypedArrayData) == sizeof(QArrayData));
         return static_cast<QTypedArrayData *>(QArrayData::allocate(sizeof(T),
