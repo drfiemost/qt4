@@ -41,7 +41,9 @@
 
 #include "qplatformdefs.h"
 
+#include <algorithm>
 #include <cstdlib>
+#include <cstring>
 
 /*
     Define the container allocation functions in a separate file, so that our
@@ -58,12 +60,10 @@ void *qMallocAligned(size_t size, size_t alignment)
 void *qReallocAligned(void *oldptr, size_t newsize, size_t oldsize, size_t alignment)
 {
     // fake an aligned allocation
-    Q_UNUSED(oldsize);
-
     void *actualptr = oldptr ? static_cast<void **>(oldptr)[-1] : nullptr;
     if (alignment <= sizeof(void*)) {
         // special, fast case
-        void **newptr = static_cast<void **>(realloc(actualptr, newsize + sizeof(void*)));
+        void **newptr = static_cast<void **>(std::realloc(actualptr, newsize + sizeof(void*)));
         if (!newptr)
             return nullptr;
         if (newptr == actualptr) {
@@ -83,14 +83,20 @@ void *qReallocAligned(void *oldptr, size_t newsize, size_t oldsize, size_t align
     // However, we need to store the actual pointer, so we need to allocate actually size +
     // alignment anyway.
 
-    void *real = realloc(actualptr, newsize + alignment);
+    qptrdiff oldoffset = static_cast<char *>(oldptr) - static_cast<char *>(actualptr);
+    void *real = std::realloc(actualptr, newsize + alignment);
     if (!real)
         return nullptr;
 
     quintptr faked = reinterpret_cast<quintptr>(real) + alignment;
     faked &= ~(alignment - 1);
-
     void **faked_ptr = reinterpret_cast<void **>(faked);
+
+    if (oldptr) {
+        qptrdiff newoffset = reinterpret_cast<char *>(faked_ptr) - static_cast<char *>(real);
+        if (oldoffset != newoffset)
+            std::memmove(faked_ptr, static_cast<char *>(real) + oldoffset, std::min(oldsize, newsize));
+    }
 
     // now save the value of the real pointer at faked-sizeof(void*)
     // by construction, alignment > sizeof(void*) and is a power of 2, so
@@ -105,7 +111,7 @@ void qFreeAligned(void *ptr)
     if (!ptr)
         return;
     void **ptr2 = static_cast<void **>(ptr);
-    free(ptr2[-1]);
+    std::free(ptr2[-1]);
 }
 
 QT_END_NAMESPACE
