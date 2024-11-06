@@ -124,7 +124,7 @@ void QMapDataBase::rotateRight(QMapNodeBase *x)
     x->setParent(y);
 }
 
-    void QMapDataBase::rebalance(QMapNodeBase *x)
+void QMapDataBase::rebalance(QMapNodeBase *x)
 {
     QMapNodeBase *&root = header.left;
     x->setColor(QMapNodeBase::Red);
