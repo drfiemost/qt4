@@ -99,7 +99,6 @@ SUBDIRS=\
     qlabel \
     qlcdnumber \
     qlineedit \
-    qlist \
     qlistview \
     qlistwidget \
     qlocale \

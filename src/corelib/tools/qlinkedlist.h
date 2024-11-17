@@ -95,7 +95,7 @@ public:
 
     inline int size() const { return d->size; }
     inline void detach()
-    { if (d->ref.isShared()) detach_helper(); }
+    { if (d->ref.isShared()) detach_helper2(this->e); }
     inline bool isDetached() const { return !d->ref.isShared(); }
     inline void setSharable(bool sharable) { if (!sharable) detach(); if (d != &QLinkedListData::shared_null) d->sharable = sharable; }
     inline bool isSharedWith(const QLinkedList<T> &other) const { return d == other.d; }
@@ -234,19 +234,28 @@ public:
 
 private:
     void detach_helper();
-    void free(QLinkedListData*);
+    iterator detach_helper2(iterator);
+    void freeData(QLinkedListData*);
 };
 
 template <typename T>
 inline QLinkedList<T>::~QLinkedList()
 {
     if (!d->ref.deref())
-        free(d);
+        freeData(d);
 }
 
 template <typename T>
 void QLinkedList<T>::detach_helper()
 {
+    detach_helper2(this->e);
+}
+
+template <typename T>
+typename QLinkedList<T>::iterator QLinkedList<T>::detach_helper2(iterator orgite)
+{
+    // detach and convert orgite to an iterator in the detached instance
+    bool isEndIterator = (orgite.i == this->e);
     union { QLinkedListData *d; Node *e; } x;
     x.d = new QLinkedListData;
     x.d->ref.initializeOwned();
@@ -254,6 +263,22 @@ void QLinkedList<T>::detach_helper()
     x.d->sharable = true;
     Node *original = e->n;
     Node *copy = x.e;
+    Node *org = orgite.i;
+
+    while (original != org) {
+        QT_TRY {
+            copy->n = new Node(original->t);
+            copy->n->p = copy;
+            original = original->n;
+            copy = copy->n;
+        } QT_CATCH(...) {
+            copy->n = x.e;
+            Q_ASSERT(!x.d->ref.deref()); // Don't trigger assert in free
+            freeData(x.d);
+            QT_RETHROW;
+        }
+    }
+    iterator r(copy);
     while (original != e) {
         QT_TRY {
             copy->n = new Node(original->t);
@@ -262,30 +287,33 @@ void QLinkedList<T>::detach_helper()
             copy = copy->n;
         } QT_CATCH(...) {
             copy->n = x.e;
-            free(x.d);
+            Q_ASSERT(!x.d->ref.deref()); // Don't trigger assert in free
+            freeData(x.d);
             QT_RETHROW;
         }
     }
     copy->n = x.e;
     x.e->p = copy;
     if (!d->ref.deref())
-        free(d);
+        freeData(d);
     d = x.d;
+    if (!isEndIterator)
+        ++r; // since we stored the element right before the original node.
+    return r;
 }
 
 template <typename T>
-void QLinkedList<T>::free(QLinkedListData *x)
+void QLinkedList<T>::freeData(QLinkedListData *x)
 {
     Node *y = reinterpret_cast<Node*>(x);
     Node *i = y->n;
-    if (x->ref == 0) {
-        while(i != y) {
-            Node *n = i;
-            i = i->n;
-            delete n;
-        }
-        delete x;
+    Q_ASSERT(x->ref.atomic.load() == 0);
+    while (i != y) {
+        Node *n = i;
+        i = i->n;
+        delete n;
     }
+    delete x;
 }
 
 template <typename T>
@@ -301,7 +329,7 @@ QLinkedList<T> &QLinkedList<T>::operator=(const QLinkedList<T> &l)
         QLinkedListData *o = l.d;
         o->ref.ref();
         if (!d->ref.deref())
-            free(d);
+            freeData(d);
         d = o;
         if (!d->sharable)
             detach_helper();
@@ -427,6 +455,9 @@ int QLinkedList<T>::count(const T &t) const
 template <typename T>
 typename QLinkedList<T>::iterator QLinkedList<T>::insert(iterator before, const T &t)
 {
+    if (d->ref.isShared())
+        before = detach_helper2(before);
+
     Node *i = before.i;
     Node *m = new Node(t);
     m->n = i;
@@ -450,7 +481,9 @@ typename QLinkedList<T>::iterator QLinkedList<T>::erase(typename QLinkedList<T>:
 template <typename T>
 typename QLinkedList<T>::iterator QLinkedList<T>::erase(iterator pos)
 {
-    detach();
+    if (d->ref.isShared())
+        pos = detach_helper2(pos);
+
     Node *i = pos.i;
     if (i != e) {
         Node *n = i;

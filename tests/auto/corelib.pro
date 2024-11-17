@@ -41,6 +41,8 @@ SUBDIRS=\
    qhash \
    qlibrary \
    qline \
+   qlinkedlist \
+   qlist \
    qmap \
    qmargins \
    qmath \
