@@ -81,13 +81,13 @@ public:
         first = buf;
         len = 0;
     }
-    int size() const {
+    qint64 size() const {
         return len;
     }
     bool isEmpty() const {
         return len == 0;
     }
-    void skip(int n) {
+    void skip(qint64 n) {
         if (n >= len) {
             clear();
         } else {
@@ -103,7 +103,7 @@ public:
         first++;
         return ch;
     }
-    int read(char* target, int size) {
+    int read(char* target, qint64 size) {
         int r = qMin(size, len);
 
         if (r == 0) {
@@ -115,7 +115,7 @@ public:
         first += r;
         return r;
     }
-    int peek(char* target, int size) {
+    int peek(char* target, qint64 size) {
         int r = qMin(size, len);
         memcpy(target, first, r);
         return r;
@@ -126,7 +126,7 @@ public:
         len += size;
         return writePtr;
     }
-    void chop(int size) {
+    void chop(qint64 size) {
         if (size >= len) {
             clear();
         } else {
@@ -139,7 +139,7 @@ public:
         clear();
         return QByteArray(f, l);
     }
-    int readLine(char* target, int size) {
+    int readLine(char* target, qint64 size) {
         int r = qMin(size, len);
         char* eol = static_cast<char*>(memchr(first, '\n', r));
         if (eol)
@@ -196,7 +196,7 @@ private:
 
 private:
     // length of the unread data
-    int len;
+    qint64 len;
     // start of the unread data
     char* first;
     // the allocated buffer

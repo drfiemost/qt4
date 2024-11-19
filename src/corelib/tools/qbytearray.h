@@ -176,6 +176,9 @@ private:
     typedef QTypedArrayData<char> Data;
 
 public:
+    // undocumented:
+    static const quint64 MaxSize = (1 << 30) - sizeof(Data);
+
     inline QByteArray();
     QByteArray(const char *);
     QByteArray(const char *, int size);
