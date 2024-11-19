@@ -148,6 +148,9 @@ private slots:
     void reserve();
 
     void literals();
+
+    void toUpperLower_data();
+    void toUpperLower();
 };
 
 tst_QByteArray::tst_QByteArray()
@@ -1573,7 +1576,7 @@ void tst_QByteArray::reserve()
     QCOMPARE(qba.capacity(), capacity);
     QCOMPARE(copy.capacity(), capacity);
 
-    copy = qba;
+    qba = copy;
     qba.reserve(capacity * 2);
     QCOMPARE(qba.size(), capacity);
     QCOMPARE(qba.capacity(), capacity * 2);
@@ -1611,6 +1614,33 @@ void tst_QByteArray::literals()
 #else
     QSKIP("Only tested on c++0x compliant compiler or gcc", SkipAll);
 #endif
+}
+
+void tst_QByteArray::toUpperLower_data()
+{
+    QTest::addColumn<QByteArray>("input");
+    QTest::addColumn<QByteArray>("upper");
+    QTest::addColumn<QByteArray>("lower");
+
+    QTest::newRow("empty") << QByteArray() << QByteArray() << QByteArray();
+    QTest::newRow("ascii") << QByteArray("Hello World, this is a STRING")
+                           << QByteArray("HELLO WORLD, THIS IS A STRING")
+                           << QByteArray("hello world, this is a string");
+    QTest::newRow("latin1") << QByteArray("R\311sum\351")
+                            << QByteArray("R\311SUM\311")
+                            << QByteArray("r\351sum\351");
+    QTest::newRow("nul") << QByteArray("a\0B", 3) << QByteArray("A\0B", 3) << QByteArray("a\0b", 3);
+}
+
+void tst_QByteArray::toUpperLower()
+{
+    QFETCH(QByteArray, input);
+    QFETCH(QByteArray, upper);
+    QFETCH(QByteArray, lower);
+    QCOMPARE(lower.toLower(), lower);
+    QCOMPARE(upper.toUpper(), upper);
+    QCOMPARE(input.toUpper(), upper);
+    QCOMPARE(input.toLower(), lower);
 }
 
 const char globalChar = '1';

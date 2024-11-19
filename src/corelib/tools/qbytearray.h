@@ -54,18 +54,6 @@
 #error qbytearray.h must be included before any header file that defines truncate
 #endif
 
-#if defined(Q_CC_GNU) && (__GNUC__ == 4 && __GNUC_MINOR__ == 0)
-//There is a bug in GCC 4.0 that tries to instantiate template of annonymous enum
-#  ifdef QT_USE_FAST_OPERATOR_PLUS
-#    undef QT_USE_FAST_OPERATOR_PLUS
-#  endif
-#  ifdef QT_USE_QSTRINGBUILDER
-#    undef QT_USE_QSTRINGBUILDER
-#  endif
-
-#endif
-
-
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE

@@ -6,7 +6,5 @@ INCLUDEPATH += .
 
 QT -= gui
 
-CONFIG += release
-
 # Input
 SOURCES += main.cpp
