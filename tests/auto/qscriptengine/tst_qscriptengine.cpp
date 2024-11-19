@@ -3518,7 +3518,7 @@ void tst_QScriptEngine::abortEvaluation_fromNative()
 }
 
 class ThreadedEngine : public QThread {
-    Q_OBJECT;
+    Q_OBJECT
 
 private:
     QScriptEngine* m_engine;
@@ -5787,7 +5787,7 @@ void tst_QScriptEngine::dateRoundtripJSQtJS()
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
-        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0)").arg(secs * 1000.0));
+        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
         QDateTime qtDate = jsDate.toDateTime();
         QScriptValue jsDate2 = eng.newDate(qtDate);
         if (jsDate2.toNumber() != jsDate.toNumber())
@@ -5814,12 +5814,11 @@ void tst_QScriptEngine::dateConversionJSQt()
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
-        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0)").arg(secs * 1000.0));
+        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
         QDateTime qtDate = jsDate.toDateTime();
         QString qtUTCDateStr = qtDate.toUTC().toString(Qt::ISODate);
         QString jsUTCDateStr = jsDate.property("toISOString").call(jsDate).toString();
-        jsUTCDateStr.chop(5); // get rid of milliseconds (".000Z")
-        jsUTCDateStr.append("Z"); // append the timezone specifier again
+        jsUTCDateStr.remove(jsUTCDateStr.length() - 5, 4); // get rid of milliseconds (".000")
         if (qtUTCDateStr != jsUTCDateStr)
             QFAIL(qPrintable(jsDate.toString()));
         secs += 2*60*60;
@@ -5833,8 +5832,8 @@ void tst_QScriptEngine::dateConversionQtJS()
     for (int i = 0; i < 8000; ++i) {
         QScriptValue jsDate = eng.newDate(qtDate);
         QString jsUTCDateStr = jsDate.property("toISOString").call(jsDate).toString();
-        jsUTCDateStr.chop(5); // get rid of milliseconds (".000Z")
-        jsUTCDateStr.append("Z"); // append the timezone specifier again
+        jsUTCDateStr.remove(jsUTCDateStr.length() - 5, 4); // get rid of milliseconds (".000")
+        
         QString qtUTCDateStr = qtDate.toUTC().toString(Qt::ISODate);
         if (jsUTCDateStr != qtUTCDateStr)
             QFAIL(qPrintable(qtDate.toString()));
