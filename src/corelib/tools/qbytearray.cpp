@@ -210,9 +210,9 @@ char *qstrcpy(char *dst, const char *src)
     A safe \c strncpy() function.
 
     Copies at most \a len bytes from \a src (stopping at \a len or the
-    terminating '\\0' whichever comes first) into \a dst and returns a
-    pointer to \a dst. Guarantees that \a dst is '\\0'-terminated. If
-    \a src or \a dst is 0, returns 0 immediately.
+    terminating '\\0' whichever comes first) into \a dst. Guarantees that \a
+    dst is '\\0'-terminated, except when \a dst is \nullptr or \a len is 0. If
+    \a src is \nullptr, returns \nullptr, otherwise returns \a dst.
 
     This function assumes that \a dst is at least \a len characters
     long.
@@ -226,16 +226,19 @@ char *qstrcpy(char *dst, const char *src)
 
 char *qstrncpy(char *dst, const char *src, uint len)
 {
-    if (!src || !dst)
-        return nullptr;
+    if (dst && len > 0) {
+        if (!src) {
+            *dst = '\0';
+            return nullptr;
+        }
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-	strncpy_s(dst, len, src, len-1);
+        strncpy_s(dst, len, src, len-1);
 #else
-    strncpy(dst, src, len);
+        strncpy(dst, src, len);
 #endif
-    if (len > 0)
         dst[len-1] = '\0';
-    return dst;
+    }
+    return src ? dst : nullptr;
 }
 
 /*! \fn uint qstrlen(const char *str)
@@ -3620,18 +3623,20 @@ QByteArray QByteArray::toBase64() const
     const char padchar = '=';
     int padlen = 0;
 
-    QByteArray tmp((d->size * 4) / 3 + 3, Qt::Uninitialized);
+    const int sz = size();
+
+    QByteArray tmp((sz + 2) / 3 * 4, Qt::Uninitialized);
 
     int i = 0;
     char *out = tmp.data();
-    while (i < d->size) {
+    while (i < sz) {
 	int chunk = 0;
     chunk |= int(uchar(d->data()[i++])) << 16;
-	if (i == d->size) {
+	if (i == sz) {
 	    padlen = 2;
 	} else {
         chunk |= int(uchar(d->data()[i++])) << 8;
-	    if (i == d->size) padlen = 1;
+	    if (i == sz) padlen = 1;
         else chunk |= int(uchar(d->data()[i++]));
 	}
 
