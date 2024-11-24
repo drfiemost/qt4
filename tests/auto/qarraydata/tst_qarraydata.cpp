@@ -79,9 +79,11 @@ private slots:
     void alignment_data();
     void alignment();
     void typedData();
+    void gccBug43247();
     void arrayOps();
     void setSharable_data();
     void setSharable();
+    void fromRawData_data();
     void fromRawData();
     void literals();
     void variadicLiterals();
@@ -790,6 +792,33 @@ void tst_QArrayData::typedData()
     }
 }
 
+void tst_QArrayData::gccBug43247()
+{
+    // This test tries to verify QArrayData is not affected by GCC optimizer
+    // bug #43247.
+    // Reported on GCC 4.4.3, Linux, affects QVector
+
+    QTest::ignoreMessage(QtDebugMsg, "GCC Optimization bug #43247 not triggered (3)");
+    QTest::ignoreMessage(QtDebugMsg, "GCC Optimization bug #43247 not triggered (4)");
+    QTest::ignoreMessage(QtDebugMsg, "GCC Optimization bug #43247 not triggered (5)");
+    QTest::ignoreMessage(QtDebugMsg, "GCC Optimization bug #43247 not triggered (6)");
+    QTest::ignoreMessage(QtDebugMsg, "GCC Optimization bug #43247 not triggered (7)");
+
+    SimpleVector<int> array(10, 0);
+    // QVector<int> vector(10, 0);
+
+    for (int i = 0; i < 10; ++i) {
+        if (i >= 3 && i < 8)
+            qDebug("GCC Optimization bug #43247 not triggered (%i)", i);
+
+        // When access to data is implemented through an array of size 1, this
+        // line lets the compiler assume i == 0, and the conditional above is
+        // skipped.
+        QVERIFY(array.at(i) == 0);
+        // QVERIFY(vector.at(i) == 0);
+    }
+}
+
 struct CountedObject
 {
     CountedObject()
@@ -1041,53 +1070,108 @@ void tst_QArrayData::setSharable()
     QVERIFY(array->ref.isSharable());
 }
 
-void tst_QArrayData::fromRawData()
+struct ResetOnDtor
 {
-    static const int array[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+    ResetOnDtor()
+        : value_()
+    {
+    }
+
+    ResetOnDtor(int value)
+        : value_(value)
+    {
+    }
+
+    ~ResetOnDtor()
+    {
+        value_ = 0;
+    }
+
+    int value_;
+};
+
+bool operator==(const ResetOnDtor &lhs, const ResetOnDtor &rhs)
+{
+    return lhs.value_ == rhs.value_;
+}
+
+template <class T>
+void fromRawData_impl()
+{
+    static const T array[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
     {
         // Default: Immutable, sharable
-        SimpleVector<int> raw = SimpleVector<int>::fromRawData(array,
+        SimpleVector<T> raw = SimpleVector<T>::fromRawData(array,
                 sizeof(array)/sizeof(array[0]), QArrayData::Default);
 
         QCOMPARE(raw.size(), size_t(11));
-        QCOMPARE(raw.constBegin(), array);
-        QCOMPARE((void *)raw.constEnd(), (void *)(array + sizeof(array)/sizeof(array[0])));
+        QCOMPARE((const T *)raw.constBegin(), array);
+        QCOMPARE((const T *)raw.constEnd(), (const T *)(array + sizeof(array)/sizeof(array[0])));
 
         QVERIFY(!raw.isShared());
-        QVERIFY(SimpleVector<int>(raw).isSharedWith(raw));
+        QVERIFY(SimpleVector<T>(raw).isSharedWith(raw));
         QVERIFY(!raw.isShared());
 
         // Detach
-        QCOMPARE(raw.back(), 11);
-        QVERIFY(raw.constBegin() != array);
+        QCOMPARE(raw.back(), T(11));
+        QVERIFY((const T *)raw.constBegin() != array);
     }
 
+#if !defined(QT_NO_UNSHARABLE_CONTAINERS)
     {
         // Immutable, unsharable
-        SimpleVector<int> raw = SimpleVector<int>::fromRawData(array,
+        SimpleVector<T> raw = SimpleVector<T>::fromRawData(array,
                 sizeof(array)/sizeof(array[0]), QArrayData::Unsharable);
 
         QCOMPARE(raw.size(), size_t(11));
-        QCOMPARE(raw.constBegin(), array);
-        QCOMPARE((void *)raw.constEnd(), (void *)(array + sizeof(array)/sizeof(array[0])));
+        QCOMPARE((const T *)raw.constBegin(), array);
+        QCOMPARE((const T *)raw.constEnd(), (const T *)(array + sizeof(array)/sizeof(array[0])));
 
-        SimpleVector<int> copy(raw);
+        SimpleVector<T> copy(raw);
         QVERIFY(!copy.isSharedWith(raw));
         QVERIFY(!raw.isShared());
 
         QCOMPARE(copy.size(), size_t(11));
 
-        for (size_t i = 0; i < 11; ++i)
+        for (size_t i = 0; i < 11; ++i) {
             QCOMPARE(const_(copy)[i], const_(raw)[i]);
+            QCOMPARE(const_(copy)[i], T(i + 1));
+        }
 
         QCOMPARE(raw.size(), size_t(11));
-        QCOMPARE(raw.constBegin(), array);
-        QCOMPARE((void *)raw.constEnd(), (void *)(array + sizeof(array)/sizeof(array[0])));
+        QCOMPARE((const T *)raw.constBegin(), array);
+        QCOMPARE((const T *)raw.constEnd(), (const T *)(array + sizeof(array)/sizeof(array[0])));
 
         // Detach
-        QCOMPARE(raw.back(), 11);
-        QVERIFY(raw.constBegin() != array);
+        QCOMPARE(raw.back(), T(11));
+        QVERIFY((const T *)raw.constBegin() != array);
+    }
+#endif
+}
+
+void tst_QArrayData::fromRawData_data()
+{
+    QTest::addColumn<int>("type");
+
+    QTest::newRow("int") << 0;
+    QTest::newRow("ResetOnDtor") << 1;
+}
+void tst_QArrayData::fromRawData()
+{
+    QFETCH(int, type);
+
+    switch (type)
+    {
+        case 0:
+            fromRawData_impl<int>();
+            break;
+        case 1:
+            fromRawData_impl<ResetOnDtor>();
+            break;
+
+        default:
+            QFAIL("Unexpected type data");
     }
 }
 
