@@ -103,8 +103,6 @@ struct Q_CORE_EXPORT QArrayData
     AllocationOptions detachFlags() const
     {
         AllocationOptions result;
-        if (!ref.isSharable())
-            result |= Unsharable;
         if (capacityReserved)
             result |= CapacityReserved;
         return result;
@@ -287,7 +285,7 @@ struct QArrayDataPointerRef
 
 #define Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER(type, size) \
     Q_STATIC_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(size,\
-        (sizeof(QArrayData) + (Q_ALIGNOF(type) - 1) & ~(Q_ALIGNOF(type) - 1) )) \
+        ((sizeof(QArrayData) + (Q_ALIGNOF(type) - 1)) & ~(Q_ALIGNOF(type) - 1) )) \
     /**/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -316,23 +314,15 @@ struct QArrayDataPointerRef
             return StaticWrapper::get();                                        \
         }())                                                                    \
     /**/
-#elif defined(Q_CC_GNU)
-// Hide array within GCC's __extension__ {( )} block
-#define Q_ARRAY_LITERAL(Type, ...)                                              \
-    __extension__ ({                                                            \
-            Q_ARRAY_LITERAL_IMPL(Type, __VA_ARGS__)                             \
-            ref;                                                                \
-        })                                                                      \
-    /**/
 #endif
 #endif // defined(Q_COMPILER_VARIADIC_MACROS)
 
 #if defined(Q_ARRAY_LITERAL)
 #define Q_ARRAY_LITERAL_IMPL(Type, ...)                                         \
-    union { Type type_must_be_POD; } dummy; Q_UNUSED(dummy)                     \
+    static_assert(std::is_literal_type<Type>::value);                         \
                                                                                 \
     /* Portable compile-time array size computation */                          \
-    Type data[] = { __VA_ARGS__ }; Q_UNUSED(data)                               \
+    constexpr Type data[] = { __VA_ARGS__ }; Q_UNUSED(data);                  \
     enum { Size = sizeof(data) / sizeof(data[0]) };                             \
                                                                                 \
     static const QStaticArrayData<Type, Size> literal = {                       \
