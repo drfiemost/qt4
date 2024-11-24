@@ -1359,7 +1359,7 @@ QByteArray::QByteArray(const char *str)
         d = Data::allocate(0);
     } else {
         int len = qstrlen(str);
-        d = Data::allocate(len + 1u);
+        d = Data::allocate(uint(len) + 1u);
         Q_CHECK_PTR(d);
         d->size = len;
         memcpy(d->data(), str, len+1); // include null terminator
