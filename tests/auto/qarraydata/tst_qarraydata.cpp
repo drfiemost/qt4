@@ -1200,10 +1200,7 @@ void tst_QArrayData::literals()
         QCOMPARE(v.size(), size_t(11));
         // v.capacity() is unspecified, for now
 
-#if defined(Q_COMPILER_VARIADIC_MACROS) \
-        && (defined(Q_COMPILER_LAMBDA) || defined(Q_CC_GNU))
         QVERIFY(v.isStatic());
-#endif
 
         QVERIFY(v.isSharable());
         QCOMPARE((void *)(v.constBegin() + v.size()), (void *)v.constEnd());
@@ -1216,8 +1213,6 @@ void tst_QArrayData::literals()
 
 void tst_QArrayData::variadicLiterals()
 {
-#if defined(Q_COMPILER_VARIADIC_MACROS) \
-        && (defined(Q_COMPILER_LAMBDA) || defined(Q_CC_GNU))
     {
         QArrayDataPointer<int> d =
             Q_ARRAY_LITERAL(int, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -1260,9 +1255,6 @@ void tst_QArrayData::variadicLiterals()
         for (int i = 0; i < 7; ++i)
             QCOMPARE(const_(v)[i], i);
     }
-#else
-    QSKIP("Variadic Q_ARRAY_LITERAL not available in current configuration.", SkipAll);
-#endif // defined(Q_COMPILER_VARIADIC_MACROS)
 }
 
 #ifdef Q_COMPILER_RVALUE_REFS

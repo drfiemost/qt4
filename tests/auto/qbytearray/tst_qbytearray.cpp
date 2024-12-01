@@ -1604,7 +1604,6 @@ void tst_QByteArray::reserve()
 
 void tst_QByteArray::literals()
 {
-#if defined(Q_COMPILER_LAMBDA)
     QByteArray str(QByteArrayLiteral("abcd"));
 
     QVERIFY(str.length() == 4);
@@ -1621,10 +1620,6 @@ void tst_QByteArray::literals()
 
     QVERIFY(str2.constData() == s);
     QVERIFY(str2.data() != s);
-
-#else
-    QSKIP("Only tested on c++0x compliant compiler or gcc", SkipAll);
-#endif
 }
 
 void tst_QByteArray::toUpperLower_data()
