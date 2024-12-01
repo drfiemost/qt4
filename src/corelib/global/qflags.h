@@ -134,7 +134,10 @@ public:
 
     Q_DECL_CONSTEXPR inline bool operator!() const { return !i; }
 
-    constexpr inline bool testFlag(Enum f) const { return (i & Int(f)) == Int(f) && (Int(f) != 0 || i == Int(f) ); }
+    constexpr inline bool testFlag(Enum flag) const noexcept { return testFlags(flag); }
+    constexpr inline bool testFlags(QFlags flags) const noexcept { return flags.i ? ((i & flags.i) == flags.i) : i == Int(0); }
+    constexpr inline bool testAnyFlag(Enum flag) const noexcept { return testAnyFlags(flag); }
+    constexpr inline bool testAnyFlags(QFlags flags) const noexcept { return (i & flags.i) != Int(0); }
 
     constexpr inline QFlags &setFlag(Enum f, bool on = true) noexcept
     {
