@@ -73,6 +73,7 @@
 #include <cmath>
 
 #include  <algorithm>
+#include  <utility>
 
 QT_BEGIN_NAMESPACE
 
@@ -1366,8 +1367,10 @@ static void parseFont(QSvgNode *node,
         case FontSizeNone:
             break;
         case FontSizeValue: {
-            QSvgHandler::LengthType dummy; // should always be pixel size
-            fontStyle->setSize(parseLength(attributes.fontSize.toString(), dummy, handler));
+            QSvgHandler::LengthType type;
+            qreal fs = parseLength(attributes.fontSize.toString(), type, handler);
+            fs = convertToPixels(fs, true, type);
+            fontStyle->setSize(qMin(fs, qreal(0xffff)));
         }
             break;
         default:
@@ -3344,7 +3347,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
     //### editable and rotate not handled
     QSvgHandler::LengthType type;
     qreal nx = parseLength(x, type, handler);
+    nx = convertToPixels(nx, true, type);
     qreal ny = parseLength(y, type, handler);
+    ny = convertToPixels(ny, true, type);
 
     QSvgNode *text = new QSvgText(parent, QPointF(nx, ny));
     return text;
@@ -3804,8 +3809,9 @@ bool QSvgHandler::startElement(const QString &localName,
                 } else if (node->type() == QSvgNode::TSPAN) {
                     static_cast<QSvgTspan *>(node)->setWhitespaceMode(m_whitespaceMode.top());
                 } else if (node->type() == QSvgNode::USE) {
-                    if (!static_cast<QSvgUse *>(node)->isResolved())
-                        m_resolveNodes.append(node);
+                    auto useNode = static_cast<QSvgUse *>(node);
+                    if (!useNode->isResolved())
+                        m_toBeResolved.append(useNode);
                 }
             }
         }
@@ -3908,17 +3914,16 @@ void QSvgHandler::resolveGradients(QSvgNode *node, int nestedDepth)
 
 void QSvgHandler::resolveNodes()
 {
-    for (QSvgNode *node : m_resolveNodes) {
-        if (!node || !node->parent() || node->type() != QSvgNode::USE)
-            continue;
-        QSvgUse *useNode = static_cast<QSvgUse *>(node);
-        if (useNode->isResolved())
-            continue;
-        QSvgNode::Type t = useNode->parent()->type();
-        if (!(t == QSvgNode::DOC || t == QSvgNode::DEFS || t == QSvgNode::G || t == QSvgNode::SWITCH))
+    for (QSvgUse *useNode : std::as_const(m_toBeResolved)) {
+        const auto parent = useNode->parent();
+        if (!parent)
             continue;
 
-        QSvgStructureNode *group = static_cast<QSvgStructureNode *>(useNode->parent());
+        QSvgNode::Type t = parent->type();
+        if (t != QSvgNode::DOC && t != QSvgNode::DEFS && t != QSvgNode::G && t != QSvgNode::SWITCH)
+            continue;
+
+        QSvgStructureNode *group = static_cast<QSvgStructureNode *>(parent);
         QSvgNode *link = group->scopeNode(useNode->linkId());
         if (!link) {
             qWarning("link #%s is undefined!", qPrintable(useNode->linkId()));
@@ -3930,7 +3935,7 @@ void QSvgHandler::resolveNodes()
 
         useNode->setLink(link);
     }
-    m_resolveNodes.clear();
+    m_toBeResolved.clear();
 }
 
 bool QSvgHandler::characters(const QStringRef &str)

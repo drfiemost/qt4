@@ -51,11 +51,14 @@
 #include <qscopedvaluerollback.h>
 #include <qtextcursor.h>
 #include <qtextdocument.h>
+#include <private/qfixed_p.h>
 
 #include <climits>
 #include <cmath>
 
-#include  <algorithm>
+#include <algorithm>
+#include <utility>
+
 
 QT_BEGIN_NAMESPACE
 
@@ -75,6 +78,10 @@ QT_BEGIN_NAMESPACE
     }                                                       \
     p->setOpacity(oldOpacity);
 
+
+#ifndef QT_SVG_MAX_LAYOUT_SIZE
+#define QT_SVG_MAX_LAYOUT_SIZE (qint64(QFIXED_MAX / 2))
+#endif
 
 void QSvgAnimation::draw(QPainter *, QSvgExtraStates &)
 {
@@ -291,19 +298,51 @@ void QSvgText::setTextArea(const QSizeF &size)
 QRectF QSvgText::bounds(QPainter *p, QSvgExtraStates &states) const
 {
     QRectF boundingRect;
-    draw_helper(p, states, &boundingRect);
-    return boundingRect;
+    if (precheck(p))
+        draw_helper(p, states, &boundingRect);
+    return p->transform().mapRect(boundingRect);
+}
+
+bool QSvgText::precheck(QPainter *p) const
+{
+    qsizetype numChars = 0;
+    qreal originalFontSize = p->font().pointSizeF();
+    qreal maxFontSize = originalFontSize;
+    for (const QSvgTspan *span : std::as_const(m_tspans)) {
+        numChars += span->text().size();
+
+        QSvgFontStyle *style = static_cast<QSvgFontStyle *>(span->styleProperty(QSvgStyleProperty::FONT));
+        if (style != nullptr && style->qfont().pointSizeF() > maxFontSize)
+            maxFontSize = style->qfont().pointSizeF();
+    }
+
+    QFont font = p->font();
+    font.setPixelSize((100.0 / originalFontSize) * maxFontSize);
+    QFontMetricsF fm(font);
+    if (m_tspans.size() * fm.height() >= QT_SVG_MAX_LAYOUT_SIZE) {
+        qWarning("Text element too high to lay out, ignoring");
+        return false;
+    }
+
+    if (numChars * fm.maxWidth() >= QT_SVG_MAX_LAYOUT_SIZE) {
+        qWarning("Text element too wide to lay out, ignoring");
+        return false;
+    }
+
+    return true;
 }
 
 void QSvgText::draw(QPainter *p, QSvgExtraStates &states)
 {
-    draw_helper(p, states);
+    if (precheck(p))
+        draw_helper(p, states);
 }
 
 void QSvgText::draw_helper(QPainter *p, QSvgExtraStates &states, QRectF *boundingRect) const
 {
     const bool isPainting = (boundingRect == nullptr);
-    applyStyle(p, states);
+    if (isPainting)
+        applyStyle(p, states);
     qreal oldOpacity = p->opacity();
     p->setOpacity(oldOpacity * states.fillOpacity);
 
@@ -469,13 +508,14 @@ void QSvgText::draw_helper(QPainter *p, QSvgExtraStates &states, QRectF *boundin
             brect.translate(m_coord * scale);
             if (bounds.height() > 0)
                 brect.setBottom(std::min(brect.bottom(), bounds.bottom()));
-            *boundingRect = p->transform().mapRect(brect);
+            *boundingRect = QTransform::fromScale(1 / scale, 1 / scale).mapRect(brect);
         }
     }
 
     p->setWorldTransform(oldTransform, false);
     p->setOpacity(oldOpacity);
-    revertStyle(p, states);
+    if (isPainting)
+        revertStyle(p, states);
 }
 
 void QSvgText::addText(const QString &text)

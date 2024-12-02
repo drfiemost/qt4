@@ -973,6 +973,7 @@ template <class T> struct QIntegerForSizeof: QIntegerForSize<sizeof(T)> { };
 typedef QIntegerForSizeof<void*>::Unsigned quintptr;
 typedef QIntegerForSizeof<void*>::Signed qptrdiff;
 typedef qptrdiff qintptr;
+typedef ptrdiff_t qsizetype;
 
 /*
    Useful type definitions for Qt
