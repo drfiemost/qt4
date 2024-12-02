@@ -163,6 +163,26 @@ inline qreal qFastCos(qreal x)
     return qt_sine_table[si] - (qt_sine_table[ci] + 0.5 * qt_sine_table[si] * d) * d;
 }
 
+constexpr inline float qDegreesToRadians(float degrees)
+{
+    return degrees * float(M_PI/180);
+}
+
+constexpr inline double qDegreesToRadians(double degrees)
+{
+    return degrees * (M_PI / 180);
+}
+
+constexpr inline float qRadiansToDegrees(float radians)
+{
+    return radians * float(180/M_PI);
+}
+
+constexpr inline double qRadiansToDegrees(double radians)
+{
+    return radians * (180 / M_PI);
+}
+
 QT_END_NAMESPACE
 
 QT_END_HEADER

@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2013 Laszlo Papp <lpapp@kde.org>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -301,5 +302,68 @@ const qreal qt_sine_table[QT_SINE_TABLE_SIZE] = {
     qreal(-0.049067674327418091),
     qreal(-0.024541228522912448)
 };
+
+/*!
+    \headerfile <QtMath>
+    \title Generic Math Declarations
+    \ingroup funclists
+    \brief The <QtMath> header file includes generic math declarations.
+    The global declarations include \l{functions}.
+    These functions are partly convenience definitions for basic
+    operations, for instance not available in the Standard Template Library et
+    al.
+*/
+
+/*!
+    \fn float qDegreesToRadians(float degrees)
+    \relates <QtMath>
+
+    \brief The function converts the \a degrees in float to radians.
+    The purpose of the function is to aid the conversion as such a convenient
+    function is not part of the Standard Template Library, i.e. in <cmath> or
+    elsewhere.
+    Example:
+    \snippet code/src_corelib_kernel_qmath.cpp 0
+    \sa qRadiansToDegrees()
+*/
+
+/*!
+    \fn double qDegreesToRadians(double degrees)
+    \relates <QtMath>
+
+    \brief The function converts the \a degrees in double to radians.
+    The purpose of the function is to aid the conversion as such a convenient
+    function is not part of the Standard Template Library, i.e. in <cmath> or
+    elsewhere.
+    Example:
+    \snippet code/src_corelib_kernel_qmath.cpp 1
+    \sa qRadiansToDegrees()
+*/
+
+/*!
+    \fn float qRadiansToDegrees(float radians)
+    \relates <QtMath>
+
+    \brief The function converts the \a radians in float to degrees.
+    The purpose of the function is to aid the conversion as such a convenient
+    function is not part of the Standard Template Library, i.e. in <cmath> or
+    elsewhere.
+    Example:
+    \snippet code/src_corelib_kernel_qmath.cpp 2
+    \sa qDegreesToRadians()
+*/
+
+/*!
+    \fn double qRadiansToDegrees(double radians)
+    \relates <QtMath>
+
+    \brief The function converts the \a radians in double to degrees.
+    The purpose of the function is to aid the conversion as such a convenient
+    function is not part of the Standard Template Library, i.e. in <cmath> or
+    elsewhere.
+    Example:
+    \snippet code/src_corelib_kernel_qmath.cpp 3
+    \sa qDegreesToRadians()
+*/
 
 QT_END_NAMESPACE

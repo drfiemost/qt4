@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtSvg module of the Qt Toolkit.
@@ -1182,13 +1182,11 @@ static QMatrix parseTransformationMatrix(const QStringRef &value)
         } else if (state == SkewX) {
             if (points.count() != 1)
                 goto error;
-            const qreal deg2rad = qreal(0.017453292519943295769);
-            matrix.shear(qTan(points[0]*deg2rad), 0);
+            matrix.shear(qTan(qDegreesToRadians(points[0])), 0);
         } else if (state == SkewY) {
             if (points.count() != 1)
                 goto error;
-            const qreal deg2rad = qreal(0.017453292519943295769);
-            matrix.shear(0, qTan(points[0]*deg2rad));
+            matrix.shear(0, qTan(qDegreesToRadians(points[0])));
         }
     }
   error:
