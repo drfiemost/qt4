@@ -1816,9 +1816,11 @@ void QObject::installEventFilter(QObject *obj)
 void QObject::removeEventFilter(QObject *obj)
 {
     Q_D(QObject);
-    for (int i = 0; i < d->eventFilters.count(); ++i) {
-        if (d->eventFilters.at(i) == obj)
-            d->eventFilters[i] = nullptr;
+    for (auto &filter : d->eventFilters) {
+    if (filter == obj) {
+            filter = nullptr;
+            break;
+        }
     }
 }
 
