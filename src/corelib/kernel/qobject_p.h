@@ -108,7 +108,15 @@ public:
 #endif
         QList<QByteArray> propertyNames;
         QList<QVariant> propertyValues;
+        QList<QPointer<QObject> > eventFilters;
+        QString objectName;
     };
+
+    void ensureExtraData()
+    {
+        if (!extraData)
+            extraData = new ExtraData();
+    }
 
     typedef void (*StaticMetaCallFunction)(QObject *, QMetaObject::Call, int, void **);
     struct Connection
@@ -183,7 +191,6 @@ public:
                                        QVarLengthArray<char> *result);
 
 public:
-    QString objectName;
     ExtraData *extraData;    // extra data set by the user
     // This atomic requires acquire/release semantics in a few places,
     // e.g. QObject::moveToThread must synchronize with QCoreApplication::postEvent,
@@ -198,11 +205,6 @@ public:
     Sender *currentSender;   // object currently activating the object
     mutable quint32 connectedSignals[2];
 
-    // preserve binary compatibility with code compiled without Qt 3 support
-    // keeping the binary layout stable helps the Qt Creator debugger
-    void *unused; // TODO remove
-
-    QList<QPointer<QObject> > eventFilters;
     union {
         QObject *currentChildBeingDeleted;
         QAbstractDeclarativeData *declarativeData; //extra data used by the declarative module

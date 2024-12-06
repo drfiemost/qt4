@@ -194,8 +194,8 @@ QObjectPrivate::~QObjectPrivate()
 #ifndef QT_NO_USERDATA
     if (extraData)
         qDeleteAll(extraData->userData);
-    delete extraData;
 #endif
+    delete extraData;
 }
 
 /*!\internal
@@ -1018,7 +1018,7 @@ QObjectPrivate::Connection::~Connection()
 QString QObject::objectName() const
 {
     Q_D(const QObject);
-    return d->objectName;
+    return d->extraData ? d->extraData->objectName : QString();
 }
 
 /*
@@ -1027,12 +1027,13 @@ QString QObject::objectName() const
 void QObject::setObjectName(const QString &name)
 {
     Q_D(QObject);
-    bool objectNameChanged = d->declarativeData && d->objectName != name;
+    d->ensureExtraData();
 
-    d->objectName = name;
-
-    if (objectNameChanged) 
-        d->declarativeData->objectNameChanged(d->declarativeData, this);
+    if (d->extraData->objectName != name) {
+        d->extraData->objectName = name;
+        if (d->declarativeData) 
+            d->declarativeData->objectNameChanged(d->declarativeData, this);
+    }
 }
 
 
@@ -1794,10 +1795,12 @@ void QObject::installEventFilter(QObject *obj)
         return;
     }
 
+    d->ensureExtraData();
+
     // clean up unused items in the list along the way:
     auto isNullOrEquals = [](auto obj) { return [obj](const auto &p) { return !p || p == obj; }; };
-    d->eventFilters.removeIf(isNullOrEquals(obj));
-    d->eventFilters.prepend(obj);
+    d->extraData->eventFilters.removeIf(isNullOrEquals(obj));
+    d->extraData->eventFilters.prepend(obj);
 }
 
 /*!
@@ -1816,10 +1819,12 @@ void QObject::installEventFilter(QObject *obj)
 void QObject::removeEventFilter(QObject *obj)
 {
     Q_D(QObject);
-    for (auto &filter : d->eventFilters) {
-    if (filter == obj) {
-            filter = nullptr;
-            break;
+    if (d->extraData) {
+        for (auto &filter : d->extraData->eventFilters) {
+        if (filter == obj) {
+                filter = nullptr;
+                break;
+            }
         }
     }
 }
@@ -3447,8 +3452,7 @@ bool QObject::setProperty(const char *name, const QVariant &value)
 
     int id = meta->indexOfProperty(name);
     if (id < 0) {
-        if (!d->extraData)
-            d->extraData = new QObjectPrivate::ExtraData;
+        d->ensureExtraData();
 
         const int idx = d->extraData->propertyNames.indexOf(name);
 
@@ -3685,8 +3689,7 @@ QObjectUserData::~QObjectUserData()
 void QObject::setUserData(uint id, QObjectUserData* data)
 {
     Q_D(QObject);
-    if (!d->extraData)
-        d->extraData = new QObjectPrivate::ExtraData;
+    d->ensureExtraData();
 
     if (d->extraData->userData.size() <= (int) id)
         d->extraData->userData.resize((int) id + 1);

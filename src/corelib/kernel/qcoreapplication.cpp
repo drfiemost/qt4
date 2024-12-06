@@ -774,10 +774,9 @@ bool QCoreApplication::notify(QObject *receiver, QEvent *event)
 bool QCoreApplicationPrivate::sendThroughApplicationEventFilters(QObject *receiver, QEvent *event)
 {
     auto thisThreadData = threadData.loadRelaxed();
-    if (receiver->d_func()->threadData.loadRelaxed() == thisThreadData) {
+    if ((receiver->d_func()->threadData.loadRelaxed() == thisThreadData) && extraData) {
         // application event filters are only called for objects in the GUI thread
-        for (const auto & eventFilter : eventFilters) {
-            QObject *obj = eventFilter;
+        for (const auto & obj : extraData->eventFilters) {
             if (!obj)
                 continue;
             if (obj->d_func()->threadData.loadRelaxed() != thisThreadData) {
@@ -794,9 +793,8 @@ bool QCoreApplicationPrivate::sendThroughApplicationEventFilters(QObject *receiv
 bool QCoreApplicationPrivate::sendThroughObjectEventFilters(QObject *receiver, QEvent *event)
 {
     Q_Q(QCoreApplication);
-    if (receiver != q) {
-        for (int i = 0; i < receiver->d_func()->eventFilters.size(); ++i) {
-            QObject *obj = receiver->d_func()->eventFilters.at(i);
+    if ((receiver != q) && receiver->d_func()->extraData) {
+        for (const auto & obj : receiver->d_func()->extraData->eventFilters) {
             if (!obj)
                 continue;
             if (obj->d_func()->threadData.loadRelaxed() != receiver->d_func()->threadData.loadRelaxed()) {
