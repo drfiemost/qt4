@@ -61,6 +61,7 @@ class Q_CORE_EXPORT QThread : public QObject
 public:
     static void* currentThreadId();
     static QThread *currentThread();
+    static bool isMainThread();
     static int idealThreadCount();
     static void yieldCurrentThread();
 

@@ -224,8 +224,10 @@ QThreadData *QThreadData::current()
         }
         data->isAdopted = true;
         data->threadId.storeRelaxed(to_HANDLE(pthread_self()));
-        if (!QCoreApplicationPrivate::theMainThread.loadAcquire())
+        if (!QCoreApplicationPrivate::theMainThread.loadAcquire()) {
             QCoreApplicationPrivate::theMainThread.storeRelease(data->thread.loadRelaxed());
+            QCoreApplicationPrivate::theMainThreadId.storeRelaxed(data->threadId.loadRelaxed());
+        }
     }
     return data;
 }

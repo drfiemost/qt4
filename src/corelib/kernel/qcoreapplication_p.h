@@ -91,6 +91,7 @@ public:
 #endif
 
     static QBasicAtomicPointer<QThread> theMainThread;
+    static QBasicAtomicPointer<void> theMainThreadId;
     static QThread *mainThread();
     static bool checkInstance(const char *method);
     static void sendPostedEvents(QObject *receiver, int event_type, QThreadData *data);

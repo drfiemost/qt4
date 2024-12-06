@@ -342,7 +342,8 @@ void QCoreApplicationPrivate::createEventDispatcher()
 #endif
 }
 
-QBasicAtomicPointer<QThread> QCoreApplicationPrivate::theMainThread = Q_BASIC_ATOMIC_INITIALIZER(0);
+QBasicAtomicPointer<QThread> QCoreApplicationPrivate::theMainThread = Q_BASIC_ATOMIC_INITIALIZER(nullptr);
+QBasicAtomicPointer<void> QCoreApplicationPrivate::theMainThreadId = Q_BASIC_ATOMIC_INITIALIZER(nullptr);
 QThread *QCoreApplicationPrivate::mainThread()
 {
     Q_ASSERT(theMainThread.loadRelaxed() != 0);
@@ -773,13 +774,15 @@ bool QCoreApplication::notify(QObject *receiver, QEvent *event)
 
 bool QCoreApplicationPrivate::sendThroughApplicationEventFilters(QObject *receiver, QEvent *event)
 {
-    auto thisThreadData = threadData.loadRelaxed();
-    if ((receiver->d_func()->threadData.loadRelaxed() == thisThreadData) && extraData) {
+    // We can't access the application event filters outside of the main thread (race conditions)
+    Q_ASSERT(QThread::isMainThread());
+
+    if (extraData) {
         // application event filters are only called for objects in the GUI thread
         for (const auto & obj : extraData->eventFilters) {
             if (!obj)
                 continue;
-            if (obj->d_func()->threadData.loadRelaxed() != thisThreadData) {
+            if (obj->d_func()->threadData.loadRelaxed() != receiver->d_func()->threadData.loadRelaxed()) {
                 qWarning("QCoreApplication: Application event filter cannot be in a different thread.");
                 continue;
             }
