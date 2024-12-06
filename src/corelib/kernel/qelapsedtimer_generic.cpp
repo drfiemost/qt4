@@ -192,7 +192,7 @@ bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2) noexcept
     return v1.t1 < v2.t1;
 }
 
-QDeadlineTimer QDeadlineTimer::current(Qt::TimerType timerType) Q_DECL_NOTHROW
+QDeadlineTimer QDeadlineTimer::current(Qt::TimerType timerType) noexcept
 {
     QDeadlineTimer result;
     result.t1 = QDateTime::currentMSecsSinceEpoch() * 1000 * 1000;

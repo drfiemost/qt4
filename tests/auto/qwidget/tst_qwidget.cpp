@@ -68,6 +68,7 @@
 #include <private/qbackingstore_p.h>
 #include <qmenubar.h>
 #include <qtableview.h>
+#include <QtGui/QWindow>
 
 #include <QtGui/QGraphicsView>
 #include <QtGui/QGraphicsProxyWidget>
@@ -89,13 +90,9 @@
 
 #if defined(Q_WS_WIN)
 #  include <qt_windows.h>
-#  if !defined(Q_OS_WINCE)
 #define Q_CHECK_PAINTEVENTS \
     if (::SwitchDesktop(::GetThreadDesktop(::GetCurrentThreadId())) == 0) \
         QSKIP("desktop is not visible, this test would fail", SkipSingle);
-#  else
-#    define Q_CHECK_PAINTEVENTS
-#  endif
 #elif defined(Q_WS_X11)
 #  include <private/qt_x11_p.h>
 #  include <qx11info_x11.h>
@@ -105,23 +102,6 @@
 
 #if !defined(Q_WS_WIN)
 #define Q_CHECK_PAINTEVENTS
-#endif
-
-#if defined(Q_OS_WINCE_WM)
-#include <qguifunctions_wince.h>
-// taken from qguifunctions_wce.cpp
-#define SPI_GETPLATFORMTYPE 257
-bool qt_wince_is_platform(const QString &platformString) {
-    wchar_t tszPlatform[64];
-    if (SystemParametersInfo(SPI_GETPLATFORMTYPE,
-                             sizeof(tszPlatform)/sizeof(*tszPlatform),tszPlatform,0))
-      if (0 == _tcsicmp(reinterpret_cast<const wchar_t *> (platformString.utf16()), tszPlatform))
-            return true;
-    return false;
-}
-bool qt_wince_is_smartphone() {
-       return qt_wince_is_platform(QString::fromLatin1("Smartphone"));
-}
 #endif
 
 #ifdef Q_WS_MAC
@@ -226,11 +206,7 @@ private slots:
 
     void ensureCreated();
     void winIdChangeEvent();
-#ifdef Q_OS_SYMBIAN
-    void reparentCausesChildWinIdChange();
-#else
     void persistentWinId();
-#endif
     void showNativeChild();
     void qobject_castInDestroyedSlot();
 
@@ -262,9 +238,7 @@ private slots:
 
 #ifdef Q_WS_WIN
     void getDC();
-#ifndef Q_OS_WINCE
     void setGeometry_win();
-#endif
 #endif
 
     void setLocale();
@@ -373,18 +347,6 @@ private slots:
 
     void openModal_taskQTBUG_5804();
 
-#ifdef Q_OS_SYMBIAN
-    void cbaVisibility();
-    void fullScreenWindowModeTransitions();
-    void maximizedWindowModeTransitions();
-    void minimizedWindowModeTransitions();
-    void normalWindowModeTransitions();
-    void focusSwitchClosesPopupMenu();
-#if !defined(Q_SYMBIAN_SEMITRANSPARENT_BG_SURFACE)
-    void opacityChangeCausesBackingStoreRecreation();
-#endif
-#endif
-
 #ifndef QT_NO_IM
     void focusProxyAndInputMethods();
 #endif
@@ -402,6 +364,7 @@ private slots:
 #endif
 
     void nativeChildFocus();
+    void taskQTBUG_27643_enterEvents();
 
 private:
     bool ensureScreenSize(int width, int height);
@@ -604,7 +567,7 @@ void tst_QWidget::getSetCheck()
     QCOMPARE(true, obj1.autoFillBackground());
 
     delete var1;
-#if defined (Q_WS_WIN) && !defined(Q_OS_WINCE)
+#if defined (Q_WS_WIN)
     obj1.setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
     HWND handle = obj1.winId();
     long flags = GetWindowLong(handle, GWL_STYLE);
@@ -643,9 +606,6 @@ private:
 
 void tst_QWidget::initTestCase()
 {
-#ifdef Q_OS_WINCE //disable magic for WindowsCE
-    qApp->setAutoMaximizeThreshold(-1);
-#endif
   // Create the test class
     testWidget = new BezierViewer( 0, "testObject");
     testWidget->resize(200,200);
@@ -729,7 +689,7 @@ void BezierViewer::paintEvent( QPaintEvent* )
 
     /* Write number of vertices */
     painter.setPen( Qt::red );
-    painter.setFont( QFont("Helvetica", 14, QFont::DemiBold, TRUE ) );
+    painter.setFont( QFont("Helvetica", 14, QFont::DemiBold, true ) );
     QString caption;
     caption.setNum( bezier.size() );
     caption += QString::fromLatin1( " vertices" );
@@ -762,24 +722,24 @@ void tst_QWidget::fontPropagation()
     childWidget->show();
     QCOMPARE( font, childWidget->font() );
 
-    font.setBold( TRUE );
+    font.setBold( true );
     testWidget->setFont( font );
     QCOMPARE( font, testWidget->font() );
     QCOMPARE( font, childWidget->font() );
 
     QFont newFont = font;
-    newFont.setItalic( TRUE );
+    newFont.setItalic( true );
     childWidget->setFont( newFont );
     QWidget* grandChildWidget = new QWidget( childWidget );
     QCOMPARE( font, testWidget->font() );
     QCOMPARE( newFont, grandChildWidget->font() );
 
-    font.setUnderline( TRUE );
+    font.setUnderline( true );
     testWidget->setFont( font );
 
     // the child and grand child should now have merged bold and
     // underline
-    newFont.setUnderline( TRUE );
+    newFont.setUnderline( true );
 
     QCOMPARE( newFont, childWidget->font() );
     QCOMPARE( newFont, grandChildWidget->font() );
@@ -1077,32 +1037,32 @@ void tst_QWidget::enabledPropagation()
     QVERIFY( testWidget->isEnabled() );
     QVERIFY( childWidget->isEnabled() );
 
-    testWidget->setEnabled( FALSE );
+    testWidget->setEnabled( false );
     QVERIFY( !testWidget->isEnabled() );
     QVERIFY( !childWidget->isEnabled() );
 
-    testWidget->setDisabled( FALSE );
+    testWidget->setDisabled( false );
     QVERIFY( testWidget->isEnabled() );
     QVERIFY( childWidget->isEnabled() );
 
     QWidget* grandChildWidget = new QWidget( childWidget );
     QVERIFY( grandChildWidget->isEnabled() );
 
-    testWidget->setDisabled( TRUE );
+    testWidget->setDisabled( true );
     QVERIFY( !testWidget->isEnabled() );
     QVERIFY( !childWidget->isEnabled() );
     QVERIFY( !grandChildWidget->isEnabled() );
 
-    grandChildWidget->setEnabled( FALSE );
-    testWidget->setEnabled( TRUE );
+    grandChildWidget->setEnabled( false );
+    testWidget->setEnabled( true );
     QVERIFY( testWidget->isEnabled() );
     QVERIFY( childWidget->isEnabled() );
     QVERIFY( !grandChildWidget->isEnabled() );
 
-    grandChildWidget->setEnabled( TRUE );
-    testWidget->setEnabled( FALSE );
-    childWidget->setDisabled( TRUE );
-    testWidget->setEnabled( TRUE );
+    grandChildWidget->setEnabled( true );
+    testWidget->setEnabled( false );
+    childWidget->setDisabled( true );
+    testWidget->setEnabled( true );
     QVERIFY( testWidget->isEnabled() );
     QVERIFY( !childWidget->isEnabled() );
     QVERIFY( !grandChildWidget->isEnabled() );
@@ -1167,7 +1127,7 @@ void tst_QWidget::isEnabledTo()
     QVERIFY( childWidget->isEnabledTo( testWidget ) );
     QVERIFY( grandChildWidget->isEnabledTo( testWidget ) );
 
-    childWidget->setEnabled( FALSE );
+    childWidget->setEnabled( false );
     QVERIFY( !childWidget->isEnabledTo( testWidget ) );
     QVERIFY( grandChildWidget->isEnabledTo( childWidget ) );
     QVERIFY( !grandChildWidget->isEnabledTo( testWidget ) );
@@ -1250,7 +1210,7 @@ void tst_QWidget::visible_setWindowOpacity()
     QVERIFY( !testWidget->isVisible() );
     testWidget->setWindowOpacity(0.5);
 #ifdef Q_OS_WIN
-    QVERIFY(::IsWindowVisible(testWidget->winId()) ==  FALSE);
+    QVERIFY(::IsWindowVisible(testWidget->winId()) ==  false);
 #endif
     testWidget->setWindowOpacity(1.0);
 }
@@ -1428,7 +1388,6 @@ void tst_QWidget::mapFromAndTo()
     subWindow2->setGeometry(75, 75, 100, 100);
     subSubWindow->setGeometry(10, 10, 10, 10);
 
-#if !defined (Q_OS_WINCE) && !defined(Q_OS_SYMBIAN) //still no proper minimizing
     //update visibility
     if (windowMinimized) {
         if (!windowHidden) {
@@ -1445,12 +1404,6 @@ void tst_QWidget::mapFromAndTo()
     } else {
         subWindow1->setVisible(!subWindow1Hidden);
     }
-#else
-    Q_UNUSED(windowHidden);
-    Q_UNUSED(subWindow1Hidden);
-    Q_UNUSED(windowMinimized);
-    Q_UNUSED(subWindow1Minimized);
-#endif
 
     subWindow2->setVisible(!subWindow2Hidden);
     subSubWindow->setVisible(!subSubWindowHidden);
@@ -1653,12 +1606,12 @@ public:
 
     void tab()
     {
-	focusNextPrevChild(TRUE);
+	focusNextPrevChild(true);
     }
 
     void backTab()
     {
-	focusNextPrevChild(FALSE);
+	focusNextPrevChild(false);
     }
 };
 
@@ -1750,15 +1703,8 @@ void tst_QWidget::activation()
 #endif
     Q_CHECK_PAINTEVENTS
 
-#if defined(Q_OS_WINCE)
-    int waitTime = 1000;
-#else
     int waitTime = 100;
-#endif
 
-#ifdef Q_OS_WINCE
-    qApp->processEvents();
-#endif
     QWidget widget1;
     widget1.setWindowTitle("Widget1");
 
@@ -1782,7 +1728,7 @@ void tst_QWidget::activation()
     QVERIFY(qApp->activeWindow() == &widget1);
     widget2.showNormal();
     QTest::qWait(waitTime);
-#if defined(Q_WS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_WS_WIN)
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)
         QEXPECT_FAIL("", "MS introduced new behavior after XP", Continue);
 #endif
@@ -1799,17 +1745,8 @@ void tst_QWidget::windowState()
     QSKIP("Many window managers do not support window state properly, which causes this "
          "test to fail.", SkipAll);
 #else
-#ifdef Q_OS_WINCE_WM
-    QPoint pos(500, 500);
-    QSize size(200, 200);
-    if (qt_wince_is_smartphone()) { //small screen
-        pos = QPoint(10,10);
-        size = QSize(100,100);
-    }
-#else
     const QPoint pos(500, 500);
     const QSize size(200, 200);
-#endif
 
     QWidget widget1;
     widget1.move(pos);
@@ -1920,7 +1857,7 @@ void tst_QWidget::showMaximized()
     layouted.showNormal();
     QVERIFY(!(layouted.windowState() & Qt::WindowMaximized));
 
-#if !defined(Q_WS_QWS) && !defined(Q_OS_WINCE) && !defined(Q_WS_QPA)
+#if !defined(Q_WS_QWS) && !defined(Q_WS_QPA)
 //embedded may choose a different size to fit on the screen.
     QCOMPARE(layouted.size(), layouted.sizeHint());
 #endif
@@ -2007,7 +1944,7 @@ void tst_QWidget::showFullScreen()
     layouted.showNormal();
     QVERIFY(!(layouted.windowState() & Qt::WindowFullScreen));
 
-#if !defined(Q_WS_QWS) && !defined(Q_OS_WINCE) && !defined(Q_WS_QPA)
+#if !defined(Q_WS_QWS) && !defined(Q_WS_QPA)
 //embedded may choose a different size to fit on the screen.
     QCOMPARE(layouted.size(), layouted.sizeHint());
 #endif
@@ -2294,11 +2231,7 @@ void tst_QWidget::reparent()
     childTLW.show();
     QTest::qWaitForWindowShown(&parent);
 
-#ifdef Q_OS_WINCE
-    parent.move(50, 50);
-#else
     parent.move(300, 300);
-#endif
 
     QPoint childPos = parent.mapToGlobal(child.pos());
     QPoint tlwPos = childTLW.pos();
@@ -2557,9 +2490,6 @@ void tst_QWidget::setGeometry()
 
 void tst_QWidget::windowOpacity()
 {
-#ifdef Q_OS_WINCE
-    QSKIP( "Windows CE does not support windowOpacity", SkipAll);
-#endif
     QWidget widget;
     QWidget child(&widget);
 
@@ -2908,9 +2838,6 @@ void tst_QWidget::stackUnder()
     foreach (UpdateWidget *child, allChildren) {
         int expectedZOrderChangeEvents = child == child1 ? 1 : 0;
         if (child == child3) {
-#ifdef Q_OS_WINCE
-            qApp->processEvents();
-#endif
 #ifndef Q_WS_MAC
             QEXPECT_FAIL(0, "See QTBUG-493", Continue);
 #endif
@@ -3275,12 +3202,6 @@ void tst_QWidget::widgetAt()
     w2->setMask(rgn);
     qApp->processEvents();
     QTest::qWait(10);
-#if defined(Q_OS_WINCE)
-    QEXPECT_FAIL("", "Windows CE does only support rectangular regions", Continue); //See also task 147191
-#endif
-#if defined(Q_OS_SYMBIAN)
-    QEXPECT_FAIL("", "Symbian/S60 does only support rectangular regions", Continue); //See also task 147191
-#endif
 #if defined(Q_WS_QPA)
     QEXPECT_FAIL("", "Window mask not implemented on Lighthouse", Continue); 
 #endif
@@ -3297,12 +3218,6 @@ void tst_QWidget::widgetAt()
     w2->setMask(bitmap);
     qApp->processEvents();
     QTest::qWait(10);
-#if defined(Q_OS_WINCE)
-    QEXPECT_FAIL("", "Windows CE does only support rectangular regions", Continue); //See also task 147191
-#endif
-#if defined(Q_OS_SYMBIAN)
-    QEXPECT_FAIL("", "Symbian/S60 does only support rectangular regions", Continue); //See also task 147191
-#endif
 #if defined(Q_WS_QPA)
     QEXPECT_FAIL("", "Window mask not implemented on Lighthouse", Continue); 
 #endif
@@ -3457,9 +3372,6 @@ void tst_QWidget::windowTitle()
 
 void tst_QWidget::windowIconText()
 {
-#ifdef Q_OS_SYMBIAN
-    QSKIP("Symbian/S60 windows don't have window icon text", SkipAll);
-#endif
     QWidget widget(0);
 
     widget.setWindowTitle("Application Name");
@@ -3467,9 +3379,8 @@ void tst_QWidget::windowIconText()
     widget.showNormal();
     QCOMPARE(visibleWindowTitle(&widget), QString("Application Name"));
     widget.showMinimized();
-#if defined(Q_WS_QWS) || defined(Q_OS_WINCE)
-    QEXPECT_FAIL(0, "Qt/Embedded/WinCE does not implement showMinimized()", Continue);
-    //See task 147193 for WinCE
+#if defined(Q_WS_QWS)
+    QEXPECT_FAIL(0, "Qt/Embedded does not implement showMinimized()", Continue);
 #endif
     QApplication::instance()->processEvents();
     QCOMPARE(visibleWindowTitle(&widget, Qt::WindowMinimized),
@@ -3481,9 +3392,8 @@ void tst_QWidget::windowIconText()
     QApplication::instance()->processEvents();
     QCOMPARE(visibleWindowTitle(&widget), QString("Application Name"));
     widget.showMinimized();
-#if defined (Q_WS_QWS) || defined(Q_OS_WINCE)
-    QEXPECT_FAIL(0, "Qt/Embedded/WinCE does not implement showMinimized()", Continue);
-    //See task 147193 for WinCE
+#if defined (Q_WS_QWS)
+    QEXPECT_FAIL(0, "Qt/Embedded does not implement showMinimized()", Continue);
 #endif
     QApplication::instance()->processEvents();
     QCOMPARE(visibleWindowTitle(&widget, Qt::WindowMinimized),
@@ -3497,9 +3407,8 @@ void tst_QWidget::windowIconText()
     else
         QCOMPARE(visibleWindowTitle(&widget), QString("Application Name"));
     widget.showMinimized();
-#if defined (Q_WS_QWS) || defined(Q_OS_WINCE)
-    QEXPECT_FAIL(0, "Qt/Embedded/WinCE does not implement showMinimized()", Continue);
-    //See task 147193 for WinCE
+#if defined (Q_WS_QWS)
+    QEXPECT_FAIL(0, "Qt/Embedded does not implement showMinimized()", Continue);
 #endif
     QApplication::instance()->processEvents();
 #ifdef Q_WS_MAC
@@ -4114,9 +4023,6 @@ void tst_QWidget::setMinimumSize()
     QCOMPARE(w.size(), defaultSize + QSize(200, 200));
     QVERIFY(!w.testAttribute(Qt::WA_Resized));
 
-#ifdef Q_OS_WINCE
-    QSKIP("Setting a minimum size larger than the desktop does not work", SkipAll);
-#endif
     QSize nonDefaultSize = defaultSize + QSize(5,5);
     w.setMinimumSize(nonDefaultSize);
     w.show();
@@ -4290,14 +4196,8 @@ void tst_QWidget::winIdChangeEvent()
         QCOMPARE(child.winIdChangeEventCount(), 1);
         parent.setParent(&grandparent2);
         const WId winIdAfter = child.internalWinId();
-#ifdef Q_OS_SYMBIAN
-        QVERIFY(winIdBefore != winIdAfter);
-        QVERIFY(winIdAfter != 0);
-        QCOMPARE(child.winIdChangeEventCount(), 2);
-#else
         QCOMPARE(winIdBefore, winIdAfter);
         QCOMPARE(child.winIdChangeEventCount(), 1);
-#endif
     }
 
     {
@@ -4328,71 +4228,6 @@ void tst_QWidget::winIdChangeEvent()
     }
 }
 
-#ifdef Q_OS_SYMBIAN
-void tst_QWidget::reparentCausesChildWinIdChange()
-{
-    QWidget *parent = new QWidget;
-    QWidget *w1 = new QWidget;
-    QWidget *w2 = new QWidget;
-    QWidget *w3 = new QWidget;
-    w1->setParent(parent);
-    w2->setParent(w1);
-    w3->setParent(w2);
-
-    WId winId1 = w1->winId();
-    WId winId2 = w2->winId();
-    WId winId3 = w3->winId();
-
-    // reparenting causes winIds of the widget being reparented, and all of its children, to change
-    w1->setParent(0);
-    QVERIFY(w1->winId() != winId1);
-    winId1 = w1->winId();
-    QVERIFY(w2->winId() != winId2);
-    winId2 = w2->winId();
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w1->setParent(parent);
-    QVERIFY(w1->winId() != winId1);
-    winId1 = w1->winId();
-    QVERIFY(w2->winId() != winId2);
-    winId2 = w2->winId();
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w2->setParent(0);
-    QVERIFY(w2->winId() != winId2);
-    winId2 = w2->winId();
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w2->setParent(parent);
-    QVERIFY(w2->winId() != winId2);
-    winId2 = w2->winId();
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w2->setParent(w1);
-    QVERIFY(w2->winId() != winId2);
-    winId2 = w2->winId();
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w3->setParent(0);
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w3->setParent(w1);
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    w3->setParent(w2);
-    QVERIFY(w3->winId() != winId3);
-    winId3 = w3->winId();
-
-    delete parent;
-}
-#else
 void tst_QWidget::persistentWinId()
 {
     QWidget *parent = new QWidget;
@@ -4449,7 +4284,6 @@ void tst_QWidget::persistentWinId()
 
     delete parent;
 }
-#endif // Q_OS_SYMBIAN
 
 void tst_QWidget::showNativeChild()
 {
@@ -5075,7 +4909,7 @@ void tst_QWidget::setWindowGeometry()
     }
 }
 
-#if defined (Q_WS_WIN) && !defined(Q_OS_WINCE)
+#if defined (Q_WS_WIN)
 void tst_QWidget::setGeometry_win()
 {
     QWidget widget;
@@ -5356,12 +5190,9 @@ void tst_QWidget::moveChild()
     parent.setStyle(new QWindowsStyle);
     ColorWidget child(&parent, Qt::blue);
 
-#ifndef Q_OS_WINCE
     parent.setGeometry(QRect(QPoint(QApplication::desktop()->availableGeometry(&parent).topLeft()),
                              QSize(100, 100)));
-#else
-    parent.setGeometry(60, 60, 150, 150);
-#endif
+
     child.setGeometry(25, 25, 50, 50);
 
     parent.show();
@@ -5908,10 +5739,6 @@ void tst_QWidget::setToolTip()
     widget.setToolTip(QString());
     QCOMPARE(widget.toolTip(), QString());
     QCOMPARE(spy.count(), 2);
-
-#ifdef Q_OS_WINCE_WM
-    QSKIP("Mouse over doesn't work on Windows mobile.", SkipAll);
-#endif
 
     for (int pass = 0; pass < 2; ++pass) {
         QWidget *popup = new QWidget(0, Qt::Popup);
@@ -6909,10 +6736,6 @@ void tst_QWidget::render_task217815()
 
 void tst_QWidget::render_windowOpacity()
 {
-#ifdef Q_OS_WINCE
-    QSKIP("Window Opacity is not supported on Windows CE", SkipAll);
-#endif
-
     const qreal opacity = 0.5;
 
     { // Check that the painter opacity effects the widget drawing.
@@ -7446,14 +7269,11 @@ void tst_QWidget::repaintWhenChildDeleted()
     }
 #endif
     ColorWidget w(0, Qt::red);
-#if !defined(Q_OS_WINCE)
     QPoint startPoint = QApplication::desktop()->availableGeometry(&w).topLeft();
     startPoint.rx() += 50;
     startPoint.ry() += 50;
     w.setGeometry(QRect(startPoint, QSize(100, 100)));
-#else
-    w.setGeometry(60, 60, 110, 110);
-#endif
+
     w.show();
     QTest::qWaitForWindowShown(&w);
     QTest::qWait(10);
@@ -7477,14 +7297,10 @@ void tst_QWidget::repaintWhenChildDeleted()
 void tst_QWidget::hideOpaqueChildWhileHidden()
 {
     ColorWidget w(0, Qt::red);
-#if !defined(Q_OS_WINCE)
     QPoint startPoint = QApplication::desktop()->availableGeometry(&w).topLeft();
     startPoint.rx() += 50;
     startPoint.ry() += 50;
     w.setGeometry(QRect(startPoint, QSize(100, 100)));
-#else
-    w.setGeometry(60, 60, 110, 110);
-#endif
 
     ColorWidget child(&w, Qt::blue);
     child.setGeometry(10, 10, 80, 80);
@@ -7514,7 +7330,7 @@ void tst_QWidget::hideOpaqueChildWhileHidden()
 
 void tst_QWidget::updateWhileMinimized()
 {
-#if defined(Q_OS_WINCE) || defined(Q_WS_QWS)
+#if defined(Q_WS_QWS)
    QSKIP("This test doesn't make sense without support for showMinimized()", SkipAll);
 #endif
 
@@ -7891,13 +7707,6 @@ void tst_QWidget::adjustSize()
         QVERIFY(child->size().width() < sizeHint.width());
         QVERIFY(child->size().height() < sizeHint.height());
     } else {
-#if defined (Q_OS_WINCE)
-        if (!haveParent) {
-            const QRect& desktopRect = qApp->desktop()->availableGeometry();
-            expectedSize.setWidth(std::min(expectedSize.width(), desktopRect.width()));
-            expectedSize.setHeight(std::min(expectedSize.height(), desktopRect.height()));
-        }
-#endif
         QCOMPARE(child->size(), expectedSize);
     }
 
@@ -9108,10 +8917,6 @@ void tst_QWidget::syntheticEnterLeave()
     QCursor::setPos(globalPos); // Enter child2 and grandChild.
     QTest::qWait(300);
 
-#ifdef Q_OS_WINCE_WM
-    QSKIP("Windows Mobile has no proper cursor support", SkipAll);
-#endif
-
     QCOMPARE(window.numLeaveEvents, 0);
     QCOMPARE(child2->numLeaveEvents, 0);
     QCOMPARE(grandChild->numLeaveEvents, 0);
@@ -9161,9 +8966,6 @@ void tst_QWidget::syntheticEnterLeave()
 
 void tst_QWidget::taskQTBUG_4055_sendSyntheticEnterLeave()
 {
-#ifdef Q_OS_WINCE_WM
-    QSKIP("Windows Mobile has no proper cursor support", SkipAll);
-#endif
     class SELParent : public QWidget
     {
     public:
@@ -9439,9 +9241,7 @@ void tst_QWidget::destroyBackingStoreWhenHidden()
     QSKIP("Test step requires access to Q_AUTOTEST_EXPORT", SkipAll);
 #endif
 
-#ifndef Q_OS_SYMBIAN
     QSKIP("Only Symbian destroys backing store when native window becomes invisible", SkipAll);
-#endif
 
     testWidget->hide();
     QTest::qWait(1000);
@@ -9745,9 +9545,6 @@ void tst_QWidget::destroyBackingStoreWhenHidden()
 
 void tst_QWidget::rectOutsideCoordinatesLimit_task144779()
 {
-#ifdef Q_OS_WINCE_WM
-    QSKIP( "Tables of 5000 elements do not make sense on Windows Mobile.", SkipAll);
-#endif
     QApplication::setOverrideCursor(Qt::BlankCursor); //keep the cursor out of screen grabs
     QWidget main(0,Qt::FramelessWindowHint); //don't get confused by the size of the window frame
     QPalette palette;
@@ -9907,329 +9704,6 @@ void tst_QWidget::openModal_taskQTBUG_5804()
     delete win;
 }
 
-#ifdef Q_OS_SYMBIAN
-void tst_QWidget::cbaVisibility()
-{
-    // Test case for task 261048
-
-    // Create first mainwindow in fullsreen and activate it
-    QMainWindow* mainwindow = new QMainWindow();
-    QLabel* label = new QLabel(mainwindow);
-    mainwindow->setCentralWidget(label);
-    mainwindow->setWindowState(Qt::WindowFullScreen);
-    mainwindow->setVisible(true);
-    mainwindow->activateWindow();
-    qApp->processEvents();
-
-    QVERIFY(mainwindow->isActiveWindow());
-    QVERIFY(QDesktopWidget().availableGeometry().size() == mainwindow->size());
-
-    // Create second mainwindow in maximized and activate it
-    QMainWindow* mainwindow2 = new QMainWindow();
-    QLabel* label2 = new QLabel(mainwindow2);
-    mainwindow2->setCentralWidget(label2);
-    mainwindow2->setWindowState(Qt::WindowMaximized);
-    mainwindow2->setVisible(true);
-    mainwindow2->activateWindow();
-    qApp->processEvents();
-
-    QVERIFY(!mainwindow->isActiveWindow());
-    QVERIFY(mainwindow2->isActiveWindow());
-    QVERIFY(QDesktopWidget().availableGeometry().size() == mainwindow2->size());
-
-    // Verify window decorations i.e. status pane and CBA are visible.
-    CEikStatusPane* statusPane = CEikonEnv::Static()->AppUiFactory()->StatusPane();
-    QVERIFY(statusPane->IsVisible());
-    CEikButtonGroupContainer* buttonGroup = CEikButtonGroupContainer::Current();
-    QVERIFY(buttonGroup->IsVisible());
-}
-
-void tst_QWidget::fullScreenWindowModeTransitions()
-{
-    QWidget widget;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QPushButton *button = new QPushButton("test Button");
-    layout->addWidget(button);
-    widget.setLayout(layout);
-    widget.show();
-
-    const QRect normalGeometry = widget.normalGeometry();
-    const QRect fullScreenGeometry = qApp->desktop()->screenGeometry(&widget);
-    const QRect maximumScreenGeometry = qApp->desktop()->availableGeometry(&widget);
-    CEikStatusPane *statusPane = CEikonEnv::Static()->AppUiFactory()->StatusPane();
-    CEikButtonGroupContainer *buttonGroup = CEikButtonGroupContainer::Current();
-
-    //Enter
-    widget.showNormal();
-    widget.showFullScreen();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showMaximized();
-    widget.showFullScreen();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showMinimized();
-    widget.showFullScreen();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    //Exit
-    widget.showFullScreen();
-    widget.showNormal();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showFullScreen();
-    widget.showMaximized();
-    QCOMPARE(widget.geometry(), maximumScreenGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showFullScreen();
-    widget.showMinimized();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-}
-
-void tst_QWidget::maximizedWindowModeTransitions()
-{
-    QWidget widget;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QPushButton *button = new QPushButton("test Button");
-    layout->addWidget(button);
-    widget.setLayout(layout);
-    widget.show();
-
-    const QRect normalGeometry = widget.normalGeometry();
-    const QRect fullScreenGeometry = qApp->desktop()->screenGeometry(&widget);
-    const QRect maximumScreenGeometry = qApp->desktop()->availableGeometry(&widget);
-    CEikStatusPane *statusPane = CEikonEnv::Static()->AppUiFactory()->StatusPane();
-    CEikButtonGroupContainer *buttonGroup = CEikButtonGroupContainer::Current();
-
-    //Enter
-    widget.showNormal();
-    widget.showMaximized();
-    QCOMPARE(widget.geometry(), maximumScreenGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showFullScreen();
-    widget.showMaximized();
-    QCOMPARE(widget.geometry(), maximumScreenGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showMinimized();
-    widget.showMaximized();
-    QCOMPARE(widget.geometry(), maximumScreenGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    //Exit
-    widget.showMaximized();
-    widget.showNormal();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showMaximized();
-    widget.showFullScreen();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showMaximized();
-    widget.showMinimized();
-    // Since showMinimized hides window decoration availableGeometry gives different value
-    // than with decoration visible. Altual size does not really matter since widget is invisible.
-    QCOMPARE(widget.geometry(), qApp->desktop()->availableGeometry(&widget));
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-}
-
-void tst_QWidget::minimizedWindowModeTransitions()
-{
-    QWidget widget;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QPushButton *button = new QPushButton("test Button");
-    layout->addWidget(button);
-    widget.setLayout(layout);
-    widget.show();
-
-    const QRect normalGeometry = widget.normalGeometry();
-    const QRect fullScreenGeometry = qApp->desktop()->screenGeometry(&widget);
-    const QRect maximumScreenGeometry = qApp->desktop()->availableGeometry(&widget);
-    CEikStatusPane *statusPane = CEikonEnv::Static()->AppUiFactory()->StatusPane();
-    CEikButtonGroupContainer *buttonGroup = CEikButtonGroupContainer::Current();
-
-    //Enter
-    widget.showNormal();
-    widget.showMinimized();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showFullScreen();
-    widget.showMinimized();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showMaximized();
-    widget.showMinimized();
-    // Since showMinimized hides window decoration availableGeometry gives different value
-    // than with decoration visible. Altual size does not really matter since widget is invisible.
-    QCOMPARE(widget.geometry(), qApp->desktop()->availableGeometry(&widget));
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    //Exit
-    widget.showMinimized();
-    widget.showNormal();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showMinimized();
-    widget.showFullScreen();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showMinimized();
-    widget.showMaximized();
-    QCOMPARE(widget.geometry(), maximumScreenGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-}
-
-void tst_QWidget::normalWindowModeTransitions()
-{
-    QWidget widget;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QPushButton *button = new QPushButton("test Button");
-    layout->addWidget(button);
-    widget.setLayout(layout);
-    widget.show();
-
-    const QRect normalGeometry = widget.normalGeometry();
-    const QRect fullScreenGeometry = qApp->desktop()->screenGeometry(&widget);
-    const QRect maximumScreenGeometry = qApp->desktop()->availableGeometry(&widget);
-    CEikStatusPane *statusPane = CEikonEnv::Static()->AppUiFactory()->StatusPane();
-    CEikButtonGroupContainer *buttonGroup = CEikButtonGroupContainer::Current();
-
-    //Enter
-    widget.showMaximized();
-    widget.showNormal();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showFullScreen();
-    widget.showNormal();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showMinimized();
-    widget.showNormal();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    //Exit
-    widget.showNormal();
-    widget.showMaximized();
-    QCOMPARE(widget.geometry(), maximumScreenGeometry);
-    QVERIFY(buttonGroup->IsVisible());
-    QVERIFY(statusPane->IsVisible());
-
-    widget.showNormal();
-    widget.showFullScreen();
-    QCOMPARE(widget.geometry(), fullScreenGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-
-    widget.showNormal();
-    widget.showMinimized();
-    QCOMPARE(widget.geometry(), normalGeometry);
-    QVERIFY(!buttonGroup->IsVisible());
-    QVERIFY(!statusPane->IsVisible());
-}
-
-void tst_QWidget::focusSwitchClosesPopupMenu()
-{
-    QMainWindow mainWindow;
-    QAction action("Test action", &mainWindow);
-    mainWindow.menuBar()->addAction(&action);
-
-    mainWindow.show();
-    QT_TRAP_THROWING(CEikonEnv::Static()->AppUiFactory()->MenuBar()->TryDisplayMenuBarL());
-    QVERIFY(CEikonEnv::Static()->AppUiFactory()->MenuBar()->IsDisplayed());
-
-    // Close the popup by opening a new window.
-    QMainWindow mainWindow2;
-    QAction action2("Test action", &mainWindow2);
-    mainWindow2.menuBar()->addAction(&action2);
-    mainWindow2.show();
-    QVERIFY(!CEikonEnv::Static()->AppUiFactory()->MenuBar()->IsDisplayed());
-
-    QT_TRAP_THROWING(CEikonEnv::Static()->AppUiFactory()->MenuBar()->TryDisplayMenuBarL());
-    QVERIFY(CEikonEnv::Static()->AppUiFactory()->MenuBar()->IsDisplayed());
-
-    // Close the popup by switching focus.
-    mainWindow.activateWindow();
-    QVERIFY(!CEikonEnv::Static()->AppUiFactory()->MenuBar()->IsDisplayed());
-}
-
-#if !defined(Q_SYMBIAN_SEMITRANSPARENT_BG_SURFACE)
-class OpacityChangeWidget : public QWidget
-{
-public:
-    OpacityChangeWidget() : m_paintEngineType(QPaintEngine::MaxUser) { }
-    void paintEvent(QPaintEvent *)
-    {
-        QPainter painter(this);
-        m_paintEngineType = painter.paintEngine()->type();
-    }
-    QPaintEngine::Type paintEngineType() const { return m_paintEngineType; }
-private:
-    QPaintEngine::Type m_paintEngineType;
-};
-
-void tst_QWidget::opacityChangeCausesBackingStoreRecreation()
-{
-    OpacityChangeWidget w;
-    w.show();
-    QTest::qWaitForWindowShown(&w);
-    const QPaintEngine::Type type = w.paintEngineType();
-    if (QPaintEngine::OpenGL != type && QPaintEngine::OpenVG != type) {
-        QSKIP("Test case is only valid when using opengl or openvg graphics system", SkipAll);
-    } else {
-        if (QApplicationPrivate::instance()->useTranslucentEGLSurfaces) {
-            QSKIP("Test case is only valid when EGL surface transparency is not supported", SkipAll);
-        } else {
-            // Making window transparent should force switch to raster graphics system
-            w.setAttribute(Qt::WA_TranslucentBackground, true);
-            w.repaint();
-            QCOMPARE(w.paintEngineType(), QPaintEngine::Raster);
-            // Making window opaque should cause switch back to previous graphics system
-            w.setAttribute(Qt::WA_TranslucentBackground, false);
-            w.repaint();
-            QCOMPARE(w.paintEngineType(), type);
-        }
-    }
-}
-#endif // !Q_SYMBIAN_SEMITRANSPARENT_BG_SURFACE
-#endif // Q_OS_SYMBIAN
-
 #ifndef QT_NO_IM
 class InputContextTester : public QInputContext
 {
@@ -10343,7 +9817,7 @@ void tst_QWidget::taskQTBUG_7532_tabOrderWithFocusProxy()
 
 void tst_QWidget::movedAndResizedAttributes()
 {
-#if defined (Q_OS_MAC) || defined(Q_WS_QWS) || defined(Q_OS_SYMBIAN)
+#if defined (Q_OS_MAC) || defined(Q_WS_QWS)
     QEXPECT_FAIL("", "FixMe, QTBUG-8941 and QTBUG-8977", Abort);
     QVERIFY(false);
 #else
@@ -10582,5 +10056,93 @@ void tst_QWidget::properTabHandlingWhenDisabled_QTBUG27417()
     QVERIFY(lineEdit3->hasFocus());
 }
 
+class EnterTestModalDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    EnterTestModalDialog() : QDialog(), button(0)
+    {
+        setGeometry(100, 300, 150, 100);
+        button = new QPushButton(this);
+        button->setGeometry(10, 10, 50, 30);
+    }
+
+    QPushButton *button;
+};
+
+class EnterTestMainDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    EnterTestMainDialog() : QDialog(), modal(nullptr), enters(0) {}
+
+public slots:
+    void buttonPressed()
+    {
+        qApp->installEventFilter(this);
+        modal = new EnterTestModalDialog();
+        QTimer::singleShot(2000, modal, SLOT(close())); // Failsafe
+        QTimer::singleShot(100, this, SLOT(doMouseMoves()));
+        modal->exec();
+        delete modal;
+    }
+
+    void doMouseMoves()
+    {
+        QPoint point1(15, 15);
+        QPoint point2(15, 20);
+        QPoint point3(20, 20);
+        QTest::mouseMove(modal, point1);
+        QTest::mouseMove(modal, point2);
+        QTest::mouseMove(modal, point3);
+        modal->close();
+    }
+
+    bool eventFilter(QObject *o, QEvent *e)
+    {
+        if (modal && modal->button && o == modal->button) {
+            switch (e->type()) {
+            case QEvent::Enter:
+                enters++;
+                break;
+            default:
+                break;
+            }
+        }
+        return QDialog::eventFilter(o, e);
+    }
+
+public:
+    EnterTestModalDialog *modal;
+    int enters;
+};
+
+// A modal dialog launched by clicking a button should not trigger excess enter events
+// when mousing over it.
+void tst_QWidget::taskQTBUG_27643_enterEvents()
+{
+    // Move the mouse cursor to a safe location so it won't interfere
+    QCursor::setPos(0,0);
+
+    EnterTestMainDialog dialog;
+    QPushButton button(&dialog);
+
+    connect(&button, SIGNAL(clicked()), &dialog, SLOT(buttonPressed()));
+
+    dialog.setGeometry(100, 100, 150, 100);
+    button.setGeometry(10, 10, 100, 50);
+    dialog.show();
+    QVERIFY(QTest::qWaitForWindowShown(&dialog));
+
+    QPoint overButton(25, 25);
+
+    QTest::mouseMove(&dialog, overButton);
+    QTest::mouseClick(&dialog, Qt::LeftButton, 0, overButton, 0);
+
+    // Modal dialog opened in EnterTestMainDialog::buttonPressed()...
+
+    // Must only register only single enter on modal dialog's button after all said and done
+    QCOMPARE(dialog.enters, 1);
+}
 QTEST_MAIN(tst_QWidget)
 #include "tst_qwidget.moc"
