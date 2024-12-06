@@ -178,6 +178,15 @@ public:
     void removeAt(int i);
     int removeAll(const T &t);
     bool removeOne(const T &t);
+    template <typename P>
+    qsizetype removeIf(P _p)
+    {
+        const auto e = end();
+        const auto it = std::remove_if(begin(), e, _p);
+        const auto result = std::distance(it, e);
+        erase(it, e);
+        return result;
+    }
     T takeAt(int i);
     T takeFirst();
     T takeLast();

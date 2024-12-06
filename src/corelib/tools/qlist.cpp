@@ -121,7 +121,7 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
 #endif
 QListData::Data *QListData::detach()
 {
-    Data *x = static_cast<Data *>(::malloc(DataHeaderSize + d->alloc * sizeof(void *)));
+    Data *x = static_cast<Data *>(std::malloc(DataHeaderSize + d->alloc * sizeof(void *)));
     Q_CHECK_PTR(x);
 
     x->ref.initializeOwned();
@@ -156,7 +156,7 @@ QListData::Data *QListData::detach2()
     Data* t = static_cast<Data *>(::malloc(DataHeaderSize + x->alloc * sizeof(void *)));
     Q_CHECK_PTR(t);
 
-    ::memcpy(t, d, DataHeaderSize + d->alloc * sizeof(void *));
+    std::memcpy(t, d, DataHeaderSize + d->alloc * sizeof(void *));
 
     t->ref.initializeOwned();
     t->alloc = x->alloc;
@@ -183,7 +183,7 @@ QListData::Data *QListData::detach2()
 QListData::Data *QListData::detach(int alloc)
 {
     Data *x = d;
-    Data* t = static_cast<Data *>(::malloc(DataHeaderSize + alloc * sizeof(void *)));
+    Data* t = static_cast<Data *>(std::malloc(DataHeaderSize + alloc * sizeof(void *)));
     Q_CHECK_PTR(t);
 
     t->ref.initializeOwned();

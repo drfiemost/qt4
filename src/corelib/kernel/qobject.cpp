@@ -1794,9 +1794,9 @@ void QObject::installEventFilter(QObject *obj)
         return;
     }
 
-    // clean up unused items in the list
-    d->eventFilters.removeAll((QObject*)nullptr);
-    d->eventFilters.removeAll(obj);
+    // clean up unused items in the list along the way:
+    auto isNullOrEquals = [](auto obj) { return [obj](const auto &p) { return !p || p == obj; }; };
+    d->eventFilters.removeIf(isNullOrEquals(obj));
     d->eventFilters.prepend(obj);
 }
 
