@@ -81,6 +81,9 @@ public:
     inline int size() const { return m_size; }
     inline const char *data() const { return m_data; }
 
+    [[nodiscard]] constexpr QLatin1Char at(int i) const { return QLatin1Char(m_data[i]); }
+    [[nodiscard]] constexpr QLatin1Char operator[](int i) const { return at(i); }
+
     inline bool operator==(const QString &s) const;
     inline bool operator!=(const QString &s) const;
     inline bool operator>(const QString &s) const;

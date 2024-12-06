@@ -206,6 +206,14 @@ static inline __m128i mergeQuestionMarks(__m128i chunk)
 }
 #endif
 
+static QVarLengthArray<ushort> qt_from_latin1_to_qvla(QLatin1String str) noexcept
+{
+    const qsizetype len = str.size();
+    QVarLengthArray<ushort> arr(len);
+    qt_from_latin1(arr.data(), str.data(), len);
+    return arr;
+}
+
 static void qt_to_latin1(uchar *dst, const ushort *src, int length)
 {
 #if defined(QT_ALWAYS_HAVE_SSE2)
@@ -2092,6 +2100,8 @@ QString &QString::replace(const QChar *before, int blen,
     }
     if (alen == 0 && blen == 0)
         return *this;
+    if (alen == 1 && blen == 1)
+        return replace(*before, *after, cs);
 
     QStringMatcher matcher(before, blen, cs);
     QChar *beforeBuffer = nullptr, *afterBuffer = nullptr;
@@ -2235,12 +2245,13 @@ QString& QString::replace(QChar before, QChar after, Qt::CaseSensitivity cs)
 */
 QString &QString::replace(QLatin1String before, QLatin1String after, Qt::CaseSensitivity cs)
 {
-    int alen = after.size();
-    int blen = before.size();
-    QVarLengthArray<ushort> a(alen);
-    QVarLengthArray<ushort> b(blen);
-    qt_from_latin1(a.data(), after.latin1(), alen);
-    qt_from_latin1(b.data(), before.latin1(), blen);
+    const int alen = after.size();
+    const int blen = before.size();
+    if (blen == 1 && alen == 1)
+        return replace(before.at(0), after.at(0), cs);
+
+    QVarLengthArray<ushort> a = qt_from_latin1_to_qvla(after);
+    QVarLengthArray<ushort> b = qt_from_latin1_to_qvla(before);
     return replace((const QChar *)b.data(), blen, (const QChar *)a.data(), alen, cs);
 }
 
@@ -2259,8 +2270,7 @@ QString &QString::replace(QLatin1String before, QLatin1String after, Qt::CaseSen
 QString &QString::replace(QLatin1String before, const QString &after, Qt::CaseSensitivity cs)
 {
     int blen = before.size();
-    QVarLengthArray<ushort> b(blen);
-    qt_from_latin1(b.data(), before.latin1(), blen);
+    QVarLengthArray<ushort> b = qt_from_latin1_to_qvla(before);
     return replace((const QChar *)b.data(), blen, after.constData(), after.d->size, cs);
 }
 
@@ -2278,9 +2288,12 @@ QString &QString::replace(QLatin1String before, const QString &after, Qt::CaseSe
 */
 QString &QString::replace(const QString &before, QLatin1String after, Qt::CaseSensitivity cs)
 {
-    int alen = after.size();
-    QVarLengthArray<ushort> a(alen);
-    qt_from_latin1(a.data(), after.latin1(), alen);
+    const int alen = after.size();
+    if (before.size() == 1 && alen == 1)
+        return replace(before.at(0), after.at(0), cs);
+
+    QVarLengthArray<ushort> a = qt_from_latin1_to_qvla(after);
+
     return replace(before.constData(), before.d->size, (const QChar *)a.data(), alen, cs);
 }
 
@@ -2298,9 +2311,11 @@ QString &QString::replace(const QString &before, QLatin1String after, Qt::CaseSe
 */
 QString &QString::replace(QChar c, QLatin1String after, Qt::CaseSensitivity cs)
 {
-    int alen = after.size();
-    QVarLengthArray<ushort> a(alen);
-    qt_from_latin1(a.data(), after.latin1(), alen);
+    const int alen = after.size();
+    if (alen == 1)
+        return replace(c, after.at(0), cs);
+
+    QVarLengthArray<ushort> a = qt_from_latin1_to_qvla(after);
     return replace(&c, 1, (const QChar *)a.data(), alen, cs);
 }
 
@@ -2891,8 +2906,7 @@ int QString::lastIndexOf(QLatin1String str, int from, Qt::CaseSensitivity cs) co
     if (from > delta)
         from = delta;
 
-    QVarLengthArray<ushort> s(sl);
-    qt_from_latin1(s.data(), str.latin1(), sl);
+    QVarLengthArray<ushort> s = qt_from_latin1_to_qvla(str);
 
     return lastIndexOfHelper(d->data(), from, s.data(), sl, cs);
 }
@@ -8530,8 +8544,7 @@ int QStringRef::lastIndexOf(QLatin1String str, int from, Qt::CaseSensitivity cs)
     if (from > delta)
         from = delta;
 
-    QVarLengthArray<ushort> s(sl);
-    qt_from_latin1(s.data(), str.latin1(), sl);
+    QVarLengthArray<ushort> s = qt_from_latin1_to_qvla(str);
 
     return lastIndexOfHelper(reinterpret_cast<const ushort*>(unicode()), from, s.data(), sl, cs);
 }
@@ -8869,11 +8882,9 @@ static inline int qt_find_latin1_string(const QChar *haystack, int size,
     if (size < needle.size())
         return -1;
 
-    const char *latin1 = needle.latin1();
-    int len = needle.size();
-    QVarLengthArray<ushort> s(len);
-    qt_from_latin1(s.data(), latin1, len);
+    QVarLengthArray<ushort> s = qt_from_latin1_to_qvla(needle);
 
+    int len = needle.size();
     return qFindString(haystack, size, from,
                        reinterpret_cast<const QChar*>(s.constData()), len, cs);
 }
