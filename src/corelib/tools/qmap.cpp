@@ -299,7 +299,7 @@ static inline void *qMapAllocate(int alloc, int alignment)
 {
     return alignment > qMapAlignmentThreshold()
         ? qMallocAligned(alloc, alignment)
-        : ::malloc(alloc);
+        : std::malloc(alloc);
 }
 
 static inline void qMapDeallocate(QMapNodeBase *node, int alignment)
@@ -307,7 +307,7 @@ static inline void qMapDeallocate(QMapNodeBase *node, int alignment)
     if (alignment > qMapAlignmentThreshold())
         qFreeAligned(node);
     else
-        ::free(node);
+        std::free(node);
 }
 
 QMapNodeBase *QMapDataBase::createNode(int alloc, int alignment, QMapNodeBase *parent, bool left)
@@ -315,7 +315,7 @@ QMapNodeBase *QMapDataBase::createNode(int alloc, int alignment, QMapNodeBase *p
     QMapNodeBase *node = static_cast<QMapNodeBase *>(qMapAllocate(alloc, alignment));
     Q_CHECK_PTR(node);
 
-    memset(node, 0, alloc);
+    std::memset(node, 0, alloc);
     ++size;
 
     if (parent) {

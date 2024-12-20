@@ -57,7 +57,7 @@
 
 #include <new>
 #include <limits.h>
-#include <string.h>
+#include <cstring>
 #include <stdlib.h>
 
 QT_BEGIN_HEADER
@@ -379,7 +379,7 @@ Q_INLINE_TEMPLATE void QList<T>::node_construct(Node *n, const T &t)
     else *reinterpret_cast<T*>(n) = t;
 #else
     // This is always safe, but penaltizes unoptimized builds a lot.
-    else ::memcpy(n, static_cast<const void *>(&t), sizeof(T));
+    else std::memcpy(n, static_cast<const void *>(&t), sizeof(T));
 #endif
 }
 
@@ -421,7 +421,7 @@ Q_INLINE_TEMPLATE void QList<T>::node_copy(Node *from, Node *to, Node *src)
         }
     } else {
         if (src != from && to - from > 0)
-            memcpy(from, src, (to - from) * sizeof(Node));
+            std::memcpy(from, src, (to - from) * sizeof(Node));
     }
 }
 
@@ -568,7 +568,7 @@ inline void QList<T>::prepend(const T &t)
             Node *n, copy;
             node_construct(&copy, t); // t might be a reference to an object in the array
             QT_TRY {
-                n = reinterpret_cast<Node *>(p.prepend());;
+                n = reinterpret_cast<Node *>(p.prepend());
             } QT_CATCH(...) {
                 node_destruct(&copy);
                 QT_RETHROW;
@@ -602,7 +602,7 @@ inline void QList<T>::insert(int i, const T &t)
             Node *n, copy;
             node_construct(&copy, t); // t might be a reference to an object in the array
             QT_TRY {
-                n = reinterpret_cast<Node *>(p.insert(i));;
+                n = reinterpret_cast<Node *>(p.insert(i));
             } QT_CATCH(...) {
                 node_destruct(&copy);
                 QT_RETHROW;
@@ -744,18 +744,14 @@ Q_OUTOFLINE_TEMPLATE QList<T>::QList(const QList<T> &l)
     if (!d->ref.ref()) {
         p.detach(d->alloc);
 
-        struct Cleanup
-        {
-            Cleanup(QListData::Data *d) : d_(d) {}
-            ~Cleanup() { if (d_) QListData::dispose(d_); }
-
-            QListData::Data *d_;
-        } tryCatch(d);
-
-        node_copy(reinterpret_cast<Node *>(p.begin()),
-                reinterpret_cast<Node *>(p.end()),
-                reinterpret_cast<Node *>(l.p.begin()));
-        tryCatch.d_ = nullptr;
+        QT_TRY {
+            node_copy(reinterpret_cast<Node *>(p.begin()),
+                    reinterpret_cast<Node *>(p.end()),
+                    reinterpret_cast<Node *>(l.p.begin()));
+        } QT_CATCH(...) {
+            QListData::dispose(d);
+            QT_RETHROW;
+        }
     }
 }
 
@@ -890,7 +886,7 @@ template <typename T>
 Q_OUTOFLINE_TEMPLATE int QList<T>::indexOf(const T &t, int from) const
 {
     if (from < 0)
-        from = qMax(from + p.size(), 0);
+        from = std::max(from + p.size(), 0);
     if (from < p.size()) {
         Node *n = reinterpret_cast<Node *>(p.at(from -1));
         Node *e = reinterpret_cast<Node *>(p.end());
@@ -913,7 +909,7 @@ Q_OUTOFLINE_TEMPLATE int QList<T>::lastIndexOf(const T &t, int from) const
         Node *n = reinterpret_cast<Node *>(p.at(from + 1));
         while (n-- != b) {
             if (n->t() == t)
-                return n - b;
+                return int(n - b);
         }
     }
     return -1;
@@ -922,9 +918,9 @@ Q_OUTOFLINE_TEMPLATE int QList<T>::lastIndexOf(const T &t, int from) const
 template <typename T>
 Q_OUTOFLINE_TEMPLATE bool QList<T>::contains(const T &t) const
 {
-    Node *b = reinterpret_cast<Node *>(p.begin());
-    Node *i = reinterpret_cast<Node *>(p.end());
-    while (i-- != b)
+    Node *e = reinterpret_cast<Node *>(p.end());
+    Node *i = reinterpret_cast<Node *>(p.begin());
+    for (; i != e; ++i)
         if (i->t() == t)
             return true;
     return false;
@@ -934,9 +930,9 @@ template <typename T>
 Q_OUTOFLINE_TEMPLATE int QList<T>::count(const T &t) const
 {
     int c = 0;
-    Node *b = reinterpret_cast<Node *>(p.begin());
-    Node *i = reinterpret_cast<Node *>(p.end());
-    while (i-- != b)
+    Node *e = reinterpret_cast<Node *>(p.end());
+    Node *i = reinterpret_cast<Node *>(p.begin());
+    for (; i != e; ++i)
         if (i->t() == t)
             ++c;
     return c;

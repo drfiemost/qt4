@@ -86,11 +86,11 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
     int l = x->end - x->begin;
     int nl = l + num;
     int alloc = grow(nl);
-    Data* t = static_cast<Data *>(::malloc(DataHeaderSize + alloc * sizeof(void *)));
+    Data* t = static_cast<Data *>(std::malloc(DataHeaderSize + alloc * sizeof(void *)));
     Q_CHECK_PTR(t);
+    t->alloc = alloc;
 
     t->ref.initializeOwned();
-    t->alloc = alloc;
     // The space reservation algorithm's optimization is biased towards appending:
     // Something which looks like an append will put the data at the beginning,
     // while something which looks like a prepend will put it in the middle
@@ -218,7 +218,7 @@ QListData::Data *QListData::detach3()
 void QListData::realloc(int alloc)
 {
     Q_ASSERT(!d->ref.isShared());
-    Data *x = static_cast<Data *>(::realloc(d, DataHeaderSize + alloc * sizeof(void *)));
+    Data *x = static_cast<Data *>(std::realloc(d, DataHeaderSize + alloc * sizeof(void *)));
     Q_CHECK_PTR(x);
 
     d = x;
@@ -243,7 +243,7 @@ void **QListData::append(int n)
         if (b - n >= 2 * d->alloc / 3) {
             // we have enough space. Just not at the end -> move it.
             e -= b;
-            ::memmove(d->array, d->array + b, e * sizeof(void *));
+            std::memmove(d->array, d->array + b, e * sizeof(void *));
             d->begin = 0;
         } else {
             realloc(grow(d->alloc + n));
@@ -283,7 +283,7 @@ void **QListData::prepend()
         else
             d->begin = d->alloc - d->end;
 
-        ::memmove(d->array + d->begin, d->array, d->end * sizeof(void *));
+        std::memmove(d->array + d->begin, d->array, d->end * sizeof(void *));
         d->end += d->begin;
     }
     return d->array + --d->begin;
@@ -319,9 +319,9 @@ void **QListData::insert(int i)
 
     if (leftward) {
         --d->begin;
-        ::memmove(d->array + d->begin, d->array + d->begin + 1, i * sizeof(void *));
+        std::memmove(d->array + d->begin, d->array + d->begin + 1, i * sizeof(void *));
     } else {
-        ::memmove(d->array + d->begin + i + 1, d->array + d->begin + i,
+        std::memmove(d->array + d->begin + i + 1, d->array + d->begin + i,
                   (size - i) * sizeof(void *));
         ++d->end;
     }
@@ -334,11 +334,11 @@ void QListData::remove(int i)
     i += d->begin;
     if (i - d->begin < d->end - i) {
         if (int offset = i - d->begin)
-            ::memmove(d->array + d->begin + 1, d->array + d->begin, offset * sizeof(void *));
+            std::memmove(d->array + d->begin + 1, d->array + d->begin, offset * sizeof(void *));
         d->begin++;
     } else {
         if (int offset = d->end - i - 1)
-            ::memmove(d->array + i, d->array + i + 1, offset * sizeof(void *));
+            std::memmove(d->array + i, d->array + i + 1, offset * sizeof(void *));
         d->end--;
     }
 }
@@ -349,11 +349,11 @@ void QListData::remove(int i, int n)
     i += d->begin;
     int middle = i + n/2;
     if (middle - d->begin < d->end - middle) {
-        ::memmove(d->array + d->begin + n, d->array + d->begin,
+        std::memmove(d->array + d->begin + n, d->array + d->begin,
                    (i - d->begin) * sizeof(void*));
         d->begin += n;
     } else {
-        ::memmove(d->array + i, d->array + i + n,
+        std::memmove(d->array + i, d->array + i + n,
                    (d->end - i - n) * sizeof(void*));
         d->end -= n;
     }
@@ -371,26 +371,26 @@ void QListData::move(int from, int to)
 
     if (from < to) {
         if (d->end == d->alloc || 3 * (to - from) < 2 * (d->end - d->begin)) {
-            ::memmove(d->array + from, d->array + from + 1, (to - from) * sizeof(void *));
+            std::memmove(d->array + from, d->array + from + 1, (to - from) * sizeof(void *));
         } else {
             // optimization
             if (int offset = from - d->begin)
-                ::memmove(d->array + d->begin + 1, d->array + d->begin, offset * sizeof(void *));
+                std::memmove(d->array + d->begin + 1, d->array + d->begin, offset * sizeof(void *));
             if (int offset = d->end - (to + 1))
-                ::memmove(d->array + to + 2, d->array + to + 1, offset * sizeof(void *));
+                std::memmove(d->array + to + 2, d->array + to + 1, offset * sizeof(void *));
             ++d->begin;
             ++d->end;
             ++to;
         }
     } else {
         if (d->begin == 0 || 3 * (from - to) < 2 * (d->end - d->begin)) {
-            ::memmove(d->array + to + 1, d->array + to, (from - to) * sizeof(void *));
+            std::memmove(d->array + to + 1, d->array + to, (from - to) * sizeof(void *));
         } else {
             // optimization
             if (int offset = to - d->begin)
-                ::memmove(d->array + d->begin - 1, d->array + d->begin, offset * sizeof(void *));
+                std::memmove(d->array + d->begin - 1, d->array + d->begin, offset * sizeof(void *));
             if (int offset = d->end - (from + 1))
-                ::memmove(d->array + from, d->array + from + 1, offset * sizeof(void *));
+                std::memmove(d->array + from, d->array + from + 1, offset * sizeof(void *));
             --d->begin;
             --d->end;
             --to;
