@@ -124,13 +124,14 @@ QT_BEGIN_NAMESPACE
 */
 QBitArray::QBitArray(int size, bool value)
 {
-    if (!size) {
+    Q_ASSERT_X(size >= 0, "QBitArray::QBitArray", "Size must be greater than or equal to 0.");
+    if (size <= 0) {
         d.resize(0);
         return;
     }
     d.resize(1 + (size+7)/8);
     uchar* c = reinterpret_cast<uchar*>(d.data());
-    memset(c, value ? 0xff : 0, d.size());
+    std::memset(c, value ? 0xff : 0, d.size());
     *c = d.size()*8 - size;
     if (value && size && size % 8)
         *(c+1+size/8) &= (1 << (size%8)) - 1;
@@ -210,7 +211,7 @@ void QBitArray::resize(int size)
         d.resize(1 + (size+7)/8);
         uchar* c = reinterpret_cast<uchar*>(d.data());
         if (size > (s << 3))
-            memset(c + s, 0, d.size() - s);
+            std::memset(c + s, 0, d.size() - s);
         else if ( size % 8)
             *(c+1+size/8) &= (1 << (size%8)) - 1;
         *c = d.size()*8 - size;
@@ -271,7 +272,7 @@ void QBitArray::fill(bool value, int begin, int end)
         return;
     int s = len & ~0x7;
     uchar *c = reinterpret_cast<uchar*>(d.data());
-    memset(c + (begin >> 3) + 1, value ? 0xff : 0, s >> 3);
+    std::memset(c + (begin >> 3) + 1, value ? 0xff : 0, s >> 3);
     begin += s;
     while (begin < end)
         setBit(begin++, value);

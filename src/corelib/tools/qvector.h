@@ -255,7 +255,7 @@ void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
         while (srcFrom != srcTo)
             new (dstFrom++) T(*srcFrom++);
     } else {
-        ::memcpy(static_cast<void *>(dstFrom), static_cast<const void *>(srcFrom), (srcTo - srcFrom) * sizeof(T));
+        std::memcpy(static_cast<void *>(dstFrom), static_cast<const void *>(srcFrom), (srcTo - srcFrom) * sizeof(T));
     }
 }
 
@@ -277,9 +277,11 @@ inline QVector<T>::QVector(const QVector<T> &v)
     } else {
         if (v.d->capacityReserved) {
             d = Data::allocate(v.d->alloc);
+            Q_CHECK_PTR(d);
             d->capacityReserved = true;
         } else {
             d = Data::allocate(v.d->size);
+            Q_CHECK_PTR(d);
         }
         if (d->alloc) {
             copyConstruct(v.d->begin(), v.d->end(), d->begin());
@@ -381,8 +383,10 @@ QVector<T> &QVector<T>::operator=(const QVector<T> &v)
 template <typename T>
 QVector<T>::QVector(int asize)
 {
-    if (Q_LIKELY(asize)) {
+    Q_ASSERT_X(asize >= 0, "QVector::QVector", "Size must be greater than or equal to 0.");
+    if (Q_LIKELY(asize > 0)) {
         d = Data::allocate(asize);
+        Q_CHECK_PTR(d);
         d->size = asize;
         defaultConstruct(d->begin(), d->end());
     } else {
@@ -393,8 +397,10 @@ QVector<T>::QVector(int asize)
 template <typename T>
 QVector<T>::QVector(int asize, const T &t)
 {
-    if (asize) {
+    Q_ASSERT_X(asize >= 0, "QVector::QVector", "Size must be greater than or equal to 0.");
+    if (asize > 0) {
         d = Data::allocate(asize);
+        Q_CHECK_PTR(d);
         d->size = asize;
         T* i = d->end();
         while (i != d->begin())
@@ -410,6 +416,7 @@ QVector<T>::QVector(std::initializer_list<T> args)
 {
     if (args.size() > 0) {
         d = Data::allocate(args.size());
+        Q_CHECK_PTR(d);
         // std::initializer_list<T>::iterator is guaranteed to be
         // const T* ([support.initlist]/1), so can be memcpy'ed away from by copyConstruct
         copyConstruct(args.begin(), args.end(), d->begin());
@@ -432,6 +439,7 @@ void QVector<T>::reallocData(const int asize, const int aalloc, QArrayData::Allo
 {
     Q_ASSERT(asize >= 0 && asize <= aalloc);
     Data *x = d;
+
     const bool isShared = d->ref.isShared();
 
     if (aalloc != 0) {
@@ -455,7 +463,7 @@ void QVector<T>::reallocData(const int asize, const int aalloc, QArrayData::Allo
                         new (dst++) T(*srcBegin++);
                     }
                 } else {
-                    ::memcpy(static_cast<void *>(dst), static_cast<void *>(srcBegin), (srcEnd - srcBegin) * sizeof(T));
+                    std::memcpy(static_cast<void *>(dst), static_cast<void *>(srcBegin), (srcEnd - srcBegin) * sizeof(T));
                     dst += srcEnd - srcBegin;
 
                     // destruct unused / not moved data
@@ -480,7 +488,7 @@ void QVector<T>::reallocData(const int asize, const int aalloc, QArrayData::Allo
             }
             x->capacityReserved = d->capacityReserved;
         } else {
-            Q_ASSERT(d->alloc == aalloc); // resize, without changing allocation size
+            Q_ASSERT(int(d->alloc) == aalloc); // resize, without changing allocation size
             Q_ASSERT(isDetached());       // can be done only on detached d
             Q_ASSERT(x == d);             // in this case we do not need to allocate anything
             if (asize <= d->size) {
@@ -592,7 +600,7 @@ typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, c
         } else {
             T *b = d->begin() + offset;
             T *i = b + n;
-            memmove(static_cast<void *>(i), static_cast<const void *>(b), (d->size - offset) * sizeof(T));
+            std::memmove(static_cast<void *>(i), static_cast<const void *>(b), (d->size - offset) * sizeof(T));
             while (i != b)
                 new (--i) T(copy);
         }
@@ -639,10 +647,10 @@ typename QVector<T>::iterator QVector<T>::erase(iterator abegin, iterator aend)
             // QTBUG-53605: static_cast<void *> masks clang errors of the form
             // error: destination for this 'memmove' call is a pointer to class containing a dynamic class
             // FIXME maybe use std::is_polymorphic (as soon as allowed) to avoid the memmove
-            memmove(static_cast<void *>(abegin), static_cast<void *>(aend),
+            std::memmove(static_cast<void *>(abegin), static_cast<void *>(aend),
                     (d->size - itemsToErase - itemsUntouched) * sizeof(T));
         }
-        d->size -= itemsToErase;
+        d->size -= int(itemsToErase);
     }
     return d->begin() + itemsUntouched;
 }
@@ -738,12 +746,9 @@ int QVector<T>::lastIndexOf(const T &t, int from) const
 template <typename T>
 bool QVector<T>::contains(const T &t) const
 {
-    T* b = d->begin();
-    T* i = d->end();
-    while (i != b)
-        if (*--i == t)
-            return true;
-    return false;
+    const T *b = d->begin();
+    const T *e = d->end();
+    return std::find(b, e, t) != e;
 }
 
 template <typename T>
