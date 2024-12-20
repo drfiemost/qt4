@@ -1462,13 +1462,13 @@ void QString::reallocData(uint alloc, bool grow)
         Data *x = Data::allocate(alloc, allocOptions);
         Q_CHECK_PTR(x);
         x->size = std::min(int(alloc) - 1, d->size);
-        ::memcpy(x->data(), d->data(), x->size * sizeof(QChar));
+        std::memcpy(x->data(), d->data(), x->size * sizeof(QChar));
         x->data()[x->size] = 0;
         if (!d->ref.deref())
             Data::deallocate(d);
         d = x;
     } else {
-        Data *p = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc * sizeof(QChar)));
+        Data *p = static_cast<Data *>(std::realloc(d, sizeof(Data) + alloc * sizeof(QChar)));
         Q_CHECK_PTR(p);
         d = p;
         d->alloc = alloc;

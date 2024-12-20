@@ -63,7 +63,7 @@
 
 QT_BEGIN_NAMESPACE
 
-// Latin 1 case system:
+// Latin 1 case system, used by QByteArray::to{Upper,Lower}() and qstr(n)icmp():
 /*
 #!/usr/bin/perl -l
 use feature "unicode_strings";
@@ -333,7 +333,7 @@ int qstricmp(const char *str1, const char *str2)
     uchar c;
     if (!s1 || !s2)
         return s1 ? 1 : (s2 ? -1 : 0);
-    for (; !(res = (c = QChar::toLower((ushort)*s1)) - QChar::toLower((ushort)*s2)); s1++, s2++)
+    for (; !(res = (c = latin1_lowercased[*s1]) - latin1_lowercased[*s2]); s1++, s2++)
         if (!c)                                // strings are equal
             break;
     return res;
@@ -368,7 +368,7 @@ int qstrnicmp(const char *str1, const char *str2, uint len)
     if (!s1 || !s2)
         return s1 ? 1 : (s2 ? -1 : 0);
     for (; len--; s1++, s2++) {
-        if ((res = (c = QChar::toLower((ushort)*s1)) - QChar::toLower((ushort)*s2)))
+        if ((res = (c = latin1_lowercased[*s1]) - latin1_lowercased[*s2]))
             return res;
         if (!c)                                // strings are equal
             break;
@@ -410,7 +410,7 @@ int qstrcmp(const QByteArray &str1, const QByteArray &str2)
 {
     int l1 = str1.length();
     int l2 = str2.length();
-    int ret = std::memcmp(str1, str2, std::min(l1, l2));
+    int ret = std::memcmp(str1.constData(), str2.constData(), std::min(l1, l2));
     if (ret != 0)
         return ret;
 
@@ -1362,11 +1362,11 @@ QByteArray::QByteArray(const char *str)
     } else if (!*str) {
         d = Data::allocate(0);
     } else {
-        int len = qstrlen(str);
-        d = Data::allocate(uint(len) + 1u);
+        int size = qstrlen(str);
+        d = Data::allocate(uint(size) + 1u);
         Q_CHECK_PTR(d);
-        d->size = len;
-        std::memcpy(d->data(), str, len+1); // include null terminator
+        d->size = size;
+        std::memcpy(d->data(), str, size+1); // include null terminator
     }
 }
 
@@ -1519,7 +1519,7 @@ void QByteArray::reallocData(uint alloc, Data::AllocationOptions options)
                 qBadAlloc();
             alloc = qAllocMore(alloc, sizeof(Data));
         }
-        Data *x = static_cast<Data *>(::realloc(d, sizeof(Data) + alloc));
+        Data *x = static_cast<Data *>(std::realloc(d, sizeof(Data) + alloc));
         Q_CHECK_PTR(x);
         x->alloc = alloc;
         x->capacityReserved = (options & Data::CapacityReserved) ? 1 : 0;
@@ -1867,7 +1867,7 @@ QByteArray &QByteArray::remove(int pos, int len)
     if (len <= 0  || pos >= d->size || pos < 0)
         return *this;
     detach();
-    if (pos + len >= d->size) {
+    if (len >= d->size - pos) {
         resize(pos);
     } else {
         std::memmove(d->data() + pos, d->data() + pos + len, d->size - pos - len);
@@ -1956,7 +1956,7 @@ QByteArray &QByteArray::replace(const QByteArray &before, const QByteArray &afte
     QByteArray aft = after;
     if (after.d == d)
         aft.detach();
-    
+
     return replace(before.constData(), before.size(), aft.constData(), aft.size());
 }
 
@@ -1973,7 +1973,7 @@ QByteArray &QByteArray::replace(const char *c, const QByteArray &after)
     QByteArray aft = after;
     if (after.d == d)
         aft.detach();
-    
+
     return replace(c, qstrlen(c), aft.constData(), aft.size());
 }
 
@@ -2006,7 +2006,7 @@ QByteArray &QByteArray::replace(const char *before, int bsize, const char *after
         std::memcpy(copy, before, bsize);
         b = copy;
     }
-    
+
     QByteArrayMatcher matcher(before, bsize);
     int index = 0;
     int len = d->size;
@@ -2096,8 +2096,7 @@ QByteArray &QByteArray::replace(const char *before, int bsize, const char *after
         ::free((char *)a);
     if (b != before)
         ::free((char *)b);
-    
-    
+
     return *this;
 }
 
@@ -2330,7 +2329,7 @@ int QByteArray::indexOf(const char *c, int from) const
     const int ol = qstrlen(c);
     if (ol == 1)
         return indexOf(*c, from);
-    
+
     const int l = d->size;
     if (from > d->size || ol + from > l)
         return -1;
@@ -3964,7 +3963,6 @@ QByteArray QByteArray::fromRawData(const char *data, int size)
     } else {
         x = Data::fromRawData(data, size);
         Q_CHECK_PTR(x);
-        x->ref.initializeOwned();
     }
     QByteArrayDataPtr dataPtr = { x };
     return QByteArray(dataPtr);
@@ -3995,7 +3993,6 @@ QByteArray &QByteArray::setRawData(const char *data, uint size)
         } else {
             d->offset = sizeof(QByteArrayData);
             d->size = 0;
-            *d->data() = 0;
         }
     }
     return *this;
