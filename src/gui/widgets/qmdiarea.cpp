@@ -948,14 +948,6 @@ void QMdiAreaPrivate::rearrange(Rearranger *rearranger)
         }
     }
 
-    if (active && rearranger->type() == Rearranger::RegularTiler) {
-        // Move active window in front if necessary. That's the case if we
-        // have any windows with staysOnTopHint set.
-        int indexToActive = widgets.indexOf((QWidget *)active);
-        if (indexToActive > 0)
-            widgets.move(indexToActive, 0);
-    }
-
     QRect domain = viewport->rect();
     if (rearranger->type() == Rearranger::RegularTiler && !widgets.isEmpty())
         domain = resizeToMinimumTileSize(minSubWindowSize, widgets.count());
@@ -1969,9 +1961,11 @@ QMdiSubWindow *QMdiArea::addSubWindow(QWidget *widget, Qt::WindowFlags windowFla
         Q_ASSERT(child->testAttribute(Qt::WA_DeleteOnClose));
     }
 
+    d->appendChild(child);
+
     if (childFocus)
         childFocus->setFocus();
-    d->appendChild(child);
+
     return child;
 }
 
@@ -2620,7 +2614,11 @@ bool QMdiArea::eventFilter(QObject *object, QEvent *event)
 #endif // QT_NO_TABBAR
         // fall through
     case QEvent::Hide:
-        d->isSubWindowsTiled = false;
+        // Do not reset the isSubWindowsTiled flag if the event is a spontaneous system window event.
+        // This ensures that tiling will be performed during the resizeEvent after an application
+        // window minimize (hide) and then restore (show).
+        if (!event->spontaneous())
+            d->isSubWindowsTiled = false;
         break;
 #ifndef QT_NO_RUBBERBAND
     case QEvent::Close:
