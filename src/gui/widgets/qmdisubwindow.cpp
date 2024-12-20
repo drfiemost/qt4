@@ -2179,7 +2179,7 @@ void QMdiSubWindowPrivate::setSizeGrip(QSizeGrip *newSizeGrip)
     if (layout && layout->indexOf(newSizeGrip) != -1)
         return;
     newSizeGrip->setFixedSize(newSizeGrip->sizeHint());
-    bool putSizeGripInLayout = layout ? true : false;
+    bool putSizeGripInLayout = layout;
 #if defined(Q_WS_MAC) && !defined(QT_NO_STYLE_MAC)
     if (qobject_cast<QMacStyle *>(q->style()))
         putSizeGripInLayout = false;
@@ -2655,7 +2655,7 @@ void QMdiSubWindow::showShaded()
     resize(d->internalMinimumSize);
 
     // Hide the internal widget if not already hidden by the user.
-    if (d->baseWidget && !d->baseWidget->isHidden()) {
+    if (d->baseWidget && !d->baseWidget->isHidden() && !(windowFlags() & Qt::FramelessWindowHint)) {
         d->baseWidget->hide();
         d->isWidgetHiddenByUs = true;
     }

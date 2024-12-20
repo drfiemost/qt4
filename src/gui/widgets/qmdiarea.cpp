@@ -360,7 +360,8 @@ void SimpleCascader::rearrange(QList<QWidget *> &widgets, const QRect &domain) c
         titleBarHeight -= 4;
 #endif
     const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QWorkspaceTitleBar"));
-    const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
+    const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1)
+        + widgets.at(0)->style()->pixelMetric(QStyle::PM_FocusFrameVMargin, 0, widgets.at(0));
 
     const int n = widgets.size();
     const int nrows = std::max((domain.height() - (topOffset + bottomOffset)) / dy, 1);
@@ -392,7 +393,7 @@ void IconTiler::rearrange(QList<QWidget *> &widgets, const QRect &domain) const
         return;
 
     const int n = widgets.size();
-    const int width = widgets.at(0)->width();
+    const int width = std::max(widgets.at(0)->width(), 1);
     const int height = widgets.at(0)->height();
     const int ncols = std::max(domain.width() / width, 1);
     const int nrows = n / ncols + ((n % ncols) ? 1 : 0);
@@ -935,7 +936,7 @@ void QMdiAreaPrivate::rearrange(Rearranger *rearranger)
         if (!sanityCheck(child, "QMdiArea::rearrange") || !child->isVisible())
             continue;
         if (rearranger->type() == Rearranger::IconTiler) {
-            if (child->isMinimized() && !child->isShaded() && !(child->windowFlags() & Qt::FramelessWindowHint))
+            if (child->isMinimized() && !child->isShaded())
                 widgets.append(child);
         } else {
             if (child->isMinimized() && !child->isShaded())
@@ -2590,6 +2591,9 @@ bool QMdiArea::eventFilter(QObject *object, QEvent *event)
         }
         return QAbstractScrollArea::eventFilter(object, event);
     }
+
+    if (subWindow->mdiArea() != this)
+        return QAbstractScrollArea::eventFilter(object, event);
 
     if (subWindow->mdiArea() != this)
         return QAbstractScrollArea::eventFilter(object, event);

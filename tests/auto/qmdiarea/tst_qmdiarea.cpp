@@ -151,6 +151,22 @@ static inline QTabBar::Shape tabBarShapeFrom(QTabWidget::TabShape shape, QTabWid
     return QTabBar::RoundedNorth;
 }
 
+static int cascadedDeltaY(const QMdiArea *area)
+{
+    // Calculate the delta (dx, dy) between two cascaded subwindows.
+    const QWidget *subWindow = area->subWindowList().first();
+    const QStyle *style = subWindow->style();
+    QStyleOptionTitleBar options;
+    options.initFrom(subWindow);
+    int titleBarHeight = style->pixelMetric(QStyle::PM_TitleBarHeight, &options);
+    // ### Remove this after the QMacStyle has been fixed
+    if (style->inherits("QMacStyle"))
+        titleBarHeight -= 4;
+    const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QMdiSubWindowTitleBar"));
+    return qMax(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1)
+        + style->pixelMetric(QStyle::PM_FocusFrameVMargin);
+}
+
 enum Arrangement {
     Tiled,
     Cascaded
@@ -162,7 +178,6 @@ static bool verifyArrangement(QMdiArea *mdiArea, Arrangement arrangement, const 
         return false;
 
     const QList<QMdiSubWindow *> subWindows = mdiArea->subWindowList();
-    const QMdiSubWindow *const firstSubWindow = subWindows.at(0);
 
     switch (arrangement) {
     case Tiled:
@@ -194,17 +209,7 @@ static bool verifyArrangement(QMdiArea *mdiArea, Arrangement arrangement, const 
     }
     case Cascaded:
     {
-        // Calculate the delta (dx, dy) between two cascaded subwindows.
-        QStyleOptionTitleBar options;
-        options.initFrom(firstSubWindow);
-        int titleBarHeight = firstSubWindow->style()->pixelMetric(QStyle::PM_TitleBarHeight, &options);
-#ifdef Q_WS_MAC
-        // ### Remove this after the mac style has been fixed
-        if (qobject_cast<QMacStyle *>(firstSubWindow->style()))
-            titleBarHeight -= 4;
-#endif
-        const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QWorkspaceTitleBar"));
-        const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
+        const int dy = cascadedDeltaY(mdiArea);
         const int dx = 10;
 
         // Current activation/stacking order.
@@ -1827,14 +1832,7 @@ void tst_QMdiArea::cascadeAndTileSubWindows()
     qApp->processEvents();
 
     // Check dy between two cascaded windows
-    QStyleOptionTitleBar options;
-    options.initFrom(windows.at(1));
-    int titleBarHeight = windows.at(1)->style()->pixelMetric(QStyle::PM_TitleBarHeight, &options);
-    // ### Remove this after the mac style has been fixed
-    if (windows.at(1)->style()->inherits("QMacStyle"))
-        titleBarHeight -= 4;
-    const QFontMetrics fontMetrics = QFontMetrics(QApplication::font("QWorkspaceTitleBar"));
-    const int dy = std::max(titleBarHeight - (titleBarHeight - fontMetrics.height()) / 2, 1);
+    const int dy = cascadedDeltaY(&workspace);
     QCOMPARE(windows.at(2)->geometry().top() - windows.at(1)->geometry().top(), dy);
 
     for (int i = 0; i < windows.count(); ++i) {
