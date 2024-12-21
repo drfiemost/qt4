@@ -52,8 +52,6 @@
 #ifndef CONFIG_FROMUIC3_H
 #define CONFIG_FROMUIC3_H
 
-#include <Qt3Support/Q3ButtonGroup>
-#include <Qt3Support/Q3GroupBox>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -71,6 +69,8 @@
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QVBoxLayout>
+#include <q3buttongroup.h>
+#include <q3groupbox.h>
 #include "gammaview.h"
 
 QT_BEGIN_NAMESPACE

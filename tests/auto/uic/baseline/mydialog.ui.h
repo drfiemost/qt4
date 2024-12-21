@@ -9,7 +9,6 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include <Qt3Support/Q3MimeSourceFactory>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -19,6 +18,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
+#include <q3mimesourcefactory.h>
 
 QT_BEGIN_NAMESPACE
 

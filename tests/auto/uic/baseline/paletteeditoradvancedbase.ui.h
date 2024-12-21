@@ -52,8 +52,6 @@
 #ifndef PALETTEEDITORADVANCEDBASE_H
 #define PALETTEEDITORADVANCEDBASE_H
 
-#include <Qt3Support/Q3ButtonGroup>
-#include <Qt3Support/Q3GroupBox>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -67,6 +65,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QVBoxLayout>
+#include <q3buttongroup.h>
+#include <q3groupbox.h>
 #include "colorbutton.h"
 
 QT_BEGIN_NAMESPACE

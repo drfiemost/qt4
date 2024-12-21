@@ -52,9 +52,6 @@
 #ifndef MAINWINDOWBASE_H
 #define MAINWINDOWBASE_H
 
-#include <Qt3Support/Q3Frame>
-#include <Qt3Support/Q3ListBox>
-#include <Qt3Support/Q3MainWindow>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -77,8 +74,11 @@
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "Qt3Support/Q3Frame"
 #include "colorbutton.h"
 #include "previewframe.h"
+#include "q3listbox.h"
+#include "q3mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 

@@ -52,8 +52,6 @@
 #ifndef PREVIEWWIDGETBASE_H
 #define PREVIEWWIDGETBASE_H
 
-#include <Qt3Support/Q3ButtonGroup>
-#include <Qt3Support/Q3MimeSourceFactory>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -73,6 +71,8 @@
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include <q3buttongroup.h>
+#include <q3mimesourcefactory.h>
 
 QT_BEGIN_NAMESPACE
 
