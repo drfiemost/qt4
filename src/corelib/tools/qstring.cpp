@@ -291,9 +291,9 @@ static int ucstricmp(const ushort *a, const ushort *ae, const ushort *b, const u
     if (a == b)
         return (ae - be);
     if (a == nullptr)
-        return 1;
+        return be - b;
     if (b == nullptr)
-        return -1;
+        return a - ae;
 
     const ushort *e = ae;
     if (be - b < ae - a)
@@ -322,13 +322,10 @@ static int ucstricmp(const ushort *a, const ushort *ae, const ushort *b, const u
 // Case-insensitive comparison between a Unicode string and a QLatin1String
 static int ucstricmp(const ushort *a, const ushort *ae, const uchar *b, const uchar *be)
 {
-    if (a == nullptr) {
-        if (b == nullptr)
-            return 0;
-        return 1;
-    }
-    if (b == nullptr)
-        return -1;
+    if (!a)
+        return be - b;
+    if (!b)
+        return a - ae;
 
     const ushort *e = ae;
     if (be - b < ae - a)
@@ -3740,6 +3737,8 @@ bool QString::endsWith(QChar c, Qt::CaseSensitivity cs) const
 */
 QByteArray QString::toLatin1() const
 {
+    if (isNull())
+        return QByteArray();
     return toLatin1_helper(unicode(), length());
 }
 
@@ -3762,8 +3761,9 @@ QByteArray QString::toAscii() const
 static QByteArray toLocal8Bit_helper(const QChar *data, int length)
 {
 #ifndef QT_NO_TEXTCODEC
-    if (QTextCodec::codecForLocale())
-        return QTextCodec::codecForLocale()->fromUnicode(data, length);
+    QTextCodec *localeCodec = QTextCodec::codecForLocale();
+    if (localeCodec)
+        return localeCodec->fromUnicode(data, length);
 #endif // QT_NO_TEXTCODEC
     return toLatin1_helper(data, length);
 }
@@ -3787,8 +3787,11 @@ static QByteArray toLocal8Bit_helper(const QChar *data, int length)
 QByteArray QString::toLocal8Bit() const
 {
 #ifndef QT_NO_TEXTCODEC
-    if (QTextCodec::codecForLocale())
-        return QTextCodec::codecForLocale()->fromUnicode(*this);
+    if (!isNull()) {
+        QTextCodec *localeCodec = QTextCodec::codecForLocale();
+        if (localeCodec)
+            return localeCodec->fromUnicode(*this);
+    }
 #endif // QT_NO_TEXTCODEC
     return toLatin1();
 }
@@ -7266,6 +7269,19 @@ QString &QString::setRawData(const QChar *unicode, int size)
     Returns the size of the Latin-1 string stored in this object.
 */
 
+/*! \fn bool QLatin1String::isNull() const
+    Returns whether the Latin-1 string stored in this object is null
+    (\c{data() == nullptr}) or not.
+    \sa isEmpty(), data()
+*/
+
+/*! \fn bool QLatin1String::isEmpty() const
+    Returns whether the Latin-1 string stored in this object is empty
+    (\c{size() == 0}) or not.
+    \sa isNull(), size()
+*/
+
+
 /*! \fn bool QLatin1String::operator==(const QString &other) const
 
     Returns true if this string is equal to string \a other;
@@ -9003,6 +9019,8 @@ static inline bool qt_ends_with(const QChar *haystack, int haystackLen,
 */
 QByteArray QStringRef::toLatin1() const
 {
+    if (isNull())
+        return QByteArray();
     return toLatin1_helper(unicode(), length());
 }
 
@@ -9043,8 +9061,11 @@ QByteArray QStringRef::toAscii() const
 QByteArray QStringRef::toLocal8Bit() const
 {
 #ifndef QT_NO_TEXTCODEC
-    if (QTextCodec::codecForLocale())
-        return QTextCodec::codecForLocale()->fromUnicode(unicode(), length());
+    if (!isNull()) {
+        QTextCodec *localeCodec = QTextCodec::codecForLocale();
+        if (localeCodec)
+            return localeCodec->fromUnicode(unicode(), length());
+    }
 #endif // QT_NO_TEXTCODEC
     return toLatin1();
 }

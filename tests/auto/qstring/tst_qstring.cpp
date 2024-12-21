@@ -3507,11 +3507,7 @@ void tst_QString::local8Bit_data()
     QTest::addColumn<QString>("local8Bit");
     QTest::addColumn<QByteArray>("result");
 
-/*
-    QString::local8Bit() called on a null QString returns an _empty_
-    QByteArray. This is the correct behavior since Qt 3.1.
-*/
-    QTest::newRow("nullString") << QString() << QByteArray("");
+    QTest::newRow("nullString") << QString() << QByteArray();
     QTest::newRow("emptyString") << QString("") << QByteArray("");
     QTest::newRow("string") << QString("test") << QByteArray("test");
 

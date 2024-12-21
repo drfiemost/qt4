@@ -78,8 +78,11 @@ public:
     constexpr inline explicit QLatin1String(const char *s, int sz) : m_size(sz), m_data(s) {}
 
     inline const char *latin1() const { return m_data; }
-    inline int size() const { return m_size; }
-    inline const char *data() const { return m_data; }
+    constexpr inline int size() const { return m_size; }
+    constexpr inline const char *data() const { return m_data; }
+
+    constexpr bool isNull() const noexcept { return !data(); }
+    constexpr bool isEmpty() const noexcept { return !size(); }
 
     [[nodiscard]] constexpr QLatin1Char at(int i) const { return QLatin1Char(m_data[i]); }
     [[nodiscard]] constexpr QLatin1Char operator[](int i) const { return at(i); }
