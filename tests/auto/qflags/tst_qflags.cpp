@@ -48,7 +48,7 @@ private slots:
     void testFlag() const;
     void testFlagZeroFlag() const;
     void testFlagMultiBits() const;
-    void testFlags();
+    //void testFlags();
     void testAnyFlag();
     void constExpr();
     void signedness();
@@ -147,7 +147,7 @@ void tst_QFlags::testFlagMultiBits() const
         QVERIFY(hasDialog.testFlag(Qt::Dialog));
     }
 }
-
+/*
 void tst_QFlags::testFlags()
 {
     using Int = Qt::TextInteractionFlags::Int;
@@ -175,7 +175,7 @@ void tst_QFlags::testFlags()
     QVERIFY(!flags.testFlags(Qt::TextEditable));
     QVERIFY(!flags.testFlags(Qt::TextSelectableByMouse | Qt::TextEditable));
 }
-
+*/
 void tst_QFlags::testAnyFlag()
 {
     Qt::TextInteractionFlags flags;

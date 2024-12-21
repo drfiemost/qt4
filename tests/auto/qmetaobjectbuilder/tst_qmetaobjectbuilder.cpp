@@ -739,7 +739,7 @@ void tst_QMetaObjectBuilder::variantProperty()
     QCOMPARE(QMetaType::Type(prop.userType()), QMetaType::QVariant);
     QCOMPARE(QByteArray(prop.typeName()), QByteArray("QVariant"));
 
-    qFree(meta);
+    std::free(meta);
 }
 
 void tst_QMetaObjectBuilder::notifySignal()
@@ -972,17 +972,17 @@ void tst_QMetaObjectBuilder::copyMetaObject()
     QMetaObjectBuilder builder(&QObject::staticMetaObject);
     QMetaObject *meta = builder.toMetaObject();
     QVERIFY(sameMetaObject(meta, &QObject::staticMetaObject));
-    qFree(meta);
+    std::free(meta);
 
     QMetaObjectBuilder builder2(&staticMetaObject);
     meta = builder2.toMetaObject();
     QVERIFY(sameMetaObject(meta, &staticMetaObject));
-    qFree(meta);
+    std::free(meta);
 
     QMetaObjectBuilder builder3(&SomethingOfEverything::staticMetaObject);
     meta = builder3.toMetaObject();
     QVERIFY(sameMetaObject(meta, &SomethingOfEverything::staticMetaObject));
-    qFree(meta);
+    std::free(meta);
 }
 
 // Serialize and deserialize a meta object and check that
@@ -1007,8 +1007,8 @@ void tst_QMetaObjectBuilder::serialize()
     QMetaObject *meta2 = builder2.toMetaObject();
 
     QVERIFY(sameMetaObject(meta, meta2));
-    qFree(meta);
-    qFree(meta2);
+    std::free(meta);
+    std::free(meta2);
     }
 
     // Partial QMetaObjectBuilder
@@ -1368,7 +1368,7 @@ TestObject::TestObject(QObject *parent)
 
 TestObject::~TestObject()
 {
-    qFree(m_metaObject);
+    std::free(m_metaObject);
 }
 
 QMetaObject *TestObject::buildMetaObject()
