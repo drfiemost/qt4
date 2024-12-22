@@ -121,7 +121,7 @@ public:
     // avoid to use this, it might malloc and memcpy.
     inline QByteArray read(qint64 amount)
     {
-        amount = qMin(byteAmount(), amount);
+        amount = std::min(byteAmount(), amount);
         QByteArray byteData;
         byteData.resize(amount);
         read(byteData.data(), byteData.size());
@@ -132,7 +132,7 @@ public:
     // avoid to use this, it will memcpy.
     qint64 read(char* dst, qint64 amount)
     {
-        amount = qMin(amount, byteAmount());
+        amount = std::min(amount, byteAmount());
         qint64 originalAmount = amount;
         char *writeDst = dst;
 
@@ -142,18 +142,18 @@ public:
                 // take it completely
                 bufferCompleteSize -= first.size();
                 amount -= first.size();
-                memcpy(writeDst, first.constData(), first.size());
+                std::memcpy(writeDst, first.constData(), first.size());
                 writeDst += first.size();
                 first.clear();
             } else {
                 // take a part of it & it is the last one to take
                 bufferCompleteSize -= amount;
-                memcpy(writeDst, first.constData(), amount);
+                std::memcpy(writeDst, first.constData(), amount);
 
                 qint64 newFirstSize = first.size() - amount;
                 QByteArray newFirstData;
                 newFirstData.resize(newFirstSize);
-                memcpy(newFirstData.data(), first.constData() + amount, newFirstSize);
+                std::memcpy(newFirstData.data(), first.constData() + amount, newFirstSize);
                 buffers.prepend(newFirstData);
 
                 amount = 0;
