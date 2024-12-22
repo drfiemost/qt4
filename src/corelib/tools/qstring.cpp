@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2013 Intel Corporation
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -156,29 +157,13 @@ static inline __m128i mergeQuestionMarks(__m128i chunk)
 {
     const __m128i questionMark = _mm_set1_epi16('?');
 
-# ifdef __SSE4_2__
-    // compare the unsigned shorts for the range 0x0100-0xFFFF
-    // note on the use of _mm_cmpestrm:
-    //  The MSDN documentation online (http://technet.microsoft.com/en-us/library/bb514080.aspx)
-    //  says for range search the following:
-    //    For each character c in a, determine whether b0 <= c <= b1 or b2 <= c <= b3
-    //
-    //  However, all examples on the Internet, including from Intel
-    //  (see http://software.intel.com/en-us/articles/xml-parsing-accelerator-with-intel-streaming-simd-extensions-4-intel-sse4/)
-    //  put the range to be searched first
-    //
-    //  Disassembly and instruction-level debugging with GCC and ICC show
-    //  that they are doing the right thing. Inverting the arguments in the
-    //  instruction does cause a bunch of test failures.
-
-    const int mode = _SIDD_UWORD_OPS | _SIDD_CMP_RANGES | _SIDD_UNIT_MASK;
-    const __m128i rangeMatch = _mm_cvtsi32_si128(0xffff0100);
-    const __m128i offLimitMask = _mm_cmpestrm(rangeMatch, 2, chunk, 8, mode);
-
-    // replace the non-Latin 1 characters in the chunk with question marks
+#  ifdef __SSE4_1__
+    const __m128i outOfRange = _mm_set1_epi16(0x100);
+    // We use an unsigned uc = qMin(uc, 0x100) and then compare for equality.
+    chunk = _mm_min_epu16(chunk, outOfRange);
+    const __m128i offLimitMask = _mm_cmpeq_epi16(chunk, outOfRange);
     chunk = _mm_blendv_epi8(chunk, questionMark, offLimitMask);
-# else
-    // SSE has no compare instruction for unsigned comparison.
+#  else
     // The variables must be shiffted + 0x8000 to be compared
     const __m128i signedBitOffset = _mm_set1_epi16(short(0x8000));
     const __m128i thresholdMask = _mm_set1_epi16(short(0xff + 0x8000));
@@ -186,10 +171,6 @@ static inline __m128i mergeQuestionMarks(__m128i chunk)
     const __m128i signedChunk = _mm_add_epi16(chunk, signedBitOffset);
     const __m128i offLimitMask = _mm_cmpgt_epi16(signedChunk, thresholdMask);
 
-#  ifdef __SSE4_1__
-    // replace the non-Latin 1 characters in the chunk with question marks
-    chunk = _mm_blendv_epi8(chunk, questionMark, offLimitMask);
-#  else
     // offLimitQuestionMark contains '?' for each 16 bits that was off-limit
     // the 16 bits that were correct contains zeros
     const __m128i offLimitQuestionMark = _mm_and_si128(offLimitMask, questionMark);
@@ -201,7 +182,6 @@ static inline __m128i mergeQuestionMarks(__m128i chunk)
     // merge offLimitQuestionMark and correctBytes to have the result
     chunk = _mm_or_si128(correctBytes, offLimitQuestionMark);
 #  endif
-# endif
     return chunk;
 }
 #endif
@@ -3817,7 +3797,7 @@ QByteArray QString::toUtf8() const
     if (isNull())
         return QByteArray();
 
-    return QUtf8::convertFromUnicode(constData(), length(), nullptr);
+    return QUtf8::convertFromUnicode(constData(), length());
 }
 
 /*!
@@ -9093,7 +9073,7 @@ QByteArray QStringRef::toUtf8() const
     if (isNull())
         return QByteArray();
 
-    return QUtf8::convertFromUnicode(constData(), length(), nullptr);
+    return QUtf8::convertFromUnicode(constData(), length());
 }
 
 /*!
