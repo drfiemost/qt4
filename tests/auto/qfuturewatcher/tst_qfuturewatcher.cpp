@@ -47,7 +47,6 @@
 #include <qfuturewatcher.h>
 #include <qtconcurrentrun.h>
 #include <qtconcurrentmap.h>
-#include "../../shared/util.h"
 
 #ifndef QT_NO_CONCURRENT_TEST
 #include <private/qfutureinterface_p.h>

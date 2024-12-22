@@ -59,7 +59,6 @@
 # define SRCDIR ""
 #endif
 
-#include "../../shared/util.h"
 
 class Widget : public QWidget
 {

@@ -53,7 +53,6 @@
 #include <QDesktopWidget>
 #include <QApplication>
 
-#include "../../shared/util.h"
 
 
 //TESTED_CLASS=

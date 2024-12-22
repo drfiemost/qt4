@@ -43,7 +43,6 @@
 #include <QtDeclarative/qdeclarativecomponent.h>
 #include <private/qdeclarativeconnections_p.h>
 #include <private/qdeclarativeitem_p.h>
-#include "../../../shared/util.h"
 #include <QtDeclarative/qdeclarativescriptstring.h>
 
 #ifdef Q_OS_SYMBIAN

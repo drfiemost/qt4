@@ -47,7 +47,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
-#include "../../../shared/util.h"
 #include "../shared/debugutil_p.h"
 
 class QJSDebugClient : public QDeclarativeDebugClient

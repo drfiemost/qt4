@@ -46,7 +46,6 @@
 #include <QtCore/qlibraryinfo.h>
 
 #include "../shared/testhttpserver.h"
-#include "../../../shared/util.h"
 
 #define SERVER_ADDR "http://127.0.0.1:14450"
 #define SERVER_PORT 14450

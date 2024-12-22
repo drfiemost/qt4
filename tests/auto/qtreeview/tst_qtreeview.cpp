@@ -46,7 +46,6 @@
 #include <QtTest/QtTest>
 #include <QtGui/QtGui>
 #include <private/qabstractitemview_p.h>
-#include "../../shared/util.h"
 
 //TESTED_CLASS=
 //TESTED_FILES=

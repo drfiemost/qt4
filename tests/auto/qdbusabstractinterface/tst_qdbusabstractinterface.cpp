@@ -46,7 +46,6 @@
 
 #include <QtDBus>
 
-#include "../../shared/util.h"
 
 #include "interface.h"
 #include "pinger.h"

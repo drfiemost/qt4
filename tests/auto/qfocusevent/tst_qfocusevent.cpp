@@ -52,7 +52,6 @@
 #include <qlineedit.h>
 #include <QBoxLayout>
 
-#include "../../shared/util.h"
 
 QT_FORWARD_DECLARE_CLASS(QWidget)
 

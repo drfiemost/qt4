@@ -52,7 +52,6 @@
 #include <QStyleFactory>
 #include <QSharedPointer>
 
-#include "../../shared/util.h"
 #include "../platformquirks.h"
 
 //TESTED_CLASS=

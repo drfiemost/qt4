@@ -43,7 +43,6 @@
 #include <QtGui/QtGui>
 #include <private/qtablewidget_p.h>
 #include <QtTest/QtTest>
-#include "../../shared/util.h"
 #include "private/qapplication_p.h"
 
 //TESTED_CLASS=

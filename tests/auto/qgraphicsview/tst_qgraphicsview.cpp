@@ -72,7 +72,6 @@
 #include <QtGui/QDesktopWidget>
 #include <private/qgraphicsscene_p.h>
 #include <private/qgraphicsview_p.h>
-#include "../../shared/util.h"
 #include "../platformquirks.h"
 
 //TESTED_CLASS=

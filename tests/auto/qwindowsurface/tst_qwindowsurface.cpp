@@ -52,7 +52,6 @@
 #include <QX11Info>
 
 
-#include "../../shared/util.h"
 
 class tst_QWindowSurface : public QObject
 {

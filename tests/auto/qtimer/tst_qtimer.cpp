@@ -50,7 +50,6 @@
 #include <unistd.h>
 #endif
 
-#include "../../shared/util.h"
 
 
 //TESTED_CLASS=

@@ -53,7 +53,6 @@
 
 #include "testtypes.h"
 
-#include "../../../shared/util.h"
 #include "testhttpserver.h"
 
 #ifdef Q_OS_SYMBIAN

@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include "../../shared/util.h"
 
 #include <qinputcontext.h>
 #include <qlineedit.h>

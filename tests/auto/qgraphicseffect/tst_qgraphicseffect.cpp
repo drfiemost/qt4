@@ -49,7 +49,6 @@
 #include <QtGui/qgraphicswidget.h>
 #include <QtGui/qstyleoption.h>
 
-#include "../../shared/util.h"
 #include <private/qgraphicseffect_p.h>
 #include "../platformquirks.h"
 

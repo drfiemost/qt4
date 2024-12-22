@@ -51,7 +51,6 @@
 #include <QtDeclarative/private/qdeclarativegridview_p.h>
 #include <QtDeclarative/private/qdeclarativetext_p.h>
 #include <QtDeclarative/private/qdeclarativelistmodel_p.h>
-#include "../../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

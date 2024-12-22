@@ -49,7 +49,6 @@
 #  include <string.h>     // memset
 #  include <X11/Xlib.h>
 #  include <X11/Xatom.h>  // XA_WM_STATE
-#  include <X11/Xutil.h>
 #  include <X11/Xmd.h>    // CARD32
 #endif
 

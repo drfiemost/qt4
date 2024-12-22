@@ -51,7 +51,6 @@
 #include <qbuffer.h>
 #include <qimage.h>
 #include <qpicture.h>
-#include <qdrawutil.h>
 #include <qpaintdevice.h>
 
 

@@ -54,7 +54,6 @@
 #include <QtDeclarative/qdeclarativeexpression.h>
 #include <QtTest/QSignalSpy>
 
-#include "../../../shared/util.h"
 #include "../shared/testhttpserver.h"
 
 #ifdef Q_OS_SYMBIAN

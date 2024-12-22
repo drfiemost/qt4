@@ -54,7 +54,6 @@
 #include <QStyleFactory>
 #include <QTabWidget>
 
-#include "../../shared/util.h"
 
 Q_DECLARE_METATYPE(QPushButton*)
 

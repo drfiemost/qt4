@@ -63,7 +63,6 @@
 #include <QMacStyle>
 #endif
 
-#include "../../shared/util.h"
 
 #include <QSysInfo>
 

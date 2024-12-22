@@ -45,7 +45,6 @@
 #include <private/qdeclarativeimage_p.h>
 #include <QImageReader>
 #include <QWaitCondition>
-#include "../../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

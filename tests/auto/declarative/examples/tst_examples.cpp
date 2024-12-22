@@ -44,7 +44,6 @@
 #include <QDir>
 #include <QProcess>
 #include <QDebug>
-#include "../../../shared/util.h"
 #include "qmlruntime.h"
 #include <QDeclarativeView>
 #include <QDeclarativeError>

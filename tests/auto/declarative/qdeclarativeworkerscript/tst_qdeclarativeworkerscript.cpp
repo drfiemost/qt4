@@ -51,7 +51,6 @@
 
 #include <private/qdeclarativeworkerscript_p.h>
 #include <private/qdeclarativeengine_p.h>
-#include "../../../shared/util.h"
 
 Q_DECLARE_METATYPE(QScriptValue)
 

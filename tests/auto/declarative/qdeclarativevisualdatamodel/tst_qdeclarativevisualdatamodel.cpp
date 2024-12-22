@@ -38,7 +38,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "../../../shared/util.h"
 #include <qtest.h>
 #include <QtTest/QSignalSpy>
 #include <QStandardItemModel>

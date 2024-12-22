@@ -47,7 +47,6 @@
 #include <private/qdeclarativevaluetype_p.h>
 #include <QtGui/qgraphicswidget.h>
 #include <math.h>
-#include "../../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

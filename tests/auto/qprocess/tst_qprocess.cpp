@@ -39,7 +39,6 @@
 **
 ****************************************************************************/
 
-#include "../../shared/util.h"
 #include <QtTest/QtTest>
 #include <QtCore/QProcess>
 #include <QtCore/QDir>

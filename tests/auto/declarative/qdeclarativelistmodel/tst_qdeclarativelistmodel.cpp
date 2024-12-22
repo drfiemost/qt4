@@ -51,7 +51,6 @@
 #include <QtCore/qtranslator.h>
 #include <QSignalSpy>
 
-#include "../../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

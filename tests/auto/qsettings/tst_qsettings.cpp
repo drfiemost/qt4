@@ -51,7 +51,6 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QtDebug>
 #include <QtCore/QString>
-#include "../../shared/util.h"
 
 # include <cctype>
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)

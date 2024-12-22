@@ -46,7 +46,6 @@
 #include <QtNetwork/qlocalsocket.h>
 #include <QtNetwork/qlocalserver.h>
 #include <QtCore/QDir>
-#include "../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
     #include <unistd.h>

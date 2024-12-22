@@ -63,7 +63,6 @@
 #include <QPlainTextEdit>
 #include <QDialog>
 
-#include "../../shared/util.h"
 
 Q_DECLARE_METATYPE(QAbstractItemDelegate::EndEditHint)
 

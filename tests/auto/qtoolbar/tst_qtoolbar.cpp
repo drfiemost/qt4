@@ -57,7 +57,6 @@
 #include <qmenu.h>
 #include <private/qtoolbarextension_p.h>
 
-#include "../../shared/util.h"
 
 //TESTED_FILES=
 

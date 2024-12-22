@@ -43,7 +43,6 @@
 #include <QtTest/QtTest>
 #include <QtGui/QtGui>
 
-#include "../../shared/util.h"
 
 //TESTED_CLASS=
 //TESTED_FILES=

@@ -61,7 +61,6 @@
 #include "tst_qmenu_mac_helpers.h"
 #endif
 
-#include "../../shared/util.h"
 
 //TESTED_CLASS=
 //TESTED_FILES=

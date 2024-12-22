@@ -51,7 +51,6 @@
 #include <QtDeclarative/private/qdeclarativevisualitemmodel_p.h>
 #include <QtDeclarative/private/qdeclarativelistmodel_p.h>
 #include <QtDeclarative/private/qlistmodelinterface_p.h>
-#include "../../../shared/util.h"
 #include "incrementalmodel.h"
 
 #ifdef Q_OS_SYMBIAN

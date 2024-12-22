@@ -49,7 +49,6 @@
 
 #include <QCopChannel>
 #include <QProcess>
-#include "../../shared/util.h"
 
 class tst_QCopChannel : public QObject
 {

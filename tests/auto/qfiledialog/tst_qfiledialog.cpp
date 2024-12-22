@@ -60,7 +60,6 @@
 #include <qsortfilterproxymodel.h>
 #include <qlineedit.h>
 #include <qlayout.h>
-#include "../../shared/util.h"
 #if defined QT_BUILD_INTERNAL
 #include "../../../src/gui/dialogs/qsidebar_p.h"
 #include "../../../src/gui/dialogs/qfilesystemmodel_p.h"

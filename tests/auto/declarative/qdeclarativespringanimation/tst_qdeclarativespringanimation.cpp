@@ -43,7 +43,6 @@
 #include <QtDeclarative/qdeclarativecomponent.h>
 #include <private/qdeclarativespringanimation_p.h>
 #include <private/qdeclarativevaluetype_p.h>
-#include "../../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

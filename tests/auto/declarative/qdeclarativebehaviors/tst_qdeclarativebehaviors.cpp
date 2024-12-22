@@ -48,7 +48,6 @@
 #include <private/qdeclarativebehavior_p.h>
 #include <private/qdeclarativeanimation_p.h>
 #include <private/qdeclarativeitem_p.h>
-#include "../../../shared/util.h"
 
 #ifdef Q_OS_SYMBIAN
 // In Symbian OS test data is located in applications private dir

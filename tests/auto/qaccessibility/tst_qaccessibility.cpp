@@ -42,7 +42,6 @@
 
 #include <QtTest/QtTest>
 #ifndef Q_OS_WINCE
-#include "../../shared/util.h"
 #include <QtGui>
 #include <math.h>
 

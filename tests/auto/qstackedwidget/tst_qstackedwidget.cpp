@@ -48,7 +48,6 @@
 #include <qpushbutton.h>
 #include <QHBoxLayout>
 #include <qlineedit.h>
-#include "../../shared/util.h"
 
 //TESTED_CLASS=
 //TESTED_FILES=
