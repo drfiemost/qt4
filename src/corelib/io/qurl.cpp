@@ -2393,7 +2393,7 @@ static void mapToLowerCase(QString *str, int from)
                 while (l < 4 && entry->mapping[l])
                     ++l;
                 if (l > 1 || uc > 0xffff) {
-                    if (uc <= 0xffff)
+                    if (!QChar::requiresSurrogates(uc))
                         str->replace(i, 1, reinterpret_cast<const QChar *>(&entry->mapping[0]), l);
                     else
                         str->replace(--i, 2, reinterpret_cast<const QChar *>(&entry->mapping[0]), l);
@@ -2997,7 +2997,7 @@ void qt_nameprep(QString *source, int from)
             }
         }
         if (!isMappedToNothing(uc)) {
-            if (uc <= 0xFFFF) {
+            if (!QChar::requiresSurrogates(uc)) {
                 *out++ = *in;
             } else {
                 *out++ = in[-1];

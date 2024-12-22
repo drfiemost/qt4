@@ -1760,7 +1760,7 @@ void tst_QXmlStream::readBack() const
     for (ushort c = 0; c < std::numeric_limits<ushort>::max(); ++c) {
         QBuffer buffer;
 
-        QVERIFY(buffer.open(QIODevice::WriteOnly));
+        QVERIFY(buffer.open(QIODevice::WriteOnly|QIODevice::Truncate));
         QXmlStreamWriter writer(&buffer);
 
         writer.writeStartDocument();
