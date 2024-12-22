@@ -249,6 +249,8 @@ public:
     tst_QMdiArea();
 public slots:
     void initTestCase();
+    void cleanup();
+
 protected slots:
     void activeChanged(QMdiSubWindow *child);
 
@@ -319,6 +321,11 @@ void tst_QMdiArea::initTestCase()
 #ifdef Q_OS_WINCE //disable magic for WindowsCE
     qApp->setAutoMaximizeThreshold(-1);
 #endif
+}
+
+void tst_QMdiArea::cleanup()
+{
+    QVERIFY(QApplication::topLevelWidgets().isEmpty());
 }
 
 // Old QWorkspace tests
@@ -516,9 +523,11 @@ void tst_QMdiArea::subWindowActivated2()
 #ifdef Q_WS_X11
     qt_x11_wait_for_window_manager(&mdiArea);
 #endif
+    mdiArea.activateWindow();
     QTest::qWait(100);
-    QTRY_COMPARE(spy.count(), 1);
-    QCOMPARE(mdiArea.activeSubWindow(), activeSubWindow);
+    QTRY_VERIFY(!spy.isEmpty()); // Normally 1, but 2 events might be received on some X11 window managers
+    QVERIFY(mdiArea.currentSubWindow());
+    QTRY_COMPARE(mdiArea.activeSubWindow(), activeSubWindow);
     spy.clear();
 
     if (PlatformQuirks::isAutoMaximizing())
@@ -1309,6 +1318,7 @@ void tst_QMdiArea::removeSubWindow_2()
     mdiArea.addSubWindow(subWindow);
     QVERIFY(numberOfConnectedSignals(subWindow) >= 2);
     subWindow->setParent(0);
+    QScopedPointer<MySubWindow> subWindowGuard(subWindow);
     QCOMPARE(numberOfConnectedSignals(subWindow), 0);
 }
 
@@ -1468,8 +1478,7 @@ void tst_QMdiArea::subWindowList()
 
     windows[staysOnTop1]->setWindowFlags(windows[staysOnTop1]->windowFlags() | Qt::WindowStaysOnTopHint);
     workspace.setActiveSubWindow(windows[activeSubWindow]);
-    qApp->processEvents();
-    QCOMPARE(workspace.activeSubWindow(), windows[activeSubWindow]);
+    QTRY_COMPARE(workspace.activeSubWindow(), windows[activeSubWindow]);
     activationOrder.move(activationOrder.indexOf(windows[activeSubWindow]), windowCount - 1);
 
     QList<QMdiSubWindow *> subWindows = workspace.subWindowList(windowOrder);
@@ -1491,13 +1500,11 @@ void tst_QMdiArea::subWindowList()
 
     windows[staysOnTop2]->setWindowFlags(windows[staysOnTop2]->windowFlags() | Qt::WindowStaysOnTopHint);
     workspace.setActiveSubWindow(windows[staysOnTop2]);
-    qApp->processEvents();
-    QCOMPARE(workspace.activeSubWindow(), windows[staysOnTop2]);
+    QTRY_COMPARE(workspace.activeSubWindow(), windows[staysOnTop2]);
     activationOrder.move(activationOrder.indexOf(windows[staysOnTop2]), windowCount - 1);
 
     workspace.setActiveSubWindow(windows[activeSubWindow]);
-    qApp->processEvents();
-    QCOMPARE(workspace.activeSubWindow(), windows[activeSubWindow]);
+    QTRY_COMPARE(workspace.activeSubWindow(), windows[activeSubWindow]);
     activationOrder.move(activationOrder.indexOf(windows[activeSubWindow]), windowCount - 1);
 
     QList<QMdiSubWindow *> widgets = workspace.subWindowList(windowOrder);
@@ -1750,6 +1757,11 @@ void tst_QMdiArea::tileSubWindows()
         subWindow->setMinimumSize(minSize);
 
     QCOMPARE(workspace.size(), QSize(350, 150));
+
+    // Prevent scrollbars from messing up the expected viewport calculation below
+    workspace.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    workspace.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     workspace.tileSubWindows();
     // The sub-windows are now tiled like this:
     // | win 1 || win 2 || win 3 |
@@ -1769,6 +1781,10 @@ void tst_QMdiArea::tileSubWindows()
     QSKIP("Not fixed yet! See task 197453", SkipAll);
 #endif
     QTRY_COMPARE(workspace.viewport()->rect().size(), expectedViewportSize);
+
+    // Restore original scrollbar behavior for test below
+    workspace.setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    workspace.setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     // Not enough space for all sub-windows to be visible -> provide scroll bars.
     workspace.resize(160, 150);
@@ -2387,7 +2403,7 @@ void tst_QMdiArea::setViewMode()
 #endif
 
     QMdiSubWindow *activeSubWindow = mdiArea.activeSubWindow();
-    const QList<QMdiSubWindow *> subWindows = mdiArea.subWindowList();
+    QList<QMdiSubWindow *> subWindows = mdiArea.subWindowList();
 
     // Default.
     QVERIFY(!activeSubWindow->isMaximized());
@@ -2457,9 +2473,12 @@ void tst_QMdiArea::setViewMode()
 
     // Remove sub-windows and make sure the tab is removed.
     foreach (QMdiSubWindow *subWindow, subWindows) {
-        if (subWindow != activeSubWindow)
+        if (subWindow != activeSubWindow) {
             mdiArea.removeSubWindow(subWindow);
+            delete subWindow;
+        }
     }
+    subWindows.clear();
     QCOMPARE(tabBar->count(), 1);
 
     // Go back to default (QMdiArea::SubWindowView).

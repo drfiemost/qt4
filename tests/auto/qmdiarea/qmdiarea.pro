@@ -11,5 +11,3 @@ contains(QT_CONFIG, opengl):QT += opengl
 mac {
     LIBS += -framework Security
 }
-
-linux-*:system(". /etc/lsb-release && [ $DISTRIB_CODENAME = lucid ]"):DEFINES+=UBUNTU_LUCID # QTBUG-26726
