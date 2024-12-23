@@ -118,25 +118,8 @@ mac:contains(QMAKE_MAC_XARCH, no) {
             silent:ssse3_compiler.commands = @echo compiling[ssse3] ${QMAKE_FILE_IN} && $$ssse3_compiler.commands
             QMAKE_EXTRA_COMPILERS += ssse3_compiler
         }
-        iwmmxt {
-            iwmmxt_compiler.commands = $$QMAKE_CXX -c -Winline
-            iwmmxt_compiler.commands += -mcpu=iwmmxt
-            iwmmxt_compiler.commands += $(CXXFLAGS) $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
-            iwmmxt_compiler.dependency_type = TYPE_C
-            iwmmxt_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
-            iwmmxt_compiler.input = IWMMXT_SOURCES
-            iwmmxt_compiler.variable_out = OBJECTS
-            iwmmxt_compiler.name = compiling[iwmmxt] ${QMAKE_FILE_IN}
-            silent:iwmmxt_compiler.commands = @echo compiling[iwmmxt] ${QMAKE_FILE_IN} && $$iwmmxt_compiler.commands
-            QMAKE_EXTRA_COMPILERS += iwmmxt_compiler
-        }
     } else {
-        mmx: SOURCES += $$MMX_SOURCES
-        3dnow: SOURCES += $$MMX3DNOW_SOURCES
-        3dnow:sse: SOURCES += $$SSE3DNOW_SOURCES
-        sse: SOURCES += $$SSE_SOURCES
         sse2: SOURCES += $$SSE2_SOURCES
         ssse3: SOURCES += $$SSSE3_SOURCES
-        iwmmxt: SOURCES += $$IWMMXT_SOURCES
     }
 }

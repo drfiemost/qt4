@@ -132,7 +132,7 @@ static inline uint detectProcessorFeatures()
         asm ("xchg %%ebx, %2\n"
              "cpuid\n"
              "xchg %%ebx, %2\n"
-            : "=c" (feature_result), "=d" (result), "=&r" (tmp1)
+            : "=&c" (feature_result), "=d" (result), "=&r" (tmp1)
             : "a" (1));
 
         asm ("xchg %%ebx, %1\n"
@@ -146,7 +146,7 @@ static inline uint detectProcessorFeatures()
              "cpuid\n"
              "2:\n"
              "xchg %%ebx, %1\n"
-            : "=d" (extended_result), "=&r" (tmp1)
+            : "=&d" (extended_result), "=&r" (tmp1)
             : "a" (0x80000000)
             : "%ecx"
             );
@@ -215,18 +215,6 @@ static inline uint detectProcessorFeatures()
 
 
     // result now contains the standard feature bits
-    if (result & (1u << 15))
-        features |= CMOV;
-    if (result & (1u << 23))
-        features |= MMX;
-    if (extended_result & (1u << 22))
-        features |= MMXEXT;
-    if (extended_result & (1u << 31))
-        features |= MMX3DNOW;
-    if (extended_result & (1u << 30))
-        features |= MMX3DNOWEXT;
-    if (result & (1u << 25))
-        features |= SSE;
     if (result & (1u << 26))
         features |= SSE2;
     if (feature_result & (1u))
@@ -246,7 +234,7 @@ static inline uint detectProcessorFeatures()
 #elif defined(__x86_64) || defined(Q_OS_WIN64)
 static inline uint detectProcessorFeatures()
 {
-    uint features = MMX|SSE|SSE2|CMOV;
+    uint features = SSE2;
     uint feature_result = 0;
 
 #if defined(Q_CC_GNU)
@@ -254,7 +242,7 @@ static inline uint detectProcessorFeatures()
     asm ("xchg %%rbx, %1\n"
          "cpuid\n"
          "xchg %%rbx, %1\n"
-        : "=c" (feature_result), "=&r" (tmp)
+        : "=&c" (feature_result), "=&r" (tmp)
         : "a" (1)
         : "%edx"
         );
@@ -280,12 +268,6 @@ static inline uint detectProcessorFeatures()
     return features;
 }
 
-#elif defined(__ia64__)
-static inline uint detectProcessorFeatures()
-{
-    return MMX|SSE|SSE2;
-}
-
 #else
 static inline uint detectProcessorFeatures()
 {
@@ -296,14 +278,8 @@ static inline uint detectProcessorFeatures()
 /*
  * Use kdesdk/scripts/generate_string_table.pl to update the table below.
  * Here's the data (don't forget the ONE leading space):
- mmx
- mmxext
- mmx3dnow
- mmx3dnowext
- sse
- sse2
- cmov
  neon
+ sse2
  sse3
  ssse3
  sse4.1
@@ -313,15 +289,8 @@ static inline uint detectProcessorFeatures()
 
 // begin generated
 static const char features_string[] =
-    " mmx\0"
-    " mmxext\0"
-    " mmx3dnow\0"
-    " mmx3dnowext\0"
-    " sse\0"
-    " sse2\0"
-    " cmov\0"
-    "\0"
     " neon\0"
+    " sse2\0"
     " sse3\0"
     " ssse3\0"
     " sse4.1\0"
@@ -330,8 +299,8 @@ static const char features_string[] =
     "\0";
 
 static const int features_indices[] = {
-       0,    5,   13,   23,   36,   41,   47,   53,
-      54,   60,   66,   73,   81,   89,   -1
+     0,    6,   12,   18,   25,   33,   41,   46,
+    -1
 };
 // end generated
 

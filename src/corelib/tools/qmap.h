@@ -191,7 +191,7 @@ struct Q_CORE_EXPORT QMapDataBase
 template <class Key, class T>
 struct QMapData : public QMapDataBase
 {
-    typedef QMapNode<Key, T> Node;
+    using Node = QMapNode<Key, T>;
 
     Node *root() const { return static_cast<Node *>(header.left); }
 
@@ -323,7 +323,7 @@ void QMapData<Key, T>::nodeRange(const Key &akey, QMapNode<Key, T> **firstNode, 
 template <class Key, class T>
 class QMap
 {
-    typedef QMapNode<Key, T> Node;
+    using Node = QMapNode<Key, T>;
 
     QMapData<Key, T> *d;
 

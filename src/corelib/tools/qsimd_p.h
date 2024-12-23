@@ -51,7 +51,6 @@ QT_BEGIN_HEADER
 #if defined(QT_NO_MAC_XARCH) || (defined(Q_OS_DARWIN) && (defined(__ppc__) || defined(__ppc64__)))
 // Disable MMX and SSE on Mac/PPC builds, or if the compiler
 // does not support -Xarch argument passing
-#undef QT_HAVE_SSE
 #undef QT_HAVE_SSE2
 #undef QT_HAVE_SSE3
 #undef QT_HAVE_SSSE3
@@ -180,29 +179,18 @@ QT_BEGIN_HEADER
 #include <arm_neon.h>
 #endif
 
-// 3D now intrinsics
-#if defined(QT_HAVE_3DNOW) && (defined(__3dNOW__) || defined(Q_CC_MSVC))
-#include <mm3dnow.h>
-#endif
-
 QT_BEGIN_NAMESPACE
 
 
 enum CPUFeatures {
     None        = 0,
-    MMX         = 0x1,
-    MMXEXT      = 0x2,
-    MMX3DNOW    = 0x4,
-    MMX3DNOWEXT = 0x8,
-    SSE         = 0x10,
-    SSE2        = 0x20,
-    CMOV        = 0x40,
-    NEON        = 0x100,
-    SSE3        = 0x200,
-    SSSE3       = 0x400,
-    SSE4_1      = 0x800,
-    SSE4_2      = 0x1000,
-    AVX         = 0x2000
+    NEON        = 0x1,
+    SSE2        = 0x2,
+    SSE3        = 0x4,
+    SSSE3       = 0x8,
+    SSE4_1      = 0x10,
+    SSE4_2      = 0x20,
+    AVX         = 0x40
 };
 
 Q_CORE_EXPORT uint qDetectCPUFeatures();
