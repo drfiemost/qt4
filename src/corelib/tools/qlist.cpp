@@ -116,62 +116,6 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
     return x;
 }
 
-#if QT_VERSION >= 0x050000
-#  error "Remove QListData::detach(), it is only required for binary compatibility for 4.0.x to 4.2.x"
-#endif
-QListData::Data *QListData::detach()
-{
-    Data *x = static_cast<Data *>(std::malloc(DataHeaderSize + d->alloc * sizeof(void *)));
-    Q_CHECK_PTR(x);
-
-    x->ref.initializeOwned();
-    x->alloc = d->alloc;
-    if (!x->alloc) {
-        x->begin = 0;
-        x->end = 0;
-    } else {
-        x->begin = d->begin;
-        x->end   = d->end;
-    }
-
-    qSwap(d, x);
-    if (!x->ref.deref())
-        return x;
-    return nullptr;
-}
-
-/*!
- *  Detaches the QListData by reallocating new memory.
- *  Returns the old (shared) data, it is up to the caller to deref() and free()
- *  For the new data node_copy needs to be called.
- *
- *  \internal
- */
-#if QT_VERSION >= 0x050000
-#  error "Remove QListData::detach2(), it is only required for binary compatibility for 4.3.x to 4.5.x"
-#endif
-QListData::Data *QListData::detach2()
-{
-    Data *x = d;
-    Data* t = static_cast<Data *>(::malloc(DataHeaderSize + x->alloc * sizeof(void *)));
-    Q_CHECK_PTR(t);
-
-    std::memcpy(t, d, DataHeaderSize + d->alloc * sizeof(void *));
-
-    t->ref.initializeOwned();
-    t->alloc = x->alloc;
-    if (!t->alloc) {
-        t->begin = 0;
-        t->end = 0;
-    } else {
-        t->begin = x->begin;
-        t->end   = x->end;
-    }
-    d = t;
-
-    return x;
-}
-
 /*!
  *  Detaches the QListData by allocating new memory for a list which possibly
  *  has a different size than the copied one.
@@ -198,21 +142,6 @@ QListData::Data *QListData::detach(int alloc)
     d = t;
 
     return x;
-}
-
-/*!
- *  Detaches the QListData by reallocating new memory.
- *  Returns the old (shared) data, it is up to the caller to deref() and free()
- *  For the new data node_copy needs to be called.
- *
- *  \internal
- */
-#if QT_VERSION >= 0x050000
-#  error "Remove QListData::detach3(), it is only required for binary compatibility for 4.5.x to 4.6.x"
-#endif
-QListData::Data *QListData::detach3()
-{
-    return detach(d->alloc);
 }
 
 void QListData::realloc(int alloc)
@@ -263,12 +192,6 @@ void **QListData::append()
 void **QListData::append(const QListData& l)
 {
     return append(l.d->end - l.d->begin);
-}
-
-// ensures that enough space is available to append the list
-void **QListData::append2(const QListData& l)
-{
-    return append(l);
 }
 
 void **QListData::prepend()

@@ -78,9 +78,6 @@ struct Q_CORE_EXPORT QListData {
 
     Data *detach(int alloc);
     Data *detach_grow(int *i, int n);
-    Q_DECL_DEPRECATED Data *detach(); // remove in 5.0
-    Q_DECL_DEPRECATED Data *detach2(); // remove in 5.0
-    Q_DECL_DEPRECATED Data *detach3(); // remove in 5.0
     void realloc(int alloc);
     inline void dispose() { dispose(d); }
     static void dispose(Data *d);
@@ -90,7 +87,6 @@ struct Q_CORE_EXPORT QListData {
     void **append(int n);
     void **append();
     void **append(const QListData &l);
-    Q_DECL_DEPRECATED void **append2(const QListData &l); // remove in 5.0
     void **prepend();
     void **insert(int i);
     void remove(int i);
