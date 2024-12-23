@@ -885,7 +885,7 @@ void QItemDelegate::doLayout(const QStyleOptionViewItem &option,
         pm.rwidth() += 2 * pixmapMargin;
     }
     if (hint) {
-        h = std::max(checkRect->height(), qMax(textRect->height(), pm.height()));
+        h = std::max(checkRect->height(), std::max(textRect->height(), pm.height()));
         if (option.decorationPosition == QStyleOptionViewItem::Left
             || option.decorationPosition == QStyleOptionViewItem::Right) {
             w = textRect->width() + pm.width();

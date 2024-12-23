@@ -124,12 +124,12 @@ static inline void qMaxExpCalc(int & max, bool &exp, bool &empty,
 {
     if (exp) {
         if (boxexp)
-            max = qMax(max, boxmax);
+            max = std::max(max, boxmax);
     } else {
         if (boxexp || (empty && (!boxempty || max == 0)))
             max = boxmax;
         else if (empty == boxempty)
-            max = qMin(max, boxmax);
+            max = std::min(max, boxmax);
     }
     exp = exp || boxexp;
     empty = empty && boxempty;

@@ -408,11 +408,11 @@ void QAbstractButtonPrivate::moveFocus(int key)
             if ((buttonRect.x() < target.right() && target.x() < buttonRect.right())
                   && (key == Qt::Key_Up || key == Qt::Key_Down)) {
                 //one item's is at the vertical of the other
-                score = (qAbs(p.y() - goal.y()) << 16) + qAbs(p.x() - goal.x());
+                score = (std::abs(p.y() - goal.y()) << 16) + std::abs(p.x() - goal.x());
             } else if ((buttonRect.y() < target.bottom() && target.y() < buttonRect.bottom())
                         && (key == Qt::Key_Left || key == Qt::Key_Right) ) {
                 //one item's is at the horizontal of the other
-                score = (qAbs(p.x() - goal.x()) << 16) + qAbs(p.y() - goal.y());
+                score = (std::abs(p.x() - goal.x()) << 16) + std::abs(p.y() - goal.y());
             } else {
                 score = (1 << 30) + (p.y() - goal.y()) * (p.y() - goal.y()) + (p.x() - goal.x()) * (p.x() - goal.x());
             }

@@ -408,7 +408,7 @@ void QOleDropSource::createCursors()
             }
 
             QRect srcRect = pm.rect();
-            QPoint pmDest = QPoint(std::max(0, -hotSpot.x()), qMax(0, -hotSpot.y()));
+            QPoint pmDest = QPoint(std::max(0, -hotSpot.x()), std::max(0, -hotSpot.y()));
             QPoint newHotSpot = hotSpot;
 
 #if defined(Q_OS_WINCE)
@@ -444,7 +444,7 @@ void QOleDropSource::createCursors()
                 newCursor.fill(QColor(0, 0, 0, 0));
                 QPainter p(&newCursor);
                 p.drawPixmap(pmDest, pm, srcRect);
-                p.drawPixmap(std::max(0,newHotSpot.x()),qMax(0,newHotSpot.y()),cpm);
+                p.drawPixmap(std::max(0,newHotSpot.x()),std::max(0,newHotSpot.y()),cpm);
             } else {
                 newCursor = cpm;
             }

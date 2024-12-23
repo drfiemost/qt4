@@ -465,7 +465,7 @@ void QRollEffect::run(int time)
     connect(&anim, SIGNAL(timeout()), this, SLOT(scroll()));
 
     move(widget->geometry().x(),widget->geometry().y());
-    resize(std::min(currentWidth, totalWidth), qMin(currentHeight, totalHeight));
+    resize(std::min(currentWidth, totalWidth), std::min(currentHeight, totalHeight));
 
     //This is roughly equivalent to calling setVisible(true) without actually showing the widget
     widget->setAttribute(Qt::WA_WState_ExplicitShowHide, true);

@@ -288,7 +288,7 @@ bool QSimplex::setConstraints(const QList<QSimplexConstraint *> newConstraints)
     // original problem.
     // Otherwise, we clean up our structures and report there is
     // no feasible solution.
-    if ((valueAt(0, columns - 1) != 0.0) && (qAbs(valueAt(0, columns - 1)) > 0.00001)) {
+    if ((valueAt(0, columns - 1) != 0.0) && (std::abs(valueAt(0, columns - 1)) > 0.00001)) {
         qWarning() << "QSimplex: No feasible solution!";
         clearDataStructures();
         return false;
@@ -390,7 +390,7 @@ void QSimplex::combineRows(int toIndex, int fromIndex, qreal factor)
         to[j] += factor * value;
 
         // ### Avoid Numerical errors
-        if (qAbs(to[j]) < 0.0000000001)
+        if (std::abs(to[j]) < 0.0000000001)
             to[j] = 0.0;
     }
 }

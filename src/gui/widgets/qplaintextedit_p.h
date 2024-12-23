@@ -87,7 +87,7 @@ public:
     QRectF blockBoundingRect(const QTextBlock &block) const override;
     inline QRectF cursorRect(const QTextCursor &cursor) const {
         QRectF r = QTextControl::cursorRect(cursor);
-        r.setLeft(qMax(r.left(), (qreal) 0.));
+        r.setLeft(std::max(r.left(), (qreal) 0.));
         return r;
     }
     inline QRectF cursorRect() { return cursorRect(textCursor()); }

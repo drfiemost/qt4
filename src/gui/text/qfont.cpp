@@ -3050,7 +3050,7 @@ void QFontCache::timerEvent(QTimerEvent *)
       calculation correct, we are more interested in speed, and use
       in_use_cost as a floor for new_max_cost
     */
-    uint new_max_cost = std::max(qMax(max_cost / 2, in_use_cost), min_cost);
+    uint new_max_cost = std::max(std::max(max_cost / 2, in_use_cost), min_cost);
 
     FC_DEBUG("  after sweep, in use %u kb, total %u kb, max %u kb, new max %u kb",
               in_use_cost, total_cost, max_cost, new_max_cost);

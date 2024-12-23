@@ -151,7 +151,7 @@ bool QDeclarativeSpringAnimationPrivate::animate(const QDeclarativeProperty &pro
         int count = elapsed / 16;
         for (int i = 0; i < count; ++i) {
             qreal diff = srcVal - animation.currentValue;
-            if (haveModulus && qAbs(diff) > modulus / 2) {
+            if (haveModulus && std::abs(diff) > modulus / 2) {
                 if (diff < 0)
                     diff += modulus;
                 else
@@ -175,7 +175,7 @@ bool QDeclarativeSpringAnimationPrivate::animate(const QDeclarativeProperty &pro
                     animation.currentValue += modulus;
             }
         }
-        if (qAbs(animation.velocity) < epsilon && qAbs(srcVal - animation.currentValue) < epsilon) {
+        if (std::abs(animation.velocity) < epsilon && std::abs(srcVal - animation.currentValue) < epsilon) {
             animation.velocity = 0.0;
             animation.currentValue = srcVal;
             stop = true;
@@ -183,7 +183,7 @@ bool QDeclarativeSpringAnimationPrivate::animate(const QDeclarativeProperty &pro
     } else {
         qreal moveBy = elapsed * velocityms;
         qreal diff = srcVal - animation.currentValue;
-        if (haveModulus && qAbs(diff) > modulus / 2) {
+        if (haveModulus && std::abs(diff) > modulus / 2) {
             if (diff < 0)
                 diff += modulus;
             else
@@ -225,7 +225,7 @@ void QDeclarativeSpringAnimationPrivate::updateMode()
         for (it = activeAnimations.begin(); it != activeAnimations.end(); ++it) {
             SpringAnimation &animation = *it;
             animation.start = lastTime;
-            qreal dist = qAbs(animation.currentValue - animation.to);
+            qreal dist = std::abs(animation.currentValue - animation.to);
             if (haveModulus && dist > modulus / 2)
                 dist = modulus - fmod(dist, modulus);
             animation.duration = dist / velocityms;
@@ -442,7 +442,7 @@ void QDeclarativeSpringAnimation::transition(QDeclarativeStateActions &actions,
             else
                 animation.currentValue = property.read().toReal();
             if (d->mode == QDeclarativeSpringAnimationPrivate::Velocity) {
-                qreal dist = qAbs(animation.currentValue - animation.to);
+                qreal dist = std::abs(animation.currentValue - animation.to);
                 if (d->haveModulus && dist > d->modulus / 2)
                     dist = d->modulus - fmod(dist, d->modulus);
                 animation.duration = dist / d->velocityms;

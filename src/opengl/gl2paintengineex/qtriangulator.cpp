@@ -523,7 +523,7 @@ bool QIntersectionPoint::isOnLine(const QPodPoint &u, const QPodPoint &v) const
     else
         ny = quint64(p.y) * yOffset.denominator + yOffset.numerator;
 
-    return qFraction(quint64(qAbs(q.x)) * xOffset.denominator, quint64(qAbs(q.y)) * yOffset.denominator) == qFraction(nx, ny);
+    return qFraction(quint64(std::abs(q.x)) * xOffset.denominator, quint64(std::abs(q.y)) * yOffset.denominator) == qFraction(nx, ny);
 }
 
 //============================================================================//
@@ -1540,8 +1540,8 @@ template <typename T>
 QVertexSet<T> QTriangulator<T>::triangulate()
 {
     for (int i = 0; i < m_vertices.size(); ++i) {
-        Q_ASSERT(qAbs(m_vertices.at(i).x) < (1 << 21));
-        Q_ASSERT(qAbs(m_vertices.at(i).y) < (1 << 21));
+        Q_ASSERT(std::abs(m_vertices.at(i).x) < (1 << 21));
+        Q_ASSERT(std::abs(m_vertices.at(i).y) < (1 << 21));
     }
 
     if (!(m_hint & (QVectorPath::OddEvenFill | QVectorPath::WindingFill)))

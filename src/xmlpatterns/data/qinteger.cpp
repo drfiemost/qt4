@@ -129,7 +129,7 @@ Numeric::Ptr Integer::abs() const
 {
     /* No reason to allocate an Integer if we're already absolute. */
     if(m_value < 0)
-        return Numeric::Ptr(new Integer(qAbs(m_value)));
+        return Numeric::Ptr(new Integer(std::abs(m_value)));
     else
         return Numeric::Ptr(const_cast<Integer *>(this));
 }

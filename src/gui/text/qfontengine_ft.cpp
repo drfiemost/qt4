@@ -352,12 +352,12 @@ void QFreetypeFace::computeSize(const QFontDef &fontDef, int *xsize, int *ysize,
     if (!(face->face_flags & FT_FACE_FLAG_SCALABLE)) {
         int best = 0;
         for (int i = 1; i < face->num_fixed_sizes; i++) {
-            if (qAbs(*ysize -  Y_SIZE(face,i)) <
-                qAbs (*ysize - Y_SIZE(face, best)) ||
-                (qAbs (*ysize - Y_SIZE(face, i)) ==
-                 qAbs (*ysize - Y_SIZE(face, best)) &&
-                 qAbs (*xsize - X_SIZE(face, i)) <
-                 qAbs (*xsize - X_SIZE(face, best)))) {
+            if (std::abs(*ysize -  Y_SIZE(face,i)) <
+                std::abs(*ysize - Y_SIZE(face, best)) ||
+                (std::abs(*ysize - Y_SIZE(face, i)) ==
+                 std::abs(*ysize - Y_SIZE(face, best)) &&
+                 std::abs(*xsize - X_SIZE(face, i)) <
+                 std::abs(*xsize - X_SIZE(face, best)))) {
                 best = i;
             }
         }
@@ -1333,7 +1333,7 @@ QFontEngineFT::QGlyphSet *QFontEngineFT::loadTransformedGlyphSet(const QTransfor
 
     if (!gs) {
         // don't try to load huge fonts
-        bool draw_as_outline = fontDef.pixelSize * qSqrt(qAbs(matrix.det())) >= QT_MAX_CACHED_GLYPH_SIZE;
+        bool draw_as_outline = fontDef.pixelSize * qSqrt(std::abs(matrix.det())) >= QT_MAX_CACHED_GLYPH_SIZE;
         if (draw_as_outline)
             return nullptr;
 

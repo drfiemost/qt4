@@ -52,7 +52,7 @@
 #ifndef Patternist_AbstractFloat_H
 #define Patternist_AbstractFloat_H
 
-#include <math.h>
+#include <cmath>
 
 #include <qnumeric.h>
 

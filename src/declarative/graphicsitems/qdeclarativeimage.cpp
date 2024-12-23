@@ -442,7 +442,7 @@ void QDeclarativeImage::geometryChanged(const QRectF &newGeometry, const QRectF 
 QRectF QDeclarativeImage::boundingRect() const
 {
     Q_D(const QDeclarativeImage);
-    return QRectF(0, 0, std::max(d->mWidth, d->paintedWidth), qMax(d->mHeight, d->paintedHeight));
+    return QRectF(0, 0, std::max(d->mWidth, d->paintedWidth), std::max(d->mHeight, d->paintedHeight));
 }
 
 /*!

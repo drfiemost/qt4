@@ -183,12 +183,12 @@ inline const QSize operator/(const QSize &s, qreal c)
 
 constexpr inline QSize QSize::expandedTo(const QSize & otherSize) const
 {
-    return QSize(qMax(wd,otherSize.wd), qMax(ht,otherSize.ht));
+    return QSize(std::max(wd,otherSize.wd), std::max(ht,otherSize.ht));
 }
 
 constexpr inline QSize QSize::boundedTo(const QSize & otherSize) const
 {
-    return QSize(qMin(wd,otherSize.wd), qMin(ht,otherSize.ht));
+    return QSize(std::min(wd,otherSize.wd), std::min(ht,otherSize.ht));
 }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -336,12 +336,12 @@ inline const QSizeF operator/(const QSizeF &s, qreal c)
 
 constexpr inline QSizeF QSizeF::expandedTo(const QSizeF & otherSize) const
 {
-    return QSizeF(qMax(wd,otherSize.wd), qMax(ht,otherSize.ht));
+    return QSizeF(std::max(wd,otherSize.wd), std::max(ht,otherSize.ht));
 }
 
 constexpr inline QSizeF QSizeF::boundedTo(const QSizeF & otherSize) const
 {
-    return QSizeF(qMin(wd,otherSize.wd), qMin(ht,otherSize.ht));
+    return QSizeF(std::min(wd,otherSize.wd), std::min(ht,otherSize.ht));
 }
 
 constexpr inline QSize QSizeF::toSize() const

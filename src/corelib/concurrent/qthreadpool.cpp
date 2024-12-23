@@ -155,7 +155,7 @@ void QThreadPoolThread::registerThreadInactive()
 */
 QThreadPoolPrivate:: QThreadPoolPrivate()
     : expiryTimeout(30000),
-      maxThreadCount(qAbs(QThread::idealThreadCount())),
+      maxThreadCount(std::abs(QThread::idealThreadCount())),
       reservedThreads(0),
       activeThreads(0)
 { }

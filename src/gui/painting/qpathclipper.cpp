@@ -70,9 +70,9 @@ QT_BEGIN_NAMESPACE
 static inline bool fuzzyIsNull(qreal d)
 {
     if (sizeof(qreal) == sizeof(double))
-        return qAbs(d) <= 1e-12;
+        return std::abs(d) <= 1e-12;
     else
-        return qAbs(d) <= 1e-5f;
+        return std::abs(d) <= 1e-5f;
 }
 
 static inline bool comparePoints(const QPointF &a, const QPointF &b)
@@ -1694,7 +1694,7 @@ bool QPathClipper::doClip(QWingedEdge &list, ClipperMode mode)
 
             found = true;
 
-            qreal height = qAbs(a->y - b->y);
+            qreal height = std::abs(a->y - b->y);
             if (height > maxHeight) {
                 index = i;
                 maxHeight = height;

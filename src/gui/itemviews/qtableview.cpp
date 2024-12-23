@@ -1769,9 +1769,9 @@ void QTableView::setSelection(const QRect &rect, QItemSelectionModel::SelectionF
 {
     Q_D(QTableView);
     QModelIndex tl = indexAt(QPoint(isRightToLeft() ? std::max(rect.left(), rect.right())
-                                    : std::min(rect.left(), rect.right()), qMin(rect.top(), rect.bottom())));
+                                    : std::min(rect.left(), rect.right()), std::min(rect.top(), rect.bottom())));
     QModelIndex br = indexAt(QPoint(isRightToLeft() ? std::min(rect.left(), rect.right()) :
-                                    std::max(rect.left(), rect.right()), qMax(rect.top(), rect.bottom())));
+                                    std::max(rect.left(), rect.right()), std::max(rect.top(), rect.bottom())));
     if (!d->selectionModel || !tl.isValid() || !br.isValid() || !d->isIndexEnabled(tl) || !d->isIndexEnabled(br))
         return;
 

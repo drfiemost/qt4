@@ -75,7 +75,7 @@ class QIncrementalSleepTimer
 public:
     QIncrementalSleepTimer(int msecs)
         : totalTimeOut(msecs)
-        , nextSleep(qMin(SLEEPMIN, totalTimeOut))
+        , nextSleep(std::min(SLEEPMIN, totalTimeOut))
     {
         if (totalTimeOut == -1)
             nextSleep = SLEEPMIN;
@@ -85,7 +85,7 @@ public:
     int nextSleepTime()
     {
         int tmp = nextSleep;
-        nextSleep = qMin(nextSleep * 2, qMin(SLEEPMAX, timeLeft()));
+        nextSleep = std::min(nextSleep * 2, std::min(SLEEPMAX, timeLeft()));
         return tmp;
     }
 
@@ -93,7 +93,7 @@ public:
     {
         if (totalTimeOut == -1)
             return SLEEPMAX;
-        return qMax(totalTimeOut - timer.elapsed(), 0);
+        return std::max(totalTimeOut - timer.elapsed(), 0);
     }
 
     bool hasTimedOut() const
@@ -105,7 +105,7 @@ public:
 
     void resetIncrements()
     {
-        nextSleep = qMin(SLEEPMIN, timeLeft());
+        nextSleep = std::min(SLEEPMIN, timeLeft());
     }
 
 private:

@@ -69,7 +69,7 @@ static inline uint sourceOver(uint d, uint color)
 
 inline static int F16Dot16FixedDiv(int x, int y)
 {
-    if (qAbs(x) > 0x7fff)
+    if (std::abs(x) > 0x7fff)
         return (((qlonglong)x) << 16) / y;
     return (x << 16) / y;
 }
@@ -429,8 +429,8 @@ void QCosmeticStroker::calculateLastPoint(qreal rx1, qreal ry1, qreal rx2, qreal
     int x2 = toF26Dot6(rx2) + half;
     int y2 = toF26Dot6(ry2) + half;
 
-    int dx = qAbs(x2 - x1);
-    int dy = qAbs(y2 - y1);
+    int dx = std::abs(x2 - x1);
+    int dy = std::abs(y2 - y1);
 
     if (dx < dy) {
         // vertical
@@ -458,7 +458,7 @@ void QCosmeticStroker::calculateLastPoint(qreal rx1, qreal ry1, qreal rx2, qreal
                 lastPixel.y = ys - 1;
                 lastDir = QCosmeticStroker::TopToBottom;
             }
-            lastAxisAligned = qAbs(xinc) < (1 << 14);
+            lastAxisAligned = std::abs(xinc) < (1 << 14);
         }
     } else {
         // horizontal
@@ -489,7 +489,7 @@ void QCosmeticStroker::calculateLastPoint(qreal rx1, qreal ry1, qreal rx2, qreal
                 lastPixel.y = (y + (xs - x - 1)*yinc) >> 16;
                 lastDir = QCosmeticStroker::LeftToRight;
             }
-            lastAxisAligned = qAbs(yinc) < (1 << 14);
+            lastAxisAligned = std::abs(yinc) < (1 << 14);
         }
     }
 //    qDebug() << "   moveTo: setting last pixel to x/y dir" << lastPixel.x << lastPixel.y << lastDir;
@@ -692,10 +692,10 @@ void QCosmeticStroker::renderCubicSubdivision(QCosmeticStroker::PointF *points, 
     if (level) {
         qreal dx = points[3].x - points[0].x;
         qreal dy = points[3].y - points[0].y;
-        qreal len = ((qreal).25) * (qAbs(dx) + qAbs(dy));
+        qreal len = ((qreal).25) * (std::abs(dx) + std::abs(dy));
 
-        if (qAbs(dx * (points[0].y - points[2].y) - dy * (points[0].x - points[2].x)) >= len ||
-            qAbs(dx * (points[0].y - points[1].y) - dy * (points[0].x - points[1].x)) >= len) {
+        if (std::abs(dx * (points[0].y - points[2].y) - dy * (points[0].x - points[2].x)) >= len ||
+            std::abs(dx * (points[0].y - points[1].y) - dy * (points[0].x - points[1].x)) >= len) {
             splitCubic(points);
 
             --level;
@@ -742,8 +742,8 @@ static bool drawLine(QCosmeticStroker *stroker, qreal rx1, qreal ry1, qreal rx2,
     int x2 = toF26Dot6(rx2) + half;
     int y2 = toF26Dot6(ry2) + half;
 
-    int dx = qAbs(x2 - x1);
-    int dy = qAbs(y2 - y1);
+    int dx = std::abs(x2 - x1);
+    int dy = std::abs(y2 - y1);
 
     QCosmeticStroker::Point last = stroker->lastPixel;
 
@@ -784,7 +784,7 @@ static bool drawLine(QCosmeticStroker *stroker, qreal rx1, qreal ry1, qreal rx2,
             if (swapped)
                 qSwap(first, last);
 
-            bool axisAligned = qAbs(xinc) < (1 << 14);
+            bool axisAligned = std::abs(xinc) < (1 << 14);
             if (stroker->lastPixel.x >= 0) {
                 if (first.x == stroker->lastPixel.x &&
                     first.y == stroker->lastPixel.y) {
@@ -798,8 +798,8 @@ static bool drawLine(QCosmeticStroker *stroker, qreal rx1, qreal ry1, qreal rx2,
                 } else if (stroker->lastDir != dir &&
                            (((axisAligned && stroker->lastAxisAligned) &&
                              stroker->lastPixel.x != first.x && stroker->lastPixel.y != first.y) ||
-                            (qAbs(stroker->lastPixel.x - first.x) > 1 ||
-                             qAbs(stroker->lastPixel.y - first.y) > 1))) {
+                            (std::abs(stroker->lastPixel.x - first.x) > 1 ||
+                             std::abs(stroker->lastPixel.y - first.y) > 1))) {
                     // have a missing pixel, insert it
                     if (swapped) {
                         ++ys;
@@ -859,7 +859,7 @@ static bool drawLine(QCosmeticStroker *stroker, qreal rx1, qreal ry1, qreal rx2,
             if (swapped)
                 qSwap(first, last);
 
-            bool axisAligned = qAbs(yinc) < (1 << 14);
+            bool axisAligned = std::abs(yinc) < (1 << 14);
             if (stroker->lastPixel.x >= 0) {
                 if (first.x == stroker->lastPixel.x && first.y == stroker->lastPixel.y) {
                     // remove duplicated pixel
@@ -872,8 +872,8 @@ static bool drawLine(QCosmeticStroker *stroker, qreal rx1, qreal ry1, qreal rx2,
                 } else if (stroker->lastDir != dir &&
                            (((axisAligned && stroker->lastAxisAligned) &&
                              stroker->lastPixel.x != first.x && stroker->lastPixel.y != first.y) ||
-                            (qAbs(stroker->lastPixel.x - first.x) > 1 ||
-                             qAbs(stroker->lastPixel.y - first.y) > 1))) {
+                            (std::abs(stroker->lastPixel.x - first.x) > 1 ||
+                             std::abs(stroker->lastPixel.y - first.y) > 1))) {
                     // have a missing pixel, insert it
                     if (swapped) {
                         ++xs;
@@ -915,7 +915,7 @@ static bool drawLineAA(QCosmeticStroker *stroker, qreal rx1, qreal ry1, qreal rx
     int dx = x2 - x1;
     int dy = y2 - y1;
 
-    if (qAbs(dx) < qAbs(dy)) {
+    if (std::abs(dx) < std::abs(dy)) {
         // vertical
 
         int xinc = F16Dot16FixedDiv(dx, dy);

@@ -892,9 +892,9 @@ void QTextControl::clear()
 void QTextControl::selectAll()
 {
     Q_D(QTextControl);
-    const int selectionLength = qAbs(d->cursor.position() - d->cursor.anchor());
+    const int selectionLength = std::abs(d->cursor.position() - d->cursor.anchor());
     d->cursor.select(QTextCursor::Document);
-    d->selectionChanged(selectionLength != qAbs(d->cursor.position() - d->cursor.anchor()));
+    d->selectionChanged(selectionLength != std::abs(d->cursor.position() - d->cursor.anchor()));
     d->cursorIsFocusIndicator = false;
     emit updateRequest();
 }

@@ -156,7 +156,7 @@ public:
     inline void setDefaultValues(Qt::Orientation o) {
         orientation = o;
         defaultSectionSize = (o == Qt::Horizontal ? 100
-                              : qMax(q_func()->minimumSectionSize(), 30));
+                              : std::max(q_func()->minimumSectionSize(), 30));
         defaultAlignment = (o == Qt::Horizontal
                             ? Qt::Alignment(Qt::AlignCenter)
                             : Qt::AlignLeft|Qt::AlignVCenter);
@@ -201,8 +201,8 @@ public:
     inline void saveCascadingSectionSize(int visual, int size) {
         if (!cascadingSectionSize.contains(visual)) {
             cascadingSectionSize.insert(visual, size);
-            firstCascadingSection = qMin(firstCascadingSection, visual);
-            lastCascadingSection = qMax(lastCascadingSection, visual);
+            firstCascadingSection = std::min(firstCascadingSection, visual);
+            lastCascadingSection = std::max(lastCascadingSection, visual);
         }
     }
 

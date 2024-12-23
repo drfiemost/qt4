@@ -414,7 +414,7 @@ QRectF QDeclarativeViewInspector::adjustToScreenBoundaries(const QRectF &boundin
 {
     int marginFromEdge = 1;
     QRectF boundingRect(boundingRectInSceneSpace);
-    if (qAbs(boundingRect.left()) - 1 < 2)
+    if (std::abs(boundingRect.left()) - 1 < 2)
         boundingRect.setLeft(marginFromEdge);
 
     QRect rect = data->view->rect();
@@ -422,7 +422,7 @@ QRectF QDeclarativeViewInspector::adjustToScreenBoundaries(const QRectF &boundin
     if (boundingRect.right() >= rect.right())
         boundingRect.setRight(rect.right() - marginFromEdge);
 
-    if (qAbs(boundingRect.top()) - 1 < 2)
+    if (std::abs(boundingRect.top()) - 1 < 2)
         boundingRect.setTop(marginFromEdge);
 
     if (boundingRect.bottom() >= rect.bottom())

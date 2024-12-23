@@ -795,8 +795,8 @@ static inline QSize basicSize(
 {
     return horizontal
         ? QSize(std::max(s.width(), t.width() + rc.width() + lc.width()),
-                s.height() + (std::max(rc.height(), qMax(lc.height(), t.height()))))
-        : QSize(s.width() + (std::max(rc.width(), qMax(lc.width(), t.width()))),
+                s.height() + (std::max(rc.height(), std::max(lc.height(), t.height()))))
+        : QSize(s.width() + (std::max(rc.width(), std::max(lc.width(), t.width()))),
                 std::max(s.height(), t.height() + rc.height() + lc.height()));
 }
 
@@ -899,7 +899,7 @@ int QTabWidget::heightForWidth(int width) const
     const int contentsWidth = width - padding.width();
     int stackWidth = contentsWidth;
     if (!tabIsHorizontal)
-        stackWidth -= std::max(t.width(), qMax(lc.width(), rc.width()));
+        stackWidth -= std::max(t.width(), std::max(lc.width(), rc.width()));
 
     int stackHeight = d->stack->heightForWidth(stackWidth);
     QSize s(stackWidth, stackHeight);

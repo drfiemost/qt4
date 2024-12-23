@@ -442,7 +442,7 @@ void QSpinBox::setRange(int minimum, int maximum)
 QString QSpinBox::textFromValue(int value) const
 {
     QString str = locale().toString(value);
-    if (qAbs(value) >= 1000 || value == INT_MIN) {
+    if (std::abs(value) >= 1000 || value == INT_MIN) {
         str.remove(locale().groupSeparator());
     }
 
@@ -860,7 +860,7 @@ QString QDoubleSpinBox::textFromValue(double value) const
 {
     Q_D(const QDoubleSpinBox);
     QString str = locale().toString(value, 'f', d->decimals);
-    if (qAbs(value) >= 1000.0) {
+    if (std::abs(value) >= 1000.0) {
         str.remove(locale().groupSeparator());
     }
     return str;

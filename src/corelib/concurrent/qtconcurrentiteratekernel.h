@@ -114,7 +114,7 @@ public:
     void reserveSpace(int resultCount)
     {
         currentResultCount = resultCount;
-        vector.resize(qMax(resultCount, vector.count()));
+        vector.resize(std::max(resultCount, vector.count()));
     }
 
     void reportResults(int begin)
@@ -242,7 +242,7 @@ public:
 
             // Atomically reserve a block of iterationCount for this thread.
             const int beginIndex = currentIndex.fetchAndAddRelease(currentBlockSize);
-            const int endIndex = qMin(beginIndex + currentBlockSize, iterationCount);
+            const int endIndex = std::min(beginIndex + currentBlockSize, iterationCount);
 
             if (beginIndex >= endIndex) {
                 // No more work

@@ -2704,7 +2704,7 @@ void QWidgetPrivate::scroll_sys(int dx, int dy, const QRect &r)
         return;
     }
     bool valid_rect = r.isValid();
-    bool just_update = qAbs(dx) > q->width() || qAbs(dy) > q->height();
+    bool just_update = std::abs(dx) > q->width() || std::abs(dy) > q->height();
     QRect sr = valid_rect ? r : clipRect();
     if (just_update)
         q->update();
@@ -2763,16 +2763,16 @@ void QWidgetPrivate::scroll_sys(int dx, int dy, const QRect &r)
     if (dx) {
         int x = x2 == sr.x() ? sr.x()+w : sr.x();
         if (repaint_immediately)
-            q->repaint(x, sr.y(), qAbs(dx), sr.height());
+            q->repaint(x, sr.y(), std::abs(dx), sr.height());
         else if (q->internalWinId())
-            XClearArea(dpy, data.winid, x, sr.y(), qAbs(dx), sr.height(), True);
+            XClearArea(dpy, data.winid, x, sr.y(), std::abs(dx), sr.height(), True);
     }
     if (dy) {
         int y = y2 == sr.y() ? sr.y()+h : sr.y();
         if (repaint_immediately)
-            q->repaint(sr.x(), y, sr.width(), qAbs(dy));
+            q->repaint(sr.x(), y, sr.width(), std::abs(dy));
         else if (q->internalWinId())
-            XClearArea(dpy, data.winid, sr.x(), y, sr.width(), qAbs(dy), True);
+            XClearArea(dpy, data.winid, sr.x(), y, sr.width(), std::abs(dy), True);
     }
 
     qt_insert_sip(q, dx, dy); // #### ignores r

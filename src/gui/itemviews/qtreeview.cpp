@@ -2263,9 +2263,9 @@ void QTreeView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFl
 
     d->executePostedLayout();
     QPoint tl(isRightToLeft() ? std::max(rect.left(), rect.right())
-              : std::min(rect.left(), rect.right()), qMin(rect.top(), rect.bottom()));
+              : std::min(rect.left(), rect.right()), std::min(rect.top(), rect.bottom()));
     QPoint br(isRightToLeft() ? std::min(rect.left(), rect.right()) :
-              std::max(rect.left(), rect.right()), qMax(rect.top(), rect.bottom()));
+              std::max(rect.left(), rect.right()), std::max(rect.top(), rect.bottom()));
     QModelIndex topLeft = indexAt(tl);
     QModelIndex bottomRight = indexAt(br);
     if (!topLeft.isValid() && !bottomRight.isValid()) {
@@ -2402,7 +2402,7 @@ void QTreeView::scrollContentsBy(int dx, int dy)
     int viewCount = d->viewport->height() / itemHeight;
     int maxDeltaY = std::min(d->viewItems.count(), viewCount);
     // no need to do a lot of work if we are going to redraw the whole thing anyway
-    if (qAbs(dy) > qAbs(maxDeltaY) && d->editorIndexHash.isEmpty()) {
+    if (std::abs(dy) > std::abs(maxDeltaY) && d->editorIndexHash.isEmpty()) {
         verticalScrollBar()->update();
         d->viewport->update();
         return;
@@ -3640,7 +3640,7 @@ void QTreeViewPrivate::select(const QModelIndex &topIndex, const QModelIndex &bo
             QModelIndex previousParent = previous.parent();
             if (previous.isValid() && parent == previousParent) {
                 // same parent
-                if (qAbs(previous.row() - index.row()) > 1) {
+                if (std::abs(previous.row() - index.row()) > 1) {
                     //a hole (hidden index inside a range) has been detected
                     if (currentRange.isValid()) {
                         selection.append(currentRange);

@@ -74,7 +74,7 @@ public:
         : x(-1), y(-1), w(0), h(0), indexHint(-1), visited(0xffff) {}
     inline QListViewItem& operator=(const QListViewItem&) = default;
     constexpr QListViewItem(QRect r, int i)
-        : x(r.x()), y(r.y()), w(qMin(r.width(), SHRT_MAX)), h(qMin(r.height(), SHRT_MAX)),
+        : x(r.x()), y(r.y()), w(std::min(r.width(), SHRT_MAX)), h(std::min(r.height(), SHRT_MAX)),
           indexHint(i), visited(0xffff) {}
     constexpr bool operator==(const QListViewItem &other) const {
         return (x == other.x && y == other.y && w == other.w && h == other.h &&
@@ -86,7 +86,7 @@ public:
     constexpr void invalidate()
         { x = -1; y = -1; w = 0; h = 0; }
     constexpr void resize(const QSize size)
-        { w = qMin(size.width(), SHRT_MAX); h = qMin(size.height(), SHRT_MAX); }
+        { w = std::min(size.width(), SHRT_MAX); h = std::min(size.height(), SHRT_MAX); }
     constexpr void move(const QPoint position)
         { x = position.x(); y = position.y(); }
     constexpr int width() const { return w; }
@@ -321,7 +321,7 @@ public:
     inline void setContentsSize(int w, int h) { commonListView->contentsSize = QSize(w, h); }
 
     inline int flipX(int x) const
-        { return qMax(viewport->width(), contentsSize().width()) - x; }
+        { return std::max(viewport->width(), contentsSize().width()) - x; }
     inline QPoint flipX(const QPoint &p) const
         { return QPoint(flipX(p.x()), p.y()); }
     inline QRect flipX(const QRect &r) const

@@ -3922,7 +3922,7 @@ void QCleanlooksStyle::polish(QPalette &pal)
     //between text and background is too low.
     QColor highlight = pal.highlight().color();
     QColor highlightText = pal.highlightedText().color();
-    if (qAbs(qGray(highlight.rgb()) - qGray(highlightText.rgb())) < 150) {
+    if (std::abs(qGray(highlight.rgb()) - qGray(highlightText.rgb())) < 150) {
         if (qGray(highlightText.rgb()) < 128)
             pal.setBrush(QPalette::Highlight, highlight.lighter(145));
     }

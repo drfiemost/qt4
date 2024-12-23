@@ -95,7 +95,7 @@ void qt_scrollRectInImage(QImage &img, const QRect &rect, const QPoint &offset)
     const int bytes = w * depth;
 
     // overlapping segments?
-    if (offset.y() == 0 && qAbs(offset.x()) < w) {
+    if (offset.y() == 0 && std::abs(offset.x()) < w) {
         do {
             ::memmove(dest, src, bytes);
             dest += lineskip;

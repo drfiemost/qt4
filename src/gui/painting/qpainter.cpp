@@ -403,8 +403,8 @@ void QPainterPrivate::draw_helper(const QPainterPath &originalPath, DrawOperatio
                 QPainterPath stroke = stroker.createStroke(originalPath);
                 strokeBounds = (stroke * state->matrix).boundingRect();
             } else {
-                strokeOffsetX = qAbs(penWidth * state->matrix.m11() / qreal(2.0));
-                strokeOffsetY = qAbs(penWidth * state->matrix.m22() / qreal(2.0));
+                strokeOffsetX = std::abs(penWidth * state->matrix.m11() / qreal(2.0));
+                strokeOffsetY = std::abs(penWidth * state->matrix.m22() / qreal(2.0));
             }
         }
     }

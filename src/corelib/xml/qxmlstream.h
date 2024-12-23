@@ -93,7 +93,7 @@ public:
     inline QStringRef prefix() const {
         return QStringRef(m_qualifiedName.string(),
                           m_qualifiedName.position(),
-                          qMax(0, m_qualifiedName.size() - m_name.size() - 1));
+                          std::max(0, m_qualifiedName.size() - m_name.size() - 1));
     }
     inline QStringRef value() const { return m_value; }
     inline bool isDefault() const { return m_isDefault; }

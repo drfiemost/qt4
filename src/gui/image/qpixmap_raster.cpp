@@ -188,7 +188,7 @@ void QRasterPixmapData::fill(const QColor &color)
     if (image.depth() == 1) {
         int gray = qGray(color.rgba());
         // Pick the best approximate color in the image's colortable.
-        if (qAbs(qGray(image.color(0)) - gray) < qAbs(qGray(image.color(1)) - gray))
+        if (std::abs(qGray(image.color(0)) - gray) < std::abs(qGray(image.color(1)) - gray))
             pixel = 0;
         else
             pixel = 1;

@@ -75,7 +75,7 @@ int ThreadEngineBarrier::release()
             }
         } else if (localCount < 0) {
             if (count.testAndSetOrdered(localCount, localCount + 1))
-                return qAbs(localCount + 1);
+                return std::abs(localCount + 1);
         } else {
             if (count.testAndSetOrdered(localCount, localCount - 1))
                 return localCount - 1;
@@ -110,7 +110,7 @@ bool ThreadEngineBarrier::releaseUnlessLast()
 {
     forever {
         int localCount = count.loadRelaxed();
-        if (qAbs(localCount) == 1) {
+        if (std::abs(localCount) == 1) {
             return false;
         } else if (localCount < 0) {
             if (count.testAndSetOrdered(localCount, localCount + 1))

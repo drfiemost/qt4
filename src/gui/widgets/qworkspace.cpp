@@ -3224,8 +3224,8 @@ QRect QWorkspacePrivate::updateWorkspace()
         if (showv) {
             vbar->setSingleStep(std::max(q->height() / 12, 30));
             vbar->setPageStep(q->height() - hsbExt);
-            vbar->setMinimum(std::min(0, yoffset + qMin(0, r.top())));
-            vbar->setMaximum(std::max(0, yoffset + qMax(0, r.bottom() - q->height() + hsbExt + 1)));
+            vbar->setMinimum(std::min(0, yoffset + std::min(0, r.top())));
+            vbar->setMaximum(std::max(0, yoffset + std::max(0, r.bottom() - q->height() + hsbExt + 1)));
             vbar->setGeometry(q->width() - vsbExt, 0, vsbExt, q->height() - hsbExt);
             vbar->setValue(yoffset);
             vbar->show();
@@ -3236,8 +3236,8 @@ QRect QWorkspacePrivate::updateWorkspace()
         if (showh) {
             hbar->setSingleStep(std::max(q->width() / 12, 30));
             hbar->setPageStep(q->width() - vsbExt);
-            hbar->setMinimum(std::min(0, xoffset + qMin(0, r.left())));
-            hbar->setMaximum(std::max(0, xoffset + qMax(0, r.right() - q->width() + vsbExt  + 1)));
+            hbar->setMinimum(std::min(0, xoffset + std::min(0, r.left())));
+            hbar->setMaximum(std::max(0, xoffset + std::max(0, r.right() - q->width() + vsbExt  + 1)));
             hbar->setGeometry(0, q->height() - hsbExt, q->width() - vsbExt, hsbExt);
             hbar->setValue(xoffset);
             hbar->show();

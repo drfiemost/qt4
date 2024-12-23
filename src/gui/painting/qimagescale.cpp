@@ -160,7 +160,7 @@ unsigned int** QImageScale::qimageCalcYPoints(unsigned int *src,
     }
     p = new unsigned int* [dh+1];
 
-    int up = qAbs(dh) >= sh;
+    int up = std::abs(dh) >= sh;
     val = up ? 0x8000 * sh / dh - 0x8000 : 0;
     inc = (sh << 16) / dh;
     for(i = 0; i < dh; i++){
@@ -188,7 +188,7 @@ int* QImageScale::qimageCalcXPoints(int sw, int dw)
     }
     p = new int[dw+1];
 
-    int up = qAbs(dw) >= sw;
+    int up = std::abs(dw) >= sw;
     val = up ? 0x8000 * sw / dw - 0x8000 : 0;
     inc = (sw << 16) / dw;
     for(i = 0; i < dw; i++){
@@ -284,7 +284,7 @@ QImageScaleInfo* QImageScale::qimageCalcScaleInfo(const QImage &img,
         return nullptr;
     memset(isi, 0, sizeof(QImageScaleInfo));
 
-    isi->xup_yup = (qAbs(dw) >= sw) + ((qAbs(dh) >= sh) << 1);
+    isi->xup_yup = (std::abs(dw) >= sw) + ((std::abs(dh) >= sh) << 1);
 
     isi->xpoints = qimageCalcXPoints(img.width(), scw);
     if(!isi->xpoints)

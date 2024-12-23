@@ -907,7 +907,7 @@ void QCommonStylePrivate::viewItemLayout(const QStyleOptionViewItem *opt,  QRect
         pm.rwidth() += 2 * pixmapMargin;
     }
     if (sizehint) {
-        h = std::max(checkRect->height(), qMax(textRect->height(), pm.height()));
+        h = std::max(checkRect->height(), std::max(textRect->height(), pm.height()));
         if (opt->decorationPosition == QStyleOptionViewItem::Left
             || opt->decorationPosition == QStyleOptionViewItem::Right) {
             w = textRect->width() + pm.width();

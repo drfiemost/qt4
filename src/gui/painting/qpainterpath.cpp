@@ -2180,8 +2180,8 @@ bool QPainterPath::contains(const QRectF &rect) const
 
 static inline bool epsilonCompare(const QPointF &a, const QPointF &b, const QSizeF &epsilon)
 {
-    return qAbs(a.x() - b.x()) <= epsilon.width()
-        && qAbs(a.y() - b.y()) <= epsilon.height();
+    return std::abs(a.x() - b.x()) <= epsilon.width()
+        && std::abs(a.y() - b.y()) <= epsilon.height();
 }
 
 /*!

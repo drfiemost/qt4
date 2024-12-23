@@ -389,9 +389,9 @@ namespace QPatternist
         {
             Q_ASSERT_X(m_min != -1 && other.m_min != -1, Q_FUNC_INFO, "One of the cardinalities are invalid.");
             if(m_max == -1 || other.m_max == -1)
-                return Cardinality(qMin(m_min, other.m_min), -1);
+                return Cardinality(std::min(m_min, other.m_min), -1);
             else
-                return Cardinality(qMin(m_min, other.m_min), qMax(m_max, other.m_max));
+                return Cardinality(std::min(m_min, other.m_min), std::max(m_max, other.m_max));
         }
 
         /**
@@ -400,14 +400,14 @@ namespace QPatternist
         inline Cardinality &operator|=(const Cardinality &other)
         {
             Q_ASSERT_X(m_min != -1 && other.m_min != -1, Q_FUNC_INFO, "One of the cardinalities are invalid.");
-            m_min = qMin(m_min, other.m_min);
+            m_min = std::min(m_min, other.m_min);
 
             if(m_max == -1)
                 return *this;
             else if(other.m_max == -1)
                 m_max = -1;
             else
-                m_max = qMax(m_max, other.m_max);
+                m_max = std::max(m_max, other.m_max);
 
             return *this;
         }
@@ -427,14 +427,14 @@ namespace QPatternist
             if(m_max < other.m_min) /* No intersection. */
                 return empty();
 
-            const Count min = qMax(m_min, other.m_min);
+            const Count min = std::max(m_min, other.m_min);
 
             if(m_max == -1)
                 return Cardinality(min, other.m_max);
             else if(other.m_max == -1)
                 return Cardinality(min, m_max);
             else
-                return Cardinality(min, qMin(m_max, other.m_max));
+                return Cardinality(min, std::min(m_max, other.m_max));
         }
 
         /**

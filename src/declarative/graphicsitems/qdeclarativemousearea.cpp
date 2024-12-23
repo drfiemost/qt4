@@ -552,7 +552,7 @@ void QDeclarativeMouseArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         if (!keepMouseGrab()) {
             const int dragThreshold = QApplication::startDragDistance();
 
-            if (qAbs(x - d->startX) > dragThreshold || qAbs(y - d->startY) > dragThreshold) {
+            if (std::abs(x - d->startX) > dragThreshold || std::abs(y - d->startY) > dragThreshold) {
                 setKeepMouseGrab(true);
                 d->stealMouse = true;
             }

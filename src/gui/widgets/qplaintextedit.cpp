@@ -1533,8 +1533,8 @@ void QPlainTextEdit::timerEvent(QTimerEvent *e)
         QPoint pos;
         if (d->inDrag) {
             pos = d->autoScrollDragPos;
-            visible.adjust(std::min(visible.width()/3,20), qMin(visible.height()/3,20),
-                           -std::min(visible.width()/3,20), -qMin(visible.height()/3,20));
+            visible.adjust(std::min(visible.width()/3,20), std::min(visible.height()/3,20),
+                           -std::min(visible.width()/3,20), -std::min(visible.height()/3,20));
         } else {
             const QPoint globalPos = QCursor::pos();
             pos = d->viewport->mapFromGlobal(globalPos);

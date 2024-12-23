@@ -605,10 +605,10 @@ QValidator::State QDoubleValidatorPrivate::validateWithLocale(QString &input, QL
         return QValidator::Acceptable;
 
     if (notation == QDoubleValidator::StandardNotation) {
-        double max = std::max(qAbs(q->b), qAbs(q->t));
+        double max = std::max(std::abs(q->b), std::abs(q->t));
         if (max < LLONG_MAX) {
             qlonglong n = pow10(numDigits(qlonglong(max))) - 1;
-            if (qAbs(i) > n)
+            if (std::abs(i) > n)
                 return QValidator::Invalid;
         }
     }

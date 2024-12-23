@@ -88,7 +88,7 @@ public:
         return (row * columnCount()) + column;
     }
     inline int childIndex(const QStandardItem *child) {
-        int start = qMax(0, lastIndexOf -2);
+        int start = std::max(0, lastIndexOf -2);
         lastIndexOf = children.indexOf(const_cast<QStandardItem*>(child), start);
         if (lastIndexOf == -1 && start != 0)
             lastIndexOf = children.lastIndexOf(const_cast<QStandardItem*>(child), start);

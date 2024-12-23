@@ -122,7 +122,7 @@ public:
     inline int numRows() const { return rr; }
     inline int numCols() const { return cc; }
     inline void expand(int rows, int cols)
-        { setSize(std::max(rows, rr), qMax(cols, cc)); }
+        { setSize(std::max(rows, rr), std::max(cols, cc)); }
     inline void setRowStretch(int r, int s)
         { expand(r + 1, 0); rStretch[r] = s; setDirty(); }
     inline void setColStretch(int c, int s)

@@ -1212,6 +1212,7 @@ typedef double qreal;
 */
 
 template <typename T>
+[[deprecated("Use std::abs")]]
 Q_DECL_CONSTEXPR inline T qAbs(const T &t) { return t >= 0 ? t : -t; }
 
 Q_DECL_CONSTEXPR inline int qRound(qreal d)
@@ -1226,15 +1227,15 @@ Q_DECL_CONSTEXPR inline qint64 qRound64(qreal d)
 #endif
 
 template <typename T>
-//[[deprecated("Use std::min")]]
+[[deprecated("Use std::min")]]
 Q_DECL_CONSTEXPR inline const T &qMin(const T &a, const T &b) { return (a < b) ? a : b; }
 template <typename T>
-//[[deprecated("Use std::max")]]
+[[deprecated("Use std::max")]]
 Q_DECL_CONSTEXPR inline const T &qMax(const T &a, const T &b) { return (a < b) ? b : a; }
 template <typename T>
 //[[deprecated("Use std::clamp")]]
 Q_DECL_CONSTEXPR inline const T &qBound(const T &min, const T &val, const T &max)
-{ return qMax(min, qMin(max, val)); }
+{ return std::max(min, std::min(max, val)); }
 
 /*
    Data stream functions are provided by many classes (defined in qdatastream.h)
@@ -1802,12 +1803,12 @@ public:
 
 Q_DECL_CONSTEXPR static inline bool qFuzzyCompare(double p1, double p2)
 {
-    return (qAbs(p1 - p2) <= 0.000000000001 * qMin(qAbs(p1), qAbs(p2)));
+    return (std::abs(p1 - p2) <= 0.000000000001 * std::min(std::abs(p1), std::abs(p2)));
 }
 
 Q_DECL_CONSTEXPR static inline bool qFuzzyCompare(float p1, float p2)
 {
-    return (qAbs(p1 - p2) <= 0.00001f * qMin(qAbs(p1), qAbs(p2)));
+    return (std::abs(p1 - p2) <= 0.00001f * std::min(std::abs(p1), std::abs(p2)));
 }
 
 /*!
@@ -1815,7 +1816,7 @@ Q_DECL_CONSTEXPR static inline bool qFuzzyCompare(float p1, float p2)
 */
 Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(double d)
 {
-    return qAbs(d) <= 0.000000000001;
+    return std::abs(d) <= 0.000000000001;
 }
 
 /*!
@@ -1823,7 +1824,7 @@ Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(double d)
 */
 Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(float f)
 {
-    return qAbs(f) <= 0.00001f;
+    return std::abs(f) <= 0.00001f;
 }
 
 /*

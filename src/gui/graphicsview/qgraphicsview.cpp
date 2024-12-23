@@ -875,8 +875,8 @@ static inline void QRect_unite(QRect *rect, const QRect &other)
     if (rect->isEmpty()) {
         *rect = other;
     } else {
-        rect->setCoords(std::min(rect->left(), other.left()), qMin(rect->top(), other.top()),
-                        std::max(rect->right(), other.right()), qMax(rect->bottom(), other.bottom()));
+        rect->setCoords(std::min(rect->left(), other.left()), std::min(rect->top(), other.top()),
+                        std::max(rect->right(), other.right()), std::max(rect->bottom(), other.bottom()));
     }
 }
 
@@ -3238,8 +3238,8 @@ void QGraphicsView::mouseMoveEvent(QMouseEvent *event)
             // Update rubberband position
             const QPoint &mp = d->mousePressViewPoint;
             QPoint ep = event->pos();
-            d->rubberBandRect = QRect(std::min(mp.x(), ep.x()), qMin(mp.y(), ep.y()),
-                                      qAbs(mp.x() - ep.x()) + 1, qAbs(mp.y() - ep.y()) + 1);
+            d->rubberBandRect = QRect(std::min(mp.x(), ep.x()), std::min(mp.y(), ep.y()),
+                                      std::abs(mp.x() - ep.x()) + 1, std::abs(mp.y() - ep.y()) + 1);
 
             // Update new rubberband
             if (d->viewportUpdateMode != QGraphicsView::NoViewportUpdate){

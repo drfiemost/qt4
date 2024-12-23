@@ -1101,7 +1101,7 @@ void QRasterPaintEnginePrivate::updateMatrixData(QSpanData *spanData, const QBru
             spanData->dy = -m.dy();
             spanData->txop = m.type();
             spanData->bilinear = bilinear;
-            spanData->fast_matrix = qAbs(m.dx()) < 1e4 && qAbs(m.dy()) < 1e4;
+            spanData->fast_matrix = std::abs(m.dx()) < 1e4 && std::abs(m.dy()) < 1e4;
             spanData->adjustSpanMethods();
         } else {
             spanData->setupMatrix(m, bilinear);
@@ -2419,7 +2419,7 @@ void QRasterPaintEngine::drawImage(const QRectF &r, const QImage &img, const QRe
             if (s->flags.tx_noshear)
                 d->rasterizer->rasterizeLine(a, b, rect.height() / rect.width());
             else
-                d->rasterizer->rasterizeLine(a, b, qAbs((s->matrix.m22() * rect.height()) / (s->matrix.m11() * rect.width())));
+                d->rasterizer->rasterizeLine(a, b, std::abs((s->matrix.m22() * rect.height()) / (s->matrix.m11() * rect.width())));
             return;
         }
 #endif
@@ -2511,7 +2511,7 @@ void QRasterPaintEngine::drawTiledPixmap(const QRectF &r, const QPixmap &pixmap,
             if (s->flags.tx_noshear)
                 d->rasterizer->rasterizeLine(a, b, rect.height() / rect.width());
             else
-                d->rasterizer->rasterizeLine(a, b, qAbs((s->matrix.m22() * rect.height()) / (s->matrix.m11() * rect.width())));
+                d->rasterizer->rasterizeLine(a, b, std::abs((s->matrix.m22() * rect.height()) / (s->matrix.m11() * rect.width())));
             return;
         }
 #endif
@@ -3391,7 +3391,7 @@ bool QRasterPaintEngine::supportsTransformations(qreal pixelSize, const QTransfo
 #endif
         return true;
 
-    if (pixelSize * pixelSize * qAbs(m.determinant()) >= 64 * 64)
+    if (pixelSize * pixelSize * std::abs(m.determinant()) >= 64 * 64)
         return true;
 
     return false;
@@ -4921,8 +4921,8 @@ void QSpanData::setupMatrix(const QTransform &matrix, int bilin)
     fast_matrix = affine
         && m11 * m11 + m21 * m21 < 1e4
         && m12 * m12 + m22 * m22 < 1e4
-        && qAbs(dx) < 1e4
-        && qAbs(dy) < 1e4;
+        && std::abs(dx) < 1e4
+        && std::abs(dy) < 1e4;
 
     adjustSpanMethods();
 }

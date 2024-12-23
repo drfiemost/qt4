@@ -385,7 +385,7 @@ void QImageTextureGlyphCache::fillTexture(const Coord &c, glyph_t g, QFixed subP
 
     if (m_type == QFontEngineGlyphCache::Raster_RGBMask) {
         QImage ref(m_image.bits() + (c.x * 4 + c.y * m_image.bytesPerLine()),
-                   std::max(mask.width(), c.w), qMax(mask.height(), c.h), m_image.bytesPerLine(),
+                   std::max(mask.width(), c.w), std::max(mask.height(), c.h), m_image.bytesPerLine(),
                    m_image.format());
         QPainter p(&ref);
         p.setCompositionMode(QPainter::CompositionMode_Source);

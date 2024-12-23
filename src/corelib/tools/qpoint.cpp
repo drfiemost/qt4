@@ -428,7 +428,7 @@ QDataStream &operator>>(QDataStream &s, QPoint &p)
 */
 int QPoint::manhattanLength() const
 {
-    return qAbs(x())+qAbs(y());
+    return std::abs(x())+std::abs(y());
 }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -524,7 +524,7 @@ QDebug operator<<(QDebug d, const QPointF &p)
 */
 qreal QPointF::manhattanLength() const
 {
-    return qAbs(x())+qAbs(y());
+    return std::abs(x())+std::abs(y());
 }
 
 /*!

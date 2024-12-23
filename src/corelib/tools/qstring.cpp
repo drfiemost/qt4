@@ -159,7 +159,7 @@ static inline __m128i mergeQuestionMarks(__m128i chunk)
 
 #  ifdef __SSE4_1__
     const __m128i outOfRange = _mm_set1_epi16(0x100);
-    // We use an unsigned uc = qMin(uc, 0x100) and then compare for equality.
+    // We use an unsigned uc = std::min(uc, 0x100) and then compare for equality.
     chunk = _mm_min_epu16(chunk, outOfRange);
     const __m128i offLimitMask = _mm_cmpeq_epi16(chunk, outOfRange);
     chunk = _mm_blendv_epi8(chunk, questionMark, offLimitMask);
@@ -6377,7 +6377,7 @@ static QString replaceArgEscapes(const QString &s, const ArgEscapeData &d, int f
     const QChar *uc_begin = s.unicode();
     const QChar *uc_end = uc_begin + s.length();
 
-    int abs_field_width = qAbs(field_width);
+    int abs_field_width = std::abs(field_width);
     int result_len = s.length()
                      - d.escape_len
                      + (d.occurrences - d.locale_occurrences)

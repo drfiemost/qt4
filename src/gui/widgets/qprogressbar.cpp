@@ -142,7 +142,7 @@ bool QProgressBarPrivate::repaintRequired() const
     if (value == lastPaintedValue)
         return false;
 
-    int valueDifference = qAbs(value - lastPaintedValue);
+    int valueDifference = std::abs(value - lastPaintedValue);
 
     // Check if the text needs to be repainted
     if (value == minimum || value == maximum)
@@ -151,7 +151,7 @@ bool QProgressBarPrivate::repaintRequired() const
         if ((format.contains(QLatin1String("%v"))))
             return true;
         if ((format.contains(QLatin1String("%p"))
-             && valueDifference >= qAbs((maximum - minimum) / 100)))
+             && valueDifference >= std::abs((maximum - minimum) / 100)))
             return true;
     }
 

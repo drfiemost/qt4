@@ -560,10 +560,10 @@ static bool do_write_jpeg_image(struct jpeg_compress_struct &cinfo,
 
         jpeg_set_defaults(&cinfo);
 
-        qreal diffInch = qAbs(image.dotsPerMeterX()*2.54/100. - qRound(image.dotsPerMeterX()*2.54/100.))
-                         + qAbs(image.dotsPerMeterY()*2.54/100. - qRound(image.dotsPerMeterY()*2.54/100.));
-        qreal diffCm = (qAbs(image.dotsPerMeterX()/100. - qRound(image.dotsPerMeterX()/100.))
-                        + qAbs(image.dotsPerMeterY()/100. - qRound(image.dotsPerMeterY()/100.)))*2.54;
+        qreal diffInch = std::abs(image.dotsPerMeterX()*2.54/100. - qRound(image.dotsPerMeterX()*2.54/100.))
+                         + std::abs(image.dotsPerMeterY()*2.54/100. - qRound(image.dotsPerMeterY()*2.54/100.));
+        qreal diffCm = (std::abs(image.dotsPerMeterX()/100. - qRound(image.dotsPerMeterX()/100.))
+                        + std::abs(image.dotsPerMeterY()/100. - qRound(image.dotsPerMeterY()/100.)))*2.54;
         if (diffInch < diffCm) {
             cinfo.density_unit = 1; // dots/inch
             cinfo.X_density = qRound(image.dotsPerMeterX()*2.54/100.);

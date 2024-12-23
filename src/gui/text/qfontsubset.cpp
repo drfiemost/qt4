@@ -840,7 +840,7 @@ static void convertPath(const QPainterPath &path, QList<TTF_POINT> *points, QLis
                 int i2_x = base[2].x + ((base[2].x - base[3].x) >> 1);
                 int i2_y = base[2].y + ((base[2].y - base[3].y) >> 1);
 //                 qDebug() << "checking: i1=" << QPoint(i1_x, i1_y) << " i2=" << QPoint(i2_x, i2_y);
-                if (qAbs(i1_x - i2_x) <= split_limit && qAbs(i1_y - i2_y) <= split_limit) {
+                if (std::abs(i1_x - i2_x) <= split_limit && std::abs(i1_y - i2_y) <= split_limit) {
                     // got a quadratic bezier curve
                     TTF_POINT np;
                     np.x = (i1_x + i2_x) >> 1;
@@ -849,7 +849,7 @@ static void convertPath(const QPainterPath &path, QList<TTF_POINT> *points, QLis
                         // see if we can optimize out the last onCurve point
                         int mx = (points->at(points->size() - 2).x + base[2].x) >> 1;
                         int my = (points->at(points->size() - 2).y + base[2].y) >> 1;
-                        if (qAbs(mx - base[3].x) <= split_limit && qAbs(my = base[3].y) <= split_limit)
+                        if (std::abs(mx - base[3].x) <= split_limit && std::abs(my = base[3].y) <= split_limit)
                             points->takeLast();
                         try_reduce = false;
                     }

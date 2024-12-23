@@ -3354,8 +3354,8 @@ bool QETWidget::translateMouseEvent(const QWSMouseEvent *event, int prevstate)
                         mouseButtonPressed == button &&
                         long(mouse.time) -long(mouseButtonPressTime)
                             < QApplication::doubleClickInterval() &&
-                        qAbs(mouse.x_root - mouseXPos) < mouse_double_click_distance &&
-                        qAbs(mouse.y_root - mouseYPos) < mouse_double_click_distance ) {
+                        std::abs(mouse.x_root - mouseXPos) < mouse_double_click_distance &&
+                        std::abs(mouse.y_root - mouseYPos) < mouse_double_click_distance ) {
                         type = QEvent::MouseButtonDblClick;
                         mouseButtonPressTime -= 2000;        // no double-click next time
                     } else {

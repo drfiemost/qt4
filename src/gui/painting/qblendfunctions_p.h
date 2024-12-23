@@ -284,8 +284,8 @@ void qt_transform_image_rasterize(DestT *destPixels, int dbpl,
                                   int dudx, int dvdx, int dudy, int dvdy, int u0, int v0,
                                   Blender blender)
 {
-    int fromY = qMax(qRound(topY), clip.top());
-    int toY = qMin(qRound(bottomY), clip.top() + clip.height());
+    int fromY = std::max(qRound(topY), clip.top());
+    int toY = std::min(qRound(bottomY), clip.top() + clip.height());
     if (fromY >= toY)
         return;
 
@@ -301,8 +301,8 @@ void qt_transform_image_rasterize(DestT *destPixels, int dbpl,
     for (int y = fromY; y < toY; ++y) {
         line = reinterpret_cast<DestT *>(reinterpret_cast<uchar *>(destPixels) + y * dbpl);
 
-        fromX = qMax(x_l >> 16, clip.left());
-        toX = qMin(x_r >> 16, clip.left() + clip.width());
+        fromX = std::max(x_l >> 16, clip.left());
+        toX = std::min(x_r >> 16, clip.left() + clip.width());
         if (fromX < toX) {
             // Because of rounding, we can get source coordinates outside the source image.
             // Clamp these coordinates to the source rect to avoid segmentation fault and

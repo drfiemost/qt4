@@ -615,7 +615,7 @@ bool QWSPcMouseHandlerPrivate::sendEvent(QWSPcMouseSubHandler& h)
 {
     if (h.reliable()) {
         QPoint motion = h.takeMotion();
-        if (qAbs(motion.x()) > accel_limit || qAbs(motion.y()) > accel_limit)
+        if (std::abs(motion.x()) > accel_limit || std::abs(motion.y()) > accel_limit)
             motion *= accel;
         QPoint newPos = handler->pos() + motion;
         if (qt_screen->isTransformed()) {

@@ -397,9 +397,9 @@ struct Q_AUTOTEST_EXPORT QScriptLine
     uint hasTrailingSpaces : 1;
     uint leadingIncluded : 1;
     QFixed height() const { return (ascent + descent).ceil() + 1
-                            + (leadingIncluded?  qMax(QFixed(),leading) : QFixed()); }
+                            + (leadingIncluded?  std::max(QFixed(),leading) : QFixed()); }
     QFixed base() const { return ascent
-                          + (leadingIncluded ? qMax(QFixed(),leading) : QFixed()); }
+                          + (leadingIncluded ? std::max(QFixed(),leading) : QFixed()); }
     void setDefaultHeight(QTextEngine *eng);
     void operator+=(const QScriptLine &other);
 };
@@ -408,9 +408,9 @@ Q_DECLARE_TYPEINFO(QScriptLine, Q_PRIMITIVE_TYPE);
 
 inline void QScriptLine::operator+=(const QScriptLine &other)
 {
-    leading= qMax(leading + ascent, other.leading + other.ascent) - qMax(ascent, other.ascent);
-    descent = qMax(descent, other.descent);
-    ascent = qMax(ascent, other.ascent);
+    leading= std::max(leading + ascent, other.leading + other.ascent) - std::max(ascent, other.ascent);
+    descent = std::max(descent, other.descent);
+    ascent = std::max(ascent, other.ascent);
     textWidth += other.textWidth;
     length += other.length;
 }

@@ -217,7 +217,7 @@ void QTextEditPrivate::pageUpDown(QTextCursor::MoveOperation op, QTextCursor::Mo
     // move using movePosition to keep the cursor's x
     do {
         qreal y = control->cursorRect(cursor).top();
-        distance += qAbs(y - lastY);
+        distance += std::abs(y - lastY);
         lastY = y;
         moved = cursor.movePosition(op, moveMode);
     } while (moved && distance < viewport->height());
@@ -1042,8 +1042,8 @@ void QTextEdit::timerEvent(QTimerEvent *e)
         QPoint pos;
         if (d->inDrag) {
             pos = d->autoScrollDragPos;
-            visible.adjust(std::min(visible.width()/3,20), qMin(visible.height()/3,20),
-                           -std::min(visible.width()/3,20), -qMin(visible.height()/3,20));
+            visible.adjust(std::min(visible.width()/3,20), std::min(visible.height()/3,20),
+                           -std::min(visible.width()/3,20), -std::min(visible.height()/3,20));
         } else {
             const QPoint globalPos = QCursor::pos();
             pos = d->viewport->mapFromGlobal(globalPos);

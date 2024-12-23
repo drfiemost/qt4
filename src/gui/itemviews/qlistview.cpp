@@ -1764,11 +1764,11 @@ QModelIndex QListViewPrivate::closestIndex(const QRect &target,
         if ((target.center().x() >= indexRect.x() && target.center().x() < indexRect.right())
             || (indexRect.center().x() >= target.x() && indexRect.center().x() < target.right())) {
                 //one item's center is at the vertical of the other
-                distance = qAbs(indexRect.center().y() - target.center().y());
+                distance = std::abs(indexRect.center().y() - target.center().y());
         } else if ((target.center().y() >= indexRect.y() && target.center().y() < indexRect.bottom())
             || (indexRect.center().y() >= target.y() && indexRect.center().y() < target.bottom())) {
                 //one item's center is at the vertical of the other
-                distance = qAbs(indexRect.center().x() - target.center().x());
+                distance = std::abs(indexRect.center().x() - target.center().x());
         } else {
             distance = (indexRect.center() - target.center()).manhattanLength();
         }
@@ -2545,10 +2545,10 @@ QRect QListModeViewBase::mapToViewport(const QRect &rect) const
     QRect result = rect;
     if (flow() == QListView::TopToBottom) {
         result.setLeft(spacing());
-        result.setWidth(std::max(rect.width(), qMax(contentsSize.width(), viewport()->width()) - 2 * spacing()));
+        result.setWidth(std::max(rect.width(), std::max(contentsSize.width(), viewport()->width()) - 2 * spacing()));
     } else { // LeftToRight
         result.setTop(spacing());
-        result.setHeight(std::max(rect.height(), qMax(contentsSize.height(), viewport()->height()) - 2 * spacing()));
+        result.setHeight(std::max(rect.height(), std::max(contentsSize.height(), viewport()->height()) - 2 * spacing()));
     }
     return result;
 }

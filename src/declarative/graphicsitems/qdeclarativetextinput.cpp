@@ -1157,7 +1157,7 @@ void QDeclarativeTextInput::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (d->sendMouseEventToInputContext(event, QEvent::MouseMove))
         return;
     if (d->selectPressed) {
-        if (qAbs(int(event->pos().x() - d->pressPos.x())) > QApplication::startDragDistance())
+        if (std::abs(int(event->pos().x() - d->pressPos.x())) > QApplication::startDragDistance())
             setKeepMouseGrab(true);
         moveCursorSelection(d->xToPos(event->pos().x()), d->mouseSelectionMode);
         event->setAccepted(true);

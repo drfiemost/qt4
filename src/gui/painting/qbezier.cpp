@@ -198,14 +198,14 @@ void QBezier::addToPolygon(QPolygonF *polygon, qreal bezier_flattening_threshold
         // check if we can pop the top bezier curve from the stack
         qreal y4y1 = b->y4 - b->y1;
         qreal x4x1 = b->x4 - b->x1;
-        qreal l = qAbs(x4x1) + qAbs(y4y1);
+        qreal l = std::abs(x4x1) + std::abs(y4y1);
         qreal d;
         if (l > 1.) {
-            d = qAbs( (x4x1)*(b->y1 - b->y2) - (y4y1)*(b->x1 - b->x2) )
-                + qAbs( (x4x1)*(b->y1 - b->y3) - (y4y1)*(b->x1 - b->x3) );
+            d = std::abs( (x4x1)*(b->y1 - b->y2) - (y4y1)*(b->x1 - b->x2) )
+                + std::abs( (x4x1)*(b->y1 - b->y3) - (y4y1)*(b->x1 - b->x3) );
         } else {
-            d = qAbs(b->x1 - b->x2) + qAbs(b->y1 - b->y2) +
-                qAbs(b->x1 - b->x3) + qAbs(b->y1 - b->y3);
+            d = std::abs(b->x1 - b->x2) + std::abs(b->y1 - b->y2) +
+                std::abs(b->x1 - b->x3) + std::abs(b->y1 - b->y3);
             l = 1.;
         }
         if (d < bezier_flattening_threshold*l || b == beziers + 31) {
@@ -272,13 +272,13 @@ static ShiftResult good_offset(const QBezier *b1, const QBezier *b2, qreal offse
         QPointF p1 = b1->pointAt(i);
         QPointF p2 = b2->pointAt(i);
         qreal d = (p1.x() - p2.x())*(p1.x() - p2.x()) + (p1.y() - p2.y())*(p1.y() - p2.y());
-        if (qAbs(d - o2) > max_dist_line)
+        if (std::abs(d - o2) > max_dist_line)
             return Split;
 
         QPointF normalPoint = b1->normalVector(i);
-        qreal l = qAbs(normalPoint.x()) + qAbs(normalPoint.y());
+        qreal l = std::abs(normalPoint.x()) + std::abs(normalPoint.y());
         if (l != qreal(0.0)) {
-            d = qAbs( normalPoint.x()*(p1.y() - p2.y()) - normalPoint.y()*(p1.x() - p2.x()) ) / l;
+            d = std::abs( normalPoint.x()*(p1.y() - p2.y()) - normalPoint.y()*(p1.x() - p2.x()) ) / l;
             if (d > max_dist_normal)
                 return Split;
         }
@@ -597,7 +597,7 @@ qreal QBezier::tForY(qreal t0, qreal t1, qreal y) const
         }
         dt = lt - t;
         lt = t;
-    } while (qAbs(dt) > qreal(1e-7));
+    } while (std::abs(dt) > qreal(1e-7));
 
     return t0;
 }
@@ -669,7 +669,7 @@ qreal QBezier::tAtLength(qreal l) const
         QBezier left;
         right.parameterSplitLeft(t, &left);
         qreal lLen = left.length();
-        if (qAbs(lLen - l) < error)
+        if (std::abs(lLen - l) < error)
             break;
 
         if (lLen < l) {

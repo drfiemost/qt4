@@ -1119,7 +1119,7 @@ void QDeclarativePathViewPrivate::handleMousePressEvent(QGraphicsSceneMouseEvent
 
     startPoint = pointNear(event->pos(), &startPc);
     if (idx == items.count()) {
-        qreal distance = qAbs(event->pos().x() - startPoint.x()) + qAbs(event->pos().y() - startPoint.y());
+        qreal distance = std::abs(event->pos().x() - startPoint.x()) + std::abs(event->pos().y() - startPoint.y());
         if (distance > dragMargin)
             return;
     }
@@ -1158,7 +1158,7 @@ void QDeclarativePathViewPrivate::handleMouseMoveEvent(QGraphicsSceneMouseEvent 
     QPointF pathPoint = pointNear(event->pos(), &newPc);
     if (!stealMouse) {
         QPointF delta = pathPoint - startPoint;
-        if (qAbs(delta.x()) > QApplication::startDragDistance() || qAbs(delta.y()) > QApplication::startDragDistance()) {
+        if (std::abs(delta.x()) > QApplication::startDragDistance() || std::abs(delta.y()) > QApplication::startDragDistance()) {
             stealMouse = true;
             startPc = newPc;
         }
@@ -1209,9 +1209,9 @@ void QDeclarativePathViewPrivate::handleMouseReleaseEvent(QGraphicsSceneMouseEve
 
     qreal elapsed = qreal(lastElapsed + QDeclarativeItemPrivate::elapsed(lastPosTime)) / 1000.;
     qreal velocity = elapsed > 0. ? lastDist / elapsed : 0;
-    if (model && modelCount && qAbs(velocity) > qreal(1.)) {
+    if (model && modelCount && std::abs(velocity) > qreal(1.)) {
         qreal count = pathItems == -1 ? modelCount : pathItems;
-        if (qAbs(velocity) > count * 2) // limit velocity
+        if (std::abs(velocity) > count * 2) // limit velocity
             velocity = (velocity > 0 ? count : -count) * 2;
         // Calculate the distance to be travelled
         qreal v2 = velocity*velocity;
@@ -1229,7 +1229,7 @@ void QDeclarativePathViewPrivate::handleMouseReleaseEvent(QGraphicsSceneMouseEve
                 dist = qreal(0.);
                 accel = qreal(0.);
             } else {
-                accel = v2 / (2.0f * qAbs(dist));
+                accel = v2 / (2.0f * std::abs(dist));
             }
         }
         offsetAdj = qreal(0.0);
@@ -1644,7 +1644,7 @@ int QDeclarativePathViewPrivate::calcCurrentIndex()
         offset = qmlMod(offset, modelCount);
         if (offset < 0)
             offset += modelCount;
-        current = qRound(qAbs(qmlMod(modelCount - offset, modelCount)));
+        current = qRound(std::abs(qmlMod(modelCount - offset, modelCount)));
         current = current % modelCount;
     }
 

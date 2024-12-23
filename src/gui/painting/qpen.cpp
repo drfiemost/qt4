@@ -656,7 +656,7 @@ void QPen::setWidthF(qreal width)
 {
     if (width < 0.f)
         qWarning("QPen::setWidthF: Setting a pen width with a negative value is not defined");
-    if (qAbs(d->width - width) < 0.00000001f)
+    if (std::abs(d->width - width) < 0.00000001f)
         return;
     detach();
     d->width = width;

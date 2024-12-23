@@ -254,7 +254,7 @@ public:
 #endif
 
     int cursorPosition() const { return m_cursor; }
-    void setCursorPosition(int pos) { if (pos <= m_text.length()) moveCursor(qMax(0, pos)); }
+    void setCursorPosition(int pos) { if (pos <= m_text.length()) moveCursor(std::max(0, pos)); }
 
     bool hasAcceptableInput() const { return hasAcceptableInput(m_text); }
     bool fixup();

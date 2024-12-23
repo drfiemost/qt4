@@ -739,7 +739,7 @@ void QHeaderView::moveSection(int from, int to)
     int logical = logicalIndices[from];
     int visual = from;
 
-    int affected_count = qAbs(to - from) + 1;
+    int affected_count = std::abs(to - from) + 1;
     QVarLengthArray<int> sizes(affected_count);
     QVarLengthArray<ResizeMode> modes(affected_count);
 
@@ -2236,7 +2236,7 @@ void QHeaderView::mouseMoveEvent(QMouseEvent *e)
             return;
         }
         case QHeaderViewPrivate::MoveSection: {
-            if (qAbs(pos - d->firstPos) >= QApplication::startDragDistance()
+            if (std::abs(pos - d->firstPos) >= QApplication::startDragDistance()
                 || !d->sectionIndicator->isHidden()) {
                 int visual = visualIndexAt(pos);
                 if (visual == -1)

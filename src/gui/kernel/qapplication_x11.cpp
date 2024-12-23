@@ -3293,7 +3293,7 @@ int QApplication::x11ProcessEvent(XEvent* event)
 
 	    // both key press/release is required for some complex
 	    // input methods. don't eliminate anything.
-	    QKeyEventEx keyevent(type, code, modifiers, text, false, std::max(qMax(count, 1), text.length()),
+	    QKeyEventEx keyevent(type, code, modifiers, text, false, std::max(std::max(count, 1), text.length()),
                                  event->xkey.keycode, keySym, event->xkey.state);
 	    if(qic && qic->filterEvent(&keyevent))
 		return true;
@@ -4308,8 +4308,8 @@ bool QETWidget::translateMouseEvent(const XEvent *event)
                 mouseButtonPressed == button &&
                 (long)event->xbutton.time -(long)mouseButtonPressTime
                 < QApplication::doubleClickInterval() &&
-                qAbs(event->xbutton.x - mouseXPos) < QT_GUI_DOUBLE_CLICK_RADIUS &&
-                qAbs(event->xbutton.y - mouseYPos) < QT_GUI_DOUBLE_CLICK_RADIUS) {
+                std::abs(event->xbutton.x - mouseXPos) < QT_GUI_DOUBLE_CLICK_RADIUS &&
+                std::abs(event->xbutton.y - mouseYPos) < QT_GUI_DOUBLE_CLICK_RADIUS) {
                 type = QEvent::MouseButtonDblClick;
                 mouseButtonPressTime -= 2000;        // no double-click next time
             } else {

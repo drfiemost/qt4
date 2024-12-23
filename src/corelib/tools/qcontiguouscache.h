@@ -171,7 +171,7 @@ private:
     int alignOfTypedData() const
     {
 #ifdef Q_ALIGNOF
-        return qMax<int>(sizeof(void*), Q_ALIGNOF(Data));
+        return std::max<int>(sizeof(void*), Q_ALIGNOF(Data));
 #else
         return 0;
 #endif
@@ -223,7 +223,7 @@ void QContiguousCache<T>::setCapacity(int asize)
     union { QContiguousCacheData *d; QContiguousCacheTypedData<T> *p; } x;
     x.d = malloc(asize);
     x.d->alloc = asize;
-    x.d->count = qMin(d->count, asize);
+    x.d->count = std::min(d->count, asize);
     x.d->offset = d->offset + d->count - x.d->count;
     if(asize)
         x.d->start = x.d->offset % x.d->alloc;

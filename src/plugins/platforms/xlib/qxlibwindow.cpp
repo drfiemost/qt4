@@ -359,7 +359,7 @@ void QXlibWindow::mousePressEvent(XButtonEvent *e)
     QEvent::Type type = QEvent::MouseButtonPress;
 
     if (e->window == prevWindow && long(e->time) - prevTime < QApplication::doubleClickInterval()
-        && qAbs(e->x - prevX) < 5 && qAbs(e->y - prevY) < 5) {
+        && std::abs(e->x - prevX) < 5 && std::abs(e->y - prevY) < 5) {
         type = QEvent::MouseButtonDblClick;
         prevTime = e->time - QApplication::doubleClickInterval(); //no double click next time
     } else {

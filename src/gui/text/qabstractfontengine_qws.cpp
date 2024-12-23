@@ -567,7 +567,7 @@ static QImage alphaMapFromPath(QFontEngine *fe, glyph_t glyph)
     pt.x = 0;
     pt.y = -glyph_y; // the baseline
     QPainterPath path;
-    QImage im(glyph_width + qAbs(glyph_x) + 4, glyph_height, QImage::Format_ARGB32_Premultiplied);
+    QImage im(glyph_width + std::abs(glyph_x) + 4, glyph_height, QImage::Format_ARGB32_Premultiplied);
     im.fill(Qt::transparent);
     QPainter p(&im);
     p.setRenderHint(QPainter::Antialiasing);

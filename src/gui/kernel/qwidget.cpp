@@ -3847,7 +3847,7 @@ void QWidget::setMinimumSize(int minw, int minh)
     if (minw > width() || minh > height()) {
         bool resized = testAttribute(Qt::WA_Resized);
         bool maximized = isMaximized();
-        resize(std::max(minw,width()), qMax(minh,height()));
+        resize(std::max(minw,width()), std::max(minh,height()));
         setAttribute(Qt::WA_Resized, resized); //not a user resize
         if (maximized)
             data->window_state = data->window_state | Qt::WindowMaximized;
@@ -3906,7 +3906,7 @@ void QWidget::setMaximumSize(int maxw, int maxh)
         d->setConstraints_sys();
     if (maxw < width() || maxh < height()) {
         bool resized = testAttribute(Qt::WA_Resized);
-        resize(std::min(maxw,width()), qMin(maxh,height()));
+        resize(std::min(maxw,width()), std::min(maxh,height()));
         setAttribute(Qt::WA_Resized, resized); //not a user resize
     }
 

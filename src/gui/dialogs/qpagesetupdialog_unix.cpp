@@ -405,7 +405,7 @@ void QPageSetupWidget::selectPrinter(QCUPSSupport *cups)
             if (m_printer->d_func()->hasUserSetPageSize) {
                 QRect cupsPaperSize = m_cups->paperRect(pageSizes->choices[i].choice);
                 QSize diff = cupsPaperSize.size() - qtPreferredSize;
-                if (qAbs(diff.width()) < 5 && qAbs(diff.height()) < 5) {
+                if (std::abs(diff.width()) < 5 && std::abs(diff.height()) < 5) {
                     widget.paperSize->setCurrentIndex(i);
                     preferredSizeMatched = true;
                 }

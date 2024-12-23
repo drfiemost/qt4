@@ -439,8 +439,8 @@ void QGL2PaintEngineExPrivate::updateMatrix()
 
     // 1/10000 == 0.0001, so we have good enough res to cover curves
     // that span the entire widget...
-    inverseScale = std::max(1 / std::max( std::max(qAbs(transform.m11()), qAbs(transform.m22())),
-                                  std::max(qAbs(transform.m12()), qAbs(transform.m21())) ),
+    inverseScale = std::max(1 / std::max( std::max(std::abs(transform.m11()), std::abs(transform.m22())),
+                                  std::max(std::abs(transform.m12()), std::abs(transform.m21())) ),
                         qreal(0.0001));
 
     matrixDirty = false;
@@ -1451,7 +1451,7 @@ void QGL2PaintEngineEx::drawStaticTextItem(QStaticTextItem *textItem)
     // don't try to cache huge fonts or vastly transformed fonts
     QFontEngine *fontEngine = textItem->fontEngine();
     const qreal pixelSize = fontEngine->fontDef.pixelSize;
-    if (pixelSize * pixelSize * qAbs(det) < QT_MAX_CACHED_GLYPH_SIZE * QT_MAX_CACHED_GLYPH_SIZE && det >= 0.25f && det <= 4.f) {
+    if (pixelSize * pixelSize * std::abs(det) < QT_MAX_CACHED_GLYPH_SIZE * QT_MAX_CACHED_GLYPH_SIZE && det >= 0.25f && det <= 4.f) {
         QFontEngineGlyphCache::Type glyphType = fontEngine->glyphFormat >= 0
                                                 ? QFontEngineGlyphCache::Type(textItem->fontEngine()->glyphFormat)
                                                 : d->glyphCacheType;
@@ -1510,7 +1510,7 @@ void QGL2PaintEngineEx::drawTextItem(const QPointF &p, const QTextItem &textItem
 
     // don't try to cache huge fonts or vastly transformed fonts
     const qreal pixelSize = ti.fontEngine->fontDef.pixelSize;
-    if (pixelSize * pixelSize * qAbs(det) >= QT_MAX_CACHED_GLYPH_SIZE * QT_MAX_CACHED_GLYPH_SIZE ||
+    if (pixelSize * pixelSize * std::abs(det) >= QT_MAX_CACHED_GLYPH_SIZE * QT_MAX_CACHED_GLYPH_SIZE ||
         det < 0.25f || det > 4.f)
         drawCached = false;
 
@@ -1578,7 +1578,7 @@ namespace {
 static bool fontSmoothingApproximately(qreal target)
 {
     extern Q_GUI_EXPORT qreal qt_fontsmoothing_gamma; // qapplication_win.cpp
-    return (qAbs(qt_fontsmoothing_gamma - target) < 0.2);
+    return (std::abs(qt_fontsmoothing_gamma - target) < 0.2);
 }
 #endif
 

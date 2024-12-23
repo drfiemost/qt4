@@ -184,16 +184,16 @@ static inline QWidget *mdiAreaNavigate(QWidget *area,
         switch (relation) {
         case QAccessible::Up:
         case QAccessible::Down:
-            if (qAbs(candidate->x() - source->x()) < minimumDistance) {
+            if (std::abs(candidate->x() - source->x()) < minimumDistance) {
                 target = candidate;
-                minimumDistance = qAbs(candidate->x() - source->x());
+                minimumDistance = std::abs(candidate->x() - source->x());
             }
             break;
         case QAccessible::Left:
         case QAccessible::Right:
-            if (qAbs(candidate->y() - source->y()) < minimumDistance) {
+            if (std::abs(candidate->y() - source->y()) < minimumDistance) {
                 target = candidate;
-                minimumDistance = qAbs(candidate->y() - source->y());
+                minimumDistance = std::abs(candidate->y() - source->y());
             }
             break;
         default:

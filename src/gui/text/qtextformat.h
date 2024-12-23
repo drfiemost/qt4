@@ -631,7 +631,7 @@ inline qreal QTextBlockFormat::lineHeight(qreal scriptLineHeight, qreal scaling 
     case FixedHeight:
       return(doubleProperty(LineHeight) * scaling);
     case MinimumHeight:
-      return(qMax(scriptLineHeight, doubleProperty(LineHeight) * scaling));
+      return(std::max(scriptLineHeight, doubleProperty(LineHeight) * scaling));
     case LineDistanceHeight:
       return(scriptLineHeight + doubleProperty(LineHeight) * scaling);
   }

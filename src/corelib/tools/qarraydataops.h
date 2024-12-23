@@ -171,7 +171,7 @@ struct QGenericArrayOps
         const T *readIter = end;
         T *writeIter = end + (e - b);
 
-        const T *const step1End = where + qMax(e - b, end - where);
+        const T *const step1End = where + std::max(e - b, end - where);
 
         struct Destructor
         {

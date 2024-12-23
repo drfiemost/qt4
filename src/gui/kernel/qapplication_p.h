@@ -167,15 +167,15 @@ inline QPointF QTabletDeviceData::scaleCoord(int coordX, int coordY,
     QPointF ret;
 
     if (sign(outExtentX) == sign(maxX))
-        ret.setX(((coordX - minX) * qAbs(outExtentX) / qAbs(qreal(maxX - minX))) + outOriginX);
+        ret.setX(((coordX - minX) * std::abs(outExtentX) / std::abs(qreal(maxX - minX))) + outOriginX);
     else
-        ret.setX(((qAbs(maxX) - (coordX - minX)) * qAbs(outExtentX) / qAbs(qreal(maxX - minX)))
+        ret.setX(((std::abs(maxX) - (coordX - minX)) * std::abs(outExtentX) / std::abs(qreal(maxX - minX)))
                  + outOriginX);
 
     if (sign(outExtentY) == sign(maxY))
-        ret.setY(((coordY - minY) * qAbs(outExtentY) / qAbs(qreal(maxY - minY))) + outOriginY);
+        ret.setY(((coordY - minY) * std::abs(outExtentY) / std::abs(qreal(maxY - minY))) + outOriginY);
     else
-        ret.setY(((qAbs(maxY) - (coordY - minY)) * qAbs(outExtentY) / qAbs(qreal(maxY - minY)))
+        ret.setY(((std::abs(maxY) - (coordY - minY)) * std::abs(outExtentY) / std::abs(qreal(maxY - minY)))
                  + outOriginY);
 
     return ret;

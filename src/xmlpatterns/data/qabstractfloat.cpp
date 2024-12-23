@@ -122,7 +122,7 @@ bool AbstractFloat<isDouble>::isEqual(const xsDouble a, const xsDouble b)
          * we cannot since we cannot depend on the STL. The small xs:double value below,
          * was extracted by printing the std::numeric_limits<xsDouble>::epsilon() using
          * gdb. */
-        return qAbs(a - b) <= 2.2204460492503131e-16 * qAbs(a);
+        return std::abs(a - b) <= 2.2204460492503131e-16 * std::abs(a);
     }
 }
 
@@ -154,7 +154,7 @@ QString AbstractFloat<isDouble>::stringValue() const
      * then the value is converted to an xs:decimal and the resulting xs:decimal
      * is converted to an xs:string according to the rules above.
      */
-    else if(0.000001 <= qAbs(m_value) && qAbs(m_value) < 1000000.0)
+    else if(0.000001 <= std::abs(m_value) && std::abs(m_value) < 1000000.0)
         return Decimal::toString(toDecimal());
     /*
      * If SV has the value positive or negative zero, TV is "0" or "-0" respectively.
@@ -262,21 +262,19 @@ Numeric::Ptr AbstractFloat<isDouble>::roundHalfToEven(const xsInteger precision)
 template <const bool isDouble>
 Numeric::Ptr AbstractFloat<isDouble>::floor() const
 {
-    return AbstractFloat<isDouble>::fromValue(static_cast<xsDouble>(::floor(m_value)));
+    return AbstractFloat<isDouble>::fromValue(static_cast<xsDouble>(std::floor(m_value)));
 }
 
 template <const bool isDouble>
 Numeric::Ptr AbstractFloat<isDouble>::ceiling() const
 {
-    return AbstractFloat<isDouble>::fromValue(static_cast<xsDouble>(ceil(m_value)));
+    return AbstractFloat<isDouble>::fromValue(static_cast<xsDouble>(std::ceil(m_value)));
 }
 
 template <const bool isDouble>
 Numeric::Ptr AbstractFloat<isDouble>::abs() const
 {
-    /* We must use fabs() instead of qAbs() because qAbs()
-     * doesn't return 0 for -0.0. */
-    return AbstractFloat<isDouble>::fromValue(static_cast<xsDouble>(fabs(m_value)));
+    return AbstractFloat<isDouble>::fromValue(static_cast<xsDouble>(std::abs(m_value)));
 }
 
 template <const bool isDouble>

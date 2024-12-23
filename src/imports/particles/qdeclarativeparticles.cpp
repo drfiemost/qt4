@@ -72,7 +72,7 @@ inline qreal fastSin(qreal theta)
     const qreal b = 4 / M_PI;
     const qreal c = -4 / PI_SQR;
 
-    qreal y = b * theta + c * theta * qAbs(theta);
+    qreal y = b * theta + c * theta * std::abs(theta);
     return y;
 }
 
@@ -244,8 +244,8 @@ void QDeclarativeParticleMotionGravity::advance(QDeclarativeParticle &p, int int
 {
     qreal xdiff = _xAttr - p.x;
     qreal ydiff = _yAttr - p.y;
-    qreal absXdiff = qAbs(xdiff);
-    qreal absYdiff = qAbs(ydiff);
+    qreal absXdiff = std::abs(xdiff);
+    qreal absYdiff = std::abs(ydiff);
 
     qreal xcomp = xdiff / (absXdiff + absYdiff);
     qreal ycomp = ydiff / (absXdiff + absYdiff);

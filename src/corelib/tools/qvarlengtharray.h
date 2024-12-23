@@ -202,7 +202,7 @@ Q_INLINE_TEMPLATE QVarLengthArray<T, Prealloc>::QVarLengthArray(int asize)
 
 template <class T, int Prealloc>
 Q_INLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::resize(int asize)
-{ realloc(asize, qMax(asize, a)); }
+{ realloc(asize, std::max(asize, a)); }
 
 template <class T, int Prealloc>
 Q_INLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::reserve(int asize)
@@ -218,7 +218,7 @@ Q_OUTOFLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::append(const T *abuf, in
     const int asize = s + increment;
 
     if (asize >= a)
-        realloc(s, qMax(s*2, asize));
+        realloc(s, std::max(s*2, asize));
 
     if (QTypeInfo<T>::isComplex) {
         // call constructor for new objects (which can throw)
@@ -237,7 +237,7 @@ Q_OUTOFLINE_TEMPLATE void QVarLengthArray<T, Prealloc>::realloc(int asize, int a
     T *oldPtr = ptr;
     int osize = s;
 
-    const int copySize = qMin(asize, osize);
+    const int copySize = std::min(asize, osize);
     if (aalloc != a) {
         if (aalloc > Prealloc) {
             T* newPtr = reinterpret_cast<T *>(malloc(aalloc * sizeof(T)));

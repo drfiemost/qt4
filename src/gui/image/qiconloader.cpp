@@ -404,7 +404,7 @@ static bool directoryMatchesSize(const QIconDirInfo &dir, int iconsize)
 static int directorySizeDistance(const QIconDirInfo &dir, int iconsize)
 {
     if (dir.type == QIconDirInfo::Fixed) {
-        return qAbs(dir.size - iconsize);
+        return std::abs(dir.size - iconsize);
 
     } else if (dir.type == QIconDirInfo::Scalable) {
         if (iconsize < dir.minSize)
@@ -472,7 +472,7 @@ QSize QIconLoaderEngine::actualSize(const QSize &size, QIcon::Mode mode,
         if (dir.type == QIconDirInfo::Scalable)
             return size;
         else {
-            int result = std::min<int>(dir.size, qMin(size.width(), size.height()));
+            int result = std::min<int>(dir.size, std::min(size.width(), size.height()));
             return QSize(result, result);
         }
     }

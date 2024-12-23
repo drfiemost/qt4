@@ -1833,7 +1833,7 @@ QColor QColor::toCmyk() const
     qreal y = qreal(1.0) - b;
 
     // cmy -> cmyk
-    const qreal k = std::min(c, qMin(m, y));
+    const qreal k = std::min(c, std::min(m, y));
 
     if (!qFuzzyIsNull(k - 1)) {
         c = (c - k) / (qreal(1.0) - k);
@@ -2384,12 +2384,12 @@ bool QColor::operator==(const QColor &color) const
         return (ct.argb.alpha == color.ct.argb.alpha
                 && ((((ct.ahsl.hue % 36000) == (color.ct.ahsl.hue % 36000)))
                     || (ct.ahsl.hue == color.ct.ahsl.hue))
-                && (qAbs(ct.ahsl.saturation - color.ct.ahsl.saturation) < 50
+                && (std::abs(ct.ahsl.saturation - color.ct.ahsl.saturation) < 50
                     || ct.ahsl.lightness == 0
                     || color.ct.ahsl.lightness == 0
                     || ct.ahsl.lightness == USHRT_MAX
                     || color.ct.ahsl.lightness == USHRT_MAX)
-                && (qAbs(ct.ahsl.lightness - color.ct.ahsl.lightness)) < 50);
+                && (std::abs(ct.ahsl.lightness - color.ct.ahsl.lightness)) < 50);
     } else {
         return (cspec == color.cspec
                 && ct.argb.alpha == color.ct.argb.alpha

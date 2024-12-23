@@ -261,7 +261,7 @@ void ZoomTool::scaleView(const QPointF &centerPos)
                    view()->rect().height() / m_currentScale);
 
     QRectF sceneRect;
-    if (qAbs(m_currentScale - 1.0f) < Constants::ZoomSnapDelta) {
+    if (std::abs(m_currentScale - 1.0f) < Constants::ZoomSnapDelta) {
         adjustedCenterPos.rx() = rectSize.width() / 2;
         adjustedCenterPos.ry() = rectSize.height() / 2;
     }

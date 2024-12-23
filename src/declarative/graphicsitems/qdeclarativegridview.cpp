@@ -1105,7 +1105,7 @@ void QDeclarativeGridViewPrivate::fixup(AxisData &data, qreal minExtent, qreal m
             QDeclarativeFlickablePrivate::fixup(data, minExtent, maxExtent);
             return;
         }
-        qreal dist = qAbs(data.move + pos);
+        qreal dist = std::abs(data.move + pos);
         if (dist > 0) {
             timeline.reset(data.move);
             if (fixupMode != Immediate) {
@@ -1167,10 +1167,10 @@ void QDeclarativeGridViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                 if (isRightToLeftTopToBottom())
                     bias = -bias;
                 data.flickTarget = -snapPosAt(-dataValue - bias);
-                maxDistance = qAbs(data.flickTarget - data.move.value());
+                maxDistance = std::abs(data.flickTarget - data.move.value());
                 velocity = maxVelocity;
             } else {
-                maxDistance = qAbs(minExtent - data.move.value());
+                maxDistance = std::abs(minExtent - data.move.value());
             }
         }
         if (snapMode == QDeclarativeGridView::NoSnap && highlightRange != QDeclarativeGridView::StrictlyEnforceRange)
@@ -1184,10 +1184,10 @@ void QDeclarativeGridViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                 if (isRightToLeftTopToBottom())
                     bias = -bias;
                 data.flickTarget = -snapPosAt(-dataValue + bias);
-                maxDistance = qAbs(data.flickTarget - data.move.value());
+                maxDistance = std::abs(data.flickTarget - data.move.value());
                 velocity = -maxVelocity;
             } else {
-                maxDistance = qAbs(maxExtent - data.move.value());
+                maxDistance = std::abs(maxExtent - data.move.value());
             }
         }
         if (snapMode == QDeclarativeGridView::NoSnap && highlightRange != QDeclarativeGridView::StrictlyEnforceRange)
@@ -1199,7 +1199,7 @@ void QDeclarativeGridViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
     if (maxDistance > 0 || overShoot) {
         // This mode requires the grid to stop exactly on a row boundary.
         qreal v = velocity;
-        if (maxVelocity != -1 && maxVelocity < qAbs(v)) {
+        if (maxVelocity != -1 && maxVelocity < std::abs(v)) {
             if (v < 0)
                 v = -maxVelocity;
             else
@@ -1229,9 +1229,9 @@ void QDeclarativeGridViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                 }
             }
             qreal adjDist = -data.flickTarget + data.move.value();
-            if (qAbs(adjDist) > qAbs(dist)) {
+            if (std::abs(adjDist) > std::abs(dist)) {
                 // Prevent painfully slow flicking - adjust velocity to suit flickDeceleration
-                qreal adjv2 = accel * 2.0f * qAbs(adjDist);
+                qreal adjv2 = accel * 2.0f * std::abs(adjDist);
                 if (adjv2 > v2) {
                     v2 = adjv2;
                     v = qSqrt(v2);
@@ -1240,7 +1240,7 @@ void QDeclarativeGridViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                 }
             }
             dist = adjDist;
-            accel = v2 / (2.0f * qAbs(dist));
+            accel = v2 / (2.0f * std::abs(dist));
         } else {
             data.flickTarget = velocity > 0 ? minExtent : maxExtent;
             overshootDist = overShoot ? overShootDistance(vSize) : 0;

@@ -1368,7 +1368,7 @@ static void parseFont(QSvgNode *node,
             QSvgHandler::LengthType type;
             qreal fs = parseLength(attributes.fontSize.toString(), type, handler);
             fs = convertToPixels(fs, true, type);
-            fontStyle->setSize(qMin(fs, qreal(0xffff)));
+            fontStyle->setSize(std::min(fs, qreal(0xffff)));
         }
             break;
         default:
@@ -1535,8 +1535,8 @@ static void pathArc(QPainterPath &path,
     int i, n_segs;
     qreal dx, dy, dx1, dy1, Px, Py, check;
 
-    rx = qAbs(rx);
-    ry = qAbs(ry);
+    rx = std::abs(rx);
+    ry = std::abs(ry);
 
     sin_th = qSin(x_axis_rotation * (Q_PI / 180.0));
     cos_th = qCos(x_axis_rotation * (Q_PI / 180.0));
@@ -1587,7 +1587,7 @@ static void pathArc(QPainterPath &path,
     else if (th_arc > 0 && !sweep_flag)
         th_arc -= 2 * Q_PI;
 
-    n_segs = qCeil(qAbs(th_arc / (Q_PI * 0.5 + 0.001)));
+    n_segs = qCeil(std::abs(th_arc / (Q_PI * 0.5 + 0.001)));
 
     for (i = 0; i < n_segs; i++) {
         pathArcSegment(path, xc, yc,

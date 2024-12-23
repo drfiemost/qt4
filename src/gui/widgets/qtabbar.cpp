@@ -1378,12 +1378,12 @@ QSize QTabBar::tabSizeHint(int index) const
 
         QSize csz;
         if (verticalTabs(d->shape)) {
-            csz = QSize( std::max(maxWidgetWidth, qMax(fm.height(), iconSize.height())) + vframe,
+            csz = QSize( std::max(maxWidgetWidth, std::max(fm.height(), iconSize.height())) + vframe,
                     fm.size(Qt::TextShowMnemonic, tab->text).width() + iconSize.width() + hframe + widgetHeight + padding);
         } else {
             csz = QSize(fm.size(Qt::TextShowMnemonic, tab->text).width() + iconSize.width() + hframe
                   + widgetWidth + padding,
-                  std::max(maxWidgetHeight, qMax(fm.height(), iconSize.height())) + vframe);
+                  std::max(maxWidgetHeight, std::max(fm.height(), iconSize.height())) + vframe);
         }
 
         QSize retSize = style()->sizeFromContents(QStyle::CT_TabBarTab, &opt, csz, this);
@@ -1942,7 +1942,7 @@ void QTabBar::mouseReleaseEvent(QMouseEvent *event)
             ? tabRect(d->pressedIndex).height()
             : tabRect(d->pressedIndex).width();
         int duration = std::min(ANIMATION_DURATION,
-                (qAbs(length) * ANIMATION_DURATION) / width);
+                (std::abs(length) * ANIMATION_DURATION) / width);
         d->tabList[d->pressedIndex].startAnimation(d, duration);
         d->dragInProgress = false;
         d->movingTab->setVisible(false);

@@ -200,7 +200,7 @@ inline bool qCompare(QStringList const &t1, QStringList const &t2,
                     "   Expected (%s) size: '%d'", actual, t1.count(), expected, t2.count());
         isOk = false;
     }
-    const int min = qMin(t1.count(), t2.count());
+    const int min = std::min(t1.count(), t2.count());
     for (int i = 0; isOk && i < min; ++i) {
         if (t1.at(i) != t2.at(i)) {
             qt_snprintf(msg, 1024, "Compared QStringLists differ at index %d.\n"

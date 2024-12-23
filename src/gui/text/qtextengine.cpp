@@ -2013,7 +2013,7 @@ void QScriptLine::setDefaultHeight(QTextEngine *eng)
     QFixed other_ascent = e->ascent();
     QFixed other_descent = e->descent();
     QFixed other_leading = e->leading();
-    leading = std::max(leading + ascent, other_leading + other_ascent) - qMax(ascent, other_ascent);
+    leading = std::max(leading + ascent, other_leading + other_ascent) - std::max(ascent, other_ascent);
     ascent = std::max(ascent, other_ascent);
     descent = std::max(descent, other_descent);
 }

@@ -535,7 +535,7 @@ void QStroker::joinPoints(qfixed focal_x, qfixed focal_y, const QLineF &nextLine
             qreal l1_on_x = adapted_angle_on_x(prevLine);
             qreal l2_on_x = adapted_angle_on_x(nextLine);
 
-            qreal sweepLength = qAbs(l2_on_x - l1_on_x);
+            qreal sweepLength = std::abs(l2_on_x - l1_on_x);
 
             int point_count;
             QPointF curves[15];

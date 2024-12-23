@@ -165,7 +165,7 @@ inline void QHashData::hasShrunk()
 {
     if (size <= (numBuckets >> 3) && numBits > userNumBits) {
         QT_TRY {
-            rehash(qMax(int(numBits) - 2, int(userNumBits)));
+            rehash(std::max(int(numBits) - 2, int(userNumBits)));
         } QT_CATCH(const std::bad_alloc &) {
             // ignore bad allocs - shrinking shouldn't throw. rehash is exception safe.
         }
@@ -263,8 +263,8 @@ class QHash
     }
 
 #ifdef Q_ALIGNOF
-    static inline int alignOfNode() { return qMax<int>(sizeof(void*), Q_ALIGNOF(Node)); }
-    static inline int alignOfDummyNode() { return qMax<int>(sizeof(void*), Q_ALIGNOF(DummyNode)); }
+    static inline int alignOfNode() { return std::max<int>(sizeof(void*), Q_ALIGNOF(Node)); }
+    static inline int alignOfDummyNode() { return std::max<int>(sizeof(void*), Q_ALIGNOF(DummyNode)); }
 #else
     static inline int alignOfNode() { return 0; }
     static inline int alignOfDummyNode() { return 0; }
@@ -825,7 +825,7 @@ template <class Key, class T>
 Q_INLINE_TEMPLATE void QHash<Key, T>::reserve(int asize)
 {
     detach();
-    d->rehash(-qMax(asize, 1));
+    d->rehash(-std::max(asize, 1));
 }
 
 template <class Key, class T>

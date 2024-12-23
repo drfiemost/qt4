@@ -104,7 +104,7 @@ public:
         return ch;
     }
     int read(char* target, qint64 size) {
-        int r = qMin(size, len);
+        int r = std::min(size, len);
 
         if (r == 0) {
             return 0;
@@ -116,7 +116,7 @@ public:
         return r;
     }
     int peek(char* target, qint64 size) {
-        int r = qMin(size, len);
+        int r = std::min(size, len);
         memcpy(target, first, r);
         return r;
     }
@@ -140,7 +140,7 @@ public:
         return QByteArray(f, l);
     }
     int readLine(char* target, qint64 size) {
-        int r = qMin(size, len);
+        int r = std::min(size, len);
         char* eol = static_cast<char*>(memchr(first, '\n', r));
         if (eol)
             r = 1+(eol-first);
@@ -174,7 +174,7 @@ public:
 private:
     enum FreeSpacePos {freeSpaceAtStart, freeSpaceAtEnd};
     void makeSpace(size_t required, FreeSpacePos where) {
-        size_t newCapacity = qMax(capacity, size_t(QIODEVICE_BUFFERSIZE));
+        size_t newCapacity = std::max(capacity, size_t(QIODEVICE_BUFFERSIZE));
         while (newCapacity < required)
             newCapacity *= 2;
         int moveOffset = (where == freeSpaceAtEnd) ? 0 : newCapacity - len;

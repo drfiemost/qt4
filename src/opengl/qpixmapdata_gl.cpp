@@ -79,7 +79,7 @@ Q_OPENGL_EXPORT extern const QGLContext* qt_gl_share_context();
 
 static inline int areaDiff(const QSize &size, const QGLFramebufferObject *fbo)
 {
-    return qAbs(size.width() * size.height() - fbo->width() * fbo->height());
+    return std::abs(size.width() * size.height() - fbo->width() * fbo->height());
 }
 
 extern int qt_next_power_of_two(int v);

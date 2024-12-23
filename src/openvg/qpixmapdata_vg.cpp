@@ -251,8 +251,8 @@ void QVGPixmapData::fill(const QColor &color)
     if (source.depth() == 1) {
         // Pick the best approximate color in the image's colortable.
         int gray = qGray(color.rgba());
-        if (qAbs(qGray(source.imageRef().color(0)) - gray)
-            < qAbs(qGray(source.imageRef().color(1)) - gray))
+        if (std::abs(qGray(source.imageRef().color(0)) - gray)
+            < std::abs(qGray(source.imageRef().color(1)) - gray))
             source.fill(0);
         else
             source.fill(1);

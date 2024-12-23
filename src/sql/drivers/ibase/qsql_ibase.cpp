@@ -1334,7 +1334,7 @@ QSqlRecord QIBaseResult::record() const
         QSqlField f(QString::fromLatin1(v.aliasname, v.aliasname_length).simplified(),
                     qIBaseTypeName2(v.sqltype, v.sqlscale < 0));
         f.setLength(v.sqllen);
-        f.setPrecision(qAbs(v.sqlscale));
+        f.setPrecision(std::abs(v.sqlscale));
         f.setRequiredStatus((v.sqltype & 1) == 0 ? QSqlField::Required : QSqlField::Optional);
         if(v.sqlscale < 0) {
             QSqlQuery q(new QIBaseResult(d->db));
@@ -1347,7 +1347,7 @@ QSqlRecord QIBaseResult::record() const
             if(q.first()) {
                 if(v.sqlscale < 0) {
                     f.setLength(q.value(0).toInt());
-                    f.setPrecision(qAbs(q.value(1).toInt()));
+                    f.setPrecision(std::abs(q.value(1).toInt()));
                 } else {
                     f.setLength(q.value(2).toInt());
                     f.setPrecision(0);
@@ -1628,7 +1628,7 @@ QSqlRecord QIBaseDriver::record(const QString& tablename) const
         QSqlField f(q.value(0).toString().simplified(), qIBaseTypeName(type, hasScale));
         if(hasScale) {
             f.setLength(q.value(4).toInt());
-            f.setPrecision(qAbs(q.value(3).toInt()));
+            f.setPrecision(std::abs(q.value(3).toInt()));
         } else {
             f.setLength(q.value(2).toInt());
             f.setPrecision(0);

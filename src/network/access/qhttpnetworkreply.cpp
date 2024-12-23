@@ -764,7 +764,7 @@ qint64 QHttpNetworkReplyPrivate::readReplyBodyRaw(QAbstractSocket *socket, QByte
     Q_ASSERT(socket);
     Q_ASSERT(out);
 
-    int toBeRead = std::min<qint64>(128*1024, qMin<qint64>(size, socket->bytesAvailable()));
+    int toBeRead = std::min<qint64>(128*1024, std::min<qint64>(size, socket->bytesAvailable()));
     if (readBufferMaxSize)
         toBeRead = std::min<qint64>(toBeRead, readBufferMaxSize);
 
@@ -783,7 +783,7 @@ qint64 QHttpNetworkReplyPrivate::readReplyBodyRaw(QAbstractSocket *socket, QByte
         bytes += haveRead;
         size -= haveRead;
 
-        toBeRead = std::min<qint64>(128*1024, qMin<qint64>(size, socket->bytesAvailable()));
+        toBeRead = std::min<qint64>(128*1024, std::min<qint64>(size, socket->bytesAvailable()));
     }
     return bytes;
 

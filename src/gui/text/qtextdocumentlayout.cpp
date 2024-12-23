@@ -2165,7 +2165,7 @@ QRectF QTextDocumentLayoutPrivate::layoutFrame(QTextFrame *f, int layoutFrom, in
         idealWidth += marginWidth.toReal();
     }
 
-    QFixed actualWidth = std::max(newContentsWidth, qMax(maxChildFrameWidth, layoutStruct.contentsWidth));
+    QFixed actualWidth = std::max(newContentsWidth, std::max(maxChildFrameWidth, layoutStruct.contentsWidth));
     fd->contentsWidth = actualWidth;
     if (newContentsWidth <= 0) { // nowrap layout?
         fd->contentsWidth = newContentsWidth;

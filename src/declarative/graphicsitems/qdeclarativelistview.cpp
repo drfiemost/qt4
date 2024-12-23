@@ -1351,7 +1351,7 @@ void QDeclarativeListViewPrivate::fixup(AxisData &data, qreal minExtent, qreal m
             return;
         }
 
-        qreal dist = qAbs(data.move + pos);
+        qreal dist = std::abs(data.move + pos);
         if (dist > 0) {
             timeline.reset(data.move);
             if (fixupMode != Immediate) {
@@ -1415,10 +1415,10 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                 if (isRightToLeft())
                     bias = -bias;
                 data.flickTarget = -snapPosAt(-(dataValue - highlightStart) - bias) + highlightStart;
-                maxDistance = qAbs(data.flickTarget - data.move.value());
+                maxDistance = std::abs(data.flickTarget - data.move.value());
                 velocity = maxVelocity;
             } else {
-                maxDistance = qAbs(minExtent - data.move.value());
+                maxDistance = std::abs(minExtent - data.move.value());
             }
         }
         if (snapMode == QDeclarativeListView::NoSnap && highlightRange != QDeclarativeListView::StrictlyEnforceRange)
@@ -1432,10 +1432,10 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                 if (isRightToLeft())
                     bias = -bias;
                 data.flickTarget = -snapPosAt(-(dataValue - highlightStart) + bias) + highlightStart;
-                maxDistance = qAbs(data.flickTarget - data.move.value());
+                maxDistance = std::abs(data.flickTarget - data.move.value());
                 velocity = -maxVelocity;
             } else {
-                maxDistance = qAbs(maxExtent - data.move.value());
+                maxDistance = std::abs(maxExtent - data.move.value());
             }
         }
         if (snapMode == QDeclarativeListView::NoSnap && highlightRange != QDeclarativeListView::StrictlyEnforceRange)
@@ -1450,7 +1450,7 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
         // Since list items can have variable sizes, the boundary will be
         // reevaluated and adjusted as we approach the boundary.
         qreal v = velocity;
-        if (maxVelocity != -1 && maxVelocity < qAbs(v)) {
+        if (maxVelocity != -1 && maxVelocity < std::abs(v)) {
             if (v < 0)
                 v = -maxVelocity;
             else
@@ -1483,9 +1483,9 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                     }
                 }
                 qreal adjDist = -data.flickTarget + data.move.value();
-                if (qAbs(adjDist) > qAbs(dist)) {
+                if (std::abs(adjDist) > std::abs(dist)) {
                     // Prevent painfully slow flicking - adjust velocity to suit flickDeceleration
-                    qreal adjv2 = accel * 2.0f * qAbs(adjDist);
+                    qreal adjv2 = accel * 2.0f * std::abs(adjDist);
                     if (adjv2 > v2) {
                         v2 = adjv2;
                         v = qSqrt(v2);
@@ -1494,7 +1494,7 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
                     }
                 }
                 dist = adjDist;
-                accel = v2 / (2.0f * qAbs(dist));
+                accel = v2 / (2.0f * std::abs(dist));
             } else if (overShoot) {
                 data.flickTarget = data.move.value() - dist;
                 if (data.flickTarget >= minExtent) {
@@ -1535,7 +1535,7 @@ void QDeclarativeListViewPrivate::flick(AxisData &data, qreal minExtent, qreal m
             else if (velocity > 0 && newtarget >= minExtent)
                 newtarget = minExtent + overshootDist;
             if (newtarget == data.flickTarget) { // boundary unchanged - nothing to do
-                if (qAbs(velocity) < MinimumFlickVelocity)
+                if (std::abs(velocity) < MinimumFlickVelocity)
                     correctFlick = false;
                 return;
             }

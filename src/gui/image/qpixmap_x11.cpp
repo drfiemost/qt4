@@ -1890,10 +1890,10 @@ QPixmap QX11PixmapData::transformed(const QTransform &transform,
     qreal scaledHeight;
 
     if (mat.type() <= QTransform::TxScale) {
-        scaledHeight = qAbs(mat.m22()) * hs + 0.9999;
-        scaledWidth = qAbs(mat.m11()) * ws + 0.9999;
-        h = qAbs(int(scaledHeight));
-        w = qAbs(int(scaledWidth));
+        scaledHeight = std::abs(mat.m22()) * hs + 0.9999;
+        scaledWidth = std::abs(mat.m11()) * ws + 0.9999;
+        h = std::abs(int(scaledHeight));
+        w = std::abs(int(scaledWidth));
     } else {                                        // rotation or shearing
         QPolygonF a(QRectF(0, 0, ws, hs));
         a = mat.map(a);
@@ -1910,7 +1910,7 @@ QPixmap QX11PixmapData::transformed(const QTransform &transform,
     mat = mat.inverted(&invertible);  // invert matrix
 
     if (h == 0 || w == 0 || !invertible
-        || qAbs(scaledWidth) >= 32768 || qAbs(scaledHeight) >= 32768 )
+        || std::abs(scaledWidth) >= 32768 || std::abs(scaledHeight) >= 32768 )
 	// error, return null pixmap
         return QPixmap();
 

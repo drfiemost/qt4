@@ -106,7 +106,7 @@ public:
 
     void resize(Qt::Orientation o, int newSize)
     {
-        newSize = qMax(pick(o, minimumSize()), newSize);
+        newSize = std::max(pick(o, minimumSize()), newSize);
         int sizeh = pick(o, sizeHint());
         if (newSize == sizeh) {
             preferredSize = -1;
@@ -118,7 +118,7 @@ public:
 
     void extendSize(Qt::Orientation o, int extent)
     {
-        int newSize = qMax(pick(o, minimumSize()), (preferredSize > 0 ? preferredSize : pick(o, sizeHint())) + extent);
+        int newSize = std::max(pick(o, minimumSize()), (preferredSize > 0 ? preferredSize : pick(o, sizeHint())) + extent);
         int sizeh = pick(o, sizeHint());
         if (newSize == sizeh) {
             preferredSize = -1;

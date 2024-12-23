@@ -2202,7 +2202,7 @@ void QX11PaintEngine::drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, co
             // first tile
             XRenderComposite(d->dpy, mode,
                              pixmap.x11PictureHandle(), XNone, pmPicture,
-                             0, 0, 0, 0, 0, 0, std::min(pw, pixmap.width()), qMin(ph, pixmap.height()));
+                             0, 0, 0, 0, 0, 0, std::min(pw, pixmap.width()), std::min(ph, pixmap.height()));
 
             // first row of tiles
             int xPos = pixmap.width();

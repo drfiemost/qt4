@@ -1772,8 +1772,8 @@ static void drawTrapezoid(const QGLTrapezoid &trap, const qreal offscreenHeight,
     QPointF rightNormal(1, -rightA);
     rightNormal /= qSqrt(rightNormal.x() * rightNormal.x() + rightNormal.y() * rightNormal.y());
 
-    qreal left_padding = xpadding / qAbs(leftNormal.x());
-    qreal right_padding = xpadding / qAbs(rightNormal.x());
+    qreal left_padding = xpadding / std::abs(leftNormal.x());
+    qreal right_padding = xpadding / std::abs(rightNormal.x());
 
     glVertex2d(bounds_topLeftX - left_padding, topY);
     glVertex2d(bounds_topRightX + right_padding, topY);
@@ -1897,15 +1897,15 @@ inline void QOpenGLPaintEnginePrivate::curveToStencil(const QPointF &cp1, const 
     QBezier *b = beziers;
     while (b >= beziers) {
         // check if we can pop the top bezier curve from the stack
-        qreal l = qAbs(b->x4 - b->x1) + qAbs(b->y4 - b->y1);
+        qreal l = std::abs(b->x4 - b->x1) + std::abs(b->y4 - b->y1);
         qreal d;
         if (l > inverseScale) {
-            d = qAbs( (b->x4 - b->x1)*(b->y1 - b->y2) - (b->y4 - b->y1)*(b->x1 - b->x2) )
-                + qAbs( (b->x4 - b->x1)*(b->y1 - b->y3) - (b->y4 - b->y1)*(b->x1 - b->x3) );
+            d = std::abs( (b->x4 - b->x1)*(b->y1 - b->y2) - (b->y4 - b->y1)*(b->x1 - b->x2) )
+                + std::abs( (b->x4 - b->x1)*(b->y1 - b->y3) - (b->y4 - b->y1)*(b->x1 - b->x3) );
             d /= l;
         } else {
-            d = qAbs(b->x1 - b->x2) + qAbs(b->y1 - b->y2) +
-                qAbs(b->x1 - b->x3) + qAbs(b->y1 - b->y3);
+            d = std::abs(b->x1 - b->x2) + std::abs(b->y1 - b->y2) +
+                std::abs(b->x1 - b->x3) + std::abs(b->y1 - b->y3);
         }
         if (d < inverseScaleHalf || b == beziers + 31) {
             // good enough, we pop it off and add the endpoint
@@ -2205,8 +2205,8 @@ void QOpenGLPaintEngine::updateMatrix(const QTransform &mtx)
 
     // 1/10000 == 0.0001, so we have good enough res to cover curves
     // that span the entire widget...
-    d->inverseScale = std::max(1 / std::max( std::max(qAbs(mtx.m11()), qAbs(mtx.m22())),
-                                     std::max(qAbs(mtx.m12()), qAbs(mtx.m21())) ),
+    d->inverseScale = std::max(1 / std::max( std::max(std::abs(mtx.m11()), std::abs(mtx.m22())),
+                                     std::max(std::abs(mtx.m12()), std::abs(mtx.m21())) ),
                            qreal(0.0001));
 
     d->updateGLMatrix();
@@ -3255,7 +3255,7 @@ QVector<QGLTrapezoid> QGLRectMaskGenerator::generateTrapezoids()
         QPointF delta = a - d;
 
         // manhattan distance (no rotation)
-        qreal width = qAbs(delta.x()) + qAbs(delta.y());
+        qreal width = std::abs(delta.x()) + std::abs(delta.y());
 
         Q_ASSERT(qFuzzyIsNull(delta.x()) || qFuzzyIsNull(delta.y()));
 
@@ -4030,17 +4030,17 @@ void QOpenGLPaintEnginePrivate::strokePathFastPen(const QPainterPath &path, bool
             QBezier *b = beziers;
             while (b >= beziers) {
                 // check if we can pop the top bezier curve from the stack
-                qreal l = qAbs(b->x4 - b->x1) + qAbs(b->y4 - b->y1);
+                qreal l = std::abs(b->x4 - b->x1) + std::abs(b->y4 - b->y1);
                 qreal d;
                 if (l > inverseScale) {
-                    d = qAbs( (b->x4 - b->x1)*(b->y1 - b->y2)
+                    d = std::abs( (b->x4 - b->x1)*(b->y1 - b->y2)
                               - (b->y4 - b->y1)*(b->x1 - b->x2) )
-                        + qAbs( (b->x4 - b->x1)*(b->y1 - b->y3)
+                        + std::abs( (b->x4 - b->x1)*(b->y1 - b->y3)
                                 - (b->y4 - b->y1)*(b->x1 - b->x3) );
                     d /= l;
                 } else {
-                    d = qAbs(b->x1 - b->x2) + qAbs(b->y1 - b->y2) +
-                        qAbs(b->x1 - b->x3) + qAbs(b->y1 - b->y3);
+                    d = std::abs(b->x1 - b->x2) + std::abs(b->y1 - b->y2) +
+                        std::abs(b->x1 - b->x3) + std::abs(b->y1 - b->y3);
                 }
                 if (d < inverseScaleHalf || b == beziers + 31) {
                     // good enough, we pop it off and add the endpoint
@@ -4096,17 +4096,17 @@ void QOpenGLPaintEnginePrivate::strokePathFastPen(const QPainterPath &path, bool
             QBezier *b = beziers;
             while (b >= beziers) {
                 // check if we can pop the top bezier curve from the stack
-                qreal l = qAbs(b->x4 - b->x1) + qAbs(b->y4 - b->y1);
+                qreal l = std::abs(b->x4 - b->x1) + std::abs(b->y4 - b->y1);
                 qreal d;
                 if (l > inverseScale) {
-                    d = qAbs( (b->x4 - b->x1)*(b->y1 - b->y2)
+                    d = std::abs( (b->x4 - b->x1)*(b->y1 - b->y2)
                               - (b->y4 - b->y1)*(b->x1 - b->x2) )
-                        + qAbs( (b->x4 - b->x1)*(b->y1 - b->y3)
+                        + std::abs( (b->x4 - b->x1)*(b->y1 - b->y3)
                                 - (b->y4 - b->y1)*(b->x1 - b->x3) );
                     d /= l;
                 } else {
-                    d = qAbs(b->x1 - b->x2) + qAbs(b->y1 - b->y2) +
-                        qAbs(b->x1 - b->x3) + qAbs(b->y1 - b->y3);
+                    d = std::abs(b->x1 - b->x2) + std::abs(b->y1 - b->y2) +
+                        std::abs(b->x1 - b->x3) + std::abs(b->y1 - b->y3);
                 }
                 if (d < inverseScaleHalf || b == beziers + 31) {
                     // good enough, we pop it off and add the endpoint

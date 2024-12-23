@@ -120,7 +120,7 @@ DayTimeDuration::Ptr DayTimeDuration::fromSeconds(const SecondCountProperty sour
                                                   const MSecondProperty msecs)
 {
     Q_ASSERT(msecs >= 0);
-    const SecondCountProperty source = qAbs(sourceSecs);
+    const SecondCountProperty source = std::abs(sourceSecs);
     const bool isPos = sourceSecs >= 0;
     const SecondCountProperty secs = source % 60;
     const MinuteCountProperty mins = (source / 60) % 60;
@@ -196,7 +196,7 @@ Item DayTimeDuration::fromValue(const Value val) const
     if(val == 0)
         return toItem(CommonValues::DayTimeDurationZero);
     else
-        return toItem(fromSeconds(val / 1000, qAbs(val) % 1000));
+        return toItem(fromSeconds(val / 1000, std::abs(val) % 1000));
 }
 
 ItemType::Ptr DayTimeDuration::type() const

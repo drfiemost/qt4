@@ -6033,11 +6033,11 @@ QImage QImage::transformed(const QTransform &matrix, Qt::TransformationMode mode
             return rotated180(*this);
 
         if (mode == Qt::FastTransformation) {
-            hd = qRound(qAbs(mat.m22()) * hs);
-            wd = qRound(qAbs(mat.m11()) * ws);
+            hd = qRound(std::abs(mat.m22()) * hs);
+            wd = qRound(std::abs(mat.m11()) * ws);
         } else {
-            hd = int(qAbs(mat.m22()) * hs + 0.9999);
-            wd = int(qAbs(mat.m11()) * ws + 0.9999);
+            hd = int(std::abs(mat.m22()) * hs + 0.9999);
+            wd = int(std::abs(mat.m11()) * ws + 0.9999);
         }
         scale_xform = true;
     } else {

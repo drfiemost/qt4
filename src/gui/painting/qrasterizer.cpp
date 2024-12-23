@@ -493,21 +493,21 @@ void QScanConverter::mergeCurve(const QT_FT_Vector &pa, const QT_FT_Vector &pb,
 
     while (b >= beziers) {
         QT_FT_Vector delta = { b[3].x - b[0].x, b[3].y - b[0].y };
-        QT_FT_Pos l = qAbs(delta.x) + qAbs(delta.y);
+        QT_FT_Pos l = std::abs(delta.x) + std::abs(delta.y);
 
         bool belowThreshold;
         if (l > 64) {
-            qlonglong d2 = qAbs(qlonglong(b[1].x-b[0].x) * qlonglong(delta.y) -
+            qlonglong d2 = std::abs(qlonglong(b[1].x-b[0].x) * qlonglong(delta.y) -
                                 qlonglong(b[1].y-b[0].y) * qlonglong(delta.x));
-            qlonglong d3 = qAbs(qlonglong(b[2].x-b[0].x) * qlonglong(delta.y) -
+            qlonglong d3 = std::abs(qlonglong(b[2].x-b[0].x) * qlonglong(delta.y) -
                                 qlonglong(b[2].y-b[0].y) * qlonglong(delta.x));
 
             qlonglong d = d2 + d3;
 
             belowThreshold = (d <= qlonglong(flatness) * qlonglong(l));
         } else {
-            QT_FT_Pos d = qAbs(b[0].x-b[1].x) + qAbs(b[0].y-b[1].y) +
-                          qAbs(b[0].x-b[2].x) + qAbs(b[0].y-b[2].y);
+            QT_FT_Pos d = std::abs(b[0].x-b[1].x) + std::abs(b[0].y-b[1].y) +
+                          std::abs(b[0].x-b[2].x) + std::abs(b[0].y-b[2].y);
 
             belowThreshold = (d <= flatness);
         }
@@ -757,7 +757,7 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
         pb += (0.5f * width) * delta;
     }
 
-    QPointF offs = QPointF(qAbs(b.y() - a.y()), qAbs(b.x() - a.x())) * width * 0.5;
+    QPointF offs = QPointF(std::abs(b.y() - a.y()), std::abs(b.x() - a.x())) * width * 0.5;
     const QRectF clip(d->clipRect.topLeft() - offs, d->clipRect.bottomRight() + QPoint(1, 1) + offs);
 
     if (!clip.contains(pa) || !clip.contains(pb)) {
@@ -823,7 +823,7 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
 
     if (q26Dot6Compare(pa.y(), pb.y())) {
         const qreal x = (pa.x() + pb.x()) * 0.5f;
-        const qreal dx = qAbs(pb.x() - pa.x()) * 0.5f;
+        const qreal dx = std::abs(pb.x() - pa.x()) * 0.5f;
 
         const qreal y = pa.y();
         const qreal dy = width * dx;

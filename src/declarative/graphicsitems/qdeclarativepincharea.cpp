@@ -364,10 +364,10 @@ void QDeclarativePinchArea::updatePinch()
             angle -= 360;
         if (!d->inPinch) {
             if (d->touchPoints.count() >= 2
-                    && (qAbs(p1.x()-d->sceneStartPoint1.x()) > dragThreshold
-                    || qAbs(p1.y()-d->sceneStartPoint1.y()) > dragThreshold
-                    || qAbs(p2.x()-d->sceneStartPoint2.x()) > dragThreshold
-                    || qAbs(p2.y()-d->sceneStartPoint2.y()) > dragThreshold)) {
+                    && (std::abs(p1.x()-d->sceneStartPoint1.x()) > dragThreshold
+                    || std::abs(p1.y()-d->sceneStartPoint1.y()) > dragThreshold
+                    || std::abs(p2.x()-d->sceneStartPoint2.x()) > dragThreshold
+                    || std::abs(p2.y()-d->sceneStartPoint2.y()) > dragThreshold)) {
                 d->sceneStartCenter = sceneCenter;
                 d->sceneLastCenter = sceneCenter;
                 d->pinchStartCenter = mapFromScene(sceneCenter);

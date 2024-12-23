@@ -455,8 +455,8 @@ void QFormLayoutPrivate::updateSizes()
 
         // Now, finally update the min/sizeHint widths
         if (wrapAllRows) {
-            sh_width = std::max(maxShLblWidth, qMax(maxShIfldWidth, maxShFldWidth));
-            min_width = std::max(maxMinLblWidth, qMax(maxMinIfldWidth, maxMinFldWidth));
+            sh_width = std::max(maxShLblWidth, std::max(maxShIfldWidth, maxShFldWidth));
+            min_width = std::max(maxMinLblWidth, std::max(maxMinIfldWidth, maxMinFldWidth));
             // in two line, we don't care as much about the threshold width
             thresh_width = 0;
         } else if (dontWrapRows) {
@@ -469,7 +469,7 @@ void QFormLayoutPrivate::updateSizes()
             sh_width = std::max(maxShLblWidth + maxShFldWidth, maxShIfldWidth);
             // min width needs to be the min when everything is wrapped,
             // otherwise we'll never get set with a width that causes wrapping
-            min_width = std::max(maxMinLblWidth, qMax(maxMinIfldWidth, maxMinFldWidth));
+            min_width = std::max(maxMinLblWidth, std::max(maxMinIfldWidth, maxMinFldWidth));
             // We split a pair at label sh + field min (### for now..)
             thresh_width = maxShLblWidth + maxMinFldWidth;
         }
@@ -796,7 +796,7 @@ void QFormLayoutPrivate::setupVerticalLayoutData(int width)
                 stretch2 = field->vStretch();
             }
 
-            vLayouts[vidx].init(std::max(stretch1, stretch2), qMax(min1.height(), min2.height()));
+            vLayouts[vidx].init(std::max(stretch1, stretch2), std::max(min1.height(), min2.height()));
             vLayouts[vidx].sizeHint = std::max(sh1.height(), sh2.height());
             vLayouts[vidx].maximumSize = std::min(max1.height(), max2.height());
             vLayouts[vidx].expansive = expanding || (vLayouts[vidx].stretch > 0);

@@ -135,7 +135,7 @@ Item YearMonthDuration::fromValue(const Value val) const
         return toItem(CommonValues::YearMonthDurationZero);
     else
     {
-        const Value absValue = qAbs(val);
+        const Value absValue = std::abs(val);
         return toItem(YearMonthDuration::fromComponents(val >= 0,
                                                         absValue / 12,
                                                         absValue % 12));

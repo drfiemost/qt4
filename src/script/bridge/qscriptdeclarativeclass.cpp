@@ -357,7 +357,7 @@ QScriptValue QScriptDeclarativeClass::scopeChainValue(QScriptContext *context, i
         for (it = node->begin(); it != node->end(); ++it) 
             ++count;
 
-        index = qAbs(index);
+        index = std::abs(index);
         if (index > count)
             return QScriptValue();
         else

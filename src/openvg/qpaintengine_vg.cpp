@@ -3322,7 +3322,7 @@ bool QVGPaintEngine::canVgWritePixels(const QImage &image) const
     // - The opacity is totally opaque
     // - The composition mode is "source" OR "source over" provided the image is opaque
     return ( d->imageTransform.type() <= QTransform::TxScale
-            && d->imageTransform.m11() == 1.0 && qAbs(d->imageTransform.m22()) == 1.0)
+            && d->imageTransform.m11() == 1.0 && std::abs(d->imageTransform.m22()) == 1.0)
             && d->opacity == 1.0f
             && (d->blendMode == VG_BLEND_SRC || (d->blendMode == VG_BLEND_SRC_OVER &&
                                                 !image.hasAlphaChannel()));

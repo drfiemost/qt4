@@ -2278,8 +2278,8 @@ bool qt_scaleForTransform(const QTransform &transform, qreal *scale)
             *scale = 1;
         return true;
     } else if (type == QTransform::TxScale) {
-        const qreal xScale = qAbs(transform.m11());
-        const qreal yScale = qAbs(transform.m22());
+        const qreal xScale = std::abs(transform.m11());
+        const qreal yScale = std::abs(transform.m22());
         if (scale)
             *scale = std::max(xScale, yScale);
         return qFuzzyCompare(xScale, yScale);

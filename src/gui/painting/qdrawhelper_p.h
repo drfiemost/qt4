@@ -453,7 +453,7 @@ const uint * QT_FASTCALL qt_fetch_radial_gradient_template(uint *buffer, const O
                     qreal s0 = (-b - detSqrt) * op->radial.inv2a;
                     qreal s1 = (-b + detSqrt) * op->radial.inv2a;
 
-                    qreal s = qMax(s0, s1);
+                    qreal s = std::max(s0, s1);
 
                     if (data->gradient.radial.focal.radius + op->radial.dr * s >= 0)
                         result = qt_gradient_pixel(&data->gradient, s);
@@ -822,12 +822,12 @@ const uint qt_bayer_matrix[16][16] = {
 
 
 #if QT_POINTER_SIZE == 8 // 64-bit versions
-#define AMIX(mask) (qMin(((qint64(s)&mask) + (qint64(d)&mask)), qint64(mask)))
-#define MIX(mask) (qMin(((qint64(s)&mask) + (qint64(d)&mask)), qint64(mask)))
+#define AMIX(mask) (std::min(((qint64(s)&mask) + (qint64(d)&mask)), qint64(mask)))
+#define MIX(mask) (std::min(((qint64(s)&mask) + (qint64(d)&mask)), qint64(mask)))
 #else // 32 bits
 // The mask for alpha can overflow over 32 bits
-#define AMIX(mask) quint32(qMin(((qint64(s)&mask) + (qint64(d)&mask)), qint64(mask)))
-#define MIX(mask) (qMin(((quint32(s)&mask) + (quint32(d)&mask)), quint32(mask)))
+#define AMIX(mask) quint32(std::min(((qint64(s)&mask) + (qint64(d)&mask)), qint64(mask)))
+#define MIX(mask) (std::min(((quint32(s)&mask) + (quint32(d)&mask)), quint32(mask)))
 #endif
 
 inline int comp_func_Plus_one_pixel_const_alpha(uint d, const uint s, const uint const_alpha, const uint one_minus_const_alpha)

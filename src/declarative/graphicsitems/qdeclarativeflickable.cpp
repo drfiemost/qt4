@@ -272,15 +272,15 @@ void QDeclarativeFlickablePrivate::flick(AxisData &data, qreal minExtent, qreal 
     data.fixingUp = false;
     // -ve velocity means list is moving up
     if (velocity > 0) {
-        maxDistance = qAbs(minExtent - data.move.value());
+        maxDistance = std::abs(minExtent - data.move.value());
         data.flickTarget = minExtent;
     } else {
-        maxDistance = qAbs(maxExtent - data.move.value());
+        maxDistance = std::abs(maxExtent - data.move.value());
         data.flickTarget = maxExtent;
     }
     if (maxDistance > 0) {
         qreal v = velocity;
-        if (maxVelocity != -1 && maxVelocity < qAbs(v)) {
+        if (maxVelocity != -1 && maxVelocity < std::abs(v)) {
             if (v < 0)
                 v = -maxVelocity;
             else
@@ -749,7 +749,7 @@ void QDeclarativeFlickablePrivate::handleMousePressEvent(QGraphicsSceneMouseEven
 {
     Q_Q(QDeclarativeFlickable);
     if (interactive && timeline.isActive()
-            && (qAbs(hData.smoothVelocity.value()) > RetainGrabVelocity || qAbs(vData.smoothVelocity.value()) > RetainGrabVelocity))
+            && (std::abs(hData.smoothVelocity.value()) > RetainGrabVelocity || std::abs(vData.smoothVelocity.value()) > RetainGrabVelocity))
         stealMouse = true; // If we've been flicked then steal the click.
     else
         stealMouse = false;
@@ -787,7 +787,7 @@ void QDeclarativeFlickablePrivate::handleMouseMoveEvent(QGraphicsSceneMouseEvent
 
     if (q->yflick()) {
         int dy = int(event->pos().y() - pressPos.y());
-        if (qAbs(dy) > QApplication::startDragDistance() || QDeclarativeItemPrivate::elapsed(pressTime) > 200) {
+        if (std::abs(dy) > QApplication::startDragDistance() || QDeclarativeItemPrivate::elapsed(pressTime) > 200) {
             if (!vMoved)
                 vData.dragStartOffset = dy;
             qreal newY = dy + vData.pressPos - vData.dragStartOffset;
@@ -809,14 +809,14 @@ void QDeclarativeFlickablePrivate::handleMouseMoveEvent(QGraphicsSceneMouseEvent
                 vData.move.setValue(qRound(newY));
                 vMoved = true;
             }
-            if (!rejectY && qAbs(dy) > QApplication::startDragDistance())
+            if (!rejectY && std::abs(dy) > QApplication::startDragDistance())
                 stealY = true;
         }
     }
 
     if (q->xflick()) {
         int dx = int(event->pos().x() - pressPos.x());
-        if (qAbs(dx) > QApplication::startDragDistance() || QDeclarativeItemPrivate::elapsed(pressTime) > 200) {
+        if (std::abs(dx) > QApplication::startDragDistance() || QDeclarativeItemPrivate::elapsed(pressTime) > 200) {
             if (!hMoved)
                 hData.dragStartOffset = dx;
             qreal newX = dx + hData.pressPos - hData.dragStartOffset;
@@ -839,7 +839,7 @@ void QDeclarativeFlickablePrivate::handleMouseMoveEvent(QGraphicsSceneMouseEvent
                 hMoved = true;
             }
 
-            if (!rejectX && qAbs(dx) > QApplication::startDragDistance())
+            if (!rejectX && std::abs(dx) > QApplication::startDragDistance())
                 stealX = true;
         }
     }
@@ -897,7 +897,7 @@ void QDeclarativeFlickablePrivate::handleMouseReleaseEvent(QGraphicsSceneMouseEv
     qreal velocity = elapsed < 100 ? vData.velocity : 0;
     if (vData.atBeginning || vData.atEnd)
         velocity /= 2;
-    if (q->yflick() && qAbs(velocity) > MinimumFlickVelocity && qAbs(event->pos().y() - pressPos.y()) > FlickThreshold) {
+    if (q->yflick() && std::abs(velocity) > MinimumFlickVelocity && std::abs(event->pos().y() - pressPos.y()) > FlickThreshold) {
         velocityTimeline.reset(vData.smoothVelocity);
         vData.smoothVelocity.setValue(-velocity);
         flickY(velocity);
@@ -908,7 +908,7 @@ void QDeclarativeFlickablePrivate::handleMouseReleaseEvent(QGraphicsSceneMouseEv
     velocity = elapsed < 100 ? hData.velocity : 0;
     if (hData.atBeginning || hData.atEnd)
         velocity /= 2;
-    if (q->xflick() && qAbs(velocity) > MinimumFlickVelocity && qAbs(event->pos().x() - pressPos.x()) > FlickThreshold) {
+    if (q->xflick() && std::abs(velocity) > MinimumFlickVelocity && std::abs(event->pos().x() - pressPos.x()) > FlickThreshold) {
         velocityTimeline.reset(hData.smoothVelocity);
         hData.smoothVelocity.setValue(-velocity);
         flickX(velocity);
@@ -1118,13 +1118,13 @@ void QDeclarativeFlickable::viewportMoved()
         int elapsed = QDeclarativeItemPrivate::restart(d->velocityTime);
         if (elapsed > 0) {
             qreal horizontalVelocity = (prevX - d->hData.move.value()) * 1000 / elapsed;
-            if (qAbs(horizontalVelocity) > 0) {
+            if (std::abs(horizontalVelocity) > 0) {
                 d->velocityTimeline.reset(d->hData.smoothVelocity);
                 d->velocityTimeline.move(d->hData.smoothVelocity, horizontalVelocity, d->reportedVelocitySmoothing);
                 d->velocityTimeline.move(d->hData.smoothVelocity, 0, d->reportedVelocitySmoothing);
             }
             qreal verticalVelocity = (prevY - d->vData.move.value()) * 1000 / elapsed;
-            if (qAbs(verticalVelocity) > 0) {
+            if (std::abs(verticalVelocity) > 0) {
                 d->velocityTimeline.reset(d->vData.smoothVelocity);
                 d->velocityTimeline.move(d->vData.smoothVelocity, verticalVelocity, d->reportedVelocitySmoothing);
                 d->velocityTimeline.move(d->vData.smoothVelocity, 0, d->reportedVelocitySmoothing);
@@ -1142,7 +1142,7 @@ void QDeclarativeFlickable::viewportMoved()
 
     if (!d->vData.inOvershoot && !d->vData.fixingUp && d->vData.flicking
             && (d->vData.move.value() > minYExtent() || d->vData.move.value() < maxYExtent())
-            && qAbs(d->vData.smoothVelocity.value()) > 100) {
+            && std::abs(d->vData.smoothVelocity.value()) > 100) {
         // Increase deceleration if we've passed a bound
         d->vData.inOvershoot = true;
         qreal maxDistance = d->overShootDistance(height());
@@ -1152,7 +1152,7 @@ void QDeclarativeFlickable::viewportMoved()
     }
     if (!d->hData.inOvershoot && !d->hData.fixingUp && d->hData.flicking
             && (d->hData.move.value() > minXExtent() || d->hData.move.value() < maxXExtent())
-            && qAbs(d->hData.smoothVelocity.value()) > 100) {
+            && std::abs(d->hData.smoothVelocity.value()) > 100) {
         // Increase deceleration if we've passed a bound
         d->hData.inOvershoot = true;
         qreal maxDistance = d->overShootDistance(width());

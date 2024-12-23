@@ -254,11 +254,11 @@ void QWSTslibMouseHandlerPrivate::readMouseData()
         int dy = sample.y - lastSample.y;
 
         // Remove small movements in oppsite direction
-        if (dx * lastdx < 0 && qAbs(dx) < jitter_limit) {
+        if (dx * lastdx < 0 && std::abs(dx) < jitter_limit) {
             sample.x = lastSample.x;
             dx = 0;
         }
-        if (dy * lastdy < 0 && qAbs(dy) < jitter_limit) {
+        if (dy * lastdy < 0 && std::abs(dy) < jitter_limit) {
             sample.y = lastSample.y;
             dy = 0;
         }

@@ -8905,7 +8905,7 @@ void QGraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsIt
     Q_UNUSED(widget);
     painter->setPen(d->pen);
     painter->setBrush(d->brush);
-    if ((d->spanAngle != 0) && (qAbs(d->spanAngle) % (360 * 16) == 0))
+    if ((d->spanAngle != 0) && (std::abs(d->spanAngle) % (360 * 16) == 0))
         painter->drawEllipse(d->rect);
     else
         painter->drawPie(d->rect, d->startAngle, d->spanAngle);

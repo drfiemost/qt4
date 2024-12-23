@@ -85,7 +85,7 @@ public:
         if (!previewWidget)
             return;
         previewWidget->resize(
-                qMax(previewWidget->minimumWidth(), event->size().width()),
+                std::max(previewWidget->minimumWidth(), event->size().width()),
                 previewWidget->height());
         QSize p = viewport()->size();
         QSize v = previewWidget->size();
