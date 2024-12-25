@@ -144,14 +144,6 @@ static const char *printer_text = QT_TRANSLATE_NOOP("MainWindow",
 "Qt should search for embeddable font files.  By default, the X "
 "server font path is used.");
 
-static const char *phonon_text = QT_TRANSLATE_NOOP("MainWindow",
-"<p><b><font size+=2>Phonon</font></b></p>"
-"<hr>"
-"<p>Use this tab to configure the Phonon GStreamer multimedia backend. "
-"<p>It is reccommended to leave all settings on \"Auto\" to let "
-"Phonon determine your settings automatically.");
-
-
 QPalette::ColorGroup MainWindow::groupFromIndex(int item)
 {
     switch (item) {
@@ -208,8 +200,6 @@ MainWindow::MainWindow()
     connect(ui->wheelScrollLinesSpinBox, SIGNAL(valueChanged(int)), SLOT(somethingModified()));
     connect(ui->menuEffectCombo, SIGNAL(activated(int)), SLOT(somethingModified()));
     connect(ui->comboEffectCombo, SIGNAL(activated(int)), SLOT(somethingModified()));
-    connect(ui->audiosinkCombo, SIGNAL(activated(int)), SLOT(somethingModified()));
-    connect(ui->videomodeCombo, SIGNAL(activated(int)), SLOT(somethingModified()));
     connect(ui->toolTipEffectCombo, SIGNAL(activated(int)), SLOT(somethingModified()));
     connect(ui->strutWidthSpinBox, SIGNAL(valueChanged(int)), SLOT(somethingModified()));
     connect(ui->strutHeightSpinBox, SIGNAL(valueChanged(int)), SLOT(somethingModified()));
@@ -414,38 +404,6 @@ MainWindow::MainWindow()
     fontpaths = settings.value(QLatin1String("fontPath")).toStringList();
     ui->fontpathListBox->insertItems(0, fontpaths);
 
-    ui->audiosinkCombo->addItem(tr("Auto (default)"), QLatin1String("Auto"));
-    ui->audiosinkCombo->setItemData(ui->audiosinkCombo->findText(tr("Auto (default)")),
-                                    tr("Choose audio output automatically."), Qt::ToolTipRole);
-    ui->audiosinkCombo->addItem(tr("aRts"), QLatin1String("artssink"));
-    ui->audiosinkCombo->setItemData(ui->audiosinkCombo->findText(tr("aRts")),
-                                    tr("Experimental aRts support for GStreamer."),
-                                    Qt::ToolTipRole);
-    ui->phononTab->setEnabled(false);
-    ui->phononLabel->setText(tr("Phonon GStreamer backend not available."));
-
-    ui->videomodeCombo->addItem(tr("Auto (default)"), QLatin1String("Auto"));
-    ui->videomodeCombo->setItemData(ui->videomodeCombo->findText(tr("Auto (default)")),
-                                    tr("Choose render method automatically"), Qt::ToolTipRole);
-#ifdef Q_WS_X11
-    ui->videomodeCombo->addItem(tr("X11"), QLatin1String("X11"));
-    ui->videomodeCombo->setItemData(ui->videomodeCombo->findText(tr("X11")),
-                                    tr("Use X11 Overlays"), Qt::ToolTipRole);
-#endif
-#ifndef QT_NO_OPENGL
-    ui->videomodeCombo->addItem(tr("OpenGL"), QLatin1String("OpenGL"));
-    ui->videomodeCombo->setItemData(ui->videomodeCombo->findText(tr("OpenGL")),
-                                    tr("Use OpenGL if available"), Qt::ToolTipRole);
-#endif
-    ui->videomodeCombo->addItem(tr("Software"), QLatin1String("Software"));
-    ui->videomodeCombo->setItemData(ui->videomodeCombo->findText(tr("Software")),
-                                    tr("Use simple software rendering"), Qt::ToolTipRole);
-
-    QString audioSink = settings.value(QLatin1String("audiosink"), QLatin1String("Auto")).toString();
-    QString videoMode = settings.value(QLatin1String("videomode"), QLatin1String("Auto")).toString();
-    ui->audiosinkCombo->setCurrentIndex(ui->audiosinkCombo->findData(audioSink));
-    ui->videomodeCombo->setCurrentIndex(ui->videomodeCombo->findData(videoMode));
-
     settings.endGroup(); // Qt
 
     ui->helpView->setText(tr(appearance_text));
@@ -531,13 +489,6 @@ void MainWindow::fileSave()
 #if defined(Q_WS_X11) && !defined(QT_NO_XIM)
         settings.setValue(QLatin1String("DefaultInputMethod"), ui->inputMethodCombo->currentText());
 #endif
-
-        QString audioSink = settings.value(QLatin1String("audiosink"), QLatin1String("Auto")).toString();
-        QString videoMode = settings.value(QLatin1String("videomode"), QLatin1String("Auto")).toString();
-        settings.setValue(QLatin1String("audiosink"),
-                          ui->audiosinkCombo->itemData(ui->audiosinkCombo->currentIndex()));
-        settings.setValue(QLatin1String("videomode"),
-                          ui->videomodeCombo->itemData(ui->videomodeCombo->currentIndex()));
 
         QStringList effects;
         if (ui->effectsCheckBox->isChecked()) {
@@ -888,8 +839,6 @@ void MainWindow::pageChanged(int pageNumber)
         ui->helpView->setText(tr(font_text));
     else if (page == ui->printerTab)
         ui->helpView->setText(tr(printer_text));
-    else if (page == ui->phononTab)
-        ui->helpView->setText(tr(phonon_text));
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
@@ -903,7 +852,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
             qApp->processEvents();
             fileSave();
 
-            // fall through intended
+            [[fallthrough]];
         case QMessageBox::No: // don't save
             e->accept();
             break;
