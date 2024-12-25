@@ -65,13 +65,11 @@ private slots:
     void actualSize();
     void actualSize2_data(); // test with 2 pixmaps with different aspect ratio
     void actualSize2();
-    void svgActualSize();
     void isNull();
     void swap();
     void bestMatch();
     void cacheKey();
     void detach();
-    void svg();
     void addFile();
     void availableSizes();
     void name();
@@ -187,34 +185,14 @@ void tst_QIcon::actualSize2_data()
 void tst_QIcon::actualSize2()
 {
     QIcon icon;
-    const QString prefix = QLatin1String(SRCDIR) + QLatin1String("/");
-
-    icon.addPixmap(QPixmap(prefix + "image.png"));
-    icon.addPixmap(QPixmap(prefix + "rect.png"));
+    icon.addPixmap(QPixmap("image.png"));
+    icon.addPixmap(QPixmap("rect.png"));
 
     QFETCH(QSize, argument);
     QFETCH(QSize, result);
 
     QCOMPARE(icon.actualSize(argument), result);
     QCOMPARE(icon.pixmap(argument).size(), result);
-}
-
-void tst_QIcon::svgActualSize()
-{
-    const QString prefix = QLatin1String(SRCDIR) + QLatin1String("/");
-    QIcon icon(prefix + "rect.svg");
-    QCOMPARE(icon.actualSize(QSize(16, 16)), QSize(16, 2));
-    QCOMPARE(icon.pixmap(QSize(16, 16)).size(), QSize(16, 2));
-
-    QPixmap p(16, 16);
-    p.fill(Qt::cyan);
-    icon.addPixmap(p);
-
-    QCOMPARE(icon.actualSize(QSize(16, 16)), QSize(16, 16));
-    QCOMPARE(icon.pixmap(QSize(16, 16)).size(), QSize(16, 16));
-
-    QCOMPARE(icon.actualSize(QSize(16, 14)), QSize(16, 2));
-    QCOMPARE(icon.pixmap(QSize(16, 14)).size(), QSize(16, 2));
 }
 
 void tst_QIcon::isNull() {
@@ -244,14 +222,13 @@ void tst_QIcon::isNull() {
     QVERIFY(!iconNoFileSuffix.isNull());
     QVERIFY(!iconNoFileSuffix.actualSize(QSize(32, 32)).isValid());
 
-    const QString prefix = QLatin1String(SRCDIR) + QLatin1String("/");
     // test string constructor with existing file but unsupported format
-    QIcon iconUnsupportedFormat = QIcon(prefix + "tst_qicon.cpp");
+    QIcon iconUnsupportedFormat = QIcon("tst_qicon.cpp");
     QVERIFY(!iconUnsupportedFormat.isNull());
     QVERIFY(!iconUnsupportedFormat.actualSize(QSize(32, 32)).isValid());
 
     // test string constructor with existing file and supported format
-    QIcon iconSupportedFormat = QIcon(prefix + "image.png");
+    QIcon iconSupportedFormat = QIcon("image.png");
     QVERIFY(!iconSupportedFormat.isNull());
     QVERIFY(iconSupportedFormat.actualSize(QSize(32, 32)).isValid());
 }
@@ -409,51 +386,6 @@ void tst_QIcon::detach()
     QVERIFY(img1 == img2);
 }
 
-void tst_QIcon::svg()
-{
-    QIcon icon1("heart.svg");
-
-    QVERIFY(!icon1.pixmap(32).isNull());
-    QImage img1 = icon1.pixmap(32).toImage();
-    QVERIFY(!icon1.pixmap(32, QIcon::Disabled).isNull());
-    QImage img2 = icon1.pixmap(32, QIcon::Disabled).toImage();
-
-    icon1.addFile("trash.svg", QSize(), QIcon::Disabled);
-    QVERIFY(!icon1.pixmap(32, QIcon::Disabled).isNull());
-    QImage img3 = icon1.pixmap(32, QIcon::Disabled).toImage();
-    QVERIFY(img3 != img2);
-    QVERIFY(img3 != img1);
-
-    QPixmap pm("image.png");
-    icon1.addPixmap(pm, QIcon::Normal, QIcon::On);
-    QVERIFY(!icon1.pixmap(128, QIcon::Normal, QIcon::On).isNull());
-    QImage img4 = icon1.pixmap(128, QIcon::Normal, QIcon::On).toImage();
-    QVERIFY(img4 != img3);
-    QVERIFY(img4 != img2);
-    QVERIFY(img4 != img1);
-
-    QIcon icon2;
-    icon2.addFile("heart.svg");
-    QVERIFY(icon2.pixmap(57).toImage() == icon1.pixmap(57).toImage());
-
-    QIcon icon3("trash.svg");
-    icon3.addFile("heart.svg");
-    QVERIFY(icon3.pixmap(57).toImage() == icon1.pixmap(57).toImage());
-
-    QIcon icon4("heart.svg");
-    icon4.addFile("image.png", QSize(), QIcon::Active);
-    QVERIFY(!icon4.pixmap(32).isNull());
-    QVERIFY(!icon4.pixmap(32, QIcon::Active).isNull());
-    QVERIFY(icon4.pixmap(32).toImage() == img1);
-    QIcon pmIcon(pm);
-    QVERIFY(icon4.pixmap(pm.size(), QIcon::Active).toImage() == pmIcon.pixmap(pm.size(), QIcon::Active).toImage());
-
-#ifndef QT_NO_COMPRESS
-    QIcon icon5("heart.svgz");
-    QVERIFY(!icon5.pixmap(32).isNull());
-#endif
-}
-
 void tst_QIcon::addFile()
 {
     QIcon icon;
@@ -515,22 +447,6 @@ void tst_QIcon::availableSizes()
         availableSizes = icon.availableSizes(QIcon::Normal, QIcon::On);
         QCOMPARE(availableSizes.size(), 1);
         QCOMPARE(availableSizes.at(0), QSize(16,16));
-    }
-
-    {
-        // checks that there are no availableSizes for scalable images.
-        QIcon icon("heart.svg");
-        QList<QSize> availableSizes = icon.availableSizes();
-        QVERIFY(availableSizes.isEmpty());
-    }
-
-    {
-        // even if an a scalable image contain added pixmaps,
-        // availableSizes still should be empty.
-        QIcon icon("heart.svg");
-        icon.addFile("image.png", QSize(32,32));
-        QList<QSize> availableSizes = icon.availableSizes();
-        QVERIFY(availableSizes.isEmpty());
     }
 
     const int defaultDimension = 16;
