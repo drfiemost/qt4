@@ -81,7 +81,6 @@ private slots:
 
     void task184901_badCache();
     void task223279_inconsistentAddFile();
-    void task239461_custom_iconengine_crash();
 
 private:
     QString oldCurrentDir;
@@ -752,19 +751,6 @@ public:
     static int destructorCalled;
 };
 int IconEngine::destructorCalled = 0;
-
-void tst_QIcon::task239461_custom_iconengine_crash()
-{
-    QIconEngine *engine = new IconEngine();
-    {
-        QIcon icon(engine);
-        QIcon icon2 = icon;
-
-        QPixmap pixmap(32, 32);
-        icon.addPixmap(pixmap);
-    }
-    QCOMPARE(IconEngine::destructorCalled, 1);
-}
 
 
 QTEST_MAIN(tst_QIcon)

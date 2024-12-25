@@ -51,11 +51,10 @@ QT_BEGIN_NAMESPACE
 
 
 class QIconEngine;
-class QIconEngineV2;
 
 struct Q_GUI_EXPORT QIconEngineFactoryInterface : public QFactoryInterface
 {
-    virtual QIconEngine *create(const QString &filename) = 0;
+    virtual QIconEngine *create(const QString &filename = QString()) = 0;
 };
 
 #define QIconEngineFactoryInterface_iid \
@@ -71,29 +70,7 @@ public:
     ~QIconEnginePlugin() override;
 
     QStringList keys() const override = 0;
-    QIconEngine *create(const QString &filename) override = 0;
-};
-
-// ### Qt 5: remove version 2
-struct Q_GUI_EXPORT QIconEngineFactoryInterfaceV2 : public QFactoryInterface
-{
-    virtual QIconEngineV2 *create(const QString &filename = QString()) = 0;
-};
-
-#define QIconEngineFactoryInterfaceV2_iid \
-    "com.trolltech.Qt.QIconEngineFactoryInterfaceV2"
-Q_DECLARE_INTERFACE(QIconEngineFactoryInterfaceV2, QIconEngineFactoryInterfaceV2_iid)
-
-class Q_GUI_EXPORT QIconEnginePluginV2 : public QObject, public QIconEngineFactoryInterfaceV2
-{
-    Q_OBJECT
-    Q_INTERFACES(QIconEngineFactoryInterfaceV2:QFactoryInterface)
-public:
-    QIconEnginePluginV2(QObject *parent = nullptr);
-    ~QIconEnginePluginV2() override;
-
-    QStringList keys() const override = 0;
-    QIconEngineV2 *create(const QString &filename = QString()) override = 0;
+    virtual QIconEngine *create(const QString &filename = QString()) = 0;
 };
 
 QT_END_NAMESPACE

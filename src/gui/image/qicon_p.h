@@ -69,14 +69,7 @@ public:
     QIconPrivate();
 
     ~QIconPrivate() {
-        if (engine_version == 1) {
-            if (!v1RefCount->deref()) {
-                delete engine;
-                delete v1RefCount;
-            }
-        } else if (engine_version == 2) {
-            delete engine;
-        }
+        delete engine;
     }
 
     QIconEngine *engine;
@@ -84,9 +77,6 @@ public:
     QAtomicInt ref;
     int serialNum;
     int detach_no;
-    int engine_version;
-
-    QAtomicInt *v1RefCount;
 };
 
 
@@ -107,7 +97,7 @@ struct QPixmapIconEngineEntry
 
 
 
-class QPixmapIconEngine : public QIconEngineV2 {
+class QPixmapIconEngine : public QIconEngine {
 public:
     QPixmapIconEngine();
     QPixmapIconEngine(const QPixmapIconEngine &);
@@ -121,7 +111,7 @@ public:
 
     // v2 functions
     QString key() const override;
-    QIconEngineV2 *clone() const override;
+    QIconEngine *clone() const override;
     bool read(QDataStream &in) override;
     bool write(QDataStream &out) const override;
     void virtual_hook(int id, void *data) override;

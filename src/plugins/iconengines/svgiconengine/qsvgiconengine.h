@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
 
 class QSvgIconEnginePrivate;
 
-class QSvgIconEngine : public QIconEngineV2
+class QSvgIconEngine : public QIconEngine
 {
 public:
     QSvgIconEngine();
@@ -70,7 +70,7 @@ public:
                  QIcon::Mode mode, QIcon::State state) override;
 
     QString key() const override;
-    QIconEngineV2 *clone() const override;
+    QIconEngine *clone() const override;
     bool read(QDataStream &in) override;
     bool write(QDataStream &out) const override;
 
