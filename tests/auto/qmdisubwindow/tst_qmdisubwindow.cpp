@@ -206,6 +206,7 @@ private slots:
     void fixedMinMaxSize();
 #if !defined (Q_WS_MAC)
     void replaceMenuBarWhileMaximized();
+    void closeOnDoubleClick_data();
     void closeOnDoubleClick();
 #endif
     void setFont();
@@ -933,38 +934,11 @@ void tst_QMdiSubWindow::setWindowFlags()
 #endif
 
     window->setWindowFlags(windowType | customFlags);
-    QEXPECT_FAIL("Qt::Widget", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Window", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Dialog", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Sheet", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Drawer", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Popup", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Tool", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::ToolTip", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::SplashScreen", "QTBUG-27274", Continue);
-    QEXPECT_FAIL("Qt::Desktop", "QTBUG-27274", Continue);
     QCOMPARE(window->windowType(), expectedWindowType);
 
-    if (!expectedCustomFlags) {
-        // We expect the same as 'customFlags'
+    if (!expectedCustomFlags) { // We expect the same as 'customFlags'
         QCOMPARE(window->windowFlags() & ~expectedWindowType, customFlags);
     } else {
-        QEXPECT_FAIL("Qt::Widget", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Window", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Dialog", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Sheet", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Drawer", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Popup", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Tool", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::ToolTip", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::SplashScreen", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::Desktop", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Qt::SubWindow", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("StandardAndFrameless", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("StandardAndFramelessAndStaysOnTop", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Shade", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("Context", "QTBUG-27274", Continue);
-        QEXPECT_FAIL("ShadeAndContext", "QTBUG-27274", Continue);
         QCOMPARE(window->windowFlags() & ~expectedWindowType, expectedCustomFlags);
     }
 }
@@ -1016,18 +990,12 @@ void tst_QMdiSubWindow::mouseDoubleClick()
     sendMouseDoubleClick(window, mousePosition);
     qApp->processEvents();
     QVERIFY(!window->isShaded());
-#ifndef Q_OS_MAC
-    QEXPECT_FAIL("", "QTBUG-27274", Continue);
-#endif
     QCOMPARE(window->geometry(), originalGeometry);
 
     window->showMinimized();
     QVERIFY(window->isMinimized());
     sendMouseDoubleClick(window, mousePosition);
     QVERIFY(!window->isMinimized());
-#ifndef Q_OS_MAC
-    QEXPECT_FAIL("", "QTBUG-27274", Continue);
-#endif
     QCOMPARE(window->geometry(), originalGeometry);
 }
 
@@ -1835,9 +1803,23 @@ void tst_QMdiSubWindow::replaceMenuBarWhileMaximized()
     QVERIFY(!subWindow->maximizedSystemMenuIconWidget());
 }
 
+void tst_QMdiSubWindow::closeOnDoubleClick_data()
+{
+    QTest::addColumn<int>("actionIndex");
+    QTest::addColumn<bool>("expectClosed");
+
+    QTest::newRow("close") << 1 << true;
+    QTest::newRow("disabled-restore-action") << 0 << false; // QTBUG-48493
+}
+
 void tst_QMdiSubWindow::closeOnDoubleClick()
 {
+    QFETCH(int, actionIndex);
+    QFETCH(bool, expectClosed);
+
     QMdiArea mdiArea;
+    mdiArea.setWindowTitle(QLatin1String(QTest::currentTestFunction())
+                           + QLatin1Char(' ') + QLatin1String(QTest::currentDataTag()));
     QPointer<QMdiSubWindow> subWindow = mdiArea.addSubWindow(new QWidget);
     mdiArea.show();
 #ifdef Q_WS_X11
@@ -1851,12 +1833,13 @@ void tst_QMdiSubWindow::closeOnDoubleClick()
     QVERIFY(systemMenu);
     QVERIFY(systemMenu->isVisible());
 
-    sendMouseDoubleClick(systemMenu, QPoint(10, 10));
+    const QRect actionGeometry = systemMenu->actionGeometry(systemMenu->actions().at(actionIndex));
+    sendMouseDoubleClick(systemMenu, actionGeometry.center());
     if (qApp->activePopupWidget() == static_cast<QWidget *>(systemMenu))
         systemMenu->hide();
     qApp->processEvents();
-    QVERIFY(!subWindow || !subWindow->isVisible());
     QVERIFY(!systemMenu || !systemMenu->isVisible());
+    QCOMPARE(subWindow.isNull() || !subWindow->isVisible(), expectClosed);
 }
 #endif
 

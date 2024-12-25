@@ -1051,6 +1051,7 @@ void QMdiSubWindowPrivate::createSystemMenu()
     Q_ASSERT_X(q, "QMdiSubWindowPrivate::createSystemMenu",
                "You can NOT call this function before QMdiSubWindow's ctor");
     systemMenu = new QMenu(q);
+    systemMenu->installEventFilter(q);
     const QStyle *style = q->style();
     addToSystemMenu(RestoreAction, QMdiSubWindow::tr("&Restore"), SLOT(showNormal()));
     actions[RestoreAction]->setIcon(style->standardIcon(QStyle::SP_TitleBarNormalButton, nullptr, q));
@@ -1106,8 +1107,8 @@ void QMdiSubWindowPrivate::updateDirtyRegions()
     if (!parent)
         return;
 
-    foreach (Operation operation, operationMap.keys())
-        operationMap.find(operation).value().region = getRegion(operation);
+    for (OperationInfoMap::iterator it = operationMap.begin(), end = operationMap.end(); it != end; ++it)
+        it.value().region = getRegion(it.key());
 }
 
 /*!
@@ -2070,13 +2071,13 @@ void QMdiSubWindowPrivate::restoreFocus()
 
 /*!
     \internal
-    ### Please add QEvent::WindowFlagsChange event
 */
 void QMdiSubWindowPrivate::setWindowFlags(Qt::WindowFlags windowFlags)
 {
     Q_Q(QMdiSubWindow);
+
     if (!parent) {
-        q->setWindowFlags(windowFlags);
+        QWidgetPrivate::setWindowFlags(windowFlags);
         return;
     }
 
@@ -2109,7 +2110,7 @@ void QMdiSubWindowPrivate::setWindowFlags(Qt::WindowFlags windowFlags)
         delete sizeGrip;
 #endif
 
-    q->setWindowFlags(windowFlags);
+    QWidgetPrivate::setWindowFlags(windowFlags);
     updateGeometryConstraints();
     updateActions();
     QSize currentSize = q->size();
@@ -2561,7 +2562,6 @@ void QMdiSubWindow::showSystemMenu()
     // Adjust x() with -menuwidth in reverse mode.
     if (isRightToLeft())
         globalPopupPos -= QPoint(d->systemMenu->sizeHint().width(), 0);
-    d->systemMenu->installEventFilter(this);
     d->systemMenu->popup(globalPopupPos);
 }
 #endif // QT_NO_MENU
@@ -2691,12 +2691,14 @@ bool QMdiSubWindow::eventFilter(QObject *object, QEvent *event)
     // System menu events.
     if (d->systemMenu && d->systemMenu == object) {
         if (event->type() == QEvent::MouseButtonDblClick) {
-            close();
+            const QMouseEvent *mouseEvent = static_cast<const QMouseEvent *>(event);
+            const QAction *action = d->systemMenu->actionAt(mouseEvent->pos());
+            if (!action || action->isEnabled())
+                close();
         } else if (event->type() == QEvent::MouseMove) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             d->hoveredSubControl = d->getSubControl(mapFromGlobal(mouseEvent->globalPos()));
         } else if (event->type() == QEvent::Hide) {
-            d->systemMenu->removeEventFilter(this);
             d->activeSubControl = QStyle::SC_None;
             update(QRegion(0, 0, width(), d->titleBarHeight()));
         }
