@@ -526,8 +526,8 @@ public:
     iterator erase(iterator it);
 
     // more Qt
-    typedef iterator Iterator;
-    typedef const_iterator ConstIterator;
+    using Iterator = iterator;
+    using ConstIterator = const_iterator;
     inline int count() const { return d->size; }
     iterator find(const Key &key);
     const_iterator find(const Key &key) const;

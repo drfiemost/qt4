@@ -286,16 +286,18 @@ public:
     inline iterator begin() { detach(); return reinterpret_cast<Node *>(p.begin()); }
     inline const_iterator begin() const { return reinterpret_cast<Node *>(p.begin()); }
     inline const_iterator constBegin() const { return reinterpret_cast<Node *>(p.begin()); }
+    inline const_iterator cbegin() const noexcept { return reinterpret_cast<Node *>(p.begin()); }
     inline iterator end() { detach(); return reinterpret_cast<Node *>(p.end()); }
     inline const_iterator end() const { return reinterpret_cast<Node *>(p.end()); }
     inline const_iterator constEnd() const { return reinterpret_cast<Node *>(p.end()); }
+    inline const_iterator cend() const noexcept { return reinterpret_cast<Node *>(p.end()); }
     iterator insert(iterator before, const T &t);
     iterator erase(iterator pos);
     iterator erase(iterator first, iterator last);
 
     // more Qt
-    typedef iterator Iterator;
-    typedef const_iterator ConstIterator;
+    using Iterator = iterator;
+    using ConstIterator = const_iterator;
     inline int count() const { return p.size(); }
     inline int length() const { return p.size(); } // Same as count()
     inline T& first() { Q_ASSERT(!isEmpty()); return *begin(); }

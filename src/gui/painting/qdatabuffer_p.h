@@ -66,7 +66,7 @@ public:
     {
         capacity = res;
         if (res)
-            buffer = (Type*) malloc(capacity * sizeof(Type));
+            buffer = (Type*) std::malloc(capacity * sizeof(Type));
         else
             buffer = nullptr;
         siz = 0;
@@ -114,16 +114,18 @@ public:
                 capacity = 1;
             while (capacity < size)
                 capacity *= 2;
-            buffer = (Type*) ::realloc(buffer, capacity * sizeof(Type));
+            buffer = (Type*) std::realloc(buffer, capacity * sizeof(Type));
+            Q_CHECK_PTR(buffer);
         }
     }
 
     inline void shrink(int size) {
         capacity = size;
-        if (size)
-            buffer = (Type*) realloc(buffer, capacity * sizeof(Type));
-        else {
-            free(buffer);
+        if (size) {
+            buffer = (Type*) std::realloc(buffer, capacity * sizeof(Type));
+            Q_CHECK_PTR(buffer);
+        } else {
+            std::free(buffer);
             buffer = nullptr;
         }
     }
