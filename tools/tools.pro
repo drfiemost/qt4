@@ -25,10 +25,6 @@ TEMPLATE        = subdirs
 
 SUBDIRS += linguist
 
-mac {
-    SUBDIRS += macdeployqt
-}
-
 embedded:SUBDIRS += kmap2qmap
 
 contains(QT_CONFIG, dbus):SUBDIRS += qdbus
