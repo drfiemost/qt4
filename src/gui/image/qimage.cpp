@@ -3834,7 +3834,7 @@ QColor QImage::pixelColor(int x, int y) const
         return QColor();
     }
 
-    const uchar * s = constScanLine(y);
+    //const uchar * s = constScanLine(y);
     switch (d->format) {
     //case Format_BGR30:
     //case Format_A2BGR30_Premultiplied:
@@ -3871,7 +3871,7 @@ void QImage::setPixelColor(int x, int y, const QColor &color)
         return;
     }
     // detach is called from within scanLine
-    uchar * s = scanLine(y);
+    //uchar * s = scanLine(y);
     switch (d->format) {
     case Format_Mono:
     case Format_MonoLSB:
