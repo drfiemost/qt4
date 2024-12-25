@@ -244,9 +244,9 @@ public:
 
     inline const QChar at(int i) const;
     const QChar operator[](int i) const;
-    QCharRef operator[](int i);
+    [[nodiscard]] QCharRef operator[](int i);
     const QChar operator[](uint i) const;
-    QCharRef operator[](uint i);
+    [[nodiscard]] QCharRef operator[](uint i);
 
     QString arg(qlonglong a, int fieldwidth=0, int base=10,
                 QChar fillChar = QLatin1Char(' ')) const Q_REQUIRED_RESULT;
