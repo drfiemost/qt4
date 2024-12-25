@@ -50,7 +50,7 @@
 
 QT_BEGIN_NAMESPACE
 
-const QMapDataBase QMapDataBase::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, { 0, nullptr, nullptr } };
+const QMapDataBase QMapDataBase::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, { 0, nullptr, nullptr }, 0 };
 
 const QMapNodeBase *QMapNodeBase::nextNode() const
 {
@@ -174,6 +174,12 @@ void QMapDataBase::freeNodeAndRebalance(QMapNodeBase *z)
     QMapNodeBase *x_parent;
     if (y->left == nullptr) {
         x = y->right;
+        if (y == mostLeftNode) {
+            if (x)
+                mostLeftNode = x; // It cannot have (left) children due the red black invariant.
+            else
+                mostLeftNode = y->parent();
+        }
     } else {
         if (y->right == nullptr) {
             x = y->left;
@@ -287,6 +293,13 @@ void QMapDataBase::freeNodeAndRebalance(QMapNodeBase *z)
     --size;
 }
 
+void QMapDataBase::recalcMostLeftNode()
+{
+    mostLeftNode = &header;
+    while (mostLeftNode->left)
+        mostLeftNode = mostLeftNode->left;
+}
+
 static inline int qMapAlignmentThreshold()
 {
     // malloc on 32-bit platforms should return pointers that are 8-byte
@@ -321,6 +334,8 @@ QMapNodeBase *QMapDataBase::createNode(int alloc, int alignment, QMapNodeBase *p
     if (parent) {
         if (left) {
             parent->left = node;
+            if (parent == mostLeftNode)
+                mostLeftNode = node;
         } else {
             parent->right = node;
         }
@@ -349,6 +364,7 @@ QMapDataBase *QMapDataBase::createData()
     d->header.p = 0;
     d->header.left = nullptr;
     d->header.right = nullptr;
+    d->mostLeftNode = &(d->header);
 
     return d;
 }

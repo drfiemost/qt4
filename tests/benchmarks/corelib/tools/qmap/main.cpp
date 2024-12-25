@@ -60,6 +60,8 @@ private slots:
     void lookup_string_int();
 
     void iteration();
+    void toStdMap();
+    void iterator_begin();
 };
 
 
@@ -155,6 +157,33 @@ void tst_QMap::iteration()
                 j += *it;
                 ++it;
             }
+        }
+    }
+}
+
+void tst_QMap::toStdMap()
+{
+    QMap<int, int> map;
+    for (int i = 0; i < 100000; ++i)
+        map.insert(i, i);
+    QBENCHMARK {
+        std::map<int, int> n = map.toStdMap();
+        n.begin();
+    }
+}
+
+void tst_QMap::iterator_begin()
+{
+    QMap<int, int> map;
+    for (int i = 0; i < 100000; ++i)
+        map.insert(i, i);
+
+    QBENCHMARK {
+        for (int i = 0; i < 100000; ++i) {
+            QMap<int, int>::const_iterator it = map.constBegin();
+            QMap<int, int>::const_iterator end = map.constEnd();
+            if (it == end) // same as if (false)
+                ++it;
         }
     }
 }

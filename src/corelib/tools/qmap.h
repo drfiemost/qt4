@@ -173,11 +173,13 @@ struct Q_CORE_EXPORT QMapDataBase
     QtPrivate::RefCount ref;
     int size;
     QMapNodeBase header;
+    QMapNodeBase *mostLeftNode;
 
     void rotateLeft(QMapNodeBase *x);
     void rotateRight(QMapNodeBase *x);
     void rebalance(QMapNodeBase *x);
     void freeNodeAndRebalance(QMapNodeBase *z);
+    void recalcMostLeftNode();
 
     QMapNodeBase *createNode(int size, int alignment, QMapNodeBase *parent, bool left);
     void freeTree(QMapNodeBase *root, int alignment);
@@ -199,8 +201,8 @@ struct QMapData : public QMapDataBase
     // actually a QMapNode.
     const Node *end() const { return reinterpret_cast<const Node *>(&header); }
     Node *end() { return reinterpret_cast<Node *>(&header); }
-    const Node *begin() const { if (root()) return root()->minimumNode(); return end(); }
-    Node *begin() { if (root()) return root()->minimumNode(); return end(); }
+    const Node *begin() const { if (root()) return static_cast<const Node*>(mostLeftNode); return end(); }
+    Node *begin() { if (root()) return static_cast<Node*>(mostLeftNode); return end(); }
 
     void deleteNode(Node *z);
     Node *findNode(const Key &akey) const;
@@ -566,6 +568,7 @@ inline QMap<Key, T>::QMap(const QMap<Key, T> &other)
         if (other.d->header.left) {
             d->header.left = static_cast<Node *>(other.d->header.left)->copy(d);
             d->header.left->setParent(&d->header);
+            d->recalcMostLeftNode();
         }
     }
 }
@@ -811,6 +814,7 @@ Q_OUTOFLINE_TEMPLATE void QMap<Key, T>::detach_helper()
     if (!d->ref.deref())
         d->destroy();
     d = x;
+    d->recalcMostLeftNode();
 }
 
 template <class Key, class T>
