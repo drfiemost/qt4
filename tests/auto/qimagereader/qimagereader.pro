@@ -7,7 +7,6 @@ RESOURCES += qimagereader.qrc
 
 !contains(QT_CONFIG, no-gif):DEFINES += QTEST_HAVE_GIF
 !contains(QT_CONFIG, no-jpeg):DEFINES += QTEST_HAVE_JPEG
-!contains(QT_CONFIG, no-mng):DEFINES += QTEST_HAVE_MNG
 !contains(QT_CONFIG, no-tiff):DEFINES += QTEST_HAVE_TIFF
 !contains(QT_CONFIG, no-svg):DEFINES += QTEST_HAVE_SVG
 !contains(QT_CONFIG, no-tga):DEFINES += QTEST_HAVE_TGA
@@ -35,7 +34,7 @@ symbian: {
     DEPLOYMENT += images
 
     qt_not_deployed {
-        imagePlugins.files = qjpeg.dll qgif.dll qmng.dll
+        imagePlugins.files = qjpeg.dll qgif.dll
         imagePlugins.path = imageformats
 
         DEPLOYMENT += imagePlugins
