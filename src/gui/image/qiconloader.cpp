@@ -548,8 +548,8 @@ void QIconLoaderEngine::virtual_hook(int id, void *data)
             arg.sizes.clear();
 
             // Gets all sizes from the DirectoryInfo entries
-            for (auto m_entrie : m_entries) {
-                int size = m_entrie->dir.size;
+            for (auto entry : m_entries) {
+                int size = entry->dir.size;
                 arg.sizes.append(QSize(size, size));
             }
         }
@@ -558,6 +558,11 @@ void QIconLoaderEngine::virtual_hook(int id, void *data)
         {
             QString &name = *reinterpret_cast<QString*>(data);
             name = m_iconName;
+        }
+        break;
+    case QIconEngine::IsNullHook:
+        {
+            *reinterpret_cast<bool*>(data) = m_entries.isEmpty();
         }
         break;
     default:

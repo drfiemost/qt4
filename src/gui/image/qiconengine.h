@@ -66,7 +66,7 @@ public:
     virtual bool read(QDataStream &in);
     virtual bool write(QDataStream &out) const;
 
-    enum IconEngineHook { AvailableSizesHook = 1, IconNameHook };
+    enum IconEngineHook { AvailableSizesHook = 1, IconNameHook, IsNullHook };
 
     struct AvailableSizesArgument
     {
@@ -79,6 +79,7 @@ public:
                                 QIcon::State state = QIcon::Off) const;
 
     virtual QString iconName() const;
+    virtual bool isNull() const;
 
     virtual void virtual_hook(int id, void *data);
 };

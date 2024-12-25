@@ -1229,7 +1229,7 @@ static const uint * QT_FASTCALL fetchTransformedBilinearARGB32PM(uint *buffer, c
                     uint *boundedEnd = end - 3; \
                     boundedEnd -= 3;
 
-#if defined(__SSE2__)
+#if defined(QT_ALWAYS_HAVE_SSE2)
                     BILINEAR_ROTATE_BOUNDS_PROLOG
 
                     const __m128i colorMask = _mm_set1_epi32(0x00ff00ff);

@@ -737,7 +737,7 @@ void QIcon::paint(QPainter *painter, const QRect &rect, Qt::Alignment alignment,
 */
 bool QIcon::isNull() const
 {
-    return !d;
+    return !d || d->engine->isNull();
 }
 
 /*!\internal
@@ -752,7 +752,12 @@ bool QIcon::isDetached() const
 void QIcon::detach()
 {
     if (d) {
-        if (d->ref.loadRelaxed() != 1) {
+        if (d->engine->isNull()) {
+            if (!d->ref.deref())
+                delete d;
+            d = 0;
+            return;
+        } else if (d->ref.loadRelaxed() != 1) {
             QIconPrivate *x = new QIconPrivate;
             x->engine = d->engine->clone();
             if (!d->ref.deref())
@@ -776,11 +781,10 @@ void QIcon::addPixmap(const QPixmap &pixmap, Mode mode, State state)
 {
     if (pixmap.isNull())
         return;
+    detach();
     if (!d) {
         d = new QIconPrivate;
         d->engine = new QPixmapIconEngine;
-    } else {
-        detach();
     }
     d->engine->addPixmap(pixmap, mode, state);
 }
@@ -814,6 +818,7 @@ void QIcon::addFile(const QString &fileName, const QSize &size, Mode mode, State
 {
     if (fileName.isEmpty())
         return;
+    detach();
     if (!d) {
 #if !defined (QT_NO_LIBRARY) && !defined(QT_NO_SETTINGS)
         QFileInfo info(fileName);
@@ -833,8 +838,6 @@ void QIcon::addFile(const QString &fileName, const QSize &size, Mode mode, State
             d = new QIconPrivate;
             d->engine = new QPixmapIconEngine;
         }
-    } else {
-        detach();
     }
     d->engine->addFile(fileName, size, mode, state);
 }

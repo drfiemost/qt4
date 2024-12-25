@@ -149,6 +149,10 @@ void QIconEngine::addFile(const QString &/*fileName*/, const QSize &/*size*/, QI
     icon, for example when instantiating an icon using
     QIcon::fromTheme().
 
+    \value IsNullHook Allow to query if this engine represents a null
+    icon. The \a data argument of the virtual_hook() is a pointer to a
+    bool that can be set to true if the icon is null.
+
     \sa virtual_hook()
  */
 
@@ -195,7 +199,7 @@ QString QIconEngine::key() const
 }
 
 /*! \fn QIconEngine *QIconEngine::clone() const
-
+virtual_hook
     Reimplement this method to return a clone of this icon engine.
  */
 
@@ -278,6 +282,17 @@ QString QIconEngine::iconName() const
     QString name;
     const_cast<QIconEngine *>(this)->virtual_hook(QIconEngine::IconNameHook, reinterpret_cast<void*>(&name));
     return name;
+}
+
+/*!
+    Returns true if this icon engine represent a null QIcon.
+ */
+
+bool QIconEngine::isNull() const
+{
+    bool isNull = false;
+    const_cast<QIconEngine *>(this)->virtual_hook(QIconEngine::IsNullHook, &isNull);
+    return isNull;
 }
 
 QT_END_NAMESPACE
