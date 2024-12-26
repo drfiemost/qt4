@@ -216,6 +216,7 @@ private slots:
     void task_233197();
     void task_226929();
     void styleChange();
+    void testFullScreenState();
 };
 
 void tst_QMdiSubWindow::initTestCase()
@@ -2083,6 +2084,22 @@ void tst_QMdiSubWindow::styleChange()
     // subWindowActivated should NOT be activated by a style change,
     // even if internally QMdiSubWindow un-minimizes subwindows temporarily.
     QCOMPARE(spy.count(), 0);
+}
+
+void tst_QMdiSubWindow::testFullScreenState()
+{
+    QMdiArea mdiArea;
+    mdiArea.showMaximized();
+
+    QMdiSubWindow *subWindow = mdiArea.addSubWindow(new QWidget);
+    subWindow->setGeometry(0, 0, 300, 300);
+    subWindow->showFullScreen(); // QMdiSubWindow does not support the fullscreen state. This call
+                                 // should be equivalent to setVisible(true) (and not showNormal())
+
+#if defined(Q_WS_X11)
+    qt_x11_wait_for_window_manager(&mdiArea);
+#endif
+    QCOMPARE(subWindow->size(), QSize(300, 300));
 }
 
 QTEST_MAIN(tst_QMdiSubWindow)
