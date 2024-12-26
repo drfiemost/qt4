@@ -1234,7 +1234,7 @@ QMakeProject::read(const QString &file, QMap<QString, QStringList> &place)
     QString filename = Option::fixPathToLocalOS(file, false);
     bool ret = false, using_stdin = false;
     QFile qfile;
-    if(!strcmp(filename.toLatin1(), "-")) {
+    if(!strcmp(filename.toLatin1().constData(), "-")) {
         qfile.setFileName("");
         ret = qfile.open(stdin, QIODevice::ReadOnly);
         using_stdin = true;
@@ -1556,7 +1556,7 @@ QMakeProject::isActiveConfig(const QString &x, bool regex, QMap<QString, QString
             buffer = (char *)malloc(1024);
             qmakeAddCacheClear(qmakeFreeCacheClear, (void**)&buffer);
         }
-        int l = readlink(Option::mkfile::qmakespec.toLatin1(), buffer, 1024);
+        int l = readlink(Option::mkfile::qmakespec.toLatin1().constData(), buffer, 1024);
         if(l != -1) {
             buffer[l] = '\0';
             QString r = buffer;

@@ -247,7 +247,7 @@ int FontPanel::closestPointSizeIndex(int desiredPointSize) const
     const int pointSizeCount = m_pointSizeComboBox->count();
     for (int i = 0; i < pointSizeCount; i++) {
         const int itemPointSize = m_pointSizeComboBox->itemData(i).toInt();
-        const int absError = qAbs(desiredPointSize - itemPointSize);
+        const int absError = std::abs(desiredPointSize - itemPointSize);
         if (absError < closestAbsError) {
             closestIndex  = i;
             closestAbsError = absError;

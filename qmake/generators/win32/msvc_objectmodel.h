@@ -1017,7 +1017,7 @@ public:
         int Windex = filepath.indexOf("\\");
         int Uindex = filepath.indexOf("/");
         if (Windex != -1 && Uindex != -1)
-            return qMin(Windex, Uindex);
+            return std::min(Windex, Uindex);
         else if (Windex != -1)
             return Windex;
         return Uindex;
@@ -1068,7 +1068,7 @@ public:
         int Windex = filepath.lastIndexOf("\\");
         int Uindex = filepath.lastIndexOf("/");
         if (Windex != -1 && Uindex != -1)
-            return qMax(Windex, Uindex);
+            return std::max(Windex, Uindex);
         else if (Windex != -1)
             return Windex;
         return Uindex;
