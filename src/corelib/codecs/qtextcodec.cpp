@@ -114,7 +114,7 @@ static bool qisalnum(char c)
 static bool nameMatch(const QByteArray &name, const QByteArray &test)
 {
     // if they're the same, return a perfect score
-    if (qstricmp(name, test) == 0)
+    if (qstricmp(name.constData(), test.constData()) == 0)
         return true;
 
     const char *n = name.constData();
@@ -520,7 +520,7 @@ static QTextCodec * ru_RU_hack(const char * i) {
                   koi8r, latin5, i);
     }
 #if !defined(QT_NO_SETLOCALE)
-    setlocale(LC_CTYPE, origlocale);
+    setlocale(LC_CTYPE, origlocale.constData());
 #endif
 
     return ru_RU_codec;
@@ -658,7 +658,7 @@ static void setupLocaleMapper()
             else if (try_locale_list(pt_154locales, lang))
                 localeMapper = QTextCodec::codecForName("PT 154");
             else if (try_locale_list(probably_koi8_rlocales, lang))
-                localeMapper = ru_RU_hack(lang);
+                localeMapper = ru_RU_hack(lang.constData());
         }
 
     }

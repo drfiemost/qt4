@@ -1056,6 +1056,8 @@ QByteArray &QByteArray::operator=(const char *str)
 /*! \fn QByteArray::operator const char *() const
     \fn QByteArray::operator const void *() const
 
+    \obsolete Use constData() instead.
+
     Returns a pointer to the data stored in the byte array. The
     pointer can be used to access the bytes that compose the array.
     The data is '\\0'-terminated. The pointer remains valid as long
@@ -2818,7 +2820,7 @@ QDataStream &operator<<(QDataStream &out, const QByteArray &ba)
         out << (quint32)0xffffffff;
         return out;
     }
-    return out.writeBytes(ba, ba.size());
+    return out.writeBytes(ba.constData(), ba.size());
 }
 
 /*! \relates QByteArray

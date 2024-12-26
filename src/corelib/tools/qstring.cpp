@@ -4813,7 +4813,7 @@ int QString::localeAwareCompare_helper(const QChar *data1, int length1,
     return collator.compare(data1, length1, data2, length2);
 #elif defined(Q_OS_UNIX)
     // declared in <string.h>
-    int delta = strcoll(toLocal8Bit_helper(data1, length1), toLocal8Bit_helper(data2, length2));
+    int delta = strcoll(toLocal8Bit_helper(data1, length1).constData(), toLocal8Bit_helper(data2, length2).constData());
     if (delta == 0)
         delta = ucstrcmp(data1, length1, data2, length2);
     return delta;
