@@ -145,10 +145,8 @@ public:
     bool isSequential() const override;
 
     bool open(OpenMode flags) override;
-    bool open(FILE *f, OpenMode flags);
-    bool open(int fd, OpenMode flags);
-    bool open(FILE *f, OpenMode ioFlags, FileHandleFlags handleFlags);
-    bool open(int fd, OpenMode ioFlags, FileHandleFlags handleFlags);
+    bool open(FILE *f, OpenMode ioFlags, FileHandleFlags handleFlags=DontCloseHandle);
+    bool open(int fd, OpenMode ioFlags, FileHandleFlags handleFlags=DontCloseHandle);
     void close() override;
 
     qint64 size() const override;
