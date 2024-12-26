@@ -2863,6 +2863,13 @@ int qrand()
     Example of a movable type:
 
     \snippet doc/src/snippets/code/src_corelib_global_qglobal.cpp 39
+
+    Qt will try to detect the class of a type using std::is_trivial or
+    std::is_trivially_copyable. Use this macro to tune the behavior.
+    For instance many types would be candidates for Q_MOVABLE_TYPE despite
+    not being trivially-copyable. For binary compatibility reasons, QList
+    optimizations are only enabled if there is an explicit
+    Q_DECLARE_TYPEINFO even for trivially-copyable types.
 */
 
 /*!

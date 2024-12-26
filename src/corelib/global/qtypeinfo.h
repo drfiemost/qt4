@@ -52,6 +52,26 @@ QT_BEGIN_NAMESPACE
    QTypeInfo     - type trait functionality
 */
 
+template <typename T>
+static constexpr bool qIsRelocatable()
+{
+#if defined(Q_CC_CLANG) || !defined(Q_CC_GNU) || Q_CC_GNU >= 501
+    return std::is_trivially_copyable<T>::value && std::is_trivially_destructible<T>::value;
+#else
+    return std::is_enum<T>::value || std::is_integral<T>::value;
+#endif
+}
+
+template <typename T>
+static constexpr bool qIsTrivial()
+{
+#if defined(Q_CC_CLANG) || !defined(Q_CC_GNU) || Q_CC_GNU >= 501
+    return std::is_trivial<T>::value;
+#else
+    return std::is_enum<T>::value || std::is_integral<T>::value;
+#endif
+}
+
 /*
   The catch-all template.
 */
@@ -63,7 +83,7 @@ public:
     enum {
         isPointer = false,
         isIntegral = std::is_integral<T>::value,
-        isComplex = !isIntegral && !std::is_enum<T>::value,
+        isComplex = !qIsTrivial<T>(),
         isStatic = true,
         isLarge = (sizeof(T)>sizeof(void*)),
         isDummy = false,
@@ -150,7 +170,7 @@ class QTypeInfo<TYPE > \
 { \
 public: \
     enum { \
-        isComplex = (((FLAGS) & Q_PRIMITIVE_TYPE) == 0), \
+        isComplex = (((FLAGS) & Q_PRIMITIVE_TYPE) == 0) && !qIsTrivial<TYPE>(), \
         isStatic = (((FLAGS) & (Q_MOVABLE_TYPE | Q_PRIMITIVE_TYPE)) == 0), \
         isLarge = (sizeof(TYPE)>sizeof(void*)), \
         isPointer = false, \

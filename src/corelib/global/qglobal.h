@@ -428,7 +428,7 @@ namespace QT_NAMESPACE {}
 #  define __is_pod(X) false
 
 #elif defined(__GNUC__)
-#  define Q_CC_GNU
+#  define Q_CC_GNU          (__GNUC__ * 100 + __GNUC_MINOR__)
 #  define Q_C_CALLBACKS
 #  if defined(__MINGW32__)
 #    define Q_CC_MINGW

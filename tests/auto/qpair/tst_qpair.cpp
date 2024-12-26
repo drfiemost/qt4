@@ -51,8 +51,8 @@ private Q_SLOTS:
     void testConstexpr();
 };
 
-class C { char _[4]; };
-class M { char _[4]; };
+class C { C() {} char _[4]; };
+class M { M() {} char _[4]; };
 class P { char _[4]; };
 
 QT_BEGIN_NAMESPACE
