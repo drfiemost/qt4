@@ -273,13 +273,11 @@ void QThreadPrivate::createEventDispatcher(QThreadData *data)
 #ifndef QT_NO_THREAD
 
 #if (defined(Q_OS_LINUX) || (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6))
-static void setCurrentThreadName(pthread_t threadId, const char *name)
+static void setCurrentThreadName(const char *name)
 {
 #  if defined(Q_OS_LINUX) && !defined(QT_LINUXBASE)
-    Q_UNUSED(threadId);
     prctl(PR_SET_NAME, (unsigned long)name, 0, 0, 0);
 #  elif (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6)
-    Q_UNUSED(threadId);
     if (QSysInfo::MacintoshVersion >= QSysInfo::MV_10_6)
         pthread_setname_np(name);
 #  endif
@@ -312,15 +310,15 @@ void *QThreadPrivate::start(void *arg)
     createEventDispatcher(data);
 
 #if (defined(Q_OS_LINUX) || (defined(Q_OS_MAC) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6))
-    // sets the name of the current thread.
-    QString objectName = thr->objectName();
-
-    pthread_t thread_id = from_HANDLE<pthread_t>(data->threadId.loadRelaxed());
-    if (Q_LIKELY(objectName.isEmpty()))
-        setCurrentThreadName(thread_id, thr->metaObject()->className());
-    else
-        setCurrentThreadName(thread_id, objectName.toLocal8Bit());
-
+        {
+            // Sets the name of the current thread. We can only do this
+            // when the thread is starting, as we don't have a cross
+            // platform way of setting the name of an arbitrary thread.
+            if (Q_LIKELY(thr->objectName().isEmpty()))
+                setCurrentThreadName(thr->metaObject()->className());
+            else
+                setCurrentThreadName(thr->objectName().toLocal8Bit());
+        }
 #endif
 
     emit thr->started();
