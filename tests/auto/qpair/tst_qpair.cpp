@@ -48,7 +48,10 @@ class tst_QPair : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void pairOfReferences();
     void testConstexpr();
+    void testConversions();
+    void taskQTBUG_48780_pairContainingCArray();
 };
 
 class C { C() {} char _[4]; };
@@ -101,6 +104,35 @@ static_assert(!QTypeInfo<QPairPP>::isStatic );
 static_assert(!QTypeInfo<QPairPP>::isDummy  );
 static_assert(!QTypeInfo<QPairPP>::isPointer);
 
+void tst_QPair::pairOfReferences()
+{
+    int i = 0;
+    QString s;
+
+    QPair<int&, QString&> p(i, s);
+
+    p.first = 1;
+    QCOMPARE(i, 1);
+
+    i = 2;
+    QCOMPARE(p.first, 2);
+
+    p.second = QLatin1String("Hello");
+    QCOMPARE(s, QLatin1String("Hello"));
+
+    s = QLatin1String("olleH");
+    QCOMPARE(p.second, QLatin1String("olleH"));
+
+    QPair<int&, QString&> q = p;
+    q.first = 3;
+    QCOMPARE(i, 3);
+    QCOMPARE(p.first, 3);
+
+    q.second = QLatin1String("World");
+    QCOMPARE(s, QLatin1String("World"));
+    QCOMPARE(p.second, QLatin1String("World"));
+}
+
 void tst_QPair::testConstexpr()
 {
     constexpr QPair<int, double> pID = qMakePair(0, 0.0);
@@ -115,6 +147,72 @@ void tst_QPair::testConstexpr()
     Q_UNUSED(pSI);
 }
 
+void tst_QPair::testConversions()
+{
+    // construction from lvalue:
+    {
+        const QPair<int, double> rhs(42, 4.5);
+        const QPair<int, int> pii = rhs;
+        QCOMPARE(pii.first, 42);
+        QCOMPARE(pii.second, 4);
+
+        const QPair<int, float> pif = rhs;
+        QCOMPARE(pif.first, 42);
+        QCOMPARE(pif.second, 4.5f);
+    }
+
+    // assignment from lvalue:
+    {
+        const QPair<int, double> rhs(42, 4.5);
+        QPair<int, int> pii;
+        pii = rhs;
+        QCOMPARE(pii.first, 42);
+        QCOMPARE(pii.second, 4);
+
+        QPair<int, float> pif;
+        pif = rhs;
+        QCOMPARE(pif.first, 42);
+        QCOMPARE(pif.second, 4.5f);
+    }
+
+    // construction from rvalue:
+    {
+#define rhs qMakePair(42, 4.5)
+        const QPair<int, int> pii = rhs;
+        QCOMPARE(pii.first, 42);
+        QCOMPARE(pii.second, 4);
+
+        const QPair<int, float> pif = rhs;
+        QCOMPARE(pif.first, 42);
+        QCOMPARE(pif.second, 4.5f);
+#undef rhs
+    }
+
+    // assignment from rvalue:
+    {
+#define rhs qMakePair(42, 4.5)
+        QPair<int, int> pii;
+        pii = rhs;
+        QCOMPARE(pii.first, 42);
+        QCOMPARE(pii.second, 4);
+
+        QPair<int, float> pif;
+        pif = rhs;
+        QCOMPARE(pif.first, 42);
+        QCOMPARE(pif.second, 4.5f);
+#undef rhs
+    }
+}
+
+void tst_QPair::taskQTBUG_48780_pairContainingCArray()
+{
+    // compile-only:
+    QPair<int[2], int> pair;
+    pair.first[0] = 0;
+    pair.first[1] = 1;
+    pair.second = 2;
+    Q_UNUSED(pair);
+}
 
 QTEST_APPLESS_MAIN(tst_QPair)
 #include "tst_qpair.moc"
