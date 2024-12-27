@@ -2073,8 +2073,8 @@ Q_CORE_EXPORT QString qtTrId(const char *id, int n = -1);
    operator to disable copying (the compiler gives an error message).
 */
 #define Q_DISABLE_COPY(Class) \
-    Class(const Class &); \
-    Class &operator=(const Class &);
+    Class(const Class &) = delete; \
+    Class &operator=(const Class &) = delete;
 
 class QByteArray;
 Q_CORE_EXPORT QByteArray qgetenv(const char *varName);
