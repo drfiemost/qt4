@@ -287,10 +287,10 @@ template <>
 class QFutureInterface<void> : public QFutureInterfaceBase
 {
 public:
-    QFutureInterface<void>(State initialState = NoState)
+    QFutureInterface(State initialState = NoState)
         : QFutureInterfaceBase(initialState)
     { }
-    QFutureInterface<void>(const QFutureInterface<void> &other)
+    QFutureInterface(const QFutureInterface<void> &other)
          
     = default;
 
