@@ -1551,7 +1551,11 @@ inline int qMacVersion() { return QSysInfo::MacintoshVersion; }
 #endif
 
 #ifndef qPrintable
-#  define qPrintable(string) QString(string).toLocal8Bit().constData()
+#  define qPrintable(string) QtPrivate::asString(string).toLocal8Bit().constData()
+#endif
+
+#ifndef qUtf8Printable
+#  define qUtf8Printable(string) QtPrivate::asString(string).toUtf8().constData()
 #endif
 
 Q_CORE_EXPORT void qDebug(const char *, ...) /* print debug message */

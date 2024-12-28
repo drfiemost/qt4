@@ -532,8 +532,8 @@ QT_BEGIN_NAMESPACE
     64-bit integer literals in a platform-independent way. The
     Q_CHECK_PTR() macro prints a warning containing the source code's
     file name and line number, saying that the program ran out of
-    memory, if the pointer is 0. The qPrintable() macro represent an
-    easy way of printing text.
+    memory, if the pointer is 0. The qPrintable() and qUtf8Printable()
+    macros represent an easy way of printing text.
 
     Finally, the QT_POINTER_SIZE macro expands to the size of a
     pointer in bytes, and the QT_VERSION and QT_VERSION_STR macros
@@ -2824,6 +2824,22 @@ int qrand()
     The char pointer will be invalid after the statement in which
     qPrintable() is used. This is because the array returned by
     toLocal8Bit() will fall out of scope.
+    \note qDebug(), qWarning(), qCritical(), qFatal() expect %s
+    arguments to be UTF-8 encoded, while qPrintable() converts to
+    local 8-bit encoding. Therefore qUtf8Printable() should be used
+    for logging strings instead of qPrintable().
+    \sa qUtf8Printable()
+*/
+
+/*!
+    \macro const char *qUtf8Printable(const QString &str)
+    \relates <QtGlobal>
+    \since 5.4
+    Returns \a str as a \c{const char *}. This is equivalent to
+    \a{str}.toUtf8().constData().
+    The char pointer will be invalid after the statement in which
+    qUtf8Printable() is used. This is because the array returned by
+    QString::toUtf8() will fall out of scope.
 
     Example:
 

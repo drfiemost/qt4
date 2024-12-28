@@ -1307,6 +1307,12 @@ inline bool QStringRef::contains(QChar c, Qt::CaseSensitivity cs) const
 inline bool QStringRef::contains(const QStringRef &s, Qt::CaseSensitivity cs) const
 { return indexOf(s, 0, cs) != -1; }
 
+namespace QtPrivate {
+// used by qPrintable() and qUtf8Printable() macros
+inline const QString &asString(const QString &s)    { return s; }
+inline QString &&asString(QString &&s)              { return std::move(s); }
+}
+
 QT_END_NAMESPACE
 
 QT_END_HEADER
