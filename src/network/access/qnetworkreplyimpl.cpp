@@ -155,7 +155,7 @@ void QNetworkReplyImplPrivate::_q_copyReadyRead()
             // we'll be called again, eventually
             break;
 
-        bytesToRead = qBound<qint64>(1, bytesToRead, copyDevice->bytesAvailable());
+        bytesToRead = std::clamp(bytesToRead, (qint64)1, copyDevice->bytesAvailable());
         QByteArray byteData;
         byteData.resize(bytesToRead);
         qint64 bytesActuallyRead = copyDevice->read(byteData.data(), byteData.size());

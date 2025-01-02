@@ -2096,7 +2096,7 @@ void QComboBox::insertItem(int index, const QIcon &icon, const QString &text, co
 {
     Q_D(QComboBox);
     int itemCount = count();
-    index = qBound(0, index, itemCount);
+    index = std::clamp(index, 0, itemCount);
     if (index >= d->maxCount)
         return;
 
@@ -2148,7 +2148,7 @@ void QComboBox::insertItems(int index, const QStringList &list)
     Q_D(QComboBox);
     if (list.isEmpty())
         return;
-    index = qBound(0, index, count());
+    index = std::clamp(index, 0, count());
     int insertCount = std::min(d->maxCount - index, list.count());
     if (insertCount <= 0)
         return;
@@ -2195,7 +2195,7 @@ void QComboBox::insertSeparator(int index)
 {
     Q_D(QComboBox);
     int itemCount = count();
-    index = qBound(0, index, itemCount);
+    index = std::clamp(index, 0, itemCount);
     if (index >= d->maxCount)
         return;
     insertItem(index, QIcon(), QString());

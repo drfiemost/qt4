@@ -694,7 +694,7 @@ void QAbstractSlider::sliderChange(SliderChange)
 */
 static inline int clampScrollStep(qreal x)
 {
-    return int(qBound(qreal(INT_MIN), x, qreal(INT_MAX)));
+    return int(std::clamp(x, qreal(INT_MIN), qreal(INT_MAX)));
 }
 
 bool QAbstractSliderPrivate::scrollByDelta(Qt::Orientation orientation, Qt::KeyboardModifiers modifiers, int delta)
@@ -708,7 +708,7 @@ bool QAbstractSliderPrivate::scrollByDelta(Qt::Orientation orientation, Qt::Keyb
 
     if ((modifiers & Qt::ControlModifier) || (modifiers & Qt::ShiftModifier)) {
         // Scroll one page regardless of delta:
-        stepsToScroll = qBound(-pageStep, clampScrollStep(offset * pageStep), pageStep);
+        stepsToScroll = std::clamp(clampScrollStep(offset * pageStep), -pageStep, pageStep);
         offset_accumulated = 0;
     } else {
         // Calculate how many lines to scroll. Depending on what delta is (and
@@ -726,7 +726,7 @@ bool QAbstractSliderPrivate::scrollByDelta(Qt::Orientation orientation, Qt::Keyb
         offset_accumulated += stepsToScrollF;
 #ifndef Q_WS_MAC
         // Don't scroll more than one page in any case:
-        stepsToScroll = qBound(-pageStep, clampScrollStep(offset_accumulated), pageStep);
+        stepsToScroll = std::clamp(clampScrollStep(offset_accumulated), -pageStep, pageStep);
 #else
         // Native UI-elements on Mac can scroll hundreds of lines at a time as
         // a result of acceleration. So keep the same behaviour in Qt, and

@@ -198,12 +198,12 @@ QSizeF *QGraphicsLayoutItemPrivate::effectiveSizeHints(const QSizeF &constraint)
         const QSizeF *hintsWithoutConstraint = effectiveSizeHints(QSizeF(-1,-1));
 
         if (adjustedConstraint.width() >= 0)
-            adjustedConstraint.setWidth( qBound( hintsWithoutConstraint[Qt::MinimumSize].width(),
-                                                 adjustedConstraint.width(),
+            adjustedConstraint.setWidth( std::clamp( adjustedConstraint.width(),
+                                                 hintsWithoutConstraint[Qt::MinimumSize].width(),
                                                  hintsWithoutConstraint[Qt::MaximumSize].width()));
         if (adjustedConstraint.height() >= 0)
-            adjustedConstraint.setHeight( qBound( hintsWithoutConstraint[Qt::MinimumSize].height(),
-                                                  adjustedConstraint.height(),
+            adjustedConstraint.setHeight( std::clamp( adjustedConstraint.height(),
+                                                  hintsWithoutConstraint[Qt::MinimumSize].height(),
                                                   hintsWithoutConstraint[Qt::MaximumSize].height()));
 
         if (!sizeHintWithConstraintCacheDirty && adjustedConstraint == cachedConstraint)

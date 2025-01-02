@@ -609,7 +609,7 @@ void QScanConverter::mergeLine(QT_FT_Vector a, QT_FT_Vector b)
         Q16Dot16 aFP = Q16Dot16Factor/2 + (a.x << 10) - COORD_ROUNDING;
 
         if (b.x == a.x) {
-            Line line = { qBound(m_leftFP, aFP, m_rightFP), 0, iTop, iBottom, winding };
+            Line line = { std::clamp( aFP, m_leftFP,m_rightFP), 0, iTop, iBottom, winding };
             m_lines.add(line);
         } else {
             const qreal slope = (b.x - a.x) / qreal(b.y - a.y);
@@ -844,11 +844,11 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
         qreal left = pa.x() - halfWidth;
         qreal right = pa.x() + halfWidth;
 
-        left = qBound(qreal(d->clipRect.left()), left, qreal(d->clipRect.right() + 1));
-        right = qBound(qreal(d->clipRect.left()), right, qreal(d->clipRect.right() + 1));
+        left = std::clamp(left, qreal(d->clipRect.left()), qreal(d->clipRect.right() + 1));
+        right = std::clamp(right, qreal(d->clipRect.left()), qreal(d->clipRect.right() + 1));
 
-        pa.ry() = qBound(qreal(d->clipRect.top()), pa.y(), qreal(d->clipRect.bottom() + 1));
-        pb.ry() = qBound(qreal(d->clipRect.top()), pb.y(), qreal(d->clipRect.bottom() + 1));
+        pa.ry() = std::clamp(pa.y(), qreal(d->clipRect.top()), qreal(d->clipRect.bottom() + 1));
+        pb.ry() = std::clamp(pb.y(), qreal(d->clipRect.top()), qreal(d->clipRect.bottom() + 1));
 
         if (q26Dot6Compare(left, right) || q26Dot6Compare(pa.y(), pb.y()))
             return;
@@ -945,8 +945,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
         left = snapTo26Dot6Grid(left);
         right = snapTo26Dot6Grid(right);
 
-        const qreal topBound = qBound(qreal(d->clipRect.top()), top.y(), qreal(d->clipRect.bottom()));
-        const qreal bottomBound = qBound(qreal(d->clipRect.top()), bottom.y(), qreal(d->clipRect.bottom()));
+        const qreal topBound = std::clamp(top.y(), qreal(d->clipRect.top()), qreal(d->clipRect.bottom()));
+        const qreal bottomBound = std::clamp(bottom.y(), qreal(d->clipRect.top()), qreal(d->clipRect.bottom()));
 
         const QPointF topLeftEdge = left - top;
         const QPointF topRightEdge = right - top;
@@ -1052,8 +1052,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
                     leftMax = Q16Dot16ToInt(bottomLeftIntersectBf);
                 }
 
-                leftMin = qBound(d->clipRect.left(), leftMin, d->clipRect.right());
-                leftMax = qBound(d->clipRect.left(), leftMax, d->clipRect.right());
+                leftMin = std::clamp(leftMin, d->clipRect.left(), d->clipRect.right());
+                leftMax = std::clamp(leftMax, d->clipRect.left(), d->clipRect.right());
 
                 if (yFP < iRightFP) {
                     rightMin = Q16Dot16ToInt(topRightIntersectAf);
@@ -1066,8 +1066,8 @@ void QRasterizer::rasterizeLine(const QPointF &a, const QPointF &b, qreal width,
                     rightMax = Q16Dot16ToInt(topRightIntersectBf);
                 }
 
-                rightMin = qBound(d->clipRect.left(), rightMin, d->clipRect.right());
-                rightMax = qBound(d->clipRect.left(), rightMax, d->clipRect.right());
+                rightMin = std::clamp(rightMin, d->clipRect.left(), d->clipRect.right());
+                rightMax = std::clamp(rightMax, d->clipRect.left(), d->clipRect.right());
 
                 if (leftMax > rightMax)
                     leftMax = rightMax;

@@ -483,11 +483,11 @@ void QLineControl::processInputMethodEvent(QInputMethodEvent *event)
         cursorPositionChanged = true;
     }
 
-    m_cursor = qBound(0, c, m_text.length());
+    m_cursor = std::clamp(c,0,  m_text.length());
 
     for (const auto & a : event->attributes()) {
         if (a.type == QInputMethodEvent::Selection) {
-            m_cursor = qBound(0, a.start + a.length, m_text.length());
+            m_cursor = std::clamp(a.start + a.length, 0, m_text.length());
             if (a.length) {
                 m_selstart = std::max(0, std::min(a.start, m_text.length()));
                 m_selend = m_cursor;

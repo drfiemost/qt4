@@ -2717,7 +2717,7 @@ void QGraphicsItem::setOpacity(qreal opacity)
     const QVariant newOpacityVariant(itemChange(ItemOpacityChange, opacity));
 
     // Normalized opacity
-    qreal newOpacity = qBound(qreal(0), newOpacityVariant.toReal(), qreal(1));
+    qreal newOpacity = std::clamp(newOpacityVariant.toReal(), qreal(0), qreal(1));
 
     // No change? Done.
     if (newOpacity == d_ptr->opacity)

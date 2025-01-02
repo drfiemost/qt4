@@ -262,7 +262,7 @@ void Generator::generateCode()
             int backSlashPos = s.lastIndexOf('\\', idx + spanLen - 1);
             if (backSlashPos >= idx) {
                 int escapeLen = lengthOfEscapeSequence(s, backSlashPos);
-                spanLen = qBound(spanLen, backSlashPos + escapeLen - idx, s.length() - idx);
+                spanLen = std::clamp(spanLen, backSlashPos + escapeLen - idx, s.length() - idx);
             }
             fwrite(s.constData() + idx, 1, spanLen, out);
             idx += spanLen;

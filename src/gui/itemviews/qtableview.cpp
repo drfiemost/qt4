@@ -2185,7 +2185,7 @@ int QTableView::sizeHintForRow(int row) const
             hint = std::max(hint, editor->sizeHint().height());
             int min = editor->minimumSize().height();
             int max = editor->maximumSize().height();
-            hint = qBound(min, hint, max);
+            hint = std::clamp(hint, min, max);
         }
         
         hint = std::max(hint, itemDelegate(index)->sizeHint(option, index).height());
@@ -2238,7 +2238,7 @@ int QTableView::sizeHintForColumn(int column) const
             hint = std::max(hint, editor->sizeHint().width());
             int min = editor->minimumSize().width();
             int max = editor->maximumSize().width();
-            hint = qBound(min, hint, max);
+            hint = std::clamp(hint, min, max);
         }
         
         hint = std::max(hint, itemDelegate(index)->sizeHint(option, index).width());

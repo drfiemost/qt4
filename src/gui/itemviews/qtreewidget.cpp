@@ -457,7 +457,7 @@ bool QTreeModel::insertColumns(int column, int count, const QModelIndex &parent)
     beginInsertColumns(parent, column, column + count - 1);
 
     int oldCount = columnCount(parent);
-    column = qBound(0, column, oldCount);
+    column = std::clamp(column, 0, oldCount);
     headerItem->values.resize(oldCount + count);
     for (int i = oldCount; i < oldCount + count; ++i) {
         headerItem->values[i].append(QWidgetItemData(Qt::DisplayRole, QString::number(i + 1)));

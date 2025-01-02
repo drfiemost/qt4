@@ -132,7 +132,7 @@ QImageData * QImageData::create(const QSize &size, QImage::Format format, int nu
         numColors = 2;
         break;
     case QImage::Format_Indexed8:
-        numColors = qBound(0, numColors, 256);
+        numColors = std::clamp(numColors, 0, 256);
         break;
     default:
         numColors = 0;

@@ -1069,7 +1069,7 @@ ProFileEvaluator::Private::VisitReturn ProFileEvaluator::Private::visitProLoop(
                 if (ok) {
                     int end = itl.mid(dotdot+2).toInt(&ok);
                     if (ok) {
-                        if (m_cumulative && qAbs(end - start) > 100) {
+                        if (m_cumulative && std::abs(end - start) > 100) {
                             // Such a loop is unlikely to contribute something useful to the
                             // file collection, and may cause considerable delay.
                             return ReturnFalse;

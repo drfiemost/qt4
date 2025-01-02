@@ -684,7 +684,7 @@ void QListView::reset()
 void QListView::setRootIndex(const QModelIndex &index)
 {
     Q_D(QListView);
-    d->column = qBound(0, d->column, d->model->columnCount(index) - 1);
+    d->column = std::clamp(d->column, 0, d->model->columnCount(index) - 1);
     QAbstractItemView::setRootIndex(index);
     // sometimes we get an update before reset() is called
     d->clear();
@@ -2177,7 +2177,7 @@ int QListModeViewBase::verticalScrollToValue(int index, QListView::ScrollHint hi
             for (int i = 0; i < flowPositions.count() - 1 && i <= scrollBarValue; ++i)
                 if (isHidden(i))
                     ++numHidden;
-            value = qBound(0, scrollValueMap.at(verticalScrollBar()->value()) - numHidden, flowPositions.count() - 1);
+            value = std::clamp(scrollValueMap.at(verticalScrollBar()->value()) - numHidden, 0, flowPositions.count() - 1);
         }
         if (above)
             hint = QListView::PositionAtTop;
@@ -2198,9 +2198,9 @@ int QListModeViewBase::horizontalOffset() const
         if (isWrapping()) {
             if (flow() == QListView::TopToBottom && !segmentPositions.isEmpty()) {
                 const int max = segmentPositions.count() - 1;
-                int currentValue = qBound(0, horizontalScrollBar()->value(), max);
+                int currentValue = std::clamp(horizontalScrollBar()->value(), 0, max);
                 int position = segmentPositions.at(currentValue);
-                int maximumValue = qBound(0, horizontalScrollBar()->maximum(), max);
+                int maximumValue = std::clamp(horizontalScrollBar()->maximum(), 0, max);
                 int maximum = segmentPositions.at(maximumValue);
                 return (isRightToLeft() ? maximum - position : position);
             }
@@ -2243,7 +2243,7 @@ int QListModeViewBase::horizontalScrollToValue(int index, QListView::ScrollHint 
     if (scrollValueMap.isEmpty())
         value = 0;
     else
-        value = qBound(0, scrollValueMap.at(horizontalScrollBar()->value()), flowPositions.count() - 1);
+        value = std::clamp(scrollValueMap.at(horizontalScrollBar()->value()), 0, flowPositions.count() - 1);
     if (leftOf)
         hint = QListView::PositionAtTop;
     else if (rightOf)
@@ -2267,14 +2267,14 @@ void QListModeViewBase::scrollContentsBy(int dx, int dy, bool scrollElasticBand)
             return;
         const int max = segmentPositions.count() - 1;
         if (horizontal && flow() == QListView::TopToBottom && dx != 0) {
-            int currentValue = qBound(0, horizontalValue, max);
-            int previousValue = qBound(0, currentValue + dx, max);
+            int currentValue = std::clamp(horizontalValue, 0, max);
+            int previousValue = std::clamp(currentValue + dx, 0, max);
             int currentCoordinate = segmentPositions.at(currentValue) - spacing();
             int previousCoordinate = segmentPositions.at(previousValue) - spacing();
             dx = previousCoordinate - currentCoordinate;
         } else if (vertical && flow() == QListView::LeftToRight && dy != 0) {
-            int currentValue = qBound(0, verticalValue, max);
-            int previousValue = qBound(0, currentValue + dy, max);
+            int currentValue = std::clamp(verticalValue, 0, max);
+            int previousValue = std::clamp(currentValue + dy, 0, max);
             int currentCoordinate = segmentPositions.at(currentValue) - spacing();
             int previousCoordinate = segmentPositions.at(previousValue) - spacing();
             dy = previousCoordinate - currentCoordinate;
@@ -2284,14 +2284,14 @@ void QListModeViewBase::scrollContentsBy(int dx, int dy, bool scrollElasticBand)
             return;
         const int max = scrollValueMap.count() - 1;
         if (vertical && flow() == QListView::TopToBottom && dy != 0) {
-            int currentValue = qBound(0, verticalValue, max);
-            int previousValue = qBound(0, currentValue + dy, max);
+            int currentValue = std::clamp(verticalValue, 0, max);
+            int previousValue = std::clamp(currentValue + dy, 0, max);
             int currentCoordinate = flowPositions.at(scrollValueMap.at(currentValue));
             int previousCoordinate = flowPositions.at(scrollValueMap.at(previousValue));
             dy = previousCoordinate - currentCoordinate;
         } else if (horizontal && flow() == QListView::LeftToRight && dx != 0) {
-            int currentValue = qBound(0, horizontalValue, max);
-            int previousValue = qBound(0, currentValue + dx, max);
+            int currentValue = std::clamp(horizontalValue, 0, max);
+            int previousValue = std::clamp(currentValue + dx, 0, max);
             int currentCoordinate = flowPositions.at(scrollValueMap.at(currentValue));
             int previousCoordinate = flowPositions.at(scrollValueMap.at(previousValue));
             dx = previousCoordinate - currentCoordinate;

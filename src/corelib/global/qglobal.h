@@ -1262,10 +1262,6 @@ typedef double qreal;
    Utility macros and inline functions
 */
 
-template <typename T>
-[[deprecated("Use std::abs")]]
-Q_DECL_CONSTEXPR inline T qAbs(const T &t) { return t >= 0 ? t : -t; }
-
 Q_DECL_CONSTEXPR inline int qRound(qreal d)
 { return d >= qreal(0.0) ? int(d + qreal(0.5)) : int(d - int(d-1) + qreal(0.5)) + int(d-1); }
 
@@ -1278,13 +1274,7 @@ Q_DECL_CONSTEXPR inline qint64 qRound64(qreal d)
 #endif
 
 template <typename T>
-[[deprecated("Use std::min")]]
-Q_DECL_CONSTEXPR inline const T &qMin(const T &a, const T &b) { return (a < b) ? a : b; }
-template <typename T>
-[[deprecated("Use std::max")]]
-Q_DECL_CONSTEXPR inline const T &qMax(const T &a, const T &b) { return (a < b) ? b : a; }
-template <typename T>
-//[[deprecated("Use std::clamp")]]
+[[deprecated("Use std::clamp")]]
 Q_DECL_CONSTEXPR inline const T &qBound(const T &min, const T &val, const T &max)
 { return std::max(min, std::min(max, val)); }
 

@@ -2931,7 +2931,7 @@ QPointF QPainterPath::pointAtPercent(qreal t) const
     QBezier b = bezierAtT(*this, t, &curLen, &bezierLen);
     qreal realT = (totalLength * t - curLen) / bezierLen;
 
-    return b.pointAt(qBound(qreal(0), realT, qreal(1)));
+    return b.pointAt(std::clamp(realT, qreal(0), qreal(1)));
 }
 
 /*!

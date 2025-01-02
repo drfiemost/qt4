@@ -511,8 +511,8 @@ static void _q_boundGeometryToSizeConstraints(const QRectF &startGeometry,
                                               const QGraphicsWidget *widget)
 {
     const QRectF proposedRect = *rect;
-    qreal width = qBound(min.width(), proposedRect.width(), max.width());
-    qreal height = qBound(min.height(), proposedRect.height(), max.height());
+    qreal width = std::clamp(proposedRect.width(), min.width(), max.width());
+    qreal height = std::clamp(proposedRect.height(), min.height(), max.height());
 
     const bool hasHFW = QGraphicsLayoutItemPrivate::get(widget)->hasHeightForWidth();
     const bool hasWFH = QGraphicsLayoutItemPrivate::get(widget)->hasWidthForHeight();

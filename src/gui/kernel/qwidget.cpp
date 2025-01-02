@@ -10640,7 +10640,7 @@ void QWidget::setWindowOpacity(qreal opacity)
     if (!isWindow())
         return;
 
-    opacity = qBound(qreal(0.0), opacity, qreal(1.0));
+    opacity = std::clamp(opacity, qreal(0.0), qreal(1.0));
     QTLWExtra *extra = d->topData();
     extra->opacity = uint(opacity * 255);
     setAttribute(Qt::WA_WState_WindowOpacitySet);

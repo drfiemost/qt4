@@ -1716,7 +1716,7 @@ recalc_minmax_widths:
 
                 const QFixed percentWidth = totalPercentagedWidth * allottedPercentage / totalPercentage;
                 if (percentWidth >= td->minWidths.at(i)) {
-                    td->widths[i] = qBound(td->minWidths.at(i), percentWidth, remainingWidth - remainingMinWidths);
+                    td->widths[i] = std::clamp(percentWidth, td->minWidths.at(i), remainingWidth - remainingMinWidths);
                 } else {
                     td->widths[i] = td->minWidths.at(i);
                 }

@@ -342,7 +342,7 @@ void QTextFormatPrivate::resolveFont(const QFont &defaultFont)
     if (hasProperty(QTextFormat::FontSizeAdjustment)) {
         const qreal scaleFactors[7] = {qreal(0.7), qreal(0.8), qreal(1.0), qreal(1.2), qreal(1.5), qreal(2), qreal(2.4)};
 
-        const int htmlFontSize = qBound(0, property(QTextFormat::FontSizeAdjustment).toInt() + 3 - 1, 6);
+        const int htmlFontSize = std::clamp(property(QTextFormat::FontSizeAdjustment).toInt() + 3 - 1, 0, 6);
 
 
         if (defaultFont.pointSize() <= 0) {

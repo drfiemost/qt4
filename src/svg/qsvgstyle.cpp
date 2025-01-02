@@ -288,8 +288,8 @@ void QSvgFontStyle::apply(QPainter *p, const QSvgNode *, QSvgExtraStates &states
         } else {
             states.fontWeight = m_weight;
         }
-        font.setWeight(SVGToQtWeight(qBound(100,
-                                            states.fontWeight,
+        font.setWeight(SVGToQtWeight(std::clamp(states.fontWeight,
+                                            100,
                                             900)));
     }
 

@@ -140,7 +140,7 @@ static const int errorMessages_count = sizeof errorMessages_indices /
 
 static inline const char *get(QDBusError::ErrorType code)
 {
-    int intcode = qBound(0, int(code) - int(QDBusError::Other), errorMessages_count);
+    int intcode = std::clamp(int(code) - int(QDBusError::Other), 0, errorMessages_count);
     return errorMessages_string + errorMessages_indices[intcode];
 }
 

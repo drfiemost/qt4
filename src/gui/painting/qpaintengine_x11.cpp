@@ -749,17 +749,17 @@ void QX11PaintEngine::drawLines(const QLineF *lines, int lineCount)
 static inline QLine clipStraightLine(const QRect &clip, const QLine &l)
 {
     if (l.p1().x() == l.p2().x()) {
-        int x = qBound(clip.left(), l.p1().x(), clip.right());
-        int y1 = qBound(clip.top(), l.p1().y(), clip.bottom());
-        int y2 = qBound(clip.top(), l.p2().y(), clip.bottom());
+        int x = std::clamp(l.p1().x(), clip.left(), clip.right());
+        int y1 = std::clamp(l.p1().y(), clip.top(), clip.bottom());
+        int y2 = std::clamp(l.p2().y(), clip.top(), clip.bottom());
 
         return QLine(x, y1, x, y2);
     } else {
         Q_ASSERT(l.p1().y() == l.p2().y());
 
-        int x1 = qBound(clip.left(), l.p1().x(), clip.right());
-        int x2 = qBound(clip.left(), l.p2().x(), clip.right());
-        int y = qBound(clip.top(), l.p1().y(), clip.bottom());
+        int x1 = std::clamp(l.p1().x(), clip.left(), clip.right());
+        int x2 = std::clamp(l.p2().x(), clip.left(), clip.right());
+        int y = std::clamp(l.p1().y(), clip.top(), clip.bottom());
 
         return QLine(x1, y, x2, y);
     }

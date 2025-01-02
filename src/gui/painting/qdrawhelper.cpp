@@ -579,8 +579,8 @@ static const uint *QT_FASTCALL fetchTransformedARGB32PM(uint *buffer, const Oper
                 if (px < 0) px += image_width;
                 if (py < 0) py += image_height;
             } else {
-                px = qBound(0, px, image_width - 1);
-                py = qBound(0, py, image_height - 1);
+                px = std::clamp(px, 0, image_width - 1);
+                py = std::clamp(py, 0, image_height - 1);
             }
             *b = reinterpret_cast<const uint *>(data->texture.scanLine(py))[px];
 
@@ -610,8 +610,8 @@ static const uint *QT_FASTCALL fetchTransformedARGB32PM(uint *buffer, const Oper
                 if (px < 0) px += image_width;
                 if (py < 0) py += image_height;
             } else {
-                px = qBound(0, px, image_width - 1);
-                py = qBound(0, py, image_height - 1);
+                px = std::clamp(px, 0, image_width - 1);
+                py = std::clamp(py, 0, image_height - 1);
             }
             *b = reinterpret_cast<const uint *>(data->texture.scanLine(py))[px];
 
@@ -663,8 +663,8 @@ static const uint *QT_FASTCALL fetchTransformed(uint *buffer, const Operator *, 
                 if (px < 0) px += image_width;
                 if (py < 0) py += image_height;
             } else {
-                px = qBound(0, px, image_width - 1);
-                py = qBound(0, py, image_height - 1);
+                px = std::clamp(px, 0, image_width - 1);
+                py = std::clamp(py, 0, image_height - 1);
             }
             *b = fetch(data->texture.scanLine(py), px);
 
@@ -694,8 +694,8 @@ static const uint *QT_FASTCALL fetchTransformed(uint *buffer, const Operator *, 
                 if (px < 0) px += image_width;
                 if (py < 0) py += image_height;
             } else {
-                px = qBound(0, px, image_width - 1);
-                py = qBound(0, py, image_height - 1);
+                px = std::clamp(px, 0, image_width - 1);
+                py = std::clamp(py, 0, image_height - 1);
             }
             *b = fetch(data->texture.scanLine(py), px);
 
@@ -4612,8 +4612,8 @@ static void blend_transformed_argb(int count, const QSpan *spans, void *userData
                 const uint *end = buffer + l;
                 uint *b = buffer;
                 while (b < end) {
-                    int px = qBound(0, x >> 16, image_width - 1);
-                    int py = qBound(0, y >> 16, image_height - 1);
+                    int px = std::clamp(x >> 16, 0, image_width - 1);
+                    int py = std::clamp(y >> 16, 0, image_height - 1);
                     *b = reinterpret_cast<const uint *>(data->texture.scanLine(py))[px];
 
                     x += fdx;
@@ -4652,8 +4652,8 @@ static void blend_transformed_argb(int count, const QSpan *spans, void *userData
                     const qreal iw = w == 0 ? 1 : 1 / w;
                     const qreal tx = x * iw;
                     const qreal ty = y * iw;
-                    const int px = qBound(0, int(tx) - (tx < 0), image_width - 1);
-                    const int py = qBound(0, int(ty) - (ty < 0), image_height - 1);
+                    const int px = std::clamp(int(tx) - (tx < 0), 0, image_width - 1);
+                    const int py = std::clamp(int(ty) - (ty < 0), 0, image_height - 1);
 
                     *b = reinterpret_cast<const uint *>(data->texture.scanLine(py))[px];
                     x += fdx;
@@ -4724,8 +4724,8 @@ static void blend_transformed_rgb565(int count, const QSpan *spans, void *userDa
                 const quint16 *end = b + l;
 
                 while (b < end) {
-                    const int px = qBound(0, x >> 16, image_width - 1);
-                    const int py = qBound(0, y >> 16, image_height - 1);
+                    const int px = std::clamp(x >> 16, 0, image_width - 1);
+                    const int py = std::clamp(y >> 16, 0, image_height - 1);
 
                     *b = ((quint16 *)data->texture.scanLine(py))[px];
                     ++b;
@@ -4783,8 +4783,8 @@ static void blend_transformed_rgb565(int count, const QSpan *spans, void *userDa
                     const qreal tx = x * iw;
                     const qreal ty = y * iw;
 
-                    const int px = qBound(0, int(tx) - (tx < 0), image_width - 1);
-                    const int py = qBound(0, int(ty) - (ty < 0), image_height - 1);
+                    const int px = std::clamp(int(tx) - (tx < 0), 0, image_width - 1);
+                    const int py = std::clamp(int(ty) - (ty < 0), 0, image_height - 1);
 
                     *b = ((quint16 *)data->texture.scanLine(py))[px];
                     ++b;

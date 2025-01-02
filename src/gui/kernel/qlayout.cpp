@@ -62,7 +62,7 @@ static int menuBarHeightForWidth(QWidget *menubar, int w)
         if (result == -1)
             result = menubar->sizeHint().height();
         const int min = qSmartMinSize(menubar).height();
-        result = qBound(min, result, menubar->maximumSize().height());
+        result = std::clamp(result, min, menubar->maximumSize().height());
         if (result != -1)
             return result;
     }

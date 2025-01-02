@@ -806,8 +806,8 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
                          &size_hints, &wm_hints, &class_hint);
 
         XResizeWindow(dpy, id,
-                      qBound(1, data.crect.width(), XCOORD_MAX),
-                      qBound(1, data.crect.height(), XCOORD_MAX));
+                      std::clamp(data.crect.width(), 1, XCOORD_MAX),
+                      std::clamp(data.crect.height(), 1, XCOORD_MAX));
         XStoreName(dpy, id, appName.data());
         Atom protocols[5];
         int n = 0;

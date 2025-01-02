@@ -88,6 +88,8 @@ class QPainter;
 class QAbstractTextDocumentLayout;
 
 
+inline QFixed qAbs(const QFixed &t) { return t >= 0 ? t : -t; }
+
 // this uses the same coordinate system as Qt, but a different one to freetype.
 // * y is usually negative, and is equal to the ascent.
 // * negative yoff means the following stuff is drawn higher up.

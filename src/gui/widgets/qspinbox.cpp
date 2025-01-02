@@ -832,7 +832,7 @@ int QDoubleSpinBox::decimals() const
 void QDoubleSpinBox::setDecimals(int decimals)
 {
     Q_D(QDoubleSpinBox);
-    d->decimals = qBound(0, decimals, DBL_MAX_10_EXP + DBL_DIG);
+    d->decimals = std::clamp(decimals, 0, DBL_MAX_10_EXP + DBL_DIG);
 
     setRange(d->actualMin, d->actualMax); // make sure values are rounded
     setValue(value());

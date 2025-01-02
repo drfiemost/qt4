@@ -53,10 +53,10 @@ QT_BEGIN_NAMESPACE
 
 template<> Q_INLINE_TEMPLATE QColor _q_interpolate(const QColor &f,const QColor &t, qreal progress)
 {
-    return QColor(qBound(0,_q_interpolate(f.red(), t.red(), progress),255),
-                  qBound(0,_q_interpolate(f.green(), t.green(), progress),255),
-                  qBound(0,_q_interpolate(f.blue(), t.blue(), progress),255),
-                  qBound(0,_q_interpolate(f.alpha(), t.alpha(), progress),255));
+    return QColor(std::clamp(_q_interpolate(f.red(), t.red(), progress),0,255),
+                  std::clamp(_q_interpolate(f.green(), t.green(), progress),0,255),
+                  std::clamp(_q_interpolate(f.blue(), t.blue(), progress),0,255),
+                  std::clamp(_q_interpolate(f.alpha(), t.alpha(), progress),0,255));
 }
 
 template<> Q_INLINE_TEMPLATE QQuaternion _q_interpolate(const QQuaternion &f,const QQuaternion &t, qreal progress)

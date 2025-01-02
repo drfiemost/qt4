@@ -284,7 +284,7 @@ void QCosmeticStroker::setup()
         opacity = (int) 256*width;
     else
         opacity = (int) 256*width*state->txscale;
-    opacity = qBound(0, opacity, 256);
+    opacity = std::clamp(opacity, 0, 256);
 
     drawCaps = state->lastPen.capStyle() != Qt::FlatCap;
 

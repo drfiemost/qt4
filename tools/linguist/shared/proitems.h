@@ -103,7 +103,7 @@ public:
     const QChar *constData() const { return m_string.constData() + m_offset; }
     ProString mid(int off, int len = -1) const;
     ProString left(int len) const { return mid(0, len); }
-    ProString right(int len) const { return mid(qMax(0, size() - len)); }
+    ProString right(int len) const { return mid(std::max(0, size() - len)); }
     ProString trimmed() const;
     void clear() { m_string.clear(); m_length = 0; }
 

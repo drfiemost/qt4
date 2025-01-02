@@ -125,15 +125,16 @@ void QGridLayoutBox::combine(const QGridLayoutBox &other)
         maxMax = std::max(q_maximumSize, other.q_maximumSize);
 
     q_maximumSize = std::max(q_minimumSize, maxMax);
-    q_preferredSize = qBound(q_minimumSize, std::max(q_preferredSize, other.q_preferredSize),
-                             q_maximumSize);
+    q_preferredSize = std::clamp(std::max(q_preferredSize, other.q_preferredSize),
+                                 q_minimumSize,
+                                 q_maximumSize);
 }
 
 void QGridLayoutBox::normalize()
 {
     q_maximumSize = std::max(qreal(0.0), q_maximumSize);
-    q_minimumSize = qBound(qreal(0.0), q_minimumSize, q_maximumSize);
-    q_preferredSize = qBound(q_minimumSize, q_preferredSize, q_maximumSize);
+    q_minimumSize = std::clamp(q_minimumSize, qreal(0.0), q_maximumSize);
+    q_preferredSize = std::clamp(q_preferredSize, q_minimumSize, q_maximumSize);
     q_minimumDescent = std::min(q_minimumDescent, q_minimumSize);
 
     Q_ASSERT((q_minimumDescent < 0.0) == (q_minimumAscent < 0.0));
@@ -1534,8 +1535,8 @@ void QGridLayoutEngine::fillRowData(QGridLayoutRowData *rowData, const QLayoutSt
             rowBox.q_maximumSize = std::max(rowBox.q_minimumSize,
                                         (rowBoxInfo.q_maximumSize != FLT_MAX ?
                                         rowBoxInfo.q_maximumSize : rowBox.q_maximumSize));
-            rowBox.q_preferredSize = qBound(rowBox.q_minimumSize,
-                                            std::max(rowBox.q_preferredSize, rowBoxInfo.q_preferredSize),
+            rowBox.q_preferredSize = std::clamp(std::max(rowBox.q_preferredSize, rowBoxInfo.q_preferredSize),
+                                            rowBox.q_minimumSize,
                                             rowBox.q_maximumSize);
         }
         if (hasIgnoreFlag)

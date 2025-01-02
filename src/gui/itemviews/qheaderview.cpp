@@ -1903,7 +1903,7 @@ void QHeaderView::initializeSections()
             d->clear();
             emit sectionCountChanged(oldCount, 0);
     } else if (newCount != oldCount) {
-        const int min = qBound(0, oldCount, newCount - 1);
+        const int min = std::clamp(oldCount, 0, newCount - 1);
         initializeSections(min, newCount - 1);
         if (stretchLastSection()) // we've already gotten the size hint
             d->lastSectionSize = sectionSize(logicalIndex(d->sectionCount - 1));

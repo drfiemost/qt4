@@ -346,8 +346,8 @@ void qt_transform_image_rasterize(DestT *destPixels, int dbpl,
             // Beginning of the scan line, with per-pixel checks.
             i = x1 - fromX;
             while (i) {
-                int uu = qBound(sourceRect.left(), u >> 16, sourceRect.left() + sourceRect.width() - 1);
-                int vv = qBound(sourceRect.top(), v >> 16, sourceRect.top() + sourceRect.height() - 1);
+                int uu = std::clamp(u >> 16, sourceRect.left(), sourceRect.left() + sourceRect.width() - 1);
+                int vv = std::clamp(v >> 16, sourceRect.top(), sourceRect.top() + sourceRect.height() - 1);
                 blender.write(line, reinterpret_cast<const SrcT *>(reinterpret_cast<const uchar *>(srcPixels) + vv * sbpl)[uu]);
                 u += dudx;
                 v += dvdx;
@@ -392,8 +392,8 @@ void qt_transform_image_rasterize(DestT *destPixels, int dbpl,
             // End of the scan line, with per-pixel checks.
             i = toX - x2;
             while (i) {
-                int uu = qBound(sourceRect.left(), u >> 16, sourceRect.left() + sourceRect.width() - 1);
-                int vv = qBound(sourceRect.top(), v >> 16, sourceRect.top() + sourceRect.height() - 1);
+                int uu = std::clamp(u >> 16, sourceRect.left(), sourceRect.left() + sourceRect.width() - 1);
+                int vv = std::clamp(v >> 16, sourceRect.top(), sourceRect.top() + sourceRect.height() - 1);
                 blender.write(line, reinterpret_cast<const SrcT *>(reinterpret_cast<const uchar *>(srcPixels) + vv * sbpl)[uu]);
                 u += dudx;
                 v += dvdx;

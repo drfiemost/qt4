@@ -397,7 +397,7 @@ void WidgetHandle::changeFormLayoutItemSpan()
     QUndoCommand *cmd = nullptr;
     // Figure out command according to the movement
     const int dx = m_widget->geometry().center().x() - m_origGeom.center().x();
-    if (qAbs(dx) >= QApplication::startDragDistance()) {
+    if (std::abs(dx) >= QApplication::startDragDistance()) {
         int operation = 0;
         if (const unsigned possibleOperations = ChangeFormLayoutItemRoleCommand::possibleOperations(m_formWindow->core(), m_widget)) {
             switch (m_type) {
@@ -530,7 +530,7 @@ void WidgetHandle::trySetGeometry(QWidget *w, int x, int y, int width, int heigh
     if (height < minh && y != w->y())
         y -= minh - height;
 
-    w->setGeometry(x, y, std::max(minw, width), qMax(minh, height));
+    w->setGeometry(x, y, std::max(minw, width), std::max(minh, height));
 }
 
 void WidgetHandle::tryResize(QWidget *w, int width, int height)
@@ -541,7 +541,7 @@ void WidgetHandle::tryResize(QWidget *w, int width, int height)
     int minh = w->minimumSize().height();
     minh = std::max(minh, 16);
 
-    w->resize(std::max(minw, width), qMax(minh, height));
+    w->resize(std::max(minw, width), std::max(minh, height));
 }
 
 // ------------------ WidgetSelection

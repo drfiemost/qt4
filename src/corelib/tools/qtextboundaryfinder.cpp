@@ -316,7 +316,7 @@ int QTextBoundaryFinder::position() const
 */
 void QTextBoundaryFinder::setPosition(int position)
 {
-    pos = qBound(0, position, length);
+    pos = std::clamp(position, 0, length);
 }
 
 /*! \fn QTextBoundaryFinder::BoundaryType QTextBoundaryFinder::type() const

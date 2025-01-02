@@ -202,7 +202,7 @@ StringSimilarityMatcher::StringSimilarityMatcher(const QString &stringToMatch)
 int StringSimilarityMatcher::getSimilarityScore(const QString &strCandidate)
 {
     CoMatrix cmTarget(strCandidate);
-    int delta = qAbs(m_length - strCandidate.size());
+    int delta = std::abs(m_length - strCandidate.size());
     int score = ( (intersection(*m_cm, cmTarget).worth() + 1) << 10 ) /
         ( reunion(*m_cm, cmTarget).worth() + (delta << 1) + 1 );
     return score;
@@ -224,7 +224,7 @@ int getSimilarityScore(const QString &str1, const QString &str2)
 {
     CoMatrix cmTarget(str2);
     CoMatrix cm(str1);
-    int delta = qAbs(str1.size() - str2.size());
+    int delta = std::abs(str1.size() - str2.size());
 
     int score = ( (intersection(cm, cmTarget).worth() + 1) << 10 )
         / ( reunion(cm, cmTarget).worth() + (delta << 1) + 1 );

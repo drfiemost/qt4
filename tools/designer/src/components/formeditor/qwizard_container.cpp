@@ -100,7 +100,7 @@ void QWizardContainer::setCurrentIndex(int index)
     if (currentIdx == index)
         return;
 
-    const int d = qAbs(index - currentIdx);
+    const int d = std::abs(index - currentIdx);
     if (index > currentIdx) {
         for (int i = 0; i < d; i++)
             m_wizard->next();

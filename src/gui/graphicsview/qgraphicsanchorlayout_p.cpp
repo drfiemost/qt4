@@ -360,28 +360,28 @@ bool ParallelAnchorData::calculateSizeHints()
     //    anchors that had to shrink.
 
     if (firstEdge->isLayoutAnchor) {
-        prefSize = qBound(minSize, secondPref, maxSize);
-        minPrefSize = qBound(minSize, secondMinPref, maxSize);
-        maxPrefSize = qBound(minSize, secondMaxPref, maxSize);
+        prefSize = std::clamp( secondPref,minSize, maxSize);
+        minPrefSize = std::clamp(secondMinPref, minSize, maxSize);
+        maxPrefSize = std::clamp(secondMaxPref, minSize, maxSize);
     } else if (secondEdge->isLayoutAnchor) {
-        prefSize = qBound(minSize, firstEdge->prefSize, maxSize);
-        minPrefSize = qBound(minSize, firstEdge->minPrefSize, maxSize);
-        maxPrefSize = qBound(minSize, firstEdge->maxPrefSize, maxSize);
+        prefSize = std::clamp(firstEdge->prefSize, minSize, maxSize);
+        minPrefSize = std::clamp(firstEdge->minPrefSize, minSize, maxSize);
+        maxPrefSize = std::clamp(firstEdge->maxPrefSize, minSize, maxSize);
     } else {
         // Calculate the intersection between the "preferred" regions of each child
         const qreal lowerBoundary =
-            qBound(minSize, std::max(firstEdge->minPrefSize, secondMinPref), maxSize);
+            std::clamp(std::max(firstEdge->minPrefSize, secondMinPref), minSize, maxSize);
         const qreal upperBoundary =
-            qBound(minSize, std::min(firstEdge->maxPrefSize, secondMaxPref), maxSize);
+            std::clamp(std::min(firstEdge->maxPrefSize, secondMaxPref), minSize, maxSize);
         const qreal prefMean =
-            qBound(minSize, (firstEdge->prefSize + secondPref) / 2, maxSize);
+            std::clamp((firstEdge->prefSize + secondPref) / 2, minSize, maxSize);
 
         if (lowerBoundary < upperBoundary) {
             // If there is an intersection between the two regions, this intersection
             // will be used as the preferred region of the parallel anchor itself.
             // The preferred size will be the bounded average between the two preferred
             // sizes.
-            prefSize = qBound(lowerBoundary, prefMean, upperBoundary);
+            prefSize = std::clamp(prefMean, lowerBoundary, upperBoundary);
             minPrefSize = lowerBoundary;
             maxPrefSize = upperBoundary;
         } else {
@@ -391,7 +391,7 @@ bool ParallelAnchorData::calculateSizeHints()
             // region to (2) the lower boundary of the upper region.
             // Then, we expose this region as _our_ preferred region and once again,
             // use the bounded average as our preferred size.
-            prefSize = qBound(upperBoundary, prefMean, lowerBoundary);
+            prefSize = std::clamp(prefMean, upperBoundary, lowerBoundary);
             minPrefSize = upperBoundary;
             maxPrefSize = lowerBoundary;
         }
@@ -2465,8 +2465,8 @@ QList<QSimplexConstraint *> QGraphicsAnchorLayoutPrivate::constraintsFromSizeHin
         // To use negative variables inside simplex, we shift them so the minimum negative value is
         // mapped to zero before solving. To make sure that it works, we need to guarantee that the
         // variables are all inside a certain boundary.
-        qreal boundedMin = qBound(-g_offset, ad->minSize, g_offset);
-        qreal boundedMax = qBound(-g_offset, ad->maxSize, g_offset);
+        qreal boundedMin = std::clamp(ad->minSize, -g_offset, g_offset);
+        qreal boundedMax = std::clamp(ad->maxSize, -g_offset, g_offset);
 
         if ((boundedMin == boundedMax) || qFuzzyCompare(boundedMin, boundedMax)) {
             QSimplexConstraint *c = new QSimplexConstraint;

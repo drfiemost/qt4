@@ -2802,7 +2802,7 @@ int QTreeView::indexRowSizeHint(const QModelIndex &index) const
                 height = std::max(height, editor->sizeHint().height());
                 int min = editor->minimumSize().height();
                 int max = editor->maximumSize().height();
-                height = qBound(min, height, max);
+                height = std::clamp(height, min, max);
             }
             int hint = d->delegateForIndex(idx)->sizeHint(option, idx).height();
             height = std::max(height, hint);

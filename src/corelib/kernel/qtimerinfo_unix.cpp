@@ -89,7 +89,6 @@ timespec QTimerInfoList::updateCurrentTime()
 
 #if ((_POSIX_MONOTONIC_CLOCK-0 <= 0) && !defined(Q_OS_MAC)) || defined(QT_BOOTSTRAPPED)
 
-template <>
 timespec qAbs(const timespec &t)
 {
     timespec tmp = t;

@@ -380,10 +380,10 @@ static void convolute(
                 }
             }
 
-            r = qBound((int)0, r >> 16, (int)255);
-            g = qBound((int)0, g >> 16, (int)255);
-            b = qBound((int)0, b >> 16, (int)255);
-            a = qBound((int)0, a >> 16, (int)255);
+            r = std::clamp(r >> 16, (int)0, (int)255);
+            g = std::clamp(g >> 16, (int)0, (int)255);
+            b = std::clamp(b >> 16, (int)0, (int)255);
+            a = std::clamp(a >> 16, (int)0, (int)255);
             // composition mode checking could be moved outside of loop
             if(mode == QPainter::CompositionMode_Source) {
                 uint color = (a<<24)+(r<<16)+(g<<8)+b;
@@ -1085,7 +1085,7 @@ qreal QPixmapColorizeFilter::strength() const
 void QPixmapColorizeFilter::setStrength(qreal strength)
 {
     Q_D(QPixmapColorizeFilter);
-    d->strength = qBound(qreal(0), strength, qreal(1));
+    d->strength = std::clamp(strength, qreal(0), qreal(1));
     d->opaque = !qFuzzyIsNull(d->strength);
     d->alphaBlend = !qFuzzyIsNull(d->strength - 1);
 }

@@ -1227,7 +1227,7 @@ void QTextLayout::drawCursor(QPainter *p, const QPointF &pos, int cursorPosition
 
     QPointF position = pos + d->position;
 
-    cursorPosition = qBound(0, cursorPosition, d->layoutData->string.length());
+    cursorPosition = std::clamp(cursorPosition, 0, d->layoutData->string.length());
     int line = d->lineNumberForTextPosition(cursorPosition);
     if (line < 0)
         line = 0;

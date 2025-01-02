@@ -2153,7 +2153,7 @@ static void parseOpacity(QSvgNode *node,
     qreal op = value.toDouble(&ok);
 
     if (ok) {
-        QSvgOpacityStyle *opacity = new QSvgOpacityStyle(qBound(qreal(0.0), op, qreal(1.0)));
+        QSvgOpacityStyle *opacity = new QSvgOpacityStyle(std::clamp(op, qreal(0.0), qreal(1.0)));
         node->appendStyleProperty(opacity, attributes.id);
     }
 }

@@ -203,7 +203,7 @@ void Layout::setup()
     // handle that and do not crash in this case
     foreach (QWidget *w, m_widgets) {
         connect(w, SIGNAL(destroyed()), this, SLOT(widgetDestroyed()));
-        m_startPoint = QPoint(std::min(m_startPoint.x(), w->x()), qMin(m_startPoint.y(), w->y()));
+        m_startPoint = QPoint(std::min(m_startPoint.x(), w->x()), std::min(m_startPoint.y(), w->y()));
         const QRect rc(w->geometry());
 
         m_geometries.insert(w, rc);
