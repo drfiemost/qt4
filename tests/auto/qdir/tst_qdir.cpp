@@ -83,6 +83,8 @@ private slots:
     void entryList_data();
     void entryList();
 
+    void entryListTimedSort();
+
     void entryListSimple_data();
     void entryListSimple();
 
@@ -725,6 +727,45 @@ void tst_QDir::entryList()
     QFile::remove(SRCDIR "entrylist/linktodirectory.lnk");
     QFile::remove(SRCDIR "entrylist/brokenlink.lnk");
     QFile::remove(SRCDIR "entrylist/brokenlink");
+}
+
+void tst_QDir::entryListTimedSort()
+{
+#ifndef QT_NO_PROCESS
+    const QString touchBinary = "/bin/touch";
+    if (!QFile::exists(touchBinary))
+        QSKIP("/bin/touch not found", SkipAll);
+
+    const QString entrylistPath = SRCDIR "/entrylist/";
+    QTemporaryFile aFile(entrylistPath + "A-XXXXXX.qws");
+    QTemporaryFile bFile(entrylistPath + "B-XXXXXX.qws");
+
+    QVERIFY(aFile.open());
+    QVERIFY(bFile.open());
+    {
+        QProcess p;
+        p.start(touchBinary, QStringList() << "-t" << "201306021513" << aFile.fileName());
+        QVERIFY(p.waitForFinished(1000));
+    }
+    {
+        QProcess p;
+        p.start(touchBinary, QStringList() << "-t" << "201504131513" << bFile.fileName());
+        QVERIFY(p.waitForFinished(1000));
+    }
+
+    QStringList actual = QDir(entrylistPath).entryList(QStringList() << "*.qws", QDir::NoFilter,
+                                                       QDir::Time);
+
+    QFileInfo aFileInfo(aFile);
+    QFileInfo bFileInfo(bFile);
+    QVERIFY(bFileInfo.lastModified().msecsTo(aFileInfo.lastModified()) < 0);
+
+    QCOMPARE(actual.size(), 2);
+    QCOMPARE(actual.first(), bFileInfo.fileName());
+    QCOMPARE(actual.last(), aFileInfo.fileName());
+#else
+    QSKIP("This test requires QProcess support.", SkipAll);
+#endif // QT_NO_PROCESS
 }
 
 void tst_QDir::entryListSimple_data()
