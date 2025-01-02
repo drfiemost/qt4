@@ -2479,7 +2479,7 @@ bool DocParser::isLeftBraceAhead()
         // ### bug with '\\'
         if (in[i] == '\n')
             numEndl++;
-            i++;
+        i++;
     }
     return numEndl < 2 && i < len && in[i] == '{';
 }

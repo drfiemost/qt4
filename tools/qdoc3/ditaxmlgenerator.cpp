@@ -3749,6 +3749,7 @@ QString DitaXmlGenerator::refForNode(const Node* node)
     case Node::Fake:
         if (node->subType() != Node::QmlPropertyGroup)
             break;
+        [[fallthrough]];
     case Node::QmlProperty:
     case Node::Property:
         ref = node->name() + "-prop";
@@ -3801,6 +3802,7 @@ QString DitaXmlGenerator::guidForNode(const Node* node)
     case Node::Fake:
         if (node->subType() != Node::QmlPropertyGroup)
             break;
+        [[fallthrough]];
     case Node::QmlProperty:
     case Node::Property:
         return node->guid();

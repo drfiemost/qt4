@@ -3143,6 +3143,7 @@ QString HtmlGenerator::refForNode(const Node *node)
     case Node::Fake:
         if (node->subType() != Node::QmlPropertyGroup)
             break;
+        [[fallthrough]];
     case Node::QmlProperty:
 #endif        
     case Node::Property:

@@ -926,34 +926,34 @@ QString CppCodeMarker::addMarkUp(const QString &in,
     readChar();
 
     while (ch != EOF) {
-	QString tag;
+        QString tag;
         bool target = false;
 
-	if (ch.isLetter() || ch == '_') {
-	    QString ident;
-	    do {
-            ident += ch;
-            finish = i;
-            readChar();
-        } while (ch.isLetterOrNumber() || ch == '_');
+        if (ch.isLetter() || ch == '_') {
+            QString ident;
+            do {
+                ident += ch;
+                finish = i;
+                readChar();
+            } while (ch.isLetterOrNumber() || ch == '_');
 
-	    if (classRegExp.exactMatch(ident)) {
-		tag = QLatin1String("type");
+            if (classRegExp.exactMatch(ident)) {
+                tag = QLatin1String("type");
             } else if (functionRegExp.exactMatch(ident)) {
                 tag = QLatin1String("func");
                 target = true;
-	    } else if (types.contains(ident)) {
-		tag = QLatin1String("type");
-	    } else if (keywords.contains(ident)) {
-		tag = QLatin1String("keyword");
-	    } else if (braceDepth == 0 && parenDepth == 0) {
-		if (QString(code.unicode() + i - 1, code.length() - (i - 1))
-		     .indexOf(QRegExp(QLatin1String("^\\s*\\("))) == 0)
-		    tag = QLatin1String("func");
-                    target = true;
-	    }
-	} else if (ch.isDigit()) {
-	    do {
+            } else if (types.contains(ident)) {
+                tag = QLatin1String("type");
+            } else if (keywords.contains(ident)) {
+                tag = QLatin1String("keyword");
+            } else if (braceDepth == 0 && parenDepth == 0) {
+            if (QString(code.unicode() + i - 1, code.length() - (i - 1))
+                        .indexOf(QRegExp(QLatin1String("^\\s*\\("))) == 0)
+                    tag = QLatin1String("func");
+                target = true;
+            }
+        } else if (ch.isDigit()) {
+            do {
                 finish = i;
 		readChar();
 	    } while (ch.isLetterOrNumber() || ch == '.');
