@@ -86,7 +86,8 @@ size_t JSStringGetUTF8CString(JSStringRef string, char* buffer, size_t bufferSiz
     if (!bufferSize)
         return 0;
 
-    char* p = buffer;ConversionResult result = conversionOK;
+    char* p = buffer;
+    ConversionResult result = conversionOK;
     if (string) {
         const UChar* d = string->characters();
         result = convertUTF16ToUTF8(&d, d + string->length(), &p, p + bufferSize - 1, true);
