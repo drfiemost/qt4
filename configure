@@ -4278,7 +4278,7 @@ compileTest()
 #-------------------------------------------------------------------------------
 
 # Detect C++17 support
-if ! "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" config.tests/unix/c++17 "C++17" $L_FLAGS $I_FLAGS $l_FLAGS; then
+if ! compileTest unix/c++17 "C++17"; then
     echo "C++17 support cannot be enabled due to functionality tests!"
     echo " Turn on verbose messaging (-v) to $0 to see the final report."
     exit 101
@@ -4358,7 +4358,7 @@ fi
 
 # detect avx2 support
 if [ "${CFG_AVX2}" = "auto" ]; then
-    if "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" config.tests/unix/avx2 "avx2" $L_FLAGS $I_FLAGS $l_FLAGS "-march=core-avx2"; then
+    if compileTest unix/avx2 "avx2" "-march=core-avx2"; then
        CFG_AVX2=yes
     else
        CFG_AVX2=no
@@ -5480,7 +5480,7 @@ if [ "$CFG_DOUBLEFORMAT" = "auto" ]; then
     fi
 fi
 
-if ! "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" config.tests/unix/stl "STL" $L_FLAGS $I_FLAGS $l_FLAGS &&
+if ! compileTest unix/stl "STL" &&
     [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
     echo "STL functionality check failed! Cannot build Qt with this STL library."
     echo " Turn on verbose messaging (-v) to $0 to see the final report."
@@ -5930,6 +5930,8 @@ if [ "$CFG_INOTIFY" = "yes" ]; then
 fi
 if [ "$CFG_LIBJPEG" = "no" ]; then
     CFG_JPEG="no"
+elif [ "$CFG_LIBJPEG" = "system" ]; then
+    QT_CONFIG="$QT_CONFIG system-jpeg"
 fi
 if [ "$CFG_JPEG" = "no" ]; then
     QT_CONFIG="$QT_CONFIG no-jpeg"
@@ -7344,3 +7346,7 @@ fi
 echo
 echo To reconfigure, run \'$MAKE confclean\' and \'configure\'.
 echo
+
+if [ "$CFG_DEV" = "yes" ]; then
+    echo $QT_CONFIG
+fi
