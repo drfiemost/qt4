@@ -45,6 +45,7 @@
 #include <qvariant.h>
 #include <qvector.h>
 #include <qbuffer.h>
+#include <qmath.h>
 #include <private/qsimd_p.h>
 
 #include <csetjmp>
@@ -315,27 +316,31 @@ static bool read_jpeg_image(QImage *outImage,
         }
 
         // Determine the scale factor to pass to libjpeg for quick downscaling.
-        if (!scaledSize.isEmpty()) {
+        if (!scaledSize.isEmpty() && info->image_width && info->image_height) {
             if (clipRect.isEmpty()) {
-                info->scale_denom =
-                    std::min(info->image_width / scaledSize.width(),
-                         info->image_height / scaledSize.height());
-            } else {
-                info->scale_denom =
-                    std::min(clipRect.width() / scaledSize.width(),
-                         clipRect.height() / scaledSize.height());
-            }
-            if (info->scale_denom < 2) {
-                info->scale_denom = 1;
-            } else if (info->scale_denom < 4) {
-                info->scale_denom = 2;
-            } else if (info->scale_denom < 8) {
-                info->scale_denom = 4;
-            } else {
+                double f = std::min(double(info->image_width) / scaledSize.width(),
+                                    double(info->image_height) / scaledSize.height());
+
+                // libjpeg supports M/8 scaling with M=[1,16]. All downscaling factors
+                // are a speed improvement, but upscaling during decode is slower.
+                info->scale_num   = std::clamp(qCeil(8/f), 1, 8);
                 info->scale_denom = 8;
-            }
-            info->scale_num = 1;
-            if (!clipRect.isEmpty()) {
+            } else {
+                info->scale_denom = std::min(clipRect.width() / scaledSize.width(),
+                                             clipRect.height() / scaledSize.height());
+
+                // Only scale by powers of two when clipping so we can
+                // keep the exact pixel boundaries
+                if (info->scale_denom < 2)
+                    info->scale_denom = 1;
+                else if (info->scale_denom < 4)
+                    info->scale_denom = 2;
+                else if (info->scale_denom < 8)
+                    info->scale_denom = 4;
+                else
+                    info->scale_denom = 8;
+                info->scale_num = 1;
+
                 // Correct the scale factor so that we clip accurately.
                 // It is recommended that the clip rectangle be aligned
                 // on an 8-pixel boundary for best performance.
@@ -513,11 +518,46 @@ inline my_jpeg_destination_mgr::my_jpeg_destination_mgr(QIODevice *device)
 }
 
 
+static inline void set_text(const QImage &image, j_compress_ptr cinfo, const QString &description)
+{
+    QMap<QString, QString> text;
+    for (const QString &key: image.textKeys()) {
+        if (!key.isEmpty())
+            text.insert(key, image.text(key));
+    }
+    for (const QString &pair: description.split(QLatin1String("\n\n"))) {
+        int index = pair.indexOf(QLatin1Char(':'));
+        if (index >= 0 && pair.indexOf(QLatin1Char(' ')) < index) {
+            QString s = pair.simplified();
+            if (!s.isEmpty())
+                text.insert(QLatin1String("Description"), s);
+        } else {
+            QString key = pair.left(index);
+            if (!key.simplified().isEmpty())
+                text.insert(key, pair.mid(index + 2).simplified());
+        }
+    }
+    if (text.isEmpty())
+        return;
+
+    for (QMap<QString, QString>::ConstIterator it = text.constBegin(); it != text.constEnd(); ++it) {
+        QByteArray comment = it.key().toUtf8();
+        if (!comment.isEmpty())
+            comment += ": ";
+        comment += it.value().toUtf8();
+        if (comment.length() > 65530)
+            comment.truncate(65530);
+        jpeg_write_marker(cinfo, JPEG_COM, (JOCTET *)comment.constData(), comment.size());
+    }
+}
+
 static bool do_write_jpeg_image(struct jpeg_compress_struct &cinfo,
                                 JSAMPROW *row_pointer,
                                 const QImage &image,
                                 QIODevice *device,
-                                int sourceQuality)
+                                int sourceQuality,
+                                const QString &description
+                               )
 {
     bool success = false;
     const QVector<QRgb> cmap = image.colorTable();
@@ -579,6 +619,8 @@ static bool do_write_jpeg_image(struct jpeg_compress_struct &cinfo,
         jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
         jpeg_start_compress(&cinfo, TRUE);
 
+        set_text(image, &cinfo, description);
+
         row_pointer[0] = new uchar[cinfo.image_width*cinfo.input_components];
         int w = cinfo.image_width;
         while (cinfo.next_scanline < cinfo.image_height) {
@@ -636,7 +678,7 @@ static bool do_write_jpeg_image(struct jpeg_compress_struct &cinfo,
                 }
                 break;
             case QImage::Format_RGB888:
-                memcpy(row, image.constScanLine(cinfo.next_scanline), w * 3);
+                std::memcpy(row, image.constScanLine(cinfo.next_scanline), w * 3);
                 break;
             case QImage::Format_RGB32:
             case QImage::Format_ARGB32:
@@ -680,9 +722,7 @@ static bool do_write_jpeg_image(struct jpeg_compress_struct &cinfo,
     return success;
 }
 
-static bool write_jpeg_image(const QImage &image,
-                             QIODevice *device,
-                             int sourceQuality)
+static bool write_jpeg_image(const QImage &image, QIODevice *device, int sourceQuality, const QString &description)
 {
     // protect these objects from the setjmp/longjmp pair inside
     // do_write_jpeg_image (by making them non-local).
@@ -692,7 +732,9 @@ static bool write_jpeg_image(const QImage &image,
 
     const bool success = do_write_jpeg_image(cinfo, row_pointer,
                                              image, device,
-                                             sourceQuality);
+                                             sourceQuality,
+                                             description
+                                            );
     delete [] row_pointer[0];
     return success;
 }
@@ -729,6 +771,9 @@ public:
     QSize scaledSize;
     QRect scaledClipRect;
     QRect clipRect;
+    QString description;
+    QStringList readTexts;
+
     struct jpeg_decompress_struct info;
     struct my_jpeg_source_mgr * iod_src;
     struct my_error_mgr err;
@@ -755,6 +800,8 @@ bool QJpegHandlerPrivate::readJpegHeader(QIODevice *device)
         info.src = iod_src;
 
         if (!setjmp(err.setjmp_buffer)) {
+            jpeg_save_markers(&info, JPEG_COM, 0xFFFF);
+
             (void) jpeg_read_header(&info, TRUE);
 
             int width = 0;
@@ -764,6 +811,27 @@ bool QJpegHandlerPrivate::readJpegHeader(QIODevice *device)
 
             format = QImage::Format_Invalid;
             read_jpeg_format(format, &info);
+
+            for (jpeg_saved_marker_ptr marker = info.marker_list; marker != NULL; marker = marker->next) {
+                if (marker->marker == JPEG_COM) {
+                    QString key, value;
+                    QString s = QString::fromUtf8((const char *)marker->data, marker->data_length);
+                    int index = s.indexOf(QLatin1String(": "));
+                    if (index == -1 || s.indexOf(QLatin1Char(' ')) < index) {
+                        key = QLatin1String("Description");
+                        value = s;
+                    } else {
+                        key = s.left(index);
+                        value = s.mid(index + 2);
+                    }
+                    if (!description.isEmpty())
+                        description += QLatin1String("\n\n");
+                    description += key + QLatin1String(": ") + value.simplified();
+                    readTexts.append(key);
+                    readTexts.append(value);
+                }
+            }
+
             state = ReadHeader;
             return true;
         }
@@ -784,9 +852,16 @@ bool QJpegHandlerPrivate::read(QImage *image)
 
     if(state == ReadHeader)
     {
-        bool success = read_jpeg_image(image, scaledSize, scaledClipRect, clipRect, quality,  &info, &err);
-        state = success ? Ready : Error;
-        return success;
+        bool success = read_jpeg_image(image, scaledSize, scaledClipRect, clipRect, quality, &info, &err);
+        if (success) {
+            for (int i = 0; i < readTexts.size()-1; i+=2)
+                image->setText(readTexts.at(i), readTexts.at(i+1));
+
+            state = Ready;
+            return true;
+        }
+
+        state = Error;
     }
 
     return false;
@@ -854,7 +929,7 @@ bool QJpegHandler::read(QImage *image)
 
 bool QJpegHandler::write(const QImage &image)
 {
-    return write_jpeg_image(image, device(), d->quality);
+    return write_jpeg_image(image, device(), d->quality, d->description);
 }
 
 bool QJpegHandler::supportsOption(ImageOption option) const
@@ -863,6 +938,7 @@ bool QJpegHandler::supportsOption(ImageOption option) const
         || option == ScaledSize
         || option == ScaledClipRect
         || option == ClipRect
+        || option == Description
         || option == Size
         || option == ImageFormat;
 }
@@ -878,6 +954,9 @@ QVariant QJpegHandler::option(ImageOption option) const
         return d->scaledClipRect;
     case ClipRect:
         return d->clipRect;
+    case Description:
+        d->readJpegHeader(device());
+        return d->description;
     case Size:
         d->readJpegHeader(device());
         return d->size;
@@ -885,8 +964,10 @@ QVariant QJpegHandler::option(ImageOption option) const
         d->readJpegHeader(device());
         return d->format;
     default:
-        return QVariant();
+        break;
     }
+
+    return QVariant();
 }
 
 void QJpegHandler::setOption(ImageOption option, const QVariant &value)
@@ -904,6 +985,9 @@ void QJpegHandler::setOption(ImageOption option, const QVariant &value)
     case ClipRect:
         d->clipRect = value.toRect();
         break;
+    case Description:
+        d->description = value.toString();
+        break;
     default:
         break;
     }
@@ -913,8 +997,5 @@ QByteArray QJpegHandler::name() const
 {
     return "jpeg";
 }
-
-
-
 
 QT_END_NAMESPACE

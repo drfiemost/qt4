@@ -152,6 +152,8 @@ private slots:
     void deepCopyWhenPaintingActive();
     void scaled_QTBUG19157();
 
+    void exifReadComments();
+
     void reinterpretAsFormat_data();
     void reinterpretAsFormat();
 
@@ -2059,7 +2061,7 @@ void tst_QImage::mirrored()
     QCOMPARE(image, imageMirroredTwice);
 
     if (format != QImage::Format_Mono && format != QImage::Format_MonoLSB)
-        QCOMPARE(memcmp(image.constBits(), imageMirroredTwice.constBits(), image.byteCount()), 0);
+        QCOMPARE(std::memcmp(image.constBits(), imageMirroredTwice.constBits(), image.byteCount()), 0);
     else {
         for (int i = 0; i < image.height(); ++i)
             for (int j = 0; j < image.width(); ++j)
@@ -2104,6 +2106,39 @@ void tst_QImage::reinterpretAsFormat_data()
     QTest::newRow("argb32pm -> rgb32") << QImage::Format_ARGB32_Premultiplied << QImage::Format_RGB32 << QColor(Qt::transparent) << QColor(Qt::black);
     QTest::newRow("argb32 -> rgb32") << QImage::Format_ARGB32 << QImage::Format_RGB32 << QColor(255, 0, 0, 127) << QColor(255, 0, 0);
     QTest::newRow("argb32pm -> rgb32") << QImage::Format_ARGB32_Premultiplied << QImage::Format_RGB32 << QColor(255, 0, 0, 127) << QColor(127, 0, 0);
+}
+
+void tst_QImage::exifReadComments()
+{
+    #ifdef SRCDIR
+    const QString prefix = QLatin1String(SRCDIR) + "/images/";
+    #else
+    const QString prefix = "images/";
+    #endif
+    QImage image;
+    QVERIFY(image.load(prefix + "jpeg_exif_utf8_comment.jpg"));
+    QVERIFY(!image.isNull());
+    QCOMPARE(image.textKeys().size(), 1);
+    QCOMPARE(image.textKeys().first(), QString("Description"));
+    // check if exif comment is read as utf-8
+    QCOMPARE(image.text("Description"), QString::fromUtf8("some unicode chars: ÖÄÜ€@"));
+
+    QByteArray ba;
+    {
+        QBuffer buf(&ba);
+        QVERIFY(buf.open(QIODevice::WriteOnly));
+        QVERIFY(image.save(&buf, "JPG"));
+    }
+    QVERIFY(!ba.isEmpty());
+    image = QImage();
+    QCOMPARE(image.textKeys().size(), 0);
+    {
+        QBuffer buf(&ba);
+        QVERIFY(buf.open(QIODevice::ReadOnly));
+        QVERIFY(image.load(&buf, "JPG"));
+    }
+    // compare written (and reread) description text
+    QCOMPARE(image.text("Description"), QString::fromUtf8("some unicode chars: ÖÄÜ€@"));
 }
 
 void tst_QImage::reinterpretAsFormat()
