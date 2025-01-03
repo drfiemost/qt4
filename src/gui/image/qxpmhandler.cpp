@@ -969,7 +969,7 @@ static bool read_xpm_body(
                 char b[16];
                 b[cpp] = '\0';
                 for (x=0; x<w && d<end; x++) {
-                    memcpy(b, (char *)d, cpp);
+                    std::memcpy(b, (char *)d, cpp);
                     *p++ = (uchar)colorMap[xpmHash(b)];
                     d += cpp;
                 }
@@ -977,7 +977,7 @@ static bool read_xpm_body(
             // avoid uninitialized memory for malformed xpms
             if (x < w) {
                 qWarning("QImage: XPM pixels missing on image line %d (possibly a C++ trigraph).", y);
-                memset(p, 0, w - x);
+                std::memset(p, 0, w - x);
             }
         } else {
             QRgb *p = (QRgb*)image.scanLine(y);
@@ -986,8 +986,8 @@ static bool read_xpm_body(
             int x;
             char b[16];
             b[cpp] = '\0';
-            for (x=0; x<w && d<end; x++) {
-                memcpy(b, (char *)d, cpp);
+            for (x=0; x<w && d+cpp<end; x++) {
+                std::memcpy(b, (char *)d, cpp);
                 *p++ = (QRgb)colorMap[xpmHash(b)];
                 d += cpp;
             }
