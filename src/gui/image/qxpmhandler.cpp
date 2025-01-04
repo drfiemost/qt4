@@ -80,7 +80,7 @@ static const int xpmRgbTblSize = 657;
 
 static const struct XPMRGBData {
     uint  value;
-    const char *name;
+    const char name[21];
 } xpmRgbTbl[] = {
   { QRGB(240,248,255),  "aliceblue" },
   { QRGB(250,235,215),  "antiquewhite" },
@@ -847,6 +847,9 @@ static bool read_xpm_header(
 #endif
         return false;                                        // < 4 numbers parsed
 
+    if (*w <= 0 || *w > 32767 || *h <= 0 || *h > 32767 || *ncols <= 0 || *ncols > (64 * 64 * 64 * 64) || *cpp <= 0 || *cpp > 15)
+        return false;                                        // failed sanity check
+
     return true;
 }
 
@@ -918,7 +921,7 @@ static bool read_xpm_body(
                 colorMap.insert(xpmHash(QLatin1String(index.constData())), 0);
             }
         } else {
-            QRgb c_rgb;
+            QRgb c_rgb = 0;
             if (((buf.length()-1) % 3) && (buf[0] == '#')) {
                 buf.truncate(((buf.length()-1) / 4 * 3) + 1); // remove alpha channel left by imagemagick
             }
@@ -986,7 +989,7 @@ static bool read_xpm_body(
             int x;
             char b[16];
             b[cpp] = '\0';
-            for (x=0; x<w && d+cpp<end; x++) {
+            for (x = 0; x < w && d + cpp <= end; x++) {
                 std::memcpy(b, (char *)d, cpp);
                 *p++ = (QRgb)colorMap[xpmHash(b)];
                 d += cpp;
@@ -994,7 +997,7 @@ static bool read_xpm_body(
             // avoid uninitialized memory for malformed xpms
             if (x < w) {
                 qWarning("QImage: XPM pixels missing on image line %d (possibly a C++ trigraph).", y);
-                memset(p, 0, (w - x)*4);
+                std::memset(p, 0, (w - x)*4);
             }
         }
     }

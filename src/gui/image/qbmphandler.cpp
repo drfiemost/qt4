@@ -181,20 +181,22 @@ static bool read_dib_infoheader(QDataStream &s, BMP_INFOHDR &bi)
     if (!(comp == BMP_RGB || (nbits == 4 && comp == BMP_RLE4) ||
         (nbits == 8 && comp == BMP_RLE8) || ((nbits == 16 || nbits == 32) && comp == BMP_BITFIELDS)))
          return false;                                // weird compression type
-    if (bi.biWidth < 0 || quint64(bi.biWidth) * std::abs(bi.biHeight) > 16384 * 16384)
+    if (bi.biHeight == INT_MIN)
+        return false; // out of range for positive int
+    if (bi.biWidth <= 0 || !bi.biHeight || quint64(bi.biWidth) * std::abs(bi.biHeight) > 16384 * 16384)
         return false;
 
     return true;
 }
 
-static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, int offset, int startpos, QImage &image)
+static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, qint64 offset, qint64 startpos, QImage &image)
 {
     QIODevice* d = s.device();
     if (d->atEnd())                                // end of stream/file
         return false;
 #if 0
-    qDebug("offset...........%d", offset);
-    qDebug("startpos.........%d", startpos);
+    qDebug("offset...........%lld", offset);
+    qDebug("startpos.........%lld", startpos);
     qDebug("biSize...........%d", bi.biSize);
     qDebug("biWidth..........%d", bi.biWidth);
     qDebug("biHeight.........%d", bi.biHeight);
@@ -243,6 +245,12 @@ static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, int offset, int
             break;
     }
 
+    if (depth != 32) {
+        ncols = bi.biClrUsed ? bi.biClrUsed : 1 << nbits;
+        if (ncols < 1 || ncols > 256) // sanity check - don't run out of mem if color table is broken
+            return false;
+    }
+
     if (bi.biHeight < 0)
         h = -h;                  // support images with negative height
 
@@ -250,13 +258,8 @@ static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, int offset, int
         image = QImage(w, h, format);
         if (image.isNull())                        // could not create image
             return false;
-    }
-
-    if (depth != 32) {
-        ncols = bi.biClrUsed ? bi.biClrUsed : 1 << nbits;
-        if (ncols > 256) // sanity check - don't run out of mem if color table is broken
-            return false;
-        image.setColorCount(ncols);
+        if (ncols)
+            image.setColorCount(ncols);            // Ensure valid QImage
     }
 
     image.setDotsPerMeterX(bi.biXPelsPerMeter);
@@ -314,6 +317,7 @@ static bool read_dib_body(QDataStream &s, const BMP_INFOHDR &bi, int offset, int
     }
 
     if (ncols > 0) {                                // read color table
+        image.setColorCount(ncols);
         uchar rgb[4];
         int   rgb_len = t == BMP_OLD ? 3 : 4;
         for (int i=0; i<ncols; i++) {
