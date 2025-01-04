@@ -3,7 +3,7 @@ SOURCES += tst_qimagereader.cpp
 MOC_DIR=tmp
 QT += network
 RESOURCES += qimagereader.qrc
-!symbian:DEFINES += SRCDIR=\\\"$$PWD\\\"
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
 !contains(QT_CONFIG, no-gif):DEFINES += QTEST_HAVE_GIF
 !contains(QT_CONFIG, no-jpeg):DEFINES += QTEST_HAVE_JPEG
@@ -15,28 +15,3 @@ win32-msvc:QMAKE_CXXFLAGS -= -Zm200
 win32-msvc:QMAKE_CXXFLAGS += -Zm800
 win32-msvc.net:QMAKE_CXXFLAGS -= -Zm300
 win32-msvc.net:QMAKE_CXXFLAGS += -Zm1100
-
-wince*: {
-    images.files = images
-    images.path = .
-
-    imagePlugins.files = $$QT_BUILD_TREE/plugins/imageformats/*.dll
-    imagePlugins.path = imageformats
-
-    DEPLOYMENT += images imagePlugins
-    DEFINES += SRCDIR=\\\".\\\"
-}
-
-symbian: {
-    images.files = images
-    images.path = .
-
-    DEPLOYMENT += images
-
-    qt_not_deployed {
-        imagePlugins.files = qjpeg.dll qgif.dll
-        imagePlugins.path = imageformats
-
-        DEPLOYMENT += imagePlugins
-    }
-}

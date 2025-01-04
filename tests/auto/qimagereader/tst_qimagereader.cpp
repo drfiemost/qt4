@@ -228,6 +228,9 @@ tst_QImageReader::~tst_QImageReader()
 
 void tst_QImageReader::initTestCase()
 {
+    QStringList paths;
+    paths << "../../../plugins";
+    QCoreApplication::setLibraryPaths(paths);
 }
 
 void tst_QImageReader::cleanupTestCase()

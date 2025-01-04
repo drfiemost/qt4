@@ -66,6 +66,7 @@ public:
     tst_QImage();
 
 private slots:
+    void initTestCase();
     void swap();
     void create();
     void createInvalidXPM();
@@ -163,6 +164,13 @@ private slots:
 tst_QImage::tst_QImage()
 
 {
+}
+
+void tst_QImage::initTestCase()
+{
+    QStringList paths;
+    paths << "../../../plugins";
+    QCoreApplication::setLibraryPaths(paths);
 }
 
 void tst_QImage::swap()
