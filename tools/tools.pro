@@ -25,12 +25,9 @@ TEMPLATE        = subdirs
 
 SUBDIRS += linguist
 
-embedded:SUBDIRS += kmap2qmap
-
 contains(QT_CONFIG, dbus):SUBDIRS += qdbus
 # We don't need these command line utilities on embedded platforms.
 contains(QT_CONFIG, xmlpatterns): SUBDIRS += xmlpatterns xmlpatternsvalidator
-embedded: SUBDIRS += makeqpf
 
 !cross_compile:SUBDIRS += qdoc3
 
