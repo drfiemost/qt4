@@ -150,15 +150,24 @@ private slots:
     void mirrored_data();
     void mirrored();
 
+    void inplaceConversion_data();
+    void inplaceConversion();
+
     void deepCopyWhenPaintingActive();
     void scaled_QTBUG19157();
 
     void exifReadComments();
+    void exif_invalid_data_QTBUG46870();
 
     void reinterpretAsFormat_data();
     void reinterpretAsFormat();
 
     void reinterpretAsFormat2();
+
+    void convertColorTable();
+
+    void pixelColor();
+    void pixel();
 };
 
 tst_QImage::tst_QImage()
@@ -1707,6 +1716,12 @@ void tst_QImage::paintEngine()
 
     QCOMPARE(engine, img.paintEngine());
     QCOMPARE(img, expected);
+
+    {
+        QImage img1(16, 16, QImage::Format_ARGB32);
+        QImage img2 = img1;
+        QVERIFY(img2.paintEngine());
+    }
 }
 
 void tst_QImage::setAlphaChannelWhilePainting()
@@ -2077,6 +2092,69 @@ void tst_QImage::mirrored()
     }
 }
 
+void tst_QImage::inplaceConversion_data()
+{
+    QTest::addColumn<QImage::Format>("format");
+    QTest::addColumn<QImage::Format>("dest_format");
+
+    QTest::newRow("Format_RGB32 -> RGB16") << QImage::Format_RGB32 << QImage::Format_RGB16;
+    //QTest::newRow("Format_ARGB32 -> Format_RGBA8888") << QImage::Format_ARGB32 << QImage::Format_RGBA8888;
+    QTest::newRow("Format_RGB888 -> Format_ARGB6666_Premultiplied") << QImage::Format_RGB888 << QImage::Format_ARGB6666_Premultiplied;
+    QTest::newRow("Format_RGB16 -> Format_RGB555") << QImage::Format_RGB16 << QImage::Format_RGB555;
+    QTest::newRow("Format_RGB666 -> Format_RGB888") << QImage::Format_RGB666 << QImage::Format_RGB888;
+    QTest::newRow("Format_ARGB8565_Premultiplied, Format_ARGB8555_Premultiplied") << QImage::Format_ARGB8565_Premultiplied << QImage::Format_ARGB8555_Premultiplied;
+    QTest::newRow("Format_ARGB4444_Premultiplied, Format_RGB444") << QImage::Format_ARGB4444_Premultiplied << QImage::Format_RGB444;
+    //QTest::newRow("Format_RGBA8888 -> RGB16") << QImage::Format_RGBA8888 << QImage::Format_RGB16;
+    //QTest::newRow("Format_RGBA8888_Premultiplied -> RGB16") << QImage::Format_RGBA8888_Premultiplied << QImage::Format_RGB16;
+}
+
+void tst_QImage::inplaceConversion()
+{
+    // Test that conversions between RGB formats of the same bitwidth can be done inplace.
+#if defined(Q_COMPILER_REF_QUALIFIERS)
+    QFETCH(QImage::Format, format);
+    QFETCH(QImage::Format, dest_format);
+
+    QImage image(16, 16, format);
+
+    for (int i = 0; i < image.height(); ++i)
+        for (int j = 0; j < image.width(); ++j)
+            image.setPixel(j, i, qRgb(j*16, i*16, 0));
+
+    const uchar* originalPtr = image.constScanLine(0);
+
+    QImage imageConverted = std::move(image).convertToFormat(dest_format);
+    QCOMPARE(imageConverted.format(), dest_format);
+    for (int i = 0; i < imageConverted.height(); ++i) {
+        for (int j = 0; j < imageConverted.width(); ++j) {
+            QRgb convertedColor = imageConverted.pixel(j,i);
+            QCOMPARE(qRed(convertedColor) & 0xF0, j * 16);
+            QCOMPARE(qGreen(convertedColor) & 0xF0, i * 16);
+        }
+    }
+    if (image.depth() == imageConverted.depth())
+        QCOMPARE(imageConverted.constScanLine(0), originalPtr);
+
+    {
+        // Test attempted inplace conversion of images created on existing buffer
+        static const quint32 readOnlyData[] = { 0x00010203U, 0x04050607U, 0x08091011U, 0x12131415U };
+        quint32 readWriteData[] = { 0x00010203U, 0x04050607U, 0x08091011U, 0x12131415U };
+
+        QImage roImage((const uchar *)readOnlyData, 2, 2, format);
+        QImage roInplaceConverted = std::move(roImage).convertToFormat(dest_format);
+
+        QImage rwImage((uchar *)readWriteData, 2, 2, format);
+        QImage rwInplaceConverted = std::move(rwImage).convertToFormat(dest_format);
+
+        QImage roImage2((const uchar *)readOnlyData, 2, 2, format);
+        QImage normalConverted = roImage2.convertToFormat(dest_format);
+
+        QCOMPARE(normalConverted, roInplaceConverted);
+        QCOMPARE(normalConverted, rwInplaceConverted);
+    }
+#endif
+}
+
 void tst_QImage::deepCopyWhenPaintingActive()
 {
     QImage image(64, 64, QImage::Format_ARGB32_Premultiplied);
@@ -2149,6 +2227,18 @@ void tst_QImage::exifReadComments()
     QCOMPARE(image.text("Description"), QString::fromUtf8("some unicode chars: ÖÄÜ€@"));
 }
 
+void tst_QImage::exif_invalid_data_QTBUG46870()
+{
+    #ifdef SRCDIR
+    const QString prefix = QLatin1String(SRCDIR) + "/images/";
+    #else
+    const QString prefix = "images/";
+    #endif
+    QImage image;
+    QVERIFY(image.load(prefix + "jpeg_exif_invalid_data_QTBUG-46870.jpg"));
+    QVERIFY(!image.isNull());
+}
+
 void tst_QImage::reinterpretAsFormat()
 {
     QFETCH(QImage::Format, in_format);
@@ -2177,15 +2267,73 @@ void tst_QImage::reinterpretAsFormat2()
         //QVERIFY(!image.reinterpretAsFormat(QImage::Format_Grayscale8));
     }
     {
-        /*QImage image(reinterpret_cast<const uchar*>(imageData), 8, 4, QImage::Format_Indexed8);
+        QImage image(reinterpret_cast<const uchar*>(imageData), 8, 4, QImage::Format_Indexed8);
         image.setColor(0, qRgb(255, 255, 255));
         QCOMPARE(image.pixelColor(0, 0), QColor(Qt::white));
-        QVERIFY(image.reinterpretAsFormat(QImage::Format_Grayscale8));
+        /*QVERIFY(image.reinterpretAsFormat(QImage::Format_Grayscale8));
         QCOMPARE(image.pixelColor(0, 0), QColor(Qt::black));
         QVERIFY(image.reinterpretAsFormat(QImage::Format_Alpha8));
-        QCOMPARE(image.pixelColor(0, 0), QColor(Qt::transparent));
+        QCOMPARE(image.pixelColor(0, 0), QColor(Qt::transparent));*/
 
-        QVERIFY(!image.reinterpretAsFormat(QImage::Format_RGB16));*/
+        QVERIFY(!image.reinterpretAsFormat(QImage::Format_RGB16));
+    }
+}
+
+void tst_QImage::convertColorTable()
+{
+    QImage image(10, 10, QImage::Format_Indexed8);
+    image.setColor(0, 0x80ffffff);
+    image.fill(0);
+    QImage argb32 = image.convertToFormat(QImage::Format_ARGB32);
+    QCOMPARE(argb32.pixel(0,0), 0x80ffffff);
+    QImage argb32pm = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    QCOMPARE(argb32pm.pixel(0,0), 0x80808080);
+    QImage rgb32 = image.convertToFormat(QImage::Format_RGB32);
+    QCOMPARE(rgb32.pixel(0,0), 0xffffffff);
+}
+
+
+void tst_QImage::pixelColor()
+{
+    QImage argb32(1, 1, QImage::Format_ARGB32);
+    QImage argb32pm(1, 1, QImage::Format_ARGB32_Premultiplied);
+
+    QColor c(Qt::red);
+    c.setAlpha(128);
+    argb32.setPixelColor(QPoint(0, 0), c);
+    argb32pm.setPixelColor(QPoint(0, 0), c);
+    QCOMPARE(argb32.pixelColor(QPoint(0, 0)), c);
+    QCOMPARE(argb32pm.pixelColor(QPoint(0, 0)), c);
+
+    QImage t = argb32.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    QCOMPARE(t.pixel(0,0), argb32pm.pixel(0,0));
+}
+
+void tst_QImage::pixel()
+{
+    {
+        QImage mono(1, 1, QImage::Format_Mono);
+        QImage monolsb(1, 1, QImage::Format_MonoLSB);
+        QImage indexed(1, 1, QImage::Format_Indexed8);
+
+        mono.fill(0);
+        monolsb.fill(0);
+        indexed.fill(0);
+
+        QCOMPARE(QColor(mono.pixel(0, 0)), QColor(Qt::black));
+        QCOMPARE(QColor(monolsb.pixel(0, 0)), QColor(Qt::black));
+        indexed.pixel(0, 0); // Don't crash
+    }
+
+    {
+        uchar a = 0;
+        QImage mono(&a, 1, 1, QImage::Format_Mono);
+        QImage monolsb(&a, 1, 1, QImage::Format_MonoLSB);
+        QImage indexed(&a, 1, 1, QImage::Format_Indexed8);
+
+        QCOMPARE(QColor(mono.pixel(0, 0)), QColor(Qt::black));
+        QCOMPARE(QColor(monolsb.pixel(0, 0)), QColor(Qt::black));
+        indexed.pixel(0, 0); // Don't crash
     }
 }
 

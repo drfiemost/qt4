@@ -1975,6 +1975,8 @@ static bool convert_ARGB_to_ARGB_PM_inplace(QImageData *data, Qt::ImageConversio
 static bool convert_indexed8_to_ARGB_PM_inplace(QImageData *data, Qt::ImageConversionFlags)
 {
     Q_ASSERT(data->format == QImage::Format_Indexed8);
+    if (!data->own_data)
+        return false;
     const int depth = 32;
 
     const int dst_bytes_per_line = ((data->width * depth + 31) >> 5) << 2;
@@ -2027,6 +2029,8 @@ static bool convert_indexed8_to_ARGB_PM_inplace(QImageData *data, Qt::ImageConve
 static bool convert_indexed8_to_RGB_inplace(QImageData *data, Qt::ImageConversionFlags)
 {
     Q_ASSERT(data->format == QImage::Format_Indexed8);
+    if (!data->own_data)
+        return false;
     const int depth = 32;
 
     const int dst_bytes_per_line = ((data->width * depth + 31) >> 5) << 2;
@@ -2076,6 +2080,8 @@ static bool convert_indexed8_to_RGB_inplace(QImageData *data, Qt::ImageConversio
 static bool convert_indexed8_to_RGB16_inplace(QImageData *data, Qt::ImageConversionFlags)
 {
     Q_ASSERT(data->format == QImage::Format_Indexed8);
+    if (!data->own_data)
+        return false;
     const int depth = 16;
 
     const int dst_bytes_per_line = ((data->width * depth + 31) >> 5) << 2;
@@ -2131,6 +2137,8 @@ static bool convert_indexed8_to_RGB16_inplace(QImageData *data, Qt::ImageConvers
 static bool convert_RGB_to_RGB16_inplace(QImageData *data, Qt::ImageConversionFlags)
 {
     Q_ASSERT(data->format == QImage::Format_RGB32);
+    if (!data->own_data)
+        return false;
     const int depth = 16;
 
     const int dst_bytes_per_line = ((data->width * depth + 31) >> 5) << 2;
@@ -2254,7 +2262,7 @@ static QVector<QRgb> fix_color_table(const QVector<QRgb> &ctbl, QImage::Format f
     if (format == QImage::Format_RGB32) {
         // check if the color table has alpha
         for (unsigned int & i : colorTable)
-            if (qAlpha(i != 0xff))
+            if (qAlpha(i) != 0xff)
                 i = i | 0xff000000;
     } else if (format == QImage::Format_ARGB32_Premultiplied) {
         // check if the color table has alpha
@@ -2844,24 +2852,31 @@ static void convert_Indexed8_to_X32(QImageData *dest, const QImageData *src, Qt:
     Q_ASSERT(src->width == dest->width);
     Q_ASSERT(src->height == dest->height);
 
-    QVector<QRgb> colorTable = fix_color_table(src->colortable, dest->format);
+    QVector<QRgb> colorTable = src->has_alpha_clut ? fix_color_table(src->colortable, dest->format) : src->colortable;
     if (colorTable.size() == 0) {
         colorTable.resize(256);
         for (int i=0; i<256; ++i)
             colorTable[i] = qRgb(i, i, i);
     }
+    if (colorTable.size() < 256) {
+        int tableSize = colorTable.size();
+        colorTable.resize(256);
+        QRgb fallbackColor = (dest->format == QImage::Format_RGB32) ? 0xff000000 : 0;
+        for (int i=tableSize; i<256; ++i)
+            colorTable[i] = fallbackColor;
+    }
 
     int w = src->width;
     const uchar *src_data = src->data;
     uchar *dest_data = dest->data;
-    int tableSize = colorTable.size() - 1;
+    const QRgb *colorTablePtr = colorTable.constData();
     for (int y = 0; y < src->height; y++) {
-        uint *p = (uint *)dest_data;
+        uint *p = reinterpret_cast<uint *>(dest_data);
         const uchar *b = src_data;
         uint *end = p + w;
 
         while (p < end)
-            *p++ = colorTable.at(std::min<int>(tableSize, *b++));
+            *p++ = colorTablePtr[*b++];
 
         src_data += src->bytes_per_line;
         dest_data += dest->bytes_per_line;
@@ -6190,7 +6205,7 @@ bool QImageData::convertInPlace(QImage::Format newFormat, Qt::ImageConversionFla
         return true;
 
     // No in-place conversion if we have to detach
-    if (ref.loadRelaxed() > 1)
+    if (ref.loadRelaxed() > 1 || ro_data)
         return false;
 
     const InPlace_Image_Converter *const converterPtr = &inplace_converter_map[format][newFormat];
