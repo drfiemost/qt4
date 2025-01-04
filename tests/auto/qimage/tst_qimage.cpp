@@ -155,6 +155,9 @@ private slots:
 
     void deepCopyWhenPaintingActive();
     void scaled_QTBUG19157();
+    void scaled_QTBUG35972();
+
+    void convertOverUnPreMul();
 
     void exifReadComments();
     void exif_invalid_data_QTBUG46870();
@@ -226,15 +229,10 @@ void tst_QImage::createInvalidXPM()
 
 void tst_QImage::createFromUChar()
 {
-    uchar data[] = {
-#if Q_BYTE_ORDER == Q_BIG_ENDIAN
-        0xFF,
-#endif
-        1,1,1, 0xFF, 2,2,2, 0xFF, 3,3,3, 0xFF, 4,4,4,
-#if Q_BYTE_ORDER != Q_BIG_ENDIAN
-        0xFF,
-#endif
-    };
+    uint data[] = { 0xff010101U,
+                    0xff020202U,
+                    0xff030303U,
+                    0xff040404U };
 
     // When the data is const, nothing you do to the image will change the source data.
     QImage i1((const uchar*)data, 2, 2, 8, QImage::Format_RGB32);
@@ -248,8 +246,8 @@ void tst_QImage::createFromUChar()
     }
     QCOMPARE(i1.pixel(0,0), 0xFF010101U);
     QCOMPARE(*(QRgb*)data, 0xFF010101U);
-    *((QRgb*)i1.bits()) = 7U;
-    QCOMPARE(i1.pixel(0,0), 7U);
+    *((QRgb*)i1.bits()) = 0xFF070707U;
+    QCOMPARE(i1.pixel(0,0), 0xFF070707U);
     QCOMPARE(*(QRgb*)data, 0xFF010101U);
 
     // Changing copies should not change the original image or data.
@@ -276,16 +274,16 @@ void tst_QImage::createFromUChar()
     }
     QCOMPARE(i2.pixel(0,0), 0xFF010101U);
     QCOMPARE(*(QRgb*)data, 0xFF010101U);
-    *((QRgb*)i2.bits()) = 7U;
-    QCOMPARE(i2.pixel(0,0), 7U);
-    QCOMPARE(*(QRgb*)data, 7U);
+    *((QRgb*)i2.bits()) = 0xFF070707U;
+    QCOMPARE(i2.pixel(0,0), 0xFF070707U);
+    QCOMPARE(*(QRgb*)data, 0xFF070707U);
 
     // Changing the data will change the image in either case.
     QImage i3((uchar*)data, 2, 2, 8, QImage::Format_RGB32);
     QImage i4((const uchar*)data, 2, 2, 8, QImage::Format_RGB32);
-    *(QRgb*)data = 6U;
-    QCOMPARE(i3.pixel(0,0), 6U);
-    QCOMPARE(i4.pixel(0,0), 6U);
+    *(QRgb*)data = 0xFF060606U;
+    QCOMPARE(i3.pixel(0,0), 0xFF060606U);
+    QCOMPARE(i4.pixel(0,0), 0xFF060606U);
 }
 
 void tst_QImage::formatHandlersInput_data()
@@ -800,7 +798,7 @@ void tst_QImage::convertToFormat()
     int dp = (src.depth() < 8 || result.depth() < 8) ? 8 : 1;
     QImage src2(src.bits() + (dp*src.depth())/8,
                 src.width() - dp*2,
-                src.height(), src.bytesPerLine(),
+                src.height() - 1, src.bytesPerLine(),
                 src.format());
     if (src.depth() < 8)
         src2.setColorTable(src.colorTable());
@@ -812,7 +810,7 @@ void tst_QImage::convertToFormat()
 
     QImage expected2(result.bits() + (dp*result.depth())/8,
                      result.width() - dp*2,
-                     result.height(), result.bytesPerLine(),
+                     result.height() - 1, result.bytesPerLine(),
                      result.format());
     if (result.depth() < 8)
         expected2.setColorTable(result.colorTable());
@@ -2176,6 +2174,26 @@ void tst_QImage::scaled_QTBUG19157()
     QVERIFY(!foo.isNull());
 }
 
+void tst_QImage::convertOverUnPreMul()
+{
+    QImage image(256, 256, QImage::Format_ARGB32_Premultiplied);
+
+    for (int j = 0; j < 256; j++) {
+        for (int i = 0; i <= j; i++) {
+            image.setPixel(i, j, qRgba(i, i, i, j));
+        }
+    }
+
+    QImage image2 = image.convertToFormat(QImage::Format_ARGB32).convertToFormat(QImage::Format_ARGB32_Premultiplied);
+
+    for (int j = 0; j < 256; j++) {
+        for (int i = 0; i <= j; i++) {
+            QCOMPARE(qAlpha(image2.pixel(i, j)), qAlpha(image.pixel(i, j)));
+            QCOMPARE(qGray(image2.pixel(i, j)), qGray(image.pixel(i, j)));
+        }
+    }
+}
+
 void tst_QImage::reinterpretAsFormat_data()
 {
     QTest::addColumn<QImage::Format>("in_format");
@@ -2192,6 +2210,25 @@ void tst_QImage::reinterpretAsFormat_data()
     QTest::newRow("argb32pm -> rgb32") << QImage::Format_ARGB32_Premultiplied << QImage::Format_RGB32 << QColor(Qt::transparent) << QColor(Qt::black);
     QTest::newRow("argb32 -> rgb32") << QImage::Format_ARGB32 << QImage::Format_RGB32 << QColor(255, 0, 0, 127) << QColor(255, 0, 0);
     QTest::newRow("argb32pm -> rgb32") << QImage::Format_ARGB32_Premultiplied << QImage::Format_RGB32 << QColor(255, 0, 0, 127) << QColor(127, 0, 0);
+}
+
+void tst_QImage::scaled_QTBUG35972()
+{
+    QImage src(532,519,QImage::Format_ARGB32_Premultiplied);
+    src.fill(QColor(Qt::white));
+    QImage dest(1000,1000,QImage::Format_ARGB32_Premultiplied);
+    dest.fill(QColor(Qt::white));
+    QPainter painter1(&dest);
+    const QTransform trf(1.25, 0,
+                         0, 1.25,
+                         /*dx */ 15.900000000000034, /* dy */ 72.749999999999986);
+    painter1.setTransform(trf);
+    painter1.drawImage(QRectF(-2.6, -2.6, 425.6, 415.20000000000005), src, QRectF(0,0,532,519));
+
+    const quint32 *pixels = reinterpret_cast<const quint32 *>(dest.constBits());
+    int size = dest.width()*dest.height();
+    for (int i = 0; i < size; ++i)
+        QCOMPARE(pixels[i], 0xffffffff);
 }
 
 void tst_QImage::exifReadComments()
