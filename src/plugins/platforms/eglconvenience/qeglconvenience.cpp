@@ -133,21 +133,6 @@ bool q_reduceConfigAttributes(QVector<EGLint> *configAttributes)
         configAttributes->remove(i,2);
     }
 
-#ifdef EGL_VG_ALPHA_FORMAT_PRE_BIT
-    // For OpenVG, we sometimes try to create a surface using a pre-multiplied format. If we can't
-    // find a config which supports pre-multiplied formats, remove the flag on the surface type:
-
-    i = configAttributes->indexOf(EGL_SURFACE_TYPE);
-    if (i >= 0) {
-        EGLint surfaceType = configAttributes->at(i +1);
-        if (surfaceType & EGL_VG_ALPHA_FORMAT_PRE_BIT) {
-            surfaceType ^= EGL_VG_ALPHA_FORMAT_PRE_BIT;
-            configAttributes->replace(i+1,surfaceType);
-            return true;
-        }
-    }
-#endif
-
     // EGL chooses configs with the highest color depth over
     // those with smaller (but faster) lower color depths. One
     // way around this is to set EGL_BUFFER_SIZE to 16, which
@@ -214,11 +199,7 @@ EGLConfig q_configFromQPlatformWindowFormat(EGLDisplay display, const QPlatformW
     configureAttributes.append(surfaceType);
 
     configureAttributes.append(EGL_RENDERABLE_TYPE);
-    if (format.windowApi() == QPlatformWindowFormat::OpenVG) {
-        configureAttributes.append(EGL_OPENVG_BIT);        
-    } else {
-        configureAttributes.append(EGL_OPENGL_ES2_BIT);
-    }
+    configureAttributes.append(EGL_OPENGL_ES2_BIT);
     configureAttributes.append(EGL_NONE);
 
     do {

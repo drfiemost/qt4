@@ -79,14 +79,11 @@ void kdProcessKeyEvents( const KDEvent *event )
 QOpenKODEWindow::QOpenKODEWindow(QWidget *tlw)
     : QPlatformWindow(tlw), isFullScreen(false)
 {
-    if (tlw->platformWindowFormat().windowApi() == QPlatformWindowFormat::OpenVG) {
-        m_eglApi = EGL_OPENVG_API;
-    } else {
-        m_eglContextAttrs.append(EGL_CONTEXT_CLIENT_VERSION);
-        m_eglContextAttrs.append(2);
 
-        m_eglApi = EGL_OPENGL_ES_API;
-    }
+    m_eglContextAttrs.append(EGL_CONTEXT_CLIENT_VERSION);
+    m_eglContextAttrs.append(2);
+
+    m_eglApi = EGL_OPENGL_ES_API;
     eglBindAPI(m_eglApi);
 
     m_eglContextAttrs.append(EGL_NONE);

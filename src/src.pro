@@ -10,7 +10,6 @@ contains(QT_CONFIG, dbus):SRC_SUBDIRS += src_dbus
 include(tools/tools.pro)
 
 contains(QT_CONFIG, opengl)|contains(QT_CONFIG, opengles1)|contains(QT_CONFIG, opengles2): SRC_SUBDIRS += src_opengl
-contains(QT_CONFIG, openvg): SRC_SUBDIRS += src_openvg
 contains(QT_CONFIG, xmlpatterns): SRC_SUBDIRS += src_xmlpatterns
 contains(QT_CONFIG, svg): SRC_SUBDIRS += src_svg
 contains(QT_CONFIG, script): SRC_SUBDIRS += src_script
@@ -43,8 +42,6 @@ src_scripttools.subdir = $$QT_SOURCE_TREE/src/scripttools
 src_scripttools.target = sub-scripttools
 src_opengl.subdir = $$QT_SOURCE_TREE/src/opengl
 src_opengl.target = sub-opengl
-src_openvg.subdir = $$QT_SOURCE_TREE/src/openvg
-src_openvg.target = sub-openvg
 src_plugins.subdir = $$QT_SOURCE_TREE/src/plugins
 src_plugins.target = sub-plugins
 src_imports.subdir = $$QT_SOURCE_TREE/src/imports
@@ -67,7 +64,6 @@ src_declarative.target = sub-declarative
    src_scripttools.depends = src_script src_gui src_network
    src_network.depends = src_corelib
    src_opengl.depends = src_gui
-   src_openvg.depends = src_gui
    src_sql.depends = src_corelib
    src_testlib.depends = src_corelib
    src_tools_idc.depends = src_corelib             # target defined in tools.pro

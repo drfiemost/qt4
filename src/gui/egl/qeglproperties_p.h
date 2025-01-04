@@ -84,7 +84,7 @@ public:
 #endif
     void setDeviceType(int devType);
     void setPaintDeviceFormat(QPaintDevice *dev);
-    void setRenderableType(QEgl::API api);
+    void setRenderableType();
 
     bool reduceConfiguration();
 

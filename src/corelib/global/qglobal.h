@@ -1374,16 +1374,6 @@ class QDataStream;
 #    else
 #      define Q_OPENGL_EXPORT Q_DECL_IMPORT
 #    endif
-#    if defined(QT_BUILD_MULTIMEDIA_LIB)
-#      define Q_MULTIMEDIA_EXPORT Q_DECL_EXPORT
-#    else
-#      define Q_MULTIMEDIA_EXPORT Q_DECL_IMPORT
-#    endif
-#    if defined(QT_BUILD_OPENVG_LIB)
-#      define Q_OPENVG_EXPORT Q_DECL_EXPORT
-#    else
-#      define Q_OPENVG_EXPORT Q_DECL_IMPORT
-#    endif
 #    if defined(QT_BUILD_XML_LIB)
 #      define Q_XML_EXPORT Q_DECL_EXPORT
 #    else
@@ -1429,8 +1419,6 @@ class QDataStream;
 #    define Q_DECLARATIVE_EXPORT Q_DECL_IMPORT
 #    define Q_CANVAS_EXPORT Q_DECL_IMPORT
 #    define Q_OPENGL_EXPORT Q_DECL_IMPORT
-#    define Q_MULTIMEDIA_EXPORT Q_DECL_IMPORT
-#    define Q_OPENVG_EXPORT Q_DECL_IMPORT
 #    define Q_XML_EXPORT Q_DECL_IMPORT
 #    define Q_XMLPATTERNS_EXPORT Q_DECL_IMPORT
 #    define Q_SCRIPT_EXPORT Q_DECL_IMPORT
@@ -1454,8 +1442,6 @@ class QDataStream;
 #    define Q_SVG_EXPORT Q_DECL_EXPORT
 #    define Q_DECLARATIVE_EXPORT Q_DECL_EXPORT
 #    define Q_OPENGL_EXPORT Q_DECL_EXPORT
-#    define Q_MULTIMEDIA_EXPORT Q_DECL_EXPORT
-#    define Q_OPENVG_EXPORT Q_DECL_EXPORT
 #    define Q_XML_EXPORT Q_DECL_EXPORT
 #    define Q_XMLPATTERNS_EXPORT Q_DECL_EXPORT
 #    define Q_SCRIPT_EXPORT Q_DECL_EXPORT
@@ -1470,8 +1456,6 @@ class QDataStream;
 #    define Q_SVG_EXPORT
 #    define Q_DECLARATIVE_EXPORT
 #    define Q_OPENGL_EXPORT
-#    define Q_MULTIMEDIA_EXPORT
-#    define Q_OPENVG_EXPORT
 #    define Q_XML_EXPORT
 #    define Q_XMLPATTERNS_EXPORT
 #    define Q_SCRIPT_EXPORT

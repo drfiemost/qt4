@@ -217,10 +217,6 @@ QWindowSurface *QOpenKODEIntegration::createWindowSurface(QWidget *widget, WId) 
         returnSurface = new QGLWindowSurface(widget);
         break;
 
-    case QPlatformWindowFormat::OpenVG:
-//        returnSurface = new QVGWindowSurface(widget);
-//        break;
-
     default:
         returnSurface = new QGLWindowSurface(widget);
         break;

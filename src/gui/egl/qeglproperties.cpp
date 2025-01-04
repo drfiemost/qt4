@@ -213,25 +213,16 @@ void QEglProperties::setPixelFormat(QImage::Format pixelFormat)
     setValue(EGL_ALPHA_SIZE, alpha);
 }
 
-void QEglProperties::setRenderableType(QEgl::API api)
+void QEglProperties::setRenderableType()
 {
 #ifdef EGL_RENDERABLE_TYPE
 #if defined(QT_OPENGL_ES_2)
-    if (api == QEgl::OpenGL)
-        setValue(EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT);
+    setValue(EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT);
 #elif defined(QT_OPENGL_ES)
-    if (api == QEgl::OpenGL)
-        setValue(EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT);
+    setValue(EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT);
 #elif defined(EGL_OPENGL_BIT)
-    if (api == QEgl::OpenGL)
-        setValue(EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT);
+    setValue(EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT);
 #endif
-#ifdef EGL_OPENVG_BIT
-    if (api == QEgl::OpenVG)
-        setValue(EGL_RENDERABLE_TYPE, EGL_OPENVG_BIT);
-#endif
-#else
-    Q_UNUSED(api);
 #endif
 }
 

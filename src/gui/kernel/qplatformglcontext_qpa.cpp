@@ -50,7 +50,7 @@
 
     \brief The QPlatformGLContext class provides an abstraction for native GL contexts.
 
-    In QPA the way to support OpenGL or OpenVG or other technologies that requires a native GL
+    In QPA the way to support OpenGL or other technologies that requires a native GL
     context is through the QPlatformGLContext wrapper.
 
     There is no factory function for QPlatformGLContexts, but rather only one accessor function.

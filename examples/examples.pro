@@ -39,7 +39,6 @@ embedded:SUBDIRS += qws
     contains(QT_BUILD_PARTS, tools):!contains(QT_CONFIG, no-gui):SUBDIRS += qtestlib help
 }
 contains(QT_CONFIG, opengl): SUBDIRS += opengl
-contains(QT_CONFIG, openvg): SUBDIRS += openvg
 contains(QT_CONFIG, dbus): SUBDIRS += dbus
 contains(QT_CONFIG, declarative): SUBDIRS += declarative helper
 contains(QT_CONFIG, xmlpatterns):!contains(QT_CONFIG, no-gui): SUBDIRS += xmlpatterns

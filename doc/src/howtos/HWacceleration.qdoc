@@ -58,12 +58,10 @@
         \row
             \o \bold {Windows CE}
             \o \l {Qt for Windows CE and OpenGL ES}{OpenGL ES}
-            \o \l {Qt for Windows CE and OpenVG}{OpenVG} 
             \o
         \row
             \o \bold {Embedded Linux}
             \o \l {Qt for Embedded Linux and OpenGL}{OpenGL ES}
-            \o \l {Qt for Embedded Linux and OpenVG}{OpenVG} 
             \o \l {Qt for Embedded Linux and DirectFB}{DirectFB}
         \row
             \o \bold {Symbian Platform}

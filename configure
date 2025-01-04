@@ -724,10 +724,6 @@ CFG_XRANDR=runtime
 CFG_XRENDER=auto
 CFG_MITSHM=auto
 CFG_OPENGL=auto
-CFG_OPENVG=auto
-CFG_OPENVG_LC_INCLUDES=no
-CFG_OPENVG_SHIVA=auto
-CFG_OPENVG_ON_OPENGL=auto
 CFG_EGL=no
 CFG_EGL_GLES_INCLUDES=no
 CFG_SSE=auto
@@ -1061,16 +1057,6 @@ while [ "$#" -gt 0 ]; do
             VAL=$1
         fi
 	;;
-    -openvg)
-        VAR=openvg
-        # this option may or may not be followed by an argument
-        if [ -z "$2" ] || echo "$2" | grep '^-' >/dev/null 2>&1; then
-            VAL=yes
-        else
-            shift;
-            VAL=$1
-        fi
-	;;
     -hostprefix)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         # this option may or may not be followed by an argument
@@ -1318,21 +1304,9 @@ while [ "$#" -gt 0 ]; do
             UNKNOWN_OPT=yes
         fi
         ;;
-    openvg)
-        if [ "$VAL" = "auto" ] || [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
-            CFG_OPENVG="$VAL"
-            if [ "$CFG_EGL" = "no" ] && [ "$VAL" != "no" ]; then
-                CFG_EGL=auto
-            fi
-        else
-            UNKNOWN_OPT=yes
-        fi
-        ;;
     graphicssystem)
         if  [ "$VAL" = "opengl" ]; then
             CFG_GRAPHICS_SYSTEM="opengl"
-        elif [ "$VAL" = "openvg" ]; then
-            CFG_GRAPHICS_SYSTEM="openvg"
         elif [ "$VAL" = "raster" ]; then
             CFG_GRAPHICS_SYSTEM="raster"
         elif [ "$VAL" = "runtime" ]; then
@@ -3306,7 +3280,6 @@ cat << EOF
     -graphicssystem <sys> Sets an alternate graphics system. Available options are:
                            raster - Software rasterizer
                            opengl - Rendering via OpenGL, Experimental!
-                           openvg - Rendering via OpenVG, Experimental!
 
 EOF
 fi
@@ -3542,11 +3515,6 @@ Qt/X11 only:
                          will be used. Use desktop, es1, or es2 for <api>
                          to force the use of the Desktop (OpenGL 1.x or 2.x),
                          OpenGL ES 1.x Common profile, or 2.x APIs instead.
-
-     -no-openvg ........ Do not support OpenVG.
- +   -openvg ........... Enable OpenVG support.
-                         Requires EGL support, typically supplied by an OpenGL
-                         or other graphics implementation.
 
  $SMN  -no-sm ............. Do not support X Session Management.
  $SMY  -sm ................ Support X Session Management, links in -lSM -lICE.
@@ -5603,50 +5571,6 @@ if [ "$CFG_OPENSSL" != "no" ]; then
     fi
 fi
 
-# detect OpenVG support
-if [ "$CFG_OPENVG" != "no" ]; then
-    if compileTest "unix/openvg" "OpenVG"; then
-        if [ "$CFG_OPENVG" = "auto" ]; then
-            CFG_OPENVG=yes
-        fi
-    elif compileTest unix/openvg "OpenVG" -config openvg_on_opengl; then
-        if [ "$CFG_OPENVG" = "auto" ]; then
-            CFG_OPENVG=yes
-        fi
-        CFG_OPENVG_ON_OPENGL=yes
-    elif compileTest unix/openvg "OpenVG (lc includes)" -config lower_case_includes; then
-        if [ "$CFG_OPENVG" = "auto" ]; then
-            CFG_OPENVG=yes
-        fi
-        CFG_OPENVG_LC_INCLUDES=yes
-    elif compileTest unix/openvg "OpenVG (lc includes)" -config "openvg_on_opengl lower_case_includes"; then
-        if [ "$CFG_OPENVG" = "auto" ]; then
-            CFG_OPENVG=yes
-        fi
-        CFG_OPENVG_LC_INCLUDES=yes
-        CFG_OPENVG_ON_OPENGL=yes
-    else
-        if [ "$CFG_OPENVG" != "auto" ] && [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
-            echo "$CFG_OPENVG was specified for OpenVG but cannot be enabled due to functionality tests!"
-            echo " Turn on verbose messaging (-v) to $0 to see the final report."
-            echo " If you believe this message is in error you may use the continue"
-            echo " switch (-continue) to $0 to continue."
-            exit 101
-        else
-            CFG_OPENVG=no
-        fi
-    fi
-    if [ "$CFG_OPENVG" = "yes" ] && compileTest "unix/shivavg" "ShivaVG" $CONFIG_ARG; then
-        CFG_OPENVG_SHIVA=yes
-    fi
-fi
-
-# if openvg is disabled and the user specified graphicssystem vg, disable it...
-if [ "$CFG_GRAPHICS_SYSTEM" = "openvg" ] && [ "$CFG_OPENVG" = "no" ]; then
-    echo "OpenVG Graphics System is disabled due to missing OpenVG support..."
-    CFG_GRAPHICS_SYSTEM=default
-fi
-
 if [ -n "$CFG_RUNTIME_SYSTEM" -a "$CFG_GRAPHICS_SYSTEM" != "runtime" ] || [ "$CFG_RUNTIME_SYSTEM" = "runtime" ]; then
     echo "Argument to -runtimegraphicssystem is invalid so ignoring..."
     CFG_RUNTIME_SYSTEM=
@@ -5799,22 +5723,7 @@ else
     fi
 fi
 
-# enable openvg
-if [ "$CFG_OPENVG" = "no" ]; then
-    QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_OPENVG"
-else
-    QT_CONFIG="$QT_CONFIG openvg"
-    if [ "$CFG_OPENVG_LC_INCLUDES" = "yes" ]; then
-        QCONFIG_FLAGS="$QCONFIG_FLAGS QT_LOWER_CASE_VG_INCLUDES"
-    fi
-    if [ "$CFG_OPENVG_ON_OPENGL" = "yes" ]; then
-        QT_CONFIG="$QT_CONFIG openvg_on_opengl"
-    fi
-    if [ "$CFG_OPENVG_SHIVA" = "yes" ]; then
-        QT_CONFIG="$QT_CONFIG shivavg"
-        QCONFIG_FLAGS="$QCONFIG_FLAGS QT_SHIVAVG"
-    fi
-fi
+QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_OPENVG"
 
 QCONFIG_FLAGS="$QCONFIG_FLAGS QT_NO_STYLE_S60"
 
@@ -6519,7 +6428,6 @@ QMakeVar set sql-plugins "$SQL_PLUGINS"
 if [ "$PLATFORM_QPA" != "yes" ]; then
     [ "$CFG_GRAPHICS_SYSTEM" = "raster" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_GRAPHICSSYSTEM_RASTER"
     [ "$CFG_GRAPHICS_SYSTEM" = "opengl" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_GRAPHICSSYSTEM_OPENGL"
-    [ "$CFG_GRAPHICS_SYSTEM" = "openvg" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_GRAPHICSSYSTEM_OPENVG"
     [ "$CFG_GRAPHICS_SYSTEM" = "runtime" ] && QCONFIG_FLAGS="$QCONFIG_FLAGS QT_GRAPHICSSYSTEM_RUNTIME"
 fi
 
@@ -6974,13 +6882,6 @@ if [ "$CFG_EGL" != "no" ]; then
         echo "EGL support ............ yes <GLES/egl.h>"
     else
         echo "EGL support ............ yes <EGL/egl.h>"
-    fi
-fi
-if [ "$CFG_OPENVG" ]; then
-    if [ "$CFG_OPENVG_SHIVA" = "yes" ]; then
-        echo "OpenVG support ......... ShivaVG"
-    else
-        echo "OpenVG support ......... $CFG_OPENVG"
     fi
 fi
 if [ "$PLATFORM_X11" = "yes" ]; then

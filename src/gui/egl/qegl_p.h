@@ -47,7 +47,7 @@
 //  -------------
 //
 // This file is not part of the Qt API.  It exists for the convenience of
-// the QtOpenGL and QtOpenVG modules.  This header file may change from
+// the QtOpenGL module.  This header file may change from
 // version to version without notice, or even be removed.
 //
 // We mean it.
@@ -159,12 +159,6 @@ typedef void *EGLImageKHR;
 class QEglProperties;
 
 namespace QEgl {
-    enum API
-    {
-        OpenGL,
-        OpenVG
-    };
-
     enum PixelFormatMatch
     {
         ExactPixelFormat,
@@ -183,7 +177,7 @@ namespace QEgl {
     // go through the eglChooseConfig loop every time, we use defaultConfig, which will return
     // the config for a particular device/api/option combo. This function assumes that once a
     // config is chosen for a particular combo, it's safe to always use that combo.
-    Q_GUI_EXPORT EGLConfig  defaultConfig(int devType, API api, ConfigOptions options);
+    Q_GUI_EXPORT EGLConfig  defaultConfig(int devType, ConfigOptions options);
 
     Q_GUI_EXPORT EGLConfig  chooseConfig(const QEglProperties* configAttribs, QEgl::PixelFormatMatch match = QEgl::ExactPixelFormat);
     Q_GUI_EXPORT EGLSurface createSurface(QPaintDevice *device, EGLConfig cfg, const QEglProperties *surfaceAttribs = 0);

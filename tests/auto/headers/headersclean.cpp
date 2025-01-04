@@ -70,11 +70,6 @@
 #include <QtDesigner/QtDesigner>
 #include <QtUiTools/QtUiTools>
 
-// feature dependent:
-#ifndef QT_NO_OPENVG
-#include <QtOpenVG/QtOpenVG>
-#endif
-
 // removed in 4.7:
 //#include <QtAssistant/QtAssistant>
 

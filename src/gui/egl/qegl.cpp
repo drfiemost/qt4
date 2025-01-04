@@ -119,7 +119,7 @@ bool QEglContext::isCurrent() const
     return current;
 }
 
-EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
+EGLConfig QEgl::defaultConfig(int devType, ConfigOptions options)
 {
     if ( (devType != QInternal::Pixmap) && ((options & Renderable) == 0))
         qWarning("QEgl::defaultConfig() - Only configs for pixmaps make sense to be read-only!");
@@ -134,27 +134,6 @@ EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
         QEGL_NO_CONFIG, // 4    Pixmap  ReadOnly    Translucent
         QEGL_NO_CONFIG  // 5    Pixmap  ReadOnly    Opaque
     };
-    if (api == OpenVG) {
-        if (devType == QInternal::Widget) {
-            if (options & Translucent)
-                targetConfig = &(defaultVGConfigs[0]);
-            else
-                targetConfig = &(defaultVGConfigs[1]);
-        } else if (devType == QInternal::Pixmap) {
-            if (options & Renderable) {
-                if (options & Translucent)
-                    targetConfig = &(defaultVGConfigs[2]);
-                else // Opaque
-                    targetConfig = &(defaultVGConfigs[3]);
-            } else { // Read-only
-                if (options & Translucent)
-                    targetConfig = &(defaultVGConfigs[4]);
-                else // Opaque
-                    targetConfig = &(defaultVGConfigs[5]);
-            }
-        }
-    }
-
 
     static EGLConfig defaultGLConfigs[] = {
         QEGL_NO_CONFIG, // 0    Window  Renderable  Translucent
@@ -166,29 +145,28 @@ EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
         QEGL_NO_CONFIG, // 6    Pixmap  ReadOnly    Translucent
         QEGL_NO_CONFIG  // 7    Pixmap  ReadOnly    Opaque
     };
-    if (api == OpenGL) {
-        if (devType == QInternal::Widget) {
+
+    if (devType == QInternal::Widget) {
+        if (options & Translucent)
+            targetConfig = &(defaultGLConfigs[0]);
+        else // Opaque
+            targetConfig = &(defaultGLConfigs[1]);
+    } else if (devType == QInternal::Pbuffer) {
+        if (options & Translucent)
+            targetConfig = &(defaultGLConfigs[2]);
+        else // Opaque
+            targetConfig = &(defaultGLConfigs[3]);
+    } else if (devType == QInternal::Pixmap) {
+        if (options & Renderable) {
             if (options & Translucent)
-                targetConfig = &(defaultGLConfigs[0]);
+                targetConfig = &(defaultGLConfigs[4]);
             else // Opaque
-                targetConfig = &(defaultGLConfigs[1]);
-        } else if (devType == QInternal::Pbuffer) {
+                targetConfig = &(defaultGLConfigs[5]);
+        } else { // ReadOnly
             if (options & Translucent)
-                targetConfig = &(defaultGLConfigs[2]);
+                targetConfig = &(defaultGLConfigs[6]);
             else // Opaque
-                targetConfig = &(defaultGLConfigs[3]);
-        } else if (devType == QInternal::Pixmap) {
-            if (options & Renderable) {
-                if (options & Translucent)
-                    targetConfig = &(defaultGLConfigs[4]);
-                else // Opaque
-                    targetConfig = &(defaultGLConfigs[5]);
-            } else { // ReadOnly
-                if (options & Translucent)
-                    targetConfig = &(defaultGLConfigs[6]);
-                else // Opaque
-                    targetConfig = &(defaultGLConfigs[7]);
-            }
+                targetConfig = &(defaultGLConfigs[7]);
         }
     }
 
@@ -204,11 +182,7 @@ EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
 
 
     // Allow overriding from an environment variable:
-    QByteArray configId;
-    if (api == OpenVG)
-        configId = qgetenv("QT_VG_EGL_CONFIG");
-    else
-        configId = qgetenv("QT_GL_EGL_CONFIG");
+    QByteArray configId = qgetenv("QT_GL_EGL_CONFIG");
     if (!configId.isEmpty()) {
         // Overridden, so get the EGLConfig for the specified config ID:
         EGLint properties[] = {
@@ -223,7 +197,7 @@ EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
     }
 
     QEglProperties configAttribs;
-    configAttribs.setRenderableType(api);
+    configAttribs.setRenderableType();
 
     EGLint surfaceType;
     switch (devType) {
@@ -240,12 +214,6 @@ EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
             qWarning("QEgl::defaultConfig() - Can't create EGL surface for %d device type", devType);
             return QEGL_NO_CONFIG;
     };
-#ifdef EGL_VG_ALPHA_FORMAT_PRE_BIT
-    // For OpenVG, we try to create a surface using a pre-multiplied format if
-    // the surface needs to have an alpha channel:
-    if (api == OpenVG && (options & Translucent))
-        surfaceType |= EGL_VG_ALPHA_FORMAT_PRE_BIT;
-#endif
     configAttribs.setValue(EGL_SURFACE_TYPE, surfaceType);
 
 #ifdef EGL_BIND_TO_TEXTURE_RGBA
@@ -258,19 +226,14 @@ EGLConfig QEgl::defaultConfig(int devType, API api, ConfigOptions options)
 #endif
 
     // Add paint engine requirements
-    if (api == OpenVG) {
-#if !defined(QVG_SCISSOR_CLIP) && defined(EGL_ALPHA_MASK_SIZE)
-        configAttribs.setValue(EGL_ALPHA_MASK_SIZE, 1);
-#endif
-    } else {
-        // Both OpenGL paint engines need to have stencil and sample buffers
-        configAttribs.setValue(EGL_STENCIL_SIZE, 1);
-        configAttribs.setValue(EGL_SAMPLE_BUFFERS, 1);
+
+    // Both OpenGL paint engines need to have stencil and sample buffers
+    configAttribs.setValue(EGL_STENCIL_SIZE, 1);
+    configAttribs.setValue(EGL_SAMPLE_BUFFERS, 1);
 #ifndef QT_OPENGL_ES_2
-        // Additionally, the GL1 engine likes to have a depth buffer for clipping
-        configAttribs.setValue(EGL_DEPTH_SIZE, 1);
+    // Additionally, the GL1 engine likes to have a depth buffer for clipping
+    configAttribs.setValue(EGL_DEPTH_SIZE, 1);
 #endif
-    }
 
     if (options & Translucent)
         configAttribs.setValue(EGL_ALPHA_SIZE, 1);
@@ -368,10 +331,6 @@ bool QEglContext::createContext(QEglContext *shareContext, const QEglProperties 
         eglBindAPI(EGL_OPENGL_API);
 #endif
 #endif //defined(QT_OPENGL_ES)
-#ifdef EGL_OPENVG_API
-    if (apiType == QEgl::OpenVG)
-        eglBindAPI(EGL_OPENVG_API);
-#endif
 
     // Create a new context for the configuration.
     QEglProperties contextProps;
@@ -454,10 +413,6 @@ bool QEglContext::makeCurrent(EGLSurface surface)
     if (apiType == QEgl::OpenGL)
         eglBindAPI(EGL_OPENGL_ES_API);
 #endif
-#ifdef EGL_OPENVG_API
-    if (apiType == QEgl::OpenVG)
-        eglBindAPI(EGL_OPENVG_API);
-#endif
 
     bool ok = eglMakeCurrent(QEgl::display(), surface, surface, ctx);
     if (!ok)
@@ -477,15 +432,10 @@ bool QEglContext::doneCurrent()
     setCurrentContext(apiType, 0);
 
     // We need to select the correct API before calling eglMakeCurrent()
-    // with EGL_NO_CONTEXT because threads can have both OpenGL and OpenVG
+    // with EGL_NO_CONTEXT because threads can have OpenGL
     // contexts active at the same time.
 #ifdef EGL_OPENGL_ES_API
-    if (apiType == QEgl::OpenGL)
-        eglBindAPI(EGL_OPENGL_ES_API);
-#endif
-#ifdef EGL_OPENVG_API
-    if (apiType == QEgl::OpenVG)
-        eglBindAPI(EGL_OPENVG_API);
+    eglBindAPI(EGL_OPENGL_ES_API);
 #endif
 
     bool ok = eglMakeCurrent(QEgl::display(), EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
