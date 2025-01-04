@@ -173,7 +173,7 @@ void CALLBACK_CALL_TYPE iod_read_fn(png_structp png_ptr, png_bytep data, png_siz
     QPngHandlerPrivate *d = (QPngHandlerPrivate *)png_get_io_ptr(png_ptr);
     QIODevice *in = d->q->device();
 
-    if (d->state == QPngHandlerPrivate::ReadingEnd && !in->isSequential() && (in->size() - in->pos()) < 4 && length == 4) {
+    if (d->state == QPngHandlerPrivate::ReadingEnd && !in->isSequential() && in->size() > 0 && (in->size() - in->pos()) < 4 && length == 4) {
         // Workaround for certain malformed PNGs that lack the final crc bytes
         uchar endcrc[4] = { 0xae, 0x42, 0x60, 0x82 };
         memcpy(data, endcrc, 4);
@@ -226,8 +226,8 @@ void setup_qt(QImage& image, png_structp png_ptr, png_infop info_ptr, float scre
 
     png_uint_32 width;
     png_uint_32 height;
-    int bit_depth;
-    int color_type;
+    int bit_depth = 0;
+    int color_type = 0;
     png_bytep trans_alpha = nullptr;
     png_color_16p trans_color_p = nullptr;
     int num_trans;
@@ -302,7 +302,7 @@ void setup_qt(QImage& image, png_structp png_ptr, png_infop info_ptr, float scre
                 return;
         }
         png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
-        image.setColorCount(num_palette);
+        image.setColorCount((format == QImage::Format_Mono) ? 2 : num_palette);
         int i = 0;
         if (png_get_tRNS(png_ptr, info_ptr, &trans_alpha, &num_trans, &trans_color_p) && trans_alpha) {
             while (i < num_trans) {
@@ -420,6 +420,12 @@ bool Q_INTERNAL_WIN_NO_THROW QPngHandlerPrivate::readPngHeader()
         return false;
 
     png_set_error_fn(png_ptr, nullptr, nullptr, qt_png_warning);
+
+#if defined(PNG_SET_OPTION_SUPPORTED) && defined(PNG_MAXIMUM_INFLATE_WINDOW)
+    // Trade off a little bit of memory for better compatibility with existing images
+    // Ref. "invalid distance too far back" explanation in libpng-manual.txt
+    png_set_option(png_ptr, PNG_MAXIMUM_INFLATE_WINDOW, PNG_OPTION_ON);
+#endif
 
     info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr) {
@@ -562,7 +568,7 @@ QImage::Format QPngHandlerPrivate::readImageFormat()
 {
         QImage::Format format = QImage::Format_Invalid;
         png_uint_32 width, height;
-        int bit_depth, color_type;
+        int bit_depth = 0, color_type = 0;
         png_colorp palette;
         int num_palette;
         png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, nullptr, nullptr, nullptr);
