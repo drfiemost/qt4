@@ -65,10 +65,6 @@
 #include <QtGui/qfontmetrics.h>
 #include <QtGui/qclipboard.h>
 
-#ifndef QT_NO_STYLE_S60
-#include <qs60style.h>
-#endif
-
 QT_BEGIN_NAMESPACE
 
 enum Button { Old_Ok = 1, Old_Cancel = 2, Old_Yes = 3, Old_No = 4, Old_Abort = 5, Old_Retry = 6,
@@ -362,15 +358,6 @@ void QMessageBoxPrivate::updateSize()
     int height = (layout->hasHeightForWidth())
                      ? layout->totalHeightForWidth(width)
                      : layout->totalMinimumSize().height();
-
-#ifndef QT_NO_STYLE_S60
-        QS60Style *s60Style = 0;
-        s60Style = qobject_cast<QS60Style *>(QApplication::style());
-
-        //use custom pixel metric to deduce the minimum height of the messagebox
-        if (s60Style)
-            height = std::max(height, s60Style->pixelMetric((QStyle::PixelMetric)PM_MessageBoxHeight));
-#endif
 
     q->setFixedSize(width, height);
     QCoreApplication::removePostedEvents(q, QEvent::LayoutRequest);

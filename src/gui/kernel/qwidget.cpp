@@ -2249,11 +2249,6 @@ static inline void fillRegion(QPainter *painter, const QRegion &rgn, const QBrus
         extern void qt_mac_fill_background(QPainter *painter, const QRegion &rgn, const QBrush &brush);
         qt_mac_fill_background(painter, rgn, brush);
 #else
-#if !defined(QT_NO_STYLE_S60)
-        // Defined in qs60style.cpp
-        extern bool qt_s60_fill_background(QPainter *painter, const QRegion &rgn, const QBrush &brush);
-        if (!qt_s60_fill_background(painter, rgn, brush))
-#endif // !defined(QT_NO_STYLE_S60)
         {
             const QRect rect(rgn.boundingRect());
             painter->setClipRegion(rgn);

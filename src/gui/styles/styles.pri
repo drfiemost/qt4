@@ -137,5 +137,3 @@ contains( styles, windowsmobile ) {
 } else {
 	DEFINES += QT_NO_STYLE_WINDOWSMOBILE
 }
-
-DEFINES += QT_NO_STYLE_S60

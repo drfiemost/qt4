@@ -66,9 +66,6 @@
 #ifndef QT_NO_STYLE_WINDOWSMOBILE
 #include "qwindowsmobilestyle.h"
 #endif
-#ifndef QT_NO_STYLE_S60
-#include "qs60style.h"
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -154,11 +151,6 @@ QStyle *QStyleFactory::create(const QString& key)
         ret = new QCDEStyle;
     else
 #endif
-#ifndef QT_NO_STYLE_S60
-    if (style == QLatin1String("s60"))
-        ret = new QS60Style;
-    else
-#endif
 #ifndef QT_NO_STYLE_PLASTIQUE
     if (style == QLatin1String("plastique"))
         ret = new QPlastiqueStyle;
@@ -232,10 +224,6 @@ QStringList QStyleFactory::keys()
 #ifndef QT_NO_STYLE_CDE
     if (!list.contains(QLatin1String("CDE")))
         list << QLatin1String("CDE");
-#endif
-#ifndef QT_NO_STYLE_S60
-    if (!list.contains(QLatin1String("S60")))
-        list << QLatin1String("S60");
 #endif
 #ifndef QT_NO_STYLE_PLASTIQUE
     if (!list.contains(QLatin1String("Plastique")))

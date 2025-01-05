@@ -726,28 +726,8 @@ void tst_QStyle::progressBarChangeStyle()
     QTest::qWait(100);
 
     //before the correction, there would be a crash here
-#elif !defined(QT_NO_STYLE_S60) && !defined(QT_NO_STYLE_WINDOWS)
-    //test a crashing situation (task 143530)
-    //where changing the styles and deleting a progressbar would crash
-
-    QWindowsStyle style1;
-    QS60Style style2;
-
-    QProgressBar *progress=new QProgressBar;
-    progress->setStyle(&style1);
-
-    progress->show();
-
-    progress->setStyle(&style2);
-
-    QTest::qWait(100);
-    delete progress;
-
-    QTest::qWait(100);
-
-    //before the correction, there would be a crash here
 #else
-    QSKIP("Either style Plastique or Windows or S60 missing", SkipAll);
+    QSKIP("Either style Plastique or Windows missing", SkipAll);
 #endif
 }
 
