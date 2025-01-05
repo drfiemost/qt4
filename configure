@@ -864,7 +864,6 @@ QT_LFLAGS_MYSQL_R=
 QT_CFLAGS_SQLITE=
 QT_LFLAGS_SQLITE=
 QT_LFLAGS_ODBC="-lodbc"
-QT_LFLAGS_TDS=
 
 # flags for libdbus-1
 QT_CFLAGS_DBUS=
@@ -884,11 +883,6 @@ QT_LIBS_CONNSETTINGS=
 #-------------------------------------------------------------------------------
 # check SQL drivers, mouse drivers and decorations available in this package
 #-------------------------------------------------------------------------------
-
-# opensource version removes some drivers, so force them to be off
-CFG_SQL_tds=no
-CFG_SQL_oci=no
-CFG_SQL_db2=no
 
 CFG_SQL_AVAILABLE=
 if [ -d "$relpath/src/plugins/sqldrivers" ]; then
@@ -4535,65 +4529,6 @@ for _SQLDR in $CFG_SQL_AVAILABLE; do
                 fi
             fi
             ;;
-        oci)
-            if [ "$CFG_SQL_oci" != "no" ]; then
-                if compileTest unix/oci "OCI"; then
-                    if [ "$CFG_SQL_oci" = "auto" ]; then
-                        CFG_SQL_oci=plugin
-                    fi
-                else
-                    if [ "$CFG_SQL_oci" != "auto" ] && [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
-                        echo "Oracle (OCI) support cannot be enabled due to functionality tests!"
-                        echo " Turn on verbose messaging (-v) to $0 to see the final report."
-                        echo " If you believe this message is in error you may use the continue"
-                        echo " switch (-continue) to $0 to continue."
-                        exit 101
-                    else
-                        CFG_SQL_oci=no
-                    fi
-                fi
-            fi
-            ;;
-        tds)
-            if [ "$CFG_SQL_tds" != "no" ]; then
-                [ -z "$SYBASE" ] || QT_LFLAGS_TDS="-L$SYBASE/lib"
-                [ -z "$SYBASE_LIBS" ] || QT_LFLAGS_TDS="$QT_LFLAGS_TDS $SYBASE_LIBS"
-                if compileTest unix/tds "TDS" $QT_LFLAGS_TDS; then
-                    if [ "$CFG_SQL_tds" = "auto" ]; then
-                        CFG_SQL_tds=plugin
-                    fi
-                else
-                    if [ "$CFG_SQL_tds" != "auto" ] && [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
-                        echo "TDS support cannot be enabled due to functionality tests!"
-                        echo " Turn on verbose messaging (-v) to $0 to see the final report."
-                        echo " If you believe this message is in error you may use the continue"
-                        echo " switch (-continue) to $0 to continue."
-                        exit 101
-                    else
-                        CFG_SQL_tds=no
-                    fi
-                fi
-            fi
-            ;;
-        db2)
-            if [ "$CFG_SQL_db2" != "no" ]; then
-                if compileTest unix/db2 "DB2"; then
-                    if [ "$CFG_SQL_db2" = "auto" ]; then
-                        CFG_SQL_db2=plugin
-                    fi
-                else
-                    if [ "$CFG_SQL_db2" != "auto" ] && [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
-                        echo "ODBC support cannot be enabled due to functionality tests!"
-                        echo " Turn on verbose messaging (-v) to $0 to see the final report."
-                        echo " If you believe this message is in error you may use the continue"
-                        echo " switch (-continue) to $0 to continue."
-                        exit 101
-                    else
-                        CFG_SQL_db2=no
-                    fi
-                fi
-            fi
-            ;;
         ibase)
             if [ "$CFG_SQL_ibase" != "no" ]; then
                 if compileTest unix/ibase "InterBase"; then
@@ -6701,9 +6636,6 @@ fi
 if [ -n "$QT_LFLAGS_ODBC" ]; then
     echo "QT_LFLAGS_ODBC   = $QT_LFLAGS_ODBC" >> "$CACHEFILE.tmp"
 fi
-if [ -n "$QT_LFLAGS_TDS" ]; then
-    echo "QT_LFLAGS_TDS   = $QT_LFLAGS_TDS" >> "$CACHEFILE.tmp"
-fi
 
 if [ "$QT_EDITION" != "QT_EDITION_OPENSOURCE" ]; then
     echo "DEFINES *= QT_EDITION=QT_EDITION_DESKTOP" >> "$CACHEFILE.tmp"
@@ -6903,9 +6835,6 @@ fi
 [ "$CFG_SQL_mysql" != "no" ] && echo "MySQL support .......... $CFG_SQL_mysql"
 [ "$CFG_SQL_psql" != "no" ] && echo "PostgreSQL support ..... $CFG_SQL_psql"
 [ "$CFG_SQL_odbc" != "no" ] && echo "ODBC support ........... $CFG_SQL_odbc"
-[ "$CFG_SQL_oci" != "no" ] && echo "OCI support ............ $CFG_SQL_oci"
-[ "$CFG_SQL_tds" != "no" ] && echo "TDS support ............ $CFG_SQL_tds"
-[ "$CFG_SQL_db2" != "no" ] && echo "DB2 support ............ $CFG_SQL_db2"
 [ "$CFG_SQL_ibase" != "no" ] && echo "InterBase support ...... $CFG_SQL_ibase"
 [ "$CFG_SQL_sqlite2" != "no" ] && echo "SQLite 2 support ....... $CFG_SQL_sqlite2"
 [ "$CFG_SQL_sqlite" != "no" ] && echo "SQLite support ......... $CFG_SQL_sqlite ($CFG_SQLITE)"

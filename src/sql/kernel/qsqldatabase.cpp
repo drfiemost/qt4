@@ -56,18 +56,6 @@
 #ifdef QT_SQL_ODBC
 #include "../drivers/odbc/qsql_odbc.h"
 #endif
-#ifdef QT_SQL_OCI
-#include "../drivers/oci/qsql_oci.h"
-#endif
-#ifdef QT_SQL_TDS
-// conflicting RETCODE typedef between odbc and freetds
-#define RETCODE DBRETCODE
-#include "../drivers/tds/qsql_tds.h"
-#undef RETCODE
-#endif
-#ifdef QT_SQL_DB2
-#include "../drivers/db2/qsql_db2.h"
-#endif
 #ifdef QT_SQL_SQLITE
 #include "../drivers/sqlite/qsql_sqlite.h"
 #endif
@@ -554,17 +542,6 @@ QStringList QSqlDatabase::drivers()
     list << QLatin1String("QODBC3");
     list << QLatin1String("QODBC");
 #endif
-#ifdef QT_SQL_OCI
-    list << QLatin1String("QOCI8");
-    list << QLatin1String("QOCI");
-#endif
-#ifdef QT_SQL_TDS
-    list << QLatin1String("QTDS7");
-    list << QLatin1String("QTDS");
-#endif
-#ifdef QT_SQL_DB2
-    list << QLatin1String("QDB2");
-#endif
 #ifdef QT_SQL_SQLITE
     list << QLatin1String("QSQLITE");
 #endif
@@ -736,18 +713,6 @@ void QSqlDatabasePrivate::init(const QString &type)
 #ifdef QT_SQL_ODBC
         if (type == QLatin1String("QODBC") || type == QLatin1String("QODBC3"))
             driver = new QODBCDriver();
-#endif
-#ifdef QT_SQL_OCI
-        if (type == QLatin1String("QOCI") || type == QLatin1String("QOCI8"))
-            driver = new QOCIDriver();
-#endif
-#ifdef QT_SQL_TDS
-        if (type == QLatin1String("QTDS") || type == QLatin1String("QTDS7"))
-            driver = new QTDSDriver();
-#endif
-#ifdef QT_SQL_DB2
-        if (type == QLatin1String("QDB2"))
-            driver = new QDB2Driver();
 #endif
 #ifdef QT_SQL_SQLITE
         if (type == QLatin1String("QSQLITE"))
