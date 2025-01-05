@@ -926,7 +926,7 @@ using quint32 = unsigned int;      /* 32 bit unsigned */
 #if defined(Q_OS_WIN) && !defined(Q_CC_GNU) && !defined(Q_CC_MWERKS)
 #  define Q_INT64_C(c) c ## i64    /* signed 64 bit constant */
 #  define Q_UINT64_C(c) c ## ui64  /* unsigned 64 bit constant */
-typedef using qint64 = __int64;    /* 64 bit signed */
+using qint64 = __int64;    /* 64 bit signed */
 using quint64 = unsigned __int64;  /* 64 bit unsigned */
 #else
 #  define Q_INT64_C(c) static_cast<long long>(c ## LL)     /* signed 64 bit constant */
