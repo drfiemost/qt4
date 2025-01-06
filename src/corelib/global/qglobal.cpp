@@ -703,6 +703,20 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \typedef qsizetype
+    \relates <QtGlobal>
+
+    Integral type providing Posix' \c ssize_t for all platforms.
+
+    This type is guaranteed to be the same size as a \c size_t on all
+    platforms supported by Qt.
+
+    Note that qsizetype is signed. Use \c size_t for unsigned values.
+
+    \sa qptrdiff
+*/
+
+/*!
     \typedef QtMsgHandler
     \relates <QtGlobal>
 

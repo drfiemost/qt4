@@ -1013,6 +1013,9 @@ namespace QtPrivate {
 
       sizeof(void *) == sizeof(quintptr)
       && sizeof(void *) == sizeof(qptrdiff)
+
+  size_t and qsizetype are not guaranteed to be the same size as a pointer, but
+  they usually are.
 */
 template <int> struct QIntegerForSize;
 template <>    struct QIntegerForSize<1> { typedef quint8  Unsigned; typedef qint8  Signed; };
@@ -1020,20 +1023,20 @@ template <>    struct QIntegerForSize<2> { typedef quint16 Unsigned; typedef qin
 template <>    struct QIntegerForSize<4> { typedef quint32 Unsigned; typedef qint32 Signed; };
 template <>    struct QIntegerForSize<8> { typedef quint64 Unsigned; typedef qint64 Signed; };
 template <class T> struct QIntegerForSizeof: QIntegerForSize<sizeof(T)> { };
-typedef QIntegerForSizeof<void*>::Unsigned quintptr;
-typedef QIntegerForSizeof<void*>::Signed qptrdiff;
-typedef qptrdiff qintptr;
-typedef ptrdiff_t qsizetype;
+using quintptr = QIntegerForSizeof<void*>::Unsigned;
+using qptrdiff = QIntegerForSizeof<void*>::Signed;
+using qintptr = qptrdiff;
+using qsizetype = QIntegerForSizeof<std::size_t>::Signed;
 
 /*
    Useful type definitions for Qt
 */
 
 QT_BEGIN_INCLUDE_NAMESPACE
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
+using uchar = unsigned char;
+using ushort = unsigned short;
+using uint = unsigned int;
+using ulong = unsigned long;
 QT_END_INCLUDE_NAMESPACE
 
 #if defined(Q_NO_BOOL_TYPE)
@@ -1242,7 +1245,7 @@ QT_END_INCLUDE_NAMESPACE
 #  define QT_WIN_CALLBACK CALLBACK QT_ENSURE_STACK_ALIGNED_FOR_SSE
 #endif
 
-typedef int QNoImplicitBoolCast;
+using QNoImplicitBoolCast = int;
 
 #if defined(QT_ARCH_ARM) || defined(QT_ARCH_ARMV6) || defined(QT_ARCH_AVR32) || (defined(QT_ARCH_MIPS) && (defined(Q_WS_QWS) || defined(Q_WS_QPA))) || defined(QT_ARCH_SH) || defined(QT_ARCH_SH4A)
 #define QT_NO_FPU
@@ -1250,11 +1253,11 @@ typedef int QNoImplicitBoolCast;
 
 // This logic must match the one in qmetatype.h
 #if defined(QT_COORD_TYPE)
-typedef QT_COORD_TYPE qreal;
+using qreal = QT_COORD_TYPE;
 #elif defined(QT_NO_FPU) || defined(QT_ARCH_ARM) || defined(QT_ARCH_WINDOWSCE)
-typedef float qreal;
+using qreal = float;
 #else
-typedef double qreal;
+using qreal = double;
 #endif
 
 /*
