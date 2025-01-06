@@ -917,26 +917,26 @@ QT_BEGIN_NAMESPACE
    Make sure to update QMetaType when changing these typedefs
 */
 
-using qint8 = signed char;         /* 8 bit signed */
-using quint8 = unsigned char;      /* 8 bit unsigned */
-using qint16 = short;              /* 16 bit signed */
-using quint16 = unsigned short;    /* 16 bit unsigned */
-using qint32 = int;                /* 32 bit signed */
-using quint32 = unsigned int;      /* 32 bit unsigned */
+typedef signed char qint8;         /* 8 bit signed */
+typedef unsigned char quint8;      /* 8 bit unsigned */
+typedef short qint16;              /* 16 bit signed */
+typedef unsigned short quint16;    /* 16 bit unsigned */
+typedef int qint32;                /* 32 bit signed */
+typedef unsigned int quint32;      /* 32 bit unsigned */
 #if defined(Q_OS_WIN) && !defined(Q_CC_GNU) && !defined(Q_CC_MWERKS)
 #  define Q_INT64_C(c) c ## i64    /* signed 64 bit constant */
-#  define Q_UINT64_C(c) c ## ui64  /* unsigned 64 bit constant */
-using qint64 = __int64;    /* 64 bit signed */
-using quint64 = unsigned __int64;  /* 64 bit unsigned */
+#  define Q_UINT64_C(c) c ## ui64   /* unsigned 64 bit constant */
+typedef __int64 qint64;            /* 64 bit signed */
+typedef unsigned __int64 quint64;  /* 64 bit unsigned */
 #else
 #  define Q_INT64_C(c) static_cast<long long>(c ## LL)     /* signed 64 bit constant */
 #  define Q_UINT64_C(c) static_cast<unsigned long long>(c ## ULL) /* unsigned 64 bit constant */
-using qint64 = long long;           /* 64 bit signed */
-using quint64 = unsigned long long; /* 64 bit unsigned */
+typedef long long qint64;           /* 64 bit signed */
+typedef unsigned long long quint64; /* 64 bit unsigned */
 #endif
 
-using qlonglong = qint64;
-using qulonglong = quint64;
+typedef qint64 qlonglong;
+typedef quint64 qulonglong;
 
 #ifndef QT_POINTER_SIZE
 #  if defined(Q_OS_WIN64)
@@ -1020,21 +1020,20 @@ template <>    struct QIntegerForSize<2> { typedef quint16 Unsigned; typedef qin
 template <>    struct QIntegerForSize<4> { typedef quint32 Unsigned; typedef qint32 Signed; };
 template <>    struct QIntegerForSize<8> { typedef quint64 Unsigned; typedef qint64 Signed; };
 template <class T> struct QIntegerForSizeof: QIntegerForSize<sizeof(T)> { };
-
-using quintptr = QIntegerForSizeof<void*>::Unsigned;
-using qptrdiff = QIntegerForSizeof<void*>::Signed;
-using qintptr = qptrdiff;
-using qsizetype = QIntegerForSizeof<std::size_t>::Signed;
+typedef QIntegerForSizeof<void*>::Unsigned quintptr;
+typedef QIntegerForSizeof<void*>::Signed qptrdiff;
+typedef qptrdiff qintptr;
+typedef ptrdiff_t qsizetype;
 
 /*
    Useful type definitions for Qt
 */
 
 QT_BEGIN_INCLUDE_NAMESPACE
-using uchar = unsigned char;
-using ushort = unsigned short;
-using uint = unsigned int;
-using ulong = unsigned long;
+typedef unsigned char uchar;
+typedef unsigned short ushort;
+typedef unsigned int uint;
+typedef unsigned long ulong;
 QT_END_INCLUDE_NAMESPACE
 
 #if defined(Q_NO_BOOL_TYPE)
