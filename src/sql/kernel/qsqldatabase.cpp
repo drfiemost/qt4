@@ -50,17 +50,11 @@
 #ifdef QT_SQL_PSQL
 #include "../drivers/psql/qsql_psql.h"
 #endif
-#ifdef QT_SQL_MYSQL
-#include "../drivers/mysql/qsql_mysql.h"
-#endif
 #ifdef QT_SQL_ODBC
 #include "../drivers/odbc/qsql_odbc.h"
 #endif
 #ifdef QT_SQL_SQLITE
 #include "../drivers/sqlite/qsql_sqlite.h"
-#endif
-#ifdef QT_SQL_SQLITE2
-#include "../drivers/sqlite2/qsql_sqlite2.h"
 #endif
 #ifdef QT_SQL_IBASE
 #undef SQL_FLOAT  // avoid clash with ODBC
@@ -534,19 +528,12 @@ QStringList QSqlDatabase::drivers()
     list << QLatin1String("QPSQL7");
     list << QLatin1String("QPSQL");
 #endif
-#ifdef QT_SQL_MYSQL
-    list << QLatin1String("QMYSQL3");
-    list << QLatin1String("QMYSQL");
-#endif
 #ifdef QT_SQL_ODBC
     list << QLatin1String("QODBC3");
     list << QLatin1String("QODBC");
 #endif
 #ifdef QT_SQL_SQLITE
     list << QLatin1String("QSQLITE");
-#endif
-#ifdef QT_SQL_SQLITE2
-    list << QLatin1String("QSQLITE2");
 #endif
 #ifdef QT_SQL_IBASE
     list << QLatin1String("QIBASE");
@@ -628,15 +615,10 @@ QStringList QSqlDatabase::connectionNames()
 
     \table
     \header \i Driver Type \i Description
-    \row \i QDB2     \i IBM DB2
     \row \i QIBASE   \i Borland InterBase Driver
-    \row \i QMYSQL   \i MySQL Driver
-    \row \i QOCI     \i Oracle Call Interface Driver
     \row \i QODBC    \i ODBC Driver (includes Microsoft SQL Server)
     \row \i QPSQL    \i PostgreSQL Driver
     \row \i QSQLITE  \i SQLite version 3 or above
-    \row \i QSQLITE2 \i SQLite version 2
-    \row \i QTDS     \i Sybase Adaptive Server
     \endtable
 
     Additional third party drivers, including your own custom
@@ -706,10 +688,6 @@ void QSqlDatabasePrivate::init(const QString &type)
         if (type == QLatin1String("QPSQL") || type == QLatin1String("QPSQL7"))
             driver = new QPSQLDriver();
 #endif
-#ifdef QT_SQL_MYSQL
-        if (type == QLatin1String("QMYSQL") || type == QLatin1String("QMYSQL3"))
-            driver = new QMYSQLDriver();
-#endif
 #ifdef QT_SQL_ODBC
         if (type == QLatin1String("QODBC") || type == QLatin1String("QODBC3"))
             driver = new QODBCDriver();
@@ -717,10 +695,6 @@ void QSqlDatabasePrivate::init(const QString &type)
 #ifdef QT_SQL_SQLITE
         if (type == QLatin1String("QSQLITE"))
             driver = new QSQLiteDriver();
-#endif
-#ifdef QT_SQL_SQLITE2
-        if (type == QLatin1String("QSQLITE2"))
-            driver = new QSQLite2Driver();
 #endif
 #ifdef QT_SQL_IBASE
         if (type == QLatin1String("QIBASE"))
@@ -1164,7 +1138,7 @@ QSqlRecord QSqlDatabase::record(const QString& tablename) const
     database client used:
 
     \table
-    \header \i ODBC \i MySQL \i PostgreSQL
+    \header \i ODBC \i PostgreSQL
     \row
 
     \i
@@ -1191,7 +1165,6 @@ QSqlRecord QSqlDatabase::record(const QString& tablename) const
     \i CLIENT_NO_SCHEMA
     \i CLIENT_INTERACTIVE
     \i UNIX_SOCKET
-    \i MYSQL_OPT_RECONNECT
     \endlist
 
     \i
@@ -1323,30 +1296,10 @@ bool QSqlDatabase::isDriverAvailable(const QString& name)
     \i PGconn *connection
     \i \c qsql_psql.cpp
     \row
-    \i QMYSQL
-    \i QMYSQLDriver
-    \i MYSQL *connection
-    \i \c qsql_mysql.cpp
-    \row
-    \i QOCI
-    \i QOCIDriver
-    \i OCIEnv *environment, OCISvcCtx *serviceContext
-    \i \c qsql_oci.cpp
-    \row
     \i QODBC
     \i QODBCDriver
     \i SQLHANDLE environment, SQLHANDLE connection
     \i \c qsql_odbc.cpp
-    \row
-    \i QDB2
-    \i QDB2
-    \i SQLHANDLE environment, SQLHANDLE connection
-    \i \c qsql_db2.cpp
-    \row
-    \i QTDS
-    \i QTDSDriver
-    \i LOGINREC *loginRecord, DBPROCESS *dbProcess, const QString &hostName
-    \i \c qsql_tds.cpp
     \row
     \i QSQLITE
     \i QSQLiteDriver
