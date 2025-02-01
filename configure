@@ -4490,25 +4490,6 @@ for _SQLDR in $CFG_SQL_AVAILABLE; do
                 fi
             fi
             ;;
-        sqlite2)
-            if [ "$CFG_SQL_sqlite2" != "no" ]; then
-                if compileTest unix/sqlite2 "SQLite2"; then
-                    if [ "$CFG_SQL_sqlite2" = "auto" ]; then
-                        CFG_SQL_sqlite2=plugin
-                    fi
-                else
-                    if [ "$CFG_SQL_sqlite2" != "auto" ] && [ "$CFG_CONFIGURE_EXIT_ON_ERROR" = "yes" ]; then
-                        echo "SQLite2 support cannot be enabled due to functionality tests!"
-                        echo " Turn on verbose messaging (-v) to $0 to see the final report."
-                        echo " If you believe this message is in error you may use the continue"
-                        echo " switch (-continue) to $0 to continue."
-                        exit 101
-                    else
-                        CFG_SQL_sqlite2=no
-                    fi
-                fi
-            fi
-            ;;
         sqlite)
             if [ "$CFG_SQL_sqlite" != "no" ]; then
                 SQLITE_AUTODETECT_FAILED="no"
@@ -6767,7 +6748,6 @@ fi
 [ "$CFG_SQL_psql" != "no" ] && echo "PostgreSQL support ..... $CFG_SQL_psql"
 [ "$CFG_SQL_odbc" != "no" ] && echo "ODBC support ........... $CFG_SQL_odbc"
 [ "$CFG_SQL_ibase" != "no" ] && echo "InterBase support ...... $CFG_SQL_ibase"
-[ "$CFG_SQL_sqlite2" != "no" ] && echo "SQLite 2 support ....... $CFG_SQL_sqlite2"
 [ "$CFG_SQL_sqlite" != "no" ] && echo "SQLite support ......... $CFG_SQL_sqlite ($CFG_SQLITE)"
 
 OPENSSL_LINKAGE=""
