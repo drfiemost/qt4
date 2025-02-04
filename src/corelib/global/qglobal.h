@@ -404,6 +404,8 @@ namespace QT_NAMESPACE {}
 #  define Q_OUTOFLINE_TEMPLATE inline
 #  define Q_NO_TEMPLATE_FRIENDS
 #  define Q_ALIGNOF(type) __alignof(type)
+#  define Q_ASSUME(expr) __assume(expr)
+#  define Q_UNREACHABLE() __assume(0)
 /* Intel C++ disguising as Visual C++: the `using' keyword avoids warnings */
 #  if defined(__INTEL_COMPILER)
 #    define Q_CC_INTEL
@@ -434,16 +436,23 @@ namespace QT_NAMESPACE {}
 #    define Q_CC_MINGW
 #  endif
 #  if defined(__INTEL_COMPILER)
-/* Intel C++ also masquerades as GCC 3.2.0 */
+/* Intel C++ also masquerades as GCC */
 #    define Q_CC_INTEL
-#  endif
-#  if defined(__clang__)
-/* Clang also masquerades as GCC 4.2.1 */
+#    define Q_ASSUME(expr)  __assume(expr)
+#    define Q_UNREACHABLE() __assume(0)
+#  elif defined(__clang__)
+/* Clang also masquerades as GCC */
 #    define Q_CC_CLANG
+#    define Q_ASSUME(expr)  if (expr){} else __builtin_unreachable()
+#    define Q_UNREACHABLE() __builtin_unreachable()
 #    if !defined(__has_extension)
 #      /* Compatibility with older Clang versions */
 #      define __has_extension __has_feature
 #    endif
+#  else
+/* Plain GCC */
+#    define Q_ASSUME(expr)  if (expr){} else __builtin_unreachable()
+#    define Q_UNREACHABLE() __builtin_unreachable()
 #  endif
 #  ifdef __APPLE__
 #    define Q_NO_DEPRECATED_CONSTRUCTORS
@@ -840,6 +849,13 @@ namespace QT_NAMESPACE {}
 #ifndef Q_UNLIKELY
 #  define Q_UNLIKELY(x) (x)
 #endif
+#ifndef Q_ASSUME
+#  define Q_ASSUME(expr)
+#endif
+#ifndef Q_UNREACHABLE
+#  define Q_UNREACHABLE()
+#endif
+
 
 #ifndef Q_CONSTRUCTOR_FUNCTION
 # define Q_CONSTRUCTOR_FUNCTION0(AFUNC) \
