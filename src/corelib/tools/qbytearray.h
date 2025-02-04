@@ -195,8 +195,8 @@ public:
     inline void squeeze();
 
 #ifndef QT_NO_CAST_FROM_BYTEARRAY
-    [[deprecated("Use constData()")]] inline operator const char *() const { return constData(); }
-    [[deprecated("Use constData()")]] inline operator const void *() const { return constData(); }
+    operator const char *() const;
+    operator const void *() const;
 #endif
     char *data();
     inline const char *data() const;
@@ -399,6 +399,12 @@ inline char QByteArray::operator[](uint i) const
 
 inline bool QByteArray::isEmpty() const
 { return d->size == 0; }
+#ifndef QT_NO_CAST_FROM_BYTEARRAY
+inline QByteArray::operator const char *() const
+{ return d->data(); }
+inline QByteArray::operator const void *() const
+{ return d->data(); }
+#endif
 inline char *QByteArray::data()
 { detach(); return d->data(); }
 inline const char *QByteArray::data() const
