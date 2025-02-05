@@ -2713,7 +2713,7 @@ static bool RectInRegion(QRegionPrivate *region, int rx, int ry, uint rwidth, ui
     const QRect *pboxEnd;
     QRect rect(rx, ry, rwidth, rheight);
     QRect *prect = &rect;
-    int partIn, partOut;
+    bool partIn, partOut;
 
     if (!region || region->numRects == 0 || !EXTENTCHECK(&region->extents, prect))
         return RectangleOut;
@@ -2766,7 +2766,7 @@ static bool RectInRegion(QRegionPrivate *region, int rx, int ry, uint rwidth, ui
             break;
         }
     }
-    return partIn ? ((ry <= prect->bottom()) ? RectanglePart : RectangleIn) : RectangleOut;
+    return partIn;
 }
 // END OF Region.c extract
 // START OF poly.h extract
