@@ -1250,6 +1250,19 @@ QT_END_INCLUDE_NAMESPACE
 # define Q_DECL_CONSTEXPR
 #endif
 
+// enable gcc warnings for printf-style functions
+#if defined(Q_CC_GNU) && !defined(__INSURE__)
+#  if defined(Q_CC_MINGW) && !defined(Q_CC_CLANG)
+#    define Q_ATTRIBUTE_FORMAT_PRINTF(A, B) \
+         __attribute__((format(gnu_printf, (A), (B))))
+#  else
+#    define Q_ATTRIBUTE_FORMAT_PRINTF(A, B) \
+         __attribute__((format(printf, (A), (B))))
+#  endif
+#else
+#  define Q_ATTRIBUTE_FORMAT_PRINTF(A, B)
+#endif
+
 //defines the type for the WNDPROC on windows
 //the alignment needs to be forced for sse2 to not crash with mingw
 #if defined(Q_WS_WIN)
