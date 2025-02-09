@@ -2737,7 +2737,7 @@ int QTreeView::sizeHintForColumn(int column) const
             w = std::max(w, editor->sizeHint().width());
             int min = editor->minimumSize().width();
             int max = editor->maximumSize().width();
-            w = qBound(min, w, max);
+            w = std::clamp(w, min, max);
         }
         int hint = d->delegateForIndex(index)->sizeHint(option, index).width();
         w = std::max(w, hint + (column == 0 ? d->indentationForItem(i) : 0));

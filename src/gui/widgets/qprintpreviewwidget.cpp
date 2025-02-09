@@ -403,7 +403,7 @@ void QPrintPreviewWidgetPrivate::generatePreview()
     pictures = printer->d_func()->previewPages();
     populateScene(); // i.e. setPreviewPrintedPictures() e.l.
     layoutPages();
-    curPage = qBound(1, curPage, pages.count());
+    curPage = std::clamp(curPage, 1, pages.count());
     if (fitting)
         _q_fit();
     emit q->previewChanged();

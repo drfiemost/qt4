@@ -1707,7 +1707,7 @@ void QDateTimeEditPrivate::updateEdit()
             ) {
         int cursor = sectionPos(currentSectionIndex);
         QDTEDEBUG << "cursor is " << cursor << currentSectionIndex;
-        cursor = qBound(0, cursor, displayText().size());
+        cursor = std::clamp(cursor, 0, displayText().size());
         QDTEDEBUG << cursor;
         if (selsize > 0) {
             edit->setSelection(cursor, selsize);

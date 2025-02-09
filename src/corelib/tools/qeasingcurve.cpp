@@ -850,7 +850,7 @@ QEasingCurve::EasingFunction QEasingCurve::customType() const
  */
 qreal QEasingCurve::valueForProgress(qreal progress) const
 {
-    progress = qBound<qreal>(0, progress, 1);
+    progress = std::clamp(progress, 0.0, 1.0);
     if (d_ptr->func)
         return d_ptr->func(progress);
     else if (d_ptr->config)

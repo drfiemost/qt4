@@ -1722,7 +1722,7 @@ void QAbstractSpinBoxPrivate::updateEdit()
     edit->setText(newText);
 
     if (!specialValue()) {
-        cursor = qBound(prefix.size(), cursor, edit->displayText().size() - suffix.size());
+        cursor = std::clamp(cursor, prefix.size(), edit->displayText().size() - suffix.size());
 
         if (selsize > 0) {
             edit->setSelection(cursor, selsize);
@@ -1988,7 +1988,7 @@ QVariant operator*(const QVariant &arg1, double multiplier)
 
     switch (arg1.type()) {
     case QVariant::Int:
-        ret = static_cast<int>(qBound<double>(INT_MIN, arg1.toInt() * multiplier, INT_MAX));
+        ret = static_cast<int>(std::clamp<double>(arg1.toInt() * multiplier, INT_MIN, INT_MAX));
         break;
     case QVariant::Double: ret = QVariant(arg1.toDouble() * multiplier); break;
     case QVariant::DateTime: {
