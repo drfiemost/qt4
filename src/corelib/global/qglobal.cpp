@@ -2263,7 +2263,7 @@ static void qt_message(QtMsgType msgType, const char *msg, va_list ap)
     QByteArray buf;
     if (msg) {
         QT_TRY {
-            buf = QString().vsprintf(msg, ap).toLocal8Bit();
+            buf = QString::vasprintf(msg, ap).toLocal8Bit();
         } QT_CATCH(const std::bad_alloc &) {
 #if !defined(QT_NO_EXCEPTIONS)
             qEmergencyOut(msgType, msg, ap);
@@ -2402,7 +2402,7 @@ void qErrnoWarning(const char *msg, ...)
     va_list ap;
     va_start(ap, msg);
     if (msg)
-        buf.vsprintf(msg, ap);
+        buf = QString::vasprintf(msg, ap);
     va_end(ap);
 
     qCritical("%s (%s)", buf.toLocal8Bit().constData(), qt_error_string(-1).toLocal8Bit().constData());
@@ -2416,7 +2416,7 @@ void qErrnoWarning(int code, const char *msg, ...)
     va_list ap;
     va_start(ap, msg);
     if (msg)
-        buf.vsprintf(msg, ap);
+        buf = QString::vasprintf(msg, ap);
     va_end(ap);
 
     qCritical("%s (%s)", buf.toLocal8Bit().constData(), qt_error_string(code).toLocal8Bit().constData());

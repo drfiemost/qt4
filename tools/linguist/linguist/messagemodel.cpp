@@ -1349,7 +1349,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             case 1:
                 {
                     QString s;
-                    s.sprintf("%d/%d", mci->getNumFinished(), mci->getNumEditable());
+                    s = QString::asprintf("%d/%d", mci->getNumFinished(), mci->getNumEditable());
                     return s;
                 }
             default:

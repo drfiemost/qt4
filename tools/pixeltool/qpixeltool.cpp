@@ -191,7 +191,7 @@ void QPixelTool::paintEvent(QPaintEvent *)
 
     if (m_freeze) {
         QString str;
-        str.sprintf("%8X (%3d,%3d,%3d,%3d)",
+        str = QString::asprintf("%8X (%3d,%3d,%3d,%3d)",
                     m_currentColor,
                     (0xff000000 & m_currentColor) >> 24,
                     (0x00ff0000 & m_currentColor) >> 16,
@@ -215,7 +215,7 @@ void QPixelTool::paintEvent(QPaintEvent *)
         p.drawRect(r);
 
         QString str;
-        str.sprintf("Rect: x=%d, y=%d, w=%d, h=%d",
+        str = QString::asprintf("Rect: x=%d, y=%d, w=%d, h=%d",
                     r.x() / m_zoom,
                     r.y() / m_zoom,
                     r.width() / m_zoom,

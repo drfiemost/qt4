@@ -1150,7 +1150,7 @@ void QDeclarativeViewer::setRecording(bool on)
                 if (progress.wasCanceled())
                     break;
                 QString name;
-                name.sprintf(framename.toLocal8Bit(),frame++);
+                name = QString::asprintf(framename.toLocal8Bit(),frame++);
                 if (record_outsize.isValid())
                     *img = img->scaled(record_outsize,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
                 if (record_dither==QLatin1String("ordered"))

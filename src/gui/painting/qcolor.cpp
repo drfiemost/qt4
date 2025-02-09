@@ -502,7 +502,7 @@ QColor::QColor(Spec spec)
 QString QColor::name() const
 {
     QString s;
-    s.sprintf("#%02x%02x%02x", red(), green(), blue());
+    s = QString::asprintf("#%02x%02x%02x", red(), green(), blue());
     return s;
 }
 

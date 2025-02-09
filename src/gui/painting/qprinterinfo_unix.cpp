@@ -256,7 +256,7 @@ void qt_parseEtcLpPrinters(QList<QPrinterDescription> *printers)
     QString tmp;
     for (auto printer : dirs) {
         if (printer.isDir()) {
-            tmp.sprintf("/etc/lp/printers/%s/configuration",
+            tmp = QString::asprintf("/etc/lp/printers/%s/configuration",
                          printer.fileName().toAscii().data());
             QFile configuration(tmp);
             char *line = new char[1025];

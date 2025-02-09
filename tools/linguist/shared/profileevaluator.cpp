@@ -2370,7 +2370,7 @@ ProStringList ProFileEvaluator::Private::evaluateExpandFunction(
             break;
         case E_LIST: {
             QString tmp;
-            tmp.sprintf(".QMAKE_INTERNAL_TMP_variableName_%d", m_listCount++);
+            tmp = QString::asprintf(".QMAKE_INTERNAL_TMP_variableName_%d", m_listCount++);
             ret = ProStringList(ProString(tmp, NoHash));
             ProStringList lst;
             foreach (const ProString &arg, args)

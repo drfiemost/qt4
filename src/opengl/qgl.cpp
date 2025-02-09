@@ -4735,7 +4735,7 @@ int QGLWidget::fontDisplayListBase(const QFont & font, int listBase)
     if (font.styleStrategy() != QFont::NoAntialias) {
         GLfloat color[4];
         glGetFloatv(GL_CURRENT_COLOR, color);
-        color_key.sprintf("%f_%f_%f",color[0], color[1], color[2]);
+        color_key = QString::asprintf("%f_%f_%f",color[0], color[1], color[2]);
     }
     QString key = font.key() + color_key + QString::number((int) regenerate);
 #else

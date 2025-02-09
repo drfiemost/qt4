@@ -760,7 +760,7 @@ void QBoxLayout::setGeometry(const QRect &r)
             for (int i = 0; i < n; i++) {
                 QBoxLayoutItem *box = d->list.at(i);
                 if (box->item->hasHeightForWidth()) {
-                    int width = qBound(box->item->minimumSize().width(), s.width(), box->item->maximumSize().width());
+                    int width = std::clamp(s.width(), box->item->minimumSize().width(), box->item->maximumSize().width());
                     a[i].sizeHint = a[i].minimumSize =
                                     box->item->heightForWidth(width);
                 }

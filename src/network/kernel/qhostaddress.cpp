@@ -710,7 +710,7 @@ QString QHostAddress::toString() const
     if (d->protocol == QAbstractSocket::IPv4Protocol) {
         quint32 i = toIPv4Address();
         QString s;
-        s.sprintf("%d.%d.%d.%d", (i>>24) & 0xff, (i>>16) & 0xff,
+        s = QString::asprintf("%d.%d.%d.%d", (i>>24) & 0xff, (i>>16) & 0xff,
                 (i >> 8) & 0xff, i & 0xff);
         return s;
     }
@@ -726,7 +726,7 @@ QString QHostAddress::toString() const
         bool zeroShortened = false;
         for (int i = 0; i < 8; i++) {
             if ((ugle[i] != 0) || zeroShortened) {
-                temp.sprintf("%X", ugle[i]);
+                temp = QString::asprintf("%X", ugle[i]);
                 s.append(temp);
                 if (zeroDetected)
                     zeroShortened = true;
@@ -736,7 +736,7 @@ QString QHostAddress::toString() const
                         s.append(QLatin1Char(':'));
                         zeroDetected = true;
                     } else {
-                        temp.sprintf("%X", ugle[i]);
+                        temp = QString::asprintf("%X", ugle[i]);
                         s.append(temp);
                         if (i<7)
                             s.append(QLatin1Char(':'));
