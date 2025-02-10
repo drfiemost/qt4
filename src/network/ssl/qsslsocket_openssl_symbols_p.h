@@ -259,13 +259,8 @@ int q_RAND_status();
 void q_RSA_free(RSA *a);
 int q_sk_num(STACK *a);
 void q_sk_pop_free(STACK *a, void (*b)(void *));
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
 void q_sk_free(_STACK *a);
 void * q_sk_value(STACK *a, int b);
-#else
-void q_sk_free(STACK *a);
-char * q_sk_value(STACK *a, int b);
-#endif
 int q_SSL_accept(SSL *a);
 int q_SSL_clear(SSL *a);
 char *q_SSL_CIPHER_description(SSL_CIPHER *a, char *b, int c);
@@ -273,11 +268,7 @@ int q_SSL_connect(SSL *a);
 int q_SSL_CTX_check_private_key(const SSL_CTX *a);
 long q_SSL_CTX_ctrl(SSL_CTX *a, int b, long c, void *d);
 void q_SSL_CTX_free(SSL_CTX *a);
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
 SSL_CTX *q_SSL_CTX_new(const SSL_METHOD *a);
-#else
-SSL_CTX *q_SSL_CTX_new(SSL_METHOD *a);
-#endif
 int q_SSL_CTX_set_cipher_list(SSL_CTX *a, const char *b);
 int q_SSL_CTX_set_default_verify_paths(SSL_CTX *a);
 void q_SSL_CTX_set_verify(SSL_CTX *a, int b, int (*c)(int, X509_STORE_CTX *));
@@ -289,11 +280,7 @@ int q_SSL_CTX_use_RSAPrivateKey(SSL_CTX *a, RSA *b);
 int q_SSL_CTX_use_PrivateKey_file(SSL_CTX *a, const char *b, int c);
 void q_SSL_free(SSL *a);
 STACK_OF(SSL_CIPHER) *q_SSL_get_ciphers(const SSL *a);
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
 const SSL_CIPHER *q_SSL_get_current_cipher(SSL *a);
-#else
-SSL_CIPHER *q_SSL_get_current_cipher(SSL *a);
-#endif
 int q_SSL_get_error(SSL *a, int b);
 STACK_OF(X509) *q_SSL_get_peer_cert_chain(SSL *a);
 X509 *q_SSL_get_peer_certificate(SSL *a);
@@ -307,7 +294,6 @@ void q_SSL_set_bio(SSL *a, BIO *b, BIO *c);
 void q_SSL_set_accept_state(SSL *a);
 void q_SSL_set_connect_state(SSL *a);
 int q_SSL_shutdown(SSL *a);
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
 const SSL_METHOD *q_SSLv3_client_method();
 const SSL_METHOD *q_SSLv23_client_method();
 const SSL_METHOD *q_TLSv1_client_method();
@@ -319,19 +305,6 @@ const SSL_METHOD *q_SSLv23_server_method();
 const SSL_METHOD *q_TLSv1_server_method();
 const SSL_METHOD *q_TLSv1_1_server_method();
 const SSL_METHOD *q_TLSv1_2_server_method();
-#else
-SSL_METHOD *q_SSLv3_client_method();
-SSL_METHOD *q_SSLv23_client_method();
-SSL_METHOD *q_TLSv1_client_method();
-SSL_METHOD *q_TLSv1_1_client_method();
-SSL_METHOD *q_TLSv1_2_client_method();
-SSL_METHOD *q_SSLv2_server_method();
-SSL_METHOD *q_SSLv3_server_method();
-SSL_METHOD *q_SSLv23_server_method();
-SSL_METHOD *q_TLSv1_server_method();
-SSL_METHOD *q_TLSv1_1_server_method();
-SSL_METHOD *q_TLSv1_2_server_method();
-#endif
 int q_SSL_write(SSL *a, const void *b, int c);
 int q_X509_cmp(X509 *a, X509 *b);
 #ifdef SSLEAY_MACROS
@@ -391,6 +364,12 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
 X509_STORE * q_SSL_CTX_get_cert_store(const SSL_CTX *ctx);
 ASN1_INTEGER * q_X509_get_serialNumber(X509 *x);
 
+#if OPENSSL_VERSION_MAJOR < 3
+using qssloptions = unsigned long;
+#else
+using qssloptions = uint64_t;
+#endif // OPENSSL_VERSION_MAJOR
+
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 #define q_SSL_CTX_set_options(ctx,op) q_SSL_CTX_ctrl((ctx),SSL_CTRL_OPTIONS,(op),NULL)
 #define q_X509_get_version(x) X509_get_version(x)
@@ -398,7 +377,7 @@ ASN1_INTEGER * q_X509_get_serialNumber(X509 *x);
 int q_EVP_PKEY_id(const EVP_PKEY *pkey);
 int q_EVP_PKEY_base_id(const EVP_PKEY *pkey);
 int q_SSL_CIPHER_get_bits(const SSL_CIPHER *cipher, int *alg_bits);
-long q_SSL_CTX_set_options(SSL_CTX *ctx, long options);
+qssloptions q_SSL_CTX_set_options(SSL_CTX *ctx, qssloptions options);
 long q_X509_get_version(X509 *x);
 X509_PUBKEY * q_X509_get_X509_PUBKEY(X509 *x);
 int q_RSA_bits(const RSA *rsa);

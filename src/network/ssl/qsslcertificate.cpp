@@ -272,19 +272,15 @@ QByteArray QSslCertificate::serialNumber() const
     QMutexLocker lock(QMutexPool::globalInstanceGet(d.data()));
     if (d->serialNumberString.isEmpty() && d->x509) {
         ASN1_INTEGER *serialNumber = q_X509_get_serialNumber(d->x509);
-        // if we cannot convert to a long, just output the hexadecimal number
-        if (serialNumber->length > 4) {
-            QByteArray hexString;
-            hexString.reserve(serialNumber->length * 3);
-            for (int a = 0; a < serialNumber->length; ++a) {
-                hexString += QByteArray::number(serialNumber->data[a], 16).rightJustified(2, '0');
-                hexString += ':';
-            }
-            hexString.chop(1);
-            d->serialNumberString = hexString;
-        } else {
-            d->serialNumberString = QByteArray::number(qlonglong(q_ASN1_INTEGER_get(serialNumber)));
+        // just output the hexadecimal number
+        QByteArray hexString;
+        hexString.reserve(serialNumber->length * 3);
+        for (int a = 0; a < serialNumber->length; ++a) {
+            hexString += QByteArray::number(serialNumber->data[a], 16).rightJustified(2, '0');
+            hexString += ':';
         }
+        hexString.chop(1);
+        d->serialNumberString = hexString;
     }
     return d->serialNumberString;
 }

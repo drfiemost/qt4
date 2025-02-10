@@ -315,7 +315,7 @@ init_context:
     }
 
     // Enable bug workarounds.
-    long options;
+    qssloptions options;
     if (configuration.protocol == QSsl::TlsV1SslV3)
         options = SSL_OP_ALL|SSL_OP_NO_SSLv2;
     else if (configuration.protocol == QSsl::SecureProtocols)

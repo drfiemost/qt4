@@ -81,6 +81,7 @@
 #include <openssl/rsa.h>
 #include <openssl/crypto.h>
 #include <openssl/tls1.h>
+#include <openssl/opensslv.h>
 
 #if OPENSSL_VERSION_NUMBER >= 0x10000000L
 typedef _STACK STACK;
@@ -107,6 +108,12 @@ public:
     X509_STORE *certificateStore;
     X509_STORE_CTX *certificateStoreCtx;
     QList<QPair<int, int> > errorList;
+
+#if OPENSSL_VERSION_MAJOR < 3
+    using qssloptions = unsigned long;
+#else
+    using qssloptions = uint64_t;
+#endif // OPENSSL_VERSION_MAJOR
 
     // Platform specific functions
     void startClientEncryption() override;
