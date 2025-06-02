@@ -297,10 +297,6 @@ public:
                 const QString &a4, const QString &a5, const QString &a6,
                 const QString &a7, const QString &a8, const QString &a9) const Q_REQUIRED_RESULT;
 
-    [[deprecated("Use vasprintf(), arg() or QTextStream instead")]]
-    QString &vsprintf(const char *format, va_list ap) Q_ATTRIBUTE_FORMAT_PRINTF(2, 0);
-    [[deprecated("Use asprintf(), arg() or QTextStream instead")]]
-    QString &sprintf(const char *format, ...) Q_ATTRIBUTE_FORMAT_PRINTF(2, 3);
     static QString vasprintf(const char *format, va_list ap) Q_ATTRIBUTE_FORMAT_PRINTF(1, 0);
     static QString asprintf(const char *format, ...) Q_ATTRIBUTE_FORMAT_PRINTF(1, 2);
 

@@ -1304,11 +1304,6 @@ Q_DECL_CONSTEXPR inline qint64 qRound64(qreal d)
 { return d >= qreal(0.0) ? qint64(d + qreal(0.5)) : qint64(d - qreal(qint64(d-1)) + qreal(0.5)) + qint64(d-1); }
 #endif
 
-template <typename T>
-[[deprecated("Use std::clamp")]]
-Q_DECL_CONSTEXPR inline const T &qBound(const T &min, const T &val, const T &max)
-{ return std::max(min, std::min(max, val)); }
-
 /*
    Data stream functions are provided by many classes (defined in qdatastream.h)
 */

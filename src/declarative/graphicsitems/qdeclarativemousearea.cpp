@@ -534,10 +534,10 @@ void QDeclarativeMouseArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         bool dragY = drag()->axis() & QDeclarativeDrag::YAxis;
 
         const qreal x = dragX
-                ? qBound(d->drag->xmin(), d->startX + curLocalPos.x() - startLocalPos.x(), d->drag->xmax())
+                ? std::clamp(d->startX + curLocalPos.x() - startLocalPos.x(), d->drag->xmin(), d->drag->xmax())
                 : d->startX;
         const qreal y = dragY
-                ? qBound(d->drag->ymin(), d->startY + curLocalPos.y() - startLocalPos.y(), d->drag->ymax())
+                ? std::clamp(d->startY + curLocalPos.y() - startLocalPos.y(), d->drag->ymin(), d->drag->ymax())
                 : d->startY;
 
         if (d->drag->active()) {

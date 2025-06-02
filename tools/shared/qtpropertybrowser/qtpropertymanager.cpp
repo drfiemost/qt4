@@ -240,6 +240,10 @@ static void setSimpleValue(QMap<const QtProperty *, Value> &propertyMap,
     emit (manager->*valueChangedSignal)(property, val);
 }
 
+template <typename T>
+Q_DECL_CONSTEXPR inline const T &qBound(const T &val, const T &min, const T &max)
+{ return std::max(min, std::min(max, val)); }
+
 template <class ValueChangeParameter, class PropertyManagerPrivate, class PropertyManager, class Value>
 static void setValueInRange(PropertyManager *manager, PropertyManagerPrivate *managerPrivate,
             void (PropertyManager::*propertyChangedSignal)(QtProperty *),
@@ -261,7 +265,7 @@ static void setValueInRange(PropertyManager *manager, PropertyManagerPrivate *ma
 
     const Value oldVal = data.val;
 
-    data.val = qBound(data.minVal, val, data.maxVal);
+    data.val = qBound(val, data.minVal, data.maxVal);
 
     if (data.val == oldVal)
         return;

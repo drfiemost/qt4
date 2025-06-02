@@ -5133,18 +5133,6 @@ QString QString::toUpper() const
     return *this;
 }
 
-/*!
-    \obsolete Use asprintf(), arg() or QTextStream instead.
-*/
-QString &QString::sprintf(const char *cformat, ...)
-{
-    va_list ap;
-    va_start(ap, cformat);
-    *this = vasprintf(cformat, ap);
-    va_end(ap);
-    return *this;
-}
-
 // ### Qt 5: Consider whether this function shouldn't be removed See task 202871.
 /*!
     Safely builds a formatted string from the format string \a cformat
@@ -5188,14 +5176,6 @@ QString QString::asprintf(const char *cformat, ...)
     const QString s = vasprintf(cformat, ap);
     va_end(ap);
     return s;
-}
-
-/*!
-    \obsolete Use vasprintf(), arg() or QTextStream instead.
-*/
-QString &QString::vsprintf(const char *cformat, va_list ap)
-{
-    return *this = vasprintf(cformat, ap);
 }
 
 /*!

@@ -407,7 +407,7 @@ void QDeclarativePath::createPointCache() const
                     epc = currLength / pathLength;
                 }
                 qreal realT = (pathLength * spc - (currLength - bezLength)) / bezLength;
-                d->_pointCache[i] = currBez.pointAt(qBound(qreal(0), realT, qreal(1)));
+                d->_pointCache[i] = currBez.pointAt(std::clamp(realT, qreal(0), qreal(1)));
                 break;
             }
             prevOrigPercent = point.origpercent;
