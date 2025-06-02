@@ -126,7 +126,7 @@ namespace WTF {
     {
         static void initialize(T* begin, T* end) 
         {
-            memset(begin, 0, reinterpret_cast<char*>(end) - reinterpret_cast<char*>(begin));
+            std::memset(begin, 0, reinterpret_cast<char*>(end) - reinterpret_cast<char*>(begin));
         }
     };
 
@@ -166,11 +166,11 @@ namespace WTF {
     {
         static void move(T* src, const T* srcEnd, T* dst) 
         {
-            memcpy(dst, src, reinterpret_cast<const char*>(srcEnd) - reinterpret_cast<const char*>(src));
+            std::memcpy(dst, src, reinterpret_cast<const char*>(srcEnd) - reinterpret_cast<const char*>(src));
         }
         static void moveOverlapping(T* src, const T* srcEnd, T* dst) 
         {
-            memmove(dst, src, reinterpret_cast<const char*>(srcEnd) - reinterpret_cast<const char*>(src));
+            std::memmove(dst, src, reinterpret_cast<const char*>(srcEnd) - reinterpret_cast<const char*>(src));
         }
     };
 
@@ -195,7 +195,7 @@ namespace WTF {
     {
         static void uninitializedCopy(const T* src, const T* srcEnd, T* dst) 
         {
-            memcpy(dst, src, reinterpret_cast<const char*>(srcEnd) - reinterpret_cast<const char*>(src));
+            std::memcpy(dst, src, reinterpret_cast<const char*>(srcEnd) - reinterpret_cast<const char*>(src));
         }
     };
 
@@ -220,13 +220,13 @@ namespace WTF {
         static void uninitializedFill(T* dst, T* dstEnd, const T& val) 
         {
             ASSERT(sizeof(T) == sizeof(char));
-            memset(dst, val, dstEnd - dst);
+            std::memset(dst, val, dstEnd - dst);
         }
     };
-    
+
     template<bool canCompareWithMemcmp, typename T>
     struct VectorComparer;
-    
+
     template<typename T>
     struct VectorComparer<false, T>
     {
@@ -244,10 +244,10 @@ namespace WTF {
     {
         static bool compare(const T* a, const T* b, size_t size)
         {
-            return memcmp(a, b, sizeof(T) * size) == 0;
+            return std::memcmp(a, b, sizeof(T) * size) == 0;
         }
     };
-    
+
     template<typename T>
     struct VectorTypeOperations
     {
@@ -280,7 +280,7 @@ namespace WTF {
         {
             VectorFiller<VectorTraits<T>::canFillWithMemset, T>::uninitializedFill(dst, dstEnd, val);
         }
-        
+
         static bool compare(const T* a, const T* b, size_t size)
         {
             return VectorComparer<VectorTraits<T>::canCompareWithMemcmp, T>::compare(a, b, size);
@@ -997,7 +997,7 @@ namespace WTF {
             // we create a brand new buffer so the caller always gets one.
             size_t bytes = m_size * sizeof(T);
             buffer = static_cast<T*>(fastMalloc(bytes));
-            memcpy(buffer, data(), bytes);
+            std::memcpy(buffer, data(), bytes);
         }
         m_size = 0;
         return buffer;

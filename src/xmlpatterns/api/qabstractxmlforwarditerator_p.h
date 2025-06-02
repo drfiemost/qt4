@@ -115,7 +115,7 @@ public:
     virtual qint64 sizeHint() const;
 
 private:
-    Q_DISABLE_COPY(QAbstractXmlForwardIterator<T>)
+    Q_DISABLE_COPY(QAbstractXmlForwardIterator)
 
     QAbstractXmlForwardIteratorPrivate *d_ptr; /* Currently not used. */
 };
