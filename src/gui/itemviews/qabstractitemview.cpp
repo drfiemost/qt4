@@ -1597,6 +1597,7 @@ bool QAbstractItemView::viewportEvent(QEvent *event)
         d->viewportEnteredNeeded = true;
         break;
     case QEvent::Leave:
+        d->setHoverIndex(QModelIndex()); // If we've left, no hover should be needed anymore
     #ifndef QT_NO_STATUSTIP
         if (d->shouldClearStatusTip && d->parent) {
             QString empty;
@@ -2974,9 +2975,8 @@ int QAbstractItemView::sizeHintForRow(int row) const
     QStyleOptionViewItem option = d->viewOptions();
     int height = 0;
     int colCount = d->model->columnCount(d->root);
-    QModelIndex index;
     for (int c = 0; c < colCount; ++c) {
-        index = d->model->index(row, c, d->root);
+        const QModelIndex index = d->model->index(row, c, d->root);
         if (QWidget *editor = d->editorForIndex(index).widget.data())
             height = std::max(height, editor->height());
         int hint = d->delegateForIndex(index)->sizeHint(option, index).height();
@@ -3005,9 +3005,8 @@ int QAbstractItemView::sizeHintForColumn(int column) const
     QStyleOptionViewItem option = d->viewOptions();
     int width = 0;
     int rows = d->model->rowCount(d->root);
-    QModelIndex index;
     for (int r = 0; r < rows; ++r) {
-        index = d->model->index(r, column, d->root);
+        const QModelIndex index = d->model->index(r, column, d->root);
         if (QWidget *editor = d->editorForIndex(index).widget.data())
             width = std::max(width, editor->sizeHint().width());
         int hint = d->delegateForIndex(index)->sizeHint(option, index).width();
@@ -3713,7 +3712,7 @@ void QAbstractItemView::doAutoScroll()
     int horizontalValue = horizontalScrollBar()->value();
 
     QPoint pos = d->viewport->mapFromGlobal(QCursor::pos());
-    QRect area = static_cast<QAbstractItemView*>(d->viewport)->d_func()->clipRect(); // access QWidget private by bending C++ rules
+    QRect area = QWidgetPrivate::get(d->viewport)->clipRect();
 
     // do the scrolling if we are in the scroll margins
     if (pos.y() - area.top() < margin)

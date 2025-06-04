@@ -57,6 +57,7 @@
 #include <qpushbutton.h>
 #include <qscrollbar.h>
 #include <qboxlayout.h>
+#include <qitemdelegate.h>
 #include <qlineedit.h>
 
 //TESTED_CLASS=
@@ -227,6 +228,7 @@ private slots:
     void ctrlRubberbandSelection();
     void QTBUG6407_extendedSelection();
     void QTBUG6753_selectOnSelection();
+    void QTBUG46785_mouseout_hover_state();
 };
 
 class MyAbstractItemDelegate : public QAbstractItemDelegate
@@ -1498,6 +1500,59 @@ void tst_QAbstractItemView::QTBUG6753_selectOnSelection()
 
     QCOMPARE(table.selectedItems().count(), 1);
     QCOMPARE(table.selectedItems().first(), table.item(item.row(), item.column()));
+}
+
+class HoverItemDelegate : public QItemDelegate
+{
+public:
+    HoverItemDelegate()
+        : QItemDelegate()
+        , m_paintedWithoutHover(false)
+    { }
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &opt, const QModelIndex &index) const override
+    {
+        Q_UNUSED(painter);
+
+        if (!(opt.state & QStyle::State_MouseOver)) {
+
+            // We don't want to set m_paintedWithoutHover for any item so check for the item at 0,0
+            if (index.row() == 0 && index.column() == 0) {
+                m_paintedWithoutHover = true;
+            }
+        }
+    }
+
+    mutable bool m_paintedWithoutHover;
+};
+
+void tst_QAbstractItemView::QTBUG46785_mouseout_hover_state()
+{
+    HoverItemDelegate delegate;
+
+    QTableWidget table(5, 5);
+    table.verticalHeader()->hide();
+    table.horizontalHeader()->hide();
+    table.setMouseTracking(true);
+    table.setItemDelegate(&delegate);
+    //centerOnScreen(&table);
+    table.show();
+    QApplication::setActiveWindow(&table);
+    QTest::qWaitForWindowShown(&table);
+    QTRY_COMPARE(static_cast<QWidget *>(&table), QApplication::activeWindow());
+
+    QModelIndex item = table.model()->index(0, 0);
+    QRect itemRect = table.visualRect(item);
+
+    // Move the mouse into the center of the item at 0,0 to cause a paint event to occur
+    QTest::mouseMove(table.viewport(), itemRect.center());
+    QTest::mouseClick(table.viewport(), Qt::LeftButton, 0, itemRect.center());
+
+    delegate.m_paintedWithoutHover = false;
+
+    QTest::mouseMove(table.viewport(), QPoint(-50, 0));
+
+    QTRY_VERIFY(delegate.m_paintedWithoutHover);
 }
 
 QTEST_MAIN(tst_QAbstractItemView)

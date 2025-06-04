@@ -336,6 +336,8 @@ public:
     explicit QWidgetPrivate(int version = QObjectPrivateVersion);
     ~QWidgetPrivate() override;
 
+     static QWidgetPrivate *get(QWidget *w) { return w->d_func(); }
+
     QWExtra *extraData() const;
     QTLWExtra *topData() const;
     QTLWExtra *maybeTopData() const;
