@@ -135,6 +135,7 @@ private slots:
     void spacing();
     void testScrollToWithHidden();
     void testViewOptions();
+    void taskQTBUG_47694_indexOutOfBoundBatchLayout();
 };
 
 // Testing get/set functions
@@ -1979,7 +1980,7 @@ void tst_QListView::taskQTBUG_9455_wrongScrollbarRanges()
     QStringList list;
     const int nrItems = 8;
     for (int i = 0; i < nrItems; i++)
-        list << QString().sprintf("item %d", i);
+        list << QString::asprintf("item %d", i);
 
     QStringListModel model(list);
     ListView_9455 w;
@@ -2273,6 +2274,19 @@ void tst_QListView::testViewOptions()
     view.setViewMode(QListView::IconMode);
     options = view.viewOptions();
     QCOMPARE(options.decorationPosition, QStyleOptionViewItem::Top);
+}
+
+void tst_QListView::taskQTBUG_47694_indexOutOfBoundBatchLayout()
+{
+    QListView view;
+    view.setLayoutMode(QListView::Batched);
+    int batchSize = view.batchSize();
+
+    QStandardItemModel model(batchSize + 1, 1);
+
+    view.setModel(&model);
+
+    view.scrollTo(model.index(batchSize - 1, 0));
 }
 
 QTEST_MAIN(tst_QListView)

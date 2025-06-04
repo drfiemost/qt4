@@ -2437,9 +2437,7 @@ void QListModeViewBase::doStaticLayout(const QListViewLayoutInfo &info)
             if (info.wrap && (flowPosition + deltaFlowPosition >= segEndPosition)) {
                 segmentExtents.append(flowPosition);
                 flowPosition = info.spacing + segStartPosition;
-                segPosition += deltaSegPosition;
-                if (info.wrap)
-                    segPosition += info.spacing;
+                segPosition += info.spacing + deltaSegPosition;
                 segmentPositions.append(segPosition);
                 segmentStartRows.append(row);
                 deltaSegPosition = 0;
