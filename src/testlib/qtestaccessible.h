@@ -102,7 +102,7 @@ public:
     static bool verifyEvent(const QTestAccessibilityEvent& ev)
     {
         if (eventList().isEmpty())
-            return FALSE;
+            return false;
         return eventList().takeFirst() == ev;
     }
 

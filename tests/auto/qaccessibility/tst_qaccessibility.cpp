@@ -1090,7 +1090,7 @@ void tst_QAccessibility::buttonTest()
 
     // tristate checkbox
     QCheckBox tristate("Tristate!", &window);
-    tristate.setTristate(TRUE);
+    tristate.setTristate(true);
 
     // radiobutton
     QRadioButton radio("Radio me!", &window);
