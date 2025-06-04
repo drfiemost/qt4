@@ -153,9 +153,35 @@ Q_DECLARE_METATYPE(Qt::DateFormat)
 
 tst_QDateTime::tst_QDateTime()
 {
-    uint x1 = QDateTime(QDate(1990, 1, 1), QTime()).toTime_t();
-    uint x2 = QDateTime(QDate(1990, 6, 1), QTime()).toTime_t();
-    zoneIsCET = (x1 == 631148400 && x2 == 644191200);
+    /*
+      Due to some jurisdictions changing their zones and rules, it's possible
+      for a non-CET zone to accidentally match CET at a few tested moments but
+      be different a few years later or earlier.  This would lead to tests
+      failing if run in the partially-aliasing zone (e.g. Algeria, Lybia).  So
+      test thoroughly; ideally at every mid-winter or mid-summer in whose
+      half-year any test below assumes zoneIsCET means what it says.  (Tests at
+      or near a DST transition implicate both of the half-years that meet
+      there.)  Years outside the 1970--2038 range, however, are likely not
+      properly handled by the TZ-database; and QDateTime explicitly handles them
+      differently, so don't probe them here.
+    */
+    zoneIsCET = (QDateTime(QDate(2038, 1, 19), QTime(4, 14, 7)).toTime_t() == 0x7fffffff
+                 // Entries a year apart robustly differ by multiples of day.
+                 && QDateTime(QDate(2015, 7, 1), QTime()).toTime_t() == 1435701600
+                 && QDateTime(QDate(2015, 1, 1), QTime()).toTime_t() == 1420066800
+                 && QDateTime(QDate(2013, 7, 1), QTime()).toTime_t() == 1372629600
+                 && QDateTime(QDate(2013, 1, 1), QTime()).toTime_t() == 1356994800
+                 && QDateTime(QDate(2012, 7, 1), QTime()).toTime_t() == 1341093600
+                 && QDateTime(QDate(2012, 1, 1), QTime()).toTime_t() == 1325372400
+                 && QDateTime(QDate(2008, 7, 1), QTime()).toTime_t() == 1214863200
+                 && QDateTime(QDate(2004, 1, 1), QTime()).toTime_t() == 1072911600
+                 && QDateTime(QDate(2000, 1, 1), QTime()).toTime_t() == 946681200
+                 && QDateTime(QDate(1990, 7, 1), QTime()).toTime_t() == 646783200
+                 && QDateTime(QDate(1990, 1, 1), QTime()).toTime_t() == 631148400
+                 && QDateTime(QDate(1979, 1, 1), QTime()).toTime_t() == 283993200
+                 // .toTime_t() returns -1 for everything before this:
+                 && QDateTime(QDate(1970, 1, 1), QTime(1, 0, 0)).toTime_t() == 0);
+    // Use .toMSecsSinceEpoch() if you really need to test anything earlier.
 }
 
 tst_QDateTime::~tst_QDateTime()
@@ -1622,19 +1648,19 @@ void tst_QDateTime::fromStringStringFormat_data()
     QTest::newRow("data24") << tuesday << QString("dddd") << QDate(1900, 1, 2);
     QTest::newRow("data25") << wednesday << QString("dddd") << QDate(1900, 1, 3);
     QTest::newRow("data26") << thursday << QString("dddd") << QDate(1900, 1, 4);
-    QTest::newRow("data26") << friday << QString("dddd") << QDate(1900, 1, 5);
-    QTest::newRow("data27") << saturday << QString("dddd") << QDate(1900, 1, 6);
-    QTest::newRow("data28") << sunday << QString("dddd") << QDate(1900, 1, 7);
+    QTest::newRow("data27") << friday << QString("dddd") << QDate(1900, 1, 5);
+    QTest::newRow("data28") << saturday << QString("dddd") << QDate(1900, 1, 6);
+    QTest::newRow("data29") << sunday << QString("dddd") << QDate(1900, 1, 7);
 
-    QTest::newRow("data29") << monday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 2);
-    QTest::newRow("data30") << tuesday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 3);
-    QTest::newRow("data31") << wednesday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 4);
-    QTest::newRow("data32") << thursday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 5);
-    QTest::newRow("data33") << friday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 6);
-    QTest::newRow("data34") << saturday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 7);
-    QTest::newRow("data35") << sunday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 1);
+    QTest::newRow("data30") << monday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 2);
+    QTest::newRow("data31") << tuesday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 3);
+    QTest::newRow("data32") << wednesday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 4);
+    QTest::newRow("data33") << thursday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 5);
+    QTest::newRow("data34") << friday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 6);
+    QTest::newRow("data35") << saturday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 7);
+    QTest::newRow("data36") << sunday + " 2006" << QString("dddd yyyy") << QDate(2006, 1, 1);
 
-    QTest::newRow("data36 ") << tuesday + " 2007 " + march << QString("dddd yyyy MMMM") << QDate(2007, 3, 6);
+    QTest::newRow("data37") << tuesday + " 2007 " + march << QString("dddd yyyy MMMM") << QDate(2007, 3, 6);
 
 }
 
