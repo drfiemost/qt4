@@ -977,10 +977,9 @@ void QListView::paintEvent(QPaintEvent *e)
         ? std::max(viewport()->size().width(), d->contentsSize().width()) - 2 * d->spacing()
         : std::max(viewport()->size().height(), d->contentsSize().height()) - 2 * d->spacing();
 
-    QVector<QModelIndex>::const_iterator end = toBeRendered.constEnd();
-    for (QVector<QModelIndex>::const_iterator it = toBeRendered.constBegin(); it != end; ++it) {
-        Q_ASSERT((*it).isValid());
-        option.rect = visualRect(*it);
+    for (auto modelIndex: toBeRendered) {
+        Q_ASSERT(modelIndex.isValid());
+        option.rect = visualRect(modelIndex);
 
         if (flow() == TopToBottom)
             option.rect.setWidth(std::min(maxSize, option.rect.width()));
@@ -988,11 +987,11 @@ void QListView::paintEvent(QPaintEvent *e)
             option.rect.setHeight(std::min(maxSize, option.rect.height()));
 
         option.state = state;
-        if (selections && selections->isSelected(*it))
+        if (selections && selections->isSelected(modelIndex))
             option.state |= QStyle::State_Selected;
         if (enabled) {
             QPalette::ColorGroup cg;
-            if ((itemModel->flags(*it) & Qt::ItemIsEnabled) == 0) {
+            if ((itemModel->flags(modelIndex) & Qt::ItemIsEnabled) == 0) {
                 option.state &= ~QStyle::State_Enabled;
                 cg = QPalette::Disabled;
             } else {
@@ -1000,18 +999,18 @@ void QListView::paintEvent(QPaintEvent *e)
             }
             option.palette.setCurrentColorGroup(cg);
         }
-        if (focus && current == *it) {
+        if (focus && current == modelIndex) {
             option.state |= QStyle::State_HasFocus;
             if (viewState == EditingState)
                 option.state |= QStyle::State_Editing;
         }
-        if (*it == hover)
+        if (modelIndex == hover)
             option.state |= QStyle::State_MouseOver;
         else
             option.state &= ~QStyle::State_MouseOver;
 
         if (alternate) {
-            int row = (*it).row();
+            int row = modelIndex.row();
             if (row != previousRow + 1) {
                 // adjust alternateBase according to rows in the "gap"
                 if (!d->hiddenRows.isEmpty()) {
@@ -1040,7 +1039,7 @@ void QListView::paintEvent(QPaintEvent *e)
             previousRow = row;
         }
 
-        d->delegateForIndex(*it)->paint(&painter, option, *it);
+        d->delegateForIndex(modelIndex)->paint(&painter, option, modelIndex);
     }
 
 #ifndef QT_NO_DRAGANDDROP
@@ -2558,7 +2557,7 @@ int QListModeViewBase::perItemScrollingPageSteps(int length, int bounds, bool wr
         positions = segmentPositions;
     else if (!flowPositions.isEmpty()) {
         positions.reserve(scrollValueMap.size());
-        foreach (int itemShown, scrollValueMap)
+        for (int itemShown: scrollValueMap)
             positions.append(flowPositions.at(itemShown));
     }
     if (positions.isEmpty() || bounds <= length)
@@ -2740,7 +2739,7 @@ bool QIconModeViewBase::filterDropEvent(QDropEvent *e)
     if (qq->acceptDrops()) {
         const Qt::ItemFlags dropableFlags = Qt::ItemIsDropEnabled|Qt::ItemIsEnabled;
         const QVector<QModelIndex> &dropIndices = intersectingSet(QRect(end, QSize(1, 1)));
-        foreach (const QModelIndex &index, dropIndices)
+        for (const QModelIndex &index: dropIndices)
             if ((index.flags() & dropableFlags) == dropableFlags)
                 return false;
     }
