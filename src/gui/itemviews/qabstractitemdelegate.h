@@ -104,6 +104,7 @@ public:
                              const QStyleOptionViewItem &option,
                              const QModelIndex &index);
 
+    [[deprecated("Use QFontMetrics::elidedText() instead")]]
     static QString elidedText(const QFontMetrics &fontMetrics, int width,
                               Qt::TextElideMode mode, const QString &text);
 
