@@ -1945,8 +1945,7 @@ QMakeProject::doProjectExpand(QString func, QList<QStringList> args_list,
         break; }
     case E_LIST: {
         static int x = 0;
-        QString tmp;
-        tmp.sprintf(".QMAKE_INTERNAL_TMP_VAR_%d", x++);
+        QString tmp = QString::asprintf(".QMAKE_INTERNAL_TMP_VAR_%d", x++);
         ret = QStringList(tmp);
         QStringList &lst = (*((QMap<QString, QStringList>*)&place))[tmp];
         lst.clear();
