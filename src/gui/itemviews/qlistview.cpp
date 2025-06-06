@@ -684,7 +684,7 @@ void QListView::reset()
 void QListView::setRootIndex(const QModelIndex &index)
 {
     Q_D(QListView);
-    d->column = std::clamp(d->column, 0, d->model->columnCount(index) - 1);
+    d->column = std::clamp(d->column, 0, std::max(0, d->model->columnCount(index) - 1));
     QAbstractItemView::setRootIndex(index);
     // sometimes we get an update before reset() is called
     d->clear();
@@ -2176,7 +2176,7 @@ int QListModeViewBase::verticalScrollToValue(int index, QListView::ScrollHint hi
             for (int i = 0; i < flowPositions.count() - 1 && i <= scrollBarValue; ++i)
                 if (isHidden(i))
                     ++numHidden;
-            value = std::clamp(scrollValueMap.at(verticalScrollBar()->value()) - numHidden, 0, flowPositions.count() - 1);
+            value = std::clamp(scrollValueMap.at(verticalScrollBar()->value()) - numHidden, 0, std::max(0, flowPositions.count() - 1));
         }
         if (above)
             hint = QListView::PositionAtTop;
@@ -2242,7 +2242,7 @@ int QListModeViewBase::horizontalScrollToValue(int index, QListView::ScrollHint 
     if (scrollValueMap.isEmpty())
         value = 0;
     else
-        value = std::clamp(scrollValueMap.at(horizontalScrollBar()->value()), 0, flowPositions.count() - 1);
+        value = std::clamp(scrollValueMap.at(horizontalScrollBar()->value()), 0, std::max(0, flowPositions.count() - 1));
     if (leftOf)
         hint = QListView::PositionAtTop;
     else if (rightOf)
