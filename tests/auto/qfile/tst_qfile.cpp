@@ -50,9 +50,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_SYMBIAN)
 #include <QHostInfo>
-#endif
 #include <QProcess>
 #ifndef Q_OS_WIN
 # include <sys/types.h>
@@ -68,19 +66,15 @@
 #elif defined(Q_OS_WINCE)
 # include <qplatformdefs.h>
 # include <private/qfsfileengine_p.h>
-#elif defined(Q_OS_SYMBIAN)
-# include <f32file.h>
 #endif
 
 #include <stdio.h>
 #include <errno.h>
 
+#define NO_NETWORK_TEST
+
 #ifndef NO_NETWORK_TEST
 #  include "../network-settings.h"
-#endif
-
-#if defined(Q_OS_SYMBIAN)
-# define SRCDIR ""
 #endif
 
 #ifndef STDIN_FILENO
@@ -222,10 +216,6 @@ private slots:
     void resize();
 
     void objectConstructors();
-#ifdef Q_OS_SYMBIAN
-    void platformSecurity_data();
-    void platformSecurity();
-#endif
     void caseSensitivity();
 
     void autocloseHandle();
@@ -244,9 +234,6 @@ private:
         OpenQFile,
         OpenFd,
         OpenStream,
-#ifdef Q_OS_SYMBIAN
-        OpenRFile,
-#endif
         NumberOfFileTypes
     };
 
@@ -283,33 +270,6 @@ private:
         return stream_ && file.open(stream_, mode, handleFlags);
     }
 
-#ifdef Q_OS_SYMBIAN
-    bool openRFile(QFile &file, QIODevice::OpenMode mode, QFile::FileHandleFlags handleFlags)
-    {
-        //connect file server first time
-        if (!rfs_.Handle() && rfs_.Connect() != KErrNone)
-                return false;
-        //symbian does not like ./ in filenames, so open by absolute path
-        QString fileName(QDir::toNativeSeparators(QFileInfo(file).absoluteFilePath()));
-        TPtrC fn(fileName.utf16(), fileName.length());
-        TInt smode = 0;
-        if (mode & QIODevice::WriteOnly)
-            smode |= EFileWrite;
-        if (mode & QIODevice::ReadOnly)
-            smode |= EFileRead;
-        TInt r;
-        if ((mode & QIODevice::Truncate) || (!(mode & QIODevice::ReadOnly) && !(mode & QIODevice::Append))) {
-            r = rfile_.Replace(rfs_, fn, smode);
-        } else {
-            r = rfile_.Open(rfs_, fn, smode);
-            if (r == KErrNotFound && (mode & QIODevice::WriteOnly)) {
-                r = rfile_.Create(rfs_, fn, smode);
-            }
-        }
-        return (r == KErrNone) && file.open(rfile_, mode, handleFlags);
-    }
-#endif
-
     bool openFile(QFile &file, QIODevice::OpenMode mode, FileType type = OpenQFile, QFile::FileHandleFlags handleFlags = QFile::DontCloseHandle)
     {
         if (mode & QIODevice::WriteOnly && !file.exists())
@@ -331,10 +291,6 @@ private:
 
             case OpenStream:
                 return openStream(file, mode, handleFlags);
-#ifdef Q_OS_SYMBIAN
-            case OpenRFile:
-                return openRFile(file, mode, handleFlags);
-#endif
         }
 
         return false;
@@ -348,10 +304,6 @@ private:
             QT_CLOSE(fd_);
         if (stream_)
             ::fclose(stream_);
-#ifdef Q_OS_SYMBIAN
-        if (rfile_.SubSessionHandle())
-            rfile_.Close();
-#endif
 
         fd_ = -1;
         stream_ = 0;
@@ -359,10 +311,6 @@ private:
 
     int fd_;
     FILE *stream_;
-#ifdef Q_OS_SYMBIAN
-    RFs rfs_;
-    RFile rfile_;
-#endif
 
     const QString m_srcDir;
     const QString m_stdinProcess;
@@ -506,7 +454,7 @@ void tst_QFile::cleanupTestCase()
 void tst_QFile::exists()
 {
     QFile f( SRCDIR "testfile.txt" );
-    QCOMPARE( f.exists(), (bool)TRUE );
+    QCOMPARE( f.exists(), true );
 
     QFile file("nobodyhassuchafile");
     file.remove();
@@ -545,45 +493,45 @@ void tst_QFile::open_data()
 #endif
     QTest::newRow( "exist_readOnly"  )
         << QString(SRCDIR "testfile.txt") << int(QIODevice::ReadOnly)
-        << (bool)TRUE << QFile::NoError;
+        << true << QFile::NoError;
 
     QTest::newRow( "exist_writeOnly" )
         << QString("readonlyfile")
         << int(QIODevice::WriteOnly)
-        << (bool)FALSE
+        << false
         << QFile::OpenError;
 
     QTest::newRow( "exist_append"    )
         << QString("readonlyfile") << int(QIODevice::Append)
-        << (bool)FALSE << QFile::OpenError;
+        << false << QFile::OpenError;
 
     QTest::newRow( "nonexist_readOnly"  )
         << QString("nonExist.txt") << int(QIODevice::ReadOnly)
-        << (bool)FALSE << QFile::OpenError;
+        << false << QFile::OpenError;
 
     QTest::newRow("emptyfile")
         << QString("")
         << int(QIODevice::ReadOnly)
-        << (bool)FALSE
+        << false
         << QFile::OpenError;
 
-    QTest::newRow("nullfile") << QString() << int(QIODevice::ReadOnly) << (bool)FALSE
+    QTest::newRow("nullfile") << QString() << int(QIODevice::ReadOnly) << false
         << QFile::OpenError;
 
-    QTest::newRow("two-dots") << QString(SRCDIR "two.dots.file") << int(QIODevice::ReadOnly) << (bool)TRUE
+    QTest::newRow("two-dots") << QString(SRCDIR "two.dots.file") << int(QIODevice::ReadOnly) << true
         << QFile::NoError;
 
     QTest::newRow("readonlyfile") << QString("readonlyfile") << int(QIODevice::WriteOnly)
-                                  << (bool)FALSE << QFile::OpenError;
+                                  << false << QFile::OpenError;
     QTest::newRow("noreadfile") << QString("noreadfile") << int(QIODevice::ReadOnly)
-                                << (bool)FALSE << QFile::OpenError;
+                                << false << QFile::OpenError;
 #if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
     const QString drive0 = QLatin1String("//./PhysicalDrive0");
     const QFileInfo drive0Fi(drive0);
     if (drive0Fi.exists() && drive0Fi.isReadable()) {
         QTest::newRow(qPrintable(drive0))
             << drive0 << int(QIODevice::ReadOnly)
-            << (bool)TRUE << QFile::NoError;
+            << true << QFile::NoError;
     } else {
         qWarning("Skipping '%s' (requires administrative permissions)", qPrintable(drive0));
     }
@@ -603,10 +551,7 @@ void tst_QFile::open()
 
     QFETCH( bool, ok );
 
-#if defined(Q_OS_SYMBIAN)
-    if (qstrcmp(QTest::currentDataTag(), "noreadfile") == 0)
-        QSKIP("Symbian does not support non-readable files", SkipSingle);
-#elif defined(Q_OS_UNIX)
+#if defined(Q_OS_UNIX)
     if (::getuid() == 0)
         // root and Chuck Norris don't care for file permissions. Skip.
         QSKIP("Running this test as root doesn't make sense", SkipAll);
@@ -868,7 +813,7 @@ void tst_QFile::atEnd()
 
     bool end = f.atEnd();
     f.close();
-    QCOMPARE( end, (bool)TRUE );
+    QCOMPARE( end, true );
 }
 
 void tst_QFile::readLine()
@@ -997,9 +942,6 @@ void tst_QFile::readAllBuffer()
 
 void tst_QFile::readAllStdin()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-    QSKIP("Currently no stdin/out supported for Windows CE or Symbian", SkipAll);
-#endif
 #if defined(QT_NO_PROCESS)
     QSKIP("Qt was compiled with QT_NO_PROCESS", SkipAll);
 #else
@@ -1024,9 +966,6 @@ void tst_QFile::readAllStdin()
 
 void tst_QFile::readLineStdin()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-    QSKIP("Currently no stdin/out supported for Windows CE or Symbian", SkipAll);
-#endif
 #if defined(QT_NO_PROCESS)
     QSKIP("Qt was compiled with QT_NO_PROCESS", SkipAll);
 #else
@@ -1067,9 +1006,6 @@ void tst_QFile::readLineStdin()
 
 void tst_QFile::readLineStdin_lineByLine()
 {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-    QSKIP("Currently no stdin/out supported for Windows CE", SkipAll);
-#endif
 #if defined(QT_NO_PROCESS)
     QSKIP("Qt was compiled with QT_NO_PROCESS", SkipAll);
 #else
@@ -1195,7 +1131,7 @@ void tst_QFile::ungetChar()
 void tst_QFile::invalidFile_data()
 {
     QTest::addColumn<QString>("fileName");
-#if !defined(Q_WS_WIN) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_WS_WIN)
     QTest::newRow( "x11" ) << QString( "qwe//" );
 #else
     QTest::newRow( "colon1" ) << QString( "fail:invalid" );
@@ -1266,10 +1202,6 @@ void tst_QFile::permissions_data()
 
 void tst_QFile::permissions()
 {
-#if defined(Q_OS_SYMBIAN)
-    if (qstrcmp(QTest::currentDataTag(), "data0") == 0)
-        QSKIP("Symbian does not have execution permissions", SkipSingle);
-#endif
     QFETCH(QString, file);
     QFETCH(uint, perms);
     QFETCH(bool, expected);
@@ -1362,11 +1294,7 @@ void tst_QFile::copyShouldntOverwrite()
     QFile::remove("tst_qfile.cpy");
     QFile file(SRCDIR "tst_qfile.cpp");
     QVERIFY(file.copy("tst_qfile.cpy"));
-#if defined(Q_OS_SYMBIAN)
-	bool ok = QFile::setPermissions("tst_qfile.cpy", QFile::WriteUser);
-#else
-	bool ok = QFile::setPermissions("tst_qfile.cpy", QFile::WriteOther);
-#endif
+    bool ok = QFile::setPermissions("tst_qfile.cpy", QFile::WriteOther);
     QVERIFY(ok);
     QVERIFY(!file.copy("tst_qfile.cpy"));
     QFile::remove("tst_qfile.cpy");
@@ -1453,9 +1381,6 @@ static QString getWorkingDirectoryForLink(const QString &linkFileName)
 
 void tst_QFile::link()
 {
-#if defined(Q_OS_SYMBIAN)
-    QSKIP("Symbian does not support links", SkipAll);
-#endif
     QFile::remove("myLink.lnk");
 
     QFileInfo info1(SRCDIR "tst_qfile.cpp");
@@ -1484,9 +1409,6 @@ void tst_QFile::link()
 
 void tst_QFile::linkToDir()
 {
-#if defined(Q_OS_SYMBIAN)
-    QSKIP("Symbian does not support linking to directories", SkipAll);
-#endif
     QFile::remove("myLinkToDir.lnk");
     QDir dir;
     dir.mkdir("myDir");
@@ -1502,9 +1424,6 @@ void tst_QFile::linkToDir()
 
 void tst_QFile::absolutePathLinkToRelativePath()
 {
-#if defined(Q_OS_SYMBIAN)
-    QSKIP("Symbian does not support links", SkipAll);
-#endif
     QFile::remove("myDir/test.txt");
     QFile::remove("myDir/myLink.lnk");
     QDir dir;
@@ -1527,29 +1446,16 @@ void tst_QFile::absolutePathLinkToRelativePath()
 
 void tst_QFile::readBrokenLink()
 {
-#if defined(Q_OS_SYMBIAN)
-    QSKIP("Symbian does not support links", SkipAll);
-#endif
     QFile::remove("myLink2.lnk");
     QFileInfo info1("file12");
-#if defined(Q_OS_SYMBIAN)
-    // In Symbian can't link to nonexisting file directly, so create the file temporarily
-    QFile tempFile("file12");
-    tempFile.open(QIODevice::WriteOnly);
-    tempFile.link("myLink2.lnk");
-    tempFile.remove();
-#else
     QVERIFY(QFile::link("file12", "myLink2.lnk"));
-#endif
     QFileInfo info2("myLink2.lnk");
     QVERIFY(info2.isSymLink());
     QCOMPARE(info2.symLinkTarget(), info1.absoluteFilePath());
     QVERIFY(QFile::remove(info2.absoluteFilePath()));
 
-#if !defined(Q_OS_SYMBIAN)
     QVERIFY(QFile::link("ole/..", "myLink2.lnk"));
     QCOMPARE(QFileInfo("myLink2.lnk").symLinkTarget(), QDir::currentPath());
-#endif
 }
 
 void tst_QFile::readTextFile_data()
@@ -1762,7 +1668,7 @@ void tst_QFile::bufferedRead()
 
 void tst_QFile::isSequential()
 {
-#if defined (Q_OS_WIN) || defined(Q_OS_SYMBIAN)
+#if defined (Q_OS_WIN)
     QSKIP("Unix only test.", SkipAll);
 #endif
 
@@ -2097,10 +2003,6 @@ void tst_QFile::longFileName()
     }
     {
         QFile file(fileName);
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-        QEXPECT_FAIL("244 chars", "Full pathname must be less than 260 chars", Abort);
-        QEXPECT_FAIL("244 chars to absolutepath", "Full pathname must be less than 260 chars", Abort);
-#endif
         QVERIFY(file.open(QFile::WriteOnly | QFile::Text));
         QTextStream ts(&file);
         ts << fileName << endl;
@@ -2360,11 +2262,8 @@ void tst_QFile::writeLargeDataBlock_data()
     QTest::newRow("localfile-QFile")  << "./largeblockfile.txt" << (int)OpenQFile;
     QTest::newRow("localfile-Fd")     << "./largeblockfile.txt" << (int)OpenFd;
     QTest::newRow("localfile-Stream") << "./largeblockfile.txt" << (int)OpenStream;
-#ifdef Q_OS_SYMBIAN
-    QTest::newRow("localfile-RFile")  << "./largeblockfile.txt" << (int)OpenRFile;
-#endif
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE) && !defined(NO_NETWORK_TEST)
+#if defined(Q_OS_WIN) && !defined(NO_NETWORK_TEST)
     // Some semi-randomness to avoid collisions.
     QTest::newRow("unc file")
         << QString("//" + QtNetworkSettings::winServerName() + "/TESTSHAREWRITABLE/largefile-%1-%2.txt")
@@ -2379,11 +2278,7 @@ static QByteArray getLargeDataBlock()
 
     if (array.isNull())
     {
-#if defined(Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-        int resizeSize = 1024 * 1024; // WinCE and Symbian do not have much space
-#else
         int resizeSize = 64 * 1024 * 1024;
-#endif
         array.resize(resizeSize);
         for (int i = 0; i < array.size(); ++i)
             array[i] = uchar(i);
@@ -2539,7 +2434,7 @@ void tst_QFile::rename_data()
     QTest::newRow("a -> .") << QString("a") << QString(".") << false;
     QTest::newRow("renamefile -> renamefile") << QString("renamefile") << QString("renamefile") << false;
     QTest::newRow("renamefile -> noreadfile") << QString("renamefile") << QString("noreadfile") << false;
-#if defined(Q_OS_UNIX) && !defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_UNIX)
     QTest::newRow("renamefile -> /etc/renamefile") << QString("renamefile") << QString("/etc/renamefile") << false;
 #endif
     QTest::newRow("renamefile -> renamedfile") << QString("renamefile") << QString("renamedfile") << true;
@@ -2716,7 +2611,6 @@ void tst_QFile::standarderror()
 void tst_QFile::handle()
 {
     int fd;
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_SYMBIAN)
     QFile file(SRCDIR "tst_qfile.cpp");
     QVERIFY(file.open(QIODevice::ReadOnly));
     fd = int(file.handle());
@@ -2744,7 +2638,6 @@ void tst_QFile::handle()
 #endif
 
     QCOMPARE(c, '*');
-#endif
 
     //test round trip of adopted stdio file handle
     QFile file2;
@@ -2766,9 +2659,6 @@ void tst_QFile::handle()
 
 void tst_QFile::nativeHandleLeaks()
 {
-#ifdef Q_OS_SYMBIAN
-    QSKIP("test assumptions invalid for symbian", SkipAll);
-#else
     int fd1, fd2;
 
 #ifdef Q_OS_WIN
@@ -2810,7 +2700,6 @@ void tst_QFile::nativeHandleLeaks()
 #ifdef Q_OS_WIN
     QCOMPARE( handle2, handle1 );
 #endif
-#endif
 }
 
 void tst_QFile::readEof_data()
@@ -2821,7 +2710,7 @@ void tst_QFile::readEof_data()
     QTest::newRow("buffered") << SRCDIR "testfile.txt" << 0;
     QTest::newRow("unbuffered") << SRCDIR "testfile.txt" << int(QIODevice::Unbuffered);
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_UNIX)
     QTest::newRow("sequential,buffered") << "/dev/null" << 0;
     QTest::newRow("sequential,unbuffered") << "/dev/null" << int(QIODevice::Unbuffered);
 #endif
@@ -3055,9 +2944,8 @@ void tst_QFile::map()
 
     file.close();
 
-#if defined(Q_OS_SYMBIAN)
-	 if (false) // No permissions for user makes no sense in Symbian
-#elif defined(Q_OS_UNIX)
+    if (false) // No permissions for user makes no sense in Symbian
+#if defined(Q_OS_UNIX)
     if (::getuid() != 0)
         // root always has permissions
 #endif
@@ -3279,9 +3167,6 @@ void tst_QFile::openStandardStreamsFileDescriptors()
 
 void tst_QFile::openStandardStreamsBufferedStreams()
 {
-#if defined (Q_OS_WINCE) || defined(Q_OS_SYMBIAN)
-    QSKIP("Not tested on Windows CE or Symbian.");
-#endif
     // Using streams
     {
         /* in/out/err.isSequential() are only true when run in a console (CI);
@@ -3332,9 +3217,6 @@ void tst_QFile::resize_data()
     QTest::newRow("native") << int(OpenQFile);
     QTest::newRow("fileno") << int(OpenFd);
     QTest::newRow("stream") << int(OpenStream);
-#ifdef Q_OS_SYMBIAN
-    QTest::newRow("rfile")  << int(OpenRFile);
-#endif
 }
 
 void tst_QFile::resize()
@@ -3360,65 +3242,9 @@ void tst_QFile::objectConstructors()
     QVERIFY(!file2->exists());
 }
 
-#ifdef Q_OS_SYMBIAN
-void tst_QFile::platformSecurity_data()
-{
-    QTest::addColumn<QString>("file");
-    QTest::addColumn<bool>("readable");
-    QTest::addColumn<bool>("writable");
-
-    QString selfname = QCoreApplication::applicationFilePath();
-    QString ownprivate = QCoreApplication::applicationDirPath();
-    QString owndrive = selfname.left(2);
-    bool amiprivileged = RProcess().HasCapability(ECapabilityAllFiles);
-    QTest::newRow("resource") << owndrive + "/resource/apps/tst_qfile.rsc" << true << amiprivileged;
-    QTest::newRow("sys") << selfname << amiprivileged << false;
-    QTest::newRow("own private") << ownprivate + "/testfile.txt" << true << true;
-    QTest::newRow("other private") << owndrive + "/private/10003a3f/import/apps/tst_qfile_reg.rsc" << amiprivileged << amiprivileged;
-}
-
-void tst_QFile::platformSecurity()
-{
-    QFETCH(QString,file);
-    QFETCH(bool,readable);
-    QFETCH(bool,writable);
-
-    {
-        QFile f(file);
-        QCOMPARE(f.open(QIODevice::ReadOnly), readable);
-    }
-
-    {
-        QFile f(file);
-        QCOMPARE(f.open(QIODevice::ReadOnly | QIODevice::Unbuffered), readable);
-    }
-
-    //append mode used to avoid truncating the files.
-    {
-        QFile f(file);
-        QCOMPARE(f.open(QIODevice::WriteOnly | QIODevice::Append), writable);
-    }
-
-    {
-        QFile f(file);
-        QCOMPARE(f.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered), writable);
-    }
-
-    {
-        QFile f(file);
-        QCOMPARE(f.open(QIODevice::ReadWrite), writable);
-    }
-
-    {
-        QFile f(file);
-        QCOMPARE(f.open(QIODevice::ReadWrite | QIODevice::Unbuffered), writable);
-    }
-}
-#endif
-
 void tst_QFile::caseSensitivity()
 {
-#if defined(Q_OS_SYMBIAN) || defined(Q_OS_WIN) || defined(Q_OS_MAC)
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     const bool caseSensitive = false;
 #else
     const bool caseSensitive = true;
@@ -3472,37 +3298,6 @@ public:
 
 void tst_QFile::autocloseHandle()
 {
-#ifdef Q_OS_SYMBIAN
-    // these tests are a bit different, because using a closed file handle results in a panic rather than error
-    {
-        QFile file("readonlyfile");
-        QFile file2("readonlyfile");
-        QVERIFY(openFile(file, QIODevice::ReadOnly, OpenRFile, QFile::AutoCloseHandle));
-        // file is opened with mandatory lock, so opening again should fail
-        QVERIFY(!file2.open(QIODevice::ReadOnly));
-
-        file.close();
-        // opening again should now succeed (because handle is closed)
-        QVERIFY(file2.open(QIODevice::ReadOnly));
-    }
-
-    {
-        QFile file("readonlyfile");
-        QFile file2("readonlyfile");
-        QVERIFY(openFile(file, QIODevice::ReadOnly, OpenRFile, QFile::DontCloseHandle));
-        // file is opened with mandatory lock, so opening again should fail
-        QVERIFY(!file2.open(QIODevice::ReadOnly));
-
-        file.close();
-        // opening again should still fail (because handle is not auto closed)
-        QVERIFY(!file2.open(QIODevice::ReadOnly));
-
-        rfile_.Close();
-        // now it should succeed
-        QVERIFY(file2.open(QIODevice::ReadOnly));
-    }
-#endif
-
     {
         QFile file("readonlyfile");
         QVERIFY(openFile(file, QIODevice::ReadOnly, OpenFd, QFile::AutoCloseHandle));

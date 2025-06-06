@@ -51,9 +51,6 @@
 #include <QTime>
 #include <QStyle>
 #include <QtGlobal>
-#if defined(Q_OS_SYMBIAN)
-# include <f32file.h>
-#endif
 //TESTED_CLASS=
 //TESTED_FILES=
 
@@ -68,23 +65,6 @@
             QTest::qWait(step); \
         } \
     } while(0)
-
-#if defined(Q_OS_SYMBIAN)
-static HBufC* qt_QString2HBufCNewL(const QString& aString)
-{
-    HBufC *buffer;
-#ifdef QT_NO_UNICODE
-    TPtrC8 ptr(reinterpret_cast<const TUint8*>(aString.toLocal8Bit().constData()));
-    buffer = HBufC8::NewL(ptr.Length());
-    buffer->Des().Copy(ptr);
-#else
-    TPtrC16 ptr(reinterpret_cast<const TUint16*>(aString.utf16()));
-    buffer = HBufC16::NewL(ptr.Length());
-    buffer->Des().Copy(ptr);
-#endif
-    return buffer;
-}
-#endif
 
 class tst_QFileSystemModel : public QObject {
   Q_OBJECT
@@ -132,7 +112,7 @@ private slots:
 
     void caseSensitivity();
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
     void Win32LongFileName();
 #endif
 
@@ -152,9 +132,6 @@ protected:
 private:
     QFileSystemModel *model;
     QString flatDirTestPath;
-#if defined(Q_OS_SYMBIAN)
-    RFs rfs;
-#endif
 };
 
 tst_QFileSystemModel::tst_QFileSystemModel() : model(0)
@@ -165,16 +142,10 @@ tst_QFileSystemModel::tst_QFileSystemModel() : model(0)
     qsrand(midnight.secsTo(QTime::currentTime()));
     // generating unique temporary directory name
     flatDirTestPath = QDir::temp().path() + '/' + QString("flatdirtest.") + QString::number(qrand());
-#if defined(Q_OS_SYMBIAN)
-    rfs.Connect();
-#endif
 }
 
 tst_QFileSystemModel::~tst_QFileSystemModel()
 {
-#if defined(Q_OS_SYMBIAN)
-    rfs.Close();
-#endif
     QString tmp = flatDirTestPath;
     QDir dir(tmp);
     if (dir.exists() && !dir.rmdir(tmp))
@@ -214,7 +185,7 @@ void tst_QFileSystemModel::cleanup()
 
 void tst_QFileSystemModel::indexPath()
 {
-#if !defined(Q_OS_WIN) && !defined(Q_OS_SYMBIAN)
+#if !defined(Q_OS_WIN)
     int depth = QDir::currentPath().count('/');
     model->setRootPath(QDir::currentPath());
     QTest::qWait(WAITTIME);
@@ -325,11 +296,6 @@ void tst_QFileSystemModel::naturalCompare()
             QCOMPARE(QFileSystemModelPrivate::naturalCompare(s2, s1, Qt::CaseSensitivity(caseSensitive)), 1);
     else
         QCOMPARE(QFileSystemModelPrivate::naturalCompare(s2, s1, Qt::CaseSensitivity(caseSensitive)), result);
-#if defined(Q_OS_WINCE)
-    // On Windows CE we need to wait after each test, otherwise no new threads can be
-    // created. The scheduler takes its time to recognize ended threads.
-    QTest::qWait(300);
-#endif
 #endif
 }
 
@@ -435,15 +401,9 @@ bool tst_QFileSystemModel::createFiles(const QString &test_path, const QStringLi
             return false;
         }
         file.close();
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
         if (initial_files.at(i)[0] == '.')
             QProcess::execute(QString("attrib +h %1").arg(file.fileName()));
-#elif defined(Q_OS_SYMBIAN)
-        if (initial_files.at(i)[0] == '.') {
-            HBufC* buffer = qt_QString2HBufCNewL(QDir::toNativeSeparators(file.fileName()));
-            rfs.SetAtt(*buffer, KEntryAttHidden, 0);
-            delete buffer;
-            }
 #endif
         //qDebug() << test_path + '/' + initial_files.at(i) << (QFile::exists(test_path + '/' + initial_files.at(i)));
     }
@@ -458,14 +418,9 @@ void tst_QFileSystemModel::rowCount()
     QSignalSpy spy2(model, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
     QSignalSpy spy3(model, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)));
 
-#if !defined(Q_OS_WINCE)
     QStringList files = QStringList() <<  "b" << "d" << "f" << "h" << "j" << ".a" << ".c" << ".e" << ".g";
     QString l = "b,d,f,h,j,.a,.c,.e,.g";
-#else
-    // Cannot hide them on CE
-    QStringList files = QStringList() <<  "b" << "d" << "f" << "h" << "j";
-    QString l = "b,d,f,h,j";
-#endif
+
     QVERIFY(createFiles(tmp, files));
 
     QModelIndex root = model->setRootPath(tmp);
@@ -486,9 +441,6 @@ void tst_QFileSystemModel::rowsInserted_data()
 
 void tst_QFileSystemModel::rowsInserted()
 {
-#if defined(Q_OS_WINCE)
-    QSKIP("Watching directories does not work on CE(see #137910)", SkipAll);
-#endif
     QString tmp = flatDirTestPath;
     rowCount();
     QModelIndex root = model->index(model->rootPath());
@@ -541,9 +493,6 @@ void tst_QFileSystemModel::rowsRemoved_data()
 
 void tst_QFileSystemModel::rowsRemoved()
 {
-#if defined(Q_OS_WINCE)
-    QSKIP("Watching directories does not work on CE(see #137910)", SkipAll);
-#endif
     QString tmp = flatDirTestPath;
     rowCount();
     QModelIndex root = model->index(model->rootPath());
@@ -632,7 +581,6 @@ void tst_QFileSystemModel::filters_data()
     QTest::addColumn<int>("dirFilters");
     QTest::addColumn<QStringList>("nameFilters");
     QTest::addColumn<int>("rowCount");
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_SYMBIAN)
     QTest::newRow("no dirs") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs) << QStringList() << 2;
     QTest::newRow("no dirs - dot") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs | QDir::NoDot) << QStringList() << 1;
     QTest::newRow("no dirs - dotdot") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs | QDir::NoDotDot) << QStringList() << 1;
@@ -654,35 +602,6 @@ void tst_QFileSystemModel::filters_data()
                          (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::CaseSensitive) << (QStringList() << "a") << 1;
     QTest::newRow("dir+files+hid+dot+cas+alldir") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") <<
                          (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::CaseSensitive | QDir::AllDirs) << (QStringList() << "Z") << 1;
-#else
-    QTest::qWait(3000); // We need to calm down a bit...
-    QTest::newRow("no dirs") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs) << QStringList() << 0;
-    QTest::newRow("no dirs - dot") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs | QDir::NoDot) << QStringList() << 1;
-    QTest::newRow("no dirs - dotdot") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs | QDir::NoDotDot) << QStringList() << 1;
-    QTest::newRow("no dirs - dotanddotdot") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs | QDir::NoDotAndDotDot) << QStringList() << 0;
-    QTest::newRow("one dir - dot") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") << (int)(QDir::Dirs | QDir::NoDot) << QStringList() << 2;
-    QTest::newRow("one dir - dotdot") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") << (int)(QDir::Dirs | QDir::NoDotDot) << QStringList() << 2;
-    QTest::newRow("one dir - dotanddotdot") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") << (int)(QDir::Dirs | QDir::NoDotAndDotDot) << QStringList() << 1;
-    QTest::newRow("one dir") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") << (int)(QDir::Dirs) << QStringList() << 1;
-    QTest::newRow("no dir + hidden") << (QStringList() << "a" << "b" << "c") << QStringList() << (int)(QDir::Dirs | QDir::Hidden) << QStringList() << 0;
-    QTest::newRow("dir+hid+files") << (QStringList() << "a" << "b" << "c") << QStringList() <<
-                         (int)(QDir::Dirs | QDir::Files | QDir::Hidden) << QStringList() << 3;
-#if defined(Q_OS_SYMBIAN)
-    // Some symbian envs have a bug that causes "A" and ".A" to be considered same name in file system.
-    QTest::newRow("dir+file+hid-dot .D") << (QStringList() << "a" << "b" << "c") << (QStringList() << ".D") <<
-#else
-    QTest::newRow("dir+file+hid-dot .A") << (QStringList() << "a" << "b" << "c") << (QStringList() << ".A") <<
-#endif
-                         (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot) << QStringList() << 4;
-    QTest::newRow("dir+files+hid+dot A") << (QStringList() << "a" << "b" << "c") << (QStringList() << "AFolder") <<
-                         (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot) << (QStringList() << "A*") << 2;
-    QTest::newRow("dir+files+hid+dot+cas1") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") <<
-                         (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::CaseSensitive) << (QStringList() << "Z") << 1;
-    QTest::newRow("dir+files+hid+dot+cas2") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") <<
-                         (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::CaseSensitive) << (QStringList() << "a") << 1;
-    QTest::newRow("dir+files+hid+dot+cas+alldir") << (QStringList() << "a" << "b" << "c") << (QStringList() << "Z") <<
-                         (int)(QDir::Dirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::CaseSensitive | QDir::AllDirs) << (QStringList() << "Z") << 1;
-#endif
 
     QTest::newRow("case sensitive") << (QStringList() << "Antiguagdb" << "Antiguamtd"
         << "Antiguamtp" << "afghanistangdb" << "afghanistanmtd")
@@ -725,8 +644,8 @@ void tst_QFileSystemModel::filters()
     for (int i = 0; i < rowCount; ++i)
         modelEntries.append(model->data(model->index(i, 0, root), QFileSystemModel::FileNameRole).toString());
 
-    qSort(dirEntries);
-    qSort(modelEntries);
+    std::sort(dirEntries.begin(), dirEntries.end());
+    std::sort(modelEntries.begin(), modelEntries.end());
     QCOMPARE(dirEntries, modelEntries);
 
 #ifdef Q_OS_LINUX
@@ -980,7 +899,7 @@ void tst_QFileSystemModel::caseSensitivity()
     }
 }
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+#if defined(Q_OS_WIN)
 void tst_QFileSystemModel::Win32LongFileName()
 {
     QString tmp = flatDirTestPath;
@@ -1093,7 +1012,7 @@ void tst_QFileSystemModel::permissions_data()
         QFile::ReadOwner,
         QFile::WriteOwner|QFile::ReadOwner,
     };
-#define ROW_NAME(i) qPrintable(QString().sprintf("%s-0%04x", readOnly ? "ro" : "rw", permissions[i]))
+#define ROW_NAME(i) qPrintable(QString::asprintf("%s-0%04x", readOnly ? "ro" : "rw", permissions[i]))
     for (int readOnly = false ; readOnly <= true; ++readOnly)
         for (size_t i = 0; i < sizeof permissions / sizeof *permissions; ++i)
             QTest::newRow(ROW_NAME(i)) << permissions[i] << bool(readOnly);

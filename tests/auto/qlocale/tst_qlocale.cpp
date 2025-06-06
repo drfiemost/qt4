@@ -56,16 +56,6 @@
 #    include <fenv.h>
 #endif
 
-#ifdef Q_OS_WINCE
-#include <qcoreapplication.h>
-#include <windows.h> // needed for GetUserDefaultLCID
-#define _control87 _controlfp
-extern "C" DWORD GetThreadLocale(void) {
-	return GetUserDefaultLCID();
-}
-
-#endif
-
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
 #    include <stdlib.h>
 #endif
@@ -420,9 +410,6 @@ void tst_QLocale::ctor()
 
 void tst_QLocale::emptyCtor()
 {
-#if defined(Q_OS_WINCE)
-    QSKIP("Uses unsupported Windows CE / Symbian QProcess functionality (std streams, env)", SkipAll);
-#endif
 #if defined(QT_NO_PROCESS)
     QSKIP("Qt was compiled with QT_NO_PROCESS", SkipAll);
 #else
