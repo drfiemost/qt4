@@ -91,7 +91,7 @@ public:
 
     void getDate(int *year, int *month, int *day);
 
-    QDate addDays(int days) const;
+    QDate addDays(qint64 days) const;
     QDate addMonths(int months) const;
     QDate addYears(int years) const;
     int daysTo(const QDate &) const;
@@ -222,10 +222,10 @@ public:
     QString toString(Qt::DateFormat f = Qt::TextDate) const;
     QString toString(const QString &format) const;
 #endif
-    QDateTime addDays(int days) const;
+    QDateTime addDays(qint64 days) const;
     QDateTime addMonths(int months) const;
     QDateTime addYears(int years) const;
-    QDateTime addSecs(int secs) const;
+    QDateTime addSecs(qint64 secs) const;
     QDateTime addMSecs(qint64 msecs) const;
 
     QDateTime toTimeSpec(Qt::TimeSpec spec) const;
@@ -254,7 +254,7 @@ public:
     static QDateTime fromString(const QString &s, const QString &format);
 #endif
     static QDateTime fromTime_t(uint secsSince1Jan1970UTC);
-    static QDateTime fromMSecsSinceEpoch(qint64 msecs);
+    static QDateTime fromMSecsSinceEpoch(qint64 msecs, Qt::TimeSpec spec = Qt::LocalTime, int offsetFromUtc = 0);
     static qint64 currentMSecsSinceEpoch() noexcept;
 
 private:
