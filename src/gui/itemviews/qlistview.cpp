@@ -57,6 +57,8 @@
 #include <qaccessible.h>
 #endif
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -1436,13 +1438,11 @@ QModelIndexList QListView::selectedIndexes() const
         return QModelIndexList();
 
     QModelIndexList viewSelected = d->selectionModel->selectedIndexes();
-    for (int i = 0; i < viewSelected.count(); ++i) {
-        const QModelIndex &index = viewSelected.at(i);
-        if (!isIndexHidden(index) && index.parent() == d->root && index.column() == d->column)
-            ++i;
-        else
-            viewSelected.removeAt(i);
-    }
+    auto ignorable = [this, d](const QModelIndex &index) {
+        return index.column() != d->column || index.parent() != d->root || isIndexHidden(index);
+    };
+    viewSelected.erase(std::remove_if(viewSelected.begin(), viewSelected.end(), ignorable),
+                       viewSelected.end());
     return viewSelected;
 }
 
@@ -1840,6 +1840,16 @@ bool QListViewPrivate::dropOn(QDropEvent *event, int *dropRow, int *dropCol, QMo
         return QAbstractItemViewPrivate::dropOn(event, dropRow, dropCol, dropIndex);
 }
 #endif
+
+void QListViewPrivate::removeCurrentAndDisabled(QVector<QModelIndex> *indexes, const QModelIndex &current) const
+{
+    auto isCurrentOrDisabled = [=](const QModelIndex &index) {
+        return !isIndexEnabled(index) || index == current;
+    };
+    indexes->erase(std::remove_if(indexes->begin(), indexes->end(),
+                                  isCurrentOrDisabled),
+                   indexes->end());
+}
 
 /*
  * Common ListView Implementation
