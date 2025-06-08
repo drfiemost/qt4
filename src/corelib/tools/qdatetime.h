@@ -189,9 +189,7 @@ class Q_CORE_EXPORT QDateTime
 public:
     QDateTime();
     explicit QDateTime(const QDate &);
-    QDateTime(const QDate &, const QTime &, Qt::TimeSpec spec = Qt::LocalTime);
-    // ### TODO: Merge with above with default offsetSeconds = 0
-    QDateTime(const QDate &date, const QTime &time, Qt::TimeSpec spec, int offsetSeconds);
+    QDateTime(const QDate &date, const QTime &time, Qt::TimeSpec spec = Qt::LocalTime, int offsetSeconds = 0);
     QDateTime(const QDateTime &other);
     ~QDateTime();
 

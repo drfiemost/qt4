@@ -272,7 +272,8 @@ static time_t qt_mktime(QDate *date, QTime *time, QDateTimePrivate::Spec *spec,
         *ok = false;
     int yy, mm, dd;
     date->getDate(&yy, &mm, &dd);
-    tm local;
+    std::tm local;
+    std::memset(&local, 0, sizeof(local)); // tm_[wy]day plus any non-standard fields
     local.tm_sec = time->second();
     local.tm_min = time->minute();
     local.tm_hour = time->hour();
@@ -287,11 +288,11 @@ static time_t qt_mktime(QDate *date, QTime *time, QDateTimePrivate::Spec *spec,
 #else
     tzset();
 #endif // Q_OS_WIN
-    const time_t secsSinceEpoch = mktime(&local);
-    if (secsSinceEpoch != (uint)-1) {
+    const std::time_t secsSinceEpoch = std::mktime(&local);
+    if (secsSinceEpoch != (std::time_t)-1) {
         *date = QDate(local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
         *time = QTime(local.tm_hour, local.tm_min, local.tm_sec, time->msec());
-        if (local.tm_isdst == 1) {
+        if (local.tm_isdst >= 1) {
             if (spec)
                 *spec = QDateTimePrivate::LocalDST;
             if (abbreviation)
@@ -316,6 +317,8 @@ static time_t qt_mktime(QDate *date, QTime *time, QDateTimePrivate::Spec *spec,
             *spec = QDateTimePrivate::LocalUnknown;
         if (abbreviation)
             *abbreviation = QString();
+        if (ok)
+            *ok = false;
     }
     return secsSinceEpoch;
 }
@@ -2192,22 +2195,6 @@ QDateTime::QDateTime(const QDate &date)
 }
 
 /*!
-    Constructs a datetime with the given \a date and \a time, using
-    the time specification defined by \a spec.
-
-    If \a date is valid and \a time is not, the time will be set to midnight.
-
-    If \a spec is Qt::OffsetFromUTC then it will be set to Qt::UTC, i.e. an
-    offset of 0 seconds. To create a Qt::OffsetFromUTC datetime use the
-    correct constructor.
-*/
-
-QDateTime::QDateTime(const QDate &date, const QTime &time, Qt::TimeSpec spec)
-    : d(new QDateTimePrivate(date, time, spec, 0))
-{
-}
-
-/*!
 
     Constructs a datetime with the given \a date and \a time, using
     the time specification defined by \a spec and \a offsetSeconds seconds.
@@ -3796,11 +3783,11 @@ QDataStream &operator>>(QDataStream &in, QDateTime &dateTime)
 *****************************************************************************/
 
 #ifdef Q_OS_WIN
-static const int LowerYear = 1980;
+static constexpr int LowerYear = 1980;
 #else
-static const int LowerYear = 1970;
+static constexpr int LowerYear = 1970;
 #endif
-static const int UpperYear = 2037;
+static constexpr int UpperYear = 2037;
 
 static QDate adjustDate(QDate date)
 {
