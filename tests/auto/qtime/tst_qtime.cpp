@@ -93,6 +93,8 @@ private slots:
     void toString_data();
     void toString_format_data();
     void toString_format();
+    void msecsSinceStartOfDay_data();
+    void msecsSinceStartOfDay();
 };
 
 Q_DECLARE_METATYPE(QTime)
@@ -697,6 +699,50 @@ void tst_QTime::toStringLocale()
                 QLocale::system().toString(time, QLocale::ShortFormat));
     QCOMPARE(time.toString(Qt::LocaleDate),
                 QLocale().toString(time, QLocale::ShortFormat));
+}
+
+void tst_QTime::msecsSinceStartOfDay_data()
+{
+    QTest::addColumn<int>("msecs");
+    QTest::addColumn<bool>("isValid");
+    QTest::addColumn<int>("hour");
+    QTest::addColumn<int>("minute");
+    QTest::addColumn<int>("second");
+    QTest::addColumn<int>("msec");
+
+    QTest::newRow("00:00:00.000") << 0 << true
+                                  << 0 << 0 << 0 << 0;
+    QTest::newRow("01:00:00.001") << ((1 * 3600 * 1000) + 1) << true
+                                  << 1 << 0 << 0 << 1;
+    QTest::newRow("03:04:05.678") << ((3 * 3600 + 4 * 60 + 5) * 1000 + 678) << true
+                                  << 3 << 4 << 5 << 678;
+    QTest::newRow("23:59:59.999") << ((23 * 3600 + 59 * 60 + 59) * 1000 + 999) << true
+                                  << 23 << 59 << 59 << 999;
+    QTest::newRow("24:00:00.000") << ((24 * 3600) * 1000) << false
+                                  << -1 << -1 << -1 << -1;
+    QTest::newRow("-1 invalid")   << -1 << false
+                                  << -1 << -1 << -1 << -1;
+}
+
+void tst_QTime::msecsSinceStartOfDay()
+{
+    QFETCH(int, msecs);
+    QFETCH(bool, isValid);
+    QFETCH(int, hour);
+    QFETCH(int, minute);
+    QFETCH(int, second);
+    QFETCH(int, msec);
+
+    QTime time = QTime::fromMSecsSinceStartOfDay(msecs);
+    QCOMPARE(time.isValid(), isValid);
+    if (msecs >= 0)
+        QCOMPARE(time.msecsSinceStartOfDay(), msecs);
+    else
+        QCOMPARE(time.msecsSinceStartOfDay(), 0);
+    QCOMPARE(time.hour(), hour);
+    QCOMPARE(time.minute(), minute);
+    QCOMPARE(time.second(), second);
+    QCOMPARE(time.msec(), msec);
 }
 
 QTEST_APPLESS_MAIN(tst_QTime)
