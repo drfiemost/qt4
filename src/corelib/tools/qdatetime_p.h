@@ -76,7 +76,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QDateTimePrivate
+class QDateTimePrivate : public QSharedData
 {
 public:
     enum Spec { LocalUnknown = -1, LocalStandard = 0, LocalDST = 1, UTC = 2, OffsetFromUTC = 3};
@@ -85,10 +85,9 @@ public:
     QDateTimePrivate(const QDate &toDate, const QTime &toTime, Qt::TimeSpec toSpec,
                      int offsetSeconds);
     QDateTimePrivate(const QDateTimePrivate &other)
-        : date(other.date), time(other.time), spec(other.spec), m_offsetFromUtc(other.m_offsetFromUtc)
+        : QSharedData(other), date(other.date), time(other.time), spec(other.spec), m_offsetFromUtc(other.m_offsetFromUtc)
     {}
 
-    QAtomicInt ref;
     QDate date;
     QTime time;
     Spec spec;
@@ -101,6 +100,9 @@ public:
 
     // Add msecs to given datetime and put result in utcDate and utcTime
     static void addMSecs(QDate &utcDate, QTime &utcTime, qint64 msecs);
+
+    static inline qint64 minJd() { return QDate::minJd(); }
+    static inline qint64 maxJd() { return QDate::maxJd(); }
 };
 
 #ifndef QT_BOOTSTRAPPED

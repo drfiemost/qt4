@@ -135,8 +135,8 @@ void tst_QDate::isNull_data()
     QTest::addColumn<qint64>("jd");
     QTest::addColumn<bool>("null");
 
-    qint64 minJd = std::numeric_limits<qint64>::min() / 2;
-    qint64 maxJd = std::numeric_limits<qint64>::max() / 2;
+    qint64 minJd = Q_INT64_C(-784350574879);
+    qint64 maxJd = Q_INT64_C( 784354017364);
 
     QTest::newRow("qint64 min") << std::numeric_limits<qint64>::min() << true;
     QTest::newRow("minJd - 1")  << minJd - 1                          << true;
@@ -211,10 +211,10 @@ void tst_QDate::isValid_data()
     QTest::newRow("idec") << 2000 << 12 << 32 << nullJd << false;
 
     // the beginning of the Julian Day calendar:
-    QTest::newRow("jd earliest formula") <<   -4800 <<  1 <<  1 << qint64(   -31776) << true;
-    QTest::newRow("jd -1")               <<   -4714 << 12 << 31 << qint64(       -1) << true;
-    QTest::newRow("jd 0")                <<   -4713 <<  1 <<  1 << qint64(        0) << true;
-    QTest::newRow("jd 1")                <<   -4713 <<  1 <<  2 << qint64(        1) << true;
+    QTest::newRow("jd earliest formula") <<   -4800 <<  1 <<  1 << qint64(   -31738) << true;
+    QTest::newRow("jd -1")               <<   -4714 << 11 << 23 << qint64(       -1) << true;
+    QTest::newRow("jd 0")                <<   -4714 << 11 << 24 << qint64(        0) << true;
+    QTest::newRow("jd 1")                <<   -4714 << 11 << 25 << qint64(        1) << true;
     QTest::newRow("jd latest formula")   << 1400000 << 12 << 31 << qint64(513060925) << true;
 }
 
@@ -315,8 +315,8 @@ void tst_QDate::julianDaysLimits()
 {
     qint64 min = std::numeric_limits<qint64>::min();
     qint64 max = std::numeric_limits<qint64>::max();
-    qint64 minJd = std::numeric_limits<qint64>::min() / 2;
-    qint64 maxJd = std::numeric_limits<qint64>::max() / 2;
+    qint64 minJd = Q_INT64_C(-784350574879);
+    qint64 maxJd = Q_INT64_C( 784354017364);
 
     QDate maxDate = QDate::fromJulianDay(maxJd);
     QDate minDate = QDate::fromJulianDay(minJd);
@@ -359,7 +359,7 @@ void tst_QDate::julianDaysLimits()
     dt = minDate.addDays(min);
     QCOMPARE(dt.isValid(), false);
     dt = minDate.addDays(max);
-    QCOMPARE(dt.isValid(), true);
+    QCOMPARE(dt.isValid(), false);
 
     dt = zeroDate.addDays(-1);
     QCOMPARE(dt.isValid(), true);
@@ -1020,26 +1020,27 @@ void tst_QDate::roundtrip() const
     // year(), month(), day(), julianDayFromDate(), and getDateFromJulianDay()
     // to ensure they are internally consistent (but doesn't guarantee correct)
 
-    // Test Julian round trip around JD 0 and current low end of valid range
+    // Test Julian round trip around JD 0 and the c++ integer division rounding
+    // problem point (eg. negative numbers) in the conversion functions.
     QDate testDate;
-    QDate loopDate = QDate::fromJulianDay(-31776); // 1 Jan 4800 BC
-    while (loopDate.toJulianDay() <= 5113) {     // 31 Dec 4700 AD
+    QDate loopDate = QDate::fromJulianDay(-50001); // 1 Jan 4850 BC
+    while (loopDate.toJulianDay() <= 5150) {     // 31 Dec 4700 AD
         testDate.setDate(loopDate.year(), loopDate.month(), loopDate.day());
         QCOMPARE(loopDate.toJulianDay(), testDate.toJulianDay());
         loopDate = loopDate.addDays(1);
     }
 
     // Test Julian round trip in both BC and AD
-    loopDate = QDate::fromJulianDay(1684899);       //  1 Jan 100 BC
-    while (loopDate.toJulianDay() <= 1757948) {   // 31 Dec 100 AD
+    loopDate = QDate::fromJulianDay(1684901);       //  1 Jan 100 BC
+    while (loopDate.toJulianDay() <= 1757949) {   // 31 Dec 100 AD
         testDate.setDate(loopDate.year(), loopDate.month(), loopDate.day());
         QCOMPARE(loopDate.toJulianDay(), testDate.toJulianDay());
         loopDate = loopDate.addDays(1);
     }
 
     // Test Julian and Gregorian round trip during changeover period
-    loopDate = QDate::fromJulianDay(2298153);     //  1 Jan 1580 AD
-    while (loopDate.toJulianDay() <= 2300334) { // 31 Dec 1585 AD
+    loopDate = QDate::fromJulianDay(2378497);     //  1 Jan 1580 AD
+    while (loopDate.toJulianDay() <= 2488433) { // 31 Dec 1585 AD
         testDate.setDate(loopDate.year(), loopDate.month(), loopDate.day());
         QCOMPARE(loopDate.toJulianDay(), testDate.toJulianDay());
         loopDate = loopDate.addDays(1);
@@ -1061,9 +1062,20 @@ void tst_QDate::roundtrip() const
         loopDate = loopDate.addDays(1);
     }
 
+    qint64 minJd = Q_INT64_C(-784350574879);
+    qint64 maxJd = Q_INT64_C( 784354017364);
+
     // Test Gregorian round trip at top end of conversion range
-    loopDate = QDate::fromJulianDay(513024036);     //  1 Jan 1399900 AD
-    while (loopDate.toJulianDay() <= 513060925) { // 31 Dec 1400000 AD
+    loopDate = QDate::fromJulianDay(maxJd);
+    while (loopDate.toJulianDay() >= maxJd - 146397) {
+        testDate.setDate(loopDate.year(), loopDate.month(), loopDate.day());
+        QCOMPARE(loopDate.toJulianDay(), testDate.toJulianDay());
+        loopDate = loopDate.addDays(-1);
+    }
+
+    // Test Gregorian round trip at low end of conversion range
+    loopDate = QDate::fromJulianDay(minJd);
+    while (loopDate.toJulianDay() <= minJd + 146397) {
         testDate.setDate(loopDate.year(), loopDate.month(), loopDate.day());
         QCOMPARE(loopDate.toJulianDay(), testDate.toJulianDay());
         loopDate = loopDate.addDays(1);

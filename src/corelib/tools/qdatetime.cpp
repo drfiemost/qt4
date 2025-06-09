@@ -75,6 +75,8 @@
 
 QT_BEGIN_NAMESPACE
 
+//Q_GLOBAL_STATIC_WITH_ARGS(QSharedDataPointer<QDateTimePrivate>, defaultDateTimePrivate, (new QDateTimePrivate()))
+
 enum {
     SECS_PER_DAY = 86400,
     MSECS_PER_DAY = 86400000,
@@ -92,72 +94,74 @@ static inline QDate fixedDate(int y, int m, int d)
     return result;
 }
 
-static inline qint64 julianDayFromGregorianDate(qint64 year, int month, int day)
+/*
+  Until C++11, rounding direction is implementation-defined.
+
+  For negative operands, implementations may chose to round down instead of
+  towards zero (truncation).  We only actually care about the case a < 0, as all
+  uses of floordiv have b > 0.  In this case, if rounding is down we have a % b
+  >= 0 and simple division works fine; but a % b = a - (a / b) * b always, so
+  rounding towards zero gives a % b <= 0; when < 0, we need to adjust.
+
+  Once we assume C++11, we can safely test a < 0 instead of a % b < 0.
+ */
+static inline qint64 floordiv(qint64 a, int b)
 {
-    // Gregorian calendar starting from October 15, 1582
-    // Algorithm from Henry F. Fliegel and Thomas C. Van Flandern
-    return (1461 * (year + 4800 + (month - 14) / 12)) / 4
-           + (367 * (month - 2 - 12 * ((month - 14) / 12))) / 12
-           - (3 * ((year + 4900 + (month - 14) / 12) / 100)) / 4
-           + day - 32075;
+    return (a - (a % b < 0 ? b - 1 : 0)) / b;
 }
 
-static qint64 julianDayFromDate(qint64 year, int month, int day)
+static inline int floordiv(int a, int b)
 {
-    if (year > 1582 || (year == 1582 && (month > 10 || (month == 10 && day >= 15)))) {
-        return julianDayFromGregorianDate(year, month, day);
-    } else if (year < 1582 || (year == 1582 && (month < 10 || (month == 10 && day <= 4)))) {
-        // Julian calendar until October 4, 1582
-        // Algorithm from Frequently Asked Questions about Calendars by Claus ToenderingMore actions
-        if (year < 0)
-            ++year;
-        int a = (14 - month) / 12;
-        return (153 * (month + (12 * a) - 3) + 2) / 5
-               + (1461 * (year + 4800 - a)) / 4
-               + day - 32083;
-    } else {
-        // the day following October 4, 1582 is October 15, 1582
-        return std::numeric_limits<qint64>::min(); // i.e. nullJd()
-    }
+    return (a - (a % b < 0 ? b - 1 : 0)) / b;
 }
 
-static void getDateFromJulianDay(qint64 julianDay, int *year, int *month, int *day)
+static inline qint64 julianDayFromDate(int year, int month, int day)
 {
-    int y, m, d;
+    // Adjust for no year 0
+    if (year < 0)
+        ++year;
 
-    if (julianDay >= 2299161) {
-        // Gregorian calendar starting from October 15, 1582
-        // This algorithm is from Henry F. Fliegel and Thomas C. Van Flandern
-        qint64 ell, n, i, j;  //TODO These will need to be bigger to prevent overflow!!!
-        ell = julianDay + 68569;
-        n = (4 * ell) / 146097;
-        ell = ell - (146097 * n + 3) / 4;
-        i = (4000 * (ell + 1)) / 1461001;
-        ell = ell - (1461 * i) / 4 + 31;
-        j = (80 * ell) / 2447;
-        d = ell - (2447 * j) / 80;
-        ell = j / 11;
-        m = j + 2 - (12 * ell);
-        y = 100 * (n - 49) + i + ell;
-    } else {
-        // Julian calendar until October 4, 1582
-        // Algorithm from Frequently Asked Questions about Calendars by Claus Toendering
-        julianDay += 32082;
-        qint64 dd = (4 * julianDay + 3) / 1461;  //TODO These may need to be bigger to prevent overflow!!!More actions
-        qint64 ee = julianDay - (1461 * dd) / 4;  //TODO These may need to be bigger to prevent overflow!!!
-        qint64 mm = ((5 * ee) + 2) / 153;  //TODO These may need to be bigger to prevent overflow!!!
-        d = ee - (153 * mm + 2) / 5 + 1;
-        m = mm + 3 - 12 * (mm / 10);
-        y = dd - 4800 + (mm / 10);
-        if (y <= 0)
-            --y;
-    }
-    if (year)
-        *year = y;
-    if (month)
-        *month = m;
-    if (day)
-        *day = d;
+/*
+ * Math from The Calendar FAQ at http://www.tondering.dk/claus/cal/julperiod.php
+ * This formula is correct for all julian days, when using mathematical integer
+ * division (round to negative infinity), not c++11 integer division (round to zero)
+ */
+    int    a = floordiv(14 - month, 12);
+    qint64 y = (qint64)year + 4800 - a;
+    int    m = month + 12 * a - 3;
+    return day + floordiv(153 * m + 2, 5) + 365 * y + floordiv(y, 4) - floordiv(y, 100) + floordiv(y, 400) - 32045;
+}
+
+struct ParsedDate
+{
+    int year, month, day;
+};
+
+static ParsedDate getDateFromJulianDay(qint64 julianDay)
+{
+/*
+ * Math from The Calendar FAQ at http://www.tondering.dk/claus/cal/julperiod.php
+ * This formula is correct for all julian days, when using mathematical integer
+ * division (round to negative infinity), not c++11 integer division (round to zero)
+ */
+    qint64 a = julianDay + 32044;
+    qint64 b = floordiv(4 * a + 3, 146097);
+    int    c = a - floordiv(146097 * b, 4);
+
+    int    d = floordiv(4 * c + 3, 1461);
+    int    e = c - floordiv(1461 * d, 4);
+    int    m = floordiv(5 * e + 2, 153);
+
+    int    day = e - floordiv(153 * m + 2, 5) + 1;
+    int    month = m + 3 - 12 * floordiv(m, 10);
+    int    year = 100 * b + d - 4800 + floordiv(m, 10);
+
+    // Adjust for no year 0
+    if (year <= 0)
+        --year ;
+
+    const ParsedDate result = { year, month, day };
+    return result;
 }
 
 
@@ -485,9 +489,7 @@ int QDate::year() const
     if (isNull())
         return 0;
 
-    int y;
-    getDateFromJulianDay(jd, &y, nullptr, nullptr);
-    return y;
+    return getDateFromJulianDay(jd).year;
 }
 
 /*!
@@ -517,9 +519,7 @@ int QDate::month() const
     if (isNull())
         return 0;
 
-    int m;
-    getDateFromJulianDay(jd, nullptr, &m, nullptr);
-    return m;
+    return getDateFromJulianDay(jd).month;
 }
 
 /*!
@@ -533,9 +533,7 @@ int QDate::day() const
     if (isNull())
         return 0;
 
-    int d;
-    getDateFromJulianDay(jd, nullptr, nullptr, &d);
-    return d;
+    return getDateFromJulianDay(jd).day;
 }
 
 /*!
@@ -581,14 +579,11 @@ int QDate::daysInMonth() const
     if (isNull())
         return 0;
 
-    int y, m, d;
-    getDateFromJulianDay(jd, &y, &m, &d);
-    if (m == 2 && isLeapYear(y))
+    const ParsedDate pd = getDateFromJulianDay(jd);
+    if (pd.month == 2 && isLeapYear(pd.year))
         return 29;
-    else if (m < 1 || m > 12)
-        return 0;
     else
-        return monthDays[m];
+        return monthDays[pd.month];
 }
 
 /*!
@@ -602,9 +597,7 @@ int QDate::daysInYear() const
     if (isNull())
         return 0;
 
-    int y;
-    getDateFromJulianDay(jd, &y, 0, 0);
-    return isLeapYear(y) ? 366 : 365;
+    return isLeapYear(getDateFromJulianDay(jd).year) ? 366 : 365;
 }
 
 /*!
@@ -823,7 +816,7 @@ QString QDate::longDayName(int weekday, MonthNameType type)
     default:
         break;
     }
-    return QLocale::system().dayName(weekday, QLocale::LongFormat);
+    return QString();
 }
 
 #endif //QT_NO_TEXTDATE
@@ -876,7 +869,9 @@ QString QDate::toString(Qt::DateFormat format) const
 {
     if (!isValid())
         return QString();
-    int y, m, d;
+
+    ParsedDate pd;
+
     switch (format) {
     case Qt::SystemLocaleDate:
     case Qt::SystemLocaleShortDate:
@@ -891,19 +886,19 @@ QString QDate::toString(Qt::DateFormat format) const
     default:
 #ifndef QT_NO_TEXTDATE
     case Qt::TextDate:
-        getDateFromJulianDay(jd, &y, &m, &d);
+        pd = getDateFromJulianDay(jd);
         return QString::fromUtf8("%1 %2 %3 %4").arg(shortDayName(dayOfWeek()))
-                                               .arg(shortMonthName(m))
-                                               .arg(d)
-                                               .arg(y);
+                                               .arg(shortMonthName(pd.month))
+                                               .arg(pd.day)
+                                               .arg(pd.year);
 #endif
     case Qt::ISODate:
-        getDateFromJulianDay(jd, &y, &m, &d);
-        if (y < 0 || y > 9999)
+        pd = getDateFromJulianDay(jd);
+        if (pd.year < 0 || pd.year > 9999)
             return QString();
-        return QString::fromUtf8("%1-%2-%3").arg(y, 4, 10, QLatin1Char('0'))
-                                            .arg(m, 2, 10, QLatin1Char('0'))
-                                            .arg(d, 2, 10, QLatin1Char('0'));
+        return QString::fromUtf8("%1-%2-%3").arg(pd.year, 4, 10, QLatin1Char('0'))
+                                            .arg(pd.month, 2, 10, QLatin1Char('0'))
+                                            .arg(pd.day, 2, 10, QLatin1Char('0'));
     }
 }
 
@@ -1007,18 +1002,18 @@ bool QDate::setDate(int year, int month, int day)
 
     \sa year(), month(), day(), isValid()
 */
-void QDate::getDate(int *year, int *month, int *day)
+void QDate::getDate(int *year, int *month, int *day) const
 {
-    if (isValid()) {
-        getDateFromJulianDay(jd, year, month, day);
-    } else {
-        if (year)
-            *year = 0;
-        if (month)
-            *month = 0;
-        if (day)
-            *day = 0;
-    }
+    ParsedDate pd = { 0, 0, 0 };
+    if (isValid())
+        pd = getDateFromJulianDay(jd);
+
+    if (year)
+        *year = pd.year;
+    if (month)
+        *month = pd.month;
+    if (day)
+        *day = pd.day;
 }
 
 /*!
@@ -1072,7 +1067,12 @@ QDate QDate::addMonths(int nmonths) const
         return *this;
 
     int old_y, y, m, d;
-    getDateFromJulianDay(jd, &y, &m, &d);
+    {
+        const ParsedDate pd = getDateFromJulianDay(jd);
+        y = pd.year;
+        m = pd.month;
+        d = pd.day;
+    }
     old_y = y;
 
     bool increasing = nmonths > 0;
@@ -1134,19 +1134,18 @@ QDate QDate::addYears(int nyears) const
     if (!isValid())
         return QDate();
 
-    int y, m, d;
-    getDateFromJulianDay(jd, &y, &m, &d);
+    ParsedDate pd = getDateFromJulianDay(jd);
 
-    int old_y = y;
-    y += nyears;
+    int old_y = pd.year;
+    pd.year += nyears;
 
     // was there a sign change?
-    if ((old_y > 0 && y <= 0) ||
-        (old_y < 0 && y >= 0))
+    if ((old_y > 0 && pd.year <= 0) ||
+        (old_y < 0 && pd.year >= 0))
         // yes, adjust the date by +1 or -1 years
-        y += nyears > 0 ? +1 : -1;
+        pd.year += nyears > 0 ? +1 : -1;
 
-    return fixedDate(y, m, d);
+    return fixedDate(pd.year, pd.month, pd.day);
 }
 
 /*!
@@ -2256,7 +2255,7 @@ int QTime::elapsed() const
     \sa isValid()
 */
 QDateTime::QDateTime()
-    : d(new QDateTimePrivate)
+    : d(new QDateTimePrivate())
 {
 }
 
@@ -2489,7 +2488,6 @@ int QDateTime::offsetFromUtc() const
 
 void QDateTime::setDate(const QDate &date)
 {
-    detach();
     d->date = date;
     if (d->spec == QDateTimePrivate::LocalStandard
         || d->spec == QDateTimePrivate::LocalDST)
@@ -2506,7 +2504,6 @@ void QDateTime::setDate(const QDate &date)
 
 void QDateTime::setTime(const QTime &time)
 {
-    detach();
     if (d->spec == QDateTimePrivate::LocalStandard
         || d->spec == QDateTimePrivate::LocalDST)
         d->spec = QDateTimePrivate::LocalUnknown;
@@ -2521,7 +2518,7 @@ void QDateTime::setTime(const QTime &time)
 
 void QDateTime::setTimeSpec(Qt::TimeSpec spec)
 {
-    detach();
+    QDateTimePrivate *d = this->d.data(); // detaches (and shadows d)
 
     d->m_offsetFromUtc = 0;
     switch (spec) {
@@ -2551,7 +2548,7 @@ void QDateTime::setTimeSpec(Qt::TimeSpec spec)
 
 void QDateTime::setOffsetFromUtc(int offsetSeconds)
 {
-    detach();
+    QDateTimePrivate *d = this->d.data(); // detaches (and shadows d)
 
     if (offsetSeconds == 0) {
         d->spec = QDateTimePrivate::UTC;
@@ -2631,15 +2628,15 @@ uint QDateTime::toTime_t() const
     (Qt::UTC). On systems that do not support time zones this function
     will behave as if local time were Qt::UTC.
 
-    Note that there are possible values for \a msecs that lie outside the
-    valid range of QDateTime, both negative and positive. The behavior of
-    this function is undefined for those values.
+    Note that passing the minimum of \c qint64More actions
+    (\c{std::numeric_limits<qint64>::min()}) to \a msecs will result in
+    undefined behavior.
 
     \sa toMSecsSinceEpoch(), setTime_t()
 */
 void QDateTime::setMSecsSinceEpoch(qint64 msecs)
 {
-    detach();
+    QDateTimePrivate *d = this->d.data(); // detaches (and shadows d)
 
     int ddays = msecs / MSECS_PER_DAY;
     msecs %= MSECS_PER_DAY;
@@ -2870,7 +2867,6 @@ QDateTime QDateTime::addDays(qint64 ndays) const
 QDateTime QDateTime::addMonths(int nmonths) const
 {
     QDateTime dt(*this);
-    dt.detach();
     dt.d->date = d->date.addMonths(nmonths);
     return dt;
 }
@@ -2886,7 +2882,6 @@ QDateTime QDateTime::addMonths(int nmonths) const
 QDateTime QDateTime::addYears(int nyears) const
 {
     QDateTime dt(*this);
-    dt.detach();
     dt.d->date = d->date.addYears(nyears);
     return dt;
 }
@@ -2957,7 +2952,6 @@ QDateTime QDateTime::addMSecs(qint64 msecs) const
         return QDateTime();
 
     QDateTime dt(*this);
-    dt.detach();
     dt.setMSecsSinceEpoch(toMSecsSinceEpoch() + msecs);
     return dt;
 }
@@ -3179,14 +3173,7 @@ QDateTime QDateTime::currentDateTime()
 
 QDateTime QDateTime::currentDateTimeUtc()
 {
-    QDate d;
-    QTime t;
-    SYSTEMTIME st;
-    memset(&st, 0, sizeof(SYSTEMTIME));
-    GetSystemTime(&st);
-    d.jd = julianDayFromDate(st.wYear, st.wMonth, st.wDay);
-    t.mds = msecsFromDecomposed(st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
-    return QDateTime(d, t, Qt::UTC);
+    return fromMSecsSinceEpoch(currentMSecsSinceEpoch(), Qt::UTC);
 }
 
 qint64 QDateTime::currentMSecsSinceEpoch() noexcept
@@ -3658,13 +3645,6 @@ QDateTime QDateTime::fromString(const QString &string, const QString &format)
     \sa toTimeSpec()
 */
 
-/*! \internal
- */
-void QDateTime::detach()
-{
-    d.detach();
-}
-
 /*****************************************************************************
   Date/time stream functions
  *****************************************************************************/
@@ -3763,8 +3743,6 @@ QDataStream &operator<<(QDataStream &out, const QDateTime &dateTime)
 
 QDataStream &operator>>(QDataStream &in, QDateTime &dateTime)
 {
-    dateTime.detach();
-
     in >> dateTime.d->date >> dateTime.d->time;
 
     if (in.version() >= 13) {
@@ -3915,7 +3893,7 @@ static QDateTimePrivate::Spec utcToLocal(QDate &date, QTime &time)
         time = QTime();
         return QDateTimePrivate::LocalUnknown;
     } else {
-        int deltaDays = fakeDate.daysTo(date);
+        qint64 deltaDays = fakeDate.daysTo(date);
         date = QDate(brokenDown->tm_year + 1900, brokenDown->tm_mon + 1, brokenDown->tm_mday);
         time = QTime(brokenDown->tm_hour, brokenDown->tm_min, brokenDown->tm_sec, time.msec());
         date = date.addDays(deltaDays);
@@ -3964,7 +3942,7 @@ static void localToUtc(QDate &date, QTime &time, int isdst)
         date = QDate(1970, 1, 1);
         time = QTime();
     } else {
-        int deltaDays = fakeDate.daysTo(date);
+        qint64 deltaDays = fakeDate.daysTo(date);
         date = QDate(brokenDown->tm_year + 1900, brokenDown->tm_mon + 1, brokenDown->tm_mday);
         time = QTime(brokenDown->tm_hour, brokenDown->tm_min, brokenDown->tm_sec, time.msec());
         date = date.addDays(deltaDays);
@@ -4859,9 +4837,9 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
 
     QDTPDEBUG << "parse" << input;
     {
-        int year, month, day, hour12, hour, minute, second, msec, ampm, dayofweek, year2digits;
-        getDateFromJulianDay(currentValue.date().toJulianDay(), &year, &month, &day);
-        year2digits = year % 100;
+        int  hour12, hour, minute, second, msec, ampm, dayofweek, year2digits;
+        ParsedDate pd = getDateFromJulianDay(currentValue.date().toJulianDay());
+        year2digits = pd.year % 100;
         hour = currentValue.time().hour();
         hour12 = -1;
         minute = currentValue.time().minute();
@@ -4918,11 +4896,11 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                 case MinuteSection: current = &minute; break;
                 case SecondSection: current = &second; break;
                 case MSecSection: current = &msec; break;
-                case YearSection: current = &year; break;
+                case YearSection: current = &pd.year; break;
                 case YearSection2Digits: current = &year2digits; break;
-                case MonthSection: current = &month; break;
+                case MonthSection: current = &pd.month; break;
                 case DayOfWeekSection: current = &dayofweek; break;
-                case DaySection: current = &day; num = std::max<int>(1, num); break;
+                case DaySection: current = &pd.day; num = std::max<int>(1, num); break;
                 case AmPmSection: current = &ampm; break;
                 default:
                     qWarning("QDateTimeParser::parse Internal error (%s)",
@@ -4954,18 +4932,18 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
 
         if (state != Invalid) {
             if (parserType != QVariant::Time) {
-                if (year % 100 != year2digits) {
+                if (pd.year % 100 != year2digits) {
                     switch (isSet & (YearSection2Digits|YearSection)) {
                     case YearSection2Digits:
-                        year = (year / 100) * 100;
-                        year += year2digits;
+                        pd.year = (pd.year / 100) * 100;
+                        pd.year += year2digits;
                         break;
                     case ((uint)YearSection2Digits|(uint)YearSection): {
                         conflicts = true;
                         const SectionNode &sn = sectionNode(currentSectionIndex);
                         if (sn.type == YearSection2Digits) {
-                            year = (year / 100) * 100;
-                            year += year2digits;
+                            pd.year = (pd.year / 100) * 100;
+                            pd.year += year2digits;
                         }
                         break; }
                     default:
@@ -4973,36 +4951,36 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                     }
                 }
 
-                const QDate date(year, month, day);
+                const QDate date(pd.year, pd.month, pd.day);
                 const int diff = dayofweek - date.dayOfWeek();
                 if (diff != 0 && state == Acceptable && isSet & DayOfWeekSection) {
                     conflicts = isSet & DaySection;
                     const SectionNode &sn = sectionNode(currentSectionIndex);
                     if (sn.type == DayOfWeekSection || currentSectionIndex == -1) {
                         // dayofweek should be preferred
-                        day += diff;
-                        if (day <= 0) {
-                            day += 7;
-                        } else if (day > date.daysInMonth()) {
-                            day -= 7;
+                        pd.day += diff;
+                        if (pd.day <= 0) {
+                            pd.day += 7;
+                        } else if (pd.day > date.daysInMonth()) {
+                            pd.day -= 7;
                         }
-                        QDTPDEBUG << year << month << day << dayofweek
-                                  << diff << QDate(year, month, day).dayOfWeek();
+                        QDTPDEBUG << pd.year << pd.month << pd.day << dayofweek
+                                  << diff << QDate(pd.year, pd.month, pd.day).dayOfWeek();
                     }
                 }
                 bool needfixday = false;
                 if (sectionType(currentSectionIndex) & (DaySection|DayOfWeekSection)) {
-                    cachedDay = day;
-                } else if (cachedDay > day) {
-                    day = cachedDay;
+                    cachedDay = pd.day;
+                } else if (cachedDay > pd.day) {
+                    pd.day = cachedDay;
                     needfixday = true;
                 }
 
-                if (!QDate::isValid(year, month, day)) {
-                    if (day < 32) {
-                        cachedDay = day;
+                if (!QDate::isValid(pd.year, pd.month, pd.day)) {
+                    if (pd.day < 32) {
+                        cachedDay = pd.day;
                     }
-                    if (day > 28 && QDate::isValid(year, month, 1)) {
+                    if (pd.day > 28 && QDate::isValid(pd.year, pd.month, 1)) {
                         needfixday = true;
                     }
                 }
@@ -5012,12 +4990,12 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
                         goto end;
                     }
                     if (state == Acceptable && fixday) {
-                        day = std::min<int>(day, QDate(year, month, 1).daysInMonth());
+                        pd.day = std::min<int>(pd.day, QDate(pd.year, pd.month, 1).daysInMonth());
 
                         const QLocale loc = locale();
                         for (int i=0; i<sectionNodesCount; ++i) {
                             if (sectionType(i) & (DaySection|DayOfWeekSection)) {
-                                input.replace(sectionPos(i), sectionSize(i), loc.toString(day));
+                                input.replace(sectionPos(i), sectionSize(i), loc.toString(pd.day));
                             }
                         }
                     } else {
@@ -5052,8 +5030,8 @@ QDateTimeParser::StateNode QDateTimeParser::parse(QString &input, int &cursorPos
 
             }
 
-            newCurrentValue = QDateTime(QDate(year, month, day), QTime(hour, minute, second, msec), spec);
-            QDTPDEBUG << year << month << day << hour << minute << second << msec;
+            newCurrentValue = QDateTime(QDate(pd.year, pd.month, pd.day), QTime(hour, minute, second, msec), spec);
+            QDTPDEBUG << pd.year << pd.month << pd.day << hour << minute << second << msec;
         }
         QDTPDEBUGN("'%s' => '%s'(%s)", input.toLatin1().constData(),
                    newCurrentValue.toString(QLatin1String("yyyy/MM/dd hh:mm:ss.zzz")).toLatin1().constData(),

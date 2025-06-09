@@ -91,7 +91,7 @@ public:
     { if (uint(y) <= 99) y += 1900; return setDate(y, m, d); }
     bool setDate(int year, int month, int day);
 
-    void getDate(int *year, int *month, int *day);
+    void getDate(int *year, int *month, int *day) const;
 
     QDate addDays(qint64 days) const;
     QDate addMonths(int months) const;
@@ -119,8 +119,8 @@ public:
 
 private:
     static inline qint64 nullJd() { return std::numeric_limits<qint64>::min(); }
-    static inline qint64 minJd() { return std::numeric_limits<qint64>::min() / 2; }
-    static inline qint64 maxJd() { return (std::numeric_limits<qint64>::max()) / 2; }
+    static inline qint64 minJd() { return Q_INT64_C(-784350574879); }
+    static inline qint64 maxJd() { return Q_INT64_C( 784354017364); }
 
     qint64 jd;
 
@@ -264,7 +264,6 @@ public:
 
 private:
     friend class QDateTimePrivate;
-    void detach();
     QExplicitlySharedDataPointer<QDateTimePrivate> d;
 
 #ifndef QT_NO_DATASTREAM
