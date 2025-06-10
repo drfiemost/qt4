@@ -253,16 +253,6 @@ static int fromOffsetString(const QString &offsetString, bool *valid)
 // Returns the tzname, assume tzset has been called already
 static QString qt_tzname(QDateTimePrivate::DaylightStatus daylightStatus)
 {
-#if defined(Q_OS_WINCE)
-    TIME_ZONE_INFORMATION tzi;
-    DWORD res = GetTimeZoneInformation(&tzi);
-    if (res == TIME_ZONE_ID_UNKNOWN)
-        return QString();
-    else if (daylightStatus == QDateTimePrivate::DaylightTime)
-        return QString::fromWCharArray(tzi.DaylightName);
-    else
-        return QString::fromWCharArray(tzi.StandardName);
-#else
     int isDst = (daylightStatus == QDateTimePrivate::DaylightTime) ? 1 : 0;
 #if defined(_MSC_VER) && _MSC_VER >= 1400
     size_t s = 0;
@@ -273,7 +263,6 @@ static QString qt_tzname(QDateTimePrivate::DaylightStatus daylightStatus)
 #else
     return QString::fromLocal8Bit(tzname[isDst]);
 #endif // Q_OS_WIN
-#endif // Q_OS_WINCE
 }
 
 // Calls the platform variant of mktime for the given date and time,
@@ -2272,7 +2261,7 @@ static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = nullp
     QTime tm;
     msecsToTime(localMsecs, &dt, &tm);
 
-    qint64 msecsMax = qint64(TIME_T_MAX) * 1000;
+    constexpr qint64 msecsMax = qint64(TIME_T_MAX) * 1000;
 
     if (localMsecs <= qint64(MSECS_PER_DAY)) {
 
@@ -2744,7 +2733,7 @@ QString QDateTime::timeZoneAbbreviation() const
         return QLatin1String("UTC") + toOffsetString(Qt::ISODate, d->m_offsetFromUtc);
     case Qt::LocalTime: {
         QString abbrev;
-        localMSecsToEpochMSecs(d->m_msecs, 0, 0, 0, &abbrev);
+        localMSecsToEpochMSecs(d->m_msecs, nullptr, nullptr, nullptr, &abbrev);
         return abbrev;
         }
     }

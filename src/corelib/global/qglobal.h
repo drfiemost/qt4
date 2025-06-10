@@ -2134,6 +2134,10 @@ Q_CORE_EXPORT QString qtTrId(const char *id, int n = -1);
 class QByteArray;
 Q_CORE_EXPORT QByteArray qgetenv(const char *varName);
 Q_CORE_EXPORT bool qputenv(const char *varName, const QByteArray& value);
+Q_CORE_EXPORT bool qunsetenv(const char *varName);
+
+Q_CORE_EXPORT bool qEnvironmentVariableIsEmpty(const char *varName) noexcept;
+Q_CORE_EXPORT bool qEnvironmentVariableIsSet(const char *varName) noexcept;
 
 inline int qIntCast(double f) { return int(f); }
 inline int qIntCast(float f) { return int(f); }

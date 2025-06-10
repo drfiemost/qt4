@@ -154,6 +154,29 @@ private:
     QTime invalidTime() const { return QTime(-1, -1, -1); }
     qint64 minJd() const { return QDateTimePrivate::minJd(); }
     qint64 maxJd() const { return QDateTimePrivate::maxJd(); }
+
+    class TimeZoneRollback
+    {
+        const QByteArray prior;
+    public:
+        // Save the previous timezone so we can restore it afterwards, otherwise
+        // later tests may break:
+        explicit TimeZoneRollback(const QByteArray &zone) : prior(qgetenv("TZ"))
+        { reset(zone); }
+        void reset(const QByteArray &zone)
+        {
+            qputenv("TZ", zone.constData());
+            tzset();
+        }
+        ~TimeZoneRollback()
+        {
+            if (prior.isNull())
+                qunsetenv("TZ");
+            else
+                qputenv("TZ", prior.constData());
+            tzset();
+        }
+    };
 };
 
 Q_DECLARE_METATYPE(QDateTime)
@@ -1617,9 +1640,7 @@ void tst_QDateTime::operator_insert_extract()
     QFETCH(QString, serialiseAs);
     QFETCH(QString, deserialiseAs);
 
-    QString previousTimeZone = qgetenv("TZ");
-    qputenv("TZ", serialiseAs.toLocal8Bit());
-    tzset();
+    TimeZoneRollback useZone(serialiseAs.toLocal8Bit());
     QDateTime dateTimeAsUTC(dateTime.toUTC());
 
     QByteArray byteArray;
@@ -1631,8 +1652,7 @@ void tst_QDateTime::operator_insert_extract()
 
     // Ensure that a change in timezone between serialisation and deserialisation
     // still results in identical UTC-converted datetimes.
-    qputenv("TZ", deserialiseAs.toLocal8Bit());
-    tzset();
+    useZone.reset(deserialiseAs.toLocal8Bit());
     QDateTime expectedLocalTime(dateTimeAsUTC.toLocalTime());
     {
         // Deserialise whole QDateTime at once.
@@ -1658,9 +1678,6 @@ void tst_QDateTime::operator_insert_extract()
         // Sanity check UTC times.
         QCOMPARE(deserialised.toUTC(), expectedLocalTime.toUTC());
     }
-
-    qputenv("TZ", previousTimeZone.toLocal8Bit().constData());
-    tzset();
 }
 
 void tst_QDateTime::toString_strformat()

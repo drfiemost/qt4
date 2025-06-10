@@ -63,13 +63,25 @@ private:
 
 void tst_QGetPutEnv::getSetCheck()
 {
-    const char* varName = "should_not_exist";
+    const char varName[] = "should_not_exist";
+
+    QVERIFY(!qEnvironmentVariableIsSet(varName));
+    QVERIFY(qEnvironmentVariableIsEmpty(varName));
     QByteArray result = qgetenv(varName);
     QCOMPARE(result, QByteArray());
     QVERIFY(qputenv(varName, QByteArray("supervalue")));
+    QVERIFY(qEnvironmentVariableIsSet(varName));
+    QVERIFY(!qEnvironmentVariableIsEmpty(varName));
     result = qgetenv(varName);
     QVERIFY(result == "supervalue");
     qputenv(varName,QByteArray());
+
+    // Now test qunsetenv
+    QVERIFY(qunsetenv(varName));
+    QVERIFY(!qEnvironmentVariableIsSet(varName));
+    QVERIFY(qEnvironmentVariableIsEmpty(varName));
+    result = qgetenv(varName);
+    QCOMPARE(result, QByteArray());
 }
 
 tst_QGetPutEnv::tst_QGetPutEnv()
