@@ -3336,6 +3336,7 @@ bool QDateTime::operator==(const QDateTime &other) const
         && d->m_status == other.d->m_status) {
         return (d->m_msecs == other.d->m_msecs);
     }
+
     // Convert to UTC and compare
     return (toMSecsSinceEpoch() == other.toMSecsSinceEpoch());
 }
@@ -4003,36 +4004,11 @@ QDataStream &operator<<(QDataStream &out, const QDateTime &dateTime)
 {
     QDate dt;
     QTime tm;
-    if (out.version() == 13) {
-        // This approach is wrong and should not be used again; it breaks
-        // the guarantee that a deserialised local datetime is the same time
-        // of day, regardless of which timezone it was serialised in.
-        if (dateTime.isValid())
-            dateTime.toUTC().d->getDateTime(&dt, &tm);
-        else
-            dateTime.d->getDateTime(&dt, &tm);
-        out << dt << tm << (qint8)dateTime.timeSpec();
-    } else {
-        dateTime.d->getDateTime(&dt, &tm);
-        out << dt << tm;
-        if (out.version() >= 7) {
-            switch (dateTime.d->m_spec) {
-            case Qt::UTC:
-                out << (qint8)QDateTimePrivate::UTC;
-                break;
-            case Qt::OffsetFromUTC:
-                out << (qint8)QDateTimePrivate::OffsetFromUTC;
-                break;
-            case Qt::LocalTime:
-                out << (qint8)QDateTimePrivate::LocalUnknown;
-                break;
-            }
-        }
-        if (out.version() >= 14
-            && dateTime.d->m_spec == Qt::OffsetFromUTC) {
-            out << qint32(dateTime.offsetFromUtc());
-        }
-    }
+    dateTime.d->getDateTime(&dt, &tm);
+    out << dt << tm << qint8(dateTime.timeSpec());
+    if (dateTime.timeSpec() == Qt::OffsetFromUTC)
+        out << qint32(dateTime.offsetFromUtc());
+
     return out;
 }
 
@@ -4048,37 +4024,18 @@ QDataStream &operator>>(QDataStream &in, QDateTime &dateTime)
 {
     QDate dt;
     QTime tm;
-    in >> dt >> tm;
+    qint8 ts = 0;
+    Qt::TimeSpec spec = Qt::LocalTime;
+    qint32 offset = 0;
 
-    if (in.version() == 13) {
-        qint8 ts = 0;
-        in >> ts;
-        // We incorrectly stored the datetime as UTC in 13 onwards.
-        dateTime.setTimeSpec(Qt::UTC);
-        dateTime.d->setDateTime(dt, tm);
-        dateTime = dateTime.toTimeSpec(static_cast<Qt::TimeSpec>(ts));
+    in >> dt >> tm >> ts;
+
+    spec = static_cast<Qt::TimeSpec>(ts);
+    if (spec == Qt::OffsetFromUTC) {
+        in >> offset;
+        dateTime = QDateTime(dt, tm, spec, offset);
     } else {
-        qint8 ts = (qint8)QDateTimePrivate::LocalUnknown;
-        if (in.version() >= 7)
-            in >> ts;
-        qint32 offset = 0;
-        if (in.version() >= 14 && ts == qint8(QDateTimePrivate::OffsetFromUTC))
-            in >> offset;
-        switch ((QDateTimePrivate::Spec)ts) {
-        case QDateTimePrivate::UTC:
-            dateTime.d->m_spec = Qt::UTC;
-            break;
-        case QDateTimePrivate::OffsetFromUTC:
-            dateTime.d->m_spec = Qt::OffsetFromUTC;
-            break;
-        case QDateTimePrivate::LocalUnknown:
-        case QDateTimePrivate::LocalStandard:
-        case QDateTimePrivate::LocalDST:
-            dateTime.d->m_spec = Qt::LocalTime;
-            break;
-        }
-        dateTime.d->m_offsetFromUtc = offset;
-        dateTime.d->setDateTime(dt, tm);
+        dateTime = QDateTime(dt, tm, spec);
     }
 
     return in;

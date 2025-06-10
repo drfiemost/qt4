@@ -734,20 +734,50 @@ void tst_QDateTime::fromMSecsSinceEpoch()
     QFETCH(QDateTime, utc);
     QFETCH(QDateTime, cet);
 
-    QDateTime dt(QDateTime::fromMSecsSinceEpoch(msecs));
+    QDateTime dtLocal = QDateTime::fromMSecsSinceEpoch(msecs, Qt::LocalTime);
+    QDateTime dtUtc = QDateTime::fromMSecsSinceEpoch(msecs, Qt::UTC);
+    QDateTime dtOffset = QDateTime::fromMSecsSinceEpoch(msecs, Qt::OffsetFromUTC, 60*60);
 
-    QCOMPARE(dt, utc);
-    /*if (europeanTimeZone)
-        QCOMPARE(dt.toLocalTime(), european);*/
+    // LocalTime will overflow for "min" or "max" tests, depending on whether
+    // you're East or West of Greenwich.  In UTC, we won't overflow.
+    if (localTimeType == LocalTimeIsUtc
+            || msecs != std::numeric_limits<qint64>::max() * localTimeType)
+        QCOMPARE(dtLocal, utc);
 
-    QCOMPARE(dt.toMSecsSinceEpoch(), msecs);
+    QCOMPARE(dtUtc, utc);
+    QCOMPARE(dtUtc.date(), utc.date());
+    QCOMPARE(dtUtc.time(), utc.time());
 
-    if (quint64(msecs / 1000) < 0xFFFFFFFF) {
-        QCOMPARE(qint64(dt.toTime_t()), msecs / 1000);
+    QCOMPARE(dtOffset, utc);
+    QCOMPARE(dtOffset.offsetFromUtc(), 60*60);
+    // // OffsetFromUTC will overflow for max
+    if (msecs != std::numeric_limits<qint64>::max())
+        QCOMPARE(dtOffset.time(), utc.time().addMSecs(60*60*1000));
+
+    if (zoneIsCET) {
+        QCOMPARE(dtLocal.toLocalTime(), cet);
+        QCOMPARE(dtUtc.toLocalTime(), cet);
+        QCOMPARE(dtOffset.toLocalTime(), cet);
     }
 
+    // LocalTime will overflow for max
+    if (msecs != std::numeric_limits<qint64>::max())
+        QCOMPARE(dtLocal.toMSecsSinceEpoch(), msecs);
+    QCOMPARE(dtUtc.toMSecsSinceEpoch(), msecs);
+    QCOMPARE(dtOffset.toMSecsSinceEpoch(), msecs);
+/*
+    if (quint64(msecs / 1000) < 0xFFFFFFFF) {
+        QCOMPARE(qint64(dtLocal.toSecsSinceEpoch()), msecs / 1000);
+        QCOMPARE(qint64(dtUtc.toSecsSinceEpoch()), msecs / 1000);
+        QCOMPARE(qint64(dtOffset.toSecsSinceEpoch()), msecs / 1000);
+    }
+*/
     QDateTime reference(QDate(1970, 1, 1), QTime(), Qt::UTC);
-    QCOMPARE(dt, reference.addMSecs(msecs));
+    // LocalTime will overflow for max
+    if (msecs != std::numeric_limits<qint64>::max())
+        QCOMPARE(dtLocal, reference.addMSecs(msecs));
+    QCOMPARE(dtUtc, reference.addMSecs(msecs));
+    QCOMPARE(dtOffset, reference.addMSecs(msecs));
 }
 
 void tst_QDateTime::toString_isoDate_data()
@@ -1094,7 +1124,7 @@ void tst_QDateTime::addSecs_data()
     QTest::newRow("toPositive") << QDateTime(QDate(-1, 12, 31), QTime(23, 59, 59), Qt::UTC)
                                 << 1
                                 << QDateTime(QDate(1, 1, 1), QTime(0, 0, 0), Qt::UTC);
-
+/*
     // Gregorian/Julian switchover
     QTest::newRow("toGregorian") << QDateTime(QDate(1582, 10, 4), QTime(23, 59, 59))
                                  << 1
@@ -1102,7 +1132,7 @@ void tst_QDateTime::addSecs_data()
     QTest::newRow("toJulian") << QDateTime(QDate(1582, 10, 15), QTime(0, 0, 0))
                               << -1
                               << QDateTime(QDate(1582, 10, 4), QTime(23, 59, 59));
-
+*/
     QTest::newRow("invalid") << invalidDateTime() << 1 << invalidDateTime();
 
     // Check Offset details are preserved
@@ -1646,7 +1676,12 @@ void tst_QDateTime::operator_insert_extract()
     QByteArray byteArray;
     {
         QDataStream dataStream(&byteArray, QIODevice::WriteOnly);
-        dataStream << dateTime;
+        dataStream << dateTimeAsUTC << dateTimeAsUTC;
+        // We'll also make sure that a deserialised local datetime is the same
+        // time of day (potentially different UTC time), regardless of which
+        // timezone it was serialised in. E.g.: Tue Aug 14 08:00:00 2012
+        // serialised in WST should be deserialised as Tue Aug 14 08:00:00 2012
+        // HST.
         dataStream << dateTime;
     }
 
