@@ -649,7 +649,32 @@ void tst_QDateTime::setMSecsSinceEpoch()
     dt.setMSecsSinceEpoch(msecs);
 
     QCOMPARE(dt, utc);
+    QCOMPARE(dt.date(), utc.date());
+    QCOMPARE(dt.time(), utc.time());
     QCOMPARE(dt.timeSpec(), Qt::UTC);
+
+    {
+        QDateTime dt1 = QDateTime::fromMSecsSinceEpoch(msecs, Qt::UTC);
+        QCOMPARE(dt1, utc);
+        QCOMPARE(dt1.date(), utc.date());
+        QCOMPARE(dt1.time(), utc.time());
+        QCOMPARE(dt1.timeSpec(), Qt::UTC);
+    }
+    {
+        QDateTime dt1(utc.date(), utc.time(), Qt::UTC);
+        QCOMPARE(dt1, utc);
+        QCOMPARE(dt1.date(), utc.date());
+        QCOMPARE(dt1.time(), utc.time());
+        QCOMPARE(dt1.timeSpec(), Qt::UTC);
+    }
+    {
+        // used to fail to clear the ShortData bit, causing corruption
+        QDateTime dt1 = dt.addDays(0);
+        QCOMPARE(dt1, utc);
+        QCOMPARE(dt1.date(), utc.date());
+        QCOMPARE(dt1.time(), utc.time());
+        QCOMPARE(dt1.timeSpec(), Qt::UTC);
+    }
 
     if (zoneIsCET) {
         QCOMPARE(dt.toLocalTime(), cet);
@@ -659,11 +684,11 @@ void tst_QDateTime::setMSecsSinceEpoch()
         localDt.setTimeSpec(Qt::LocalTime);
         localDt.setMSecsSinceEpoch(msecs);
 
-        QCOMPARE(localDt, utc);
+        // LocalTime will overflow for max
+        if (msecs != std::numeric_limits<qint64>::max())
+            QCOMPARE(localDt, utc);
         QCOMPARE(localDt.timeSpec(), Qt::LocalTime);
     }
-
-    QCOMPARE(dt.timeSpec(), Qt::UTC);
 
     QCOMPARE(dt.toMSecsSinceEpoch(), msecs);
 
@@ -722,6 +747,10 @@ void tst_QDateTime::toString_isoDate_data()
     QTest::newRow("negative OffsetFromUTC")
             << dt
             << QString("1978-11-09T13:28:34-02:00");
+    dt.setOffsetFromUtc(-900);
+    QTest::newRow("negative non-integral OffsetFromUTC")
+            << dt
+            << QString("1978-11-09T13:28:34-00:15");
     QTest::newRow("invalid")
             << QDateTime(QDate(-1, 11, 9), QTime(13, 28, 34), Qt::UTC)
             << QString();

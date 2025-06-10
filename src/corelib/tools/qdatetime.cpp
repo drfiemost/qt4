@@ -75,7 +75,7 @@
 
 QT_BEGIN_NAMESPACE
 
-//Q_GLOBAL_STATIC_WITH_ARGS(QSharedDataPointer<QDateTimePrivate>, defaultDateTimePrivate, (new QDateTimePrivate()))
+Q_GLOBAL_STATIC_WITH_ARGS(QSharedDataPointer<QDateTimePrivate>, defaultDateTimePrivate, (new QDateTimePrivate()))
 
 enum {
     SECS_PER_DAY = 86400,
@@ -96,24 +96,20 @@ static inline QDate fixedDate(int y, int m, int d)
 }
 
 /*
-  Until C++11, rounding direction is implementation-defined.
+  Division, rounding down (rather than towards zero).
 
-  For negative operands, implementations may chose to round down instead of
-  towards zero (truncation).  We only actually care about the case a < 0, as all
-  uses of floordiv have b > 0.  In this case, if rounding is down we have a % b
-  >= 0 and simple division works fine; but a % b = a - (a / b) * b always, so
-  rounding towards zero gives a % b <= 0; when < 0, we need to adjust.
-
-  Once we assume C++11, we can safely test a < 0 instead of a % b < 0.
+  From C++11 onwards, integer division is defined to round towards zero, so weMore actions
+  can rely on that when implementing this.  This is only used with denominator b
+  > 0, so we only have to treat negative numerator, a, specially.
  */
 static inline qint64 floordiv(qint64 a, int b)
 {
-    return (a - (a % b < 0 ? b - 1 : 0)) / b;
+    return (a - (a < 0 ? b - 1 : 0)) / b;
 }
 
 static inline int floordiv(int a, int b)
 {
-    return (a - (a % b < 0 ? b - 1 : 0)) / b;
+    return (a - (a < 0 ? b - 1 : 0)) / b;
 }
 
 static inline qint64 julianDayFromDate(int year, int month, int day)
@@ -286,7 +282,7 @@ static QString qt_tzname(QDateTimePrivate::DaylightStatus daylightStatus)
 // then null date/time will be returned, you should adjust the date first if
 // you need a guaranteed result.
 static qint64 qt_mktime(QDate *date, QTime *time, QDateTimePrivate::DaylightStatus *daylightStatus,
-                        QString *abbreviation, bool *ok)
+                        QString *abbreviation, bool *ok = nullptr)
 {
     const qint64 msec = time->msec();
     int yy, mm, dd;
@@ -2268,9 +2264,9 @@ static bool epochMSecsToLocalTime(qint64 msecs, QDate *localDate, QTime *localTi
 // Convert a LocalTime expressed in local msecs encoding into a UTC epoch msecs
 // Optionally populate the returned values from mktime for the adjusted local
 // date and time and daylight status
-static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = 0, QTime *localTime = 0,
-                                     QDateTimePrivate::DaylightStatus *daylightStatus = 0,
-                                     QString *abbreviation = 0, bool *ok = 0)
+static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = nullptr, QTime *localTime = nullptr,
+                                     QDateTimePrivate::DaylightStatus *daylightStatus = nullptr,
+                                     QString *abbreviation = nullptr)
 {
     QDate dt;
     QTime tm;
@@ -2293,8 +2289,6 @@ static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = 0, QT
                     *localDate = dt;
                 if (localTime)
                     *localTime = tm;
-                if (ok)
-                    *ok = true;
                 return utcMsecs;
             }
         } else {
@@ -2309,8 +2303,6 @@ static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = 0, QT
             *daylightStatus = QDateTimePrivate::StandardTime;
         if (abbreviation)
             *abbreviation = qt_tzname(QDateTimePrivate::StandardTime);
-        if (ok)
-            *ok = true;
         return utcMsecs;
 
     } else if (localMsecs >= msecsMax - MSECS_PER_DAY) {
@@ -2329,8 +2321,6 @@ static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = 0, QT
                     *localDate = dt;
                 if (localTime)
                     *localTime = tm;
-                if (ok)
-                    *ok = true;
                 return utcMsecs;
             }
         }
@@ -2344,7 +2334,7 @@ static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = 0, QT
             --day;
         QDate fakeDate(2037, month, day);
         qint64 fakeDiff = fakeDate.daysTo(dt);
-        qint64 utcMsecs = qt_mktime(&fakeDate, &tm, daylightStatus, abbreviation, ok);
+        qint64 utcMsecs = qt_mktime(&fakeDate, &tm, daylightStatus, abbreviation);
         if (localDate)
             *localDate = fakeDate.addDays(fakeDiff);
         if (localTime)
@@ -2359,7 +2349,7 @@ static qint64 localMSecsToEpochMSecs(qint64 localMsecs, QDate *localDate = 0, QT
     } else {
 
         // Clearly falls inside 1970-2037 suported range so can use mktime
-        qint64 utcMsecs = qt_mktime(&dt, &tm, daylightStatus, abbreviation, ok);
+        qint64 utcMsecs = qt_mktime(&dt, &tm, daylightStatus, abbreviation);
         if (localDate)
             *localDate = dt;
         if (localTime)
@@ -2584,7 +2574,7 @@ void QDateTimePrivate::getDateTime(QDate *date, QTime *time) const
     \sa isValid()
 */
 QDateTime::QDateTime()
-    : d(new QDateTimePrivate())
+    : d(*defaultDateTimePrivate())
 {
 }
 
@@ -3030,12 +3020,10 @@ QString QDateTime::toString(Qt::DateFormat format) const
         QDate dt;
         QTime tm;
         d->getDateTime(&dt, &tm);
-        //We cant use date.toString(Qt::TextDate) as we need to insert the time before the year
-        buf = QString::fromUtf8("%1 %2 %3 %4 %5").arg(dt.shortDayName(dt.dayOfWeek()))
-                                                 .arg(dt.shortMonthName(dt.month()))
-                                                 .arg(dt.day())
-                                                 .arg(tm.toString(Qt::TextDate))
-                                                 .arg(dt.year());
+        buf = dt.toString(Qt::TextDate);
+        // Insert time between date's day and year:
+        buf.insert(buf.lastIndexOf(QLatin1Char(' ')),
+                   QLatin1Char(' ') + tm.toString(Qt::TextDate));
         if (timeSpec() != Qt::LocalTime) {
             buf += QStringLiteral(" GMT");
             if (d->m_spec == Qt::OffsetFromUTC)

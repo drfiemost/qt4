@@ -267,7 +267,7 @@ public:
 
 private:
     friend class QDateTimePrivate;
-    QExplicitlySharedDataPointer<QDateTimePrivate> d;
+    QSharedDataPointer<QDateTimePrivate> d;
 
 #ifndef QT_NO_DATASTREAM
     friend Q_CORE_EXPORT QDataStream &operator<<(QDataStream &, const QDateTime &);
