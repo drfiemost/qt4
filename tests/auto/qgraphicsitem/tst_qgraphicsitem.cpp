@@ -10589,7 +10589,7 @@ public:
 
     void update() { nbUpdates++; }
 
-    bool nbUpdates;
+    int nbUpdates;
 };
 
 class MyInputWidget : public QGraphicsWidget

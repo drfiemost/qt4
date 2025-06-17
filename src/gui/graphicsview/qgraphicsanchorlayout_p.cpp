@@ -360,7 +360,7 @@ bool ParallelAnchorData::calculateSizeHints()
     //    anchors that had to shrink.
 
     if (firstEdge->isLayoutAnchor) {
-        prefSize = std::clamp( secondPref,minSize, maxSize);
+        prefSize = std::clamp(secondPref, minSize, maxSize);
         minPrefSize = std::clamp(secondMinPref, minSize, maxSize);
         maxPrefSize = std::clamp(secondMaxPref, minSize, maxSize);
     } else if (secondEdge->isLayoutAnchor) {
