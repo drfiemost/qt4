@@ -1283,7 +1283,7 @@ using QNoImplicitBoolCast = int;
 // This logic must match the one in qmetatype.h
 #if defined(QT_COORD_TYPE)
 using qreal = QT_COORD_TYPE;
-#elif defined(QT_NO_FPU) || defined(QT_ARCH_ARM) || defined(QT_ARCH_WINDOWSCE)
+#elif defined(QT_NO_FPU) || defined(QT_ARCH_ARM)
 using qreal = float;
 #else
 using qreal = double;
@@ -1296,7 +1296,7 @@ using qreal = double;
 Q_DECL_CONSTEXPR inline int qRound(qreal d)
 { return d >= qreal(0.0) ? int(d + qreal(0.5)) : int(d - int(d-1) + qreal(0.5)) + int(d-1); }
 
-#if defined(QT_NO_FPU) || defined(QT_ARCH_ARM) || defined(QT_ARCH_WINDOWSCE)
+#if defined(QT_NO_FPU) || defined(QT_ARCH_ARM)
 Q_DECL_CONSTEXPR inline qint64 qRound64(double d)
 { return d >= 0.0 ? qint64(d + 0.5) : qint64(d - qreal(qint64(d-1)) + 0.5) + qint64(d-1); }
 #else
