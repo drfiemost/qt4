@@ -244,8 +244,7 @@ public:
     {
     }
 
-    inline virtual ~QGraphicsItemPrivate()
-    = default;
+    virtual ~QGraphicsItemPrivate();
 
     static const QGraphicsItemPrivate *get(const QGraphicsItem *item)
     {

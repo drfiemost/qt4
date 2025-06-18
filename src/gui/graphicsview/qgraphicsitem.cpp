@@ -798,7 +798,7 @@ static QPainterPath qt_graphicsItem_shapeFromPath(const QPainterPath &path, cons
     // if we pass a value of 0.0 to QPainterPathStroker::setWidth()
     const qreal penWidthZero = qreal(0.00000001);
 
-    if (path == QPainterPath())
+    if (path == QPainterPath() || pen == Qt::NoPen)
         return path;
     QPainterPathStroker ps;
     ps.setCapStyle(pen.capStyle());
@@ -811,6 +811,13 @@ static QPainterPath qt_graphicsItem_shapeFromPath(const QPainterPath &path, cons
     QPainterPath p = ps.createStroke(path);
     p.addPath(path);
     return p;
+}
+
+/*!
+    \internal
+*/
+QGraphicsItemPrivate::~QGraphicsItemPrivate()
+{
 }
 
 /*!
@@ -852,8 +859,8 @@ void QGraphicsItemPrivate::updateAncestorFlag(QGraphicsItem::GraphicsItemFlag ch
             // Inherit the enabled-state from our parents.
             if ((parent->d_ptr->ancestorFlags & flag)
                     || (int(parent->d_ptr->flags & childFlag) == childFlag)
-                        || (childFlag == -1 && parent->d_ptr->handlesChildEvents)
-                        || (childFlag == -2 && parent->d_ptr->filtersDescendantEvents)) {
+                        || (int(childFlag) == -1 && parent->d_ptr->handlesChildEvents)
+                        || (int(childFlag) == -2 && parent->d_ptr->filtersDescendantEvents)) {
                 enabled = true;
                 ancestorFlags |= flag;
             } else {
@@ -876,7 +883,7 @@ void QGraphicsItemPrivate::updateAncestorFlag(QGraphicsItem::GraphicsItemFlag ch
             ancestorFlags &= ~flag;
 
         // Don't process children if the item has the main flag set on itself.
-        if ((childFlag != -1 &&  int(flags & childFlag) == childFlag)
+        if ((int(childFlag) != -1 &&  int(flags & childFlag) == childFlag)
             || (int(childFlag) == -1 && handlesChildEvents)
             || (int(childFlag) == -2 && filtersDescendantEvents))
             return;
@@ -1475,6 +1482,7 @@ QGraphicsItem::~QGraphicsItem()
 #endif
 
     clearFocus();
+    setFocusProxy(0);
 
     // Update focus scope item ptr.
     QGraphicsItem *p = d_ptr->parent;
@@ -2206,10 +2214,12 @@ bool QGraphicsItem::hasCursor() const
 */
 void QGraphicsItem::unsetCursor()
 {
+    if (!d_ptr->hasCursor)
+        return;
     d_ptr->unsetExtra(QGraphicsItemPrivate::ExtraCursor);
     d_ptr->hasCursor = 0;
     if (d_ptr->scene) {
-        foreach (QGraphicsView *view, d_ptr->scene->views()) {
+        for (QGraphicsView *view: d_ptr->scene->views()) {
             if (view->underMouse() && view->itemAt(view->mapFromGlobal(QCursor::pos())) == this) {
                 QMetaObject::invokeMethod(view, "_q_unsetViewportCursor");
                 break;
@@ -10924,6 +10934,7 @@ void QGraphicsSimpleTextItem::paint(QPainter *painter, const QStyleOptionGraphic
         layout.setAdditionalFormats(formats);
     }
 
+    setupTextLayout(&layout);
     layout.draw(painter, QPointF(0, 0));
 
     if (option->state & (QStyle::State_Selected | QStyle::State_HasFocus))
