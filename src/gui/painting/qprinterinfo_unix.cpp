@@ -106,7 +106,7 @@ inline bool operator<(const NamedPaperSize &data, const char *name)
 
 static inline QPrinter::PaperSize string2PaperSize(const char *name)
 {
-    const NamedPaperSize *r = qBinaryFind(named_sizes_map, named_sizes_map + QPrinter::NPageSize, name);
+    const NamedPaperSize *r = std::lower_bound(named_sizes_map, named_sizes_map + QPrinter::NPageSize, name);
     if (r - named_sizes_map != QPrinter::NPageSize)
         return r->size;
     return QPrinter::Custom;

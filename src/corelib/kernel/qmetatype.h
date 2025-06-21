@@ -419,7 +419,7 @@ struct QMetaTypeId< SINGLE_ARG_TEMPLATE<T> > \
     static int qt_metatype_id() \
     { \
         static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0); \
-        if (!metatype_id.load()) \
+        if (!metatype_id.loadRelaxed()) \
             metatype_id.storeRelease(qRegisterMetaType< SINGLE_ARG_TEMPLATE<T> >( QByteArray(QByteArray(#SINGLE_ARG_TEMPLATE "<") + QMetaType::typeName(qMetaTypeId<T>()) + ">"), \
                         reinterpret_cast< SINGLE_ARG_TEMPLATE<T> *>(quintptr(-1)))); \
         return metatype_id.loadAcquire(); \
