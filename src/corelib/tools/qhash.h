@@ -103,14 +103,14 @@ template <class T> inline uint qHash(const T *key, uint seed = 0)
 #pragma warning( pop )
 #endif
 
+template<typename T> inline uint qHash(const T &t, uint seed) { return (qHash(t) ^ seed); }
+
 template <typename T1, typename T2> inline uint qHash(const QPair<T1, T2> &key, uint seed = 0)
 {
     uint h1 = qHash(key.first, seed);
     uint h2 = qHash(key.second, seed);
     return ((h1 << 16) | (h1 >> 16)) ^ h2 ^ seed;
 }
-
-template<typename T> inline uint qHash(const T &t, uint seed) { return (qHash(t) ^ seed); }
 
 struct Q_CORE_EXPORT QHashData
 {
@@ -197,28 +197,42 @@ inline bool operator==(const QHashDummyValue & /* v1 */, const QHashDummyValue &
 Q_DECLARE_TYPEINFO(QHashDummyValue, Q_MOVABLE_TYPE | Q_DUMMY_TYPE);
 
 template <class Key, class T>
-struct QHashDummyNode
-{
-    QHashDummyNode *next;
-    uint h;
-    Key key;
-
-    inline QHashDummyNode(const Key &key0) : key(key0) {}
-};
-
-template <class Key, class T>
 struct QHashNode
 {
     QHashNode *next;
-    uint h;
-    Key key;
+    const uint h;
+    const Key key;
     T value;
 
-    inline QHashNode(const Key &key0, const T &value0) : key(key0), value(value0) {}
-    inline bool same_key(uint h0, const Key &key0) { return h0 == h && key0 == key; }
+    inline QHashNode(const Key &key0, const T &value0, uint hash, QHashNode *n)
+        : next(n), h(hash), key(key0), value(value0) {}
+    inline bool same_key(uint h0, const Key &key0) const { return h0 == h && key0 == key; }
+};
+
+template <class Key, class T>
+struct QHashDummyNode
+{
+    QHashNode<Key, T> *next;
+    const uint h;
+    const Key key;
+
+    inline QHashDummyNode(const Key &key0, uint hash, QHashNode<Key, T> *n) : next(n), h(hash), key(key0) {}
 };
 
 
+#if 0
+// ###
+// The introduction of the QHash random seed breaks this optimization, as it
+// relies on qHash(int i) = i. If the hash value is salted, then the hash
+// table becomes corrupted.
+//
+// A bit more research about whether it makes sense or not to salt integer
+// keys (and in general keys whose hash value is easy to invert)
+// is needed, or about how keep this optimization and the seed (f.i. by
+// specializing QHash for integer values, and re-apply the seed during lookup).
+//
+// Be aware that such changes can easily be binary incompatible, and therefore
+// cannot be made during the Qt 5 lifetime.
 #define Q_HASH_DECLARE_INT_NODES(key_type) \
     template <class T> \
     struct QHashDummyNode<key_type, T> { \
@@ -236,7 +250,7 @@ struct QHashNode
 \
         inline QHashNode(key_type /* key0 */) {} \
         inline QHashNode(key_type /* key0 */, const T &value0) : value(value0) {} \
-        inline bool same_key(uint h0, key_type) { return h0 == h; } \
+        inline bool same_key(uint h0, key_type) const { return h0 == h; } \
     }
 
 #if defined(Q_BYTE_ORDER) && Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -246,6 +260,7 @@ Q_HASH_DECLARE_INT_NODES(ushort);
 Q_HASH_DECLARE_INT_NODES(int);
 Q_HASH_DECLARE_INT_NODES(uint);
 #undef Q_HASH_DECLARE_INT_NODES
+#endif // #if 0
 
 template <class Key, class T>
 class QHash
@@ -500,10 +515,10 @@ template <class Key, class T>
 Q_INLINE_TEMPLATE void QHash<Key, T>::duplicateNode(QHashData::Node *node, void *newNode)
 {
     Node *concreteNode = concrete(node);
-    if (QTypeInfo<T>::isDummy) {
-        (void) new (newNode) DummyNode(concreteNode->key);
+    if constexpr (QTypeInfo<T>::isDummy) {
+        (void) new (newNode) DummyNode(concreteNode->key, concreteNode->h, 0);
     } else {
-        (void) new (newNode) Node(concreteNode->key, concreteNode->value);
+        (void) new (newNode) Node(concreteNode->key, concreteNode->value, concreteNode->h, 0);
     }
 }
 
@@ -513,14 +528,12 @@ QHash<Key, T>::createNode(uint ah, const Key &akey, const T &avalue, Node **anex
 {
     Node *node;
 
-    if (QTypeInfo<T>::isDummy) {
-        node = reinterpret_cast<Node *>(new (d->allocateNode(alignOfDummyNode())) DummyNode(akey));
+    if constexpr (QTypeInfo<T>::isDummy) {
+        node = reinterpret_cast<Node *>(new (d->allocateNode(alignOfDummyNode())) DummyNode(akey, ah, *anextNode));
     } else {
-        node = new (d->allocateNode(alignOfNode())) Node(akey, avalue);
+        node = new (d->allocateNode(alignOfNode())) Node(akey, avalue, ah, *anextNode);
     }
 
-    node->h = ah;
-    node->next = *anextNode;
     *anextNode = node;
     ++d->size;
     return node;
@@ -737,7 +750,7 @@ Q_INLINE_TEMPLATE typename QHash<Key, T>::iterator QHash<Key, T>::insert(const K
         return iterator(createNode(h, akey, avalue, node));
     }
 
-    if (!QTypeInfo<T>::isDummy)
+    if constexpr (!QTypeInfo<T>::isDummy)
         (*node)->value = avalue;
     return iterator(*node);
 }
@@ -803,6 +816,22 @@ Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::iterator QHash<Key, T>::erase(itera
     if (it == iterator(e))
         return it;
 
+    if (d->ref.isShared()) {
+        int bucketNum = (it.i->h % d->numBuckets);
+        iterator bucketIterator(*(d->buckets + bucketNum));
+        int stepsFromBucketStartToIte = 0;
+        while (bucketIterator != it) {
+            ++stepsFromBucketStartToIte;
+            ++bucketIterator;
+        }
+        detach();
+        it = iterator(*(d->buckets + bucketNum));
+        while (stepsFromBucketStartToIte > 0) {
+            --stepsFromBucketStartToIte;
+            ++it;
+        }
+    }
+
     iterator ret = it;
     ++ret;
 
@@ -856,7 +885,7 @@ Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(cons
     uint h = 0;
 
     if (d->numBuckets || ahp) {
-        h = qHash(akey, 0);
+        h = qHash(akey, d->seed);
         if (ahp)
             *ahp = h;
     }

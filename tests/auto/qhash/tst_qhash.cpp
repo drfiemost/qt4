@@ -84,6 +84,7 @@ private slots:
 
     void const_shared_null();
     void twoArguments_qHash();
+    void eraseValidIteratorOnSharedHash();
 };
 
 struct Foo {
@@ -1345,6 +1346,35 @@ void tst_QHash::twoArguments_qHash()
     TwoArgumentsQHashStruct4 twoArgsObject4;
     twoArgsHash4[twoArgsObject4] = 1;
     QCOMPARE(wrongqHashOverload, 0);
+}
+
+void tst_QHash::eraseValidIteratorOnSharedHash()
+{
+    QHash<int, int> a, b;
+    a.insert(10, 10);
+    a.insertMulti(10, 25);
+    a.insertMulti(10, 30);
+    a.insert(20, 20);
+    a.insert(40, 40);
+
+    QHash<int, int>::iterator i = a.begin();
+    while (i.value() != 25)
+        ++i;
+
+    b = a;
+    a.erase(i);
+
+    QCOMPARE(b.size(), 5);
+    QCOMPARE(a.size(), 4);
+
+    for (i = a.begin(); i != a.end(); ++i)
+        QVERIFY(i.value() != 25);
+
+    int itemsWith10 = 0;
+    for (i = b.begin(); i != b.end(); ++i)
+        itemsWith10 += (i.key() == 10);
+
+    QCOMPARE(itemsWith10, 3);
 }
 
 QTEST_APPLESS_MAIN(tst_QHash)
