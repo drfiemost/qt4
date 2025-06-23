@@ -82,7 +82,7 @@ void OrderBy::OrderSpec::prepare(const Expression::Ptr &source,
  * is in the global namespace. Hence it can't be in QPatternist.
  */
 template<>
-class qLess<Item::List>
+class std::less<Item::List>
 {
 private:
 
@@ -93,7 +93,7 @@ private:
     }
 
 public:
-    inline qLess(const OrderBy::OrderSpec::Vector &orderspecs,
+    inline less(const OrderBy::OrderSpec::Vector &orderspecs,
                  const DynamicContext::Ptr &context) : m_orderSpecs(orderspecs)
                                                      , m_context(context)
     {
@@ -175,7 +175,7 @@ Item::Iterator::Ptr OrderBy::evaluateSequence(const DynamicContext::Ptr &context
 {
     Item::List tuples(m_operand->evaluateSequence(context)->toList());
 
-    const qLess<Item::List> sorter(m_orderSpecs, context);
+    const std::less<Item::List> sorter(m_orderSpecs, context);
 
     Q_ASSERT(m_stability == StableOrder || m_stability == UnstableOrder);
 
