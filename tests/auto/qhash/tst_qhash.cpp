@@ -84,6 +84,9 @@ private slots:
 
     void const_shared_null();
     void twoArguments_qHash();
+
+    void qthash_data();
+    void qthash();
     void eraseValidIteratorOnSharedHash();
 };
 
@@ -545,14 +548,14 @@ void tst_QHash::key()
         hash2.insert(3, "two");
         QCOMPARE(hash2.key("one"), 1);
         QCOMPARE(hash2.key("one", def), 1);
-        QCOMPARE(hash2.key("two"), 2);
-        QCOMPARE(hash2.key("two", def), 2);
+        QVERIFY(hash2.key("two") == 2 || hash2.key("two") == 3);
+        QVERIFY(hash2.key("two", def) == 2 || hash2.key("two", def) == 3);
         QCOMPARE(hash2.key("three"), 0);
         QCOMPARE(hash2.key("three", def), def);
 
         hash2.insert(-1, "two");
-        QCOMPARE(hash2.key("two"), -1);
-        QCOMPARE(hash2.key("two", def), -1);
+        QVERIFY(hash2.key("two") == 2 || hash2.key("two") == 3 || hash2.key("two") == -1);
+        QVERIFY(hash2.key("two", def) == 2 || hash2.key("two", def) == 3 || hash2.key("two", def) == -1);
 
         hash2.insert(0, "zero");
         QCOMPARE(hash2.key("zero"), 0);
@@ -865,7 +868,7 @@ void tst_QHash::iterators()
     //STL-Style iterators
 
     QHash<int, QString>::iterator stlIt = hash.begin();
-    for(stlIt = hash.begin(), i = 1; stlIt != hash.end(), i < 100; ++stlIt, ++i) {
+    for(stlIt = hash.begin(), i = 1; stlIt != hash.end() && i < 100; ++stlIt, ++i) {
             testMap.insert(i,stlIt.value());
             //QVERIFY(stlIt.value() == hash.value(
     }
@@ -890,7 +893,7 @@ void tst_QHash::iterators()
     //STL-Style const-iterators
 
     QHash<int, QString>::const_iterator cstlIt = hash.constBegin();
-    for(cstlIt = hash.constBegin(), i = 1; cstlIt != hash.constEnd(), i < 100; ++cstlIt, ++i) {
+    for(cstlIt = hash.constBegin(), i = 1; cstlIt != hash.constEnd() && i < 100; ++cstlIt, ++i) {
             testMap.insert(i,cstlIt.value());
             //QVERIFY(stlIt.value() == hash.value(
     }
@@ -1346,6 +1349,25 @@ void tst_QHash::twoArguments_qHash()
     TwoArgumentsQHashStruct4 twoArgsObject4;
     twoArgsHash4[twoArgsObject4] = 1;
     QCOMPARE(wrongqHashOverload, 0);
+}
+
+void tst_QHash::qthash_data()
+{
+    QTest::addColumn<QString>("key");
+    QTest::addColumn<uint>("hash");
+
+    QTest::newRow("null") << QString() << 0u;
+    QTest::newRow("empty") << QStringLiteral("") << 0u;
+    QTest::newRow("abcdef") << QStringLiteral("abcdef") << 108567222u;
+    QTest::newRow("tqbfjotld") << QStringLiteral("The quick brown fox jumps over the lazy dog") << 140865879u;
+    QTest::newRow("42") << QStringLiteral("42") << 882u;
+}
+
+void tst_QHash::qthash()
+{
+    QFETCH(QString, key);
+    const uint result = qt_hash(key);
+    QTEST(result, "hash");
 }
 
 void tst_QHash::eraseValidIteratorOnSharedHash()

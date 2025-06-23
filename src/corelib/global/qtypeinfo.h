@@ -86,7 +86,7 @@ public:
         isComplex = !qIsTrivial<T>(),
         isStatic = true,
         isLarge = (sizeof(T)>sizeof(void*)),
-        isDummy = false,
+        isDummy = false, //### TODO: remove
         sizeOf = sizeof(T)
     };
 };

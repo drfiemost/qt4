@@ -110,22 +110,22 @@ static uint hash(const QChar *p, int n, uint seed)
     return h;
 }
 
-uint qHash(const QByteArray &key, uint seed)
+uint qHash(const QByteArray &key, uint seed) noexcept
 {
     return hash(reinterpret_cast<const uchar *>(key.constData()), key.size(), seed);
 }
 
-uint qHash(const QString &key, uint seed)
+uint qHash(const QString &key, uint seed) noexcept
 {
     return hash(key.unicode(), key.size(), seed);
 }
 
-uint qHash(const QStringRef &key, uint seed)
+uint qHash(const QStringRef &key, uint seed) noexcept
 {
     return hash(key.unicode(), key.size(), seed);
 }
 
-uint qHash(const QBitArray &bitArray, uint seed)
+uint qHash(const QBitArray &bitArray, uint seed) noexcept
 {
     int m = bitArray.d.size() - 1;
     uint result = hash(reinterpret_cast<const uchar *>(bitArray.d.constData()), std::max(0, m), seed);
@@ -138,7 +138,7 @@ uint qHash(const QBitArray &bitArray, uint seed)
     return result;
 }
 
-uint qHash(QLatin1String key, uint seed)
+uint qHash(QLatin1String key, uint seed) noexcept
 {
     return hash(reinterpret_cast<const uchar *>(key.data()), key.size(), seed);
 }
@@ -229,7 +229,7 @@ static void qt_initialize_qhash_seed()
     results.
     This function must *never* change its results.
 */
-uint qt_hash(const QString &key)
+uint qt_hash(const QString &key) noexcept
 {
     const QChar *p = key.unicode();
     int n = key.size();
