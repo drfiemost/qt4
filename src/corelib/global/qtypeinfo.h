@@ -53,13 +53,13 @@ QT_BEGIN_NAMESPACE
 */
 
 template <typename T>
-static constexpr bool qIsRelocatable()
+inline constexpr bool qIsRelocatable()
 {
     return std::is_trivially_copyable<T>::value && std::is_trivially_destructible<T>::value;
 }
 
 template <typename T>
-static constexpr bool qIsTrivial()
+inline constexpr bool qIsTrivial()
 {
     return std::is_trivial<T>::value;
 }
