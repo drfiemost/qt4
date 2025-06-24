@@ -46,10 +46,6 @@
 #include <QtCore/qatomic.h>
 #include <QtCore/qbytearray.h>
 
-#ifndef QT_NO_DATASTREAM
-#include <QtCore/qdatastream.h>
-#endif
-
 #ifdef Bool
 #error qmetatype.h must be included before any header file that defines Bool
 #endif
@@ -172,6 +168,8 @@ QT_BEGIN_NAMESPACE
 
 #define QT_DEFINE_METATYPE_ID(TypeName, Id, Name) \
     TypeName = Id,
+
+class QDataStream;
 
 class Q_CORE_EXPORT QMetaType {
 public:

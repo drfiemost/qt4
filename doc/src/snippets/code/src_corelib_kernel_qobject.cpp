@@ -434,6 +434,30 @@ hostNameLabel->setText(tr("Name:"));
 QString example = tr("Example");
 //! [40]
 
+
+//! [44]
+QLabel *label = new QLabel;
+QLineEdit *lineEdit = new QLineEdit;
+QObject::connect(lineEdit, &QLineEdit::textChanged,
+                 label,  &QLabel::setText);
+//! [44]
+
+//! [45]
+void someFunction();
+QPushButton *button = new QPushButton;
+QObject::connect(button, &QPushButton::clicked, someFunction);
+//! [45]
+
+//! [46]
+QByteArray page = ...;
+QTcpSocket *socket = new QTcpSocket;
+socket->connectToHost("qt-project.org", 80);
+QObject::connect(socket, &QTcpSocket::connected, [=] () {
+        socket->write("GET " + page + "\r\n");
+    });
+//! [46]
+
+
 //! [meta data]
 //: This is a comment for the translator.
 //= qtn_foo_bar
