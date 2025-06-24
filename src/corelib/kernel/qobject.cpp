@@ -4334,7 +4334,7 @@ bool QObject::disconnect(const QMetaObject::Connection &connection)
 bool QObject::disconnectImpl(const QObject *sender, void **signal, const QObject *receiver, void **slot, const QMetaObject *senderMetaObject)
 {
     if (sender == 0 || (receiver == 0 && slot != 0)) {
-        qWarning("Object::disconnect: Unexpected null parameter");
+        qWarning("QObject::disconnect: Unexpected null parameter");
         return false;
     }
 

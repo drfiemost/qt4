@@ -70,9 +70,6 @@ public:
 
     QSizeF intrinsicSize(QTextDocument *doc, int posInDocument, const QTextFormat &format) override;
     void drawObject(QPainter *p, const QRectF &rect, QTextDocument *doc, int posInDocument, const QTextFormat &format) override;
-
-    typedef QImage (*ExternalImageLoaderFunction)(const QString &name, const QString &context);
-    static Q_GUI_EXPORT ExternalImageLoaderFunction externalLoader; //this is needed by Qt3Support
 };
 
 QT_END_NAMESPACE

@@ -167,7 +167,6 @@ Type Moc::parseType()
                     type.isVolatile = true;
                 continue;
             case Q_MOC_COMPAT_TOKEN:
-            case Q_QT3_SUPPORT_TOKEN:
             case Q_INVOKABLE_TOKEN:
             case Q_SCRIPTABLE_TOKEN:
             case Q_SIGNALS_TOKEN:
@@ -338,7 +337,6 @@ bool Moc::testFunctionAttribute(Token tok, FunctionDef *def)
 {
     switch (tok) {
         case Q_MOC_COMPAT_TOKEN:
-        case Q_QT3_SUPPORT_TOKEN:
             def->isCompat = true;
             return true;
         case Q_INVOKABLE_TOKEN:

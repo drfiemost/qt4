@@ -222,7 +222,12 @@ public:
         reinterpret_cast<typename SignalType::Object *>(0)->qt_check_for_QOBJECT_macro(*reinterpret_cast<typename SignalType::Object *>(0));
 
         //compilation error if the arguments does not match.
-        typedef typename QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::IncompatibleSignalSlotArguments EnsureCompatibleArguments;
+        static_assert(int(SignalType::ArgumentCount) >= int(SlotType::ArgumentCount),
+                          "The slot requires more arguments than the signal provides.");
+        static_assert((QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::value),
+                          "Signal and slot arguments are not compatible.");
+        static_assert((QtPrivate::AreArgumentsCompatible<typename SlotType::ReturnType, typename SignalType::ReturnType>::value),
+                          "Return type of the slot is not compatible with the return type of the signal.");
 
         const int *types = 0;
         if (type == Qt::QueuedConnection || type == Qt::BlockingQueuedConnection)
@@ -244,8 +249,12 @@ public:
         typedef QtPrivate::FunctionPointer<Func2> SlotType;
 
         //compilation error if the arguments does not match.
-        typedef typename QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::IncompatibleSignalSlotArguments EnsureCompatibleArguments;
-        typedef typename QtPrivate::QEnableIf<(int(SignalType::ArgumentCount) >= int(SlotType::ArgumentCount))>::Type EnsureArgumentsCount;
+        static_assert(int(SignalType::ArgumentCount) >= int(SlotType::ArgumentCount),
+                          "The slot requires more arguments than the signal provides.");
+        static_assert((QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::value),
+                          "Signal and slot arguments are not compatible.");
+        static_assert((QtPrivate::AreArgumentsCompatible<typename SlotType::ReturnType, typename SignalType::ReturnType>::value),
+                          "Return type of the slot is not compatible with the return type of the signal.");
 
         return connectImpl(sender, reinterpret_cast<void **>(&signal), sender, 0,
                            new QStaticSlotObject<Func2,
@@ -286,7 +295,9 @@ public:
         reinterpret_cast<typename SignalType::Object *>(0)->qt_check_for_QOBJECT_macro(*reinterpret_cast<typename SignalType::Object *>(0));
 
         //compilation error if the arguments does not match.
-        typedef typename QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::IncompatibleSignalSlotArguments EnsureCompatibleArguments;
+        static_assert((QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::value),
+                          "Signal and slot arguments are not compatible.");
+
         return disconnectImpl(sender, reinterpret_cast<void **>(&signal), receiver, reinterpret_cast<void **>(&slot),
                               &SignalType::Object::staticMetaObject);
     }
