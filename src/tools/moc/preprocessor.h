@@ -51,6 +51,10 @@ QT_BEGIN_NAMESPACE
 
 struct Macro
 {
+    Macro() : isFunction(false), isVariadic(false) {}
+    bool isFunction;
+    bool isVariadic;
+    Symbols arguments;
     Symbols symbols;
 };
 
@@ -81,12 +85,15 @@ public:
     Macros macros;
     Symbols preprocessed(const QByteArray &filename, FILE *file);
 
+    void parseDefineArguments(Macro *m);
 
     void skipUntilEndif();
     bool skipBranch();
 
     void substituteMacro(const MacroName &macro, Symbols &substituted, MacroSafeSet safeset = MacroSafeSet());
     void substituteUntilNewline(Symbols &substituted, MacroSafeSet safeset = MacroSafeSet());
+    void macroExpandIdentifier(int lineNum, Symbols &preprocessed, MacroSafeSet safeset = MacroSafeSet());
+    void macroExpandSymbols(int lineNum, const Symbols &symbols, Symbols &expanded, MacroSafeSet safeset);
 
     int evaluateCondition();
 

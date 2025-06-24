@@ -71,6 +71,7 @@
 #endif
 #include "cxx11-enums.h"
 #include "cxx-attributes.h"
+#include "parse-defines.h"
 
 // No such thing as "long long" in Microsoft's compiler 13.0 and before
 #if defined Q_CC_MSVC && _MSC_VER <= 1310
@@ -194,7 +195,7 @@ class TestClass : public MyNamespace::TestSuperClass, public DONT_CONFUSE_MOC(My
                   public DONT_CONFUSE_MOC_EVEN_MORE(MyStruct2, dummy, ignored)
 {
     Q_OBJECT
-    Q_CLASSINFO("help", QT_TR_NOOP("Opening this will let you configure something"))
+    //Q_CLASSINFO("help", QT_TR_NOOP("Opening this will let you configure something"))
     Q_PROPERTY(short int shortIntProperty READ shortIntProperty)
     Q_PROPERTY(unsigned short int unsignedShortIntProperty READ unsignedShortIntProperty)
     Q_PROPERTY(signed short int signedShortIntProperty READ signedShortIntProperty)
@@ -526,6 +527,7 @@ private slots:
     void cxx11Enums();
     void cxxAttributes();
     void returnRefs();
+    void parseDefines();
 
 signals:
     void sigWithUnsignedArg(unsigned foo);
@@ -1776,6 +1778,58 @@ void tst_Moc::returnRefs()
     QVERIFY(mobj->indexOfMethod("myInvokableReturningConstRef()") != -1);
     // Those two functions are copied from the qscriptextqobject test in qtscript
     // they used to cause miscompilation of the moc generated file.
+}
+
+void tst_Moc::parseDefines()
+{
+    const QMetaObject *mo = &PD_NAMESPACE::PD_CLASSNAME::staticMetaObject;
+    QCOMPARE(mo->className(), PD_SCOPED_STRING(PD_NAMESPACE, PD_CLASSNAME));
+    QVERIFY(mo->indexOfSlot("voidFunction()") != -1);
+
+    int index = mo->indexOfSlot("stringMethod()");
+    QVERIFY(index != -1);
+    //QVERIFY(mo->method(index).returnType() == QMetaType::QString);
+
+    index = mo->indexOfSlot("combined1()");
+    QVERIFY(index != -1);
+
+    index = mo->indexOfSlot("combined2()");
+    QVERIFY(index != -1);
+
+    index = mo->indexOfSlot("combined3()");
+    QVERIFY(index != -1);
+
+    index = mo->indexOfSlot("combined4(int,int)");
+    QVERIFY(index != -1);
+
+    index = mo->indexOfSlot("combined5()");
+    QVERIFY(index != -1);
+
+    index = mo->indexOfSlot("combined6()");
+    QVERIFY(index != -1);
+
+#if defined(Q_COMPILER_VARIADIC_MACROS)
+    index = mo->indexOfSlot("vararg1()");
+    QVERIFY(index != -1);
+    index = mo->indexOfSlot("vararg2(int)");
+    QVERIFY(index != -1);
+    index = mo->indexOfSlot("vararg3(int,int)");
+    QVERIFY(index != -1);
+#endif
+
+    int count = 0;
+    for (int i = 0; i < mo->classInfoCount(); ++i) {
+        QMetaClassInfo mci = mo->classInfo(i);
+        if (!qstrcmp(mci.name(), "TestString")) {
+            ++count;
+            QVERIFY(!qstrcmp(mci.value(), "ParseDefine"));
+        }
+        if (!qstrcmp(mci.name(), "TestString2")) {
+            ++count;
+            QVERIFY(!qstrcmp(mci.value(), "TestValue"));
+        }
+    }
+    QVERIFY(count == 2);
 }
 
 
