@@ -229,9 +229,9 @@ public:
             types = QtPrivate::ConnectionTypes<typename SignalType::Arguments>::types();
 
         return connectImpl(sender, reinterpret_cast<void **>(&signal),
-                           receiver, new QSlotObject<Func2,
-                                                     typename QtPrivate::List_Left<typename SignalType::Arguments, SlotType::ArgumentCount>::Value,
-                                                     typename SignalType::ReturnType>(slot),
+                           receiver, reinterpret_cast<void **>(&slot),
+                           new QSlotObject<Func2, typename QtPrivate::List_Left<typename SignalType::Arguments, SlotType::ArgumentCount>::Value,
+                                           typename SignalType::ReturnType>(slot),
                             type, types, &SignalType::Object::staticMetaObject);
     }
 
@@ -247,7 +247,7 @@ public:
         typedef typename QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::IncompatibleSignalSlotArguments EnsureCompatibleArguments;
         typedef typename QtPrivate::QEnableIf<(int(SignalType::ArgumentCount) >= int(SlotType::ArgumentCount))>::Type EnsureArgumentsCount;
 
-        return connectImpl(sender, reinterpret_cast<void **>(&signal), sender,
+        return connectImpl(sender, reinterpret_cast<void **>(&signal), sender, 0,
                            new QStaticSlotObject<Func2,
                                                  typename QtPrivate::List_Left<typename SignalType::Arguments, SlotType::ArgumentCount>::Value,
                                                  typename SignalType::ReturnType>(slot),
@@ -261,8 +261,8 @@ public:
     {
         typedef QtPrivate::FunctionPointer<Func1> SignalType;
 
-        return connectImpl(sender, reinterpret_cast<void **>(&signal),
-                           sender, new QFunctorSlotObject<Func2, SignalType::ArgumentCount, typename SignalType::Arguments, typename SignalType::ReturnType>(slot),
+        return connectImpl(sender, reinterpret_cast<void **>(&signal), sender, 0,
+                           new QFunctorSlotObject<Func2, SignalType::ArgumentCount, typename SignalType::Arguments, typename SignalType::ReturnType>(slot),
                            Qt::DirectConnection, 0, &SignalType::Object::staticMetaObject);
     }
 
@@ -276,6 +276,33 @@ public:
     inline bool disconnect(const QObject *receiver, const char *member = nullptr)
         { return disconnect(this, nullptr, receiver, member); }
     static bool disconnect(const QMetaObject::Connection &);
+
+    template <typename Func1, typename Func2>
+    static inline bool disconnect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal,
+                                  const typename QtPrivate::FunctionPointer<Func2>::Object *receiver, Func2 slot)
+    {
+        typedef QtPrivate::FunctionPointer<Func1> SignalType;
+        typedef QtPrivate::FunctionPointer<Func2> SlotType;
+        reinterpret_cast<typename SignalType::Object *>(0)->qt_check_for_QOBJECT_macro(*reinterpret_cast<typename SignalType::Object *>(0));
+
+        //compilation error if the arguments does not match.
+        typedef typename QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::IncompatibleSignalSlotArguments EnsureCompatibleArguments;
+        return disconnectImpl(sender, reinterpret_cast<void **>(&signal), receiver, reinterpret_cast<void **>(&slot),
+                              &SignalType::Object::staticMetaObject);
+    }
+    template <typename Func1>
+    static inline bool disconnect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal,
+                                  const QObject *receiver, void **zero)
+    {
+        // This is the overload for when one wish to disconnect a signal from any slot. (slot=0)
+        // Since the function template parametter cannot be deduced from '0', we use a
+        // dummy void ** parametter that must be equal to 0
+        Q_ASSERT(!zero);
+        typedef QtPrivate::FunctionPointer<Func1> SignalType;
+        return disconnectImpl(sender, reinterpret_cast<void **>(&signal), receiver, zero,
+                              &SignalType::Object::staticMetaObject);
+    }
+
 
     void dumpObjectTree();
     void dumpObjectInfo();
@@ -344,6 +371,7 @@ private:
         QSlotObjectBase() : ref(1) {}
         virtual ~QSlotObjectBase();
         virtual void call(QObject *receiver, void **a) = 0;
+        virtual bool compare(void **);
     };
     // implementation of QSlotObjectBase for which the slot is a pointer to member function of a QObject
     // Args and R are the List of arguments and the returntype of the signal to which the slot is connected.
@@ -354,6 +382,9 @@ private:
         QSlotObject(Func f) : function(f) {};
         virtual void call(QObject *receiver, void **a) {
             FuncType::template call<Args, R>(function, static_cast<typename FuncType::Object *>(receiver), a);
+        }
+        virtual bool compare(void **f) {
+            return *reinterpret_cast<Func *>(f) == function;
         }
     };
     // implementation of QSlotObjectBase for which the slot is a static function
@@ -380,8 +411,13 @@ private:
         }
     };
 
-    static QMetaObject::Connection connectImpl(const QObject *sender, void **signal, const QObject *receiver, QSlotObjectBase *slot,
-                                               Qt::ConnectionType type, const int *types, const QMetaObject *senderMetaObject);
+    static QMetaObject::Connection connectImpl(const QObject *sender, void **signal,
+                                               const QObject *receiver, void **slotPtr,
+                                               QSlotObjectBase *slot, Qt::ConnectionType type,
+                                               const int *types, const QMetaObject *senderMetaObject);
+
+    static bool disconnectImpl(const QObject *sender, void **signal, const QObject *receiver, void **slot,
+                               const QMetaObject *senderMetaObject);
 };
 
 inline QMetaObject::Connection QObject::connect(const QObject *asender, const char *asignal,

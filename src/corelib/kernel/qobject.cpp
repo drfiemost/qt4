@@ -306,8 +306,18 @@ QObjectList QObjectPrivate::senderList() const
     return returnValue;
 }
 
+/*! \internal
+  Add the connection \a c to to the list of connections of the sender's object
+  for the specified \a signal
+
+  The signalSlotLock() of the sender and receiver must be locked while calling
+  this function
+
+  Will also add the connection in the sender's list of the receiver.
+ */
 void QObjectPrivate::addConnection(int signal, Connection *c)
 {
+    Q_ASSERT(c->sender == q_ptr);
     if (!connectionLists)
         connectionLists = new QObjectConnectionListVector();
     if (signal >= connectionLists->count())
@@ -322,6 +332,18 @@ void QObjectPrivate::addConnection(int signal, Connection *c)
     connectionList.last = c;
 
     cleanConnectionLists();
+
+    c->prev = &(QObjectPrivate::get(c->receiver)->senders);
+    c->next = *c->prev;
+    *c->prev = c;
+    if (c->next)
+        c->next->prev = &c->next;
+
+    if (signal < 0) {
+        connectedSignals[0] = connectedSignals[1] = ~0;
+    } else if (signal < (int)sizeof(connectedSignals) * 8) {
+        connectedSignals[signal >> 5] |= (1 << (signal & 0x1f));
+    }
 }
 
 void QObjectPrivate::cleanConnectionLists()
@@ -914,7 +936,7 @@ QObject::~QObject()
 QObjectPrivate::Connection::~Connection()
 {
     if (ownArgumentTypes) {
-        const int *v = argumentTypes.load();
+        const int *v = argumentTypes.loadRelaxed();
         if (v != &DIRECT_CONNECTION_ONLY)
             delete [] v;
     }
@@ -2294,7 +2316,7 @@ static inline void check_and_warn_compat(const QMetaObject *sender, const QMetaM
     If you pass the Qt::UniqueConnection \a type, the connection will only
     be made if it is not a duplicate. If there is already a duplicate
     (exact same signal to the exact same slot on the same objects),
-    the connection will fail and connect will return false.
+    the connection will fail and connect will return an invalid QMetaObject::Connection.
 
     The optional \a type parameter describes the type of connection
     to establish. In particular, it determines whether a particular
@@ -2707,7 +2729,7 @@ bool QObject::disconnect(const QObject *sender, const char *signal,
         }
 
         if (!method) {
-            res |= QMetaObjectPrivate::disconnect(sender, signal_index, receiver, -1);
+            res |= QMetaObjectPrivate::disconnect(sender, signal_index, receiver, -1, nullptr);
         } else {
             const QMetaObject *rmeta = receiver->metaObject();
             do {
@@ -2717,7 +2739,7 @@ bool QObject::disconnect(const QObject *sender, const char *signal,
                             rmeta = rmeta->superClass();
                 if (method_index < 0)
                     break;
-                res |= QMetaObjectPrivate::disconnect(sender, signal_index, receiver, method_index);
+                res |= QMetaObjectPrivate::disconnect(sender, signal_index, receiver, method_index, nullptr);
                 method_found = true;
             } while ((rmeta = rmeta->superClass()));
         }
@@ -2826,7 +2848,7 @@ bool QObject::disconnect(const QObject *sender, const QMetaMethod &signal,
         return false;
     }
 
-    if (!QMetaObjectPrivate::disconnect(sender, signal_index, receiver, method_index))
+    if (!QMetaObjectPrivate::disconnect(sender, signal_index, receiver, method_index, nullptr))
         return false;
 
     const_cast<QObject*>(sender)->disconnectNotify(method.mobj ? signalSignature.constData() : nullptr);
@@ -2993,20 +3015,6 @@ QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender, i
     c->callFunction = callFunction;
 
     QObjectPrivate::get(s)->addConnection(signal_index, c.data());
-
-    c->prev = &(QObjectPrivate::get(r)->senders);
-    c->next = *c->prev;
-    *c->prev = c.data();
-    if (c->next)
-        c->next->prev = &c->next;
-
-    QObjectPrivate *const sender_d = QObjectPrivate::get(s);
-    if (signal_index < 0) {
-        sender_d->connectedSignals[0] = sender_d->connectedSignals[1] = ~0;
-    } else if (signal_index < (int)sizeof(sender_d->connectedSignals) * 8) {
-        sender_d->connectedSignals[signal_index >> 5] |= (1 << (signal_index & 0x1f));
-    }
-
     return c.take();
 }
 
@@ -3017,7 +3025,7 @@ bool QMetaObject::disconnect(const QObject *sender, int signal_index,
 {
     signal_index = methodIndexToSignalIndex(sender->metaObject(), signal_index);
     return QMetaObjectPrivate::disconnect(sender, signal_index,
-                                          receiver, method_index);
+                                          receiver, method_index, nullptr);
 }
 
 /*!\internal
@@ -3031,7 +3039,7 @@ bool QMetaObject::disconnectOne(const QObject *sender, int signal_index,
 {
     signal_index = methodIndexToSignalIndex(sender->metaObject(), signal_index);
     return QMetaObjectPrivate::disconnect(sender, signal_index,
-                                          receiver, method_index,
+                                          receiver, method_index, nullptr,
                                           QMetaObjectPrivate::DisconnectOne);
 }
 
@@ -3039,7 +3047,7 @@ bool QMetaObject::disconnectOne(const QObject *sender, int signal_index,
     Helper function to remove the connection from the senders list and setting the receivers to 0
  */
 bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
-                                          const QObject *receiver, int method_index,
+                                          const QObject *receiver, int method_index, void **slot,
                                           QMutex *senderMutex, DisconnectType disconnectType)
 {
     bool success = false;
@@ -3048,7 +3056,8 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
 
         if (r
             && (receiver == nullptr || (r == receiver
-                           && (method_index < 0 || c->method() == method_index)))) {
+                           && (method_index < 0 || c->method() == method_index)
+                           && (slot == 0 || (c->isSlotObject && c->slotObj->compare(slot)))))) {
             bool needToUnlock = false;
             QMutex *receiverMutex = nullptr;
             if (!receiver) {
@@ -3081,7 +3090,7 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
     Same as the QMetaObject::disconnect, but \a signal_index must be the result of QObjectPrivate::signalIndex
  */
 bool QMetaObjectPrivate::disconnect(const QObject *sender, int signal_index,
-                                    const QObject *receiver, int method_index,
+                                    const QObject *receiver, int method_index, void **slot,
                                     DisconnectType disconnectType)
 {
     if (!sender)
@@ -3106,7 +3115,7 @@ bool QMetaObjectPrivate::disconnect(const QObject *sender, int signal_index,
         for (signal_index = -1; signal_index < connectionLists->count(); ++signal_index) {
             QObjectPrivate::Connection *c =
                 (*connectionLists)[signal_index].first;
-            if (disconnectHelper(c, receiver, method_index, senderMutex, disconnectType)) {
+            if (disconnectHelper(c, receiver, method_index, slot, senderMutex, disconnectType)) {
                 success = true;
                 connectionLists->dirty = true;
             }
@@ -3114,7 +3123,7 @@ bool QMetaObjectPrivate::disconnect(const QObject *sender, int signal_index,
     } else if (signal_index < connectionLists->count()) {
         QObjectPrivate::Connection *c =
             (*connectionLists)[signal_index].first;
-        if (disconnectHelper(c, receiver, method_index, senderMutex, disconnectType)) {
+        if (disconnectHelper(c, receiver, method_index, slot, senderMutex, disconnectType)) {
             success = true;
             connectionLists->dirty = true;
         }
@@ -4102,6 +4111,14 @@ void qDeleteInEventHandler(QObject *o)
     to verify the existence of \a signal (if it was not declared as a signal)
     You can check if the QMetaObject::Connection is valid by casting it to a bool.
 
+    By default, a signal is emitted for every connection you make;
+    two signals are emitted for duplicate connections. You can break
+    all of these connections with a single disconnect() call.
+    If you pass the Qt::UniqueConnection \a type, the connection will only
+    be made if it is not a duplicate. If there is already a duplicate
+    (exact same signal to the exact same slot on the same objects),
+    the connection will fail and connect will return an invalid QMetaObject::Connection.
+
     The optional \a type parameter describes the type of connection
     to establish. In particular, it determines whether a particular
     signal is delivered to a slot immediately or queued for delivery
@@ -4149,9 +4166,35 @@ void qDeleteInEventHandler(QObject *o)
 
     The connection will automatically disconnect if the sender is destroyed.
  */
-QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signal, const QObject *receiver, QObject::QSlotObjectBase *slotObj,
-                                             Qt::ConnectionType type, const int* types, const QMetaObject* senderMetaObject)
+
+/** \internal
+
+    Implementation of the template version of connect
+
+    \a sender is the sender object
+    \a signal is a pointer to a pointer to a member signal of the sender
+    \a receiver is the receiver object, may not be null, will be equal to sender when
+                connecting to a static function or a functor
+    \a slot a pointer only used when using Qt::UniqueConnection
+    \a type the Qt::ConnctionType passed as argument to connect
+    \a types an array of integer with the metatype id of the parametter of the signal
+             to be used with queued connection
+             must stay valid at least for the whole time of the connection, this function
+             do not take ownership. typically static data.
+             If null, then the types will be computed when the signal is emit in a queued
+             connection from the types from the signature.
+    \a senderMetaObject is the metaobject used to lookup the signal, the signal must be in
+                        this metaobject
+ */
+QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signal,
+                                             const QObject *receiver, void **slot,
+                                             QObject::QSlotObjectBase *slotObj, Qt::ConnectionType type,
+                                             const int *types, const QMetaObject *senderMetaObject)
 {
+    if (!sender || !signal || !slotObj || !senderMetaObject) {
+        qWarning("QObject::connect: invalid null parametter");
+        return QMetaObject::Connection();
+    }
     int signal_index = -1;
     void *args[] = { &signal_index, signal };
     senderMetaObject->static_metacall(QMetaObject::IndexOfMethod, 0, args);
@@ -4163,7 +4206,6 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
     computeOffsets(senderMetaObject, &signalOffset, &methodOffset);
     signal_index += signalOffset;
 
-    // duplicated from QMetaObjectPrivate::connect
     QObject *s = const_cast<QObject *>(sender);
     QObject *r = const_cast<QObject *>(receiver);
 
@@ -4171,8 +4213,18 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
                                signalSlotLock(receiver));
 
     if (type & Qt::UniqueConnection) {
-        qWarning() << "QObject::connect: Qt::UniqueConnection not supported when connecting function pointers";
-        type = static_cast<Qt::ConnectionType>(type & (Qt::UniqueConnection - 1));
+        QObjectConnectionListVector *connectionLists = QObjectPrivate::get(s)->connectionLists;
+        if (connectionLists && connectionLists->count() > signal_index) {
+            const QObjectPrivate::Connection *c2 =
+                (*connectionLists)[signal_index].first;
+
+            while (c2) {
+                if (c2->receiver == receiver && c2->isSlotObject && c2->slotObj->compare(slot))
+                    return QMetaObject::Connection();
+                c2 = c2->nextConnectionList;
+            }
+        }
+        type = static_cast<Qt::ConnectionType>(type ^ Qt::UniqueConnection);
     }
 
     QScopedPointer<QObjectPrivate::Connection> c(new QObjectPrivate::Connection);
@@ -4182,25 +4234,11 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
     c->connectionType = type;
     c->isSlotObject = true;
     if (types) {
-        c->argumentTypes.store(types);
+        c->argumentTypes.storeRelaxed(types);
         c->ownArgumentTypes = false;
     }
 
     QObjectPrivate::get(s)->addConnection(signal_index, c.data());
-
-    c->prev = &(QObjectPrivate::get(r)->senders);
-    c->next = *c->prev;
-    *c->prev = c.data();
-    if (c->next)
-        c->next->prev = &c->next;
-
-    QObjectPrivate *const sender_d = QObjectPrivate::get(s);
-    if (signal_index < 0) {
-        sender_d->connectedSignals[0] = sender_d->connectedSignals[1] = ~0;
-    } else if (signal_index < (int)sizeof(sender_d->connectedSignals) * 8) {
-        sender_d->connectedSignals[signal_index >> 5] |= (1 << (signal_index & 0x1f));
-    }
-
     return QMetaObject::Connection(c.take());
 }
 
@@ -4232,6 +4270,88 @@ bool QObject::disconnect(const QMetaObject::Connection &connection)
         c->next->prev = c->prev;
     c->receiver = 0;
     return true;
+}
+
+/*! \fn bool QObject::disconnect(const QObject *sender, (T::*signal)(...), const Qbject *receiver, (T::*method)(...))
+    \threadsafe
+    \overload
+
+    Disconnects \a signal in object \a sender from \a method in object
+    \a receiver. Returns true if the connection is successfully broken;
+    otherwise returns false.
+
+    A signal-slot connection is removed when either of the objects
+    involved are destroyed.
+
+    disconnect() is typically used in three ways, as the following
+    examples demonstrate.
+    \list 1
+    \i Disconnect everything connected to an object's signals:
+
+       \snippet doc/src/snippets/code/src_corelib_kernel_qobject.cpp 26
+
+    \i Disconnect everything connected to a specific signal:
+
+       \snippet doc/src/snippets/code/src_corelib_kernel_qobject.cpp 47
+
+    \i Disconnect a specific receiver:
+
+       \snippet doc/src/snippets/code/src_corelib_kernel_qobject.cpp 30
+
+    \i Disconnect a connection from one specific signal to a specific slot:
+
+       \snippet doc/src/snippets/code/src_corelib_kernel_qobject.cpp 48
+
+
+    \endlist
+
+    0 may be used as a wildcard, meaning "any signal", "any receiving
+    object", or "any slot in the receiving object", respectively.
+
+    The \a sender may never be 0. (You cannot disconnect signals from
+    more than one object in a single call.)
+
+    If \a signal is 0, it disconnects \a receiver and \a method from
+    any signal. If not, only the specified signal is disconnected.
+
+    If \a receiver is 0, it disconnects anything connected to \a
+    signal. If not, slots in objects other than \a receiver are not
+    disconnected.
+
+    If \a method is 0, it disconnects anything that is connected to \a
+    receiver. If not, only slots named \a method will be disconnected,
+    and all other slots are left alone. The \a method must be 0 if \a
+    receiver is left out, so you cannot disconnect a
+    specifically-named slot on all objects.
+
+    \note It is not possible to use this overload to diconnect signals
+    connected to functors or lambda expressions. That is because it is not
+    possible to compare them. Instead, use the olverload that take a
+    QMetaObject::Connection
+
+    \sa connect()
+*/
+bool QObject::disconnectImpl(const QObject *sender, void **signal, const QObject *receiver, void **slot, const QMetaObject *senderMetaObject)
+{
+    if (sender == 0 || (receiver == 0 && slot != 0)) {
+        qWarning("Object::disconnect: Unexpected null parameter");
+        return false;
+    }
+
+    int signal_index = -1;
+    if (signal) {
+        void *args[] = { &signal_index, signal };
+        senderMetaObject->static_metacall(QMetaObject::IndexOfMethod, 0, args);
+        if (signal_index < 0 || signal_index >= QMetaObjectPrivate::get(senderMetaObject)->signalCount) {
+            qWarning("QObject::disconnect: signal not found in %s", senderMetaObject->className());
+            return false;
+        }
+        int signalOffset, methodOffset;
+        computeOffsets(senderMetaObject, &signalOffset, &methodOffset);
+        signal_index += signalOffset;
+    }
+
+    return QMetaObjectPrivate::disconnect(sender, signal_index, receiver, -1, slot);
 }
 
 /*! \class QMetaObject::Connection
@@ -4284,6 +4404,12 @@ QMetaObject::Connection::~Connection()
 QObject::QSlotObjectBase::~QSlotObjectBase()
 {
 }
+
+bool QObject::QSlotObjectBase::compare(void** )
+{
+    return false;
+}
+
 
 
 QT_END_NAMESPACE

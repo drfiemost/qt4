@@ -146,11 +146,11 @@ struct QMetaObjectPrivate
                         const QMetaObject *rmeta = nullptr,
                         int type = 0, int *types = nullptr);
     static bool disconnect(const QObject *sender, int signal_index,
-                           const QObject *receiver, int method_index,
+                           const QObject *receiver, int method_index, void **slot,
                            DisconnectType = DisconnectAll);
     static inline bool disconnectHelper(QObjectPrivate::Connection *c,
-                                        const QObject *receiver, int method_index,
-                                        QMutex *senderMutex, DisconnectType);
+                                        const QObject *receiver, int method_index, void **slot,
+                                        QMutex *senderMutex, DisconnectType = DisconnectAll);
 #endif
 };
 
