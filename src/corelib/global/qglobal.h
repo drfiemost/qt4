@@ -1250,6 +1250,14 @@ QT_END_INCLUDE_NAMESPACE
 # define Q_DECL_CONSTEXPR
 #endif
 
+#ifdef Q_COMPILER_EXPLICIT_OVERRIDES
+# define Q_DECL_OVERRIDE override
+# define Q_DECL_FINAL final
+#else
+# define Q_DECL_OVERRIDE
+# define Q_DECL_FINAL
+#endif
+
 // enable gcc warnings for printf-style functions
 #if defined(Q_CC_GNU) && !defined(__INSURE__)
 #  if defined(Q_CC_MINGW) && !defined(Q_CC_CLANG)

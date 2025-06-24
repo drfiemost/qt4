@@ -168,6 +168,13 @@ int runMoc(int _argc, char **_argv)
     pp.macros["BOOST_TYPE_TRAITS_HPP"];
     pp.macros["_SYS_SYSMACROS_H_OUTER"];
 
+    // Don't stumble over GCC extensions
+    Macro dummyVariadicFunctionMacro;
+    dummyVariadicFunctionMacro.isFunction = true;
+    dummyVariadicFunctionMacro.isVariadic = true;
+    dummyVariadicFunctionMacro.arguments += Symbol(0, PP_IDENTIFIER, "__VA_ARGS__");
+    pp.macros["__attribute__"] = dummyVariadicFunctionMacro;
+
     QByteArray filename;
     QByteArray output;
     FILE *in = nullptr;

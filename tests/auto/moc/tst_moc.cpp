@@ -44,6 +44,7 @@
 #include <QtTest/QtTest>
 #include <stdio.h>
 #include <qobject.h>
+#include <qmetaobject.h>
 
 #include "using-namespaces.h"
 #include "assign-namespace.h"
@@ -70,6 +71,8 @@
 #include "parse-boost.h"
 #endif
 #include "cxx11-enums.h"
+#include "cxx11-final-classes.h"
+#include "cxx11-explicit-override-control.h"
 #include "cxx-attributes.h"
 #include "parse-defines.h"
 
@@ -527,7 +530,13 @@ private slots:
     void cxx11Enums();
     void cxxAttributes();
     void returnRefs();
+
+    void finalClasses_data();
+    void finalClasses();
+    void explicitOverrideControl_data();
+    void explicitOverrideControl();
     void parseDefines();
+    void preprocessorOnly();
 
 signals:
     void sigWithUnsignedArg(unsigned foo);
@@ -1780,6 +1789,69 @@ void tst_Moc::returnRefs()
     // they used to cause miscompilation of the moc generated file.
 }
 
+void tst_Moc::finalClasses_data()
+{
+    QTest::addColumn<QString>("className");
+    QTest::addColumn<QString>("expected");
+
+    QTest::newRow("FinalTestClassQt") << FinalTestClassQt::staticMetaObject.className() << "FinalTestClassQt";
+    QTest::newRow("ExportedFinalTestClassQt") << ExportedFinalTestClassQt::staticMetaObject.className() << "ExportedFinalTestClassQt";
+    QTest::newRow("ExportedFinalTestClassQtX") << ExportedFinalTestClassQtX::staticMetaObject.className() << "ExportedFinalTestClassQtX";
+
+    QTest::newRow("FinalTestClassCpp11") << FinalTestClassCpp11::staticMetaObject.className() << "FinalTestClassCpp11";
+    QTest::newRow("ExportedFinalTestClassCpp11") << ExportedFinalTestClassCpp11::staticMetaObject.className() << "ExportedFinalTestClassCpp11";
+    QTest::newRow("ExportedFinalTestClassCpp11X") << ExportedFinalTestClassCpp11X::staticMetaObject.className() << "ExportedFinalTestClassCpp11X";
+
+    QTest::newRow("SealedTestClass") << SealedTestClass::staticMetaObject.className() << "SealedTestClass";
+    QTest::newRow("ExportedSealedTestClass") << ExportedSealedTestClass::staticMetaObject.className() << "ExportedSealedTestClass";
+    QTest::newRow("ExportedSealedTestClassX") << ExportedSealedTestClassX::staticMetaObject.className() << "ExportedSealedTestClassX";
+}
+
+void tst_Moc::finalClasses()
+{
+    QFETCH(QString, className);
+    QFETCH(QString, expected);
+
+    QCOMPARE(className, expected);
+}
+
+Q_DECLARE_METATYPE(const QMetaObject*);
+
+void tst_Moc::explicitOverrideControl_data()
+{
+    QTest::addColumn<const QMetaObject*>("mo");
+
+#define ADD(x) QTest::newRow(#x) << &x::staticMetaObject
+    ADD(ExplicitOverrideControlFinalQt);
+    ADD(ExplicitOverrideControlFinalCxx11);
+    ADD(ExplicitOverrideControlSealed);
+    ADD(ExplicitOverrideControlOverrideQt);
+    ADD(ExplicitOverrideControlOverrideCxx11);
+    ADD(ExplicitOverrideControlFinalQtOverrideQt);
+    ADD(ExplicitOverrideControlFinalCxx11OverrideCxx11);
+    ADD(ExplicitOverrideControlSealedOverride);
+#undef ADD
+}
+
+void tst_Moc::explicitOverrideControl()
+{
+    QFETCH(const QMetaObject*, mo);
+
+    QVERIFY(mo);
+    QCOMPARE(mo->indexOfMethod("pureSlot0()"), mo->methodOffset() + 0);
+    QCOMPARE(mo->indexOfMethod("pureSlot1()"), mo->methodOffset() + 1);
+    QCOMPARE(mo->indexOfMethod("pureSlot2()"), mo->methodOffset() + 2);
+    QCOMPARE(mo->indexOfMethod("pureSlot3()"), mo->methodOffset() + 3);
+#if 0 // moc doesn't support volatile slots
+    QCOMPARE(mo->indexOfMethod("pureSlot4()"), mo->methodOffset() + 4);
+    QCOMPARE(mo->indexOfMethod("pureSlot5()"), mo->methodOffset() + 5);
+    QCOMPARE(mo->indexOfMethod("pureSlot6()"), mo->methodOffset() + 6);
+    QCOMPARE(mo->indexOfMethod("pureSlot7()"), mo->methodOffset() + 7);
+    QCOMPARE(mo->indexOfMethod("pureSlot8()"), mo->methodOffset() + 8);
+    QCOMPARE(mo->indexOfMethod("pureSlot9()"), mo->methodOffset() + 9);
+#endif
+}
+
 void tst_Moc::parseDefines()
 {
     const QMetaObject *mo = &PD_NAMESPACE::PD_CLASSNAME::staticMetaObject;
@@ -1815,6 +1887,12 @@ void tst_Moc::parseDefines()
     QVERIFY(index != -1);
     index = mo->indexOfSlot("vararg3(int,int)");
     QVERIFY(index != -1);
+    index = mo->indexOfSlot("vararg4()");
+    QVERIFY(index != -1);
+    index = mo->indexOfSlot("vararg5(int)");
+    QVERIFY(index != -1);
+    index = mo->indexOfSlot("vararg6(int,int)");
+    QVERIFY(index != -1);
 #endif
 
     int count = 0;
@@ -1830,6 +1908,26 @@ void tst_Moc::parseDefines()
         }
     }
     QVERIFY(count == 2);
+}
+
+void tst_Moc::preprocessorOnly()
+{
+#ifdef MOC_CROSS_COMPILED
+    QSKIP("Not tested when cross-compiled", SkipAll);
+#endif
+#if defined(Q_OS_LINUX) && defined(Q_CC_GNU) && !defined(QT_NO_PROCESS)
+    QProcess proc;
+    proc.start("moc", QStringList() << "-E" << srcify("/pp-dollar-signs.h"));
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitCode(), 0);
+    QByteArray mocOut = proc.readAllStandardOutput();
+    QVERIFY(!mocOut.isEmpty());
+    QCOMPARE(proc.readAllStandardError(), QByteArray());
+
+    QVERIFY(mocOut.contains("$$ = parser->createFoo()"));
+#else
+    QSKIP("Only tested on linux/gcc", SkipAll);
+#endif
 }
 
 

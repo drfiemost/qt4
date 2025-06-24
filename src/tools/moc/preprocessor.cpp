@@ -193,8 +193,12 @@ static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode m
                 token = keywords[state].ident;
 
             if (token == NOTOKEN) {
-                // an error really
                 ++data;
+                // an error really, but let's ignore this input
+                // to not confuse moc later. However in pre-processor
+                // only mode let's continue.
+                if (!Preprocessor::preprocessOnly)
+                    continue;
                 continue;
             }
 
@@ -562,7 +566,6 @@ void Preprocessor::macroExpandIdentifier(int lineNum, Symbols &preprocessed, Mac
     const Macro &macro = macros.value(s);
     safeset += s;
 
-    // don't expand macros with arguments for now
     if (macro.isFunction) {
         while (test(PP_WHITESPACE));
         if (!test(PP_LPAREN)) {
@@ -591,10 +594,7 @@ void Preprocessor::macroExpandIdentifier(int lineNum, Symbols &preprocessed, Mac
                 argument += symbol();
             }
 
-            // each argument undoergoes macro expansion
-            Symbols expanded;
-            macroExpandSymbols(lineNum, argument, expanded, safeset);
-            arguments += expanded;
+            arguments += argument;
 
             if (nesting < 0)
                 break;
@@ -627,13 +627,19 @@ void Preprocessor::macroExpandIdentifier(int lineNum, Symbols &preprocessed, Mac
             }
             int index = macro.arguments.indexOf(s);
             if (mode == Normal) {
-                if (index >= 0)
-                    expansion += arguments.at(index);
-                else
+                if (index >= 0) {
+                    // each argument undoergoes macro expansion if it's not used as part of a # or ##
+                    if (i < macro.symbols.size() - 1 && macro.symbols.at(i + 1).token != PP_HASHHASH) {
+                        Symbols expanded;
+                        macroExpandSymbols(lineNum, arguments.at(index), expanded, safeset);
+                        expansion += expanded;
+                    } else {
+                        expansion += arguments.at(index);
+                    }
+               } else {
                     expansion += s;
+                }
             } else if (mode == Hash) {
-                if (s.token == WHITESPACE)
-                    continue;
                 if (index < 0)
                     error("'#' is not followed by a macro parameter");
 
@@ -1064,8 +1070,30 @@ void Preprocessor::preprocess(const QByteArray &filename, Symbols &preprocessed)
             int start = index;
             until(PP_NEWLINE);
             macro.symbols.reserve(index - start - 1);
-            for (int i = start; i < index - 1; ++i)
-                macro.symbols += symbols.at(i);
+
+            // remove whitespace where there shouldn't be any:
+            // Before and after the macro, after a # and around ##
+            Token lastToken = HASH; // skip shitespace at the beginning
+            for (int i = start; i < index - 1; ++i) {
+                Token token = symbols.at(i).token;
+                if (token ==  PP_WHITESPACE || token == WHITESPACE) {
+                    if (lastToken == PP_HASH || lastToken == HASH ||
+                        lastToken == PP_HASHHASH ||
+                        lastToken == PP_WHITESPACE || lastToken == WHITESPACE)
+                        continue;
+                } else if (token == PP_HASHHASH) {
+                    if (!macro.symbols.isEmpty() &&
+                        (lastToken ==  PP_WHITESPACE || lastToken == WHITESPACE))
+                        macro.symbols.pop_back();
+                }
+                macro.symbols.append(symbols.at(i));
+                lastToken = token;
+            }
+            // remove trailing whitespace
+            while (!macro.symbols.isEmpty() &&
+                   (macro.symbols.last().token == PP_WHITESPACE || macro.symbols.last().token == WHITESPACE))
+                macro.symbols.pop_back();
+
             macros.insert(name, macro);
             continue;
         }
@@ -1193,8 +1221,18 @@ void Preprocessor::parseDefineArguments(Macro *m)
         t = next();
         if (t == PP_RPAREN)
             break;
-        if (t != PP_COMMA)
-            error("Unexpected character in macro argument list.");
+        if (t == PP_COMMA)
+            continue;
+        if (lexem() == "...") {
+            //GCC extension:    #define FOO(x, y...) x(y)
+            // The last argument was already parsed. Just mark the macro as variadic.
+            m->isVariadic = true;
+            while (test(PP_WHITESPACE));
+            if (!test(PP_RPAREN))
+                error("missing ')' in macro argument list");
+            break;
+        }
+        error("Unexpected character in macro argument list.");
     }
     m->arguments = arguments;
     while (test(PP_WHITESPACE));
