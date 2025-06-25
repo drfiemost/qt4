@@ -405,6 +405,10 @@ public slots:
 private:
      myNS::Points m_points;
 
+#ifdef Q_MOC_RUN
+    int xx = 11'11; // digit separator must not confuse moc (QTBUG-59351)
+#endif
+
 private slots:
      inline virtual void blub1() {}
      virtual inline void blub2() {}
@@ -1647,6 +1651,13 @@ void tst_Moc::warnings_data()
         << QString()
         << QString("standard input:1: Error: Class contains Q_OBJECT macro but does not inherit from QObject");
 
+    QTest::newRow("Warning on invalid macro")
+        << QByteArray("#define Foo(a, b)\n class X : public QObject { Q_OBJECT  }; \n Foo(a) \n Foo(a,b,c) \n")
+        << QStringList()
+        << 0
+        << QString("IGNORE_ALL_STDOUT")
+        << QString(":3: Warning: Macro argument mismatch.\n:4: Warning: Macro argument mismatch.");
+
     QTest::newRow("Class declaration lacks Q_OBJECT macro.")
         << QByteArray("class X : public QObject \n { \n public slots: \n void foo() {} \n };")
         << QStringList()
@@ -1654,12 +1665,19 @@ void tst_Moc::warnings_data()
         << QString()
         << QString("standard input:5: Error: Class declaration lacks Q_OBJECT macro.");
 
-    QTest::newRow("QTBUG-46210: crash on invalid macro")
-        << QByteArray("#define Foo(a, b, c) a b c #a #b #c a##b##c #d\n Foo(45);")
+    QTest::newRow("Invalid macro definition")
+        << QByteArray("#define Foo(a, b, c) a b c #a #b #c a##b##c #d\n Foo(45, 42, 39);")
         << QStringList()
         << 1
         << QString("IGNORE_ALL_STDOUT")
         << QString(":2: Error: '#' is not followed by a macro parameter");
+
+    QTest::newRow("QTBUG-46210: crash on invalid macro invocation")
+        << QByteArray("#define Foo(a, b, c) a b c #a #b #c a##b##c\n Foo(45);")
+        << QStringList()
+        << 1
+        << QString("IGNORE_ALL_STDOUT")
+        << QString(":2: Error: Macro invoked with too few parameters for a use of '#'");
 
     QTest::newRow("QTBUG-54609: crash on invalid input")
         << QByteArray::fromBase64("EAkJCQkJbGFzcyBjbGFzcyBiYWkcV2kgTUEKcGYjZGVmaW5lIE1BKFEs/4D/FoQ=")
@@ -1711,7 +1729,7 @@ void tst_Moc::warnings()
     // magic value "IGNORE_ALL_STDOUT" ignores stdout
     if (expectedStdOut != "IGNORE_ALL_STDOUT")
         QCOMPARE(QString::fromLocal8Bit(proc.readAllStandardOutput()).trimmed(), expectedStdOut);
-    QCOMPARE(QString::fromLocal8Bit(proc.readAllStandardError()).trimmed(), expectedStdErr);
+    QCOMPARE(QString::fromLocal8Bit(proc.readAllStandardError()).trimmed().remove('\r'), expectedStdErr);
 
     }
 
@@ -1949,6 +1967,9 @@ void tst_Moc::parseDefines()
     QVERIFY(index != -1);
 
     index = mo->indexOfSignal("cmdlineSignal(QMap<int,int>)");
+    QVERIFY(index != -1);
+
+    index = mo->indexOfSignal("signalQTBUG55853()");
     QVERIFY(index != -1);
 }
 
