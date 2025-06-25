@@ -1904,7 +1904,6 @@ void tst_Moc::parseDefines()
     index = mo->indexOfSlot("combined6()");
     QVERIFY(index != -1);
 
-#if defined(Q_COMPILER_VARIADIC_MACROS)
     index = mo->indexOfSlot("vararg1()");
     QVERIFY(index != -1);
     index = mo->indexOfSlot("vararg2(int)");
@@ -1917,7 +1916,6 @@ void tst_Moc::parseDefines()
     QVERIFY(index != -1);
     index = mo->indexOfSlot("vararg6(int,int)");
     QVERIFY(index != -1);
-#endif
 
     index = mo->indexOfSlot("INNERFUNCTION(int)");
     QVERIFY(index != -1);
@@ -1977,7 +1975,7 @@ void tst_Moc::preprocessorOnly()
 void tst_Moc::unterminatedFunctionMacro()
 {
 #ifdef MOC_CROSS_COMPILED
-    QSKIP("Not tested when cross-compiled");
+    QSKIP("Not tested when cross-compiled", SkipAll);
 #endif
 #if defined(Q_OS_LINUX) && defined(Q_CC_GNU) && !defined(QT_NO_PROCESS)
     QProcess proc;
@@ -1989,7 +1987,7 @@ void tst_Moc::unterminatedFunctionMacro()
     QVERIFY(!errorOutput.isEmpty());
     QVERIFY(errorOutput.contains("missing ')' in macro usage"));
 #else
-    QSKIP("Only tested on linux/gcc");
+    QSKIP("Only tested on linux/gcc", SkipAll);
 #endif
 }
 
