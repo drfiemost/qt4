@@ -480,7 +480,7 @@ static void* qt_load_library_runtime(const char *library, int vernum,
         for(int i = highestVernum; i > vernum; --i)
             versions << i;
     }
-    Q_FOREACH(int version, versions) {
+    for (int version: versions) {
         QLatin1String libName(library);
         QLibrary xfixesLib(libName, version);
         xfixesLib.setLoadHints(QLibrary::ImprovedSearchHeuristics);

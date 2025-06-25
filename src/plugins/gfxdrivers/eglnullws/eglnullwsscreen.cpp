@@ -112,7 +112,7 @@ bool EGLNullWSScreen::connect(const QString &displaySpec)
 {
     const QStringList args = displaySpec.section(':', 1).split(':', QString::SkipEmptyParts);
     const QHash<QString, QImage::Format> formatDict = formatDictionary();
-    Q_FOREACH(const QString arg, args) {
+    for(const QString arg: args) {
         const QString optionName = arg.section('=', 0, 0);
         const QString optionArg = arg.section('=', 1);
         if (optionName == QLatin1String("size")) {

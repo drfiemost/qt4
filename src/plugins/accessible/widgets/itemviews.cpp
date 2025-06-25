@@ -306,7 +306,7 @@ QList<QAccessibleTable2CellInterface*> QAccessibleTable2::selectedCells() const
     QList<QAccessibleTable2CellInterface*> cells;
     if (!view()->selectionModel())
         return cells;
-    Q_FOREACH (const QModelIndex &index, view()->selectionModel()->selectedIndexes()) {
+    for (const QModelIndex &index: view()->selectionModel()->selectedIndexes()) {
         cells.append(cell(index));
     }
     return cells;
@@ -317,7 +317,7 @@ QList<int> QAccessibleTable2::selectedColumns() const
     QList<int> columns;
     if (!view()->selectionModel())
         return columns;
-    Q_FOREACH (const QModelIndex &index, view()->selectionModel()->selectedColumns()) {
+    for (const QModelIndex &index: view()->selectionModel()->selectedColumns()) {
         columns.append(index.column());
     }
     return columns;
@@ -328,7 +328,7 @@ QList<int> QAccessibleTable2::selectedRows() const
     if (!view()->selectionModel())
         return QList<int>();
     QList<int> rows;
-    Q_FOREACH (const QModelIndex &index, view()->selectionModel()->selectedRows()) {
+    for (const QModelIndex &index: view()->selectionModel()->selectedRows()) {
         rows.append(index.row());
     }
     return rows;
