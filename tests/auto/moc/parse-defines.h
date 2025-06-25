@@ -85,6 +85,8 @@
 #define DEFINE_CMDLINE_SIGNAL void cmdlineSignal(const QMap<int, int> &i)
 #endif
 
+#define HASH_SIGN #
+
 PD_BEGIN_NAMESPACE
 
 class DEFINE_CMDLINE_EMPTY PD_CLASSNAME DEFINE_CMDLINE_EMPTY
@@ -157,6 +159,15 @@ signals:
 };
 
 #undef QString
+
+#ifdef Q_MOC_RUN
+// Normaly, redefining keywords is forbidden, but we should not abort parsing
+#define and    &&
+#define and_eq &=
+#define bitand  &
+#define true 1
+#undef true
+#endif
 
 PD_END_NAMESPACE
 

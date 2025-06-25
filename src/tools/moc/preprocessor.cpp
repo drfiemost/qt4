@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
-** Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.org>
+** Copyright (C) 2014 Olivier Goffart <ogoffart@woboq.org>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -1115,19 +1115,18 @@ void Preprocessor::preprocess(const QByteArray &filename, Symbols &preprocessed)
         }
         case PP_DEFINE:
         {
-            next(IDENTIFIER);
+            next();
             QByteArray name = lexem();
+            if (name.isEmpty() || !is_ident_start(name[0]))
+                error();
             Macro macro;
             macro.isVariadic = false;
-            Token t = next();
-            if (t == LPAREN) {
+            if (test(LPAREN)) {
                 // we have a function macro
                 macro.isFunction = true;
                 parseDefineArguments(&macro);
-            } else if (t == PP_WHITESPACE) {
-                macro.isFunction = false;
             } else {
-                error("Moc: internal error");
+                macro.isFunction = false;
             }
             int start = index;
             until(PP_NEWLINE);
@@ -1161,16 +1160,12 @@ void Preprocessor::preprocess(const QByteArray &filename, Symbols &preprocessed)
                     macro.symbols.last().token == PP_HASHHASH) {
                     error("'##' cannot appear at either end of a macro expansion");
                 }
-                if (macro.symbols.last().token == HASH ||
-                    macro.symbols.last().token == PP_HASH) {
-                    error("'#' is not followed by a macro parameter");
-                }
             }
             macros.insert(name, macro);
             continue;
         }
         case PP_UNDEF: {
-            next(IDENTIFIER);
+            next();
             QByteArray name = lexem();
             until(PP_NEWLINE);
             macros.remove(name);
