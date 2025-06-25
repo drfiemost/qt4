@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.org>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -157,8 +158,7 @@ bool Preprocessor::skipBranch()
 }
 
 
-enum TokenizeMode { TokenizeCpp, TokenizePreprocessor, PreparePreprocessorStatement, TokenizePreprocessorStatement, TokenizeInclude, PrepareDefine, TokenizeDefine };
-static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode mode = TokenizeCpp)
+Symbols Preprocessor::tokenize(const QByteArray& input, int lineNum, Preprocessor::TokenizeMode mode)
 {
     Symbols symbols;
     const char *begin = input.constData();
@@ -537,12 +537,14 @@ static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode m
     return symbols;
 }
 
-Symbols Preprocessor::macroExpand(Preprocessor *that, Symbols &toExpand, int &index, int lineNum, bool one)
+Symbols Preprocessor::macroExpand(Preprocessor *that, Symbols &toExpand, int &index,
+                                  int lineNum, bool one, const QSet<QByteArray> &excludeSymbols)
 {
     SymbolStack symbols;
     SafeSymbols sf;
     sf.symbols = toExpand;
     sf.index = index;
+    sf.excludedSymbols = excludeSymbols;
     symbols.push(sf);
 
     Symbols result;
@@ -631,6 +633,8 @@ Symbols Preprocessor::macroExpandIdentifier(Preprocessor *that, SymbolStack &sym
 
             if (nesting < 0)
                 break;
+            else if (!symbols.hasNext())
+                that->error("missing ')' in macro usage");
         }
 
         // empty VA_ARGS
@@ -664,7 +668,7 @@ Symbols Preprocessor::macroExpandIdentifier(Preprocessor *that, SymbolStack &sym
                     if (i == macro.symbols.size() - 1 || macro.symbols.at(i + 1).token != PP_HASHHASH) {
                         Symbols arg = arguments.at(index);
                         int idx = 1;
-                        expansion += macroExpand(that, arg, idx, lineNum, false);
+                        expansion += macroExpand(that, arg, idx, lineNum, false, symbols.excludeSymbols());
                     } else {
                         expansion += arguments.at(index);
                     }

@@ -76,9 +76,19 @@
 
 #endif
 
+#define PD_ADD_SUFFIX(x)  PD_DEFINE1(x,_SUFFIX)
+#define PD_DEFINE_ITSELF PD_ADD_SUFFIX(PD_DEFINE_ITSELF)
+
+#ifndef Q_MOC_RUN
+// macro defined on the command line (in tst_moc.pro)
+#define DEFINE_CMDLINE_EMPTY
+#define DEFINE_CMDLINE_SIGNAL void cmdlineSignal(const QMap<int, int> &i)
+#endif
+
 PD_BEGIN_NAMESPACE
 
-class PD_CLASSNAME : public QObject
+class DEFINE_CMDLINE_EMPTY PD_CLASSNAME DEFINE_CMDLINE_EMPTY
+    : public DEFINE_CMDLINE_EMPTY QObject DEFINE_CMDLINE_EMPTY
 {
     Q_OBJECT
     Q_CLASSINFO("TestString", PD_STRINGIFY(PD_CLASSNAME))
@@ -127,6 +137,11 @@ public slots:
 #if !(cond1() & cond2())
     void conditionSlot() {}
 #endif
+
+    void PD_DEFINE_ITSELF(int) {}
+
+signals:
+    DEFINE_CMDLINE_SIGNAL;
 
 };
 

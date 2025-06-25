@@ -293,7 +293,8 @@ int runMoc(int _argc, char **_argv)
                 if (name.isEmpty())
                     error("Missing macro name");
                 Macro macro;
-                macro.symbols += Symbol(0, PP_IDENTIFIER, value);
+                macro.symbols = Preprocessor::tokenize(value, 1, Preprocessor::TokenizeDefine);
+                macro.symbols.removeLast(); // remove the EOF symbol
                 pp.macros.insert(name, macro);
 
             }

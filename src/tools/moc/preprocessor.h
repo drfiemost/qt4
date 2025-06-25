@@ -91,10 +91,13 @@ public:
 
     void substituteUntilNewline(Symbols &substituted);
     static Symbols macroExpandIdentifier(Preprocessor *that, SymbolStack &symbols, int lineNum, QByteArray *macroName);
-    static Symbols macroExpand(Preprocessor *that, Symbols &toExpand, int &index, int lineNum, bool one);
+    static Symbols macroExpand(Preprocessor *that, Symbols &toExpand, int &index, int lineNum, bool one,
+                               const QSet<QByteArray> &excludeSymbols = QSet<QByteArray>());
 
     int evaluateCondition();
 
+    enum TokenizeMode { TokenizeCpp, TokenizePreprocessor, PreparePreprocessorStatement, TokenizePreprocessorStatement, TokenizeInclude, PrepareDefine, TokenizeDefine };
+    static Symbols tokenize(const QByteArray &input, int lineNum = 1, TokenizeMode mode = TokenizeCpp);
 
 private:
     void until(Token);

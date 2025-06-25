@@ -33,3 +33,6 @@ contains(QT_CONFIG, dbus) {
     DEFINES += WITH_DBUS
     QT += dbus
 }
+
+# Define macro on the command lines used in  parse-defines.h
+QMAKE_MOC_OPTIONS += "-DDEFINE_CMDLINE_EMPTY="  "\"-DDEFINE_CMDLINE_SIGNAL=void cmdlineSignal(const QMap<int, int> &i)\""

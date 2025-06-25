@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.com>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -134,6 +135,7 @@ using Symbols = QVector<Symbol>;
 struct SafeSymbols {
     Symbols symbols;
     QByteArray expandedMacro;
+    QSet<QByteArray> excludedSymbols;
     int index;
 };
 
@@ -159,6 +161,7 @@ public:
     inline QByteArray unquotedLexem() { return symbol().unquotedLexem(); }
 
     bool dontReplaceSymbol(const QByteArray &name);
+    QSet<QByteArray> excludeSymbols();
 };
 
 inline bool SymbolStack::test(Token token)
@@ -178,10 +181,20 @@ inline bool SymbolStack::test(Token token)
 inline bool SymbolStack::dontReplaceSymbol(const QByteArray &name)
 {
     for (int i = 0; i < size(); ++i) {
-        if (name == at(i).expandedMacro)
+        if (name == at(i).expandedMacro || at(i).excludedSymbols.contains(name))
             return true;
     }
     return false;
+}
+
+inline QSet<QByteArray> SymbolStack::excludeSymbols()
+{
+    QSet<QByteArray> set;
+    for (int i = 0; i < size(); ++i) {
+        set << at(i).expandedMacro;
+        set += at(i).excludedSymbols;
+    }
+    return set;
 }
 
 QT_END_NAMESPACE

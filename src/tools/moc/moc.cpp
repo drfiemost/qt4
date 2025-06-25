@@ -1182,8 +1182,10 @@ void Moc::parseClassInfo(ClassDef *def)
     if (test(STRING_LITERAL)) {
         infoDef.value = symbol().unquotedLexem();
     } else {
+        qWarning() << "here";
         // support Q_CLASSINFO("help", QT_TR_NOOP("blah"))
         next(IDENTIFIER);
+        qWarning() << "xxx";
         next(LPAREN);
         next(STRING_LITERAL);
         infoDef.value = symbol().unquotedLexem();
