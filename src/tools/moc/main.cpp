@@ -177,7 +177,7 @@ int runMoc(int _argc, char **_argv)
 
     QByteArray filename;
     QByteArray output;
-    FILE *in = nullptr;
+    QFile in;
     FILE *out = nullptr;
     bool ignoreConflictingOptions = false;
 
@@ -371,14 +371,10 @@ int runMoc(int _argc, char **_argv)
 
     if (filename.isEmpty()) {
         filename = "standard input";
-        in = stdin;
+        in.open(stdin, QIODevice::ReadOnly);
     } else {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-		if (fopen_s(&in, filename.data(), "rb")) {
-#else
-        in = fopen(filename.data(), "rb");
-		if (!in) {
-#endif
+        in.setFileName(QString::fromUtf8(filename));
+        if (!in.open(QIODevice::ReadOnly)) {
             fprintf(stderr, "moc: %s: No such file\n", filename.constData());
             return 1;
         }
@@ -388,8 +384,7 @@ int runMoc(int _argc, char **_argv)
     moc.currentFilenames.push(filename);
 
     // 1. preprocess
-    moc.symbols = pp.preprocessed(moc.filename, in);
-    fclose(in);
+    moc.symbols = pp.preprocessed(moc.filename, &in);
 
     if (!pp.preprocessOnly) {
         // 2. parse

@@ -129,6 +129,7 @@ public:
         emit send(value);
     }
 
+    bool operator< ( const Sender & ) const { /* QTBUG-36834 */ return true;}
 signals:
     void send(const String::Type&);
     void send(const Int::Type&);
@@ -538,6 +539,7 @@ private slots:
     void parseDefines();
     void preprocessorOnly();
     void unterminatedFunctionMacro();
+    void strignLiteralsInMacroExtension();
 
 signals:
     void sigWithUnsignedArg(unsigned foo);
@@ -1651,6 +1653,27 @@ void tst_Moc::warnings_data()
         << 1
         << QString()
         << QString("standard input:5: Error: Class declaration lacks Q_OBJECT macro.");
+
+    QTest::newRow("QTBUG-46210: crash on invalid macro")
+        << QByteArray("#define Foo(a, b, c) a b c #a #b #c a##b##c #d\n Foo(45);")
+        << QStringList()
+        << 1
+        << QString("IGNORE_ALL_STDOUT")
+        << QString(":2: Error: '#' is not followed by a macro parameter");
+
+    QTest::newRow("QTBUG-54609: crash on invalid input")
+        << QByteArray::fromBase64("EAkJCQkJbGFzcyBjbGFzcyBiYWkcV2kgTUEKcGYjZGVmaW5lIE1BKFEs/4D/FoQ=")
+        << QStringList()
+        << 1
+        << QString("IGNORE_ALL_STDOUT")
+        << QString(":-1: Error: Unexpected character in macro argument list.");
+
+    QTest::newRow("QTBUG-54815: Crash on invalid input")
+        << QByteArray("class M{(})F<{}d000000000000000#0")
+        << QStringList()
+        << 0
+        << QString()
+        << QString("standard input:1: Note: No relevant classes found. No output generated.");
 }
 
 void tst_Moc::warnings()
@@ -1667,7 +1690,7 @@ void tst_Moc::warnings()
 
 #ifdef Q_CC_MSVC
     // for some reasons, moc compiled with MSVC uses a different output format
-    QRegExp lineNumberRe(":(\\d+):");
+    QRegExp lineNumberRe(":(-?\\d+):");
     lineNumberRe.setMinimal(true);
     expectedStdErr.replace(lineNumberRe, "(\\1):");
 #endif
@@ -1968,6 +1991,45 @@ void tst_Moc::unterminatedFunctionMacro()
 #else
     QSKIP("Only tested on linux/gcc");
 #endif
+}
+
+class StringLiteralsInMacroExtension: public QObject
+{
+    Q_OBJECT
+#define Macro(F) F " " F
+    Q_CLASSINFO(Macro("String"), Macro("Literal"))
+#undef Macro
+
+#define Macro(F) F
+    Q_CLASSINFO("String" Macro("!"), "Literal" Macro("!"))
+    Q_CLASSINFO(Macro("!") "String", Macro("!") "Literal")
+#undef Macro
+
+#define Macro "foo"
+    Q_CLASSINFO("String" Macro, "Literal" Macro)
+    Q_CLASSINFO(Macro "String", Macro "Literal")
+#undef Macro
+};
+
+void tst_Moc::strignLiteralsInMacroExtension()
+{
+    const QMetaObject *mobj = &StringLiteralsInMacroExtension::staticMetaObject;
+    QCOMPARE(mobj->classInfoCount(), 5);
+
+    QCOMPARE(mobj->classInfo(0).name(), "String String");
+    QCOMPARE(mobj->classInfo(0).value(), "Literal Literal");
+
+    QCOMPARE(mobj->classInfo(1).name(), "String!");
+    QCOMPARE(mobj->classInfo(1).value(), "Literal!");
+
+    QCOMPARE(mobj->classInfo(2).name(), "!String");
+    QCOMPARE(mobj->classInfo(2).value(), "!Literal");
+
+    QCOMPARE(mobj->classInfo(3).name(), "Stringfoo");
+    QCOMPARE(mobj->classInfo(3).value(), "Literalfoo");
+
+    QCOMPARE(mobj->classInfo(4).name(), "fooString");
+    QCOMPARE(mobj->classInfo(4).value(), "fooLiteral");
 }
 
 
