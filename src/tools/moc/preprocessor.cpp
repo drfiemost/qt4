@@ -208,7 +208,6 @@ Symbols Preprocessor::tokenize(const QByteArray& input, int lineNum, Preprocesso
                 // only mode let's continue.
                 if (!Preprocessor::preprocessOnly)
                     continue;
-                continue;
             }
 
             ++column;

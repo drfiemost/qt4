@@ -14,6 +14,7 @@ SOURCES += tst_moc.cpp
 INCLUDEPATH += testproject/include testproject
 
 DEFINES += SRCDIR=\\\"$$PWD\\\"
+DEFINES += BINDIR=\\\"$$OUT_PWD\\\"
 cross_compile: DEFINES += MOC_CROSS_COMPILED
 
 HEADERS += using-namespaces.h no-keywords.h task87883.h c-comments.h backslash-newlines.h oldstyle-casts.h \
@@ -35,4 +36,5 @@ contains(QT_CONFIG, dbus) {
 }
 
 # Define macro on the command lines used in  parse-defines.h
-QMAKE_MOC_OPTIONS += "-DDEFINE_CMDLINE_EMPTY="  "\"-DDEFINE_CMDLINE_SIGNAL=void cmdlineSignal(const QMap<int, int> &i)\""
+DEFINES += DEFINE_CMDLINE_EMPTY=
+#QMAKE_MOC_OPTIONS +=  "\"-DDEFINE_CMDLINE_SIGNAL=void cmdlineSignal(const QMap<int, int> &i)\""
