@@ -301,7 +301,7 @@ void Generator::generateCode()
         for (int i = 0; i < extraList.count(); ++i) {
             fprintf(out, "    &%s::staticMetaObject,\n", extraList.at(i).constData());
         }
-        fprintf(out, "    0\n};\n\n");
+        fprintf(out, "    nullptr\n};\n\n");
     }
 
     bool hasExtraData = (cdef->hasQObject && !isQt) || !extraList.isEmpty();
@@ -309,14 +309,14 @@ void Generator::generateCode()
         fprintf(out, "const QMetaObjectExtraData %s::staticMetaObjectExtraData = {\n    ",
                 cdef->qualified.constData());
         if (extraList.isEmpty())
-            fprintf(out, "0, ");
+            fprintf(out, "nullptr, ");
         else
             fprintf(out, "qt_meta_extradata_%s, ", qualifiedClassNameIdentifier.constData());
 
         if (cdef->hasQObject && !isQt)
             fprintf(out, " qt_static_metacall");
         else
-            fprintf(out, " 0");
+            fprintf(out, " nullptr");
         fprintf(out, " \n};\n\n");
     }
 
@@ -329,11 +329,11 @@ void Generator::generateCode()
         fprintf(out, "const QMetaObject %s::staticMetaObject = {\n", cdef->qualified.constData());
 
     if (isQObject)
-        fprintf(out, "    { 0, ");
+        fprintf(out, "    { nullptr, ");
     else if (cdef->superclassList.size())
         fprintf(out, "    { &%s::staticMetaObject, ", purestSuperClass.constData());
     else
-        fprintf(out, "    { 0, ");
+        fprintf(out, "    { nullptr, ");
     fprintf(out, "qt_meta_stringdata_%s,\n      qt_meta_data_%s, ",
              qualifiedClassNameIdentifier.constData(), qualifiedClassNameIdentifier.constData());
     if (!hasExtraData)
@@ -355,7 +355,7 @@ void Generator::generateCode()
 // Generate smart cast function
 //
     fprintf(out, "\nvoid *%s::qt_metacast(const char *_clname)\n{\n", cdef->qualified.constData());
-    fprintf(out, "    if (!_clname) return 0;\n");
+    fprintf(out, "    if (!_clname) return nullptr;\n");
     fprintf(out, "    if (!strcmp(_clname, qt_meta_stringdata_%s))\n"
                   "        return static_cast<void*>(const_cast< %s*>(this));\n",
             qualifiedClassNameIdentifier.constData(), cdef->classname.constData());
@@ -384,7 +384,7 @@ void Generator::generateCode()
         }
         fprintf(out, "    return %s::qt_metacast(_clname);\n", superClass.constData());
     } else {
-        fprintf(out, "    return 0;\n");
+        fprintf(out, "    return nullptr;\n");
     }
     fprintf(out, "}\n");
 
@@ -925,7 +925,7 @@ void Generator::generateStaticMetacall()
                 continue;
             anythingUsed = true;
             fprintf(out, "        {\n");
-            fprintf(out, "            typedef %s (%s::*_t)(",f.type.rawName.constData() , cdef->classname.constData());
+            fprintf(out, "            using _t = %s (%s::*)(",f.type.rawName.constData() , cdef->classname.constData());
             for (int j = 0; j < f.arguments.count(); ++j) {
                 const ArgumentDef &a = f.arguments.at(j);
                 if (j)
@@ -982,7 +982,7 @@ void Generator::generateSignal(FunctionDef *def,int index)
 
     if (def->arguments.isEmpty() && def->normalizedType.isEmpty()) {
         fprintf(out, ")%s\n{\n"
-                "    QMetaObject::activate(%s, &staticMetaObject, %d, 0);\n"
+                "    QMetaObject::activate(%s, &staticMetaObject, %d, nullptr);\n"
                 "}\n", constQualifier, thisPtr.constData(), index);
         return;
     }
@@ -1006,7 +1006,7 @@ void Generator::generateSignal(FunctionDef *def,int index)
 
     fprintf(out, "    void *_a[] = { ");
     if (def->normalizedType.isEmpty()) {
-        fprintf(out, "0");
+        fprintf(out, "nullptr");
     } else {
         if (def->returnTypeIsVolatile)
              fprintf(out, "const_cast<void*>(reinterpret_cast<const volatile void*>(&_t0))");
