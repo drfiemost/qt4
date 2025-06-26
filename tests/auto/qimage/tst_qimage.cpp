@@ -159,8 +159,11 @@ private slots:
 
     void convertOverUnPreMul();
 
+    void exifOrientation_data();
+    void exifOrientation();
     void exifReadComments();
-    void exif_invalid_data_QTBUG46870();
+    void exifInvalidData_data();
+    void exifInvalidData();
 
     void reinterpretAsFormat_data();
     void reinterpretAsFormat();
@@ -2231,6 +2234,41 @@ void tst_QImage::scaled_QTBUG35972()
         QCOMPARE(pixels[i], 0xffffffff);
 }
 
+void tst_QImage::exifOrientation_data()
+{
+    #ifdef SRCDIR
+    const QString prefix = QLatin1String(SRCDIR) + "/images/";
+    #else
+    const QString prefix = "images/";
+    #endif
+    QTest::addColumn<QString>("fileName");
+    QTest::newRow("Orientation 1, Intel format") << prefix + "jpeg_exif_orientation_value_1.jpg";
+    QTest::newRow("Orientation 2, Intel format") << prefix + "jpeg_exif_orientation_value_2.jpg";
+    QTest::newRow("Orientation 3, Intel format") << prefix + "jpeg_exif_orientation_value_3.jpg";
+    QTest::newRow("Orientation 4, Intel format") << prefix + "jpeg_exif_orientation_value_4.jpg";
+    QTest::newRow("Orientation 5, Intel format") << prefix + "jpeg_exif_orientation_value_5.jpg";
+    QTest::newRow("Orientation 6, Intel format") << prefix + "jpeg_exif_orientation_value_6.jpg";
+    QTest::newRow("Orientation 6, Motorola format") << prefix + "jpeg_exif_orientation_value_6_motorola.jpg";
+    QTest::newRow("Orientation 7, Intel format") << prefix + "jpeg_exif_orientation_value_7.jpg";
+    QTest::newRow("Orientation 8, Intel format") << prefix + "jpeg_exif_orientation_value_8.jpg";
+}
+
+void tst_QImage::exifOrientation()
+{
+    QFETCH(QString, fileName);
+
+    QImage img;
+    QRgb px;
+
+    QVERIFY(img.load(fileName));
+
+    px = img.pixel(0, 0);
+    QVERIFY(qRed(px) > 250 && qGreen(px) < 5 && qBlue(px) < 5);
+
+    px = img.pixel(img.width() - 1, 0);
+    QVERIFY(qRed(px) < 5 && qGreen(px) < 5 && qBlue(px) > 250);
+}
+
 void tst_QImage::exifReadComments()
 {
     #ifdef SRCDIR
@@ -2264,7 +2302,17 @@ void tst_QImage::exifReadComments()
     QCOMPARE(image.text("Description"), QString::fromUtf8("some unicode chars: ÖÄÜ€@"));
 }
 
-void tst_QImage::exif_invalid_data_QTBUG46870()
+void tst_QImage::exifInvalidData_data()
+{
+    QTest::addColumn<bool>("$never used");
+    QTest::newRow("QTBUG-46870");
+    QTest::newRow("back_pointers");
+    QTest::newRow("past_end");
+    QTest::newRow("too_many_ifds");
+    QTest::newRow("too_many_tags");
+}
+
+void tst_QImage::exifInvalidData()
 {
     #ifdef SRCDIR
     const QString prefix = QLatin1String(SRCDIR) + "/images/";
@@ -2272,7 +2320,7 @@ void tst_QImage::exif_invalid_data_QTBUG46870()
     const QString prefix = "images/";
     #endif
     QImage image;
-    QVERIFY(image.load(prefix + "jpeg_exif_invalid_data_QTBUG-46870.jpg"));
+    QVERIFY(image.load(prefix + "jpeg_exif_invalid_data_" + QTest::currentDataTag() + ".jpg"));
     QVERIFY(!image.isNull());
 }
 
