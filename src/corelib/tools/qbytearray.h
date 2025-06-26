@@ -294,12 +294,12 @@ public:
     QT_ASCII_CAST_WARN int lastIndexOf(const QString &s, int from = -1) const;
 #endif
 #ifndef QT_NO_CAST_FROM_ASCII
-    inline QT_ASCII_CAST_WARN bool operator==(const QString &s2) const;
-    inline QT_ASCII_CAST_WARN bool operator!=(const QString &s2) const;
-    inline QT_ASCII_CAST_WARN bool operator<(const QString &s2) const;
-    inline QT_ASCII_CAST_WARN bool operator>(const QString &s2) const;
-    inline QT_ASCII_CAST_WARN bool operator<=(const QString &s2) const;
-    inline QT_ASCII_CAST_WARN bool operator>=(const QString &s2) const;
+    QT_ASCII_CAST_WARN inline bool operator==(const QString &s2) const;
+    QT_ASCII_CAST_WARN inline bool operator!=(const QString &s2) const;
+    QT_ASCII_CAST_WARN inline bool operator<(const QString &s2) const;
+    QT_ASCII_CAST_WARN inline bool operator>(const QString &s2) const;
+    QT_ASCII_CAST_WARN inline bool operator<=(const QString &s2) const;
+    QT_ASCII_CAST_WARN inline bool operator>=(const QString &s2) const;
 #endif
 
     short toShort(bool *ok = nullptr, int base = 10) const;

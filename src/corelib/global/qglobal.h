@@ -874,7 +874,9 @@ namespace QT_NAMESPACE {}
 #endif
 
 #ifndef Q_REQUIRED_RESULT
-#  if defined(Q_CC_GNU) && !defined(Q_CC_INTEL) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1))
+#  if __cplusplus >= 201703L
+#    define Q_REQUIRED_RESULT [[nodiscard]]
+#  elif defined(Q_CC_GNU) && !defined(Q_CC_INTEL) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1))
 #    define Q_REQUIRED_RESULT __attribute__ ((warn_unused_result))
 #  else
 #    define Q_REQUIRED_RESULT
@@ -1129,6 +1131,8 @@ QT_END_INCLUDE_NAMESPACE
 */
 #if defined(Q_MOC_RUN)
 #  define Q_DECL_DEPRECATED Q_DECL_DEPRECATED
+#elif __cplusplus >= 201402L
+#  define Q_DECL_DEPRECATED [[deprecated]]
 #elif (defined(Q_CC_GNU) && !defined(Q_CC_INTEL) && (__GNUC__ - 0 > 3 || (__GNUC__ - 0 == 3 && __GNUC_MINOR__ - 0 >= 2))) || defined(Q_CC_RVCT)
 #  define Q_DECL_DEPRECATED __attribute__ ((__deprecated__))
 #elif defined(Q_CC_MSVC)

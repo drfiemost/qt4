@@ -170,7 +170,7 @@ template <> struct QConcatenable<char> : private QAbstractConcatenable
     enum { ExactSize = true };
     static int size(const char) { return 1; }
 #ifndef QT_NO_CAST_FROM_ASCII
-    static inline QT_ASCII_CAST_WARN void appendTo(const char c, QChar *&out)
+    QT_ASCII_CAST_WARN static inline void appendTo(const char c, QChar *&out)
     {
         QAbstractConcatenable::convertFromAscii(c, out);
     }
@@ -275,7 +275,7 @@ template <int N> struct QConcatenable<char[N]> : private QAbstractConcatenable
     enum { ExactSize = false };
     static int size(const char[N]) { return N - 1; }
 #ifndef QT_NO_CAST_FROM_ASCII
-    static inline void QT_ASCII_CAST_WARN appendTo(const char a[N], QChar *&out)
+    QT_ASCII_CAST_WARN static inline void appendTo(const char a[N], QChar *&out)
     {
         QAbstractConcatenable::convertFromAscii(a, N, out);
     }
@@ -294,7 +294,7 @@ template <int N> struct QConcatenable<const char[N]> : private QAbstractConcaten
     enum { ExactSize = false };
     static int size(const char[N]) { return N - 1; }
 #ifndef QT_NO_CAST_FROM_ASCII
-    static inline void QT_ASCII_CAST_WARN appendTo(const char a[N], QChar *&out)
+    QT_ASCII_CAST_WARN static inline void appendTo(const char a[N], QChar *&out)
     {
         QAbstractConcatenable::convertFromAscii(a, N, out);
     }
@@ -313,7 +313,7 @@ template <> struct QConcatenable<const char *> : private QAbstractConcatenable
     enum { ExactSize = false };
     static int size(const char *a) { return qstrlen(a); }
 #ifndef QT_NO_CAST_FROM_ASCII
-    static inline void QT_ASCII_CAST_WARN appendTo(const char *a, QChar *&out)
+    QT_ASCII_CAST_WARN static inline void appendTo(const char *a, QChar *&out)
     { QAbstractConcatenable::convertFromAscii(a, -1, out); }
 #endif
     static inline void appendTo(const char *a, char *&out)
