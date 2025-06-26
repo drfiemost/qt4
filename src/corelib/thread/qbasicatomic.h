@@ -67,10 +67,6 @@
 #  include "QtCore/qatomic_armv6.h"
 #elif defined(QT_ARCH_IA64)
 #  include "QtCore/qatomic_ia64.h"
-#elif defined(QT_ARCH_MIPS)
-#  include "QtCore/qatomic_mips.h"
-#elif defined(QT_ARCH_SPARC)
-#  include "QtCore/qatomic_sparc.h"
 #elif defined(__i386) || defined(__i386__) || defined(__x86_64) || defined(__x86_64__) || defined(__amd64)
 #  include <QtCore/qatomic_x86.h>
 

@@ -1116,22 +1116,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \fn QSysInfo::SymbianVersion QSysInfo::symbianVersion()
-    \since 4.6
-
-    Returns the version of the Symbian operating system on which the
-    application is run (Symbian only).
-*/
-
-/*!
-    \fn QSysInfo::S60Version QSysInfo::s60Version()
-    \since 4.6
-
-    Returns the version of the S60 SDK system on which the
-    application is run (S60 only).
-*/
-
-/*!
     \enum QSysInfo::Endian
 
     \value BigEndian  Big-endian byte order (also called Network byte order)
@@ -1231,51 +1215,6 @@ bool qSharedBuild()
     \value MV_YOSEMITE     Apple codename for MV_10_10
 
     \sa WinVersion, SymbianVersion
-*/
-
-/*!
-    \enum QSysInfo::SymbianVersion
-
-    This enum provides symbolic names for the various versions of the
-    Symbian operating system. On Symbian, the
-    QSysInfo::symbianVersion() function gives the version of the
-    system on which the application is run.
-
-    \value SV_9_2 Symbian OS v9.2
-    \value SV_9_3 Symbian OS v9.3
-    \value SV_9_4 Symbian OS v9.4
-    \value SV_SF_1 S60 5th Edition (Symbian^1)
-    \value SV_SF_2 Symbian^2
-    \value SV_SF_3 Symbian^3 or Symbian Anna
-    \value SV_SF_4 \e{This enum value is deprecated.}
-    \value SV_API_5_3 Symbian/S60 API version 5.3 release
-    \value SV_API_5_4 Symbian/S60 API version 5.4 release
-    \value SV_API_5_5 Symbian/S60 API version 5.5 release
-    \value SV_Unknown An unknown and currently unsupported platform
-
-    \sa S60Version, WinVersion, MacVersion
-*/
-
-/*!
-    \enum QSysInfo::S60Version
-
-    This enum provides symbolic names for the various versions of the
-    S60 SDK. On S60, the
-    QSysInfo::s60Version() function gives the version of the
-    SDK on which the application is run.
-
-    \value SV_S60_3_1 S60 3rd Edition Feature Pack 1
-    \value SV_S60_3_2 S60 3rd Edition Feature Pack 2
-    \value SV_S60_5_0 S60 5th Edition
-    \value SV_S60_5_1 \e{This enum value is deprecated.}
-    \value SV_S60_5_2 Symbian^3 and Symbian Anna
-    \value SV_S60_5_3 Symbian/S60 API version 5.3 release
-    \value SV_S60_5_4 Symbian/S60 API version 5.4 release
-    \value SV_S60_5_5 Symbian/S60 API version 5.5 release
-    \value SV_S60_Unknown An unknown and currently unsupported platform
-    \omitvalue SV_S60_None
-
-    \sa SymbianVersion, WinVersion, MacVersion
 */
 
 /*!
@@ -2755,56 +2694,6 @@ int qrand()
     Expands to the size of a pointer in bytes (4 or 8). This is
     equivalent to \c sizeof(void *) but can be used in a preprocessor
     directive.
-*/
-
-/*!
-    \macro TRUE
-    \relates <QtGlobal>
-    \obsolete
-
-    Synonym for \c true.
-
-    \sa FALSE
-*/
-
-/*!
-    \macro FALSE
-    \relates <QtGlobal>
-    \obsolete
-
-    Synonym for \c false.
-
-    \sa TRUE
-*/
-
-/*!
-    \macro QABS(n)
-    \relates <QtGlobal>
-    \obsolete
-
-    Use qAbs(\a n) instead.
-
-    \sa QMIN(), QMAX()
-*/
-
-/*!
-    \macro QMIN(x, y)
-    \relates <QtGlobal>
-    \obsolete
-
-    Use std::min(\a x, \a y) instead.
-
-    \sa QMAX(), QABS()
-*/
-
-/*!
-    \macro QMAX(x, y)
-    \relates <QtGlobal>
-    \obsolete
-
-    Use std::max(\a x, \a y) instead.
-
-    \sa QMIN(), QABS()
 */
 
 /*!

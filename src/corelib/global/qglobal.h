@@ -1013,7 +1013,7 @@ QT_END_INCLUDE_NAMESPACE
 
 using QNoImplicitBoolCast = int;
 
-#if defined(QT_ARCH_ARM) || defined(QT_ARCH_ARMV6) || defined(QT_ARCH_AVR32) || (defined(QT_ARCH_MIPS) && (defined(Q_WS_QWS) || defined(Q_WS_QPA))) || defined(QT_ARCH_SH) || defined(QT_ARCH_SH4A)
+#if defined(QT_ARCH_ARM) || defined(QT_ARCH_ARMV6)
 #define QT_NO_FPU
 #endif
 

@@ -2611,12 +2611,6 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
         fi
         CFG_HOST_ARCH=arm
         ;;
-    Linux:*:sparc*)
-        if [ "$OPT_VERBOSE" = "yes" ]; then
-            echo "    Linux on SPARC"
-        fi
-        CFG_HOST_ARCH=sparc
-        ;;
     *:*:*)
         if [ "$OPT_VERBOSE" = "yes" ]; then
             echo "    Trying '$UNAME_MACHINE'..."
