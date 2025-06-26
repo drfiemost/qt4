@@ -1432,59 +1432,10 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_CC_COMEAU
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Comeau C++.
-*/
-
-/*!
-    \macro Q_CC_OC
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using CenterLine C++.
-*/
-
-/*!
     \macro Q_CC_MIPS
     \relates <QtGlobal>
 
     Defined if the application is compiled using MIPSpro C++.
-*/
-
-/*!
-    \macro Q_CC_DEC
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using DEC C++.
-*/
-
-/*!
-    \macro Q_CC_HPACC
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using HP aC++.
-*/
-
-/*!
-    \macro Q_CC_USLC
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using SCO OUDK and UDK.
-*/
-
-/*!
-    \macro Q_CC_CDS
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Reliant C++.
-*/
-
-/*!
-    \macro Q_CC_KAI
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using KAI C++.
 */
 
 /*!
@@ -1493,21 +1444,6 @@ bool qSharedBuild()
 
     Defined if the application is compiled using Intel C++ for Linux,
     Intel C++ for Windows.
-*/
-
-/*!
-    \macro Q_CC_PGI
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Portland Group C++.
-*/
-
-/*!
-    \macro Q_CC_GHS
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Green Hills
-    Optimizing C++ Compilers.
 */
 
 /*!

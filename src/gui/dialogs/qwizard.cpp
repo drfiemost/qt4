@@ -1389,11 +1389,8 @@ bool QWizardPrivate::ensureButton(QWizard::WizardButton which) const
         pushButton->setAutoDefault(false);
 #endif
         pushButton->hide();
-#ifdef Q_CC_HPACC
-        const_cast<QWizardPrivate *>(this)->btns[which] = pushButton;
-#else
         btns[which] = pushButton;
-#endif
+
         if (which < QWizard::NStandardButtons)
             pushButton->setText(buttonDefaultText(wizStyle, which, this));
 

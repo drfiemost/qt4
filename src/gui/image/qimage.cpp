@@ -69,11 +69,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_CC_DEC) && defined(__alpha) && (__DECCXX_VER-0 >= 50190001)
-#pragma message disable narrowptr
-#endif
-
-
 #define QIMAGE_SANITYCHECK_MEMORY(image) \
     if ((image).isNull()) { \
         qWarning("QImage: out of memory, returning null image"); \

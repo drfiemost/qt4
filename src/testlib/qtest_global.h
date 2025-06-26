@@ -61,17 +61,10 @@ QT_BEGIN_NAMESPACE
 # endif
 #endif
 
-#if defined (Q_CC_XLC) || (defined (Q_CC_GNU) && (__GNUC__ - 0 < 3))
+#if (defined (Q_CC_GNU) && (__GNUC__ - 0 < 3))
 # define QTEST_NO_SPECIALIZATIONS
 #endif
 
-
-#if (defined Q_CC_HPACC) && (defined __ia64)
-# ifdef Q_TESTLIB_EXPORT
-#  undef Q_TESTLIB_EXPORT
-# endif
-# define Q_TESTLIB_EXPORT
-#endif
 
 #define QTEST_VERSION     QT_VERSION
 #define QTEST_VERSION_STR QT_VERSION_STR

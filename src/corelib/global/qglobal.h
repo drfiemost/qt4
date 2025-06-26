@@ -454,74 +454,6 @@ namespace QT_NAMESPACE {}
 #    endif
 #  endif
 
-/* IBM compiler versions are a bit messy. There are actually two products:
-   the C product, and the C++ product. The C++ compiler is always packaged
-   with the latest version of the C compiler. Version numbers do not always
-   match. This little table (I'm not sure it's accurate) should be helpful:
-
-   C++ product                C product
-
-   C Set 3.1                  C Compiler 3.0
-   ...                        ...
-   C++ Compiler 3.6.6         C Compiler 4.3
-   ...                        ...
-   Visual Age C++ 4.0         ...
-   ...                        ...
-   Visual Age C++ 5.0         C Compiler 5.0
-   ...                        ...
-   Visual Age C++ 6.0         C Compiler 6.0
-
-   Now:
-   __xlC__    is the version of the C compiler in hexadecimal notation
-              is only an approximation of the C++ compiler version
-   __IBMCPP__ is the version of the C++ compiler in decimal notation
-              but it is not defined on older compilers like C Set 3.1 */
-#elif defined(__xlC__)
-#  define Q_CC_XLC
-#  define Q_FULL_TEMPLATE_INSTANTIATION
-#  if __xlC__ < 0x400
-#    define Q_NO_BOOL_TYPE
-#    define Q_NO_EXPLICIT_KEYWORD
-#    define Q_OUTOFLINE_TEMPLATE inline
-#    define Q_BROKEN_TEMPLATE_SPECIALIZATION
-#    define Q_CANNOT_DELETE_CONSTANT
-#  elif __xlC__ >= 0x0600
-#    define Q_ALIGNOF(type)     __alignof__(type)
-#    define Q_PACKED            __attribute__((__packed__))
-#  endif
-
-/* Older versions of DEC C++ do not define __EDG__ or __EDG - observed
-   on DEC C++ V5.5-004. New versions do define  __EDG__ - observed on
-   Compaq C++ V6.3-002.
-   This compiler is different enough from other EDG compilers to handle
-   it separately anyway. */
-#elif defined(__DECCXX) || defined(__DECC)
-#  define Q_CC_DEC
-/* Compaq have disabled EDG's _BOOL macro and use _BOOL_EXISTS instead
-   - observed on Compaq C++ V6.3-002.
-   In any case versions prior to Compaq C++ V6.0-005 do not have bool. */
-#  if !defined(_BOOL_EXISTS)
-#    define Q_NO_BOOL_TYPE
-#  endif
-/* Apply to all versions prior to Compaq C++ V6.0-000 - observed on
-   DEC C++ V5.5-004. */
-#  if __DECCXX_VER < 60060000
-#    define Q_BROKEN_TEMPLATE_SPECIALIZATION
-#    define Q_CANNOT_DELETE_CONSTANT
-#  endif
-/* avoid undefined symbol problems with out-of-line template members */
-#  define Q_OUTOFLINE_TEMPLATE inline
-
-/* The Portland Group C++ compiler is based on EDG and does define __EDG__
-   but the C compiler does not */
-#elif defined(__PGI)
-#  define Q_CC_PGI
-
-/* VxWorks' DIAB toolchain has an additional EDG type C++ compiler
-   (see __DCC__ above). This one is for C mode files (__EDG is not defined) */
-#elif defined(_DIAB_TOOL)
-#  define Q_CC_DIAB
-
 #else
 #  error "Qt has not been tested with this compiler"
 #endif
@@ -956,7 +888,7 @@ QT_END_INCLUDE_NAMESPACE
    Proper for-scoping in MIPSpro CC
 */
 #ifndef QT_NO_KEYWORDS
-#  if defined(Q_CC_MIPS) || (defined(Q_CC_HPACC) && defined(__ia64))
+#  if defined(Q_CC_MIPS)
 #    define for if(0){}else for
 #  endif
 #endif
@@ -1576,16 +1508,12 @@ inline T *q_check_ptr(T *p) { Q_CHECK_PTR(p); return p; }
 #  define Q_UNREACHABLE() Q_ASSERT(false);
 #endif
 
-#if defined(Q_CC_GNU) || defined(Q_CC_HPACC) || defined(Q_CC_DIAB)
+#if defined(Q_CC_GNU)
 #  define Q_FUNC_INFO __PRETTY_FUNCTION__
 #elif defined(_MSC_VER)
 #  define Q_FUNC_INFO __FUNCSIG__
 #else
-#   if defined(Q_CC_XLC)
-#      define Q_FUNC_INFO __FILE__ "(line number unavailable)"
-#   else
-#       define Q_FUNC_INFO __FILE__ ":" QT_STRINGIFY(__LINE__)
-#   endif
+#  define Q_FUNC_INFO __FILE__ ":" QT_STRINGIFY(__LINE__)
 #endif
 
 enum QtMsgType { QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtSystemMsg = QtCriticalMsg };
@@ -1893,17 +1821,6 @@ inline const QForeachContainer<T> *qForeachContainer(const QForeachContainerBase
         for (variable = *qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->i; \
              qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->brk;           \
              --qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->brk)
-
-#elif defined(Q_CC_DIAB)
-// VxWorks DIAB generates unresolvable symbols, if container is a function call
-#  define Q_FOREACH(variable,container)                                                             \
-    if(0){}else                                                                                     \
-    for (const QForeachContainerBase &_container_ = qForeachContainerNew(container);                \
-         qForeachContainer(&_container_, (__typeof__(container) *) 0)->condition();       \
-         ++qForeachContainer(&_container_, (__typeof__(container) *) 0)->i)               \
-        for (variable = *qForeachContainer(&_container_, (__typeof__(container) *) 0)->i; \
-             qForeachContainer(&_container_, (__typeof__(container) *) 0)->brk;           \
-             --qForeachContainer(&_container_, (__typeof__(container) *) 0)->brk)
 
 #else
 #  define Q_FOREACH(variable, container) \

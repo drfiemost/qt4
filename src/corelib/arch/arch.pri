@@ -1,5 +1,4 @@
 win32:HEADERS += arch/qatomic_windows.h
-wince:HEADERS += arch/qatomic_windowsce.h
 
 HEADERS += \
     arch/qatomic_armv5.h \
