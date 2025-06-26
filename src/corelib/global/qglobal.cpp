@@ -1401,22 +1401,6 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_CC_SYM
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Digital Mars C/C++
-    (used to be Symantec C++).
-*/
-
-/*!
-    \macro Q_CC_MWERKS
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Metrowerks
-    CodeWarrior.
-*/
-
-/*!
     \macro Q_CC_MSVC
     \relates <QtGlobal>
 
@@ -1429,13 +1413,6 @@ bool qSharedBuild()
     \relates <QtGlobal>
 
     Defined if the application is compiled using GNU C++.
-*/
-
-/*!
-    \macro Q_CC_MIPS
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using MIPSpro C++.
 */
 
 /*!
@@ -1870,20 +1847,6 @@ Q_CORE_EXPORT unsigned int qt_int_sqrt(unsigned int n)
 
 static QtMsgHandler handler = nullptr;                // pointer to debug handler
 
-#if defined(Q_CC_MWERKS) && defined(Q_OS_MACX)
-extern bool qt_is_gui_used;
-static void mac_default_handler(const char *msg)
-{
-    if (qt_is_gui_used) {
-        Str255 pmsg;
-        qt_mac_to_pascal_string(QString::fromAscii(msg), pmsg);
-        DebugStr(pmsg);
-    } else {
-        fprintf(stderr, msg);
-    }
-}
-#endif // Q_CC_MWERKS && Q_OS_MACX
-
 #if defined(QT_USE_SLOG2)
 #ifndef QT_LOG_CODE
 #define QT_LOG_CODE 9000
@@ -2071,9 +2034,7 @@ void qt_message_output(QtMsgType msgType, const char *buf)
     if (handler) {
         (*handler)(msgType, buf);
     } else {
-#if defined(Q_CC_MWERKS) && defined(Q_OS_MACX)
-        mac_default_handler(buf);
-#elif defined(QT_USE_SLOG2)
+#if defined(QT_USE_SLOG2)
         slog2_default_handler(msgType, buf);
 #else
         fprintf(stderr, "%s\n", buf);

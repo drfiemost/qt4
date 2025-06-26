@@ -312,25 +312,9 @@ namespace QT_NAMESPACE {}
 /*
    The compiler, must be one of: (Q_CC_x)
 
-     SYM      - Digital Mars C/C++ (used to be Symantec C++)
-     MWERKS   - Metrowerks CodeWarrior
      MSVC     - Microsoft Visual C/C++, Intel C++ for Windows
-     BOR      - Borland/Turbo C++
-     WAT      - Watcom C++
      GNU      - GNU C++
-     COMEAU   - Comeau C++
-     OC       - CenterLine C++
-     SUN      - Forte Developer, or Sun Studio C++
-     MIPS     - MIPSpro C++
-     DEC      - DEC C++
-     HPACC    - HP aC++
-     USLC     - SCO OUDK and UDK
-     CDS      - Reliant C++
-     KAI      - KAI C++
      INTEL    - Intel C++ for Linux, Intel C++ for Windows
-     HIGHC    - MetaWare High C/C++
-     PGI      - Portland Group C++
-     GHS      - Green Hills Optimizing C++ Compilers
      RVCT     - ARM Realview Compiler Suite
      CLANG    - C++ front-end for the LLVM compiler
 
@@ -338,36 +322,7 @@ namespace QT_NAMESPACE {}
    Should be sorted most to least authoritative.
 */
 
-#if defined(__ghs)
-# define Q_OUTOFLINE_TEMPLATE inline
-
-/* the following are necessary because the GHS C++ name mangling relies on __*/
-# define Q_CONSTRUCTOR_FUNCTION0(AFUNC) \
-   static const int AFUNC ## _init_variable_ = AFUNC();
-# define Q_CONSTRUCTOR_FUNCTION(AFUNC) Q_CONSTRUCTOR_FUNCTION0(AFUNC)
-# define Q_DESTRUCTOR_FUNCTION0(AFUNC) \
-    class AFUNC ## _dest_class_ { \
-    public: \
-       inline AFUNC ## _dest_class_() { } \
-       inline ~ AFUNC ## _dest_class_() { AFUNC(); } \
-    } AFUNC ## _dest_instance_;
-# define Q_DESTRUCTOR_FUNCTION(AFUNC) Q_DESTRUCTOR_FUNCTION0(AFUNC)
-
-#endif
-
-/* Symantec C++ is now Digital Mars */
-#if defined(__DMC__) || defined(__SC__)
-#  define Q_CC_SYM
-/* "explicit" semantics implemented in 8.1e but keyword recognized since 7.5 */
-#  if defined(__SC__) && __SC__ < 0x750
-#    define Q_NO_EXPLICIT_KEYWORD
-#  endif
-
-#elif defined(__MWERKS__)
-#  define Q_CC_MWERKS
-/* "explicit" recognized since 4.0d1 */
-
-#elif defined(_MSC_VER)
+#if defined(_MSC_VER)
 #  define Q_CC_MSVC
 #  define Q_CC_MSVC_NET
 #  define Q_CANNOT_DELETE_CONSTANT
@@ -416,7 +371,7 @@ namespace QT_NAMESPACE {}
 #    define Q_ASSUME(expr)  if (expr){} else __builtin_unreachable()
 #    define Q_UNREACHABLE() __builtin_unreachable()
 #    if !defined(__has_extension)
-#      /* Compatibility with older Clang versions */
+/* Compatibility with older Clang versions */
 #      define __has_extension __has_feature
 #    endif
 #  else
@@ -720,7 +675,7 @@ typedef short qint16;              /* 16 bit signed */
 typedef unsigned short quint16;    /* 16 bit unsigned */
 typedef int qint32;                /* 32 bit signed */
 typedef unsigned int quint32;      /* 32 bit unsigned */
-#if defined(Q_OS_WIN) && !defined(Q_CC_GNU) && !defined(Q_CC_MWERKS)
+#if defined(Q_OS_WIN) && !defined(Q_CC_GNU)
 #  define Q_INT64_C(c) c ## i64    /* signed 64 bit constant */
 #  define Q_UINT64_C(c) c ## ui64   /* unsigned 64 bit constant */
 typedef __int64 qint64;            /* 64 bit signed */
@@ -882,15 +837,6 @@ QT_END_INCLUDE_NAMESPACE
 #  define QT_WARNING_DISABLE_MSVC(number)
 #  define QT_WARNING_DISABLE_CLANG(text)
 #  define QT_WARNING_DISABLE_GCC(text)
-#endif
-
-/*
-   Proper for-scoping in MIPSpro CC
-*/
-#ifndef QT_NO_KEYWORDS
-#  if defined(Q_CC_MIPS)
-#    define for if(0){}else for
-#  endif
 #endif
 
 /*
@@ -1809,20 +1755,6 @@ template <typename T>
 inline const QForeachContainer<T> *qForeachContainer(const QForeachContainerBase *base, const T *)
 { return static_cast<const QForeachContainer<T> *>(base); }
 
-#if defined(Q_CC_MIPS)
-/*
-   Proper for-scoping in MIPSpro CC
-*/
-#  define Q_FOREACH(variable,container)                                                             \
-    if(0){}else                                                                                     \
-    for (const QForeachContainerBase &_container_ = qForeachContainerNew(container);                \
-         qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->condition();       \
-         ++qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->i)               \
-        for (variable = *qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->i; \
-             qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->brk;           \
-             --qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->brk)
-
-#else
 #  define Q_FOREACH(variable, container) \
     for (const QForeachContainerBase &_container_ = qForeachContainerNew(container); \
          qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->condition();       \
@@ -1830,7 +1762,6 @@ inline const QForeachContainer<T> *qForeachContainer(const QForeachContainerBase
         for (variable = *qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->i; \
              qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->brk;           \
              --qForeachContainer(&_container_, true ? 0 : qForeachPointer(container))->brk)
-#endif // MSVC6 || MIPSpro
 
 #endif
 

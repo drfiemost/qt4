@@ -182,13 +182,6 @@ QString &exponentForm(QChar zero, QChar decimal, QChar exponential,
     return digits;
 }
 
-#if defined(Q_CC_MWERKS) && defined(Q_OS_WIN32)
-inline bool isascii(int c)
-{
-        return (c >= 0 && c <=127);
-}
-#endif
-
 /*-
  * Copyright (c) 1992, 1993
  *        The Regents of the University of California.  All rights reserved.
