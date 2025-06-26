@@ -243,20 +243,7 @@ namespace QTest
     template <typename T1, typename T2>
     bool qCompare(T1 const &, T2 const &, const char *, const char *, const char *, int);
 
-#if defined(QT_COORD_TYPE) && (defined(QT_ARCH_ARM) || defined(QT_NO_FPU))
-    inline bool qCompare(qreal const &t1, float const &t2, const char *actual,
-                                 const char *expected, const char *file, int line)
-    {
-        return qCompare(t1, qreal(t2), actual, expected, file, line);
-    }
-
-    inline bool qCompare<(float const &t1, qreal const &t2, const char *actual,
-                                 const char *expected, const char *file, int line)
-    {
-        return qCompare(qreal(t1), t2, actual, expected, file, line);
-    }
-
-#elif defined(QT_COORD_TYPE) || defined(QT_ARCH_ARM) || defined(QT_NO_FPU)
+#if defined(QT_NO_FPU)
     inline bool qCompare(qreal const &t1, double const &t2, const char *actual,
                                  const char *expected, const char *file, int line)
     {

@@ -1,7 +1,6 @@
 win32:HEADERS += arch/qatomic_windows.h
 
 HEADERS += \
-    arch/qatomic_armv5.h \
     arch/qatomic_armv6.h \
     arch/qatomic_armv7.h \
     arch/qatomic_bootstrap.h \

@@ -58,9 +58,6 @@
     || (defined(__TARGET_ARCH_ARM) && (__TARGET_ARCH_ARM-0 >= 6))
 # define QT_ARCH_ARMV6
 # include "QtCore/qatomic_armv6.h"
-#else
-# define QT_ARCH_ARMV5
-# include "QtCore/qatomic_armv5.h"
 #endif
 
 #endif // QATOMIC_ARM_H

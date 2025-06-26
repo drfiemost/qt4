@@ -2627,12 +2627,9 @@ elif [ "$PLATFORM_MAC" = "yes" ] || [ -z "$CFG_ARCH" ]; then
 fi
 
 # for compatibility
-COMPAT_ARCH=
 case "$CFG_ARCH" in
 arm*)
-    # previously, armv6 was a different arch
     CFG_ARCH=arm
-    COMPAT_ARCH=armv6
     ;;
 esac
 
@@ -6554,7 +6551,7 @@ echo "PCH support ............ $CFG_PRECOMPILE"
 echo "SSE2/SSE3/SSSE3......... ${CFG_SSE2}/${CFG_SSE3}/${CFG_SSSE3}"
 echo "SSE4.1/SSE4.2........... ${CFG_SSE4_1}/${CFG_SSE4_2}"
 echo "AVX/AVX2................ ${CFG_AVX}/${CFG_AVX2}"
-if [ "$CFG_ARCH" = "arm" ] || [ "$CFG_ARCH" = "armv6" ]; then
+if [ "$CFG_ARCH" = "arm" ]; then
     echo "NEON support ........... ${CFG_NEON}"
 fi
 [ "${PLATFORM_QWS}" != "yes" -a "${PLATFORM_QPA}" != "yes" ] && echo "Graphics System ........ $CFG_GRAPHICS_SYSTEM"
