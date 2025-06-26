@@ -3373,7 +3373,7 @@ int QTreeViewPrivate::viewIndex(const QModelIndex &_index) const
     const int totalCount = viewItems.count();
     const QModelIndex index = _index.sibling(_index.row(), 0);
     const int row = index.row();
-    const qint64 internalId = index.internalId();
+    const quintptr internalId = index.internalId();
 
     // We start nearest to the lastViewedItem
     int localCount = std::min(lastViewedItem - 1, totalCount - lastViewedItem);
