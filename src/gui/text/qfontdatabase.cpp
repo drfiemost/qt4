@@ -803,7 +803,7 @@ void QFontDatabasePrivate::addFont(const QString &familyname, const char *foundr
         for (int i = 0; i < writingSystems.count(); ++i)
             *stream << quint8(writingSystems.at(i));
     }
-#else // ..in case of defined(Q_OS_SYMBIAN) && !defined(QT_NO_FREETYPE)
+#else // ..in case of !defined(QT_NO_FREETYPE)
     f->fontFilename = file;
     f->fontFileIndex = fileIndex;
 #endif

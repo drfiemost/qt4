@@ -492,7 +492,6 @@ public Q_SLOTS:
     inline void setHidden(bool hidden) { setVisible(!hidden); }
     inline void show() { setVisible(true); }
     inline void hide() { setVisible(false); }
-    inline QT_MOC_COMPAT void setShown(bool shown) { setVisible(shown); }
 
     void showMinimized();
     void showMaximized();
