@@ -1439,26 +1439,10 @@ bool qSharedBuild()
 */
 
 /*!
-    \macro Q_CC_EDG
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Edison Design Group
-    C++.
-*/
-
-/*!
     \macro Q_CC_OC
     \relates <QtGlobal>
 
     Defined if the application is compiled using CenterLine C++.
-*/
-
-/*!
-    \macro Q_CC_SUN
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using Forte Developer, or
-    Sun Studio C++.
 */
 
 /*!
@@ -1509,13 +1493,6 @@ bool qSharedBuild()
 
     Defined if the application is compiled using Intel C++ for Linux,
     Intel C++ for Windows.
-*/
-
-/*!
-    \macro Q_CC_HIGHC
-    \relates <QtGlobal>
-
-    Defined if the application is compiled using MetaWare High C/C++.
 */
 
 /*!

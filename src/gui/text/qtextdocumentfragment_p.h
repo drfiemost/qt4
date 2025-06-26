@@ -157,9 +157,6 @@ private:
     // either in a block or in regular text
     QStringList namedAnchors;
 
-#ifdef Q_CC_SUN
-    friend struct QTextHtmlImporter::Table;
-#endif
     struct TableCellIterator
     {
         inline TableCellIterator(QTextTable *t = nullptr) : table(t), row(0), column(0) {}

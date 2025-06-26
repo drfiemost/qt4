@@ -61,20 +61,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef Q_CC_SUN // Sun CC picks the wrong overload, so introduce awful hack
-
-template <typename T>
-inline T *v_cast(const QVariant::Private *nd, T * = nullptr)
-{
-    QVariant::Private *d = const_cast<QVariant::Private *>(nd);
-    if constexpr (sizeof(T) > sizeof(QVariant::Private::Data))
-        return static_cast<T *>(d->data.shared->ptr);
-    else
-        return static_cast<T *>(static_cast<void *>(&d->data.c));
-}
-
-#else // every other compiler in this world
-
 template <typename T>
 inline const T *v_cast(const QVariant::Private *d, T * = nullptr)
 {
@@ -92,8 +78,6 @@ inline T *v_cast(QVariant::Private *d, T * = nullptr)
     else
         return static_cast<T *>(static_cast<void *>(&d->data.c));
 }
-
-#endif
 
 
 //a simple template that avoids to allocate 2 memory chunks when creating a QVariant

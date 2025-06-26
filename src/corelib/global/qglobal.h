@@ -151,29 +151,14 @@ namespace QT_NAMESPACE {}
      OS2      - OS/2
      OS2EMX   - XFree86 on OS/2 (not PM)
      WIN32    - Win32 (Windows 2000/XP/Vista/7 and Windows Server 2003/2008)
-     WINCE    - WinCE (Windows CE 5.0)
      CYGWIN   - Cygwin
-     SOLARIS  - Sun Solaris
-     HPUX     - HP-UX
-     ULTRIX   - DEC Ultrix
      LINUX    - Linux
      FREEBSD  - FreeBSD
      NETBSD   - NetBSD
      OPENBSD  - OpenBSD
      BSDI     - BSD/OS
-     IRIX     - SGI Irix
-     OSF      - HP Tru64 UNIX
-     SCO      - SCO OpenServer 5
-     UNIXWARE - UnixWare 7, Open UNIX 8
-     AIX      - AIX
      HURD     - GNU Hurd
-     DGUX     - DG/UX
-     RELIANT  - Reliant UNIX
-     DYNIX    - DYNIX/ptx
-     QNX      - QNX
-     LYNX     - LynxOS
      BSD4     - Any BSD 4.4 system
-     UNIX     - Any UNIX BSD/SYSV system
 */
 
 #if defined(__APPLE__) && (defined(__GNUC__) || defined(__xlC__) || defined(__xlc__))
@@ -334,7 +319,6 @@ namespace QT_NAMESPACE {}
      WAT      - Watcom C++
      GNU      - GNU C++
      COMEAU   - Comeau C++
-     EDG      - Edison Design Group C++
      OC       - CenterLine C++
      SUN      - Forte Developer, or Sun Studio C++
      MIPS     - MIPSpro C++
@@ -513,11 +497,6 @@ namespace QT_NAMESPACE {}
    it separately anyway. */
 #elif defined(__DECCXX) || defined(__DECC)
 #  define Q_CC_DEC
-/* Compaq C++ V6 compilers are EDG-based but I'm not sure about older
-   DEC C++ V5 compilers. */
-#  if defined(__EDG__)
-#    define Q_CC_EDG
-#  endif
 /* Compaq have disabled EDG's _BOOL macro and use _BOOL_EXISTS instead
    - observed on Compaq C++ V6.3-002.
    In any case versions prior to Compaq C++ V6.0-005 do not have bool. */
@@ -537,132 +516,14 @@ namespace QT_NAMESPACE {}
    but the C compiler does not */
 #elif defined(__PGI)
 #  define Q_CC_PGI
-#  if defined(__EDG__)
-#    define Q_CC_EDG
-#  endif
-
-/* Compilers with EDG front end are similar. To detect them we test:
-   __EDG documented by SGI, observed on MIPSpro 7.3.1.1 and KAI C++ 4.0b
-   __EDG__ documented in EDG online docs, observed on Compaq C++ V6.3-002
-   and PGI C++ 5.2-4 */
-#elif (defined(__EDG) || defined(__EDG__))
-#  define Q_CC_EDG
-/* From the EDG documentation (does not seem to apply to Compaq C++):
-   _BOOL
-        Defined in C++ mode when bool is a keyword. The name of this
-        predefined macro is specified by a configuration flag. _BOOL
-        is the default.
-   __BOOL_DEFINED
-        Defined in Microsoft C++ mode when bool is a keyword. */
-#  if !defined(_BOOL) && !defined(__BOOL_DEFINED)
-#    define Q_NO_BOOL_TYPE
-#  endif
-
-/* The Comeau compiler is based on EDG and does define __EDG__ */
-#  if defined(__COMO__)
-#    define Q_CC_COMEAU
-#    define Q_C_CALLBACKS
-
-/* The `using' keyword was introduced to avoid KAI C++ warnings
-   but it's now causing KAI C++ errors instead. The standard is
-   unclear about the use of this keyword, and in practice every
-   compiler is using its own set of rules. Forget it. */
-#  elif defined(__KCC)
-#    define Q_CC_KAI
-
-/* Using the `using' keyword avoids Intel C++ for Linux warnings */
-#  elif defined(__INTEL_COMPILER)
-#    define Q_CC_INTEL
-
-/* Uses CFront, make sure to read the manual how to tweak templates. */
-#  elif defined(__ghs)
-#    define Q_CC_GHS
-
-#  elif defined(__DCC__)
-#    define Q_CC_DIAB
-#    undef Q_NO_BOOL_TYPE
-#    if !defined(__bool)
-#      define Q_NO_BOOL_TYPE
-#    endif
-
-/* The UnixWare 7 UDK compiler is based on EDG and does define __EDG__ */
-#  elif defined(__USLC__) && defined(__SCO_VERSION__)
-#    define Q_CC_USLC
-/* The latest UDK 7.1.1b does not need this, but previous versions do */
-#    if !defined(__SCO_VERSION__) || (__SCO_VERSION__ < 302200010)
-#      define Q_OUTOFLINE_TEMPLATE inline
-#    endif
-
-/* Never tested! */
-#  elif defined(CENTERLINE_CLPP) || defined(OBJECTCENTER)
-#    define Q_CC_OC
-
-/* CDS++ defines __EDG__ although this is not documented in the Reliant
-   documentation. It also follows conventions like _BOOL and this documented */
-#  elif defined(sinix)
-#    define Q_CC_CDS
-
-/* The MIPSpro compiler defines __EDG */
-#  elif defined(__sgi)
-#    define Q_CC_MIPS
-#    define Q_NO_TEMPLATE_FRIENDS
-#    if defined(_COMPILER_VERSION) && (_COMPILER_VERSION >= 740)
-#      define Q_OUTOFLINE_TEMPLATE inline
-#      pragma set woff 3624,3625,3649 /* turn off some harmless warnings */
-#    endif
-#  endif
 
 /* VxWorks' DIAB toolchain has an additional EDG type C++ compiler
    (see __DCC__ above). This one is for C mode files (__EDG is not defined) */
 #elif defined(_DIAB_TOOL)
 #  define Q_CC_DIAB
 
-/* Never tested! */
-#elif defined(__HIGHC__)
-#  define Q_CC_HIGHC
-
-#elif defined(__SUNPRO_CC) || defined(__SUNPRO_C)
-#  define Q_CC_SUN
-/* 5.0 compiler or better
-    'bool' is enabled by default but can be disabled using -features=nobool
-    in which case _BOOL is not defined
-        this is the default in 4.2 compatibility mode triggered by -compat=4 */
-#  if __SUNPRO_CC >= 0x500
-#    if __SUNPRO_CC < 0x590
-#      define QT_NO_TEMPLATE_TEMPLATE_PARAMETERS
-       /* see http://www.oracle.com/technetwork/systems/cccompare-137792.html */
-#    endif
-#    if __SUNPRO_CC >= 0x590
-#      define Q_ALIGNOF(type)   __alignof__(type)
-#    endif
-#    if __SUNPRO_CC >= 0x550
-#      define Q_DECL_EXPORT     __global
-#    endif
-#    if __SUNPRO_CC < 0x5a0
-#      define Q_NO_TEMPLATE_FRIENDS
-#    endif
-#    if !defined(_BOOL)
-#      define Q_NO_BOOL_TYPE
-#    endif
-#    define Q_C_CALLBACKS
-/* 4.2 compiler or older */
-#  else
-#    define Q_NO_BOOL_TYPE
-#    define Q_NO_EXPLICIT_KEYWORD
-#  endif
-
-/* CDS++ does not seem to define __EDG__ or __EDG according to Reliant
-   documentation but nevertheless uses EDG conventions like _BOOL */
-#elif defined(sinix)
-#  define Q_CC_EDG
-#  define Q_CC_CDS
-#  if !defined(_BOOL)
-#    define Q_NO_BOOL_TYPE
-#  endif
-#  define Q_BROKEN_TEMPLATE_SPECIALIZATION
-
 #else
-#  error "Qt has not been tested with this compiler - talk to qt-bugs@trolltech.com"
+#  error "Qt has not been tested with this compiler"
 #endif
 
 /*

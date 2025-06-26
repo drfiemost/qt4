@@ -328,16 +328,12 @@ inline int qMetaTypeId(
 
 template <typename T>
 inline int qRegisterMetaType(
-#if !defined(qdoc) && !defined(Q_CC_SUN)
+#if !defined(qdoc)
     T * dummy = nullptr
 #endif
 )
 {
-#ifdef Q_CC_SUN
-    return qMetaTypeId(static_cast<T *>(0));
-#else
     return qMetaTypeId(dummy);
-#endif
 }
 
 #ifndef QT_NO_DATASTREAM

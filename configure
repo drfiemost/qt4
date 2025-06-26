@@ -2540,20 +2540,6 @@ if [ "$OPT_VERBOSE" = "yes" ]; then
     echo "Determining system architecture... ($UNAME_SYSTEM:$UNAME_RELEASE:$UNAME_MACHINE)"
 fi
 
-if [ "$CFG_RTOS_ENABLED" = "no" ]; then
-    case `basename "$XPLATFORM"` in
-	qnx-*)
-            echo ""
-            echo "You are not licensed for Qt for `basename $XPLATFORM`."
-            echo ""
-            echo "Please use the contact form at http://www.qt.io/contact-us"
-            echo "to upgrade your license to include this platform, or install"
-            echo "the Qt Open Source Edition if you intend to develop free software."
-            exit 1
-	    ;;
-    esac
-fi
-
 if [ -z "${CFG_HOST_ARCH}" ]; then
     case "$UNAME_SYSTEM:$UNAME_RELEASE:$UNAME_MACHINE" in
     GNU:*:*)
@@ -2613,12 +2599,6 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
         fi
         CFG_HOST_ARCH=powerpc
         ;;
-    *:*:s390*)
-    	if [ "$OPT_VERBOSE" = "yes" ]; then
-    	    echo "    IBM S/390 (s390)"
-    	fi
-    	CFG_HOST_ARCH=s390
-    	;;
     *:*:aarch64*|*:*:arm64*)
         if [ "$OPT_VERBOSE" = "yes" ]; then
             echo "    AArch64 (aarch64)"

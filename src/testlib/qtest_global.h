@@ -61,7 +61,7 @@ QT_BEGIN_NAMESPACE
 # endif
 #endif
 
-#if defined (Q_CC_SUN) || defined (Q_CC_XLC) || (defined (Q_CC_GNU) && (__GNUC__ - 0 < 3)) || defined (Q_CC_NOKIAX86)
+#if defined (Q_CC_XLC) || (defined (Q_CC_GNU) && (__GNUC__ - 0 < 3))
 # define QTEST_NO_SPECIALIZATIONS
 #endif
 
