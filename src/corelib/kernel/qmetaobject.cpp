@@ -309,25 +309,9 @@ const QObject *QMetaObject::cast(const QObject *obj) const
 /*!
     \internal
 */
-QString QMetaObject::tr(const char *s, const char *c) const
-{
-    return QCoreApplication::translate(d.stringdata, s, c, QCoreApplication::DefaultCodec);
-}
-
-/*!
-    \internal
-*/
 QString QMetaObject::tr(const char *s, const char *c, int n) const
 {
     return QCoreApplication::translate(d.stringdata, s, c, QCoreApplication::DefaultCodec, n);
-}
-
-/*!
-    \internal
-*/
-QString QMetaObject::trUtf8(const char *s, const char *c) const
-{
-    return QCoreApplication::translate(d.stringdata, s, c, QCoreApplication::UnicodeUTF8);
 }
 
 /*!
