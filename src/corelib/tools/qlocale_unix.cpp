@@ -48,7 +48,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static QByteArray getSystemLocale()
+static inline QByteArray getSystemLocale()
 {
     return qgetenv("LC_ALL");
 }
