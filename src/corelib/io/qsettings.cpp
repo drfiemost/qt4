@@ -173,7 +173,7 @@ Q_AUTOTEST_EXPORT_HELPER bool qIsLikelyToBeNfs(int handle)
            || buf.f_type == AUTOFSNG_SUPER_MAGIC;
 }
 
-#elif defined(Q_OS_UNIXWARE) || defined(Q_OS_RELIANT) || defined(Q_OS_NETBSD)
+#elif defined(Q_OS_NETBSD)
 QT_BEGIN_INCLUDE_NAMESPACE
 # include <sys/statvfs.h>
 QT_END_INCLUDE_NAMESPACE

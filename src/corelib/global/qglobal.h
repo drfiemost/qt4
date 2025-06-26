@@ -193,10 +193,6 @@ namespace QT_NAMESPACE {}
 #    define Q_OS_WIN32
 #elif defined(__MWERKS__) && defined(__INTEL__)
 #  define Q_OS_WIN32
-#elif defined(__ultrix) || defined(ultrix)
-#  define Q_OS_ULTRIX
-#elif defined(sinix)
-#  define Q_OS_RELIANT
 #elif defined(__linux__) || defined(__linux)
 #  define Q_OS_LINUX
 #elif defined(__FreeBSD__) || defined(__DragonFly__)
@@ -211,18 +207,8 @@ namespace QT_NAMESPACE {}
 #elif defined(__bsdi__)
 #  define Q_OS_BSDI
 #  define Q_OS_BSD4
-#elif defined(__Lynx__)
-#  define Q_OS_LYNX
 #elif defined(__GNU__)
 #  define Q_OS_HURD
-#elif defined(__DGUX__)
-#  define Q_OS_DGUX
-#elif defined(_SEQUENT_)
-#  define Q_OS_DYNIX
-#elif defined(__USLC__) /* all SCO platforms + UDK or OUDK */
-#  define Q_OS_UNIXWARE
-#elif defined(__svr4__) && defined(i386) /* Open UNIX 8 + GCC */
-#  define Q_OS_UNIXWARE
 #elif defined(__MAKEDEPEND__)
 #else
 #  error "Qt has not been ported to this OS - talk to qt-bugs@trolltech.com"

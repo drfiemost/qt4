@@ -2405,12 +2405,6 @@ if [ -z "$PLATFORM" ]; then
      GNU:*)
         PLATFORM=hurd-g++
         ;;
-     dgux:*)
-        PLATFORM=dgux-g++
-        ;;
-     ULTRIX:*)
-        PLATFORM=ultrix-g++
-        ;;
      FreeBSD:*)
         PLATFORM=freebsd-g++
         PLATFORM_NOTES="
@@ -2432,18 +2426,8 @@ if [ -z "$PLATFORM" ]; then
             - Also available for Linux: linux-kcc linux-icc linux-cxx
         "
         ;;
-     ReliantUNIX-*:*|SINIX-*:*)
-        PLATFORM=reliant-cds
-        #PLATFORM=reliant-cds-64
-        PLATFORM_NOTES="
-            - Also available for Reliant UNIX: reliant-cds-64
-        "
-        ;;
      CYGWIN*:*)
         PLATFORM=cygwin-g++
-        ;;
-     LynxOS*:*)
-        PLATFORM=lynxos-g++
         ;;
      OpenUNIX:*)
         #PLATFORM=unixware-g++
@@ -2451,16 +2435,6 @@ if [ -z "$PLATFORM" ]; then
         PLATFORM_NOTES="
             - Also available for OpenUNIX: unixware-g++
         "
-        ;;
-     UnixWare:*)
-        #PLATFORM=unixware-g++
-        PLATFORM=unixware-cc
-        PLATFORM_NOTES="
-            - Also available for UnixWare: unixware-g++
-        "
-        ;;
-     UNIX_SV:*)
-        PLATFORM=unixware-g++
         ;;
      *)
         if [ "$OPT_HELP" != "yes" ]; then
