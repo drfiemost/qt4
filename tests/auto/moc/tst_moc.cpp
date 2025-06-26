@@ -625,7 +625,7 @@ void tst_Moc::oldStyleCasts()
 
     QStringList args;
     args << "-c" << "-x" << "c++" << "-Wold-style-cast" << "-I" << "."
-         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-fPIC" << "-std=c++11" << "-";
+         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-fPIC" << "-std=c++17" << "-";
     proc.start("gcc", args);
     QVERIFY(proc.waitForStarted());
     proc.write(mocOut);
@@ -698,7 +698,7 @@ void tst_Moc::inputFileNameWithDotsButNoExtension()
 
     QStringList args;
     args << "-c" << "-x" << "c++" << "-I" << ".."
-         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-fPIE" << "-";
+         << "-I" << qtIncludePath << "-o" << "/dev/null" << "-fPIC" << "-std=c++17" << "-";
     proc.start("gcc", args);
     QVERIFY(proc.waitForStarted());
     proc.write(mocOut);
@@ -1616,7 +1616,7 @@ void tst_Moc::warnings_data()
         << QStringList()
         << 0
         << QString("IGNORE_ALL_STDOUT")
-        << QString("standard input:1: Warning: Property declaration x has no READ accessor function. The property will be invalid.");
+        << QString("standard input:1: Warning: Property declaration x has no READ accessor function or associated MEMBER variable. The property will be invalid.");
 
     // This should output a warning
     QTest::newRow("Duplicate property warning")
@@ -1632,7 +1632,7 @@ void tst_Moc::warnings_data()
         << (QStringList() << "-nn")
         << 0
         << QString("IGNORE_ALL_STDOUT")
-        << QString("standard input:1: Warning: Property declaration x has no READ accessor function. The property will be invalid.");
+        << QString("standard input:1: Warning: Property declaration x has no READ accessor function or associated MEMBER variable. The property will be invalid.");
 
     // Passing "-nw" should suppress the warning
     QTest::newRow("Invalid property warning with -nw")

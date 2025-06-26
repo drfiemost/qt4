@@ -1864,12 +1864,12 @@ public:
 
 #endif
 
-Q_DECL_CONSTEXPR static inline bool qFuzzyCompare(double p1, double p2)
+[[nodiscard]] constexpr static inline bool qFuzzyCompare(double p1, double p2)
 {
     return (std::abs(p1 - p2) <= 0.000000000001 * std::min(std::abs(p1), std::abs(p2)));
 }
 
-Q_DECL_CONSTEXPR static inline bool qFuzzyCompare(float p1, float p2)
+[[nodiscard]] constexpr static inline bool qFuzzyCompare(float p1, float p2)
 {
     return (std::abs(p1 - p2) <= 0.00001f * std::min(std::abs(p1), std::abs(p2)));
 }
@@ -1877,7 +1877,7 @@ Q_DECL_CONSTEXPR static inline bool qFuzzyCompare(float p1, float p2)
 /*!
   \internal
 */
-Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(double d)
+[[nodiscard]] constexpr static inline bool qFuzzyIsNull(double d)
 {
     return std::abs(d) <= 0.000000000001;
 }
@@ -1885,7 +1885,7 @@ Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(double d)
 /*!
   \internal
 */
-Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(float f)
+[[nodiscard]] constexpr static inline bool qFuzzyIsNull(float f)
 {
     return std::abs(f) <= 0.00001f;
 }
@@ -1895,7 +1895,7 @@ Q_DECL_CONSTEXPR static inline bool qFuzzyIsNull(float f)
    check whether the actual value is 0 or close to 0, but whether
    it is binary 0.
 */
-static inline bool qIsNull(double d)
+[[nodiscard]] static inline bool qIsNull(double d)
 {
     union U {
         double d;
@@ -1911,7 +1911,7 @@ static inline bool qIsNull(double d)
    check whether the actual value is 0 or close to 0, but whether
    it is binary 0.
 */
-static inline bool qIsNull(float f)
+[[nodiscard]] static inline bool qIsNull(float f)
 {
     union U {
         float f;
