@@ -2072,15 +2072,23 @@ void QSvgHandler::parseCSStoXMLAttrs(const QString &css, QVector<QSvgCssAttribut
 
 static void cssStyleLookup(QSvgNode *node,
                            QSvgHandler *handler,
-                           QSvgStyleSelector *selector)
+                           QSvgStyleSelector *selector,
+                           QXmlStreamAttributes &attributes)
 {
     QCss::StyleSelector::NodePtr cssNode;
     cssNode.ptr = node;
     QVector<QCss::Declaration> decls = selector->declarationsForNode(cssNode);
 
-    QXmlStreamAttributes attributes;
     parseCSStoXMLAttrs(decls, attributes);
     parseStyle(node, attributes, handler);
+}
+
+static void cssStyleLookup(QSvgNode *node,
+                           QSvgHandler *handler,
+                           QSvgStyleSelector *selector)
+{
+    QXmlStreamAttributes attributes;
+    cssStyleLookup(node, handler, selector, attributes);
 }
 
 static inline QStringList stringToList(const QString &str)
@@ -3174,21 +3182,12 @@ static bool parseStopNode(QSvgStyleProperty *parent,
     QVector<QCss::Declaration> decls = handler->selector()->declarationsForNode(cssNode);
 
     QXmlStreamAttributes xmlAttr = attributes;
-    for (int i = 0; i < decls.count(); ++i) {
-        const QCss::Declaration &decl = decls.at(i);
 
-        if (decl.d->property.isEmpty())
-            continue;
-        if (decl.d->values.count() != 1)
-            continue;
-        QCss::Value val = decl.d->values.first();
-        QString valueStr = val.toString();
-        if (val.type == QCss::Value::Uri) {
-            valueStr.prepend(QLatin1String("url("));
-            valueStr.append(QLatin1Char(')'));
-        }
-        xmlAttr.append(QString(), decl.d->property, valueStr);
-    }
+#ifndef QT_NO_CSSPARSER
+    cssStyleLookup(&anim, handler, handler->selector(), xmlAttr);
+#endif
+    parseStyle(&anim, xmlAttr, handler);
+
     QSvgAttributes attrs(xmlAttr, handler);
 
     QSvgGradientStyle *style =

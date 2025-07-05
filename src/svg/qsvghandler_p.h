@@ -70,7 +70,6 @@ class QSvgTinyDocument;
 class QSvgHandler;
 class QColor;
 class QSvgStyleSelector;
-class QXmlStreamReader;
 
 struct QSvgCssAttribute
 {
