@@ -8,7 +8,8 @@ HEADERS +=  \
         global/qnumeric.h \
         global/qtypeinfo.h \
         global/qsysinfo.h \
-        global/qflags.h
+        global/qflags.h\
+        global/qtypetraits.h
 
 SOURCES += \
 	global/qglobal.cpp \

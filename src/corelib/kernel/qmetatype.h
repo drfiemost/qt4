@@ -45,6 +45,7 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qatomic.h>
 #include <QtCore/qbytearray.h>
+#include <QtCore/qtypetraits.h>
 
 #ifdef Bool
 #error qmetatype.h must be included before any header file that defines Bool

@@ -215,7 +215,8 @@ public:
     {
         typedef QtPrivate::FunctionPointer<Func1> SignalType;
         typedef QtPrivate::FunctionPointer<Func2> SlotType;
-        reinterpret_cast<typename SignalType::Object *>(0)->qt_check_for_QOBJECT_macro(*reinterpret_cast<typename SignalType::Object *>(0));
+        static_assert(QtPrivate::HasQ_OBJECT_Macro<typename SignalType::Object>::Value,
+                          "No Q_OBJECT in the class with the signal");
 
         //compilation error if the arguments does not match.
         static_assert(int(SignalType::ArgumentCount) >= int(SlotType::ArgumentCount),
@@ -244,6 +245,9 @@ public:
         typedef QtPrivate::FunctionPointer<Func1> SignalType;
         typedef QtPrivate::FunctionPointer<Func2> SlotType;
 
+        static_assert(QtPrivate::HasQ_OBJECT_Macro<typename SignalType::Object>::Value,
+                          "No Q_OBJECT in the class with the signal");
+
         //compilation error if the arguments does not match.
         static_assert(int(SignalType::ArgumentCount) >= int(SlotType::ArgumentCount),
                           "The slot requires more arguments than the signal provides.");
@@ -265,6 +269,9 @@ public:
             connect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal, Func2 slot)
     {
         typedef QtPrivate::FunctionPointer<Func1> SignalType;
+
+        static_assert(QtPrivate::HasQ_OBJECT_Macro<typename SignalType::Object>::Value,
+                          "No Q_OBJECT in the class with the signal");
 
         return connectImpl(sender, reinterpret_cast<void **>(&signal), sender, 0,
                            new QFunctorSlotObject<Func2, SignalType::ArgumentCount, typename SignalType::Arguments, typename SignalType::ReturnType>(slot),
@@ -288,7 +295,9 @@ public:
     {
         typedef QtPrivate::FunctionPointer<Func1> SignalType;
         typedef QtPrivate::FunctionPointer<Func2> SlotType;
-        reinterpret_cast<typename SignalType::Object *>(0)->qt_check_for_QOBJECT_macro(*reinterpret_cast<typename SignalType::Object *>(0));
+        static_assert(QtPrivate::HasQ_OBJECT_Macro<typename SignalType::Object>::Value,
+                          "No Q_OBJECT in the class with the signal");
+
 
         //compilation error if the arguments does not match.
         static_assert((QtPrivate::CheckCompatibleArguments<typename SignalType::Arguments, typename SlotType::Arguments>::value),
@@ -467,18 +476,18 @@ inline QT_DEPRECATED QList<T> qFindChildren(const QObject *o, const QRegExp &re)
 template <class T>
 inline T qobject_cast(QObject *object)
 {
-#if !defined(QT_NO_QOBJECT_CHECK)
-    reinterpret_cast<T>(object)->qt_check_for_QOBJECT_macro(*reinterpret_cast<T>(object));
-#endif
+    typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
+    static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
+                    "qobject_cast require the type to have a Q_OBJECT macro");
     return static_cast<T>(reinterpret_cast<T>(object)->staticMetaObject.cast(object));
 }
 
 template <class T>
 inline T qobject_cast(const QObject *object)
 {
-#if !defined(QT_NO_QOBJECT_CHECK)
-    reinterpret_cast<T>(object)->qt_check_for_QOBJECT_macro(*reinterpret_cast<T>(const_cast<QObject *>(object)));
-#endif
+    typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
+    static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
+                      "qobject_cast require the type to have a Q_OBJECT macro");
     return static_cast<T>(reinterpret_cast<T>(object)->staticMetaObject.cast(object));
 }
 
