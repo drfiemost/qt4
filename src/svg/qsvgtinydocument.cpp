@@ -429,9 +429,9 @@ void QSvgTinyDocument::draw(QPainter *p)
     draw(p, QRectF());
 }
 
-void QSvgTinyDocument::draw(QPainter *p, QSvgExtraStates &)
+void QSvgTinyDocument::draw(QPainter *, QSvgExtraStates &)
 {
-    draw(p);
+    qDebug() << "SVG Tiny does not support nested <svg> elements: ignored.";
 }
 
 static bool isValidMatrix(const QTransform &transform)

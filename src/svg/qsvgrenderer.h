@@ -66,6 +66,7 @@ class Q_SVG_EXPORT QSvgRenderer : public QObject
     Q_PROPERTY(QRectF viewBox READ viewBoxF WRITE setViewBox)
     Q_PROPERTY(int framesPerSecond READ framesPerSecond WRITE setFramesPerSecond)
     Q_PROPERTY(int currentFrame READ currentFrame WRITE setCurrentFrame)
+    Q_PROPERTY(bool animationEnabled READ isAnimationEnabled WRITE setAnimationEnabled)
 public:
     QSvgRenderer(QObject *parent=nullptr);
     QSvgRenderer(const QString &filename, QObject *parent=nullptr);
@@ -88,6 +89,8 @@ public:
     int currentFrame() const;
     void setCurrentFrame(int);
     int animationDuration() const;//in seconds
+    bool isAnimationEnabled() const;
+    void setAnimationEnabled(bool enable);
 
     QRectF boundsOnElement(const QString &id) const;
     bool elementExists(const QString &id) const;

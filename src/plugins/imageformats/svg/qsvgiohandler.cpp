@@ -57,7 +57,7 @@ class QSvgIOHandlerPrivate
 {
 public:
     QSvgIOHandlerPrivate(QSvgIOHandler *qq)
-        : q(qq), loaded(false), readDone(false), backColor(Qt::transparent)
+        : q(qq), loadAttempted(false), loadStatus(false), readDone(false), backColor(Qt::transparent)
     {}
 
     bool load(QIODevice *device);
@@ -69,7 +69,8 @@ public:
     QRect            clipRect;
     QSize            scaledSize;
     QRect            scaledClipRect;
-    bool             loaded;
+    bool             loadAttempted;
+    bool             loadStatus;
     bool             readDone;
     QColor           backColor;
 };
@@ -77,8 +78,9 @@ public:
 
 bool QSvgIOHandlerPrivate::load(QIODevice *device)
 {
-    if (loaded)
-        return true;
+    if (loadAttempted)
+        return loadStatus;
+    loadAttempted = true;
     if (q->format().isEmpty())
         q->canRead();
 
@@ -99,10 +101,10 @@ bool QSvgIOHandlerPrivate::load(QIODevice *device)
 
     if (res) {
         defaultSize = r.defaultSize();
-        loaded = true;
+        loadStatus = true;
     }
 
-    return loaded;
+    return loadStatus;
 }
 
 
@@ -141,7 +143,7 @@ bool QSvgIOHandler::canRead() const
 {
     if (!device())
         return false;
-    if (d->loaded && !d->readDone)
+    if (d->loadStatus && !d->readDone)
         return true;        // Will happen if we have been asked for the size
 
     bool isCompressed = false;

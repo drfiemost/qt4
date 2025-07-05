@@ -106,6 +106,8 @@ private slots:
     void oss_fuzz_24738();
     void illegalAnimateTransform_data();
     void illegalAnimateTransform();
+    void animated();
+    void notAnimated();
 
 #ifndef QT_NO_COMPRESS
     void testGzLoading();
@@ -142,6 +144,14 @@ void tst_QSvgRenderer::getSetCheck()
     QCOMPARE(0, obj1.framesPerSecond()); // Can't have a negative framerate
     obj1.setFramesPerSecond(INT_MAX);
     QCOMPARE(INT_MAX, obj1.framesPerSecond());
+
+    // bool QSvgRenderer::isAnimationEnabled()
+    // void QSvgRenderer::setAnimationEnabled()
+    QVERIFY(obj1.isAnimationEnabled());
+    obj1.setAnimationEnabled(false);
+    QVERIFY(!obj1.isAnimationEnabled());
+    obj1.setAnimationEnabled(true);
+    QVERIFY(obj1.isAnimationEnabled());
 }
 
 void tst_QSvgRenderer::emptyRect_data()
@@ -1600,6 +1610,8 @@ void tst_QSvgRenderer::testUseElement()
             }
         } else if (i > 7 && i < 10) {
             QCOMPARE(images[8], images[i]);
+        } else if (i == 12 || i == 13 || i == 17) {
+            QCOMPARE(images[10], images[i]);
         } else if (i > 11 && i < 15) {
             QCOMPARE(images[11], images[i]);
         } else if (i == 15) {
@@ -1706,6 +1718,60 @@ void tst_QSvgRenderer::illegalAnimateTransform()
     QFETCH(QByteArray, svg);
     QSvgRenderer renderer;
     QVERIFY(!renderer.load(svg)); // also shouldn't assert
+}
+
+static const char *const animatedSvgContents = R"(<svg>
+            <path d="M36 18c0-9.94-8.06-18-18-18">
+                <animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/>
+            </path></svg>)";
+
+void tst_QSvgRenderer::animated()
+{
+    QSvgRenderer renderer;
+    QVERIFY(renderer.load(QByteArray(animatedSvgContents)));
+    QVERIFY(renderer.isAnimationEnabled());
+    QCOMPARE(renderer.framesPerSecond(), 30);
+    QTimer *timer = renderer.findChild<QTimer *>();
+    QVERIFY(timer);
+    QVERIFY(timer->isActive());
+
+    // Toggling animationEnabled
+    renderer.setAnimationEnabled(false);
+    QVERIFY(!renderer.isAnimationEnabled());
+    QVERIFY(!timer->isActive());
+    renderer.setAnimationEnabled(true);
+    QVERIFY(renderer.isAnimationEnabled());
+    QVERIFY(timer->isActive());
+
+    // Adjusting the FPS
+    renderer.setFramesPerSecond(0);
+    QVERIFY(renderer.isAnimationEnabled());
+    QVERIFY(!timer->isActive());
+    renderer.setFramesPerSecond(30);
+    QVERIFY(renderer.isAnimationEnabled());
+    QVERIFY(timer->isActive());
+
+    // Mixing both
+    renderer.setFramesPerSecond(0);
+    QVERIFY(!timer->isActive());
+    renderer.setAnimationEnabled(true); // this isn't enough to restart the animation, we are still at FPS 0
+    QVERIFY(!timer->isActive());
+    renderer.setFramesPerSecond(30);
+    QVERIFY(timer->isActive());
+
+    // Load non-animated SVG
+    QVERIFY(renderer.load(QByteArray(src)));
+    QVERIFY(renderer.isAnimationEnabled()); // property didn't change
+    QVERIFY(!timer->isActive()); // but timer stopped
+}
+
+void tst_QSvgRenderer::notAnimated()
+{
+    // Start with animations disabled
+    QSvgRenderer renderer;
+    renderer.setAnimationEnabled(false);
+    QVERIFY(renderer.load(QByteArray(animatedSvgContents)));
+    QVERIFY(!renderer.isAnimationEnabled());
 }
 
 QTEST_MAIN(tst_QSvgRenderer)

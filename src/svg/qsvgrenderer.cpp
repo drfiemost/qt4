@@ -115,11 +115,31 @@ public:
         delete render;
     }
 
+    void startOrStopTimer()
+    {
+        if (animationEnabled && render && render->animated() && fps > 0) {
+            ensureTimerCreated();
+            timer->start(1000 / fps);
+        } else if (timer) {
+            timer->stop();
+        }
+    }
+
+    void ensureTimerCreated()
+    {
+        Q_Q(QSvgRenderer);
+        if (!timer) {
+            timer = new QTimer(q);
+            q->connect(timer, &QTimer::timeout, q, &QSvgRenderer::repaintNeeded);
+        }
+    }
+
     static void callRepaintNeeded(QSvgRenderer *const q);
 
     QSvgTinyDocument *render;
     QTimer *timer;
     int fps;
+    bool animationEnabled = true;
 };
 
 /*!
@@ -231,6 +251,34 @@ bool QSvgRenderer::animated() const
 }
 
 /*!
+    \property QSvgRenderer::animationEnabled
+    \brief whether the animation should run, if the SVG is animated
+
+    Setting the property to false stops the animation timer.
+    Setting the property to false starts the animation timer,
+    provided that the SVG contains animated elements.
+
+    If the SVG is not animated, the property will have no effect.
+    Otherwise, the property defaults to true.
+
+    \sa animated()
+
+    \since 6.7
+*/
+bool QSvgRenderer::isAnimationEnabled() const
+{
+    Q_D(const QSvgRenderer);
+    return d->animationEnabled;
+}
+
+void QSvgRenderer::setAnimationEnabled(bool enable)
+{
+    Q_D(QSvgRenderer);
+    d->animationEnabled = enable;
+    d->startOrStopTimer();
+}
+
+/*!
     \property QSvgRenderer::framesPerSecond
     \brief the number of frames per second to be shown
 
@@ -252,6 +300,7 @@ void QSvgRenderer::setFramesPerSecond(int num)
         return;
     }
     d->fps = num;
+    d->startOrStopTimer();
 }
 
 /*!
@@ -317,17 +366,7 @@ static bool loadDocument(QSvgRenderer *const q,
         delete d->render;
         d->render = nullptr;
     }
-    if (d->render && d->render->animated() && d->fps > 0) {
-        if (!d->timer)
-            d->timer = new QTimer(q);
-        else
-            d->timer->stop();
-        q->connect(d->timer, SIGNAL(timeout()),
-                   q, SIGNAL(repaintNeeded()));
-        d->timer->start(1000/d->fps);
-    } else if (d->timer) {
-        d->timer->stop();
-    }
+    d->startOrStopTimer();
 
     //force first update
     QSvgRendererPrivate::callRepaintNeeded(q);
