@@ -1106,9 +1106,9 @@ void tst_QSvgRenderer::paths()
 void tst_QSvgRenderer::paths2()
 {
     const char *svg =
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\">"
-            "<path d=\"M 3 8 A 5 5 0 1013 8\" id=\"path1\"/>"
-        "</svg>";
+        R"(<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+            <path d="M 3 8 A 5 5 0 1013 8" id="path1"/>
+        </svg>)";
 
     QByteArray data(svg);
     QSvgRenderer renderer(data);
