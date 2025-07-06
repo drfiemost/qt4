@@ -478,13 +478,25 @@ static void qt_debug_path(const QPainterPath &path)
     \sa ElementType, elementAt(), isEmpty()
 */
 
+int QPainterPath::elementCount() const
+{
+    return d_ptr ? d_ptr->elements.size() : 0;
+}
+
 /*!
-    \fn const QPainterPath::Element &QPainterPath::elementAt(int index) const
+    \fn QPainterPath::Element QPainterPath::elementAt(int index) const
 
     Returns the element at the given \a index in the painter path.
 
     \sa ElementType, elementCount(), isEmpty()
 */
+
+QPainterPath::Element QPainterPath::elementAt(int i) const
+{
+    Q_ASSERT(d_ptr);
+    Q_ASSERT(i >= 0 && i < elementCount());
+    return d_ptr->elements.at(i);
+}
 
 /*!
     \fn void QPainterPath::setElementPositionAt(int index, qreal x, qreal y)
@@ -493,6 +505,17 @@ static void qt_debug_path(const QPainterPath &path)
     Sets the x and y coordinate of the element at index \a index to \a
     x and \a y.
 */
+
+void QPainterPath::setElementPositionAt(int i, qreal x, qreal y)
+{
+    Q_ASSERT(d_ptr);
+    Q_ASSERT(i >= 0 && i < elementCount());
+    detach();
+    QPainterPath::Element &e = d_ptr->elements[i];
+    e.x = x;
+    e.y = y;
+}
+
 
 /*###
     \fn QPainterPath &QPainterPath::operator +=(const QPainterPath &other)
@@ -504,7 +527,7 @@ static void qt_debug_path(const QPainterPath &path)
 /*!
     Constructs an empty QPainterPath object.
 */
-QPainterPath::QPainterPath()
+QPainterPath::QPainterPath() noexcept
     : d_ptr(nullptr)
 {
 }
@@ -533,6 +556,13 @@ QPainterPath::QPainterPath(const QPointF &startPoint)
 {
     Element e = { startPoint.x(), startPoint.y(), MoveToElement };
     d_func()->elements << e;
+}
+
+void QPainterPath::detach()
+{
+    if (d_ptr->ref.loadRelaxed() != 1)
+        detach_helper();
+    setDirty(true);
 }
 
 /*!
@@ -994,7 +1024,6 @@ void QPainterPath::addRect(const QRectF &r)
 
     bool first = d_func()->elements.size() < 2;
 
-    d_func()->elements.reserve(d_func()->elements.size() + 5);
     moveTo(r.x(), r.y());
 
     Element l1 = { r.x() + r.width(), r.y(), LineToElement };
@@ -1031,8 +1060,6 @@ void QPainterPath::addPolygon(const QPolygonF &polygon)
 
     ensureData();
     detach();
-
-    d_func()->elements.reserve(d_func()->elements.size() + polygon.size());
 
     moveTo(polygon.first());
     for (int i=1; i<polygon.size(); ++i) {
@@ -1076,9 +1103,7 @@ void QPainterPath::addEllipse(const QRectF &boundingRect)
     ensureData();
     detach();
 
-    Q_D(QPainterPath);
     bool first = d_func()->elements.size() < 2;
-    d->elements.reserve(d->elements.size() + 13);
 
     QPointF pts[12];
     int point_count;
@@ -1256,7 +1281,6 @@ void QPainterPath::addRegion(const QRegion &region)
     detach();
 
     QVector<QRect> rects = region.rects();
-    d_func()->elements.reserve(rects.size() * 5);
     for (auto rect : rects)
         addRect(rect);
 }
@@ -1450,6 +1474,11 @@ QRectF QPainterPath::controlPointRect() const
     \sa elementCount()
 */
 
+bool QPainterPath::isEmpty() const
+{
+    return !d_ptr || (d_ptr->elements.size() == 1 && d_ptr->elements.first().type == MoveToElement);
+}
+
 /*!
     Creates and returns a reversed copy of the path.
 
@@ -1598,7 +1627,8 @@ QList<QPolygonF> QPainterPath::toFillPolygons(const QTransform &matrix) const
     if (count == 0)
         return polys;
 
-    QList<QRectF> bounds;
+    QVector<QRectF> bounds;
+    bounds.reserve(count);
     for (int i=0; i<count; ++i)
         bounds += subpaths.at(i).boundingRect();
 
@@ -1608,7 +1638,7 @@ QList<QPolygonF> QPainterPath::toFillPolygons(const QTransform &matrix) const
         qDebug() << " bounds" << i << bounds.at(i);
 #endif
 
-    QVector< QList<int> > isects;
+    QVector< QVector<int> > isects;
     isects.resize(count);
 
     // find all intersections
@@ -1636,7 +1666,7 @@ QList<QPolygonF> QPainterPath::toFillPolygons(const QTransform &matrix) const
 
     // flatten the sets of intersections
     for (int i=0; i<count; ++i) {
-        const QList<int> &current_isects = isects.at(i);
+        const QVector<int> &current_isects = isects.at(i);
         for (int isect_j : current_isects) {
             if (isect_j == i)
                 continue;
@@ -1663,7 +1693,7 @@ QList<QPolygonF> QPainterPath::toFillPolygons(const QTransform &matrix) const
 
     // Join the intersected subpaths as rewinded polygons
     for (int i=0; i<count; ++i) {
-        const QList<int> &subpath_list = isects[i];
+        const QVector<int> &subpath_list = isects[i];
         if (!subpath_list.isEmpty()) {
             QPolygonF buildUp;
             for (int j : subpath_list) {
@@ -1816,6 +1846,8 @@ bool QPainterPath::contains(const QPointF &pt) const
             : ((winding_number % 2) != 0));
 }
 
+enum PainterDirections { Left, Right, Top, Bottom };
+
 static bool qt_painterpath_isect_line_rect(qreal x1, qreal y1, qreal x2, qreal y2,
                                            const QRectF &rect)
 {
@@ -1824,7 +1856,6 @@ static bool qt_painterpath_isect_line_rect(qreal x1, qreal y1, qreal x2, qreal y
     qreal top = rect.top();
     qreal bottom = rect.bottom();
 
-    enum { Left, Right, Top, Bottom };
     // clip the lines, after cohen-sutherland, see e.g. http://www.nondot.org/~sabre/graphpro/line6.html
     int p1 = ((x1 < left) << Left)
              | ((x1 > right) << Right)
@@ -1934,6 +1965,17 @@ static bool qt_isect_curve_vertical(const QBezier &bezier, qreal x, qreal y1, qr
      return false;
 }
 
+static bool pointOnEdge(const QRectF &rect, const QPointF &point)
+{
+    if ((point.x() == rect.left() || point.x() == rect.right()) &&
+        (point.y() >= rect.top() && point.y() <= rect.bottom()))
+        return true;
+    if ((point.y() == rect.top() || point.y() == rect.bottom()) &&
+        (point.x() >= rect.left() && point.x() <= rect.right()))
+        return true;
+    return false;
+}
+
 /*
     Returns true if any lines or curves cross the four edges in of rect
 */
@@ -1941,6 +1983,7 @@ static bool qt_painterpath_check_crossing(const QPainterPath *path, const QRectF
 {
     QPointF last_pt;
     QPointF last_start;
+    enum { OnRect, InsideRect, OutsideRect} edgeStatus = OnRect;
     for (int i=0; i<path->elementCount(); ++i) {
         const QPainterPath::Element &e = path->elementAt(i);
 
@@ -1978,6 +2021,27 @@ static bool qt_painterpath_check_crossing(const QPainterPath *path, const QRectF
 
         default:
             break;
+        }
+        // Handle crossing the edges of the rect at the end-points of individual sub-paths.
+        // A point on on the edge itself is considered neither inside nor outside for this purpose.
+        if (!pointOnEdge(rect, last_pt)) {
+            bool contained = rect.contains(last_pt);
+            switch (edgeStatus) {
+            case OutsideRect:
+                if (contained)
+                    return true;
+                break;
+            case InsideRect:
+                if (!contained)
+                    return true;
+                break;
+            case OnRect:
+                edgeStatus = contained ? InsideRect : OutsideRect;
+                break;
+            }
+        } else {
+            if (last_pt == last_start)
+                edgeStatus = OnRect;
         }
     }
 
@@ -2381,7 +2445,6 @@ QDataStream &operator>>(QDataStream &s, QPainterPath &p)
         Q_ASSERT(p.d_func()->elements.at(0).type == QPainterPath::MoveToElement);
         p.d_func()->elements.clear();
     }
-    p.d_func()->elements.reserve(p.d_func()->elements.size() + size);
     for (int i=0; i<size; ++i) {
         int type;
         double x, y;
@@ -2498,6 +2561,24 @@ QPainterPathStrokerPrivate::QPainterPathStrokerPrivate()
 QPainterPathStroker::QPainterPathStroker()
     : d_ptr(new QPainterPathStrokerPrivate)
 {
+}
+
+/*!
+   Creates a new stroker based on \a pen.
+ */
+QPainterPathStroker::QPainterPathStroker(const QPen &pen)
+    : d_ptr(new QPainterPathStrokerPrivate)
+{
+    setWidth(pen.widthF());
+    setCapStyle(pen.capStyle());
+    setJoinStyle(pen.joinStyle());
+    setMiterLimit(pen.miterLimit());
+    setDashOffset(pen.dashOffset());
+
+    if (pen.style() == Qt::CustomDashLine)
+        setDashPattern(pen.dashPattern());
+    else
+        setDashPattern(pen.style());
 }
 
 /*!

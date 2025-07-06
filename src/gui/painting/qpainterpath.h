@@ -59,6 +59,7 @@ class QPainterPathPrivate;
 struct QPainterPathPrivateDeleter;
 class QPainterPathData;
 class QPainterPathStrokerPrivate;
+class QPen;
 class QPolygonF;
 class QRegion;
 class QVectorPath;
@@ -90,16 +91,16 @@ public:
         inline bool operator!=(const Element &e) const { return !operator==(e); }
     };
 
-    QPainterPath();
+    QPainterPath() noexcept;
     explicit QPainterPath(const QPointF &startPoint);
     QPainterPath(const QPainterPath &other);
     QPainterPath &operator=(const QPainterPath &other);
 #ifdef Q_COMPILER_RVALUE_REFS
-    inline QPainterPath &operator=(QPainterPath &&other)
+    inline QPainterPath &operator=(QPainterPath &&other) noexcept
     { qSwap(d_ptr, other.d_ptr); return *this; }
 #endif
     ~QPainterPath();
-    inline void swap(QPainterPath &other) { d_ptr.swap(other.d_ptr); }
+    inline void swap(QPainterPath &other) noexcept { d_ptr.swap(other.d_ptr); }
 
     void closeSubpath();
 
@@ -165,7 +166,7 @@ public:
     Qt::FillRule fillRule() const;
     void setFillRule(Qt::FillRule fillRule);
 
-    inline bool isEmpty() const;
+    bool isEmpty() const;
 
     QPainterPath toReversed() const;
     QList<QPolygonF> toSubpathPolygons(const QMatrix &matrix = QMatrix()) const;
@@ -175,9 +176,9 @@ public:
     QList<QPolygonF> toFillPolygons(const QTransform &matrix) const;
     QPolygonF toFillPolygon(const QTransform &matrix) const;
 
-    inline int elementCount() const;
-    inline const QPainterPath::Element &elementAt(int i) const;
-    inline void setElementPositionAt(int i, qreal x, qreal y);
+    int elementCount() const;
+    QPainterPath::Element elementAt(int i) const;
+    void setElementPositionAt(int i, qreal x, qreal y);
 
     qreal   length() const;
     qreal   percentAtLength(qreal t) const;
@@ -211,7 +212,7 @@ private:
 
     inline void ensureData() { if (!d_ptr) ensureData_helper(); }
     void ensureData_helper();
-    inline void detach();
+    void detach();
     void detach_helper();
     void setDirty(bool);
     void computeBoundingRect() const;
@@ -233,29 +234,6 @@ private:
 #endif
 };
 
-class QPainterPathPrivate
-{
-public:
-    friend class QPainterPath;
-    friend class QPainterPathData;
-    friend class QPainterPathStroker;
-    friend class QPainterPathStrokerPrivate;
-    friend class QMatrix;
-    friend class QTransform;
-    friend class QVectorPath;
-    friend struct QPainterPathPrivateDeleter;
-#ifndef QT_NO_DATASTREAM
-    friend Q_GUI_EXPORT QDataStream &operator<<(QDataStream &, const QPainterPath &);
-    friend Q_GUI_EXPORT QDataStream &operator>>(QDataStream &, QPainterPath &);
-#endif
-
-    QPainterPathPrivate() : ref(1) {}
-
-private:
-    QAtomicInt ref;
-    QVector<QPainterPath::Element> elements;
-};
-
 Q_DECLARE_TYPEINFO(QPainterPath::Element, Q_PRIMITIVE_TYPE);
 
 #ifndef QT_NO_DATASTREAM
@@ -268,6 +246,7 @@ class Q_GUI_EXPORT QPainterPathStroker
     Q_DECLARE_PRIVATE(QPainterPathStroker)
 public:
     QPainterPathStroker();
+    QPainterPathStroker(const QPen &pen);
     ~QPainterPathStroker();
 
     void setWidth(qreal width);
@@ -390,41 +369,6 @@ inline void QPainterPath::translate(const QPointF &offset)
 
 inline QPainterPath QPainterPath::translated(const QPointF &offset) const
 { return translated(offset.x(), offset.y()); }
-
-inline bool QPainterPath::isEmpty() const
-{
-    return !d_ptr || (d_ptr->elements.size() == 1 && d_ptr->elements.first().type == MoveToElement);
-}
-
-inline int QPainterPath::elementCount() const
-{
-    return d_ptr ? d_ptr->elements.size() : 0;
-}
-
-inline const QPainterPath::Element &QPainterPath::elementAt(int i) const
-{
-    Q_ASSERT(d_ptr);
-    Q_ASSERT(i >= 0 && i < elementCount());
-    return d_ptr->elements.at(i);
-}
-
-inline void QPainterPath::setElementPositionAt(int i, qreal x, qreal y)
-{
-    Q_ASSERT(d_ptr);
-    Q_ASSERT(i >= 0 && i < elementCount());
-    detach();
-    QPainterPath::Element &e = d_ptr->elements[i];
-    e.x = x;
-    e.y = y;
-}
-
-
-inline void QPainterPath::detach()
-{
-    if (d_ptr->ref.loadRelaxed() != 1)
-        detach_helper();
-    setDirty(true);
-}
 
 #ifndef QT_NO_DEBUG_STREAM
 Q_GUI_EXPORT QDebug operator<<(QDebug, const QPainterPath &);

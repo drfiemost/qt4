@@ -116,6 +116,8 @@ private slots:
     void translate();
 
     void lineWithinBounds();
+
+    void intersectionPointOnEdge();
 };
 
 // Testing get/set functions
@@ -1324,6 +1326,17 @@ void tst_QPainterPath::lineWithinBounds()
         qreal actual = path.pointAtPercent(qreal(i) / iteration_count).y();
         QVERIFY(actual == yVal); // don't use QCOMPARE, don't want fuzzy comparison
     }
+}
+
+void tst_QPainterPath::intersectionPointOnEdge()
+{
+    // From QTBUG-31551
+    QPainterPath p; p.addRoundedRect(-10, 10, 40, 40, 10, 10);
+    QRectF r(0, 0, 100, 100);
+    QPainterPath rp; rp.addRect(r);
+    QVERIFY(!p.intersected(rp).isEmpty());
+    QVERIFY(p.intersects(rp));
+    QVERIFY(p.intersects(r));
 }
 
 
