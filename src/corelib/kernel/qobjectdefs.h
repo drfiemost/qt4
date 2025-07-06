@@ -106,34 +106,8 @@ class QString;
 # define QT_TR_FUNCTIONS
 #endif
 
-#if defined(QT_NO_QOBJECT_CHECK)
-/* tmake ignore Q_OBJECT */
-#define Q_OBJECT_CHECK
-#else
-
-/* This is a compile time check that ensures that any class cast with qobject_cast
-   actually contains a Q_OBJECT macro. Note: qobject_cast will fail if a QObject
-   subclass doesn't contain Q_OBJECT.
-
-   In qt_check_for_QOBJECT_macro, we call a dummy templated function with two
-   parameters, the first being "this" and the other the target of the qobject
-   cast. If the types are not identical, we know that a Q_OBJECT macro is missing.
-
-   If you get a compiler error here, make sure that the class you are casting
-   to contains a Q_OBJECT macro.
-*/
-
-/* tmake ignore Q_OBJECT */
-#define Q_OBJECT_CHECK \
-    template <typename T> inline void qt_check_for_QOBJECT_macro(const T &_q_argument) const \
-    { int i = qYouForgotTheQ_OBJECT_Macro(this, &_q_argument); i = i + 1; }
-
-template <typename T>
-inline int qYouForgotTheQ_OBJECT_Macro(T, T) { return 0; }
-
-template <typename T1, typename T2>
-inline void qYouForgotTheQ_OBJECT_Macro(T1, T2) {}
-#endif // QT_NO_QOBJECT_CHECK
+// TODO: remove
+#define Q_OBJECT_CHECK  /* empty, unused since 39bc70b */
 
 #if defined(Q_CC_INTEL) || defined(Q_CC_GNU)
 // Cannot redefine the visibility of a method in an exported class
@@ -145,7 +119,6 @@ inline void qYouForgotTheQ_OBJECT_Macro(T1, T2) {}
 /* tmake ignore Q_OBJECT */
 #define Q_OBJECT \
 public: \
-    Q_OBJECT_CHECK \
     static const QMetaObject staticMetaObject; \
     virtual const QMetaObject *metaObject() const; \
     virtual void *qt_metacast(const char *); \
