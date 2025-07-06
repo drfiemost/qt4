@@ -48,6 +48,9 @@
 #include <QtCore/qpair.h>
 #include <QtCore/qrefcount.h>
 
+#include <algorithm>
+#include <utility>
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -400,6 +403,7 @@ public:
     class const_iterator
     {
         friend class iterator;
+        friend class QHash<Key, T>;
         QHashData::Node *i;
 
     public:
@@ -466,6 +470,9 @@ public:
     inline iterator end() { detach(); return iterator(e); }
     inline const_iterator end() const { return const_iterator(e); }
     inline const_iterator constEnd() const { return const_iterator(e); }
+
+    QPair<iterator, iterator> equal_range(const Key &key);
+    QPair<const_iterator, const_iterator> equal_range(const Key &key) const noexcept;
     iterator erase(iterator it);
 
     // more Qt
@@ -904,19 +911,58 @@ Q_OUTOFLINE_TEMPLATE bool QHash<Key, T>::operator==(const QHash<Key, T> &other) 
     const_iterator it = begin();
 
     while (it != end()) {
-        const Key &akey = it.key();
+        // Build two equal ranges for i.key(); one for *this and one for other.
+        // For *this we can avoid a lookup via equal_range, as we know the beginning of the range.
+        auto thisEqualRangeEnd = it;
+        while (thisEqualRangeEnd != end() && it.key() == thisEqualRangeEnd.key())
+            ++thisEqualRangeEnd;
 
-        const_iterator it2 = other.find(akey);
-        do {
-            if (it2 == other.end() || !(it2.key() == akey))
-                return false;
-            if (!(it.value() == it2.value()))
-                return false;
-            ++it;
-            ++it2;
-        } while (it != end() && it.key() == akey);
+        const auto otherEqualRange = other.equal_range(it.key());
+
+        if (std::distance(it, thisEqualRangeEnd) != std::distance(otherEqualRange.first, otherEqualRange.second))
+            return false;
+
+        // Keys in the ranges are equal by construction; this checks only the values.
+        if (!std::is_permutation(it, thisEqualRangeEnd, otherEqualRange.first))
+            return false;
+
+        it = thisEqualRangeEnd;
     }
+
     return true;
+}
+
+template <class Key, class T>
+QPair<typename QHash<Key, T>::iterator, typename QHash<Key, T>::iterator> QHash<Key, T>::equal_range(const Key &akey)
+{
+    detach();
+    auto pair = std::as_const(*this).equal_range(akey);
+    return qMakePair(iterator(pair.first.i), iterator(pair.second.i));
+}
+
+template <class Key, class T>
+QPair<typename QHash<Key, T>::const_iterator, typename QHash<Key, T>::const_iterator> QHash<Key, T>::equal_range(const Key &akey) const noexcept
+{
+    uint h;
+    Node *node = *findNode(akey, &h);
+    const_iterator firstIt = const_iterator(node);
+
+    if (node != e) {
+        // equal keys must hash to the same value and so they all
+        // end up in the same bucket. So we can use node->next,
+        // which only works within a bucket, instead of (out-of-line)
+        // QHashData::nextNode()
+        while (node->next != e && node->next->key == akey)
+            node = node->next;
+
+        // 'node' may be the last node in the bucket. To produce the end iterator, we'd
+        // need to enter the next bucket in this case, so we need to use
+        // QHashData::nextNode() here, which, unlike node->next above, can move between
+        // buckets.
+        node = concrete(QHashData::nextNode(reinterpret_cast<QHashData::Node *>(node)));
+    }
+
+    return qMakePair(firstIt, const_iterator(node));
 }
 
 template <class Key, class T>
