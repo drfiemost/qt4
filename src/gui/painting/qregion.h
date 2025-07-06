@@ -84,6 +84,18 @@ public:
     inline void swap(QRegion &other) { qSwap(d, other.d); }
     bool isEmpty() const;
 
+    typedef const QRect *const_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+
+    const_iterator begin()  const noexcept;
+    const_iterator cbegin() const noexcept { return begin(); }
+    const_iterator end()    const noexcept;
+    const_iterator cend()   const noexcept { return end(); }
+    const_reverse_iterator rbegin()  const noexcept { return const_reverse_iterator(end()); }
+    const_reverse_iterator crbegin() const noexcept { return rbegin(); }
+    const_reverse_iterator rend()    const noexcept { return const_reverse_iterator(begin()); }
+    const_reverse_iterator crend()   const noexcept { return rend(); }
+
     bool contains(const QPoint &p) const;
     bool contains(const QRect &r) const;
 
