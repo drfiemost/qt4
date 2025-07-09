@@ -75,7 +75,7 @@ QT_BEGIN_NAMESPACE
 
 static inline bool isValidCoord(qreal c)
 {
-    if (sizeof(qreal) >= sizeof(double))
+    if constexpr (sizeof(qreal) >= sizeof(double))
         return std::isfinite(c) && std::fabs(c) < 1e128;
     else
         return std::isfinite(c) && std::fabsf(float(c)) < 1e16f;

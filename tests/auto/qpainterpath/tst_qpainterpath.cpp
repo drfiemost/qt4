@@ -57,6 +57,8 @@ class tst_QPainterPath : public QObject
     Q_OBJECT
 
 public:
+public slots:
+    void cleanupTestCase();
 
 private slots:
     void getSetCheck();
@@ -117,8 +119,15 @@ private slots:
 
     void lineWithinBounds();
 
+    void intersectionEquality();
+
     void intersectionPointOnEdge();
 };
+
+void tst_QPainterPath::cleanupTestCase()
+{
+    QFile::remove(QLatin1String("data"));
+}
 
 // Testing get/set functions
 void tst_QPainterPath::getSetCheck()
@@ -281,13 +290,13 @@ void tst_QPainterPath::contains_QPointF_data()
     inside.addEllipse(base_rect.adjusted(5, 5, -5, -5));
     QPolygonF inside_poly = inside.toFillPolygon();
     for (int i=0; i<inside_poly.size(); ++i)
-        QTest::newRow("inside_ellipse") << path << inside_poly.at(i) << true;
+        QTest::newRow(qPrintable(QString("inside_ellipse %1").arg(i))) << path << inside_poly.at(i) << true;
 
     QPainterPath outside;
     outside.addEllipse(base_rect.adjusted(-5, -5, 5, 5));
     QPolygonF outside_poly = outside.toFillPolygon();
     for (int i=0; i<outside_poly.size(); ++i)
-        QTest::newRow("outside_ellipse") << path << outside_poly.at(i) << false;
+        QTest::newRow(qPrintable(QString("outside_ellipse %1").arg(i))) << path << outside_poly.at(i) << false;
 
     path = QPainterPath();
     base_rect = QRectF(50, 50, 200, 200);
@@ -712,23 +721,24 @@ void tst_QPainterPath::testOperatorDatastream()
     path.addRect(0, 0, 100, 100);
     path.setFillRule(Qt::WindingFill);
 
+    QTemporaryFile data;
     // Write out
     {
-        QFile data("data");
-        bool ok = data.open(QFile::WriteOnly);
+        bool ok = data.open();
         QVERIFY(ok);
         QDataStream stream(&data);
         stream << path;
+        data.close();
     }
 
     QPainterPath other;
     // Read in
     {
-        QFile data("data");
-        bool ok = data.open(QFile::ReadOnly);
+        bool ok = data.open();
         QVERIFY(ok);
         QDataStream stream(&data);
         stream >> other;
+        data.close();
     }
 
     QVERIFY(other == path);
@@ -744,7 +754,11 @@ void tst_QPainterPath::closing()
         triangle.lineTo(200, 200);
         QCOMPARE(triangle.elementCount(), 3);
 
+        //add this line to make sure closeSubpath() also calls detach() and detached properly
+        QPainterPath copied = triangle;
         triangle.closeSubpath();
+        QCOMPARE(copied.elementCount(), 3);
+
         QCOMPARE(triangle.elementCount(), 4);
         QCOMPARE(triangle.elementAt(3).type, QPainterPath::LineToElement);
 
@@ -852,20 +866,21 @@ void tst_QPainterPath::testArcMoveTo_data()
     QTest::addColumn<QRectF>("rect");
     QTest::addColumn<qreal>("angle");
 
-    QList<QRectF> rects;
-    rects << QRectF(100, 100, 100, 100)
-          << QRectF(100, 100, -100, 100)
-          << QRectF(100, 100, 100, -100)
-          << QRectF(100, 100, -100, -100);
+    static constexpr QRectF rects[] = {
+        QRectF(100, 100, 100, 100),
+        QRectF(100, 100, -100, 100),
+        QRectF(100, 100, 100, -100),
+        QRectF(100, 100, -100, -100),
+    };
 
-    for (int domain=0; domain<rects.size(); ++domain) {
+    for (uint domain = 0; domain < sizeof rects / sizeof *rects; ++domain) {
         for (int i=-360; i<=360; ++i) {
-            QTest::newRow("test") << rects.at(domain) << (qreal) i;
+            QTest::newRow(qPrintable(QString("test %1 %2").arg(domain).arg(i))) << rects[domain] << (qreal) i;
         }
 
         // test low angles
-        QTest::newRow("test") << rects.at(domain) << (qreal) 1e-10;
-        QTest::newRow("test") << rects.at(domain) << (qreal)-1e-10;
+        QTest::newRow("low angles 1") << rects[domain] << (qreal) 1e-10;
+        QTest::newRow("low angles 2") << rects[domain] << (qreal)-1e-10;
     }
 }
 
@@ -1326,6 +1341,54 @@ void tst_QPainterPath::lineWithinBounds()
         qreal actual = path.pointAtPercent(qreal(i) / iteration_count).y();
         QVERIFY(actual == yVal); // don't use QCOMPARE, don't want fuzzy comparison
     }
+}
+
+void tst_QPainterPath::intersectionEquality()
+{
+    // Test case from QTBUG-17027
+    QPainterPath p1;
+    p1.moveTo(256.0000000000000000, 135.8384137532701743);
+    p1.lineTo(50.9999999999999715, 107.9999999999999857);
+    p1.lineTo(233.5425474228109123, 205.3560252921671462);
+    p1.lineTo(191.7771366877784373, 318.0257074407572304);
+    p1.lineTo(-48.2616272048215151, 229.0459803737862216);
+    p1.lineTo(0.0000000000000000, 98.8515898136580801);
+    p1.lineTo(0.0000000000000000, 0.0000000000000000);
+    p1.lineTo(256.0000000000000000, 0.0000000000000000);
+    p1.lineTo(256.0000000000000000, 135.8384137532701743);
+
+    QPainterPath p2;
+    p2.moveTo(1516.2703263523442274, 306.9795200262722119);
+    p2.lineTo(-1296.8426224886295585, -75.0331736542986931);
+    p2.lineTo(-1678.8553161692004778, 2738.0797751866753060);
+    p2.lineTo(1134.2576326717733081, 3120.0924688672457705);
+    p2.lineTo(1516.2703263523442274, 306.9795200262722119);
+
+    QPainterPath i1 = p1.intersected(p2);
+    QPainterPath i2 = p2.intersected(p1);
+    QVERIFY(i1 == i2 || i1.toReversed() == i2);
+
+    p1 = QPainterPath();
+    p1.moveTo(256.00000000, 135.83841375);
+    p1.lineTo(50.99999999, 107.99999999);
+    p1.lineTo(233.54254742, 205.35602529);
+    p1.lineTo(191.77713668, 318.02570744);
+    p1.lineTo(-48.26162720, 229.04598037);
+    p1.lineTo(0.00000000, 98.85158981);
+    p1.lineTo(0.00000000, 0.00000000);
+    p1.lineTo(256.00000000, 0.00000000);
+    p1.lineTo(256.00000000, 135.83841375);
+
+    p2 = QPainterPath();
+    p2.moveTo(1516.27032635, 306.97952002);
+    p2.lineTo(-1296.84262248, -75.03317365);
+    p2.lineTo(-1678.85531616, 2738.07977518);
+    p2.lineTo(1134.25763267, 3120.09246886);
+    p2.lineTo(1516.27032635, 306.97952002);
+
+    i1 = p1.intersected(p2);
+    i2 = p2.intersected(p1);
+    QVERIFY(i1 == i2 || i1.toReversed() == i2);
 }
 
 void tst_QPainterPath::intersectionPointOnEdge()
