@@ -53,6 +53,7 @@
 #include "qbytearray.h"
 #include "qqueue.h"
 #include "qstack.h"
+#include "qtransform.h"
 #include "qdebug.h"
 
 #ifndef QT_NO_COMPRESS
@@ -515,13 +516,13 @@ bool QSvgTinyDocument::elementExists(const QString &id) const
     return (node!=nullptr);
 }
 
-QMatrix QSvgTinyDocument::matrixForElement(const QString &id) const
+QTransform QSvgTinyDocument::transformForElement(const QString &id) const
 {
     QSvgNode *node = scopeNode(id);
 
     if (!node) {
         qDebug("Couldn't find node %s. Skipping rendering.", qPrintable(id));
-        return QMatrix();
+        return QTransform();
     }
 
     QTransform t;
@@ -533,7 +534,7 @@ QMatrix QSvgTinyDocument::matrixForElement(const QString &id) const
         node = node->parent();
     }
 
-    return t.toAffine();
+    return t;
 }
 
 int QSvgTinyDocument::currentFrame() const

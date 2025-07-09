@@ -58,6 +58,7 @@ QT_BEGIN_NAMESPACE
 class QSvgRendererPrivate;
 class QPainter;
 class QByteArray;
+class QTransform;
 
 class Q_SVG_EXPORT QSvgRenderer : public QObject
 {
@@ -93,8 +94,10 @@ public:
     void setAnimationEnabled(bool enable);
 
     QRectF boundsOnElement(const QString &id) const;
+    [[deprecated("Use transformForElement()")]]
     bool elementExists(const QString &id) const;
     QMatrix matrixForElement(const QString &id) const;
+    QTransform transformForElement(const QString &id) const;
 
 public Q_SLOTS:
     bool load(const QString &filename);

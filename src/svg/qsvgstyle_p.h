@@ -59,7 +59,7 @@
 
 #include "QtGui/qpen.h"
 #include "QtGui/qbrush.h"
-#include "QtGui/qmatrix.h"
+#include "QtGui/qtransform.h"
 #include "QtGui/qcolor.h"
 #include "QtGui/qfont.h"
 #include <qdebug.h>
@@ -597,10 +597,10 @@ public:
     void resolveStops();
     void resolveStops_helper(QStringList *visited);
 
-    void setMatrix(const QMatrix &matrix);
-    QMatrix  qmatrix() const
+    void setTransform(const QTransform &transform);
+    QTransform  qtransform() const
     {
-        return m_matrix;
+        return m_transform;
     }
 
     QGradient *qgradient() const
@@ -621,7 +621,7 @@ public:
     QBrush brush(QPainter *, QSvgExtraStates &) override;
 private:
     QGradient      *m_gradient;
-    QMatrix m_matrix;
+    QTransform m_transform;
 
     QSvgTinyDocument *m_doc;
     QString           m_link;
