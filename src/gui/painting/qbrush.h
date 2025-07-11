@@ -198,7 +198,8 @@ public:
     enum CoordinateMode {
         LogicalMode,
         StretchToDeviceMode,
-        ObjectBoundingMode
+        ObjectBoundingMode,  // deprecated
+        ObjectMode
     };
 
     enum InterpolationMode {
