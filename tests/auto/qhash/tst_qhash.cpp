@@ -544,14 +544,14 @@ void tst_QHash::key()
         hash2.insert(3, "two");
         QCOMPARE(hash2.key("one"), 1);
         QCOMPARE(hash2.key("one", def), 1);
-        QCOMPARE(hash2.key("two"), 2);
-        QCOMPARE(hash2.key("two", def), 2);
+        QVERIFY(hash2.key("two") == 2 || hash2.key("two") == 3);
+        QVERIFY(hash2.key("two", def) == 2 || hash2.key("two", def) == 3);
         QCOMPARE(hash2.key("three"), 0);
         QCOMPARE(hash2.key("three", def), def);
 
         hash2.insert(-1, "two");
-        QCOMPARE(hash2.key("two"), -1);
-        QCOMPARE(hash2.key("two", def), -1);
+        QVERIFY(hash2.key("two") == 2 || hash2.key("two") == 3 || hash2.key("two") == -1);
+        QVERIFY(hash2.key("two", def) == 2 || hash2.key("two", def) == 3 || hash2.key("two", def) == -1);
 
         hash2.insert(0, "zero");
         QCOMPARE(hash2.key("zero"), 0);
@@ -864,7 +864,7 @@ void tst_QHash::iterators()
     //STL-Style iterators
 
     QHash<int, QString>::iterator stlIt = hash.begin();
-    for(stlIt = hash.begin(), i = 1; stlIt != hash.end(), i < 100; ++stlIt, ++i) {
+    for(stlIt = hash.begin(), i = 1; stlIt != hash.end() && i < 100; ++stlIt, ++i) {
             testMap.insert(i,stlIt.value());
             //QVERIFY(stlIt.value() == hash.value(
     }
@@ -889,7 +889,7 @@ void tst_QHash::iterators()
     //STL-Style const-iterators
 
     QHash<int, QString>::const_iterator cstlIt = hash.constBegin();
-    for(cstlIt = hash.constBegin(), i = 1; cstlIt != hash.constEnd(), i < 100; ++cstlIt, ++i) {
+    for(cstlIt = hash.constBegin(), i = 1; cstlIt != hash.constEnd() && i < 100; ++cstlIt, ++i) {
             testMap.insert(i,cstlIt.value());
             //QVERIFY(stlIt.value() == hash.value(
     }

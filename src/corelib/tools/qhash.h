@@ -58,14 +58,14 @@ class QByteArray;
 class QString;
 class QStringRef;
 
-inline uint qHash(char key, uint seed = 0) { return uint(key) ^ seed; }
-inline uint qHash(uchar key, uint seed = 0) { return uint(key) ^ seed; }
-inline uint qHash(signed char key, uint seed = 0) { return uint(key) ^ seed; }
-inline uint qHash(ushort key, uint seed = 0) { return uint(key) ^ seed; }
-inline uint qHash(short key, uint seed = 0) { return uint(key) ^ seed; }
-inline uint qHash(uint key, uint seed = 0) { return key ^ seed; }
-inline uint qHash(int key, uint seed = 0) { return uint(key) ^ seed; }
-inline uint qHash(ulong key, uint seed = 0)
+constexpr inline uint qHash(char key, uint seed = 0) noexcept { return uint(key) ^ seed; }
+constexpr inline uint qHash(uchar key, uint seed = 0) noexcept { return uint(key) ^ seed; }
+constexpr inline uint qHash(signed char key, uint seed = 0) noexcept { return uint(key) ^ seed; }
+constexpr inline uint qHash(ushort key, uint seed = 0) noexcept { return uint(key) ^ seed; }
+constexpr inline uint qHash(short key, uint seed = 0) noexcept { return uint(key) ^ seed; }
+constexpr inline uint qHash(uint key, uint seed = 0) noexcept { return key ^ seed; }
+constexpr inline uint qHash(int key, uint seed = 0) noexcept { return uint(key) ^ seed; }
+inline uint qHash(ulong key, uint seed = 0) noexcept
 {
     if (sizeof(ulong) > sizeof(uint)) {
         return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
@@ -73,23 +73,19 @@ inline uint qHash(ulong key, uint seed = 0)
         return uint(key & (~0U)) ^ seed;
     }
 }
-inline uint qHash(long key, uint seed = 0) { return qHash(ulong(key), seed); }
-inline uint qHash(quint64 key, uint seed = 0)
+inline uint qHash(long key, uint seed = 0) noexcept { return qHash(ulong(key), seed); }
+constexpr inline uint qHash(quint64 key, uint seed = 0) noexcept
 {
-    if (sizeof(quint64) > sizeof(uint)) {
-        return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
-    } else {
-        return uint(key & (~0U)) ^ seed;
-    }
+    return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
 }
-inline uint qHash(qint64 key, uint seed = 0) { return qHash(quint64(key), seed); }
-inline uint qHash(QChar key, uint seed = 0) { return qHash(key.unicode(), seed); }
-Q_CORE_EXPORT uint qHash(const QByteArray &key, uint seed = 0);
-Q_CORE_EXPORT uint qHash(const QString &key, uint seed = 0);
-Q_CORE_EXPORT uint qHash(const QStringRef &key, uint seed = 0);
-Q_CORE_EXPORT uint qHash(const QBitArray &key, uint seed = 0);
-Q_CORE_EXPORT uint qHash(QLatin1String key, uint seed = 0);
-Q_CORE_EXPORT uint qt_hash(const QString &key);
+constexpr inline uint qHash(qint64 key, uint seed = 0) noexcept { return qHash(quint64(key), seed); }
+inline uint qHash(QChar key, uint seed = 0) noexcept { return qHash(key.unicode(), seed); }
+Q_CORE_EXPORT uint qHash(const QByteArray &key, uint seed = 0) noexcept;
+Q_CORE_EXPORT uint qHash(const QString &key, uint seed = 0) noexcept;
+Q_CORE_EXPORT uint qHash(const QStringRef &key, uint seed = 0) noexcept;
+Q_CORE_EXPORT uint qHash(const QBitArray &key, uint seed = 0) noexcept;
+Q_CORE_EXPORT uint qHash(QLatin1String key, uint seed = 0) noexcept;
+Q_CORE_EXPORT uint qt_hash(const QString &key) noexcept;
 
 #if defined(Q_CC_MSVC)
 #pragma warning( push )
