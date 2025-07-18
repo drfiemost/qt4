@@ -3090,6 +3090,7 @@ static QSvgNode *createRectNode(QSvgNode *parent,
     qreal nwidth = parseLength(width, type, handler, &ok);
     if (!ok)
         return nullptr;
+    nwidth = convertToPixels(nwidth, true, type);
 
     qreal nheight = parseLength(height, type, handler, &ok);
     if (!ok)

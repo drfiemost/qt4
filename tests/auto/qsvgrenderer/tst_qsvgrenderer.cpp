@@ -160,7 +160,7 @@ void tst_QSvgRenderer::emptyRect_data()
     // Those caused divisions by zero, e.g. QTBUG-49160 and oss-fuzz issue 23588
     // UBSAN is required to see those divisions by zero
     QTest::addColumn<QByteArray>("svg");
-    QTest::newRow("nothing") << QByteArray("(<svg><rect/></svg>)");
+    QTest::newRow("nothing") << QByteArray(R"(<svg><rect/></svg>)");
     QTest::newRow("no width zero height") << QByteArray(R"(<svg><rect height="0"/></svg>)");
     QTest::newRow("zero width no height") << QByteArray(R"(<svg><rect width="0"/></svg>)");
     QTest::newRow("no width") << QByteArray(R"(<svg><rect height="1"/></svg>)");
@@ -1668,10 +1668,10 @@ void tst_QSvgRenderer::styleSheet()
 
 void tst_QSvgRenderer::duplicateStyleId()
 {
-    QByteArray svg = QByteArrayLiteral("<svg><linearGradient id=\"a\"/>"
-                                       "<rect style=\"fill:url(#a)\"/>"
-                                       "<linearGradient id=\"a\"/></svg>");
-    QTest::ignoreMessage(QtWarningMsg, "Duplicate unique style id: \"a\"");
+    QByteArray svg = QByteArrayLiteral(R"x(<svg><linearGradient id="a"/>
+                                       <rect style="fill:url(#a)"/>
+                                       <linearGradient id="a"/></svg>)");
+    QTest::ignoreMessage(QtWarningMsg, R"(Duplicate unique style id: "a")x");
     QImage image(200, 200, QImage::Format_RGB32);
     QPainter painter(&image);
     QSvgRenderer renderer(svg);
@@ -1682,7 +1682,7 @@ void tst_QSvgRenderer::oss_fuzz_23731()
 {
     // when configured with "-sanitize undefined", this resulted in:
     // "runtime error: division by zero"
-    QSvgRenderer().load(QByteArray("<svg><path d=\"A4------\">"));
+    QSvgRenderer().load(QByteArray(R"(<svg><path d="A4------">)"));
 }
 
 void tst_QSvgRenderer::oss_fuzz_24131()
@@ -1692,7 +1692,7 @@ void tst_QSvgRenderer::oss_fuzz_24131()
     // runtime error: signed integer overflow: -2147483648 + -2147483648 cannot be represented in type 'int'
     QImage image(377, 233, QImage::Format_RGB32);
     QPainter painter(&image);
-    QSvgRenderer renderer(QByteArray("<svg><path d=\"M- 4 44044404444E-334-\"/></svg>"));
+    QSvgRenderer renderer(QByteArray(R"(<svg><path d="M- 4 44044404444E-334-"/></svg>)"));
     renderer.render(&painter);
 }
 
@@ -1700,17 +1700,17 @@ void tst_QSvgRenderer::oss_fuzz_24738()
 {
     // when configured with "-sanitize undefined", this resulted in:
     // "runtime error: division by zero"
-    QSvgRenderer().load(QByteArray("<svg><path d=\"a 2 1e-212.....\">"));
+    QSvgRenderer().load(QByteArray(R"(<svg><path d="a 2 1e-212.....">)"));
 }
 
 void tst_QSvgRenderer::illegalAnimateTransform_data()
 {
     QTest::addColumn<QByteArray>("svg");
 
-    QTest::newRow("case1") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" values=\"8,0,5,0\">");
-    QTest::newRow("case2") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" values=\"1,2\">");
-    QTest::newRow("case3") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" from=\".. 5 2\" to=\"f\">");
-    QTest::newRow("case4") << QByteArray("<svg><animateTransform type=\"scale\" begin=\"1\" dur=\"2\" by=\"--,..\">");
+    QTest::newRow("case1") << QByteArray(R"(<svg><animateTransform type="rotate" begin="1" dur="2" values="8,0,5,0">)");
+    QTest::newRow("case2") << QByteArray(R"(<svg><animateTransform type="rotate" begin="1" dur="2" values="1,2">)");
+    QTest::newRow("case3") << QByteArray(R"(<svg><animateTransform type="rotate" begin="1" dur="2" from=".. 5 2" to="f">)");
+    QTest::newRow("case4") << QByteArray(R"(<svg><animateTransform type="scale" begin="1" dur="2" by="--,..">)");
 }
 
 void tst_QSvgRenderer::illegalAnimateTransform()
