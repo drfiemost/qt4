@@ -110,22 +110,22 @@ static uint hash(const QChar *p, int n, uint seed)
     return h;
 }
 
-uint qHash(const QByteArray &key, uint seed) noexcept
+uint qHash(const QByteArray &key, uint seed)
 {
     return hash(reinterpret_cast<const uchar *>(key.constData()), key.size(), seed);
 }
 
-uint qHash(const QString &key, uint seed) noexcept
+uint qHash(const QString &key, uint seed)
 {
     return hash(key.unicode(), key.size(), seed);
 }
 
-uint qHash(const QStringRef &key, uint seed) noexcept
+uint qHash(const QStringRef &key, uint seed)
 {
     return hash(key.unicode(), key.size(), seed);
 }
 
-uint qHash(const QBitArray &bitArray, uint seed) noexcept
+uint qHash(const QBitArray &bitArray, uint seed)
 {
     int m = bitArray.d.size() - 1;
     uint result = hash(reinterpret_cast<const uchar *>(bitArray.d.constData()), std::max(0, m), seed);
@@ -138,7 +138,7 @@ uint qHash(const QBitArray &bitArray, uint seed) noexcept
     return result;
 }
 
-uint qHash(QLatin1String key, uint seed) noexcept
+uint qHash(QLatin1String key, uint seed)
 {
     return hash(reinterpret_cast<const uchar *>(key.data()), key.size(), seed);
 }
@@ -229,7 +229,7 @@ static void qt_initialize_qhash_seed()
     results.
     This function must *never* change its results.
 */
-uint qt_hash(const QString &key) noexcept
+uint qt_hash(const QString &key)
 {
     const QChar *p = key.unicode();
     int n = key.size();
@@ -361,6 +361,7 @@ QHashData *QHashData::detach_helper(void (*node_duplicate)(Node *, void *),
                         QT_RETHROW;
                     }
 
+                    dup->h = oldNode->h;
                     *nextNode = dup;
                     nextNode = &dup->next;
                     oldNode = oldNode->next;
@@ -1334,19 +1335,6 @@ void QHashData::checkSanity()
     This function is provided for STL compatibility. It is equivalent
     to isEmpty(), returning true if the hash is empty; otherwise
     returns false.
-*/
-
-/*! \fn QPair<iterator, iterator> QHash::equal_range(const Key &key)
-    \since 5.7
-
-    Returns a pair of iterators delimiting the range of values \c{[first, second)}, that
-    are stored under \a key. If the range is empty then both iterators will be equal to end().
-*/
-
-/*!
-    \fn QPair<const_iterator, const_iterator> QHash::equal_range(const Key &key) const
-    \overload
-    \since 5.7
 */
 
 /*! \typedef QHash::ConstIterator

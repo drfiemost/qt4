@@ -55,13 +55,21 @@ QT_BEGIN_NAMESPACE
 template <typename T>
 inline constexpr bool qIsRelocatable()
 {
+#if defined(Q_CC_CLANG) || !defined(Q_CC_GNU) || Q_CC_GNU >= 501
     return std::is_trivially_copyable<T>::value && std::is_trivially_destructible<T>::value;
+#else
+    return std::is_enum<T>::value || std::is_integral<T>::value;
+#endif
 }
 
 template <typename T>
 inline constexpr bool qIsTrivial()
 {
+#if defined(Q_CC_CLANG) || !defined(Q_CC_GNU) || Q_CC_GNU >= 501
     return std::is_trivial<T>::value;
+#else
+    return std::is_enum<T>::value || std::is_integral<T>::value;
+#endif
 }
 
 /*
@@ -78,6 +86,7 @@ public:
         isComplex = !qIsTrivial<T>(),
         isStatic = true,
         isLarge = (sizeof(T)>sizeof(void*)),
+        isDummy = false,
         sizeOf = sizeof(T)
     };
 };
@@ -91,6 +100,7 @@ public:
         isComplex = false,
         isStatic = false,
         isLarge = false,
+        isDummy = false,
         sizeOf = 0
     };
 };
@@ -105,6 +115,7 @@ public:
         isComplex = false,
         isStatic = false,
         isLarge = false,
+        isDummy = false,
         sizeOf = sizeof(T*)
     };
 };
@@ -132,6 +143,7 @@ public:
         isStatic = QTypeInfo<T1>::isStatic || QTypeInfo<T2>::isStatic || QTypeInfo<T3>::isStatic || QTypeInfo<T4>::isStatic,
         isLarge = sizeof(T) > sizeof(void*),
         isPointer = false,
+        isDummy = false,
         sizeOf = sizeof(T)
     };
 };
@@ -163,6 +175,7 @@ public: \
         isLarge = (sizeof(TYPE)>sizeof(void*)), \
         isPointer = false, \
         isIntegral = std::is_integral< TYPE >::value, \
+        isDummy = (((FLAGS) & Q_DUMMY_TYPE) != 0), \
         sizeOf = sizeof(TYPE) \
     }; \
     static inline const char *name() { return #TYPE; } \

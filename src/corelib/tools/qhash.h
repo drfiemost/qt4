@@ -48,9 +48,6 @@
 #include <QtCore/qpair.h>
 #include <QtCore/qrefcount.h>
 
-#include <algorithm>
-#include <utility>
-
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -61,14 +58,14 @@ class QByteArray;
 class QString;
 class QStringRef;
 
-constexpr inline uint qHash(char key, uint seed = 0) noexcept { return uint(key) ^ seed; }
-constexpr inline uint qHash(uchar key, uint seed = 0) noexcept { return uint(key) ^ seed; }
-constexpr inline uint qHash(signed char key, uint seed = 0) noexcept { return uint(key) ^ seed; }
-constexpr inline uint qHash(ushort key, uint seed = 0) noexcept { return uint(key) ^ seed; }
-constexpr inline uint qHash(short key, uint seed = 0) noexcept { return uint(key) ^ seed; }
-constexpr inline uint qHash(uint key, uint seed = 0) noexcept { return key ^ seed; }
-constexpr inline uint qHash(int key, uint seed = 0) noexcept { return uint(key) ^ seed; }
-inline uint qHash(ulong key, uint seed = 0) noexcept
+inline uint qHash(char key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(uchar key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(signed char key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(ushort key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(short key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(uint key, uint seed = 0) { return key ^ seed; }
+inline uint qHash(int key, uint seed = 0) { return uint(key) ^ seed; }
+inline uint qHash(ulong key, uint seed = 0)
 {
     if (sizeof(ulong) > sizeof(uint)) {
         return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
@@ -76,19 +73,23 @@ inline uint qHash(ulong key, uint seed = 0) noexcept
         return uint(key & (~0U)) ^ seed;
     }
 }
-inline uint qHash(long key, uint seed = 0) noexcept { return qHash(ulong(key), seed); }
-constexpr inline uint qHash(quint64 key, uint seed = 0) noexcept
+inline uint qHash(long key, uint seed = 0) { return qHash(ulong(key), seed); }
+inline uint qHash(quint64 key, uint seed = 0)
 {
-    return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
+    if (sizeof(quint64) > sizeof(uint)) {
+        return uint(((key >> (8 * sizeof(uint) - 1)) ^ key) & (~0U)) ^ seed;
+    } else {
+        return uint(key & (~0U)) ^ seed;
+    }
 }
-constexpr inline uint qHash(qint64 key, uint seed = 0) noexcept { return qHash(quint64(key), seed); }
-inline uint qHash(QChar key, uint seed = 0) noexcept { return qHash(key.unicode(), seed); }
-Q_CORE_EXPORT uint qHash(const QByteArray &key, uint seed = 0) noexcept;
-Q_CORE_EXPORT uint qHash(const QString &key, uint seed = 0) noexcept;
-Q_CORE_EXPORT uint qHash(const QStringRef &key, uint seed = 0) noexcept;
-Q_CORE_EXPORT uint qHash(const QBitArray &key, uint seed = 0) noexcept;
-Q_CORE_EXPORT uint qHash(QLatin1String key, uint seed = 0) noexcept;
-Q_CORE_EXPORT uint qt_hash(const QString &key) noexcept;
+inline uint qHash(qint64 key, uint seed = 0) { return qHash(quint64(key), seed); }
+inline uint qHash(QChar key, uint seed = 0) { return qHash(key.unicode(), seed); }
+Q_CORE_EXPORT uint qHash(const QByteArray &key, uint seed = 0);
+Q_CORE_EXPORT uint qHash(const QString &key, uint seed = 0);
+Q_CORE_EXPORT uint qHash(const QStringRef &key, uint seed = 0);
+Q_CORE_EXPORT uint qHash(const QBitArray &key, uint seed = 0);
+Q_CORE_EXPORT uint qHash(QLatin1String key, uint seed = 0);
+Q_CORE_EXPORT uint qt_hash(const QString &key);
 
 #if defined(Q_CC_MSVC)
 #pragma warning( push )
@@ -102,14 +103,14 @@ template <class T> inline uint qHash(const T *key, uint seed = 0)
 #pragma warning( pop )
 #endif
 
-template<typename T> inline uint qHash(const T &t, uint seed) { return (qHash(t) ^ seed); }
-
 template <typename T1, typename T2> inline uint qHash(const QPair<T1, T2> &key, uint seed = 0)
 {
     uint h1 = qHash(key.first, seed);
     uint h2 = qHash(key.second, seed);
     return ((h1 << 16) | (h1 >> 16)) ^ h2 ^ seed;
 }
+
+template<typename T> inline uint qHash(const T &t, uint seed) { return (qHash(t) ^ seed); }
 
 struct Q_CORE_EXPORT QHashData
 {
@@ -196,54 +197,28 @@ inline bool operator==(const QHashDummyValue & /* v1 */, const QHashDummyValue &
 Q_DECLARE_TYPEINFO(QHashDummyValue, Q_MOVABLE_TYPE | Q_DUMMY_TYPE);
 
 template <class Key, class T>
+struct QHashDummyNode
+{
+    QHashDummyNode *next;
+    uint h;
+    Key key;
+
+    inline QHashDummyNode(const Key &key0) : key(key0) {}
+};
+
+template <class Key, class T>
 struct QHashNode
 {
     QHashNode *next;
-    const uint h;
-    const Key key;
+    uint h;
+    Key key;
     T value;
 
-    inline QHashNode(const Key &key0, const T &value0, uint hash, QHashNode *n)
-        : next(n), h(hash), key(key0), value(value0) {}
-    inline bool same_key(uint h0, const Key &key0) const { return h0 == h && key0 == key; }
-
-private:
-    Q_DISABLE_COPY(QHashNode)
-};
-
-// Specialize for QHashDummyValue in order to save some memoryMore actions
-template <class Key>
-struct QHashNode<Key, QHashDummyValue>
-{
-    union {
-        QHashNode *next;
-        QHashDummyValue value;
-    };
-    const uint h;
-    const Key key;
-
-    inline QHashNode(const Key &key0, const QHashDummyValue &, uint hash, QHashNode *n)
-        : next(n), h(hash), key(key0) {}
-    inline bool same_key(uint h0, const Key &key0) const { return h0 == h && key0 == key; }
-
-private:
-    Q_DISABLE_COPY(QHashNode)
+    inline QHashNode(const Key &key0, const T &value0) : key(key0), value(value0) {}
+    inline bool same_key(uint h0, const Key &key0) { return h0 == h && key0 == key; }
 };
 
 
-#if 0
-// ###
-// The introduction of the QHash random seed breaks this optimization, as it
-// relies on qHash(int i) = i. If the hash value is salted, then the hash
-// table becomes corrupted.
-//
-// A bit more research about whether it makes sense or not to salt integer
-// keys (and in general keys whose hash value is easy to invert)
-// is needed, or about how keep this optimization and the seed (f.i. by
-// specializing QHash for integer values, and re-apply the seed during lookup).
-//
-// Be aware that such changes can easily be binary incompatible, and therefore
-// cannot be made during the Qt 5 lifetime.
 #define Q_HASH_DECLARE_INT_NODES(key_type) \
     template <class T> \
     struct QHashDummyNode<key_type, T> { \
@@ -261,7 +236,7 @@ private:
 \
         inline QHashNode(key_type /* key0 */) {} \
         inline QHashNode(key_type /* key0 */, const T &value0) : value(value0) {} \
-        inline bool same_key(uint h0, key_type) const { return h0 == h; } \
+        inline bool same_key(uint h0, key_type) { return h0 == h; } \
     }
 
 #if defined(Q_BYTE_ORDER) && Q_BYTE_ORDER == Q_LITTLE_ENDIAN
@@ -271,12 +246,12 @@ Q_HASH_DECLARE_INT_NODES(ushort);
 Q_HASH_DECLARE_INT_NODES(int);
 Q_HASH_DECLARE_INT_NODES(uint);
 #undef Q_HASH_DECLARE_INT_NODES
-#endif // #if 0
 
 template <class Key, class T>
 class QHash
 {
-    using Node = QHashNode<Key, T>;
+    typedef QHashDummyNode<Key, T> DummyNode;
+    typedef QHashNode<Key, T> Node;
 
     union {
         QHashData *d;
@@ -288,6 +263,7 @@ class QHash
     }
 
     static inline int alignOfNode() { return std::max<int>(sizeof(void*), Q_ALIGNOF(Node)); }
+    static inline int alignOfDummyNode() { return std::max<int>(sizeof(void*), Q_ALIGNOF(DummyNode)); }
 
 public:
     inline QHash() : d(const_cast<QHashData *>(&QHashData::shared_null)) { }
@@ -403,7 +379,6 @@ public:
     class const_iterator
     {
         friend class iterator;
-        friend class QHash<Key, T>;
         QHashData::Node *i;
 
     public:
@@ -470,9 +445,6 @@ public:
     inline iterator end() { detach(); return iterator(e); }
     inline const_iterator end() const { return const_iterator(e); }
     inline const_iterator constEnd() const { return const_iterator(e); }
-
-    QPair<iterator, iterator> equal_range(const Key &key);
-    QPair<const_iterator, const_iterator> equal_range(const Key &key) const noexcept;
     iterator erase(iterator it);
 
     // more Qt
@@ -528,14 +500,27 @@ template <class Key, class T>
 Q_INLINE_TEMPLATE void QHash<Key, T>::duplicateNode(QHashData::Node *node, void *newNode)
 {
     Node *concreteNode = concrete(node);
-    new (newNode) Node(concreteNode->key, concreteNode->value, concreteNode->h, 0);
+    if (QTypeInfo<T>::isDummy) {
+        (void) new (newNode) DummyNode(concreteNode->key);
+    } else {
+        (void) new (newNode) Node(concreteNode->key, concreteNode->value);
+    }
 }
 
 template <class Key, class T>
 Q_INLINE_TEMPLATE typename QHash<Key, T>::Node *
 QHash<Key, T>::createNode(uint ah, const Key &akey, const T &avalue, Node **anextNode)
 {
-    Node *node = new (d->allocateNode(alignOfNode())) Node(akey, avalue, ah, *anextNode);
+    Node *node;
+
+    if (QTypeInfo<T>::isDummy) {
+        node = reinterpret_cast<Node *>(new (d->allocateNode(alignOfDummyNode())) DummyNode(akey));
+    } else {
+        node = new (d->allocateNode(alignOfNode())) Node(akey, avalue);
+    }
+
+    node->h = ah;
+    node->next = *anextNode;
     *anextNode = node;
     ++d->size;
     return node;
@@ -568,7 +553,9 @@ Q_INLINE_TEMPLATE void QHash<Key, T>::clear()
 template <class Key, class T>
 Q_OUTOFLINE_TEMPLATE void QHash<Key, T>::detach_helper()
 {
-    QHashData *x = d->detach_helper(duplicateNode, deleteNode2, sizeof(Node), alignOfNode());
+    QHashData *x = d->detach_helper(duplicateNode, deleteNode2,
+        QTypeInfo<T>::isDummy ? sizeof(DummyNode) : sizeof(Node),
+        QTypeInfo<T>::isDummy ? alignOfDummyNode() : alignOfNode());
     if (!d->ref.deref())
         freeData(d);
     d = x;
@@ -750,7 +737,7 @@ Q_INLINE_TEMPLATE typename QHash<Key, T>::iterator QHash<Key, T>::insert(const K
         return iterator(createNode(h, akey, avalue, node));
     }
 
-    if constexpr (!std::is_same<T, QHashDummyValue>::value)
+    if (!QTypeInfo<T>::isDummy)
         (*node)->value = avalue;
     return iterator(*node);
 }
@@ -816,22 +803,6 @@ Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::iterator QHash<Key, T>::erase(itera
     if (it == iterator(e))
         return it;
 
-    if (d->ref.isShared()) {
-        int bucketNum = (it.i->h % d->numBuckets);
-        iterator bucketIterator(*(d->buckets + bucketNum));
-        int stepsFromBucketStartToIte = 0;
-        while (bucketIterator != it) {
-            ++stepsFromBucketStartToIte;
-            ++bucketIterator;
-        }
-        detach();
-        it = iterator(*(d->buckets + bucketNum));
-        while (stepsFromBucketStartToIte > 0) {
-            --stepsFromBucketStartToIte;
-            ++it;
-        }
-    }
-
     iterator ret = it;
     ++ret;
 
@@ -885,7 +856,7 @@ Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(cons
     uint h = 0;
 
     if (d->numBuckets || ahp) {
-        h = qHash(akey, d->seed);
+        h = qHash(akey, 0);
         if (ahp)
             *ahp = h;
     }
@@ -911,58 +882,19 @@ Q_OUTOFLINE_TEMPLATE bool QHash<Key, T>::operator==(const QHash<Key, T> &other) 
     const_iterator it = begin();
 
     while (it != end()) {
-        // Build two equal ranges for i.key(); one for *this and one for other.
-        // For *this we can avoid a lookup via equal_range, as we know the beginning of the range.
-        auto thisEqualRangeEnd = it;
-        while (thisEqualRangeEnd != end() && it.key() == thisEqualRangeEnd.key())
-            ++thisEqualRangeEnd;
+        const Key &akey = it.key();
 
-        const auto otherEqualRange = other.equal_range(it.key());
-
-        if (std::distance(it, thisEqualRangeEnd) != std::distance(otherEqualRange.first, otherEqualRange.second))
-            return false;
-
-        // Keys in the ranges are equal by construction; this checks only the values.
-        if (!std::is_permutation(it, thisEqualRangeEnd, otherEqualRange.first))
-            return false;
-
-        it = thisEqualRangeEnd;
+        const_iterator it2 = other.find(akey);
+        do {
+            if (it2 == other.end() || !(it2.key() == akey))
+                return false;
+            if (!QTypeInfo<T>::isDummy && !(it.value() == it2.value()))
+                return false;
+            ++it;
+            ++it2;
+        } while (it != end() && it.key() == akey);
     }
-
     return true;
-}
-
-template <class Key, class T>
-QPair<typename QHash<Key, T>::iterator, typename QHash<Key, T>::iterator> QHash<Key, T>::equal_range(const Key &akey)
-{
-    detach();
-    auto pair = std::as_const(*this).equal_range(akey);
-    return qMakePair(iterator(pair.first.i), iterator(pair.second.i));
-}
-
-template <class Key, class T>
-QPair<typename QHash<Key, T>::const_iterator, typename QHash<Key, T>::const_iterator> QHash<Key, T>::equal_range(const Key &akey) const noexcept
-{
-    uint h;
-    Node *node = *findNode(akey, &h);
-    const_iterator firstIt = const_iterator(node);
-
-    if (node != e) {
-        // equal keys must hash to the same value and so they all
-        // end up in the same bucket. So we can use node->next,
-        // which only works within a bucket, instead of (out-of-line)
-        // QHashData::nextNode()
-        while (node->next != e && node->next->key == akey)
-            node = node->next;
-
-        // 'node' may be the last node in the bucket. To produce the end iterator, we'd
-        // need to enter the next bucket in this case, so we need to use
-        // QHashData::nextNode() here, which, unlike node->next above, can move between
-        // buckets.
-        node = concrete(QHashData::nextNode(reinterpret_cast<QHashData::Node *>(node)));
-    }
-
-    return qMakePair(firstIt, const_iterator(node));
 }
 
 template <class Key, class T>

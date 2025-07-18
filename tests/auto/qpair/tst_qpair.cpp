@@ -101,6 +101,7 @@ static_assert(!QTypeInfo<QPairPM>::isStatic );
 static_assert(!QTypeInfo<QPairPP>::isComplex);
 static_assert(!QTypeInfo<QPairPP>::isStatic );
 
+static_assert(!QTypeInfo<QPairPP>::isDummy  );
 static_assert(!QTypeInfo<QPairPP>::isPointer);
 
 void tst_QPair::pairOfReferences()
