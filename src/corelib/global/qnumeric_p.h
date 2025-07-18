@@ -55,142 +55,62 @@
 
 #include "QtCore/qglobal.h"
 
+#include <cmath>
+#include <limits>
+
 QT_BEGIN_NAMESPACE
 
-#if !defined(Q_CC_MIPS)
-
-static const union { unsigned char c[8]; double d; } qt_be_inf_bytes = { { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 } };
-static const union { unsigned char c[8]; double d; } qt_le_inf_bytes = { { 0, 0, 0, 0, 0, 0, 0xf0, 0x7f } };
-static inline double qt_inf()
+constexpr static inline double qt_inf()
 {
-    return (QSysInfo::ByteOrder == QSysInfo::BigEndian
-            ? qt_be_inf_bytes.d
-            : qt_le_inf_bytes.d);
+    static_assert(std::numeric_limits<double>::has_infinity,
+                  "platform has no definition for infinity for type double");
+    return std::numeric_limits<double>::infinity();
 }
 
 // Signaling NAN
-static const union { unsigned char c[8]; double d; } qt_be_snan_bytes = { { 0x7f, 0xf8, 0, 0, 0, 0, 0, 0 } };
-static const union { unsigned char c[8]; double d; } qt_le_snan_bytes = { { 0, 0, 0, 0, 0, 0, 0xf8, 0x7f } };
-static inline double qt_snan()
+constexpr static inline double qt_snan()
 {
-    return (QSysInfo::ByteOrder == QSysInfo::BigEndian
-            ? qt_be_snan_bytes.d
-            : qt_le_snan_bytes.d);
+    static_assert(std::numeric_limits<double>::has_signaling_NaN,
+                  "platform has no definition for signaling NaN for type double");
+    return std::numeric_limits<double>::signaling_NaN();
 }
 
 // Quiet NAN
-static const union { unsigned char c[8]; double d; } qt_be_qnan_bytes = { { 0xff, 0xf8, 0, 0, 0, 0, 0, 0 } };
-static const union { unsigned char c[8]; double d; } qt_le_qnan_bytes = { { 0, 0, 0, 0, 0, 0, 0xf8, 0xff } };
-static inline double qt_qnan()
+constexpr static inline double qt_qnan()
 {
-    return (QSysInfo::ByteOrder == QSysInfo::BigEndian
-            ? qt_be_qnan_bytes.d
-            : qt_le_qnan_bytes.d);
+    static_assert(std::numeric_limits<double>::has_quiet_NaN,
+                  "platform has no definition for quiet NaN for type double");
+    return std::numeric_limits<double>::quiet_NaN();
 }
-
-#else // Q_CC_MIPS
-
-static const unsigned char qt_be_inf_bytes[] = { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 };
-static const unsigned char qt_le_inf_bytes[] = { 0, 0, 0, 0, 0, 0, 0xf0, 0x7f };
-static inline double qt_inf()
-{
-    const unsigned char *bytes = (QSysInfo::ByteOrder == QSysInfo::BigEndian
-             ? qt_be_inf_bytes
-             : qt_le_inf_bytes);
-
-    union { unsigned char c[8]; double d; } returnValue;
-    std::memcpy(returnValue.c, bytes, sizeof(returnValue.c));
-    return returnValue.d;
-}
-
-// Signaling NAN
-static const unsigned char qt_be_snan_bytes[] = { 0x7f, 0xf8, 0, 0, 0, 0, 0, 0 };
-static const unsigned char qt_le_snan_bytes[] = { 0, 0, 0, 0, 0, 0, 0xf8, 0x7f };
-static inline double qt_snan()
-{
-    const unsigned char *bytes = (QSysInfo::ByteOrder == QSysInfo::BigEndian
-             ? qt_be_snan_bytes
-             : qt_le_snan_bytes);
-
-    union { unsigned char c[8]; double d; } returnValue;
-    std::memcpy(returnValue.c, bytes, sizeof(returnValue.c));
-    return returnValue.d;
-}
-
-// Quiet NAN
-static const unsigned char qt_be_qnan_bytes[] = { 0xff, 0xf8, 0, 0, 0, 0, 0, 0 };
-static const unsigned char qt_le_qnan_bytes[] = { 0, 0, 0, 0, 0, 0, 0xf8, 0xff };
-static inline double qt_qnan()
-{
-    const unsigned char *bytes = (QSysInfo::ByteOrder == QSysInfo::BigEndian
-             ? qt_be_qnan_bytes
-             : qt_le_qnan_bytes);
-
-    union { unsigned char c[8]; double d; } returnValue;
-    std::memcpy(returnValue.c, bytes, sizeof(returnValue.c));
-    return returnValue.d;
-}
-
-#endif // Q_CC_MIPS
 
 static inline bool qt_is_inf(double d)
 {
-    uchar *ch = (uchar *)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[0] & 0x7f) == 0x7f && ch[1] == 0xf0;
-    } else {
-        return (ch[7] & 0x7f) == 0x7f && ch[6] == 0xf0;
-    }
+    return std::isinf(d);
 }
 
 static inline bool qt_is_nan(double d)
 {
-    uchar *ch = (uchar *)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[0] & 0x7f) == 0x7f && ch[1] > 0xf0;
-    } else {
-        return (ch[7] & 0x7f) == 0x7f && ch[6] > 0xf0;
-    }
+    return std::isnan(d);
 }
 
 static inline bool qt_is_finite(double d)
 {
-    uchar *ch = (uchar *)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[0] & 0x7f) != 0x7f || (ch[1] & 0xf0) != 0xf0;
-    } else {
-        return (ch[7] & 0x7f) != 0x7f || (ch[6] & 0xf0) != 0xf0;
-    }
+    return std::isfinite(d);
 }
 
 static inline bool qt_is_inf(float d)
 {
-    uchar *ch = (uchar *)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[0] & 0x7f) == 0x7f && ch[1] == 0x80;
-    } else {
-        return (ch[3] & 0x7f) == 0x7f && ch[2] == 0x80;
-    }
+    return std::isinf(d);
 }
 
 static inline bool qt_is_nan(float d)
 {
-    uchar *ch = (uchar *)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[0] & 0x7f) == 0x7f && ch[1] > 0x80;
-    } else {
-        return (ch[3] & 0x7f) == 0x7f && ch[2] > 0x80;
-    }
+    return std::isnan(d);
 }
 
 static inline bool qt_is_finite(float d)
 {
-    uchar *ch = (uchar *)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[0] & 0x7f) != 0x7f || (ch[1] & 0x80) != 0x80;
-    } else {
-        return (ch[3] & 0x7f) != 0x7f || (ch[2] & 0x80) != 0x80;
-    }
+    return std::isfinite(d);
 }
 
 QT_END_NAMESPACE
