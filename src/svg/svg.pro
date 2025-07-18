@@ -22,7 +22,8 @@ HEADERS += \
 	qsvgrenderer.h          \
         qsvgwidget.h            \
         qgraphicssvgitem.h      \
-        qsvggenerator.h
+        qsvggenerator.h     \
+    qsvgutils_p.h
 
 
 SOURCES += \
@@ -36,7 +37,8 @@ SOURCES += \
 	qsvgrenderer.cpp        \
         qsvgwidget.cpp          \
         qgraphicssvgitem.cpp    \
-        qsvggenerator.cpp
+        qsvggenerator.cpp   \
+    qsvgutils.cpp
 
 INCLUDEPATH += ../3rdparty/harfbuzz/src
 
