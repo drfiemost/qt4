@@ -55,21 +55,13 @@ QT_BEGIN_NAMESPACE
 template <typename T>
 inline constexpr bool qIsRelocatable()
 {
-#if defined(Q_CC_CLANG) || !defined(Q_CC_GNU) || Q_CC_GNU >= 501
     return std::is_trivially_copyable<T>::value && std::is_trivially_destructible<T>::value;
-#else
-    return std::is_enum<T>::value || std::is_integral<T>::value;
-#endif
 }
 
 template <typename T>
 inline constexpr bool qIsTrivial()
 {
-#if defined(Q_CC_CLANG) || !defined(Q_CC_GNU) || Q_CC_GNU >= 501
     return std::is_trivial<T>::value;
-#else
-    return std::is_enum<T>::value || std::is_integral<T>::value;
-#endif
 }
 
 /*
