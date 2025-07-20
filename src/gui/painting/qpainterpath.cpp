@@ -108,7 +108,7 @@ struct QPainterPathPrivateDeleter
 
 // #define QPP_DEBUG
 // #define QPP_STROKE_DEBUG
-//#define QPP_FILLPOLYGONS_DEBUG
+// #define QPP_FILLPOLYGONS_DEBUG
 
 QPainterPath qt_stroke_dash(const QPainterPath &path, qreal *dashes, int dashCount);
 
@@ -681,7 +681,7 @@ void QPainterPath::closeSubpath()
 void QPainterPath::moveTo(const QPointF &p)
 {
 #ifdef QPP_DEBUG
-    printf("QPainterPath::moveTo() (%.2f,%.2f)\n", p.x(), p.y());
+    printf("QPainterPath::moveTo() (%.2f;%.2f)\n", p.x(), p.y());
 #endif
 
     if (!hasValidCoords(p)) {
@@ -731,7 +731,7 @@ void QPainterPath::moveTo(const QPointF &p)
 void QPainterPath::lineTo(const QPointF &p)
 {
 #ifdef QPP_DEBUG
-    printf("QPainterPath::lineTo() (%.2f,%.2f)\n", p.x(), p.y());
+    printf("QPainterPath::lineTo() (%.2f;%.2f)\n", p.x(), p.y());
 #endif
 
     if (!hasValidCoords(p)) {
@@ -789,7 +789,7 @@ void QPainterPath::lineTo(const QPointF &p)
 void QPainterPath::cubicTo(const QPointF &c1, const QPointF &c2, const QPointF &e)
 {
 #ifdef QPP_DEBUG
-    printf("QPainterPath::cubicTo() (%.2f,%.2f), (%.2f,%.2f), (%.2f,%.2f)\n",
+    printf("QPainterPath::cubicTo() (%.2f;%.2f), (%.2f;%.2f), (%.2f;%.2f)\n",
            c1.x(), c1.y(), c2.x(), c2.y(), e.x(), e.y());
 #endif
 
@@ -845,7 +845,7 @@ void QPainterPath::cubicTo(const QPointF &c1, const QPointF &c2, const QPointF &
 void QPainterPath::quadTo(const QPointF &c, const QPointF &e)
 {
 #ifdef QPP_DEBUG
-    printf("QPainterPath::quadTo() (%.2f,%.2f), (%.2f,%.2f)\n",
+    printf("QPainterPath::quadTo() (%.2f;%.2f), (%.2f;%.2f)\n",
            c.x(), c.y(), e.x(), e.y());
 #endif
 
