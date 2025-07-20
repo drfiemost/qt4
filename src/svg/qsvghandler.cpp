@@ -1277,28 +1277,22 @@ static void pathArcSegment(QPainterPath &path,
                            qreal th0, qreal th1,
                            qreal rx, qreal ry, qreal xAxisRotation)
 {
-    qreal sinTh, cosTh;
-    qreal a00, a01, a10, a11;
-    qreal x1, y1, x2, y2, x3, y3;
-    qreal t;
-    qreal thHalf;
+    qreal sinTh = qSin(xAxisRotation * (Q_PI / 180.0));
+    qreal cosTh = qCos(xAxisRotation * (Q_PI / 180.0));
 
-    sinTh = qSin(xAxisRotation * (Q_PI / 180.0));
-    cosTh = qCos(xAxisRotation * (Q_PI / 180.0));
+    qreal a00 =  cosTh * rx;
+    qreal a01 = -sinTh * ry;
+    qreal a10 =  sinTh * rx;
+    qreal a11 =  cosTh * ry;
 
-    a00 =  cosTh * rx;
-    a01 = -sinTh * ry;
-    a10 =  sinTh * rx;
-    a11 =  cosTh * ry;
-
-    thHalf = 0.5 * (th1 - th0);
-    t = (8.0 / 3.0) * qSin(thHalf * 0.5) * qSin(thHalf * 0.5) / qSin(thHalf);
-    x1 = xc + qCos(th0) - t * qSin(th0);
-    y1 = yc + qSin(th0) + t * qCos(th0);
-    x3 = xc + qCos(th1);
-    y3 = yc + qSin(th1);
-    x2 = x3 + t * qSin(th1);
-    y2 = y3 - t * qCos(th1);
+    qreal thHalf = 0.5 * (th1 - th0);
+    qreal t = (8.0 / 3.0) * qSin(thHalf * 0.5) * qSin(thHalf * 0.5) / qSin(thHalf);
+    qreal x1 = xc + qCos(th0) - t * qSin(th0);
+    qreal y1 = yc + qSin(th0) + t * qCos(th0);
+    qreal x3 = xc + qCos(th1);
+    qreal y3 = yc + qSin(th1);
+    qreal x2 = x3 + t * qSin(th1);
+    qreal y2 = y3 - t * qCos(th1);
 
     path.cubicTo(a00 * x1 + a01 * y1, a10 * x1 + a11 * y1,
                  a00 * x2 + a01 * y2, a10 * x2 + a11 * y2,
@@ -1347,69 +1341,61 @@ static void pathArc(QPainterPath &path,
     if (!Pr1 || !Pr2)
         return;
 
-    qreal sin_th, cos_th;
-    qreal a00, a01, a10, a11;
-    qreal x0, y0, x1, y1, xc, yc;
-    qreal d, sfactor, sfactor_sq;
-    qreal th0, th1, th_arc;
-    int i, n_segs;
-    qreal dx, dy, dx1, dy1, Px, Py, check;
-
     rx = std::abs(rx);
     ry = std::abs(ry);
 
-    sin_th = qSin(x_axis_rotation * (Q_PI / 180.0));
-    cos_th = qCos(x_axis_rotation * (Q_PI / 180.0));
+    qreal sin_th = qSin(x_axis_rotation * (Q_PI / 180.0));
+    qreal cos_th = qCos(x_axis_rotation * (Q_PI / 180.0));
 
-    dx = (curx - x) / 2.0;
-    dy = (cury - y) / 2.0;
-    dx1 =  cos_th * dx + sin_th * dy;
-    dy1 = -sin_th * dx + cos_th * dy;
-    Px = dx1 * dx1;
-    Py = dy1 * dy1;
+    qreal dx = (curx - x) / 2.0;
+    qreal dy = (cury - y) / 2.0;
+    qreal dx1 =  cos_th * dx + sin_th * dy;
+    qreal dy1 = -sin_th * dx + cos_th * dy;
+    qreal Px = dx1 * dx1;
+    qreal Py = dy1 * dy1;
     /* Spec : check if radii are large enough */
-    check = Px / Pr1 + Py / Pr2;
+    qreal check = Px / Pr1 + Py / Pr2;
     if (check > 1) {
         rx = rx * qSqrt(check);
         ry = ry * qSqrt(check);
     }
 
-    a00 =  cos_th / rx;
-    a01 =  sin_th / rx;
-    a10 = -sin_th / ry;
-    a11 =  cos_th / ry;
-    x0 = a00 * curx + a01 * cury;
-    y0 = a10 * curx + a11 * cury;
-    x1 = a00 * x + a01 * y;
-    y1 = a10 * x + a11 * y;
+    qreal a00 =  cos_th / rx;
+    qreal a01 =  sin_th / rx;
+    qreal a10 = -sin_th / ry;
+    qreal a11 =  cos_th / ry;
+    qreal x0 = a00 * curx + a01 * cury;
+    qreal y0 = a10 * curx + a11 * cury;
+    qreal x1 = a00 * x + a01 * y;
+    qreal y1 = a10 * x + a11 * y;
     /* (x0, y0) is current point in transformed coordinate space.
        (x1, y1) is new point in transformed coordinate space.
 
        The arc fits a unit-radius circle in this space.
     */
-    d = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0);
+    qreal d = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0);
     if (!d)
         return;
-    sfactor_sq = 1.0 / d - 0.25;
+    qreal sfactor_sq = 1.0 / d - 0.25;
     if (sfactor_sq < 0) sfactor_sq = 0;
-    sfactor = qSqrt(sfactor_sq);
+    qreal sfactor = qSqrt(sfactor_sq);
     if (sweep_flag == large_arc_flag) sfactor = -sfactor;
-    xc = 0.5 * (x0 + x1) - sfactor * (y1 - y0);
-    yc = 0.5 * (y0 + y1) + sfactor * (x1 - x0);
+    qreal xc = 0.5 * (x0 + x1) - sfactor * (y1 - y0);
+    qreal yc = 0.5 * (y0 + y1) + sfactor * (x1 - x0);
     /* (xc, yc) is center of the circle. */
 
-    th0 = qAtan2(y0 - yc, x0 - xc);
-    th1 = qAtan2(y1 - yc, x1 - xc);
+    qreal th0 = qAtan2(y0 - yc, x0 - xc);
+    qreal th1 = qAtan2(y1 - yc, x1 - xc);
 
-    th_arc = th1 - th0;
+    qreal th_arc = th1 - th0;
     if (th_arc < 0 && sweep_flag)
         th_arc += 2 * Q_PI;
     else if (th_arc > 0 && !sweep_flag)
         th_arc -= 2 * Q_PI;
 
-    n_segs = qCeil(std::abs(th_arc / (Q_PI * 0.5 + 0.001)));
+    int n_segs = qCeil(std::abs(th_arc / (Q_PI * 0.5 + 0.001)));
 
-    for (i = 0; i < n_segs; i++) {
+    for (int i = 0; i < n_segs; i++) {
         pathArcSegment(path, xc, yc,
                        th0 + i * th_arc / n_segs,
                        th0 + (i + 1) * th_arc / n_segs,
