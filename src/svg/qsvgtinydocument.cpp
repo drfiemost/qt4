@@ -95,7 +95,7 @@ static QByteArray qt_inflateSvgzDataFrom(QIODevice *device, bool doCheckContent)
 
     Q_ASSERT(device->isOpen() && device->isReadable());
 
-    static const int CHUNK_SIZE = 4096;
+    static constexpr int CHUNK_SIZE = 4096;
     int zlibResult = Z_OK;
 
     QByteArray source;
