@@ -109,7 +109,7 @@ inline qreal qAtan(qreal v)
     return atan(v);
 }
 
-inline qreal qAtan2(qreal x, qreal y)
+inline qreal qAtan2(qreal y, qreal x)
 {
     using std::atan2;
     return atan2(y, x);
