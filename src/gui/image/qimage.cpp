@@ -4458,7 +4458,8 @@ QColor QImage::pixelColor(int x, int y) const
     //case Format_A2RGB30_Premultiplied:
     //    return QColor(qConvertA2rgb30ToRgb64<PixelOrderRGB>(reinterpret_cast<const quint32 *>(s)[x]));
     default:
-        return QColor(pixel(x, y));
+        QRgb c = pixel(x, y);
+        return QColor(qRed(c), qGreen(c), qBlue(c), qAlpha(c));
     }
 }
 
