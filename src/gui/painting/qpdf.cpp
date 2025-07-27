@@ -1173,8 +1173,7 @@ void QPdfBaseEngine::updateState(const QPaintEngineState &state)
     } else if (flags & DirtyClipRegion) {
         d->clipEnabled = true;
         QPainterPath path;
-        QVector<QRect> rects = state.clipRegion().rects();
-        for (auto rect : rects)
+        for (const QRect &rect : state.clipRegion())
             path.addRect(rect);
         updateClipPath(path, state.clipOperation());
         flags |= DirtyClipPath;

@@ -363,8 +363,7 @@ void QBlitterPaintEnginePrivate::fillRect(const QRectF &rect, const QColor &colo
             else
                 pmData->blittable()->fillRect(targetRect & clipData->clipRect, color);
         } else if (clipData->hasRegionClip) {
-            QVector<QRect> rects = clipData->clipRegion.rects();
-            for (auto rect : rects) {
+            for (const QRect &rect : clipData->clipRegion) {
                 QRect intersectRect = rect.intersected(targetRect.toRect());
                 if (!intersectRect.isEmpty()) {
                     unlock();
@@ -592,12 +591,10 @@ void QBlitterPaintEngine::fillRect(const QRectF &rect, const QBrush &brush)
                     d->pmData->blittable()->drawPixmap(targetRect, pm, srcRect);
                 }
             } else if (clipData->hasRegionClip) {
-                QVector<QRect> clipRects = clipData->clipRegion.rects();
                 QRect unclippedTargetRect(x, y, blitWidth, blitHeight);
-                QRegion intersectedRects = clipData->clipRegion.intersected(unclippedTargetRect);
+                QRegion targetRegion = clipData->clipRegion.intersected(unclippedTargetRect);
 
-                for (int i = 0; i < intersectedRects.rects().size(); ++i) {
-                    QRect targetRect = intersectedRects.rects().at(i);
+                for (const QRect &targetRect : targetRegion) {
                     if (!targetRect.isValid() || targetRect.isEmpty())
                         continue;
                     int tmpSrcX = srcX + (targetRect.x() - x);
@@ -671,8 +668,7 @@ void QBlitterPaintEngine::drawPixmap(const QRectF &r, const QPixmap &pm, const Q
             if (clipData->hasRectClip) {
                 d->clipAndDrawPixmap(clipData->clipRect, targetRect, pm, sr, canDrawOpacity);
             } else if (clipData->hasRegionClip) {
-                QVector<QRect>rects = clipData->clipRegion.rects();
-                for (auto rect : rects)
+                for (const QRect &rect : clipData->clipRegion)
                     d->clipAndDrawPixmap(rect, targetRect, pm, sr, canDrawOpacity);
             }
         } else {

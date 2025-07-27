@@ -1295,7 +1295,6 @@ void QPainterPath::addRegion(const QRegion &region)
     ensureData();
     detach();
 
-    QVector<QRect> rects = region.rects();
     for (const QRect &rect : region)
         addRect(rect);
 }
