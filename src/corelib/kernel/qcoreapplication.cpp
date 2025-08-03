@@ -520,13 +520,6 @@ void QCoreApplication::flush()
     \a argc must be greater than zero and \a argv must contain at least
     one valid character string.
 */
-QCoreApplication::QCoreApplication(int &argc, char **argv)
-    : QObject(*new QCoreApplicationPrivate(argc, argv, 0x040000))
-{
-    init();
-    QCoreApplicationPrivate::eventDispatcher->startingUp();
-}
-
 QCoreApplication::QCoreApplication(int &argc, char **argv, int _internal)
 : QObject(*new QCoreApplicationPrivate(argc, argv, _internal))
 {

@@ -238,7 +238,7 @@ bool QEventDispatcherQPA::processEvents(QEventLoop::ProcessEventsFlags flags)
         }
         nevents++;
 
-        QApplicationPrivate::processWindowSystemEvent(event);
+        QGuiApplicationPrivate::processWindowSystemEvent(event);
         delete event;
     }
 

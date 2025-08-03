@@ -174,7 +174,7 @@ void QPlatformWindow::setOpacity(qreal level)
 */
 void QPlatformWindow::requestActivateWindow()
 {
-    QWindowSystemInterface::handleWindowActivated(window()->widget());
+    QWindowSystemInterface::handleWindowActivated(window());
 }
 
 /*!

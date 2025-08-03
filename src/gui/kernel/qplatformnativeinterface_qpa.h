@@ -49,12 +49,12 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 
-class QWidget;
+class QWindow;
 
 class Q_GUI_EXPORT QPlatformNativeInterface
 {
 public:
-    virtual void *nativeResourceForWidget(const QByteArray &resource, QWidget *widget);
+    virtual void *nativeResourceForWindow(const QByteArray &resource, QWindow *window);
 };
 
 QT_END_NAMESPACE

@@ -150,7 +150,7 @@ bool QApplicationPrivate::quitOnLastWindowClosed = true;
 bool QApplicationPrivate::autoSipEnabled = true;
 
 QApplicationPrivate::QApplicationPrivate(int &argc, char **argv, QApplication::Type type, int flags)
-    : QCoreApplicationPrivate(argc, argv, flags)
+    : QApplicationPrivateBase(argc, argv, flags)
 {
     application_type = type;
     qt_appType = type;
@@ -425,9 +425,6 @@ QPalette *QApplicationPrivate::sys_pal = nullptr;        // default system palet
 QPalette *QApplicationPrivate::set_pal = nullptr;        // default palette set by programmer
 
 QGraphicsSystem *QApplicationPrivate::graphics_system = nullptr; // default graphics system
-#if defined(Q_WS_QPA)
-QPlatformIntegration *QApplicationPrivate::platform_integration = 0;
-#endif
 QString QApplicationPrivate::graphics_system_name;         // graphics system id - for delayed initialization
 bool QApplicationPrivate::runtime_graphics_system = false;
 
@@ -688,11 +685,11 @@ void QApplicationPrivate::process_cmdline()
 */
 
 QApplication::QApplication(int &argc, char **argv)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, GuiClient, 0x040000))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, GuiClient, 0x040000))
 { Q_D(QApplication); d->construct(); }
 
 QApplication::QApplication(int &argc, char **argv, int _internal)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, GuiClient, _internal))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, GuiClient, _internal))
 { Q_D(QApplication); d->construct(); }
 
 
@@ -722,11 +719,11 @@ QApplication::QApplication(int &argc, char **argv, int _internal)
 */
 
 QApplication::QApplication(int &argc, char **argv, bool GUIenabled )
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, GUIenabled ? GuiClient : Tty, 0x040000))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, GUIenabled ? GuiClient : Tty, 0x040000))
 { Q_D(QApplication); d->construct(); }
 
 QApplication::QApplication(int &argc, char **argv, bool GUIenabled , int _internal)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, GUIenabled ? GuiClient : Tty, _internal))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, GUIenabled ? GuiClient : Tty, _internal))
 { Q_D(QApplication); d->construct();}
 
 
@@ -745,11 +742,11 @@ QApplication::QApplication(int &argc, char **argv, bool GUIenabled , int _intern
     \c -qws option).
 */
 QApplication::QApplication(int &argc, char **argv, Type type)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, type, 0x040000))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, type, 0x040000))
 { Q_D(QApplication); d->construct(); }
 
 QApplication::QApplication(int &argc, char **argv, Type type , int _internal)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, type, _internal))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, type, _internal))
 { Q_D(QApplication); d->construct(); }
 
 #if defined(Q_WS_X11) && !defined(QT_NO_EGL)
@@ -846,7 +843,7 @@ static char *aargv[] = { (char*)"unknown", nullptr };
     This function is only available on X11.
 */
 QApplication::QApplication(Display* dpy, Qt::HANDLE visual, Qt::HANDLE colormap)
-    : QCoreApplication(*new QApplicationPrivate(aargc, aargv, GuiClient, 0x040000))
+    : QApplicationBase(*new QApplicationPrivate(aargc, aargv, GuiClient, 0x040000))
 {
     if (! dpy)
         qWarning("QApplication: Invalid Display* argument");
@@ -855,7 +852,7 @@ QApplication::QApplication(Display* dpy, Qt::HANDLE visual, Qt::HANDLE colormap)
 }
 
 QApplication::QApplication(Display* dpy, Qt::HANDLE visual, Qt::HANDLE colormap, int _internal)
-    : QCoreApplication(*new QApplicationPrivate(aargc, aargv, GuiClient, _internal))
+    : QApplicationBase(*new QApplicationPrivate(aargc, aargv, GuiClient, _internal))
 {
     if (! dpy)
         qWarning("QApplication: Invalid Display* argument");
@@ -880,7 +877,7 @@ QApplication::QApplication(Display* dpy, Qt::HANDLE visual, Qt::HANDLE colormap,
 */
 QApplication::QApplication(Display *dpy, int &argc, char **argv,
                            Qt::HANDLE visual, Qt::HANDLE colormap)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, GuiClient, 0x040000))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, GuiClient, 0x040000))
 {
     if (! dpy)
         qWarning("QApplication: Invalid Display* argument");
@@ -890,7 +887,7 @@ QApplication::QApplication(Display *dpy, int &argc, char **argv,
 
 QApplication::QApplication(Display *dpy, int &argc, char **argv,
                            Qt::HANDLE visual, Qt::HANDLE colormap, int _internal)
-    : QCoreApplication(*new QApplicationPrivate(argc, argv, GuiClient, _internal))
+    : QApplicationBase(*new QApplicationPrivate(argc, argv, GuiClient, _internal))
 {
     if (! dpy)
         qWarning("QApplication: Invalid Display* argument");
@@ -1248,7 +1245,7 @@ bool QApplication::compressEvent(QEvent *event, QObject *receiver, QPostEventLis
         }
         return false;
     }
-    return QCoreApplication::compressEvent(event, receiver, postedEvents);
+    return QApplicationBase::compressEvent(event, receiver, postedEvents);
 }
 
 /*!
@@ -2422,7 +2419,7 @@ bool QApplication::event(QEvent *e)
             d->toolTipFallAsleep.stop();
         }
     }
-    return QCoreApplication::event(e);
+    return QApplicationBase::event(e);
 }
 #if !defined(Q_WS_X11)
 
@@ -2793,6 +2790,7 @@ bool QApplicationPrivate::isBlockedByModal(QWidget *widget)
     if (QApplication::activePopupWidget() == widget)
         return false;
 
+#if 0
     for (auto modalWidget : *qt_modal_stack) {
         {
             // check if the active modal widget is our widget or a parent of our widget
@@ -2869,6 +2867,7 @@ bool QApplicationPrivate::isBlockedByModal(QWidget *widget)
             break;
         }
     }
+#endif
     return false;
 }
 
@@ -3681,7 +3680,7 @@ int QApplication::exec()
 #ifndef QT_NO_ACCESSIBILITY
     QAccessible::setRootObject(qApp);
 #endif
-    return QCoreApplication::exec();
+    return QApplicationBase::exec();
 }
 
 /*! \reimp
@@ -5322,7 +5321,7 @@ uint QApplicationPrivate::currentPlatform(){
 
 bool qt_sendSpontaneousEvent(QObject *receiver, QEvent *event)
 {
-    return QCoreApplication::sendSpontaneousEvent(receiver, event);
+    return QApplicationBase::sendSpontaneousEvent(receiver, event);
 }
 
 
