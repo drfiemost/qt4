@@ -267,13 +267,7 @@ public:
         WindowContextHelpButtonHint = 0x00010000,
         WindowShadeButtonHint = 0x00020000,
         WindowStaysOnTopHint = 0x00040000,
-        // reserved for Qt3Support:
-        // WMouseNoMask = 0x00080000,
-        // WDestructiveClose = 0x00100000,
-        // WStaticContents = 0x00200000,
-        // WGroupLeader = 0x00400000,
-        // WShowModal = 0x00800000,
-        // WNoMousePropagation = 0x01000000,
+
         CustomizeWindowHint = 0x02000000,
         WindowStaysOnBottomHint = 0x04000000,
         WindowCloseButtonHint = 0x08000000,
