@@ -46,41 +46,12 @@
 #include "qplatformglcontext_qpa.h"
 #include "qwindowcontext_qpa.h"
 
+#include "qwindow_qpa_p.h"
 #include "qapplication_p.h"
 
 #include <QtCore/QDebug>
 
 QT_BEGIN_NAMESPACE
-
-class QWindowPrivate : public QObjectPrivate
-{
-public:
-    QWindowPrivate()
-        : QObjectPrivate()
-        , windowType(Qt::Window)
-        , surfaceType(QWindow::RasterSurface)
-        , platformWindow(nullptr)
-        , glContext(nullptr)
-        , widget(nullptr)
-    {
-
-    }
-
-    ~QWindowPrivate()
-    {
-
-    }
-
-    Qt::WindowFlags windowFlags;
-    QWindow::SurfaceType surfaceType;
-
-    QPlatformWindow *platformWindow;
-    QWindowFormat requestedFormat;
-    QString windowTitle;
-    QRect geometry;
-    QWindowContext *glContext;
-    QWidget *widget;
-};
 
 QWindow::QWindow(QWindow *parent)
     : QObject(*new QWindowPrivate(), parent)
@@ -90,18 +61,6 @@ QWindow::QWindow(QWindow *parent)
 QWindow::~QWindow()
 {
     destroy();
-}
-
-QWidget *QWindow::widget() const
-{
-    Q_D(const QWindow);
-    return d->widget;
-}
-
-void QWindow::setWidget(QWidget *widget)
-{
-    Q_D(QWindow);
-    d->widget = widget;
 }
 
 void QWindow::setVisible(bool visible)
@@ -330,6 +289,12 @@ QPlatformWindow *QWindow::handle() const
     return d->platformWindow;
 }
 
+QWindowSurface *QWindow::surface() const
+{
+    Q_D(const QWindow);
+    return d->surface;
+}
+
 void QWindow::showMinimized()
 {
     qDebug() << "unimplemented:" << __FILE__ << __LINE__;
@@ -359,7 +324,6 @@ bool QWindow::close()
 
 void QWindow::resizeEvent(QResizeEvent *)
 {
-    qDebug() << "unimplemented:" << __FILE__ << __LINE__;
 }
 
 void QWindow::showEvent(QShowEvent *)
@@ -376,20 +340,39 @@ bool QWindow::event(QEvent *event)
 {
     switch (event->type()) {
     case QEvent::MouseMove:
-        mouseMoveEvent((QMouseEvent*)event);
+        mouseMoveEvent(static_cast<QMouseEvent*>(event));
         break;
 
     case QEvent::MouseButtonPress:
-        mousePressEvent((QMouseEvent*)event);
+        mousePressEvent(static_cast<QMouseEvent*>(event));
         break;
 
     case QEvent::MouseButtonRelease:
-        mouseReleaseEvent((QMouseEvent*)event);
+        mouseReleaseEvent(static_cast<QMouseEvent*>(event));
         break;
 
     case QEvent::MouseButtonDblClick:
-        mouseDoubleClickEvent((QMouseEvent*)event);
+        mouseDoubleClickEvent(static_cast<QMouseEvent*>(event));
         break;
+
+    case QEvent::Resize:
+        resizeEvent(static_cast<QResizeEvent*>(event));
+        break;
+
+    case QEvent::KeyPress:
+        keyPressEvent(static_cast<QKeyEvent *>(event));
+        break;
+
+    case QEvent::KeyRelease:
+        keyReleaseEvent(static_cast<QKeyEvent *>(event));
+        break;
+
+#ifndef QT_NO_WHEELEVENT
+    case QEvent::Wheel:
+        wheelEvent(static_cast<QWheelEvent*>(event));
+        break;
+#endif
+
 
     default:
         return QObject::event(event);
@@ -399,7 +382,6 @@ bool QWindow::event(QEvent *event)
 
 void QWindow::keyPressEvent(QKeyEvent *)
 {
-
 }
 
 void QWindow::keyReleaseEvent(QKeyEvent *)

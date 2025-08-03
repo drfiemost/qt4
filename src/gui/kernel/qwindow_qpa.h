@@ -52,7 +52,6 @@ QT_BEGIN_NAMESPACE
 
 
 class QWindowPrivate;
-class QWidget;
 
 class QResizeEvent;
 class QShowEvent;
@@ -66,6 +65,7 @@ class QWheelEvent;
 
 class QPlatformWindow;
 class QWindowContext;
+class QWindowSurface;
 
 class Q_GUI_EXPORT QWindow : public QObject
 {
@@ -80,18 +80,18 @@ public:
         OpenGLSurface
     };
 
-    QWindow(QWindow *parent = 0);
+    QWindow(QWindow *parent = nullptr);
     virtual ~QWindow();
-
-    // to be removed at some point in the future
-    QWidget *widget() const;
-    void setWidget(QWidget *widget);
 
     void setVisible(bool visible);
     void create();
 
     WId winId() const;
+
+    QWindow *parent() const;
     void setParent(const QWindow *parent);
+
+    QWindow *topLevelWindow() const;
 
     void setWindowFormat(const QWindowFormat &format);
     QWindowFormat requestedWindowFormat() const;
@@ -130,6 +130,7 @@ public:
     void destroy();
 
     QPlatformWindow *handle() const;
+    QWindowSurface *surface() const;
 
 public Q_SLOTS:
     inline void show() { setVisible(true); }
@@ -172,6 +173,7 @@ private:
 
     friend class QGuiApplication;
     friend class QGuiApplicationPrivate;
+    friend class QWindowSurface;
 };
 
 QT_END_NAMESPACE

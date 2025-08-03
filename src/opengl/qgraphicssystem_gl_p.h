@@ -65,7 +65,7 @@ public:
     QGLGraphicsSystem(bool useX11GL);
 
     QPixmapData *createPixmapData(QPixmapData::PixelType type) const override;
-    QWindowSurface *createWindowSurface(QWidget *widget) const override;
+    QWindowSurface *createWindowSurface(QWindow *window) const override;
 
 private:
     bool m_useX11GL;

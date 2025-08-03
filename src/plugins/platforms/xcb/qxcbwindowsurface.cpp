@@ -168,12 +168,12 @@ void QXcbShmImage::preparePaint(const QRegion &region)
     }
 }
 
-QXcbWindowSurface::QXcbWindowSurface(QWidget *widget, bool setDefaultSurface)
-    : QWindowSurface(widget, setDefaultSurface)
-    , m_image(0)
+QXcbWindowSurface::QXcbWindowSurface(QWindow *window, bool setDefaultSurface)
+    : QWindowSurface(window, setDefaultSurface)
+    , m_image(nullptr)
     , m_syncingResize(false)
 {
-    QXcbScreen *screen = static_cast<QXcbScreen *>(QPlatformScreen::platformScreenForWidget(widget));
+    QXcbScreen *screen = static_cast<QXcbScreen *>(QPlatformScreen::platformScreenForWindow(window));
     setConnection(screen->connection());
 }
 
@@ -206,7 +206,7 @@ void QXcbWindowSurface::endPaint(const QRegion &)
 {
 }
 
-void QXcbWindowSurface::flush(QWidget *widget, const QRegion &region, const QPoint &offset)
+void QXcbWindowSurface::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
     QRect bounds = region.boundingRect();
 
@@ -215,14 +215,11 @@ void QXcbWindowSurface::flush(QWidget *widget, const QRegion &region, const QPoi
 
     Q_XCB_NOOP(connection());
 
-    QXcbWindow *window = static_cast<QXcbWindow *>(widget->windowHandle()->handle());
-
-    extern QWidgetData* qt_widget_data(QWidget *);
-    QPoint widgetOffset = qt_qwidget_data(widget)->wrect.topLeft();
+    QXcbWindow *platformWindow = static_cast<QXcbWindow *>(window->handle());
 
     QVector<QRect> rects = region.rects();
     for (int i = 0; i < rects.size(); ++i)
-        m_image->put(window->xcb_window(), rects.at(i).topLeft() - widgetOffset, rects.at(i).translated(offset));
+        m_image->put(platformWindow->xcb_window(), rects.at(i).topLeft(), rects.at(i).translated(offset));
 
     Q_XCB_NOOP(connection());
 
@@ -230,7 +227,7 @@ void QXcbWindowSurface::flush(QWidget *widget, const QRegion &region, const QPoi
         xcb_flush(xcb_connection());
         connection()->sync();
         m_syncingResize = false;
-        window->updateSyncRequestCounter();
+        platformWindow->updateSyncRequestCounter();
     }
 }
 
@@ -242,7 +239,7 @@ void QXcbWindowSurface::resize(const QSize &size)
     Q_XCB_NOOP(connection());
     QWindowSurface::resize(size);
 
-    QXcbScreen *screen = static_cast<QXcbScreen *>(QPlatformScreen::platformScreenForWidget(window()));
+    QXcbScreen *screen = static_cast<QXcbScreen *>(QPlatformScreen::platformScreenForWindow(window()));
     QXcbWindow* win = static_cast<QXcbWindow *>(window()->platformWindow());
 
     delete m_image;

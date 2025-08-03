@@ -98,7 +98,7 @@ class QWSManager;
 class QCoreGraphicsPaintEnginePrivate;
 #endif
 #if defined(Q_WS_QPA)
-class QWindow;
+class QWidgetWindow;
 #endif
 class QPaintEngine;
 class QPixmap;
@@ -225,7 +225,7 @@ struct QTLWExtra {
     QWSManager *qwsManager;
 #endif
 #elif defined(Q_WS_QPA)
-    QWindow *window;
+    QWidgetWindow *window;
     quint32 screenIndex; // index in qplatformscreenlist
 #endif
 };

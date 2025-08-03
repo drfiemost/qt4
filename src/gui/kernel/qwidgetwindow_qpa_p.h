@@ -39,13 +39,12 @@
 **
 ****************************************************************************/
 
-#ifndef QGUIAPPLICATION_QPA_H
-#define QGUIAPPLICATION_QPA_H
+#ifndef QWIDGETWINDOW_QPA_P_H
+#define QWIDGETWINDOW_QPA_P_H
 
-#include <QtCore/qcoreapplication.h>
-#include <QtGui/qwindowdefs.h>
-#include <QtCore/qpoint.h>
-#include <QtCore/qsize.h>
+#include <QtGui/qwindow_qpa.h>
+
+#include <QtCore/private/qobject_p.h>
 
 QT_BEGIN_HEADER
 
@@ -53,66 +52,23 @@ QT_BEGIN_NAMESPACE
 
 QT_MODULE(Gui)
 
-class QGuiApplicationPrivate;
-class QPlatformNativeInterface;
-
-class Q_GUI_EXPORT QGuiApplication : public QCoreApplication
+class QWidgetWindow : public QWindow
 {
     Q_OBJECT
-    Q_PROPERTY(int doubleClickInterval  READ doubleClickInterval WRITE setDoubleClickInterval)
-    Q_PROPERTY(int keyboardInputInterval READ keyboardInputInterval WRITE setKeyboardInputInterval)
-
 public:
-    QGuiApplication(int &argc, char **argv, int = ApplicationFlags);
-    virtual ~QGuiApplication();
+    QWidgetWindow(QWidget *widget);
 
-#if 0
-#ifndef QT_NO_CURSOR
-    static QCursor *overrideCursor();
-    static void setOverrideCursor(const QCursor &);
-    static void changeOverrideCursor(const QCursor &);
-    static void restoreOverrideCursor();
-#endif
-#endif
-
-    static QFont font();
-    static void setFont(const QFont &);
-
-#ifndef QT_NO_CLIPBOARD
-    static QClipboard *clipboard();
-#endif
-
-    static Qt::KeyboardModifiers keyboardModifiers();
-    static Qt::MouseButtons mouseButtons();
-
-    static void setDoubleClickInterval(int);
-    static int doubleClickInterval();
-
-    static void setKeyboardInputInterval(int);
-    static int keyboardInputInterval();
-
-    static QPlatformNativeInterface *platformNativeInterface();
-
-    static int exec();
-    bool notify(QObject *, QEvent *);
+    QWidget *widget() const { return m_widget; }
 
 protected:
     bool event(QEvent *);
-    bool compressEvent(QEvent *, QObject *receiver, QPostEventList *);
-
-    QGuiApplication(QGuiApplicationPrivate &p);
 
 private:
-    Q_DISABLE_COPY(QGuiApplication)
-    Q_DECLARE_PRIVATE(QGuiApplication)
-
-#ifndef QT_NO_GESTURES
-    friend class QGestureManager;
-#endif
+    QWidget *m_widget;
 };
 
 QT_END_NAMESPACE
 
 QT_END_HEADER
 
-#endif // QGUIAPPLICATION_QPA_H
+#endif // QWIDGETWINDOW_QPA_P_H

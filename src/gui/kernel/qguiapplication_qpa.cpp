@@ -52,6 +52,8 @@
 
 #include <QtCore/QAbstractEventDispatcher>
 #include <QtCore/private/qcoreapplication_p.h>
+#include <QtCore/private/qabstracteventdispatcher_p.h>
+#include <QtCore/qmutex.h>
 #include <QtDebug>
 
 #include <QtGui/QPlatformIntegration>
@@ -59,6 +61,11 @@
 
 #include <QWindowSystemInterface>
 #include "private/qwindowsysteminterface_qpa_p.h"
+#include "private/qwindow_qpa_p.h"
+
+#ifndef QT_NO_CLIPBOARD
+#include <QtGui/QClipboard>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -87,7 +94,14 @@ int QGuiApplicationPrivate::mousePressX = 0;
 int QGuiApplicationPrivate::mousePressY = 0;
 int QGuiApplicationPrivate::mouse_double_click_distance = 5;
 
-QGuiApplicationPrivate *QGuiApplicationPrivate::self = 0;
+QGuiApplicationPrivate *QGuiApplicationPrivate::self = nullptr;
+
+#ifndef QT_NO_CLIPBOARD
+QClipboard *QGuiApplicationPrivate::qt_clipboard = nullptr;
+#endif
+
+Q_GLOBAL_STATIC(QMutex, applicationFontMutex)
+QFont *QGuiApplicationPrivate::app_font = nullptr;
 
 QGuiApplication::QGuiApplication(int &argc, char **argv, int flags)
     : QCoreApplication(*new QGuiApplicationPrivate(argc, argv, flags))
@@ -105,6 +119,18 @@ QGuiApplication::QGuiApplication(QGuiApplicationPrivate &p)
 
 QGuiApplication::~QGuiApplication()
 {
+    Q_D(QGuiApplication);
+    // flush clipboard contents
+    if (QGuiApplicationPrivate::qt_clipboard) {
+        QEvent event(QEvent::Clipboard);
+        QApplication::sendEvent(QGuiApplicationPrivate::qt_clipboard, &event);
+    }
+
+    d->eventDispatcher->closingDown();
+    d->eventDispatcher = nullptr;
+
+    delete QGuiApplicationPrivate::qt_clipboard;
+    QGuiApplicationPrivate::qt_clipboard = nullptr;
 }
 
 QGuiApplicationPrivate::QGuiApplicationPrivate(int &argc, char **argv, int flags)
@@ -362,7 +388,7 @@ void QGuiApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::Mo
 
     QWindow *window = e->window.data();
 
-    QWidget * tlw = window ? window->widget() : nullptr;
+    QWidget * tlw = nullptr;//window ? window->widget() : nullptr;
 
     QPoint localPoint = e->localPos;
     QPoint globalPoint = e->globalPos;
@@ -485,10 +511,12 @@ void QGuiApplicationPrivate::processMouseEvent(QWindowSystemInterfacePrivate::Mo
         implicit_mouse_grabber.clear();
     }
 
+#if 0
     if (mouseWidget != qt_last_mouse_receiver) {
 //        dispatchEnterLeave(mouseWidget, qt_last_mouse_receiver);
         qt_last_mouse_receiver = mouseWidget;
     }
+#endif
 
     // Remember, we might enter a modal event loop when sending the event,
     // so think carefully before adding code below this point.
@@ -526,12 +554,15 @@ void QGuiApplicationPrivate::processWheelEvent(QWindowSystemInterfacePrivate::Wh
 //    QPoint localPoint = ev.pos();
     QPoint globalPoint = e->globalPos;
 //    bool trustLocalPoint = !!tlw; //is there something the local point can be local to?
-    QWidget *mouseWidget;
 
     qt_last_x = globalPoint.x();
     qt_last_y = globalPoint.y();
 
-     QWidget *mouseWindow = e->window.data() ? e->window.data()->widget() : 0;
+    QWindow *window = e->window.data();
+    if (!window)
+        return;
+
+    QWidget *mouseWidget = nullptr;//window ? window->widget() : nullptr;
 
      // find the tlw if we didn't get it from the plugin
 #if 0
@@ -540,10 +571,12 @@ void QGuiApplicationPrivate::processWheelEvent(QWindowSystemInterfacePrivate::Wh
      }
 #endif
 
-     if (!mouseWindow)
+     if (!mouseWidget) {
+         QWheelEvent ev(e->localPos, e->globalPos, e->delta, buttons, QGuiApplication::keyboardModifiers(),
+                        e->orient);
+         QGuiApplication::sendSpontaneousEvent(window, &ev);
          return;
-
-     mouseWidget = mouseWindow;
+     }
 
 #if 0
      if (app_do_modal && !qt_try_modal(mouseWindow, QEvent::Wheel) ) {
@@ -556,11 +589,11 @@ void QGuiApplicationPrivate::processWheelEvent(QWindowSystemInterfacePrivate::Wh
          mouseWidget = w;
          p = mouseWidget->mapFromGlobal(globalPoint);
      }
+#endif
 
-     QWheelEvent ev(p, globalPoint, e->delta, buttons, QGuiApplication::keyboardModifiers(),
+     QWheelEvent ev(e->localPos, e->globalPos, e->delta, buttons, QGuiApplication::keyboardModifiers(),
                    e->orient);
      QGuiApplication::sendSpontaneousEvent(mouseWidget, &ev);
-#endif
 }
 
 
@@ -569,28 +602,31 @@ void QGuiApplicationPrivate::processWheelEvent(QWindowSystemInterfacePrivate::Wh
 
 void QGuiApplicationPrivate::processKeyEvent(QWindowSystemInterfacePrivate::KeyEvent *e)
 {
-    QWidget *focusW = 0;
+    QWindow *window = e->window.data();
+    if (!window)
+        return;
+
+    QObject *target = window;//window->widget() ? static_cast<QObject *>(window->widget()) : static_cast<QObject *>(window);
+
 #if 0
+    QWidget *focusW = 0;
     if (self->inPopupMode()) {
         QWidget *popupW = qApp->activePopupWidget();
         focusW = popupW->focusWidget() ? popupW->focusWidget() : popupW;
     }
     if (!focusW)
         focusW = QGuiApplication::focusWidget();
-#endif
-    if (!focusW) {
-        focusW = e->window.data() ? e->window.data()->widget() : 0;
-    }
-#if 0
+    if (!focusW)
+        focusW = window->widget();
     if (!focusW)
         focusW = QGuiApplication::activeWindow();
 #endif
 
     //qDebug() << "handleKeyEvent" << hex << e->key() << e->modifiers() << e->text() << "widget" << focusW;
 
+#if 0
     if (!focusW)
         return;
-#if 0
     if (app_do_modal && !qt_try_modal(focusW, e->keyType))
         return;
 #endif
@@ -598,17 +634,17 @@ void QGuiApplicationPrivate::processKeyEvent(QWindowSystemInterfacePrivate::KeyE
     if (e->nativeScanCode || e->nativeVirtualKey || e->nativeModifiers) {
         QKeyEventEx ev(e->keyType, e->key, e->modifiers, e->unicode, e->repeat, e->repeatCount,
                        e->nativeScanCode, e->nativeVirtualKey, e->nativeModifiers);
-        QGuiApplication::sendSpontaneousEvent(focusW, &ev);
+        QGuiApplication::sendSpontaneousEvent(target, &ev);
     } else {
         QKeyEvent ev(e->keyType, e->key, e->modifiers, e->unicode, e->repeat, e->repeatCount);
-        QGuiApplication::sendSpontaneousEvent(focusW, &ev);
+        QGuiApplication::sendSpontaneousEvent(target, &ev);
     }
 }
 
 void QGuiApplicationPrivate::processEnterEvent(QWindowSystemInterfacePrivate::EnterEvent *e)
 {
 //    QGuiApplicationPrivate::dispatchEnterLeave(e->enter.data(),0);
-    qt_last_mouse_receiver = e->enter.data() ? e->enter.data()->widget() : nullptr;
+//    qt_last_mouse_receiver = e->enter.data();
 }
 
 void QGuiApplicationPrivate::processLeaveEvent(QWindowSystemInterfacePrivate::LeaveEvent *)
@@ -632,27 +668,42 @@ void QGuiApplicationPrivate::processGeometryChangeEvent(QWindowSystemInterfacePr
 {
     if (e->tlw.isNull())
        return;
-    QWidget *tlw = e->tlw.data() ? e->tlw.data()->widget() : nullptr;
-    if (!tlw || !tlw->isWindow())
+
+    QWindow *window = e->tlw.data();
+    if (!window)
+        return;
+
+    QWidget *tlw = nullptr;//window->widget();
+    QObject *target = tlw ? static_cast<QObject *>(tlw) : static_cast<QObject *>(window);
+
+    QRect newRect = e->newGeometry;
+    QRect cr = tlw ? tlw->geometry() : window->geometry();
+
+    bool isResize = cr.size() != newRect.size();
+    bool isMove = cr.topLeft() != newRect.topLeft();
+
+    if (tlw && !tlw->isWindow())
         return; //geo of native child widgets is controlled by lighthouse
                 //so we already have sent the events; besides this new rect
                 //is not mapped to parent
 
-    QRect newRect = e->newGeometry;
-    QRect cr(tlw->geometry());
-    bool isResize = cr.size() != newRect.size();
-    bool isMove = cr.topLeft() != newRect.topLeft();
-    tlw->data->crect = newRect;
+
+    if (tlw)
+        tlw->data->crect = newRect;
+    else
+        window->d_func()->geometry = newRect;
+
     if (isResize) {
-        QResizeEvent e(tlw->data->crect.size(), cr.size());
-        QGuiApplication::sendSpontaneousEvent(tlw, &e);
-        tlw->update();
+        QResizeEvent e(newRect.size(), cr.size());
+        QGuiApplication::sendSpontaneousEvent(target, &e);
+        if (tlw)
+            tlw->update();
     }
 
     if (isMove) {
         //### frame geometry
-        QMoveEvent e(tlw->data->crect.topLeft(), cr.topLeft());
-        QGuiApplication::sendSpontaneousEvent(tlw, &e);
+        QMoveEvent e(newRect.topLeft(), cr.topLeft());
+        QGuiApplication::sendSpontaneousEvent(target, &e);
     }
 }
 
@@ -731,6 +782,37 @@ void QGuiApplicationPrivate::reportAvailableGeometryChange(
             w->d_func()->setMaxWindowState_helper();
     }
 #endif
+}
+
+#ifndef QT_NO_CLIPBOARD
+QClipboard * QGuiApplication::clipboard()
+{
+    if (QGuiApplicationPrivate::qt_clipboard == 0) {
+        if (!qApp) {
+            qWarning("QApplication: Must construct a QApplication before accessing a QClipboard");
+            return 0;
+        }
+        QGuiApplicationPrivate::qt_clipboard = new QClipboard(0);
+    }
+    return QGuiApplicationPrivate::qt_clipboard;
+}
+#endif
+
+QFont QGuiApplication::font()
+{
+    QMutexLocker locker(applicationFontMutex());
+    if (!QGuiApplicationPrivate::app_font)
+        QGuiApplicationPrivate::app_font = new QFont(QLatin1String("Helvetica"));
+    return *QGuiApplicationPrivate::app_font;
+}
+
+void QGuiApplication::setFont(const QFont &font)
+{
+    QMutexLocker locker(applicationFontMutex());
+    if (!QGuiApplicationPrivate::app_font)
+        QGuiApplicationPrivate::app_font = new QFont(font);
+    else
+        *QGuiApplicationPrivate::app_font = font;
 }
 
 

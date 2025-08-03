@@ -428,8 +428,10 @@ QGraphicsSystem *QApplicationPrivate::graphics_system = nullptr; // default grap
 QString QApplicationPrivate::graphics_system_name;         // graphics system id - for delayed initialization
 bool QApplicationPrivate::runtime_graphics_system = false;
 
+#ifndef Q_WS_QPA
 static QBasicMutex applicationFontMutex;
 QFont *QApplicationPrivate::app_font = nullptr;        // default application font
+#endif
 QFont *QApplicationPrivate::sys_font = nullptr;        // default system font
 QFont *QApplicationPrivate::set_font = nullptr;        // default font set by programmer
 
@@ -505,7 +507,7 @@ FontHash *qt_app_fonts_hash()
 QWidgetList *QApplicationPrivate::popupWidgets = nullptr;        // has keyboard input focus
 
 QDesktopWidget *qt_desktopWidget = nullptr;                // root window widgets
-#ifndef QT_NO_CLIPBOARD
+#if !defined(Q_WS_QPA) && !defined(QT_NO_CLIPBOARD)
 QClipboard              *qt_clipboard = nullptr;        // global clipboard object
 #endif
 QWidgetList * qt_modal_stack=nullptr;                // stack of modal widgets
@@ -1022,7 +1024,7 @@ QApplication::~QApplication()
 {
     Q_D(QApplication);
 
-#ifndef QT_NO_CLIPBOARD
+#if !defined(Q_WS_QPA) && !defined(QT_NO_CLIPBOARD)
     // flush clipboard contents
     if (qt_clipboard) {
         QEvent event(QEvent::Clipboard);
@@ -1037,8 +1039,10 @@ QApplication::~QApplication()
     d->toolTipWakeUp.stop();
     d->toolTipFallAsleep.stop();
 
+#if !defined(Q_WS_QPA)
     d->eventDispatcher->closingDown();
     d->eventDispatcher = nullptr;
+#endif
     QApplicationPrivate::is_app_closing = true;
     QApplicationPrivate::is_app_running = false;
 
@@ -1060,7 +1064,7 @@ QApplication::~QApplication()
     delete qt_desktopWidget;
     qt_desktopWidget = nullptr;
 
-#ifndef QT_NO_CLIPBOARD
+#if !defined(Q_WS_QPA) && !defined(QT_NO_CLIPBOARD)
     delete qt_clipboard;
     qt_clipboard = nullptr;
 #endif
@@ -1082,11 +1086,14 @@ QApplication::~QApplication()
     QApplicationPrivate::set_pal = nullptr;
     app_palettes()->clear();
 
+#ifndef Q_WS_QPA
     {
         QMutexLocker locker(&applicationFontMutex);
         delete QApplicationPrivate::app_font;
         QApplicationPrivate::app_font = nullptr;
     }
+#endif
+
     delete QApplicationPrivate::sys_font;
     QApplicationPrivate::sys_font = nullptr;
     delete QApplicationPrivate::set_font;
@@ -1854,11 +1861,15 @@ void QApplicationPrivate::setSystemPalette(const QPalette &pal)
 */
 QFont QApplication::font()
 {
+#ifndef Q_WS_QPA
     QMutexLocker locker(&applicationFontMutex);
     if (!QApplicationPrivate::app_font) {
         QApplicationPrivate::app_font = new QFont(QLatin1String("Helvetica"));
     }
     return *QApplicationPrivate::app_font;
+#else
+    return QGuiApplication::font();
+#endif
 }
 
 /*!
@@ -1937,11 +1948,15 @@ void QApplication::setFont(const QFont &font, const char *className)
     bool all = false;
     FontHash *hash = app_fonts();
     if (!className) {
+#ifndef Q_WS_QPA
         QMutexLocker locker(&applicationFontMutex);
         if (!QApplicationPrivate::app_font)
             QApplicationPrivate::app_font = new QFont(font);
         else
             *QApplicationPrivate::app_font = font;
+#else
+        QGuiApplication::setFont(font);
+#endif
         if (hash && hash->size()) {
             all = true;
             hash->clear();
@@ -3157,7 +3172,7 @@ QDesktopWidget *QApplication::desktop()
     return qt_desktopWidget;
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if !defined(Q_WS_QPA) && !defined(QT_NO_CLIPBOARD)
 /*!
     Returns a pointer to the application global clipboard.
 
@@ -3175,7 +3190,7 @@ QClipboard *QApplication::clipboard()
     }
     return qt_clipboard;
 }
-#endif // QT_NO_CLIPBOARD
+#endif // Q_WS_QPA && QT_NO_CLIPBOARD
 
 /*!
     Sets whether Qt should use the system's standard colors, fonts, etc., to

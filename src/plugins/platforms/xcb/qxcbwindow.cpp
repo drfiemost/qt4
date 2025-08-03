@@ -114,7 +114,6 @@ QXcbWindow::QXcbWindow(QWindow *window)
     : QPlatformWindow(window)
     , m_context(nullptr)
 {
-    QWidget *tlw = window->widget();
     m_screen = static_cast<QXcbScreen *>(QGuiApplicationPrivate::platformIntegration()->screens().at(0));
 
     setConnection(m_screen->connection());
@@ -241,6 +240,7 @@ QXcbWindow::QXcbWindow(QWindow *window)
                                        &m_syncCounter));
     }
 
+#if 0
     if (tlw && isTransient(tlw) && tlw->parentWidget()) {
         // ICCCM 4.1.2.6
         QWidget *p = tlw->parentWidget()->window();
@@ -250,6 +250,7 @@ QXcbWindow::QXcbWindow(QWindow *window)
                                        1, &parentWindow));
 
     }
+#endif
 
     // set the PID to let the WM kill the application if unresponsive
     long pid = getpid();
@@ -559,15 +560,11 @@ QPlatformGLContext *QXcbWindow::glContext() const
 
 void QXcbWindow::handleExposeEvent(const xcb_expose_event_t *event)
 {
-    QWidget *widget = window()->widget();
-    if (!widget)
-        return;
-
-    QWindowSurface *surface = widget->windowSurface();
+    QWindowSurface *surface = window()->surface();
     if (surface) {
         QRect rect(event->x, event->y, event->width, event->height);
 
-        surface->flush(widget, rect, QPoint());
+        surface->flush(window(), rect, QPoint());
     }
 }
 

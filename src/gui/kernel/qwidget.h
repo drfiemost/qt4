@@ -752,6 +752,7 @@ private:
     friend class QGraphicsProxyWidgetPrivate;
     friend class QStyleSheetStyle;
     friend struct QWidgetExceptionCleaner;
+    friend class QWidgetWindow;
 #ifndef QT_NO_GESTURES
     friend class QGestureManager;
     friend class QWinNativePanGestureRecognizer;
