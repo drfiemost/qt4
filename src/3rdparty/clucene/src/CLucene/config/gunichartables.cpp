@@ -134,9 +134,7 @@ typedef enum
 #ifdef _LUCENE_PRAGMA_WARNINGS
  #pragma message ("===== Using internal character function =====")
 #else
-#if !(defined(Q_CC_MIPS))
 #warning "===== Using internal character function ====="
-#endif
 #endif
 
 bool cl_isletter(gunichar c)

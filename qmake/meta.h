@@ -81,15 +81,7 @@ inline QStringList &QMakeMetaInfo::values(const QString &v)
 
 inline QString QMakeMetaInfo::first(const QString &v)
 {
-#if defined(Q_CC_SUN) && (__SUNPRO_CC == 0x500) || defined(Q_CC_HP)
-    // workaround for Sun WorkShop 5.0 bug fixed in Forte 6
-    if (isEmpty(v))
-        return QString("");
-    else
-        return vars[v].first();
-#else
     return isEmpty(v) ? QString("") : vars[v].first();
-#endif
 }
 
 inline QMap<QString, QStringList> &QMakeMetaInfo::variables()

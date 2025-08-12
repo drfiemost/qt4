@@ -88,22 +88,6 @@ Item EvaluationCache<IsForGlobal>::evaluateSingleton(const DynamicContext::Ptr &
     }
 }
 
-#if defined(Q_CC_MIPS)
-/**
- * @short Compile workaround for MIPSPro on IRIX.
- *
- * This function is never called.
- *
- * It's mere presence means the MIPSPro compiler can accept some other code below.
- *
- * I recommend Buddism.
- */
-static inline Item::Iterator::Ptr workaroundIrixMIPSPro(const ItemSequenceCacheCell &cell)
-{
-  return Item::Iterator::Ptr(new ListIterator<Item, Item::List>(cell.cachedItems));
-}
-#endif
-
 template<bool IsForGlobal>
 Item::Iterator::Ptr EvaluationCache<IsForGlobal>::evaluateSequence(const DynamicContext::Ptr &context) const
 {

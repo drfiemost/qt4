@@ -103,16 +103,6 @@ private slots:
 # define DONT_TEST_STL_SORTING
 #endif
 
-#if defined(Q_CC_HPACC)
-# define DONT_TEST_TEMPLATE_CONSTRUCTORS
-# define DONT_TEST_CONSTRUCTOR_SPECIALIZATION
-# define DONT_TEST_DATASTREAM_DETECTION
-#endif
-
-#if defined(Q_CC_SUN)
-# define DONT_TEST_STL_SORTING
-#endif
-
 #ifndef DONT_TEST_TEMPLATE_METHODS
 class TemplateMethodClass
 {
@@ -605,8 +595,6 @@ void tst_Compiler::privateStaticTemplateMember() const
 }
 
 
-#if !defined(Q_CC_MIPS)
-
 // make sure we can use a static initializer with a union and then use
 // the second member of the union
 static const union { unsigned char c[8]; double d; } qt_be_inf_bytes = { { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 } };
@@ -617,23 +605,6 @@ static inline double qt_inf()
             ? qt_be_inf_bytes.d
             : qt_le_inf_bytes.d);
 }
-
-#else
-
-static const unsigned char qt_be_inf_bytes[] = { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 };
-static const unsigned char qt_le_inf_bytes[] = { 0, 0, 0, 0, 0, 0, 0xf0, 0x7f };
-static inline double qt_inf()
-{
-    const uchar *bytes = (QSysInfo::ByteOrder == QSysInfo::BigEndian
-             ? qt_be_inf_bytes
-             : qt_le_inf_bytes);
-
-    union { uchar c[8]; double d; } returnValue;
-    std::memcpy(returnValue.c, bytes, sizeof(returnValue.c));
-    return returnValue.d;
-}
-
-#endif
 
 void tst_Compiler::staticConstUnionWithInitializerList() const
 {

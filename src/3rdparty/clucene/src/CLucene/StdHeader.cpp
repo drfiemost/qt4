@@ -27,7 +27,6 @@ CL_NS_USE(util)
 TCHAR* _LUCENE_BLANK_STRING = _T("");
 char* _LUCENE_BLANK_ASTRING = "";
 
-#ifndef Q_CC_MIPS
 #if defined(_LUCENE_THREADMUTEX_USINGDEFAULT)
 #    if defined(_LUCENE_PRAGMA_WARNINGS)
 #        pragma message ("==================Using clunky thread mutex!!!==================")
@@ -54,7 +53,6 @@ char* _LUCENE_BLANK_ASTRING = "";
 #         warning "==================Hashing not available or is disabled! CLucene may run slower than optimal =================="
 #    endif
 #endif*/
-#endif
 
 //clears all static memory. do not attempt to do anything else
 //in clucene after calling this function

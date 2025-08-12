@@ -1398,45 +1398,6 @@ while [ "$#" -gt 0 ]; do
         PLATFORM="$VAL"
         # keep compatibility with old platform names
         case $PLATFORM in
-        aix-64)
-            PLATFORM=aix-xlc-64
-            ;;
-        hpux-o64)
-            PLATFORM=hpux-acc-o64
-            ;;
-        hpux-n64)
-            PLATFORM=hpux-acc-64
-            ;;
-        hpux-acc-n64)
-            PLATFORM=hpux-acc-64
-            ;;
-        irix-n32)
-            PLATFORM=irix-cc
-            ;;
-        irix-64)
-            PLATFORM=irix-cc-64
-            ;;
-        irix-cc-n64)
-            PLATFORM=irix-cc-64
-            ;;
-        reliant-64)
-            PLATFORM=reliant-cds-64
-            ;;
-        solaris-64)
-            PLATFORM=solaris-cc-64
-            ;;
-        openunix-cc)
-            PLATFORM=unixware-cc
-            ;;
-        openunix-g++)
-            PLATFORM=unixware-g++
-            ;;
-        unixware7-cc)
-            PLATFORM=unixware-cc
-            ;;
-        unixware7-g++)
-            PLATFORM=unixware-g++
-            ;;
         macx-g++-64)
             PLATFORM=macx-g++
 	    NATIVE_64_ARCH=
@@ -2429,13 +2390,6 @@ if [ -z "$PLATFORM" ]; then
      CYGWIN*:*)
         PLATFORM=cygwin-g++
         ;;
-     OpenUNIX:*)
-        #PLATFORM=unixware-g++
-        PLATFORM=unixware-cc
-        PLATFORM_NOTES="
-            - Also available for OpenUNIX: unixware-g++
-        "
-        ;;
      *)
         if [ "$OPT_HELP" != "yes" ]; then
             echo
@@ -2764,15 +2718,7 @@ if [ "$CFG_SEPARATE_DEBUG_INFO" != "no" ] && [ "$CFG_SHARED" = "yes" ]; then
     if "$unixtests/objcopy.test" "$COMPILER_WITH_FLAGS" "$TEST_OBJCOPY" "$OPT_VERBOSE"; then
        CFG_SEPARATE_DEBUG_INFO=no
     else
-       case "$PLATFORM" in
-       hpux-*)
-           # binutils on HP-UX is buggy; default to no.
-           CFG_SEPARATE_DEBUG_INFO=no
-           ;;
-       *)
-           CFG_SEPARATE_DEBUG_INFO=yes
-           ;;
-       esac
+       CFG_SEPARATE_DEBUG_INFO=yes
     fi
 fi
 
@@ -3780,18 +3726,6 @@ elif [ "$Edition" != "OpenSource" ]; then
     done
 fi
 
-# this should be moved somewhere else
-case "$PLATFORM" in
-aix-*)
-    AIX_VERSION=`uname -v`
-    if [ "$AIX_VERSION" -lt "5" ]; then
-	QMakeVar add QMAKE_LIBS_X11 -lbind
-    fi
-    ;;
-*)
-    ;;
-esac
-
 #-------------------------------------------------------------------------------
 # generate qconfig.cpp
 #-------------------------------------------------------------------------------
@@ -3973,10 +3907,6 @@ if true; then ###[ '!' -f "$outpath/bin/qmake" ];
         EXTRA_CFLAGS="\$(QMAKE_CFLAGS)"
         EXTRA_CXXFLAGS="\$(QMAKE_CXXFLAGS)"
         EXTRA_LFLAGS="\$(QMAKE_LFLAGS) \$(QMAKE_LFLAGS_GCSECTIONS)"
-
-        if [ "$PLATFORM" = "irix-cc" ] || [ "$PLATFORM" = "irix-cc-64" ]; then
-	    EXTRA_LFLAGS="$EXTRA_LFLAGS -lm"
-        fi
 
 	[ -n "$CC" ] && echo "CC = $CC" >> "$mkfile"
 	[ -n "$CXX" ] && echo "CXX = $CXX" >> "$mkfile"
@@ -4698,19 +4628,6 @@ if [ "$PLATFORM_X11" = "yes" -o "$XPLATFORM_MINGW" = "yes" ]; then
             fi
             CFG_OPENGL=no
         fi
-        case "$PLATFORM" in
-        hpux*)
-            # HP-UX have buggy glx headers; check if we really need to define the GLXFBConfig struct.
-            if [ "$CFG_OPENGL" = "desktop" ]; then
-                compileTest x11/glxfbconfig "OpenGL" $X11TESTS_FLAGS
-                if [ $? != "0" ]; then
-                    QMakeVar add DEFINES QT_DEFINE_GLXFBCONFIG_STRUCT
-                fi
-            fi
-            ;;
-        *)
-            ;;
-        esac
     elif [ "$CFG_OPENGL" = "es1" ]; then
         # OpenGL ES 1.x
         compileTest unix/opengles1 "OpenGL ES 1.x"
@@ -4741,17 +4658,6 @@ if [ "$PLATFORM_X11" = "yes" -o "$XPLATFORM_MINGW" = "yes" ]; then
             echo " ${XQMAKESPEC}."
             exit 1
         fi
-        case "$PLATFORM" in
-        hpux*)
-            # HP-UX have buggy glx headers; check if we really need to define the GLXFBConfig struct.
-            compileTest x11/glxfbconfig "OpenGL" $X11TESTS_FLAGS
-            if [ $? != "0" ]; then
-                QMakeVar add DEFINES QT_DEFINE_GLXFBCONFIG_STRUCT
-            fi
-            ;;
-        *)
-            ;;
-        esac
     fi
 
     # if opengl is disabled and the user specified graphicssystem gl, disable it...
@@ -5784,23 +5690,6 @@ if [ $? != "0" ]; then
 fi
 
 case "$XPLATFORM" in
-    hpux-g++*)
-	# PA-RISC's assembly is too limited
-	# gcc 3.4 on that platform can't build QtXmlPatterns
-	# the assembly it generates cannot be compiled
-
-	# Check gcc's version
-	case "$(${QMAKE_CONF_COMPILER} -dumpversion)" in
-	    4*)
-		;;
-	    3.4*)
-		canBuildQtXmlPatterns="no"
-		;;
-	    *)
-		canBuildQtXmlPatterns="no"
-		;;
-	esac
-	;;
     *-g++*)
 	# Check gcc's version
 	case "$(${QMAKE_CONF_COMPILER} -dumpversion)" in
@@ -5810,58 +5699,6 @@ case "$XPLATFORM" in
 		canBuildQtXmlPatterns="no"
 		;;
 	esac
-	;;
-    solaris-cc*)
-        # Check the compiler version
-        case `${QMAKE_CONF_COMPILER} -V 2>&1 | awk '{print $4}'` in
-            5.[012345678])
-                canBuildQtXmlPatterns="no"
-                canBuildQtConcurrent="no"
-                ;;
-            5.9)
-                canBuildQtConcurrent="no"
-                ;;
-        esac
-        ;;
-    hpux-acc*)
-	canBuildQtXmlPatterns="no"
-        canBuildQtConcurrent="no"
-	;;
-    aix-xlc*)
-        # Get the xlC version
-        cat > xlcver.c <<EOF
-#include <stdio.h>
-int main()
-{
-    printf("%d.%d\n", __xlC__ >> 8, __xlC__ & 0xFF);
-    return 0;
-}
-EOF
-        xlcver=
-        if ${QMAKE_CONF_COMPILER} -o xlcver xlcver.c >/dev/null 2>/dev/null; then
-            xlcver=`./xlcver 2>/dev/null`
-            rm -f ./xlcver
-        fi
-        if [ "$OPT_VERBOSE" = "yes" ]; then
-            if [ -n "$xlcver" ]; then
-                echo Found IBM xlC version: $xlcver.
-            else
-                echo Could not determine IBM xlC version, assuming oldest supported.
-            fi
-        fi
-
-        case "$xlcver" in
-            [123456].*)
-                canBuildQtXmlPatterns="no"
-                canBuildQtConcurrent="no"
-                ;;
-            *)
-                canBuildQtConcurrent="no"
-                ;;
-        esac
-        ;;
-    irix-cc*)
-        canBuildQtConcurrent="no"
 	;;
 esac
 

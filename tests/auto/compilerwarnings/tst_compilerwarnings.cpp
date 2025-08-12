@@ -184,47 +184,10 @@ void tst_CompilerWarnings::warnings()
          << "-Wcast-align"
          << "-o" << tmpFile
          << tmpSourceFile;
-#elif defined(Q_CC_XLC)
-    compilerName = "xlC_r";
-    args << "-I" + qtDir + "/include"
-# if QT_POINTER_SIZE == 8
-         << "-q64"
-# endif
-         << "-c" << "-o" << tmpFile
-         << "-info=all"
-         << tmpSourceFile;
 #elif defined(Q_CC_MSVC)
     compilerName = "cl";
     args << "-I" + qtDir + "/include"
          << "-nologo" << "-W3"
-         << tmpSourceFile;
-#elif defined (Q_CC_SUN)
-    compilerName = "CC";
-    // +w or +w2 outputs too much bogus
-    args << "-I" + qtDir + "/include"
-# if QT_POINTER_SIZE == 8
-         << "-xarch=v9"
-# endif
-         << "-o" << tmpFile
-         << tmpSourceFile;
-#elif defined (Q_CC_HPACC)
-    compilerName = "aCC";
-    args << "-I" + qtDir + "/include"
-         << "-I/usr/local/mesa/aCC-64/include"
-         << "-I/opt/graphics/OpenGL/include"
-# if QT_POINTER_SIZE == 8 && !defined __ia64
-         << "+DA2.0W"
-# endif
-         // aCC generates too much bogus.
-         << "-DQT_NO_STL" << "-c" << "-w"
-         << "-o" << tmpFile
-         << tmpSourceFile;
-#elif defined(Q_CC_MIPS)
-    compilerName = "CC";
-    args << "-I" + qtDir + "/include"
-         << "-c"
-         << "-woff" << "3303" // const qualifier on return
-         << "-o" << tmpFile
          << tmpSourceFile;
 #else
     QSKIP("Test not implemented for this compiler", SkipAll);

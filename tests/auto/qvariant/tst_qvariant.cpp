@@ -2126,9 +2126,7 @@ void tst_QVariant::userType()
         data3 = qvariant_cast<MyType>(myCarrier);
         QCOMPARE(data3.number, 1);
         QCOMPARE(data3.text, (const char *)"eins");
-#ifndef Q_CC_SUN
         QCOMPARE(instanceCount, 4);
-#endif
 
     }
 

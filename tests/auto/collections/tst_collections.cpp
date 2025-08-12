@@ -226,7 +226,7 @@ void tst_Collections::list()
 	QVERIFY(list.size() == 6);
 	QVERIFY(list.end() - list.begin() == list.size());
 
-#if !defined(Q_CC_MSVC) && !defined(Q_CC_SUN)
+#if !defined(Q_CC_MSVC)
 	QVERIFY(std::binary_search(list.begin(), list.end(), 2) == true);
 	QVERIFY(std::binary_search(list.begin(), list.end(), 9) == false);
 #endif

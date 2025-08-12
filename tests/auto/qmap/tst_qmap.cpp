@@ -176,9 +176,7 @@ void tst_QMap::count()
 	map2["Hallo"] = MyClass( "Fritz" );
 	QCOMPARE( map.count(), 0 );
         QCOMPARE( map2.count(), 1 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 1 );
-#endif
     }
     QCOMPARE( MyClass::count, int(0) );
 
@@ -207,70 +205,50 @@ void tst_QMap::count()
 
 	QCOMPARE( map.count(), 9 );
     QCOMPARE( map.count("Paul"), 1 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 9 );
-#endif
 
 	Map map2( map );
 	QVERIFY( map2.count() == 9 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 9 );
-#endif
 
 	map2.insert( "Kay", MyClass("Roemer") );
 	QVERIFY( map2.count() == 10 );
 	QVERIFY( map.count() == 9 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 19 );
-#endif
 
 	map2 = map;
 	QVERIFY( map.count() == 9 );
 	QVERIFY( map2.count() == 9 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 9 );
-#endif
 
 	map2.insert( "Kay", MyClass("Roemer") );
 	QVERIFY( map2.count() == 10 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 19 );
-#endif
 
 	map2.clear();
 	QVERIFY( map.count() == 9 );
 	QVERIFY( map2.count() == 0 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 9 );
-#endif
 
 	map2 = map;
 	QVERIFY( map.count() == 9 );
 	QVERIFY( map2.count() == 9 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 9 );
-#endif
 
 	map2.clear();
 	QVERIFY( map.count() == 9 );
 	QVERIFY( map2.count() == 0 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 9 );
-#endif
 
 	map.remove( "Lars" );
 	QVERIFY( map.count() == 8 );
 	QVERIFY( map2.count() == 0 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 8 );
-#endif
 
 	map.remove( "Mist" );
 	QVERIFY( map.count() == 8 );
 	QVERIFY( map2.count() == 0 );
-#ifndef Q_CC_SUN
 	QCOMPARE( MyClass::count, 8 );
-#endif
     }
     QVERIFY( MyClass::count == 0 );
 
@@ -278,23 +256,17 @@ void tst_QMap::count()
 	typedef QMap<QString,MyClass> Map;
 	Map map;
 	map["Torben"] = MyClass("Weis");
-#ifndef Q_CC_SUN
 	QVERIFY( MyClass::count == 1 );
-#endif
 	QVERIFY( map.count() == 1 );
 
 	(void)map["Torben"].str;
 	(void)map["Lars"].str;
-#ifndef Q_CC_SUN
 	QVERIFY( MyClass::count == 2 );
-#endif
 	QVERIFY( map.count() == 2 );
 
 	const Map& cmap = map;
 	(void)cmap["Depp"].str;
-#ifndef Q_CC_SUN
 	QVERIFY( MyClass::count == 2 );
-#endif
 	QVERIFY( map.count() == 2 );
 	QVERIFY( cmap.count() == 2 );
     }

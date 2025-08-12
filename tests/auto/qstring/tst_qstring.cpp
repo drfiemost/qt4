@@ -3303,9 +3303,6 @@ void tst_QString::setRawData()
 
 void tst_QString::fromStdString()
 {
-#ifdef Q_CC_HPACC
-    QSKIP("This test crashes on HP-UX with aCC", SkipSingle);
-#endif
     std::string stroustrup = "foo";
     QString eng = QString::fromStdString( stroustrup );
     QCOMPARE( eng, QString("foo") );
@@ -3317,9 +3314,6 @@ void tst_QString::fromStdString()
 
 void tst_QString::toStdString()
 {
-#ifdef Q_CC_HPACC
-    QSKIP("This test crashes on HP-UX with aCC", SkipSingle);
-#endif
     QString nord = "foo";
     std::string stroustrup1 = nord.toStdString();
     QVERIFY( qstrcmp(stroustrup1.c_str(), "foo") == 0 );
