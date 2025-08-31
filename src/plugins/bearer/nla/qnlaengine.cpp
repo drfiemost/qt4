@@ -121,9 +121,6 @@ static void printBlob(NLA_BLOB *blob)
 
 static QNetworkConfiguration::BearerType qGetInterfaceType(const QString &interface)
 {
-#ifdef Q_OS_WINCE
-    Q_UNUSED(interface)
-#else
     unsigned long oid;
     DWORD bytesWritten;
 
@@ -177,8 +174,6 @@ static QNetworkConfiguration::BearerType qGetInterfaceType(const QString &interf
 
 #ifdef BEARER_MANAGEMENT_DEBUG
     qDebug() << medium << physicalMedium;
-#endif
-
 #endif
 
     return QNetworkConfiguration::BearerUnknown;
@@ -309,16 +304,12 @@ void QNlaThread::run()
                 break;
         }
 
-#ifndef Q_OS_WINCE
         // Not interested in unrelated IO completion events
         // although we also don't want to block them
         while (WaitForSingleObjectEx(changeEvent, WSA_INFINITE, true) != WAIT_IO_COMPLETION &&
                handle)
         {
         }
-#else
-        WaitForSingleObject(changeEvent, WSA_INFINITE);
-#endif
 
         mutex.lock();
         if (handle) {
