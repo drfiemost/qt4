@@ -1070,6 +1070,7 @@ struct CustomType
     CustomType(const CustomType &other): i1(other.i1), i2(other.i2), i3(other.i3)
     { ++instanceCount; }
     ~CustomType() { --instanceCount; }
+    CustomType &operator=(const CustomType &) = default;
 
     int i1, i2, i3;
     int value() { return i1 + i2 + i3; }
