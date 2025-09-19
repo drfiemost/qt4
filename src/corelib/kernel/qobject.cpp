@@ -69,6 +69,11 @@ QT_BEGIN_NAMESPACE
 
 static int DIRECT_CONNECTION_ONLY = 0;
 
+struct QSlotObjectBaseDeleter { // for use with QScopedPointer<QSlotObjectBase,...>
+    static void cleanup(QtPrivate::QSlotObjectBase *slot) {
+        if (slot) slot->destroyIfLastRef();
+    }
+};
 static int *queuedConnectionTypes(const QList<QByteArray> &typeNames)
 {
     int *types = new int [typeNames.count() + 1];
@@ -501,14 +506,14 @@ QMetaCallEvent::QMetaCallEvent(ushort method_offset, ushort method_relative, QOb
 
 /*! \internal
  */
-QMetaCallEvent::QMetaCallEvent(QObject::QSlotObjectBase *slotO, const QObject *sender, int signalId,
+QMetaCallEvent::QMetaCallEvent(QtPrivate::QSlotObjectBase *slotO, const QObject *sender, int signalId,
                                int nargs, int *types, void **args, QSemaphore *semaphore)
     : QEvent(MetaCall), slotObj_(slotO), sender_(sender), signalId_(signalId),
       nargs_(nargs), types_(types), args_(args), semaphore_(semaphore),
       callFunction_(nullptr), method_offset_(0), method_relative_(-1)
 {
     if (slotObj_)
-        slotObj_->ref.ref();
+        slotObj_->ref();
 }
 
 /*! \internal
@@ -527,8 +532,8 @@ QMetaCallEvent::~QMetaCallEvent()
     if (semaphore_)
         semaphore_->release();
 #endif
-    if (slotObj_ && !slotObj_->ref.deref())
-        delete slotObj_;
+    if (slotObj_)
+        slotObj_->destroyIfLastRef();
 }
 
 /*! \internal
@@ -940,8 +945,8 @@ QObjectPrivate::Connection::~Connection()
         if (v != &DIRECT_CONNECTION_ONLY)
             delete [] v;
     }
-    if (isSlotObject && !slotObj->ref.deref())
-        delete slotObj;
+    if (isSlotObject)
+        slotObj->destroyIfLastRef();
 }
 
 
@@ -3366,7 +3371,8 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
             const QObjectPrivate::StaticMetaCallFunction callFunction = c->callFunction;
             const int method_relative = c->method_relative;
             if (c->isSlotObject) {
-                QExplicitlySharedDataPointer<QObject::QSlotObjectBase> obj(c->slotObj);
+                c->slotObj->ref();
+                const QScopedPointer<QtPrivate::QSlotObjectBase, QSlotObjectBaseDeleter> obj(c->slotObj);
                 locker.unlock();
                 obj->call(receiver, argv ? argv : empty_argv);
                 locker.relock();
@@ -4188,11 +4194,13 @@ void qDeleteInEventHandler(QObject *o)
  */
 QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signal,
                                              const QObject *receiver, void **slot,
-                                             QObject::QSlotObjectBase *slotObj, Qt::ConnectionType type,
+                                             QtPrivate::QSlotObjectBase *slotObj, Qt::ConnectionType type,
                                              const int *types, const QMetaObject *senderMetaObject)
 {
     if (!sender || !signal || !slotObj || !senderMetaObject) {
-        qWarning("QObject::connect: invalid null parametter");
+        qWarning("QObject::connect: invalid null parameter");
+        if (slotObj)
+            slotObj->destroyIfLastRef();
         return QMetaObject::Connection();
     }
     int signal_index = -1;
@@ -4204,6 +4212,7 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
     }
     if (!senderMetaObject) {
         qWarning("QObject::connect: signal not found in %s", sender->metaObject()->className());
+        slotObj->destroyIfLastRef();
         return QMetaObject::Connection(0);
     }
     int signalOffset, methodOffset;
@@ -4223,8 +4232,10 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
                 (*connectionLists)[signal_index].first;
 
             while (c2) {
-                if (c2->receiver == receiver && c2->isSlotObject && c2->slotObj->compare(slot))
+                if (c2->receiver == receiver && c2->isSlotObject && c2->slotObj->compare(slot)) {
+                    slotObj->destroyIfLastRef();
                     return QMetaObject::Connection();
+                }
                 c2 = c2->nextConnectionList;
             }
         }
@@ -4404,16 +4415,6 @@ QMetaObject::Connection::~Connection()
     The connection is invalid if QObject::connect was not able to find
     the signal or the slot, or if the arguments do not match.
  */
-
-QObject::QSlotObjectBase::~QSlotObjectBase()
-{
-}
-
-bool QObject::QSlotObjectBase::compare(void** )
-{
-    return false;
-}
-
 
 
 QT_END_NAMESPACE

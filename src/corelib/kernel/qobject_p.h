@@ -125,7 +125,7 @@ public:
         QObject *receiver;
         union {
             StaticMetaCallFunction callFunction;
-            QObject::QSlotObjectBase *slotObj;
+            QtPrivate::QSlotObjectBase *slotObj;
         };
         // The next pointer for the singly-linked ConnectionList
         Connection *nextConnectionList;
@@ -302,7 +302,7 @@ class Q_CORE_EXPORT QMetaCallEvent : public QEvent
 public:
     QMetaCallEvent(ushort method_offset, ushort method_relative, QObjectPrivate::StaticMetaCallFunction callFunction , const QObject *sender, int signalId,
                    int nargs = 0, int *types = nullptr, void **args = nullptr, QSemaphore *semaphore = nullptr);
-    QMetaCallEvent(QObject::QSlotObjectBase *slotObj, const QObject *sender, int signalId,
+    QMetaCallEvent(QtPrivate::QSlotObjectBase *slotObj, const QObject *sender, int signalId,
                    int nargs = 0, int *types = nullptr, void **args = nullptr, QSemaphore *semaphore = nullptr);
 
     ~QMetaCallEvent() override;
@@ -315,7 +315,7 @@ public:
     virtual void placeMetaCall(QObject *object);
 
 private:
-    QObject::QSlotObjectBase *slotObj_;
+    QtPrivate::QSlotObjectBase *slotObj_;
     const QObject *sender_;
     int signalId_;
     int nargs_;
