@@ -168,25 +168,25 @@ static void clear_thread_data()
 }
 
 template <typename T>
-static typename QtPrivate::QEnableIf<QTypeInfo<T>::isIntegral, void*>::Type to_HANDLE(T id)
+static typename std::enable_if<QTypeInfo<T>::isIntegral, void*>::type to_HANDLE(T id)
 {
     return reinterpret_cast<void*>(static_cast<intptr_t>(id));
 }
 
 template <typename T>
-static typename QtPrivate::QEnableIf<QTypeInfo<T>::isIntegral, T>::Type from_HANDLE(void* id)
+static typename std::enable_if<QTypeInfo<T>::isIntegral, T>::type from_HANDLE(void* id)
 {
     return static_cast<T>(reinterpret_cast<intptr_t>(id));
 }
 
 template <typename T>
-static typename QtPrivate::QEnableIf<QTypeInfo<T>::isPointer, void*>::Type to_HANDLE(T id)
+static typename std::enable_if<QTypeInfo<T>::isPointer, void*>::type to_HANDLE(T id)
 {
     return id;
 }
 
 template <typename T>
-static typename QtPrivate::QEnableIf<QTypeInfo<T>::isPointer, T>::Type from_HANDLE(void* id)
+static typename std::enable_if<QTypeInfo<T>::isPointer, T>::type from_HANDLE(void* id)
 {
     return static_cast<T>(id);
 }

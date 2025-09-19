@@ -154,13 +154,17 @@ public:
 
     template<typename T>
     inline T findChild(const QString &aName = QString()) const
-    { return static_cast<T>(qt_qFindChild_helper(this, aName, reinterpret_cast<T>(0)->staticMetaObject)); }
+    {
+        typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
+        return static_cast<T>(qt_qFindChild_helper(this, aName, ObjType::staticMetaObject));
+    }
 
     template<typename T>
     inline QList<T> findChildren(const QString &aName = QString()) const
     {
+        typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
         QList<T> list;
-        qt_qFindChildren_helper(this, aName, nullptr, reinterpret_cast<T>(0)->staticMetaObject,
+        qt_qFindChildren_helper(this, aName, nullptr, ObjType::staticMetaObject,
                                 reinterpret_cast<QList<void *> *>(&list));
         return list;
     }
@@ -169,8 +173,9 @@ public:
     template<typename T>
     inline QList<T> findChildren(const QRegExp &re) const
     {
+        typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
         QList<T> list;
-        qt_qFindChildren_helper(this, QString(), &re, reinterpret_cast<T>(0)->staticMetaObject,
+        qt_qFindChildren_helper(this, QString(), &re, ObjType::staticMetaObject,
                                 reinterpret_cast<QList<void *> *>(&list));
         return list;
     }
@@ -231,7 +236,7 @@ public:
 
     //connect to a function pointer  (not a member)
     template <typename Func1, typename Func2>
-    static inline typename QtPrivate::QEnableIf<int(QtPrivate::FunctionPointer<Func2>::ArgumentCount) >= 0, QMetaObject::Connection>::Type
+    static inline typename std::enable_if<int(QtPrivate::FunctionPointer<Func2>::ArgumentCount) >= 0, QMetaObject::Connection>::type
             connect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal, Func2 slot)
     {
         typedef QtPrivate::FunctionPointer<Func1> SignalType;
@@ -257,7 +262,7 @@ public:
 
     //connect to a functor
     template <typename Func1, typename Func2>
-    static inline typename QtPrivate::QEnableIf<QtPrivate::FunctionPointer<Func2>::ArgumentCount == -1, QMetaObject::Connection>::Type
+    static inline typename std::enable_if<QtPrivate::FunctionPointer<Func2>::ArgumentCount == -1, QMetaObject::Connection>::type
             connect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal, Func2 slot)
     {
 #ifndef Q_COMPILER_DECLTYPE  //Workaround the lack of decltype using another function as indirection
@@ -489,7 +494,7 @@ inline T qobject_cast(QObject *object)
     typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
     static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
                     "qobject_cast require the type to have a Q_OBJECT macro");
-    return static_cast<T>(reinterpret_cast<T>(object)->staticMetaObject.cast(object));
+    return static_cast<T>(ObjType::staticMetaObject.cast(object));
 }
 
 template <class T>
@@ -498,7 +503,7 @@ inline T qobject_cast(const QObject *object)
     typedef typename QtPrivate::remove_cv<typename QtPrivate::remove_pointer<T>::type>::type ObjType;
     static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
                       "qobject_cast require the type to have a Q_OBJECT macro");
-    return static_cast<T>(reinterpret_cast<T>(object)->staticMetaObject.cast(object));
+    return static_cast<T>(ObjType::staticMetaObject.cast(object));
 }
 
 

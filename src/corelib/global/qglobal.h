@@ -1885,10 +1885,6 @@ Q_CORE_EXPORT int qrand();
 #endif
 
 namespace QtPrivate {
-//like std::enable_if
-template <bool B, typename T = void> struct QEnableIf;
-template <typename T> struct QEnableIf<true, T> { typedef T Type; };
-
 template <bool B, typename T, typename F> struct QConditional { typedef T Type; };
 template <typename T, typename F> struct QConditional<false, T, F> { typedef F Type; };
 }
