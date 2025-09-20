@@ -103,7 +103,7 @@ private slots:
     void thread();
     void thread0();
     void moveToThread();
-    void sender();
+    void senderTest();
     void declareInterface();
     void qpointerResetBeforeDestroyedSignal();
     void testUserData();
@@ -153,6 +153,10 @@ private slots:
     void returnValue2();
     void connectVirtualSlots();
     void connectFunctorArgDifference();
+    void connectFunctorQueued();
+    void connectFunctorWithContext();
+    void connectStaticSlotWithObject();
+    void contextDoesNotLeakFunctor();
     void connectBase();
 protected:
 };
@@ -1861,7 +1865,7 @@ signals:
     void theSignal();
 };
 
-void tst_QObject::sender()
+void tst_QObject::senderTest()
 {
     {
         SuperObject sender;
@@ -5276,6 +5280,217 @@ void tst_QObject::connectFunctorArgDifference()
 #endif
 
     QVERIFY(true);
+}
+
+class ContextObject : public QObject
+{
+    Q_OBJECT
+public:
+    void compareSender(QObject *s) { QCOMPARE(s, sender()); }
+};
+
+struct SlotArgFunctor
+{
+    SlotArgFunctor(int *s) : status(s), context(nullptr), sender(nullptr) {}
+    SlotArgFunctor(ContextObject *context, QObject *sender, int *s) : status(s), context(context), sender(sender) {}
+    void operator()() { *status = 2; if (context) context->compareSender(sender); }
+
+protected:
+    int *status;
+    ContextObject *context;
+    QObject *sender;
+};
+
+void tst_QObject::connectFunctorQueued()
+{
+    int status = 1;
+    SenderObject obj;
+    QEventLoop e;
+
+    connect(&obj, &SenderObject::signal1, this, SlotArgFunctor(&status), Qt::QueuedConnection);
+    connect(&obj, &SenderObject::signal1, &e, &QEventLoop::quit, Qt::QueuedConnection);
+
+    obj.emitSignal1();
+    QCOMPARE(status, 1);
+    e.exec();
+    QCOMPARE(status, 2);
+
+#if defined(Q_COMPILER_LAMBDA)
+    status = 1;
+    connect(&obj, &SenderObject::signal1, this, [&status] { status = 2; }, Qt::QueuedConnection);
+
+    obj.emitSignal1();
+    QCOMPARE(status, 1);
+    e.exec();
+    QCOMPARE(status, 2);
+#endif
+}
+
+void tst_QObject::connectFunctorWithContext()
+{
+    int status = 1;
+    SenderObject obj;
+    QMetaObject::Connection handle;
+    ContextObject *context = new ContextObject;
+    QEventLoop e;
+
+    connect(&obj, &SenderObject::signal1, context, SlotArgFunctor(&status));
+    connect(&obj, &SenderObject::signal1, &e, &QEventLoop::quit, Qt::QueuedConnection);
+
+    // When the context gets deleted, the connection should decay and the signal shouldn't trigger
+    // The connection is queued to make sure the destroyed signal propagates correctly and
+    // cuts the connection.
+    connect(context, &QObject::destroyed, &obj, &SenderObject::signal1, Qt::QueuedConnection);
+    context->deleteLater();
+
+    QCOMPARE(status, 1);
+    e.exec();
+    QCOMPARE(status, 1);
+
+    // Check the sender arg is set correctly in the context
+    context = new ContextObject;
+
+    connect(&obj, &SenderObject::signal1, context,
+            SlotArgFunctor(context, &obj, &status), Qt::QueuedConnection);
+
+    obj.emitSignal1();
+    QCOMPARE(status, 1);
+    e.exec();
+    QCOMPARE(status, 2);
+
+#if defined(Q_COMPILER_LAMBDA)
+    status = 1;
+    connect(&obj, &SenderObject::signal1, this, [this, &status, &obj] { status = 2; QCOMPARE(sender(), &obj); }, Qt::QueuedConnection);
+
+    obj.emitSignal1();
+    QCOMPARE(status, 1);
+    e.exec();
+    QCOMPARE(status, 2);
+#endif
+
+    // Free
+    context->deleteLater();
+}
+
+static int s_static_slot_checker = 1;
+
+class StaticSlotChecker : public QObject
+{
+    Q_OBJECT
+public Q_SLOTS:
+    static void staticSlot() { s_static_slot_checker = 2; }
+};
+
+void tst_QObject::connectStaticSlotWithObject()
+{
+    SenderObject sender;
+    StaticSlotChecker *receiver = new StaticSlotChecker;
+    QEventLoop e;
+
+    QVERIFY(connect(&sender, &SenderObject::signal1, receiver, &StaticSlotChecker::staticSlot, Qt::QueuedConnection));
+    connect(&sender, &SenderObject::signal1, &e, &QEventLoop::quit, Qt::QueuedConnection);
+
+    sender.emitSignal1();
+    QCOMPARE(s_static_slot_checker, 1);
+    e.exec();
+    QCOMPARE(s_static_slot_checker, 2);
+
+    s_static_slot_checker = 1;
+
+    connect(receiver, &QObject::destroyed, &sender, &SenderObject::signal1, Qt::QueuedConnection);
+    receiver->deleteLater();
+
+    QCOMPARE(s_static_slot_checker, 1);
+    e.exec();
+    QCOMPARE(s_static_slot_checker, 1);
+}
+
+class GetSenderObject : public QObject
+{
+    Q_OBJECT
+public:
+    QObject *accessSender() { return sender(); }
+
+public Q_SLOTS:
+    void triggerSignal() { Q_EMIT aSignal(); }
+
+Q_SIGNALS:
+    void aSignal();
+};
+
+static int countedStructObjectsCount = 0;
+struct CountedStruct
+{
+    CountedStruct() : sender(nullptr) { ++countedStructObjectsCount; }
+    CountedStruct(GetSenderObject *sender) : sender(sender) { ++countedStructObjectsCount; }
+    CountedStruct(const CountedStruct &o) : sender(o.sender) { ++countedStructObjectsCount; }
+    CountedStruct &operator=(const CountedStruct &) { return *this; }
+    // accessSender here allows us to check if there's a deadlock
+    ~CountedStruct() { --countedStructObjectsCount; if (sender != nullptr) (void)sender->accessSender(); }
+    void operator()() const { }
+
+    GetSenderObject *sender;
+};
+
+void tst_QObject::contextDoesNotLeakFunctor()
+{
+    QCOMPARE(countedStructObjectsCount, 0);
+    {
+        QMetaObject::Connection c;
+        {
+            QEventLoop e;
+            ContextObject *context = new ContextObject;
+            SenderObject obj;
+
+            connect(&obj, &SenderObject::signal1, context, CountedStruct());
+            connect(context, &QObject::destroyed, &e, &QEventLoop::quit, Qt::QueuedConnection);
+            context->deleteLater();
+
+            QCOMPARE(countedStructObjectsCount, 1);
+            e.exec();
+            QCOMPARE(countedStructObjectsCount, 0);
+        }
+        QCOMPARE(countedStructObjectsCount, 0);
+    }
+    QCOMPARE(countedStructObjectsCount, 0);
+    {
+        GetSenderObject obj;
+        QMetaObject::Connection c;
+        {
+            CountedStruct s(&obj);
+            QEventLoop e;
+            ContextObject *context = new ContextObject;
+            QCOMPARE(countedStructObjectsCount, 1);
+
+            connect(&obj, &GetSenderObject::aSignal, context, s);
+            QCOMPARE(countedStructObjectsCount, 2);
+
+            connect(context, &QObject::destroyed, &e, &QEventLoop::quit, Qt::QueuedConnection);
+            context->deleteLater();
+
+            e.exec();
+            QCOMPARE(countedStructObjectsCount, 1);
+        }
+        QCOMPARE(countedStructObjectsCount, 0);
+    }
+    QCOMPARE(countedStructObjectsCount, 0);
+    {
+#if defined(Q_COMPILER_LAMBDA)
+        CountedStruct s;
+        QEventLoop e;
+        ContextObject *context = new ContextObject;
+        QCOMPARE(countedStructObjectsCount, 1);
+        QTimer timer;
+
+        connect(&timer, &QTimer::timeout, context, [s](){});
+        QCOMPARE(countedStructObjectsCount, 2);
+        connect(context, &QObject::destroyed, &e, &QEventLoop::quit, Qt::QueuedConnection);
+        context->deleteLater();
+        e.exec();
+        QCOMPARE(countedStructObjectsCount, 1);
+#endif // Q_COMPILER_LAMBDA
+    }
+    QCOMPARE(countedStructObjectsCount, 0);
 }
 
 class SubSender : public SenderObject {

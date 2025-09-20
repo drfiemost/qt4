@@ -923,9 +923,21 @@ QObject::~QObject()
             if (senderLists)
                 senderLists->dirty = true;
 
+            QtPrivate::QSlotObjectBase *slotObj = nullptr;
+            if (node->isSlotObject) {
+                slotObj = node->slotObj;
+                node->isSlotObject = false;
+            }
+
             node = node->next;
             if (needToUnlock)
                 m->unlock();
+
+            if (slotObj) {
+                locker.unlock();
+                slotObj->destroyIfLastRef();
+                locker.relock();
+            }
         }
     }
 
@@ -4171,6 +4183,41 @@ void qDeleteInEventHandler(QObject *o)
     \snippet doc/src/snippets/code/src_corelib_kernel_qobject.cpp 46
 
     The connection will automatically disconnect if the sender is destroyed.
+ */
+
+/*!
+    \fn QMetaObject::Connection QObject::connect(const QObject *sender, PointerToMemberFunction signal, const QObject *context, Functor functor, Qt::ConnectionType type)
+
+    \threadsafe
+    \overload connect()
+
+    Creates a connection of a given \a type from \a signal in
+    \a sender object to \a functor to be placed in a specific event
+    loop of \a context, and returns a handle to the connection
+
+    The signal must be a function declared as a signal in the header.
+    The slot function can be any function or functor that can be connected
+    to the signal.
+    A function can be connected to a given signal if the signal as at
+    least as many argument as the slot. A functor can be connected to a signal
+    if they have exactly the same number of arguments. There must exist implicit
+    conversion between the types of the corresponding arguments in the
+    signal and the slot.
+
+    Example:
+
+    \snippet code/src_corelib_kernel_qobject.cpp 50
+
+    If your compiler support C++11 lambda expressions, you can use them:
+
+    \snippet code/src_corelib_kernel_qobject.cpp 51
+
+    The connection will automatically disconnect if the sender or the context
+    is destroyed.
+
+    \note If the compiler does not support C++11 variadic templates, the number
+    of arguments in the signal or slot are limited to 6, and the functor object
+    must not have an overloaded or templated operator().
  */
 
 /** \internal
