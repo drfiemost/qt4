@@ -213,6 +213,7 @@ signals:
     void signal3();
     void signal4();
     QT_MOC_COMPAT void signal5();
+    void signal6(void);
 
 public slots:
     void aPublicSlot() { aPublicSlotCalled++; }
@@ -747,6 +748,8 @@ void tst_QObject::connectDisconnectNotify_data()
     QTest::newRow("combo2") << SIGNAL( signal2(void) )    << SLOT( slot2(  ) );
     QTest::newRow("combo3") << SIGNAL( signal3(  ) )      << SLOT( slot3(void) );
     QTest::newRow("combo4") << SIGNAL(  signal4( void )  )<< SLOT(  slot4( void )  );
+    QTest::newRow("combo5") << SIGNAL( signal6( void ) )  << SLOT( slot4() );
+    QTest::newRow("combo6") << SIGNAL( signal6() )        << SLOT( slot4() );
 }
 
 void tst_QObject::connectDisconnectNotify()
@@ -1643,10 +1646,11 @@ void tst_QObject::property()
     QVERIFY(property.isValid());
     QVERIFY(property.isWritable());
     QVERIFY(!property.isEnumType());
+    qRegisterMetaType<CustomType*>();
     QCOMPARE(property.typeName(), "CustomType*");
     QCOMPARE(property.type(), QVariant::UserType);
 
-    CustomType *customPointer = 0;
+    CustomType *customPointer = nullptr;
     QVariant customVariant = object.property("custom");
     customPointer = qvariant_cast<CustomType *>(customVariant);
     QCOMPARE(customPointer, object.custom());
@@ -3861,8 +3865,6 @@ void tst_QObject::disconnectByMetaMethod()
             s->metaObject()->indexOfMethod("signal2()"));
     QMetaMethod signal3 = s->metaObject()->method(
             s->metaObject()->indexOfMethod("signal3()"));
-    QMetaMethod signal4 = s->metaObject()->method(
-            s->metaObject()->indexOfMethod("signal4()"));
 
     QMetaMethod slot1 = r1->metaObject()->method(
             r1->metaObject()->indexOfMethod("slot1()"));
@@ -4080,12 +4082,12 @@ void tst_QObject::baseDestroyed()
         //When d goes out of scope, slotUseList should not be called as the BaseDestroyed has
         // already been destroyed while ~QObject emit destroyed
     }
-    /*{
+    {
         BaseDestroyed d;
         connect(&d, &QObject::destroyed, processEvents);
         QMetaObject::invokeMethod(&d, "slotUseList", Qt::QueuedConnection);
         //the destructor will call processEvents, that should not call the slotUseList
-    }*/
+    }
 }
 
 void tst_QObject::pointerConnect()
@@ -4102,9 +4104,6 @@ void tst_QObject::pointerConnect()
     QVERIFY( connect( s, &SenderObject::signal1 , r2, &ReceiverObject::slot1 ) );
     QVERIFY( connect( s, &SenderObject::signal1 , r1, &ReceiverObject::slot3 ) );
     QVERIFY( connect( s, &SenderObject::signal3 , r1, &ReceiverObject::slot3 ) );
-#if defined(Q_CC_GNU) && defined(Q_OS_UNIX)
-    QEXPECT_FAIL("", "Test may fail due to failing comparison of pointers to member functions caused by problems with -reduce-relocations on this platform.", Continue);
-#endif
     QVERIFY2( connect( &timer, &QTimer::timeout, r1, &ReceiverObject::deleteLater ),
              "Signal connection failed most likely due to failing comparison of pointers to member functions caused by problems with -reduce-relocations on this platform.");
 
@@ -4157,7 +4156,18 @@ void tst_QObject::pointerConnect()
 
     //connect a slot to a signal (== error)
     QTest::ignoreMessage(QtWarningMsg, "QObject::connect: signal not found in ReceiverObject");
-    con = connect(r1, &ReceiverObject::slot4 , s, &SenderObject::signal4 );
+    con = connect(r1, &ReceiverObject::slot4, s, &SenderObject::signal4 );
+    QVERIFY(!con);
+    QVERIFY(!QObject::disconnect(con));
+
+    //connect an arbitrary PMF to a slot
+    QTest::ignoreMessage(QtWarningMsg, "QObject::connect: signal not found in ReceiverObject");
+    con = connect(r1, &ReceiverObject::reset, r1, &ReceiverObject::slot1);
+    QVERIFY(!con);
+    QVERIFY(!QObject::disconnect(con));
+
+    QTest::ignoreMessage(QtWarningMsg, "QObject::connect: signal not found in ReceiverObject");
+    con = connect(r1, &ReceiverObject::reset, r1, [](){});
     QVERIFY(!con);
     QVERIFY(!QObject::disconnect(con));
 
