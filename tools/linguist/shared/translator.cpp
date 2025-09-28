@@ -606,9 +606,9 @@ void Translator::reportDuplicates(const Duplicates &dupes,
             std::cerr << "'\n(try -verbose for more info).\n";
         } else {
             std::cerr << "':\n";
-            foreach (int i, dupes.byId)
+            for (int i: dupes.byId)
                 std::cerr << "\n* ID: " << qPrintable(message(i).id()) << std::endl;
-            foreach (int j, dupes.byContents) {
+            for (int j: dupes.byContents) {
                 const TranslatorMessage &msg = message(j);
                 std::cerr << "\n* Context: " << qPrintable(msg.context())
                           << "\n* Source: " << qPrintable(msg.sourceText()) << std::endl;
@@ -626,7 +626,7 @@ void Translator::makeFileNamesAbsolute(const QDir &originalPath)
     for (auto & msg : m_messages) {
         TranslatorMessage::References refs = msg.allReferences();
         msg.setReferences(TranslatorMessage::References());
-        foreach (const TranslatorMessage::Reference &ref, refs) {
+        for (const TranslatorMessage::Reference &ref: refs) {
             QString fileName = ref.fileName();
             QFileInfo fi (fileName);
             if (fi.isRelative())
