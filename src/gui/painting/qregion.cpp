@@ -1175,28 +1175,18 @@ Q_AUTOTEST_EXPORT QPainterPath qt_regionToPath(const QRegion &region)
 
 struct QRegionPrivate {
     int numRects;
+    int innerArea;
     QVector<QRect> rects;
     QRect extents;
     QRect innerRect;
-    int innerArea;
 
     inline QRegionPrivate() : numRects(0), innerArea(-1) {}
-    inline QRegionPrivate(const QRect &r) {
-        numRects = 1;
-        extents = r;
-        innerRect = r;
-        innerArea = r.width() * r.height();
-    }
-
-    inline QRegionPrivate(const QRegionPrivate &r) {
-        rects = r.rects;
-        numRects = r.numRects;
-        extents = r.extents;
-        innerRect = r.innerRect;
-        innerArea = r.innerArea;
-    }
-
-    inline QRegionPrivate &operator=(const QRegionPrivate &r) = default;
+    inline QRegionPrivate(const QRect &r) :
+        numRects(1),
+        innerArea(r.width() * r.height()),
+        extents(r),
+        innerRect(r)
+    {}
 
     void intersect(const QRect &r);
 
@@ -1835,7 +1825,7 @@ QT_END_INCLUDE_NAMESPACE
  * the buffers together
  */
 typedef struct _POINTBLOCK {
-    int data[NUMPTSTOBUFFER * sizeof(QPoint)];
+    char data[NUMPTSTOBUFFER * sizeof(QPoint)];
     QPoint *pts;
     struct _POINTBLOCK *next;
 } POINTBLOCK;
@@ -3081,11 +3071,11 @@ typedef struct {
 
 typedef struct _EdgeTableEntry {
      int ymax;             /* ycoord at which we exit this edge. */
+     int ClockWise;        /* flag for winding number rule       */
      BRESINFO bres;        /* Bresenham info to run the edge     */
      struct _EdgeTableEntry *next;       /* next in the list     */
      struct _EdgeTableEntry *back;       /* for insertion sort   */
      struct _EdgeTableEntry *nextWETE;   /* for winding num rule */
-     int ClockWise;        /* flag for winding number rule       */
 } EdgeTableEntry;
 
 
@@ -3606,7 +3596,7 @@ static void PtsToRegion(int numFullPtBlocks, int iCurPtBlock,
                 }
 
                 if (rowSize) {
-                    QPoint *next = i ? &pts[2] : (numFullPtBlocks ? CurPtBlock->next->pts : nullptr);
+                    QPoint *next = i ? &pts[2] : (numFullPtBlocks && iCurPtBlock ? CurPtBlock->next->pts : nullptr);
 
                     if (!next || next->y() != pts[0].y()) {
                         flushRow(row.data(), pts[0].y(), rowSize, reg, &lastRow, &extendTo, &needsExtend);
@@ -3668,8 +3658,7 @@ static QRegionPrivate *PolygonRegion(const QPoint *Pts, int Count, int rule)
     POINTBLOCK *tmpPtBlock;
     int numFullPtBlocks = 0;
 
-    if (!(region = new QRegionPrivate))
-        return nullptr;
+    region = new QRegionPrivate;
 
     Q_ASSUME(Count > 1);
 
@@ -4368,9 +4357,8 @@ QVector<QRect> QRegion::rects() const
 {
     if (d->qt_rgn) {
         d->qt_rgn->vectorize();
-        // hw: modify the vector size directly to avoid reallocation
-        if (d->qt_rgn->rects.d != QVector<QRect>::Data::sharedNull())
-            d->qt_rgn->rects.d->size = d->qt_rgn->numRects;
+        d->qt_rgn->rects.reserve(d->qt_rgn->numRects);
+        d->qt_rgn->rects.resize(d->qt_rgn->numRects);
         return d->qt_rgn->rects;
     } else {
         return QVector<QRect>();
