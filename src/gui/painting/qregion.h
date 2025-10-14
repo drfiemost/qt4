@@ -83,6 +83,7 @@ public:
 #endif
     inline void swap(QRegion &other) { qSwap(d, other.d); }
     bool isEmpty() const;
+    bool isNull() const;
 
     typedef const QRect *const_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -101,23 +102,29 @@ public:
 
     void translate(int dx, int dy);
     inline void translate(const QPoint &p) { translate(p.x(), p.y()); }
-    QRegion translated(int dx, int dy) const;
-    inline QRegion translated(const QPoint &p) const { return translated(p.x(), p.y()); }
+    [[nodiscard]] QRegion translated(int dx, int dy) const;
+    [[nodiscard]] inline QRegion translated(const QPoint &p) const { return translated(p.x(), p.y()); }
 
-    // ### Qt 5: make these four functions QT4_SUPPORT
-    QRegion unite(const QRegion &r) const;
-    QRegion unite(const QRect &r) const;
-    QRegion intersect(const QRegion &r) const;
-    QRegion intersect(const QRect &r) const;
-    QRegion subtract(const QRegion &r) const;
-    QRegion eor(const QRegion &r) const;
+    [[nodiscard]] QRegion united(const QRegion &r) const;
+    [[nodiscard]] QRegion united(const QRect &r) const;
+    [[nodiscard]] QRegion intersected(const QRegion &r) const;
+    [[nodiscard]] QRegion intersected(const QRect &r) const;
+    [[nodiscard]] QRegion subtracted(const QRegion &r) const;
+    [[nodiscard]] QRegion xored(const QRegion &r) const;
 
-    inline QRegion united(const QRegion &r) const { return unite(r); }
-    inline QRegion united(const QRect &r) const { return unite(r); }
-    inline QRegion intersected(const QRegion &r) const { return intersect(r); }
-    inline QRegion intersected(const QRect &r) const { return intersect(r); }
-    inline QRegion subtracted(const QRegion &r) const { return subtract(r); }
-    inline QRegion xored(const QRegion &r) const { return eor(r); }
+    // ### TODO remove
+    [[deprecated("Use united")]]
+    [[nodiscard]] inline QRegion unite(const QRegion &r) const { return united(r); }
+    [[deprecated("Use united")]]
+    [[nodiscard]] inline QRegion unite(const QRect &r) const { return united(r); }
+    [[deprecated("Use intersected")]]
+    [[nodiscard]] inline QRegion intersect(const QRegion &r) const { return intersected(r); }
+    [[deprecated("Use intersected")]]
+    [[nodiscard]] inline QRegion intersect(const QRect &r) const { return intersected(r); }
+    [[deprecated("Use subtracted")]]
+    [[nodiscard]] inline QRegion subtract(const QRegion &r) const { return subtracted(r); }
+    [[deprecated("Use xored")]]
+    [[nodiscard]] inline QRegion eor(const QRegion &r) const { return xored(r); }
 
     bool intersects(const QRegion &r) const;
     bool intersects(const QRect &r) const;

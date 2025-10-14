@@ -74,8 +74,8 @@ public:
     void translate(int dx, int dy);
     void translate(const QPoint &offset);
 
-    QPolygon translated(int dx, int dy) const;
-    inline QPolygon translated(const QPoint &offset) const;
+    [[nodiscard]] QPolygon translated(int dx, int dy) const;
+    [[nodiscard]] inline QPolygon translated(const QPoint &offset) const;
 
     QRect boundingRect() const;
 
@@ -91,9 +91,9 @@ public:
 
     bool containsPoint(const QPoint &pt, Qt::FillRule fillRule) const;
 
-    QPolygon united(const QPolygon &r) const;
-    QPolygon intersected(const QPolygon &r) const;
-    QPolygon subtracted(const QPolygon &r) const;
+    [[nodiscard]] QPolygon united(const QPolygon &r) const;
+    [[nodiscard]] QPolygon intersected(const QPolygon &r) const;
+    [[nodiscard]] QPolygon subtracted(const QPolygon &r) const;
 };
 
 inline QPolygon::QPolygon(int asize) : QVector<QPoint>(asize) {}

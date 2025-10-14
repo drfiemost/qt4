@@ -746,6 +746,16 @@ QRegion QRegion::intersect(const QRect &r) const
 */
 
 /*!
+    \fn bool QRegion::isNull() const
+
+    Returns true if the region is empty; otherwise returns false. An
+    empty region is a region that contains no points. This function is
+    the same as isEmpty
+
+    \sa isEmpty()
+*/
+
+/*!
     \fn bool QRegion::contains(const QPoint &p) const
 
     Returns true if the region contains the point \a p; otherwise
@@ -4047,6 +4057,10 @@ bool QRegion::isEmpty() const
     return d == &shared_empty || d->qt_rgn->numRects == 0;
 }
 
+bool QRegion::isNull() const
+{
+    return d == &shared_empty || d->qt_rgn->numRects == 0;
+}
 
 bool QRegion::contains(const QPoint &p) const
 {
@@ -4069,7 +4083,7 @@ void QRegion::translate(int dx, int dy)
     OffsetRegion(*d->qt_rgn, dx, dy);
 }
 
-QRegion QRegion::unite(const QRegion &r) const
+QRegion QRegion::united(const QRegion &r) const
 {
     if (isEmptyHelper(d->qt_rgn))
         return r;
@@ -4132,7 +4146,7 @@ QRegion& QRegion::operator+=(const QRegion &r)
     }
 }
 
-QRegion QRegion::unite(const QRect &r) const
+QRegion QRegion::united(const QRect &r) const
 {
     if (isEmptyHelper(d->qt_rgn))
         return r;
@@ -4193,7 +4207,7 @@ QRegion& QRegion::operator+=(const QRect &r)
     }
 }
 
-QRegion QRegion::intersect(const QRegion &r) const
+QRegion QRegion::intersected(const QRegion &r) const
 {
     if (isEmptyHelper(d->qt_rgn) || isEmptyHelper(r.d->qt_rgn)
         || !EXTENTCHECK(&d->qt_rgn->extents, &r.d->qt_rgn->extents))
@@ -4238,7 +4252,7 @@ QRegion QRegion::intersect(const QRegion &r) const
     return result;
 }
 
-QRegion QRegion::intersect(const QRect &r) const
+QRegion QRegion::intersected(const QRect &r) const
 {
     if (isEmptyHelper(d->qt_rgn) || r.isEmpty()
         || !EXTENTCHECK(&d->qt_rgn->extents, &r))
@@ -4264,7 +4278,7 @@ QRegion QRegion::intersect(const QRect &r) const
     return result;
 }
 
-QRegion QRegion::subtract(const QRegion &r) const
+QRegion QRegion::subtracted(const QRegion &r) const
 {
     if (isEmptyHelper(d->qt_rgn) || isEmptyHelper(r.d->qt_rgn))
         return *this;
@@ -4289,7 +4303,7 @@ QRegion QRegion::subtract(const QRegion &r) const
     return result;
 }
 
-QRegion QRegion::eor(const QRegion &r) const
+QRegion QRegion::xored(const QRegion &r) const
 {
     if (isEmptyHelper(d->qt_rgn)) {
         return r;
