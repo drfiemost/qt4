@@ -76,8 +76,69 @@ public:
     inline void setSingleShot(bool singleShot);
     inline bool isSingleShot() const { return single; }
 
-    static void singleShot(int msec, QObject *receiver, const char *member);
-    static void singleShot(int msec, Qt::TimerType timerType, QObject *receiver, const char *member);
+    static void singleShot(int msec, const QObject *receiver, const char *member);
+    static void singleShot(int msec, Qt::TimerType timerType, const QObject *receiver, const char *member);
+
+#ifdef Q_QDOC
+    static void singleShot(int msec, const QObject *receiver, PointerToMemberFunction method);
+    static void singleShot(int msec, Qt::TimerType timerType, const QObject *receiver, PointerToMemberFunction method);
+    static void singleShot(int msec, Functor functor);
+    static void singleShot(int msec, Qt::TimerType timerType, Functor functor);
+    static void singleShot(int msec, const QObject *context, Functor functor);
+    static void singleShot(int msec, Qt::TimerType timerType, const QObject *context, Functor functor);
+#else
+    // singleShot to a QObject slot
+    template <typename Func1>
+    static inline void singleShot(int msec, const typename QtPrivate::FunctionPointer<Func1>::Object *receiver, Func1 slot)
+    {
+        singleShot(msec, msec >= 2000 ? Qt::CoarseTimer : Qt::PreciseTimer, receiver, slot);
+    }
+    template <typename Func1>
+    static inline void singleShot(int msec, Qt::TimerType timerType, const typename QtPrivate::FunctionPointer<Func1>::Object *receiver,
+                                  Func1 slot)
+    {
+        typedef QtPrivate::FunctionPointer<Func1> SlotType;
+
+        //compilation error if the slot has arguments.
+        static_assert(int(SlotType::ArgumentCount) == 0,
+                          "The slot must not have any arguments.");
+
+        singleShotImpl(msec, timerType, receiver,
+                       new QtPrivate::QSlotObject<Func1, typename SlotType::Arguments, void>(slot));
+    }
+    // singleShot to a functor or function pointer (without context)
+    template <typename Func1>
+    static inline void singleShot(int msec, Func1 slot)
+    {
+        singleShot(msec, msec >= 2000 ? Qt::CoarseTimer : Qt::PreciseTimer, nullptr, slot);
+    }
+    template <typename Func1>
+    static inline void singleShot(int msec, Qt::TimerType timerType, Func1 slot)
+    {
+        singleShot(msec, timerType, nullptr, slot);
+    }
+    // singleShot to a functor or function pointer (with context)
+    template <typename Func1>
+    static inline typename std::enable_if<!QtPrivate::FunctionPointer<Func1>::IsPointerToMemberFunction &&
+                                                !QtPrivate::is_same<const char*, Func1>::value, void>::type
+            singleShot(int msec, QObject *context, Func1 slot)
+    {
+        singleShot(msec, msec >= 2000 ? Qt::CoarseTimer : Qt::PreciseTimer, context, slot);
+    }
+    template <typename Func1>
+    static inline typename std::enable_if<!QtPrivate::FunctionPointer<Func1>::IsPointerToMemberFunction &&
+                                                !QtPrivate::is_same<const char*, Func1>::value, void>::type
+            singleShot(int msec, Qt::TimerType timerType, QObject *context, Func1 slot)
+    {
+        //compilation error if the slot has arguments.
+        typedef QtPrivate::FunctionPointer<Func1> SlotType;
+        static_assert(int(SlotType::ArgumentCount) <= 0,  "The slot must not have any arguments.");
+
+        singleShotImpl(msec, timerType, context,
+                       new QtPrivate::QFunctorSlotObject<Func1, 0,
+                            typename QtPrivate::List_Left<void, 0>::Value, void>(slot));
+    }
+#endif
 
 public Q_SLOTS:
     void start(int msec);
@@ -96,6 +157,9 @@ private:
 
     inline int startTimer(int){ return -1;}
     inline void killTimer(int){}
+
+    static void singleShotImpl(int msec, Qt::TimerType timerType,
+                               const QObject *receiver, QtPrivate::QSlotObjectBase *slotObj);
 
     int id, inter, del;
     uint single : 1;
