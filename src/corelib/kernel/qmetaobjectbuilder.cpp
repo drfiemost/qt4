@@ -473,7 +473,7 @@ QMetaMethodBuilder QMetaObjectBuilder::addSignal(const QByteArray& signature)
 {
     int index = d->methods.size();
     d->methods.append(QMetaMethodBuilderPrivate
-        (QMetaMethod::Signal, signature, QByteArray(), QMetaMethod::Protected));
+        (QMetaMethod::Signal, signature, QByteArray(), QMetaMethod::Public));
     return QMetaMethodBuilder(this, index);
 }
 
@@ -1874,8 +1874,7 @@ void QMetaMethodBuilder::setTag(const QByteArray& value)
 /*!
     Returns the access specification of this method (private, protected,
     or public).  The default value is QMetaMethod::Public for methods,
-    slots, and constructors.  The default value is QMetaMethod::Protected
-    for signals.
+    slots, signals and constructors.
 
     \sa setAccess()
 */

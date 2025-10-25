@@ -378,7 +378,7 @@ void tst_QMetaObjectBuilder::signal()
     QVERIFY(method1.returnType().isEmpty());
     QVERIFY(method1.parameterNames().isEmpty());
     QVERIFY(method1.tag().isEmpty());
-    QVERIFY(method1.access() == QMetaMethod::Protected);
+    QVERIFY(method1.access() == QMetaMethod::Public);
     QCOMPARE(method1.attributes(), 0);
     QCOMPARE(method1.index(), 0);
     QCOMPARE(builder.methodCount(), 1);
@@ -390,7 +390,7 @@ void tst_QMetaObjectBuilder::signal()
     QVERIFY(method2.returnType().isEmpty());
     QVERIFY(method2.parameterNames().isEmpty());
     QVERIFY(method2.tag().isEmpty());
-    QVERIFY(method2.access() == QMetaMethod::Protected);
+    QVERIFY(method2.access() == QMetaMethod::Public);
     QCOMPARE(method2.attributes(), 0);
     QCOMPARE(method2.index(), 1);
     QCOMPARE(builder.methodCount(), 2);
