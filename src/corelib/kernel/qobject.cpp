@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.com>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -163,7 +164,7 @@ QObjectPrivate::QObjectPrivate(int version)
 
     // QObjectData initialization
     q_ptr = nullptr;
-    parent = nullptr;                                 // no parent yet. It is set by setParent()
+    parent = nullptr;                           // no parent yet. It is set by setParent()
     isWidget = false;                           // assume not a widget object
     pendTimer = false;                          // no timers yet
     blockSig = false;                           // not blocking signals
@@ -894,6 +895,14 @@ QObject::~QObject()
                         m->unlock();
 
                     connectionList.first = c->nextConnectionList;
+
+                    // The destroy operation must happen outside the lock
+                    if (c->isSlotObject) {
+                        c->isSlotObject = false;
+                        locker.unlock();
+                        c->slotObj->destroyIfLastRef();
+                        locker.relock();
+                    }
                     c->deref();
                 }
             }
@@ -906,7 +915,15 @@ QObject::~QObject()
             d->connectionLists = nullptr;
         }
 
-        // disconnect all senders
+        /* disconnect all senders
+         * This loop basically just does
+         *     for (node = d->senders; node; node = node->next) { ... }
+         *
+         * We need to temporarily unlock the receiver mutex to destroy the functors or to lock the
+         * sender's mutex. And when the mutex is released, node->next might be destroyed by another
+         * thread. That's why we set node->prev to &node, that way, if node is destroyed, node will
+         * be updated.
+         */
         QObjectPrivate::Connection *node = d->senders;
         while (node) {
             QObject *sender = node->sender;
@@ -915,6 +932,8 @@ QObject::~QObject()
             bool needToUnlock = QOrderedMutexLocker::relock(signalSlotMutex, m);
             //the node has maybe been removed while the mutex was unlocked in relock?
             if (!node || node->sender != sender) {
+                // We hold the wrong mutex
+                Q_ASSERT(needToUnlock);
                 m->unlock();
                 continue;
             }
@@ -934,6 +953,8 @@ QObject::~QObject()
                 m->unlock();
 
             if (slotObj) {
+                if (node)
+                    node->prev = &node;
                 locker.unlock();
                 slotObj->destroyIfLastRef();
                 locker.relock();
@@ -1515,7 +1536,7 @@ int QObject::startTimer(int interval, Qt::TimerType timerType)
     Q_D(QObject);
 
     if (interval < 0) {
-        qWarning("QObject::startTimer: QTimer cannot have a negative interval");
+        qWarning("QObject::startTimer: Timers cannot have negative intervals");
         return 0;
     }
 
@@ -1523,7 +1544,7 @@ int QObject::startTimer(int interval, Qt::TimerType timerType)
 
     auto thisThreadData = d->threadData.loadRelaxed();
     if (!thisThreadData->hasEventDispatcher()) {
-        qWarning("QObject::startTimer: QTimer can only be used with threads started with QThread");
+        qWarning("QObject::startTimer: Timers can only be used with threads started with QThread");
         return 0;
     }
     return thisThreadData->eventDispatcher.loadRelaxed()->registerTimer(interval, this);
@@ -3077,7 +3098,7 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
                            && (slot == 0 || (c->isSlotObject && c->slotObj->compare(slot)))))) {
             bool needToUnlock = false;
             QMutex *receiverMutex = nullptr;
-            if (!receiver) {
+            if (c->receiver) {
                 receiverMutex = signalSlotLock(r);
                 // need to relock this receiver and sender in the correct order
                 needToUnlock = QOrderedMutexLocker::relock(senderMutex, receiverMutex);
@@ -3092,6 +3113,13 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
                 receiverMutex->unlock();
 
             c->receiver = nullptr;
+
+            if (c->isSlotObject) {
+                c->isSlotObject = false;
+                senderMutex->unlock();
+                c->slotObj->destroyIfLastRef();
+                senderMutex->lock();
+            }
 
             success = true;
 
@@ -3116,8 +3144,7 @@ bool QMetaObjectPrivate::disconnect(const QObject *sender, int signal_index,
     QObject *s = const_cast<QObject *>(sender);
 
     QMutex *senderMutex = signalSlotLock(sender);
-    QMutex *receiverMutex = receiver ? signalSlotLock(receiver) : nullptr;
-    QOrderedMutexLocker locker(senderMutex, receiverMutex);
+    QMutexLocker locker(senderMutex);
 
     QObjectConnectionListVector *connectionLists = QObjectPrivate::get(s)->connectionLists;
     if (!connectionLists)
@@ -3384,9 +3411,15 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
             const int method_relative = c->method_relative;
             if (c->isSlotObject) {
                 c->slotObj->ref();
-                const QScopedPointer<QtPrivate::QSlotObjectBase, QSlotObjectBaseDeleter> obj(c->slotObj);
+                QScopedPointer<QtPrivate::QSlotObjectBase, QSlotObjectBaseDeleter> obj(c->slotObj);
                 locker.unlock();
                 obj->call(receiver, argv ? argv : empty_argv);
+
+                // Make sure the slot object gets destroyed before the mutex is locked again, as the
+                // destructor of the slot object might also lock a mutex from the signalSlotLock() mutex pool,
+                // and that would deadlock if the pool happens to return the same mutex.
+                obj.reset();
+
                 locker.relock();
             } else if (callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
                 //we compare the vtable to make sure we are not in the destructor of the object.
@@ -4321,16 +4354,29 @@ bool QObject::disconnect(const QMetaObject::Connection &connection)
 
     QMutex *senderMutex = signalSlotLock(c->sender);
     QMutex *receiverMutex = signalSlotLock(c->receiver);
-    QOrderedMutexLocker locker(senderMutex, receiverMutex);
 
-    QObjectConnectionListVector *connectionLists = QObjectPrivate::get(c->sender)->connectionLists;
-    Q_ASSERT(connectionLists);
-    connectionLists->dirty = true;
+    {
+        QOrderedMutexLocker locker(senderMutex, receiverMutex);
 
-    *c->prev = c->next;
-    if (c->next)
-        c->next->prev = c->prev;
-    c->receiver = 0;
+        QObjectConnectionListVector *connectionLists = QObjectPrivate::get(c->sender)->connectionLists;
+        Q_ASSERT(connectionLists);
+        connectionLists->dirty = true;
+
+        *c->prev = c->next;
+        if (c->next)
+            c->next->prev = c->prev;
+        c->receiver = nullptr;
+    }
+
+    // destroy the QSlotObject, if possible
+    if (c->isSlotObject) {
+        c->slotObj->destroyIfLastRef();
+        c->isSlotObject = false;
+    }
+
+    const_cast<QMetaObject::Connection &>(connection).d_ptr = nullptr;
+    c->deref(); // has been removed from the QMetaObject::Connection object
+
     return true;
 }
 
