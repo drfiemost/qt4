@@ -235,7 +235,7 @@ class TestClass : public MyNamespace::TestSuperClass, public DONT_CONFUSE_MOC(My
 "      <arg direction=\"in\" type=\"s\" name=\"path\" />\n"
 "      <arg direction=\"in\" type=\"s\" name=\"name\" />\n"
 "      <arg direction=\"out\" type=\"as\" name=\"cookies\" />\n"
-"      <annotation value=\"QList&lt;int>\" name=\"com.trolltech.QtDBus.QtTypeName.In0\" />\n"
+"      <annotation value=\"QList&lt;int>\" name=\"org.qtproject.QtDBus.QtTypeName.In0\" />\n"
 "    </method>\n"
 "    <method name=\"findDOMCookies\" >\n"
 "      <arg direction=\"in\" type=\"s\" name=\"url\" />\n"

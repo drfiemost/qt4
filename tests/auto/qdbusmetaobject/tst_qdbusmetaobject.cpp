@@ -432,7 +432,7 @@ void tst_QDBusMetaObject::types()
 class MethodTest1: public QObject
 {
     Q_OBJECT
-    
+
 public slots:
     void method() { }
 };

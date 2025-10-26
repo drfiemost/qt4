@@ -52,12 +52,12 @@ void *qdbus_resolve_me(const char *name);
 
 #if !defined QT_LINKED_LIBDBUS
 
-static QLibrary *qdbus_libdbus = 0;
+static QLibrary *qdbus_libdbus = nullptr;
 
 void qdbus_unloadLibDBus()
 {
     delete qdbus_libdbus;
-    qdbus_libdbus = 0;
+    qdbus_libdbus = nullptr;
 }
 
 bool qdbus_loadLibDBus()
@@ -86,7 +86,7 @@ bool qdbus_loadLibDBus()
     }
 
     delete lib;
-    lib = 0;
+    lib = nullptr;
     return false;
 }
 
@@ -94,12 +94,12 @@ void *qdbus_resolve_conditionally(const char *name)
 {
     if (qdbus_loadLibDBus())
         return qdbus_libdbus->resolve(name);
-    return 0;
+    return nullptr;
 }
 
 void *qdbus_resolve_me(const char *name)
 {
-    void *ptr = 0;
+    void *ptr = nullptr;
     if (!qdbus_loadLibDBus())
         qFatal("Cannot find libdbus-1 in your system to resolve symbol '%s'.", name);
 

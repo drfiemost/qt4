@@ -46,6 +46,9 @@
 #include <QtCore/qatomic.h>
 #include <QtCore/qbytearray.h>
 #include <QtCore/qtypetraits.h>
+#ifndef QT_NO_QOBJECT
+#include <QtCore/qobjectdefs.h>
+#endif
 
 #ifdef Bool
 #error qmetatype.h must be included before any header file that defines Bool
@@ -207,7 +210,10 @@ public:
 #endif
     static int registerType(const char *typeName, Destructor destructor,
                             Constructor constructor);
+    static int registerNormalizedType(const QT_PREPEND_NAMESPACE(QByteArray) &normalizedTypeName, Destructor destructor,
+                            Constructor constructor);
     static int registerTypedef(const char *typeName, int aliasId);
+    static int registerNormalizedTypedef(const QT_PREPEND_NAMESPACE(QByteArray) &normalizedTypeName, int aliasId);
     static int type(const char *typeName);
     static const char *typeName(int type);
     static bool isRegistered(int type);
@@ -277,7 +283,7 @@ namespace QtPrivate {
 }
 
 template <typename T>
-int qRegisterMetaType(const char *typeName
+int qRegisterNormalizedMetaType(const QT_PREPEND_NAMESPACE(QByteArray) &normalizedTypeName
 #ifndef qdoc
     , T * dummy = nullptr
 #endif
@@ -285,15 +291,30 @@ int qRegisterMetaType(const char *typeName
 {
     const int typedefOf = dummy ? -1 : QtPrivate::QMetaTypeIdHelper<T>::qt_metatype_id();
     if (typedefOf != -1)
-        return QMetaType::registerTypedef(typeName, typedefOf);
+        return QMetaType::registerNormalizedTypedef(normalizedTypeName, typedefOf);
 
     typedef void*(*ConstructPtr)(const T*);
     ConstructPtr cptr = qMetaTypeConstructHelper<T>;
     typedef void(*DeletePtr)(T*);
     DeletePtr dptr = qMetaTypeDeleteHelper<T>;
 
-    return QMetaType::registerType(typeName, reinterpret_cast<QMetaType::Destructor>(dptr),
+    return QMetaType::registerNormalizedType(normalizedTypeName, reinterpret_cast<QMetaType::Destructor>(dptr),
                                    reinterpret_cast<QMetaType::Constructor>(cptr));
+}
+
+template <typename T>
+int qRegisterMetaType(const char *typeName
+#ifndef qdoc
+    , T * dummy = 0
+#endif
+)
+{
+#ifdef QT_NO_QOBJECT
+    QT_PREPEND_NAMESPACE(QByteArray) normalizedTypeName = typeName;
+#else
+    QT_PREPEND_NAMESPACE(QByteArray) normalizedTypeName = QMetaObject::normalizedType(typeName);
+#endif
+    return qRegisterNormalizedMetaType<T>(normalizedTypeName, dummy);
 }
 
 #ifndef QT_NO_DATASTREAM

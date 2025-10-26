@@ -146,9 +146,8 @@ static QString generateInterfaceXml(const QMetaObject *mo, int flags, int method
                           !(flags & (QDBusConnection::ExportScriptableInvokables | QDBusConnection::ExportNonScriptableInvokables))))
             continue;           // we're not exporting any slots or invokables
 
-        QString xml = QString::fromLatin1("    <%1 name=\"%2\">\n")
-                      .arg(isSignal ? QLatin1String("signal") : QLatin1String("method"))
-                      .arg(QLatin1String(signature.left(paren)));
+        QString xml = QString::asprintf("    <%s name=\"%s\">\n",
+                                        isSignal ? "signal" : "method", signature.left(paren).constData());
 
         // check the return type first
         int typeId = qDBusNameToTypeId(mm.typeName());
@@ -196,10 +195,8 @@ static QString generateInterfaceXml(const QMetaObject *mo, int flags, int method
             bool isOutput = isSignal || j > inputCount;
 
             const char *signature = QDBusMetaType::typeToSignature(types.at(j));
-            xml += QString::fromLatin1("      <arg %1type=\"%2\" direction=\"%3\"/>\n")
-                   .arg(name)
-                   .arg(QLatin1String(signature))
-                   .arg(isOutput ? QLatin1String("out") : QLatin1String("in"));
+            xml += QString::asprintf("      <arg %lstype=\"%s\" direction=\"%s\"/>\n",
+                                     qUtf16Printable(name), signature, isOutput ? "out" : "in");
 
             // do we need to describe this argument?
             if (QDBusMetaType::signatureToType(signature) == QVariant::Invalid) {

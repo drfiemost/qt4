@@ -7,4 +7,4 @@ contains(QT_CONFIG,dbus): {
     SOURCES += ../qdbusmarshall/dummy.cpp
 }
 
-OTHER_FILES += com.trolltech.QtDBus.Pinger.xml
+OTHER_FILES += org.qtproject.QtDBus.Pinger.xml

@@ -319,10 +319,10 @@ int QDBusMetaType::signatureToType(const char *signature)
 
     case DBUS_TYPE_UINT16:
         return QMetaType::UShort;
-        
+
     case DBUS_TYPE_INT32:
         return QVariant::Int;
-        
+
     case DBUS_TYPE_UINT32:
         return QVariant::UInt;
 

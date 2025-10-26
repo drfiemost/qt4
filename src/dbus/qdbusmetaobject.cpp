@@ -125,6 +125,25 @@ QDBusMetaObjectGenerator::QDBusMetaObjectGenerator(const QString &interfaceName,
     }
 }
 
+static int registerComplexDBusType(const char *typeName)
+{
+    struct QDBusRawTypeHandler {
+        static void destruct(void *)
+        {
+            qFatal("Cannot destruct placeholder type QDBusRawType");
+        }
+
+        static void *construct(const void *)
+        {
+            qFatal("Cannot construct placeholder type QDBusRawType");
+            return nullptr;
+        }
+    };
+
+    return QMetaType::registerNormalizedType(typeName, QDBusRawTypeHandler::destruct,
+                                             QDBusRawTypeHandler::construct);
+}
+
 Q_DBUS_EXPORT bool qt_dbus_metaobject_skip_annotations = false;
 
 QDBusMetaObjectGenerator::Type
@@ -167,8 +186,8 @@ QDBusMetaObjectGenerator::findType(const QByteArray &signature,
         if (type == QVariant::Invalid || signature != QDBusMetaType::typeToSignature(type)) {
             // type is still unknown or doesn't match back to the signature that it
             // was expected to, so synthesize a fake type
-            type = QMetaType::VoidStar;
             typeName = "QDBusRawType<0x" + signature.toHex() + ">*";
+            type = registerComplexDBusType(typeName);
         }
 
         result.name = typeName;
@@ -184,7 +203,7 @@ QDBusMetaObjectGenerator::findType(const QByteArray &signature,
             type = QVariant::Map;
         } else {
             result.name = "QDBusRawType::" + signature;
-            type = -1;
+            type = registerComplexDBusType(result.name);
         }
     } else {
         result.name = QMetaType::typeName(type);

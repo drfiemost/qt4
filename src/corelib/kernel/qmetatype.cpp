@@ -429,15 +429,31 @@ static int qMetaTypeCustomType_unlocked(const char *typeName, int length)
 int QMetaType::registerType(const char *typeName, Destructor destructor,
                             Constructor constructor)
 {
-    QVector<QCustomTypeInfo> *ct = customTypes();
-    if (!ct || !typeName || !destructor || !constructor)
-        return -1;
-
 #ifdef QT_NO_QOBJECT
     NS(QByteArray) normalizedTypeName = typeName;
 #else
     NS(QByteArray) normalizedTypeName = QMetaObject::normalizedType(typeName);
 #endif
+
+    return registerNormalizedType(normalizedTypeName, destructor, constructor);
+}
+
+
+/*! \internal
+
+    Registers a user type for marshalling, with \a normalizedTypeName, a \a
+    deleter, a \a creator, a \a destructor, a \a constructor, and
+    a \a size. Returns the type's handle, or -1 if the type could
+    not be registered.  Note that normalizedTypeName is not checked for
+    conformance with Qt's normalized format, so it must already
+    conform.
+ */
+int QMetaType::registerNormalizedType(const NS(QByteArray) &normalizedTypeName, Destructor destructor,
+                            Constructor constructor)
+{
+    QVector<QCustomTypeInfo> *ct = customTypes();
+    if (!ct || normalizedTypeName.isEmpty() || !destructor || !constructor)
+        return -1;
 
     int idx = qMetaTypeStaticType(normalizedTypeName.constData(),
                                   normalizedTypeName.size());
@@ -466,15 +482,26 @@ int QMetaType::registerType(const char *typeName, Destructor destructor,
 */
 int QMetaType::registerTypedef(const char* typeName, int aliasId)
 {
-    QVector<QCustomTypeInfo> *ct = customTypes();
-    if (!ct || !typeName)
-        return -1;
-
 #ifdef QT_NO_QOBJECT
     NS(QByteArray) normalizedTypeName = typeName;
 #else
     NS(QByteArray) normalizedTypeName = QMetaObject::normalizedType(typeName);
 #endif
+
+    return registerNormalizedTypedef(normalizedTypeName, aliasId);
+}
+
+/*! \internal
+
+    Registers a user type for marshalling, as an alias of another type (typedef).
+    Note that normalizedTypeName is not checked for conformance with Qt's normalized format,
+    so it must already conform.
+*/
+int QMetaType::registerNormalizedTypedef(const NS(QByteArray) &normalizedTypeName, int aliasId)
+{
+    QVector<QCustomTypeInfo> *ct = customTypes();
+    if (!ct || normalizedTypeName.isEmpty())
+        return -1;
 
     int idx = qMetaTypeStaticType(normalizedTypeName.constData(),
                                   normalizedTypeName.size());

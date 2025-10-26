@@ -1343,6 +1343,15 @@ inline int qMacVersion() { return QSysInfo::MacintoshVersion; }
 #  define qUtf8Printable(string) QtPrivate::asString(string).toUtf8().constData()
 #endif
 
+/*
+    Wrap QString::utf16() with enough casts to allow passing it
+    to QString::asprintf("%ls") without warnings.
+*/
+#ifndef qUtf16Printable
+#  define qUtf16Printable(string) \
+    static_cast<const wchar_t*>(static_cast<const void*>(QString(string).utf16()))
+#endif
+
 Q_CORE_EXPORT void qDebug(const char *, ...) /* print debug message */
 #if defined(Q_CC_GNU) && !defined(__INSURE__)
     __attribute__ ((format (printf, 1, 2)))
