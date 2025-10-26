@@ -169,7 +169,7 @@ QObjectPrivate::QObjectPrivate(int version)
     pendTimer = false;                          // no timers yet
     blockSig = false;                           // not blocking signals
     wasDeleted = false;                         // double-delete catcher
-    sendChildEvents = true;                     // if we should send ChildInsert and ChildRemove events to parent
+    sendChildEvents = true;                     // if we should send ChildAdded and ChildRemoved events to parent
     receiveChildEvents = true;
     postedEvents = 0;
     extraData = nullptr;
@@ -3319,8 +3319,6 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                                                          argv ? argv : empty_argv);
     }
 
-    void* currentThreadId = QThread::currentThreadId();
-
     {
     QMutexLocker locker(signalSlotLock(sender));
     struct ConnectionListsRef {
@@ -3360,6 +3358,8 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
     else
         list = &connectionLists->allsignals;
 
+    void* currentThreadId = QThread::currentThreadId();
+
     do {
         QObjectPrivate::Connection *c = list->first;
         if (!c) continue;
@@ -3382,7 +3382,6 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                 continue;
 #ifndef QT_NO_THREAD
             } else if (c->connectionType == Qt::BlockingQueuedConnection) {
-                locker.unlock();
                 if (receiverInSameThread) {
                     qWarning("Qt: Dead lock detected while activating a BlockingQueuedConnection: "
                     "Sender is %s(%p), receiver is %s(%p)",
@@ -3396,6 +3395,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                     new QMetaCallEvent(c->slotObj, sender, signal_absolute_index, 0, 0, argv ? argv : empty_argv, &semaphore) :
                     new QMetaCallEvent(c->method_offset, c->method_relative, c->callFunction, sender, signal_absolute_index, 0, 0, argv ? argv : empty_argv, &semaphore);
                 QCoreApplication::postEvent(receiver, ev);
+                locker.unlock();
                 semaphore.acquire();
                 locker.relock();
                 continue;
@@ -3407,8 +3407,6 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
             if (receiverInSameThread) {
                 sw.switchSender(receiver, sender, signal_absolute_index);
             }
-            const QObjectPrivate::StaticMetaCallFunction callFunction = c->callFunction;
-            const int method_relative = c->method_relative;
             if (c->isSlotObject) {
                 c->slotObj->ref();
                 QScopedPointer<QtPrivate::QSlotObjectBase, QSlotObjectBaseDeleter> obj(c->slotObj);
@@ -3421,10 +3419,12 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                 obj.reset();
 
                 locker.relock();
-            } else if (callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
+            } else if (c->callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
                 //we compare the vtable to make sure we are not in the destructor of the object.
-                locker.unlock();
                 const int methodIndex = c->method();
+                const int method_relative = c->method_relative;
+                const auto callFunction = c->callFunction;
+                locker.unlock();
                 if (qt_signal_spy_callback_set.slot_begin_callback != nullptr)
                     qt_signal_spy_callback_set.slot_begin_callback(receiver, methodIndex, argv ? argv : empty_argv);
 
@@ -3434,7 +3434,7 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
                     qt_signal_spy_callback_set.slot_end_callback(receiver, methodIndex);
                 locker.relock();
             } else {
-                const int method = method_relative + c->method_offset;
+                const int method = c->method_relative + c->method_offset;
                 locker.unlock();
 
                 if (qt_signal_spy_callback_set.slot_begin_callback != nullptr) {
@@ -4287,7 +4287,7 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
                                              QtPrivate::QSlotObjectBase *slotObj, Qt::ConnectionType type,
                                              const int *types, const QMetaObject *senderMetaObject)
 {
-    if (!sender || !signal || !slotObj || !senderMetaObject) {
+    if (!sender || !receiver || !signal || !slotObj || !senderMetaObject) {
         qWarning("QObject::connect: invalid null parameter");
         if (slotObj)
             slotObj->destroyIfLastRef();
@@ -4315,7 +4315,7 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
     QOrderedMutexLocker locker(signalSlotLock(sender),
                                signalSlotLock(receiver));
 
-    if (type & Qt::UniqueConnection) {
+    if (type & Qt::UniqueConnection && slot) {
         QObjectConnectionListVector *connectionLists = QObjectPrivate::get(s)->connectionLists;
         if (connectionLists && connectionLists->count() > signal_index) {
             const QObjectPrivate::Connection *c2 =

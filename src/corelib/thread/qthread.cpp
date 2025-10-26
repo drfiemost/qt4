@@ -171,7 +171,8 @@ void QAdoptedThread::run()
 
 QThreadPrivate::QThreadPrivate(QThreadData *d)
     : QObjectPrivate(), data(d), running(false), finished(false), terminated(false),
-      isInFinish(false), exited(false), returnCode(-1),
+      isInFinish(false), interruptionRequested(false),
+      exited(false), returnCode(-1),
       stackSize(0), priority(QThread::InheritPriority)
 {
 #if defined (Q_WS_WIN)
@@ -557,8 +558,8 @@ int QThread::exec()
 
     Note that unlike the C library function of the same name, this
     function \e does return to the caller -- it is event processing
-    that stops. 
-    
+    that stops.
+
     No QEventLoops will be started anymore in this thread  until 
     QThread::exec() has been called again. If the eventloop in QThread::exec()
     is not running then the next call to QThread::exec() will also return
@@ -779,7 +780,7 @@ QThread::Priority QThread::priority() const
 #else // QT_NO_THREAD
 
 QThread::QThread(QObject *parent)
-    : QObject(*(new QThreadPrivate), (QObject*)0){
+    : QObject(*(new QThreadPrivate), (QObject*)nullptr){
     Q_D(QThread);
     d->data->thread.storeRelaxed(this);
 }
@@ -790,7 +791,7 @@ QThread *QThread::currentThread()
 }
 
 // No threads: so we can just use static variables
-static QThreadData *data = 0;
+static QThreadData *data = nullptr;
 
 QThreadData *QThreadData::current(bool createIfNecessary)
 {
@@ -811,7 +812,7 @@ QThreadData *QThreadData::current(bool createIfNecessary)
 void QThreadData::clearCurrentThreadData()
 {
     delete data;
-    data = 0;
+    data = nullptr;
 }
 
 /*! \internal
@@ -834,5 +835,58 @@ QThreadPrivate::~QThreadPrivate()
 }
 
 #endif // QT_NO_THREAD
+
+/*!
+    Request the interruption of the thread.
+    That request is advisory and it is up to code running on the thread to decide
+    if and how it should act upon such request.
+    This function does not stop any event loop running on the thread and
+    does not terminate it in any way.
+
+    \sa isInterruptionRequested()
+*/
+
+void QThread::requestInterruption()
+{
+    Q_D(QThread);
+    QMutexLocker locker(&d->mutex);
+    if (!d->running || d->finished || d->isInFinish)
+        return;
+    if (this == QCoreApplicationPrivate::theMainThread) {
+        qWarning("QThread::requestInterruption has no effect on the main thread");
+        return;
+    }
+    d->interruptionRequested = true;
+}
+
+/*!
+    Return true if the task running on this thread should be stopped.
+    An interruption can be requested by requestInterruption().
+
+    This function can be used to make long running tasks cleanly interruptible.
+    Never checking or acting on the value returned by this function is safe,
+    however it is advisable do so regularly in long running functions.
+    Take care not to call it too often, to keep the overhead low.
+
+    \code
+    void long_task() {
+         forever {
+            if ( QThread::currentThread()->isInterruptionRequested() ) {
+                return;
+            }
+        }
+    }
+    \endcode
+
+    \sa currentThread() requestInterruption()
+*/
+bool QThread::isInterruptionRequested() const
+{
+    Q_D(const QThread);
+    QMutexLocker locker(&d->mutex);
+    if (!d->running || d->finished || d->isInFinish)
+        return false;
+    return d->interruptionRequested;
+}
 
 QT_END_NAMESPACE

@@ -151,6 +151,7 @@ public:
     bool finished;
     bool terminated;
     bool isInFinish; //when in QThreadPrivate::finish
+    bool interruptionRequested;
 
     bool exited;
     int returnCode;
