@@ -3033,7 +3033,7 @@ QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender, i
             int method_index_absolute = method_index + method_offset;
 
             while (c2) {
-                if (c2->receiver == receiver && c2->method() == method_index_absolute)
+                if (!c2->isSlotObject && c2->receiver == receiver && c2->method() == method_index_absolute)
                     return nullptr;
                 c2 = c2->nextConnectionList;
             }
@@ -3094,7 +3094,7 @@ bool QMetaObjectPrivate::disconnectHelper(QObjectPrivate::Connection *c,
 
         if (r
             && (receiver == nullptr || (r == receiver
-                           && (method_index < 0 || c->method() == method_index)
+                           && (method_index < 0 || (!c->isSlotObject && c->method() == method_index))
                            && (slot == 0 || (c->isSlotObject && c->slotObj->compare(slot)))))) {
             bool needToUnlock = false;
             QMutex *receiverMutex = nullptr;
@@ -3253,7 +3253,7 @@ void QMetaObject::connectSlotsByName(QObject *o)
 static void queued_activate(QObject *sender, int signal, QObjectPrivate::Connection *c, void **argv)
 {
     const int *argumentTypes = c->argumentTypes.loadRelaxed();
-    if (!argumentTypes && argumentTypes != &DIRECT_CONNECTION_ONLY) {
+    if (!argumentTypes) {
         QMetaMethod m = sender->metaObject()->method(signal);
         argumentTypes = queuedConnectionTypes(m.parameterTypes());
         if (!argumentTypes) // cannot queue arguments
@@ -3424,13 +3424,14 @@ void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_sign
             } else if (callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
                 //we compare the vtable to make sure we are not in the destructor of the object.
                 locker.unlock();
+                const int methodIndex = c->method();
                 if (qt_signal_spy_callback_set.slot_begin_callback != nullptr)
-                    qt_signal_spy_callback_set.slot_begin_callback(receiver, c->method(), argv ? argv : empty_argv);
+                    qt_signal_spy_callback_set.slot_begin_callback(receiver, methodIndex, argv ? argv : empty_argv);
 
                 callFunction(receiver, QMetaObject::InvokeMetaMethod, method_relative, argv ? argv : empty_argv);
 
                 if (qt_signal_spy_callback_set.slot_end_callback != nullptr)
-                    qt_signal_spy_callback_set.slot_end_callback(receiver, c->method());
+                    qt_signal_spy_callback_set.slot_end_callback(receiver, methodIndex);
                 locker.relock();
             } else {
                 const int method = method_relative + c->method_offset;
@@ -3735,6 +3736,11 @@ void QObject::dumpObjectInfo()
                     c = c->nextConnectionList;
                     continue;
                 }
+                if (c->isSlotObject) {
+                    qDebug("          <functor or function pointer>");
+                    c = c->nextConnectionList;
+                    continue;
+                }
                 const QMetaObject *receiverMetaObject = c->receiver->metaObject();
                 const QMetaMethod method = receiverMetaObject->method(c->method());
                 qDebug("          --> %s::%s %s",
@@ -3753,11 +3759,15 @@ void QObject::dumpObjectInfo()
 
     if (d->senders) {
         for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
-            const QMetaMethod slot = metaObject()->method(s->method());
-            qDebug("          <-- %s::%s  %s",
+            QByteArray slotName = QByteArrayLiteral("<unknown>");
+            if (!s->isSlotObject) {
+                const QMetaMethod slot = metaObject()->method(s->method());
+                slotName = slot.methodSignature();
+            }
+            qDebug("          <-- %s::%s %s",
                    s->sender->metaObject()->className(),
                    s->sender->objectName().isEmpty() ? "unnamed" : qPrintable(s->sender->objectName()),
-                   slot.signature());
+                   slotName.constData());
         }
     } else {
         qDebug("        <None>");
@@ -3811,7 +3821,7 @@ QDebug operator<<(QDebug dbg, const QObject *o) {
 #ifndef Q_BROKEN_DEBUG_STREAM
     if (!o)
         return dbg << "QObject(0x0) ";
-    dbg.nospace() << o->metaObject()->className() << '(' << (void *)o;
+    dbg.nospace() << o->metaObject()->className() << '(' << (const void *)o;
     if (!o->objectName().isEmpty())
         dbg << ", name = " << o->objectName();
     dbg << ')';
@@ -4449,10 +4459,14 @@ bool QObject::disconnectImpl(const QObject *sender, void **signal, const QObject
     int signal_index = -1;
     if (signal) {
         void *args[] = { &signal_index, signal };
-        senderMetaObject->static_metacall(QMetaObject::IndexOfMethod, 0, args);
-        if (signal_index < 0 || signal_index >= QMetaObjectPrivate::get(senderMetaObject)->signalCount) {
-            qWarning("QObject::disconnect: signal not found in %s", senderMetaObject->className());
-            return false;
+        for (; senderMetaObject && signal_index < 0; senderMetaObject = senderMetaObject->superClass()) {
+            senderMetaObject->static_metacall(QMetaObject::IndexOfMethod, 0, args);
+            if (signal_index >= 0 && signal_index < QMetaObjectPrivate::get(senderMetaObject)->signalCount)
+                break;
+        }
+        if (!senderMetaObject) {
+            qWarning("QObject::disconnect: signal not found in %s", sender->metaObject()->className());
+            return QMetaObject::Connection(0);
         }
         int signalOffset, methodOffset;
         computeOffsets(senderMetaObject, &signalOffset, &methodOffset);
