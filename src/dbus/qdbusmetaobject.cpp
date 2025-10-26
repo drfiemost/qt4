@@ -99,7 +99,7 @@ private:
     Type findType(const QByteArray &signature,
                   const QDBusIntrospection::Annotations &annotations,
                   const char *direction = "Out", int id = -1);
-    
+
     void parseMethods();
     void parseSignals();
     void parseProperties();
@@ -128,20 +128,20 @@ QDBusMetaObjectGenerator::QDBusMetaObjectGenerator(const QString &interfaceName,
 static int registerComplexDBusType(const char *typeName)
 {
     struct QDBusRawTypeHandler {
-        static void destruct(void *)
+        static void destroy(void *)
         {
-            qFatal("Cannot destruct placeholder type QDBusRawType");
+            qFatal("Cannot destroy placeholder type QDBusRawType");
         }
 
-        static void *construct(const void *)
+        static void *create(const void *)
         {
-            qFatal("Cannot construct placeholder type QDBusRawType");
+            qFatal("Cannot create placeholder type QDBusRawType");
             return nullptr;
         }
     };
 
-    return QMetaType::registerNormalizedType(typeName, QDBusRawTypeHandler::destruct,
-                                             QDBusRawTypeHandler::construct);
+    return QMetaType::registerNormalizedType(typeName, QDBusRawTypeHandler::destroy,
+                                             QDBusRawTypeHandler::create);
 }
 
 Q_DBUS_EXPORT bool qt_dbus_metaobject_skip_annotations = false;
@@ -358,7 +358,7 @@ void QDBusMetaObjectGenerator::parseProperties()
         Type type = findType(p.type.toLatin1(), p.annotations);
         if (type.id == QVariant::Invalid)
             continue;
-        
+
         QByteArray name = p.name.toLatin1();
         mp.signature = p.type.toLatin1();
         mp.type = type.id;
@@ -481,12 +481,12 @@ void QDBusMetaObjectGenerator::write(QDBusMetaObject *obj)
 
             idata[signatureOffset++] = typeidOffset;
             idata[typeidOffset++] = mm.inputTypes.count();
-            memcpy(idata.data() + typeidOffset, mm.inputTypes.data(), mm.inputTypes.count() * sizeof(int));
+            std::memcpy(idata.data() + typeidOffset, mm.inputTypes.data(), mm.inputTypes.count() * sizeof(int));
             typeidOffset += mm.inputTypes.count();
 
             idata[signatureOffset++] = typeidOffset;
             idata[typeidOffset++] = mm.outputTypes.count();
-            memcpy(idata.data() + typeidOffset, mm.outputTypes.data(), mm.outputTypes.count() * sizeof(int));
+            std::memcpy(idata.data() + typeidOffset, mm.outputTypes.data(), mm.outputTypes.count() * sizeof(int));
             typeidOffset += mm.outputTypes.count();
         }
     }
@@ -517,13 +517,13 @@ void QDBusMetaObjectGenerator::write(QDBusMetaObject *obj)
     {
         MetaStringTable::const_iterator it;
         for (it = strings.constBegin(); it != strings.constEnd(); ++it) {
-            memcpy(string_data + it.value(), it.key().constData(), it.key().size());
+            std::memcpy(string_data + it.value(), it.key().constData(), it.key().size());
             string_data[it.value() + it.key().size()] = '\0';
         }
     }
 
     uint *uint_data = new uint[idata.size()];
-    memcpy(uint_data, idata.data(), idata.size() * sizeof(int));
+    std::memcpy(uint_data, idata.data(), idata.size() * sizeof(int));
 
     // put the metaobject together
     obj->d.data = uint_data;
@@ -596,7 +596,7 @@ QDBusMetaObject *QDBusMetaObject::createMetaObject(const QString &interface, con
     if (we)
         return we;
     // still nothing?
-    
+
     if (parsed.isEmpty()) {
         // object didn't return introspection
         we = new QDBusMetaObject;

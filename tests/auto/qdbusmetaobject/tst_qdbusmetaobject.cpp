@@ -296,8 +296,10 @@ signals:
     void signal(StringPair);
 };
 const char TypesTest16_xml[] =
-    "<signal name=\"signal\"><arg type=\"(ss)\"/>"
-    "<annotation name=\"org.qtproject.QtDBus.QtTypeName.Out0\" value=\"StringPair\"></signal>";
+    R"x(<signal name="signal">
+            <arg type="(ss)"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="StringPair"/>
+        </signal>)x";
 
 class TypesTest17: public QObject
 {
@@ -307,8 +309,10 @@ signals:
     void signal(Struct1);
 };
 const char TypesTest17_xml[] =
-    "<signal name=\"signal\"><arg type=\"(s)\"/>"
-    "<annotation name=\"org.qtproject.QtDBus.QtTypeName.Out0\" value=\"Struct1\"></signal>";
+    R"x(<signal name="signal">
+            <arg type="(s)"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="Struct1"/>
+        </signal>)x";
 
 class TypesTest18: public QObject
 {
@@ -318,8 +322,10 @@ signals:
     void signal(Struct4);
 };
 const char TypesTest18_xml[] =
-    "<signal name=\"signal\"><arg type=\"(ssa(ss)sayasx)\"/>"
-    "<annotation name=\"org.qtproject.QtDBus.QtTypeName.Out0\" value=\"Struct4\"></signal>";
+    R"x(<signal name="signal">
+            <arg type="(ssa(ss)sayasx)"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="Struct4"/>
+        </signal>)x";
 
 class TypesTest19: public QObject
 {
@@ -329,8 +335,10 @@ signals:
     void signal(QVariantList);
 };
 const char TypesTest19_xml[] =
-    "<signal name=\"signal\"><arg type=\"av\"/>"
-    "<annotation name=\"org.qtproject.QtDBus.QtTypeName.Out0\" value=\"QVariantList\"></signal>";
+    R"x(<signal name="signal">
+            <arg type="av"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantList"/>
+        </signal>)x";
 
 class TypesTest20: public QObject
 {
@@ -340,8 +348,10 @@ signals:
     void signal(QVariantMap);
 };
 const char TypesTest20_xml[] =
-    "<signal name=\"signal\"><arg type=\"a{sv}\"/>"
-    "<annotation name=\"org.qtproject.QtDBus.QtTypeName.Out0\" value=\"QVariantMap\"></signal>";
+    R"x(<signal name="signal">
+            <arg type="a{sv}"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+        </signal>)x";
 
 void tst_QDBusMetaObject::types_data()
 {
