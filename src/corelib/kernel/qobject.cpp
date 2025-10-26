@@ -982,6 +982,15 @@ QObjectPrivate::Connection::~Connection()
         slotObj->destroyIfLastRef();
 }
 
+/*! \internal Returns true if the object is still connected */
+bool QMetaObject::Connection::isConnected_helper() const
+{
+    Q_ASSERT(d_ptr);    // we're only called from operator RestrictedBool() const
+    QObjectPrivate::Connection *c = static_cast<QObjectPrivate::Connection *>(d_ptr);
+
+    return c->receiver;
+}
+
 
 /*!
     \fn QMetaObject *QObject::metaObject() const
@@ -4297,6 +4306,7 @@ QMetaObject::Connection QObject::connectImpl(const QObject *sender, void **signa
     void *args[] = { &signal_index, signal };
     for (; senderMetaObject && signal_index < 0; senderMetaObject = senderMetaObject->superClass()) {
         senderMetaObject->static_metacall(QMetaObject::IndexOfMethod, 0, args);
+
         if (signal_index >= 0 && signal_index < QMetaObjectPrivate::get(senderMetaObject)->signalCount)
             break;
     }
@@ -4505,7 +4515,7 @@ QMetaObject::Connection& QMetaObject::Connection::operator=(const QMetaObject::C
     return *this;
 }
 
-QMetaObject::Connection::Connection() : d_ptr(0) {}
+QMetaObject::Connection::Connection() : d_ptr(nullptr) {}
 
 QMetaObject::Connection::~Connection()
 {

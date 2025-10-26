@@ -424,6 +424,7 @@ class Q_CORE_EXPORT QMetaObject::Connection {
     explicit Connection(void *data) : d_ptr(data) {  }
     friend class QObject;
     friend struct QMetaObject;
+    bool isConnected_helper() const;
 public:
     ~Connection();
     Connection();
@@ -433,11 +434,11 @@ public:
     operator bool() const;
 #else
     typedef void *Connection::*RestrictedBool;
-    operator RestrictedBool() const { return d_ptr ? &Connection::d_ptr : 0; }
+    operator RestrictedBool() const { return d_ptr && isConnected_helper() ? &Connection::d_ptr : nullptr; }
 #endif
 
 #ifdef Q_COMPILER_RVALUE_REFS
-    inline Connection(Connection &&o) : d_ptr(o.d_ptr) { o.d_ptr = 0; }
+    inline Connection(Connection &&o) : d_ptr(o.d_ptr) { o.d_ptr = nullptr; }
     inline Connection &operator=(Connection &&other)
     { qSwap(d_ptr, other.d_ptr); return *this; }
 #endif
