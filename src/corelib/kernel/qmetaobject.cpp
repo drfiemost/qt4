@@ -519,7 +519,7 @@ static inline int indexOfMethodRelative(const QMetaObject **baseObject,
         if (!normalizeStringData) {
             for (; i >= end; --i) {
                 const char *stringdata = m->d.stringdata + m->d.data[priv(m->d.data)->methodData + 5*i];
-                if (method[0] == stringdata[0] && strcmp(method + 1, stringdata + 1) == 0) {
+                if (method[0] == stringdata[0] && std::strcmp(method + 1, stringdata + 1) == 0) {
                     *baseObject = m;
                     return i;
                 }
@@ -696,7 +696,7 @@ int QMetaObject::indexOfEnumerator(const char *name) const
         const QMetaObjectPrivate *d = priv(m->d.data);
         for (int i = d->enumeratorCount - 1; i >= 0; --i) {
             const char *prop = m->d.stringdata + m->d.data[d->enumeratorData + 4*i];
-            if (strcmp(name, prop) == 0) {
+            if (std::strcmp(name, prop) == 0) {
                 i += m->enumeratorOffset();
                 return i;
             }
@@ -1884,7 +1884,7 @@ bool QMetaEnum::isFlag() const
 */
 const char *QMetaEnum::scope() const
 {
-    return mobj?mobj->d.stringdata : nullptr;
+    return mobj ? mobj->d.stringdata : nullptr;
 }
 
 /*!
@@ -1911,8 +1911,8 @@ int QMetaEnum::keyToValue(const char *key) const
     int count = mobj->d.data[handle + 2];
     int data = mobj->d.data[handle + 3];
     for (int i = 0; i < count; ++i)
-        if ((!scope || (qstrlen(mobj->d.stringdata) == scope && strncmp(qualified_key, mobj->d.stringdata, scope) == 0))
-             && strcmp(key, mobj->d.stringdata + mobj->d.data[data + 2*i]) == 0)
+        if ((!scope || (qstrlen(mobj->d.stringdata) == scope && std::strncmp(qualified_key, mobj->d.stringdata, scope) == 0))
+             && std::strcmp(key, mobj->d.stringdata + mobj->d.data[data + 2*i]) == 0)
             return mobj->d.data[data + 2*i + 1];
     return -1;
 }
@@ -1967,8 +1967,8 @@ int QMetaEnum::keysToValue(const char *keys) const
         }
         int i;
         for (i = count-1; i >= 0; --i)
-            if ((!scope || (qstrlen(mobj->d.stringdata) == scope && strncmp(qualified_key.constData(), mobj->d.stringdata, scope) == 0))
-                 && strcmp(key, mobj->d.stringdata + mobj->d.data[data + 2*i]) == 0) {
+            if ((!scope || (qstrlen(mobj->d.stringdata) == scope && std::strncmp(qualified_key.constData(), mobj->d.stringdata, scope) == 0))
+                 && std::strcmp(key, mobj->d.stringdata + mobj->d.data[data + 2*i]) == 0) {
                 value |= mobj->d.data[data + 2*i + 1];
                 break;
             }
@@ -2306,7 +2306,7 @@ bool QMetaProperty::write(QObject *object, const QVariant &value) const
         if (t == QVariant::Invalid) {
             const char *typeName = mobj->d.stringdata + mobj->d.data[handle + 1];
             const char *vtypeName = value.typeName();
-            if (vtypeName && strcmp(typeName, vtypeName) == 0)
+            if (vtypeName && std::strcmp(typeName, vtypeName) == 0)
                 t = value.userType();
             else
                 t = QVariant::nameToType(typeName);
