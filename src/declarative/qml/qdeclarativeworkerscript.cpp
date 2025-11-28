@@ -225,7 +225,7 @@ QScriptValue QDeclarativeWorkerScriptEnginePrivate::sendMessage(QScriptContext *
     if (!script)
         return engine->undefinedValue();
 
-    QMutexLocker(&p->m_lock);
+    QMutexLocker locker(&p->m_lock);
 
     if (script->owner)
         QCoreApplication::postEvent(script->owner,
@@ -348,7 +348,7 @@ void QDeclarativeWorkerScriptEnginePrivate::reportScriptException(WorkerScript *
 
     QDeclarativeWorkerScriptEnginePrivate *p = QDeclarativeWorkerScriptEnginePrivate::get(workerEngine);
 
-    QMutexLocker(&p->m_lock);
+    QMutexLocker locker(&p->m_lock);
     if (script->owner)
         QCoreApplication::postEvent(script->owner, new WorkerErrorEvent(error));
 }
