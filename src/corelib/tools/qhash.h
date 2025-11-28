@@ -865,7 +865,7 @@ Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(cons
     uint h = 0;
 
     if (d->numBuckets || ahp) {
-        h = qHash(akey, d->seed);
+        h = qHash(akey, 0 /*d->seed*/); // breaks kwin qml decorations (#13)
         if (ahp)
             *ahp = h;
     }
