@@ -5590,11 +5590,52 @@ inline static void qt_bitmapblit_quint16(QRasterBuffer *rasterBuffer,
 }
 
 
-uchar qt_pow_rgb_gamma[256];
-uchar qt_pow_rgb_invgamma[256];
+struct QDrawHelperGammaTables
+{
+    QDrawHelperGammaTables();
 
-uint qt_pow_gamma[256];
-uchar qt_pow_invgamma[2048];
+    uchar qt_pow_rgb_gamma[256];
+    uchar qt_pow_rgb_invgamma[256];
+
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+    uint qt_pow_gamma[256];
+    uchar qt_pow_invgamma[2048];
+#endif
+};
+
+QDrawHelperGammaTables::QDrawHelperGammaTables()
+{
+    qreal smoothing = qreal(1.7);
+
+    for (int i=0; i<256; ++i) {
+        qt_pow_rgb_gamma[i] = uchar(qRound(qPow(i / qreal(255.0), smoothing) * 255));
+        qt_pow_rgb_invgamma[i] = uchar(qRound(qPow(i / qreal(255.), 1 / smoothing) * 255));
+    }
+
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+    const qreal gray_gamma = 2.31;
+    for (int i=0; i<256; ++i)
+        qt_pow_gamma[i] = uint(qRound(qPow(i / qreal(255.), gray_gamma) * 2047));
+    for (int i=0; i<2048; ++i)
+        qt_pow_invgamma[i] = uchar(qRound(qPow(i / qreal(2047.0), 1 / gray_gamma) * 255));
+#endif
+}
+
+Q_GLOBAL_STATIC(QDrawHelperGammaTables, qt_gamma_tables);
+
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINCE)
+const uint *qt_pow_gamma()
+{
+    QDrawHelperGammaTables *tables = qt_gamma_tables();
+    return tables ? tables->qt_pow_gamma : 0;
+}
+#endif
+
+const uchar *qt_pow_rgb_gamma()
+{
+    QDrawHelperGammaTables *tables = qt_gamma_tables();
+    return tables ? tables->qt_pow_rgb_gamma : 0;
+}
 
 static void qt_alphamapblit_quint16(QRasterBuffer *rasterBuffer,
                                     int x, int y, quint32 color,
@@ -5625,43 +5666,7 @@ static void qt_alphamapblit_quint16(QRasterBuffer *rasterBuffer,
     }
 }
 
-void qt_build_pow_tables() {
-    qreal smoothing = qreal(1.7);
-
-#ifdef Q_WS_MAC
-    // decided by testing a few things on an iMac, should probably get this from the
-    // system...
-    smoothing = qreal(2.0);
-#endif
-
-#ifdef Q_WS_WIN
-    extern qreal qt_fontsmoothing_gamma; // qapplication_win.cpp
-    smoothing = qt_fontsmoothing_gamma;
-#endif
-
-#ifdef Q_WS_X11
-    Q_UNUSED(smoothing);
-    for (int i=0; i<256; ++i) {
-        qt_pow_rgb_gamma[i] = uchar(i);
-        qt_pow_rgb_invgamma[i] = uchar(i);
-    }
-#else
-    for (int i=0; i<256; ++i) {
-        qt_pow_rgb_gamma[i] = uchar(qRound(qPow(i / qreal(255.0), smoothing) * 255));
-        qt_pow_rgb_invgamma[i] = uchar(qRound(qPow(i / qreal(255.), 1 / smoothing) * 255));
-    }
-#endif
-
-#if defined(Q_OS_WIN)
-    const qreal gray_gamma = 2.31;
-    for (int i=0; i<256; ++i)
-        qt_pow_gamma[i] = uint(qRound(qPow(i / qreal(255.), gray_gamma) * 2047));
-    for (int i=0; i<2048; ++i)
-        qt_pow_invgamma[i] = uchar(qRound(qPow(i / qreal(2047.0), 1 / gray_gamma) * 255));
-#endif
-}
-
-static inline void rgbBlendPixel(quint32 *dst, int coverage, int sr, int sg, int sb)
+static inline void rgbBlendPixel(quint32 *dst, int coverage, int sr, int sg, int sb, const uchar *gamma, const uchar *invgamma)
 {
     // Do a gray alphablend...
     int da = qAlpha(*dst);
@@ -5677,9 +5682,9 @@ static inline void rgbBlendPixel(quint32 *dst, int coverage, int sr, int sg, int
         ) {
 
         int a = qGray(coverage);
-        sr = qt_div_255(qt_pow_rgb_invgamma[sr] * a);
-        sg = qt_div_255(qt_pow_rgb_invgamma[sg] * a);
-        sb = qt_div_255(qt_pow_rgb_invgamma[sb] * a);
+        sr = qt_div_255(invgamma[sr] * a);
+        sg = qt_div_255(invgamma[sg] * a);
+        sb = qt_div_255(invgamma[sb] * a);
 
         int ia = 255 - a;
         dr = qt_div_255(dr * ia);
@@ -5697,32 +5702,32 @@ static inline void rgbBlendPixel(quint32 *dst, int coverage, int sr, int sg, int
     int mg = qGreen(coverage);
     int mb = qBlue(coverage);
 
-    dr = qt_pow_rgb_gamma[dr];
-    dg = qt_pow_rgb_gamma[dg];
-    db = qt_pow_rgb_gamma[db];
+    dr = gamma[dr];
+    dg = gamma[dg];
+    db = gamma[db];
 
     int nr = qt_div_255((sr - dr) * mr) + dr;
     int ng = qt_div_255((sg - dg) * mg) + dg;
     int nb = qt_div_255((sb - db) * mb) + db;
 
-    nr = qt_pow_rgb_invgamma[nr];
-    ng = qt_pow_rgb_invgamma[ng];
-    nb = qt_pow_rgb_invgamma[nb];
+    nr = invgamma[nr];
+    ng = invgamma[ng];
+    nb = invgamma[nb];
 
     *dst = qRgb(nr, ng, nb);
 }
 
 #if defined(Q_OS_WIN)
-static inline void grayBlendPixel(quint32 *dst, int coverage, int sr, int sg, int sb)
+static inline void grayBlendPixel(quint32 *dst, int coverage, int sr, int sg, int sb, const uint *gamma, const uchar *invgamma)
 {
     // Do a gammacorrected gray alphablend...
     int dr = qRed(*dst);
     int dg = qGreen(*dst);
     int db = qBlue(*dst);
 
-    dr = qt_pow_gamma[dr];
-    dg = qt_pow_gamma[dg];
-    db = qt_pow_gamma[db];
+    dr = gamma[dr];
+    dg = gamma[dg];
+    db = gamma[db];
 
     int alpha = coverage;
     int ialpha = 255 - alpha;
@@ -5730,9 +5735,9 @@ static inline void grayBlendPixel(quint32 *dst, int coverage, int sr, int sg, in
     int ng = (sg * alpha + ialpha * dg) / 255;
     int nb = (sb * alpha + ialpha * db) / 255;
 
-    nr = qt_pow_invgamma[nr];
-    ng = qt_pow_invgamma[ng];
-    nb = qt_pow_invgamma[nb];
+    nr = invgamma[nr];
+    ng = invgamma[ng];
+    nb = invgamma[nb];
 
     *dst = qRgb(nr, ng, nb);
 }
@@ -5748,13 +5753,17 @@ static void qt_alphamapblit_quint32(QRasterBuffer *rasterBuffer,
     const int destStride = rasterBuffer->bytesPerLine() / sizeof(quint32);
 
 #if defined(Q_OS_WIN)
-    int sr = qRed(color);
-    int sg = qGreen(color);
-    int sb = qBlue(color);
+    QDrawHelperGammaTables *tables = qt_gamma_tables();
+    if (!tables)
+        return;
 
-    sr = qt_pow_gamma[sr];
-    sg = qt_pow_gamma[sg];
-    sb = qt_pow_gamma[sb];
+    const uint *gamma = tables->qt_pow_gamma;
+    const uchar *invgamma = tables->qt_pow_invgamma;
+
+    int sr = gamma[qRed(color)];
+    int sg = gamma[qGreen(color)];
+    int sb = gamma[qBlue(color)];
+
     bool opaque_src = (qAlpha(color) == 255);
 #endif
 
@@ -5772,7 +5781,7 @@ static void qt_alphamapblit_quint32(QRasterBuffer *rasterBuffer,
 #if defined(Q_OS_WIN)
                     if (QSysInfo::WindowsVersion >= QSysInfo::WV_XP && opaque_src
                         && qAlpha(dest[i]) == 255) {
-                        grayBlendPixel(dest+i, coverage, sr, sg, sb);
+                        grayBlendPixel(dest+i, coverage, sr, sg, sb, gamma, invgamma);
                     } else
 #endif
                     {
@@ -5813,7 +5822,7 @@ static void qt_alphamapblit_quint32(QRasterBuffer *rasterBuffer,
 #if defined(Q_OS_WIN)
                         if (QSysInfo::WindowsVersion >= QSysInfo::WV_XP && opaque_src
                             && qAlpha(dest[xp]) == 255) {
-                            grayBlendPixel(dest+xp, coverage, sr, sg, sb);
+                            grayBlendPixel(dest+xp, coverage, sr, sg, sb, gamma, invgamma);
                         } else
 #endif
                         {
@@ -5841,9 +5850,16 @@ static void qt_alphargbblit_quint32(QRasterBuffer *rasterBuffer,
     int sb = qBlue(color);
     int sa = qAlpha(color);
 
-    sr = qt_pow_rgb_gamma[sr];
-    sg = qt_pow_rgb_gamma[sg];
-    sb = qt_pow_rgb_gamma[sb];
+    QDrawHelperGammaTables *tables = qt_gamma_tables();
+    if (!tables)
+        return;
+
+    const uchar *gamma = tables->qt_pow_rgb_gamma;
+    const uchar *invgamma = tables->qt_pow_rgb_invgamma;
+
+    sr = gamma[sr];
+    sg = gamma[sg];
+    sb = gamma[sb];
 
     if (sa == 0)
         return;
@@ -5857,7 +5873,7 @@ static void qt_alphargbblit_quint32(QRasterBuffer *rasterBuffer,
                 if (coverage == 0xffffffff) {
                     dst[i] = c;
                 } else if (coverage != 0xff000000) {
-                    rgbBlendPixel(dst+i, coverage, sr, sg, sb);
+                    rgbBlendPixel(dst+i, coverage, sr, sg, sb, gamma, invgamma);
                 }
             }
 
@@ -5887,7 +5903,7 @@ static void qt_alphargbblit_quint32(QRasterBuffer *rasterBuffer,
                     if (coverage == 0xffffffff) {
                         dst[xp] = c;
                     } else if (coverage != 0xff000000) {
-                        rgbBlendPixel(dst+xp, coverage, sr, sg, sb);
+                        rgbBlendPixel(dst+xp, coverage, sr, sg, sb, gamma, invgamma);
                     }
                 }
             } // for (i -> line.count)
@@ -6384,8 +6400,6 @@ void qInitDrawhelperAsm()
     }
     if (functionForModeAsm)
         functionForMode = functionForModeAsm;
-
-    qt_build_pow_tables();
 }
 
 static void qt_memfill32_setup(quint32 *dest, quint32 value, int count)
