@@ -782,7 +782,7 @@ bool QCoreApplicationPrivate::sendThroughApplicationEventFilters(QObject *receiv
         for (const auto & obj : extraData->eventFilters) {
             if (!obj)
                 continue;
-            if (obj->d_func()->threadData.loadRelaxed() != receiver->d_func()->threadData.loadRelaxed()) {
+            if (obj->d_func()->threadData.loadRelaxed() != threadData.loadRelaxed()) {
                 qWarning("QCoreApplication: Application event filter cannot be in a different thread.");
                 continue;
             }
