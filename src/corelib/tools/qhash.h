@@ -493,6 +493,7 @@ private:
     void detach_helper();
     void freeData(QHashData *d);
     Node **findNode(const Key &key, uint *hp = nullptr) const;
+    Node **findNode(const Key &key, uint h) const;
     Node *createNode(uint h, const Key &key, const T &value, Node **nextNode);
     void deleteNode(Node *node);
     static void deleteNode2(QHashData::Node *node);
@@ -720,7 +721,7 @@ Q_INLINE_TEMPLATE T &QHash<Key, T>::operator[](const Key &akey)
     Node **node = findNode(akey, &h);
     if (*node == e) {
         if (d->willGrow())
-            node = findNode(akey, &h);
+            node = findNode(akey, h);
         return createNode(h, akey, T(), node)->value;
     }
     return (*node)->value;
@@ -736,7 +737,7 @@ Q_INLINE_TEMPLATE typename QHash<Key, T>::iterator QHash<Key, T>::insert(const K
     Node **node = findNode(akey, &h);
     if (*node == e) {
         if (d->willGrow())
-            node = findNode(akey, &h);
+            node = findNode(akey, h);
         return iterator(createNode(h, akey, avalue, node));
     }
 
@@ -868,17 +869,10 @@ Q_INLINE_TEMPLATE bool QHash<Key, T>::contains(const Key &akey) const
 }
 
 template <class Key, class T>
-Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(const Key &akey,
-                                                                            uint *ahp) const
+Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(const Key &akey, uint h) const
 {
     Node **node;
-    uint h = 0;
 
-    if (d->numBuckets || ahp) {
-        h = qHash(akey, 0 /*d->seed*/); // breaks kwin qml decorations (#13)
-        if (ahp)
-            *ahp = h;
-    }
     if (d->numBuckets) {
         node = reinterpret_cast<Node **>(&d->buckets[h % d->numBuckets]);
         Q_ASSERT(*node == e || (*node)->next);
@@ -888,6 +882,20 @@ Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(cons
         node = const_cast<Node **>(reinterpret_cast<const Node * const *>(&e));
     }
     return node;
+}
+
+template <class Key, class T>
+Q_OUTOFLINE_TEMPLATE typename QHash<Key, T>::Node **QHash<Key, T>::findNode(const Key &akey,
+                                                                            uint *ahp) const
+{
+    uint h = 0;
+
+    if (d->numBuckets || ahp) {
+        h = qHash(akey, d->seed);
+        if (ahp)
+            *ahp = h;
+    }
+    return findNode(akey, h);
 }
 
 template <class Key, class T>
