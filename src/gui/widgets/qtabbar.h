@@ -72,6 +72,7 @@ class Q_GUI_EXPORT QTabBar: public QWidget
     Q_PROPERTY(bool expanding READ expanding WRITE setExpanding)
     Q_PROPERTY(bool movable READ isMovable WRITE setMovable)
     Q_PROPERTY(bool documentMode READ documentMode WRITE setDocumentMode)
+    Q_PROPERTY(bool autoHide READ autoHide WRITE setAutoHide)
 
 public:
     explicit QTabBar(QWidget* parent=nullptr);
@@ -168,6 +169,9 @@ public:
     bool documentMode() const;
     void setDocumentMode(bool set);
 
+    bool autoHide() const;
+    void setAutoHide(bool hide);
+
 public Q_SLOTS:
     void setCurrentIndex(int index);
 
@@ -175,6 +179,8 @@ Q_SIGNALS:
     void currentChanged(int index);
     void tabCloseRequested(int index);
     void tabMoved(int from, int to);
+    void tabBarClicked(int index);
+    void tabBarDoubleClicked(int index);
 
 protected:
     virtual QSize tabSizeHint(int index) const;
@@ -187,6 +193,7 @@ protected:
     void showEvent(QShowEvent *) override;
     void hideEvent(QHideEvent *) override;
     void paintEvent(QPaintEvent *) override;
+    void mouseDoubleClickEvent(QMouseEvent *) override;
     void mousePressEvent (QMouseEvent *) override;
     void mouseMoveEvent (QMouseEvent *) override;
     void mouseReleaseEvent (QMouseEvent *) override;

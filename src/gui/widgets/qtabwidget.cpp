@@ -183,6 +183,23 @@ QT_BEGIN_NAMESPACE
     \sa setTabsClosable()
 */
 
+/*!
+    \fn void QTabWidget::tabBarClicked(int index)
+
+    This signal is emitted when user clicks on a tab at an \a index.
+
+    \a index refers to the tab clicked, or -1 if no tab is under the cursor.
+*/
+
+/*!
+    \fn void QTabWidget::tabBarDoubleClicked(int index)
+
+    This signal is emitted when the user double clicks on a tab at an \a index.
+
+    \a index is the index of a clicked tab, or -1 if no tab is under the cursor.
+*/
+
+
 class QTabWidgetPrivate : public QWidgetPrivate
 {
     Q_DECLARE_PUBLIC(QTabWidget)
@@ -698,6 +715,10 @@ void QTabWidget::setTabBar(QTabBar* tb)
             this, SLOT(_q_showTab(int)));
     connect(d->tabs, SIGNAL(tabMoved(int,int)),
             this, SLOT(_q_tabMoved(int,int)));
+    connect(d->tabs, SIGNAL(tabBarClicked(int)),
+            this, SIGNAL(tabBarClicked(int)));
+    connect(d->tabs, SIGNAL(tabBarDoubleClicked(int)),
+            this, SIGNAL(tabBarDoubleClicked(int)));
     if (d->tabs->tabsClosable())
         connect(d->tabs, SIGNAL(tabCloseRequested(int)),
                 this, SIGNAL(tabCloseRequested(int)));
@@ -1331,6 +1352,28 @@ void QTabWidget::setDocumentMode(bool enabled)
     d->tabs->setExpanding(!enabled);
     d->tabs->setDrawBase(enabled);
     setUpLayout();
+}
+
+/*!
+    \property QTabWidget::tabBarAutoHide
+    \brief If true, the tab bar is automatically hidden when it contains less
+    than 2 tabs.
+
+    By default, this property is false.
+
+    \sa QWidget::visible
+*/
+
+bool QTabWidget::tabBarAutoHide() const
+{
+    Q_D(const QTabWidget);
+    return d->tabs->autoHide();
+}
+
+void QTabWidget::setTabBarAutoHide(bool enabled)
+{
+    Q_D(QTabWidget);
+    return d->tabs->setAutoHide(enabled);
 }
 
 /*!

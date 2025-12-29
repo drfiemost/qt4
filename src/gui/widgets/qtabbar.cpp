@@ -334,6 +334,23 @@ void QTabBar::initStyleOption(QStyleOptionTab *option, int tabIndex) const
     \sa moveTab()
 */
 
+/*!
+    \fn void QTabBar::tabBarClicked(int index)
+
+    This signal is emitted when user clicks on a tab at an \a index.
+
+    \a index is the index of a clicked tab, or -1 if no tab is under the cursor.
+*/
+
+/*!
+    \fn void QTabBar::tabBarDoubleClicked(int index)
+
+    This signal is emitted when the user double clicks on a tab at \a index.
+
+    \a index refers to the tab clicked, or -1 if no tab is under the cursor.
+*/
+
+
 int QTabBarPrivate::extraWidth() const
 {
     Q_Q(const QTabBar);
@@ -600,6 +617,14 @@ void QTabBarPrivate::layoutWidgets(int start)
     }
 }
 
+void QTabBarPrivate::autoHideTabs()
+{
+    Q_Q(QTabBar);
+
+    if (autoHide)
+        q->setVisible(q->count() > 1);
+}
+
 void QTabBarPrivate::_q_closeTab()
 {
     Q_Q(QTabBar);
@@ -828,6 +853,7 @@ int QTabBar::insertTab(int index, const QIcon& icon, const QString &text)
     }
 
     tabInserted(index);
+    d->autoHideTabs();
     return index;
 }
 
@@ -903,6 +929,7 @@ void QTabBar::removeTab(int index)
             setCurrentIndex(d->currentIndex - 1);
         }
         d->refresh();
+        d->autoHideTabs();
         tabRemoved(index);
     }
 }
@@ -1694,11 +1721,36 @@ void QTabBarPrivate::moveTab(int index, int offset)
     q_func()->update();
 }
 
+/*!
+    \reimp
+*/
+void QTabBar::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    Q_D(QTabBar);
+
+    const QPoint pos = event->pos();
+    const bool isEventInCornerButtons = (!d->leftB->isHidden() && d->leftB->geometry().contains(pos))
+                                     || (!d->rightB->isHidden() && d->rightB->geometry().contains(pos));
+    if (!isEventInCornerButtons) {
+        const int index = tabAt(pos);
+        emit tabBarDoubleClicked(index);
+    }
+}
+
 /*!\reimp
 */
 void QTabBar::mousePressEvent(QMouseEvent *event)
 {
     Q_D(QTabBar);
+
+    const QPoint pos = event->pos();
+    const bool isEventInCornerButtons = (!d->leftB->isHidden() && d->leftB->geometry().contains(pos))
+                                     || (!d->rightB->isHidden() && d->rightB->geometry().contains(pos));
+    if (!isEventInCornerButtons) {
+        const int index = d->indexAtPos(pos);
+        emit tabBarClicked(index);
+    }
+
     if (event->button() != Qt::LeftButton) {
         event->ignore();
         return;
@@ -2215,6 +2267,35 @@ void QTabBar::setDocumentMode(bool enabled)
 
     d->documentMode = enabled;
     d->updateMacBorderMetrics();
+}
+
+/*!
+    \property QTabBar::autoHide
+    \brief If true, the tab bar is automatically hidden when it contains less
+    than 2 tabs.
+
+    By default, this property is false.
+
+    \sa QWidget::visible
+*/
+
+bool QTabBar::autoHide() const
+{
+    Q_D(const QTabBar);
+    return d->autoHide;
+}
+
+void QTabBar::setAutoHide(bool hide)
+{
+    Q_D(QTabBar);
+    if (d->autoHide == hide)
+        return;
+
+    d->autoHide = hide;
+    if (hide)
+        d->autoHideTabs();
+    else
+        setVisible(true);
 }
 
 /*!

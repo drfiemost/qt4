@@ -70,6 +70,7 @@ class Q_GUI_EXPORT QTabWidget : public QWidget
     Q_PROPERTY(bool documentMode READ documentMode WRITE setDocumentMode)
     Q_PROPERTY(bool tabsClosable READ tabsClosable WRITE setTabsClosable)
     Q_PROPERTY(bool movable READ isMovable WRITE setMovable)
+    Q_PROPERTY(bool tabBarAutoHide READ tabBarAutoHide WRITE setTabBarAutoHide)
 
 public:
     explicit QTabWidget(QWidget *parent = nullptr);
@@ -141,7 +142,12 @@ public:
     bool documentMode() const;
     void setDocumentMode(bool set);
 
+    bool tabBarAutoHide() const;
+    void setTabBarAutoHide(bool enabled);
+
     void clear();
+
+    QTabBar* tabBar() const;
 
 public Q_SLOTS:
     void setCurrentIndex(int index);
@@ -150,6 +156,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void currentChanged(int index);
     void tabCloseRequested(int index);
+    void tabBarClicked(int index);
+    void tabBarDoubleClicked(int index);
 
 protected:
     virtual void tabInserted(int index);
@@ -160,7 +168,6 @@ protected:
     void keyPressEvent(QKeyEvent *) override;
     void paintEvent(QPaintEvent *) override;
     void setTabBar(QTabBar *);
-    QTabBar* tabBar() const;
     void changeEvent(QEvent *) override;
     bool event(QEvent *) override;
     void initStyleOption(QStyleOptionTabWidgetFrame *option) const;

@@ -43,6 +43,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QDir>
+#include <QImageReader>
 
 #include <QtDeclarative/qdeclarativeengine.h>
 #include <QtDeclarative/qdeclarativecomponent.h>
@@ -81,6 +82,7 @@ private slots:
     void mirror();
     void mirror_data();
     void svg();
+    void svg_data();
     void geometry();
     void geometry_data();
     void big();
@@ -143,6 +145,8 @@ void tst_qdeclarativeimage::imageSource_data()
     QTest::newRow("remote") << SERVER_ADDR "/colors.png" << 120.0 << 120.0 << true << false << true << "";
     QTest::newRow("remote redirected") << SERVER_ADDR "/oldcolors.png" << 120.0 << 120.0 << true << false << false << "";
     QTest::newRow("remote svg") << SERVER_ADDR "/heart.svg" << 550.0 << 500.0 << true << false << false << "";
+    if (QImageReader::supportedImageFormats().contains("svgz"))
+        QTest::newRow("remote svgz") << SERVER_ADDR "/heart.svgz" << 550.0 << 500.0 << true << false << false << "";
     QTest::newRow("remote not found") << SERVER_ADDR "/no-such-file.png" << 0.0 << 0.0 << true
         << false << true << "file::2:1: QML Image: Error downloading " SERVER_ADDR "/no-such-file.png - server replied: Not found";
 
@@ -368,9 +372,22 @@ void tst_qdeclarativeimage::mirror_data()
     QTest::newRow("TileHorizontally") << int(QDeclarativeImage::TileHorizontally);
 }
 
+void tst_qdeclarativeimage::svg_data()
+{
+    QTest::addColumn<QString>("src");
+    QTest::addColumn<QByteArray>("format");
+
+    QTest::newRow("svg") << QUrl::fromLocalFile(SRCDIR "/data/heart.svg").toString() << QByteArray("svg");
+    QTest::newRow("svgz") << QUrl::fromLocalFile(SRCDIR "/data/heart.svgz").toString() << QByteArray("svgz");
+}
+
 void tst_qdeclarativeimage::svg()
 {
-    QString src = QUrl::fromLocalFile(SRCDIR "/data/heart.svg").toString();
+    QFETCH(QString, src);
+    QFETCH(QByteArray, format);
+    if (!QImageReader::supportedImageFormats().contains(format))
+        QSKIP("svg support not available", SkipAll);
+
     QString componentStr = "import QtQuick 1.0\nImage { source: \"" + src + "\"; sourceSize.width: 300; sourceSize.height: 300 }";
     QDeclarativeComponent component(&engine);
     component.setData(componentStr.toLatin1(), QUrl::fromLocalFile(""));
@@ -380,6 +397,7 @@ void tst_qdeclarativeimage::svg()
     QCOMPARE(obj->pixmap().height(), 300);
     QCOMPARE(obj->width(), 300.0);
     QCOMPARE(obj->height(), 300.0);
+
 #if defined(Q_OS_LINUX)
     QCOMPARE(obj->pixmap(), QPixmap(SRCDIR "/data/heart.png"));
 #elif defined(Q_OS_WIN32)
@@ -397,6 +415,7 @@ void tst_qdeclarativeimage::svg()
 #elif defined(Q_OS_WIN32)
     QCOMPARE(obj->pixmap(), QPixmap(SRCDIR "/data/heart200-win32.png"));
 #endif
+
     delete obj;
 }
 
