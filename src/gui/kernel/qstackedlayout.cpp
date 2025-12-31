@@ -475,6 +475,39 @@ void QStackedLayout::setGeometry(const QRect &rect)
 }
 
 /*!
+    \reimp
+*/
+bool QStackedLayout::hasHeightForWidth() const
+{
+    const int n = count();
+
+    for (int i = 0; i < n; ++i) {
+        if (QLayoutItem *item = itemAt(i)) {
+            if (item->hasHeightForWidth())
+                return true;
+        }
+    }
+    return false;
+}
+
+/*!
+    \reimp
+*/
+int QStackedLayout::heightForWidth(int width) const
+{
+    const int n = count();
+
+    int hfw = 0;
+    for (int i = 0; i < n; ++i) {
+        if (QLayoutItem *item = itemAt(i)) {
+            hfw = std::max(hfw, item->heightForWidth(width));
+        }
+    }
+    return hfw;
+}
+
+
+/*!
     \enum QStackedLayout::StackingMode
     \since 4.4
 

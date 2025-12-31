@@ -92,6 +92,8 @@ public:
     QLayoutItem *itemAt(int) const override;
     QLayoutItem *takeAt(int) override;
     void setGeometry(const QRect &rect) override;
+    bool hasHeightForWidth() const override;
+    int heightForWidth(int width) const override;
 
 Q_SIGNALS:
     void widgetRemoved(int index);

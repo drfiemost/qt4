@@ -49,57 +49,12 @@
 
 QT_BEGIN_NAMESPACE
 
-/**
-   QStackedLayout does not support height for width (simply because it does not reimplement
-   heightForWidth() and hasHeightForWidth()). That is not possible to fix without breaking
-   binary compatibility. (QLayout is subject to multiple inheritance).
-   However, we can fix QStackedWidget by simply using a modified version of QStackedLayout
-   that reimplements the hfw-related functions:
- */
-class QStackedLayoutHFW : public QStackedLayout
-{
-public:
-    QStackedLayoutHFW(QWidget *parent = nullptr) : QStackedLayout(parent) {}
-    bool hasHeightForWidth() const override;
-    int heightForWidth(int width) const override;
-};
-
-bool QStackedLayoutHFW::hasHeightForWidth() const
-{
-    const int n = count();
-
-    for (int i = 0; i < n; ++i) {
-        if (QLayoutItem *item = itemAt(i)) {
-            if (item->hasHeightForWidth())
-                return true;
-        }
-    }
-    return false;
-}
-
-int QStackedLayoutHFW::heightForWidth(int width) const
-{
-    const int n = count();
-
-    int hfw = 0;
-    for (int i = 0; i < n; ++i) {
-        if (QLayoutItem *item = itemAt(i)) {
-            if (QWidget *w = item->widget())
-                hfw = std::max(hfw, w->heightForWidth(width));
-        }
-    }
-
-    hfw = std::max(hfw, minimumSize().height());
-    return hfw;
-}
-
-
 class QStackedWidgetPrivate : public QFramePrivate
 {
     Q_DECLARE_PUBLIC(QStackedWidget)
 public:
     QStackedWidgetPrivate():layout(nullptr){}
-    QStackedLayoutHFW *layout;
+    QStackedLayout *layout;
     bool blockChildAdd;
 };
 
@@ -183,7 +138,7 @@ QStackedWidget::QStackedWidget(QWidget *parent)
     : QFrame(*new QStackedWidgetPrivate, parent)
 {
     Q_D(QStackedWidget);
-    d->layout = new QStackedLayoutHFW(this);
+    d->layout = new QStackedLayout(this);
     connect(d->layout, SIGNAL(widgetRemoved(int)), this, SIGNAL(widgetRemoved(int)));
     connect(d->layout, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
 }
@@ -287,7 +242,7 @@ QWidget *QStackedWidget::currentWidget() const
 void QStackedWidget::setCurrentWidget(QWidget *widget)
 {
     Q_D(QStackedWidget);
-    if (d->layout->indexOf(widget) == -1) {
+    if (Q_UNLIKELY(d->layout->indexOf(widget) == -1)) {
         qWarning("QStackedWidget::setCurrentWidget: widget %p not contained in stack", static_cast<void*>(widget));
         return;
     }
