@@ -48,6 +48,8 @@
 #include <QtCore/qpair.h>
 #include <QtCore/qrefcount.h>
 
+#include <initializer_list>
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -285,6 +287,13 @@ class QHash
 
 public:
     inline QHash() : d(const_cast<QHashData *>(&QHashData::shared_null)) { }
+    inline QHash(std::initializer_list<std::pair<Key,T> > list)
+        : d(const_cast<QHashData *>(&QHashData::shared_null))
+    {
+        reserve(list.size());
+        for (typename std::initializer_list<std::pair<Key,T> >::const_iterator it = list.begin(); it != list.end(); ++it)
+            insert(it->first, it->second);
+    }
     inline QHash(const QHash<Key, T> &other) : d(other.d) { d->ref.ref(); if (!d->sharable) detach(); }
     inline ~QHash() { if (!d->ref.deref()) freeData(d); }
 
@@ -406,7 +415,7 @@ public:
         typedef const T *pointer;
         typedef const T &reference;
 
-        inline const_iterator() : i(nullptr) { }
+        constexpr inline const_iterator() : i(nullptr) { }
         explicit inline const_iterator(void *node)
             : i(reinterpret_cast<QHashData::Node *>(node)) { }
 #ifdef QT_STRICT_ITERATORS
@@ -420,8 +429,8 @@ public:
         inline const T &value() const { return concrete(i)->value; }
         inline const T &operator*() const { return concrete(i)->value; }
         inline const T *operator->() const { return &concrete(i)->value; }
-        inline bool operator==(const const_iterator &o) const { return i == o.i; }
-        inline bool operator!=(const const_iterator &o) const { return i != o.i; }
+        constexpr inline bool operator==(const const_iterator &o) const { return i == o.i; }
+        constexpr inline bool operator!=(const const_iterator &o) const { return i != o.i; }
 
         inline const_iterator &operator++() {
             i = QHashData::nextNode(i);
@@ -929,6 +938,12 @@ class QMultiHash : public QHash<Key, T>
 {
 public:
     QMultiHash() = default;
+    inline QMultiHash(std::initializer_list<std::pair<Key,T> > list)
+    {
+        this->reserve(list.size());
+        for (typename std::initializer_list<std::pair<Key,T> >::const_iterator it = list.begin(); it != list.end(); ++it)
+            insert(it->first, it->second);
+    }
     QMultiHash(const QHash<Key, T> &other) : QHash<Key, T>(other) {}
     inline void swap(QMultiHash<Key, T> &other) { QHash<Key, T>::swap(other); } // prevent QMultiHash<->QHash swaps
 

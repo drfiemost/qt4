@@ -84,6 +84,7 @@ private slots:
 
     void const_shared_null();
     void twoArguments_qHash();
+    void initializerList();
 
     void eraseValidIteratorOnSharedHash();
 };
@@ -1319,6 +1320,31 @@ void tst_QHash::twoArguments_qHash()
     TwoArgumentsQHashStruct4 twoArgsObject4;
     twoArgsHash4[twoArgsObject4] = 1;
     QCOMPARE(wrongqHashOverload, 0);
+}
+
+void tst_QHash::initializerList()
+{
+    QHash<int, QString> hash{{1, "hello"}, {2, "initializer_list"}};
+    QCOMPARE(hash.count(), 2);
+    QVERIFY(hash[1] == "hello");
+    QVERIFY(hash[2] == "initializer_list");
+
+    QMultiHash<QString, int> multiHash{{"il", 1}, {"il", 2}, {"il", 3}};
+    QCOMPARE(multiHash.count(), 3);
+    QList<int> values = multiHash.values("il");
+    QCOMPARE(values.count(), 3);
+
+    QHash<int, int> emptyHash{};
+    QVERIFY(emptyHash.isEmpty());
+
+    QHash<int, char> emptyPairs{{}, {}};
+    QVERIFY(!emptyPairs.isEmpty());
+
+    QMultiHash<QString, double> emptyMultiHash{};
+    QVERIFY(emptyMultiHash.isEmpty());
+
+    QMultiHash<int, float> emptyPairs2{{}, {}};
+    QVERIFY(!emptyPairs2.isEmpty());
 }
 
 void tst_QHash::eraseValidIteratorOnSharedHash()

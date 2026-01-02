@@ -44,6 +44,8 @@
 
 #include <QtCore/qhash.h>
 
+#include <initializer_list>
+
 QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
@@ -56,6 +58,12 @@ class QSet
 
 public:
     inline QSet() = default;
+    inline QSet(std::initializer_list<T> list)
+    {
+        reserve(list.size());
+        for (typename std::initializer_list<T>::const_iterator it = list.begin(); it != list.end(); ++it)
+            insert(*it);
+    }
     inline QSet(const QSet<T> &other) : q_hash(other.q_hash) {}
 
     inline QSet<T> &operator=(const QSet<T> &other)

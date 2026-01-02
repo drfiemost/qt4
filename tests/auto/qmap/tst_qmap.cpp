@@ -91,6 +91,7 @@ private slots:
 
     void insert();
     void checkMostLeftNode();
+    void initializerList();
     void eraseValidIteratorOnSharedMap();
 };
 
@@ -1167,6 +1168,31 @@ void tst_QMap::checkMostLeftNode()
     // erase last item
     map.erase(map.begin());
     sanityCheckTree(map, __LINE__);
+}
+
+void tst_QMap::initializerList()
+{
+    QMap<int, QString> map{{1, "hello"}, {2, "initializer_list"}};
+    QCOMPARE(map.count(), 2);
+    QVERIFY(map[1] == "hello");
+    QVERIFY(map[2] == "initializer_list");
+
+    QMultiMap<QString, int> multiMap{{"il", 1}, {"il", 2}, {"il", 3}};
+    QCOMPARE(multiMap.count(), 3);
+    QList<int> values = multiMap.values("il");
+    QCOMPARE(values.count(), 3);
+
+    QMap<int, int> emptyMap{};
+    QVERIFY(emptyMap.isEmpty());
+
+    QMap<char, char> emptyPairs{{}, {}};
+    QVERIFY(!emptyPairs.isEmpty());
+
+    QMultiMap<double, double> emptyMultiMap{};
+    QVERIFY(emptyMultiMap.isEmpty());
+
+    QMultiMap<float, float> emptyPairs2{{}, {}};
+    QVERIFY(!emptyPairs2.isEmpty());
 }
 
 QTEST_APPLESS_MAIN(tst_QMap)

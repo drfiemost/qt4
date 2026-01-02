@@ -54,6 +54,7 @@
 #include <map>
 #include <new>
 #include <functional>
+#include <initializer_list>
 
 QT_BEGIN_HEADER
 
@@ -331,6 +332,12 @@ class QMap
 
 public:
     inline QMap() : d(static_cast<QMapData<Key, T> *>(const_cast<QMapDataBase *>(&QMapDataBase::shared_null))) { }
+    inline QMap(std::initializer_list<std::pair<Key,T> > list)
+        : d(static_cast<QMapData<Key, T> *>(const_cast<QMapDataBase *>(&QMapDataBase::shared_null)))
+    {
+        for (typename std::initializer_list<std::pair<Key,T> >::const_iterator it = list.begin(); it != list.end(); ++it)
+            insert(it->first, it->second);
+    }
     QMap(const QMap<Key, T> &other);
 
     inline ~QMap() { if (!d->ref.deref()) d->destroy(); }
@@ -466,7 +473,7 @@ public:
         typedef const T *pointer;
         typedef const T &reference;
 
-        inline const_iterator() : i(nullptr) { }
+        constexpr inline const_iterator() : i(nullptr) { }
         inline const_iterator(const Node *node) : i(node) { }
 #ifdef QT_STRICT_ITERATORS
         explicit inline const_iterator(const iterator &o)
@@ -479,8 +486,8 @@ public:
         inline const T &value() const { return i->value; }
         inline const T &operator*() const { return i->value; }
         inline const T *operator->() const { return &i->value; }
-        inline bool operator==(const const_iterator &o) const { return i == o.i; }
-        inline bool operator!=(const const_iterator &o) const { return i != o.i; }
+        constexpr inline bool operator==(const const_iterator &o) const { return i == o.i; }
+        constexpr inline bool operator!=(const const_iterator &o) const { return i != o.i; }
 
         inline const_iterator &operator++() {
             i = i->nextNode();
@@ -991,6 +998,11 @@ class QMultiMap : public QMap<Key, T>
 {
 public:
     QMultiMap() = default;
+    inline QMultiMap(std::initializer_list<std::pair<Key,T> > list)
+    {
+        for (typename std::initializer_list<std::pair<Key,T> >::const_iterator it = list.begin(); it != list.end(); ++it)
+            insert(it->first, it->second);
+    }
     QMultiMap(const QMap<Key, T> &other) : QMap<Key, T>(other) {}
     inline void swap(QMultiMap<Key, T> &other) { QMap<Key, T>::swap(other); }
 
