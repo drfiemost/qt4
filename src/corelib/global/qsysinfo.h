@@ -81,8 +81,6 @@ public:
 #    error "Undefined byte order"
 #  endif
     };
-#else
-#  error "Qt not configured correctly, please run configure"
 #endif
 #if defined(Q_WS_WIN) || defined(Q_OS_CYGWIN)
     enum WinVersion {

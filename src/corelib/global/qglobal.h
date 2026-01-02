@@ -62,6 +62,8 @@
 #include <QtCore/qconfig.h>
 #endif
 
+#include <QtCore/qprocessordetection.h>
+
 /* These two macros makes it possible to turn the builtin line expander into a
  * string literal. */
 #define QT_STRINGIFY2(x) #x
