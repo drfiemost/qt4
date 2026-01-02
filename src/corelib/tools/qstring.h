@@ -546,9 +546,9 @@ public:
 
     // ASCII compatibility
 #ifndef QT_NO_CAST_FROM_ASCII
-    QT_ASCII_CAST_WARN_CONSTRUCTOR inline QString(const char *ch) : d(fromAscii_helper(ch))
+    QT_ASCII_CAST_WARN inline QString(const char *ch) : d(fromAscii_helper(ch))
     {}
-    QT_ASCII_CAST_WARN_CONSTRUCTOR inline QString(const QByteArray &a)
+    QT_ASCII_CAST_WARN inline QString(const QByteArray &a)
         : d(fromAscii_helper(a.constData(), qstrnlen(a.constData(), a.size())))
     {}
     QT_ASCII_CAST_WARN inline QString &operator=(const char *ch)
