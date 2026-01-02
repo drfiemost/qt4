@@ -6265,16 +6265,16 @@ qt_memfill16_func qt_memfill16 = qt_memfill16_setup;
 
 void qInitDrawhelperAsm()
 {
-
     qt_memfill32 = qt_memfill_template<quint32>;
     qt_memfill16 = qt_memfill_quint16; //qt_memfill_template<quint16>;
 
     CompositionFunction *functionForModeAsm = nullptr;
     CompositionFunctionSolid *functionForModeSolidAsm = nullptr;
 
-    const uint features = qDetectCPUFeatures();
+    const uint features = qCpuFeatures();
     if (false) {
-#ifdef QT_HAVE_SSE2
+        Q_UNUSED(features);
+#ifdef QT_COMPILER_SUPPORTS_SSE2
     } else if (features & SSE2) {
         qt_memfill32 = qt_memfill32_sse2;
         qt_memfill16 = qt_memfill16_sse2;
@@ -6288,7 +6288,7 @@ void qInitDrawhelperAsm()
 #endif
     }
 
-#ifdef QT_HAVE_SSE2
+#ifdef QT_COMPILER_SUPPORTS_SSE2
     if (features & SSE2) {
         extern void qt_blend_rgb32_on_rgb32_sse2(uchar *destPixels, int dbpl,
                                                  const uchar *srcPixels, int sbpl,
@@ -6316,7 +6316,7 @@ void qInitDrawhelperAsm()
         qt_fetch_radial_gradient = qt_fetch_radial_gradient_sse2;
     }
 
-#ifdef QT_HAVE_SSSE3
+#ifdef QT_COMPILER_SUPPORTS_SSSE3
     if (features & SSSE3) {
         extern void qt_blend_argb32_on_argb32_ssse3(uchar *destPixels, int dbpl,
                                                     const uchar *srcPixels, int sbpl,
@@ -6334,19 +6334,19 @@ void qInitDrawhelperAsm()
 
 #endif // SSE2
 
-#ifdef QT_HAVE_SSE2
+#ifdef QT_COMPILER_SUPPORTS_SSE2
     if (features & SSE2) {
         functionForModeAsm = qt_functionForMode_SSE2;
         functionForModeSolidAsm = qt_functionForModeSolid_SSE2;
-    }
-#endif // SSE2
+        }
+#endif
 
 #if defined(QT_HAVE_ARM_SIMD)
     qBlendFunctions[QImage::Format_RGB32][QImage::Format_RGB32] = qt_blend_rgb32_on_rgb32_arm_simd;
     qBlendFunctions[QImage::Format_ARGB32_Premultiplied][QImage::Format_RGB32] = qt_blend_rgb32_on_rgb32_arm_simd;
     qBlendFunctions[QImage::Format_RGB32][QImage::Format_ARGB32_Premultiplied] = qt_blend_argb32_on_argb32_arm_simd;
     qBlendFunctions[QImage::Format_ARGB32_Premultiplied][QImage::Format_ARGB32_Premultiplied] = qt_blend_argb32_on_argb32_arm_simd;
-#elif defined(QT_HAVE_NEON)
+#elif defined(QT_COMPILER_SUPPORTS_NEON)
     if (features & NEON) {
         qBlendFunctions[QImage::Format_RGB32][QImage::Format_RGB32] = qt_blend_rgb32_on_rgb32_neon;
         qBlendFunctions[QImage::Format_ARGB32_Premultiplied][QImage::Format_RGB32] = qt_blend_rgb32_on_rgb32_neon;

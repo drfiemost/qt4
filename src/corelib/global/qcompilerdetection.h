@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2012 Intel Corporation
 ** Contact: http://www.qt-project.org/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -46,6 +47,16 @@
 #ifndef QCOMPILERDETECTION_H
 #define QCOMPILERDETECTION_H
 
+
+#ifdef __has_cpp_attribute
+#  if __has_cpp_attribute(deprecated)
+#    define Q_DECL_DEPRECATED [[deprecated]]
+#  endif
+#  if __has_cpp_attribute(noreturn)
+#    define Q_NORETURN [[noreturn]]
+#  endif
+#endif
+
 /*
    The compiler, must be one of: (Q_CC_x)
 
@@ -64,11 +75,21 @@
 #  define Q_CC_MSVC_NET
 #  define Q_OUTOFLINE_TEMPLATE inline
 #  define Q_NO_TEMPLATE_FRIENDS
+#  define Q_COMPILER_MANGLES_RETURN_TYPE
 #  define Q_ALIGNOF(type) __alignof(type)
 #  define Q_ASSUME(expr) __assume(expr)
 #  define Q_UNREACHABLE() __assume(0)
+#  ifndef Q_NORETURN
+#    define Q_NORETURN __declspec(noreturn)
+#  endif
+#  ifndef Q_DECL_DEPRECATED
+#    define Q_DECL_DEPRECATED __declspec(deprecated)
+#  endif
+#  define Q_DECL_EXPORT __declspec(dllexport)
+#  define Q_DECL_IMPORT __declspec(dllimport)
 /* Intel C++ disguising as Visual C++: the `using' keyword avoids warnings */
 #  if defined(__INTEL_COMPILER)
+#    define Q_DECL_VARIABLE_DEPRECATED
 #    define Q_CC_INTEL
 #  endif
 /* MSVC does not support SSE/MMX on x64 */
@@ -89,6 +110,17 @@
 /* work-around for missing compiler intrinsics */
 #  define __is_empty(X) false
 #  define __is_pod(X) false
+#  ifndef Q_DECL_DEPRECATED
+#    define Q_DECL_DEPRECATED __attribute__ ((__deprecated__))
+#  endif
+#  ifdef Q_OS_LINUX
+#    define Q_DECL_EXPORT     __attribute__((visibility("default")))
+#    define Q_DECL_IMPORT     __attribute__((visibility("default")))
+#    define Q_DECL_HIDDEN     __attribute__((visibility("hidden")))
+#  else
+#    define Q_DECL_EXPORT     __declspec(dllexport)
+#    define Q_DECL_IMPORT     __declspec(dllimport)
+#  endif
 
 #elif defined(__GNUC__)
 #  define Q_CC_GNU          (__GNUC__ * 100 + __GNUC_MINOR__)
@@ -117,9 +149,16 @@
 #  endif
 #  define Q_ALIGNOF(type)   __alignof__(type)
 #  define Q_TYPEOF(expr)    __typeof__(expr)
+#  ifndef Q_DECL_DEPRECATED
+#    define Q_DECL_DEPRECATED __attribute__ ((__deprecated__))
+#  endif
 #  define Q_DECL_ALIGN(n)   __attribute__((__aligned__(n)))
 #  define Q_LIKELY(expr)    __builtin_expect(!!(expr), true)
 #  define Q_UNLIKELY(expr)  __builtin_expect(!!(expr), false)
+#  ifndef Q_NORETURN
+#    define Q_NORETURN        __attribute__((__noreturn__))
+#  endif
+#  define Q_REQUIRED_RESULT __attribute__ ((__warn_unused_result__))
 #  if !defined(QT_MOC_CPP)
 #    define Q_PACKED __attribute__ ((__packed__))
 #    define Q_NO_PACKED_REFERENCE
@@ -128,8 +167,21 @@
 #    endif
 #  endif
 
+#  ifdef Q_OS_WIN
+#    define Q_DECL_EXPORT     __declspec(dllexport)
+#    define Q_DECL_IMPORT     __declspec(dllimport)
+#  elif defined(QT_VISIBILITY_AVAILABLE)
+#    define Q_DECL_EXPORT     __attribute__((visibility("default")))
+#    define Q_DECL_IMPORT     __attribute__((visibility("default")))
+#    define Q_DECL_HIDDEN     __attribute__((visibility("hidden")))
+#  endif
+
 #else
 #  error "Qt has not been tested with this compiler"
+#endif
+
+#ifndef Q_NORETURN
+# define Q_NORETURN
 #endif
 
 /*
@@ -291,10 +343,23 @@
 #  endif
 #endif
 
-#ifndef Q_COMPILER_MANGLES_RETURN_TYPE
-#  if defined(Q_CC_MSVC)
-#    define Q_COMPILER_MANGLES_RETURN_TYPE
-#  endif
+#ifndef Q_REQUIRED_RESULT
+#  define Q_REQUIRED_RESULT
+#endif
+#ifndef Q_DECL_DEPRECATED
+#  define Q_DECL_DEPRECATED
+#endif
+#ifndef Q_DECL_VARIABLE_DEPRECATED
+#  define Q_DECL_VARIABLE_DEPRECATED Q_DECL_DEPRECATED
+#endif
+#ifndef Q_DECL_EXPORT
+#  define Q_DECL_EXPORT
+#endif
+#ifndef Q_DECL_IMPORT
+#  define Q_DECL_IMPORT
+#endif
+#ifndef Q_DECL_HIDDEN
+#  define Q_DECL_HIDDEN
 #endif
 
 #endif // QCOMPILERDETECTION_H

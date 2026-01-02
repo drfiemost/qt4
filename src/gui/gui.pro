@@ -50,7 +50,6 @@ QMAKE_DYNAMIC_LIST_FILE = $$PWD/QtGui.dynlist
 DEFINES += Q_INTERNAL_QAPP_SRC
 
 neon:if(*-g++*|*-qcc*) {
-    DEFINES += QT_HAVE_NEON
     HEADERS += $$NEON_HEADERS
 
     neon_compiler.commands = $$QMAKE_CXX -c
@@ -117,6 +116,18 @@ mac:contains(QMAKE_MAC_XARCH, no) {
             ssse3_compiler.name = compiling[ssse3] ${QMAKE_FILE_IN}
             silent:ssse3_compiler.commands = @echo compiling[ssse3] ${QMAKE_FILE_IN} && $$ssse3_compiler.commands
             QMAKE_EXTRA_COMPILERS += ssse3_compiler
+        }
+        avx {
+            avx_compiler.commands = $$QMAKE_CXX -c $(CXXFLAGS)
+            avx_compiler.commands += -mavx
+            avx_compiler.commands += $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+            avx_compiler.dependency_type = TYPE_C
+            avx_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
+            avx_compiler.input = AVX_SOURCES
+            avx_compiler.variable_out = OBJECTS
+            avx_compiler.name = compiling[avx] ${QMAKE_FILE_IN}
+            silent:avx_compiler.commands = @echo compiling[avx] ${QMAKE_FILE_IN} && $$avx_compiler.commands
+            QMAKE_EXTRA_COMPILERS += avx_compiler
         }
     } else {
         sse2: SOURCES += $$SSE2_SOURCES

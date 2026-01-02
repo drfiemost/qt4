@@ -43,26 +43,36 @@
 #define QSIMD_P_H
 
 #include <qglobal.h>
-
+#include <qatomic.h>
 
 QT_BEGIN_HEADER
 
-
-#if defined(QT_NO_MAC_XARCH) || (defined(Q_OS_DARWIN) && (defined(__ppc__) || defined(__ppc64__)))
-// Disable MMX and SSE on Mac/PPC builds, or if the compiler
-// does not support -Xarch argument passing
-#undef QT_HAVE_SSE2
-#undef QT_HAVE_SSE3
-#undef QT_HAVE_SSSE3
-#undef QT_HAVE_SSE4_1
-#undef QT_HAVE_SSE4_2
-#undef QT_HAVE_AVX
-#undef QT_HAVE_3DNOW
-#undef QT_HAVE_MMX
-#endif
+/*
+ * qt_module_config.prf defines the QT_COMPILER_SUPPORTS_XXX macros.
+ * They mean the compiler supports the necessary flags and the headers
+ * for the x86 and ARM intrinsics:
+ *  - GCC: the -mXXX or march=YYY flag is necessary before #include
+ *  - Intel CC: #include can happen unconditionally
+ *  - MSVC: #include can happen unconditionally
+ *  - RVCT: ???
+ *
+ * We will try to include all headers possible under this configuration.
+ *
+ * Supported XXX are:
+ *   Flag  | Arch |  GCC  | Intel CC |  MSVC  |
+ *  NEON   | ARM  | I & C | None     |   ?    |
+ *  SSE2   | x86  | I & C | I & C    | I & C  |
+ *  SSE3   | x86  | I & C | I & C    | I only |
+ *  SSSE3  | x86  | I & C | I & C    | I only |
+ *  SSE4_1 | x86  | I & C | I & C    | I only |
+ *  SSE4_2 | x86  | I & C | I & C    | I only |
+ *  AVX    | x86  | I & C | I & C    | I & C  |
+ *  AVX2   | x86  | I & C | I & C    | I only |
+ * I = intrinsics; C = code generation
+ */
 
 // SSE intrinsics
-#if defined(QT_HAVE_SSE2) && (defined(__SSE2__) || defined(Q_CC_MSVC))
+#if defined(__SSE2__) || (defined(QT_COMPILER_SUPPORTS_SSE2) && defined(Q_CC_MSVC))
 #if defined(QT_LINUXBASE)
 /// this is an evil hack - the posix_memalign declaration in LSB
 /// is wrong - see http://bugs.linuxbase.org/show_bug.cgi?id=2431
@@ -75,24 +85,25 @@ QT_BEGIN_HEADER
 #  endif
 #  include <emmintrin.h>
 #endif
+#endif
 
 // SSE3 intrinsics
-#if defined(QT_HAVE_SSE3) && (defined(__SSE3__) || defined(Q_CC_MSVC))
+#if defined(__SSE3__) || (defined(QT_COMPILER_SUPPORTS_SSE3) && defined(Q_CC_MSVC))
 #include <pmmintrin.h>
 #endif
 
 // SSSE3 intrinsics
-#if defined(QT_HAVE_SSSE3) && (defined(__SSSE3__) || defined(Q_CC_MSVC))
+#if defined(__SSSE3__) || (defined(QT_COMPILER_SUPPORTS_SSSE3) && defined(Q_CC_MSVC))
 #include <tmmintrin.h>
 #endif
 
 // SSE4.1 intrinsics
-#if defined(QT_HAVE_SSE4_1) && (defined(__SSE4_1__) || defined(Q_CC_MSVC))
+#if defined(__SSE4_1__) || (defined(QT_COMPILER_SUPPORTS_SSE4_1) && defined(Q_CC_MSVC))
 #include <smmintrin.h>
 #endif
 
 // SSE4.2 intrinsics
-#if defined(QT_HAVE_SSE4_2) && (defined(__SSE4_2__) || defined(Q_CC_MSVC))
+#if defined(__SSE4_2__) || (defined(QT_COMPILER_SUPPORTS_SSE4_2) && defined(Q_CC_MSVC))
 #include <nmmintrin.h>
 
 // Add missing intrisics in some compilers (e.g. llvm-gcc)
@@ -163,15 +174,9 @@ QT_BEGIN_HEADER
 #endif
 
 // AVX intrinsics
-#if defined(QT_HAVE_AVX) && (defined(__AVX__) || defined(Q_CC_MSVC))
+#if defined(__AVX__) || (defined(QT_COMPILER_SUPPORTS_AVX) && defined(Q_CC_MSVC))
 #include <immintrin.h>
 #endif
-
-
-#if !defined(QT_BOOTSTRAPPED) && (!defined(Q_CC_MSVC) || (defined(_M_X64) || _M_IX86_FP == 2))
-#define QT_ALWAYS_HAVE_SSE2
-#endif
-#endif // defined(QT_HAVE_SSE2) && (defined(__SSE2__) || defined(Q_CC_MSVC))
 
 // NEON intrinsics
 #if defined __ARM_NEON__
@@ -183,7 +188,6 @@ QT_BEGIN_NAMESPACE
 
 
 enum CPUFeatures {
-    None        = 0,
     NEON        = 0x1,
     SSE2        = 0x2,
     SSE3        = 0x4,
@@ -193,10 +197,64 @@ enum CPUFeatures {
     AVX         = 0x40,
     AVX2        = 0x80,
     HLE         = 0x100,
-    RTM         = 0x200
+    RTM         = 0x200,
+
+    // used only to indicate that the CPU detection was initialised
+    QSimdInitialized = 0x80000000
 };
 
-Q_CORE_EXPORT uint qDetectCPUFeatures();
+static const uint qCompilerCpuFeatures = 0
+#if defined __RTM__
+        | RTM
+#endif
+#if defined __HLE__
+        | HLE
+#endif
+#if defined __AVX2__
+        | AVX2
+#endif
+#if defined __AVX__
+        | AVX
+#endif
+#if defined __SSE4_2__
+        | SSE4_2
+#endif
+#if defined __SSE4_1__
+        | SSE4_1
+#endif
+#if defined __SSSE3__
+        | SSSE3
+#endif
+#if defined __SSE3__
+        | SSE3
+#endif
+#if defined __SSE2__
+        | SSE2
+#endif
+#if defined __ARM_NEON__
+        | NEON
+#endif
+        ;
+
+
+extern Q_CORE_EXPORT QBasicAtomicInt qt_cpu_features;
+Q_CORE_EXPORT void qDetectCpuFeatures();
+
+inline uint qCpuFeatures()
+{
+    int features = qt_cpu_features.loadRelaxed();
+    if (Q_UNLIKELY(features == 0)) {
+        qDetectCpuFeatures();
+        features = qt_cpu_features.loadRelaxed();
+        Q_ASSUME(features != 0);
+    }
+    return uint(features);
+}
+
+inline uint qCpuHasFeature(CPUFeatures feature)
+{
+    return qCompilerCpuFeatures & feature || qCpuFeatures() & feature;
+}
 
 
 #define ALIGNMENT_PROLOGUE_16BYTES(ptr, i, length) \

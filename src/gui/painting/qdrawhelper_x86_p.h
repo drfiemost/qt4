@@ -57,7 +57,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef QT_HAVE_SSE2
+#ifdef QT_COMPILER_SUPPORTS_SSE2
 void qt_memfill32_sse2(quint32 *dest, quint32 value, int count);
 void qt_memfill16_sse2(quint16 *dest, quint16 value, int count);
 void qt_bitmapblit32_sse2(QRasterBuffer *rasterBuffer, int x, int y,
@@ -77,7 +77,7 @@ void qt_blend_rgb32_on_rgb32_sse2(uchar *destPixels, int dbpl,
 
 extern CompositionFunction qt_functionForMode_SSE2[];
 extern CompositionFunctionSolid qt_functionForModeSolid_SSE2[];
-#endif // QT_HAVE_SSE2
+#endif // QT_COMPILER_SUPPORTS_SSE2
 
 static const int numCompositionFunctions = 33;
 

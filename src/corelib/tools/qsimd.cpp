@@ -68,7 +68,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(Q_PROCESSOR_ARM) || defined(QT_HAVE_NEON)
+#if defined(Q_PROCESSOR_ARM) || defined(QT_COMPILER_SUPPORTS_NEON)
 static inline uint detectProcessorFeatures()
 {
     uint features = 0;
@@ -311,36 +311,9 @@ static const int features_indices[] = {
 
 static const int features_count = (sizeof features_indices - 1) / (sizeof features_indices[0]);
 
-static const uint minFeature = None
-#if defined __RTM__
-                               | RTM
-#endif
+// record what CPU features were enabled by default in this Qt build
 // don't define for HLE, since the HLE prefix can be run on older CPUs
-#if defined __AVX2__
-                               | AVX2
-#endif
-#if defined __AVX__
-                               | AVX
-#endif
-#if defined __SSE4_2__
-                               | SSE4_2
-#endif
-#if defined __SSE4_1__
-                               | SSE4_1
-#endif
-#if defined __SSSE3__
-                               | SSSE3
-#endif
-#if defined __SSE3__
-                               | SSE3
-#endif
-#if defined __SSE2__
-                               | SSE2
-#endif
-#if defined __ARM_NEON__
-                               | NEON
-#endif
-                               ;
+static const uint minFeature = qCompilerCpuFeatures & ~HLE;
 
 #ifdef Q_OS_WIN
 int ffs(int i)
@@ -350,12 +323,10 @@ int ffs(int i)
 }
 #endif
 
-uint qDetectCPUFeatures()
-{
-    static QBasicAtomicInt features = Q_BASIC_ATOMIC_INITIALIZER(-1);
-    if (features.loadRelaxed() != -1)
-        return features.loadRelaxed();
+QBasicAtomicInt qt_cpu_features = Q_BASIC_ATOMIC_INITIALIZER(0);
 
+void qDetectCpuFeatures()
+{
     uint f = detectProcessorFeatures();
     QByteArray disable = qgetenv("QT_NO_CPU_FEATURE");
     if (!disable.isEmpty()) {
@@ -379,13 +350,12 @@ uint qDetectCPUFeatures()
                features_string + features_indices[ffs(missing) - 1]);
     }
 
-    features.storeRelaxed(f);
-    return f;
+    qt_cpu_features.storeRelaxed(f | QSimdInitialized);
 }
 
 void qDumpCPUFeatures()
 {
-    uint features = qDetectCPUFeatures();
+    uint features = qCpuFeatures();
     printf("Processor features: ");
     for (int i = 0; i < features_count; ++i) {
         if (features & (1 << i))

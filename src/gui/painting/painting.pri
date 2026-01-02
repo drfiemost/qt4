@@ -206,7 +206,7 @@ x11|embedded|qpa {
         DEFINES += QT_NO_CUPS QT_NO_LPR
 }
 
-if(mmx|3dnow|sse|sse2|iwmmxt) {
+if(mmx|3dnow|sse|sse2|avx) {
     HEADERS += painting/qdrawhelper_x86_p.h \
                painting/qdrawingprimitive_sse2_p.h
     SSE2_SOURCES += painting/qdrawhelper_sse2.cpp

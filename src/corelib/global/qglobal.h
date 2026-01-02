@@ -325,7 +325,7 @@ namespace QtPrivate {
     (size_t(QT_PREPEND_NAMESPACE(QtPrivate)::AlignOf<T>::Value))
 
 #ifndef Q_ALIGNOF
-#define Q_ALIGNOF(T) QT_EMULATED_ALIGNOF(T)
+#  define Q_ALIGNOF(T) QT_EMULATED_ALIGNOF(T)
 #endif
 
 
@@ -418,28 +418,6 @@ QT_END_INCLUDE_NAMESPACE
 #else
 #  define QT_STATIC_CONST static const
 #  define QT_STATIC_CONST_IMPL const
-#endif
-
-/*
-   Warnings and errors when using deprecated methods
-*/
-#if defined(Q_MOC_RUN)
-#  define Q_DECL_DEPRECATED Q_DECL_DEPRECATED
-#elif __cplusplus >= 201402L
-#  define Q_DECL_DEPRECATED [[deprecated]]
-#elif (defined(Q_CC_GNU) && !defined(Q_CC_INTEL) && (__GNUC__ - 0 > 3 || (__GNUC__ - 0 == 3 && __GNUC_MINOR__ - 0 >= 2))) || defined(Q_CC_RVCT)
-#  define Q_DECL_DEPRECATED __attribute__ ((__deprecated__))
-#elif defined(Q_CC_MSVC)
-#  define Q_DECL_DEPRECATED __declspec(deprecated)
-#  if defined (Q_CC_INTEL)
-#    define Q_DECL_VARIABLE_DEPRECATED
-#  else
-#  endif
-#else
-#  define Q_DECL_DEPRECATED
-#endif
-#ifndef Q_DECL_VARIABLE_DEPRECATED
-#  define Q_DECL_VARIABLE_DEPRECATED Q_DECL_DEPRECATED
 #endif
 
 #if defined(QT_NO_DEPRECATED)
@@ -616,28 +594,6 @@ class QDataStream;
 #  define Q_DECL_EXPORT     __attribute__((visibility("default")))
 #  define Q_DECL_IMPORT     __attribute__((visibility("default")))
 #  define Q_DECL_HIDDEN     __attribute__((visibility("hidden")))
-#endif
-
-#ifndef Q_DECL_EXPORT
-#  if defined(Q_OS_WIN) || defined(Q_CC_RVCT)
-#    define Q_DECL_EXPORT __declspec(dllexport)
-#  elif defined(QT_VISIBILITY_AVAILABLE)
-#    define Q_DECL_EXPORT __attribute__((visibility("default")))
-#    define Q_DECL_HIDDEN __attribute__((visibility("hidden")))
-#  endif
-#  ifndef Q_DECL_EXPORT
-#    define Q_DECL_EXPORT
-#  endif
-#endif
-#ifndef Q_DECL_IMPORT
-#  if defined(Q_OS_WIN) || defined(Q_CC_RVCT)
-#    define Q_DECL_IMPORT __declspec(dllimport)
-#  else
-#    define Q_DECL_IMPORT
-#  endif
-#endif
-#ifndef Q_DECL_HIDDEN
-#  define Q_DECL_HIDDEN
 #endif
 
 
