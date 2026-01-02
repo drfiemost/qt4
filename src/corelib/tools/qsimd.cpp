@@ -68,7 +68,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#if defined(__arm__) || defined(__arm) || defined(QT_HAVE_NEON)
+#if defined(Q_PROCESSOR_ARM) || defined(QT_HAVE_NEON)
 static inline uint detectProcessorFeatures()
 {
     uint features = 0;
@@ -107,17 +107,27 @@ static inline uint detectProcessorFeatures()
     return features;
 }
 
-#elif defined(__i386__) || defined(_M_IX86)
-static inline uint detectProcessorFeatures()
-{
-    uint features = 0;
+#elif defined(Q_PROCESSOR_X86)
 
-    unsigned int extended_result = 0;
-    unsigned int feature_result = 0;
-    uint result = 0;
-    /* see p. 118 of amd64 instruction set manual Vol3 */
-#if defined(Q_CC_GNU)
-    long cpuid_supported, tmp1;
+#ifdef Q_PROCESSOR_X86_32
+# define PICreg "%%ebx"
+#else
+# define PICreg "%%rbx"
+#endif
+
+static int maxBasicCpuidSupported()
+{
+#ifdef Q_OS_WIN
+    // Use the __cpuid function; if the CPUID instruction isn't supported, it will return 0
+    int info[4];
+    __cpuid(info, 0);
+    return info[0];
+#elif defined(Q_CC_GNU)
+    long tmp1;
+
+# ifdef Q_PROCESSOR_X86_32
+    // check if the CPUID instruction is supported
+    long cpuid_supported;
     asm ("pushf\n"
          "pop %0\n"
          "mov %0, %1\n"
@@ -129,142 +139,130 @@ static inline uint detectProcessorFeatures()
          "xor %1, %0\n" // %eax is now 0 if CPUID is not supported
          : "=a" (cpuid_supported), "=r" (tmp1)
          );
-    if (cpuid_supported) {
-        asm ("xchg %%ebx, %2\n"
-             "cpuid\n"
-             "xchg %%ebx, %2\n"
-            : "=&c" (feature_result), "=d" (result), "=&r" (tmp1)
-            : "a" (1));
+    if (!cpuid_supported)
+        return 0;
+# endif
 
-        asm ("xchg %%ebx, %1\n"
-             "cpuid\n"
-             "cmp $0x80000000, %%eax\n"
-             "jnbe 1f\n"
-             "xor %0, %0\n"
-             "jmp 2f\n"
-             "1:\n"
-             "mov $0x80000001, %%eax\n"
-             "cpuid\n"
-             "2:\n"
-             "xchg %%ebx, %1\n"
-            : "=&d" (extended_result), "=&r" (tmp1)
-            : "a" (0x80000000)
-            : "%ecx"
-            );
-    }
-
-#elif defined (Q_OS_WIN)
-    _asm {
-        push eax
-        push ebx
-        push ecx
-        push edx
-        pushfd
-        pop eax
-        mov ebx, eax
-        xor eax, 00200000h
-        push eax
-        popfd
-        pushfd
-        pop eax
-        mov edx, 0
-        xor eax, ebx
-        jz skip
-
-        mov eax, 1
-        cpuid
-        mov result, edx
-        mov feature_result, ecx
-    skip:
-        pop edx
-        pop ecx
-        pop ebx
-        pop eax
-    }
-
-    _asm {
-        push eax
-        push ebx
-        push ecx
-        push edx
-        pushfd
-        pop eax
-        mov ebx, eax
-        xor eax, 00200000h
-        push eax
-        popfd
-        pushfd
-        pop eax
-        mov edx, 0
-        xor eax, ebx
-        jz skip2
-
-        mov eax, 80000000h
-        cpuid
-        cmp eax, 80000000h
-        jbe skip2
-        mov eax, 80000001h
-        cpuid
-        mov extended_result, edx
-    skip2:
-        pop edx
-        pop ecx
-        pop ebx
-        pop eax
-    }
+    int result;
+    asm ("xchg " PICreg ", %1\n"
+         "cpuid\n"
+         "xchg " PICreg ", %1\n"
+        : "=&a" (result), "=&r" (tmp1)
+        : "0" (0)
+        : "ecx", "edx");
+    return result;
+#else
+    return 0;
 #endif
-
-
-    // result now contains the standard feature bits
-    if (result & (1u << 26))
-        features |= SSE2;
-    if (feature_result & (1u))
-        features |= SSE3;
-    if (feature_result & (1u << 9))
-        features |= SSSE3;
-    if (feature_result & (1u << 19))
-        features |= SSE4_1;
-    if (feature_result & (1u << 20))
-        features |= SSE4_2;
-    if (feature_result & (1u << 28))
-        features |= AVX;
-
-    return features;
 }
 
-#elif defined(__x86_64) || defined(Q_OS_WIN64)
-static inline uint detectProcessorFeatures()
+static void cpuidFeatures01(uint &ecx, uint &edx)
 {
-    uint features = SSE2;
-    uint feature_result = 0;
-
-#if defined(Q_CC_GNU)
-    quint64 tmp;
-    asm ("xchg %%rbx, %1\n"
+#ifdef Q_OS_WIN
+    int info[4];
+    __cpuid(info, 1);
+    ecx = info[2];
+    edx = info[3];
+#elif defined(Q_CC_GNU)
+    long tmp1;
+    asm ("xchg " PICreg ", %2\n"
          "cpuid\n"
-         "xchg %%rbx, %1\n"
-        : "=&c" (feature_result), "=&r" (tmp)
-        : "a" (1)
-        : "%edx"
-        );
-#elif defined (Q_OS_WIN64)
-    {
-       int info[4];
-       __cpuid(info, 1);
-       feature_result = info[2];
-    }
+         "xchg " PICreg ", %2\n"
+        : "=&c" (ecx), "=&d" (edx), "=&r" (tmp1)
+        : "a" (1));
+#endif
+}
+
+static void cpuidFeatures07_00(uint &ebx)
+{
+#ifdef Q_OS_WIN
+    int info[4];
+    __cpuidex(info, 7, 0);
+    ebx = info[1];
+#elif defined(Q_CC_GNU)
+    unsigned long rbx; // in case it's 64-bit
+    asm ("xchg " PICreg ", %0\n"
+         "cpuid\n"
+         "xchg " PICreg ", %0\n"
+        : "=&r" (rbx)
+        : "a" (7), "c" (0)
+        : "%edx");
+    ebx = rbx;
+#endif
+}
+
+#ifdef Q_OS_WIN
+namespace QtXgetbvHack {
+    inline quint64 _xgetbv(int) { return 0; }
+}
+using namespace QtXgetbvHack;
 #endif
 
-    if (feature_result & (1u))
+static void xgetbv(int in, uint &eax, uint &edx)
+{
+#ifdef Q_OS_WIN
+    quint64 result = _xgetbv(in);
+    eax = result;
+    edx = result >> 32;
+#elif defined(Q_CC_GNU)
+    asm (".byte 0x0F, 0x01, 0xD0" // xgetbv instruction
+        : "=a" (eax), "=d" (edx)
+        : "c" (in));
+#endif
+}
+
+static inline uint detectProcessorFeatures()
+{
+    uint features = 0;
+    int cpuidLevel = maxBasicCpuidSupported();
+    if (cpuidLevel < 1)
+        return 0;
+
+    uint cpuid01ECX = 0, cpuid01EDX = 0;
+    cpuidFeatures01(cpuid01ECX, cpuid01EDX);
+#if defined(Q_PROCESSOR_X86_32)
+    // x86 might not have SSE2 support
+    if (cpuid01EDX & (1u << 26))
+        features |= SSE2;
+#else
+    // x86-64 or x32
+    features = SSE2;
+#endif
+
+    // common part between 32- and 64-bit
+    if (cpuid01ECX & (1u))
         features |= SSE3;
-    if (feature_result & (1u << 9))
+    if (cpuid01ECX & (1u << 9))
         features |= SSSE3;
-    if (feature_result & (1u << 19))
+    if (cpuid01ECX & (1u << 19))
         features |= SSE4_1;
-    if (feature_result & (1u << 20))
+    if (cpuid01ECX & (1u << 20))
         features |= SSE4_2;
-    if (feature_result & (1u << 28))
-        features |= AVX;
+    if (cpuid01ECX & (1u << 25))
+        features |= 0; // AES, enable if needed
+    uint xgetbvA = 0, xgetbvD = 0;
+    if (cpuid01ECX & (1u << 27)) {
+        // XGETBV enabled
+        xgetbv(0, xgetbvA, xgetbvD);
+    }
+
+    uint cpuid0700EBX = 0;
+    if (cpuidLevel >= 7)
+        cpuidFeatures07_00(cpuid0700EBX);
+
+    if ((xgetbvA & 6) == 6) {
+        // support for YMM and XMM registers is enabled
+        if (cpuid01ECX & (1u << 28))
+            features |= AVX;
+
+        if (cpuid0700EBX & (1u << 5))
+            features |= AVX2;
+    }
+
+    if (cpuid0700EBX & (1u << 4))
+        features |= HLE; // Hardware Lock Ellision
+    if (cpuid0700EBX & (1u << 11))
+        features |= RTM; // Restricted Transactional Memory
 
     return features;
 }
@@ -286,6 +284,9 @@ static inline uint detectProcessorFeatures()
  sse4.1
  sse4.2
  avx
+ avx2
+ hle
+ rtm
   */
 
 // begin generated
@@ -297,11 +298,14 @@ static const char features_string[] =
     " sse4.1\0"
     " sse4.2\0"
     " avx\0"
+    " avx2\0"
+    " hle\0"
+    " rtm\0"
     "\0";
 
 static const int features_indices[] = {
      0,    6,   12,   18,   25,   33,   41,   46,
-    -1
+    52,   57,   -1
 };
 // end generated
 
