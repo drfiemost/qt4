@@ -100,6 +100,22 @@ static const uint *QT_FASTCALL convertARGB32ToARGB32PM(uint *buffer, const uint 
     return buffer;
 }
 
+static const uint *QT_FASTCALL convertRGBA8888PMToARGB32PM(uint *buffer, const uint *src, int count,
+                                                           const QPixelLayout *, const QRgb *)
+{
+    for (int i = 0; i < count; ++i)
+        buffer[i] = RGBA2ARGB(src[i]);
+    return buffer;
+}
+
+static const uint *QT_FASTCALL convertRGBA8888ToARGB32PM(uint *buffer, const uint *src, int count,
+                                                         const QPixelLayout *, const QRgb *)
+{
+    for (int i = 0; i < count; ++i)
+        buffer[i] = PREMUL(RGBA2ARGB(src[i]));
+    return buffer;
+}
+
 static const uint *QT_FASTCALL convertToRGB32(uint *buffer, const uint *src, int count,
                                               const QPixelLayout *layout, const QRgb *)
 {
@@ -204,6 +220,22 @@ static const uint *QT_FASTCALL convertARGB32FromARGB32PM(uint *buffer, const uin
     return buffer;
 }
 
+static const uint *QT_FASTCALL convertRGBA8888PMFromARGB32PM(uint *buffer, const uint *src, int count,
+                                                             const QPixelLayout *, const QRgb *)
+{
+    for (int i = 0; i < count; ++i)
+        buffer[i] = ARGB2RGBA(src[i]);
+    return buffer;
+}
+
+static const uint *QT_FASTCALL convertRGBA8888FromARGB32PM(uint *buffer, const uint *src, int count,
+                                                             const QPixelLayout *, const QRgb *)
+{
+    for (int i = 0; i < count; ++i)
+        buffer[i] = ARGB2RGBA(INV_PREMUL(src[i]));
+    return buffer;
+}
+
 static const uint *QT_FASTCALL convertFromARGB32PM(uint *buffer, const uint *src, int count,
                                                    const QPixelLayout *layout, const QRgb *)
 {
@@ -235,6 +267,111 @@ static const uint *QT_FASTCALL convertFromARGB32PM(uint *buffer, const uint *src
         buffer[i] = red | green | blue | alpha;
     }
     return buffer;
+}
+
+template <QPixelLayout::BPP bpp> static
+uint QT_FASTCALL fetchPixel(const uchar *src, int index);
+
+template <>
+inline uint QT_FASTCALL fetchPixel<QPixelLayout::BPP1LSB>(const uchar *src, int index)
+{
+    return (src[index >> 3] >> (index & 7)) & 1;
+}
+
+template <>
+inline uint QT_FASTCALL fetchPixel<QPixelLayout::BPP1MSB>(const uchar *src, int index)
+{
+    return (src[index >> 3] >> (~index & 7)) & 1;
+}
+
+template <>
+inline uint QT_FASTCALL fetchPixel<QPixelLayout::BPP8>(const uchar *src, int index)
+{
+    return src[index];
+}
+
+template <>
+inline uint QT_FASTCALL fetchPixel<QPixelLayout::BPP16>(const uchar *src, int index)
+{
+    return reinterpret_cast<const quint16 *>(src)[index];
+}
+
+template <>
+inline uint QT_FASTCALL fetchPixel<QPixelLayout::BPP24>(const uchar *src, int index)
+{
+    return reinterpret_cast<const quint24 *>(src)[index];
+}
+
+template <>
+inline uint QT_FASTCALL fetchPixel<QPixelLayout::BPP32>(const uchar *src, int index)
+{
+    return reinterpret_cast<const uint *>(src)[index];
+}
+
+template <QPixelLayout::BPP bpp>
+inline const uint *QT_FASTCALL fetchPixels(uint *buffer, const uchar *src, int index, int count)
+{
+    for (int i = 0; i < count; ++i)
+        buffer[i] = fetchPixel<bpp>(src, index + i);
+    return buffer;
+}
+
+template <>
+inline const uint *QT_FASTCALL fetchPixels<QPixelLayout::BPP32>(uint *, const uchar *src, int index, int)
+{
+    return reinterpret_cast<const uint *>(src) + index;
+}
+
+template <QPixelLayout::BPP width> static
+void QT_FASTCALL storePixel(uchar *dest, int index, uint pixel);
+
+template <>
+inline void QT_FASTCALL storePixel<QPixelLayout::BPP1LSB>(uchar *dest, int index, uint pixel)
+{
+    if (pixel)
+        dest[index >> 3] |= 1 << (index & 7);
+    else
+        dest[index >> 3] &= ~(1 << (index & 7));
+}
+
+template <>
+inline void QT_FASTCALL storePixel<QPixelLayout::BPP1MSB>(uchar *dest, int index, uint pixel)
+{
+    if (pixel)
+        dest[index >> 3] |= 1 << (~index & 7);
+    else
+        dest[index >> 3] &= ~(1 << (~index & 7));
+}
+
+template <>
+inline void QT_FASTCALL storePixel<QPixelLayout::BPP8>(uchar *dest, int index, uint pixel)
+{
+    dest[index] = uchar(pixel);
+}
+
+template <>
+inline void QT_FASTCALL storePixel<QPixelLayout::BPP16>(uchar *dest, int index, uint pixel)
+{
+    reinterpret_cast<quint16 *>(dest)[index] = quint16(pixel);
+}
+
+template <>
+inline void QT_FASTCALL storePixel<QPixelLayout::BPP24>(uchar *dest, int index, uint pixel)
+{
+    reinterpret_cast<quint24 *>(dest)[index] = quint24(pixel);
+}
+
+template <QPixelLayout::BPP width>
+inline void QT_FASTCALL storePixels(uchar *dest, const uint *src, int index, int count)
+{
+    for (int i = 0; i < count; ++i)
+        storePixel<width>(dest, index + i, src[i]);
+}
+
+template <>
+inline void QT_FASTCALL storePixels<QPixelLayout::BPP32>(uchar *dest, const uint *src, int index, int count)
+{
+    std::memcpy(reinterpret_cast<uint *>(dest) + index, src, count * sizeof(uint));
 }
 
 static const uint *QT_FASTCALL convertRGBFromARGB32PM(uint *buffer, const uint *src, int count,
@@ -286,13 +423,13 @@ QPixelLayout qPixelLayouts[QImage::NImageFormats] = {
     { 4,  8, 4,  4, 4,  0, 0,  0, false, QPixelLayout::BPP16, convertToRGB32, convertFromARGB32PM }, // Format_RGB444
     { 4,  8, 4,  4, 4,  0, 4, 12,  true, QPixelLayout::BPP16, convertToARGB32PM, convertFromARGB32PM }, // Format_ARGB4444_Premultiplied
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
-    { 8, 24, 8, 16, 8,  8, 0,  0, false, QPixelLayout::BPP32, convertToRGB32, convertRGBFromARGB32PM }, // Format_RGBX8888
-    { 8, 24, 8, 16, 8,  8, 8,  0, false, QPixelLayout::BPP32, convertToARGB32PM, convertFromARGB32PM }, // Format_RGBA8888
-    { 8, 24, 8, 16, 8,  8, 8,  0,  true, QPixelLayout::BPP32, convertToARGB32PM, convertFromARGB32PM }, // Format_RGBA8888_Premultiplied
+    { 8, 24, 8, 16, 8,  8, 0,  0, false, QPixelLayout::BPP32, convertRGBA8888PMToARGB32PM, convertRGBFromARGB32PM }, // Format_RGBX8888
+    { 8, 24, 8, 16, 8,  8, 8,  0, false, QPixelLayout::BPP32, convertRGBA8888ToARGB32PM, convertRGBA8888FromARGB32PM }, // Format_RGBA8888
+    { 8, 24, 8, 16, 8,  8, 8,  0,  true, QPixelLayout::BPP32, convertRGBA8888PMToARGB32PM, convertRGBA8888PMFromARGB32PM }, // Format_RGBA8888_Premultiplied
 #else
-    { 8,  0, 8,  8, 8, 16, 0, 24, false, QPixelLayout::BPP32, convertToRGB32, convertRGBFromARGB32PM }, // Format_RGBX8888
-    { 8,  0, 8,  8, 8, 16, 8, 24, false, QPixelLayout::BPP32, convertToARGB32PM, convertFromARGB32PM }, // Format_RGBA8888 (ABGR32)
-    { 8,  0, 8,  8, 8, 16, 8, 24,  true, QPixelLayout::BPP32, convertToARGB32PM, convertFromARGB32PM }  // Format_RGBA8888_Premultiplied
+    { 8,  0, 8,  8, 8, 16, 0, 24, false, QPixelLayout::BPP32, convertRGBA8888PMToARGB32PM, convertRGBFromARGB32PM }, // Format_RGBX8888
+    { 8,  0, 8,  8, 8, 16, 8, 24, false, QPixelLayout::BPP32, convertRGBA8888ToARGB32PM, convertRGBA8888FromARGB32PM }, // Format_RGBA8888 (ABGR32)
+    { 8,  0, 8,  8, 8, 16, 8, 24,  true, QPixelLayout::BPP32, convertRGBA8888PMToARGB32PM, convertRGBA8888PMFromARGB32PM }  // Format_RGBA8888_Premultiplied
 #endif
 };
 
@@ -5913,9 +6050,9 @@ static void qt_alphargbblit_quint32(QRasterBuffer *rasterBuffer,
     }
 }
 
-static void qt_rectfill_quint32(QRasterBuffer *rasterBuffer,
-                                int x, int y, int width, int height,
-                                quint32 color)
+static void qt_rectfill_argb32(QRasterBuffer *rasterBuffer,
+                               int x, int y, int width, int height,
+                               quint32 color)
 {
     qt_rectfill<quint32>(reinterpret_cast<quint32 *>(rasterBuffer->buffer()),
                          color, x, y, width, height, rasterBuffer->bytesPerLine());
@@ -5929,13 +6066,30 @@ static void qt_rectfill_quint16(QRasterBuffer *rasterBuffer,
                          qConvertRgb32To16(color), x, y, width, height, rasterBuffer->bytesPerLine());
 }
 
-static void qt_rectfill_nonpremul_quint32(QRasterBuffer *rasterBuffer,
-                                          int x, int y, int width, int height,
-                                          quint32 color)
+static void qt_rectfill_nonpremul_argb32(QRasterBuffer *rasterBuffer,
+                                         int x, int y, int width, int height,
+                                         quint32 color)
 {
     qt_rectfill<quint32>(reinterpret_cast<quint32 *>(rasterBuffer->buffer()),
                          INV_PREMUL(color), x, y, width, height, rasterBuffer->bytesPerLine());
 }
+
+static void qt_rectfill_rgba(QRasterBuffer *rasterBuffer,
+                             int x, int y, int width, int height,
+                             quint32 color)
+{
+    qt_rectfill<quint32>(reinterpret_cast<quint32 *>(rasterBuffer->buffer()),
+                         ARGB2RGBA(color), x, y, width, height, rasterBuffer->bytesPerLine());
+}
+
+static void qt_rectfill_nonpremul_rgba(QRasterBuffer *rasterBuffer,
+                                       int x, int y, int width, int height,
+                                       quint32 color)
+{
+    qt_rectfill<quint32>(reinterpret_cast<quint32 *>(rasterBuffer->buffer()),
+                         ARGB2RGBA(INV_PREMUL(color)), x, y, width, height, rasterBuffer->bytesPerLine());
+}
+
 
 
 // Map table for destination image format. Contains function pointers
@@ -5970,7 +6124,7 @@ DrawHelper qDrawHelper[QImage::NImageFormats] =
         qt_bitmapblit_quint32,
         qt_alphamapblit_quint32,
         qt_alphargbblit_quint32,
-        qt_rectfill_quint32
+        qt_rectfill_argb32
     },
     // Format_ARGB32,
     {
@@ -5979,7 +6133,7 @@ DrawHelper qDrawHelper[QImage::NImageFormats] =
         qt_bitmapblit_quint32,
         qt_alphamapblit_quint32,
         qt_alphargbblit_quint32,
-        qt_rectfill_nonpremul_quint32
+        qt_rectfill_nonpremul_argb32
     },
     // Format_ARGB32_Premultiplied
     {
@@ -5988,7 +6142,7 @@ DrawHelper qDrawHelper[QImage::NImageFormats] =
         qt_bitmapblit_quint32,
         qt_alphamapblit_quint32,
         qt_alphargbblit_quint32,
-        qt_rectfill_quint32
+        qt_rectfill_argb32
     },
     // Format_RGB16
     {
@@ -6059,7 +6213,7 @@ DrawHelper qDrawHelper[QImage::NImageFormats] =
         nullptr,
         nullptr,
 #endif
-        qt_rectfill_quint32
+        qt_rectfill_rgba
     },
     // Format_RGBA8888
     {
@@ -6073,7 +6227,7 @@ DrawHelper qDrawHelper[QImage::NImageFormats] =
         nullptr,
         nullptr,
 #endif
-        qt_rectfill_quint32
+        qt_rectfill_nonpremul_rgba
     },
     // Format_RGB8888_Premultiplied
     {
@@ -6087,7 +6241,7 @@ DrawHelper qDrawHelper[QImage::NImageFormats] =
         nullptr,
         nullptr,
 #endif
-        qt_rectfill_quint32
+        qt_rectfill_rgba
     }
 };
 
