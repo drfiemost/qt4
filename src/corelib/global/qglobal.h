@@ -548,12 +548,7 @@ using QNoImplicitBoolCast = int;
 #  define QT_NO_FPU
 #endif
 
-// This logic must match the one in qmetatype.h
-#if defined(QT_NO_FPU)
-using qreal = float;
-#else
 using qreal = double;
-#endif
 
 /*
    Utility macros and inline functions

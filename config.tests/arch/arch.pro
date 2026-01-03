@@ -1,7 +1,12 @@
-CONFIG -= qt debug_and_release
-# Detect target by preprocessing a file that uses Q_PROCESSOR_* macros from qprocessordetection.h
-COMMAND = $$QMAKE_CXX $$QMAKE_CXXFLAGS -E $$PWD/arch.cpp
-# 'false' as second argument to system() prevents qmake from stripping newlines
-COMPILER_ARCH = $$system($$COMMAND, false)
-# Message back to configure so that it can set QT_ARCH and QT_HOST_ARCH
-message($$COMPILER_ARCH)
+TARGET = arch
+SOURCES = arch.cpp
+mac:CONFIG -= app_bundle
+
+!isEmpty(QMAKE_CFLAGS_AVX2):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_AVX2
+else:!isEmpty(QMAKE_CFLAGS_AVX):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_AVX
+else:!isEmpty(QMAKE_CFLAGS_SSE4_2):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_SSE4_2
+else:!isEmpty(QMAKE_CFLAGS_SSE4_1):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_SSE4_1
+else:!isEmpty(QMAKE_CFLAGS_SSSE3):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_SSSE3
+else:!isEmpty(QMAKE_CFLAGS_SSE3):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_SSE3
+else:!isEmpty(QMAKE_CFLAGS_SSE2):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_SSE2
+else:!isEmpty(QMAKE_CFLAGS_NEON):QMAKE_CXXFLAGS += $$QMAKE_CFLAGS_NEON

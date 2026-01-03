@@ -725,7 +725,6 @@ CFG_MITSHM=auto
 CFG_OPENGL=auto
 CFG_EGL=no
 CFG_EGL_GLES_INCLUDES=no
-CFG_SSE=auto
 CFG_FONTCONFIG=auto
 CFG_LIBFREETYPE=auto
 CFG_SQL_AVAILABLE=
@@ -753,8 +752,10 @@ CFG_MOUSE_ON="pc linuxtp"   #default, see QMakeVar above
 
 # Target architecture
 CFG_ARCH=
+CFG_CPUFEATURES=
 # Host architecture, same as CFG_ARCH when not cross-compiling
 CFG_HOST_ARCH=
+CFG_HOST_CPUFEATURES=
 # Set when the -arch or -host-arch arguments are used
 OPT_OBSOLETE_HOST_ARG=no
 
@@ -1238,13 +1239,6 @@ while [ "$#" -gt 0 ]; do
         PLATFORM_QPA=yes
         if [ "$VAL" != "auto" ]; then
             QT_QPA_DEFAULT_PLATFORM="$VAL"
-        fi
-        ;;
-    sse)
-        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
-            CFG_SSE="$VAL"
-        else
-            UNKNOWN_OPT=yes
         fi
         ;;
     opengl)
@@ -2132,12 +2126,6 @@ for e in gawk nawk awk; do
         break
     fi
 done
-
-# find perl
-PERL="/usr/bin/perl"
-if "$WHICH" perl >/dev/null 2>&1 && ( perl /dev/null ) >/dev/null 2>&1; then
-    PERL=`$WHICH perl`
-fi
 
 ### skip this if the user just needs help...
 if [ "$OPT_HELP" != "yes" ]; then
@@ -3930,17 +3918,38 @@ fi
 # determine the target and host architectures
 #-------------------------------------------------------------------------------
 
-# Use config.tests/arch/arch.pro to has the compiler tell us what the target architecture is
-CFG_ARCH=`"$outpath/bin/qmake" -spec "$XQMAKESPEC" -o /dev/null "$relpath/config.tests/arch/arch.pro" 2>&1 | sed -e "s,^Project MESSAGE: ,," -e "s,^#.*$,,g" | grep -v "^$"`
+# Use config.tests/arch/arch.pro to have the compiler tell us what the target architecture is
+
+OUTFILE=$outpath/arch.result
+"$unixtests/arch.test" "$XQMAKESPEC" $OPT_VERBOSE "$relpath" "$outpath" "$OUTFILE" "CFG"
+if [ $? -eq 0 ]; then
+    eval `cat "$OUTFILE"`
+else
+    echo
+    echo "Could not determine the target architecture!"
+    echo "Turn on verbose messaging (-v) to see the final report."
+fi
+rm -f "$OUTFILE" 2>/dev/null
 [ -z "$CFG_ARCH" ] && CFG_ARCH="unknown"
+
 if [ "$QMAKESPEC" != "$XQMAKESPEC" ]; then
     # Do the same test again, using the host compiler
-    CFG_HOST_ARCH=`"$outpath/bin/qmake" -spec "$QMAKESPEC" -o /dev/null "$relpath/config.tests/arch/arch.pro" 2>&1 | sed -e "s,^Project MESSAGE: ,," -e "s,^#.*$,,g" | grep -v "^$"`
+    SYSROOT_FLAG= "$unixtests/arch.test" "$QMAKESPEC" $OPT_VERBOSE "$relpath" "$outpath" "$OUTFILE" "CFG_HOST"
+    if [ $? -eq 0 ]; then
+        eval `cat "$OUTFILE"`
+    else
+        echo
+        echo "Could not determine the host architecture!"
+        echo "Turn on verbose messaging (-v) to see the final report."
+    fi
+    rm -f "$OUTFILE" 2>/dev/null
     [ -z "$CFG_HOST_ARCH" ] && CFG_HOST_ARCH="unknown"
 else
     # not cross compiling, host == target
     CFG_HOST_ARCH="$CFG_ARCH"
+    CFG_HOST_CPUFEATURES="$CFG_CPUFEATURES"
 fi
+unset OUTFILE
 
 if [ "$OPT_VERBOSE" = "yes" ]; then
     echo "System architecture: '$CFG_ARCH'"
@@ -3978,7 +3987,7 @@ if [ "${CFG_SSE2}" = "no" ]; then
     CFG_SSE2=no
 fi
 if [ "${CFG_SSE2}" = "auto" ]; then
-    if compileTest unix/sse2 "sse2" "-msse2"; then
+    if compileTest unix/sse2 "sse2"; then
        CFG_SSE2=yes
     else
        CFG_SSE2=no
@@ -3990,7 +3999,7 @@ if [ "${CFG_SSE2}" = "no" ]; then
     CFG_SSE3=no
 fi
 if [ "${CFG_SSE3}" = "auto" ]; then
-    if compileTest unix/sse3 "sse3" "-msse3"; then
+    if compileTest unix/sse3 "sse3"; then
        CFG_SSE3=yes
     else
        CFG_SSE3=no
@@ -4002,7 +4011,7 @@ if [ "${CFG_SSE3}" = "no" ]; then
     CFG_SSSE3=no
 fi
 if [ "${CFG_SSSE3}" = "auto" ]; then
-    if compileTest unix/ssse3 "ssse3" "-mssse3"; then
+    if compileTest unix/ssse3 "ssse3"; then
        CFG_SSSE3=yes
     else
        CFG_SSSE3=no
@@ -4014,7 +4023,7 @@ if [ "${CFG_SSSE3}" = "no" ]; then
     CFG_SSE4_1=no
 fi
 if [ "${CFG_SSE4_1}" = "auto" ]; then
-    if compileTest unix/sse4_1 "sse4_1" "-msse4.1"; then
+    if compileTest unix/sse4_1 "sse4_1"; then
        CFG_SSE4_1=yes
     else
        CFG_SSE4_1=no
@@ -4026,7 +4035,7 @@ if [ "${CFG_SSE4_1}" = "no" ]; then
     CFG_SSE4_2=no
 fi
 if [ "${CFG_SSE4_2}" = "auto" ]; then
-    if compileTest unix/sse4_2 "sse4_2" "-msse4.2"; then
+    if compileTest unix/sse4_2 "sse4_2"; then
        CFG_SSE4_2=yes
     else
        CFG_SSE4_2=no
@@ -4038,7 +4047,7 @@ if [ "${CFG_SSE4_2}" = "no" ]; then
     CFG_AVX=no
 fi
 if [ "${CFG_AVX}" = "auto" ]; then
-    if compileTest unix/avx "avx" "-mavx"; then
+    if compileTest unix/avx "avx"; then
        CFG_AVX=yes
     else
        CFG_AVX=no
@@ -4047,7 +4056,7 @@ fi
 
 # detect avx2 support
 if [ "${CFG_AVX2}" = "auto" ]; then
-    if compileTest unix/avx2 "avx2" "-march=core-avx2"; then
+    if compileTest unix/avx2 "avx2"; then
        CFG_AVX2=yes
     else
        CFG_AVX2=no
@@ -4056,7 +4065,7 @@ fi
 
 # detect neon support
 if [ "$CFG_ARCH" = "arm" ] && [ "${CFG_NEON}" = "auto" ]; then
-    if compileTest unix/neon "neon" "-mfpu=neon"; then
+    if compileTest unix/neon "neon"; then
 	CFG_NEON=yes
     else
 	CFG_NEON=no
@@ -5949,6 +5958,8 @@ cat >>"$QTCONFIG.tmp" <<EOF
 CONFIG += $QTCONFIG_CONFIG
 QT_ARCH = $CFG_ARCH
 QT_HOST_ARCH = $CFG_HOST_ARCH
+QT_CPU_FEATURES = $CFG_CPUFEATURES
+QT_HOST_CPU_FEATURES = $CFG_HOST_CPUFEATURES
 QT_EDITION = $Edition
 QT_CONFIG += $QT_CONFIG
 
@@ -6107,10 +6118,10 @@ else
     echo "Building for:  $XPLATFORM"
 fi
 
-echo "Architecture:  $CFG_ARCH"
-
+# the missing space before $CFG_FEATURES is intentional
+echo "Architecture:  $CFG_ARCH, features:$CFG_CPUFEATURES"
 if [ "$PLATFORM_QPA" = "yes" ]; then
-    echo "Host architecture: $CFG_HOST_ARCH"
+    echo "Host architecture: $CFG_HOST_ARCH, features:$CFG_HOST_CPUFEATURES"
 fi
 
 if [ "$PLATFORM_MAC" = "yes" ]; then

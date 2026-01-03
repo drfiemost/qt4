@@ -53,7 +53,7 @@ neon:if(*-g++*|*-qcc*) {
     HEADERS += $$NEON_HEADERS
 
     neon_compiler.commands = $$QMAKE_CXX -c
-    neon_compiler.commands += $(CXXFLAGS) -mfpu=neon $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+    neon_compiler.commands += $(CXXFLAGS) $$QMAKE_CFLAGS_NEON $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
     neon_compiler.dependency_type = TYPE_C
     neon_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
     neon_compiler.input = NEON_SOURCES
@@ -61,7 +61,7 @@ neon:if(*-g++*|*-qcc*) {
     neon_compiler.name = compiling[neon] ${QMAKE_FILE_IN}
     silent:neon_compiler.commands = @echo compiling[neon] ${QMAKE_FILE_IN} && $$neon_compiler.commands
     neon_assembler.commands = $$QMAKE_CC -c
-    neon_assembler.commands += $(CFLAGS) -mfpu=neon $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+    neon_assembler.commands += $(CFLAGS) $$QMAKE_CFLAGS_NEON $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
     neon_assembler.dependency_type = TYPE_C
     neon_assembler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
     neon_assembler.input = NEON_ASM
@@ -75,62 +75,48 @@ win32:!contains(QT_CONFIG, directwrite) {
     DEFINES += QT_NO_DIRECTWRITE
 }
 
-mac:contains(QMAKE_MAC_XARCH, no) {
-    DEFINES += QT_NO_MAC_XARCH
-} else {
-    win32-g++*|!win32:!win32-icc*:!macx-icc* {
-        sse2 {
-            sse2_compiler.commands = $$QMAKE_CXX -c -Winline
+*-g++*|linux-icc*|*-clang  {
+    sse2 {
+        sse2_compiler.commands = $$QMAKE_CXX -c -Winline
 
-            mac {
-                sse2_compiler.commands += -Xarch_i386 -msse2
-                sse2_compiler.commands += -Xarch_x86_64 -msse2
-            } else {
-                sse2_compiler.commands += -msse2
-            }
+        sse2_compiler.commands += $$QMAKE_CFLAGS_SSE2
 
-            sse2_compiler.commands += $(CXXFLAGS) $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
-            sse2_compiler.dependency_type = TYPE_C
-            sse2_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
-            sse2_compiler.input = SSE2_SOURCES
-            sse2_compiler.variable_out = OBJECTS
-            sse2_compiler.name = compiling[sse2] ${QMAKE_FILE_IN}
-            silent:sse2_compiler.commands = @echo compiling[sse2] ${QMAKE_FILE_IN} && $$sse2_compiler.commands
-            QMAKE_EXTRA_COMPILERS += sse2_compiler
-        }
-        ssse3 {
-            ssse3_compiler.commands = $$QMAKE_CXX -c -Winline
-
-            mac {
-                ssse3_compiler.commands += -Xarch_i386 -mssse3
-                ssse3_compiler.commands += -Xarch_x86_64 -mssse3
-            } else {
-                ssse3_compiler.commands += -mssse3
-            }
-
-            ssse3_compiler.commands += $(CXXFLAGS) $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
-            ssse3_compiler.dependency_type = TYPE_C
-            ssse3_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
-            ssse3_compiler.input = SSSE3_SOURCES
-            ssse3_compiler.variable_out = OBJECTS
-            ssse3_compiler.name = compiling[ssse3] ${QMAKE_FILE_IN}
-            silent:ssse3_compiler.commands = @echo compiling[ssse3] ${QMAKE_FILE_IN} && $$ssse3_compiler.commands
-            QMAKE_EXTRA_COMPILERS += ssse3_compiler
-        }
-        avx {
-            avx_compiler.commands = $$QMAKE_CXX -c $(CXXFLAGS)
-            avx_compiler.commands += -mavx
-            avx_compiler.commands += $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
-            avx_compiler.dependency_type = TYPE_C
-            avx_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
-            avx_compiler.input = AVX_SOURCES
-            avx_compiler.variable_out = OBJECTS
-            avx_compiler.name = compiling[avx] ${QMAKE_FILE_IN}
-            silent:avx_compiler.commands = @echo compiling[avx] ${QMAKE_FILE_IN} && $$avx_compiler.commands
-            QMAKE_EXTRA_COMPILERS += avx_compiler
-        }
-    } else {
-        sse2: SOURCES += $$SSE2_SOURCES
-        ssse3: SOURCES += $$SSSE3_SOURCES
+        sse2_compiler.commands += $(CXXFLAGS) $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+        sse2_compiler.dependency_type = TYPE_C
+        sse2_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
+        sse2_compiler.input = SSE2_SOURCES
+        sse2_compiler.variable_out = OBJECTS
+        sse2_compiler.name = compiling[sse2] ${QMAKE_FILE_IN}
+        silent:sse2_compiler.commands = @echo compiling[sse2] ${QMAKE_FILE_IN} && $$sse2_compiler.commands
+        QMAKE_EXTRA_COMPILERS += sse2_compiler
     }
+    ssse3 {
+        ssse3_compiler.commands = $$QMAKE_CXX -c -Winline
+
+        ssse3_compiler.commands += $$QMAKE_CFLAGS_SSSE3
+
+        ssse3_compiler.commands += $(CXXFLAGS) $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+        ssse3_compiler.dependency_type = TYPE_C
+        ssse3_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
+        ssse3_compiler.input = SSSE3_SOURCES
+        ssse3_compiler.variable_out = OBJECTS
+        ssse3_compiler.name = compiling[ssse3] ${QMAKE_FILE_IN}
+        silent:ssse3_compiler.commands = @echo compiling[ssse3] ${QMAKE_FILE_IN} && $$ssse3_compiler.commands
+        QMAKE_EXTRA_COMPILERS += ssse3_compiler
+    }
+    avx {
+        avx_compiler.commands = $$QMAKE_CXX -c $(CXXFLAGS)
+        avx_compiler.commands += $$QMAKE_CFLAGS_AVX
+        avx_compiler.commands += $(INCPATH) ${QMAKE_FILE_IN} -o ${QMAKE_FILE_OUT}
+        avx_compiler.dependency_type = TYPE_C
+        avx_compiler.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_BASE}$${first(QMAKE_EXT_OBJ)}
+        avx_compiler.input = AVX_SOURCES
+        avx_compiler.variable_out = OBJECTS
+        avx_compiler.name = compiling[avx] ${QMAKE_FILE_IN}
+        silent:avx_compiler.commands = @echo compiling[avx] ${QMAKE_FILE_IN} && $$avx_compiler.commands
+        QMAKE_EXTRA_COMPILERS += avx_compiler
+    }
+} else {
+    sse2: SOURCES += $$SSE2_SOURCES
+    ssse3: SOURCES += $$SSSE3_SOURCES
 }
