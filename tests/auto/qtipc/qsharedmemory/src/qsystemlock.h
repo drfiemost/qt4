@@ -45,7 +45,6 @@
 
 #include <QtCore/qstring.h>
 
-QT_BEGIN_HEADER
 
 #ifndef QT_NO_SYSTEMLOCK
 
@@ -129,7 +128,6 @@ private:
 
 #endif // QT_NO_SYSTEMLOCK
 
-QT_END_HEADER
 
 #endif // QSYSTEMLOCK_H
 

@@ -53,7 +53,6 @@
 #include "ASTItem.h"
 
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -173,7 +172,6 @@ namespace QPatternistSDK
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif
 // vim: et:ts=4:sw=4:sts=4

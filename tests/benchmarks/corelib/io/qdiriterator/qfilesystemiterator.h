@@ -44,7 +44,6 @@
 
 #include <QtCore/qdir.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -93,6 +92,5 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QFileSystemIterator::IteratorFlags)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif
