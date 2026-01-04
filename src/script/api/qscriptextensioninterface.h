@@ -28,7 +28,6 @@
 
 #include <QtCore/qobject.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -46,6 +45,5 @@ Q_DECLARE_INTERFACE(QScriptExtensionInterface,
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSCRIPTEXTENSIONINTERFACE_H

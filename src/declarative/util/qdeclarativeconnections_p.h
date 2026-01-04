@@ -49,7 +49,6 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qstring.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -97,6 +96,5 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeConnections)
 
-QT_END_HEADER
 
 #endif

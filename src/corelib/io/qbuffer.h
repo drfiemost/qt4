@@ -45,7 +45,6 @@
 #include <QtCore/qiodevice.h>
 #include <QtCore/qbytearray.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -106,6 +105,5 @@ inline void QBuffer::setData(const char *adata, int alen)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QBUFFER_H

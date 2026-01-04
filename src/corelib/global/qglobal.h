@@ -229,7 +229,6 @@ namespace QT_NAMESPACE {}
 #  define Q_WS_WIN
 #endif
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 /*
@@ -1286,7 +1285,6 @@ template <typename T, typename F> struct QConditional<false, T, F> { typedef F T
 }
 
 QT_END_NAMESPACE
-QT_END_HEADER
 
 // Q_GLOBAL_STATIC
 #include <QtCore/qglobalstatic.h>

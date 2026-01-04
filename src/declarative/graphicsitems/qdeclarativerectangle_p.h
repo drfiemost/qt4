@@ -48,7 +48,6 @@
 
 #include <private/qdeclarativeglobal_p.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -182,6 +181,5 @@ QML_DECLARE_TYPE(QDeclarativeGradientStop)
 QML_DECLARE_TYPE(QDeclarativeGradient)
 QML_DECLARE_TYPE(QDeclarativeRectangle)
 
-QT_END_HEADER
 
 #endif // QDECLARATIVERECT_H

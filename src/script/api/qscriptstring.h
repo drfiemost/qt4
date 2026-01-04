@@ -28,7 +28,6 @@
 
 #include <QtCore/qsharedpointer.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -63,6 +62,5 @@ Q_SCRIPT_EXPORT uint qHash(const QScriptString &key);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSCRIPTSTRING_H

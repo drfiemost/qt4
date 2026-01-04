@@ -50,7 +50,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -227,6 +226,5 @@ QML_DECLARE_TYPE(QDeclarativeRow)
 QML_DECLARE_TYPE(QDeclarativeGrid)
 QML_DECLARE_TYPE(QDeclarativeFlow)
 
-QT_END_HEADER
 
 #endif

@@ -48,7 +48,6 @@
 #include <QtCore/qsharedpointer.h>
 #include <private/qdeclarativeglobal_p.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -204,6 +203,5 @@ QT_END_NAMESPACE
 QML_DECLARE_TYPE(QDeclarativeStateOperation)
 QML_DECLARE_TYPE(QDeclarativeState)
 
-QT_END_HEADER
 
 #endif // QDECLARATIVESTATE_H

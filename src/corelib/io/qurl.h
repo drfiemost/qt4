@@ -48,7 +48,6 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qhash.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -250,6 +249,5 @@ Q_CORE_EXPORT QDebug operator<<(QDebug, const QUrl &);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QURL_H

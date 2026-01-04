@@ -45,7 +45,6 @@
 #include "private/qdeclarativeflickable_p.h"
 #include "private/qdeclarativeguard_p.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -364,6 +363,5 @@ QML_DECLARE_TYPEINFO(QDeclarativeListView, QML_HAS_ATTACHED_PROPERTIES)
 QML_DECLARE_TYPE(QDeclarativeListView)
 QML_DECLARE_TYPE(QDeclarativeViewSection)
 
-QT_END_HEADER
 
 #endif

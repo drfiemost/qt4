@@ -52,7 +52,6 @@
 #include <QtGui/qfont.h>
 #include <QtGui/qaction.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -228,6 +227,5 @@ QML_DECLARE_TYPE(QGraphicsRotation)
 QML_DECLARE_TYPE(QGraphicsWidget)
 QML_DECLARE_TYPE(QAction)
 
-QT_END_HEADER
 
 #endif // QDECLARATIVEITEM_H

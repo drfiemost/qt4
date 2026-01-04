@@ -58,7 +58,6 @@
 #include <QtCore/QList>
 #include <QtCore/QUrl>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -142,6 +141,5 @@ public:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QDECLARATIVESCRIPTPARSER_P_H

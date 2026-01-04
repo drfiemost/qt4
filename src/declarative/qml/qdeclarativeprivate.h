@@ -61,7 +61,6 @@
 #include <QtDeclarative/QDeclarativePropertyValueSource>
 #include <QtDeclarative/QDeclarativePropertyValueInterceptor>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -328,6 +327,5 @@ namespace QDeclarativePrivate
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QDECLARATIVEPRIVATE_H

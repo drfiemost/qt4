@@ -46,7 +46,6 @@
 #include <QtCore/qvariant.h>
 #include <QtCore/qstring.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
@@ -196,6 +195,5 @@ QT_END_NAMESPACE
 
 #endif // QT_NO_SETTINGS
 
-QT_END_HEADER
 
 #endif // QSETTINGS_H

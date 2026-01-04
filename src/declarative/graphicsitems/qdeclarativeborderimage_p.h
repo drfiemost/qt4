@@ -46,7 +46,6 @@
 
 #include <QtNetwork/qnetworkreply.h>
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 
@@ -103,6 +102,5 @@ private:
 
 QT_END_NAMESPACE
 QML_DECLARE_TYPE(QDeclarativeBorderImage)
-QT_END_HEADER
 
 #endif // QDECLARATIVEBORDERIMAGE_H

@@ -44,7 +44,6 @@
 
 #include "qdeclarativeitem.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -212,6 +211,5 @@ QT_END_NAMESPACE
 QML_DECLARE_TYPE(QDeclarativeDrag)
 QML_DECLARE_TYPE(QDeclarativeMouseArea)
 
-QT_END_HEADER
 
 #endif // QDECLARATIVEMOUSEAREA_H

@@ -60,7 +60,6 @@
 
 #include <private/qscriptdeclarativeclass_p.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -274,7 +273,6 @@ QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(ModelNode *)
 
-QT_END_HEADER
 
 #endif // QDECLARATIVELISTMODEL_P_P_H
 

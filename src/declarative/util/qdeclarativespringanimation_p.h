@@ -47,7 +47,6 @@
 
 #include <QtCore/qobject.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -105,6 +104,5 @@ QT_END_NAMESPACE
 
 QML_DECLARE_TYPE(QDeclarativeSpringAnimation)
 
-QT_END_HEADER
 
 #endif // QDECLARATIVESPRINGANIMATION_H
