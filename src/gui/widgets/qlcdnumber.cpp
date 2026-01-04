@@ -428,12 +428,12 @@ void QLCDNumber::setNumDigits(int numDigits)
 void QLCDNumber::setDigitCount(int numDigits)
 {
     Q_D(QLCDNumber);
-    if (numDigits > 99) {
+    if (Q_UNLIKELY(numDigits > 99)) {
         qWarning("QLCDNumber::setNumDigits: (%s) Max 99 digits allowed",
                  objectName().toLocal8Bit().constData());
         numDigits = 99;
     }
-    if (numDigits < 0) {
+    if (Q_UNLIKELY(numDigits < 0)) {
         qWarning("QLCDNumber::setNumDigits: (%s) Min 0 digits allowed",
                  objectName().toLocal8Bit().constData());
         numDigits = 0;

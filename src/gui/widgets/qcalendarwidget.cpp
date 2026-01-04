@@ -2870,7 +2870,7 @@ void QCalendarWidget::setDateEditAcceptDelay(int delay)
 */
 void QCalendarWidget::updateCell(const QDate &date)
 {
-    if (!date.isValid()) {
+    if (Q_UNLIKELY(!date.isValid())) {
         qWarning("QCalendarWidget::updateCell: Invalid date");
         return;
     }

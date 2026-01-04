@@ -1802,7 +1802,7 @@ void QDockAreaLayoutInfo::saveState(QDataStream &stream) const
             stream << (uchar) WidgetMarker;
             QWidget *w = item.widgetItem->widget();
             QString name = w->objectName();
-            if (name.isEmpty()) {
+            if (Q_UNLIKELY(name.isEmpty())) {
                 qWarning("QMainWindow::saveState(): 'objectName' not set for QDockWidget %p '%s;",
                          static_cast<void*>(w), qPrintable(w->windowTitle()));
             }

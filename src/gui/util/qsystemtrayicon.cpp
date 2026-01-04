@@ -267,7 +267,7 @@ void QSystemTrayIcon::setVisible(bool visible)
     Q_D(QSystemTrayIcon);
     if (visible == d->visible)
         return;
-    if (d->icon.isNull() && visible)
+    if (Q_UNLIKELY(visible && d->icon.isNull()))
         qWarning("QSystemTrayIcon::setVisible: No Icon set");
     d->visible = visible;
     if (d->visible)

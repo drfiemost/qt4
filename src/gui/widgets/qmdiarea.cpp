@@ -187,7 +187,7 @@ using namespace QMdi;
 // Asserts in debug mode, gives warning otherwise.
 static bool sanityCheck(const QMdiSubWindow * const child, const char *where)
 {
-    if (!child) {
+    if (Q_UNLIKELY(!child)) {
         const char error[] = "null pointer";
         Q_ASSERT_X(false, where, error);
         qWarning("%s:%s", where, error);
@@ -198,13 +198,13 @@ static bool sanityCheck(const QMdiSubWindow * const child, const char *where)
 
 static bool sanityCheck(const QList<QWidget *> &widgets, const int index, const char *where)
 {
-    if (index < 0 || index >= widgets.size()) {
+    if (Q_UNLIKELY(index < 0 || index >= widgets.size())) {
         const char error[] = "index out of range";
         Q_ASSERT_X(false, where, error);
         qWarning("%s:%s", where, error);
         return false;
     }
-    if (!widgets.at(index)) {
+    if (Q_UNLIKELY(!widgets.at(index))) {
         const char error[] = "null pointer";
         Q_ASSERT_X(false, where, error);
         qWarning("%s:%s", where, error);
@@ -1814,12 +1814,12 @@ void QMdiArea::setActiveSubWindow(QMdiSubWindow *window)
         return;
     }
 
-    if (d->childWindows.isEmpty()) {
+    if (Q_UNLIKELY(d->childWindows.isEmpty())) {
         qWarning("QMdiArea::setActiveSubWindow: workspace is empty");
         return;
     }
 
-    if (d->childWindows.indexOf(window) == -1) {
+    if (Q_UNLIKELY(d->childWindows.indexOf(window) == -1)) {
         qWarning("QMdiArea::setActiveSubWindow: window is not inside workspace");
         return;
     }
@@ -1943,7 +1943,7 @@ void QMdiArea::activatePreviousSubWindow()
 */
 QMdiSubWindow *QMdiArea::addSubWindow(QWidget *widget, Qt::WindowFlags windowFlags)
 {
-    if (!widget) {
+    if (Q_UNLIKELY(!widget)) {
         qWarning("QMdiArea::addSubWindow: null pointer to widget");
         return nullptr;
     }
@@ -1955,7 +1955,7 @@ QMdiSubWindow *QMdiArea::addSubWindow(QWidget *widget, Qt::WindowFlags windowFla
 
     // Widget is already a QMdiSubWindow
     if (child) {
-        if (d->childWindows.indexOf(child) != -1) {
+        if (Q_UNLIKELY(d->childWindows.indexOf(child) != -1)) {
             qWarning("QMdiArea::addSubWindow: window is already added");
             return child;
         }
@@ -1988,7 +1988,7 @@ QMdiSubWindow *QMdiArea::addSubWindow(QWidget *widget, Qt::WindowFlags windowFla
 */
 void QMdiArea::removeSubWindow(QWidget *widget)
 {
-    if (!widget) {
+    if (Q_UNLIKELY(!widget)) {
         qWarning("QMdiArea::removeSubWindow: null pointer to widget");
         return;
     }
@@ -1999,7 +1999,7 @@ void QMdiArea::removeSubWindow(QWidget *widget)
 
     if (QMdiSubWindow *child = qobject_cast<QMdiSubWindow *>(widget)) {
         int index = d->childWindows.indexOf(child);
-        if (index == -1) {
+        if (Q_UNLIKELY(index == -1)) {
             qWarning("QMdiArea::removeSubWindow: window is not inside workspace");
             return;
         }
@@ -2023,7 +2023,7 @@ void QMdiArea::removeSubWindow(QWidget *widget)
         }
     }
 
-    if (!found)
+    if (Q_UNLIKELY(!found))
         qWarning("QMdiArea::removeSubWindow: widget is not child of any window inside QMdiArea");
 }
 

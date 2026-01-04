@@ -1049,7 +1049,7 @@ void QSplitter::setCollapsible(int index, bool collapse)
 {
     Q_D(QSplitter);
 
-    if (index < 0 || index >= d->list.size()) {
+    if (Q_UNLIKELY(index < 0 || index >= d->list.size())) {
         qWarning("QSplitter::setCollapsible: Index %d out of range", index);
         return;
     }
@@ -1062,7 +1062,7 @@ void QSplitter::setCollapsible(int index, bool collapse)
 bool QSplitter::isCollapsible(int index) const
 {
     Q_D(const QSplitter);
-    if (index < 0 || index >= d->list.size()) {
+    if (Q_UNLIKELY(index < 0 || index >= d->list.size())) {
         qWarning("QSplitter::isCollapsible: Index %d out of range", index);
         return false;
     }
