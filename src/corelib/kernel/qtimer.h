@@ -47,7 +47,6 @@
 #include <QtCore/qbasictimer.h> // conceptual inheritance
 #include <QtCore/qobject.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -120,14 +119,14 @@ public:
     // singleShot to a functor or function pointer (with context)
     template <typename Func1>
     static inline typename std::enable_if<!QtPrivate::FunctionPointer<Func1>::IsPointerToMemberFunction &&
-                                                !QtPrivate::is_same<const char*, Func1>::value, void>::type
+                                                !std::is_same<const char*, Func1>::value, void>::type
             singleShot(int msec, QObject *context, Func1 slot)
     {
         singleShot(msec, msec >= 2000 ? Qt::CoarseTimer : Qt::PreciseTimer, context, slot);
     }
     template <typename Func1>
     static inline typename std::enable_if<!QtPrivate::FunctionPointer<Func1>::IsPointerToMemberFunction &&
-                                                !QtPrivate::is_same<const char*, Func1>::value, void>::type
+                                                !std::is_same<const char*, Func1>::value, void>::type
             singleShot(int msec, Qt::TimerType timerType, QObject *context, Func1 slot)
     {
         //compilation error if the slot has arguments.
@@ -172,7 +171,6 @@ inline void QTimer::setSingleShot(bool asingleShot) { single = asingleShot; }
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QT_NO_QOBJECT
 

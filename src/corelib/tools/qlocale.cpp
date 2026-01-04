@@ -679,17 +679,15 @@ QDataStream &operator>>(QDataStream &ds, QLocale &l)
 
 static const int locale_data_size = sizeof(locale_data)/sizeof(QLocaleData) - 1;
 
+Q_GLOBAL_STATIC_WITH_ARGS(QSharedDataPointer<QLocalePrivate>, defaultLocalePrivate,
+                          (QLocalePrivate::create(defaultData(), default_number_options)))
+
 static QLocalePrivate *localePrivateByName(const QString &name)
 {
     if (name == QLatin1String("C"))
         return c_private();
     const QLocaleData *data = findLocaleData(name);
     return QLocalePrivate::create(data, data->m_language_id == QLocale::C ? QLocale::OmitGroupSeparator : 0);
-}
-
-static QLocalePrivate *defaultLocalePrivate()
-{
-    return QLocalePrivate::create(defaultData(), default_number_options);
 }
 
 static QLocalePrivate *findLocalePrivate(QLocale::Language language, QLocale::Script script,
@@ -762,7 +760,7 @@ QLocale::QLocale(const QString &name)
 */
 
 QLocale::QLocale()
-    : d(defaultLocalePrivate())
+    : d(*defaultLocalePrivate)
 {
 }
 
@@ -970,6 +968,11 @@ void QLocale::setDefault(const QLocale &locale)
 {
     default_data = locale.d->m_data;
     default_number_options = locale.numberOptions();
+
+    if (defaultLocalePrivate.exists()) {
+        // update the cached private
+        *defaultLocalePrivate = locale.d;
+    }
 }
 
 /*!
