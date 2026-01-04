@@ -61,8 +61,31 @@ static const QArrayData qt_array[3] = {
 static const QArrayData &qt_array_empty = qt_array[0];
 static const QArrayData &qt_array_unsharable_empty = qt_array[1];
 
+static inline size_t calculateBlockSize(size_t &capacity, size_t objectSize, size_t headerSize,
+                                        uint options)
+{
+    // Calculate the byte size
+    // allocSize = objectSize * capacity + headerSize, but checked for overflow
+    // plus padded to grow in size
+    if (options & QArrayData::Grow) {
+        auto r = qCalculateGrowingBlockSize(capacity, objectSize, headerSize);
+        capacity = r.elementCount;
+        return r.size;
+    } else {
+        return qCalculateBlockSize(capacity, objectSize, headerSize);
+    }
+}
+
+static QArrayData *reallocateData(QArrayData *header, size_t allocSize, uint options)
+{
+    header = static_cast<QArrayData *>(::realloc(header, allocSize));
+    if (header)
+        header->capacityReserved = bool(options & QArrayData::CapacityReserved);
+    return header;
+}
+
 QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
-        size_t capacity, AllocationOptions options)
+        size_t capacity, AllocationOptions options) noexcept
 {
     // Alignment is a power of two
     Q_ASSERT(alignment >= Q_ALIGNOF(QArrayData)
@@ -86,17 +109,7 @@ QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
     if (headerSize > size_t(MaxAllocSize))
         return 0;
 
-    // Calculate the byte size
-    // allocSize = objectSize * capacity + headerSize, but checked for overflow
-    // plus padded to grow in size
-    size_t allocSize;
-    if (options & Grow) {
-        auto r = qCalculateGrowingBlockSize(capacity, objectSize, headerSize);
-        capacity = r.elementCount;
-        allocSize = r.size;
-    } else {
-        allocSize = qCalculateBlockSize(capacity, objectSize, headerSize);
-    }
+    size_t allocSize = calculateBlockSize(capacity, objectSize, headerSize, options);
 
     QArrayData *header = static_cast<QArrayData *>(::malloc(allocSize));
     if (header) {
@@ -113,8 +126,23 @@ QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
     return header;
 }
 
+QArrayData *QArrayData::reallocateUnaligned(QArrayData *data, size_t objectSize, size_t capacity,
+                                            AllocationOptions options) noexcept
+{
+    Q_ASSERT(data);
+    Q_ASSERT(data->isMutable());
+    Q_ASSERT(!data->ref.isShared());
+
+    size_t headerSize = sizeof(QArrayData);
+    size_t allocSize = calculateBlockSize(capacity, objectSize, headerSize, options);
+    QArrayData *header = static_cast<QArrayData *>(reallocateData(data, allocSize, options));
+    if (header)
+        header->alloc = capacity;
+    return header;
+}
+
 void QArrayData::deallocate(QArrayData *data, size_t objectSize,
-        size_t alignment)
+        size_t alignment) noexcept
 {
     // Alignment is a power of two
     Q_ASSERT(alignment >= Q_ALIGNOF(QArrayData)
