@@ -47,7 +47,6 @@
 #include "shadereffectsource.h"
 #include "scenegraph/qsggeometry.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -145,7 +144,6 @@ private:
     bool m_defaultVertexShader : 1;
 };
 
-QT_END_HEADER
 
 QT_END_NAMESPACE
 

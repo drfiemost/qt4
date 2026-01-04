@@ -44,7 +44,6 @@
 
 #include <QtOpenGL>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -55,7 +54,6 @@ public:
     ~ShaderEffectBuffer() override;
 };
 
-QT_END_HEADER
 
 QT_END_NAMESPACE
 
