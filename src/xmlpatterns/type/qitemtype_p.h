@@ -56,7 +56,6 @@
 
 #include <QtXmlPatterns/private/qnamepool_p.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -280,6 +279,5 @@ Q_DECLARE_TYPEINFO(QPatternist::ItemType::Ptr, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

@@ -47,7 +47,6 @@
 class KDThread;
 class KDEvent;
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 class QOpenKODEEventLoopIntegration : public QPlatformEventLoopIntegration
@@ -66,6 +65,5 @@ private:
 };
 
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #endif // QOPENKODEEVENTLOOPINTEGRATION_H

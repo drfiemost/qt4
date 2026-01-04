@@ -44,7 +44,6 @@
 
 #include <QtCore/qstring.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -674,6 +673,5 @@ Q_XML_EXPORT QTextStream& operator<<(QTextStream&, const QDomNode&);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QDOM_H

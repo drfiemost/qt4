@@ -45,7 +45,6 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QUrl>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -95,6 +94,5 @@ QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QSourceLocation) /* This macro must appear after QT_END_NAMESPACE. */
 
-QT_END_HEADER
 
 #endif

@@ -54,7 +54,6 @@
 
 #include "qdelegatingstaticcontext_p.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -85,6 +84,5 @@ namespace QPatternist
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

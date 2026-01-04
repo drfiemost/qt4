@@ -54,7 +54,6 @@
 
 #include <QtCore/QtGlobal>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -538,6 +537,5 @@ Q_DECLARE_TYPEINFO(QPatternist::Cardinality, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

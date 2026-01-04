@@ -54,7 +54,6 @@
 
 #include "qfunctioncall_p.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -89,6 +88,5 @@ statEnv |-  (FN-URI,"trace")(Type) : prime(Type) * quantifier(Type)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

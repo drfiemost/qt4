@@ -45,7 +45,6 @@
 #include <QtTest/qtestcorelist.h>
 #include <QtTest/qtestelementattribute.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -165,6 +164,5 @@ const QTestElementAttribute *QTestCoreElement<ElementType>::attribute(QTest::Att
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

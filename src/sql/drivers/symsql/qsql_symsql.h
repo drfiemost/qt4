@@ -54,7 +54,6 @@
 #define Q_EXPORT_SQLDRIVER_SYMSQL Q_SQL_EXPORT
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 class QSymSQLDriverPrivate;
@@ -127,6 +126,5 @@ private:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSQL_SYMSQL_H

@@ -48,7 +48,6 @@
 #include <directfb.h>
 #include <directfb_version.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -295,7 +294,6 @@ inline bool QDirectFBScreen::hasAlphaChannel(IDirectFBSurface *surface)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QT_NO_QWS_DIRECTFB
 #endif // QDIRECTFBSCREEN_H

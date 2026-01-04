@@ -65,7 +65,6 @@
 #pragma qt_no_master_include
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -111,6 +110,5 @@ extern void qt_x11_wait_for_window_manager(QWidget *w);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

@@ -45,7 +45,6 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <QtSql/qsqldatabase.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -99,6 +98,5 @@ protected:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSQLQUERYMODEL_H

@@ -59,7 +59,6 @@ template<typename T> class QList;
 #include "qcardinality_p.h"
 #include "qitemtype_p.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -132,6 +131,5 @@ Q_DECLARE_TYPEINFO(QPatternist::SequenceType::Ptr, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif
