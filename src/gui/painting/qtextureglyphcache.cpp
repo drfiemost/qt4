@@ -51,20 +51,6 @@ QT_BEGIN_NAMESPACE
 
 // #define CACHE_DEBUG
 
-// returns the highest number closest to v, which is a power of 2
-// NB! assumes 32 bit ints
-static inline int qt_next_power_of_two(int v)
-{
-    v--;
-    v |= v >> 1;
-    v |= v >> 2;
-    v |= v >> 4;
-    v |= v >> 8;
-    v |= v >> 16;
-    ++v;
-    return v;
-}
-
 int QTextureGlyphCache::calculateSubPixelPositionCount(glyph_t glyph) const
 {
     // Test 12 different subpixel positions since it factors into 3*4 so it gives
@@ -179,7 +165,7 @@ bool QTextureGlyphCache::populate(QFontEngine *fontEngine, int numGlyphs, const 
                metrics.yoff.toReal(),
                metrics.x.toReal(),
                metrics.y.toReal());
-#endif        
+#endif
         GlyphAndSubPixelPosition key(glyph, subPixelPosition);
         int glyph_width = metrics.width.ceil().toInt();
         int glyph_height = metrics.height.ceil().toInt();
@@ -213,7 +199,7 @@ bool QTextureGlyphCache::populate(QFontEngine *fontEngine, int numGlyphs, const 
         if (fontEngine->maxCharWidth() <= QT_DEFAULT_TEXTURE_GLYPH_CACHE_WIDTH)
             m_w = QT_DEFAULT_TEXTURE_GLYPH_CACHE_WIDTH;
         else
-            m_w = qt_next_power_of_two(fontEngine->maxCharWidth());
+            m_w = qNextPowerOfTwo(qCeil(fontEngine->maxCharWidth()) - 1);
     }
 
     // now actually use the coords and paint the wanted glyps into cache.
@@ -275,9 +261,9 @@ void QTextureGlyphCache::fillInPendingGlyphs()
 
     if (isNull() || requiredHeight > m_h || requiredWidth > m_w) {
         if (isNull())
-            createCache(qt_next_power_of_two(requiredWidth), qt_next_power_of_two(requiredHeight));
+            createCache(qNextPowerOfTwo(requiredWidth - 1), qNextPowerOfTwo(requiredHeight - 1));
         else
-            resizeCache(qt_next_power_of_two(requiredWidth), qt_next_power_of_two(requiredHeight));
+            resizeCache(qNextPowerOfTwo(requiredWidth - 1), qNextPowerOfTwo(requiredHeight - 1));
     }
 
     {

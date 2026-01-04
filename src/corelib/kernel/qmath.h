@@ -43,6 +43,7 @@
 #define QMATH_H
 
 #include <QtCore/qglobal.h>
+#include <QtCore/qcompilerdetection.h>
 
 #include <cmath>
 
@@ -181,6 +182,52 @@ constexpr inline float qRadiansToDegrees(float radians)
 constexpr inline double qRadiansToDegrees(double radians)
 {
     return radians * (180 / M_PI);
+}
+
+constexpr inline quint32 qNextPowerOfTwo(quint32 v)
+{
+#if defined(Q_CC_GNU)
+// clz instructions exist in at least MIPS, ARM, PowerPC and X86, so we can assume this builtin always maps to an efficient instruction.
+    if (v == 0)
+        return 1;
+    return 2U << (31 ^ __builtin_clz(v));
+#else
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    ++v;
+    return v;
+#endif
+}
+
+constexpr inline quint64 qNextPowerOfTwo(quint64 v)
+{
+#if defined(Q_CC_GNU)
+    if (v == 0)
+        return 1;
+    return Q_UINT64_C(2) << (63 ^ __builtin_clzll(v));
+#else
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v |= v >> 32;
+    ++v;
+    return v;
+#endif
+}
+
+constexpr inline quint32 qNextPowerOfTwo(qint32 v)
+{
+    return qNextPowerOfTwo(quint32(v));
+}
+
+constexpr inline quint64 qNextPowerOfTwo(qint64 v)
+{
+    return qNextPowerOfTwo(quint64(v));
 }
 
 QT_END_NAMESPACE

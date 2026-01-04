@@ -57,6 +57,7 @@
 #include <qfile.h>
 #include <qimagereader.h>
 #include <qbuffer.h>
+#include <qmath.h>
 
 #include  <algorithm>
 
@@ -82,12 +83,10 @@ static inline int areaDiff(const QSize &size, const QGLFramebufferObject *fbo)
     return std::abs(size.width() * size.height() - fbo->width() * fbo->height());
 }
 
-extern int qt_next_power_of_two(int v);
-
 static inline QSize maybeRoundToNextPowerOfTwo(const QSize &sz)
 {
 #ifdef QT_OPENGL_ES_2
-    QSize rounded(qt_next_power_of_two(sz.width()), qt_next_power_of_two(sz.height()));
+    QSize rounded(qNextPowerOfTwo(sz.width() - 1), qNextPowerOfTwo(sz.height() - 1));
     if (rounded.width() * rounded.height() < 1.20 * sz.width() * sz.height())
         return rounded;
 #endif

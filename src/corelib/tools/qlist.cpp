@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2015 Intel Corporation.
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the QtCore module of the Qt Toolkit.
@@ -61,15 +62,6 @@ QT_BEGIN_NAMESPACE
 
 const QListData::Data QListData::shared_null = { Q_REFCOUNT_INITIALIZE_STATIC, 0, 0, 0, { nullptr } };
 
-static int grow(int size)
-{
-    if (size_t(size) > (MaxAllocSize - QListData::DataHeaderSize) / sizeof(void *))
-        qBadAlloc();
-    // dear compiler: don't optimize me out.
-    volatile int x = qAllocMore(size * sizeof(void *), QListData::DataHeaderSize) / sizeof(void *);
-    return x;
-}
-
 /*!
  *  Detaches the QListData by allocating new memory for a list which will be bigger
  *  than the copied one and is expected to grow further.
@@ -85,10 +77,10 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
     Data *x = d;
     int l = x->end - x->begin;
     int nl = l + num;
-    int alloc = grow(nl);
-    Data* t = static_cast<Data *>(std::malloc(DataHeaderSize + alloc * sizeof(void *)));
+    auto blockInfo = qCalculateGrowingBlockSize(nl, sizeof(void *), DataHeaderSize);
+    Data* t = static_cast<Data *>(::malloc(blockInfo.size));
     Q_CHECK_PTR(t);
-    t->alloc = alloc;
+    t->alloc = int(uint(blockInfo.elementCount));
 
     t->ref.initializeOwned();
     // The space reservation algorithm's optimization is biased towards appending:
@@ -100,12 +92,12 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
     int bg;
     if (*idx < 0) {
         *idx = 0;
-        bg = (alloc - nl) >> 1;
+        bg = (t->alloc - nl) >> 1;
     } else if (*idx > l) {
         *idx = l;
         bg = 0;
     } else if (*idx < (l >> 1)) {
-        bg = (alloc - nl) >> 1;
+        bg = (t->alloc - nl) >> 1;
     } else {
         bg = 0;
     }
@@ -127,7 +119,7 @@ QListData::Data *QListData::detach_grow(int *idx, int num)
 QListData::Data *QListData::detach(int alloc)
 {
     Data *x = d;
-    Data* t = static_cast<Data *>(std::malloc(DataHeaderSize + alloc * sizeof(void *)));
+    Data* t = static_cast<Data *>(std::malloc(qCalculateBlockSize(alloc, sizeof(void*), DataHeaderSize)));
     Q_CHECK_PTR(t);
 
     t->ref.initializeOwned();
@@ -147,13 +139,24 @@ QListData::Data *QListData::detach(int alloc)
 void QListData::realloc(int alloc)
 {
     Q_ASSERT(!d->ref.isShared());
-    Data *x = static_cast<Data *>(std::realloc(d, DataHeaderSize + alloc * sizeof(void *)));
+    Data *x = static_cast<Data *>(std::realloc(d, qCalculateBlockSize(alloc, sizeof(void *), DataHeaderSize)));
     Q_CHECK_PTR(x);
 
     d = x;
     d->alloc = alloc;
     if (!alloc)
         d->begin = d->end = 0;
+}
+
+void QListData::realloc_grow(int growth)
+{
+    Q_ASSERT(!d->ref.isShared());
+    auto r = qCalculateGrowingBlockSize(d->alloc + growth, sizeof(void *), DataHeaderSize);
+    Data *x = static_cast<Data *>(::realloc(d, r.size));
+    Q_CHECK_PTR(x);
+
+    d = x;
+    d->alloc = int(uint(r.elementCount));
 }
 
 void QListData::dispose(Data *d)
@@ -175,7 +178,7 @@ void **QListData::append(int n)
             std::memmove(d->array, d->array + b, e * sizeof(void *));
             d->begin = 0;
         } else {
-            realloc(grow(d->alloc + n));
+            realloc_grow(n);
         }
     }
     d->end = e + n;
@@ -199,7 +202,7 @@ void **QListData::prepend()
     Q_ASSERT(!d->ref.isShared());
     if (d->begin == 0) {
         if (d->end >= d->alloc / 3)
-            realloc(grow(d->alloc + 1));
+            realloc_grow(1);
 
         if (d->end < d->alloc / 3)
             d->begin = d->alloc - 2 * d->end;
@@ -226,7 +229,7 @@ void **QListData::insert(int i)
     if (d->begin == 0) {
         if (d->end == d->alloc) {
             // If the array is full, we expand it and move some items rightward
-            realloc(grow(d->alloc + 1));
+            realloc_grow(1);
         } else {
             // If there is free space at the end of the array, we move some items rightward
         }

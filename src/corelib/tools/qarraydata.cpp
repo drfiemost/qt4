@@ -1,6 +1,8 @@
  /****************************************************************************
 **
 ** Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2016 Intel Corporation.
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
 **
@@ -40,6 +42,7 @@
 ****************************************************************************/
 
 #include <QtCore/qarraydata.h>
+#include <QtCore/private/qnumeric_p.h>
 #include <QtCore/private/qtools_p.h>
 
 #include <cstdlib>
@@ -80,23 +83,20 @@ QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
     if (!(options & RawData))
         headerSize += (alignment - Q_ALIGNOF(QArrayData));
 
-    // Allocate additional space if array is growing
+    if (headerSize > size_t(MaxAllocSize))
+        return 0;
+
+    // Calculate the byte size
+    // allocSize = objectSize * capacity + headerSize, but checked for overflow
+    // plus padded to grow in size
+    size_t allocSize;
     if (options & Grow) {
-
-        // Guard against integer overflow when multiplying.
-        if (capacity > std::numeric_limits<size_t>::max() / objectSize)
-            return nullptr;
-
-        size_t alloc = objectSize * capacity;
-
-        // Make sure qAllocMore won't overflow.
-        if (headerSize > size_t(MaxAllocSize) || alloc > size_t(MaxAllocSize) - headerSize)
-            return nullptr;
-
-        capacity = qAllocMore(int(alloc), int(headerSize)) / int(objectSize);
+        auto r = qCalculateGrowingBlockSize(capacity, objectSize, headerSize);
+        capacity = r.elementCount;
+        allocSize = r.size;
+    } else {
+        allocSize = qCalculateBlockSize(capacity, objectSize, headerSize);
     }
-
-    size_t allocSize = headerSize + objectSize * capacity;
 
     QArrayData *header = static_cast<QArrayData *>(::malloc(allocSize));
     if (header) {

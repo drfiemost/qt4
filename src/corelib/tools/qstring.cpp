@@ -1428,10 +1428,13 @@ void QString::resize(int size)
 
 void QString::reallocData(uint alloc, bool grow)
 {
+    size_t blockSize;
     if (grow) {
-        if (alloc > (uint(MaxAllocSize) - sizeof(Data)) / sizeof(QChar))
-            qBadAlloc();
-        alloc = qAllocMore(alloc * sizeof(QChar), sizeof(Data)) / sizeof(QChar);
+        auto r = qCalculateGrowingBlockSize(alloc, sizeof(QChar), sizeof(Data));
+        blockSize = r.size;
+        alloc = uint(r.elementCount);
+    } else {
+        blockSize = qCalculateBlockSize(alloc, sizeof(QChar), sizeof(Data));
     }
 
     if (d->ref.isShared() || IS_RAW_DATA(d)) {
@@ -1445,7 +1448,7 @@ void QString::reallocData(uint alloc, bool grow)
             Data::deallocate(d);
         d = x;
     } else {
-        Data *p = static_cast<Data *>(std::realloc(d, sizeof(Data) + alloc * sizeof(QChar)));
+        Data *p = static_cast<Data *>(std::realloc(d, blockSize));
         Q_CHECK_PTR(p);
         d = p;
         d->alloc = alloc;

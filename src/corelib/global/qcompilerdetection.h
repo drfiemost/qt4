@@ -159,6 +159,8 @@
 #    define Q_NORETURN        __attribute__((__noreturn__))
 #  endif
 #  define Q_REQUIRED_RESULT __attribute__ ((__warn_unused_result__))
+#  define Q_DECL_PURE_FUNCTION __attribute__((pure))
+#  define Q_DECL_CONST_FUNCTION __attribute__((const))
 #  if !defined(QT_MOC_CPP)
 #    define Q_PACKED __attribute__ ((__packed__))
 #    define Q_NO_PACKED_REFERENCE
@@ -360,6 +362,12 @@
 #endif
 #ifndef Q_DECL_HIDDEN
 #  define Q_DECL_HIDDEN
+#endif
+#ifndef Q_DECL_PURE_FUNCTION
+#  define Q_DECL_PURE_FUNCTION
+#endif
+#ifndef Q_DECL_CONST_FUNCTION
+#  define Q_DECL_CONST_FUNCTION Q_DECL_PURE_FUNCTION
 #endif
 
 #endif // QCOMPILERDETECTION_H

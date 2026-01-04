@@ -89,8 +89,6 @@ extern void *qt_current_nsopengl_context(); // qgl_mac.mm
 #define QREAL_MAX 9e100
 #define QREAL_MIN -9e100
 
-extern int qt_next_power_of_two(int v);
-
 #define DISABLE_DEBUG_ONCE
 
 //#define DEBUG_DISPLAY_MASK_TEXTURE
@@ -334,7 +332,7 @@ void QGLOffscreen::initialize()
     activated = true;
     initialized = true;
 
-    int dim = std::max(2048, static_cast<int>(qt_next_power_of_two(std::max(device->size().width(), device->size().height()))));
+    int dim = std::max(2048, static_cast<int>(qNextPowerOfTwo(std::max(device->size().width(), device->size().height()) - 1)));
 
     bool shared_context = QGLContext::areSharing(device->context(), ctx);
     bool would_fail = last_failed_size.isValid() &&
@@ -1412,8 +1410,8 @@ bool QOpenGLPaintEngine::begin(QPaintDevice *pdev)
             glDeleteTextures(1, &d->drawable_texture);
 
         d->dirty_drawable_texture = true;
-        d->drawable_texture_size = QSize(qt_next_power_of_two(sz.width()),
-                                         qt_next_power_of_two(sz.height()));
+        d->drawable_texture_size = QSize(qNextPowerOfTwo(sz.width() - 1),
+                                         qNextPowerOfTwo(sz.height()) - 1);
     }
 #endif
 
@@ -2980,7 +2978,7 @@ void QGLMaskTextureCache::quadtreeFindExistingLocation(const QSize &size, QRect 
         if (occupied_quadtree[i][0].largest_used_block < occupied_quadtree[*channel][0].largest_used_block)
             *channel = i;
 
-    int needed_block_size = qt_next_power_of_two(std::max(1, std::max(size.width(), size.height())));
+    int needed_block_size = qNextPowerOfTwo(std::max(1, std::max(size.width(), size.height())) - 1);
 
     int node = 0;
     int current_block_size = offscreenSize.width();
@@ -4763,8 +4761,8 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
     if (it == qt_font_textures.constEnd()) {
         GLuint font_texture;
         glGenTextures(1, &font_texture);
-        GLint tex_height = qt_next_power_of_two(qRound(fontEngine->ascent().toReal() + fontEngine->descent().toReal())+2);
-        GLint tex_width = qt_next_power_of_two(tex_height*30); // ###
+        GLint tex_height = qNextPowerOfTwo(qRound(fontEngine->ascent().toReal() + fontEngine->descent().toReal())+2 - 1);
+        GLint tex_width = qNextPowerOfTwo(tex_height*30 - 1); // ###
         GLint max_tex_size;
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_tex_size);
         Q_ASSERT(max_tex_size > 0);
@@ -4799,7 +4797,7 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
                 ++glyph_width;
 
             if (font_tex->x_offset + glyph_width + x_margin > font_tex->width) {
-                int strip_height = qt_next_power_of_two(qRound(fontEngine->ascent().toReal() + fontEngine->descent().toReal())+2);
+                int strip_height = qNextPowerOfTwo(qRound(fontEngine->ascent().toReal() + fontEngine->descent().toReal())+1);
                 font_tex->x_offset = x_margin;
                 font_tex->y_offset += strip_height;
                 if (font_tex->y_offset + strip_height > font_tex->height) {
@@ -4810,7 +4808,7 @@ void QGLGlyphCache::cacheGlyphs(QGLContext *context, QFontEngine *fontEngine,
                     // realloc a larger texture
                     glDeleteTextures(1, &font_tex->texture);
                     glGenTextures(1, &font_tex->texture);
-                    font_tex->height = qt_next_power_of_two(font_tex->height + strip_height);
+                    font_tex->height = qNextPowerOfTwo(font_tex->height + strip_height - 1);
                     allocTexture(font_tex);
 
                     // write back the old texture data
