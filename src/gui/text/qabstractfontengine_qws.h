@@ -49,7 +49,6 @@
 #include <QtGui/qpaintengine.h>
 #include <QtGui/qfontdatabase.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -215,6 +214,5 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QAbstractFontEngine::TextShapingFlags)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

@@ -44,7 +44,6 @@
 
 #include <QtGui/qmouse_qws.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -74,6 +73,5 @@ protected:
 
 #endif // QT_NO_QWS_MOUSE_TSLIB
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #endif // QMOUSETSLIB_QWS_H

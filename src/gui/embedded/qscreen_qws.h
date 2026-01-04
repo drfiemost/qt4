@@ -52,7 +52,6 @@
 
 struct fb_cmap;
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -386,6 +385,5 @@ const unsigned char * qt_probe_bus();
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSCREEN_QWS_H

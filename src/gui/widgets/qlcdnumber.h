@@ -45,7 +45,6 @@
 #include <QtGui/qframe.h>
 #include <QtCore/qbitarray.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -125,6 +124,5 @@ private:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QLCDNUMBER_H

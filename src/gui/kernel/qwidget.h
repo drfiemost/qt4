@@ -66,7 +66,6 @@
 #include <QtGui/qevent.h>
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -933,6 +932,5 @@ inline bool QWidget::testAttribute(Qt::WidgetAttribute attribute) const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QWIDGET_H

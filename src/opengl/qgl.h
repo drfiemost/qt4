@@ -52,7 +52,6 @@
 #include <QtGui/QWindowFormat>
 #endif
 
-QT_BEGIN_HEADER
 
 #if defined(Q_WS_WIN)
 # include <QtCore/qt_windows.h>
@@ -646,6 +645,5 @@ inline bool QGLFormat::sampleBuffers() const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QGL_H

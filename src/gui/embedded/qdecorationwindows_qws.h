@@ -44,7 +44,6 @@
 
 #include <QtGui/qdecorationdefault_qws.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -71,6 +70,5 @@ protected:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QDECORATIONWINDOWS_QWS_H

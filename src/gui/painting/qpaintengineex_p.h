@@ -62,7 +62,6 @@
 #include <private/qvectorpath_p.h>
 
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -265,6 +264,5 @@ inline uint QVectorPath::polygonFlags(QPaintEngine::PolygonDrawMode mode) {
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

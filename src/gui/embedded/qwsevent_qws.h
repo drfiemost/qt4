@@ -48,7 +48,6 @@
 #include <QtGui/qregion.h>
 #include <QtCore/qvector.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -453,6 +452,5 @@ struct QWSScreenTransformationEvent : QWSEvent {
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QWSEVENT_QWS_H

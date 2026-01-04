@@ -44,7 +44,6 @@
 
 #include <QtGui/qdecoration_qws.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -95,6 +94,5 @@ private:
 
 QT_END_NAMESPACE
 #endif // QT_NO_QWS_DECORATION_DEFAULT
-QT_END_HEADER
 
 #endif // QDECORATIONDEFAULT_QWS_H

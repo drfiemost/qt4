@@ -47,7 +47,6 @@
 #include <QtGui/qdecoration_qws.h>
 #include <QtGui/qevent.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -116,6 +115,5 @@ QT_END_INCLUDE_NAMESPACE
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QWSMANAGER_QWS_H

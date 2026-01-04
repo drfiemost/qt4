@@ -43,7 +43,6 @@
 
 #include <QtGui/QPlatformWindow>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -149,6 +148,5 @@ inline bool QWindowFormat::windowSurface() const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif //QPLATFORMWINDOWFORMAT_QPA_H

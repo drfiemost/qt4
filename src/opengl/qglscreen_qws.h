@@ -70,7 +70,6 @@ typedef NativeDisplayType EGLNativeDisplayType;
 #define QEGL_NATIVE_TYPES_DEFINED 1
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -120,6 +119,5 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QGLScreen::Options)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSCREENEGL_P_H

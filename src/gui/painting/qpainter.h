@@ -61,7 +61,6 @@
 #include <QtGui/qfontmetrics.h>
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -932,6 +931,5 @@ inline void QPainter::drawPicture(const QPoint &pt, const QPicture &p)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QPAINTER_H

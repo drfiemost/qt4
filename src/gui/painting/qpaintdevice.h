@@ -45,7 +45,6 @@
 #include <QtGui/qwindowdefs.h>
 #include <QtCore/qrect.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -128,6 +127,5 @@ inline bool QPaintDevice::paintingActive() const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QPAINTDEVICE_H

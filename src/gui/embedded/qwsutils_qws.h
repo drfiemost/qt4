@@ -44,7 +44,6 @@
 
 #include <QtCore/QIODevice>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -92,6 +91,5 @@ inline void qws_write_uint(QIODevice *socket, int i)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QWSUTILS_QWS_H

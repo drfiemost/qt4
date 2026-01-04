@@ -45,7 +45,6 @@
 #include <QtCore/qobjectdefs.h>
 #include <QtCore/qnamespace.h>
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 
@@ -86,7 +85,6 @@ template<typename T> class QList;
 typedef QList<QWidget *> QWidgetList;
 
 QT_END_NAMESPACE
-QT_END_HEADER
 
 // Window system dependent definitions
 
@@ -119,11 +117,9 @@ typedef unsigned long  WId;
 #if defined(Q_WS_QWS)
 
 typedef unsigned long  WId;
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 struct QWSEvent;
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #endif // Q_WS_QWS
 
@@ -133,7 +129,6 @@ typedef unsigned long  WId;
 
 #endif // Q_WS_QPA
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 template<class K, class V> class QHash;
@@ -143,7 +138,6 @@ template<class V> class QSet;
 typedef QSet<QWidget *> QWidgetSet;
 
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #if defined(QT_NEEDS_QMAIN)
 #define main qMain

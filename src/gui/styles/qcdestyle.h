@@ -45,7 +45,6 @@
 
 #include <QtGui/qmotifstyle.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -76,6 +75,5 @@ protected Q_SLOTS:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QCDESTYLE_H

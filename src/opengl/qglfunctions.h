@@ -49,7 +49,6 @@
 
 #include <QtOpenGL/qgl.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -2289,6 +2288,5 @@ inline void QGLFunctions::glVertexAttribPointer(GLuint indx, GLint size, GLenum 
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

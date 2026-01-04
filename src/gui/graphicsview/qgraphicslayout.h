@@ -44,7 +44,6 @@
 
 #include <QtGui/qgraphicslayoutitem.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -93,7 +92,6 @@ Q_DECLARE_INTERFACE(QGraphicsLayout, "com.trolltech.Qt.QGraphicsLayout")
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif
 

@@ -50,7 +50,6 @@
 #include <QtNetwork/qtcpsocket.h>
 #include <QtGui/qwssocket_qws.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -164,7 +163,6 @@ Q_SIGNALS:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QT_NO_SOUND
 

@@ -45,7 +45,6 @@
 #include <QtCore/qobject.h>
 #include <QtGui/qmouse_qws.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -78,6 +77,5 @@ private:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QMOUSE_QWS_H

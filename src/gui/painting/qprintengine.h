@@ -45,7 +45,6 @@
 #include <QtCore/qvariant.h>
 #include <QtGui/qprinter.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -113,6 +112,5 @@ public:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QPRINTENGINE_H

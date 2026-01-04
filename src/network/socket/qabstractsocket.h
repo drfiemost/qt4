@@ -48,7 +48,6 @@
 #include <QtCore/qdebug.h>
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -223,6 +222,5 @@ Q_NETWORK_EXPORT QDebug operator<<(QDebug, QAbstractSocket::SocketState);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QABSTRACTSOCKET_H

@@ -48,7 +48,6 @@
 #include <QtGui/qtextcursor.h>
 #include <QtGui/qpalette.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -144,6 +143,5 @@ Q_DECLARE_INTERFACE(QTextObjectInterface, "com.trolltech.Qt.QTextObjectInterface
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QABSTRACTTEXTDOCUMENTLAYOUT_H

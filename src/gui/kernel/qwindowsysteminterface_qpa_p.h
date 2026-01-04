@@ -43,7 +43,6 @@
 
 #include "qwindowsysteminterface_qpa.h"
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -229,7 +228,6 @@ public:
     static QTime eventTime;
 };
 
-QT_END_HEADER
 QT_END_NAMESPACE
 
 #endif // QWINDOWSYSTEMINTERFACE_QPA_P_H

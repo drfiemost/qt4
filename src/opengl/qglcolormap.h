@@ -45,7 +45,6 @@
 #include <QtGui/qcolor.h>
 #include <QtCore/qvector.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -99,6 +98,5 @@ inline void QGLColormap::detach()
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QGLCOLORMAP_H

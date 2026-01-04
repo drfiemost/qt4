@@ -51,7 +51,6 @@
 #include <QtGui/qcolor.h>
 #include <QtGui/qevent.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -449,6 +448,5 @@ Q_DECLARE_INTERFACE(QAccessibleInterface, QAccessibleInterface_iid)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QACCESSIBLE_H

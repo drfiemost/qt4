@@ -44,7 +44,6 @@
 
 #include <QtGui/qdialog.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -123,6 +122,5 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QAbstractPrintDialog::PrintDialogOptions)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QABSTRACTPRINTDIALOG_H

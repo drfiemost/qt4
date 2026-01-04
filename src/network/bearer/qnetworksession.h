@@ -54,7 +54,6 @@
 #undef interface
 #endif
 
-QT_BEGIN_HEADER
 
 #ifndef QT_MOBILITY_BEARER
 #include <QtCore/qshareddata.h>
@@ -148,7 +147,6 @@ Q_DECLARE_METATYPE(QNetworkSession::SessionError)
 QTM_END_NAMESPACE
 #endif
 
-QT_END_HEADER
 
 #endif // QT_NO_BEARERMANAGEMENT
 

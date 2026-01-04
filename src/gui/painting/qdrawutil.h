@@ -46,7 +46,6 @@
 #include <QtCore/qstring.h> // char*->QString conversion
 #include <QtCore/qmargins.h>
 #include <QtGui/qpixmap.h>
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -168,6 +167,5 @@ inline void qDrawBorderPixmap(QPainter *painter,
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QDRAWUTIL_H

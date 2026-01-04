@@ -54,7 +54,6 @@
 
 #include <sys/types.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -274,7 +273,6 @@ inline QByteArray &QAuthDevice::buffer()
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QT_NO_SXE
 #endif // QTRANSPORTAUTH_QWS_H

@@ -45,7 +45,6 @@
 #include <QtGui/qframe.h>
 #include <QtGui/qicon.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -125,6 +124,5 @@ inline int QToolBox::insertItem(int index, QWidget *item, const QString &text)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QTOOLBOX_H

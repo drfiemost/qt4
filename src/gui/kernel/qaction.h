@@ -48,7 +48,6 @@
 #include <QtCore/qvariant.h>
 #include <QtGui/qicon.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -234,6 +233,5 @@ QT_END_INCLUDE_NAMESPACE
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QACTION_H

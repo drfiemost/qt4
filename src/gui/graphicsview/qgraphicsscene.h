@@ -51,7 +51,6 @@
 #include <QtGui/qmatrix.h>
 #include <QtGui/qpen.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -322,6 +321,5 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QGraphicsScene::SceneLayers)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

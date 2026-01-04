@@ -52,7 +52,6 @@
 
 typedef struct x509_st X509; // ### check if this works
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -133,6 +132,5 @@ Q_NETWORK_EXPORT QDebug operator<<(QDebug debug, QSslCertificate::SubjectInfo in
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

@@ -56,7 +56,6 @@
 #include <QtCore/qobject.h>
 #include "QtGui/qaction.h"
 
-QT_BEGIN_HEADER
 
 #ifndef QT_NO_SOFTKEYMANAGER
 QT_BEGIN_NAMESPACE
@@ -107,6 +106,5 @@ private:
 QT_END_NAMESPACE
 #endif //QT_NO_SOFTKEYMANAGER
 
-QT_END_HEADER
 
 #endif //QSOFTKEYMANAGER_P_H
