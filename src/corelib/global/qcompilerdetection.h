@@ -215,6 +215,7 @@
  *  N1720           Q_COMPILER_STATIC_ASSERT
  *  N2258           Q_COMPILER_TEMPLATE_ALIAS
  *  N2659           Q_COMPILER_THREAD_LOCAL
+ *  N2660           Q_COMPILER_THREADSAFE_STATICS
  *  N2756           Q_COMPILER_UDL
  *  N2442           Q_COMPILER_UNICODE_STRINGS          __cpp_unicode_literals = 200710
  *  N2544           Q_COMPILER_UNRESTRICTED_UNIONS
@@ -227,6 +228,7 @@
  */
 
 #ifdef Q_CC_INTEL
+#  define Q_COMPILER_THREADSAFE_STATICS
 #  if __INTEL_COMPILER < 1200
 #    define Q_NO_TEMPLATE_FRIENDS
 #  endif
@@ -246,6 +248,8 @@
 #endif
 
 #if defined(Q_CC_CLANG) && !defined(Q_CC_INTEL)
+/* General C++ features */
+#  define Q_COMPILER_THREADSAFE_STATICS
 #  if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
     /* Detect C++ features using __has_feature(), see http://clang.llvm.org/docs/LanguageExtensions.html#cxx11 */
 #    if __has_feature(cxx_auto_type)
@@ -287,6 +291,7 @@
 #endif
 
 #if defined(Q_CC_GNU) && !defined(Q_CC_INTEL) && !defined(Q_CC_CLANG)
+#  define Q_COMPILER_THREADSAFE_STATICS
 #  if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 #    if (__GNUC__ * 100 + __GNUC_MINOR__) >= 403
        /* C++0x features supported in GCC 4.3: */

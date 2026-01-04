@@ -191,6 +191,16 @@ void tst_QObject::cleanup()
 {
 }
 
+struct QObjectCreatedOnShutdown
+{
+    QObjectCreatedOnShutdown() {}
+    ~QObjectCreatedOnShutdown()
+    {
+        QObject();
+    }
+};
+static QObjectCreatedOnShutdown s_qobjectCreatedOnShutdown;
+
 class SenderObject : public QObject
 {
     Q_OBJECT

@@ -41,6 +41,7 @@
 #define QGENERICATOMIC_H
 
 #include <QtCore/qglobal.h>
+#include <QtCore/qtypeinfo.h>
 
 QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE

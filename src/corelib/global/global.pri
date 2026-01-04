@@ -1,23 +1,25 @@
 # Qt kernel library base module
 
 HEADERS +=  \
-	global/qglobal.h \
+        global/qglobal.h \
         global/qsystemdetection.h \
         global/qcompilerdetection.h \
-	global/qnamespace.h \
         global/qprocessordetection.h \
+        global/qnamespace.h \
         global/qendian.h \
         global/qnumeric_p.h \
         global/qnumeric.h \
+        global/qglobalstatic.h \
         global/qtypeinfo.h \
         global/qsysinfo.h \
         global/qflags.h\
         global/qtypetraits.h
 
 SOURCES += \
-	global/qglobal.cpp \
+        global/qglobal.cpp \
+        global/qglobalstatic.cpp \
         global/qlibraryinfo.cpp \
-	global/qmalloc.cpp \
+        global/qmalloc.cpp \
         global/qnumeric.cpp
 
 # qlibraryinfo.cpp includes qconfig.cpp

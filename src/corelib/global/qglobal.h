@@ -983,126 +983,6 @@ Q_CORE_EXPORT void qt_message_output(QtMsgType, const char *buf);
 using QtMsgHandler = void (*)(QtMsgType, const char*);
 Q_CORE_EXPORT QtMsgHandler qInstallMsgHandler(QtMsgHandler);
 
-#if defined(QT_NO_THREAD)
-
-template <typename T>
-class QGlobalStatic
-{
-public:
-    T *pointer;
-    inline QGlobalStatic(T *p) : pointer(p) { }
-    inline ~QGlobalStatic() { pointer = nullptr; }
-};
-
-#define Q_GLOBAL_STATIC(TYPE, NAME)                                  \
-    static TYPE *NAME()                                              \
-    {                                                                \
-        static TYPE thisVariable;                                    \
-        static QGlobalStatic<TYPE > thisGlobalStatic(&thisVariable); \
-        return thisGlobalStatic.pointer;                             \
-    }
-
-#define Q_GLOBAL_STATIC_WITH_ARGS(TYPE, NAME, ARGS)                  \
-    static TYPE *NAME()                                              \
-    {                                                                \
-        static TYPE thisVariable ARGS;                               \
-        static QGlobalStatic<TYPE > thisGlobalStatic(&thisVariable); \
-        return thisGlobalStatic.pointer;                             \
-    }
-
-#define Q_GLOBAL_STATIC_WITH_INITIALIZER(TYPE, NAME, INITIALIZER)    \
-    static TYPE *NAME()                                              \
-    {                                                                \
-        static TYPE thisVariable;                                    \
-        static QGlobalStatic<TYPE > thisGlobalStatic(0);             \
-        if (!thisGlobalStatic.pointer) {                             \
-            TYPE *x = thisGlobalStatic.pointer = &thisVariable;      \
-            INITIALIZER;                                             \
-        }                                                            \
-        return thisGlobalStatic.pointer;                             \
-    }
-
-#else
-
-// forward declaration, since qatomic.h needs qglobal.h
-template <typename T> class QBasicAtomicPointer;
-
-// POD for Q_GLOBAL_STATIC
-template <typename T>
-class QGlobalStatic
-{
-public:
-    QBasicAtomicPointer<T> pointer;
-    bool destroyed;
-};
-
-// Created as a function-local static to delete a QGlobalStatic<T>
-template <typename T>
-class QGlobalStaticDeleter
-{
-public:
-    QGlobalStatic<T> &globalStatic;
-    QGlobalStaticDeleter(QGlobalStatic<T> &_globalStatic)
-        : globalStatic(_globalStatic)
-    { }
-
-    inline ~QGlobalStaticDeleter()
-    {
-        delete globalStatic.pointer.loadRelaxed();
-        globalStatic.pointer.storeRelaxed(nullptr);
-        globalStatic.destroyed = true;
-    }
-};
-
-#define Q_GLOBAL_STATIC_INIT(TYPE, NAME)                                      \
-        static QGlobalStatic<TYPE > this_ ## NAME                             \
-                            = { Q_BASIC_ATOMIC_INITIALIZER(nullptr), false }
-
-#define Q_GLOBAL_STATIC(TYPE, NAME)                                           \
-    static TYPE *NAME()                                                       \
-    {                                                                         \
-        Q_GLOBAL_STATIC_INIT(TYPE, _StaticVar_);                              \
-        if (!this__StaticVar_.pointer.loadRelaxed() && !this__StaticVar_.destroyed) { \
-            TYPE *x = new TYPE;                                               \
-            if (!this__StaticVar_.pointer.testAndSetOrdered(nullptr, x))            \
-                delete x;                                                     \
-            else                                                              \
-                static QGlobalStaticDeleter<TYPE > cleanup(this__StaticVar_); \
-        }                                                                     \
-        return this__StaticVar_.pointer.loadRelaxed();                               \
-    }
-
-#define Q_GLOBAL_STATIC_WITH_ARGS(TYPE, NAME, ARGS)                           \
-    static TYPE *NAME()                                                       \
-    {                                                                         \
-        Q_GLOBAL_STATIC_INIT(TYPE, _StaticVar_);                              \
-        if (!this__StaticVar_.pointer.loadRelaxed() && !this__StaticVar_.destroyed) { \
-            TYPE *x = new TYPE ARGS;                                          \
-            if (!this__StaticVar_.pointer.testAndSetOrdered(0, x))            \
-                delete x;                                                     \
-            else                                                              \
-                static QGlobalStaticDeleter<TYPE > cleanup(this__StaticVar_); \
-        }                                                                     \
-        return this__StaticVar_.pointer.loadRelaxed();                               \
-    }
-
-#define Q_GLOBAL_STATIC_WITH_INITIALIZER(TYPE, NAME, INITIALIZER)             \
-    static TYPE *NAME()                                                       \
-    {                                                                         \
-        Q_GLOBAL_STATIC_INIT(TYPE, _StaticVar_);                              \
-        if (!this__StaticVar_.pointer.loadRelaxed() && !this__StaticVar_.destroyed) { \
-            QScopedPointer<TYPE > x(new TYPE);                                \
-            INITIALIZER;                                                      \
-            if (this__StaticVar_.pointer.testAndSetOrdered(0, x.data())) {    \
-                static QGlobalStaticDeleter<TYPE > cleanup(this__StaticVar_); \
-                x.take();                                                     \
-            }                                                                 \
-        }                                                                     \
-        return this__StaticVar_.pointer.loadRelaxed();                               \
-    }
-
-#endif
-
 [[nodiscard]] constexpr static inline bool qFuzzyCompare(double p1, double p2)
 {
     return (std::abs(p1 - p2) <= 0.000000000001 * std::min(std::abs(p1), std::abs(p2)));
@@ -1407,6 +1287,9 @@ template <typename T, typename F> struct QConditional<false, T, F> { typedef F T
 
 QT_END_NAMESPACE
 QT_END_HEADER
+
+// Q_GLOBAL_STATIC
+#include <QtCore/qglobalstatic.h>
 
 #include <QtCore/qflags.h>
 #include <QtCore/qsysinfo.h>
