@@ -44,7 +44,6 @@
 
 #include <QtCore/qstring.h>
 
-QT_BEGIN_HEADER
 
 #if defined(Q_OS_WIN)
 #ifndef GUID_DEFINED
@@ -188,6 +187,5 @@ Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QUuid &);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QUUID_H

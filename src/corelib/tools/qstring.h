@@ -58,7 +58,6 @@
 #error qstring.h must be included before any header file that defines truncate
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -1307,7 +1306,6 @@ inline QString &&asString(QString &&s)              { return std::move(s); }
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #if defined(QT_USE_FAST_OPERATOR_PLUS) || defined(QT_USE_QSTRINGBUILDER)
 #include <QtCore/qstringbuilder.h>

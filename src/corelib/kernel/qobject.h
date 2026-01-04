@@ -57,7 +57,6 @@
 #include <QtCore/qobject_impl.h>
 
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -499,7 +498,6 @@ Q_CORE_EXPORT QDebug operator<<(QDebug, const QObject *);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif
 

@@ -45,7 +45,6 @@
 #include <QtCore/qglobal.h>
 #include <limits.h> // ### Qt 5: remove
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -233,6 +232,5 @@ private:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QREADWRITELOCK_H

@@ -45,7 +45,6 @@
 #include <QtCore/qobjectdefs.h>
 #include <QtCore/qvariant.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -236,6 +235,5 @@ Q_DECLARE_TYPEINFO(QMetaClassInfo, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QMETAOBJECT_H

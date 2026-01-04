@@ -54,7 +54,6 @@
 #error qbytearray.h must be included before any header file that defines truncate
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -597,7 +596,6 @@ Q_DECLARE_SHARED(QByteArray)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #ifdef QT_USE_QSTRINGBUILDER
 #include <QtCore/qstring.h>

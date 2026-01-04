@@ -51,7 +51,6 @@
 
 #ifndef QT_NO_DBUS
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -188,7 +187,6 @@ Q_DECLARE_METATYPE(QList<QDBusObjectPath>)
 Q_DECLARE_METATYPE(QDBusSignature)
 Q_DECLARE_METATYPE(QList<QDBusSignature>)
 
-QT_END_HEADER
 
 #endif // QT_NO_DBUS
 #endif

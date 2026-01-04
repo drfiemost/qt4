@@ -49,7 +49,6 @@
 
 #ifndef QT_NO_DBUS
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -125,7 +124,6 @@ QT_END_NAMESPACE
 
 Q_DECLARE_BUILTIN_METATYPE(QDBusConnectionInterface::RegisterServiceReply, UInt)
 
-QT_END_HEADER
 
 #endif // QT_NO_DBUS
 #endif

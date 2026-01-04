@@ -45,7 +45,6 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qatomic.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -266,6 +265,5 @@ Q_INLINE_TEMPLATE void swap(QExplicitlySharedDataPointer<T> &p1, QExplicitlyShar
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSHAREDDATA_H

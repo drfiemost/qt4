@@ -42,7 +42,6 @@
 #ifndef QATOMIC_IA64_H
 #define QATOMIC_IA64_H
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -613,6 +612,5 @@ Q_INLINE_TEMPLATE T *QBasicAtomicPointer<T>::fetchAndAddRelaxed(qptrdiff valueTo
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QATOMIC_IA64_H

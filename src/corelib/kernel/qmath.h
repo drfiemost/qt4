@@ -47,7 +47,6 @@
 
 #include <cmath>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -232,6 +231,5 @@ constexpr inline quint64 qNextPowerOfTwo(qint64 v)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QMATH_H

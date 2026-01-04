@@ -237,7 +237,6 @@ extern "C" {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -489,7 +488,6 @@ Q_INLINE_TEMPLATE T *QBasicAtomicPointer<T>::fetchAndAddRelease(qptrdiff valueTo
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // Q_CC_MSVC
 

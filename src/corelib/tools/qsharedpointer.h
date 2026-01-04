@@ -50,7 +50,6 @@
 # include <QtCore/qsharedpointer_impl.h>
 #else
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -149,7 +148,6 @@ template <class X, class T> QWeakPointer<X> qWeakPointerCast(const QWeakPointer<
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // Q_QDOC
 

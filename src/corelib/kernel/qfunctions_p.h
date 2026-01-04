@@ -58,8 +58,6 @@
 #define Q_STATIC_GLOBAL_OPERATOR static
 #define Q_STATIC_GLOBAL_INLINE_OPERATOR static inline
 
-QT_BEGIN_HEADER
-QT_END_HEADER
 
 #endif
 

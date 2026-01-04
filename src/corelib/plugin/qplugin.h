@@ -45,7 +45,6 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qpointer.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -141,6 +140,5 @@ void Q_CORE_EXPORT qRegisterStaticPluginInstanceFunction(QtPluginInstanceFunctio
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // Q_PLUGIN_H

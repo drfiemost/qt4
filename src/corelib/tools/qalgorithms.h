@@ -44,7 +44,6 @@
 
 #include <QtCore/qglobal.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -475,6 +474,5 @@ template <typename RandomAccessIterator, typename T, typename LessThan>
 QT_WARNING_POP
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QALGORITHMS_H

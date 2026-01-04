@@ -45,7 +45,6 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qobjectdefs.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -119,6 +118,5 @@ Q_CORE_EXPORT QDataStream &operator>>(QDataStream &, QEasingCurve &);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif

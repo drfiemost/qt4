@@ -46,7 +46,6 @@
 
 #include <QtCore/qobjectdefs_impl.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -473,6 +472,5 @@ namespace QtPrivate {
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QOBJECTDEFS_H

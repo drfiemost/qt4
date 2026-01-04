@@ -50,7 +50,6 @@
 #include <QtCore/qtconcurrentrunbase.h>
 #include <QtCore/qtconcurrentstoredfunctioncall.h>
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 
@@ -336,7 +335,6 @@ QFuture<T> run(const Class *object, T (Class::*fn)(Param1, Param2, Param3, Param
 #endif // qdoc
 
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #endif // QT_NO_CONCURRENT
 

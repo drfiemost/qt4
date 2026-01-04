@@ -43,13 +43,11 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qtypeinfo.h>
 
-QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 #if 0
 // silence syncqt warnings
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #pragma qt_sync_skip_header_check
 #pragma qt_sync_stop_processing
@@ -410,6 +408,5 @@ template <typename BaseClass> struct QGenericAtomicOps
 #undef always_inline
 
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #endif // QGENERICATOMIC_H

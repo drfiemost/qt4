@@ -42,7 +42,6 @@
 #ifndef QATOMIC_MACOSX_H
 #define QATOMIC_MACOSX_H
 
-QT_BEGIN_HEADER
 
 #if defined(__x86_64__)
 #  include <QtCore/qatomic_x86_64.h>
@@ -52,6 +51,5 @@ QT_BEGIN_HEADER
 #  include <QtCore/qatomic_powerpc.h>
 #endif // !__x86_64__ && !__i386__
 
-QT_END_HEADER
 
 #endif // QATOMIC_MACOSX_H

@@ -52,7 +52,6 @@
 # include <utility>
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -96,7 +95,6 @@ QT_END_NAMESPACE
 Q_DECLARE_METATYPE(QDBusUnixFileDescriptor)
 Q_DECLARE_METATYPE(QList<QDBusUnixFileDescriptor>)
 
-QT_END_HEADER
 
 #endif // QT_NO_DBUS
 #endif // QDBUSUNIXFILEDESCRIPTOR_H

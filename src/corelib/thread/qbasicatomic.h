@@ -77,7 +77,6 @@
 #  error "Qt has not been ported to this platform"
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -85,7 +84,6 @@ QT_BEGIN_NAMESPACE
 #if 0
 // silence syncqt warnings
 QT_END_NAMESPACE
-QT_END_HEADER
 
 #pragma qt_no_master_include
 #pragma qt_sync_stop_processing
@@ -343,6 +341,5 @@ public:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QBASICATOMIC_H

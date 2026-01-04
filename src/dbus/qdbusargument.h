@@ -55,7 +55,6 @@
 
 #ifndef QT_NO_DBUS
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -400,7 +399,6 @@ inline QDBusArgument &operator<<(QDBusArgument &arg, const QVariantHash &map)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QT_NO_DBUS
 #endif

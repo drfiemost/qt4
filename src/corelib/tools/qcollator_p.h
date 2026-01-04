@@ -45,7 +45,6 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qlocale.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -119,6 +118,5 @@ private:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QCOLLATOR_P_H

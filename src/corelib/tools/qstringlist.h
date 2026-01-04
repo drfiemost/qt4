@@ -52,7 +52,6 @@
 #include <Qt3Support/q3valuelist.h>
 #endif
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -208,6 +207,5 @@ inline QDataStream &operator<<(QDataStream &out, const QStringList &list)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSTRINGLIST_H

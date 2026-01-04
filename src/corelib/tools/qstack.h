@@ -44,7 +44,6 @@
 
 #include <QtCore/qvector.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -77,6 +76,5 @@ inline const T &QStack<T>::top() const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSTACK_H

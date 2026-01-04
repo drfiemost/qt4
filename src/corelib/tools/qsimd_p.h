@@ -45,7 +45,6 @@
 #include <qglobal.h>
 #include <qatomic.h>
 
-QT_BEGIN_HEADER
 
 /*
  * qt_module_config.prf defines the QT_COMPILER_SUPPORTS_XXX macros.
@@ -265,6 +264,5 @@ inline char  operator ""_c(unsigned long long value) { return static_cast<char>(
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QSIMD_P_H

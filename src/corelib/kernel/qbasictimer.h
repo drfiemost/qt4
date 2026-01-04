@@ -45,7 +45,6 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qnamespace.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -70,6 +69,5 @@ Q_DECLARE_TYPEINFO(QBasicTimer, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QBASICTIMER_H

@@ -47,7 +47,6 @@
 
 #ifndef QT_NO_DBUS
 
-QT_BEGIN_HEADER
 
 struct DBusError;
 
@@ -122,7 +121,6 @@ QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QDBusError)
 
-QT_END_HEADER
 
 #endif // QT_NO_DBUS
 #endif

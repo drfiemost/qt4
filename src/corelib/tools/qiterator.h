@@ -44,7 +44,6 @@
 
 #include <QtCore/qglobal.h>
 
-QT_BEGIN_HEADER
 
 #ifdef QT_NO_STL
 # include <new> // No-op, indirectly include additional configuration headers.
@@ -221,6 +220,5 @@ public: \
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QITERATOR_H

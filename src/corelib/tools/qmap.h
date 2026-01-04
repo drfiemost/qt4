@@ -56,7 +56,6 @@
 #include <functional>
 #include <initializer_list>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -1097,6 +1096,5 @@ Q_DECLARE_MUTABLE_ASSOCIATIVE_ITERATOR(Map)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QMAP_H

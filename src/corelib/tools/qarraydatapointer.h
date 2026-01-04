@@ -44,7 +44,6 @@
 
 #include <QtCore/qarraydataops.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -207,6 +206,5 @@ inline void swap(QArrayDataPointer<T> &p1, QArrayDataPointer<T> &p2)
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // include guard
