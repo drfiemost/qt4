@@ -100,7 +100,7 @@ public:
 #endif
 
     QScriptValue(SpecialValue value);
-    QScriptValue(bool value);
+    explicit QScriptValue(bool value);
     QScriptValue(int value);
     QScriptValue(uint value);
     QScriptValue(qsreal value);
