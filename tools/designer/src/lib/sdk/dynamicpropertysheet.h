@@ -55,7 +55,6 @@
 
 #include <QtDesigner/extension.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -76,6 +75,5 @@ Q_DECLARE_EXTENSION_INTERFACE(QDesignerDynamicPropertySheetExtension, "com.troll
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // DYNAMICPROPERTYSHEET_H

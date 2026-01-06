@@ -55,7 +55,6 @@
 
 #include <QtDesigner/extension.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -95,6 +94,5 @@ Q_DECLARE_EXTENSION_INTERFACE(QDesignerLanguageExtension, "com.trolltech.Qt.Desi
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // QDESIGNER_ABTRACT_LANGUAGE_H

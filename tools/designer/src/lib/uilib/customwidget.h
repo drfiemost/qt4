@@ -47,7 +47,6 @@
 #include <QtCore/QString>
 #include <QtGui/QIcon>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -96,6 +95,5 @@ Q_DECLARE_INTERFACE(QDesignerCustomWidgetCollectionInterface,
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // CUSTOMWIDGET_H

@@ -47,7 +47,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -81,6 +80,5 @@ inline QDesignerFormEditorInterface *QDesignerIntegrationInterface::core() const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // ABSTRACTINTEGRATION_H

@@ -47,7 +47,6 @@
 #include <QtCore/QList>
 #include <QtCore/QByteArray>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -84,6 +83,5 @@ Q_DECLARE_EXTENSION_INTERFACE(QDesignerMemberSheetExtension, "com.trolltech.Qt.D
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // MEMBERSHEET_H

@@ -48,7 +48,6 @@
 #include <QtGui/QWidget>
 #include <QtGui/QIcon>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -137,6 +136,5 @@ QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QT_PREPEND_NAMESPACE(QDesignerWidgetBoxInterface::Widget))
 
-QT_END_HEADER
 
 #endif // ABSTRACTWIDGETBOX_H

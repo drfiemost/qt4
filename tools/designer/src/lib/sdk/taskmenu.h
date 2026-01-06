@@ -44,7 +44,6 @@
 
 #include <QtDesigner/extension.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -67,6 +66,5 @@ inline QAction *QDesignerTaskMenuExtension::preferredEditAction() const
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // TASKMENU_H

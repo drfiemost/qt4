@@ -57,7 +57,6 @@
 #include <QtDesigner/extension.h>
 #include <QtCore/QVariant>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -78,6 +77,5 @@ Q_DECLARE_EXTENSION_INTERFACE(QDesignerScriptExtension, "com.trolltech.Qt.Design
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // SCRIPT_H
