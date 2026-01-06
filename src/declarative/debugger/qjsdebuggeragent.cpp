@@ -541,11 +541,11 @@ void QJSDebuggerAgentPrivate::positionChange(qint64 scriptId, int lineNumber, in
     case SteppingOutState:
         if (stepDepth >= 0)
             break;
-        //fallthough
+        [[fallthrough]];
     case SteppingOverState:
         if (stepDepth > 0)
             break;
-        //fallthough
+        [[fallthrough]];
     case SteppingIntoState:
         stopped();
         break;
