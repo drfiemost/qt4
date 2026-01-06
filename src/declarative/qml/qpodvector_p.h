@@ -89,11 +89,11 @@ public:
     void insert(int idx, const T &v) {
         if (m_count == m_capacity) {
             m_capacity += Increment;
-            m_data = (T *)q_check_ptr(realloc(m_data, m_capacity * sizeof(T)));
+            m_data = (T *)q_check_ptr(std::realloc(m_data, m_capacity * sizeof(T)));
         }
         int moveCount = m_count - idx;
         if (moveCount)
-            ::memmove(m_data + idx + 1, m_data + idx, moveCount * sizeof(T));
+            std::memmove(m_data + idx + 1, m_data + idx, moveCount * sizeof(T));
         m_count++;
         m_data[idx] = v;
     }
@@ -101,7 +101,7 @@ public:
     void reserve(int count) {
         if (count >= m_capacity) {
             m_capacity = (count + (Increment-1)) & (0xFFFFFFFF - Increment + 1);
-            m_data = (T *)q_check_ptr(realloc(m_data, m_capacity * sizeof(T)));
+            m_data = (T *)q_check_ptr(std::realloc(m_data, m_capacity * sizeof(T)));
         }
     }
 
@@ -110,7 +110,7 @@ public:
         reserve(newSize);
         int moveCount = m_count - idx;
         if (moveCount) 
-            ::memmove(m_data + idx + count,  m_data + idx, 
+            std::memmove(m_data + idx + count,  m_data + idx,
                       moveCount * sizeof(T));
         m_count = newSize;
     }
@@ -118,7 +118,7 @@ public:
     void remove(int idx, int count = 1) {
         int moveCount = m_count - (idx + count);
         if (moveCount)
-            ::memmove(m_data + idx, m_data + idx + count, 
+            std::memmove(m_data + idx, m_data + idx + count, 
                       moveCount * sizeof(T));
         m_count -= count;
     }

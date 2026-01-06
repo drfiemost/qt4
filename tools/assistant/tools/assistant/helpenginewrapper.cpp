@@ -118,6 +118,11 @@ private:
 
 const QString HelpEngineWrapper::TrUnfiltered = HelpEngineWrapper::tr("Unfiltered");
 
+HelpEngineWrapper &HelpEngineWrapper::instance()
+{
+    return instance({});
+}
+
 HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = nullptr;
 
 HelpEngineWrapper &HelpEngineWrapper::instance(const QString &collectionFile)
